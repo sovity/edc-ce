@@ -1,0 +1,36 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - 'main'
+
+# Grant permissions to obtain federated identity credentials
+# see https://docs.github.com/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-azure
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+
+  # Build runtime image in Azure Container Registry, tagged with the commit ID.
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout code
+      - uses: actions/checkout@v2
+
+      # Build Docker runtime image
+      - name: 'Build image'
+        run: docker build -t data-dashboard .
+
+      # Run Docker container
+      - name: 'Run container'
+        run: docker run -p 8080:80 -d --rm --name data-dashboard data-dashboard
+
+      # Verify docker image
+      - name: 'Verify container'
+        run: |
+          curl -O https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+          chmod +x wait-for-it.sh
+          ./wait-for-it.sh -t 20 localhost:8080

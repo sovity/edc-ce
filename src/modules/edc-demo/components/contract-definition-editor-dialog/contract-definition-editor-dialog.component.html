@@ -1,0 +1,52 @@
+<mat-dialog-content>
+
+    <mat-form-field class="form-field" color="accent" id="form-field-id">
+        <mat-label>Id</mat-label>
+        <input [(ngModel)]="contractDefinition.id" [disabled]="editMode" matInput required>
+    </mat-form-field>
+
+    <div>
+        <mat-form-field class="form-field form-field-policy" id="form-field-access-policy">
+            <mat-label>Access policy</mat-label>
+            <mat-select [(ngModel)]="accessPolicy" required>
+                <mat-option *ngFor="let policy of policies" [value]="policy">
+                    {{policy.uid}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="form-field form-field-policy" id="form-field-contract-policy">
+            <mat-label>Contract policy</mat-label>
+            <mat-select [(ngModel)]="contractPolicy" required>
+                <mat-option *ngFor="let policy of policies" [value]="policy">
+                    {{policy.uid}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="form-field form-field-assets" id="form-field-contract-assets">
+          <mat-label>Assets</mat-label>
+          <mat-select [(ngModel)]="assets" multiple>
+            <mat-option *ngFor="let asset of availableAssets" [value]="asset">
+              {{asset.id}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+    </div>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+    <button (click)="onSave()" *ngIf="editMode" color="accent" mat-stroked-button>
+        <mat-icon>save</mat-icon> Save
+    </button>
+
+    <button (click)="onSave()" *ngIf="!editMode" color="accent" mat-stroked-button>
+        <mat-icon>add_circle_outline</mat-icon> Create
+    </button>
+
+    <button color="accent" mat-dialog-close mat-stroked-button>
+        <mat-icon>cancel</mat-icon> Cancel
+    </button>
+</mat-dialog-actions>

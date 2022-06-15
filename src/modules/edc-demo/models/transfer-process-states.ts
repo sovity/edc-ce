@@ -1,0 +1,16 @@
+export enum TransferProcessStates {
+    UNSAVED = 0,
+    INITIAL = 100,
+    PROVISIONING = 200,
+    PROVISIONED = 300,
+    REQUESTED = 400,
+    REQUESTED_ACK = 500,
+    IN_PROGRESS = 600,
+    STREAMING = 700,
+    COMPLETED = 800,
+    DEPROVISIONING = 900,
+    DEPROVISIONING_REQ = 901,
+    DEPROVISIONED = 1000,
+    ENDED = 1100,
+    ERROR = -1
+}

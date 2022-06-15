@@ -1,0 +1,72 @@
+<div id="wrapper">
+    <mat-card>
+      <div class="info-box">
+        <mat-icon>info</mat-icon>
+        <span class="text">Please install Storage Explorer for visualizing files transferred to Azure Blob Storage</span>
+        <span class="button">
+          <a mat-stroked-button href="https://azure.microsoft.com/features/storage-explorer/" color="accent">Install Azure Storage Explorer</a>
+        </span>
+      </div>
+    </mat-card>
+
+    <div *ngIf="transferProcesses$ | async as transferProcesses">
+      <button mat-stroked-button (click)="loadTransferProcesses()" color="accent">
+        <mat-icon>cached</mat-icon>
+        Refresh
+      </button>
+      <mat-paginator [length]="transferProcesses.length" pageSize="transferProcesses.length" hidePageSize="true"></mat-paginator>
+
+      <table mat-table [dataSource]="transferProcesses" class="transfer-history-table">
+
+          <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef scope="col">Id</th>
+              <td mat-cell *matCellDef="let item">{{item.id}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="creationDate">
+              <th mat-header-cell *matHeaderCellDef scope="col">Created</th>
+              <td mat-cell *matCellDef="let item">{{asDate(item.createdTimestamp)}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="state">
+              <th mat-header-cell *matHeaderCellDef scope="col">State</th>
+              <td mat-cell *matCellDef="let item">{{item.state}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="lastUpdated">
+              <th mat-header-cell *matHeaderCellDef scope="col">Last updated</th>
+              <td mat-cell *matCellDef="let item">{{asDate(item.stateTimestamp)}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="connectorId">
+              <th mat-header-cell *matHeaderCellDef scope="col">ConnectorId</th>
+              <td mat-cell *matCellDef="let item">{{item.dataRequest.connectorId}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="assetId">
+              <th mat-header-cell *matHeaderCellDef scope="col">AssetId</th>
+              <td mat-cell *matCellDef="let item">{{item.dataRequest.assetId}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="contractId">
+              <th mat-header-cell *matHeaderCellDef scope="col">ContractId</th>
+              <td mat-cell *matCellDef="let item">{{item.dataRequest.contractId}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef scope="col">Actions</th>
+            <td mat-cell *matCellDef="let item" class="singleline-cell">
+              <a *ngIf="showStorageExplorerLink(item)" mat-stroked-button mat-button color="accent" [href]="storageExplorerLinkTemplate | replace: item.dataDestination.properties | safe: 'url'" class="action-button">
+                <mat-icon>loupe</mat-icon> Open Storage Explorer
+              </a>
+              <button *ngIf="showDeprovisionButton(item)" (click)="onDeprovision(item)" color="warn" mat-stroked-button  class="action-button">
+                <mat-icon>cancel_presentation</mat-icon> Deprovision
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columns" class="transfer-history-table-header"></tr>
+          <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+      </table>
+    </div>
+</div>

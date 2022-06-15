@@ -1,0 +1,24 @@
+@import './theme.scss';
+
+html, body {
+    height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+.snackbar-info-style {
+  background-color: orange;
+  color: black;
+}
+
+.snackbar-error-style {
+  background-color: crimson;
+  color: black;
+}
+
+.code{
+  font-family: monospace;
+  font-size: larger;
+}

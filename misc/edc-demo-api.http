@@ -1,0 +1,64 @@
+@homeConnectorBaseUrl = http://localhost:8181
+@someProviderBaseUrl = http://localhost:9191
+
+@edcDemoApiBaseUrl = {{homeConnectorBaseUrl}}/api/edc-demo
+
+@someProviderApiBaseUrl = {{someProviderBaseUrl}}/api/edc-demo
+
+### get health
+GET {{edcDemoApiBaseUrl}}/health
+
+### get catalog
+GET {{edcDemoApiBaseUrl}}/catalog
+
+### get transfer processes
+GET {{edcDemoApiBaseUrl}}/transfer-processes
+
+### get storage types
+GET {{edcDemoApiBaseUrl}}/storage-types
+
+### get contract definitions
+GET {{edcDemoApiBaseUrl}}/contract-definitions
+
+### get policies
+GET {{edcDemoApiBaseUrl}}/policies
+
+
+### create transfer process
+POST {{edcDemoApiBaseUrl}}/transfer-processes
+Content-Type: application/json
+
+{
+    "assetId": "schematic-drawing-az_provider",
+    "contractId": "1",
+    "dataDestinationType": "AzureStorage",
+    "connectorAddress": "http://localhost:9191"
+}
+
+### get status of transfer process
+@id = a2672e6f-e8b4-4989-8513-0c37d578256f
+GET {{edcDemoApiBaseUrl}}/transfer-processes/{{id}}
+
+### create sample asset entry
+POST {{someProviderApiBaseUrl}}/asset-entry
+Content-Type: application/json
+
+{
+    "asset": {
+        "properties": {
+            "asset:prop:name": "test-asset-990",
+            "asset:prop:version": "1.0",
+            "asset:prop:id": "test-asset-990"
+        }
+    },
+    "dataAddress": {
+        "properties": {
+            "someprop": "someval",
+            "type": "test-dataaddress-990"
+        },
+        "type": "test-dataaddress-990",
+        "keyName": null
+    }
+}
+
+

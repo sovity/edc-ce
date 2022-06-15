@@ -1,0 +1,13 @@
+mat-dialog-content {
+  width: 800px;
+}
+
+.form-field-half{
+  box-sizing: border-box;
+  width: calc(50% - 2px);
+  margin: 1px;
+}
+.form-field-stretch{
+  box-sizing: border-box;
+  width: 100%;
+}

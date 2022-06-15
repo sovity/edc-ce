@@ -1,0 +1,8 @@
+<mat-expansion-panel fxFill [disabled]="rules?.length === 0" hideToggle>
+  <mat-expansion-panel-header>
+    <mat-panel-title>{{title}}</mat-panel-title>
+  </mat-expansion-panel-header>
+  <div class="rule-json-panel">
+    <pre><p>{{rules | json}}</p></pre>
+  </div>
+</mat-expansion-panel>
