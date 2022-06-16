@@ -1,0 +1,59 @@
+<div *ngIf="filteredAssets$ | async as assets" id="wrapper">
+  <div>
+    <mat-form-field appearance="fill" appearance="outline" class="search-form-field" color="accent">
+      <mat-label>Search assets</mat-label>
+      <input (input)="onSearch()" [(ngModel)]="searchText" matInput>
+      <mat-icon matPrefix>search</mat-icon>
+      <button (click)="searchText=''; onSearch()" *ngIf="searchText" mat-icon-button matSuffix>
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-paginator [length]="assets.length" hidePageSize="true" pageSize="contractDefinitions.length">
+    </mat-paginator>
+
+    <button (click)="onCreate()" color="accent" id="create-button" mat-stroked-button>
+      <mat-icon>add_circle_outline</mat-icon>
+      Create asset
+    </button>
+
+  </div>
+
+  <div fxLayout="row wrap" fxLayoutAlign="start start">
+    <mat-card *ngFor="let asset of assets" class="contract-definition-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>id</mat-icon>
+        <mat-card-title>{{asset.id}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list dense>
+          <mat-list-item>
+            <mat-icon mat-list-icon>info</mat-icon>
+            <div class="asset-property" mat-line>Name</div>
+            <div mat-line>{{asset.name}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon>category</mat-icon>
+            <div class="asset-property" mat-line>Content Type</div>
+            <div mat-line>{{asset.contentType}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon>file_copy</mat-icon>
+            <div class="asset-property" mat-line>Version</div>
+            <div mat-line>{{asset.version}}</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+
+      <mat-divider inset></mat-divider>
+      <mat-card-actions class="card-actions">
+        <button (click)="onDelete(asset)" [disabled]="isBusy()" color="warn" mat-stroked-button>
+          <mat-icon>delete_sweep</mat-icon> Delete
+        </button>
+      </mat-card-actions>
+      <mat-card-footer>
+        <mat-progress-bar *ngIf="isBusy()" color="accent" mode="indeterminate"></mat-progress-bar>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+</div>

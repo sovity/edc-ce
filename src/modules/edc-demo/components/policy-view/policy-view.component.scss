@@ -1,0 +1,26 @@
+#wrapper {
+  margin: 20px;
+}
+
+:host ::ng-deep div.mat-expansion-panel-body {
+  padding-left: 0 !important;
+}
+
+.policy-card {
+  margin-top: 10px;
+  width: 50%;
+}
+
+#create-button {
+  margin-left: 10px;
+}
+
+mat-paginator {
+  display: inline-block;
+  background-color: transparent;
+}
+
+.search-form-field {
+  min-width: 200px;
+  width: 30%;
+}
