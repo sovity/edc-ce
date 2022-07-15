@@ -13,8 +13,8 @@ import { DataAddress } from './dataAddress';
 
 
 export interface SelectionRequest { 
-    source?: DataAddress;
     destination?: DataAddress;
+    source?: DataAddress;
     strategy?: string;
 }
 

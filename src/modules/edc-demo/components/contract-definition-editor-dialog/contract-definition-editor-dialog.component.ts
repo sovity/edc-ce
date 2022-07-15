@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {AssetService, ContractDefinitionDto, Policy, PolicyService} from "../../../edc-dmgmt-client";
+import {AssetService, ContractDefinitionDto, PolicyDefinition, PolicyService} from "../../../edc-dmgmt-client";
 import {map} from "rxjs/operators";
 import {Asset} from "../../models/asset";
 
@@ -12,12 +12,12 @@ import {Asset} from "../../models/asset";
 })
 export class ContractDefinitionEditorDialog implements OnInit {
 
-  policies: Policy[] = [];
+  policies: PolicyDefinition[] = [];
   availableAssets: Asset[] = [];
   name: string = '';
   editMode = false;
-  accessPolicy?: Policy;
-  contractPolicy?: Policy;
+  accessPolicy?: PolicyDefinition;
+  contractPolicy?: PolicyDefinition;
   assets: Asset[] = [];
   contractDefinition: ContractDefinitionDto = {
     id: '',
@@ -57,10 +57,8 @@ export class ContractDefinitionEditorDialog implements OnInit {
     this.contractDefinition.contractPolicyId = this.contractPolicy!.uid;
     this.contractDefinition.criteria = [];
 
-    const ids= this.assets.map(asset => asset.id);
-
-
-      this.contractDefinition.criteria = [...this.contractDefinition.criteria, {
+    const ids = this.assets.map(asset => asset.id);
+    this.contractDefinition.criteria = [...this.contractDefinition.criteria, {
         left: 'asset:prop:id',
         op: 'in',
         right: ids,

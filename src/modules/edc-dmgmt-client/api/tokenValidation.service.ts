@@ -18,10 +18,6 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-// @ts-ignore
-import { ContractOffer } from '../model/contractOffer';
-// @ts-ignore
-import { FederatedCatalogCacheQuery } from '../model/federatedCatalogCacheQuery';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -32,7 +28,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class DefaultService {
+export class TokenValidationService {
 
     protected basePath = 'http://localhost';
     public defaultHeaders = new HttpHeaders();
@@ -90,16 +86,23 @@ export class DefaultService {
     }
 
     /**
-     * @param federatedCatalogCacheQuery
+     * Checks that the provided token has been signed by the present entity and asserts its validity. If token is valid, then the data address contained in its claims is decrypted and returned back to the caller.
+     * @param authorization
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getCachedCatalog(federatedCatalogCacheQuery?: FederatedCatalogCacheQuery, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<Array<ContractOffer>>;
-    public getCachedCatalog(federatedCatalogCacheQuery?: FederatedCatalogCacheQuery, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<Array<ContractOffer>>>;
-    public getCachedCatalog(federatedCatalogCacheQuery?: FederatedCatalogCacheQuery, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<Array<ContractOffer>>>;
-    public getCachedCatalog(federatedCatalogCacheQuery?: FederatedCatalogCacheQuery, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+    public validate(authorization: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any>;
+    public validate(authorization: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public validate(authorization: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public validate(authorization: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (authorization === null || authorization === undefined) {
+            throw new Error('Required parameter authorization was null or undefined when calling validate.');
+        }
 
         let localVarHeaders = this.defaultHeaders;
+        if (authorization !== undefined && authorization !== null) {
+            localVarHeaders = localVarHeaders.set('Authorization', String(authorization));
+        }
 
         let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
         if (localVarHttpHeaderAcceptSelected === undefined) {
@@ -119,15 +122,6 @@ export class DefaultService {
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
-        }
-
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -139,8 +133,7 @@ export class DefaultService {
             }
         }
 
-        return this.httpClient.post<Array<ContractOffer>>(`${this.configuration.basePath}/federatedcatalog`,
-            federatedCatalogCacheQuery,
+        return this.httpClient.get<any>(`${this.configuration.basePath}/token`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

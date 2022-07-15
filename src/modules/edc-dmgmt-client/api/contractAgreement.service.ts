@@ -12,14 +12,8 @@
 /* tslint:disable:no-unused-variable member-ordering */
 
 import { Inject, Injectable, Optional }                      from '@angular/core';
-import {
-  HttpClient,
-  HttpContext,
-  HttpEvent,
-  HttpHeaders,
-  HttpParameterCodec,
-  HttpParams,
-  HttpResponse
+import { HttpClient, HttpHeaders, HttpParams,
+         HttpResponse, HttpEvent, HttpParameterCodec, HttpContext
         }       from '@angular/common/http';
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
@@ -32,30 +26,32 @@ import {API_KEY, BASE_PATH, COLLECTION_FORMATS, CONNECTOR_DATAMANAGEMENT_API} fr
 import { Configuration }                                     from '../configuration';
 
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class ContractAgreementService {
 
-  public defaultHeaders = new HttpHeaders({'X-Api-Key': this.apiKey});
+    protected basePath = 'http://localhost';
+    public defaultHeaders = new HttpHeaders({'X-Api-Key': this.apiKey});
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
-  protected basePath = 'http://localhost';
 
   constructor(protected httpClient: HttpClient,
               @Inject(CONNECTOR_DATAMANAGEMENT_API) basePath: string,
               @Inject(API_KEY) private apiKey: string,
               @Optional() configuration: Configuration) {
-        if (configuration) {
-            this.configuration = configuration;
-        }
-        if (typeof this.configuration.basePath !== 'string') {
-            this.configuration.basePath = basePath;
-        }
-        this.encoder = this.configuration.encoder || new CustomHttpParameterCodec();
+    if (configuration) {
+      this.configuration = configuration;
     }
+    if (typeof this.configuration.basePath !== 'string') {
+      this.configuration.basePath = basePath;
+    }
+    this.encoder = this.configuration.encoder || new CustomHttpParameterCodec();
+  }
 
 
+    // @ts-ignore
     private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
         if (typeof value === "object" && value instanceof Date === false) {
             httpParams = this.addToHttpParamsRecursive(httpParams, value);
@@ -92,6 +88,7 @@ export class ContractAgreementService {
     }
 
     /**
+     * Gets all contract agreements according to a particular query
      * @param offset
      * @param limit
      * @param filter
@@ -172,6 +169,7 @@ export class ContractAgreementService {
     }
 
     /**
+     * Gets an contract agreement with the given ID
      * @param id
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.

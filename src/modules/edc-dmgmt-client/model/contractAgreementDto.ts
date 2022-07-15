@@ -9,16 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Policy } from './policy';
 
 
 export interface ContractAgreementDto { 
-    id?: string;
-    providerAgentId?: string;
-    consumerAgentId?: string;
+    assetId: string;
+    consumerAgentId: string;
+    contractEndDate?: number;
     contractSigningDate?: number;
     contractStartDate?: number;
-    contractEndDate?: number;
-    assetId?: string;
-    policyId?: string;
+    id: string;
+    policy: Policy;
+    providerAgentId: string;
 }
 

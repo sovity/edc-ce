@@ -1,4 +1,4 @@
-<div id="wrapper" *ngIf="filteredPolicies$ | async as policies">
+<div id="wrapper" *ngIf="filteredPolicies$ | async as policyDefinitions">
 <!--    entry fields for new policy-->
   <div>
     <mat-form-field appearance="outline" class="search-form-field" color="accent">
@@ -10,7 +10,7 @@
       </button>
     </mat-form-field>
 
-    <mat-paginator [length]="policies?.length" hidePageSize="true" pageSize="10"></mat-paginator>
+    <mat-paginator [length]="policyDefinitions?.length" hidePageSize="true" pageSize="10"></mat-paginator>
 
     <button (click)="onCreate()" color="accent" id="create-button" mat-stroked-button>
       <mat-icon>add_circle_outline</mat-icon>
@@ -20,10 +20,10 @@
   </div>
 
   <div fxLayout="column" fxLayoutAlign="space-around stretch">
-    <mat-card *ngFor="let policy of policies" class="policy-card">
+    <mat-card *ngFor="let policyDef of policyDefinitions" class="policy-card">
       <mat-card-header>
         <mat-icon mat-card-avatar>policy</mat-icon>
-        <mat-card-title><span class="code">{{policy.uid}}</span></mat-card-title>
+        <mat-card-title><span class="code">{{policyDef.uid}}</span></mat-card-title>
       </mat-card-header>
 
       <mat-card-content>
@@ -31,27 +31,27 @@
         <mat-list dense>
           <mat-list-item>
             <mat-icon mat-list-icon>trip_origin</mat-icon>
-            <div mat-line>{{policy.assigner || 'n/a'}}</div>
+            <div mat-line>{{policyDef.policy?.assigner || 'n/a'}}</div>
             <div mat-line>Assigner</div>
           </mat-list-item>
           <mat-list-item>
             <mat-icon mat-list-icon>adjust</mat-icon>
-            <div mat-line>{{policy.assignee || 'n/a'}}</div>
+            <div mat-line>{{policyDef.policy?.assignee || 'n/a'}}</div>
             <div mat-line>Assignee</div>
           </mat-list-item>
         </mat-list>
 
         <!-- Permissions-->
-        <policy-rules [rules]="policy.permissions" [title]="'Permissions'"></policy-rules>
+        <policy-rules [rules]="policyDef.policy?.permissions" [title]="'Permissions'"></policy-rules>
 
         <!-- Obligations-->
-        <policy-rules [rules]="policy.obligations" [title]="'Obligations'"></policy-rules>
+        <policy-rules [rules]="policyDef.policy?.obligations" [title]="'Obligations'"></policy-rules>
 
         <!-- Prohibitions-->
-        <policy-rules [rules]="policy.prohibitions" [title]="'Prohibitions'"></policy-rules>
+        <policy-rules [rules]="policyDef.policy?.prohibitions" [title]="'Prohibitions'"></policy-rules>
 
       </mat-card-content>
-      <button (click)="delete(policy)" mat-stroked-button color="warn" matSuffix>
+      <button (click)="delete(policyDef)" mat-stroked-button color="warn" matSuffix>
         <mat-icon>delete</mat-icon>
         Delete
       </button>

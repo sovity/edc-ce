@@ -7,10 +7,11 @@ import {ContractOffer} from '../models/contract-offer';
 import {
   API_KEY,
   CONNECTOR_CATALOG_API,
-  ContractAgreementDto,
   ContractNegotiationDto,
   ContractNegotiationService,
+  NegotiationId,
   NegotiationInitiateRequestDto,
+  TransferId,
   TransferProcessDto,
   TransferProcessService,
   TransferRequestDto
@@ -34,7 +35,7 @@ export class CatalogBrowserService {
 
   getContractOffers(): Observable<ContractOffer[]> {
     return this.post<ContractOffer[]>(this.catalogApiUrl)
-      .pipe(map((contractOffers) => contractOffers.map(contractOffer => {
+      .pipe(map(contractOffers => contractOffers.map(contractOffer => {
         contractOffer.asset = new Asset(contractOffer.asset.properties)
         return contractOffer;
       })));
@@ -56,7 +57,7 @@ export class CatalogBrowserService {
     return this.negotiationService.getNegotiation(id);
   }
 
-  getAgreementForNegotiation(contractId: string): Observable<ContractAgreementDto> {
+  getAgreementForNegotiation(contractId: string): Observable<ContractNegotiationDto> {
     return this.negotiationService.getAgreementForNegotiation(contractId);
   }
 

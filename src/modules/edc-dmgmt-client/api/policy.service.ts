@@ -12,24 +12,19 @@
 /* tslint:disable:no-unused-variable member-ordering */
 
 import { Inject, Injectable, Optional }                      from '@angular/core';
-import {
-  HttpClient,
-  HttpContext,
-  HttpEvent,
-  HttpHeaders,
-  HttpParameterCodec,
-  HttpParams,
-  HttpResponse
+import { HttpClient, HttpHeaders, HttpParams,
+         HttpResponse, HttpEvent, HttpParameterCodec, HttpContext
         }       from '@angular/common/http';
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { Policy } from '../model/policy';
+import { PolicyDefinition } from '../model/policyDefinition';
 
 // @ts-ignore
 import {API_KEY, BASE_PATH, COLLECTION_FORMATS, CONNECTOR_DATAMANAGEMENT_API} from '../variables';
 import { Configuration }                                     from '../configuration';
+
 
 
 @Injectable({
@@ -37,28 +32,30 @@ import { Configuration }                                     from '../configurat
 })
 export class PolicyService {
 
-  public defaultHeaders = new HttpHeaders({'X-Api-Key': this.apiKey});
+    public defaultHeaders = new HttpHeaders({'X-Api-Key': this.apiKey});
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
-  protected basePath = 'http://localhost';
+    protected basePath = 'http://localhost';
 
-  constructor(protected httpClient: HttpClient,
-              @Inject(CONNECTOR_DATAMANAGEMENT_API) basePath: string,
-              @Inject(API_KEY) private apiKey: string,
-              @Optional() configuration: Configuration) {
-        if (configuration) {
-            this.configuration = configuration;
+    constructor(protected httpClient: HttpClient,
+                @Inject(CONNECTOR_DATAMANAGEMENT_API) basePath: string,
+                @Inject(API_KEY) private apiKey: string,
+                @Optional() configuration: Configuration) {
+      if (configuration) {
+        this.configuration = configuration;
+      }
+      if (typeof this.configuration.basePath !== 'string') {
+        if (typeof basePath !== 'string') {
+          basePath = this.basePath;
         }
-        if (typeof this.configuration.basePath !== 'string') {
-            if (typeof basePath !== 'string') {
-                basePath = this.basePath;
-            }
-            this.configuration.basePath = basePath;
-        }
-        this.encoder = this.configuration.encoder || new CustomHttpParameterCodec();
+        this.configuration.basePath = basePath;
+      }
+      this.encoder = this.configuration.encoder || new CustomHttpParameterCodec();
     }
 
 
+
+  // @ts-ignore
     private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
         if (typeof value === "object" && value instanceof Date === false) {
             httpParams = this.addToHttpParamsRecursive(httpParams, value);
@@ -95,14 +92,15 @@ export class PolicyService {
     }
 
     /**
-     * @param policy
+     * Creates a new policy definition
+     * @param policyDefinition
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createPolicy(policy?: Policy, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any>;
-    public createPolicy(policy?: Policy, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public createPolicy(policy?: Policy, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public createPolicy(policy?: Policy, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+    public createPolicy(policyDefinition?: PolicyDefinition, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any>;
+    public createPolicy(policyDefinition?: PolicyDefinition, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public createPolicy(policyDefinition?: PolicyDefinition, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public createPolicy(policyDefinition?: PolicyDefinition, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -144,8 +142,8 @@ export class PolicyService {
             }
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/policies`,
-            policy,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/policydefinitions`,
+            policyDefinition,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -158,6 +156,7 @@ export class PolicyService {
     }
 
     /**
+     * Removes a policy definition with the given ID if possible. Deleting a policy definition is only possible if that policy definition is not yet referenced by a contract definition, in which case an error is returned. DANGER ZONE: Note that deleting policy definitions can have unexpected results, do this at your own risk!
      * @param id
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -201,7 +200,7 @@ export class PolicyService {
             }
         }
 
-        return this.httpClient.delete<any>(`${this.configuration.basePath}/policies/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<any>(`${this.configuration.basePath}/policydefinitions/${encodeURIComponent(String(id))}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -214,6 +213,7 @@ export class PolicyService {
     }
 
     /**
+     * Returns all policy definitions according to a query
      * @param offset
      * @param limit
      * @param filter
@@ -222,9 +222,9 @@ export class PolicyService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAllPolicies(offset?: number, limit?: number, filter?: string, sort?: 'ASC' | 'DESC', sortField?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<Array<Policy>>;
-    public getAllPolicies(offset?: number, limit?: number, filter?: string, sort?: 'ASC' | 'DESC', sortField?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<Array<Policy>>>;
-    public getAllPolicies(offset?: number, limit?: number, filter?: string, sort?: 'ASC' | 'DESC', sortField?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<Array<Policy>>>;
+    public getAllPolicies(offset?: number, limit?: number, filter?: string, sort?: 'ASC' | 'DESC', sortField?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<Array<PolicyDefinition>>;
+    public getAllPolicies(offset?: number, limit?: number, filter?: string, sort?: 'ASC' | 'DESC', sortField?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<Array<PolicyDefinition>>>;
+    public getAllPolicies(offset?: number, limit?: number, filter?: string, sort?: 'ASC' | 'DESC', sortField?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<Array<PolicyDefinition>>>;
     public getAllPolicies(offset?: number, limit?: number, filter?: string, sort?: 'ASC' | 'DESC', sortField?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
@@ -280,7 +280,7 @@ export class PolicyService {
             }
         }
 
-        return this.httpClient.get<Array<Policy>>(`${this.configuration.basePath}/policies`,
+        return this.httpClient.get<Array<PolicyDefinition>>(`${this.configuration.basePath}/policydefinitions`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -294,13 +294,14 @@ export class PolicyService {
     }
 
     /**
+     * Gets a policy definition with the given ID
      * @param id
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getPolicy(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<Policy>;
-    public getPolicy(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<Policy>>;
-    public getPolicy(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<Policy>>;
+    public getPolicy(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PolicyDefinition>;
+    public getPolicy(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PolicyDefinition>>;
+    public getPolicy(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PolicyDefinition>>;
     public getPolicy(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getPolicy.');
@@ -337,7 +338,7 @@ export class PolicyService {
             }
         }
 
-        return this.httpClient.get<Policy>(`${this.configuration.basePath}/policies/${encodeURIComponent(String(id))}`,
+        return this.httpClient.get<PolicyDefinition>(`${this.configuration.basePath}/policydefinitions/${encodeURIComponent(String(id))}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

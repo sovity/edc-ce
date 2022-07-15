@@ -1,9 +1,10 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {
+  AssetDto,
   AssetService,
   ContractAgreementDto,
   ContractAgreementService,
-  TransferId,
+  TransferId, TransferProcessDto,
   TransferProcessService,
   TransferRequestDto
 } from "../../../edc-dmgmt-client";
@@ -109,7 +110,8 @@ export class ContractViewerComponent implements OnInit {
         },
         managedResources: true,
         transferType: {isFinite: true}, //must be there, otherwise NPE on backend
-        connectorAddress: offeredAsset.originator
+        connectorAddress: offeredAsset.originator,
+        protocol: 'ids-multipart'
       };
     }));
 

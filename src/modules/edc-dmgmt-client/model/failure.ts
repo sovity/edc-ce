@@ -9,12 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Policy } from './policy';
 
 
-export interface ContractOfferDescription { 
-    assetId: string;
-    offerId: string;
-    policy: Policy;
+export interface Failure { 
+    messages?: Array<string>;
 }
 

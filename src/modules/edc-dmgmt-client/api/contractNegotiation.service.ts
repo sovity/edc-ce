@@ -12,30 +12,25 @@
 /* tslint:disable:no-unused-variable member-ordering */
 
 import { Inject, Injectable, Optional }                      from '@angular/core';
-import {
-  HttpClient,
-  HttpContext,
-  HttpEvent,
-  HttpHeaders,
-  HttpParameterCodec,
-  HttpParams,
-  HttpResponse
+import { HttpClient, HttpHeaders, HttpParams,
+         HttpResponse, HttpEvent, HttpParameterCodec, HttpContext
         }       from '@angular/common/http';
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { ContractAgreementDto } from '../model/contractAgreementDto';
-// @ts-ignore
 import { ContractNegotiationDto } from '../model/contractNegotiationDto';
 // @ts-ignore
+import { NegotiationId } from '../model/negotiationId';
+// @ts-ignore
 import { NegotiationInitiateRequestDto } from '../model/negotiationInitiateRequestDto';
+// @ts-ignore
+import { NegotiationState } from '../model/negotiationState';
 
 // @ts-ignore
 import {API_KEY, BASE_PATH, COLLECTION_FORMATS, CONNECTOR_DATAMANAGEMENT_API} from '../variables';
 import { Configuration }                                     from '../configuration';
-import {NegotiationState} from "../model/negotiationState";
-import {NegotiationId} from "../model/negotiationId";
+
 
 
 @Injectable({
@@ -43,25 +38,26 @@ import {NegotiationId} from "../model/negotiationId";
 })
 export class ContractNegotiationService {
 
-  public defaultHeaders = new HttpHeaders({'X-Api-Key': this.apiKey});
+    public defaultHeaders = new HttpHeaders({'X-Api-Key': this.apiKey});
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
-  protected basePath = 'http://localhost';
+    protected basePath = 'http://localhost';
 
-  constructor(protected httpClient: HttpClient,
-              @Inject(CONNECTOR_DATAMANAGEMENT_API) basePath: string,
-              @Inject(API_KEY) private apiKey: string,
-              @Optional() configuration: Configuration) {
-        if (configuration) {
-            this.configuration = configuration;
-        }
-        if (typeof this.configuration.basePath !== 'string') {
-            this.configuration.basePath = basePath;
-        }
-        this.encoder = this.configuration.encoder || new CustomHttpParameterCodec();
+    constructor(protected httpClient: HttpClient,
+                @Inject(CONNECTOR_DATAMANAGEMENT_API) basePath: string,
+                @Inject(API_KEY) private apiKey: string,
+                @Optional() configuration: Configuration) {
+      if (configuration) {
+        this.configuration = configuration;
+      }
+      if (typeof this.configuration.basePath !== 'string') {
+        this.configuration.basePath = basePath;
+      }
+      this.encoder = this.configuration.encoder || new CustomHttpParameterCodec();
     }
 
 
+    // @ts-ignore
     private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
         if (typeof value === "object" && value instanceof Date === false) {
             httpParams = this.addToHttpParamsRecursive(httpParams, value);
@@ -98,6 +94,7 @@ export class ContractNegotiationService {
     }
 
     /**
+     * Requests aborting the contract negotiation. Due to the asynchronous nature of contract negotiations, a successful response only indicates that the request was successfully received. Clients must poll the /{id}/state endpoint to track the state.
      * @param id
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -155,6 +152,7 @@ export class ContractNegotiationService {
     }
 
     /**
+     * Requests cancelling the contract negotiation. Due to the asynchronous nature of contract negotiations, a successful response only indicates that the request was successfully received. Clients must poll the /{id}/state endpoint to track the state.
      * @param id
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -212,13 +210,14 @@ export class ContractNegotiationService {
     }
 
     /**
+     * Gets a contract agreement for a contract negotiation with the given ID
      * @param id
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAgreementForNegotiation(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ContractAgreementDto>;
-    public getAgreementForNegotiation(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ContractAgreementDto>>;
-    public getAgreementForNegotiation(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ContractAgreementDto>>;
+    public getAgreementForNegotiation(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ContractNegotiationDto>;
+    public getAgreementForNegotiation(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ContractNegotiationDto>>;
+    public getAgreementForNegotiation(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ContractNegotiationDto>>;
     public getAgreementForNegotiation(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getAgreementForNegotiation.');
@@ -255,7 +254,7 @@ export class ContractNegotiationService {
             }
         }
 
-        return this.httpClient.get<ContractAgreementDto>(`${this.configuration.basePath}/contractnegotiations/${encodeURIComponent(String(id))}/agreement`,
+        return this.httpClient.get<ContractNegotiationDto>(`${this.configuration.basePath}/contractnegotiations/${encodeURIComponent(String(id))}/agreement`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -268,6 +267,7 @@ export class ContractNegotiationService {
     }
 
     /**
+     * Gets an contract negotiation with the given ID
      * @param id
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -324,6 +324,7 @@ export class ContractNegotiationService {
     }
 
     /**
+     * Gets the state of a contract negotiation with the given ID
      * @param id
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -380,6 +381,7 @@ export class ContractNegotiationService {
     }
 
     /**
+     * Returns all contract negotiations according to a query
      * @param offset
      * @param limit
      * @param filter
@@ -460,6 +462,7 @@ export class ContractNegotiationService {
     }
 
     /**
+     * Initiates a contract negotiation for a given offer and with the given counter part. Please note that successfully invoking this endpoint only means that the negotiation was initiated. Clients must poll the /{id}/state endpoint to track the state
      * @param negotiationInitiateRequestDto
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.

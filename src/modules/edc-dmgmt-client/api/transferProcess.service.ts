@@ -12,28 +12,25 @@
 /* tslint:disable:no-unused-variable member-ordering */
 
 import { Inject, Injectable, Optional }                      from '@angular/core';
-import {
-  HttpClient,
-  HttpContext,
-  HttpEvent,
-  HttpHeaders,
-  HttpParameterCodec,
-  HttpParams,
-  HttpResponse
+import { HttpClient, HttpHeaders, HttpParams,
+         HttpResponse, HttpEvent, HttpParameterCodec, HttpContext
         }       from '@angular/common/http';
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
+import { TransferId } from '../model/transferId';
+// @ts-ignore
 import { TransferProcessDto } from '../model/transferProcessDto';
 // @ts-ignore
 import { TransferRequestDto } from '../model/transferRequestDto';
+// @ts-ignore
+import { TransferState } from '../model/transferState';
 
 // @ts-ignore
 import {API_KEY, BASE_PATH, COLLECTION_FORMATS, CONNECTOR_DATAMANAGEMENT_API} from '../variables';
 import { Configuration }                                     from '../configuration';
-import {TransferState} from "../model/transferState";
-import {TransferId} from "../model/transferId";
+
 
 
 @Injectable({
@@ -41,25 +38,26 @@ import {TransferId} from "../model/transferId";
 })
 export class TransferProcessService {
 
-  public defaultHeaders = new HttpHeaders({'X-Api-Key': this.apiKey});
+    public defaultHeaders = new HttpHeaders({'X-Api-Key': this.apiKey});
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
-  protected basePath = 'http://localhost';
+    protected basePath = 'http://localhost';
 
-  constructor(protected httpClient: HttpClient,
-              @Inject(CONNECTOR_DATAMANAGEMENT_API) basePath: string,
-              @Inject(API_KEY) private apiKey: string,
-              @Optional() configuration: Configuration) {
-        if (configuration) {
-            this.configuration = configuration;
-        }
-        if (typeof this.configuration.basePath !== 'string') {
-            this.configuration.basePath = basePath;
-        }
-        this.encoder = this.configuration.encoder || new CustomHttpParameterCodec();
+    constructor(protected httpClient: HttpClient,
+                @Inject(CONNECTOR_DATAMANAGEMENT_API) basePath: string,
+                @Inject(API_KEY) private apiKey: string,
+                @Optional() configuration: Configuration) {
+      if (configuration) {
+        this.configuration = configuration;
+      }
+      if (typeof this.configuration.basePath !== 'string') {
+        this.configuration.basePath = basePath;
+      }
+      this.encoder = this.configuration.encoder || new CustomHttpParameterCodec();
     }
 
 
+    // @ts-ignore
     private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
         if (typeof value === "object" && value instanceof Date === false) {
             httpParams = this.addToHttpParamsRecursive(httpParams, value);
@@ -96,6 +94,7 @@ export class TransferProcessService {
     }
 
     /**
+     * Requests aborting the transfer process. Due to the asynchronous nature of transfers, a successful response only indicates that the request was successfully received. Clients must poll the /{id}/state endpoint to track the state.
      * @param id
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -153,6 +152,7 @@ export class TransferProcessService {
     }
 
     /**
+     * Requests the deprovisioning of resources associated with a transfer process. Due to the asynchronous nature of transfers, a successful response only indicates that the request was successfully received. This may take a long time, so clients must poll the /{id}/state endpoint to track the state.
      * @param id
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -210,6 +210,7 @@ export class TransferProcessService {
     }
 
     /**
+     * Returns all transfer process according to a query
      * @param offset
      * @param limit
      * @param filter
@@ -290,6 +291,7 @@ export class TransferProcessService {
     }
 
     /**
+     * Gets an transfer process with the given ID
      * @param id
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -346,6 +348,7 @@ export class TransferProcessService {
     }
 
     /**
+     * Gets the state of a transfer process with the given ID
      * @param id
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -402,6 +405,7 @@ export class TransferProcessService {
     }
 
     /**
+     * Initiates a data transfer with the given parameters. Please note that successfully invoking this endpoint only means that the transfer was initiated. Clients must poll the /{id}/state endpoint to track the state
      * @param transferRequestDto
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.

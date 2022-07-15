@@ -9,18 +9,18 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import {DataRequestDto} from './dataRequestDto';
-import {DataAddressInformationDto} from './dataAddressInformationDto';
+import { DataRequestDto } from './dataRequestDto';
+import { DataAddressInformationDto } from './dataAddressInformationDto';
 
 
 export interface TransferProcessDto {
-  id: string;
-  type: string;
-  state: string;
-  errorDetail?: string;
-  dataRequest: DataRequestDto;
-  dataDestination?: DataAddressInformationDto;
-  createdTimestamp?: number; // epoch millis
-  stateTimestamp?: number; // epoch millis
+    id: string;
+    state: string;
+    type: string;
+    errorDetail?: string;
+    dataRequest: DataRequestDto;
+    dataDestination?: DataAddressInformationDto;
+    stateTimestamp?: number;
+    createdTimestamp?: number;
 }
 

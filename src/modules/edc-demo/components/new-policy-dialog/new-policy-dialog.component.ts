@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Policy} from "../../../edc-dmgmt-client";
+import {Policy, PolicyDefinition} from "../../../edc-dmgmt-client";
 import TypeEnum = Policy.TypeEnum;
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
@@ -11,8 +11,11 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 export class NewPolicyDialogComponent implements OnInit {
   editMode: boolean = false;
   policy: Policy = {
-    uid: '',
     type: TypeEnum.Set
+  };
+  policyDefinition: PolicyDefinition = {
+    policy: this.policy,
+    uid: ''
   };
   permissionsJson: string = '';
   prohibitionsJson: string = '';
@@ -39,7 +42,8 @@ export class NewPolicyDialogComponent implements OnInit {
     }
 
     this.dialogRef.close({
-      policy: this.policy
+      policy: this.policyDefinition.policy,
+      uid: this.policyDefinition.uid
     })
   }
 }

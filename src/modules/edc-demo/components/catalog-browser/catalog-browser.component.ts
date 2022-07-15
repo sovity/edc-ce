@@ -63,7 +63,8 @@ export class CatalogBrowserComponent implements OnInit {
         assetId: contractOffer.asset.id,
         policy: contractOffer.policy,
       },
-      connectorId: 'yomama'
+      connectorId: 'yomama',
+      protocol: 'ids-multipart'
     };
 
     const finishedNegotiationStates = [

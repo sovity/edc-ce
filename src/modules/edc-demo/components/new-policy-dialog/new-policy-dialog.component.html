@@ -3,7 +3,7 @@
   <!--  ID -->
   <mat-form-field class="form-field-stretch" color="accent" id="form-field-id">
     <mat-label>ID</mat-label>
-    <input [(ngModel)]="policy.uid" matInput required>
+    <input [(ngModel)]="policyDefinition.uid" matInput required>
   </mat-form-field>
 
   <!--  Assigner / Assignee-->
@@ -40,7 +40,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button (click)="onSave()" *ngIf="editMode" color="accent" mat-stroked-button [disabled]="!policy.uid">
+  <button (click)="onSave()" *ngIf="editMode" color="accent" mat-stroked-button >
     <mat-icon>save</mat-icon>
     Save
   </button>

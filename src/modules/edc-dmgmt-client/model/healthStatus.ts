@@ -9,12 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Policy } from './policy';
+import { HealthCheckResult } from './healthCheckResult';
 
 
-export interface ContractOfferDescription { 
-    assetId: string;
-    offerId: string;
-    policy: Policy;
+export interface HealthStatus { 
+    componentResults?: Array<HealthCheckResult>;
+    isSystemHealthy?: boolean;
 }
 

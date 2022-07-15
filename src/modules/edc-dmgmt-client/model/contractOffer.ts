@@ -14,16 +14,15 @@ import { Asset } from './asset';
 
 
 export interface ContractOffer { 
-    id?: string;
-    policy?: Policy;
     asset?: Asset;
-    policyId?: string;
     assetId?: string;
-    provider?: string;
     consumer?: string;
-    offerStart?: string;
-    offerEnd?: string;
-    contractStart?: string;
     contractEnd?: string;
+    contractStart?: string;
+    id?: string;
+    offerEnd?: string;
+    offerStart?: string;
+    policy?: Policy;
+    provider?: string;
 }
 
