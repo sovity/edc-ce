@@ -12,8 +12,8 @@
 
 
 export interface Criterion {
-    left: string;
-    op: string;
-    right: string | object;
+    operandLeft: string;
+    operator: string;
+    operandRight: string | object;
 }
 

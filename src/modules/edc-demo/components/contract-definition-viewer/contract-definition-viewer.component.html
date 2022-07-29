@@ -49,7 +49,7 @@
                     <mat-list dense>
                         <mat-list-item *ngFor="let criterion of contractDefinition.criteria">
                             <mat-icon mat-list-icon>check</mat-icon>
-                            <div mat-line>{{criterion.left}} {{criterion.op}} {{criterion.right}}</div>
+                            <div mat-line>{{criterion.operandLeft}} {{criterion.operator}} {{criterion.operandRight}}</div>
                         </mat-list-item>
                         <!-- <mat-list-item *ngIf="asset.contentType">
                             <mat-icon mat-list-icon>content_paste</mat-icon>

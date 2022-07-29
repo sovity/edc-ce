@@ -46,7 +46,7 @@ export class ContractDefinitionEditorDialog implements OnInit {
       this.availableAssets = assets;
       // preselection
       if (this.contractDefinition) {
-        const assetIds = this.contractDefinition.criteria.map(c => c.right);
+        const assetIds = this.contractDefinition.criteria.map(c => c.operandRight);
         this.assets = this.availableAssets.filter(asset => assetIds.includes(asset.id));
       }
     })
@@ -59,9 +59,9 @@ export class ContractDefinitionEditorDialog implements OnInit {
 
     const ids = this.assets.map(asset => asset.id);
     this.contractDefinition.criteria = [...this.contractDefinition.criteria, {
-        left: 'asset:prop:id',
-        op: 'in',
-        right: ids,
+        operandLeft: 'asset:prop:id',
+        operator: 'in',
+        operandRight: ids,
       }];
 
     this.dialogRef.close({
