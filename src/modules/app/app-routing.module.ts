@@ -51,8 +51,7 @@ export const routes: Routes = [
   },
   {
     path: '', redirectTo: 'introduction', pathMatch: 'full'
-  },
-  { path: 'logout', component: LogoutComponent}
+  }
 ];
 
 @NgModule({
