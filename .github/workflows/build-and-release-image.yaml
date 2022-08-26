@@ -1,19 +1,22 @@
-name: Docker
+name: Build and Release Image
 
 
 on:
-  pull_request:
+  push:
     branches:
+      - main
       - develop
-    types: [ closed ]
+    tags:
+      - "*.*.*"
 
 
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: edc-ui
+  IMAGE_NAME: edc-data-dashboard
   IMAGE_NAME_BASE: ${{ github.repository_owner }}
+
 
 jobs:
   build:
@@ -38,13 +41,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BASE }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=schedule
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=ref,event=branch
-            type=ref,event=pr
-            type=sha
+            type=semver,pattern={{version}},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build EDC-UI image
