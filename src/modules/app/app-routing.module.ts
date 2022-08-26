@@ -11,7 +11,6 @@ import {
 } from '../edc-demo/components/transfer-history/transfer-history-viewer.component';
 import {PolicyViewComponent} from "../edc-demo/components/policy-view/policy-view.component";
 import {ContractViewerComponent} from "../edc-demo/components/contract-viewer/contract-viewer.component";
-import {LogoutComponent} from "../edc-demo/components/logout/logout.component";
 
 export const routes: Routes = [
   {
