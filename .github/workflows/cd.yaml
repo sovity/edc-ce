@@ -37,7 +37,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BASE }}/${{ IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BASE }}/${{ env.IMAGE_NAME }}
           tags: |
             type=schedule
             type=semver,pattern={{version}}
