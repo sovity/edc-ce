@@ -1,8 +1,12 @@
 # EDC Data Dashboard
 
-**Note: this repository does not contain production-grade code and is only intended for demonstration purposes**
+**Please note: This repository does not contain production-grade code and is only intended for demonstration purposes.**
 
 EDC Data Dashboard is a dev frontend application for [EDC Data Management API](https://github.com/eclipse-dataspaceconnector/DataSpaceConnector).
+
+## Documentation
+
+Developer documentation can be found under [docs/developer](docs/developer/), where the main concepts and decisions are captured as [decision records](docs/developer/decision-records/).
 
 ## Generate client code for EDC REST APIs
 
@@ -73,6 +77,7 @@ az container create --image ${ACR_NAME}.azurecr.io/edc-showcase/edc-data-dashboa
 --secrets-mount-path /usr/share/nginx/html/assets/config \
 --dns-name-label edc-data-dashboard
 ```
+
 ## Contributing
 
-See [how to contribute](./CONTRIBUTING.md) for details.
+See [how to contribute](https://github.com/eclipse-dataspaceconnector/DataSpaceConnector/blob/main/CONTRIBUTING.md) for details.
