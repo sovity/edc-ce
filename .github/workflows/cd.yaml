@@ -1,36 +1,56 @@
-name: CD
+name: Docker
+
 
 on:
-  push:
+  pull_request:
     branches:
-      - 'main'
+      - develop
+    types: [ closed ]
 
-# Grant permissions to obtain federated identity credentials
-# see https://docs.github.com/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-azure
-permissions:
-  id-token: write
-  contents: read
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: edc-ui
+  IMAGE_NAME_BASE: ${{ github.repository_owner }}
 
 jobs:
-
-  # Build runtime image in Azure Container Registry, tagged with the commit ID.
-  Build:
+  build:
+    if: github.event.pull_request.merged == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       # Checkout code
       - uses: actions/checkout@v2
 
-      # Build Docker runtime image
-      - name: 'Build image'
-        run: docker build -t data-dashboard .
+      - name: Log in to the Container registry (push-only)
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Run Docker container
-      - name: 'Run container'
-        run: docker run -p 8080:80 -d --rm --name data-dashboard data-dashboard
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BASE }}/${{ IMAGE_NAME }}
+          tags: |
+            type=schedule
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha
 
-      # Verify docker image
-      - name: 'Verify container'
-        run: |
-          curl -O https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-          chmod +x wait-for-it.sh
-          ./wait-for-it.sh -t 20 localhost:8080
+      - name: Build EDC-UI image
+        uses: docker/build-push-action@v2
+        with:
+          file: Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
