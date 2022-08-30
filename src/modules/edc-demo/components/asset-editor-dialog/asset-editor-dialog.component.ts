@@ -15,11 +15,10 @@ export class AssetEditorDialog implements OnInit {
   version: string = '';
   name: string = '';
   contenttype: string = '';
-
-  storageTypeId: string = 'AzureStorage';
-  account: string = '';
-  container: string = 'src-container';
-  blobname: string = '';
+  type: string = '';
+  description: string = '';
+  originator: string = '';
+  dataDestination: string = '';
 
   constructor(private assetService: AssetService, private dialogRef: MatDialogRef<AssetEditorDialog>,
       @Inject('STORAGE_TYPES') public storageTypes: StorageType[]) {
@@ -36,17 +35,12 @@ export class AssetEditorDialog implements OnInit {
           "asset:prop:version": this.version,
           "asset:prop:id": this.id,
           "asset:prop:contenttype": this.contenttype,
+          "asset:prop:type": this.type,
+          "asset:prop:description": this.description,
+          "asset:prop:originator": this.originator,
         }
       },
-      dataAddress: {
-        properties: {
-          "type": this.storageTypeId,
-          "account": this.account,
-          "container": this.container,
-          "blobname": this.blobname,
-          "keyName": `${this.account}-key1`
-        },
-      }
+      dataAddress: JSON.parse(this.dataDestination)
     };
 
     this.dialogRef.close({ assetEntryDto });

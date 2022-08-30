@@ -75,12 +75,8 @@ export class ContractViewerComponent implements OnInit {
     const dialogRef = this.dialog.open(CatalogBrowserTransferDialog);
 
     dialogRef.afterClosed().pipe(first()).subscribe(result => {
-      const storageTypeId: string = result.storageTypeId;
-      if (storageTypeId !== 'AzureStorage') {
-        this.notificationService.showError("Only storage type \"AzureStorage\" is implemented currently!")
-        return;
-      }
-      this.createTransferRequest(contract, storageTypeId)
+      const dataDestination: string = result.dataDestination;
+      this.createTransferRequest(contract, dataDestination)
         .pipe(switchMap(trq => this.transferService.initiateTransfer(trq)))
         .subscribe(transferId => {
           this.startPolling(transferId, contract.id!);
@@ -95,20 +91,14 @@ export class ContractViewerComponent implements OnInit {
     return !!this.runningTransfers.find(rt => rt.contractId === contractId);
   }
 
-  private createTransferRequest(contract: ContractAgreementDto, storageTypeId: string): Observable<TransferRequestDto> {
+  private createTransferRequest(contract: ContractAgreementDto, dataDestination: string): Observable<TransferRequestDto> {
     return this.getOfferedAssetForId(contract.assetId!).pipe(map(offeredAsset => {
       return {
         assetId: offeredAsset.id,
         contractId: contract.id,
         connectorId: "consumer", //doesn't matter, but cannot be null
-        dataDestination: {
-          properties: {
-            "type": storageTypeId,
-            account: this.homeConnectorStorageAccount, // CAUTION: hardcoded value for AzureBlob
-            // container: omitted, so it will be auto-assigned by the EDC runtime
-          }
-        },
-        managedResources: true,
+        dataDestination:  JSON.parse(dataDestination),
+        managedResources: false,
         transferType: {isFinite: true}, //must be there, otherwise NPE on backend
         connectorAddress: offeredAsset.originator,
         protocol: 'ids-multipart'

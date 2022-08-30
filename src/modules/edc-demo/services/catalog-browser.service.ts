@@ -16,6 +16,7 @@ import {
   TransferProcessService,
   TransferRequestDto
 } from "../../edc-dmgmt-client";
+import {ContractOfferResponse} from "../models/contract-offer-response";
 
 
 /**
@@ -34,8 +35,8 @@ export class CatalogBrowserService {
   }
 
   getContractOffers(): Observable<ContractOffer[]> {
-    return this.post<ContractOffer[]>(this.catalogApiUrl)
-      .pipe(map(contractOffers => contractOffers.map(contractOffer => {
+    return this.httpClient.get<ContractOfferResponse>(this.catalogApiUrl)
+      .pipe(map(contractOfferResponse => contractOfferResponse.contractOffers.map(contractOffer => {
         contractOffer.asset = new Asset(contractOffer.asset.properties)
         return contractOffer;
       })));

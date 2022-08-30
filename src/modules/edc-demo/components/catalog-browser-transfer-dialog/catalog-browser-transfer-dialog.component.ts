@@ -11,7 +11,7 @@ import {StorageType} from '../../models/storage-type';
 export class CatalogBrowserTransferDialog implements OnInit {
 
   name: string = '';
-  storageTypeId = '';
+  dataDestination: string = '';
 
   constructor(@Inject('STORAGE_TYPES') public storageTypes: StorageType[],
               private dialogRef: MatDialogRef<CatalogBrowserTransferDialog>,
@@ -23,7 +23,7 @@ export class CatalogBrowserTransferDialog implements OnInit {
 
 
   onTransfer() {
-    this.dialogRef.close({storageTypeId: this.storageTypeId});
+    this.dialogRef.close({dataDestination: this.dataDestination});
   }
 
 }
