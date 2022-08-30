@@ -63,7 +63,7 @@ export class CatalogBrowserComponent implements OnInit {
         assetId: contractOffer.asset.id,
         policy: contractOffer.policy,
       },
-      connectorId: 'yomama',
+      connectorId: 'my-connector',
       protocol: 'ids-multipart'
     };
 

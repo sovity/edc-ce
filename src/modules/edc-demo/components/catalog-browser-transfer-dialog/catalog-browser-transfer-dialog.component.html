@@ -1,26 +1,24 @@
 <mat-dialog-content *ngIf="storageTypes as storageTypes">
 
-  <mat-form-field class="form-field" color="accent" id="form-field-destination">
-    <mat-label>Destination</mat-label>
-    <mat-select [(ngModel)]="storageTypeId">
-      <mat-option *ngFor="let storageType of storageTypes" [value]="storageType.id">
-        {{storageType.name}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field class="form-field-stretch" color="accent" id="form-field-permissions">
+        <mat-label>Data Destination (JSON)</mat-label>
+        <input [(ngModel)]="dataDestination" matInput>
+    </mat-form-field>
 
 </mat-dialog-content>
 
 <mat-dialog-actions>
     <div>
-    <button (click)="onTransfer()" color="accent" mat-stroked-button>
-        <mat-icon>downloading</mat-icon> Start transfer
-    </button>
+        <button (click)="onTransfer()" color="accent" mat-stroked-button>
+            <mat-icon>downloading</mat-icon>
+            Start transfer
+        </button>
 
-    <button color="accent" mat-dialog-close mat-stroked-button>
-        <mat-icon>cancel</mat-icon> Cancel
-    </button>
-</div>
-<!-- <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar> -->
+        <button color="accent" mat-dialog-close mat-stroked-button>
+            <mat-icon>cancel</mat-icon>
+            Cancel
+        </button>
+    </div>
+    <!-- <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar> -->
 
 </mat-dialog-actions>
