@@ -1,6 +1,6 @@
 <div *ngIf="filteredAssets$ | async as assets" id="wrapper">
   <div>
-    <mat-form-field appearance="fill" appearance="outline" class="search-form-field" color="accent">
+    <mat-form-field appearance="fill" appearance="outline" class="search-form-field" color="primary">
       <mat-label>Search assets</mat-label>
       <input (input)="onSearch()" [(ngModel)]="searchText" matInput>
       <mat-icon matPrefix>search</mat-icon>
@@ -12,7 +12,7 @@
     <mat-paginator [length]="assets.length" hidePageSize="true" pageSize="contractDefinitions.length">
     </mat-paginator>
 
-    <button (click)="onCreate()" color="accent" id="create-button" mat-stroked-button>
+    <button (click)="onCreate()" color="primary" id="create-button" mat-stroked-button>
       <mat-icon>add_circle_outline</mat-icon>
       Create asset
     </button>
@@ -52,7 +52,7 @@
         </button>
       </mat-card-actions>
       <mat-card-footer>
-        <mat-progress-bar *ngIf="isBusy()" color="accent" mode="indeterminate"></mat-progress-bar>
+        <mat-progress-bar *ngIf="isBusy()" color="primary" mode="indeterminate"></mat-progress-bar>
       </mat-card-footer>
     </mat-card>
   </div>
