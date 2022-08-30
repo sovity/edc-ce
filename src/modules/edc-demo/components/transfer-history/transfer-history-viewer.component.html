@@ -1,16 +1,6 @@
 <div id="wrapper">
-    <mat-card>
-      <div class="info-box">
-        <mat-icon>info</mat-icon>
-        <span class="text">Please install Storage Explorer for visualizing files transferred to Azure Blob Storage</span>
-        <span class="button">
-          <a mat-stroked-button href="https://azure.microsoft.com/features/storage-explorer/" color="accent">Install Azure Storage Explorer</a>
-        </span>
-      </div>
-    </mat-card>
-
     <div *ngIf="transferProcesses$ | async as transferProcesses">
-      <button mat-stroked-button (click)="loadTransferProcesses()" color="accent">
+      <button mat-stroked-button (click)="loadTransferProcesses()" color="primary">
         <mat-icon>cached</mat-icon>
         Refresh
       </button>
@@ -56,7 +46,7 @@
           <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef scope="col">Actions</th>
             <td mat-cell *matCellDef="let item" class="singleline-cell">
-              <a *ngIf="showStorageExplorerLink(item)" mat-stroked-button mat-button color="accent" [href]="storageExplorerLinkTemplate | replace: item.dataDestination.properties | safe: 'url'" class="action-button">
+              <a *ngIf="showStorageExplorerLink(item)" mat-stroked-button mat-button color="primary" [href]="storageExplorerLinkTemplate | replace: item.dataDestination.properties | safe: 'url'" class="action-button">
                 <mat-icon>loupe</mat-icon> Open Storage Explorer
               </a>
               <button *ngIf="showDeprovisionButton(item)" (click)="onDeprovision(item)" color="warn" mat-stroked-button  class="action-button">

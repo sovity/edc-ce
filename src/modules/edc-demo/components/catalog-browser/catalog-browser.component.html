@@ -1,6 +1,6 @@
 <div *ngIf="filteredContractOffers$ | async as filteredContractOffers" id="wrapper">
   <div>
-    <mat-form-field class="search-form-field" color="accent">
+    <mat-form-field class="search-form-field" color="primary">
       <mat-label>Search catalog</mat-label>
       <input (input)="onSearch()" [(ngModel)]="searchText" matInput>
       <mat-icon matPrefix>search</mat-icon>
@@ -83,13 +83,13 @@
             <mat-card-actions class="card-actions">
               <button (click)="onNegotiateClicked(contractOffer)"
                       [disabled]="!contractOffer.asset.isAsync || isBusy(contractOffer) || isNegotiated(contractOffer)"
-                      color="accent" mat-stroked-button>
+                      color="primary" mat-stroked-button>
                 <mat-icon>drive_file_rename_outline</mat-icon>
                 Negotiate
               </button>
             </mat-card-actions>
             <mat-card-footer>
-              <mat-progress-bar *ngIf="isBusy(contractOffer)" color="accent" mode="indeterminate"></mat-progress-bar>
+              <mat-progress-bar *ngIf="isBusy(contractOffer)" color="primary" mode="indeterminate"></mat-progress-bar>
             </mat-card-footer>
         </mat-card>
     </div>
