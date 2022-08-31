@@ -7,7 +7,7 @@ This file will not cover changes about documentation, code clean-up, samples, or
 (respectively milestone), the core features are highlighted. Relevant changes to existing implementations can be found
 in the detailed section referring to by linking pull requests or issues.
 
-## [1.0.0] 31.08.2022
+## [1.0.0] 2022-08-31
 
 ### Overview
 
@@ -17,7 +17,7 @@ First release of sovity EDC-Data-Dashboard. Adds support for connecting REST-API
 
 #### Added
 
-- Sovity Theming
+- sovity Theming
 
 #### Changed
 
