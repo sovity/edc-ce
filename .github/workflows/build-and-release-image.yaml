@@ -4,7 +4,6 @@ name: Build and Release Image
 on:
   push:
     branches:
-      - main
       - develop
     tags:
       - "*.*.*"
@@ -43,7 +42,7 @@ jobs:
           tags: |
             type=semver,pattern={{version}},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
             type=raw,value=latest,enable={{is_default_branch}}
-            type=sha
+            type=sha,enable={{is_default_branch}}
 
       - name: Build EDC-UI image
         uses: docker/build-push-action@v2
