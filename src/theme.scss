@@ -3,8 +3,8 @@
 @import 'https://fonts.googleapis.com/icon?family=Material+Icons';
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
-
 @import "~@angular/material/theming";
+
 @include mat-core();
 
 //default theme {
@@ -13,9 +13,9 @@ $theming-material-components-accent: mat-palette($mat-orange, A200, A100, A400);
 $theming-material-components-warn: mat-palette($mat-red);
 
 $theming-material-components-theme: mat-dark-theme(
-    $theming-material-components-primary,
-    $theming-material-components-accent,
-    $theming-material-components-warn
+                $theming-material-components-primary,
+                $theming-material-components-accent,
+                $theming-material-components-warn
 );
 
 @include angular-material-theme($theming-material-components-theme);
@@ -31,9 +31,9 @@ $theming-material-components-theme: mat-dark-theme(
   $theming-material-components-warn: mat-palette($mat-red);
 
   $theming-material-components-theme: mat-dark-theme(
-      $theming-material-components-primary,
-      $theming-material-components-accent,
-      $theming-material-components-warn
+                  $theming-material-components-primary,
+                  $theming-material-components-accent,
+                  $theming-material-components-warn
   );
 
   @include angular-material-theme($theming-material-components-theme);
@@ -45,9 +45,9 @@ $theming-material-components-theme: mat-dark-theme(
   $theming-material-components-warn: mat-palette($mat-red);
 
   $theming-material-components-theme: mat-dark-theme(
-      $theming-material-components-primary,
-      $theming-material-components-accent,
-      $theming-material-components-warn
+                  $theming-material-components-primary,
+                  $theming-material-components-accent,
+                  $theming-material-components-warn
   );
 
   @include angular-material-theme($theming-material-components-theme);
@@ -138,7 +138,7 @@ $custom-typography: mat.define-typography-config($font-family: 'Open Sans');
 @include mat.core($custom-typography);
 
 :root {
-    --theme-color-primary: #{mat-color($theming-material-components-primary)};
-    --theme-color-accent: #{mat-color($theming-material-components-accent)};
-    --theme-color-warn: #{mat-color($theming-material-components-warn)};
+  --theme-color-primary: #{mat-color($theming-material-components-primary)};
+  --theme-color-accent: #{mat-color($theming-material-components-accent)};
+  --theme-color-warn: #{mat-color($theming-material-components-warn)};
 }
