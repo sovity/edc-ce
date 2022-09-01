@@ -7,7 +7,7 @@ This file will not cover changes about documentation, code clean-up, samples, or
 (respectively milestone), the core features are highlighted. Relevant changes to existing implementations can be found
 in the detailed section referring to by linking pull requests or issues.
 
-## [1.0.0] 2022-08-31
+## [0.0.1-ab1b6fd0-sovity1] 2022-08-31
 
 ### Overview
 
