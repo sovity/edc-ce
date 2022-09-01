@@ -20,7 +20,7 @@ export class AppConfigService {
 
   loadConfig(): Promise<void> {
     return this.http
-      .get<AppConfig>('/ui/assets/config/app.config.json')
+      .get<AppConfig>('/assets/config/app.config.json')
       .toPromise()
       .then(data => {
         this.config = data;
