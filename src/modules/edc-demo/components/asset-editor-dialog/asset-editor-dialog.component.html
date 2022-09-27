@@ -22,24 +22,39 @@
   </div>
 
   <div>
+    <mat-form-field class="full-width-form-field" color="accent">
+      <mat-label>Description</mat-label>
+      <textarea [(ngModel)]="description" matInput [placeholder]="'1.0'"></textarea>
+    </mat-form-field>
+  </div>
+
+  <div>
     <mat-form-field class="form-field" color="accent">
       <mat-label>Type</mat-label>
-      <input [(ngModel)]="type" matInput [placeholder]="'text/plain'">
+      <mat-select [(ngModel)]="type" required>
+        <mat-option value="Json">
+          Json
+        </mat-option>
+        <mat-option value="Rest-Api">
+          Rest-Api
+        </mat-option>
+      </mat-select>
     </mat-form-field>
-
-    <mat-form-field class="form-field" color="accent">
-      <mat-label>Description</mat-label>
-      <input [(ngModel)]="description" matInput [placeholder]="'1.0'">
+    <mat-form-field class="form-field" color="accent" *ngIf="type == 'Rest-Api'">
+      <mat-label>Source Endpoint</mat-label>
+      <input [(ngModel)]="baseUrl" matInput [placeholder]="'https://'">
+    </mat-form-field>
+  </div>
+  <div *ngIf="type == 'Json'">
+    <mat-form-field class="full-width-form-field" color="accent">
+      <mat-label>Data Destination (JSON)</mat-label>
+      <textarea [(ngModel)]="dataDestination" matInput [placeholder]="'{}'"></textarea>
     </mat-form-field>
   </div>
   <div>
     <mat-form-field class="form-field" color="accent">
       <mat-label>Originator</mat-label>
       <input [(ngModel)]="originator" matInput [placeholder]="'text/plain'">
-    </mat-form-field>
-    <mat-form-field class="form-field" color="accent">
-      <mat-label>Data Destination (JSON)</mat-label>
-      <input [(ngModel)]="dataDestination" matInput [placeholder]="'text/plain'">
     </mat-form-field>
   </div>
 </mat-dialog-content>
