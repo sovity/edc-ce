@@ -19,6 +19,7 @@ export class AssetEditorDialog implements OnInit {
   description: string = '';
   originator: string = '';
   dataDestination: string = '';
+  baseUrl: string = '';
 
   constructor(private assetService: AssetService, private dialogRef: MatDialogRef<AssetEditorDialog>,
       @Inject('STORAGE_TYPES') public storageTypes: StorageType[]) {
@@ -28,21 +29,41 @@ export class AssetEditorDialog implements OnInit {
   }
 
   onSave() {
-    const assetEntryDto: AssetEntryDto = {
-      asset: {
-        properties: {
-          "asset:prop:name": this.name,
-          "asset:prop:version": this.version,
-          "asset:prop:id": this.id,
-          "asset:prop:contenttype": this.contenttype,
-          "asset:prop:type": this.type,
-          "asset:prop:description": this.description,
-          "asset:prop:originator": this.originator,
+    if (this.type == 'Json') {
+      const assetEntryDto: AssetEntryDto = {
+        asset: {
+          properties: {
+            "asset:prop:name": this.name,
+            "asset:prop:version": this.version,
+            "asset:prop:id": this.id,
+            "asset:prop:contenttype": this.contenttype,
+            "asset:prop:description": this.description,
+            "asset:prop:originator": this.originator,
+          }
+        },
+        dataAddress: JSON.parse(this.dataDestination)
+      };
+      this.dialogRef.close({ assetEntryDto });
+    } else if (this.type == 'Rest-Api') {
+      const assetEntryDto: AssetEntryDto = {
+        asset: {
+          properties: {
+            "asset:prop:name": this.name,
+            "asset:prop:version": this.version,
+            "asset:prop:id": this.id,
+            "asset:prop:contenttype": this.contenttype,
+            "asset:prop:description": this.description,
+            "asset:prop:originator": this.originator,
+          }
+        },
+        dataAddress: {
+          properties: {
+            "type": "HttpData",
+            "baseUrl": this.baseUrl
+          }
         }
-      },
-      dataAddress: JSON.parse(this.dataDestination)
-    };
-
-    this.dialogRef.close({ assetEntryDto });
+      };
+      this.dialogRef.close({ assetEntryDto });
+    }
   }
 }
