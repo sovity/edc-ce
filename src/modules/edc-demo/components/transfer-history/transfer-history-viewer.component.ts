@@ -16,7 +16,7 @@ import {map} from "rxjs/operators";
 })
 export class TransferHistoryViewerComponent implements OnInit {
 
-    columns: string[] = ['id', 'creationDate', 'state', 'lastUpdated', 'connectorId', 'assetId', 'contractId', 'action'];
+    columns: string[] = ['id', 'creationDate', 'state', 'lastUpdated', 'connectorId', 'assetId', 'contractId'];
     transferProcesses$: Observable<TransferProcessDto[]> = of([]);
     storageExplorerLinkTemplate: string | undefined;
 
@@ -48,13 +48,13 @@ export class TransferHistoryViewerComponent implements OnInit {
         });
     }
 
-    showStorageExplorerLink(transferProcess: TransferProcessDto) {
-        return transferProcess.dataDestination?.properties?.type === 'AzureStorage' && transferProcess.state === 'COMPLETED';
-    }
-
-    showDeprovisionButton(transferProcess: TransferProcessDto) {
-        return ['COMPLETED', 'PROVISIONED', 'REQUESTED', 'REQUESTED_ACK', 'IN_PROGRESS', 'STREAMING'].includes(transferProcess.state);
-    }
+    // showStorageExplorerLink(transferProcess: TransferProcessDto) {
+    //     return transferProcess.dataDestination?.properties?.type === 'AzureStorage' && transferProcess.state === 'COMPLETED';
+    // }
+    //
+    // showDeprovisionButton(transferProcess: TransferProcessDto) {
+    //     return ['COMPLETED', 'PROVISIONED', 'REQUESTED', 'REQUESTED_ACK', 'IN_PROGRESS', 'STREAMING'].includes(transferProcess.state);
+    // }
 
     loadTransferProcesses() {
         this.transferProcesses$ = this.transferProcessService.getAllTransferProcesses()
