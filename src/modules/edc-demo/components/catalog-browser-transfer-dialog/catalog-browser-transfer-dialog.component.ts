@@ -26,13 +26,13 @@ export class CatalogBrowserTransferDialog implements OnInit {
 
     onTransfer() {
         if (this.type == 'Json') {
-            const result = {dataDestination: JSON.parse(this.dataDestination)};
+            const result = {dataDestination: JSON.parse(this.dataDestination.trim())};
             this.dialogRef.close(result);
         } else if (this.type == 'Rest-Api') {
             const dataAddress: DataAddress = {
                 properties: {
                     "type": "HttpData",
-                    "baseUrl": this.dataDestination
+                    "baseUrl": this.dataDestination.trim()
                 }
             }
             const result = {dataDestination: dataAddress};

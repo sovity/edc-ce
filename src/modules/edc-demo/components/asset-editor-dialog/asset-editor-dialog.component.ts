@@ -42,33 +42,33 @@ export class AssetEditorDialog implements OnInit {
       const assetEntryDto: AssetEntryDto = {
         asset: {
           properties: {
-            "asset:prop:name": this.name,
-            "asset:prop:version": this.version,
-            "asset:prop:id": this.id,
-            "asset:prop:contenttype": this.contenttype,
-            "asset:prop:description": this.description,
-            "asset:prop:originator": this.connectorOriginator,
+            "asset:prop:name": this.name.trim(),
+            "asset:prop:version": this.version.trim(),
+            "asset:prop:id": this.id.trim(),
+            "asset:prop:contenttype": this.contenttype.trim(),
+            "asset:prop:description": this.description.trim(),
+            "asset:prop:originator": this.connectorOriginator.trim(),
           }
         },
-        dataAddress: JSON.parse(this.dataDestination)
+        dataAddress: JSON.parse(this.dataDestination.trim())
       };
       this.dialogRef.close({ assetEntryDto });
     } else if (this.type == 'Rest-Api') {
       const assetEntryDto: AssetEntryDto = {
         asset: {
           properties: {
-            "asset:prop:name": this.name,
-            "asset:prop:version": this.version,
-            "asset:prop:id": this.id,
-            "asset:prop:contenttype": this.contenttype,
-            "asset:prop:description": this.description,
-            "asset:prop:originator": this.connectorOriginator,
+            "asset:prop:name": this.name.trim(),
+            "asset:prop:version": this.version.trim(),
+            "asset:prop:id": this.id.trim(),
+            "asset:prop:contenttype": this.contenttype.trim(),
+            "asset:prop:description": this.description.trim(),
+            "asset:prop:originator": this.connectorOriginator.trim(),
           }
         },
         dataAddress: {
           properties: {
             "type": "HttpData",
-            "baseUrl": this.baseUrl
+            "baseUrl": this.baseUrl.trim()
           }
         }
       };
