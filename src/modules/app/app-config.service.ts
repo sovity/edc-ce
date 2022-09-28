@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 
 export interface AppConfig {
   dataManagementApiUrl: string;
+  originator: string;
   catalogUrl: string;
   storageAccount: string;
   apiKey: string;

@@ -1,7 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Policy, PolicyDefinition} from "../../../edc-dmgmt-client";
+import {Permission, Policy, PolicyDefinition} from "../../../edc-dmgmt-client";
 import TypeEnum = Policy.TypeEnum;
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-new-policy-dialog',
@@ -17,9 +18,11 @@ export class NewPolicyDialogComponent implements OnInit {
     policy: this.policy,
     uid: ''
   };
-  permissionsJson: string = '';
-  prohibitionsJson: string = '';
-  obligationsJson: string = '';
+  policyType: string = '';
+  range = new FormGroup({
+    start: new FormControl(null),
+    end: new FormControl(null),
+  });
 
   constructor(private dialogRef: MatDialogRef<NewPolicyDialogComponent>) {
   }
@@ -29,18 +32,17 @@ export class NewPolicyDialogComponent implements OnInit {
   }
 
   onSave() {
-    if (this.permissionsJson && this.permissionsJson !== '') {
-      this.policy.permissions = JSON.parse(this.permissionsJson);
-    }
-
-    if (this.prohibitionsJson && this.prohibitionsJson !== '') {
-      this.policy.prohibitions = JSON.parse(this.prohibitionsJson);
-    }
-
-    if (this.obligationsJson && this.obligationsJson !== '') {
-      this.policy.obligations = JSON.parse(this.obligationsJson);
-    }
-
+    this.policyDefinition.uid = this.policyDefinition.uid.trim()
+    const permissionTemplate: string = "{    \"edctype\": \"dataspaceconnector:permission\",    \"uid\": null,    \"target\": \"urn:artifact:urn:artifact:bitcoin\",    \"action\": {      \"type\": \"USE\",      \"includedIn\": null,      \"constraint\": null    },    \"assignee\": null,    \"assigner\": null,    \"constraints\": [      {        \"edctype\": \"AtomicConstraint\",        \"leftExpression\": {          \"edctype\": \"dataspaceconnector:literalexpression\",          \"value\": \"POLICY_EVALUATION_TIME\"        },        \"operator\": \"GT\",        \"rightExpression\": {          \"edctype\": \"dataspaceconnector:literalexpression\",          \"value\": \"2022-08-31T00:00:00.001Z\"        }      },      {        \"edctype\": \"AtomicConstraint\",        \"leftExpression\": {          \"edctype\": \"dataspaceconnector:literalexpression\",          \"value\": \"POLICY_EVALUATION_TIME\"        },        \"operator\": \"LT\",        \"rightExpression\": {          \"edctype\": \"dataspaceconnector:literalexpression\",          \"value\": \"2023-08-31T23:59:59.000Z\"        }      }    ],    \"duties\": []  }";
+    let permission = JSON.parse(permissionTemplate);
+    let constraints = permission["constraints"];
+    let startDateConstraint = constraints[0]
+    let endDateConstraint = constraints[1]
+    let startDate : Date = this.range.value["start"] as Date
+    let endDate : Date = this.range.value["end"] as Date
+    startDateConstraint["rightExpression"]["value"] = startDate.toISOString();
+    endDateConstraint["rightExpression"]["value"] = endDate.toISOString();
+    this.policy.permissions = [permission]
     this.dialogRef.close({
       policy: this.policyDefinition.policy,
       uid: this.policyDefinition.uid

@@ -3,7 +3,7 @@ import {
   AssetDto,
   AssetService,
   ContractAgreementDto,
-  ContractAgreementService,
+  ContractAgreementService, DataAddress,
   TransferId, TransferProcessDto,
   TransferProcessService,
   TransferRequestDto
@@ -75,7 +75,7 @@ export class ContractViewerComponent implements OnInit {
     const dialogRef = this.dialog.open(CatalogBrowserTransferDialog);
 
     dialogRef.afterClosed().pipe(first()).subscribe(result => {
-      const dataDestination: string = result.dataDestination;
+      const dataDestination: DataAddress = result.dataDestination;
       this.createTransferRequest(contract, dataDestination)
         .pipe(switchMap(trq => this.transferService.initiateTransfer(trq)))
         .subscribe(transferId => {
@@ -91,13 +91,13 @@ export class ContractViewerComponent implements OnInit {
     return !!this.runningTransfers.find(rt => rt.contractId === contractId);
   }
 
-  private createTransferRequest(contract: ContractAgreementDto, dataDestination: string): Observable<TransferRequestDto> {
+  private createTransferRequest(contract: ContractAgreementDto, dataDestination: DataAddress): Observable<TransferRequestDto> {
     return this.getOfferedAssetForId(contract.assetId!).pipe(map(offeredAsset => {
       return {
         assetId: offeredAsset.id,
         contractId: contract.id,
         connectorId: "consumer", //doesn't matter, but cannot be null
-        dataDestination:  JSON.parse(dataDestination),
+        dataDestination:  dataDestination,
         managedResources: false,
         transferType: {isFinite: true}, //must be there, otherwise NPE on backend
         connectorAddress: offeredAsset.originator,

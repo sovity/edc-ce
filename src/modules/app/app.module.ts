@@ -15,8 +15,15 @@ import {NavigationComponent} from './components/navigation/navigation.component'
 import {EdcDemoModule} from '../edc-demo/edc-demo.module';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 import {AppConfigService} from "./app-config.service";
-import {API_KEY, CONNECTOR_CATALOG_API, CONNECTOR_DATAMANAGEMENT_API} from "../edc-dmgmt-client";
+import {
+  API_KEY,
+  CONNECTOR_CATALOG_API,
+  CONNECTOR_DATAMANAGEMENT_API,
+  CONNECTOR_ORIGINATOR
+} from "../edc-dmgmt-client";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
 
 
 @NgModule({
@@ -31,18 +38,26 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     MatIconModule,
     MatListModule,
     EdcDemoModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   declarations: [
     AppComponent,
     NavigationComponent,
   ],
   providers: [
+    MatDatepickerModule,
     {
       provide: APP_INITIALIZER,
       useFactory: (configService: AppConfigService) => () => configService.loadConfig(),
       deps: [AppConfigService],
       multi: true
+    },
+    {
+      provide: CONNECTOR_ORIGINATOR,
+      useFactory: (s: AppConfigService) => s.getConfig()?.originator,
+      deps: [AppConfigService]
     },
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
     {

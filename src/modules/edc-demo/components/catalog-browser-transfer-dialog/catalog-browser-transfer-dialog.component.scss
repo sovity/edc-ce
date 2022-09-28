@@ -1,7 +1,16 @@
+mat-dialog-content {
+  width: 600px;
+}
+
 .form-field {
-    width: 300px;
+  width: 300px;
+}
+
+.form-field-stretch {
+  box-sizing: border-box;
+  width: 100%;
 }
 
 mat-card-actions {
-    margin-left: 0;
+  margin-left: 0;
 }
