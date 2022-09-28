@@ -7,6 +7,44 @@ This file will not cover changes about documentation, code clean-up, samples, or
 (respectively milestone), the core features are highlighted. Relevant changes to existing implementations can be found
 in the detailed section referring to by linking pull requests or issues.
 
+## [0.0.1-ab1b6fd0-sovity2] 2022-09-28
+
+### Overview
+
+Robustness and convenience improvements.
+
+### Detailed Changes
+
+#### Added
+
+- Field `originator` in `app.config.json` (https://github.com/sovity/edc-sovity-ui/pull/36)
+
+#### Changed
+
+- CreateAssetDialog (https://github.com/sovity/edc-sovity-ui/pull/31)
+  - Added ComboBox for Asset Datasource-Type
+    - Json: Passing a Datasource using Json
+    - Rest-Api: Just passing a Url
+  - Removed Originator Field
+  - Originator will now bet set using the `originator` from `app.config.json`
+  - Changed Json Input Field to TextArea
+- TransferDialog (https://github.com/sovity/edc-sovity-ui/pull/33)
+  - Added ComboBox for Transfer Destination-Type
+    - Json: Passing a Data-Destination using Json
+    - Rest-Api: Just passing a Url
+- PolicyDialog (https://github.com/sovity/edc-sovity-ui/pull/34)
+  - Removed fields (Assignee, Assigner, Permissions, Prohibitions and Obligations)
+  - Added ComboBox for Choosing a fixed Policy
+  - Added Time-Interval-Selection Component for Time-Restricted Policy
+
+#### Removed
+
+- `Deprovision` Button in Transfer History: Has been used for AzureBlob Storage before, but is not required for Rest-Api Transfers (https://github.com/sovity/edc-sovity-ui/pull/35) 
+
+#### Fixed
+
+- User-Input will be trimmed before sending it to the EDC-Backend (https://github.com/sovity/edc-sovity-ui/pull/39)
+
 ## [0.0.1-ab1b6fd0-sovity1] 2022-08-31
 
 ### Overview
