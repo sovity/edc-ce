@@ -53,6 +53,7 @@ export class ContractDefinitionEditorDialog implements OnInit {
   }
 
   onSave() {
+    this.contractDefinition.id = this.contractDefinition.id!.trim();
     this.contractDefinition.accessPolicyId = this.accessPolicy!.uid;
     this.contractDefinition.contractPolicyId = this.contractPolicy!.uid;
     this.contractDefinition.criteria = [];
