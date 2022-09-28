@@ -1,5 +1,10 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {AssetDto, AssetEntryDto, AssetService} from "../../../edc-dmgmt-client";
+import {
+    AssetDto,
+    AssetEntryDto,
+    AssetService,
+    CONNECTOR_DATAMANAGEMENT_API, CONNECTOR_ORIGINATOR
+} from "../../../edc-dmgmt-client";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {StorageType} from "../../models/storage-type";
 
@@ -17,12 +22,16 @@ export class AssetEditorDialog implements OnInit {
   contenttype: string = '';
   type: string = '';
   description: string = '';
-  originator: string = '';
   dataDestination: string = '';
   baseUrl: string = '';
+  connectorOriginator: string = '';
 
-  constructor(private assetService: AssetService, private dialogRef: MatDialogRef<AssetEditorDialog>,
-      @Inject('STORAGE_TYPES') public storageTypes: StorageType[]) {
+  constructor(
+      private assetService: AssetService,
+      private dialogRef: MatDialogRef<AssetEditorDialog>,
+      @Inject('STORAGE_TYPES') public storageTypes: StorageType[],
+      @Inject(CONNECTOR_ORIGINATOR) connectorOriginator: string) {
+      this.connectorOriginator = connectorOriginator;
   }
 
   ngOnInit(): void {
@@ -38,7 +47,7 @@ export class AssetEditorDialog implements OnInit {
             "asset:prop:id": this.id,
             "asset:prop:contenttype": this.contenttype,
             "asset:prop:description": this.description,
-            "asset:prop:originator": this.originator,
+            "asset:prop:originator": this.connectorOriginator,
           }
         },
         dataAddress: JSON.parse(this.dataDestination)
@@ -53,7 +62,7 @@ export class AssetEditorDialog implements OnInit {
             "asset:prop:id": this.id,
             "asset:prop:contenttype": this.contenttype,
             "asset:prop:description": this.description,
-            "asset:prop:originator": this.originator,
+            "asset:prop:originator": this.connectorOriginator,
           }
         },
         dataAddress: {
