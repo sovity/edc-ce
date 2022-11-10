@@ -1,6 +1,6 @@
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {EMPTY, Observable} from 'rxjs';
+import {EMPTY, forkJoin, Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {Asset} from '../models/asset';
 import {ContractOffer} from '../models/contract-offer';
@@ -35,11 +35,17 @@ export class CatalogBrowserService {
   }
 
   getContractOffers(): Observable<ContractOffer[]> {
-    return this.httpClient.get<ContractOfferResponse>(this.catalogApiUrl)
-      .pipe(map(contractOfferResponse => contractOfferResponse.contractOffers.map(contractOffer => {
-        contractOffer.asset = new Asset(contractOffer.asset.properties)
-        return contractOffer;
-      })));
+    const catalogApiUrlArray = this.catalogApiUrl.split(",");
+    let allContractOffers: Observable<ContractOffer[]>[] = [];
+    for (const catalogApiUrl of catalogApiUrlArray) {
+      const contractOffers = this.httpClient.get<ContractOfferResponse>(catalogApiUrl)
+          .pipe(map(contractOfferResponse => contractOfferResponse.contractOffers.map(contractOffer => {
+            contractOffer.asset = new Asset(contractOffer.asset.properties)
+            return contractOffer;
+          })))
+      allContractOffers.push(contractOffers);
+    }
+    return forkJoin(allContractOffers).pipe(map(x => x.reduce((previousValue, currentValue) => previousValue.concat(currentValue), [])));
   }
 
   initiateTransfer(transferRequest: TransferRequestDto): Observable<string> {
