@@ -7,6 +7,24 @@ This file will not cover changes about documentation, code clean-up, samples, or
 (respectively milestone), the core features are highlighted. Relevant changes to existing implementations can be found
 in the detailed section referring to by linking pull requests or issues.
 
+## [0.0.1-ab1b6fd0-sovity3] 2022-11-10
+
+### Overview
+
+Passing multiple Catalog Urls.
+
+### Detailed Changes
+
+#### Added
+- Support for Passing multiple Catalog Urls (https://github.com/sovity/edc-sovity-ui/issues/46)
+  - `catalogUrl` in `app.config.json` may be set to following pattern: {catalog1Url},{catalog2Url},...
+
+#### Changed
+
+#### Removed
+
+#### Fixed
+
 ## [0.0.1-ab1b6fd0-sovity2] 2022-09-28
 
 ### Overview
