@@ -15,7 +15,7 @@ export class NewPolicyDialogComponent implements OnInit {
   };
   policyDefinition: PolicyDefinition = {
     policy: this.policy,
-    uid: ''
+    id: ''
   };
   permissionsJson: string = '';
   prohibitionsJson: string = '';
@@ -43,7 +43,7 @@ export class NewPolicyDialogComponent implements OnInit {
 
     this.dialogRef.close({
       policy: this.policyDefinition.policy,
-      uid: this.policyDefinition.uid
+      id: this.policyDefinition.id
     })
   }
 }

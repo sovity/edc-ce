@@ -1511,7 +1511,7 @@ components:
       properties:
         policy:
           $ref: '#/components/schemas/Policy'
-        uid:
+        id:
           type: string
     Prohibition:
       type: object

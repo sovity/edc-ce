@@ -10,7 +10,7 @@
             <mat-label>Access policy</mat-label>
             <mat-select [(ngModel)]="accessPolicy" required>
                 <mat-option *ngFor="let policy of policies" [value]="policy">
-                    {{policy.uid}}
+                    {{policy.id}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -19,7 +19,7 @@
             <mat-label>Contract policy</mat-label>
             <mat-select [(ngModel)]="contractPolicy" required>
                 <mat-option *ngFor="let policy of policies" [value]="policy">
-                    {{policy.uid}}
+                    {{policy.id}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
