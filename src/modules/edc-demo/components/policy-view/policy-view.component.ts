@@ -67,13 +67,13 @@ export class PolicyViewComponent implements OnInit {
 
   delete(policy: PolicyDefinition) {
 
-    const dialogData = ConfirmDialogModel.forDelete("policy", policy.uid);
+    const dialogData = ConfirmDialogModel.forDelete("policy", policy.id);
 
     const ref = this.dialog.open(ConfirmationDialogComponent, {maxWidth: '20%', data: dialogData});
 
     ref.afterClosed().subscribe(res => {
       if (res) {
-        this.policyService.deletePolicy(policy.uid).subscribe(this.errorOrUpdateSubscriber);
+        this.policyService.deletePolicy(policy.id).subscribe(this.errorOrUpdateSubscriber);
       }
     });
   }
