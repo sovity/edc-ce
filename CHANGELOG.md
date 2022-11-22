@@ -7,6 +7,25 @@ This file will not cover changes about documentation, code clean-up, samples, or
 (respectively milestone), the core features are highlighted. Relevant changes to existing implementations can be found
 in the detailed section referring to by linking pull requests or issues.
 
+## [0.0.1-ab1b6fd0-sovity4] Unreleased
+
+### Overview
+
+Supporting communication with milestone 7 EDC.
+
+### Detailed Changes
+
+#### Added
+- Add Help-Box (Zammad links) (https://github.com/sovity/edc-sovity-ui/issues/55)
+
+#### Changed
+- Renamed policyDefinition `uid` field to `id`
+
+#### Removed
+- Developer text description on start page
+
+#### Fixed
+
 ## [0.0.1-ab1b6fd0-sovity3] 2022-11-10
 
 ### Overview
