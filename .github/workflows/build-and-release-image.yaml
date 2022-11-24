@@ -2,6 +2,12 @@ name: Build and Release Image
 
 
 on:
+  workflow_dispatch:
+    inputs:
+      imageName:
+        description: 'Name of the image, that will be available as package'
+        required: true
+        type: string
   push:
     branches:
       - develop
@@ -43,6 +49,7 @@ jobs:
             type=semver,pattern={{version}},enable=${{ startsWith(github.ref, 'refs/tags/') }}
             type=raw,value=latest,enable={{is_default_branch}}
             type=sha,enable={{is_default_branch}}
+            type=raw,value=${{ inputs.imageName }},enabled=${{ github.event_name == 'workflow_dispatch' }}
 
       - name: Build EDC-UI image
         uses: docker/build-push-action@v2
