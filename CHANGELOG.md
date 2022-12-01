@@ -18,6 +18,8 @@ Supporting communication with milestone 7 EDC. Working Logout.
 #### Added
 - Add Help-Box (Zammad links) (https://github.com/sovity/edc-sovity-ui/issues/55)
 - Additional `logoutUrl` Property in app.config.json (https://github.com/sovity/edc-sovity-ui/issues/24)
+  - OAuth2-Proxy-Config has to be adapted
+    - Setting: --whitelist-domain to {{KEYCLOAK_ASE_URL}}
   - Schema: {{EDC_UI_BASE_URL}}/oauth2/sign_out?rd={{KEYCLOAK_LOGOUT_URL}}
   - KEYCLOAK_LOGOUT_URL
     - all url encoded including {{KEYCLOAK_BASE_URL}} and {{EDC_UI_BASE_URL}}
