@@ -46,6 +46,7 @@ import {
 import {NewPolicyDialogComponent} from "./components/new-policy-dialog/new-policy-dialog.component";
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
+import { LogoutComponent } from './components/logout/logout.component';
 
 @NgModule({
     imports: [
@@ -93,7 +94,8 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
     ContractViewerComponent,
     NewPolicyDialogComponent,
     IntroductionComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    LogoutComponent
   ],
   exports: [
     CatalogBrowserComponent,
