@@ -17,6 +17,7 @@ Supporting communication with milestone 7 EDC.
 
 #### Added
 - Add Help-Box (Zammad links) (https://github.com/sovity/edc-sovity-ui/issues/55)
+- Added secret scanning to repo
 
 #### Changed
 - Renamed policyDefinition `uid` field to `id`
