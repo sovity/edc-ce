@@ -1,7 +1,7 @@
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
 import {EMPTY, forkJoin, Observable, of} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, map, timeout} from 'rxjs/operators';
 import {Asset} from '../models/asset';
 import {ContractOffer} from '../models/contract-offer';
 import {
@@ -40,6 +40,7 @@ export class CatalogBrowserService {
     for (const catalogApiUrl of catalogApiUrlArray) {
       const contractOffers = this.httpClient.get<ContractOfferResponse>(catalogApiUrl)
           .pipe(map(({contractOffers}) => contractOffers))
+          .pipe(timeout({first: 5_000, with: () => of([])}))
           .pipe(
               catchError((httpErrorResponse: HttpErrorResponse) => {
                 if (httpErrorResponse.error instanceof Error) {
