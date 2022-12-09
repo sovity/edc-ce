@@ -46,7 +46,7 @@ export class CatalogBrowserService {
                 } else {
                   console.error(`Unsuccessful status code accessing URL '${catalogApiUrl}', Method: Get, StatusCode: '${httpErrorResponse.status}', Error: '${httpErrorResponse.error?.message}'`);
                 }
-                return EMPTY;
+                return [];
               }))
           .pipe(map(contractOfferResponse => contractOfferResponse.contractOffers.map(contractOffer => {
             contractOffer.asset = new Asset(contractOffer.asset.properties)
