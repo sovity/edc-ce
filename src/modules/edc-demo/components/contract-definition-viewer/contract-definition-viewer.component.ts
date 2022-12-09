@@ -8,7 +8,7 @@ import {
 import {ContractDefinitionDto, ContractDefinitionService} from "../../../edc-dmgmt-client";
 import {ConfirmationDialogComponent, ConfirmDialogModel} from "../confirmation-dialog/confirmation-dialog.component";
 import {NotificationService} from "../../services/notification.service";
-
+import {AppConfigService} from "../../../app/app-config.service";
 
 @Component({
   selector: 'edc-demo-contract-definition-viewer',
@@ -20,13 +20,16 @@ export class ContractDefinitionViewerComponent implements OnInit {
   filteredContractDefinitions$: Observable<ContractDefinitionDto[]> = of([]);
   searchText = '';
   private fetch$ = new BehaviorSubject(null);
+  themeClassString: any;
 
   constructor(private contractDefinitionService: ContractDefinitionService,
               private notificationService: NotificationService,
-              private readonly dialog: MatDialog) {
+              private readonly dialog: MatDialog,
+              private appConfigService: AppConfigService) {
   }
 
   ngOnInit(): void {
+    this.themeClass();
     this.filteredContractDefinitions$ = this.fetch$
       .pipe(
         switchMap(() => {
@@ -36,6 +39,10 @@ export class ContractDefinitionViewerComponent implements OnInit {
             :
             contractDefinitions$;
         }));
+  }
+
+  themeClass() {
+    this.themeClassString = this.appConfigService.getConfig()?.theme;
   }
 
   onSearch() {
@@ -56,7 +63,7 @@ export class ContractDefinitionViewerComponent implements OnInit {
   }
 
   onCreate() {
-    const dialogRef = this.dialog.open(ContractDefinitionEditorDialog);
+    const dialogRef = this.dialog.open(ContractDefinitionEditorDialog, {panelClass: this.themeClassString});
     dialogRef.afterClosed().pipe(first()).subscribe((result: { contractDefinition?: ContractDefinitionDto }) => {
       const newContractDefinition = result?.contractDefinition;
       if (newContractDefinition) {

@@ -13,7 +13,7 @@ export class CatalogBrowserTransferDialog implements OnInit {
 
     name: string = '';
     dataDestination: string = '';
-    type: string = '';
+    type: string = 'Json';
 
     constructor(@Inject('STORAGE_TYPES') public storageTypes: StorageType[],
                 private dialogRef: MatDialogRef<CatalogBrowserTransferDialog>,

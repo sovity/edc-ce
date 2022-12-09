@@ -9,7 +9,7 @@
         <mat-form-field class="form-field form-field-policy" id="form-field-access-policy">
             <mat-label>Access policy</mat-label>
             <mat-select [(ngModel)]="accessPolicy" required>
-                <mat-option *ngFor="let policy of policies" [value]="policy">
+                <mat-option *ngFor="let policy of policies" [value]="policy" style="background-color: white; color: black">
                     {{policy.id}}
                 </mat-option>
             </mat-select>
@@ -18,7 +18,7 @@
         <mat-form-field class="form-field form-field-policy" id="form-field-contract-policy">
             <mat-label>Contract policy</mat-label>
             <mat-select [(ngModel)]="contractPolicy" required>
-                <mat-option *ngFor="let policy of policies" [value]="policy">
+                <mat-option *ngFor="let policy of policies" [value]="policy" style="background-color: white; color: black">
                     {{policy.id}}
                 </mat-option>
             </mat-select>
@@ -27,7 +27,7 @@
         <mat-form-field class="form-field form-field-assets" id="form-field-contract-assets">
           <mat-label>Assets</mat-label>
           <mat-select [(ngModel)]="assets" multiple>
-            <mat-option *ngFor="let asset of availableAssets" [value]="asset">
+            <mat-option *ngFor="let asset of availableAssets" [value]="asset" style="background-color: white; color: black">
               {{asset.id}}
             </mat-option>
           </mat-select>
