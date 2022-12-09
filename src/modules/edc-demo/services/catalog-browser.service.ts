@@ -39,6 +39,15 @@ export class CatalogBrowserService {
     let allContractOffers: Observable<ContractOffer[]>[] = [];
     for (const catalogApiUrl of catalogApiUrlArray) {
       const contractOffers = this.httpClient.get<ContractOfferResponse>(catalogApiUrl)
+          .pipe(
+              catchError((httpErrorResponse: HttpErrorResponse) => {
+                if (httpErrorResponse.error instanceof Error) {
+                  console.error(`Error accessing URL '${catalogApiUrl}', Method: 'GET', Error: '${httpErrorResponse.error.message}'`);
+                } else {
+                  console.error(`Unsuccessful status code accessing URL '${catalogApiUrl}', Method: Get, StatusCode: '${httpErrorResponse.status}', Error: '${httpErrorResponse.error?.message}'`);
+                }
+                return EMPTY;
+              }))
           .pipe(map(contractOfferResponse => contractOfferResponse.contractOffers.map(contractOffer => {
             contractOffer.asset = new Asset(contractOffer.asset.properties)
             return contractOffer;
