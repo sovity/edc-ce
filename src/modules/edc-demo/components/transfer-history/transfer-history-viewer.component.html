@@ -1,6 +1,6 @@
 <div id="wrapper">
     <div *ngIf="transferProcesses$ | async as transferProcesses">
-      <button mat-stroked-button (click)="loadTransferProcesses()" color="accent">
+      <button mat-raised-button (click)="loadTransferProcesses()" color="primary">
         <mat-icon>cached</mat-icon>
         Refresh
       </button>

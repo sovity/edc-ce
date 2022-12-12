@@ -16,7 +16,7 @@
   </mat-form-field>
 
   <div *ngIf="policyType == 'Time-Period-Restricted'">
-    <mat-form-field>
+    <mat-form-field color="accent">
       <mat-label>Enter a date range</mat-label>
       <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
         <input matStartDate formControlName="start" placeholder="Start date">
@@ -34,17 +34,17 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button (click)="onSave()" *ngIf="editMode" color="accent" mat-stroked-button >
+  <button (click)="onSave()" *ngIf="editMode" color="primary" mat-raised-button >
     <mat-icon>save</mat-icon>
     Save
   </button>
 
-  <button (click)="onSave()" *ngIf="!editMode" color="accent" mat-stroked-button>
+  <button (click)="onSave()" *ngIf="!editMode" color="primary" mat-raised-button>
     <mat-icon>add_circle_outline</mat-icon>
     Create
   </button>
 
-  <button color="accent" mat-dialog-close="true" mat-stroked-button>
+  <button color="primary" mat-dialog-close="true" mat-raised-button>
     <mat-icon>cancel</mat-icon>
     Cancel
   </button>
