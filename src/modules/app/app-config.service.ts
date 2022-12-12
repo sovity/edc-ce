@@ -8,6 +8,7 @@ export interface AppConfig {
   storageAccount: string;
   apiKey: string;
   storageExplorerLinkTemplate: string;
+  logoutUrl: string;
   theme: string;
 }
 
