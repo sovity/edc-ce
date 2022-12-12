@@ -3,7 +3,10 @@
                  [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
                  [mode]="(isHandset$ | async) ? 'over' : 'side'"
                  [opened]="(isHandset$ | async) === false">
-        <mat-toolbar class="custom-toolbar"><img width="70%" src="/assets/images/MDS-Logo-black.svg" alt=""></mat-toolbar>
+        <mat-toolbar class="custom-toolbar">
+            <img *ngIf="themeClassString == 'theme-mds' else sovityImage" width="70%" src="/assets/images/MDS-Logo-black.svg" alt="" />
+            <ng-template #sovityImage><img width="70%" src="/assets/images/sovity_logo.svg" alt="" /></ng-template>
+        </mat-toolbar>
         <mat-nav-list>
             <a [routerLink]="[route.path]" *ngFor="let route of routes">
                 <mat-list-item *ngIf="route.component">
