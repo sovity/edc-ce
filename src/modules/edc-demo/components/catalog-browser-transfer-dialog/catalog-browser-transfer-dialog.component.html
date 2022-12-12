@@ -4,10 +4,10 @@
         <mat-form-field class="form-field-stretch" color="accent">
             <mat-label>Type</mat-label>
             <mat-select [(ngModel)]="type" required>
-                <mat-option value="Json">
+                <mat-option value="Json" style="background-color: white; color: black">
                     Json
                 </mat-option>
-                <mat-option value="Rest-Api">
+                <mat-option value="Rest-Api" style="background-color: white; color: black">
                     Rest-Api
                 </mat-option>
             </mat-select>
@@ -31,12 +31,12 @@
 
 <mat-dialog-actions>
     <div>
-        <button (click)="onTransfer()" color="accent" mat-stroked-button>
+        <button (click)="onTransfer()" color="primary" mat-raised-button>
             <mat-icon>downloading</mat-icon>
             Start transfer
         </button>
 
-        <button color="accent" mat-dialog-close mat-stroked-button>
+        <button color="primary" mat-dialog-close mat-raised-button>
             <mat-icon>cancel</mat-icon>
             Cancel
         </button>

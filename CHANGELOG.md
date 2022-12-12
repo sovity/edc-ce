@@ -22,6 +22,7 @@ Supporting communication with milestone 7 EDC.
     - NGINX_BIND
     - NGINX_PORT
 - Added secret scanning to repo
+- Added MDS logo in the tool bar and added MDS theme
 
 #### Changed
 - Renamed policyDefinition `uid` field to `id`

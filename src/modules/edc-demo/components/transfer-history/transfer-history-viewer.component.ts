@@ -2,68 +2,73 @@ import {Component, OnInit} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {TransferProcessDto, TransferProcessService} from "../../../edc-dmgmt-client";
 import {AppConfigService} from "../../../app/app-config.service";
-import {
-    ConfirmationDialogComponent,
-    ConfirmDialogModel
-} from "../confirmation-dialog/confirmation-dialog.component";
+import {ConfirmationDialogComponent, ConfirmDialogModel} from "../confirmation-dialog/confirmation-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
-import {map} from "rxjs/operators";
+import {map} from "rxjs/operators"
+
 
 @Component({
-    selector: 'edc-demo-transfer-history',
-    templateUrl: './transfer-history-viewer.component.html',
-    styleUrls: ['./transfer-history-viewer.component.scss']
+  selector: 'edc-demo-transfer-history',
+  templateUrl: './transfer-history-viewer.component.html',
+  styleUrls: ['./transfer-history-viewer.component.scss']
 })
 export class TransferHistoryViewerComponent implements OnInit {
 
-    columns: string[] = ['id', 'creationDate', 'state', 'lastUpdated', 'connectorId', 'assetId', 'contractId'];
-    transferProcesses$: Observable<TransferProcessDto[]> = of([]);
-    storageExplorerLinkTemplate: string | undefined;
+  columns: string[] = ['id', 'creationDate', 'state', 'lastUpdated', 'connectorId', 'assetId', 'contractId'];
+  transferProcesses$: Observable<TransferProcessDto[]> = of([]);
+  storageExplorerLinkTemplate: string | undefined;
+  themeClassString: any;
 
-    constructor(private transferProcessService: TransferProcessService,
-                private dialog: MatDialog,
-                private appConfigService: AppConfigService) {
-    }
+  constructor(private transferProcessService: TransferProcessService,
+              private dialog: MatDialog,
+              private appConfigService: AppConfigService) {
+  }
 
-    ngOnInit(): void {
-        this.loadTransferProcesses();
-        this.storageExplorerLinkTemplate = this.appConfigService.getConfig()?.storageExplorerLinkTemplate
-    }
+  ngOnInit(): void {
+    this.themeClass();
+    this.loadTransferProcesses();
+    this.storageExplorerLinkTemplate = this.appConfigService.getConfig()?.storageExplorerLinkTemplate
+  }
 
-    onDeprovision(transferProcess: TransferProcessDto): void {
+  themeClass() {
+    this.themeClassString = this.appConfigService.getConfig()?.theme;
+  }
 
-        const dialogData = new ConfirmDialogModel("Confirm deprovision", `Deprovisioning resources for transfer [${transferProcess.id}] will take some time and once started, it cannot be stopped.`)
-        dialogData.confirmColor = "warn";
-        dialogData.confirmText = "Confirm";
-        dialogData.cancelText = "Abort";
-        const ref = this.dialog.open(ConfirmationDialogComponent, {
-            maxWidth: '20%',
-            data: dialogData
-        });
+  onDeprovision(transferProcess: TransferProcessDto): void {
 
-        ref.afterClosed().subscribe(res => {
-            if (res) {
-                this.transferProcessService.deprovisionTransferProcess(transferProcess.id).subscribe(() => this.loadTransferProcesses());
-            }
-        });
-    }
+    const dialogData = new ConfirmDialogModel("Confirm deprovision", `Deprovisioning resources for transfer [${transferProcess.id}] will take some time and once started, it cannot be stopped.`)
+    dialogData.confirmColor = "warn";
+    dialogData.confirmText = "Confirm";
+    dialogData.cancelText = "Abort";
+    const ref = this.dialog.open(ConfirmationDialogComponent, {
+      maxWidth: '20%',
+      data: dialogData,
+      panelClass: this.themeClassString
+    });
 
-    // showStorageExplorerLink(transferProcess: TransferProcessDto) {
-    //     return transferProcess.dataDestination?.properties?.type === 'AzureStorage' && transferProcess.state === 'COMPLETED';
-    // }
-    //
-    // showDeprovisionButton(transferProcess: TransferProcessDto) {
-    //     return ['COMPLETED', 'PROVISIONED', 'REQUESTED', 'REQUESTED_ACK', 'IN_PROGRESS', 'STREAMING'].includes(transferProcess.state);
-    // }
+    ref.afterClosed().subscribe(res => {
+      if (res) {
+        this.transferProcessService.deprovisionTransferProcess(transferProcess.id).subscribe(() => this.loadTransferProcesses());
+      }
+    });
+  }
 
-    loadTransferProcesses() {
-        this.transferProcesses$ = this.transferProcessService.getAllTransferProcesses()
-            .pipe(map(transferProcesses => transferProcesses.sort(function (a, b) {
-                return b.createdTimestamp?.valueOf()!-a.createdTimestamp?.valueOf()!;
-            })));
-    }
+  // showStorageExplorerLink(transferProcess: TransferProcessDto) {
+  //     return transferProcess.dataDestination?.properties?.type === 'AzureStorage' && transferProcess.state === 'COMPLETED';
+  // }
+  //
+  // showDeprovisionButton(transferProcess: TransferProcessDto) {
+  //     return ['COMPLETED', 'PROVISIONED', 'REQUESTED', 'REQUESTED_ACK', 'IN_PROGRESS', 'STREAMING'].includes(transferProcess.state);
+  // }
 
-    asDate(epochMillis?: number) {
-        return epochMillis ? new Date(epochMillis).toLocaleDateString() : '';
-    }
+  loadTransferProcesses() {
+    this.transferProcesses$ = this.transferProcessService.getAllTransferProcesses()
+      .pipe(map(transferProcesses => transferProcesses.sort(function (a, b) {
+        return b.createdTimestamp?.valueOf()! - a.createdTimestamp?.valueOf()!;
+      })));
+  }
+
+  asDate(epochMillis?: number) {
+    return epochMillis ? new Date(epochMillis).toLocaleDateString() : '';
+  }
 }

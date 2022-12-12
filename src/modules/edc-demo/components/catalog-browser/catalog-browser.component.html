@@ -1,6 +1,6 @@
 <div *ngIf="filteredContractOffers$ | async as filteredContractOffers" id="wrapper">
   <div>
-    <mat-form-field class="search-form-field" color="primary">
+    <mat-form-field class="search-form-field" color="accent">
       <mat-label>Search catalog</mat-label>
       <input (input)="onSearch()" [(ngModel)]="searchText" matInput>
       <mat-icon matPrefix>search</mat-icon>
@@ -83,7 +83,7 @@
             <mat-card-actions class="card-actions">
               <button (click)="onNegotiateClicked(contractOffer)"
                       [disabled]="!contractOffer.asset.isAsync || isBusy(contractOffer) || isNegotiated(contractOffer)"
-                      color="primary" mat-stroked-button>
+                      color="primary" mat-raised-button>
                 <mat-icon>drive_file_rename_outline</mat-icon>
                 Negotiate
               </button>

@@ -7,6 +7,7 @@ import {AssetEditorDialog} from "../asset-editor-dialog/asset-editor-dialog.comp
 import {Asset} from "../../models/asset";
 import {ConfirmationDialogComponent, ConfirmDialogModel} from "../confirmation-dialog/confirmation-dialog.component";
 import {NotificationService} from "../../services/notification.service";
+import {AppConfigService} from "../../../app/app-config.service";
 
 @Component({
   selector: 'edc-demo-asset-viewer',
@@ -19,10 +20,12 @@ export class AssetViewerComponent implements OnInit {
   searchText = '';
   isTransferring = false;
   private fetch$ = new BehaviorSubject(null);
+  themeClassString: any;
 
   constructor(private assetService: AssetService,
               private notificationService: NotificationService,
-              private readonly dialog: MatDialog) {
+              private readonly dialog: MatDialog,
+              private appConfigService: AppConfigService) {
   }
 
   private showError(error: string) {
@@ -31,6 +34,7 @@ export class AssetViewerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.themeClass();
     this.filteredAssets$ = this.fetch$
       .pipe(
         switchMap(() => {
@@ -40,6 +44,10 @@ export class AssetViewerComponent implements OnInit {
             :
             assets$;
         }));
+  }
+
+  themeClass() {
+    this.themeClassString = this.appConfigService.getConfig()?.theme;
   }
 
   isBusy() {
@@ -67,7 +75,7 @@ export class AssetViewerComponent implements OnInit {
   }
 
   onCreate() {
-    const dialogRef = this.dialog.open(AssetEditorDialog);
+    const dialogRef = this.dialog.open(AssetEditorDialog, {panelClass: this.themeClassString});
     dialogRef.afterClosed().pipe(first()).subscribe((result: { assetEntryDto?: AssetEntryDto }) => {
       const newAsset = result?.assetEntryDto;
       if (newAsset) {
