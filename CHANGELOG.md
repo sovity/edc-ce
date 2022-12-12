@@ -17,6 +17,10 @@ Supporting communication with milestone 7 EDC.
 
 #### Added
 - Add Help-Box (Zammad links) (https://github.com/sovity/edc-sovity-ui/issues/55)
+- Support customizing the NGINX listen address (https://github.com/sovity/edc-sovity-ui/issues/42)
+  - Required Environment-Variables
+    - NGINX_BIND
+    - NGINX_PORT
 - Added secret scanning to repo
 - Added MDS logo in the tool bar and added MDS theme
 
