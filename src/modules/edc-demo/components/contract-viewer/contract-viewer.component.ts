@@ -1,10 +1,10 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {
-  AssetDto,
   AssetService,
   ContractAgreementDto,
-  ContractAgreementService, DataAddress,
-  TransferId, TransferProcessDto,
+  ContractAgreementService,
+  DataAddress,
+  TransferId,
   TransferProcessService,
   TransferRequestDto
 } from "../../../edc-dmgmt-client";
@@ -19,6 +19,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {CatalogBrowserService} from "../../services/catalog-browser.service";
 import {Router} from "@angular/router";
 import {TransferProcessStates} from "../../models/transfer-process-states";
+import {AppConfigService} from "../../../app/app-config.service";
 
 interface RunningTransferProcess {
   processId: string;
@@ -36,6 +37,7 @@ export class ContractViewerComponent implements OnInit {
   contracts$: Observable<ContractAgreementDto[]> = of([]);
   private runningTransfers: RunningTransferProcess[] = [];
   private pollingHandleTransfer?: any;
+  themeClassString: any;
 
   constructor(private contractAgreementService: ContractAgreementService,
               private assetService: AssetService,
@@ -44,7 +46,8 @@ export class ContractViewerComponent implements OnInit {
               private transferService: TransferProcessService,
               private catalogService: CatalogBrowserService,
               private router: Router,
-              private notificationService: NotificationService) {
+              private notificationService: NotificationService,
+              private appConfigService: AppConfigService) {
   }
 
   private static isFinishedState(state: string): boolean {
@@ -55,11 +58,16 @@ export class ContractViewerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.themeClass();
     this.contracts$ = this.contractAgreementService.getAllAgreements();
   }
 
+  themeClass() {
+    this.themeClassString = this.appConfigService.getConfig()?.theme;
+  }
+
   asDate(epochSeconds?: number): string {
-    if(epochSeconds){
+    if (epochSeconds) {
       const d = new Date(0);
       d.setUTCSeconds(epochSeconds);
       return d.toLocaleDateString();
@@ -72,7 +80,7 @@ export class ContractViewerComponent implements OnInit {
   }
 
   onTransferClicked(contract: ContractAgreementDto) {
-    const dialogRef = this.dialog.open(CatalogBrowserTransferDialog);
+    const dialogRef = this.dialog.open(CatalogBrowserTransferDialog, {panelClass: this.themeClassString});
 
     dialogRef.afterClosed().pipe(first()).subscribe(result => {
       const dataDestination: DataAddress = result.dataDestination;
@@ -97,7 +105,7 @@ export class ContractViewerComponent implements OnInit {
         assetId: offeredAsset.id,
         contractId: contract.id,
         connectorId: "consumer", //doesn't matter, but cannot be null
-        dataDestination:  dataDestination,
+        dataDestination: dataDestination,
         managedResources: false,
         transferType: {isFinite: true}, //must be there, otherwise NPE on backend
         connectorAddress: offeredAsset.originator,

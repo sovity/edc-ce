@@ -1,8 +1,5 @@
-events {}
-http {
-  include /etc/nginx/mime.types;
-  server {
-      listen       80;
+server {
+      listen       ${NGINX_BIND}:${NGINX_PORT};
       server_name  localhost;
 
       root   /usr/share/nginx/html;
@@ -11,5 +8,4 @@ http {
       location / {
           try_files $uri $uri/ /index.html;
       }
-  }
 }

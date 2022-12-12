@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {Policy, PolicyDefinition, PolicyService} from "../../../edc-dmgmt-client";
+import {PolicyDefinition, PolicyService} from "../../../edc-dmgmt-client";
 import {BehaviorSubject, Observable, Observer, of} from "rxjs";
 import {first, map, switchMap} from "rxjs/operators";
 import {MatDialog} from "@angular/material/dialog";
 import {NewPolicyDialogComponent} from "../new-policy-dialog/new-policy-dialog.component";
 import {NotificationService} from "../../services/notification.service";
 import {ConfirmationDialogComponent, ConfirmDialogModel} from "../confirmation-dialog/confirmation-dialog.component";
+import {AppConfigService} from "../../../app/app-config.service";
 
 @Component({
   selector: 'app-policy-view',
@@ -18,10 +19,12 @@ export class PolicyViewComponent implements OnInit {
   searchText: string = '';
   private fetch$ = new BehaviorSubject(null);
   private readonly errorOrUpdateSubscriber: Observer<string>;
+  themeClassString: any;
 
   constructor(private policyService: PolicyService,
               private notificationService: NotificationService,
-              private readonly dialog: MatDialog) {
+              private readonly dialog: MatDialog,
+              private appConfigService: AppConfigService) {
 
     this.errorOrUpdateSubscriber = {
       next: x => this.fetch$.next(null),
@@ -34,6 +37,7 @@ export class PolicyViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.themeClass();
     this.filteredPolicies$ = this.fetch$.pipe(
       switchMap(() => {
         const contractDefinitions$ = this.policyService.getAllPolicies();
@@ -44,12 +48,16 @@ export class PolicyViewComponent implements OnInit {
       }));
   }
 
+  themeClass() {
+    this.themeClassString = this.appConfigService.getConfig()?.theme;
+  }
+
   onSearch() {
     this.fetch$.next(null);
   }
 
   onCreate() {
-    const dialogRef = this.dialog.open(NewPolicyDialogComponent)
+    const dialogRef = this.dialog.open(NewPolicyDialogComponent, {panelClass: this.themeClassString})
     dialogRef.afterClosed().pipe(first()).subscribe((result: PolicyDefinition) => {
       if (result) {
         this.policyService.createPolicy(result).subscribe(this.errorOrUpdateSubscriber);

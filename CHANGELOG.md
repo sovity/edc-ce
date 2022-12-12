@@ -24,6 +24,13 @@ Supporting communication with milestone 7 EDC. Working Logout.
   - KEYCLOAK_LOGOUT_URL
     - all url encoded including {{KEYCLOAK_BASE_URL}} and {{EDC_UI_BASE_URL}}
     - Schema: {{KEYCLOAK_BASE_URL}}%2Frealms%2Fsovity%2Fprotocol%2Fopenid-connect%2Flogout%3Fclient_id%3D{{OAUTH2_PROXY_KEYCLOAK_CLIENT_ID}}%26post_logout_redirect_uri%3D{{EDC_UI_BASE_URL}}
+- Support customizing the NGINX listen address (https://github.com/sovity/edc-sovity-ui/issues/42)
+  - Required Environment-Variables
+    - NGINX_BIND
+    - NGINX_PORT
+- Added secret scanning to repo
+- Added MDS logo in the tool bar and added MDS theme
+- Added focus on nav-bar item
 
 #### Changed
 - Renamed policyDefinition `uid` field to `id`
