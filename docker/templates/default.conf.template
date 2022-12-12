@@ -1,6 +1,6 @@
 server {
-      listen       ${NGINX_PORT};
-      server_name  ${NGINX_SERVER_NAME};
+      listen       ${NGINX_BIND}:${NGINX_PORT};
+      server_name  localhost;
 
       root   /usr/share/nginx/html;
       index  index.html;
