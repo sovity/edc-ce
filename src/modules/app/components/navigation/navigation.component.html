@@ -9,7 +9,7 @@
         </mat-toolbar>
         <mat-nav-list>
             <a [routerLink]="[route.path]" *ngFor="let route of routes">
-                <mat-list-item *ngIf="route.component">
+                <mat-list-item *ngIf="route.component" [routerLinkActive]="['is-active']">
                     <mat-icon mat-list-icon>{{route.data?.icon}}</mat-icon>
                     <span matLine>{{route.data?.title ?? route.path}}</span>
                 </mat-list-item>
