@@ -19,8 +19,8 @@ Supporting communication with milestone 7 EDC.
 - Add Help-Box (Zammad links) (https://github.com/sovity/edc-sovity-ui/issues/55)
 - Support customizing the NGINX listen address (https://github.com/sovity/edc-sovity-ui/issues/42)
   - Required Environment-Variables
+    - NGINX_BIND
     - NGINX_PORT
-    - NGINX_SERVER_NAME
 
 #### Changed
 - Renamed policyDefinition `uid` field to `id`
