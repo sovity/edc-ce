@@ -21,6 +21,7 @@ Supporting communication with milestone 7 EDC.
   - Required Environment-Variables
     - NGINX_BIND
     - NGINX_PORT
+- Added secret scanning to repo
 
 #### Changed
 - Renamed policyDefinition `uid` field to `id`
