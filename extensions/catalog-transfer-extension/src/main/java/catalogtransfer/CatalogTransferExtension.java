@@ -79,6 +79,9 @@ public class CatalogTransferExtension implements ServiceExtension {
     @Setting
     private static final String UPDATE_INTERVAL_IN_SECONDS = "update.interval.in.seconds";
 
+    @Setting
+    private static final String EDC_CONNECTOR_NAME = "edc.connector.name";
+
     @Inject
     private IdsApiConfiguration idsApiConfiguration;
 
@@ -245,10 +248,11 @@ public class CatalogTransferExtension implements ServiceExtension {
         var typeManager = context.getTypeManager();
         var objectMapper = typeManager.getMapper(TYPE_MANAGER_SERIALIZER_KEY);
         var connectorId = resolveConnectorId(context);
+        var connectorName = context.getSetting(EDC_CONNECTOR_NAME, "EDC");
 
         var senderDelegateContext = new SenderDelegateContext(connectorId, objectMapper, transformerRegistry, idsApiConfiguration.getIdsWebhookAddress());
 
-        var registerConnectorSender = new RegisterConnectorRequestSender(senderDelegateContext, objectMapper);
+        var registerConnectorSender = new RegisterConnectorRequestSender(senderDelegateContext, objectMapper, connectorName);
         var registerResourceSender = new RegisterResourceRequestSender(senderDelegateContext, objectMapper);
         var unregisterResourceSender = new UnregisterResourceRequestSender(senderDelegateContext);
         var queryMessageRequestSender = new QueryMessageRequestSender(senderDelegateContext);

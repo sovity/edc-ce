@@ -22,6 +22,7 @@ import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.MessageProcessedNotificationMessageImpl;
 import de.fraunhofer.iais.eis.ResourceCatalogBuilder;
 import de.fraunhofer.iais.eis.SecurityProfile;
+import de.fraunhofer.iais.eis.util.TypedLiteral;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.MultipartSenderDelegate;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.SenderDelegateContext;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.IdsMultipartParts;
@@ -41,10 +42,14 @@ public class RegisterConnectorRequestSender implements MultipartSenderDelegate<R
 
     private SenderDelegateContext context;
     private ObjectMapper objectMapper;
+    private String connectorName;
 
-    public RegisterConnectorRequestSender(SenderDelegateContext context, ObjectMapper objectMapper) {
+    public RegisterConnectorRequestSender(SenderDelegateContext context,
+                                          ObjectMapper objectMapper,
+                                          String connectorName) {
         this.context = context;
         this.objectMapper = objectMapper;
+        this.connectorName = connectorName;
     }
 
     @Override
@@ -69,6 +74,7 @@ public class RegisterConnectorRequestSender implements MultipartSenderDelegate<R
         var resourceCatalog = new ResourceCatalogBuilder()
                 .build();
         var baseConnector = new BaseConnectorBuilder(registerConnectorMessage.connectorBaseUrl())
+                ._title_(new TypedLiteral(connectorName))
                 ._curator_(registerConnectorMessage.curator())
                 ._hasDefaultEndpoint_(connectorEndpoint)
                 ._resourceCatalog_(resourceCatalog) // has to be set, otherwise broker will crash
