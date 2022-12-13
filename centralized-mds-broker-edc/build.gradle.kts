@@ -9,7 +9,6 @@ val edcGroup: String by project
 
 dependencies {
     implementation(project(":extensions:catalog-transfer-extension"))
-    implementation(project(":extensions:policies"))
     implementation(project(":extensions:event-asset-provider"))
     implementation("${edcGroup}:control-plane-core:${edcVersion}")
     implementation("${edcGroup}:api-observability:${edcVersion}")
