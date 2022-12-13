@@ -1,7 +1,7 @@
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {EMPTY, forkJoin, Observable} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {EMPTY, forkJoin, Observable, of} from 'rxjs';
+import {catchError, map, timeout} from 'rxjs/operators';
 import {Asset} from '../models/asset';
 import {ContractOffer} from '../models/contract-offer';
 import {
@@ -39,7 +39,18 @@ export class CatalogBrowserService {
     let allContractOffers: Observable<ContractOffer[]>[] = [];
     for (const catalogApiUrl of catalogApiUrlArray) {
       const contractOffers = this.httpClient.get<ContractOfferResponse>(catalogApiUrl)
-          .pipe(map(contractOfferResponse => contractOfferResponse.contractOffers.map(contractOffer => {
+          .pipe(map(({contractOffers}) => contractOffers))
+          .pipe(timeout({first: 5_000, with: () => of([])}))
+          .pipe(
+              catchError((httpErrorResponse: HttpErrorResponse) => {
+                if (httpErrorResponse.error instanceof Error) {
+                  console.error(`Error accessing URL '${catalogApiUrl}', Method: 'GET', Error: '${httpErrorResponse.error.message}'`);
+                } else {
+                  console.error(`Unsuccessful status code accessing URL '${catalogApiUrl}', Method: Get, StatusCode: '${httpErrorResponse.status}', Error: '${httpErrorResponse.error?.message}'`);
+                }
+                return of([]);
+              }))
+          .pipe(map(contractOffers => contractOffers.map(contractOffer => {
             contractOffer.asset = new Asset(contractOffer.asset.properties)
             return contractOffer;
           })))
