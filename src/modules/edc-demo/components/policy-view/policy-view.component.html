@@ -1,7 +1,7 @@
 <div id="wrapper" *ngIf="filteredPolicies$ | async as policyDefinitions">
 <!--    entry fields for new policy-->
   <div>
-    <mat-form-field appearance="outline" class="search-form-field" color="primary">
+    <mat-form-field appearance="outline" class="search-form-field" color="accent">
       <mat-label>Search policies</mat-label>
       <input (input)="onSearch()" [(ngModel)]="searchText" matInput>
       <mat-icon matPrefix>search</mat-icon>
@@ -12,7 +12,7 @@
 
     <mat-paginator [length]="policyDefinitions?.length" hidePageSize="true" pageSize="10"></mat-paginator>
 
-    <button (click)="onCreate()" color="primary" id="create-button" mat-stroked-button>
+    <button (click)="onCreate()" color="primary" id="create-button" mat-raised-button>
       <mat-icon>add_circle_outline</mat-icon>
       Create policy
     </button>
@@ -23,7 +23,7 @@
     <mat-card *ngFor="let policyDef of policyDefinitions" class="policy-card">
       <mat-card-header>
         <mat-icon mat-card-avatar>policy</mat-icon>
-        <mat-card-title><span class="code">{{policyDef.uid}}</span></mat-card-title>
+        <mat-card-title><span class="code">{{policyDef.id}}</span></mat-card-title>
       </mat-card-header>
 
       <mat-card-content>

@@ -15,3 +15,25 @@
   top: 0;
   z-index: 1;
 }
+
+#contact-form {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  background: #FFFFFF;
+}
+
+#contact-form a {
+  display: block;
+  margin: 16px 16px;
+}
+
+.custom-toolbar {
+  margin: 3px 3px;
+}
+
+.is-active{
+  cursor: pointer;
+  background-color: #DEDEDE;
+}

@@ -14,6 +14,6 @@ import { Policy } from './policy';
 
 export interface PolicyDefinition {
     policy: Policy;
-    uid: string;
+    id: string;
 }
 

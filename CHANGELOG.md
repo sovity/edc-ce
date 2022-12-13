@@ -7,6 +7,40 @@ This file will not cover changes about documentation, code clean-up, samples, or
 (respectively milestone), the core features are highlighted. Relevant changes to existing implementations can be found
 in the detailed section referring to by linking pull requests or issues.
 
+## [0.0.1-ab1b6fd0-sovity4] Unreleased
+
+### Overview
+
+Supporting communication with milestone 7 EDC. Working Logout.
+
+### Detailed Changes
+
+#### Added
+- Add Help-Box (Zammad links) (https://github.com/sovity/edc-sovity-ui/issues/55)
+- Additional `logoutUrl` Property in app.config.json (https://github.com/sovity/edc-sovity-ui/issues/24)
+  - OAuth2-Proxy-Config has to be adapted
+    - Setting: --whitelist-domain to {{KEYCLOAK_ASE_URL}}
+  - Schema: {{EDC_UI_BASE_URL}}/oauth2/sign_out?rd={{KEYCLOAK_LOGOUT_URL}}
+  - KEYCLOAK_LOGOUT_URL
+    - all url encoded including {{KEYCLOAK_BASE_URL}} and {{EDC_UI_BASE_URL}}
+    - Schema: {{KEYCLOAK_BASE_URL}}%2Frealms%2Fsovity%2Fprotocol%2Fopenid-connect%2Flogout%3Fclient_id%3D{{OAUTH2_PROXY_KEYCLOAK_CLIENT_ID}}%26post_logout_redirect_uri%3D{{EDC_UI_BASE_URL}}
+- Support customizing the NGINX listen address (https://github.com/sovity/edc-sovity-ui/issues/42)
+  - Required Environment-Variables
+    - NGINX_BIND
+    - NGINX_PORT
+- Added secret scanning to repo
+- Added MDS logo in the tool bar and added MDS theme
+- Added focus on nav-bar item
+
+#### Changed
+- Renamed policyDefinition `uid` field to `id`
+- Removed Logout-Button from Startpage and added it to the menu (https://github.com/sovity/edc-sovity-ui/issues/24)
+
+#### Removed
+- Developer text description on start page
+
+#### Fixed
+
 ## [0.0.1-ab1b6fd0-sovity3] 2022-11-10
 
 ### Overview
