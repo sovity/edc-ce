@@ -1,7 +1,8 @@
 name: EDC Image CI
 
 on:
-  workflow_dispatch
+   push:
+    branches: [ main ]
 
 env:
   REGISTRY: ghcr.io
