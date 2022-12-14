@@ -2,7 +2,7 @@ FROM gradle:7.4.1-jdk17 AS build
 
 COPY --chown=gradle:gradle . /home/gradle/project/
 WORKDIR /home/gradle/project/
-RUN gradle :build --no-daemon
+RUN gradle build --no-daemon
 
 # -buster is required to have apt available
 FROM openjdk:17-slim-buster
