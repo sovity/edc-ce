@@ -1,3 +1,9 @@
+FROM gradle:7.4.1-jdk17 AS build
+
+COPY --chown=gradle:gradle . /home/gradle/project/
+WORKDIR /home/gradle/project/
+RUN gradle :build --no-daemon
+
 # -buster is required to have apt available
 FROM openjdk:17-slim-buster
 
@@ -11,8 +17,8 @@ RUN apt update \
 
 WORKDIR /app
 
-COPY ./build/libs/app.jar /app
-COPY ./src/main/resources/logging.properties /app
+COPY --from=build /home/gradle/project/centralized-mds-broker-edc/build/libs/app.jar /app
+COPY ./centralized-mds-broker-edc/src/main/resources/logging.properties /app
 
 EXPOSE 8181
 EXPOSE 9191

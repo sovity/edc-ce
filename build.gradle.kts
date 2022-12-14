@@ -19,10 +19,10 @@ val downloadArtifact: Configuration by configurations.creating {
 
 val identityHubVersion: String by project;
 val registrationServiceVersion: String by project;
-dependencies {
-    downloadArtifact("org.eclipse.dataspaceconnector.identityhub:identity-hub-cli:${identityHubVersion}:all")
-    downloadArtifact("org.eclipse.dataspaceconnector.registrationservice:registration-service-cli:${registrationServiceVersion}:all")
-}
+//dependencies {
+//    downloadArtifact("org.eclipse.dataspaceconnector.identityhub:identity-hub-cli:${identityHubVersion}:all")
+//    downloadArtifact("org.eclipse.dataspaceconnector.registrationservice:registration-service-cli:${registrationServiceVersion}:all")
+//}
 
 // task that downloads the RegSrv CLI and IH CLI
 val getJars by tasks.registering(Copy::class) {
@@ -64,5 +64,8 @@ allprojects {
         maven {
             url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
         }
+//        maven {
+//            url = uri("/libs")
+//        }
     }
 }
