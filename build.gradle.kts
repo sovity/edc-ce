@@ -1,6 +1,7 @@
 plugins {
     id("java")
     id("checkstyle")
+    `maven-publish`
 }
 
 dependencies {
