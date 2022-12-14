@@ -1,4 +1,4 @@
-rootProject.name = "mds-edc-broker"
+rootProject.name = "broker-extension"
 include("extensions:policies")
 findProject(":extensions:policies")?.name = "policies"
 include("extensions:catalog-transfer-extension")
