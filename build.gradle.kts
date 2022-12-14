@@ -71,6 +71,9 @@ allprojects {
     }
 }
 
+group = "de.sovity"
+version = "0.0.1"
+
 publishing {
     repositories {
         maven {
