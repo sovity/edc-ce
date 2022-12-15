@@ -21,3 +21,7 @@ Here we show the way via the tool `KeyStore Explorer` using Windows, for direct 
 - Double-click on the certificate under the specified storage path
 - Under the `Details` section you will find the details of the AKI and SKI of both the applicant and the issuer
 - Finally, both specifications have to be manually rewritten into the required format, see the above example of the client-ID
+
+## License
+
+This project is licensed under the Apache License 2.0 - see [here](LICENSE) for details.
