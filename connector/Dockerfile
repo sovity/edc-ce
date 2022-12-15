@@ -17,8 +17,8 @@ RUN apt update \
 
 WORKDIR /app
 
-COPY --from=build /home/gradle/project/centralized-mds-broker-edc/build/libs/app.jar /app
-COPY ./centralized-mds-broker-edc/src/main/resources/logging.properties /app
+COPY --from=build /home/gradle/project/connector/build/libs/app.jar /app
+COPY ./connector/src/main/resources/logging.properties /app
 
 EXPOSE 8181
 EXPOSE 9191
