@@ -77,7 +77,7 @@ public class IdsBrokerServiceImpl implements IdsBrokerService {
     @Override
     public void registerResourceAtBroker(URL brokerBaseUrl, String resourceId, Asset asset) {
         try {
-            var resourceUriId = new URI(String.format("https://test.connector.de/catalog/%s", resourceId));
+            var resourceUriId = new URI(String.format("https://%1$s/catalog/%2$s", hostname.get(), resourceId));
             var brokerInfrastructureUrl = new URL(String.format("%s/infrastructure",
                     brokerBaseUrl));
             var connectorBaseUrl = new URI(String.format("http://%s/", hostname.get()));
