@@ -43,10 +43,12 @@ public class RegisterConnectorRequestSender implements MultipartSenderDelegate<R
     private SenderDelegateContext context;
     private ObjectMapper objectMapper;
     private String connectorName;
+    private String endpoint;
 
     public RegisterConnectorRequestSender(SenderDelegateContext context,
                                           ObjectMapper objectMapper,
-                                          String connectorName) {
+                                          String connectorName,
+                                          String endpoint) {
         this.context = context;
         this.objectMapper = objectMapper;
         this.connectorName = connectorName;
@@ -69,7 +71,7 @@ public class RegisterConnectorRequestSender implements MultipartSenderDelegate<R
     @Override
     public String buildMessagePayload(RegisterConnectorMessage registerConnectorMessage) throws Exception {
         var connectorEndpoint = new ConnectorEndpointBuilder(new URI("http://endpointid"))
-                ._accessURL_(new URI("http://endpointUrl"))
+                ._accessURL_(new URI(endpoint))
                 .build();
         var resourceCatalog = new ResourceCatalogBuilder()
                 .build();
