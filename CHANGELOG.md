@@ -31,6 +31,7 @@ Supporting communication with milestone 7 EDC. Working Logout.
 - Added secret scanning to repo
 - Added MDS logo in the tool bar and added MDS theme
 - Added focus on nav-bar item
+- Added test server setup
 
 #### Changed
 - Renamed policyDefinition `uid` field to `id`
