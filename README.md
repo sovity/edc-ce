@@ -11,10 +11,7 @@ To get started, a sample docker-compose file is located in the resources/docs fo
 - `EDC_CONNECTOR_NAME:` _The name of the connector_
 - `EDC_HOSTNAME:` _The host of the connector_
 - `EDC_API_AUTH_KEY:` _The API authorization key of management API_
--       : "MDS Eclipse Dataspace Connector"
-      EDC_IDS_DESCRIPTION: "An MDS EDC Connector with MDS Broker Extension"
       
-
 #### MDS Environment Configuration
 The test environment is set by default.
 - `EDC_BROKER_BASE_URL:` https://broker.dev.mobility-dataspace.eu
