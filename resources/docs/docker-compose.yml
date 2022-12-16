@@ -1,12 +1,14 @@
 version: "3.8"
 services:
-
   edc:
     container_name: edc
     image: ghcr.io/sovity/broker-extension:main
     environment:
       IDS_WEBHOOK_ADDRESS: http://edc:8282
       EDC_IDS_ID: urn:connector:catalog-transfer-edc
+      EDC_IDS_TITLE: "MDS Eclipse Dataspace Connector"
+      EDC_IDS_DESCRIPTION: "An MDS EDC Connector with MDS Broker Extension"
+      EDC_IDS_ENDPOINT: "http://edc:8282/api/v1/ids"
       EDC_IDS_CURATOR: https://example.com
       EDC_IDS_MAINTAINER: https://sovity.de
       EDC_CONNECTOR_NAME: EDC-Connector

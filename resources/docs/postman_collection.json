@@ -126,7 +126,7 @@
 					"response": []
 				},
 				{
-					"name": "Publish ContractDefinition 1 Copy",
+					"name": "Delete ContractDefinition 1",
 					"event": [
 						{
 							"listen": "test",
@@ -157,7 +157,7 @@
 					"response": []
 				},
 				{
-					"name": "Publish ContractDefinition 1 Copy 2",
+					"name": "Get Published ContractDefinition 1",
 					"event": [
 						{
 							"listen": "test",
@@ -181,29 +181,6 @@
 							],
 							"path": [
 								"contractdefinitions"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Federated Catalog",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{federated_catalog_url}}",
-							"host": [
-								"{{federated_catalog_url}}"
 							]
 						}
 					},
