@@ -8,7 +8,7 @@ services:
       IDS_WEBHOOK_ADDRESS: http://edc:8282
       EDC_IDS_ID: urn:connector:catalog-transfer-edc
       EDC_IDS_CURATOR: https://example.com
-      EDC_IDS_MAINTAINER: https://example.com
+      EDC_IDS_MAINTAINER: https://sovity.de
       EDC_CONNECTOR_NAME: EDC-Connector
       EDC_HOSTNAME: company1
       EDC_VAULT: /resources/vault/edc/vault.properties
