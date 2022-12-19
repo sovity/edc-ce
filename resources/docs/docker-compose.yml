@@ -2,7 +2,7 @@ version: "3.8"
 services:
   edc:
     container_name: edc
-    image: ghcr.io/sovity/broker-extension:main
+    image: ghcr.io/sovity/edc-broker-extension:main
     environment:
       IDS_WEBHOOK_ADDRESS: http://edc:8282
       EDC_IDS_ID: urn:connector:catalog-transfer-edc
