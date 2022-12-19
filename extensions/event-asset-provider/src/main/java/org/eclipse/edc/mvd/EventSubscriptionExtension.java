@@ -47,7 +47,7 @@ public class EventSubscriptionExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        var eventSubscriber = new CustomEventSubscriber(contractDefinitionStore, assetIndex);
+        var eventSubscriber = new CustomEventSubscriber(contractDefinitionStore);
         eventRouter.registerSync(eventSubscriber); //asynchronous dispatch - registerSync for synchronous dispatch
         context.registerService(ContractDefinitionProvider.class, eventSubscriber);
     }

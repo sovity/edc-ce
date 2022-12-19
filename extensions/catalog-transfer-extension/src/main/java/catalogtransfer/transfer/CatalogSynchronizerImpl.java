@@ -14,7 +14,6 @@
 package catalogtransfer.transfer;
 
 import catalogtransfer.broker.IdsBrokerService;
-import okhttp3.OkHttpClient;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.monitor.Monitor;
@@ -31,26 +30,17 @@ import java.util.Map;
 public class CatalogSynchronizerImpl implements CatalogSynchronizer {
 
     private final IdsBrokerService idsBrokerService;
-    private final OkHttpClient okHttpClient;
     private final Monitor monitor;
-
-    private final String catalogUrl;
-
     private final ContractDefinitionProvider contractDefinitionProvider;
-
     private final AssetIndex assetIndex;
 
     public CatalogSynchronizerImpl(
             IdsBrokerService idsBrokerService,
-            OkHttpClient okHttpClient,
             Monitor monitor,
-            String catalogUrl,
             ContractDefinitionProvider contractOfferProvider,
             AssetIndex assetIndex) {
         this.idsBrokerService = idsBrokerService;
-        this.okHttpClient = okHttpClient;
         this.monitor = monitor;
-        this.catalogUrl = catalogUrl;
         this.contractDefinitionProvider = contractOfferProvider;
         this.assetIndex = assetIndex;
     }
@@ -99,8 +89,6 @@ public class CatalogSynchronizerImpl implements CatalogSynchronizer {
             Map<String, Asset> federatedCatalogResourceMap,
             URL brokerBaseUrl) {
         var createdResourceSet = new HashSet<>(federatedCatalogResourceMap.keySet());
-
-        //monitor.info(String.format("Found offers in federated catalog: %s", createdResourceSet));
 
         for (var createdResourceId : createdResourceSet) {
             monitor.info(String.format("Registering resource %s at broker", createdResourceId));

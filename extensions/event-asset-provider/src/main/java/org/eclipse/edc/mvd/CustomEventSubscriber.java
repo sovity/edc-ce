@@ -16,7 +16,6 @@ package org.eclipse.edc.mvd;
 import catalogtransfer.transfer.ContractDefinitionProvider;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
-import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.event.Event;
 import org.eclipse.edc.spi.event.EventSubscriber;
 import org.eclipse.edc.spi.event.contractdefinition.ContractDefinitionCreated;
@@ -29,15 +28,11 @@ import java.util.List;
 public class CustomEventSubscriber implements EventSubscriber, ContractDefinitionProvider {
     private final ContractDefinitionStore contractDefinitionStore;
 
-    private final AssetIndex assetIndex;
-
     private final List<ContractDefinition> createdContractDefinitions;
     private final List<String> deletedContractDefinitionIds;
 
-    public CustomEventSubscriber(ContractDefinitionStore contractDefinitionStore,
-                                 AssetIndex assetIndex) {
+    public CustomEventSubscriber(ContractDefinitionStore contractDefinitionStore) {
         this.contractDefinitionStore = contractDefinitionStore;
-        this.assetIndex = assetIndex;
         createdContractDefinitions = new LinkedList<>();
         deletedContractDefinitionIds = new LinkedList<>();
     }

@@ -33,7 +33,6 @@ import de.fraunhofer.iais.eis.ResourceUpdateMessage;
 import okhttp3.OkHttpClient;
 import org.eclipse.edc.protocol.ids.api.configuration.IdsApiConfiguration;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.SenderDelegateContext;
 import org.eclipse.edc.protocol.ids.jsonld.JsonLd;
 import org.eclipse.edc.protocol.ids.service.ConnectorServiceSettings;
 import org.eclipse.edc.protocol.ids.spi.service.DynamicAttributeTokenService;
@@ -58,8 +57,6 @@ import sender.message.dispatcher.IdsMultipartExtendedRemoteMessageDispatcher;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-
-import static org.eclipse.edc.protocol.ids.util.ConnectorIdUtil.resolveConnectorId;
 
 public class CatalogTransferExtension implements ServiceExtension {
 
@@ -128,12 +125,6 @@ public class CatalogTransferExtension implements ServiceExtension {
         brokerBaseUrl = readUrlFromSettings(context, BROKER_BASE_URL_SETTING);
         monitor = context.getMonitor();
 
-        var catalogUrlSetting = readUrlFromSettings(context, EDC_CATALOG_URL);
-        var catalogUrl = "";
-        if (catalogUrlSetting != null) {
-            catalogUrl = catalogUrlSetting.toString();
-        }
-
         var updateInterval = context.getSetting(UPDATE_INTERVAL_IN_SECONDS, "5");
 
         registerSerializerBrokerMessages(context);
@@ -144,25 +135,19 @@ public class CatalogTransferExtension implements ServiceExtension {
                 dispatcherRegistry,
                 hostname);
         initializeCatalogTransferProcess(
-                okHttpClient,
                 idsBrokerService,
                 monitor,
-                catalogUrl,
                 updateInterval);
     }
 
     private void initializeCatalogTransferProcess(
-            OkHttpClient okHttpClient,
             IdsBrokerService idsBrokerService,
             Monitor monitor,
-            String catalogUrl,
             String updateInterval) {
 
         var catalogSynchronizer = new CatalogSynchronizerImpl(
                 idsBrokerService,
-                okHttpClient,
                 monitor,
-                catalogUrl,
                 assetProvider,
                 assetIndex);
         catalogTransferProcess = new CatalogTransferProcessImpl(
@@ -250,16 +235,13 @@ public class CatalogTransferExtension implements ServiceExtension {
         var monitor = context.getMonitor();
         var typeManager = context.getTypeManager();
         var objectMapper = typeManager.getMapper(TYPE_MANAGER_SERIALIZER_KEY);
-        var connectorId = resolveConnectorId(context);
         var connectorName = context.getSetting(EDC_CONNECTOR_NAME, "EDC");
         var endpoint = context.getSetting(EDC_IDS_ENDPOINT, "http://endpoint");
 
-        var senderDelegateContext = new SenderDelegateContext(connectorId, objectMapper, transformerRegistry, idsApiConfiguration.getIdsWebhookAddress());
-
-        var registerConnectorSender = new RegisterConnectorRequestSender(senderDelegateContext, objectMapper, connectorName, endpoint);
-        var registerResourceSender = new RegisterResourceRequestSender(senderDelegateContext, objectMapper);
-        var unregisterResourceSender = new UnregisterResourceRequestSender(senderDelegateContext);
-        var queryMessageRequestSender = new QueryMessageRequestSender(senderDelegateContext);
+        var registerConnectorSender = new RegisterConnectorRequestSender(objectMapper, connectorName, endpoint);
+        var registerResourceSender = new RegisterResourceRequestSender(objectMapper);
+        var unregisterResourceSender = new UnregisterResourceRequestSender();
+        var queryMessageRequestSender = new QueryMessageRequestSender();
 
         var idsMultipartSender = new IdsMultipartSender(monitor, httpClient, dynamicAttributeTokenService, objectMapper);
         var dispatcher = new IdsMultipartExtendedRemoteMessageDispatcher(idsMultipartSender);
@@ -278,10 +260,6 @@ public class CatalogTransferExtension implements ServiceExtension {
         } catch (Exception e) {
             monitor.severe(String.format("%s failed during startup: ", CATALOG_TRANSFER_EXTENSION), e);
         }
-    }
-
-    @Override
-    public void shutdown() {
     }
 
     @Override

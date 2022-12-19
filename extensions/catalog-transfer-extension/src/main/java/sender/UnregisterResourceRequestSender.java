@@ -18,7 +18,6 @@ import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.MessageProcessedNotificationMessageImpl;
 import de.fraunhofer.iais.eis.ResourceUnavailableMessageBuilder;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.MultipartSenderDelegate;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.SenderDelegateContext;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.IdsMultipartParts;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.MultipartResponse;
 import org.eclipse.edc.protocol.ids.spi.domain.IdsConstants;
@@ -32,16 +31,13 @@ import static org.eclipse.edc.protocol.ids.jsonld.JsonLd.getObjectMapper;
 
 public class UnregisterResourceRequestSender implements MultipartSenderDelegate<UnregisterResourceMessage, String> {
 
-    private SenderDelegateContext context;
-
-    public UnregisterResourceRequestSender(SenderDelegateContext context) {
-        this.context = context;
+    public UnregisterResourceRequestSender() {
     }
 
     @Override
     public Message buildMessageHeader(UnregisterResourceMessage unregisterResourceMessage,
                                       DynamicAttributeToken token) throws Exception {
-        var resourceUnavailableMessage = new ResourceUnavailableMessageBuilder()
+        return new ResourceUnavailableMessageBuilder()
                 ._modelVersion_(IdsConstants.INFORMATION_MODEL_VERSION)
                 ._issued_(CalendarUtil.gregorianNow())
                 ._securityToken_(token)
@@ -49,7 +45,6 @@ public class UnregisterResourceRequestSender implements MultipartSenderDelegate<
                 ._senderAgent_(unregisterResourceMessage.connectorBaseUrl())
                 ._affectedResource_(unregisterResourceMessage.affectedResourceUri())
                 .build();
-        return resourceUnavailableMessage;
     }
 
     @Override
