@@ -24,7 +24,6 @@ import de.fraunhofer.iais.eis.ResourceCatalogBuilder;
 import de.fraunhofer.iais.eis.SecurityProfile;
 import de.fraunhofer.iais.eis.util.TypedLiteral;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.MultipartSenderDelegate;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.SenderDelegateContext;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.IdsMultipartParts;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.MultipartResponse;
 import org.eclipse.edc.protocol.ids.spi.domain.IdsConstants;
@@ -40,16 +39,13 @@ import static org.eclipse.edc.protocol.ids.jsonld.JsonLd.getObjectMapper;
 public class RegisterConnectorRequestSender implements MultipartSenderDelegate<RegisterConnectorMessage,
         String> {
 
-    private SenderDelegateContext context;
     private ObjectMapper objectMapper;
     private String connectorName;
     private String endpoint;
 
-    public RegisterConnectorRequestSender(SenderDelegateContext context,
-                                          ObjectMapper objectMapper,
+    public RegisterConnectorRequestSender(ObjectMapper objectMapper,
                                           String connectorName,
                                           String endpoint) {
-        this.context = context;
         this.objectMapper = objectMapper;
         this.connectorName = connectorName;
     }
@@ -57,7 +53,7 @@ public class RegisterConnectorRequestSender implements MultipartSenderDelegate<R
     @Override
     public Message buildMessageHeader(RegisterConnectorMessage registerConnectorMessage,
                                       DynamicAttributeToken token) throws Exception {
-        var connectorUpdateMessage = new ConnectorUpdateMessageBuilder()
+        return new ConnectorUpdateMessageBuilder()
                 ._modelVersion_(IdsConstants.INFORMATION_MODEL_VERSION)
                 ._issued_(CalendarUtil.gregorianNow())
                 ._securityToken_(token)
@@ -65,7 +61,6 @@ public class RegisterConnectorRequestSender implements MultipartSenderDelegate<R
                 ._senderAgent_(registerConnectorMessage.connectorBaseUrl())
                 ._affectedConnector_(registerConnectorMessage.connectorBaseUrl())
                 .build();
-        return connectorUpdateMessage;
     }
 
     @Override

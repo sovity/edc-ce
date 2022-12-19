@@ -22,7 +22,6 @@ import de.fraunhofer.iais.eis.ResourceBuilder;
 import de.fraunhofer.iais.eis.ResourceUpdateMessageBuilder;
 import de.fraunhofer.iais.eis.util.TypedLiteral;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.MultipartSenderDelegate;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.SenderDelegateContext;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.IdsMultipartParts;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.MultipartResponse;
 import org.eclipse.edc.protocol.ids.spi.domain.IdsConstants;
@@ -37,19 +36,16 @@ import static org.eclipse.edc.protocol.ids.jsonld.JsonLd.getObjectMapper;
 public class RegisterResourceRequestSender implements MultipartSenderDelegate<RegisterResourceMessage,
         String> {
 
-    private SenderDelegateContext context;
     private ObjectMapper objectMapper;
 
-    public RegisterResourceRequestSender(SenderDelegateContext context, ObjectMapper objectMapper) {
-        this.context = context;
+    public RegisterResourceRequestSender(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
     @Override
     public Message buildMessageHeader(RegisterResourceMessage registerResourceMessage,
                                       DynamicAttributeToken token) throws Exception {
-        var resourceUpdateMessage =
-                new ResourceUpdateMessageBuilder(registerResourceMessage.affectedResourceUri())
+        return new ResourceUpdateMessageBuilder(registerResourceMessage.affectedResourceUri())
                         ._modelVersion_(IdsConstants.INFORMATION_MODEL_VERSION)
                         ._issued_(CalendarUtil.gregorianNow())
                         ._securityToken_(token)
@@ -57,7 +53,6 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                         ._senderAgent_(registerResourceMessage.connectorBaseUrl())
                         ._affectedResource_(registerResourceMessage.affectedResourceUri())
                         .build();
-        return resourceUpdateMessage;
     }
 
     @Override

@@ -21,7 +21,6 @@ import de.fraunhofer.iais.eis.QueryScope;
 import de.fraunhofer.iais.eis.QueryTarget;
 import de.fraunhofer.iais.eis.ResultMessageImpl;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.MultipartSenderDelegate;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.SenderDelegateContext;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.IdsMultipartParts;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.MultipartResponse;
 import org.eclipse.edc.protocol.ids.spi.domain.IdsConstants;
@@ -108,17 +107,11 @@ public class QueryMessageRequestSender implements MultipartSenderDelegate<QueryM
             """; // LIMIT 50 OFFSET 0
     private static final String SPARQL_QUERY_FULL_TEXT_TEMPLATE = "${fullTextQueryString}";
 
-    private SenderDelegateContext context;
-
-    public QueryMessageRequestSender(SenderDelegateContext context) {
-        this.context = context;
-    }
-
     @Override
     public Message buildMessageHeader(QueryMessage queryMessage,
                                       DynamicAttributeToken token) throws Exception {
 
-        var connectorUpdateMessage = new QueryMessageBuilder()
+        return new QueryMessageBuilder()
                 ._modelVersion_(IdsConstants.INFORMATION_MODEL_VERSION)
                 ._issued_(CalendarUtil.gregorianNow())
                 ._securityToken_(token)
@@ -128,7 +121,6 @@ public class QueryMessageRequestSender implements MultipartSenderDelegate<QueryM
                 ._queryScope_(QueryScope.ALL)
                 ._recipientScope_(QueryTarget.BROKER)
                 .build();
-        return connectorUpdateMessage;
     }
 
     @Override
