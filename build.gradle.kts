@@ -18,12 +18,10 @@ val downloadArtifact: Configuration by configurations.creating {
 }
 
 
-val identityHubVersion: String by project;
-val registrationServiceVersion: String by project;
-//dependencies {
-//    downloadArtifact("org.eclipse.dataspaceconnector.identityhub:identity-hub-cli:${identityHubVersion}:all")
-//    downloadArtifact("org.eclipse.dataspaceconnector.registrationservice:registration-service-cli:${registrationServiceVersion}:all")
-//}
+val identityHubVersion: String by project
+val registrationServiceVersion: String by project
+val theVersion: String by project
+val theGroup: String by project
 
 // task that downloads the RegSrv CLI and IH CLI
 val getJars by tasks.registering(Copy::class) {
@@ -49,6 +47,7 @@ allprojects {
     apply(plugin = "java")
     apply(plugin = "checkstyle")
 
+
     checkstyle {
         toolVersion = "9.0"
         configFile = rootProject.file("resources/checkstyle-config.xml")
@@ -65,14 +64,11 @@ allprojects {
         maven {
             url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
         }
-//        maven {
-//            url = uri("/libs")
-//        }
     }
 }
 
-group = "de.sovity"
-version = "0.0.1"
+group = theGroup
+version = theVersion
 
 publishing {
     repositories {
