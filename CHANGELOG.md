@@ -1,6 +1,5 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [X.X.X] - XXXX-XX-XX
-
+## [1.0.0] - 2022-12-19
 - initial release
