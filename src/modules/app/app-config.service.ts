@@ -3,9 +3,7 @@ import {Injectable} from '@angular/core';
 
 export interface AppConfig {
   dataManagementApiUrl: string;
-  catalogUrl: string;
   storageAccount: string;
-  apiKey: string;
   storageExplorerLinkTemplate: string;
   theme: string;
 }

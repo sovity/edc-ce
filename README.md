@@ -29,7 +29,6 @@ by default contain the following:
   "catalogUrl": "{{catalogUrl}}",
   "storageAccount": "{{account}}",
   "storageExplorerLinkTemplate": "storageexplorer://v=1&accountid=/subscriptions/{{subscriptionId}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Storage/storageAccounts/{{account}}&subscriptionid={{subscriptionId}}&resourcetype=Azure.BlobContainer&resourcename={{container}}",
-  "apiKey": "{{apiKey}}"
 }
 ```
 Substitute the values as necessary:

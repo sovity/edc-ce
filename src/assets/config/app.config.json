@@ -1,9 +1,7 @@
 {
-  "_comment": "This file will be replaced at runtime when deployed to the cloud",
-  "dataManagementApiUrl": "{{dataManagementApiUrl}}",
-  "catalogUrl": "{{catalogUrl}}",
-  "storageAccount": "{{account}}",
-  "storageExplorerLinkTemplate": "storageexplorer://v=1&accountid=/subscriptions/{{subscriptionId}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Storage/storageAccounts/{{account}}&subscriptionid={{subscriptionId}}&resourcetype=Azure.BlobContainer&resourcename={{container}}",
-  "apiKey": "{{apiKey}}",
-  "theme": "{{theme}}"
+  "apiKey": "ApiKeyDefaultValue",
+  "dataManagementApiUrl": "http://localhost:9192/api/v1/data",
+  "storageAccount": "company2assets",
+  "storageExplorerLinkTemplate": "storageexplorer://v=1",
+  "theme": "theme-2"
 }

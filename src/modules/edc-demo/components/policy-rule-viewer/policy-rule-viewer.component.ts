@@ -1,5 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Rule} from "../../../edc-dmgmt-client/model/rule";
 
 @Component({
   selector: 'policy-rules',
@@ -8,7 +7,7 @@ import {Rule} from "../../../edc-dmgmt-client/model/rule";
 })
 export class PolicyRuleViewerComponent implements OnInit {
 
-  @Input() rules: Rule[] | undefined = [];
+  @Input() rules: any[] | undefined = [];
   @Input() title: string =''
 
   constructor() {

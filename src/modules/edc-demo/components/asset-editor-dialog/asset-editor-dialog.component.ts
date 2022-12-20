@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {AssetDto, AssetEntryDto, AssetService} from "../../../edc-dmgmt-client";
+import { AssetEntryDto, AssetService} from "../../../mgmt-api-client";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {StorageType} from "../../models/storage-type";
 

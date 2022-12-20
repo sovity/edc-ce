@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Policy, PolicyDefinition, PolicyService} from "../../../edc-dmgmt-client";
+import {IdResponseDto, PolicyDefinitionResponseDto, PolicyService} from "../../../mgmt-api-client";
 import {BehaviorSubject, Observable, Observer, of} from "rxjs";
 import {first, map, switchMap} from "rxjs/operators";
 import {MatDialog} from "@angular/material/dialog";
@@ -14,10 +14,10 @@ import {ConfirmationDialogComponent, ConfirmDialogModel} from "../confirmation-d
 })
 export class PolicyViewComponent implements OnInit {
 
-  filteredPolicies$: Observable<PolicyDefinition[]> = of([]);
+  filteredPolicies$: Observable<PolicyDefinitionResponseDto[]> = of([]);
   searchText: string = '';
   private fetch$ = new BehaviorSubject(null);
-  private readonly errorOrUpdateSubscriber: Observer<string>;
+  private readonly errorOrUpdateSubscriber: Observer<IdResponseDto>;
 
   constructor(private policyService: PolicyService,
               private notificationService: NotificationService,
@@ -36,11 +36,11 @@ export class PolicyViewComponent implements OnInit {
   ngOnInit(): void {
     this.filteredPolicies$ = this.fetch$.pipe(
       switchMap(() => {
-        const contractDefinitions$ = this.policyService.getAllPolicies();
+        const policyDefinitions = this.policyService.getAllPolicies();
         return !!this.searchText ?
-          contractDefinitions$.pipe(map(policies => policies.filter(policy => this.isFiltered(policy, this.searchText))))
+          policyDefinitions.pipe(map(policies => policies.filter(policy => this.isFiltered(policy, this.searchText))))
           :
-          contractDefinitions$;
+          policyDefinitions;
       }));
   }
 
@@ -50,7 +50,7 @@ export class PolicyViewComponent implements OnInit {
 
   onCreate() {
     const dialogRef = this.dialog.open(NewPolicyDialogComponent)
-    dialogRef.afterClosed().pipe(first()).subscribe((result: PolicyDefinition) => {
+    dialogRef.afterClosed().pipe(first()).subscribe((result: PolicyDefinitionResponseDto) => {
       if (result) {
         this.policyService.createPolicy(result).subscribe(this.errorOrUpdateSubscriber);
       }
@@ -61,19 +61,20 @@ export class PolicyViewComponent implements OnInit {
    * simple full-text search - serialize to JSON and see if "searchText"
    * is contained
    */
-  private isFiltered(policy: PolicyDefinition, searchText: string) {
+  private isFiltered(policy: PolicyDefinitionResponseDto, searchText: string) {
     return JSON.stringify(policy).includes(searchText);
   }
 
-  delete(policy: PolicyDefinition) {
+  delete(policy: PolicyDefinitionResponseDto) {
 
-    const dialogData = ConfirmDialogModel.forDelete("policy", policy.id);
+    let policyId = policy.id!;
+    const dialogData = ConfirmDialogModel.forDelete("policy", policyId);
 
     const ref = this.dialog.open(ConfirmationDialogComponent, {maxWidth: '20%', data: dialogData});
 
     ref.afterClosed().subscribe(res => {
       if (res) {
-        this.policyService.deletePolicy(policy.id).subscribe(this.errorOrUpdateSubscriber);
+        this.policyService.deletePolicy(policyId).subscribe(this.errorOrUpdateSubscriber);
       }
     });
   }

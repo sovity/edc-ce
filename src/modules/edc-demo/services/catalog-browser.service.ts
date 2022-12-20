@@ -5,17 +5,14 @@ import {catchError, map} from 'rxjs/operators';
 import {Asset} from '../models/asset';
 import {ContractOffer} from '../models/contract-offer';
 import {
-  API_KEY,
-  CONNECTOR_CATALOG_API,
   ContractNegotiationDto,
   ContractNegotiationService,
-  NegotiationId,
   NegotiationInitiateRequestDto,
-  TransferId,
   TransferProcessDto,
   TransferProcessService,
-  TransferRequestDto
-} from "../../edc-dmgmt-client";
+  TransferRequestDto,
+} from "../../mgmt-api-client";
+import {CONNECTOR_MANAGEMENT_API} from "../../app/variables";
 
 
 /**
@@ -29,12 +26,11 @@ export class CatalogBrowserService {
   constructor(private httpClient: HttpClient,
               private transferProcessService: TransferProcessService,
               private negotiationService: ContractNegotiationService,
-              @Inject(API_KEY) private apiKey: string,
-              @Inject(CONNECTOR_CATALOG_API) private catalogApiUrl: string) {
+              @Inject(CONNECTOR_MANAGEMENT_API) private managementApiUrl: string) {
   }
 
   getContractOffers(): Observable<ContractOffer[]> {
-    return this.post<ContractOffer[]>(this.catalogApiUrl)
+    return this.post<ContractOffer[]>(this.managementApiUrl + "/federatedcatalog")
       .pipe(map(contractOffers => contractOffers.map(contractOffer => {
         contractOffer.asset = new Asset(contractOffer.asset.properties)
         return contractOffer;
@@ -65,8 +61,8 @@ export class CatalogBrowserService {
                   params?: HttpParams | { [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>; })
     : Observable<T> {
     const url = `${urlPath}`;
-    let headers = new HttpHeaders({'X-Api-Key': this.apiKey});
-    return this.catchError(this.httpClient.post<T>(url, {headers, params}), url, 'POST');
+    let headers = new HttpHeaders({"Content-type": "application/json"});
+    return this.catchError(this.httpClient.post<T>(url, "{}", {headers, params}), url, 'POST');
   }
 
   private catchError<T>(observable: Observable<T>, url: string, method: string): Observable<T> {

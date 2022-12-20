@@ -1,13 +1,11 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {
-  AssetDto,
   AssetService,
   ContractAgreementDto,
-  ContractAgreementService,
-  TransferId, TransferProcessDto,
+  ContractAgreementService, IdResponseDto,
   TransferProcessService,
   TransferRequestDto
-} from "../../../edc-dmgmt-client";
+} from "../../../mgmt-api-client";
 import {from, Observable, of} from "rxjs";
 import {Asset} from "../../models/asset";
 import {filter, first, map, switchMap, tap} from "rxjs/operators";
@@ -68,7 +66,7 @@ export class ContractViewerComponent implements OnInit {
   }
 
   getAsset(assetId?: string): Observable<Asset> {
-    return assetId ? this.assetService.getAsset(assetId).pipe(map(a => new Asset(a.properties))) : of();
+    return assetId ? this.assetService.getAsset(assetId).pipe(map(a => new Asset(a.properties!))) : of();
   }
 
   onTransferClicked(contract: ContractAgreementDto) {
@@ -126,14 +124,14 @@ export class ContractViewerComponent implements OnInit {
   private getOfferedAssetForId(assetId: string): Observable<Asset> {
     return this.catalogService.getContractOffers()
       .pipe(
-        map(offers => offers.find(o => `urn:artifact:${o.asset.id}` === assetId)),
+        map(offers => offers.find(o => `${o.asset.id}` === assetId)),
         map(o => {
           if (o) return o.asset;
           else throw new Error(`No offer found for asset ID ${assetId}`);
         }))
   }
 
-  private startPolling(transferProcessId: TransferId, contractId: string) {
+  private startPolling(transferProcessId: IdResponseDto, contractId: string) {
     // track this transfer process
     this.runningTransfers.push({
       processId: transferProcessId.id!,
@@ -151,7 +149,7 @@ export class ContractViewerComponent implements OnInit {
     return () => {
       from(this.runningTransfers) //create from array
         .pipe(switchMap(t => this.catalogService.getTransferProcessesById(t.processId)), // fetch from API
-          filter(tpDto => ContractViewerComponent.isFinishedState(tpDto.state)), // only use finished ones
+          filter(tpDto => ContractViewerComponent.isFinishedState(tpDto.state!)), // only use finished ones
           tap(tpDto => {
             // remove from in-progress
             this.runningTransfers = this.runningTransfers.filter(rtp => rtp.processId !== tpDto.id)

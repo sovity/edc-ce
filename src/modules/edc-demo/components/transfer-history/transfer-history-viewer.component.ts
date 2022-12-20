@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable, of} from 'rxjs';
-import {TransferProcessDto, TransferProcessService} from "../../../edc-dmgmt-client";
+import {TransferProcessDto, TransferProcessService} from "../../../mgmt-api-client";
 import {AppConfigService} from "../../../app/app-config.service";
 import {ConfirmationDialogComponent, ConfirmDialogModel} from "../confirmation-dialog/confirmation-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
@@ -36,7 +36,7 @@ export class TransferHistoryViewerComponent implements OnInit {
 
     ref.afterClosed().subscribe(res => {
       if (res) {
-        this.transferProcessService.deprovisionTransferProcess(transferProcess.id).subscribe(() => this.loadTransferProcesses());
+        this.transferProcessService.deprovisionTransferProcess(transferProcess.id!).subscribe(() => this.loadTransferProcesses());
       }
     });
   }
@@ -46,7 +46,7 @@ export class TransferHistoryViewerComponent implements OnInit {
   }
 
   showDeprovisionButton(transferProcess: TransferProcessDto) {
-    return ['COMPLETED', 'PROVISIONED', 'REQUESTED', 'REQUESTED_ACK', 'IN_PROGRESS', 'STREAMING'].includes(transferProcess.state);
+    return ['COMPLETED', 'PROVISIONED', 'REQUESTED', 'REQUESTED_ACK', 'IN_PROGRESS', 'STREAMING'].includes(transferProcess.state!);
   }
 
   loadTransferProcesses() {
