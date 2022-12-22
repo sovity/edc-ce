@@ -23,6 +23,7 @@ export class NewPolicyDialogComponent implements OnInit {
     start: new FormControl(null),
     end: new FormControl(null),
   });
+  connectorId: string = '';
 
   constructor(private dialogRef: MatDialogRef<NewPolicyDialogComponent>) {
   }
