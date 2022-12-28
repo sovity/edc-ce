@@ -12,7 +12,7 @@ import {
   TransferProcessService,
   TransferRequestDto,
 } from "../../mgmt-api-client";
-import {CONNECTOR_MANAGEMENT_API} from "../../app/variables";
+import {CONNECTOR_CATALOG_API, CONNECTOR_MANAGEMENT_API} from "../../app/variables";
 
 
 /**
@@ -26,11 +26,13 @@ export class CatalogBrowserService {
   constructor(private httpClient: HttpClient,
               private transferProcessService: TransferProcessService,
               private negotiationService: ContractNegotiationService,
-              @Inject(CONNECTOR_MANAGEMENT_API) private managementApiUrl: string) {
+              @Inject(CONNECTOR_MANAGEMENT_API) private managementApiUrl: string,
+              @Inject(CONNECTOR_CATALOG_API) private catalogApiUrl: string) {
   }
 
   getContractOffers(): Observable<ContractOffer[]> {
-    return this.post<ContractOffer[]>(this.managementApiUrl + "/federatedcatalog")
+    let url = this.catalogApiUrl || this.managementApiUrl;
+    return this.post<ContractOffer[]>(url + "/federatedcatalog")
       .pipe(map(contractOffers => contractOffers.map(contractOffer => {
         contractOffer.asset = new Asset(contractOffer.asset.properties)
         return contractOffer;
