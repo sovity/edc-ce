@@ -6,7 +6,6 @@ import {Asset} from '../models/asset';
 import {ContractOffer} from '../models/contract-offer';
 import {
     API_KEY,
-    CONNECTOR_CATALOG_API,
     ContractNegotiationDto,
     ContractNegotiationService,
     NegotiationId,
@@ -29,8 +28,7 @@ export class AuthService {
     constructor(private httpClient: HttpClient,
                 private transferProcessService: TransferProcessService,
                 private negotiationService: ContractNegotiationService,
-                @Inject(API_KEY) private apiKey: string,
-                @Inject(CONNECTOR_CATALOG_API) private catalogApiUrl: string) {
+                @Inject(API_KEY) private apiKey: string,) {
     }
 
     getContractOffers(): Observable<ContractOffer[]> {
@@ -65,7 +63,6 @@ export class AuthService {
                     params?: HttpParams | { [param: string]: string | number | boolean | ReadonlyArray<string | number | boolean>; })
         : Observable<T> {
         const url = `${urlPath}`;
-        //let headers = new HttpHeaders({'X-Api-Key': this.apiKey});
         return this.catchError(this.httpClient.post<T>(url, {params}), url, 'POST');
     }
 

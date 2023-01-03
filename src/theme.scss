@@ -223,3 +223,8 @@ $custom-typography: mat.define-typography-config($font-family: 'Open Sans');
   --theme-color-accent: #{mat-color($theming-material-components-accent)};
   --theme-color-warn: #{mat-color($theming-material-components-warn)};
 }
+
+/* fix paginator background, it was white before, but our background is gray */
+mat-paginator {
+  background: transparent !important;
+}
