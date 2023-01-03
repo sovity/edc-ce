@@ -30,3 +30,91 @@ body {
     white-space: nowrap;
   }
 }
+
+/*
+  Tailwind Style Utility Classes
+ */
+
+.w-full {
+  width: 100%;
+}
+
+.flex {
+  display: flex;
+}
+
+.space-x-\[10px\] > * + * {
+  margin-left: 10px;
+}
+
+.mt-\[10px\] {
+  margin-top: 10px;
+}
+
+// See https://tailwindcss.com/docs/flex-direction
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+// See https://tailwindcss.com/docs/flex-grow
+.grow {
+  flex-grow: 1;
+}
+
+// See https://tailwindcss.com/docs/align-items
+.items-start {
+  align-items: flex-start;
+}
+
+.items-end {
+  align-items: flex-end;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-baseline {
+  align-items: baseline;
+}
+
+.items-stretch {
+  align-items: stretch;
+}
+
+// See https://tailwindcss.com/docs/justify-content
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-around {
+  justify-content: space-around;
+}
+
+.justify-evenly {
+  justify-content: space-evenly;
+}
+
+.bg-white {
+  background: white;
+}
+
+.text-black {
+  color: black;
+}

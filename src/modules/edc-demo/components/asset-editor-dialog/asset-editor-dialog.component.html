@@ -1,65 +1,186 @@
+<h1 mat-dialog-title>
+  Create New Asset
+</h1>
 <mat-dialog-content>
-  <div>
-    <mat-form-field class="form-field" color="accent">
-      <mat-label>Id</mat-label>
-      <input [(ngModel)]="id" matInput>
-    </mat-form-field>
-    <mat-form-field class="form-field" color="accent">
-      <mat-label>Name</mat-label>
-      <input [(ngModel)]="name" matInput>
-    </mat-form-field>
-  </div>
-  <div>
-    <mat-form-field class="form-field" color="accent">
-      <mat-label>Content Type</mat-label>
-      <input [(ngModel)]="contenttype" matInput [placeholder]="'text/plain'">
-    </mat-form-field>
+  <mat-vertical-stepper [linear]="true">
+    <!-- Step: Metadata -->
+    <mat-step [stepControl]="form.metadata">
+      <form [formGroup]="form.metadata">
+        <ng-template matStepLabel>General Information</ng-template>
+        <div class="flex flex-col mt-[10px]">
 
-    <mat-form-field class="form-field" color="accent">
-      <mat-label>Version</mat-label>
-      <input [(ngModel)]="version" matInput [placeholder]="'1.0'">
-    </mat-form-field>
-  </div>
+          <div class="flex flex-row space-x-[10px]">
+            <!-- ID -->
+            <mat-form-field class="form-field grow" color="accent">
+              <mat-label>Id</mat-label>
+              <input [formControl]="form.metadata.controls.id" matInput>
+            </mat-form-field>
 
-  <div>
-    <mat-form-field class="full-width-form-field" color="accent">
-      <mat-label>Description</mat-label>
-      <textarea [(ngModel)]="description" matInput [placeholder]="'1.0'"></textarea>
-    </mat-form-field>
-  </div>
+            <!-- Name -->
+            <mat-form-field class="form-field grow" color="accent">
+              <mat-label>Name</mat-label>
+              <input [formControl]="form.metadata.controls.name" matInput>
+            </mat-form-field>
+          </div>
 
-  <div>
-    <mat-form-field class="form-field" color="accent">
-      <mat-label>Type</mat-label>
-      <mat-select [(ngModel)]="type" required>
-        <mat-option value="Json" style="background-color: white; color: black">
-          Json
-        </mat-option>
-        <mat-option value="Rest-Api" style="background-color: white; color: black">
-          Rest-Api
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field class="form-field" color="accent" *ngIf="type == 'Rest-Api'">
-      <mat-label>Source Endpoint</mat-label>
-      <input [(ngModel)]="baseUrl" matInput [placeholder]="'https://'">
-    </mat-form-field>
-  </div>
-  <div *ngIf="type == 'Json'">
-    <mat-form-field class="full-width-form-field" color="accent">
-      <mat-label>Data Destination (JSON)</mat-label>
-      <textarea [(ngModel)]="dataDestination" matInput [placeholder]="'{}'"></textarea>
-    </mat-form-field>
-  </div>
+          <div class="flex flex-row space-x-[10px]">
+            <!-- Content Type -->
+            <mat-form-field class="form-field grow" color="accent">
+              <mat-label>Content Type</mat-label>
+              <input [formControl]="form.metadata.controls.contenttype" matInput [placeholder]="'text/plain'">
+            </mat-form-field>
+
+            <!-- Version -->
+            <mat-form-field class="form-field grow" color="accent">
+              <mat-label>Version</mat-label>
+              <input [formControl]="form.metadata.controls.version" matInput [placeholder]="'1.0'">
+            </mat-form-field>
+          </div>
+
+          <!-- Keywords -->
+          <mat-form-field class="form-field grow" color="accent">
+            <mat-label>Keywords</mat-label>
+            <input [formControl]="form.metadata.controls.keywords" placeholder="Keyword A, Keyword B, ..." matInput>
+          </mat-form-field>
+
+          <!-- Description -->
+          <mat-form-field color="accent">
+            <mat-label>Description</mat-label>
+            <textarea [formControl]="form.metadata.controls.description" matInput [placeholder]="'1.0'"></textarea>
+          </mat-form-field>
+
+          <div class="flex flex-row space-x-[10px]">
+            <!-- Language -->
+            <language-select class="grow" label="Language"
+                             [control]="form.metadata.controls.language"></language-select>
+            <!-- Payment Modality -->
+            <payment-modality-select class="grow" label="Payment Modality"
+                                     [control]="form.metadata.controls.paymentModality"></payment-modality-select>
+          </div>
+
+          <!-- Nav Buttons -->
+          <div class="flex flex-row">
+            <button mat-button disabled>Back</button>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </div>
+      </form>
+    </mat-step>
+    <!-- Step: Advanced -->
+    <mat-step *ngIf="'mds' | isActiveFeatureSet" [stepControl]="form.advanced">
+      <form [formGroup]="form.advanced">
+        <ng-template matStepLabel>Advanced Information</ng-template>
+        <div class="flex flex-col mt-[10px]">
+          <div class="flex flex-row space-x-[10px]">
+            <!-- Data Category -->
+            <mat-form-field class="form-field grow" color="accent">
+              <mat-label>Data Category</mat-label>
+              <input [formControl]="form.advanced.controls.dataCategory" matInput>
+            </mat-form-field>
+
+            <!-- Data Model -->
+            <mat-form-field class="form-field grow" color="accent">
+              <mat-label>Data Model</mat-label>
+              <input [formControl]="form.advanced.controls.dataModel" matInput>
+            </mat-form-field>
+          </div>
+
+          <div class="flex flex-row space-x-[10px]">
+            <!-- Transport Mode -->
+            <mat-form-field class="form-field grow" color="accent">
+              <mat-label>Transport Mode</mat-label>
+              <input [formControl]="form.advanced.controls.transportMode" matInput>
+            </mat-form-field>
+
+            <!-- Geo reference method -->
+            <mat-form-field class="form-field grow" color="accent">
+              <mat-label>Geo reference method</mat-label>
+              <input [formControl]="form.advanced.controls.geoReferenceMethod" matInput>
+            </mat-form-field>
+          </div>
+
+          <!-- Nav Buttons -->
+          <div class="flex flex-row">
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </div>
+      </form>
+    </mat-step>
+    <!-- Step: Datasource -->
+    <mat-step [stepControl]="form.datasource">
+      <form [formGroup]="form.datasource">
+        <ng-template matStepLabel>Datasource Information</ng-template>
+        <div class="flex flex-col mt-[10px]">
+
+          <!-- Data Address Type -->
+          <mat-form-field class="form-field" color="accent">
+            <mat-label>Type</mat-label>
+            <mat-select [formControl]="form.datasource.controls.dataAddressType">
+              <mat-option value="Json" style="background-color: white; color: black">
+                Data Source Configuraiton (JSON)
+              </mat-option>
+              <mat-option value="Rest-Api" style="background-color: white; color: black">
+                REST-API Endpoint (GET)
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Data Source Config JSON (Json) -->
+          <mat-form-field *ngIf="form.dataAddressType === 'Json'" color="accent">
+            <mat-label>Data Destination (JSON)</mat-label>
+            <textarea [formControl]="form.datasource.controls.dataDestination" matInput [placeholder]="'{}'"
+            ></textarea>
+          </mat-form-field>
+
+          <!-- Source Endpoint (Rest-Api) -->
+          <mat-form-field *ngIf="form.dataAddressType === 'Rest-Api'" class="form-field" color="accent">
+            <mat-label>Source Endpoint</mat-label>
+            <input [formControl]="form.datasource.controls.baseUrl" matInput [placeholder]="'https://'">
+          </mat-form-field>
+
+          <!-- Endpoint Documentation -->
+          <mat-form-field class="form-field grow" color="accent">
+            <mat-label>Endpoint Documentation</mat-label>
+            <input [formControl]="form.datasource.controls.endpointDocumentation" placeholder="https://" matInput>
+          </mat-form-field>
+
+          <div class="flex flex-row space-x-[10px]">
+            <!-- Publisher -->
+            <mat-form-field class="form-field grow" color="accent">
+              <mat-label>Publisher</mat-label>
+              <input [formControl]="form.datasource.controls.publisher" placeholder="https://" matInput>
+            </mat-form-field>
+
+            <!-- Standard License -->
+            <mat-form-field class="form-field grow" color="accent">
+              <mat-label>Standard License</mat-label>
+              <input [formControl]="form.datasource.controls.standardLicense" matInput>
+            </mat-form-field>
+          </div>
+
+          <!-- Nav Buttons -->
+          <div class="flex flex-row">
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext disabled>Next</button>
+          </div>
+        </div>
+      </form>
+    </mat-step>
+  </mat-vertical-stepper>
 </mat-dialog-content>
 
 
 <mat-dialog-actions>
-    <button (click)="onSave()" mat-raised-button color="primary">
-        <mat-icon>add_circle_outline</mat-icon> Create
+  <div class="w-full flex flex-row justify-end">
+    <button mat-dialog-close mat-raised-button color="default" style="margin-right: 8px">
+      <mat-icon>cancel</mat-icon>
+      Cancel
     </button>
 
-    <button mat-dialog-close mat-raised-button color="primary">
-        <mat-icon>cancel</mat-icon> Cancel
+    <button (click)="onSave()" mat-raised-button color="primary" [disabled]="!form.all.valid">
+      <mat-icon>add_circle_outline</mat-icon>
+      Create
     </button>
+  </div>
 </mat-dialog-actions>

@@ -48,6 +48,10 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import { LogoutComponent } from './components/logout/logout.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatStepperModule} from "@angular/material/stepper";
+import {IsActiveFeatureSetPipe} from "./pipes/is-active-feature-set.pipe";
+import {LanguageSelectComponent} from "./components/language-select/language-select.component";
+import {PaymentModalitySelectComponent} from "./components/payment-modality-select/payment-modality-select.component";
 
 @NgModule({
     imports: [
@@ -76,6 +80,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
         MatProgressSpinnerModule,
         MatDatepickerModule,
         MatTooltipModule,
+        MatStepperModule
     ],
   declarations: [
     CatalogBrowserComponent,
@@ -97,7 +102,10 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     NewPolicyDialogComponent,
     IntroductionComponent,
     ConfirmationDialogComponent,
-    LogoutComponent
+    LogoutComponent,
+    IsActiveFeatureSetPipe,
+    LanguageSelectComponent,
+    PaymentModalitySelectComponent
   ],
   exports: [
     CatalogBrowserComponent,
