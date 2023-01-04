@@ -1,7 +1,7 @@
 @import './theme.scss';
 
 html, body {
-    height: 100%;
+  height: 100%;
 }
 
 body {
@@ -18,7 +18,15 @@ body {
   color: black;
 }
 
-.code{
+.code {
   font-family: monospace;
   font-size: larger;
+}
+
+.mat-hint-text-ellipsis {
+  mat-hint {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 }

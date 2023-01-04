@@ -32,10 +32,10 @@
     <mat-form-field class="form-field" color="accent">
       <mat-label>Type</mat-label>
       <mat-select [(ngModel)]="type" required>
-        <mat-option value="Json">
+        <mat-option value="Json" style="background-color: white; color: black">
           Json
         </mat-option>
-        <mat-option value="Rest-Api">
+        <mat-option value="Rest-Api" style="background-color: white; color: black">
           Rest-Api
         </mat-option>
       </mat-select>
@@ -55,11 +55,11 @@
 
 
 <mat-dialog-actions>
-    <button (click)="onSave()" color="accent" mat-stroked-button>
+    <button (click)="onSave()" mat-raised-button color="primary">
         <mat-icon>add_circle_outline</mat-icon> Create
     </button>
 
-    <button color="accent" mat-dialog-close mat-stroked-button>
+    <button mat-dialog-close mat-raised-button color="primary">
         <mat-icon>cancel</mat-icon> Cancel
     </button>
 </mat-dialog-actions>

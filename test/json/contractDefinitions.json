@@ -1,0 +1,114 @@
+[
+  {
+    "accessPolicyId": "time-restricted-policy -2",
+    "contractPolicyId": "time-restricted-policy -2",
+    "criteria": [
+      {
+        "operandLeft": "asset:prop:id",
+        "operator": "in",
+        "operandRight": [
+          "urn:artifact:bitcoin3"
+        ]
+      }
+    ],
+    "id": "offering"
+  },
+  {
+    "accessPolicyId": "time-restricted",
+    "contractPolicyId": "time-restricted",
+    "criteria": [
+      {
+        "operandLeft": "asset:prop:id",
+        "operator": "in",
+        "operandRight": [
+          "urn:artifact:bitcoin"
+        ]
+      }
+    ],
+    "id": "bitcoin-3-contract"
+  },
+  {
+    "accessPolicyId": "end-of-the-year",
+    "contractPolicyId": "end-of-the-year",
+    "criteria": [
+      {
+        "operandLeft": "asset:prop:id",
+        "operator": "in",
+        "operandRight": [
+          "urn:artifact:emissions"
+        ]
+      }
+    ],
+    "id": "emissions-end-of-the-year-offering"
+  },
+  {
+    "accessPolicyId": "end-of-the-year",
+    "contractPolicyId": "end-of-the-year",
+    "criteria": [
+      {
+        "operandLeft": "asset:prop:id",
+        "operator": "in",
+        "operandRight": [
+          "urn:artifact:ethereum2"
+        ]
+      }
+    ],
+    "id": "ETH-Value"
+  },
+  {
+    "accessPolicyId": "time-restricted-usage-221017",
+    "contractPolicyId": "time-restricted-usage-221017",
+    "criteria": [
+      {
+        "operandLeft": "asset:prop:id",
+        "operator": "in",
+        "operandRight": [
+          "urn:artifact:electrocharging"
+        ]
+      }
+    ],
+    "id": "charging-contract-time-restricted"
+  },
+  {
+    "accessPolicyId": "time-restricted-policy-from221014",
+    "contractPolicyId": "time-restricted-policy-from221014",
+    "criteria": [
+      {
+        "operandLeft": "asset:prop:id",
+        "operator": "in",
+        "operandRight": [
+          "urn:artifact:sharedmobilityescooter"
+        ]
+      }
+    ],
+    "id": "escooterswiss-contract-definition"
+  },
+  {
+    "accessPolicyId": "time-restricted-policy-221017",
+    "contractPolicyId": "time-restricted-policy-221017",
+    "criteria": [
+      {
+        "operandLeft": "asset:prop:id",
+        "operator": "in",
+        "operandRight": [
+          "urn:artifact:methane-emissions-timeseries"
+        ]
+      }
+    ],
+    "id": "Methane-contract-definition"
+  },
+  {
+    "accessPolicyId": "time-restricted-policy-walkthrough",
+    "contractPolicyId": "time-restricted-policy-walkthrough",
+    "criteria": [
+      {
+        "operandLeft": "asset:prop:id",
+        "operator": "in",
+        "operandRight": [
+          "urn:artifact:chargingstationswalkthrough"
+        ]
+      }
+    ],
+    "id": "Charging Station - Walkthrough"
+  }
+]

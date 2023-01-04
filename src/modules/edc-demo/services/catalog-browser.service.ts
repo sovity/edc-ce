@@ -1,23 +1,20 @@
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {EMPTY, forkJoin, Observable} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {EMPTY, forkJoin, MonoTypeOperatorFunction, Observable, of, OperatorFunction, pluck} from 'rxjs';
+import {catchError, map, timeout} from 'rxjs/operators';
 import {Asset} from '../models/asset';
 import {ContractOffer} from '../models/contract-offer';
 import {
   API_KEY,
-  CONNECTOR_CATALOG_API,
   ContractNegotiationDto,
   ContractNegotiationService,
-  NegotiationId,
   NegotiationInitiateRequestDto,
-  TransferId,
   TransferProcessDto,
   TransferProcessService,
   TransferRequestDto
 } from "../../edc-dmgmt-client";
 import {ContractOfferResponse} from "../models/contract-offer-response";
-
+import {CatalogApiUrlService} from "./catalog-api-url.service";
 
 /**
  * Combines several services that are used from the {@link CatalogBrowserComponent}
@@ -31,15 +28,18 @@ export class CatalogBrowserService {
               private transferProcessService: TransferProcessService,
               private negotiationService: ContractNegotiationService,
               @Inject(API_KEY) private apiKey: string,
-              @Inject(CONNECTOR_CATALOG_API) private catalogApiUrl: string) {
+              private catalogApiUrlService: CatalogApiUrlService) {
   }
 
   getContractOffers(): Observable<ContractOffer[]> {
-    const catalogApiUrlArray = this.catalogApiUrl.split(",");
+    const catalogApiUrlArray = this.catalogApiUrlService.getCatalogApiUrls();
     let allContractOffers: Observable<ContractOffer[]>[] = [];
     for (const catalogApiUrl of catalogApiUrlArray) {
       const contractOffers = this.httpClient.get<ContractOfferResponse>(catalogApiUrl)
-          .pipe(map(contractOfferResponse => contractOfferResponse.contractOffers.map(contractOffer => {
+          .pipe(map(({contractOffers}) => contractOffers))
+          .pipe(timeout({first: 5_000, with: () => of([])}))
+          .pipe(this.logErrors(catalogApiUrl, 'GET', of([])))
+          .pipe(map(contractOffers => contractOffers.map(contractOffer => {
             contractOffer.asset = new Asset(contractOffer.asset.properties)
             return contractOffer;
           })))
@@ -73,20 +73,26 @@ export class CatalogBrowserService {
     : Observable<T> {
     const url = `${urlPath}`;
     let headers = new HttpHeaders({'X-Api-Key': this.apiKey});
-    return this.catchError(this.httpClient.post<T>(url, {headers, params}), url, 'POST');
+    return this.httpClient.post<T>(url, {headers, params}).pipe(this.logErrors(url, 'POST', EMPTY));
   }
 
-  private catchError<T>(observable: Observable<T>, url: string, method: string): Observable<T> {
-    return observable
-      .pipe(
-        catchError((httpErrorResponse: HttpErrorResponse) => {
-          if (httpErrorResponse.error instanceof Error) {
-            console.error(`Error accessing URL '${url}', Method: 'GET', Error: '${httpErrorResponse.error.message}'`);
-          } else {
-            console.error(`Unsuccessful status code accessing URL '${url}', Method: '${method}', StatusCode: '${httpErrorResponse.status}', Error: '${httpErrorResponse.error?.message}'`);
-          }
+  /**
+   * Catches errors, logs them to console.error
+   * @param url additional logging: url
+   * @param method additional logging: method
+   * @param fallback optional default value to fall back to
+   * @private
+   */
+  private logErrors<T, R>(url: string, method: string, fallback: Observable<R>): OperatorFunction<T, T | R> {
+    return observable => observable.pipe(
+      catchError((httpErrorResponse: HttpErrorResponse) => {
+        if (httpErrorResponse.error instanceof Error) {
+          console.error(`Error accessing URL '${url}', Method: 'GET', Error: '${httpErrorResponse.error.message}'`);
+        } else {
+          console.error(`Unsuccessful status code accessing URL '${url}', Method: '${method}', StatusCode: '${httpErrorResponse.status}', Error: '${httpErrorResponse.error?.message}'`);
+        }
 
-          return EMPTY;
-        }));
+        return fallback;
+      }));
   }
 }

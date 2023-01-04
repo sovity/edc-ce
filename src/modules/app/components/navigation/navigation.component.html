@@ -3,15 +3,30 @@
                  [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
                  [mode]="(isHandset$ | async) ? 'over' : 'side'"
                  [opened]="(isHandset$ | async) === false">
-        <mat-toolbar><img width="70%" src="/assets/images/sovity_logo.svg" alt=""></mat-toolbar>
+        <mat-toolbar class="custom-toolbar">
+            <img *ngIf="themeClassString == 'theme-mds' else sovityImage" width="70%" src="/assets/images/MDS-Logo-black.svg" alt="" />
+            <ng-template #sovityImage><img width="70%" src="/assets/images/sovity_logo.svg" alt="" /></ng-template>
+        </mat-toolbar>
         <mat-nav-list>
             <a [routerLink]="[route.path]" *ngFor="let route of routes">
-                <mat-list-item *ngIf="route.component">
+                <mat-list-item *ngIf="route.component" [routerLinkActive]="['is-active']">
                     <mat-icon mat-list-icon>{{route.data?.icon}}</mat-icon>
                     <span matLine>{{route.data?.title ?? route.path}}</span>
                 </mat-list-item>
             </a>
         </mat-nav-list>
+        <div class="align-to-bottom" id="contact-form">
+            <b>Do you have feedback or need help?</b>
+            <p><em>Select &nbsp;<kbd>SAML</kbd>&nbsp; login on following page</em></p>
+            <a href="https://sovity.zammad.com/#customer_ticket_new" target="_blank"
+               mat-raised-button color="primary">
+                CONTACT US
+            </a>
+            <a href="https://sovity.zammad.com/#customer_ticket_new" target="_blank"
+               mat-raised-button color="primary">
+                TUTORIAL & FAQ
+            </a>
+        </div>
     </mat-sidenav>
     <mat-sidenav-content>
         <mat-toolbar color="primary">
