@@ -31,24 +31,24 @@
         <mat-list dense>
           <mat-list-item>
             <mat-icon mat-list-icon>trip_origin</mat-icon>
-            <div mat-line>{{policyDef.policy?.assigner || 'n/a'}}</div>
+            <div mat-line>{{policyDef.policy.assigner || 'n/a'}}</div>
             <div mat-line>Assigner</div>
           </mat-list-item>
           <mat-list-item>
             <mat-icon mat-list-icon>adjust</mat-icon>
-            <div mat-line>{{policyDef.policy?.assignee || 'n/a'}}</div>
+            <div mat-line>{{policyDef.policy.assignee || 'n/a'}}</div>
             <div mat-line>Assignee</div>
           </mat-list-item>
         </mat-list>
 
         <!-- Permissions-->
-        <policy-rules [rules]="policyDef.policy?.permissions" [title]="'Permissions'"></policy-rules>
+        <policy-rules [rules]="policyDef.policy.permissions" [title]="'Permissions'"></policy-rules>
 
         <!-- Obligations-->
-        <policy-rules [rules]="policyDef.policy?.obligations" [title]="'Obligations'"></policy-rules>
+        <policy-rules [rules]="policyDef.policy.obligations" [title]="'Obligations'"></policy-rules>
 
         <!-- Prohibitions-->
-        <policy-rules [rules]="policyDef.policy?.prohibitions" [title]="'Prohibitions'"></policy-rules>
+        <policy-rules [rules]="policyDef.policy.prohibitions" [title]="'Prohibitions'"></policy-rules>
 
       </mat-card-content>
       <button (click)="delete(policyDef)" mat-stroked-button color="warn" matSuffix>
