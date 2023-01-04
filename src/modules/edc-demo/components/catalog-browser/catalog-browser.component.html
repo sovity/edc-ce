@@ -11,10 +11,10 @@
     </mat-form-field>
 
     <!-- Catalog URL -->
-    <mat-form-field class="search-form-field" color="accent" style="margin-left: 15px">
+    <mat-form-field class="search-form-field mat-hint-text-ellipsis" color="accent" style="margin-left: 15px">
       <mat-label>Catalog URL</mat-label>
       <input (input)="onCatalogUrlsChange()" [(ngModel)]="customCatalogUrl" matInput>
-      <mat-hint *ngIf="presetCatalogUrls">Already using: {{ presetCatalogUrls }}</mat-hint>
+      <mat-hint *ngIf="presetCatalogUrlsMessage" [matTooltip]="presetCatalogUrlsMessage">{{ presetCatalogUrlsMessage }}</mat-hint>
     </mat-form-field>
 
     <!-- Spacer -->

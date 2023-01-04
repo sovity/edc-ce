@@ -27,7 +27,7 @@ export class CatalogBrowserComponent implements OnInit {
   filteredContractOffers: ContractOffer[] = [];
   searchText = '';
   customCatalogUrl = '';
-  presetCatalogUrls = ''
+  presetCatalogUrlsMessage = ''
   runningTransferProcesses: RunningTransferProcess[] = [];
   runningNegotiations: Map<string, NegotiationResult> = new Map<string, NegotiationResult>(); // contractOfferId, NegotiationResult
   finishedNegotiations: Map<string, ContractNegotiationDto> = new Map<string, ContractNegotiationDto>(); // contractOfferId, contractAgreementId
@@ -52,7 +52,7 @@ export class CatalogBrowserComponent implements OnInit {
           return contractOffers.filter(contractOffer => contractOffer.asset.name.toLowerCase().includes(searchText));
         })
       ).subscribe(filteredContractOffers => this.filteredContractOffers = filteredContractOffers);
-    this.presetCatalogUrls = this.catalogApiUrlService.getPresetApiUrls().join(", ")
+    this.presetCatalogUrlsMessage = this.buildPresetCatalogUrlsMessage()
   }
 
   onSearch() {
@@ -141,4 +141,11 @@ export class CatalogBrowserComponent implements OnInit {
     return this.finishedNegotiations.get(contractOffer.id) !== undefined;
   }
 
+  private buildPresetCatalogUrlsMessage(): string {
+    const urls = this.catalogApiUrlService.getPresetApiUrls()
+    if (!urls.length) {
+      return '';
+    }
+    return `Already using${urls.length > 1 ? ` (${urls.length})` : ''}: ${urls.join(", ")}`;
+  }
 }
