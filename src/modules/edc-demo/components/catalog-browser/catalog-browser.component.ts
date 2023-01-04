@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, MonoTypeOperatorFunction, observable, Observable, of, sampleTime} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {CatalogBrowserService} from "../../services/catalog-browser.service";
 import {ContractNegotiationDto, NegotiationInitiateRequestDto} from "../../../edc-dmgmt-client";
@@ -9,6 +9,7 @@ import {Router} from "@angular/router";
 import {TransferProcessStates} from "../../models/transfer-process-states";
 import {ContractOffer} from "../../models/contract-offer";
 import {NegotiationResult} from "../../models/negotiation-result";
+import {CatalogApiUrlService} from "../../services/catalog-api-url.service";
 
 interface RunningTransferProcess {
   processId: string;
@@ -23,8 +24,10 @@ interface RunningTransferProcess {
 })
 export class CatalogBrowserComponent implements OnInit {
 
-  filteredContractOffers$: Observable<ContractOffer[]> = of([]);
+  filteredContractOffers: ContractOffer[] = [];
   searchText = '';
+  customCatalogUrl = '';
+  presetCatalogUrls = ''
   runningTransferProcesses: RunningTransferProcess[] = [];
   runningNegotiations: Map<string, NegotiationResult> = new Map<string, NegotiationResult>(); // contractOfferId, NegotiationResult
   finishedNegotiations: Map<string, ContractNegotiationDto> = new Map<string, ContractNegotiationDto>(); // contractOfferId, contractAgreementId
@@ -35,19 +38,21 @@ export class CatalogBrowserComponent implements OnInit {
               public dialog: MatDialog,
               private router: Router,
               private notificationService: NotificationService,
-              @Inject('HOME_CONNECTOR_STORAGE_ACCOUNT') private homeConnectorStorageAccount: string) {
+              @Inject('HOME_CONNECTOR_STORAGE_ACCOUNT') private homeConnectorStorageAccount: string,
+              private catalogApiUrlService: CatalogApiUrlService) {
   }
 
   ngOnInit(): void {
-    this.filteredContractOffers$ = this.fetch$
+    this.fetch$
       .pipe(
-        switchMap(() => {
-          const contractOffers$ = this.apiService.getContractOffers();
-          return !!this.searchText ?
-            contractOffers$.pipe(map(contractOffers => contractOffers.filter(contractOffer => contractOffer.asset.name.toLowerCase().includes(this.searchText))))
-            :
-            contractOffers$;
-        }));
+        sampleTime(200),
+        switchMap(() => this.apiService.getContractOffers()),
+        map(contractOffers => {
+          const searchText = this.searchText.toLowerCase();
+          return contractOffers.filter(contractOffer => contractOffer.asset.name.toLowerCase().includes(searchText));
+        })
+      ).subscribe(filteredContractOffers => this.filteredContractOffers = filteredContractOffers);
+    this.presetCatalogUrls = this.catalogApiUrlService.getPresetApiUrls().join(", ")
   }
 
   onSearch() {
@@ -82,8 +87,6 @@ export class CatalogBrowserComponent implements OnInit {
       if (!this.pollingHandleNegotiation) {
         // there are no active negotiations
         this.pollingHandleNegotiation = setInterval(() => {
-          // const finishedNegotiations: NegotiationResult[] = [];
-
           for (const negotiation of this.runningNegotiations.values()) {
             this.apiService.getNegotiationState(negotiation.id).subscribe(updatedNegotiation => {
               if (finishedNegotiationStates.includes(updatedNegotiation.state)) {
@@ -109,6 +112,11 @@ export class CatalogBrowserComponent implements OnInit {
       console.error(error);
       this.notificationService.showError("Error starting negotiation");
     });
+  }
+
+  onCatalogUrlsChange(): void {
+    this.catalogApiUrlService.setCustomApiUrlString(this.customCatalogUrl)
+    this.fetch$.next(null)
   }
 
   isBusy(contractOffer: ContractOffer) {
