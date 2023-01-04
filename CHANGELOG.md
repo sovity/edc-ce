@@ -7,7 +7,21 @@ This file will not cover changes about documentation, code clean-up, samples, or
 (respectively milestone), the core features are highlighted. Relevant changes to existing implementations can be found
 in the detailed section referring to by linking pull requests or issues.
 
-## [0.0.1-ab1b6fd0-sovity4] Unreleased
+## [0.0.1-ab1b6fd0-sovity5] Unreleased
+
+### Overview
+
+### Detailed Changes
+
+#### Added
+
+#### Changed
+
+#### Removed
+
+#### Fixed
+
+## [0.0.1-ab1b6fd0-sovity4] 04.01.2023
 
 ### Overview
 
@@ -32,6 +46,7 @@ Supporting communication with milestone 7 EDC. Working Logout.
 - Added MDS logo in the tool bar and added MDS theme
 - Added focus on nav-bar item
 - Added test server setup
+- Added Catalog Url Field in Catalog Browser (https://github.com/sovity/edc-sovity-ui/issues/83)
 
 #### Changed
 - Renamed policyDefinition `uid` field to `id`
