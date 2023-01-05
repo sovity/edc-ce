@@ -8,7 +8,6 @@ val edcVersion: String by project
 val edcGroup: String by project
 
 dependencies {
-    implementation(project(":extensions:event-provider"))
     implementation(project(":extensions:broker"))
     implementation(project(":extensions:clearinghouse"))
 

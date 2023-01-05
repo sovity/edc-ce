@@ -11,11 +11,15 @@
  *       sovity GmbH - initial API and implementation
  *
  */
-package transfer.transfer;
+package clearinghouse;
+
+import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 
 import java.net.URL;
 
-public interface Synchronizer {
+public interface IdsClearingHouseService {
 
-    void synchronize(URL brokerBaseUrl);
+    void logContractAgreement(ContractAgreement contractAgreement,
+                              URL clearingHouseLogUrl);
+
 }

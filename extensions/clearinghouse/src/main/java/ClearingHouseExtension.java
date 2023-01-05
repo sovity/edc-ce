@@ -11,10 +11,12 @@
  *       sovity GmbH - initial API and implementation
  *
  */
-package transfer;
 
+import clearinghouse.IdsClearingHouseService;
+import clearinghouse.IdsClearingHouseServiceImpl;
 import de.fraunhofer.iais.eis.Artifact;
 import okhttp3.OkHttpClient;
+import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.protocol.ids.api.configuration.IdsApiConfiguration;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
 import org.eclipse.edc.protocol.ids.jsonld.JsonLd;
@@ -24,6 +26,7 @@ import org.eclipse.edc.protocol.ids.spi.transform.IdsTransformerRegistry;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.EdcException;
+import org.eclipse.edc.spi.event.EventRouter;
 import org.eclipse.edc.spi.iam.IdentityService;
 import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
 import org.eclipse.edc.spi.monitor.Monitor;
@@ -32,19 +35,13 @@ import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.types.TypeManager;
 import sender.message.dispatcher.IdsMultipartExtendedRemoteMessageDispatcher;
-import transfer.clearinghouse.IdsClearingHouseService;
-import transfer.clearinghouse.IdsClearingHouseServiceImpl;
-import transfer.serializer.MultiContextJsonLdSerializer;
-import transfer.transfer.ClearingHouseDefinitionProvider;
-import transfer.transfer.SynchronizerImpl;
-import transfer.transfer.TransferProcess;
-import transfer.transfer.TransferProcessImpl;
+import serializer.MultiContextJsonLdSerializer;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-public class TransferExtension implements ServiceExtension {
+public class ClearingHouseExtension implements ServiceExtension {
 
     public static final String CATALOG_TRANSFER_EXTENSION = "ClearingHouseExtension";
     private static final String TYPE_MANAGER_SERIALIZER_KEY = "ids-clearinghouse";
@@ -81,6 +78,9 @@ public class TransferExtension implements ServiceExtension {
     private IdsTransformerRegistry transformerRegistry;
 
     @Inject
+    private ContractNegotiationStore contractNegotiationStore;
+
+    @Inject
     private Hostname hostname;
 
     @Inject
@@ -90,10 +90,9 @@ public class TransferExtension implements ServiceExtension {
     private DynamicAttributeTokenService dynamicAttributeTokenService;
 
     @Inject
-    private ClearingHouseDefinitionProvider provider;
+    private EventRouter eventRouter;
 
     private IdsClearingHouseService idsClearingHouseService;
-    private TransferProcess catalogTransferProcess;
 
     private URL clearingHouseLogUrl;
     private Monitor monitor;
@@ -108,46 +107,25 @@ public class TransferExtension implements ServiceExtension {
         clearingHouseLogUrl = readUrlFromSettings(context, CLEARINGHOUSE_LOG_URL_SETTING);
         monitor = context.getMonitor();
 
-        var updateInterval = context.getSetting(UPDATE_INTERVAL_IN_SECONDS, "5");
-
         registerSerializerClearingHouseMessages(context);
         registerClearingHouseMessageSenders(context);
 
-        initializeIdsClearingHouseService(
-                context,
-                dispatcherRegistry,
-                hostname);
-
-        initializeCatalogTransferProcess(
-                idsClearingHouseService,
-                monitor,
-                updateInterval);
-    }
-
-    private void initializeCatalogTransferProcess(
-            IdsClearingHouseService idsClearinghouseService,
-            Monitor monitor,
-            String updateInterval) {
-
-        var synchronizer = new SynchronizerImpl(
-                idsClearinghouseService,
-                monitor,
-                provider);
-        catalogTransferProcess = new TransferProcessImpl(
-                synchronizer,
-                monitor,
-                updateInterval);
-    }
-
-    private void initializeIdsClearingHouseService(
-            ServiceExtensionContext context,
-            RemoteMessageDispatcherRegistry dispatcherRegistry,
-            Hostname hostname) {
         var connectorServiceSettings = new ConnectorServiceSettings(context, context.getMonitor());
-        idsClearingHouseService = new IdsClearingHouseServiceImpl(
+
+        registerEventSubscriber(context, connectorServiceSettings);
+    }
+
+    private void registerEventSubscriber(ServiceExtensionContext context,
+                                         ConnectorServiceSettings connectorServiceSettings) {
+        var eventSubscriber = new IdsClearingHouseServiceImpl(
                 dispatcherRegistry,
                 connectorServiceSettings,
-                hostname);
+                hostname,
+                clearingHouseLogUrl,
+                contractNegotiationStore);
+
+        eventRouter.registerSync(eventSubscriber); //asynchronous dispatch - registerSync for synchronous dispatch
+        context.registerService(IdsClearingHouseService.class, eventSubscriber);
     }
 
     private URL readUrlFromSettings(ServiceExtensionContext context, String settingsPath) {
@@ -187,22 +165,16 @@ public class TransferExtension implements ServiceExtension {
         var connectorName = context.getSetting(EDC_CONNECTOR_NAME, "EDC");
         var endpoint = context.getSetting(EDC_IDS_ENDPOINT, "http://endpoint");
 
-//        var registerConnectorSender = new RegisterConnectorRequestSender(objectMapper, connectorName, endpoint);
+        //var registerConnectorSender = new RegisterConnectorRequestSender(objectMapper, connectorName, endpoint);
 
         var idsMultipartSender = new IdsMultipartSender(monitor, httpClient, dynamicAttributeTokenService, objectMapper);
         var dispatcher = new IdsMultipartExtendedRemoteMessageDispatcher(idsMultipartSender);
-//        dispatcher.register(registerConnectorSender);
+        //dispatcher.register(registerConnectorSender);
         dispatcherRegistry.register(dispatcher);
     }
 
     @Override
-    public void start() {
-        try {
-            catalogTransferProcess.startTransferProcess(clearingHouseLogUrl);
-        } catch (Exception e) {
-            monitor.severe(String.format("%s failed during startup: ", CATALOG_TRANSFER_EXTENSION), e);
-        }
-    }
+    public void start() {}
 
     @Override
     public void prepare() {

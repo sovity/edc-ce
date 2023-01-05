@@ -11,8 +11,9 @@
  *       sovity GmbH - initial API and implementation
  *
  */
-package transfer;
 
+import broker.IdsBrokerService;
+import broker.IdsBrokerServiceImpl;
 import de.fraunhofer.iais.eis.Artifact;
 import de.fraunhofer.iais.eis.BaseConnector;
 import de.fraunhofer.iais.eis.ConnectorEndpoint;
@@ -24,17 +25,16 @@ import de.fraunhofer.iais.eis.ResourceCatalog;
 import de.fraunhofer.iais.eis.ResourceUnavailableMessage;
 import de.fraunhofer.iais.eis.ResourceUpdateMessage;
 import okhttp3.OkHttpClient;
-import org.eclipse.edc.protocol.ids.api.configuration.IdsApiConfiguration;
+import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
 import org.eclipse.edc.protocol.ids.jsonld.JsonLd;
 import org.eclipse.edc.protocol.ids.service.ConnectorServiceSettings;
 import org.eclipse.edc.protocol.ids.spi.service.DynamicAttributeTokenService;
-import org.eclipse.edc.protocol.ids.spi.transform.IdsTransformerRegistry;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.asset.AssetIndex;
-import org.eclipse.edc.spi.iam.IdentityService;
+import org.eclipse.edc.spi.event.EventRouter;
 import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.Hostname;
@@ -46,19 +46,13 @@ import sender.RegisterConnectorRequestSender;
 import sender.RegisterResourceRequestSender;
 import sender.UnregisterResourceRequestSender;
 import sender.message.dispatcher.IdsMultipartExtendedRemoteMessageDispatcher;
-import transfer.broker.IdsBrokerService;
-import transfer.broker.IdsBrokerServiceImpl;
-import transfer.serializer.MultiContextJsonLdSerializer;
-import transfer.transfer.BrokerDefinitionProvider;
-import transfer.transfer.SynchronizerImpl;
-import transfer.transfer.TransferProcess;
-import transfer.transfer.TransferProcessImpl;
+import serializer.MultiContextJsonLdSerializer;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-public class TransferExtension implements ServiceExtension {
+public class BrokerExtension implements ServiceExtension {
 
     public static final String CATALOG_TRANSFER_EXTENSION = "BrokerExtension";
     private static final String TYPE_MANAGER_SERIALIZER_KEY = "ids-broker";
@@ -74,25 +68,13 @@ public class TransferExtension implements ServiceExtension {
     private static final String EDC_CATALOG_URL = "edc.catalog.url";
 
     @Setting
-    private static final String UPDATE_INTERVAL_IN_SECONDS = "update.interval.in.seconds";
-
-    @Setting
     private static final String EDC_CONNECTOR_NAME = "edc.connector.name";
 
     @Setting
     private static final String EDC_IDS_ENDPOINT = "edc.ids.endpoint";
 
     @Inject
-    private IdsApiConfiguration idsApiConfiguration;
-
-    @Inject
     private RemoteMessageDispatcherRegistry dispatcherRegistry;
-
-    @Inject
-    private IdentityService identityService;
-
-    @Inject
-    private IdsTransformerRegistry transformerRegistry;
 
     @Inject
     private Hostname hostname;
@@ -104,14 +86,15 @@ public class TransferExtension implements ServiceExtension {
     private DynamicAttributeTokenService dynamicAttributeTokenService;
 
     @Inject
-    private BrokerDefinitionProvider assetProvider;
-
-    @Inject
     private AssetIndex assetIndex;
 
-    private IdsBrokerService idsBrokerService;
+    @Inject
+    private ContractDefinitionStore contractDefinitionStore;
 
-    private TransferProcess catalogTransferProcess;
+    @Inject
+    private EventRouter eventRouter;
+
+    private IdsBrokerService idsBrokerService;
 
     private URL brokerBaseUrl;
 
@@ -127,8 +110,6 @@ public class TransferExtension implements ServiceExtension {
         brokerBaseUrl = readUrlFromSettings(context, BROKER_BASE_URL_SETTING);
         monitor = context.getMonitor();
 
-        var updateInterval = context.getSetting(UPDATE_INTERVAL_IN_SECONDS, "5");
-
         registerSerializerBrokerMessages(context);
         registerBrokerMessageSenders(context);
 
@@ -137,26 +118,18 @@ public class TransferExtension implements ServiceExtension {
                 dispatcherRegistry,
                 hostname);
 
-        initializeCatalogTransferProcess(
-                idsBrokerService,
-                monitor,
-                updateInterval);
-    }
+        var connectorServiceSettings = new ConnectorServiceSettings(context, context.getMonitor());
 
-    private void initializeCatalogTransferProcess(
-            IdsBrokerService idsBrokerService,
-            Monitor monitor,
-            String updateInterval) {
-
-        var catalogSynchronizer = new SynchronizerImpl(
-                idsBrokerService,
-                monitor,
-                assetProvider,
-                assetIndex);
-        catalogTransferProcess = new TransferProcessImpl(
-                catalogSynchronizer,
-                monitor,
-                updateInterval);
+        var eventSubscriber = new IdsBrokerServiceImpl(
+                dispatcherRegistry,
+                connectorServiceSettings,
+                hostname,
+                contractDefinitionStore,
+                brokerBaseUrl,
+                assetIndex,
+                monitor);
+        eventRouter.registerSync(eventSubscriber); //asynchronous dispatch - registerSync for synchronous dispatch
+        context.registerService(IdsBrokerService.class, eventSubscriber);
     }
 
     private void initializeIdsBrokerService(
@@ -167,7 +140,11 @@ public class TransferExtension implements ServiceExtension {
         idsBrokerService = new IdsBrokerServiceImpl(
                 dispatcherRegistry,
                 connectorServiceSettings,
-                hostname);
+                hostname,
+                contractDefinitionStore,
+                brokerBaseUrl,
+                assetIndex,
+                monitor);
     }
 
     private URL readUrlFromSettings(ServiceExtensionContext context, String settingsPath) {
@@ -259,7 +236,6 @@ public class TransferExtension implements ServiceExtension {
     public void start() {
         try {
             idsBrokerService.registerConnectorAtBroker(brokerBaseUrl);
-            catalogTransferProcess.startTransferProcess(brokerBaseUrl);
         } catch (Exception e) {
             monitor.severe(String.format("%s failed during startup: ", CATALOG_TRANSFER_EXTENSION), e);
         }

@@ -12,7 +12,7 @@
  *
  */
 
-package transfer.serializer;
+package serializer;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.core.JsonGenerator;

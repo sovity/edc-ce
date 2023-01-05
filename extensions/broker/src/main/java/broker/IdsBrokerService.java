@@ -11,7 +11,7 @@
  *       sovity GmbH - initial API and implementation
  *
  */
-package transfer.broker;
+package broker;
 
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 
