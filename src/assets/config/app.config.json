@@ -1,7 +1,7 @@
 {
   "_comment": "This file will be replaced at runtime when deployed to the cloud",
   "dataManagementApiUrl": "http://localhost:3000",
-  "catalogUrl": "{{catalogUrl}}",
+  "catalogUrl": "http://localhost:3000/catalogs/1,http://localhost:3000/catalogs/3,http://localhost:3000/catalogs/4,http://localhost:3000/catalogs/5",
   "storageAccount": "{{account}}",
   "storageExplorerLinkTemplate": "storageexplorer://v=1&accountid=/subscriptions/{{subscriptionId}}/resourceGroups/{{resourceGroup}}/providers/Microsoft.Storage/storageAccounts/{{account}}&subscriptionid={{subscriptionId}}&resourcetype=Azure.BlobContainer&resourcename={{container}}",
   "apiKey": "{{apiKey}}",

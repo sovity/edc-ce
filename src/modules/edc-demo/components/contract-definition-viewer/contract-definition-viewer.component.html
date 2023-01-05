@@ -51,20 +51,6 @@
                             <mat-icon mat-list-icon>check</mat-icon>
                             <div mat-line>{{criterion.operandLeft}} {{criterion.operator}} {{criterion.operandRight}}</div>
                         </mat-list-item>
-                        <!-- <mat-list-item *ngIf="asset.contentType">
-                            <mat-icon mat-list-icon>content_paste</mat-icon>
-                            <div mat-line class="asset-property-name">Content-Type</div>
-                            <div mat-line>{{asset.contentType}}</div>
-                        </mat-list-item>
-                        <mat-list-item *ngFor="let additionalPropertyKey of asset.additionalPropertyKeys">
-                            <mat-icon mat-list-icon>list</mat-icon>
-                            <div mat-line *ngIf="additionalPropertyKey.replace('asset:prop:', '') as name"
-                                class="asset-property-name">
-                                {{name.charAt(0).toUpperCase() + name.slice(1)}}
-                            </div>
-                            <div mat-line title="{{asset.properties[additionalPropertyKey]}}">
-                                {{asset.properties[additionalPropertyKey]}}</div>
-                        </mat-list-item> -->
                     </mat-list>
                 </mat-expansion-panel>
 

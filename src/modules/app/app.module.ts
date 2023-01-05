@@ -17,7 +17,6 @@ import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 import {AppConfigService} from "./app-config.service";
 import {
   API_KEY,
-  CONNECTOR_CATALOG_API,
   CONNECTOR_DATAMANAGEMENT_API,
   CONNECTOR_ORIGINATOR
 } from "../edc-dmgmt-client";
@@ -63,11 +62,6 @@ import {MatNativeDateModule} from "@angular/material/core";
     {
       provide: CONNECTOR_DATAMANAGEMENT_API,
       useFactory: (s: AppConfigService) => s.getConfig()?.dataManagementApiUrl,
-      deps: [AppConfigService]
-    },
-    {
-      provide: CONNECTOR_CATALOG_API,
-      useFactory: (s: AppConfigService) => s.getConfig()?.catalogUrl,
       deps: [AppConfigService]
     },
     {

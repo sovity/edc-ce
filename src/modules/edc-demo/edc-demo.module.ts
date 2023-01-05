@@ -47,6 +47,7 @@ import {NewPolicyDialogComponent} from "./components/new-policy-dialog/new-polic
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import { LogoutComponent } from './components/logout/logout.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
     imports: [
@@ -74,6 +75,7 @@ import { LogoutComponent } from './components/logout/logout.component';
         RouterModule,
         MatProgressSpinnerModule,
         MatDatepickerModule,
+        MatTooltipModule,
     ],
   declarations: [
     CatalogBrowserComponent,

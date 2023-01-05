@@ -10,6 +10,8 @@ const policyDefinitions = JSON.parse(fs.readFileSync(path.resolve('json/policyDe
 const contractDefinitions = JSON.parse(fs.readFileSync(path.resolve('json/contractDefinitions.json')).toString())
 const transferProcess = JSON.parse(fs.readFileSync(path.resolve('json/transferProcess.json')).toString())
 const contractAgreements = JSON.parse(fs.readFileSync(path.resolve('json/contractAgreements.json')).toString())
+const catalog1 = JSON.parse(fs.readFileSync(path.resolve('json/catalog1.json')).toString())
+const catalog2 = JSON.parse(fs.readFileSync(path.resolve('json/catalog2.json')).toString())
 
 apimock.processor.process({
   src: 'mocks'
@@ -49,5 +51,13 @@ app.get('/transferProcess', (req, res) => {
 
 app.get('/contractagreements', (req, res) => {
   res.json(contractAgreements)
+})
+
+app.get('/catalogs/1', (req, res) => {
+  res.json(catalog1)
+})
+
+app.get('/catalogs/2', (req, res) => {
+  res.json(catalog1)
 })
 
