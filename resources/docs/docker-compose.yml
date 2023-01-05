@@ -2,6 +2,8 @@ version: "3.8"
 services:
   edc:
     container_name: edc
+#    build:
+#      context: ../../connector
     image: ghcr.io/sovity/edc-broker-extension:main
     environment:
       IDS_WEBHOOK_ADDRESS: http://edc:8282
@@ -15,10 +17,10 @@ services:
       EDC_HOSTNAME: company1
       EDC_VAULT: /resources/vault/edc/vault.properties
       EDC_API_AUTH_KEY: ApiKeyDefaultValue
-      UPDATE_INTERVAL_IN_SECONDS: 5
       EDC_WEB_REST_CORS_ENABLED: "true"
       EDC_WEB_REST_CORS_HEADERS: "origin,content-type,accept,authorization,x-api-key"
       EDC_BROKER_BASE_URL: https://broker.test.mobility-dataspace.eu
+      EDC_CLEARINGHOUSE_LOG_URL: https://clearing.dev.mobility-dataspace.eu/messages/log
       EDC_KEYSTORE: /resources/vault/edc/keystore.jks
       EDC_KEYSTORE_PASSWORD: password
       EDC_OAUTH_PUBLIC_KEY_ALIAS: 1
