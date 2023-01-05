@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {Permission, Policy, PolicyDefinition} from "../../../edc-dmgmt-client";
 import TypeEnum = Policy.TypeEnum;
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {FormControl, FormGroup} from "@angular/forms";
+import {UntypedFormControl, UntypedFormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-new-policy-dialog',
@@ -19,9 +19,9 @@ export class NewPolicyDialogComponent implements OnInit {
     id: ''
   };
   policyType: string = '';
-  range = new FormGroup({
-    start: new FormControl(null),
-    end: new FormControl(null),
+  range = new UntypedFormGroup({
+    start: new UntypedFormControl(null),
+    end: new UntypedFormControl(null),
   });
   connectorId: string = '';
 

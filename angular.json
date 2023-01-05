@@ -115,5 +115,7 @@
       }
     }
   },
-  "defaultProject": "edc-demo-client"
+  "cli": {
+    "analytics": false
+  }
 }
