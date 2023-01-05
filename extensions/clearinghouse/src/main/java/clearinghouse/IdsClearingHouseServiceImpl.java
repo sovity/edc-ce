@@ -50,6 +50,7 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
     @Override
     public void logContractAgreement(ContractAgreement contractAgreement, URL clearingHouseLogUrl) {
         //TODO: log contractAgreement to CH (clearingHouseLogUrl)
+
     }
 
     @Override
