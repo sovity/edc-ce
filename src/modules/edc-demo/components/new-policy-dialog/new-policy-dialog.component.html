@@ -12,6 +12,9 @@
       <mat-option value="Time-Period-Restricted" style="background-color: white; color: black">
         Time-Period-Restricted
       </mat-option>
+      <mat-option value="Connector-Restricted-Usage" style="background-color: white; color: black">
+        Connector-Restricted-Usage
+      </mat-option>
     </mat-select>
   </mat-form-field>
 
@@ -28,6 +31,13 @@
 
       <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
       <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="policyType == 'Connector-Restricted-Usage'">
+    <mat-form-field color="accent">
+      <mat-label>Connector ID</mat-label>
+      <input [(ngModel)]="connectorId" matInput required>
     </mat-form-field>
   </div>
 
