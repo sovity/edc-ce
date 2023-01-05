@@ -16,6 +16,7 @@ Supporting communication with milestone 7 EDC. Working Logout.
 ### Detailed Changes
 
 #### Added
+- Angular 14 and Angular Material 14
 - Add Help-Box (Zammad links) (https://github.com/sovity/edc-sovity-ui/issues/55)
 - Additional `logoutUrl` Property in app.config.json (https://github.com/sovity/edc-sovity-ui/issues/24)
   - OAuth2-Proxy-Config has to be adapted
