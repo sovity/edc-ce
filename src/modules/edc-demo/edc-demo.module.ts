@@ -40,18 +40,15 @@ import {AssetEditorDialog} from "./components/asset-editor-dialog/asset-editor-d
 import {AssetViewerComponent} from "./components/asset-viewer/asset-viewer.component";
 
 import {PolicyViewComponent} from "./components/policy-view/policy-view.component";
-import {
-  PolicyRuleViewerComponent
-} from "./components/policy-rule-viewer/policy-rule-viewer.component";
+import {PolicyRuleViewerComponent} from "./components/policy-rule-viewer/policy-rule-viewer.component";
 import {NewPolicyDialogComponent} from "./components/new-policy-dialog/new-policy-dialog.component";
-import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import {ConfirmationDialogComponent} from './components/confirmation-dialog/confirmation-dialog.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
-import { LogoutComponent } from './components/logout/logout.component';
+import {LogoutComponent} from './components/logout/logout.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatStepperModule} from "@angular/material/stepper";
 import {IsActiveFeatureSetPipe} from "./pipes/is-active-feature-set.pipe";
 import {LanguageSelectComponent} from "./components/language-select/language-select.component";
-import {PaymentModalitySelectComponent} from "./components/payment-modality-select/payment-modality-select.component";
 
 @NgModule({
     imports: [
@@ -105,7 +102,6 @@ import {PaymentModalitySelectComponent} from "./components/payment-modality-sele
     LogoutComponent,
     IsActiveFeatureSetPipe,
     LanguageSelectComponent,
-    PaymentModalitySelectComponent
   ],
   exports: [
     CatalogBrowserComponent,

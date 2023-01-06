@@ -1,16 +1,15 @@
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
-import {AssetDto, AssetEntryDto, CONNECTOR_ORIGINATOR, DataAddressDto} from "../../../edc-dmgmt-client";
 import {DataAddressType} from "./data-address-type";
 import {
   AssetEditorDialogAdvancedFormModel,
   AssetEditorDialogDatasourceFormModel,
-  AssetEditorDialogFormModel, AssetEditorDialogFormValue,
+  AssetEditorDialogFormModel,
+  AssetEditorDialogFormValue,
   AssetEditorDialogMetadataFormModel
 } from "./asset-editor-dialog-form-model";
 import {LanguageSelectItemService} from "../language-select/language-select-item.service";
 import {isFeatureSetActive} from "../../pipes/is-active-feature-set.pipe";
-import {PaymentModalitySelectItemService} from "../payment-modality-select/payment-modality-select-item.service";
 import {jsonValidator} from "./json-validator";
 import {urlValidator} from "./url-validator";
 
@@ -53,7 +52,6 @@ export class AssetEditorDialogForm {
   constructor(
     private formBuilder: FormBuilder,
     private languageSelectItemService: LanguageSelectItemService,
-    private paymentModalityItemService: PaymentModalitySelectItemService
   ) {
   }
 
@@ -71,7 +69,6 @@ export class AssetEditorDialogForm {
       // MDS Specific
       keywords: '',
       language: this.languageSelectItemService.english(),
-      paymentModality: this.paymentModalityItemService.free(),
     });
 
     const advanced: FormGroup<AssetEditorDialogAdvancedFormModel> = this.formBuilder.nonNullable.group({

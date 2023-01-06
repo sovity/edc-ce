@@ -1,8 +1,0 @@
-<mat-form-field class="grow form-field" color="accent">
-  <mat-label>{{label}}</mat-label>
-  <mat-select [formControl]="control" [compareWith]="compareWith">
-    <mat-option *ngFor="let item of items.items" [value]="item">
-      {{ item.label }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>

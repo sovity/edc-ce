@@ -1,7 +1,6 @@
 import {FormControl, FormGroup, ɵFormGroupValue} from "@angular/forms";
 import {DataAddressType} from "./data-address-type";
 import {LanguageSelectItem} from "../language-select/language-select-item";
-import {PaymentModalitySelectItem} from "../payment-modality-select/payment-modality-select-item";
 
 /**
  * Form Value Type
@@ -25,7 +24,6 @@ export interface AssetEditorDialogMetadataFormModel {
   description: FormControl<string>;
   keywords: FormControl<string>;
   language: FormControl<LanguageSelectItem>;
-  paymentModality: FormControl<PaymentModalitySelectItem>;
 }
 
 export interface AssetEditorDialogAdvancedFormModel {

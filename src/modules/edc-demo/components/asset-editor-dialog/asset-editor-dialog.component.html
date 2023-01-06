@@ -49,14 +49,8 @@
             <textarea [formControl]="form.metadata.controls.description" matInput [placeholder]="'1.0'"></textarea>
           </mat-form-field>
 
-          <div class="flex flex-row space-x-[10px]">
-            <!-- Language -->
-            <language-select class="grow" label="Language"
-                             [control]="form.metadata.controls.language"></language-select>
-            <!-- Payment Modality -->
-            <payment-modality-select class="grow" label="Payment Modality"
-                                     [control]="form.metadata.controls.paymentModality"></payment-modality-select>
-          </div>
+          <!-- Language -->
+          <language-select class="grow" label="Language" [control]="form.metadata.controls.language"></language-select>
         </div>
       </form>
     </mat-step>

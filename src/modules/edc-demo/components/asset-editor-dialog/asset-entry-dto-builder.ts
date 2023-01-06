@@ -25,7 +25,6 @@ export class AssetEntryDtoBuilder {
       "asset:prop:contenttype": this.trimSafe(metadata?.contenttype),
       "asset:prop:description": this.trimSafe(metadata?.description),
       'asset:prop:language': metadata?.language?.id ?? '',
-      'asset:prop:paymentModality': metadata?.paymentModality?.id ?? '',
 
       "asset:prop:publisher": this.trimSafe(datasource?.publisher),
       "asset:prop:standardLicense": this.trimSafe(datasource?.standardLicense),
