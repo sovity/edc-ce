@@ -10,9 +10,7 @@ on:
         type: string
   push:
     branches:
-      - develop
-    tags:
-      - "*"
+      - 86-mds-specific-additional-attributes-from-dsc
 
 
 env:
@@ -60,7 +58,7 @@ jobs:
           file: docker/Dockerfile
           build-args: |
             EDC_UI_CONFIGURATION=production
-          push: true
+          push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
   build-mds:
@@ -99,6 +97,6 @@ jobs:
           file: docker/Dockerfile
           build-args: |
             EDC_UI_CONFIGURATION=mds-production
-          push: true
+          push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
