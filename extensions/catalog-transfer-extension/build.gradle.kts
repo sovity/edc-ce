@@ -1,5 +1,6 @@
 plugins {
     `java-library`
+    `maven-publish`
 }
 
 val edcVersion: String by project
@@ -8,6 +9,8 @@ val jupiterVersion: String by project
 val mockitoVersion: String by project
 val assertj: String by project
 val okHttpVersion: String by project
+val theVersion: String by project
+val theGroup: String by project
 
 dependencies {
     implementation("${edcGroup}:control-plane-core:${edcVersion}")
@@ -28,4 +31,25 @@ dependencies {
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+}
+
+group = theGroup
+version = theVersion
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/sovity/broker-extension")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        register<MavenPublication>("gpr") {
+            from(components["java"])
+        }
+    }
 }
