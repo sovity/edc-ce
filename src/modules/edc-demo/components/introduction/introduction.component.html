@@ -7,25 +7,19 @@
             It implements the International Data Spaces standard (IDS) as well as relevant protocols associated with GAIA-X.
             The connector is designed in an extensible way in order to support alternative protocols and integrate in various ecosystems.
         </p>
-        <p>
-          <a class="link" color="secondary" href="https://github.com/eclipse-dataspaceconnector/DataSpaceConnector"
+        <div class="flex flex-row !space-x-[10px]">
+          <a color="secondary" href="https://github.com/eclipse-dataspaceconnector/DataSpaceConnector"
              mat-stroked-button
              target="_blank">
             GitHub
           </a>
-          <a class="link" color="secondary"
+          <a color="secondary"
              href="https://github.com/eclipse-dataspaceconnector/DataSpaceConnector/blob/main/README.md"
              mat-stroked-button
              target="_blank">
             Getting Started
           </a>
-          <a class="link" color="secondary"
-             href="https://github.com/eclipse-dataspaceconnector/DataSpaceConnector/blob/main/onboarding.md"
-             mat-stroked-button
-             target="_blank">
-            Onboarding Guide
-          </a>
-        </p>
+        </div>
     </div>
 </mat-card>
 
@@ -36,14 +30,14 @@
           Example use cases, that you can try out with this application, are:
       </p>
       <ul id="example-use-cases-list">
-        <li>View the asset catalog available to you in your Dataspace using the <a [routerLink]="['/catalog-browser']" class="md-accent">Catalog Browser</a></li>
-        <li>Negotiate a contract for data sharing in your Dataspace using the <a [routerLink]="['/catalog-browser']">Catalog Browser</a></li>
-        <li>View your existing contracts in the <a [routerLink]="['/contracts']">Contracts</a> page</li>
-        <li>Transfer an asset in your Dataspace using the <a [routerLink]="['/contracts']">Contracts</a> page</li>
-        <li>View which assets have been transferred in your Dataspace in the <a [routerLink]="['/transfer-history']">Transfer History</a> page</li>
-        <li>View and create assets using the <a [routerLink]="['/my-assets']">Assets</a> page</li>
-        <li>View and create policies and apply these to assets in your Dataspace using the <a [routerLink]="['/policies']">Policies</a> page</li>
-        <li>Publish a new asset into your Dataspace using the <a [routerLink]="['/contract-definitions']">Contract Definitions</a> page</li>
+        <li>View the asset catalog available to you in your Dataspace using the <a class="link" [routerLink]="['/catalog-browser']">Catalog Browser</a></li>
+        <li>Negotiate a contract for data sharing in your Dataspace using the <a class="link" [routerLink]="['/catalog-browser']">Catalog Browser</a></li>
+        <li>View your existing contracts in the <a class="link" [routerLink]="['/contracts']">Contracts</a> page</li>
+        <li>Transfer an asset in your Dataspace using the <a class="link" [routerLink]="['/contracts']">Contracts</a> page</li>
+        <li>View which assets have been transferred in your Dataspace in the <a class="link" [routerLink]="['/transfer-history']">Transfer History</a> page</li>
+        <li>View and create assets using the <a class="link" [routerLink]="['/my-assets']">Assets</a> page</li>
+        <li>View and create policies and apply these to assets in your Dataspace using the <a class="link" [routerLink]="['/policies']">Policies</a> page</li>
+        <li>Publish a new asset into your Dataspace using the <a class="link" [routerLink]="['/contract-definitions']">Contract Definitions</a> page</li>
       </ul>
     </div>
 </mat-card>

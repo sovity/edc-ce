@@ -1,4 +1,5 @@
-@import './theme.scss';
+@use "theme-colors" as colors;
+@forward "theme";
 
 html, body {
   height: 100%;
@@ -31,6 +32,16 @@ body {
   }
 }
 
+// hrefs
+.link {
+  color: colors.$link-color;
+  text-decoration: none;
+
+  &:hover, &:focus {
+    text-decoration: underline;
+  }
+}
+
 /*
   Tailwind Style Utility Classes
  */
@@ -43,8 +54,17 @@ body {
   display: flex;
 }
 
+.space-x-\[5px\] > * + * {
+  margin-left: 5px;
+}
+
+
 .space-x-\[10px\] > * + * {
   margin-left: 10px;
+}
+
+.\!space-x-\[10px\] > * + * {
+  margin-left: 10px !important;
 }
 
 .mt-\[10px\] {
