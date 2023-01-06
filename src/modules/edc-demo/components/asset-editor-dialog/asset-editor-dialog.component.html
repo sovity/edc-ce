@@ -57,12 +57,6 @@
             <payment-modality-select class="grow" label="Payment Modality"
                                      [control]="form.metadata.controls.paymentModality"></payment-modality-select>
           </div>
-
-          <!-- Nav Buttons -->
-          <div class="flex flex-row">
-            <button mat-button disabled>Back</button>
-            <button mat-button matStepperNext>Next</button>
-          </div>
         </div>
       </form>
     </mat-step>
@@ -97,12 +91,6 @@
               <mat-label>Geo reference method</mat-label>
               <input [formControl]="form.advanced.controls.geoReferenceMethod" matInput>
             </mat-form-field>
-          </div>
-
-          <!-- Nav Buttons -->
-          <div class="flex flex-row">
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button matStepperNext>Next</button>
           </div>
         </div>
       </form>
@@ -157,12 +145,6 @@
               <mat-label>Standard License</mat-label>
               <input [formControl]="form.datasource.controls.standardLicense" matInput>
             </mat-form-field>
-          </div>
-
-          <!-- Nav Buttons -->
-          <div class="flex flex-row">
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button matStepperNext disabled>Next</button>
           </div>
         </div>
       </form>
