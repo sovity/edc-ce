@@ -34,6 +34,7 @@ import org.eclipse.edc.spi.system.Hostname;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.types.TypeManager;
+import sender.LogMessageSender;
 import sender.message.dispatcher.IdsMultipartExtendedRemoteMessageDispatcher;
 import serializer.MultiContextJsonLdSerializer;
 
@@ -162,14 +163,14 @@ public class ClearingHouseExtension implements ServiceExtension {
         var monitor = context.getMonitor();
         var typeManager = context.getTypeManager();
         var objectMapper = typeManager.getMapper(TYPE_MANAGER_SERIALIZER_KEY);
-        var connectorName = context.getSetting(EDC_CONNECTOR_NAME, "EDC");
-        var endpoint = context.getSetting(EDC_IDS_ENDPOINT, "http://endpoint");
+        //var connectorName = context.getSetting(EDC_CONNECTOR_NAME, "EDC");
+        //var endpoint = context.getSetting(EDC_IDS_ENDPOINT, "http://endpoint");
 
-        //var registerConnectorSender = new RegisterConnectorRequestSender(objectMapper, connectorName, endpoint);
+        var logMessageSender = new LogMessageSender();
 
         var idsMultipartSender = new IdsMultipartSender(monitor, httpClient, dynamicAttributeTokenService, objectMapper);
         var dispatcher = new IdsMultipartExtendedRemoteMessageDispatcher(idsMultipartSender);
-        //dispatcher.register(registerConnectorSender);
+        dispatcher.register(logMessageSender);
         dispatcherRegistry.register(dispatcher);
     }
 
