@@ -118,7 +118,7 @@
             <mat-label>Type</mat-label>
             <mat-select [formControl]="form.datasource.controls.dataAddressType">
               <mat-option value="Json" style="background-color: white; color: black">
-                Data Source Configuraiton (JSON)
+                Custom Datasource Config (JSON)
               </mat-option>
               <mat-option value="Rest-Api" style="background-color: white; color: black">
                 REST-API Endpoint (GET)
@@ -128,14 +128,14 @@
 
           <!-- Data Source Config JSON (Json) -->
           <mat-form-field *ngIf="form.dataAddressType === 'Json'" color="accent">
-            <mat-label>Data Destination (JSON)</mat-label>
+            <mat-label>Custom Datasource Config (JSON)</mat-label>
             <textarea [formControl]="form.datasource.controls.dataDestination" matInput [placeholder]="'{}'"
             ></textarea>
           </mat-form-field>
 
           <!-- Source Endpoint (Rest-Api) -->
           <mat-form-field *ngIf="form.dataAddressType === 'Rest-Api'" class="form-field" color="accent">
-            <mat-label>Source Endpoint</mat-label>
+            <mat-label>REST-API Endpoint (GET)</mat-label>
             <input [formControl]="form.datasource.controls.baseUrl" matInput [placeholder]="'https://'">
           </mat-form-field>
 
