@@ -16,3 +16,8 @@ $custom-typography: mat.define-typography-config($font-family: 'Open Sans');
 mat-paginator {
   background: transparent !important;
 }
+
+// Fix Icon sizes used in card avatars
+mat-icon[mat-card-avatar] {
+  font-size: 40px;
+}

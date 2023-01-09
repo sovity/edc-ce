@@ -7,9 +7,10 @@ import {ContractNegotiationDto, NegotiationInitiateRequestDto} from "../../../ed
 import {NotificationService} from "../../services/notification.service";
 import {Router} from "@angular/router";
 import {TransferProcessStates} from "../../models/transfer-process-states";
-import {ContractOffer} from "../../models/contract-offer";
+import {ContractOfferDto} from "../../models/contract-offer-dto";
 import {NegotiationResult} from "../../models/negotiation-result";
 import {CatalogApiUrlService} from "../../services/catalog-api-url.service";
+import {ContractOffer} from "../../models/contract-offer";
 
 interface RunningTransferProcess {
   processId: string;
@@ -49,7 +50,7 @@ export class CatalogBrowserComponent implements OnInit {
         switchMap(() => this.apiService.getContractOffers()),
         map(contractOffers => {
           const searchText = this.searchText.toLowerCase();
-          return contractOffers.filter(contractOffer => contractOffer.asset.name.toLowerCase().includes(searchText));
+          return contractOffers.filter(contractOffer => contractOffer.asset.name?.toLowerCase()?.includes(searchText));
         })
       ).subscribe(filteredContractOffers => this.filteredContractOffers = filteredContractOffers);
     this.presetCatalogUrlsMessage = this.buildPresetCatalogUrlsMessage()
@@ -61,7 +62,7 @@ export class CatalogBrowserComponent implements OnInit {
 
   onNegotiateClicked(contractOffer: ContractOffer) {
     const initiateRequest: NegotiationInitiateRequestDto = {
-      connectorAddress: contractOffer.asset.originator,
+      connectorAddress: contractOffer.asset.originator!,
 
       offer: {
         offerId: contractOffer.id,

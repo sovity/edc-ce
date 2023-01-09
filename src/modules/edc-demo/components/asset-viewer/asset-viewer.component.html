@@ -22,10 +22,12 @@
   <div fxLayout="row wrap" fxLayoutAlign="start start">
     <mat-card *ngFor="let asset of assets" class="contract-definition-card">
       <mat-card-header>
-        <mat-icon mat-card-avatar>id</mat-icon>
-        <mat-card-title>{{asset.id}}</mat-card-title>
+        <mat-icon mat-card-avatar>upload</mat-icon>
+        <mat-card-title>{{asset.name}}</mat-card-title>
+        <mat-card-subtitle>{{asset.id}}</mat-card-subtitle>
       </mat-card-header>
-      <mat-card-content>
+      <mat-card-content class="flex flex-col">
+        
         <mat-list dense>
           <mat-list-item>
             <mat-icon mat-list-icon>info</mat-icon>

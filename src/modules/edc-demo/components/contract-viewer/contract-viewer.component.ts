@@ -20,6 +20,7 @@ import {CatalogBrowserService} from "../../services/catalog-browser.service";
 import {Router} from "@angular/router";
 import {TransferProcessStates} from "../../models/transfer-process-states";
 import {AppConfigService} from "../../../app/app-config.service";
+import {AssetPropertyMapper} from "../../services/asset-property-mapper";
 
 interface RunningTransferProcess {
   processId: string;
@@ -39,7 +40,8 @@ export class ContractViewerComponent implements OnInit {
   private pollingHandleTransfer?: any;
   themeClassString: any;
 
-  constructor(private contractAgreementService: ContractAgreementService,
+  constructor(
+    private contractAgreementService: ContractAgreementService,
               private assetService: AssetService,
               public dialog: MatDialog,
               @Inject('HOME_CONNECTOR_STORAGE_ACCOUNT') private homeConnectorStorageAccount: string,
@@ -47,7 +49,8 @@ export class ContractViewerComponent implements OnInit {
               private catalogService: CatalogBrowserService,
               private router: Router,
               private notificationService: NotificationService,
-              private appConfigService: AppConfigService) {
+              private appConfigService: AppConfigService,
+              private assetPropertyMapper: AssetPropertyMapper) {
   }
 
   private static isFinishedState(state: string): boolean {
@@ -76,7 +79,9 @@ export class ContractViewerComponent implements OnInit {
   }
 
   getAsset(assetId?: string): Observable<Asset> {
-    return assetId ? this.assetService.getAsset(assetId).pipe(map(a => new Asset(a.properties))) : of();
+    return assetId
+      ? this.assetService.getAsset(assetId).pipe(map(a => this.assetPropertyMapper.readProperties(a.properties)))
+      : of();
   }
 
   onTransferClicked(contract: ContractAgreementDto) {
@@ -108,7 +113,7 @@ export class ContractViewerComponent implements OnInit {
         dataDestination: dataDestination,
         managedResources: false,
         transferType: {isFinite: true}, //must be there, otherwise NPE on backend
-        connectorAddress: offeredAsset.originator,
+        connectorAddress: offeredAsset.originator!!,
         protocol: 'ids-multipart'
       };
     }));

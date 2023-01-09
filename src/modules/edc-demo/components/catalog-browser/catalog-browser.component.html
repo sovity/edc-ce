@@ -37,13 +37,13 @@
         <mat-card-title>{{contractOffer.asset.name}}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <mat-list dense>
+        <!--<mat-list dense>
           <mat-list-item>
             <mat-icon mat-list-icon>category</mat-icon>
             <div class="asset-property-name" mat-line>Type</div>
             <div mat-line>{{contractOffer.asset.type}}</div>
           </mat-list-item>
-        </mat-list>
+        </mat-list>-->
 
         <mat-expansion-panel>
           <mat-expansion-panel-header>
@@ -72,7 +72,7 @@
               <div class="asset-property-name" mat-line>Originator</div>
               <div mat-line>{{contractOffer.asset.originator}}</div>
             </mat-list-item>
-            <mat-list-item *ngFor="let additionalPropertyKey of contractOffer.asset.additionalPropertyKeys">
+            <!--<mat-list-item *ngFor="let additionalPropertyKey of contractOffer.asset.additionalPropertyKeys">
               <mat-icon mat-list-icon>list</mat-icon>
               <div *ngIf="additionalPropertyKey.replace('asset:prop:', '') as name"
                    class="asset-property-name"
@@ -81,7 +81,7 @@
               </div>
               <div mat-line title="{{contractOffer.asset.properties[additionalPropertyKey]}}">
                 {{contractOffer.asset.properties[additionalPropertyKey]}}</div>
-            </mat-list-item>
+            </mat-list-item>-->
           </mat-list>
         </mat-expansion-panel>
 
@@ -90,7 +90,7 @@
       <mat-divider inset></mat-divider>
       <mat-card-actions class="card-actions">
         <button (click)="onNegotiateClicked(contractOffer)"
-                [disabled]="!contractOffer.asset.isAsync || isBusy(contractOffer) || isNegotiated(contractOffer)"
+                [disabled]="isBusy(contractOffer) || isNegotiated(contractOffer)"
                 color="primary" mat-raised-button>
           <mat-icon>drive_file_rename_outline</mat-icon>
           Negotiate

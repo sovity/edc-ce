@@ -3,7 +3,7 @@ import {Inject, Injectable} from '@angular/core';
 import {EMPTY, forkJoin, MonoTypeOperatorFunction, Observable, of, OperatorFunction, pluck} from 'rxjs';
 import {catchError, map, timeout} from 'rxjs/operators';
 import {Asset} from '../models/asset';
-import {ContractOffer} from '../models/contract-offer';
+import {ContractOfferDto} from '../models/contract-offer-dto';
 import {
   API_KEY,
   ContractNegotiationDto,
@@ -13,8 +13,10 @@ import {
   TransferProcessService,
   TransferRequestDto
 } from "../../edc-dmgmt-client";
-import {ContractOfferResponse} from "../models/contract-offer-response";
+import {ContractOfferResponseDto} from "../models/contract-offer-response-dto";
 import {CatalogApiUrlService} from "./catalog-api-url.service";
+import {ContractOffer} from "../models/contract-offer";
+import {AssetPropertyMapper} from "./asset-property-mapper";
 
 /**
  * Combines several services that are used from the {@link CatalogBrowserComponent}
@@ -24,25 +26,28 @@ import {CatalogApiUrlService} from "./catalog-api-url.service";
 })
 export class CatalogBrowserService {
 
-  constructor(private httpClient: HttpClient,
-              private transferProcessService: TransferProcessService,
-              private negotiationService: ContractNegotiationService,
-              @Inject(API_KEY) private apiKey: string,
-              private catalogApiUrlService: CatalogApiUrlService) {
+  constructor(
+    private httpClient: HttpClient,
+    private transferProcessService: TransferProcessService,
+    private negotiationService: ContractNegotiationService,
+    @Inject(API_KEY) private apiKey: string,
+    private catalogApiUrlService: CatalogApiUrlService,
+    private assetPropertyMapper: AssetPropertyMapper
+  ) {
   }
 
   getContractOffers(): Observable<ContractOffer[]> {
     const catalogApiUrlArray = this.catalogApiUrlService.getCatalogApiUrls();
     let allContractOffers: Observable<ContractOffer[]>[] = [];
     for (const catalogApiUrl of catalogApiUrlArray) {
-      const contractOffers = this.httpClient.get<ContractOfferResponse>(catalogApiUrl)
-          .pipe(map(({contractOffers}) => contractOffers))
-          .pipe(timeout({first: 5_000, with: () => of([])}))
-          .pipe(this.logErrors(catalogApiUrl, 'GET', of([])))
-          .pipe(map(contractOffers => contractOffers.map(contractOffer => {
-            contractOffer.asset = new Asset(contractOffer.asset.properties)
-            return contractOffer;
-          })))
+      const contractOffers = this.httpClient.get<ContractOfferResponseDto>(catalogApiUrl)
+        .pipe(map(({contractOffers}) => contractOffers))
+        .pipe(timeout({first: 5_000, with: () => of([])}))
+        .pipe(this.logErrors(catalogApiUrl, 'GET', of([])))
+        .pipe(map(contractOffers => contractOffers.map(contractOffer => ({
+          ...contractOffer,
+          asset: this.assetPropertyMapper.readProperties(contractOffer.asset.properties)
+        }))))
       allContractOffers.push(contractOffers);
     }
     return forkJoin(allContractOffers).pipe(map(x => x.reduce((previousValue, currentValue) => previousValue.concat(currentValue), [])));

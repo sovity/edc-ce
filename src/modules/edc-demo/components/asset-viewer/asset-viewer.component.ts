@@ -8,6 +8,7 @@ import {Asset} from "../../models/asset";
 import {ConfirmationDialogComponent, ConfirmDialogModel} from "../confirmation-dialog/confirmation-dialog.component";
 import {NotificationService} from "../../services/notification.service";
 import {AppConfigService} from "../../../app/app-config.service";
+import {AssetPropertyMapper} from "../../services/asset-property-mapper";
 
 @Component({
   selector: 'edc-demo-asset-viewer',
@@ -25,7 +26,8 @@ export class AssetViewerComponent implements OnInit {
   constructor(private assetService: AssetService,
               private notificationService: NotificationService,
               private readonly dialog: MatDialog,
-              private appConfigService: AppConfigService) {
+              private appConfigService: AppConfigService,
+              private assetPropertyMapper: AssetPropertyMapper) {
   }
 
   private showError(error: string) {
@@ -38,11 +40,14 @@ export class AssetViewerComponent implements OnInit {
     this.filteredAssets$ = this.fetch$
       .pipe(
         switchMap(() => {
-          const assets$ = this.assetService.getAllAssets().pipe(map(assets => assets.map(asset => new Asset(asset.properties))));
-          return !!this.searchText ?
-            assets$.pipe(map(assets => assets.filter(asset => asset.name.includes(this.searchText))))
-            :
-            assets$;
+          let assets$ = this.assetService.getAllAssets()
+            .pipe(map(assets => assets.map(asset => this.assetPropertyMapper.readProperties(asset.properties))));
+
+          if (this.searchText) {
+            assets$ = assets$.pipe(map(assets => assets.filter(asset => asset.name?.includes(this.searchText))))
+          }
+
+          return assets$;
         }));
   }
 

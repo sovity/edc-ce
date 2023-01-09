@@ -5,7 +5,7 @@ import {DataCategorySelectItemService} from "../components/data-category-select/
 import {
   DataSubcategorySelectItemService
 } from "../components/data-subcategory-select/data-subcategory-select-item.service";
-import {AssetDto} from "./asset-dto";
+import {Asset} from "../models/asset";
 import {AssetProperties} from "./asset-properties";
 import {AssetEditorDialogFormValue} from "../components/asset-editor-dialog/asset-editor-dialog-form-model";
 import {isFeatureSetActive} from "../pipes/is-active-feature-set.pipe";
@@ -30,22 +30,22 @@ export class AssetPropertyMapper {
   ) {
   }
 
-  readProperties(props: Record<string, string>): AssetDto {
+  readProperties(props: Record<string, string | null>): Asset {
     const language = props[AssetProperties.language]
-      ? this.languageSelectItemService.findById(props[AssetProperties.language])
+      ? this.languageSelectItemService.findById(props[AssetProperties.language]!!)
       : null;
     const dataCategory = props[AssetProperties.dataCategory]
-      ? this.dataCategorySelectItemService.findById(props[AssetProperties.dataCategory])
+      ? this.dataCategorySelectItemService.findById(props[AssetProperties.dataCategory]!!)
       : null;
     const dataSubcategory = props[AssetProperties.dataSubcategory]
-      ? this.dataSubcategorySelectItemService.findById(props[AssetProperties.dataSubcategory])
+      ? this.dataSubcategorySelectItemService.findById(props[AssetProperties.dataSubcategory]!!)
       : null;
     const transportMode = props[AssetProperties.transportMode]
-      ? this.transportModeSelectItemService.findById(props[AssetProperties.transportMode])
+      ? this.transportModeSelectItemService.findById(props[AssetProperties.transportMode]!!)
       : null;
 
     return {
-      id: props[AssetProperties.assetIdEdcc],
+      id: props[AssetProperties.assetIdEdcc] ?? props[AssetProperties.assetIdIds] ?? 'no-known-id-field-was-set',
       idsId: props[AssetProperties.assetIdIds],
       name: props[AssetProperties.name],
       version: props[AssetProperties.version],

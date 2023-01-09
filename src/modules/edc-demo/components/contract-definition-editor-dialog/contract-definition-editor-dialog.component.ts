@@ -3,6 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {AssetService, ContractDefinitionDto, PolicyDefinition, PolicyService} from "../../../edc-dmgmt-client";
 import {map} from "rxjs/operators";
 import {Asset} from "../../models/asset";
+import {AssetPropertyMapper} from "../../services/asset-property-mapper";
 
 
 @Component({
@@ -29,6 +30,7 @@ export class ContractDefinitionEditorDialog implements OnInit {
   constructor(private policyService: PolicyService,
               private assetService: AssetService,
               private dialogRef: MatDialogRef<ContractDefinitionEditorDialog>,
+              private assetPropertyMapper: AssetPropertyMapper,
               @Inject(MAT_DIALOG_DATA) contractDefinition?: ContractDefinitionDto) {
     if (contractDefinition) {
       this.contractDefinition = contractDefinition;
@@ -42,14 +44,16 @@ export class ContractDefinitionEditorDialog implements OnInit {
       this.accessPolicy = this.policies.find(policy => policy.id === this.contractDefinition.accessPolicyId);
       this.contractPolicy = this.policies.find(policy => policy.id === this.contractDefinition.contractPolicyId);
     });
-    this.assetService.getAllAssets().pipe(map(asset => asset.map(a => new Asset(a.properties)))).subscribe(assets => {
-      this.availableAssets = assets;
-      // preselection
-      if (this.contractDefinition) {
-        const assetIds = this.contractDefinition.criteria.map(c => c.operandRight);
-        this.assets = this.availableAssets.filter(asset => assetIds.includes(asset.id));
-      }
-    })
+    this.assetService.getAllAssets()
+      .pipe(map(asset => asset.map(a => this.assetPropertyMapper.readProperties(a.properties))))
+      .subscribe(assets => {
+        this.availableAssets = assets;
+        // preselection
+        if (this.contractDefinition) {
+          const assetIds = this.contractDefinition.criteria.map(c => c.operandRight);
+          this.assets = this.availableAssets.filter(asset => assetIds.includes(asset.id));
+        }
+      })
   }
 
   onSave() {
@@ -60,10 +64,10 @@ export class ContractDefinitionEditorDialog implements OnInit {
 
     const ids = this.assets.map(asset => asset.id);
     this.contractDefinition.criteria = [...this.contractDefinition.criteria, {
-        operandLeft: 'asset:prop:id',
-        operator: 'in',
-        operandRight: ids,
-      }];
+      operandLeft: 'asset:prop:id',
+      operator: 'in',
+      operandRight: ids,
+    }];
 
     this.dialogRef.close({
       "contractDefinition": this.contractDefinition
