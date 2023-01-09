@@ -1,10 +1,13 @@
+# Build Arg: Angular Config Profile
+ARG EDC_UI_CONFIGURATION=production
+
 # Stage 1: Compile and Build angular codebase
 FROM node:lts as build
 
 WORKDIR /app
 COPY ./ /app/
 RUN npm install
-RUN npm run ng build --prod
+RUN npm run ng build --no-progress --configuration=${EDC_UI_CONFIGURATION}
 
 # Stage 2: Serve app with nginx
 FROM nginx:1.23.2-alpine
