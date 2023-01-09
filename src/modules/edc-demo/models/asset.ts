@@ -1,12 +1,16 @@
+import {AssetProperties} from "../services/asset-properties";
 
+/**
+ * Legacy Asset Object (with mapping included)
+ */
 export class Asset {
-    private static readonly PROPERTY_ID:string = "asset:prop:id";
-    private static readonly PROPERTY_NAME = "asset:prop:name";
-    private static readonly PROPERTY_VERSION = "asset:prop:version";
-    private static readonly PROPERTY_CONTENT_TYPE = "asset:prop:contenttype";
-    private static readonly PROPERTY_POLICY_ID = "asset:prop:policy-id";
-    private static readonly PROPERTY_ORIGINATOR = "asset:prop:originator";
-    private static readonly PROPERTY_TYPE = "type";
+    private static readonly PROPERTY_ID:string = AssetProperties.assetIdEdcc;
+    private static readonly PROPERTY_NAME = AssetProperties.name;
+    private static readonly PROPERTY_VERSION = AssetProperties.version;
+    private static readonly PROPERTY_CONTENT_TYPE = AssetProperties.contentType;
+    private static readonly PROPERTY_POLICY_ID = AssetProperties.legacyAssetObjectPolicyId;
+    private static readonly PROPERTY_ORIGINATOR = AssetProperties.originator;
+    private static readonly PROPERTY_TYPE = AssetProperties.legacyAssetObjectType;
     private static readonly KNOWN_PROPERTY_KEYS = [
         Asset.PROPERTY_ID,
         Asset.PROPERTY_NAME,
