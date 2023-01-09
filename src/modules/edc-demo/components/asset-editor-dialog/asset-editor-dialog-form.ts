@@ -81,13 +81,13 @@ export class AssetEditorDialogForm {
     const datasource: FormGroup<AssetEditorDialogDatasourceFormModel> = this.formBuilder.nonNullable.group({
       dataAddressType: 'Json' as DataAddressType,
       dataDestination: '',
-      baseUrl: '',
-      publisher: '',
-      standardLicense: '',
-      endpointDocumentation: '',
+      baseUrl: ['', urlValidator],
+      publisher: ['', urlValidator],
+      standardLicense: ['', urlValidator],
+      endpointDocumentation: ['', urlValidator],
     });
 
-    this.activateValidationByDataAddressType(datasource, {
+    this.activateValidationByDataAddressType(datasource,  ["dataDestination", "baseUrl"], {
       'Json': {
         dataDestination: [Validators.required, jsonValidator],
       },
@@ -106,11 +106,13 @@ export class AssetEditorDialogForm {
   /**
    * Apply validators depending on selected {@link DataAddressType}
    * @param datasource form group
+   * @param keys all dataAddressType-affected fields
    * @param validators validators for each {@link DataAddressType}
    * @private
    */
   private activateValidationByDataAddressType(
     datasource: FormGroup<AssetEditorDialogDatasourceFormModel>,
+    keys: (keyof AssetEditorDialogDatasourceFormModel)[],
     validators: Record<
       DataAddressType,
       Partial<Record<keyof AssetEditorDialogDatasourceFormModel, ValidatorFn | ValidatorFn[]>>
@@ -118,7 +120,7 @@ export class AssetEditorDialogForm {
   ) {
     const updateDatasourceValidators = () => {
       // Remove all validators
-      Object.values(datasource.controls).forEach(control => {
+      keys.map(key => datasource.controls[key]).forEach(control => {
         control.clearValidators()
         control.updateValueAndValidity()
       })

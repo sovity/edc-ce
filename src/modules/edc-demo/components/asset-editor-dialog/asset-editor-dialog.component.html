@@ -109,35 +109,58 @@
           </mat-form-field>
 
           <!-- Data Source Config JSON (Json) -->
-          <mat-form-field *ngIf="form.dataAddressType === 'Json'" color="accent">
+          <mat-form-field
+            *ngIf="form.dataAddressType === 'Json' && form.datasource.controls.dataDestination; let ctrl"
+            color="accent"
+          >
             <mat-label>Custom Datasource Config (JSON)</mat-label>
-            <textarea [formControl]="form.datasource.controls.dataDestination" matInput [placeholder]="'{}'"
-            ></textarea>
+            <textarea [formControl]="ctrl" matInput [placeholder]="'{}'"></textarea>
+            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.jsonInvalid">{{invalidJsonMessage}}</mat-error>
           </mat-form-field>
 
           <!-- Source Endpoint (Rest-Api) -->
-          <mat-form-field *ngIf="form.dataAddressType === 'Rest-Api'" class="form-field" color="accent">
+          <mat-form-field
+            *ngIf="form.dataAddressType === 'Rest-Api' && form.datasource.controls.baseUrl; let ctrl"
+            class="form-field"
+            color="accent"
+          >
             <mat-label>REST-API Endpoint (GET)</mat-label>
-            <input [formControl]="form.datasource.controls.baseUrl" matInput [placeholder]="'https://'">
+            <input [formControl]="ctrl" matInput [placeholder]="'https://'">
+            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{invalidUrlMessage}}</mat-error>
           </mat-form-field>
 
           <!-- Endpoint Documentation -->
-          <mat-form-field class="form-field grow" color="accent">
+          <mat-form-field
+            *ngIf="form.datasource.controls.endpointDocumentation; let ctrl"
+            class="form-field grow"
+            color="accent"
+          >
             <mat-label>Endpoint Documentation</mat-label>
-            <input [formControl]="form.datasource.controls.endpointDocumentation" placeholder="https://" matInput>
+            <input [formControl]="ctrl" placeholder="https://" matInput>
+            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{invalidUrlMessage}}</mat-error>
           </mat-form-field>
 
           <div class="flex flex-row space-x-[10px]">
             <!-- Publisher -->
-            <mat-form-field class="form-field grow" color="accent">
+            <mat-form-field
+              *ngIf="form.datasource.controls.publisher; let ctrl"
+              class="form-field grow"
+              color="accent"
+            >
               <mat-label>Publisher</mat-label>
-              <input [formControl]="form.datasource.controls.publisher" placeholder="https://" matInput>
+              <input [formControl]="ctrl" placeholder="https://" matInput>
+              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{invalidUrlMessage}}</mat-error>
             </mat-form-field>
 
             <!-- Standard License -->
-            <mat-form-field class="form-field grow" color="accent">
+            <mat-form-field
+              *ngIf="form.datasource.controls.standardLicense; let ctrl"
+              class="form-field grow"
+              color="accent"
+            >
               <mat-label>Standard License</mat-label>
-              <input [formControl]="form.datasource.controls.standardLicense" matInput>
+              <input [formControl]="ctrl" matInput>
+              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{invalidUrlMessage}}</mat-error>
             </mat-form-field>
           </div>
         </div>

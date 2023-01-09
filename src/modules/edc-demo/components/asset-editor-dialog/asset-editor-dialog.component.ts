@@ -14,6 +14,9 @@ import {AssetEntryDtoBuilder} from "./asset-entry-dto-builder";
 })
 export class AssetEditorDialog {
 
+  invalidUrlMessage = "Must be valid URL, e.g. https://example.com"
+  invalidJsonMessage = "Must be valid JSON"
+
   constructor(
     public form: AssetEditorDialogForm,
     private assetEntryDtoBuilder: AssetEntryDtoBuilder,
