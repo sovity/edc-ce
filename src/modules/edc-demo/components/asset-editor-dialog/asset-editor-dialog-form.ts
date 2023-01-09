@@ -12,6 +12,10 @@ import {LanguageSelectItemService} from "../language-select/language-select-item
 import {isFeatureSetActive} from "../../pipes/is-active-feature-set.pipe";
 import {jsonValidator} from "./json-validator";
 import {urlValidator} from "./url-validator";
+import {DataSubcategorySelectItem} from "../data-subcategory-select/data-subcategory-select-item";
+import {TransportModeSelectItem} from "../transport-mode-select/transport-mode-select-item";
+import {DataCategorySelectItem} from "../data-category-select/data-category-select-item";
+import {LanguageSelectItem} from "../language-select/language-select-item";
 
 /**
  * Handles AngularForms for AssetEditorDialog
@@ -43,6 +47,13 @@ export class AssetEditorDialogForm {
   }
 
   /**
+   * Quick access to selected data category
+   */
+  get dataCategory(): DataCategorySelectItem | null {
+    return this.advanced.controls.dataCategory.value
+  }
+
+  /**
    * Quick access to full value
    */
   get value(): AssetEditorDialogFormValue {
@@ -65,16 +76,15 @@ export class AssetEditorDialogForm {
       version: '',
       contenttype: '',
       description: '',
-
-      // MDS Specific
       keywords: '',
-      language: this.languageSelectItemService.english(),
+      language: this.languageSelectItemService.english() as LanguageSelectItem | null,
     });
 
     const advanced: FormGroup<AssetEditorDialogAdvancedFormModel> = this.formBuilder.nonNullable.group({
       dataModel: '',
-      dataCategory: validateIffMds(['', Validators.required]),
-      transportMode: '',
+      dataCategory: validateIffMds([null as DataCategorySelectItem | null, Validators.required]),
+      dataSubcategory: null as DataSubcategorySelectItem | null,
+      transportMode: null as TransportModeSelectItem | null,
       geoReferenceMethod: '',
     });
 
@@ -87,7 +97,7 @@ export class AssetEditorDialogForm {
       endpointDocumentation: ['', urlValidator],
     });
 
-    this.activateValidationByDataAddressType(datasource,  ["dataDestination", "baseUrl"], {
+    this.activateValidationByDataAddressType(datasource, ["dataDestination", "baseUrl"], {
       'Json': {
         dataDestination: [Validators.required, jsonValidator],
       },

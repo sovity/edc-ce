@@ -57,7 +57,7 @@ export class NewPolicyDialogComponent implements OnInit {
 
     this.dialogRef.close({
       policy: this.policyDefinition.policy,
-      id: this.policyDefinition.id
+      assetIdEdcc: this.policyDefinition.id
     })
   }
 }

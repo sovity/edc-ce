@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {first, map, switchMap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
-import {AssetEntryDto, AssetService,} from "../../../edc-dmgmt-client";
+import {AssetService,} from "../../../edc-dmgmt-client";
 import {AssetEditorDialog} from "../asset-editor-dialog/asset-editor-dialog.component";
 import {Asset} from "../../models/asset";
 import {ConfirmationDialogComponent, ConfirmDialogModel} from "../confirmation-dialog/confirmation-dialog.component";
@@ -75,12 +75,6 @@ export class AssetViewerComponent implements OnInit {
   }
 
   onCreate() {
-    const dialogRef = this.dialog.open(AssetEditorDialog, {panelClass: this.themeClassString});
-    dialogRef.afterClosed().pipe(first()).subscribe((result: { assetEntryDto?: AssetEntryDto }) => {
-      const newAsset = result?.assetEntryDto;
-      if (newAsset) {
-        this.assetService.createAsset(newAsset).subscribe(() => this.fetch$.next(null), error => this.showError(error), () => this.notificationService.showInfo("Successfully created"));
-      }
-    });
+    this.dialog.open(AssetEditorDialog, {panelClass: this.themeClassString});
   }
 }

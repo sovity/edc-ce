@@ -72,7 +72,7 @@ import {MatNativeDateModule} from "@angular/material/core";
     {provide: API_KEY, useFactory: (s: AppConfigService) => s.getConfig()?.apiKey, deps: [AppConfigService]},
     {
       provide: 'STORAGE_TYPES',
-      useFactory: () => [{id: "AzureStorage", name: "AzureStorage"}, {id: "AmazonS3", name: "AmazonS3"}],
+      useFactory: () => [{assetIdEdcc: "AzureStorage", name: "AzureStorage"}, {assetIdEdcc: "AmazonS3", name: "AmazonS3"}],
     },
   ],
   bootstrap: [AppComponent]

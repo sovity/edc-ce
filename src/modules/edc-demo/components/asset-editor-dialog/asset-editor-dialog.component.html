@@ -61,24 +61,34 @@
         <div class="flex flex-col mt-[10px]">
           <div class="flex flex-row space-x-[10px]">
             <!-- Data Category -->
-            <mat-form-field class="form-field grow" color="accent">
-              <mat-label>Data Category</mat-label>
-              <input [formControl]="form.advanced.controls.dataCategory" matInput>
-            </mat-form-field>
+            <data-category-select
+              label="Data Category"
+              class="grow"
+              [control]="form.advanced.controls.dataCategory"
+            ></data-category-select>
 
-            <!-- Data Model -->
-            <mat-form-field class="form-field grow" color="accent">
-              <mat-label>Data Model</mat-label>
-              <input [formControl]="form.advanced.controls.dataModel" matInput>
-            </mat-form-field>
+            <!-- Data Subcategory -->
+            <data-subcategory-select
+              label="Data Subcategory"
+              class="grow"
+              [dataCategory]="form.dataCategory"
+              [control]="form.advanced.controls.dataSubcategory"
+            ></data-subcategory-select>
           </div>
+
+          <!-- Data Model -->
+          <mat-form-field class="form-field" color="accent">
+            <mat-label>Data Model</mat-label>
+            <input [formControl]="form.advanced.controls.dataModel" matInput>
+          </mat-form-field>
 
           <div class="flex flex-row space-x-[10px]">
             <!-- Transport Mode -->
-            <mat-form-field class="form-field grow" color="accent">
-              <mat-label>Transport Mode</mat-label>
-              <input [formControl]="form.advanced.controls.transportMode" matInput>
-            </mat-form-field>
+            <transport-mode-select
+              label="Transport Mode"
+              class="grow"
+              [control]="form.advanced.controls.transportMode"
+            ></transport-mode-select>
 
             <!-- Geo reference method -->
             <mat-form-field class="form-field grow" color="accent">
@@ -172,14 +182,14 @@
 
 <mat-dialog-actions>
   <div class="w-full flex flex-row justify-end">
-    <button mat-dialog-close mat-raised-button color="default" style="margin-right: 8px">
+    <button mat-dialog-close mat-raised-button color="default" style="margin-right: 8px" [disabled]="loading">
       <div class="flex flex-row items-center space-x-[5px]">
         <mat-icon>cancel</mat-icon>
         <span>Cancel</span>
       </div>
     </button>
 
-    <button (click)="onSave()" mat-raised-button color="primary" [disabled]="!form.all.valid">
+    <button (click)="onSave()" mat-raised-button color="primary" [disabled]="!form.all.valid || loading">
       <div class="flex flex-row items-center space-x-[5px]">
         <mat-icon>add_circle_outline</mat-icon>
         <span>Create</span>

@@ -49,6 +49,10 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatStepperModule} from "@angular/material/stepper";
 import {IsActiveFeatureSetPipe} from "./pipes/is-active-feature-set.pipe";
 import {LanguageSelectComponent} from "./components/language-select/language-select.component";
+import {DataCategorySelectComponent} from "./components/data-category-select/data-category-select.component";
+import {DataSubcategorySelectComponent} from "./components/data-subcategory-select/data-subcategory-select.component";
+import {TransportModeSelectComponent} from "./components/transport-mode-select/transport-mode-select.component";
+import {DataSubcategoryItemsPipe} from "./components/data-subcategory-select/data-subcategory-items.pipe";
 
 @NgModule({
     imports: [
@@ -102,6 +106,10 @@ import {LanguageSelectComponent} from "./components/language-select/language-sel
     LogoutComponent,
     IsActiveFeatureSetPipe,
     LanguageSelectComponent,
+    DataCategorySelectComponent,
+    DataSubcategorySelectComponent,
+    DataSubcategoryItemsPipe,
+    TransportModeSelectComponent,
   ],
   exports: [
     CatalogBrowserComponent,
