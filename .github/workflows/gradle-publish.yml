@@ -8,7 +8,9 @@
 name: Gradle Package
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+  push:
+    tags: 'v*'
 
 jobs:
   build:
