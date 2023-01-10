@@ -40,6 +40,16 @@ Example of a client-ID entry:
 `EDC_OAUTH_CLIENT_ID: 7X:7Y:...:B2:94:keyid:6A:2B:...:28:80`
 
 ### How do you get the SKI and AKI of a p12 and how do you convert it to a jks?
+There are two ways to generate the SKI/AKI and jks file.
+You can use a script (if you're on WSL or Linux) or use KeyStore Explorer to manually generate them.
+
+#### Option 1: With script
+1. Open your bash console in the resources/docs directory
+2. Run the script ``./get_client.sh [filepath].p12 [password]`` and substitute [filepath] to the certificate filepath and 
+[password] to the certificate password
+3. The jks file will be generated in the same folder as your p12 file and the SKI/AKI combination is printed out in the console
+
+#### Option 2: Manually with KeyStore Explorer
 Here we show the way via the tool `KeyStore Explorer` (https://github.com/kaikramer/keystore-explorer) using Windows, for direct commands see other examples online.
 
 1. Convert the `p12` to a `jks`
@@ -49,8 +59,8 @@ Here we show the way via the tool `KeyStore Explorer` (https://github.com/kaikra
 - Right-click on the KeyPair in KeyStore Explorer -> `Export` -> `Export Certificate Chain` -> Confirm the dialog with `Export` Button
 - Double-click on the certificate under the specified storage path (Windows Certificate Manager opens)
 - Under the `Details` section you will find the details about
-  - `AKI` (Authority Key Identifier, dt.: Stellenschlüsselkennung) and 
-  - `SKI` (Subject Key Identifier, dt.: Schlüsselkennung des Antragstellers)
+    - `AKI` (Authority Key Identifier, dt.: Stellenschlüsselkennung) and
+    - `SKI` (Subject Key Identifier, dt.: Schlüsselkennung des Antragstellers)
 - Finally, the identifiers itself have to be manually combined into the required format `SKI:keyid:AKI` with upper case letters and colon separator (see the above example of the client-ID):
 
 ## License
