@@ -20,7 +20,8 @@ The test environment is set by default.
 - `EDC_OAUTH_PROVIDER_JWKS_URL:` https://daps.dev.mobility-dataspace.eu/jwks.json
 
 ### Start
-Start via `docker compose up` in the docker-compose file folder
+1. Login into GitHub Container Registry (GHCR): `$ docker login ghcr.io`.
+2. Start via `$ docker compose up` in the docker-compose file folder
 
 ### Test extension
 Use Postman (https://github.com/postmanlabs) and import collection located at `resources/docs/postman_collection.json`. Depending on your configuration changes, you need to adjust variables on collection `MDV > Variables > Current Value`
