@@ -43,15 +43,19 @@ export class AssetPropertyMapper {
     const transportMode = props[AssetProperties.transportMode]
       ? this.transportModeSelectItemService.findById(props[AssetProperties.transportMode]!!)
       : null;
+    const keywords = (props[AssetProperties.keywords] ?? '').split(",").map(it => it.trim()).filter(it => it)
+
+    const id = props[AssetProperties.assetIdEdcc] ?? props[AssetProperties.assetIdIds] ?? 'no-known-id-field-was-set';
 
     return {
-      id: props[AssetProperties.assetIdEdcc] ?? props[AssetProperties.assetIdIds] ?? 'no-known-id-field-was-set',
+      id,
       idsId: props[AssetProperties.assetIdIds],
-      name: props[AssetProperties.name],
+      name: props[AssetProperties.name] ?? id,
       version: props[AssetProperties.version],
       contentType: props[AssetProperties.contentType],
       originator: props[AssetProperties.originator],
 
+      keywords,
       description: props[AssetProperties.description],
       language,
       publisher: props[AssetProperties.publisher],
@@ -74,7 +78,7 @@ export class AssetPropertyMapper {
     props[AssetProperties.name] = trimmedOrNull(metadata?.name)
     props[AssetProperties.version] = trimmedOrNull(metadata?.version)
     props[AssetProperties.originator] = trimmedOrNull(this.connectorOriginator)
-    props[AssetProperties.keywords] = trimmedOrNull(metadata?.keywords)
+    props[AssetProperties.keywords] = trimmedOrNull(metadata?.keywords?.join(", "))
     props[AssetProperties.contentType] = trimmedOrNull(metadata?.contenttype)
     props[AssetProperties.description] = trimmedOrNull(metadata?.description)
     props[AssetProperties.language] = metadata?.language?.id ?? null

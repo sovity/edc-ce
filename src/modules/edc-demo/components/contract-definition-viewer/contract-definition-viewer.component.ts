@@ -20,16 +20,13 @@ export class ContractDefinitionViewerComponent implements OnInit {
   filteredContractDefinitions$: Observable<ContractDefinitionDto[]> = of([]);
   searchText = '';
   private fetch$ = new BehaviorSubject(null);
-  themeClassString: any;
 
   constructor(private contractDefinitionService: ContractDefinitionService,
               private notificationService: NotificationService,
-              private readonly dialog: MatDialog,
-              private appConfigService: AppConfigService) {
+              private readonly dialog: MatDialog) {
   }
 
   ngOnInit(): void {
-    this.themeClass();
     this.filteredContractDefinitions$ = this.fetch$
       .pipe(
         switchMap(() => {
@@ -39,10 +36,6 @@ export class ContractDefinitionViewerComponent implements OnInit {
             :
             contractDefinitions$;
         }));
-  }
-
-  themeClass() {
-    this.themeClassString = this.appConfigService.getConfig()?.theme;
   }
 
   onSearch() {
@@ -63,7 +56,7 @@ export class ContractDefinitionViewerComponent implements OnInit {
   }
 
   onCreate() {
-    const dialogRef = this.dialog.open(ContractDefinitionEditorDialog, {panelClass: this.themeClassString});
+    const dialogRef = this.dialog.open(ContractDefinitionEditorDialog);
     dialogRef.afterClosed().pipe(first()).subscribe((result: { contractDefinition?: ContractDefinitionDto }) => {
       const newContractDefinition = result?.contractDefinition;
       if (newContractDefinition) {

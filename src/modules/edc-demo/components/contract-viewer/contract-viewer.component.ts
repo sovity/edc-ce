@@ -38,7 +38,6 @@ export class ContractViewerComponent implements OnInit {
   contracts$: Observable<ContractAgreementDto[]> = of([]);
   private runningTransfers: RunningTransferProcess[] = [];
   private pollingHandleTransfer?: any;
-  themeClassString: any;
 
   constructor(
     private contractAgreementService: ContractAgreementService,
@@ -61,12 +60,7 @@ export class ContractViewerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.themeClass();
     this.contracts$ = this.contractAgreementService.getAllAgreements();
-  }
-
-  themeClass() {
-    this.themeClassString = this.appConfigService.getConfig()?.theme;
   }
 
   asDate(epochSeconds?: number): string {
@@ -85,7 +79,7 @@ export class ContractViewerComponent implements OnInit {
   }
 
   onTransferClicked(contract: ContractAgreementDto) {
-    const dialogRef = this.dialog.open(CatalogBrowserTransferDialog, {panelClass: this.themeClassString});
+    const dialogRef = this.dialog.open(CatalogBrowserTransferDialog);
 
     dialogRef.afterClosed().pipe(first()).subscribe(result => {
       const dataDestination: DataAddress = result.dataDestination;

@@ -17,7 +17,6 @@ export class TransferHistoryViewerComponent implements OnInit {
   columns: string[] = ['id', 'creationDate', 'state', 'lastUpdated', 'connectorId', 'assetId', 'contractId'];
   transferProcesses$: Observable<TransferProcessDto[]> = of([]);
   storageExplorerLinkTemplate: string | undefined;
-  themeClassString: any;
 
   constructor(private transferProcessService: TransferProcessService,
               private dialog: MatDialog,
@@ -25,25 +24,18 @@ export class TransferHistoryViewerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.themeClass();
     this.loadTransferProcesses();
     this.storageExplorerLinkTemplate = this.appConfigService.getConfig()?.storageExplorerLinkTemplate
   }
 
-  themeClass() {
-    this.themeClassString = this.appConfigService.getConfig()?.theme;
-  }
-
   onDeprovision(transferProcess: TransferProcessDto): void {
-
     const dialogData = new ConfirmDialogModel("Confirm deprovision", `Deprovisioning resources for transfer [${transferProcess.id}] will take some time and once started, it cannot be stopped.`)
     dialogData.confirmColor = "warn";
     dialogData.confirmText = "Confirm";
     dialogData.cancelText = "Abort";
     const ref = this.dialog.open(ConfirmationDialogComponent, {
       maxWidth: '20%',
-      data: dialogData,
-      panelClass: this.themeClassString
+      data: dialogData
     });
 
     ref.afterClosed().subscribe(res => {

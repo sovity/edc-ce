@@ -21,3 +21,19 @@ mat-paginator {
 mat-icon[mat-card-avatar] {
   font-size: 40px;
 }
+
+// Fix scroll bar showing when mat-dialog is large enough
+.mat-dialog-content {
+  margin-top: -24px !important; // was 0
+  margin-bottom: -24px !important; // was 0
+  padding-top: 24px !important; // was 0
+  padding-bottom: 24px !important; // was 0
+}
+
+// Fix mat-chips exploding out and/or having multiline exploding strings
+mat-chip {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

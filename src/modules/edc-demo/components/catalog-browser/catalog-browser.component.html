@@ -26,79 +26,9 @@
     </mat-paginator>
   </div>
 
-  <div *ngIf="!filteredContractOffers.length" style="text-align: center; margin-top: 50px;">
-    No contract offers found.
-  </div>
-
-  <div *ngIf="filteredContractOffers.length"  fxLayout="row wrap" fxLayoutAlign="start start">
-    <mat-card *ngFor="let contractOffer of filteredContractOffers" class="asset-card">
-      <mat-card-header>
-        <mat-icon mat-card-avatar>sim_card</mat-icon>
-        <mat-card-title>{{contractOffer.asset.name}}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <!--<mat-list dense>
-          <mat-list-item>
-            <mat-icon mat-list-icon>category</mat-icon>
-            <div class="asset-property-name" mat-line>Type</div>
-            <div mat-line>{{contractOffer.asset.type}}</div>
-          </mat-list-item>
-        </mat-list>-->
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Additional properties
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <mat-list dense>
-            <mat-list-item>
-              <mat-icon mat-list-icon>key</mat-icon>
-              <div class="asset-property-name" mat-line>Id</div>
-              <div mat-line>{{contractOffer.asset.id}}</div>
-            </mat-list-item>
-            <mat-list-item>
-              <mat-icon mat-list-icon>numbers</mat-icon>
-              <div class="asset-property-name" mat-line>Version</div>
-              <div mat-line>{{contractOffer.asset.version}}</div>
-            </mat-list-item>
-            <mat-list-item *ngIf="contractOffer.asset.contentType">
-              <mat-icon mat-list-icon>content_paste</mat-icon>
-              <div class="asset-property-name" mat-line>Content-Type</div>
-              <div mat-line>{{contractOffer.asset.contentType}}</div>
-            </mat-list-item>
-            <mat-list-item *ngIf="contractOffer.asset.originator">
-              <mat-icon mat-list-icon>link</mat-icon>
-              <div class="asset-property-name" mat-line>Originator</div>
-              <div mat-line>{{contractOffer.asset.originator}}</div>
-            </mat-list-item>
-            <!--<mat-list-item *ngFor="let additionalPropertyKey of contractOffer.asset.additionalPropertyKeys">
-              <mat-icon mat-list-icon>list</mat-icon>
-              <div *ngIf="additionalPropertyKey.replace('asset:prop:', '') as name"
-                   class="asset-property-name"
-                   mat-line>
-                {{name.charAt(0).toUpperCase() + name.slice(1)}}
-              </div>
-              <div mat-line title="{{contractOffer.asset.properties[additionalPropertyKey]}}">
-                {{contractOffer.asset.properties[additionalPropertyKey]}}</div>
-            </mat-list-item>-->
-          </mat-list>
-        </mat-expansion-panel>
-
-      </mat-card-content>
-
-      <mat-divider inset></mat-divider>
-      <mat-card-actions class="card-actions">
-        <button (click)="onNegotiateClicked(contractOffer)"
-                [disabled]="isBusy(contractOffer) || isNegotiated(contractOffer)"
-                color="primary" mat-raised-button>
-          <mat-icon>drive_file_rename_outline</mat-icon>
-          Negotiate
-        </button>
-      </mat-card-actions>
-      <mat-card-footer>
-        <mat-progress-bar *ngIf="isBusy(contractOffer)" color="primary" mode="indeterminate"></mat-progress-bar>
-      </mat-card-footer>
-    </mat-card>
-  </div>
+  <edc-demo-contract-offer-list
+    *ngIf="filteredContractOffers.length"
+    [contractOffers]="filteredContractOffers"
+    (contractOfferClick)="onContractOfferClick($event)"
+  ></edc-demo-contract-offer-list>
 </div>

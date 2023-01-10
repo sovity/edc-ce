@@ -22,6 +22,8 @@
   },
   {
     "properties": {
+      "edcc:id": "urn:artifact:bitcoin-data",
+      "ids:name": "Bitcoin Data",
       "asset:prop:name": "Bitcoin Data",
       "asset:prop:contenttype": "application/json",
       "asset:prop:description": "description",

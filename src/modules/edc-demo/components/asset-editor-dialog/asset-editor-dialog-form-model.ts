@@ -25,7 +25,7 @@ export interface AssetEditorDialogMetadataFormModel {
   version: FormControl<string>;
   contenttype: FormControl<string>;
   description: FormControl<string>;
-  keywords: FormControl<string>;
+  keywords: FormControl<string[]>;
   language: FormControl<LanguageSelectItem | null>;
 }
 

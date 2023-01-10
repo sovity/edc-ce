@@ -7,6 +7,7 @@ import {AssetEntryBuilder} from "../../services/asset-entry-builder";
 import {finalize, takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
 import {NotificationService} from "../../services/notification.service";
+import {AssetEditorDialogResult} from "./asset-editor-dialog-result";
 
 
 @Component({
@@ -49,13 +50,17 @@ export class AssetEditorDialog implements OnDestroy {
       .subscribe({
         complete: () => {
           this.notificationService.showInfo("Successfully created");
-          this.dialogRef.close();
+          this.close({refreshList: true});
         },
         error: error => {
           console.error("Failed creating asset!", error);
           this.notificationService.showError("Failed creating asset!");
         }
       })
+  }
+
+  private close(params: AssetEditorDialogResult) {
+    this.dialogRef.close(params)
   }
 
   ngOnDestroy$ = new Subject();

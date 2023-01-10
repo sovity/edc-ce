@@ -19,7 +19,6 @@ export class PolicyViewComponent implements OnInit {
   searchText: string = '';
   private fetch$ = new BehaviorSubject(null);
   private readonly errorOrUpdateSubscriber: Observer<string>;
-  themeClassString: any;
 
   constructor(private policyService: PolicyService,
               private notificationService: NotificationService,
@@ -37,7 +36,6 @@ export class PolicyViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.themeClass();
     this.filteredPolicies$ = this.fetch$.pipe(
       switchMap(() => {
         const contractDefinitions$ = this.policyService.getAllPolicies();
@@ -48,16 +46,12 @@ export class PolicyViewComponent implements OnInit {
       }));
   }
 
-  themeClass() {
-    this.themeClassString = this.appConfigService.getConfig()?.theme;
-  }
-
   onSearch() {
     this.fetch$.next(null);
   }
 
   onCreate() {
-    const dialogRef = this.dialog.open(NewPolicyDialogComponent, {panelClass: this.themeClassString})
+    const dialogRef = this.dialog.open(NewPolicyDialogComponent)
     dialogRef.afterClosed().pipe(first()).subscribe((result: PolicyDefinition) => {
       if (result) {
         this.policyService.createPolicy(result).subscribe(this.errorOrUpdateSubscriber);

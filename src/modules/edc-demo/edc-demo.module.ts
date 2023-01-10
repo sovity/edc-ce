@@ -53,6 +53,11 @@ import {DataCategorySelectComponent} from "./components/data-category-select/dat
 import {DataSubcategorySelectComponent} from "./components/data-subcategory-select/data-subcategory-select.component";
 import {TransportModeSelectComponent} from "./components/transport-mode-select/transport-mode-select.component";
 import {DataSubcategoryItemsPipe} from "./components/data-subcategory-select/data-subcategory-items.pipe";
+import {MatChipsModule} from "@angular/material/chips";
+import { KeywordSelectComponent } from './components/keyword-select/keyword-select.component';
+import {AssetListComponent} from "./components/asset-list/asset-list.component";
+import {AssetDetailDialog} from "./components/asset-detail-dialog/asset-detail-dialog.component";
+import {ContractOfferListComponent} from "./components/contract-offer-list/contract-offer-list.component";
 
 @NgModule({
     imports: [
@@ -81,7 +86,8 @@ import {DataSubcategoryItemsPipe} from "./components/data-subcategory-select/dat
         MatProgressSpinnerModule,
         MatDatepickerModule,
         MatTooltipModule,
-        MatStepperModule
+        MatStepperModule,
+        MatChipsModule,
     ],
   declarations: [
     CatalogBrowserComponent,
@@ -110,6 +116,10 @@ import {DataSubcategoryItemsPipe} from "./components/data-subcategory-select/dat
     DataSubcategorySelectComponent,
     DataSubcategoryItemsPipe,
     TransportModeSelectComponent,
+    KeywordSelectComponent,
+    AssetListComponent,
+    AssetDetailDialog,
+    ContractOfferListComponent
   ],
   exports: [
     CatalogBrowserComponent,
@@ -120,7 +130,8 @@ import {DataSubcategoryItemsPipe} from "./components/data-subcategory-select/dat
     PolicyRuleViewerComponent,
     IntroductionComponent,
     NewPolicyDialogComponent,
-    ContractViewerComponent
+    ContractViewerComponent,
+    IsActiveFeatureSetPipe
   ]
 })
 export class EdcDemoModule {

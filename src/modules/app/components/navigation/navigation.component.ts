@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
-import { routes } from '../../app-routing.module';
-import { Title } from '@angular/platform-browser';
+import {Component} from '@angular/core';
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import {Observable} from 'rxjs';
+import {map, shareReplay} from 'rxjs/operators';
+import {routes} from '../../app-routing.module';
+import {Title} from '@angular/platform-browser';
 import {AppConfigService} from "../../app-config.service";
 
 @Component({
@@ -20,19 +20,10 @@ export class NavigationComponent {
     );
 
   routes = routes;
-  themeClassString: string | undefined;
 
   constructor(
     public titleService: Title,
     private breakpointObserver: BreakpointObserver,
-    private appConfigService: AppConfigService) {
-  }
-
-  ngOnInit(): void {
-    this.themeClass();
-  }
-
-  themeClass() {
-    this.themeClassString = this.appConfigService.getConfig()?.theme;
+  ) {
   }
 }

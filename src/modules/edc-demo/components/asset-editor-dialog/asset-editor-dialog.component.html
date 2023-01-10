@@ -23,6 +23,15 @@
             </mat-form-field>
           </div>
 
+          <!-- Description -->
+          <mat-form-field color="accent">
+            <mat-label>Description</mat-label>
+            <textarea [formControl]="form.metadata.controls.description" matInput [placeholder]="'1.0'"></textarea>
+          </mat-form-field>
+
+          <!-- Keywords -->
+          <keyword-select label="Keywords" [control]="form.metadata.controls.keywords"></keyword-select>
+
           <div class="flex flex-row space-x-[10px]">
             <!-- Content Type -->
             <mat-form-field class="form-field grow" color="accent">
@@ -36,18 +45,6 @@
               <input [formControl]="form.metadata.controls.version" matInput [placeholder]="'1.0'">
             </mat-form-field>
           </div>
-
-          <!-- Keywords -->
-          <mat-form-field class="form-field grow" color="accent">
-            <mat-label>Keywords</mat-label>
-            <input [formControl]="form.metadata.controls.keywords" placeholder="Keyword A, Keyword B, ..." matInput>
-          </mat-form-field>
-
-          <!-- Description -->
-          <mat-form-field color="accent">
-            <mat-label>Description</mat-label>
-            <textarea [formControl]="form.metadata.controls.description" matInput [placeholder]="'1.0'"></textarea>
-          </mat-form-field>
 
           <!-- Language -->
           <language-select class="grow" label="Language" [control]="form.metadata.controls.language"></language-select>
@@ -180,20 +177,12 @@
 </mat-dialog-content>
 
 
-<mat-dialog-actions>
-  <div class="w-full flex flex-row justify-end">
-    <button mat-dialog-close mat-raised-button color="default" style="margin-right: 8px" [disabled]="loading">
-      <div class="flex flex-row items-center space-x-[5px]">
-        <mat-icon>cancel</mat-icon>
-        <span>Cancel</span>
-      </div>
-    </button>
+<mat-dialog-actions class="flex flex-row justify-end">
+  <button mat-dialog-close mat-button color="default" [disabled]="loading">
+    Cancel
+  </button>
 
-    <button (click)="onSave()" mat-raised-button color="primary" [disabled]="!form.all.valid || loading">
-      <div class="flex flex-row items-center space-x-[5px]">
-        <mat-icon>add_circle_outline</mat-icon>
-        <span>Create</span>
-      </div>
-    </button>
-  </div>
+  <button (click)="onSave()" mat-raised-button color="primary" [disabled]="!form.all.valid || loading">
+    Create
+  </button>
 </mat-dialog-actions>

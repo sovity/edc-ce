@@ -76,7 +76,7 @@ export class AssetEditorDialogForm {
       version: '',
       contenttype: '',
       description: '',
-      keywords: '',
+      keywords: [new Array<string>()],
       language: this.languageSelectItemService.english() as LanguageSelectItem | null,
     });
 
