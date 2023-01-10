@@ -10,7 +10,7 @@ on:
         type: string
   push:
     branches:
-      - develop
+      - main
     tags:
       - "*"
 
