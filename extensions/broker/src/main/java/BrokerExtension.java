@@ -54,7 +54,7 @@ import java.util.Map;
 
 public class BrokerExtension implements ServiceExtension {
 
-    public static final String CATALOG_TRANSFER_EXTENSION = "BrokerExtension";
+    public static final String BROKER_EXTENSION = "BrokerExtension";
     private static final String TYPE_MANAGER_SERIALIZER_KEY = "ids-broker";
 
     private static final Map<String, String> CONTEXT_MAP = Map.of(
@@ -102,7 +102,7 @@ public class BrokerExtension implements ServiceExtension {
 
     @Override
     public String name() {
-        return CATALOG_TRANSFER_EXTENSION;
+        return BROKER_EXTENSION;
     }
 
     @Override
@@ -237,7 +237,7 @@ public class BrokerExtension implements ServiceExtension {
         try {
             idsBrokerService.registerConnectorAtBroker(brokerBaseUrl);
         } catch (Exception e) {
-            monitor.severe(String.format("%s failed during startup: ", CATALOG_TRANSFER_EXTENSION), e);
+            monitor.severe(String.format("%s failed during startup: ", BROKER_EXTENSION), e);
         }
     }
 
