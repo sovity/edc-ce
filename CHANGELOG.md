@@ -21,6 +21,7 @@ in the detailed section referring to by linking pull requests or issues.
 #### Removed
 
 #### Fixed
+- Error-Message Displayed when Creating and Cancelling the Create-Policy-Dialog
 
 ## [0.0.1-ab1b6fd0-sovity4] 04.01.2023
 

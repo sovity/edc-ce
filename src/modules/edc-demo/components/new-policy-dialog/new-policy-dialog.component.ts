@@ -1,8 +1,8 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {Permission, Policy, PolicyDefinition} from "../../../edc-dmgmt-client";
-import TypeEnum = Policy.TypeEnum;
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Component, OnInit} from '@angular/core';
+import {Policy, PolicyDefinition} from "../../../edc-dmgmt-client";
+import {MatDialogRef} from "@angular/material/dialog";
 import {UntypedFormControl, UntypedFormGroup} from "@angular/forms";
+import TypeEnum = Policy.TypeEnum;
 
 @Component({
   selector: 'app-new-policy-dialog',
@@ -51,7 +51,7 @@ export class NewPolicyDialogComponent implements OnInit {
       let permission = JSON.parse(permissionTemplate);
       let constraints = permission["constraints"];
       let connectorConstraint = constraints[0]
-      connectorConstraint["rightExpression"]["value"] = this.connectorId as string;
+      connectorConstraint["rightExpression"]["value"] = this.connectorId;
       this.policy.permissions = [permission]
     }
 

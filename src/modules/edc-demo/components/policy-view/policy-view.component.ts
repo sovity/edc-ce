@@ -88,6 +88,6 @@ export class PolicyViewComponent implements OnInit {
 
   private showError(error: Error) {
     console.error(error)
-    this.notificationService.showError('This policy cannot be deleted');
+    this.notificationService.showError('Action could not be performed');
   }
 }
