@@ -9,8 +9,11 @@
   <mat-form-field class="form-field" color="accent">
     <mat-label>Type</mat-label>
     <mat-select [(ngModel)]="policyType" required>
-      <mat-option value="Time-Period-Restricted" style="background-color: white; color: black">
+      <mat-option value="Time-Period-Restricted">
         Time-Period-Restricted
+      </mat-option>
+      <mat-option value="Connector-Restricted-Usage">
+        Connector-Restricted-Usage
       </mat-option>
     </mat-select>
   </mat-form-field>
@@ -31,6 +34,13 @@
     </mat-form-field>
   </div>
 
+  <div *ngIf="policyType == 'Connector-Restricted-Usage'">
+    <mat-form-field color="accent">
+      <mat-label>Connector ID</mat-label>
+      <input [(ngModel)]="connectorId" matInput required>
+    </mat-form-field>
+  </div>
+
 </mat-dialog-content>
 
 <mat-dialog-actions>
@@ -44,7 +54,7 @@
     Create
   </button>
 
-  <button color="primary" mat-dialog-close="true" mat-raised-button>
+  <button mat-dialog-close color="primary" mat-raised-button>
     <mat-icon>cancel</mat-icon>
     Cancel
   </button>
