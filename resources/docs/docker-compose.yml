@@ -18,14 +18,14 @@ services:
       UPDATE_INTERVAL_IN_SECONDS: 5
       EDC_WEB_REST_CORS_ENABLED: "true"
       EDC_WEB_REST_CORS_HEADERS: "origin,content-type,accept,authorization,x-api-key"
-      EDC_BROKER_BASE_URL: https://broker.test.mobility-dataspace.eu
+      EDC_BROKER_BASE_URL: https://broker.dev.mobility-dataspace.eu
       EDC_KEYSTORE: /resources/vault/edc/keystore.jks
       EDC_KEYSTORE_PASSWORD: password
       EDC_OAUTH_PUBLIC_KEY_ALIAS: 1
       EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
       EDC_OAUTH_CLIENT_ID:
-      EDC_OAUTH_TOKEN_URL: https://daps.test.mobility-dataspace.eu/token
-      EDC_OAUTH_PROVIDER_JWKS_URL: https://daps.test.mobility-dataspace.eu/jwks.json
+      EDC_OAUTH_TOKEN_URL: https://daps.dev.mobility-dataspace.eu/token
+      EDC_OAUTH_PROVIDER_JWKS_URL: https://daps.dev.mobility-dataspace.eu/jwks.json
       EDC_OAUTH_PROVIDER_AUDIENCE: idsc:IDS_CONNECTORS_ALL
     ports:
       - "9191:9191"
