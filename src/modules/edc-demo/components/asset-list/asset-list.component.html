@@ -2,7 +2,7 @@
   No assets found.
 </div>
 
-<mat-card *ngFor="let asset of assets" style="width: 280px;">
+<mat-card *ngFor="let asset of assets" class="asset-card">
   <mat-card-header>
     <mat-icon mat-card-avatar>upload</mat-icon>
     <mat-card-title>
@@ -14,7 +14,7 @@
   </mat-card-header>
   <mat-card-content class="flex flex-col space-y-[16px]">
     <!-- Description -->
-    <div *ngIf="asset.description" class="whitespace-pre-line">
+    <div *ngIf="asset.description" class="whitespace-pre-line truncate-lines-5">
       {{asset.description}}
     </div>
 

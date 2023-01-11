@@ -2,7 +2,7 @@
   No contract offers found.
 </div>
 
-<mat-card *ngFor="let contractOffer of contractOffers" style="width: 280px;">
+<mat-card *ngFor="let contractOffer of contractOffers" class="asset-card">
   <ng-container *ngIf="contractOffer.asset; let asset">
     <mat-card-header>
       <edc-demo-contract-offer-icon mat-card-avatar [contractOffer]="contractOffer"></edc-demo-contract-offer-icon>
@@ -22,7 +22,7 @@
       ></mat-progress-bar>
 
       <!-- Description -->
-      <div *ngIf="asset.description" class="whitespace-pre-line">
+      <div *ngIf="asset.description" class="whitespace-pre-line truncate-lines-5">
         {{asset.description}}
       </div>
 
