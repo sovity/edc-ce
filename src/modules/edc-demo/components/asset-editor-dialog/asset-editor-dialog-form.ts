@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {DataAddressType} from "./data-address-type";
 import {
   AssetEditorDialogAdvancedFormModel,
@@ -17,12 +17,15 @@ import {TransportModeSelectItem} from "../transport-mode-select/transport-mode-s
 import {DataCategorySelectItem} from "../data-category-select/data-category-select-item";
 import {LanguageSelectItem} from "../language-select/language-select-item";
 import {noWhitespaceValidator} from "../../validators/no-whitespace-validator";
+import {concat, distinctUntilChanged, of, pairwise} from "rxjs";
+import {requiresPrefixValidator} from "../../validators/requires-prefix-validator";
 
 /**
  * Handles AngularForms for AssetEditorDialog
  */
 @Injectable()
 export class AssetEditorDialogForm {
+
   all = this.buildFormGroup()
 
   /**
@@ -72,7 +75,7 @@ export class AssetEditorDialogForm {
       isFeatureSetActive('mds') ? x : [x[0], []]
 
     const metadata: FormGroup<AssetEditorDialogMetadataFormModel> = this.formBuilder.nonNullable.group({
-      id: ['', [Validators.required, noWhitespaceValidator]],
+      id: ['', [Validators.required, noWhitespaceValidator, requiresPrefixValidator("urn:artifact:")]],
       name: ['', Validators.required],
       version: '',
       contenttype: '',
@@ -80,6 +83,9 @@ export class AssetEditorDialogForm {
       keywords: [new Array<string>()],
       language: this.languageSelectItemService.english() as LanguageSelectItem | null,
     });
+
+    // generate id from names
+    this.initIdGeneration(metadata.controls.id, metadata.controls.name)
 
     const advanced: FormGroup<AssetEditorDialogAdvancedFormModel> = this.formBuilder.nonNullable.group({
       dataModel: '',
@@ -98,6 +104,7 @@ export class AssetEditorDialogForm {
       endpointDocumentation: ['', urlValidator],
     });
 
+    // Switch Validators depending on selected datasource type
     this.activateValidationByDataAddressType(datasource, ["dataDestination", "baseUrl"], {
       'Json': {
         dataDestination: [Validators.required, jsonValidator],
@@ -148,5 +155,22 @@ export class AssetEditorDialogForm {
 
     // Update on dataAddressType changes
     datasource.controls.dataAddressType.valueChanges.subscribe(() => updateDatasourceValidators())
+  }
+
+  private initIdGeneration(id: FormControl<string>, name: FormControl<string>) {
+    concat(of(name.value), name.valueChanges)
+      .pipe(distinctUntilChanged(), pairwise())
+      .subscribe(([previousName, currentName]) => {
+        if (!id.value || id.value == this.generateId(previousName)) {
+          // Generate ID, but leave field untouched if it was edited
+          id.setValue(this.generateId(currentName))
+        }
+      })
+  }
+
+  private generateId(name: string) {
+    const normalizedName = name.replace(":", "")
+      .replaceAll(" ", "-").toLowerCase();
+    return `urn:artifact:${normalizedName}`;
   }
 }

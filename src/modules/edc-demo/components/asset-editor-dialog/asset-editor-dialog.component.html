@@ -10,17 +10,18 @@
         <div class="flex flex-col mt-[10px]">
 
           <div class="flex flex-row space-x-[10px]">
-            <!-- ID -->
-            <mat-form-field *ngIf="form.metadata.controls.id; let ctrl" class="form-field grow" color="accent">
-              <mat-label>Id</mat-label>
-              <input [formControl]="ctrl" matInput>
-              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{invalidWhitespacesMessage}}</mat-error>
-            </mat-form-field>
-
             <!-- Name -->
             <mat-form-field class="form-field grow" color="accent">
               <mat-label>Name</mat-label>
               <input [formControl]="form.metadata.controls.name" matInput>
+            </mat-form-field>
+
+            <!-- ID -->
+            <mat-form-field *ngIf="form.metadata.controls.id; let ctrl" class="form-field grow" color="accent">
+              <mat-label>Id</mat-label>
+              <input [formControl]="ctrl" placeholder="urn:artifact:..." matInput>
+              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{invalidWhitespacesMessage}}</mat-error>
+              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.requiresPrefix">{{invalidIdPrefix}}</mat-error>
             </mat-form-field>
           </div>
 
