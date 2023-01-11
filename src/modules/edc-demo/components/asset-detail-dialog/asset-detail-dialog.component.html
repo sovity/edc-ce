@@ -1,5 +1,11 @@
 <div class="mat-card-header">
-  <mat-icon style="font-size: 40px; width: 40px; height: 40px;">{{icon}}</mat-icon>
+  <mat-icon *ngIf="data.mode === 'asset-details'" style="font-size: 40px; width: 40px; height: 40px; min-width: 40px">
+    upload
+  </mat-icon>
+  <edc-demo-contract-offer-icon
+    *ngIf="data.mode === 'contract-offer'"
+    [contractOffer]="data.contractOffer!"
+  ></edc-demo-contract-offer-icon>
   <div class="mat-card-header-text">
     <div class="mat-card-title">
       {{asset.name}}

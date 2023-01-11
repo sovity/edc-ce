@@ -19,6 +19,7 @@ import {LanguageSelectItem} from "../language-select/language-select-item";
 import {noWhitespaceValidator} from "../../validators/no-whitespace-validator";
 import {concat, distinctUntilChanged, of, pairwise} from "rxjs";
 import {requiresPrefixValidator} from "../../validators/requires-prefix-validator";
+import {switchValidation} from "../../utils/form-group-utils";
 
 /**
  * Handles AngularForms for AssetEditorDialog
@@ -104,57 +105,25 @@ export class AssetEditorDialogForm {
       endpointDocumentation: ['', urlValidator],
     });
 
-    // Switch Validators depending on selected datasource type
-    this.activateValidationByDataAddressType(datasource, ["dataDestination", "baseUrl"], {
-      'Json': {
-        dataDestination: [Validators.required, jsonValidator],
-      },
-      'Rest-Api': {
-        baseUrl: [Validators.required, urlValidator]
+    // Switch validation depending on selected datasource type
+    switchValidation({
+      formGroup: datasource,
+      switchCtrl: datasource.controls.dataAddressType,
+      validators: {
+        'Json': {
+          dataDestination: [Validators.required, jsonValidator],
+        },
+        'Rest-Api': {
+          baseUrl: [Validators.required, urlValidator]
+        }
       }
-    })
+    });
 
     return this.formBuilder.nonNullable.group({
       metadata,
       advanced,
       datasource
     });
-  }
-
-  /**
-   * Apply validators depending on selected {@link DataAddressType}
-   * @param datasource form group
-   * @param keys all dataAddressType-affected fields
-   * @param validators validators for each {@link DataAddressType}
-   * @private
-   */
-  private activateValidationByDataAddressType(
-    datasource: FormGroup<AssetEditorDialogDatasourceFormModel>,
-    keys: (keyof AssetEditorDialogDatasourceFormModel)[],
-    validators: Record<
-      DataAddressType,
-      Partial<Record<keyof AssetEditorDialogDatasourceFormModel, ValidatorFn | ValidatorFn[]>>
-    >
-  ) {
-    const updateDatasourceValidators = () => {
-      // Remove all validators
-      keys.map(key => datasource.controls[key]).forEach(control => {
-        control.clearValidators()
-        control.updateValueAndValidity()
-      })
-
-      // Add validators where configured
-      Object.entries(validators[datasource.controls.dataAddressType.value])
-        .forEach(([control, validators]) => {
-          datasource.controls[control as keyof AssetEditorDialogDatasourceFormModel].setValidators(validators)
-        })
-    }
-
-    // Update now
-    updateDatasourceValidators()
-
-    // Update on dataAddressType changes
-    datasource.controls.dataAddressType.valueChanges.subscribe(() => updateDatasourceValidators())
   }
 
   private initIdGeneration(id: FormControl<string>, name: FormControl<string>) {

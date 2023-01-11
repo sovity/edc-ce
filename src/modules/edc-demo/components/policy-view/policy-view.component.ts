@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {PolicyDefinition, PolicyService} from "../../../edc-dmgmt-client";
-import {BehaviorSubject, Observable, Observer, of} from "rxjs";
+import {BehaviorSubject, Observable, of} from "rxjs";
 import {first, map, switchMap} from "rxjs/operators";
 import {MatDialog} from "@angular/material/dialog";
 import {NewPolicyDialogComponent} from "../new-policy-dialog/new-policy-dialog.component";
 import {NotificationService} from "../../services/notification.service";
 import {ConfirmationDialogComponent, ConfirmDialogModel} from "../confirmation-dialog/confirmation-dialog.component";
-import {AppConfigService} from "../../../app/app-config.service";
+import {NewPolicyDialogResult} from "../new-policy-dialog/new-policy-dialog-result";
 
 @Component({
   selector: 'app-policy-view',
@@ -18,21 +18,12 @@ export class PolicyViewComponent implements OnInit {
   filteredPolicies$: Observable<PolicyDefinition[]> = of([]);
   searchText: string = '';
   private fetch$ = new BehaviorSubject(null);
-  private readonly errorOrUpdateSubscriber: Observer<string>;
 
-  constructor(private policyService: PolicyService,
-              private notificationService: NotificationService,
-              private readonly dialog: MatDialog,
-              private appConfigService: AppConfigService) {
-
-    this.errorOrUpdateSubscriber = {
-      next: x => this.fetch$.next(null),
-      error: err => this.showError(err),
-      complete: () => {
-        this.notificationService.showInfo("Successfully completed")
-      },
-    }
-
+  constructor(
+    private policyService: PolicyService,
+    private notificationService: NotificationService,
+    private readonly dialog: MatDialog
+  ) {
   }
 
   ngOnInit(): void {
@@ -47,16 +38,20 @@ export class PolicyViewComponent implements OnInit {
   }
 
   onSearch() {
-    this.fetch$.next(null);
+    this.refresh();
   }
 
   onCreate() {
     const dialogRef = this.dialog.open(NewPolicyDialogComponent)
-    dialogRef.afterClosed().pipe(first()).subscribe((result: PolicyDefinition) => {
-      if (result) {
-        this.policyService.createPolicy(result).subscribe(this.errorOrUpdateSubscriber);
+    dialogRef.afterClosed().pipe(first()).subscribe((result: NewPolicyDialogResult) => {
+      if (result.refreshList) {
+        this.refresh();
       }
     })
+  }
+
+  private refresh() {
+    this.fetch$.next(null);
   }
 
   /**
@@ -68,20 +63,21 @@ export class PolicyViewComponent implements OnInit {
   }
 
   delete(policy: PolicyDefinition) {
-
     const dialogData = ConfirmDialogModel.forDelete("policy", policy.id);
-
     const ref = this.dialog.open(ConfirmationDialogComponent, {maxWidth: '20%', data: dialogData});
-
     ref.afterClosed().subscribe(res => {
       if (res) {
-        this.policyService.deletePolicy(policy.id).subscribe(this.errorOrUpdateSubscriber);
+        this.policyService.deletePolicy(policy.id).subscribe({
+          complete: () => {
+            this.fetch$.next(null)
+            this.notificationService.showInfo("Successfully deleted policy.")
+          },
+          error: err => {
+            console.error(err)
+            this.notificationService.showError('Failed deleting policy.');
+          },
+        });
       }
     });
-  }
-
-  private showError(error: Error) {
-    console.error(error)
-    this.notificationService.showError('Action could not be performed');
   }
 }

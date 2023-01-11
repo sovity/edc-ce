@@ -54,10 +54,11 @@ import {DataSubcategorySelectComponent} from "./components/data-subcategory-sele
 import {TransportModeSelectComponent} from "./components/transport-mode-select/transport-mode-select.component";
 import {DataSubcategoryItemsPipe} from "./components/data-subcategory-select/data-subcategory-items.pipe";
 import {MatChipsModule} from "@angular/material/chips";
-import { KeywordSelectComponent } from './components/keyword-select/keyword-select.component';
+import {KeywordSelectComponent} from './components/keyword-select/keyword-select.component';
 import {AssetListComponent} from "./components/asset-list/asset-list.component";
 import {AssetDetailDialog} from "./components/asset-detail-dialog/asset-detail-dialog.component";
 import {ContractOfferListComponent} from "./components/contract-offer-list/contract-offer-list.component";
+import {ContractOfferIconComponent} from "./components/contract-offer-icon/contract-offer-icon.component";
 
 @NgModule({
     imports: [
@@ -119,7 +120,8 @@ import {ContractOfferListComponent} from "./components/contract-offer-list/contr
     KeywordSelectComponent,
     AssetListComponent,
     AssetDetailDialog,
-    ContractOfferListComponent
+    ContractOfferListComponent,
+    ContractOfferIconComponent
   ],
   exports: [
     CatalogBrowserComponent,

@@ -37,3 +37,8 @@ mat-chip {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+// Fix Date range second-date-text being "higher" than first-date-text
+.mat-date-range-input-container {
+  align-items: unset !important;
+}

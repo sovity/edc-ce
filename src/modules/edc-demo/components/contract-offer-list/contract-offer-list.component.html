@@ -5,15 +5,7 @@
 <mat-card *ngFor="let contractOffer of contractOffers" style="width: 280px;">
   <ng-container *ngIf="contractOffer.asset; let asset">
     <mat-card-header>
-      <div mat-card-avatar>
-        <!-- Negotiation Success Indicator -->
-        <div *ngIf="contractNegotiationService.isNegotiated(contractOffer)" style="position: absolute;">
-          <mat-icon style="margin-top: 3px; margin-left: 4px; font-weight: bold; color: limegreen;">done</mat-icon>
-        </div>
-
-        <!-- Icon -->
-        <mat-icon>sim_card</mat-icon>
-      </div>
+      <edc-demo-contract-offer-icon mat-card-avatar [contractOffer]="contractOffer"></edc-demo-contract-offer-icon>
       <mat-card-title>
         <a class="link" href="javascript:void(0)" (click)="contractOfferClick.emit(contractOffer)">
           {{asset.name}}

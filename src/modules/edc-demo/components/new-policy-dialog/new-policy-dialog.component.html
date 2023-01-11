@@ -1,61 +1,61 @@
+<h1 mat-dialog-title>
+  Create New Policy
+</h1>
 <mat-dialog-content>
+  <div class="flex flex-col mt-[10px]">
+    <!--  ID -->
+    <mat-form-field *ngIf="form.group.controls.id; let ctrl" class="form-field-stretch" color="accent"
+                    id="form-field-id">
+      <mat-label>ID</mat-label>
+      <input [formControl]="ctrl" matInput>
+      <mat-error
+        *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{validationMessages.invalidWhitespacesMessage}}</mat-error>
+    </mat-form-field>
 
-  <!--  ID -->
-  <mat-form-field class="form-field-stretch" color="accent" id="form-field-id">
-    <mat-label>ID</mat-label>
-    <input [(ngModel)]="policyDefinition.id" matInput required>
-  </mat-form-field>
+    <!-- Policy Type -->
+    <mat-form-field class="form-field" color="accent">
+      <mat-label>Type</mat-label>
+      <mat-select [formControl]="form.group.controls.policyType">
+        <mat-option value="Time-Period-Restricted">
+          Time-Period-Restricted
+        </mat-option>
+        <mat-option value="Connector-Restricted-Usage">
+          Connector-Restricted-Usage
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field class="form-field" color="accent">
-    <mat-label>Type</mat-label>
-    <mat-select [(ngModel)]="policyType" required>
-      <mat-option value="Time-Period-Restricted">
-        Time-Period-Restricted
-      </mat-option>
-      <mat-option value="Connector-Restricted-Usage">
-        Connector-Restricted-Usage
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <div *ngIf="policyType == 'Time-Period-Restricted'">
-    <mat-form-field color="accent">
-      <mat-label>Enter a date range</mat-label>
-      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+    <!-- Date Range -->
+    <mat-form-field
+      *ngIf="form.policyType == 'Time-Period-Restricted' && form.group.controls.range; let ctrl"
+      color="accent"
+    >
+      <mat-label>Time-Period</mat-label>
+      <mat-date-range-input [formGroup]="ctrl" [rangePicker]="picker">
         <input matStartDate formControlName="start" placeholder="Start date">
         <input matEndDate formControlName="end" placeholder="End date">
       </mat-date-range-input>
       <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-date-range-picker #picker></mat-date-range-picker>
-
-      <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
-      <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+      <mat-error *ngIf="ctrl.invalid">{{validationMessages.invalidDateRangeMessage}}</mat-error>
     </mat-form-field>
-  </div>
 
-  <div *ngIf="policyType == 'Connector-Restricted-Usage'">
-    <mat-form-field color="accent">
+    <!-- Connector ID -->
+    <mat-form-field *ngIf="form.policyType == 'Connector-Restricted-Usage'" color="accent">
       <mat-label>Connector ID</mat-label>
-      <input [(ngModel)]="connectorId" matInput required>
+      <input [formControl]="form.group.controls.connectorId" matInput>
     </mat-form-field>
   </div>
-
 </mat-dialog-content>
 
-<mat-dialog-actions>
-  <button (click)="onSave()" *ngIf="editMode" color="primary" mat-raised-button >
-    <mat-icon>save</mat-icon>
+<mat-dialog-actions class="flex flex-row justify-end">
+  <button mat-dialog-close mat-button [disabled]="loading">
+    Cancel
+  </button>
+
+  <button (click)="onSave()" color="primary" mat-raised-button [disabled]="loading || !form.group.valid">
     Save
   </button>
-
-  <button (click)="onSave()" *ngIf="!editMode" color="primary" mat-raised-button>
-    <mat-icon>add_circle_outline</mat-icon>
-    Create
-  </button>
-
-  <button mat-dialog-close color="primary" mat-raised-button>
-    <mat-icon>cancel</mat-icon>
-    Cancel
   </button>
 </mat-dialog-actions>

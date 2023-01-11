@@ -25,10 +25,6 @@ export class AssetDetailDialog implements OnDestroy {
 
   loading = false
 
-  get icon(): string {
-    return this.data.mode === 'asset-details' ? 'upload' : 'sim_card';
-  }
-
   get negotiationState(): 'ready' | 'negotiating' | 'negotiated' {
     const contractOffer = this.data.contractOffer!;
     if (this.contractNegotiationService.isNegotiated(contractOffer)) {
