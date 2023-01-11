@@ -11,7 +11,7 @@
  *       sovity GmbH - initial API and implementation
  *
  */
-package sender.message.dispatcher;
+package sender.message.clearingdispatcher;
 
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.IdsMultipartRemoteMessageDispatcher;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;

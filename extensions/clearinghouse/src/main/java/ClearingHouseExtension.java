@@ -35,7 +35,7 @@ import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.types.TypeManager;
 import sender.LogMessageSender;
-import sender.message.dispatcher.IdsMultipartExtendedRemoteMessageDispatcher;
+import sender.message.clearingdispatcher.IdsMultipartClearingRemoteMessageDispatcher;
 import serializer.MultiContextJsonLdSerializer;
 
 import java.net.MalformedURLException;
@@ -169,7 +169,7 @@ public class ClearingHouseExtension implements ServiceExtension {
         var logMessageSender = new LogMessageSender();
 
         var idsMultipartSender = new IdsMultipartSender(monitor, httpClient, dynamicAttributeTokenService, objectMapper);
-        var dispatcher = new IdsMultipartExtendedRemoteMessageDispatcher(idsMultipartSender);
+        var dispatcher = new IdsMultipartClearingRemoteMessageDispatcher(idsMultipartSender);
         dispatcher.register(logMessageSender);
         dispatcherRegistry.register(dispatcher);
     }

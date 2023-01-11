@@ -15,7 +15,7 @@ package sender.message;
 
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.spi.types.domain.message.RemoteMessage;
-import sender.message.dispatcher.ExtendedMessageProtocol;
+import sender.message.clearingdispatcher.ExtendedMessageProtocol;
 
 import java.net.URI;
 import java.net.URL;

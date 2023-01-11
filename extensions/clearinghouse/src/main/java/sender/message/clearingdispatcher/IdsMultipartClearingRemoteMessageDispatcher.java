@@ -11,19 +11,20 @@
  *       sovity GmbH - initial API and implementation
  *
  */
-package sender.message.dispatcher;
+package sender.message.clearingdispatcher;
 
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.IdsMultipartRemoteMessageDispatcher;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
+import org.eclipse.edc.protocol.ids.spi.types.MessageProtocol;
 
-public class IdsMultipartExtendedRemoteMessageDispatcher extends IdsMultipartRemoteMessageDispatcher {
+public class IdsMultipartClearingRemoteMessageDispatcher extends IdsMultipartRemoteMessageDispatcher {
 
-    public IdsMultipartExtendedRemoteMessageDispatcher(IdsMultipartSender idsMultipartSender) {
+    public IdsMultipartClearingRemoteMessageDispatcher(IdsMultipartSender idsMultipartSender) {
         super(idsMultipartSender);
     }
 
     @Override
     public String protocol() {
-        return ExtendedMessageProtocol.IDS_EXTENDED_PROTOCOL;
+        return String.format("%s%s", MessageProtocol.IDS_MULTIPART, "-clearing");
     }
 }

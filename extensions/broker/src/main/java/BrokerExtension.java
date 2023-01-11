@@ -45,7 +45,7 @@ import sender.QueryMessageRequestSender;
 import sender.RegisterConnectorRequestSender;
 import sender.RegisterResourceRequestSender;
 import sender.UnregisterResourceRequestSender;
-import sender.message.dispatcher.IdsMultipartExtendedRemoteMessageDispatcher;
+import sender.message.clearingdispatcher.IdsMultipartExtendedRemoteMessageDispatcher;
 import serializer.MultiContextJsonLdSerializer;
 
 import java.net.MalformedURLException;
