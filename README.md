@@ -13,11 +13,11 @@ To get started, a sample docker-compose file is located in the resources/docs fo
 - `EDC_API_AUTH_KEY:` _The API authorization key of management API_
       
 #### MDS Environment Configuration
-The test environment is set by default.
-- `EDC_BROKER_BASE_URL:` https://broker.test.mobility-dataspace.eu
+The dev environment is set by default.
+- `EDC_BROKER_BASE_URL:` https://broker.dev.mobility-dataspace.eu
 - `EDC_OAUTH_CLIENT_ID:` _To be able to start an EDC-Connector with the broker-extensions, the `SKI` and `AKI` of the connector certificate must be entered as `client-ID` in the docker-compose and the .jks must be placed under the path specified in the docker-compose (in the example in the folder `resources/vault/edc/`, see `EDC_KEYSTORE` setting)._
-- `EDC_OAUTH_TOKEN_URL:` https://daps.test.mobility-dataspace.eu/token
-- `EDC_OAUTH_PROVIDER_JWKS_URL:` https://daps.test.mobility-dataspace.eu/jwks.json
+- `EDC_OAUTH_TOKEN_URL:` https://daps.dev.mobility-dataspace.eu/token
+- `EDC_OAUTH_PROVIDER_JWKS_URL:` https://daps.dev.mobility-dataspace.eu/jwks.json
 
 ### Start
 1. Login into GitHub Container Registry (GHCR): `$ docker login ghcr.io`.
