@@ -48,6 +48,7 @@ public class RegisterConnectorRequestSender implements MultipartSenderDelegate<R
                                           String endpoint) {
         this.objectMapper = objectMapper;
         this.connectorName = connectorName;
+        this.endpoint = endpoint;
     }
 
     @Override
