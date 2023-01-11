@@ -9,7 +9,7 @@ import {AssetDetailDialogResult} from "./asset-detail-dialog-result";
 import {AssetDetailDialogData} from "./asset-detail-dialog-data";
 import {Asset} from "../../models/asset";
 import {AssetDetailDialogField} from "./asset-detail-dialog-field";
-import {validUrlPattern} from "../asset-editor-dialog/url-validator";
+import {validUrlPattern} from "../../validators/url-validator";
 import {AssetDetailDialogFieldBuilder} from "./asset-detail-dialog-field-builder";
 import {ContractNegotiationService} from "../../services/contract-negotiation.service";
 

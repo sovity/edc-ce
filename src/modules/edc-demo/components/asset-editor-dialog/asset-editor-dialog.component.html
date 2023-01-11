@@ -11,9 +11,10 @@
 
           <div class="flex flex-row space-x-[10px]">
             <!-- ID -->
-            <mat-form-field class="form-field grow" color="accent">
+            <mat-form-field *ngIf="form.metadata.controls.id; let ctrl" class="form-field grow" color="accent">
               <mat-label>Id</mat-label>
-              <input [formControl]="form.metadata.controls.id" matInput>
+              <input [formControl]="ctrl" matInput>
+              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{invalidWhitespacesMessage}}</mat-error>
             </mat-form-field>
 
             <!-- Name -->

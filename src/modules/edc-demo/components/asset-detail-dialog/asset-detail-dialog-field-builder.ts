@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Asset} from "../../models/asset";
 import {AssetDetailDialogField} from "./asset-detail-dialog-field";
-import {validUrlPattern} from "../asset-editor-dialog/url-validator";
+import {validUrlPattern} from "../../validators/url-validator";
 import {isFeatureSetActive} from "../../pipes/is-active-feature-set.pipe";
 
 @Injectable()

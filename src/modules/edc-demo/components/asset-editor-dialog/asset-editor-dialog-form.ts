@@ -10,12 +10,13 @@ import {
 } from "./asset-editor-dialog-form-model";
 import {LanguageSelectItemService} from "../language-select/language-select-item.service";
 import {isFeatureSetActive} from "../../pipes/is-active-feature-set.pipe";
-import {jsonValidator} from "./json-validator";
-import {urlValidator} from "./url-validator";
+import {jsonValidator} from "../../validators/json-validator";
+import {urlValidator} from "../../validators/url-validator";
 import {DataSubcategorySelectItem} from "../data-subcategory-select/data-subcategory-select-item";
 import {TransportModeSelectItem} from "../transport-mode-select/transport-mode-select-item";
 import {DataCategorySelectItem} from "../data-category-select/data-category-select-item";
 import {LanguageSelectItem} from "../language-select/language-select-item";
+import {noWhitespaceValidator} from "../../validators/no-whitespace-validator";
 
 /**
  * Handles AngularForms for AssetEditorDialog
@@ -71,7 +72,7 @@ export class AssetEditorDialogForm {
       isFeatureSetActive('mds') ? x : [x[0], []]
 
     const metadata: FormGroup<AssetEditorDialogMetadataFormModel> = this.formBuilder.nonNullable.group({
-      id: ['', Validators.required],
+      id: ['', [Validators.required, noWhitespaceValidator]],
       name: ['', Validators.required],
       version: '',
       contenttype: '',

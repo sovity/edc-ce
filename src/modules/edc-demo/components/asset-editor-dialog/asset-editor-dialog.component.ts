@@ -20,6 +20,7 @@ export class AssetEditorDialog implements OnDestroy {
 
   invalidUrlMessage = "Must be valid URL, e.g. https://example.com"
   invalidJsonMessage = "Must be valid JSON"
+  invalidWhitespacesMessage = "Must not contain whitespaces."
 
   loading = false
 
