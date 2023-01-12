@@ -14,14 +14,54 @@ in the detailed section referring to by linking pull requests or issues.
 ### Detailed Changes
 
 #### Added
-- Add support for connector restricted usage policy. 
+- Added support for connector restricted usage policy.
+- Added additional asset fields:
+  - General fields (e.g. standard license).
+  - MDS specific fields (e.g. transport mode).
+- Catalog Browser:
+  - Reworked cards to support to support some new fields.
+  - Added new detail dialog showing asset details.
+- Asset Viewer:
+  - Reworked cards to support to support some new fields.
+  - Added new detail dialog showing asset details.
+- Asset Create Dialog:
+  - Divided asset creation into stages with an Angular Material Stepper.
+  - Added title and fixed styling.
+  - Added validation for required fields.
+  - Added validation for URL fields.
+  - Added validation for ID field, no whitespaces.
+  - Added ID generation from name.
+  - Added vocabulary for MDS specific fields: Data Category, Data Subcategory, Transport Mode.
+  - Added new MDS field: Data Subcategory
+- Policy Definition Dialog:
+  - Added title and fixed styling.
+  - Added validation for required fields.
+- Contract Definition Dialog:
+  - Added title and fixed styling.
+  - Added validation for required fields.
 
 #### Changed
+- Changed asset properties, especially ID property. See `asset-properties.ts`.
 
 #### Removed
 
 #### Fixed
 - Error-Message Displayed when Creating and Cancelling the Create-Policy-Dialog
+- Removed dead theming code at wrong places.
+- Fixed "black" accent color having black text on black background.
+- Asset Create Dialog:
+  - Fixed validation not preventing submit.
+  - Fixed data flow so submit errors don't close dialog.
+- Policy Viewer
+  - Fixed filter / pagination bar styling.
+- Policy Definition Dialog:
+  - Fixed validation not preventing submit.
+  - Fixed data flow so submit errors don't close dialog.
+- Contract Definition Viewer
+  - Fixed filter / pagination bar styling.
+- Contract Definition Dialog:
+  - Fixed validation not preventing submit.
+  - Fixed data flow so submit errors don't close dialog.
 
 ## [0.0.1-ab1b6fd0-sovity4] 04.01.2023
 
