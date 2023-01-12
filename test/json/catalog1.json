@@ -65,7 +65,7 @@
           "ids:name": "Test Asset",
           "ids:version": "1.1",
           "ids:originator": null,
-          "ids:originatorOrganization": "test",
+          "ids:originatorOrganization": "BMW Group AG FG-20",
           "ids:keyword": "test, asset",
           "ids:mediaType": "text/plain",
           "ids:description": "A simple test asset.",

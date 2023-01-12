@@ -49,9 +49,9 @@ export class AssetDetailDialogFieldBuilder {
       },
       {
         icon: 'account_circle',
-        label: 'Connector Originator Organization',
+        label: 'Organization',
         text: tryValue(asset.originatorOrganization),
-        url: tryUrl(asset.originatorOrganization)
+        url: tryUrl(asset.originator)
       }
     ];
 
