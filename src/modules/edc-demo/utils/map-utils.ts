@@ -10,7 +10,7 @@ export function groupedBy<T, K>(array: T[], keyExtractor: (it: T) => K): Map<K, 
     if (!map.has(key)) {
       map.set(key, [])
     }
-    map.get(key)!!.push(it)
+    map.get(key)!.push(it)
   })
   return map;
 }

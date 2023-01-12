@@ -20,8 +20,12 @@
             <mat-form-field *ngIf="form.metadata.controls.id; let ctrl" class="form-field grow" color="accent">
               <mat-label>Id</mat-label>
               <input [formControl]="ctrl" placeholder="urn:artifact:..." matInput>
-              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{invalidWhitespacesMessage}}</mat-error>
-              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.requiresPrefix">{{invalidIdPrefix}}</mat-error>
+              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
+                {{validationMessages.invalidWhitespacesMessage}}
+              </mat-error>
+              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.requiresPrefix">
+                {{validationMessages.invalidPrefix('ID', 'urn:artifact')}}
+              </mat-error>
             </mat-form-field>
           </div>
 
@@ -124,7 +128,9 @@
           >
             <mat-label>Custom Datasource Config (JSON)</mat-label>
             <textarea [formControl]="ctrl" matInput [placeholder]="'{}'"></textarea>
-            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.jsonInvalid">{{invalidJsonMessage}}</mat-error>
+            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.jsonInvalid">
+              {{validationMessages.invalidJsonMessage}}
+            </mat-error>
           </mat-form-field>
 
           <!-- Source Endpoint (Rest-Api) -->
@@ -135,7 +141,9 @@
           >
             <mat-label>REST-API Endpoint (GET)</mat-label>
             <input [formControl]="ctrl" matInput [placeholder]="'https://'">
-            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{invalidUrlMessage}}</mat-error>
+            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
+              {{validationMessages.invalidUrlMessage}}
+            </mat-error>
           </mat-form-field>
 
           <!-- Endpoint Documentation -->
@@ -146,7 +154,9 @@
           >
             <mat-label>Endpoint Documentation</mat-label>
             <input [formControl]="ctrl" placeholder="https://" matInput>
-            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{invalidUrlMessage}}</mat-error>
+            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
+              {{validationMessages.invalidUrlMessage}}
+            </mat-error>
           </mat-form-field>
 
           <div class="flex flex-row space-x-[10px]">
@@ -158,7 +168,9 @@
             >
               <mat-label>Publisher</mat-label>
               <input [formControl]="ctrl" placeholder="https://" matInput>
-              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{invalidUrlMessage}}</mat-error>
+              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
+                {{validationMessages.invalidUrlMessage}}
+              </mat-error>
             </mat-form-field>
 
             <!-- Standard License -->
@@ -169,7 +181,9 @@
             >
               <mat-label>Standard License</mat-label>
               <input [formControl]="ctrl" matInput>
-              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{invalidUrlMessage}}</mat-error>
+              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
+                {{validationMessages.invalidUrlMessage}}
+              </mat-error>
             </mat-form-field>
           </div>
         </div>

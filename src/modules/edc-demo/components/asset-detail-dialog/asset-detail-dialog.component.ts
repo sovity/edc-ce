@@ -89,7 +89,7 @@ export class AssetDetailDialog implements OnDestroy {
         complete: () => {
           this.notificationService.showInfo(opts.successMessage);
           if (opts.onsuccess) {
-            opts.onsuccess!!();
+            opts.onsuccess();
           }
         },
         error: err => {

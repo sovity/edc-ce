@@ -107,7 +107,7 @@ export class ContractViewerComponent implements OnInit {
         dataDestination: dataDestination,
         managedResources: false,
         transferType: {isFinite: true}, //must be there, otherwise NPE on backend
-        connectorAddress: offeredAsset.originator!!,
+        connectorAddress: offeredAsset.originator!,
         protocol: 'ids-multipart'
       };
     }));

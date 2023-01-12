@@ -14,6 +14,6 @@ export class AssetDetailDialogData {
   }
 
   static forContractOffer(contractOffer: ContractOffer): AssetDetailDialogData {
-    return new AssetDetailDialogData('contract-offer', contractOffer.asset!!, contractOffer)
+    return new AssetDetailDialogData('contract-offer', contractOffer.asset!, contractOffer)
   }
 }

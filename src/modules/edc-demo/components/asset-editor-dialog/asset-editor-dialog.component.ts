@@ -8,6 +8,7 @@ import {finalize, takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
 import {NotificationService} from "../../services/notification.service";
 import {AssetEditorDialogResult} from "./asset-editor-dialog-result";
+import {ValidationMessages} from "../../validators/validation-messages";
 
 
 @Component({
@@ -16,21 +17,15 @@ import {AssetEditorDialogResult} from "./asset-editor-dialog-result";
   providers: [AssetEditorDialogForm, AssetEntryBuilder]
 })
 export class AssetEditorDialog implements OnDestroy {
-
-  invalidUrlMessage = "Must be valid URL, e.g. https://example.com"
-  invalidJsonMessage = "Must be valid JSON"
-  invalidWhitespacesMessage = "Must not contain whitespaces."
-  invalidIdPrefix = "ID must start with \"urn:artifact:\"."
-
   loading = false
 
   constructor(
     public form: AssetEditorDialogForm,
+    public validationMessages: ValidationMessages,
     private assetEntryDtoBuilder: AssetEntryBuilder,
     private notificationService: NotificationService,
     private assetService: AssetService,
     private dialogRef: MatDialogRef<AssetEditorDialog>,
-    @Inject('STORAGE_TYPES') public storageTypes: StorageType[],
   ) {
   }
 

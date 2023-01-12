@@ -32,16 +32,16 @@ export class AssetPropertyMapper {
 
   readProperties(props: Record<string, string | null>): Asset {
     const language = props[AssetProperties.language]
-      ? this.languageSelectItemService.findById(props[AssetProperties.language]!!)
+      ? this.languageSelectItemService.findById(props[AssetProperties.language]!)
       : null;
     const dataCategory = props[AssetProperties.dataCategory]
-      ? this.dataCategorySelectItemService.findById(props[AssetProperties.dataCategory]!!)
+      ? this.dataCategorySelectItemService.findById(props[AssetProperties.dataCategory]!)
       : null;
     const dataSubcategory = props[AssetProperties.dataSubcategory]
-      ? this.dataSubcategorySelectItemService.findById(props[AssetProperties.dataSubcategory]!!)
+      ? this.dataSubcategorySelectItemService.findById(props[AssetProperties.dataSubcategory]!)
       : null;
     const transportMode = props[AssetProperties.transportMode]
-      ? this.transportModeSelectItemService.findById(props[AssetProperties.transportMode]!!)
+      ? this.transportModeSelectItemService.findById(props[AssetProperties.transportMode]!)
       : null;
     const keywords = (props[AssetProperties.keywords] ?? '').split(",").map(it => it.trim()).filter(it => it)
 
@@ -74,7 +74,7 @@ export class AssetPropertyMapper {
     const {metadata, advanced, datasource} = formValue;
     const props: Record<string, string | null> = {};
     props[AssetProperties.assetIdEdcc] = trimmedOrNull(metadata?.id)
-    props[AssetProperties.assetIdIds] = this.buildIdsId(props[AssetProperties.assetIdEdcc]!!)
+    props[AssetProperties.assetIdIds] = this.buildIdsId(props[AssetProperties.assetIdEdcc]!)
     props[AssetProperties.name] = trimmedOrNull(metadata?.name)
     props[AssetProperties.version] = trimmedOrNull(metadata?.version)
     props[AssetProperties.originator] = trimmedOrNull(this.connectorOriginator)
