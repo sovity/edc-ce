@@ -15,7 +15,6 @@ import {PolicyDefinitionBuilder} from "../../services/policy-definition-builder"
 @Component({
   selector: 'edc-demo-new-policy-dialog',
   templateUrl: './new-policy-dialog.component.html',
-  styleUrls: ['./new-policy-dialog.component.scss'],
   providers: [NewPolicyDialogForm, AssetEntryBuilder]
 })
 export class NewPolicyDialogComponent implements OnDestroy {

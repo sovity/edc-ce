@@ -2,13 +2,15 @@ import {Component, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {first, map, switchMap} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
-import {
-  ContractDefinitionEditorDialog
-} from '../contract-definition-editor-dialog/contract-definition-editor-dialog.component';
 import {ContractDefinitionDto, ContractDefinitionService} from "../../../edc-dmgmt-client";
 import {ConfirmationDialogComponent, ConfirmDialogModel} from "../confirmation-dialog/confirmation-dialog.component";
 import {NotificationService} from "../../services/notification.service";
-import {AppConfigService} from "../../../app/app-config.service";
+import {
+  ContractDefinitionEditorDialog
+} from "../contract-definition-editor-dialog/contract-definition-editor-dialog.component";
+import {
+  ContractDefinitionEditorDialogResult
+} from "../contract-definition-editor-dialog/contract-definition-editor-dialog-result";
 
 @Component({
   selector: 'edc-demo-contract-definition-viewer',
@@ -21,25 +23,22 @@ export class ContractDefinitionViewerComponent implements OnInit {
   searchText = '';
   private fetch$ = new BehaviorSubject(null);
 
-  constructor(private contractDefinitionService: ContractDefinitionService,
-              private notificationService: NotificationService,
-              private readonly dialog: MatDialog) {
+  constructor(
+    private contractDefinitionService: ContractDefinitionService,
+    private notificationService: NotificationService,
+    private readonly dialog: MatDialog
+  ) {
   }
 
   ngOnInit(): void {
-    this.filteredContractDefinitions$ = this.fetch$
-      .pipe(
-        switchMap(() => {
-          const contractDefinitions$ = this.contractDefinitionService.getAllContractDefinitions();
-          return !!this.searchText ?
-            contractDefinitions$.pipe(map(contractDefinitions => contractDefinitions.filter(contractDefinition => contractDefinition.id.toLowerCase().includes(this.searchText))))
-            :
-            contractDefinitions$;
-        }));
+    this.filteredContractDefinitions$ = this.fetch$.pipe(
+      switchMap(() => this.contractDefinitionService.getAllContractDefinitions()),
+      map(contractDefinitions => this.filterContractDefinitions(contractDefinitions, this.searchText))
+    );
   }
 
   onSearch() {
-    this.fetch$.next(null);
+    this.refresh()
   }
 
   onDelete(contractDefinition: ContractDefinitionDto) {
@@ -57,14 +56,27 @@ export class ContractDefinitionViewerComponent implements OnInit {
 
   onCreate() {
     const dialogRef = this.dialog.open(ContractDefinitionEditorDialog);
-    dialogRef.afterClosed().pipe(first()).subscribe((result: { contractDefinition?: ContractDefinitionDto }) => {
-      const newContractDefinition = result?.contractDefinition;
-      if (newContractDefinition) {
-        this.contractDefinitionService.createContractDefinition(newContractDefinition).subscribe(() => this.fetch$.next(null),
-          error => this.notificationService.showError("Contract definition cannot be created"),
-          () => this.notificationService.showInfo("Contract definition created"));
+    dialogRef.afterClosed().pipe(first()).subscribe((result: ContractDefinitionEditorDialogResult) => {
+      if (result.refreshList) {
+        this.refresh()
       }
     });
+  }
+
+  private filterContractDefinitions(
+    contractDefinitions: ContractDefinitionDto[],
+    searchText: string
+  ): ContractDefinitionDto[] {
+    if (!searchText) {
+      return contractDefinitions;
+    }
+    return contractDefinitions.filter(
+      contractDefinition => contractDefinition.id.toLowerCase().includes(this.searchText)
+    );
+  }
+
+  private refresh() {
+    this.fetch$.next(null);
   }
 
 }

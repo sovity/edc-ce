@@ -13,7 +13,6 @@ import {AssetEditorDialogResult} from "./asset-editor-dialog-result";
 @Component({
   selector: 'edc-demo-asset-editor-dialog',
   templateUrl: './asset-editor-dialog.component.html',
-  styleUrls: ['./asset-editor-dialog.component.scss'],
   providers: [AssetEditorDialogForm, AssetEntryBuilder]
 })
 export class AssetEditorDialog implements OnDestroy {

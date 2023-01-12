@@ -27,9 +27,6 @@ import {
 import {IntroductionComponent} from './components/introduction/introduction.component';
 import {RouterModule} from '@angular/router';
 import {
-  ContractDefinitionEditorDialog
-} from './components/contract-definition-editor-dialog/contract-definition-editor-dialog.component';
-import {
   CatalogBrowserTransferDialog
 } from './components/catalog-browser-transfer-dialog/catalog-browser-transfer-dialog.component';
 import {ContractViewerComponent} from './components/contract-viewer/contract-viewer.component';
@@ -59,6 +56,10 @@ import {AssetListComponent} from "./components/asset-list/asset-list.component";
 import {AssetDetailDialog} from "./components/asset-detail-dialog/asset-detail-dialog.component";
 import {ContractOfferListComponent} from "./components/contract-offer-list/contract-offer-list.component";
 import {ContractOfferIconComponent} from "./components/contract-offer-icon/contract-offer-icon.component";
+import {
+  ContractDefinitionEditorDialog
+} from "./components/contract-definition-editor-dialog/contract-definition-editor-dialog.component";
+import {PolicySelectComponent} from "./components/policy-select/policy-select.component";
 
 @NgModule({
     imports: [
@@ -108,7 +109,6 @@ import {ContractOfferIconComponent} from "./components/contract-offer-icon/contr
     CatalogBrowserTransferDialog,
     ContractViewerComponent,
     NewPolicyDialogComponent,
-    IntroductionComponent,
     ConfirmationDialogComponent,
     LogoutComponent,
     IsActiveFeatureSetPipe,
@@ -121,7 +121,8 @@ import {ContractOfferIconComponent} from "./components/contract-offer-icon/contr
     AssetListComponent,
     AssetDetailDialog,
     ContractOfferListComponent,
-    ContractOfferIconComponent
+    ContractOfferIconComponent,
+    PolicySelectComponent
   ],
   exports: [
     CatalogBrowserComponent,

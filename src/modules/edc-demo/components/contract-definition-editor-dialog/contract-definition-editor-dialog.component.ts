@@ -1,76 +1,91 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {AssetService, ContractDefinitionDto, PolicyDefinition, PolicyService} from "../../../edc-dmgmt-client";
-import {map} from "rxjs/operators";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AssetService, ContractDefinitionService, PolicyDefinition, PolicyService} from "../../../edc-dmgmt-client";
+import {MatDialogRef} from "@angular/material/dialog";
+import {ContractDefinitionEditorDialogForm} from "./contract-definition-editor-dialog-form";
+import {AssetEntryBuilder} from "../../services/asset-entry-builder";
+import {finalize, takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
+import {NotificationService} from "../../services/notification.service";
+import {ContractDefinitionEditorDialogResult} from "./contract-definition-editor-dialog-result";
+import {ValidationMessages} from "../../validators/validation-messages";
 import {Asset} from "../../models/asset";
+import {ContractDefinitionBuilder} from "../../services/contract-definition-builder";
 import {AssetPropertyMapper} from "../../services/asset-property-mapper";
 
 
 @Component({
   selector: 'edc-demo-contract-definition-editor-dialog',
   templateUrl: './contract-definition-editor-dialog.component.html',
-  styleUrls: ['./contract-definition-editor-dialog.component.scss']
+  providers: [ContractDefinitionEditorDialogForm, AssetEntryBuilder]
 })
-export class ContractDefinitionEditorDialog implements OnInit {
-
+export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
   policies: PolicyDefinition[] = [];
-  availableAssets: Asset[] = [];
-  name: string = '';
-  editMode = false;
-  accessPolicy?: PolicyDefinition;
-  contractPolicy?: PolicyDefinition;
   assets: Asset[] = [];
-  contractDefinition: ContractDefinitionDto = {
-    id: '',
-    criteria: [],
-    accessPolicyId: undefined!,
-    contractPolicyId: undefined!
-  };
+  loading = false
 
-  constructor(private policyService: PolicyService,
-              private assetService: AssetService,
-              private dialogRef: MatDialogRef<ContractDefinitionEditorDialog>,
-              private assetPropertyMapper: AssetPropertyMapper,
-              @Inject(MAT_DIALOG_DATA) contractDefinition?: ContractDefinitionDto) {
-    if (contractDefinition) {
-      this.contractDefinition = contractDefinition;
-      this.editMode = true;
-    }
+  constructor(
+    public form: ContractDefinitionEditorDialogForm,
+    private notificationService: NotificationService,
+    private policyService: PolicyService,
+    private assetService: AssetService,
+    private assetPropertyMapper: AssetPropertyMapper,
+    private contractDefinitionService: ContractDefinitionService,
+    private contractDefinitionBuilder: ContractDefinitionBuilder,
+    private dialogRef: MatDialogRef<ContractDefinitionEditorDialog>,
+    public validationMessages: ValidationMessages,
+  ) {
   }
 
-  ngOnInit(): void {
-    this.policyService.getAllPolicies().subscribe(polices => {
-      this.policies = polices;
-      this.accessPolicy = this.policies.find(policy => policy.id === this.contractDefinition.accessPolicyId);
-      this.contractPolicy = this.policies.find(policy => policy.id === this.contractDefinition.contractPolicyId);
-    });
-    this.assetService.getAllAssets()
-      .pipe(map(asset => asset.map(a => this.assetPropertyMapper.readProperties(a.properties))))
+  ngOnInit() {
+    this.policyService.getAllPolicies().pipe(takeUntil(this.ngOnDestroy$))
+      .subscribe(polices => {
+        this.policies = polices;
+        console.log(this.policies)
+      });
+    this.assetService.getAllAssets().pipe(takeUntil(this.ngOnDestroy$))
       .subscribe(assets => {
-        this.availableAssets = assets;
-        // preselection
-        if (this.contractDefinition) {
-          const assetIds = this.contractDefinition.criteria.map(c => c.operandRight);
-          this.assets = this.availableAssets.filter(asset => assetIds.includes(asset.id));
+        this.assets = assets.map(it => this.assetPropertyMapper.readProperties(it.properties));
+      });
+  }
+
+  onSave() {
+    const formValue = this.form.value
+    const contractDefinition = this.contractDefinitionBuilder.buildContractDefinition(formValue)
+
+    this.form.group.disable();
+    this.loading = true;
+    this.contractDefinitionService.createContractDefinition(contractDefinition)
+      .pipe(
+        takeUntil(this.ngOnDestroy$),
+        finalize(() => {
+          this.form.group.enable();
+          this.loading = false;
+        })
+      )
+      .subscribe({
+        complete: () => {
+          this.notificationService.showInfo("Successfully created policy.");
+          this.close({refreshList: true});
+        },
+        error: error => {
+          console.error("Failed creating asset!", error);
+          this.notificationService.showError("Failed creating policy!");
         }
       })
   }
 
-  onSave() {
-    this.contractDefinition.id = this.contractDefinition.id!.trim();
-    this.contractDefinition.accessPolicyId = this.accessPolicy!.id;
-    this.contractDefinition.contractPolicyId = this.contractPolicy!.id;
-    this.contractDefinition.criteria = [];
+  private close(params: ContractDefinitionEditorDialogResult) {
+    this.dialogRef.close(params)
+  }
 
-    const ids = this.assets.map(asset => asset.id);
-    this.contractDefinition.criteria = [...this.contractDefinition.criteria, {
-      operandLeft: 'asset:prop:id',
-      operator: 'in',
-      operandRight: ids,
-    }];
+  isEqualId(a: { id: string }, b: { id: string }): boolean {
+    return a?.id === b?.id;
+  }
 
-    this.dialogRef.close({
-      "contractDefinition": this.contractDefinition
-    });
+  ngOnDestroy$ = new Subject();
+
+  ngOnDestroy(): void {
+    this.ngOnDestroy$.next(null);
+    this.ngOnDestroy$.complete();
   }
 }

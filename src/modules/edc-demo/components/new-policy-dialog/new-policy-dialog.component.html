@@ -1,10 +1,10 @@
 <h1 mat-dialog-title>
   Create New Policy
 </h1>
-<mat-dialog-content>
+<mat-dialog-content class="w-[800px]">
   <div class="flex flex-col mt-[10px]">
     <!--  ID -->
-    <mat-form-field *ngIf="form.group.controls.id; let ctrl" class="form-field-stretch" color="accent"
+    <mat-form-field *ngIf="form.group.controls.id; let ctrl" color="accent"
                     id="form-field-id">
       <mat-label>ID</mat-label>
       <input [formControl]="ctrl" matInput>
@@ -13,7 +13,7 @@
     </mat-form-field>
 
     <!-- Policy Type -->
-    <mat-form-field class="form-field" color="accent">
+    <mat-form-field color="accent">
       <mat-label>Type</mat-label>
       <mat-select [formControl]="form.group.controls.policyType">
         <mat-option value="Time-Period-Restricted">
@@ -55,7 +55,7 @@
   </button>
 
   <button (click)="onSave()" color="primary" mat-raised-button [disabled]="loading || !form.group.valid">
-    Save
+    Create
   </button>
   </button>
 </mat-dialog-actions>
