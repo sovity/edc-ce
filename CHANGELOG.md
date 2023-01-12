@@ -24,6 +24,7 @@ in the detailed section referring to by linking pull requests or issues.
 - Asset Viewer:
   - Reworked cards to support to support some new fields.
   - Added new detail dialog showing asset details.
+  - Added field CONNECTOR ORIGINATOR ORGANIZATION to be fetched from app.config.json
 - Asset Create Dialog:
   - Divided asset creation into stages with an Angular Material Stepper.
   - Added title and fixed styling.

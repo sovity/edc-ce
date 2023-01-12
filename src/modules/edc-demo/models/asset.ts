@@ -15,6 +15,7 @@ export interface Asset {
   version: string | null,
   contentType: string | null,
   originator: string | null,
+  originatorOrganization: string|null,
   keywords: string[],
 
   description: string | null,

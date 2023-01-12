@@ -10,6 +10,7 @@ export interface AppConfig {
   storageExplorerLinkTemplate: string;
   logoutUrl: string;
   theme: string;
+  originatorOrganization: string;
 }
 
 @Injectable({

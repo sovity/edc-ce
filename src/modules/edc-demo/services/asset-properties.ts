@@ -19,6 +19,7 @@ export const AssetProperties = {
   contentType: "ids:mediaType",
   keywords: "ids:keyword",
   originator: "ids:originator", // guessed
+  originatorOrganization: "ids:originatorOrganization",
   description: "ids:description", // guessed
   language: 'ids:language',
   publisher: "ids:publisher",

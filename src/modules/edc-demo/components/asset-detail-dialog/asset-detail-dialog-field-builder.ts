@@ -47,6 +47,12 @@ export class AssetDetailDialogFieldBuilder {
         text: tryValue(asset.standardLicense),
         url: tryUrl(asset.standardLicense)
       },
+      {
+        icon: 'account_circle',
+        label: 'Connector Originator Organization',
+        text: tryValue(asset.originatorOrganization),
+        url: tryUrl(asset.originatorOrganization)
+      }
     ];
 
     // MDS Specific Fields

@@ -10,7 +10,7 @@ import {AssetProperties} from "./asset-properties";
 import {AssetEditorDialogFormValue} from "../components/asset-editor-dialog/asset-editor-dialog-form-model";
 import {isFeatureSetActive} from "../pipes/is-active-feature-set.pipe";
 import {trimmedOrNull} from "../utils/string-utils";
-import {CONNECTOR_ORIGINATOR} from "../../edc-dmgmt-client";
+import {CONNECTOR_ORIGINATOR, CONNECTOR_ORIGINATOR_ORGANIZATON} from "../../edc-dmgmt-client";
 import urlJoin from 'url-join';
 
 
@@ -26,7 +26,8 @@ export class AssetPropertyMapper {
     private transportModeSelectItemService: TransportModeSelectItemService,
     private dataCategorySelectItemService: DataCategorySelectItemService,
     private dataSubcategorySelectItemService: DataSubcategorySelectItemService,
-    @Inject(CONNECTOR_ORIGINATOR) private connectorOriginator: string
+    @Inject(CONNECTOR_ORIGINATOR) private connectorOriginator: string,
+    @Inject(CONNECTOR_ORIGINATOR_ORGANIZATON) private connectorOriginatorOrganization: string
   ) {
   }
 
@@ -54,7 +55,7 @@ export class AssetPropertyMapper {
       version: props[AssetProperties.version],
       contentType: props[AssetProperties.contentType],
       originator: props[AssetProperties.originator],
-
+      originatorOrganization: props[AssetProperties.originatorOrganization],
       keywords,
       description: props[AssetProperties.description],
       language,
@@ -78,6 +79,7 @@ export class AssetPropertyMapper {
     props[AssetProperties.name] = trimmedOrNull(metadata?.name)
     props[AssetProperties.version] = trimmedOrNull(metadata?.version)
     props[AssetProperties.originator] = trimmedOrNull(this.connectorOriginator)
+    props[AssetProperties.originatorOrganization] = trimmedOrNull(this.connectorOriginatorOrganization)
     props[AssetProperties.keywords] = trimmedOrNull(metadata?.keywords?.join(", "))
     props[AssetProperties.contentType] = trimmedOrNull(metadata?.contenttype)
     props[AssetProperties.description] = trimmedOrNull(metadata?.description)
