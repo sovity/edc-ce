@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {TransferProcessDto, TransferProcessService} from "../../../edc-dmgmt-client";
-import {AppConfigService} from "../../../app/app-config.service";
+import {AppConfigService} from "../../../app/config/app-config.service";
 import {ConfirmationDialogComponent, ConfirmDialogModel} from "../confirmation-dialog/confirmation-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {map} from "rxjs/operators"
@@ -16,16 +16,13 @@ export class TransferHistoryViewerComponent implements OnInit {
 
   columns: string[] = ['id', 'creationDate', 'state', 'lastUpdated', 'connectorId', 'assetId', 'contractId'];
   transferProcesses$: Observable<TransferProcessDto[]> = of([]);
-  storageExplorerLinkTemplate: string | undefined;
 
   constructor(private transferProcessService: TransferProcessService,
-              private dialog: MatDialog,
-              private appConfigService: AppConfigService) {
+              private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
     this.loadTransferProcesses();
-    this.storageExplorerLinkTemplate = this.appConfigService.getConfig()?.storageExplorerLinkTemplate
   }
 
   onDeprovision(transferProcess: TransferProcessDto): void {

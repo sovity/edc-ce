@@ -1,19 +1,18 @@
 [
   {
     "properties": {
-      "edcc:id": "urn:artifact:db-rail-network-2023-jan",
-      "ids:id": "https://originator-undefined-in-edc-ui/assets/urn:artifact:my-asset",
-      "ids:name": "Rail Network DB 2023 January",
-      "ids:version": "1.1",
-      "ids:originator": "https://rail-mgmt.bahn.de",
-      "ids:originatorOrganization": "Deutsche Bahn AG",
-      "ids:keyword": "db, bahn, rail, Rail-Designer",
-      "ids:mediaType": "application/json",
-      "ids:description": "Train Network Map released on 10.01.2023, valid until 31.02.2023. \nFile format is xyz as exported by Rail-Designer.",
-      "ids:language": "ISO_639:EN",
-      "ids:publisher": "https://my.cool-api.gg/about",
-      "ids:standardLicense": "https://my.cool-api.gg/license",
-      "ids:endpointDocumentation": "https://my.cool-api.gg/docs",
+      "asset:prop:id": "urn:artifact:db-rail-network-2023-jan",
+      "asset:prop:name": "Rail Network DB 2023 January",
+      "asset:prop:version": "1.1",
+      "asset:prop:originator": "https://rail-mgmt.bahn.de",
+      "asset:prop:originatorOrganization": "Deutsche Bahn AG",
+      "asset:prop:keywords": "db, bahn, rail, Rail-Designer",
+      "asset:prop:contenttype": "application/json",
+      "asset:prop:description": "Train Network Map released on 10.01.2023, valid until 31.02.2023. \nFile format is xyz as exported by Rail-Designer.",
+      "asset:prop:language": "ISO_639:EN",
+      "asset:prop:publisher": "https://my.cool-api.gg/about",
+      "asset:prop:standardLicense": "https://my.cool-api.gg/license",
+      "asset:prop:endpointDocumentation": "https://my.cool-api.gg/docs",
       "http://w3id.org/mds#dataCategory": "InfrastructureLogistics",
       "http://w3id.org/mds#dataSubcategory": "GeneralInformationAboutPlanningOfRoutes",
       "http://w3id.org/mds#dataModel": "my-data-model-001",
@@ -23,13 +22,11 @@
   },
   {
     "properties": {
-      "edcc:id": "urn:artifact:bitcoin-data",
-      "ids:name": "Bitcoin Data",
+      "asset:prop:id": "urn:artifact:bitcoin-data",
       "asset:prop:name": "Bitcoin Data",
       "asset:prop:contenttype": "application/json",
       "asset:prop:description": "description",
       "asset:prop:version": "1.0",
-      "asset:prop:id": "urn:artifact:bitcoin2",
       "asset:prop:type": "HttpData",
       "asset:prop:originator": "https://sovity-001.stage-sovity.azure.sovity.io/control/api/v1/ids/data"
     }

@@ -4,3 +4,4 @@ misc
 openapi
 tmp
 node_modules
+src/assets/config/*.json

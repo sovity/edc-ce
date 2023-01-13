@@ -70,46 +70,6 @@
               "sourceMap": true,
               "namedChunks": true
             },
-            "mds-development": {
-              "buildOptimizer": false,
-              "optimization": false,
-              "vendorChunk": true,
-              "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.mds.ts"
-                }
-              ]
-            },
-            "mds-production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "2.0mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.mds-prod.ts"
-                }
-              ],
-              "outputHashing": "all",
-              "sourceMap": {
-                "hidden": false,
-                "scripts": true,
-                "styles": true
-              }
-            }
           },
           "defaultConfiguration": "production"
         },
@@ -122,12 +82,6 @@
             "development": {
               "browserTarget": "edc-demo-client:build:development"
             },
-            "mds-development": {
-              "browserTarget": "edc-demo-client:build:mds-development"
-            },
-            "mds-production": {
-              "browserTarget": "edc-demo-client:build:mds-production"
-            }
           },
           "options": {
             "browserTarget": "project-name:build"

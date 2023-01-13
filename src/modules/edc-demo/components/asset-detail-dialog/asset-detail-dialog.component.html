@@ -38,9 +38,8 @@
   </div>
 
   <!-- Properties -->
-  <div class="flex flex-row flex-wrap gap-[10px] justify-between" style="margin-top: 10px">
-    <div *ngFor="let prop of props" class="flex flex-row space-x-[10px]"
-         style="width: 220px; max-width: 220px; overflow: hidden;">
+  <div class="flex flex-row flex-wrap gap-[10px] justify-start" style="margin-top: 10px">
+    <div *ngFor="let prop of props" class="flex flex-row space-x-[10px] overflow-hidden" style="width: calc(100% / 3 - 20px);">
       <!-- Property Icon -->
       <mat-icon style="flex-shrink: 0; margin-top: 6px;">{{prop.icon}}</mat-icon>
       <div class="flex flex-col">

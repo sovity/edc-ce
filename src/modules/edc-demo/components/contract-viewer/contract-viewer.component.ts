@@ -19,7 +19,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {CatalogBrowserService} from "../../services/catalog-browser.service";
 import {Router} from "@angular/router";
 import {TransferProcessStates} from "../../models/transfer-process-states";
-import {AppConfigService} from "../../../app/app-config.service";
+import {AppConfigService} from "../../../app/config/app-config.service";
 import {AssetPropertyMapper} from "../../services/asset-property-mapper";
 
 interface RunningTransferProcess {

@@ -43,18 +43,6 @@
               <td mat-cell *matCellDef="let item">{{item.dataRequest.contractId}}</td>
           </ng-container>
 
-<!--          <ng-container matColumnDef="action">-->
-<!--            <th mat-header-cell *matHeaderCellDef scope="col">Actions</th>-->
-<!--            <td mat-cell *matCellDef="let item" class="singleline-cell">-->
-<!--              <a *ngIf="showStorageExplorerLink(item)" mat-stroked-button mat-button color="primary" [href]="storageExplorerLinkTemplate | replace: item.dataDestination.properties | safe: 'url'" class="action-button">-->
-<!--                <mat-icon>loupe</mat-icon> Open Storage Explorer-->
-<!--              </a>-->
-<!--              <button *ngIf="showDeprovisionButton(item)" (click)="onDeprovision(item)" color="warn" mat-stroked-button  class="action-button">-->
-<!--                <mat-icon>cancel_presentation</mat-icon> Deprovision-->
-<!--              </button>-->
-<!--            </td>-->
-<!--          </ng-container>-->
-
           <tr mat-header-row *matHeaderRowDef="columns" class="transfer-history-table-header"></tr>
           <tr mat-row *matRowDef="let row; columns: columns;"></tr>
       </table>

@@ -80,4 +80,8 @@ export class PolicyViewComponent implements OnInit {
       }
     });
   }
+
+  id(x: any): string {
+    return x?.id || x?.uid;
+  }
 }

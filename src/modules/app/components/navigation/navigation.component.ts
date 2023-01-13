@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
 import {routes} from '../../app-routing.module';
 import {Title} from '@angular/platform-browser';
-import {AppConfigService} from "../../app-config.service";
+import {AppConfigService} from "../../config/app-config.service";
 
 @Component({
   selector: 'app-navigation',
