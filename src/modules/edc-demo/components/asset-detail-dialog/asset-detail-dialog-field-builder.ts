@@ -47,12 +47,6 @@ export class AssetDetailDialogFieldBuilder {
         text: tryValue(asset.standardLicense),
         url: tryUrl(asset.standardLicense)
       },
-      {
-        icon: 'account_circle',
-        label: 'Organization',
-        text: tryValue(asset.originatorOrganization),
-        url: tryUrl(asset.originator)
-      }
     ];
 
     // MDS Specific Fields
@@ -82,6 +76,15 @@ export class AssetDetailDialogFieldBuilder {
         },
       )
     }
+
+    fields.push(
+      {
+        icon: 'account_circle',
+        label: 'Organization',
+        text: tryValue(asset.originatorOrganization),
+        url: tryUrl(asset.originator)
+      }
+    )
 
     return fields
   }
