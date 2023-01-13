@@ -96,10 +96,14 @@ export class AssetPropertyMapper {
       props[AssetProperties.geoReferenceMethod] = trimmedOrNull(advanced?.geoReferenceMethod)
       props[AssetProperties.transportMode] = advanced?.transportMode?.id ?? null
     }
-    return props;
+    return this.removeNullValues(props);
   }
 
   private buildIdsId(edccId: string): string {
     return urlJoin(this.connectorOriginator ?? `https://originator-undefined-in-edc-ui`, "assets", edccId);
+  }
+
+  private removeNullValues(obj: Record<string, string | null>): Record<string, string> {
+    return Object.fromEntries(Object.entries(obj).filter(([k, _]) => k != null) as [string, string][])
   }
 }

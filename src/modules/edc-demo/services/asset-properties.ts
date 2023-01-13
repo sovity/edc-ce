@@ -12,7 +12,7 @@ export const AssetProperties = {
   assetIdIds: "ids:id",
 
   // EDCC ID, needs to start with urn:artifact:
-  assetIdEdcc: "edcc:id",
+  assetIdEdcc: "asset:prop:id",
 
   name: "ids:name",
   version: "ids:version",
