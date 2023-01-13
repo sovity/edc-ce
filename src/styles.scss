@@ -1,4 +1,3 @@
-@use "theme-colors" as colors;
 @forward "theme";
 
 html, body {
@@ -53,7 +52,7 @@ body {
 
 // hrefs
 .link {
-  color: colors.$link-color;
+  color: var(--link-color);
   text-decoration: none;
 
   &:hover, &:focus {

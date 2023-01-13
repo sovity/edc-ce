@@ -1,34 +1,35 @@
 @use '@angular/material' as mat;
+@use 'sass:map';
 
 /* Theming (MDS EDC UI) */
 
 // theme set as per http://mcg.mbitson.com/#!?mcgpalette0=%23ffff00&themename=mds
 $theme-colors-primary: (
-  50 : #ffffe0,
-  100 : #ffffb3,
-  200 : #ffff80,
-  300 : #ffff4d,
-  400 : #ffff26,
-  500 : #ffff00,
-  600 : #ffff00,
-  700 : #ffff00,
-  800 : #ffff00,
-  900 : #ffff00,
-  A100 : #ffffff,
-  A200 : #fffff2,
-  A400 : #ffffbf,
-  A700 : #ffffa6,
+  50 : #f2f2e0,
+  100 : #dedeb3,
+  200 : #c8c880,
+  300 : #b1b14d,
+  400 : #a1a126,
+  500 : #909000,
+  600 : #888800,
+  700 : #7d7d00,
+  800 : #737300,
+  900 : #616100,
+  A100 : #ffff91,
+  A200 : #ffff5e,
+  A400 : #ffff2b,
+  A700 : #ffff12,
   contrast: (
     50 : #000000,
     100 : #000000,
     200 : #000000,
     300 : #000000,
     400 : #000000,
-    500 : #000000,
-    600 : #000000,
-    700 : #000000,
-    800 : #000000,
-    900 : #000000,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
     A100 : #000000,
     A200 : #000000,
     A400 : #000000,
@@ -36,8 +37,10 @@ $theme-colors-primary: (
   )
 );
 
+$link-color: darken (map.get($theme-colors-primary, 500), 5%);
+
 $theme-colors-accent: (
-  50 : #000000,
+  50 : #FFFFFF,
   100 : #000000,
   200 : #000000,
   300 : #000000,
@@ -55,17 +58,17 @@ $theme-colors-accent: (
     50 : #000000,
     100 : #000000,
     200 : #000000,
-    300 : #000000,
-    400 : #000000,
-    500 : #000000,
-    600 : #000000,
-    700 : #000000,
-    800 : #000000,
-    900 : #000000,
+    300 : #ffffff,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
     A100 : #000000,
-    A200 : #000000,
-    A400 : #000000,
-    A700 : #000000,
+    A200 : #ffffff,
+    A400 : #ffffff,
+    A700 : #ffffff,
   )
 );
 

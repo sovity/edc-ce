@@ -9,7 +9,6 @@ export interface AppConfig {
   apiKey: string;
   storageExplorerLinkTemplate: string;
   logoutUrl: string;
-  theme: string;
   originatorOrganization: string;
 }
 
