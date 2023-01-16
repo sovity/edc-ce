@@ -25,6 +25,6 @@ public class IdsMultipartClearingRemoteMessageDispatcher extends IdsMultipartRem
 
     @Override
     public String protocol() {
-        return String.format("%s%s", MessageProtocol.IDS_MULTIPART, "-clearing");
+        return ExtendedMessageProtocol.IDS_EXTENDED_PROTOCOL_CLEARING;
     }
 }

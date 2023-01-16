@@ -12,7 +12,7 @@ public record LogMessage(URL clearingHouseLogUrl,
                          ContractAgreement contractAgreement) implements RemoteMessage {
     @Override
     public String getProtocol() {
-        return ExtendedMessageProtocol.IDS_EXTENDED_PROTOCOL;
+        return ExtendedMessageProtocol.IDS_EXTENDED_PROTOCOL_CLEARING;
     }
 
     @Override

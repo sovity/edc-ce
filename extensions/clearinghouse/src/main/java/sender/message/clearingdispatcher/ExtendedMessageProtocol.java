@@ -18,7 +18,7 @@ import org.eclipse.edc.protocol.ids.spi.types.MessageProtocol;
 public final class ExtendedMessageProtocol {
 
     private static final String EXTENDED_SUFFIX = "-extended-clearing";
-    public static final String IDS_EXTENDED_PROTOCOL = String.format("%s%s", MessageProtocol.IDS_MULTIPART, EXTENDED_SUFFIX);
+    public static final String IDS_EXTENDED_PROTOCOL_CLEARING = String.format("%s%s", MessageProtocol.IDS_MULTIPART, EXTENDED_SUFFIX);
 
     private ExtendedMessageProtocol() {
     }
