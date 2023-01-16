@@ -13,7 +13,7 @@ export const AssetProperties = {
   version: "asset:prop:version",
 
   // our asset properties
-  keywords: "asset:prop:keyword",
+  keywords: "asset:prop:keywords",
   originatorOrganization: "asset:prop:originatorOrganization",
   language: 'asset:prop:language',
   publisher: "asset:prop:publisher",
