@@ -100,7 +100,7 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
 
     private static String getVersion(RegisterResourceMessage registerResourceMessage){
         var version = "";
-        checkPropertyExists(registerResourceMessage, "asset:prop:version") {
+        if(checkPropertyExists(registerResourceMessage, "asset:prop:version")) {
             version = registerResourceMessage.asset().getProperties().get("asset:prop:version").toString();
         }
         return version;
