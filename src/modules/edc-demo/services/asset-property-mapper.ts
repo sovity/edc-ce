@@ -98,6 +98,6 @@ export class AssetPropertyMapper {
   }
 
   private removeNullValues(obj: Record<string, string | null>): Record<string, string> {
-    return Object.fromEntries(Object.entries(obj).filter(([k, _]) => k != null) as [string, string][])
+    return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v != null) as [string, string][])
   }
 }
