@@ -21,6 +21,7 @@ import org.eclipse.edc.spi.event.Event;
 import org.eclipse.edc.spi.event.EventSubscriber;
 import org.eclipse.edc.spi.event.contractnegotiation.ContractNegotiationConfirmed;
 import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
+import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.Hostname;
 import sender.message.LogMessage;
 
@@ -37,24 +38,27 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
     private final Hostname hostname;
     private final URL clearingHouseLogUrl;
     private final ContractNegotiationStore contractNegotiationStore;
+    private final Monitor monitor;
 
     public IdsClearingHouseServiceImpl(
             RemoteMessageDispatcherRegistry dispatcherRegistry,
             ConnectorServiceSettings connectorServiceSettings,
             Hostname hostname,
             URL clearingHouseLogUrl,
-            ContractNegotiationStore contractNegotiationStore) {
+            ContractNegotiationStore contractNegotiationStore,
+            Monitor monitor) {
         this.dispatcherRegistry = dispatcherRegistry;
         this.connectorServiceSettings = connectorServiceSettings;
         this.hostname = hostname;
         this.clearingHouseLogUrl = clearingHouseLogUrl;
         this.contractNegotiationStore = contractNegotiationStore;
+        this.monitor = monitor;
     }
 
     @Override
     public void logContractAgreement(ContractAgreement contractAgreement, URL clearingHouseLogUrl) {
-        //TODO: log contractAgreement to CH (clearingHouseLogUrl)
-
+        //TODO: monitor info
+        monitor.info("Logging contract agreement to ClearingHouse");
         try {
             var connectorBaseUrl = new URI(String.format("http://%s/", hostname.get()));
             var logMessage = new LogMessage(clearingHouseLogUrl, connectorBaseUrl, contractAgreement);

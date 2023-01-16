@@ -123,7 +123,8 @@ public class ClearingHouseExtension implements ServiceExtension {
                 connectorServiceSettings,
                 hostname,
                 clearingHouseLogUrl,
-                contractNegotiationStore);
+                contractNegotiationStore,
+                monitor);
 
         eventRouter.registerSync(eventSubscriber); //asynchronous dispatch - registerSync for synchronous dispatch
         context.registerService(IdsClearingHouseService.class, eventSubscriber);
