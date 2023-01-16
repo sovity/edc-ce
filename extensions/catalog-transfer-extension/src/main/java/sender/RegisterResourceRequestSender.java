@@ -59,18 +59,24 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
     public String buildMessagePayload(RegisterResourceMessage registerResourceMessage) throws Exception {
         var assetTitle = getAssetTitle(registerResourceMessage);
         var assetDescription = getAssetDescription(registerResourceMessage);
+        var language = Language.EN;
+        var version = getVersion(registerResourceMessage);
+//        var keywords = getKeywords(registerResourceMessage);
 
         var resource = new ResourceBuilder(registerResourceMessage.affectedResourceUri())
                 ._title_(new TypedLiteral(assetTitle, "en"))
                 ._description_(new TypedLiteral(assetDescription, "en"))
-                ._language_(Language.EN)
+                ._language_(language)
+                ._version_(version)
+//                ._keyword_()
+//                ._representation_()
                 .build();
         return objectMapper.writeValueAsString(resource);
     }
 
     private static String getAssetDescription(RegisterResourceMessage registerResourceMessage) {
         var assetDescription = "";
-        if (registerResourceMessage.asset().getProperties().get("asset:prop:description") != null) {
+        if (checkPropertyExists(registerResourceMessage, "asset:prop:description")) {
             assetDescription = registerResourceMessage.asset().getProperties().get("asset:prop:description").toString();
         }
         return assetDescription;
@@ -78,10 +84,30 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
 
     private static String getAssetTitle(RegisterResourceMessage registerResourceMessage) {
         var assetTitle = "";
-        if (registerResourceMessage.asset().getProperties().get("asset:prop:name") != null) {
+        if (checkPropertyExists(registerResourceMessage, "asset:prop:name")) {
             assetTitle = registerResourceMessage.asset().getProperties().get("asset:prop:name").toString();
         }
         return assetTitle;
+    }
+
+    private static String getKeywords(RegisterResourceMessage registerResourceMessage){
+        var keywords = "";
+        if(checkPropertyExists(registerResourceMessage, "asset:prop:keywords")) {
+            keywords = registerResourceMessage.asset().getProperties().get("asset:prop:keywords").toString();
+        }
+        return keywords;
+    }
+
+    private static String getVersion(RegisterResourceMessage registerResourceMessage){
+        var version = "";
+        checkPropertyExists(registerResourceMessage, "asset:prop:version") {
+            version = registerResourceMessage.asset().getProperties().get("asset:prop:version").toString();
+        }
+        return version;
+    }
+
+    private static boolean checkPropertyExists(RegisterResourceMessage registerResourceMessage, String property) {
+        return registerResourceMessage.asset().getProperties().get(property) != null;
     }
 
     @Override
