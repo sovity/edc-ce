@@ -82,6 +82,10 @@ public class CatalogTransferExtension implements ServiceExtension {
     @Setting
     private static final String EDC_IDS_ENDPOINT = "edc.ids.endpoint";
 
+    @Setting
+    private static final String EDC_IDS_DESCRIPTION = "edc.ids.description";
+
+
     @Inject
     private IdsApiConfiguration idsApiConfiguration;
 
@@ -237,8 +241,9 @@ public class CatalogTransferExtension implements ServiceExtension {
         var objectMapper = typeManager.getMapper(TYPE_MANAGER_SERIALIZER_KEY);
         var connectorName = context.getSetting(EDC_CONNECTOR_NAME, "EDC");
         var endpoint = context.getSetting(EDC_IDS_ENDPOINT, "http://endpoint");
+        var description = context.getSetting(EDC_IDS_DESCRIPTION, "");
 
-        var registerConnectorSender = new RegisterConnectorRequestSender(objectMapper, connectorName, endpoint);
+        var registerConnectorSender = new RegisterConnectorRequestSender(objectMapper, connectorName, endpoint, description);
         var registerResourceSender = new RegisterResourceRequestSender(objectMapper);
         var unregisterResourceSender = new UnregisterResourceRequestSender();
         var queryMessageRequestSender = new QueryMessageRequestSender();

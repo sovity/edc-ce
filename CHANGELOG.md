@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [X.X.X]
+
+### Feature:
+- Add connector description to broker message
+
 ## [1.0.1] - 2023-01-11 
 
 ### Fixed: 
