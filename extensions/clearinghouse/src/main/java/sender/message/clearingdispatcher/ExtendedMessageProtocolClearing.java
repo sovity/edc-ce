@@ -15,11 +15,11 @@ package sender.message.clearingdispatcher;
 
 import org.eclipse.edc.protocol.ids.spi.types.MessageProtocol;
 
-public final class ExtendedMessageProtocol {
+public final class ExtendedMessageProtocolClearing {
 
     private static final String EXTENDED_SUFFIX = "-extended-clearing";
     public static final String IDS_EXTENDED_PROTOCOL_CLEARING = String.format("%s%s", MessageProtocol.IDS_MULTIPART, EXTENDED_SUFFIX);
 
-    private ExtendedMessageProtocol() {
+    private ExtendedMessageProtocolClearing() {
     }
 }

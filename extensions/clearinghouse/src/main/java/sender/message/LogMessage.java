@@ -2,7 +2,7 @@ package sender.message;
 
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.spi.types.domain.message.RemoteMessage;
-import sender.message.clearingdispatcher.ExtendedMessageProtocol;
+import sender.message.clearingdispatcher.ExtendedMessageProtocolClearing;
 
 import java.net.URI;
 import java.net.URL;
@@ -12,7 +12,7 @@ public record LogMessage(URL clearingHouseLogUrl,
                          ContractAgreement contractAgreement) implements RemoteMessage {
     @Override
     public String getProtocol() {
-        return ExtendedMessageProtocol.IDS_EXTENDED_PROTOCOL_CLEARING;
+        return ExtendedMessageProtocolClearing.IDS_EXTENDED_PROTOCOL_CLEARING;
     }
 
     @Override
