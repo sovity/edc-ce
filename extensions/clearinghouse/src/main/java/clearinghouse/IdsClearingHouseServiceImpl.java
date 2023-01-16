@@ -57,7 +57,6 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
 
     @Override
     public void logContractAgreement(ContractAgreement contractAgreement, URL clearingHouseLogUrl) {
-        //TODO: monitor info
         monitor.info("Logging contract agreement to ClearingHouse");
         try {
             var connectorBaseUrl = new URI(String.format("http://%s/", hostname.get()));
