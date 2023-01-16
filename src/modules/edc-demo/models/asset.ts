@@ -10,7 +10,6 @@ import {LanguageSelectItem} from "../components/language-select/language-select-
  */
 export interface Asset {
   id: string,
-  idsId: string | null,
   name: string | null,
   version: string | null,
   contentType: string | null,

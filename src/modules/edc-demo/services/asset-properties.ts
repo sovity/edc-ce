@@ -4,36 +4,26 @@
  * SSOT for asset property string names
  */
 export const AssetProperties = {
-  // Properties try to be the same as IDS asset properties,
-  // but IDS API won't be flat and will have a different structure
-  // making a mapping necessary
+  // edc asset properties
+  id: "asset:prop:id", // needs to start with urn:artifact:
+  name: "asset:prop:name",
+  contentType: "asset:prop:contenttype",
+  originator: "asset:prop:originator",
+  description: "asset:prop:description",
+  version: "asset:prop:version",
 
-  // IDS id, needs to be URL
-  assetIdIds: "ids:id",
+  // our asset properties
+  keywords: "asset:prop:keyword",
+  originatorOrganization: "asset:prop:originatorOrganization",
+  language: 'asset:prop:language',
+  publisher: "asset:prop:publisher",
+  standardLicense: "asset:prop:standardLicense",
+  endpointDocumentation: "asset:prop:endpointDocumentation",
 
-  // EDCC ID, needs to start with urn:artifact:
-  assetIdEdcc: "asset:prop:id",
-
-  name: "ids:name",
-  version: "ids:version",
-  contentType: "ids:mediaType",
-  keywords: "ids:keyword",
-  originator: "ids:originator", // guessed
-  originatorOrganization: "ids:originatorOrganization",
-  description: "ids:description", // guessed
-  language: 'ids:language',
-  publisher: "ids:publisher",
-  standardLicense: "ids:standardLicense",
-  endpointDocumentation: "ids:endpointDocumentation",
-
-  // MDS Specific
+  // mds specific asset properties
   dataCategory: 'http://w3id.org/mds#dataCategory',
   dataSubcategory: 'http://w3id.org/mds#dataSubcategory',
   dataModel: 'http://w3id.org/mds#dataModel', // guessed
   geoReferenceMethod: 'http://w3id.org/mds#geoReferenceMethod', // guessed
   transportMode: 'http://w3id.org/mds#transportMode',
-
-  // Probably obsolete, but still kept here to let this file be a SSOT
-  legacyAssetObjectPolicyId: "asset:prop:policy-id",
-  legacyAssetObjectType: "type",
 }

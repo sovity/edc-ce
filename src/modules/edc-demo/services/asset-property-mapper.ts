@@ -46,11 +46,10 @@ export class AssetPropertyMapper {
       : null;
     const keywords = (props[AssetProperties.keywords] ?? '').split(",").map(it => it.trim()).filter(it => it)
 
-    const id = props[AssetProperties.assetIdEdcc] ?? props[AssetProperties.assetIdIds] ?? 'no-known-id-field-was-set';
+    const id = props[AssetProperties.id] ?? 'no-id-was-set';
 
     return {
       id,
-      idsId: props[AssetProperties.assetIdIds],
       name: props[AssetProperties.name] ?? id,
       version: props[AssetProperties.version],
       contentType: props[AssetProperties.contentType],
@@ -74,8 +73,7 @@ export class AssetPropertyMapper {
   buildProperties(formValue: AssetEditorDialogFormValue): Record<string, string | null> {
     const {metadata, advanced, datasource} = formValue;
     const props: Record<string, string | null> = {};
-    props[AssetProperties.assetIdEdcc] = trimmedOrNull(metadata?.id)
-    props[AssetProperties.assetIdIds] = this.buildIdsId(props[AssetProperties.assetIdEdcc]!)
+    props[AssetProperties.id] = trimmedOrNull(metadata?.id)
     props[AssetProperties.name] = trimmedOrNull(metadata?.name)
     props[AssetProperties.version] = trimmedOrNull(metadata?.version)
     props[AssetProperties.originator] = trimmedOrNull(this.connectorOriginator)
@@ -97,10 +95,6 @@ export class AssetPropertyMapper {
       props[AssetProperties.transportMode] = advanced?.transportMode?.id ?? null
     }
     return this.removeNullValues(props);
-  }
-
-  private buildIdsId(edccId: string): string {
-    return urlJoin(this.connectorOriginator ?? `https://originator-undefined-in-edc-ui`, "assets", edccId);
   }
 
   private removeNullValues(obj: Record<string, string | null>): Record<string, string> {

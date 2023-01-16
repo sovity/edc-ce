@@ -24,7 +24,7 @@ export class ContractDefinitionBuilder {
       contractPolicyId: formValue.contractPolicy?.id!,
       criteria: [
         {
-          operandLeft: AssetProperties.assetIdEdcc,
+          operandLeft: AssetProperties.id,
           operator: 'in',
           operandRight: formValue.assets!.map(it => it.id),
         }

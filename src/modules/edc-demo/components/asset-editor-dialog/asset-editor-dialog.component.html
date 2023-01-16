@@ -180,7 +180,7 @@
               color="accent"
             >
               <mat-label>Standard License</mat-label>
-              <input [formControl]="ctrl" matInput>
+              <input [formControl]="ctrl" placeholder="https://" matInput>
               <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
                 {{validationMessages.invalidUrlMessage}}
               </mat-error>
