@@ -15,7 +15,6 @@ package sender.message.clearingdispatcher;
 
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.IdsMultipartRemoteMessageDispatcher;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
-import org.eclipse.edc.protocol.ids.spi.types.MessageProtocol;
 
 public class IdsMultipartClearingRemoteMessageDispatcher extends IdsMultipartRemoteMessageDispatcher {
 
