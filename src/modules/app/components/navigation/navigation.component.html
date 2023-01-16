@@ -4,7 +4,7 @@
                  [mode]="(isHandset$ | async) ? 'over' : 'side'"
                  [opened]="(isHandset$ | async) === false">
         <mat-toolbar class="custom-toolbar">
-            <img *ngIf="themeClassString == 'theme-mds' else sovityImage" width="70%" src="/assets/images/MDS-Logo-black.svg" alt="" />
+            <img *ngIf="'mds' | isActiveFeatureSet else sovityImage" width="70%" src="/assets/images/MDS-Logo-black.svg" alt="" />
             <ng-template #sovityImage><img width="70%" src="/assets/images/sovity_logo.svg" alt="" /></ng-template>
         </mat-toolbar>
         <mat-nav-list>

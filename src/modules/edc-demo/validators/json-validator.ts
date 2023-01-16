@@ -5,11 +5,13 @@ import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
  * @param control control
  */
 export const jsonValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-  try {
-    JSON.parse(control.value);
-  } catch (e) {
-    return {jsonInvalid: true};
+  const value = control.value
+  if (value) {
+    try {
+      JSON.parse(value);
+    } catch (e) {
+      return {jsonInvalid: true};
+    }
   }
-
   return null;
 };

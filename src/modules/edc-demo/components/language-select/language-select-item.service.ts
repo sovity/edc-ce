@@ -1,6 +1,7 @@
 import {LanguageSelectItem} from './language-select-item';
 import {Injectable} from "@angular/core";
 import {LANGUAGE_SELECT_DATA} from "./language-select-data";
+import {associateBy} from "../../utils/map-utils";
 
 /**
  * Access list of available LanguageSelectItems
@@ -14,10 +15,9 @@ export class LanguageSelectItemService {
   highlightItemIds = ['LANG:MULTI_LINGUAL', 'ISO_639:DE', 'ISO_639:EN']
   highlightItems: LanguageSelectItem[];
   otherItems: LanguageSelectItem[];
-  itemsById: Map<string, LanguageSelectItem>;
+  itemsById = associateBy(LANGUAGE_SELECT_DATA, it => it.id);
 
   constructor() {
-    this.itemsById = this.buildItemsMap();
     this.highlightItems = this.buildHighlightItems();
     this.otherItems = this.buildOtherItems();
   }
@@ -47,10 +47,5 @@ export class LanguageSelectItemService {
 
   private buildOtherItems(): LanguageSelectItem[] {
     return LANGUAGE_SELECT_DATA.filter(it => !this.highlightItemIds.includes(it.id));
-  }
-
-
-  private buildItemsMap(): Map<string, LanguageSelectItem> {
-    return new Map(LANGUAGE_SELECT_DATA.map(it => [it.id, it]))
   }
 }

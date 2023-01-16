@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+@use 'sass:map';
 
 /* Theming (MDS EDC UI) */
 
@@ -36,8 +37,10 @@ $theme-colors-primary: (
   )
 );
 
+$link-color: darken (map.get($theme-colors-primary, 500), 5%);
+
 $theme-colors-accent: (
-  50 : #000000,
+  50 : #FFFFFF,
   100 : #000000,
   200 : #000000,
   300 : #000000,
@@ -55,17 +58,17 @@ $theme-colors-accent: (
     50 : #000000,
     100 : #000000,
     200 : #000000,
-    300 : #000000,
-    400 : #000000,
-    500 : #000000,
-    600 : #000000,
-    700 : #000000,
-    800 : #000000,
-    900 : #000000,
+    300 : #ffffff,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
     A100 : #000000,
-    A200 : #000000,
-    A400 : #000000,
-    A700 : #000000,
+    A200 : #ffffff,
+    A400 : #ffffff,
+    A700 : #ffffff,
   )
 );
 

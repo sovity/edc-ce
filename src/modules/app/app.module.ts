@@ -18,7 +18,7 @@ import {AppConfigService} from "./app-config.service";
 import {
   API_KEY,
   CONNECTOR_DATAMANAGEMENT_API,
-  CONNECTOR_ORIGINATOR
+  CONNECTOR_ORIGINATOR, CONNECTOR_ORIGINATOR_ORGANIZATON
 } from "../edc-dmgmt-client";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatDatepickerModule} from "@angular/material/datepicker";
@@ -56,6 +56,11 @@ import {MatNativeDateModule} from "@angular/material/core";
     {
       provide: CONNECTOR_ORIGINATOR,
       useFactory: (s: AppConfigService) => s.getConfig()?.originator,
+      deps: [AppConfigService]
+    },
+    {
+      provide: CONNECTOR_ORIGINATOR_ORGANIZATON,
+      useFactory: (s: AppConfigService) => s.getConfig()?.originatorOrganization,
       deps: [AppConfigService]
     },
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},

@@ -1,13 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import {BehaviorSubject, Observable, of} from 'rxjs';
-import {first, map, switchMap} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
-import {AssetEntryDto, AssetService,} from "../../../edc-dmgmt-client";
-import {AssetEditorDialog} from "../asset-editor-dialog/asset-editor-dialog.component";
+import {BehaviorSubject, Observable, of} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
+import {AssetService} from "../../../edc-dmgmt-client";
 import {Asset} from "../../models/asset";
-import {ConfirmationDialogComponent, ConfirmDialogModel} from "../confirmation-dialog/confirmation-dialog.component";
-import {NotificationService} from "../../services/notification.service";
-import {AppConfigService} from "../../../app/app-config.service";
+import {AssetPropertyMapper} from "../../services/asset-property-mapper";
+import {AssetDetailDialogData} from "../asset-detail-dialog/asset-detail-dialog-data";
+import {AssetDetailDialogResult} from "../asset-detail-dialog/asset-detail-dialog-result";
+import {AssetDetailDialog} from "../asset-detail-dialog/asset-detail-dialog.component";
+import {AssetEditorDialog} from "../asset-editor-dialog/asset-editor-dialog.component";
+import {AssetEditorDialogResult} from "../asset-editor-dialog/asset-editor-dialog-result";
 
 @Component({
   selector: 'edc-demo-asset-viewer',
@@ -18,69 +20,54 @@ export class AssetViewerComponent implements OnInit {
 
   filteredAssets$: Observable<Asset[]> = of([]);
   searchText = '';
-  isTransferring = false;
   private fetch$ = new BehaviorSubject(null);
-  themeClassString: any;
 
-  constructor(private assetService: AssetService,
-              private notificationService: NotificationService,
-              private readonly dialog: MatDialog,
-              private appConfigService: AppConfigService) {
-  }
-
-  private showError(error: string) {
-    this.notificationService.showError("This asset cannot be deleted");
-    console.error(error);
+  constructor(
+    private assetService: AssetService,
+    private dialog: MatDialog,
+    private assetPropertyMapper: AssetPropertyMapper
+  ) {
   }
 
   ngOnInit(): void {
-    this.themeClass();
     this.filteredAssets$ = this.fetch$
       .pipe(
         switchMap(() => {
-          const assets$ = this.assetService.getAllAssets().pipe(map(assets => assets.map(asset => new Asset(asset.properties))));
-          return !!this.searchText ?
-            assets$.pipe(map(assets => assets.filter(asset => asset.name.includes(this.searchText))))
-            :
-            assets$;
+          let assets$ = this.assetService.getAllAssets()
+            .pipe(map(assets => assets.map(asset => this.assetPropertyMapper.readProperties(asset.properties))));
+
+          if (this.searchText) {
+            assets$ = assets$.pipe(map(assets => assets.filter(asset => asset.name?.includes(this.searchText))))
+          }
+
+          return assets$;
         }));
   }
 
-  themeClass() {
-    this.themeClassString = this.appConfigService.getConfig()?.theme;
-  }
-
-  isBusy() {
-    return this.isTransferring;
-  }
-
   onSearch() {
-    this.fetch$.next(null);
-  }
-
-  onDelete(asset: Asset) {
-
-    const dialogData = ConfirmDialogModel.forDelete("asset", `"${asset.name}"`)
-    const ref = this.dialog.open(ConfirmationDialogComponent, {maxWidth: "20%", data: dialogData});
-
-    ref.afterClosed().subscribe(res => {
-      if (res) {
-        this.assetService.removeAsset(asset.id).subscribe(() => this.fetch$.next(null),
-          err => this.showError(err),
-          () => this.notificationService.showInfo("Successfully deleted")
-        );
-      }
-    });
-
+    this.refresh();
   }
 
   onCreate() {
-    const dialogRef = this.dialog.open(AssetEditorDialog, {panelClass: this.themeClassString});
-    dialogRef.afterClosed().pipe(first()).subscribe((result: { assetEntryDto?: AssetEntryDto }) => {
-      const newAsset = result?.assetEntryDto;
-      if (newAsset) {
-        this.assetService.createAsset(newAsset).subscribe(() => this.fetch$.next(null), error => this.showError(error), () => this.notificationService.showInfo("Successfully created"));
+    const ref = this.dialog.open(AssetEditorDialog);
+    ref.afterClosed().subscribe((result: AssetEditorDialogResult) => {
+      if (result.refreshList) {
+        this.refresh();
       }
-    });
+    })
+  }
+
+  onAssetClick(asset: Asset) {
+    const data = AssetDetailDialogData.forAssetDetails(asset);
+    const ref = this.dialog.open(AssetDetailDialog, {data, maxHeight: '90vh'})
+    ref.afterClosed().subscribe((result: AssetDetailDialogResult) => {
+      if (result.refreshList) {
+        this.refresh();
+      }
+    })
+  }
+
+  private refresh() {
+    this.fetch$.next(null)
   }
 }

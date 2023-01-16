@@ -1,6 +1,9 @@
 import {FormControl, FormGroup, ɵFormGroupValue} from "@angular/forms";
 import {DataAddressType} from "./data-address-type";
 import {LanguageSelectItem} from "../language-select/language-select-item";
+import {TransportModeSelectItem} from "../transport-mode-select/transport-mode-select-item";
+import {DataSubcategorySelectItem} from "../data-subcategory-select/data-subcategory-select-item";
+import {DataCategorySelectItem} from "../data-category-select/data-category-select-item";
 
 /**
  * Form Value Type
@@ -22,15 +25,16 @@ export interface AssetEditorDialogMetadataFormModel {
   version: FormControl<string>;
   contenttype: FormControl<string>;
   description: FormControl<string>;
-  keywords: FormControl<string>;
-  language: FormControl<LanguageSelectItem>;
+  keywords: FormControl<string[]>;
+  language: FormControl<LanguageSelectItem | null>;
 }
 
 export interface AssetEditorDialogAdvancedFormModel {
-  dataCategory: FormControl<string>;
+  dataCategory: FormControl<DataCategorySelectItem | null>;
+  dataSubcategory: FormControl<DataSubcategorySelectItem | null>;
   dataModel: FormControl<string>;
   geoReferenceMethod: FormControl<string>;
-  transportMode: FormControl<string>;
+  transportMode: FormControl<TransportModeSelectItem | null>;
 }
 
 export interface AssetEditorDialogDatasourceFormModel {
@@ -41,4 +45,3 @@ export interface AssetEditorDialogDatasourceFormModel {
   standardLicense: FormControl<string>;
   endpointDocumentation: FormControl<string>;
 }
-

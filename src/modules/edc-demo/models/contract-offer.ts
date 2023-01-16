@@ -1,10 +1,9 @@
-import { Asset } from "./asset";
-import {Policy} from "../../edc-dmgmt-client";
+import {ContractOfferDto} from "./contract-offer-dto";
+import {Asset} from "./asset";
 
-export interface ContractOffer {
-    id: string;
-    policy: Policy;
-    provider: string;
-    consumer: string;
-    asset: Asset;
+/**
+ * Contract Offer (UI Dto)
+ */
+export type ContractOffer = Omit<ContractOfferDto, 'asset'> & {
+  asset: Asset;
 }

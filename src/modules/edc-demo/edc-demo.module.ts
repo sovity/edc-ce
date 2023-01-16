@@ -27,9 +27,6 @@ import {
 import {IntroductionComponent} from './components/introduction/introduction.component';
 import {RouterModule} from '@angular/router';
 import {
-  ContractDefinitionEditorDialog
-} from './components/contract-definition-editor-dialog/contract-definition-editor-dialog.component';
-import {
   CatalogBrowserTransferDialog
 } from './components/catalog-browser-transfer-dialog/catalog-browser-transfer-dialog.component';
 import {ContractViewerComponent} from './components/contract-viewer/contract-viewer.component';
@@ -49,6 +46,20 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatStepperModule} from "@angular/material/stepper";
 import {IsActiveFeatureSetPipe} from "./pipes/is-active-feature-set.pipe";
 import {LanguageSelectComponent} from "./components/language-select/language-select.component";
+import {DataCategorySelectComponent} from "./components/data-category-select/data-category-select.component";
+import {DataSubcategorySelectComponent} from "./components/data-subcategory-select/data-subcategory-select.component";
+import {TransportModeSelectComponent} from "./components/transport-mode-select/transport-mode-select.component";
+import {DataSubcategoryItemsPipe} from "./components/data-subcategory-select/data-subcategory-items.pipe";
+import {MatChipsModule} from "@angular/material/chips";
+import {KeywordSelectComponent} from './components/keyword-select/keyword-select.component';
+import {AssetListComponent} from "./components/asset-list/asset-list.component";
+import {AssetDetailDialog} from "./components/asset-detail-dialog/asset-detail-dialog.component";
+import {ContractOfferListComponent} from "./components/contract-offer-list/contract-offer-list.component";
+import {ContractOfferIconComponent} from "./components/contract-offer-icon/contract-offer-icon.component";
+import {
+  ContractDefinitionEditorDialog
+} from "./components/contract-definition-editor-dialog/contract-definition-editor-dialog.component";
+import {PolicySelectComponent} from "./components/policy-select/policy-select.component";
 
 @NgModule({
     imports: [
@@ -77,7 +88,8 @@ import {LanguageSelectComponent} from "./components/language-select/language-sel
         MatProgressSpinnerModule,
         MatDatepickerModule,
         MatTooltipModule,
-        MatStepperModule
+        MatStepperModule,
+        MatChipsModule,
     ],
   declarations: [
     CatalogBrowserComponent,
@@ -97,11 +109,20 @@ import {LanguageSelectComponent} from "./components/language-select/language-sel
     CatalogBrowserTransferDialog,
     ContractViewerComponent,
     NewPolicyDialogComponent,
-    IntroductionComponent,
     ConfirmationDialogComponent,
     LogoutComponent,
     IsActiveFeatureSetPipe,
     LanguageSelectComponent,
+    DataCategorySelectComponent,
+    DataSubcategorySelectComponent,
+    DataSubcategoryItemsPipe,
+    TransportModeSelectComponent,
+    KeywordSelectComponent,
+    AssetListComponent,
+    AssetDetailDialog,
+    ContractOfferListComponent,
+    ContractOfferIconComponent,
+    PolicySelectComponent
   ],
   exports: [
     CatalogBrowserComponent,
@@ -112,7 +133,8 @@ import {LanguageSelectComponent} from "./components/language-select/language-sel
     PolicyRuleViewerComponent,
     IntroductionComponent,
     NewPolicyDialogComponent,
-    ContractViewerComponent
+    ContractViewerComponent,
+    IsActiveFeatureSetPipe
   ]
 })
 export class EdcDemoModule {

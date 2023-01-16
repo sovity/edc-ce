@@ -20,6 +20,7 @@ import {CatalogBrowserService} from "../../services/catalog-browser.service";
 import {Router} from "@angular/router";
 import {TransferProcessStates} from "../../models/transfer-process-states";
 import {AppConfigService} from "../../../app/app-config.service";
+import {AssetPropertyMapper} from "../../services/asset-property-mapper";
 
 interface RunningTransferProcess {
   processId: string;
@@ -37,9 +38,9 @@ export class ContractViewerComponent implements OnInit {
   contracts$: Observable<ContractAgreementDto[]> = of([]);
   private runningTransfers: RunningTransferProcess[] = [];
   private pollingHandleTransfer?: any;
-  themeClassString: any;
 
-  constructor(private contractAgreementService: ContractAgreementService,
+  constructor(
+    private contractAgreementService: ContractAgreementService,
               private assetService: AssetService,
               public dialog: MatDialog,
               @Inject('HOME_CONNECTOR_STORAGE_ACCOUNT') private homeConnectorStorageAccount: string,
@@ -47,7 +48,8 @@ export class ContractViewerComponent implements OnInit {
               private catalogService: CatalogBrowserService,
               private router: Router,
               private notificationService: NotificationService,
-              private appConfigService: AppConfigService) {
+              private appConfigService: AppConfigService,
+              private assetPropertyMapper: AssetPropertyMapper) {
   }
 
   private static isFinishedState(state: string): boolean {
@@ -58,12 +60,7 @@ export class ContractViewerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.themeClass();
     this.contracts$ = this.contractAgreementService.getAllAgreements();
-  }
-
-  themeClass() {
-    this.themeClassString = this.appConfigService.getConfig()?.theme;
   }
 
   asDate(epochSeconds?: number): string {
@@ -76,11 +73,13 @@ export class ContractViewerComponent implements OnInit {
   }
 
   getAsset(assetId?: string): Observable<Asset> {
-    return assetId ? this.assetService.getAsset(assetId).pipe(map(a => new Asset(a.properties))) : of();
+    return assetId
+      ? this.assetService.getAsset(assetId).pipe(map(a => this.assetPropertyMapper.readProperties(a.properties)))
+      : of();
   }
 
   onTransferClicked(contract: ContractAgreementDto) {
-    const dialogRef = this.dialog.open(CatalogBrowserTransferDialog, {panelClass: this.themeClassString});
+    const dialogRef = this.dialog.open(CatalogBrowserTransferDialog);
 
     dialogRef.afterClosed().pipe(first()).subscribe(result => {
       const dataDestination: DataAddress = result.dataDestination;
@@ -108,7 +107,7 @@ export class ContractViewerComponent implements OnInit {
         dataDestination: dataDestination,
         managedResources: false,
         transferType: {isFinite: true}, //must be there, otherwise NPE on backend
-        connectorAddress: offeredAsset.originator,
+        connectorAddress: offeredAsset.originator!,
         protocol: 'ids-multipart'
       };
     }));

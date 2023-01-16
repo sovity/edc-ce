@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
-@use 'theme-colors' as colors;
+@use 'theme-colors' as sovityColors;
+@use 'theme-colors.mds' as mdsColors;
 
 // Import styles that aren't theme dependant (including typography)
 @import 'https://fonts.googleapis.com/icon?family=Material+Icons';
@@ -10,9 +11,34 @@ $custom-typography: mat.define-typography-config($font-family: 'Open Sans');
 @include mat.core($custom-typography);
 
 // Import theme and theme-dependant styles
-@include mat.all-component-themes(colors.$theme);
+.theme-sovity {
+  @include mat.all-component-themes(sovityColors.$theme);
+  --link-color: #{sovityColors.$link-color};
+}
+.theme-mds {
+  @include mat.all-component-themes(mdsColors.$theme);
+  --link-color: #{mdsColors.$link-color};
+}
 
 // fix paginator background, it was white before, but our background is gray
 mat-paginator {
   background: transparent !important;
+}
+
+// Fix Icon sizes used in card avatars
+mat-icon[mat-card-avatar] {
+  font-size: 40px;
+}
+
+// Fix mat-chips exploding out and/or having multiline exploding strings
+mat-chip {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Fix Date range second-date-text being "higher" than first-date-text
+.mat-date-range-input-container {
+  align-items: unset !important;
 }

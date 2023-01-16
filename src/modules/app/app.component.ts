@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import {Component, OnInit} from '@angular/core';
+import {Title} from '@angular/platform-browser';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {filter, map} from 'rxjs/operators';
 import {AppConfigService} from "./app-config.service";
+import {isFeatureSetActive} from "../edc-demo/pipes/is-active-feature-set.pipe";
 
 @Component({
   selector: 'app-root',
@@ -32,11 +33,13 @@ export class AppComponent implements OnInit {
           return appTitle;
         })
       ).subscribe((title: string) => {
-        this.titleService.setTitle(title);
-      });
-  }
+      this.titleService.setTitle(title);
+    });
 
-  themeClass(): string | undefined {
-    return this.configService.getConfig()?.theme;
+    let themeClass = 'theme-sovity';
+    if (isFeatureSetActive('mds')) {
+      themeClass = 'theme-mds';
+    }
+    window.document.body.classList.add(themeClass)
   }
 }

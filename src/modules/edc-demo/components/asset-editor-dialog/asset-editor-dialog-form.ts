@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {DataAddressType} from "./data-address-type";
 import {
   AssetEditorDialogAdvancedFormModel,
@@ -10,14 +10,23 @@ import {
 } from "./asset-editor-dialog-form-model";
 import {LanguageSelectItemService} from "../language-select/language-select-item.service";
 import {isFeatureSetActive} from "../../pipes/is-active-feature-set.pipe";
-import {jsonValidator} from "./json-validator";
-import {urlValidator} from "./url-validator";
+import {jsonValidator} from "../../validators/json-validator";
+import {urlValidator} from "../../validators/url-validator";
+import {DataSubcategorySelectItem} from "../data-subcategory-select/data-subcategory-select-item";
+import {TransportModeSelectItem} from "../transport-mode-select/transport-mode-select-item";
+import {DataCategorySelectItem} from "../data-category-select/data-category-select-item";
+import {LanguageSelectItem} from "../language-select/language-select-item";
+import {noWhitespaceValidator} from "../../validators/no-whitespace-validator";
+import {concat, distinctUntilChanged, of, pairwise} from "rxjs";
+import {requiresPrefixValidator} from "../../validators/requires-prefix-validator";
+import {switchValidation} from "../../utils/form-group-utils";
 
 /**
  * Handles AngularForms for AssetEditorDialog
  */
 @Injectable()
 export class AssetEditorDialogForm {
+
   all = this.buildFormGroup()
 
   /**
@@ -43,6 +52,13 @@ export class AssetEditorDialogForm {
   }
 
   /**
+   * Quick access to selected data category
+   */
+  get dataCategory(): DataCategorySelectItem | null {
+    return this.advanced.controls.dataCategory.value
+  }
+
+  /**
    * Quick access to full value
    */
   get value(): AssetEditorDialogFormValue {
@@ -60,41 +76,48 @@ export class AssetEditorDialogForm {
       isFeatureSetActive('mds') ? x : [x[0], []]
 
     const metadata: FormGroup<AssetEditorDialogMetadataFormModel> = this.formBuilder.nonNullable.group({
-      id: ['', Validators.required],
+      id: ['', [Validators.required, noWhitespaceValidator, requiresPrefixValidator("urn:artifact:")]],
       name: ['', Validators.required],
       version: '',
       contenttype: '',
       description: '',
-
-      // MDS Specific
-      keywords: '',
-      language: this.languageSelectItemService.english(),
+      keywords: [new Array<string>()],
+      language: this.languageSelectItemService.english() as LanguageSelectItem | null,
     });
+
+    // generate id from names
+    this.initIdGeneration(metadata.controls.id, metadata.controls.name)
 
     const advanced: FormGroup<AssetEditorDialogAdvancedFormModel> = this.formBuilder.nonNullable.group({
       dataModel: '',
-      dataCategory: validateIffMds(['', Validators.required]),
-      transportMode: '',
+      dataCategory: validateIffMds([null as DataCategorySelectItem | null, Validators.required]),
+      dataSubcategory: null as DataSubcategorySelectItem | null,
+      transportMode: null as TransportModeSelectItem | null,
       geoReferenceMethod: '',
     });
 
     const datasource: FormGroup<AssetEditorDialogDatasourceFormModel> = this.formBuilder.nonNullable.group({
       dataAddressType: 'Json' as DataAddressType,
       dataDestination: '',
-      baseUrl: '',
-      publisher: '',
-      standardLicense: '',
-      endpointDocumentation: '',
+      baseUrl: ['', urlValidator],
+      publisher: ['', urlValidator],
+      standardLicense: ['', urlValidator],
+      endpointDocumentation: ['', urlValidator],
     });
 
-    this.activateValidationByDataAddressType(datasource, {
-      'Json': {
-        dataDestination: [Validators.required, jsonValidator],
-      },
-      'Rest-Api': {
-        baseUrl: [Validators.required, urlValidator]
+    // Switch validation depending on selected datasource type
+    switchValidation({
+      formGroup: datasource,
+      switchCtrl: datasource.controls.dataAddressType,
+      validators: {
+        'Json': {
+          dataDestination: [Validators.required, jsonValidator],
+        },
+        'Rest-Api': {
+          baseUrl: [Validators.required, urlValidator]
+        }
       }
-    })
+    });
 
     return this.formBuilder.nonNullable.group({
       metadata,
@@ -103,37 +126,20 @@ export class AssetEditorDialogForm {
     });
   }
 
-  /**
-   * Apply validators depending on selected {@link DataAddressType}
-   * @param datasource form group
-   * @param validators validators for each {@link DataAddressType}
-   * @private
-   */
-  private activateValidationByDataAddressType(
-    datasource: FormGroup<AssetEditorDialogDatasourceFormModel>,
-    validators: Record<
-      DataAddressType,
-      Partial<Record<keyof AssetEditorDialogDatasourceFormModel, ValidatorFn | ValidatorFn[]>>
-    >
-  ) {
-    const updateDatasourceValidators = () => {
-      // Remove all validators
-      Object.values(datasource.controls).forEach(control => {
-        control.clearValidators()
-        control.updateValueAndValidity()
+  private initIdGeneration(id: FormControl<string>, name: FormControl<string>) {
+    concat(of(name.value), name.valueChanges)
+      .pipe(distinctUntilChanged(), pairwise())
+      .subscribe(([previousName, currentName]) => {
+        if (!id.value || id.value == this.generateId(previousName)) {
+          // Generate ID, but leave field untouched if it was edited
+          id.setValue(this.generateId(currentName))
+        }
       })
+  }
 
-      // Add validators where configured
-      Object.entries(validators[datasource.controls.dataAddressType.value])
-        .forEach(([control, validators]) => {
-          datasource.controls[control as keyof AssetEditorDialogDatasourceFormModel].setValidators(validators)
-        })
-    }
-
-    // Update now
-    updateDatasourceValidators()
-
-    // Update on dataAddressType changes
-    datasource.controls.dataAddressType.valueChanges.subscribe(() => updateDatasourceValidators())
+  private generateId(name: string) {
+    const normalizedName = name.replace(":", "")
+      .replaceAll(" ", "-").toLowerCase();
+    return `urn:artifact:${normalizedName}`;
   }
 }

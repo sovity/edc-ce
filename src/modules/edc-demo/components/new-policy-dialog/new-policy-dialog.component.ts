@@ -1,63 +1,69 @@
-import {Component, OnInit} from '@angular/core';
-import {Policy, PolicyDefinition} from "../../../edc-dmgmt-client";
+import {Component, Inject, OnDestroy} from '@angular/core';
+import {AssetService, PolicyService} from "../../../edc-dmgmt-client";
 import {MatDialogRef} from "@angular/material/dialog";
-import {UntypedFormControl, UntypedFormGroup} from "@angular/forms";
-import TypeEnum = Policy.TypeEnum;
+import {StorageType} from "../../models/storage-type";
+import {NewPolicyDialogForm} from "./new-policy-dialog-form";
+import {AssetEntryBuilder} from "../../services/asset-entry-builder";
+import {finalize, takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
+import {NotificationService} from "../../services/notification.service";
+import {NewPolicyDialogResult} from "./new-policy-dialog-result";
+import {ValidationMessages} from "../../validators/validation-messages";
+import {PolicyDefinitionBuilder} from "../../services/policy-definition-builder";
+
 
 @Component({
-  selector: 'app-new-policy-dialog',
+  selector: 'edc-demo-new-policy-dialog',
   templateUrl: './new-policy-dialog.component.html',
-  styleUrls: ['./new-policy-dialog.component.scss']
+  providers: [NewPolicyDialogForm, AssetEntryBuilder]
 })
-export class NewPolicyDialogComponent implements OnInit {
-  editMode: boolean = false;
-  policy: Policy = {
-    type: TypeEnum.Set
-  };
-  policyDefinition: PolicyDefinition = {
-    policy: this.policy,
-    id: ''
-  };
-  policyType: string = '';
-  range = new UntypedFormGroup({
-    start: new UntypedFormControl(null),
-    end: new UntypedFormControl(null),
-  });
-  connectorId: string = '';
+export class NewPolicyDialogComponent implements OnDestroy {
+  loading = false
 
-  constructor(private dialogRef: MatDialogRef<NewPolicyDialogComponent>) {
-  }
-
-  ngOnInit(): void {
-    this.editMode = true;
+  constructor(
+    public form: NewPolicyDialogForm,
+    private notificationService: NotificationService,
+    private policyService: PolicyService,
+    private dialogRef: MatDialogRef<NewPolicyDialogComponent>,
+    public validationMessages: ValidationMessages,
+    private policyDefinitionBuilder: PolicyDefinitionBuilder
+  ) {
   }
 
   onSave() {
-    this.policyDefinition.id = this.policyDefinition.id.trim()
+    const formValue = this.form.value
+    const policyDefinition = this.policyDefinitionBuilder.buildPolicyDefinition(formValue)
 
-    if (this.policyType === "Time-Period-Restricted") {
-      const permissionTemplate: string = "{    \"edctype\": \"dataspaceconnector:permission\",    \"id\": null,    \"target\": \"urn:artifact:urn:artifact:bitcoin\",    \"action\": {      \"type\": \"USE\",      \"includedIn\": null,      \"constraint\": null    },    \"assignee\": null,    \"assigner\": null,    \"constraints\": [      {        \"edctype\": \"AtomicConstraint\",        \"leftExpression\": {          \"edctype\": \"dataspaceconnector:literalexpression\",          \"value\": \"POLICY_EVALUATION_TIME\"        },        \"operator\": \"GT\",        \"rightExpression\": {          \"edctype\": \"dataspaceconnector:literalexpression\",          \"value\": \"2022-08-31T00:00:00.001Z\"        }      },      {        \"edctype\": \"AtomicConstraint\",        \"leftExpression\": {          \"edctype\": \"dataspaceconnector:literalexpression\",          \"value\": \"POLICY_EVALUATION_TIME\"        },        \"operator\": \"LT\",        \"rightExpression\": {          \"edctype\": \"dataspaceconnector:literalexpression\",          \"value\": \"2023-08-31T23:59:59.000Z\"        }      }    ],    \"duties\": []  }";
-      let permission = JSON.parse(permissionTemplate);
-      let constraints = permission["constraints"];
-      let startDateConstraint = constraints[0]
-      let endDateConstraint = constraints[1]
-      let startDate: Date = this.range.value["start"] as Date
-      let endDate: Date = this.range.value["end"] as Date
-      startDateConstraint["rightExpression"]["value"] = startDate.toISOString();
-      endDateConstraint["rightExpression"]["value"] = endDate.toISOString();
-      this.policy.permissions = [permission]
-    } else if (this.policyType === 'Connector-Restricted-Usage') {
-      const permissionTemplate: string = "{\"edctype\":\"dataspaceconnector:permission\",\"id\":null,\"target\":\"urn:artifact:urn:artifact:bitcoin\",\"action\":{\"type\":\"USE\",\"includedIn\":null,\"constraint\":null},\"assignee\":null,\"assigner\":null,\"constraints\":[{\"edctype\":\"AtomicConstraint\",\"leftExpression\":{\"edctype\":\"dataspaceconnector:literalexpression\",\"value\":\"REFERRING_CONNECTOR\"},\"operator\":\"EQ\",\"rightExpression\":{\"edctype\":\"dataspaceconnector:literalexpression\",\"value\":\"http://example.org\"}}],\"duties\":[]}\n"
-      let permission = JSON.parse(permissionTemplate);
-      let constraints = permission["constraints"];
-      let connectorConstraint = constraints[0]
-      connectorConstraint["rightExpression"]["value"] = this.connectorId;
-      this.policy.permissions = [permission]
-    }
+    this.form.group.disable();
+    this.loading = true;
+    this.policyService.createPolicy(policyDefinition)
+      .pipe(
+        takeUntil(this.ngOnDestroy$),
+        finalize(() => {
+          this.form.group.enable();
+          this.loading = false;
+        })
+      )
+      .subscribe({
+        complete: () => {
+          this.notificationService.showInfo("Successfully created policy.");
+          this.close({refreshList: true});
+        },
+        error: error => {
+          console.error("Failed creating asset!", error);
+          this.notificationService.showError("Failed creating policy!");
+        }
+      })
+  }
 
-    this.dialogRef.close({
-      policy: this.policyDefinition.policy,
-      id: this.policyDefinition.id
-    })
+  private close(params: NewPolicyDialogResult) {
+    this.dialogRef.close(params)
+  }
+
+  ngOnDestroy$ = new Subject();
+
+  ngOnDestroy(): void {
+    this.ngOnDestroy$.next(null);
+    this.ngOnDestroy$.complete();
   }
 }

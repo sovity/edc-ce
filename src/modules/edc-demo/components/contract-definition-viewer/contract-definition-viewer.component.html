@@ -1,22 +1,32 @@
 <div *ngIf="filteredContractDefinitions$ | async as contractDefinitions" id="wrapper">
-    <div>
-        <mat-form-field appearance="outline" class="search-form-field" color="primary">
-            <mat-label>Search definitions</mat-label>
-            <input (input)="onSearch()" [(ngModel)]="searchText" matInput>
-            <mat-icon matPrefix>search</mat-icon>
-            <button (click)="searchText=''; onSearch()" *ngIf="searchText" mat-icon-button matSuffix>
-                <mat-icon>close</mat-icon>
-            </button>
-        </mat-form-field>
-
-        <mat-paginator [length]="contractDefinitions.length" hidePageSize="true" pageSize="contractDefinitions.length">
-        </mat-paginator>
-
-        <button (click)="onCreate()" color="primary" id="create-button" mat-raised-button>
-          <mat-icon>add_circle_outline</mat-icon>
-          Create contract definition
+    <div class="flex flex-row">
+      <!-- Search -->
+      <mat-form-field appearance="outline" class="search-form-field" color="accent">
+        <mat-label>Search policies</mat-label>
+        <input (input)="onSearch()" [(ngModel)]="searchText" matInput>
+        <mat-icon matPrefix>search</mat-icon>
+        <button (click)="searchText=''; onSearch()" *ngIf="searchText" mat-icon-button matSuffix>
+          <mat-icon>close</mat-icon>
         </button>
+      </mat-form-field>
 
+      <!-- Create Button -->
+      <button
+        (click)="onCreate()"
+        color="primary"
+        id="create-button"
+        mat-raised-button
+        style="margin-top: 8px; height: 44px;"
+      >
+        <mat-icon>add_circle_outline</mat-icon>
+        Create contract definition
+      </button>
+
+      <!-- Spacer -->
+      <div class="grow"></div>
+
+      <!-- Paginator -->
+      <mat-paginator [length]="contractDefinitions?.length" hidePageSize="true" pageSize="10"></mat-paginator>
     </div>
 
     <div fxLayout="row wrap" fxLayoutAlign="start start">

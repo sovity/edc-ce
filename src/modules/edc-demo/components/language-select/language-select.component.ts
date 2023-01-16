@@ -12,7 +12,7 @@ export class LanguageSelectComponent {
   label!: string;
 
   @Input()
-  control!: FormControl<LanguageSelectItem>
+  control!: FormControl<LanguageSelectItem | null>
 
   @HostBinding("class.flex")
   @HostBinding("class.flex-row")
