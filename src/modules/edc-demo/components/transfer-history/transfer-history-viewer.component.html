@@ -1,50 +1,66 @@
 <div id="wrapper">
-    <div *ngIf="transferProcesses$ | async as transferProcesses">
-      <button mat-raised-button (click)="loadTransferProcesses()" color="primary">
-        <mat-icon>cached</mat-icon>
-        Refresh
-      </button>
-      <mat-paginator [length]="transferProcesses.length" pageSize="transferProcesses.length" hidePageSize="true"></mat-paginator>
+  <div *ngIf="transferProcesses$ | async as transferProcesses">
+    <button mat-raised-button color="primary" (click)="loadTransferProcesses()">
+      <mat-icon>cached</mat-icon>
+      Refresh
+    </button>
+    <mat-paginator
+      pageSize="transferProcesses.length"
+      hidePageSize="true"
+      [length]="transferProcesses.length"></mat-paginator>
 
-      <table mat-table [dataSource]="transferProcesses" class="transfer-history-table">
+    <table
+      class="transfer-history-table"
+      mat-table
+      [dataSource]="transferProcesses">
+      <ng-container matColumnDef="id">
+        <th *matHeaderCellDef mat-header-cell scope="col">Id</th>
+        <td *matCellDef="let item" mat-cell>{{ item.id }}</td>
+      </ng-container>
 
-          <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef scope="col">Id</th>
-              <td mat-cell *matCellDef="let item">{{item.id}}</td>
-          </ng-container>
+      <ng-container matColumnDef="creationDate">
+        <th *matHeaderCellDef mat-header-cell scope="col">Created</th>
+        <td *matCellDef="let item" mat-cell>
+          {{ asDate(item.createdTimestamp) }}
+        </td>
+      </ng-container>
 
-          <ng-container matColumnDef="creationDate">
-              <th mat-header-cell *matHeaderCellDef scope="col">Created</th>
-              <td mat-cell *matCellDef="let item">{{asDate(item.createdTimestamp)}}</td>
-          </ng-container>
+      <ng-container matColumnDef="state">
+        <th *matHeaderCellDef mat-header-cell scope="col">State</th>
+        <td *matCellDef="let item" mat-cell>{{ item.state }}</td>
+      </ng-container>
 
-          <ng-container matColumnDef="state">
-              <th mat-header-cell *matHeaderCellDef scope="col">State</th>
-              <td mat-cell *matCellDef="let item">{{item.state}}</td>
-          </ng-container>
+      <ng-container matColumnDef="lastUpdated">
+        <th *matHeaderCellDef mat-header-cell scope="col">Last updated</th>
+        <td *matCellDef="let item" mat-cell>
+          {{ asDate(item.stateTimestamp) }}
+        </td>
+      </ng-container>
 
-          <ng-container matColumnDef="lastUpdated">
-              <th mat-header-cell *matHeaderCellDef scope="col">Last updated</th>
-              <td mat-cell *matCellDef="let item">{{asDate(item.stateTimestamp)}}</td>
-          </ng-container>
+      <ng-container matColumnDef="connectorId">
+        <th *matHeaderCellDef mat-header-cell scope="col">ConnectorId</th>
+        <td *matCellDef="let item" mat-cell>
+          {{ item.dataRequest.connectorId }}
+        </td>
+      </ng-container>
 
-          <ng-container matColumnDef="connectorId">
-              <th mat-header-cell *matHeaderCellDef scope="col">ConnectorId</th>
-              <td mat-cell *matCellDef="let item">{{item.dataRequest.connectorId}}</td>
-          </ng-container>
+      <ng-container matColumnDef="assetId">
+        <th *matHeaderCellDef mat-header-cell scope="col">AssetId</th>
+        <td *matCellDef="let item" mat-cell>{{ item.dataRequest.assetId }}</td>
+      </ng-container>
 
-          <ng-container matColumnDef="assetId">
-              <th mat-header-cell *matHeaderCellDef scope="col">AssetId</th>
-              <td mat-cell *matCellDef="let item">{{item.dataRequest.assetId}}</td>
-          </ng-container>
+      <ng-container matColumnDef="contractId">
+        <th *matHeaderCellDef mat-header-cell scope="col">ContractId</th>
+        <td *matCellDef="let item" mat-cell>
+          {{ item.dataRequest.contractId }}
+        </td>
+      </ng-container>
 
-          <ng-container matColumnDef="contractId">
-              <th mat-header-cell *matHeaderCellDef scope="col">ContractId</th>
-              <td mat-cell *matCellDef="let item">{{item.dataRequest.contractId}}</td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="columns" class="transfer-history-table-header"></tr>
-          <tr mat-row *matRowDef="let row; columns: columns;"></tr>
-      </table>
-    </div>
+      <tr
+        *matHeaderRowDef="columns"
+        class="transfer-history-table-header"
+        mat-header-row></tr>
+      <tr *matRowDef="let row; columns: columns" mat-row></tr>
+    </table>
+  </div>
 </div>

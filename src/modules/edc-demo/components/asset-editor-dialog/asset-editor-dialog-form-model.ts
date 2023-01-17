@@ -1,14 +1,15 @@
-import {FormControl, FormGroup, ɵFormGroupValue} from "@angular/forms";
-import {DataAddressType} from "./data-address-type";
-import {LanguageSelectItem} from "../language-select/language-select-item";
-import {TransportModeSelectItem} from "../transport-mode-select/transport-mode-select-item";
-import {DataSubcategorySelectItem} from "../data-subcategory-select/data-subcategory-select-item";
-import {DataCategorySelectItem} from "../data-category-select/data-category-select-item";
+import {FormControl, FormGroup, ɵFormGroupValue} from '@angular/forms';
+import {DataCategorySelectItem} from '../data-category-select/data-category-select-item';
+import {DataSubcategorySelectItem} from '../data-subcategory-select/data-subcategory-select-item';
+import {LanguageSelectItem} from '../language-select/language-select-item';
+import {TransportModeSelectItem} from '../transport-mode-select/transport-mode-select-item';
+import {DataAddressType} from './data-address-type';
 
 /**
  * Form Value Type
  */
-export type AssetEditorDialogFormValue = ɵFormGroupValue<AssetEditorDialogFormModel>;
+export type AssetEditorDialogFormValue =
+  ɵFormGroupValue<AssetEditorDialogFormModel>;
 
 /**
  * Form Group Template Type

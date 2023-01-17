@@ -1,7 +1,7 @@
 import {Component, HostBinding, Input} from '@angular/core';
-import {LanguageSelectItem} from "./language-select-item";
-import {FormControl} from "@angular/forms";
-import {LanguageSelectItemService} from "./language-select-item.service";
+import {FormControl} from '@angular/forms';
+import {LanguageSelectItem} from './language-select-item';
+import {LanguageSelectItemService} from './language-select-item.service';
 
 @Component({
   selector: 'language-select',
@@ -12,16 +12,18 @@ export class LanguageSelectComponent {
   label!: string;
 
   @Input()
-  control!: FormControl<LanguageSelectItem | null>
+  control!: FormControl<LanguageSelectItem | null>;
 
-  @HostBinding("class.flex")
-  @HostBinding("class.flex-row")
-  cls = true
+  @HostBinding('class.flex')
+  @HostBinding('class.flex-row')
+  cls = true;
 
-  constructor(public items: LanguageSelectItemService) {
-  }
+  constructor(public items: LanguageSelectItemService) {}
 
-  compareWith(a: LanguageSelectItem | null, b: LanguageSelectItem | null): boolean {
+  compareWith(
+    a: LanguageSelectItem | null,
+    b: LanguageSelectItem | null,
+  ): boolean {
     return a?.id === b?.id;
   }
 }

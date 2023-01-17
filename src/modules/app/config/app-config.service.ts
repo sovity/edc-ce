@@ -1,5 +1,5 @@
-import {AppConfig} from "./app-config";
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
+import {AppConfig} from './app-config';
 
 /**
  * Holds {@link AppConfig}

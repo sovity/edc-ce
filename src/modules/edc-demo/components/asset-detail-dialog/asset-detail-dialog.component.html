@@ -1,17 +1,18 @@
 <div class="mat-card-header">
-  <mat-icon *ngIf="data.mode === 'asset-details'" style="font-size: 40px; width: 40px; height: 40px; min-width: 40px">
+  <mat-icon
+    *ngIf="data.mode === 'asset-details'"
+    style="font-size: 40px; width: 40px; height: 40px; min-width: 40px">
     upload
   </mat-icon>
   <edc-demo-contract-offer-icon
     *ngIf="data.mode === 'contract-offer'"
-    [contractOffer]="data.contractOffer!"
-  ></edc-demo-contract-offer-icon>
+    [contractOffer]="data.contractOffer!"></edc-demo-contract-offer-icon>
   <div class="mat-card-header-text">
     <div class="mat-card-title">
-      {{asset.name}}
+      {{ asset.name }}
     </div>
     <div class="mat-card-subtitle">
-      {{asset.id}}
+      {{ asset.id }}
     </div>
   </div>
 </div>
@@ -19,80 +20,90 @@
 <mat-dialog-content class="flex flex-col space-y-[10px]">
   <!-- Progress Bar -->
   <mat-progress-bar
-    *ngIf="data.mode === 'contract-offer' && contractNegotiationService.isBusy(data.contractOffer!)"
+    *ngIf="
+      data.mode === 'contract-offer' &&
+      contractNegotiationService.isBusy(data.contractOffer!)
+    "
     color="primary"
-    mode="indeterminate"
-  ></mat-progress-bar>
+    mode="indeterminate"></mat-progress-bar>
 
   <!-- Description -->
   <div class="whitespace-pre-line">
-    {{asset.description}}
+    {{ asset.description }}
     <i *ngIf="!asset.description">No description.</i>
   </div>
 
   <!-- Tag List -->
   <div *ngIf="asset.keywords.length">
     <mat-chip-list aria-label="Tags">
-      <mat-chip *ngFor="let keyword of asset.keywords">{{keyword}}</mat-chip>
+      <mat-chip *ngFor="let keyword of asset.keywords">{{ keyword }}</mat-chip>
     </mat-chip-list>
   </div>
 
   <!-- Properties -->
-  <div class="flex flex-row flex-wrap gap-[10px] justify-start" style="margin-top: 10px">
-    <div *ngFor="let prop of props" class="flex flex-row space-x-[10px] overflow-hidden" style="width: calc(100% / 3 - 20px);">
+  <div
+    class="flex flex-row flex-wrap gap-[10px] justify-start"
+    style="margin-top: 10px">
+    <div
+      *ngFor="let prop of props"
+      class="flex flex-row space-x-[10px] overflow-hidden"
+      style="width: calc(100% / 3 - 20px)">
       <!-- Property Icon -->
-      <mat-icon style="flex-shrink: 0; margin-top: 6px;">{{prop.icon}}</mat-icon>
+      <mat-icon style="flex-shrink: 0; margin-top: 6px">{{
+        prop.icon
+      }}</mat-icon>
       <div class="flex flex-col">
         <!-- Property Label -->
-        <div class="uppercase text-slate text-sm">{{prop.label}}</div>
+        <div class="uppercase text-slate text-sm">{{ prop.label }}</div>
 
         <!-- Property Value (URL) -->
         <a
           *ngIf="prop.url"
           class="link break-all"
-          [ngClass]="prop.additionalClasses"
-          [attr.href]="prop.url"
           target="_blank"
           rel="noreferrer"
-        >{{prop.text}}</a>
+          [ngClass]="prop.additionalClasses"
+          [attr.href]="prop.url"
+          >{{ prop.text }}</a
+        >
 
         <!-- Property Value (Text) -->
-        <span *ngIf="!prop.url" [ngClass]="prop.additionalClasses">{{prop.text}}</span>
+        <span *ngIf="!prop.url" [ngClass]="prop.additionalClasses">{{
+          prop.text
+        }}</span>
       </div>
     </div>
   </div>
 </mat-dialog-content>
 
-
 <mat-dialog-actions>
   <div class="w-full flex flex-row justify-end">
-
     <div>
-      <button mat-dialog-close mat-button [disabled]="loading">
-        Close
-      </button>
+      <button mat-dialog-close mat-button [disabled]="loading">Close</button>
 
       <button
         *ngIf="data.mode === 'asset-details'"
-        (click)="onDeleteClick()"
         mat-raised-button
         color="warn"
         [disabled]="loading"
-      >
+        (click)="onDeleteClick()">
         Delete
       </button>
 
       <button
         *ngIf="data.mode === 'contract-offer'"
-        (click)="onNegotiateClick()"
         mat-raised-button
         color="primary"
         [disabled]="negotiationState != 'ready'"
         [ngSwitch]="negotiationState"
-      >
+        (click)="onNegotiateClick()">
         <ng-container *ngSwitchCase="'ready'">Negotiate</ng-container>
-        <ng-container *ngSwitchCase="'negotiating'">Negotiating...</ng-container>
-        <ng-container *ngSwitchCase="'negotiated'">Successfully Negotiated</ng-container>
+        <ng-container *ngSwitchCase="'negotiating'"
+          >Negotiating...</ng-container
+        >
+        <ng-container *ngSwitchCase="'negotiated'"
+          >Successfully Negotiated</ng-container
+        >
       </button>
     </div>
   </div>

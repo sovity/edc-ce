@@ -5,10 +5,10 @@ import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
  */
 export function requiresPrefixValidator(prefix: string): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    const value = control.value
+    const value = control.value;
     if (value && !value.startsWith(prefix)) {
       return {requiresPrefix: true};
     }
     return null;
-  }
-};
+  };
+}

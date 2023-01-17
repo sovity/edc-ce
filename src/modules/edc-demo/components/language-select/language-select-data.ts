@@ -1,11 +1,11 @@
 import {LanguageSelectItem} from './language-select-item';
 
 export const LANGUAGE_SELECT_DATA: LanguageSelectItem[] = [
-
   {
     id: 'https://w3id.org/idsa/code/MULTI_LINGUAL',
     label: 'Multilingual',
-    comment: 'Code indicates that several languages are used or no concrete language can be determined.',
+    comment:
+      'Code indicates that several languages are used or no concrete language can be determined.',
   },
 
   {
@@ -1110,5 +1110,5 @@ export const LANGUAGE_SELECT_DATA: LanguageSelectItem[] = [
     id: 'https://w3id.org/idsa/code/ZU',
     label: 'Zulu',
     sameAs: 'https://dbpedia.org/resource/ISO_639:zu',
-  }
+  },
 ];

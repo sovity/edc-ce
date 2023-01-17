@@ -4,5 +4,5 @@
 export interface AssetDto {
   id: string;
   createdAt: number;
-  properties: Record<string, string | null>
+  properties: Record<string, string | null>;
 }

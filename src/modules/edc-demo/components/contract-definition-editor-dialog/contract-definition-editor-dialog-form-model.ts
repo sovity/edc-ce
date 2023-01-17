@@ -1,11 +1,12 @@
-import {FormControl, ɵFormGroupValue} from "@angular/forms";
-import {PolicyDefinition} from "../../../edc-dmgmt-client";
-import {Asset} from "../../models/asset";
+import {FormControl, ɵFormGroupValue} from '@angular/forms';
+import {PolicyDefinition} from '../../../edc-dmgmt-client';
+import {Asset} from '../../models/asset';
 
 /**
  * Form Value Type
  */
-export type ContractDefinitionEditorDialogFormValue = ɵFormGroupValue<ContractDefinitionEditorDialogFormModel>;
+export type ContractDefinitionEditorDialogFormValue =
+  ɵFormGroupValue<ContractDefinitionEditorDialogFormModel>;
 
 /**
  * Form Group Template Type

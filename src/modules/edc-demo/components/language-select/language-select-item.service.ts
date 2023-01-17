@@ -1,7 +1,7 @@
+import {Injectable} from '@angular/core';
+import {associateBy} from '../../utils/map-utils';
+import {LANGUAGE_SELECT_DATA} from './language-select-data';
 import {LanguageSelectItem} from './language-select-item';
-import {Injectable} from "@angular/core";
-import {LANGUAGE_SELECT_DATA} from "./language-select-data";
-import {associateBy} from "../../utils/map-utils";
 
 /**
  * Access list of available LanguageSelectItems
@@ -12,10 +12,10 @@ export class LanguageSelectItemService {
    * Partition LanguageSelectItems into highlighted and other.
    * Usability: See important options first and close to each other.
    */
-  highlightItemIds = ['LANG:MULTI_LINGUAL', 'ISO_639:DE', 'ISO_639:EN']
+  highlightItemIds = ['LANG:MULTI_LINGUAL', 'ISO_639:DE', 'ISO_639:EN'];
   highlightItems: LanguageSelectItem[];
   otherItems: LanguageSelectItem[];
-  itemsById = associateBy(LANGUAGE_SELECT_DATA, it => it.id);
+  itemsById = associateBy(LANGUAGE_SELECT_DATA, (it) => it.id);
 
   constructor() {
     this.highlightItems = this.buildHighlightItems();
@@ -33,7 +33,7 @@ export class LanguageSelectItemService {
     }
     return {
       id,
-      label: `Unknown (${id})`
+      label: `Unknown (${id})`,
     };
   }
 
@@ -42,10 +42,14 @@ export class LanguageSelectItemService {
   }
 
   private buildHighlightItems(): LanguageSelectItem[] {
-    return LANGUAGE_SELECT_DATA.filter(it => this.highlightItemIds.includes(it.id));
+    return LANGUAGE_SELECT_DATA.filter((it) =>
+      this.highlightItemIds.includes(it.id),
+    );
   }
 
   private buildOtherItems(): LanguageSelectItem[] {
-    return LANGUAGE_SELECT_DATA.filter(it => !this.highlightItemIds.includes(it.id));
+    return LANGUAGE_SELECT_DATA.filter(
+      (it) => !this.highlightItemIds.includes(it.id),
+    );
   }
 }

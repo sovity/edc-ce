@@ -1,6 +1,4 @@
-<h1 mat-dialog-title>
-  Create New Asset
-</h1>
+<h1 mat-dialog-title>Create New Asset</h1>
 <mat-dialog-content class="w-[800px]">
   <mat-vertical-stepper [linear]="true">
     <!-- Step: Metadata -->
@@ -8,23 +6,28 @@
       <form [formGroup]="form.metadata">
         <ng-template matStepLabel>General Information</ng-template>
         <div class="flex flex-col mt-[10px]">
-
           <div class="flex flex-row space-x-[10px]">
             <!-- Name -->
             <mat-form-field class="form-field grow" color="accent">
               <mat-label>Name</mat-label>
-              <input [formControl]="form.metadata.controls.name" matInput>
+              <input matInput [formControl]="form.metadata.controls.name" />
             </mat-form-field>
 
             <!-- ID -->
-            <mat-form-field *ngIf="form.metadata.controls.id; let ctrl" class="form-field grow" color="accent">
+            <mat-form-field
+              *ngIf="form.metadata.controls.id; let ctrl"
+              class="form-field grow"
+              color="accent">
               <mat-label>Id</mat-label>
-              <input [formControl]="ctrl" placeholder="urn:artifact:..." matInput>
+              <input
+                placeholder="urn:artifact:..."
+                matInput
+                [formControl]="ctrl" />
               <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
-                {{validationMessages.invalidWhitespacesMessage}}
+                {{ validationMessages.invalidWhitespacesMessage }}
               </mat-error>
               <mat-error *ngIf="ctrl.invalid && ctrl.errors?.requiresPrefix">
-                {{validationMessages.invalidPrefix('ID', 'urn:artifact')}}
+                {{ validationMessages.invalidPrefix('ID', 'urn:artifact') }}
               </mat-error>
             </mat-form-field>
           </div>
@@ -32,28 +35,42 @@
           <!-- Description -->
           <mat-form-field color="accent">
             <mat-label>Description</mat-label>
-            <textarea [formControl]="form.metadata.controls.description" matInput [placeholder]="'1.0'"></textarea>
+            <textarea
+              matInput
+              [formControl]="form.metadata.controls.description"
+              [placeholder]="'1.0'"></textarea>
           </mat-form-field>
 
           <!-- Keywords -->
-          <keyword-select label="Keywords" [control]="form.metadata.controls.keywords"></keyword-select>
+          <keyword-select
+            label="Keywords"
+            [control]="form.metadata.controls.keywords"></keyword-select>
 
           <div class="flex flex-row space-x-[10px]">
             <!-- Content Type -->
             <mat-form-field class="form-field grow" color="accent">
               <mat-label>Content Type</mat-label>
-              <input [formControl]="form.metadata.controls.contenttype" matInput [placeholder]="'text/plain'">
+              <input
+                matInput
+                [formControl]="form.metadata.controls.contenttype"
+                [placeholder]="'text/plain'" />
             </mat-form-field>
 
             <!-- Version -->
             <mat-form-field class="form-field grow" color="accent">
               <mat-label>Version</mat-label>
-              <input [formControl]="form.metadata.controls.version" matInput [placeholder]="'1.0'">
+              <input
+                matInput
+                [formControl]="form.metadata.controls.version"
+                [placeholder]="'1.0'" />
             </mat-form-field>
           </div>
 
           <!-- Language -->
-          <language-select class="grow" label="Language" [control]="form.metadata.controls.language"></language-select>
+          <language-select
+            class="grow"
+            label="Language"
+            [control]="form.metadata.controls.language"></language-select>
         </div>
       </form>
     </mat-step>
@@ -65,38 +82,43 @@
           <div class="flex flex-row space-x-[10px]">
             <!-- Data Category -->
             <data-category-select
-              label="Data Category"
               class="grow"
-              [control]="form.advanced.controls.dataCategory"
-            ></data-category-select>
+              label="Data Category"
+              [control]="
+                form.advanced.controls.dataCategory
+              "></data-category-select>
 
             <!-- Data Subcategory -->
             <data-subcategory-select
-              label="Data Subcategory"
               class="grow"
+              label="Data Subcategory"
               [dataCategory]="form.dataCategory"
-              [control]="form.advanced.controls.dataSubcategory"
-            ></data-subcategory-select>
+              [control]="
+                form.advanced.controls.dataSubcategory
+              "></data-subcategory-select>
           </div>
 
           <!-- Data Model -->
           <mat-form-field class="form-field" color="accent">
             <mat-label>Data Model</mat-label>
-            <input [formControl]="form.advanced.controls.dataModel" matInput>
+            <input matInput [formControl]="form.advanced.controls.dataModel" />
           </mat-form-field>
 
           <div class="flex flex-row space-x-[10px]">
             <!-- Transport Mode -->
             <transport-mode-select
-              label="Transport Mode"
               class="grow"
-              [control]="form.advanced.controls.transportMode"
-            ></transport-mode-select>
+              label="Transport Mode"
+              [control]="
+                form.advanced.controls.transportMode
+              "></transport-mode-select>
 
             <!-- Geo reference method -->
             <mat-form-field class="form-field grow" color="accent">
               <mat-label>Geo reference method</mat-label>
-              <input [formControl]="form.advanced.controls.geoReferenceMethod" matInput>
+              <input
+                matInput
+                [formControl]="form.advanced.controls.geoReferenceMethod" />
             </mat-form-field>
           </div>
         </div>
@@ -107,11 +129,11 @@
       <form [formGroup]="form.datasource">
         <ng-template matStepLabel>Datasource Information</ng-template>
         <div class="flex flex-col mt-[10px]">
-
           <!-- Data Address Type -->
           <mat-form-field class="form-field" color="accent">
             <mat-label>Type</mat-label>
-            <mat-select [formControl]="form.datasource.controls.dataAddressType">
+            <mat-select
+              [formControl]="form.datasource.controls.dataAddressType">
               <mat-option value="Json">
                 Custom Datasource Config (JSON)
               </mat-option>
@@ -123,26 +145,35 @@
 
           <!-- Data Source Config JSON (Json) -->
           <mat-form-field
-            *ngIf="form.dataAddressType === 'Json' && form.datasource.controls.dataDestination; let ctrl"
-            color="accent"
-          >
+            *ngIf="
+              form.dataAddressType === 'Json' &&
+                form.datasource.controls.dataDestination;
+              let ctrl
+            "
+            color="accent">
             <mat-label>Custom Datasource Config (JSON)</mat-label>
-            <textarea [formControl]="ctrl" matInput [placeholder]="'{}'"></textarea>
+            <textarea
+              matInput
+              [formControl]="ctrl"
+              [placeholder]="'{}'"></textarea>
             <mat-error *ngIf="ctrl.invalid && ctrl.errors?.jsonInvalid">
-              {{validationMessages.invalidJsonMessage}}
+              {{ validationMessages.invalidJsonMessage }}
             </mat-error>
           </mat-form-field>
 
           <!-- Source Endpoint (Rest-Api) -->
           <mat-form-field
-            *ngIf="form.dataAddressType === 'Rest-Api' && form.datasource.controls.baseUrl; let ctrl"
+            *ngIf="
+              form.dataAddressType === 'Rest-Api' &&
+                form.datasource.controls.baseUrl;
+              let ctrl
+            "
             class="form-field"
-            color="accent"
-          >
+            color="accent">
             <mat-label>REST-API Endpoint (GET)</mat-label>
-            <input [formControl]="ctrl" matInput [placeholder]="'https://'">
+            <input matInput [formControl]="ctrl" [placeholder]="'https://'" />
             <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
-              {{validationMessages.invalidUrlMessage}}
+              {{ validationMessages.invalidUrlMessage }}
             </mat-error>
           </mat-form-field>
 
@@ -150,12 +181,11 @@
           <mat-form-field
             *ngIf="form.datasource.controls.endpointDocumentation; let ctrl"
             class="form-field grow"
-            color="accent"
-          >
+            color="accent">
             <mat-label>Endpoint Documentation</mat-label>
-            <input [formControl]="ctrl" placeholder="https://" matInput>
+            <input placeholder="https://" matInput [formControl]="ctrl" />
             <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
-              {{validationMessages.invalidUrlMessage}}
+              {{ validationMessages.invalidUrlMessage }}
             </mat-error>
           </mat-form-field>
 
@@ -164,12 +194,11 @@
             <mat-form-field
               *ngIf="form.datasource.controls.publisher; let ctrl"
               class="form-field grow"
-              color="accent"
-            >
+              color="accent">
               <mat-label>Publisher</mat-label>
-              <input [formControl]="ctrl" placeholder="https://" matInput>
+              <input placeholder="https://" matInput [formControl]="ctrl" />
               <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
-                {{validationMessages.invalidUrlMessage}}
+                {{ validationMessages.invalidUrlMessage }}
               </mat-error>
             </mat-form-field>
 
@@ -177,12 +206,11 @@
             <mat-form-field
               *ngIf="form.datasource.controls.standardLicense; let ctrl"
               class="form-field grow"
-              color="accent"
-            >
+              color="accent">
               <mat-label>Standard License</mat-label>
-              <input [formControl]="ctrl" placeholder="https://" matInput>
+              <input placeholder="https://" matInput [formControl]="ctrl" />
               <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
-                {{validationMessages.invalidUrlMessage}}
+                {{ validationMessages.invalidUrlMessage }}
               </mat-error>
             </mat-form-field>
           </div>
@@ -192,13 +220,16 @@
   </mat-vertical-stepper>
 </mat-dialog-content>
 
-
 <mat-dialog-actions class="flex flex-row justify-end">
   <button mat-dialog-close mat-button color="default" [disabled]="loading">
     Cancel
   </button>
 
-  <button (click)="onSave()" mat-raised-button color="primary" [disabled]="!form.all.valid || loading">
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="!form.all.valid || loading"
+    (click)="onSave()">
     Create
   </button>
 </mat-dialog-actions>

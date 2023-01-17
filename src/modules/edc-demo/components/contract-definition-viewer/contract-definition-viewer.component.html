@@ -1,77 +1,93 @@
-<div *ngIf="filteredContractDefinitions$ | async as contractDefinitions" id="wrapper">
-    <div class="flex flex-row">
-      <!-- Search -->
-      <mat-form-field appearance="outline" class="search-form-field" color="accent">
-        <mat-label>Search policies</mat-label>
-        <input (input)="onSearch()" [(ngModel)]="searchText" matInput>
-        <mat-icon matPrefix>search</mat-icon>
-        <button (click)="searchText=''; onSearch()" *ngIf="searchText" mat-icon-button matSuffix>
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-
-      <!-- Create Button -->
+<div
+  *ngIf="filteredContractDefinitions$ | async as contractDefinitions"
+  id="wrapper">
+  <div class="flex flex-row">
+    <!-- Search -->
+    <mat-form-field
+      class="search-form-field"
+      appearance="outline"
+      color="accent">
+      <mat-label>Search policies</mat-label>
+      <input matInput [(ngModel)]="searchText" (input)="onSearch()" />
+      <mat-icon matPrefix>search</mat-icon>
       <button
-        (click)="onCreate()"
-        color="primary"
-        id="create-button"
-        mat-raised-button
-        style="margin-top: 8px; height: 44px;"
-      >
-        <mat-icon>add_circle_outline</mat-icon>
-        Create contract definition
+        *ngIf="searchText"
+        mat-icon-button
+        matSuffix
+        (click)="searchText = ''; onSearch()">
+        <mat-icon>close</mat-icon>
       </button>
+    </mat-form-field>
 
-      <!-- Spacer -->
-      <div class="grow"></div>
+    <!-- Create Button -->
+    <button
+      id="create-button"
+      color="primary"
+      mat-raised-button
+      style="margin-top: 8px; height: 44px"
+      (click)="onCreate()">
+      <mat-icon>add_circle_outline</mat-icon>
+      Create contract definition
+    </button>
 
-      <!-- Paginator -->
-      <mat-paginator [length]="contractDefinitions?.length" hidePageSize="true" pageSize="10"></mat-paginator>
-    </div>
+    <!-- Spacer -->
+    <div class="grow"></div>
 
-    <div fxLayout="row wrap" fxLayoutAlign="start start">
+    <!-- Paginator -->
+    <mat-paginator
+      hidePageSize="true"
+      pageSize="10"
+      [length]="contractDefinitions?.length"></mat-paginator>
+  </div>
 
-        <mat-card *ngFor="let contractDefinition of contractDefinitions" class="contract-definition-card">
-            <mat-card-header>
-                <mat-icon mat-card-avatar>policy</mat-icon>
-                <mat-card-title>{{contractDefinition.id}}</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <mat-list dense>
-                    <mat-list-item>
-                        <mat-icon mat-list-icon>policy</mat-icon>
-                        <div class="policy-name" mat-line>Access policy</div>
-                        <div mat-line>{{contractDefinition.accessPolicyId}}</div>
-                    </mat-list-item>
-                    <mat-list-item>
-                        <mat-icon mat-list-icon>policy</mat-icon>
-                        <div class="policy-name" mat-line>Contract policy</div>
-                        <div mat-line>{{contractDefinition.contractPolicyId}}</div>
-                    </mat-list-item>
-                </mat-list>
+  <div fxLayout="row wrap" fxLayoutAlign="start start">
+    <mat-card
+      *ngFor="let contractDefinition of contractDefinitions"
+      class="contract-definition-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>policy</mat-icon>
+        <mat-card-title>{{ contractDefinition.id }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list dense>
+          <mat-list-item>
+            <mat-icon mat-list-icon>policy</mat-icon>
+            <div class="policy-name" mat-line>Access policy</div>
+            <div mat-line>{{ contractDefinition.accessPolicyId }}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon>policy</mat-icon>
+            <div class="policy-name" mat-line>Contract policy</div>
+            <div mat-line>{{ contractDefinition.contractPolicyId }}</div>
+          </mat-list-item>
+        </mat-list>
 
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            Selectors
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <mat-list dense>
-                        <mat-list-item *ngFor="let criterion of contractDefinition.criteria">
-                            <mat-icon mat-list-icon>check</mat-icon>
-                            <div mat-line>{{criterion.operandLeft}} {{criterion.operator}} {{criterion.operandRight}}</div>
-                        </mat-list-item>
-                    </mat-list>
-                </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Selectors </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-list dense>
+            <mat-list-item
+              *ngFor="let criterion of contractDefinition.criteria">
+              <mat-icon mat-list-icon>check</mat-icon>
+              <div mat-line>
+                {{ criterion.operandLeft }} {{ criterion.operator }}
+                {{ criterion.operandRight }}
+              </div>
+            </mat-list-item>
+          </mat-list>
+        </mat-expansion-panel>
+      </mat-card-content>
 
-            </mat-card-content>
-
-            <mat-divider inset></mat-divider>
-            <mat-card-actions class="card-actions">
-                <button (click)="onDelete(contractDefinition)" color="warn" mat-stroked-button>
-                    <mat-icon>delete_sweep</mat-icon> Delete
-                </button>
-            </mat-card-actions>
-        </mat-card>
-    </div>
+      <mat-divider inset></mat-divider>
+      <mat-card-actions class="card-actions">
+        <button
+          color="warn"
+          mat-stroked-button
+          (click)="onDelete(contractDefinition)">
+          <mat-icon>delete_sweep</mat-icon> Delete
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 </div>

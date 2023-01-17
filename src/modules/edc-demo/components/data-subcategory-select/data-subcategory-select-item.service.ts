@@ -1,16 +1,19 @@
+import {Injectable} from '@angular/core';
+import {associateBy, groupedBy} from '../../utils/map-utils';
+import {DataCategorySelectItem} from '../data-category-select/data-category-select-item';
+import {DATA_SUBCATEGORY_SELECT_DATA} from './data-subcategory-select-data';
 import {DataSubcategorySelectItem} from './data-subcategory-select-item';
-import {Injectable} from "@angular/core";
-import {DATA_SUBCATEGORY_SELECT_DATA} from "./data-subcategory-select-data";
-import {associateBy, groupedBy} from "../../utils/map-utils";
-import {DataCategorySelectItem} from "../data-category-select/data-category-select-item";
 
 /**
  * Access list of available DataSubcategorySelectItems
  */
 @Injectable({providedIn: 'root'})
 export class DataSubcategorySelectItemService {
-  itemsById = associateBy(DATA_SUBCATEGORY_SELECT_DATA, it => it.id);
-  itemsByDataCategory = groupedBy(DATA_SUBCATEGORY_SELECT_DATA, it => it.dataCategoryId)
+  itemsById = associateBy(DATA_SUBCATEGORY_SELECT_DATA, (it) => it.id);
+  itemsByDataCategory = groupedBy(
+    DATA_SUBCATEGORY_SELECT_DATA,
+    (it) => it.dataCategoryId,
+  );
 
   /**
    * Find DataSubcategorySelectItem by id
@@ -24,14 +27,18 @@ export class DataSubcategorySelectItemService {
     return {
       id,
       dataCategoryId: '',
-      label: `Unknown (${id})`
+      label: `Unknown (${id})`,
     };
   }
 
   /**
    * Find DataCategorySelectItems by (parent) data category
    */
-  findByDataCategory(dataCategory: DataCategorySelectItem | null): DataSubcategorySelectItem[] {
-    return dataCategory ? this.itemsByDataCategory.get(dataCategory?.id) ?? [] : [];
+  findByDataCategory(
+    dataCategory: DataCategorySelectItem | null,
+  ): DataSubcategorySelectItem[] {
+    return dataCategory
+      ? this.itemsByDataCategory.get(dataCategory?.id) ?? []
+      : [];
   }
 }

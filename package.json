@@ -8,7 +8,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "generate-config": "node config-generator.js"
+    "generate-config": "node config-generator.js",
+    "format-all": "prettier --write ."
   },
   "private": true,
   "dependencies": {
@@ -42,6 +43,7 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
+    "prettier": "^2.8.3",
     "typescript": "~4.6.4"
   }
 }

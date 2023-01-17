@@ -6,9 +6,7 @@
       {
         "operandLeft": "asset:prop:id",
         "operator": "in",
-        "operandRight": [
-          "urn:artifact:bitcoin3"
-        ]
+        "operandRight": ["urn:artifact:bitcoin3"]
       }
     ],
     "id": "offering"
@@ -20,9 +18,7 @@
       {
         "operandLeft": "asset:prop:id",
         "operator": "in",
-        "operandRight": [
-          "urn:artifact:bitcoin"
-        ]
+        "operandRight": ["urn:artifact:bitcoin"]
       }
     ],
     "id": "bitcoin-3-contract"
@@ -34,9 +30,7 @@
       {
         "operandLeft": "asset:prop:id",
         "operator": "in",
-        "operandRight": [
-          "urn:artifact:emissions"
-        ]
+        "operandRight": ["urn:artifact:emissions"]
       }
     ],
     "id": "emissions-end-of-the-year-offering"
@@ -48,9 +42,7 @@
       {
         "operandLeft": "asset:prop:id",
         "operator": "in",
-        "operandRight": [
-          "urn:artifact:ethereum2"
-        ]
+        "operandRight": ["urn:artifact:ethereum2"]
       }
     ],
     "id": "ETH-Value"
@@ -62,9 +54,7 @@
       {
         "operandLeft": "asset:prop:id",
         "operator": "in",
-        "operandRight": [
-          "urn:artifact:electrocharging"
-        ]
+        "operandRight": ["urn:artifact:electrocharging"]
       }
     ],
     "id": "charging-contract-time-restricted"
@@ -76,9 +66,7 @@
       {
         "operandLeft": "asset:prop:id",
         "operator": "in",
-        "operandRight": [
-          "urn:artifact:sharedmobilityescooter"
-        ]
+        "operandRight": ["urn:artifact:sharedmobilityescooter"]
       }
     ],
     "id": "escooterswiss-contract-definition"
@@ -90,9 +78,7 @@
       {
         "operandLeft": "asset:prop:id",
         "operator": "in",
-        "operandRight": [
-          "urn:artifact:methane-emissions-timeseries"
-        ]
+        "operandRight": ["urn:artifact:methane-emissions-timeseries"]
       }
     ],
     "id": "Methane-contract-definition"
@@ -104,9 +90,7 @@
       {
         "operandLeft": "asset:prop:id",
         "operator": "in",
-        "operandRight": [
-          "urn:artifact:chargingstationswalkthrough"
-        ]
+        "operandRight": ["urn:artifact:chargingstationswalkthrough"]
       }
     ],
     "id": "Charging Station - Walkthrough"

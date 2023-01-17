@@ -1,5 +1,5 @@
-import {Policy} from "../../edc-dmgmt-client";
-import {AssetDto} from "./asset-dto";
+import {Policy} from '../../edc-dmgmt-client';
+import {AssetDto} from './asset-dto';
 
 /**
  * Contract Offer (API Model)
