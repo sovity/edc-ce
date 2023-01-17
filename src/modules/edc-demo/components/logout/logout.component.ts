@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {DOCUMENT} from "@angular/common";
-import {AppConfigService} from "../../../app/app-config.service";
+import {AppConfigService} from "../../../app/config/app-config.service";
 
 @Component({
   selector: 'app-logout',
@@ -14,7 +14,7 @@ export class LogoutComponent implements OnInit {
       @Inject(DOCUMENT) private document: Document) { }
 
   ngOnInit(): void {
-    this.document.location.href = this.appConfigService.getConfig()?.logoutUrl!;
+    this.document.location.href = this.appConfigService.config.logoutUrl!;
   }
 
 }

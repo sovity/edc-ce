@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0 ",
-    "start-prod": "ng serve --host 0.0.0.0 --configuration=production",
+    "start": "npm run generate-config && ng serve --host 0.0.0.0 ",
+    "start-prod": "npm run generate-config && ng serve --host 0.0.0.0 --configuration=production",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "generate-config": "node config-generator.js"
   },
   "private": true,
   "dependencies": {
@@ -23,6 +24,7 @@
     "@angular/platform-browser-dynamic": "^14.2.12",
     "@angular/router": "^14.2.12",
     "@ng-apimock/core": "^3.6.0",
+    "dotenv": "^16.0.3",
     "rxjs": "~7.5.5",
     "tslib": "^2.3.0",
     "url-join": "^5.0.0",

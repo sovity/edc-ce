@@ -9,7 +9,6 @@ import {
   AssetEditorDialogMetadataFormModel
 } from "./asset-editor-dialog-form-model";
 import {LanguageSelectItemService} from "../language-select/language-select-item.service";
-import {isFeatureSetActive} from "../../pipes/is-active-feature-set.pipe";
 import {jsonValidator} from "../../validators/json-validator";
 import {urlValidator} from "../../validators/url-validator";
 import {DataSubcategorySelectItem} from "../data-subcategory-select/data-subcategory-select-item";
@@ -20,6 +19,7 @@ import {noWhitespaceValidator} from "../../validators/no-whitespace-validator";
 import {concat, distinctUntilChanged, of, pairwise} from "rxjs";
 import {requiresPrefixValidator} from "../../validators/requires-prefix-validator";
 import {switchValidation} from "../../utils/form-group-utils";
+import {ActiveFeatureSet} from "../../../app/config/active-feature-set";
 
 /**
  * Handles AngularForms for AssetEditorDialog
@@ -68,12 +68,13 @@ export class AssetEditorDialogForm {
   constructor(
     private formBuilder: FormBuilder,
     private languageSelectItemService: LanguageSelectItemService,
+    private activeFeatureSet: ActiveFeatureSet,
   ) {
   }
 
   buildFormGroup(): FormGroup<AssetEditorDialogFormModel> {
     const validateIffMds = <T>(x: [T, ValidatorFn | ValidatorFn[]]): [T, ValidatorFn | ValidatorFn[]] =>
-      isFeatureSetActive('mds') ? x : [x[0], []]
+      this.activeFeatureSet.isMds() ? x : [x[0], []]
 
     const metadata: FormGroup<AssetEditorDialogMetadataFormModel> = this.formBuilder.nonNullable.group({
       id: ['', [Validators.required, noWhitespaceValidator, requiresPrefixValidator("urn:artifact:")]],

@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -14,15 +14,15 @@ import {MatListModule} from '@angular/material/list';
 import {NavigationComponent} from './components/navigation/navigation.component';
 import {EdcDemoModule} from '../edc-demo/edc-demo.module';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
-import {AppConfigService} from "./app-config.service";
-import {
-  API_KEY,
-  CONNECTOR_DATAMANAGEMENT_API,
-  CONNECTOR_ORIGINATOR, CONNECTOR_ORIGINATOR_ORGANIZATON
-} from "../edc-dmgmt-client";
+import {API_KEY, BASE_PATH, CONNECTOR_DATAMANAGEMENT_API} from "../edc-dmgmt-client";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
+import {provideConfigProperty} from "./config/app-config-injection-utils";
+import {loadAppConfigOnStartup} from "./config/app-config-initializer";
+import {AppConfigFetcher} from "./config/app-config.fetcher";
+import {AppConfigBuilder} from "./config/app-config.builder";
+import {AppConfigService} from "./config/app-config.service";
 
 
 @NgModule({
@@ -46,39 +46,20 @@ import {MatNativeDateModule} from "@angular/material/core";
     NavigationComponent,
   ],
   providers: [
+    AppConfigFetcher,
+    AppConfigBuilder,
+    AppConfigService,
+
+    // Load and build config on page load
+    loadAppConfigOnStartup(),
+
+    // Provide individual properties of config for better Angular Component APIs
+    provideConfigProperty(CONNECTOR_DATAMANAGEMENT_API, 'dataManagementApiUrl'),
+    provideConfigProperty(API_KEY, 'dataManagementApiKey'),
+
+
     MatDatepickerModule,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (configService: AppConfigService) => () => configService.loadConfig(),
-      deps: [AppConfigService],
-      multi: true
-    },
-    {
-      provide: CONNECTOR_ORIGINATOR,
-      useFactory: (s: AppConfigService) => s.getConfig()?.originator,
-      deps: [AppConfigService]
-    },
-    {
-      provide: CONNECTOR_ORIGINATOR_ORGANIZATON,
-      useFactory: (s: AppConfigService) => s.getConfig()?.originatorOrganization,
-      deps: [AppConfigService]
-    },
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
-    {
-      provide: CONNECTOR_DATAMANAGEMENT_API,
-      useFactory: (s: AppConfigService) => s.getConfig()?.dataManagementApiUrl,
-      deps: [AppConfigService]
-    },
-    {
-      provide: 'HOME_CONNECTOR_STORAGE_ACCOUNT',
-      useFactory: (s: AppConfigService) => s.getConfig()?.storageAccount,
-      deps: [AppConfigService]
-    },
-    {provide: API_KEY, useFactory: (s: AppConfigService) => s.getConfig()?.apiKey, deps: [AppConfigService]},
-    {
-      provide: 'STORAGE_TYPES',
-      useFactory: () => [{id: "AzureStorage", name: "AzureStorage"}, {id: "AmazonS3", name: "AmazonS3"}],
-    },
   ],
   bootstrap: [AppComponent]
 })

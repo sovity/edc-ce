@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AppConfigService} from "../../app/app-config.service";
+import {AppConfigService} from "../../app/config/app-config.service";
 
 /**
  * Stores Catalog API URLs
@@ -9,7 +9,7 @@ import {AppConfigService} from "../../app/app-config.service";
 })
 export class CatalogApiUrlService {
   /**
-   * From app.config.json, not user editable
+   * From app-config.json, not user editable
    */
   private readonly presetCatalogApiUrls = new Array<string>();
 
@@ -19,7 +19,7 @@ export class CatalogApiUrlService {
   private customCatalogApiUrls = new Array<string>();
 
   constructor(private appConfigService: AppConfigService) {
-    this.presetCatalogApiUrls = this.splitUrls(appConfigService.getConfig()?.catalogUrl);
+    this.presetCatalogApiUrls = this.splitUrls(appConfigService.config.catalogUrl);
   }
 
   /**

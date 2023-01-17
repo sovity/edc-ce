@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {StorageType} from '../../models/storage-type';
-import {AssetEntryDto, DataAddress} from "../../../edc-dmgmt-client";
+import {DataAddress} from "../../../edc-dmgmt-client";
 
 
 @Component({
@@ -9,7 +9,7 @@ import {AssetEntryDto, DataAddress} from "../../../edc-dmgmt-client";
     templateUrl: './catalog-browser-transfer-dialog.component.html',
     styleUrls: ['./catalog-browser-transfer-dialog.component.scss']
 })
-export class CatalogBrowserTransferDialog implements OnInit {
+export class CatalogBrowserTransferDialog {
 
     name: string = '';
     dataDestination: string = '';
@@ -18,9 +18,6 @@ export class CatalogBrowserTransferDialog implements OnInit {
     constructor(@Inject('STORAGE_TYPES') public storageTypes: StorageType[],
                 private dialogRef: MatDialogRef<CatalogBrowserTransferDialog>,
                 @Inject(MAT_DIALOG_DATA) contractDefinition?: any) {
-    }
-
-    ngOnInit(): void {
     }
 
 

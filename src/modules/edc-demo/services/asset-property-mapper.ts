@@ -1,4 +1,4 @@
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {LanguageSelectItemService} from "../components/language-select/language-select-item.service";
 import {TransportModeSelectItemService} from "../components/transport-mode-select/transport-mode-select-item.service";
 import {DataCategorySelectItemService} from "../components/data-category-select/data-category-select-item.service";
@@ -8,10 +8,9 @@ import {
 import {Asset} from "../models/asset";
 import {AssetProperties} from "./asset-properties";
 import {AssetEditorDialogFormValue} from "../components/asset-editor-dialog/asset-editor-dialog-form-model";
-import {isFeatureSetActive} from "../pipes/is-active-feature-set.pipe";
 import {trimmedOrNull} from "../utils/string-utils";
-import {CONNECTOR_ORIGINATOR, CONNECTOR_ORIGINATOR_ORGANIZATON} from "../../edc-dmgmt-client";
-import urlJoin from 'url-join';
+import {AppConfigService} from "../../app/config/app-config.service";
+import {ActiveFeatureSet} from "../../app/config/active-feature-set";
 
 
 /**
@@ -26,8 +25,8 @@ export class AssetPropertyMapper {
     private transportModeSelectItemService: TransportModeSelectItemService,
     private dataCategorySelectItemService: DataCategorySelectItemService,
     private dataSubcategorySelectItemService: DataSubcategorySelectItemService,
-    @Inject(CONNECTOR_ORIGINATOR) private connectorOriginator: string,
-    @Inject(CONNECTOR_ORIGINATOR_ORGANIZATON) private connectorOriginatorOrganization: string
+    private appConfigService: AppConfigService,
+    private activeFeatureSet: ActiveFeatureSet,
   ) {
   }
 
@@ -76,8 +75,8 @@ export class AssetPropertyMapper {
     props[AssetProperties.id] = trimmedOrNull(metadata?.id)
     props[AssetProperties.name] = trimmedOrNull(metadata?.name)
     props[AssetProperties.version] = trimmedOrNull(metadata?.version)
-    props[AssetProperties.originator] = trimmedOrNull(this.connectorOriginator)
-    props[AssetProperties.originatorOrganization] = trimmedOrNull(this.connectorOriginatorOrganization)
+    props[AssetProperties.originator] = trimmedOrNull(this.appConfigService.config.originator)
+    props[AssetProperties.originatorOrganization] = trimmedOrNull(this.appConfigService.config.originatorOrganization)
     props[AssetProperties.keywords] = trimmedOrNull(metadata?.keywords?.join(", "))
     props[AssetProperties.contentType] = trimmedOrNull(metadata?.contenttype)
     props[AssetProperties.description] = trimmedOrNull(metadata?.description)
@@ -87,7 +86,7 @@ export class AssetPropertyMapper {
     props[AssetProperties.standardLicense] = trimmedOrNull(datasource?.standardLicense)
     props[AssetProperties.endpointDocumentation] = trimmedOrNull(datasource?.endpointDocumentation)
 
-    if (isFeatureSetActive('mds')) {
+    if (this.activeFeatureSet.isMds()) {
       props[AssetProperties.dataCategory] = advanced?.dataCategory?.id ?? null
       props[AssetProperties.dataSubcategory] = advanced?.dataSubcategory?.id ?? null
       props[AssetProperties.dataModel] = trimmedOrNull(advanced?.dataModel)
