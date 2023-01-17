@@ -7,7 +7,21 @@ This file will not cover changes about documentation, code clean-up, samples, or
 (respectively milestone), the core features are highlighted. Relevant changes to existing implementations can be found
 in the detailed section referring to by linking pull requests or issues.
 
-## [0.0.1-ab1b6fd0-sovity5] Unreleased
+## Unreleased
+
+### Overview
+
+### Detailed Changes
+
+#### Added
+
+#### Changed
+
+#### Removed
+
+#### Fixed
+
+## [0.0.1-ab1b6fd0-sovity5] 17.01.2023
 
 ### Overview
 
