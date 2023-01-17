@@ -81,6 +81,7 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
         var standardLicense = getAssetStandardLicense(registerResourceMessage);
         var endpointDocumentation = getAssetEndpointDocumentation(registerResourceMessage);
         var transportMode = getAssetTransportMode(registerResourceMessage);
+        var dataCategory = getAssetDataCategory(registerResourceMessage);
 
         var resource = new ResourceBuilder(registerResourceMessage.affectedResourceUri())
                 ._title_(new TypedLiteral(assetTitle, "en"))
@@ -102,20 +103,33 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
 
         ObjectNode jsonNode = (ObjectNode) objectMapper.readTree(objectMapper.writeValueAsString(resource));
         jsonNode.set("http://w3id.org/mds#transportMode", getTransportModeJson(transportMode));
+        jsonNode.set("http://w3id.org/mds#dataCategory", getDataCategory(dataCategory));
         System.out.println(jsonNode);
         return objectMapper.writeValueAsString(jsonNode);
     }
 
-    @NotNull
     private ObjectNode getTransportModeJson(String transportMode) {
+        return getPropertyJson(transportMode);
+    }
+
+    private ObjectNode getDataCategory(String dataCategory) {
+        return getPropertyJson(dataCategory);
+    }
+
+
+    private ObjectNode getPropertyJson(String property) {
         ObjectNode transportModeJson = objectMapper.createObjectNode();
-        transportModeJson.put("@value", transportMode);
+        transportModeJson.put("@value", property);
         transportModeJson.put("@type", "http://www.w3.org/2001/XMLSchema#string");
         return transportModeJson;
     }
 
-    private String getAssetTransportMode(RegisterResourceMessage registerResourceMessage) {
+    private String getAssetDataCategory(RegisterResourceMessage registerResourceMessage) {
         return getAssetProperty(registerResourceMessage, "http://w3id.org/mds#dataCategory");
+    }
+
+    private String getAssetTransportMode(RegisterResourceMessage registerResourceMessage) {
+        return getAssetProperty(registerResourceMessage, "http://w3id.org/mds#transportMode");
     }
 
     private String getAssetEndpointDocumentation(RegisterResourceMessage registerResourceMessage) {
