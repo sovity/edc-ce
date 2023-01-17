@@ -28,6 +28,8 @@ import org.eclipse.edc.protocol.ids.spi.domain.IdsConstants;
 import org.eclipse.edc.protocol.ids.util.CalendarUtil;
 import sender.message.RegisterResourceMessage;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.util.ResponseUtil.parseMultipartStringResponse;
@@ -61,16 +63,20 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
         var assetDescription = getAssetDescription(registerResourceMessage);
         var language = Language.EN;
         var version = getVersion(registerResourceMessage);
-//        var keywords = getKeywords(registerResourceMessage);
+        List<TypedLiteral> keywords = getKeywords(registerResourceMessage)
+                        .stream()
+                        .map(k -> new TypedLiteral(k, "en"))
+                        .toList();
 
         var resource = new ResourceBuilder(registerResourceMessage.affectedResourceUri())
                 ._title_(new TypedLiteral(assetTitle, "en"))
                 ._description_(new TypedLiteral(assetDescription, "en"))
                 ._language_(language)
                 ._version_(version)
-//                ._keyword_()
+                ._keyword_(keywords)
 //                ._representation_()
                 .build();
+        System.out.println(objectMapper.writeValueAsString(resource));
         return objectMapper.writeValueAsString(resource);
     }
 
@@ -90,12 +96,12 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
         return assetTitle;
     }
 
-    private static String getKeywords(RegisterResourceMessage registerResourceMessage){
+    private static List<String> getKeywords(RegisterResourceMessage registerResourceMessage){
         var keywords = "";
         if(checkPropertyExists(registerResourceMessage, "asset:prop:keywords")) {
             keywords = registerResourceMessage.asset().getProperties().get("asset:prop:keywords").toString();
         }
-        return keywords;
+        return new ArrayList<>(Arrays.asList(keywords.split(",")));
     }
 
     private static String getVersion(RegisterResourceMessage registerResourceMessage){
