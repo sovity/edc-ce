@@ -5,33 +5,17 @@ const path = require('path');
 const app = express();
 app.set('port', 3000);
 
-const assets = JSON.parse(
-  fs.readFileSync(path.resolve('json/assets.json')).toString(),
-);
-const policyDefinitions = JSON.parse(
-  fs.readFileSync(path.resolve('json/policyDefinitions.json')).toString(),
-);
-const contractDefinitions = JSON.parse(
-  fs.readFileSync(path.resolve('json/contractDefinitions.json')).toString(),
-);
-const transferProcess = JSON.parse(
-  fs.readFileSync(path.resolve('json/transferProcess.json')).toString(),
-);
-const contractAgreements = JSON.parse(
-  fs.readFileSync(path.resolve('json/contractAgreements.json')).toString(),
-);
-const catalog1 = JSON.parse(
-  fs.readFileSync(path.resolve('json/catalog1.json')).toString(),
-);
-const catalog2 = JSON.parse(
-  fs.readFileSync(path.resolve('json/catalog2.json')).toString(),
-);
+function json(jsonFile) {
+  return JSON.parse(fs.readFileSync(path.resolve(jsonFile)).toString());
+}
 
-apimock.processor.process({
-  src: 'mocks',
-});
-
-app.use(apimock.middleware);
+const assets = json('json/assets.json');
+const policyDefinitions = json('json/policyDefinitions.json');
+const contractDefinitions = json('json/contractDefinitions.json');
+const transferProcess = json('json/transferProcess.json');
+const contractAgreements = json('json/contractAgreements.json');
+const catalog1 = json('json/catalog1.json');
+const catalog2 = json('json/catalog2.json');
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -40,10 +24,6 @@ app.use((req, res, next) => {
   res.header('Content-Type', 'application/json');
   res.status(200);
   next();
-});
-
-app.listen(app.get('port'), () => {
-  console.log('@ng-apimock/core running on port', app.get('port'));
 });
 
 app.get('/assets', (req, res) => {
@@ -71,5 +51,5 @@ app.get('/catalogs/1', (req, res) => {
 });
 
 app.get('/catalogs/2', (req, res) => {
-  res.json(catalog1);
+  res.json(catalog2);
 });
