@@ -46,6 +46,8 @@ The Broker Extension supports the following additional meta information to be se
 - publisher: "asset:prop:publisher"
 - standardLicense: "asset:prop:standardLicense"
 - endpointDocumentation: "asset:prop:endpointDocumentation"
+
+MDS-specific properties:
 - dataCategory: 'http://w3id.org/mds#dataCategory'
 - dataSubcategory: 'http://w3id.org/mds#dataSubcategory'
 - dataModel: 'http://w3id.org/mds#dataModel'
