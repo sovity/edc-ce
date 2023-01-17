@@ -42,13 +42,16 @@ public class RegisterConnectorRequestSender implements MultipartSenderDelegate<R
     private ObjectMapper objectMapper;
     private String connectorName;
     private String endpoint;
+    private String connectorDescription;
 
     public RegisterConnectorRequestSender(ObjectMapper objectMapper,
                                           String connectorName,
-                                          String endpoint) {
+                                          String endpoint,
+                                          String connectorDescription) {
         this.objectMapper = objectMapper;
         this.connectorName = connectorName;
         this.endpoint = endpoint;
+        this.connectorDescription = connectorDescription;
     }
 
     @Override
@@ -75,6 +78,7 @@ public class RegisterConnectorRequestSender implements MultipartSenderDelegate<R
                 ._title_(new TypedLiteral(connectorName))
                 ._curator_(registerConnectorMessage.curator())
                 ._hasDefaultEndpoint_(connectorEndpoint)
+                ._description_(new TypedLiteral(connectorDescription, "en"))
                 ._resourceCatalog_(resourceCatalog) // has to be set, otherwise broker will crash
                 ._maintainer_(registerConnectorMessage.maintainer())
                 ._outboundModelVersion_(IdsConstants.INFORMATION_MODEL_VERSION)
