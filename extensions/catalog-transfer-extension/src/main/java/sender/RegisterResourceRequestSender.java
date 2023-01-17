@@ -97,11 +97,10 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                         ._language_(language)
                         ._mediaType_(new IANAMediaTypeBuilder()._filenameExtension_(mediaType).build())
                         .build())
-                //resource endpoint not working, resource not being shown
-//                ._resourceEndpoint_(List.of(new ConnectorEndpointBuilder()
-//                        ._accessURL_(URI.create(endpointDocumentation))
-//                        ._endpointDocumentation_(URI.create(endpointDocumentation))
-//                        .build()))
+                ._resourceEndpoint_(List.of(new ConnectorEndpointBuilder()
+                        ._endpointDocumentation_(URI.create(endpointDocumentation))
+                        ._accessURL_(registerResourceMessage.affectedResourceUri())
+                        .build()))
                 .build();
 
         ObjectNode json = (ObjectNode) objectMapper.readTree(objectMapper.writeValueAsString(resource));
@@ -110,7 +109,6 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
         json.set("http://w3id.org/mds#dataSubcategory", getDataSubcategoryJson(dataSubcategory));
         json.set("http://w3id.org/mds#dataModel", getDataModelJson(dataModel));
         json.set("http://w3id.org/mds#geoReferenceMethod", getGeoReferenceMethodJson(geoReferenceMethod));
-        System.out.println(json);
         return objectMapper.writeValueAsString(json);
     }
 
