@@ -1,0 +1,10 @@
+build
+coverage
+e2e
+node_modules
+.angular
+.github
+
+openapi
+src/modules/edc-dmgmt-client
+src/assets/config/app-config.json
