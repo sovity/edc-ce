@@ -16,6 +16,11 @@ in the detailed section referring to by linking pull requests or issues.
 #### Added
 
 #### Changed
+- Changed configuration:
+  - Removed `app.config.json`.
+  - Configuration via `EDC_UI_` environment variables in both local dev and docker container.
+  - See `app-config-properties.ts` for available properties.
+  - Configuration via single environment variable `EDC_UI_CONFIG_JSON` possible.
 
 #### Removed
 
@@ -57,11 +62,6 @@ in the detailed section referring to by linking pull requests or issues.
 
 #### Changed
 - Changed asset properties, especially ID property. See `asset-properties.ts`.
-- Changed configuration:
-  - Removed `app.config.json`.
-  - Configuration via `EDC_UI_` environment variables in both local dev and docker container.
-  - See `app-config-properties.ts` for available properties.
-  - Configuration via single environment variable `EDC_UI_CONFIG_JSON` possible.
 
 #### Removed
 
