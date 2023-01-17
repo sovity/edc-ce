@@ -33,6 +33,28 @@ To test Broker functionality, simply execute steps
 3. `Publish ContractDefinition 1`: You will see a notification about registering resource at broker, which will then be reflected in the Broker's UI.
 4. `Delete ContractDefinition 1`: You will see a notification about unregistering the resource at broker.
 
+### Additional Meta Information
+The Broker Extension supports the following additional meta information to be sent to the broker:
+```
+- id: "asset:prop:id"
+- name: "asset:prop:name"
+- contentType: "asset:prop:contenttype"
+- description: "asset:prop:description"
+- version: "asset:prop:version"
+- keywords: "asset:prop:keywords"
+- language: 'asset:prop:language'
+- publisher: "asset:prop:publisher"
+- standardLicense: "asset:prop:standardLicense"
+- endpointDocumentation: "asset:prop:endpointDocumentation"
+- dataCategory: 'http://w3id.org/mds#dataCategory'
+- dataSubcategory: 'http://w3id.org/mds#dataSubcategory'
+- dataModel: 'http://w3id.org/mds#dataModel'
+- geoReferenceMethod: 'http://w3id.org/mds#geoReferenceMethod'
+- transportMode: 'http://w3id.org/mds#transportMode'
+```
+
+For an example of how the API calls are to be made, see the postman collection, where examples of the properties are
+also shown.
 ## FAQ 
 ### What should the client ID entry look like?
 Example of a client-ID entry:
