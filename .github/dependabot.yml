@@ -18,7 +18,7 @@ updates:
     labels:
       - "dependencies"
   - package-ecosystem: "docker"
-    directory: "/"
+    directory: "/connector"
     schedule:
       interval: "daily"
     target-branch: "main"
