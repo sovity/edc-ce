@@ -1,9 +1,10 @@
-const apimock = require('@ng-apimock/core');
 const express = require('express');
+const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+
 const app = express();
-app.set('port', 3000);
+app.use(cors());
 
 function json(jsonFile) {
   return JSON.parse(fs.readFileSync(path.resolve(jsonFile)).toString());
@@ -18,13 +19,13 @@ const catalog1 = json('json/catalog1.json');
 const catalog2 = json('json/catalog2.json');
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', '*');
-  res.header('Access-Control-Allow-Methods', '*');
   res.header('Content-Type', 'application/json');
   res.status(200);
   next();
 });
+
+// Delay Responses
+app.use((req, res, next) => setTimeout(next, 1000));
 
 app.get('/assets', (req, res) => {
   res.json(assets);
@@ -38,7 +39,7 @@ app.get('/contractdefinitions', (req, res) => {
   res.json(contractDefinitions);
 });
 
-app.get('/transferProcess', (req, res) => {
+app.get('/transferprocess', (req, res) => {
   res.json(transferProcess);
 });
 
@@ -52,4 +53,8 @@ app.get('/catalogs/1', (req, res) => {
 
 app.get('/catalogs/2', (req, res) => {
   res.json(catalog2);
+});
+
+app.listen(3000, function () {
+  console.log('Fake Backend listening on port 3000');
 });
