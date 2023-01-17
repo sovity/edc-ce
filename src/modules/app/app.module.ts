@@ -12,11 +12,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {EdcDemoModule} from '../edc-demo/edc-demo.module';
-import {
-  API_KEY,
-  BASE_PATH,
-  CONNECTOR_DATAMANAGEMENT_API,
-} from '../edc-dmgmt-client';
+import {API_KEY, CONNECTOR_DATAMANAGEMENT_API} from '../edc-dmgmt-client';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {NavigationComponent} from './components/navigation/navigation.component';

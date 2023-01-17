@@ -22,10 +22,5 @@ export const loadAppConfigOnStartup = (): Provider => ({
       fetcher
         .fetchConfigJson()
         .then((json) => builder.buildAppConfig(json))
-        .then((config: AppConfig) => {
-          service.config = config;
-          if (!environment.production) {
-            console.log('Using AppConfig:', config);
-          }
-        }),
+        .then((config: AppConfig) => service.setConfig(config)),
 });

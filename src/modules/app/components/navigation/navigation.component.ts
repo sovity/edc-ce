@@ -24,5 +24,6 @@ export class NavigationComponent {
   constructor(
     public titleService: Title,
     private breakpointObserver: BreakpointObserver,
+    public appConfigService: AppConfigService,
   ) {}
 }

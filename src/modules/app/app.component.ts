@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
       });
 
     let themeClass = 'theme-sovity';
-    if (this.activeFeatureSet.isMds()) {
+    if (this.activeFeatureSet.hasMdsFields()) {
       themeClass = 'theme-mds';
     }
     window.document.body.classList.add(themeClass);

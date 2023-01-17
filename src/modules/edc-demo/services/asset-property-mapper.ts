@@ -105,7 +105,7 @@ export class AssetPropertyMapper {
       datasource?.endpointDocumentation,
     );
 
-    if (this.activeFeatureSet.isMds()) {
+    if (this.activeFeatureSet.hasMdsFields()) {
       props[AssetProperties.dataCategory] = advanced?.dataCategory?.id ?? null;
       props[AssetProperties.dataSubcategory] =
         advanced?.dataSubcategory?.id ?? null;

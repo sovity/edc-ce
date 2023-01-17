@@ -41,8 +41,8 @@ For dev mode ENV vars are read from:
 
 ```properties
 # Example:
-# Create a .env file to easily switch active feature sets
-EDC_UI_ACTIVE_FEATURE_SET=mds
+# Create a .env file to easily switch between profiles
+EDC_UI_ACTIVE_PROFILE=mds-open-source
 ```
 
 ## Build docker image

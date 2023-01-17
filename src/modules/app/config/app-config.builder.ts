@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AppConfig} from './app-config';
 import {AppConfigProperties} from './app-config-properties';
-import {ALL_EDC_UI_FEATURE_SETS, EdcUiFeatureSet} from './edc-ui-feature-set';
+import {EDC_UI_PROFILE_DATA, getProfileOrFallback} from './edc-ui-profile';
 
 @Injectable()
 export class AppConfigBuilder {
@@ -16,13 +16,13 @@ export class AppConfigBuilder {
       ...envVars,
     };
 
-    const activeFeatureSet: EdcUiFeatureSet = this.findOrDefaultToFirst(
-      ALL_EDC_UI_FEATURE_SETS,
-      vars[AppConfigProperties.activeFeatureSet],
+    const profile = getProfileOrFallback(
+      vars[AppConfigProperties.activeProfile],
     );
 
     return {
-      activeFeatureSet,
+      profile,
+      ...EDC_UI_PROFILE_DATA[profile],
       dataManagementApiKey:
         vars[AppConfigProperties.dataManagementApiKey] ??
         'no-api-key-configured',
@@ -40,14 +40,5 @@ export class AppConfigBuilder {
         vars[AppConfigProperties.logoutUrl] ??
         'https://no-logout-url-configured',
     };
-  }
-
-  private findOrDefaultToFirst<T extends string>(
-    availableValues: T[],
-    value: string,
-  ): T {
-    return availableValues.includes(value as T)
-      ? (value as T)
-      : availableValues[0];
   }
 }

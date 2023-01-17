@@ -40,8 +40,6 @@ export class ContractViewerComponent implements OnInit {
     private contractAgreementService: ContractAgreementService,
     private assetService: AssetService,
     public dialog: MatDialog,
-    @Inject('HOME_CONNECTOR_STORAGE_ACCOUNT')
-    private homeConnectorStorageAccount: string,
     private transferService: TransferProcessService,
     private catalogService: CatalogBrowserService,
     private router: Router,

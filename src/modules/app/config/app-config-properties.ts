@@ -15,9 +15,9 @@ export const AppConfigProperties = {
   /**
    * Customer-Specific Feature Set and/or Theme.
    *
-   * See {@link EdcUiFeatureSet}.
+   * See {@link EdcUiProfile}.
    */
-  activeFeatureSet: 'EDC_UI_ACTIVE_FEATURE_SET',
+  activeProfile: 'EDC_UI_ACTIVE_PROFILE',
 
   /**
    * EDC Backend URL

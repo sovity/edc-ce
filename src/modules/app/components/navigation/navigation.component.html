@@ -8,13 +8,9 @@
     [opened]="(isHandset$ | async) === false">
     <mat-toolbar class="custom-toolbar">
       <img
-        *ngIf="'mds' | isActiveFeatureSet; else sovityImage"
         width="70%"
-        src="/assets/images/MDS-Logo-black.svg"
-        alt="" />
-      <ng-template #sovityImage
-        ><img width="70%" src="/assets/images/sovity_logo.svg" alt=""
-      /></ng-template>
+        alt="Logo"
+        [attr.src]="appConfigService.config.brandLogoSrc" />
     </mat-toolbar>
     <mat-nav-list>
       <a *ngFor="let route of routes" [routerLink]="[route.path]">
@@ -26,7 +22,10 @@
         </mat-list-item>
       </a>
     </mat-nav-list>
-    <div id="contact-form" class="align-to-bottom">
+    <div
+      *ngIf="'sovity-zammad-integration' | isActiveFeature"
+      id="contact-form"
+      class="align-to-bottom">
       <b>Do you have feedback or need help?</b>
       <p><em>Select &nbsp;<kbd>SAML</kbd>&nbsp; login on following page</em></p>
       <a
