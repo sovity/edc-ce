@@ -3,1111 +3,1111 @@ import {LanguageSelectItem} from './language-select-item';
 export const LANGUAGE_SELECT_DATA: LanguageSelectItem[] = [
 
   {
-    id: 'LANG:MULTI_LINGUAL',
+    id: 'https://w3id.org/idsa/code/MULTI_LINGUAL',
     label: 'Multilingual',
     comment: 'Code indicates that several languages are used or no concrete language can be determined.',
   },
 
   {
-    id: 'ISO_639:AB',
+    id: 'https://w3id.org/idsa/code/AB',
     label: 'Abkhaz',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ab',
   },
 
   {
-    id: 'ISO_639:AA',
+    id: 'https://w3id.org/idsa/code/AA',
     label: 'Afar',
     sameAs: 'https://dbpedia.org/resource/ISO_639:aa',
   },
 
   {
-    id: 'ISO_639:AF',
+    id: 'https://w3id.org/idsa/code/AF',
     label: 'Afrikaans',
     sameAs: 'https://dbpedia.org/resource/ISO_639:af',
   },
 
   {
-    id: 'ISO_639:AK',
+    id: 'https://w3id.org/idsa/code/AK',
     label: 'Akan',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ak',
   },
 
   {
-    id: 'ISO_639:SQ',
+    id: 'https://w3id.org/idsa/code/SQ',
     label: 'Albanian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:sq',
   },
 
   {
-    id: 'ISO_639:AM',
+    id: 'https://w3id.org/idsa/code/AM',
     label: 'Amharic',
     sameAs: 'https://dbpedia.org/resource/ISO_639:am',
   },
 
   {
-    id: 'ISO_639:AR',
+    id: 'https://w3id.org/idsa/code/AR',
     label: 'Arabic',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ar',
   },
 
   {
-    id: 'ISO_639:AN',
+    id: 'https://w3id.org/idsa/code/AN',
     label: 'Aragonese',
     sameAs: 'https://dbpedia.org/resource/ISO_639:an',
   },
 
   {
-    id: 'ISO_639:HY',
+    id: 'https://w3id.org/idsa/code/HY',
     label: 'Armenian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:hy',
   },
 
   {
-    id: 'ISO_639:AS',
+    id: 'https://w3id.org/idsa/code/AS',
     label: 'Assamese',
     sameAs: 'https://dbpedia.org/resource/ISO_639:as',
   },
 
   {
-    id: 'ISO_639:AV',
+    id: 'https://w3id.org/idsa/code/AV',
     label: 'Avaric',
     sameAs: 'https://dbpedia.org/resource/ISO_639:av',
   },
 
   {
-    id: 'ISO_639:AE',
+    id: 'https://w3id.org/idsa/code/AE',
     label: 'Avestan',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ae',
   },
 
   {
-    id: 'ISO_639:AY',
+    id: 'https://w3id.org/idsa/code/AY',
     label: 'Aymara',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ay',
   },
 
   {
-    id: 'ISO_639:AZ',
+    id: 'https://w3id.org/idsa/code/AZ',
     label: 'Azerbaijani',
     sameAs: 'https://dbpedia.org/resource/ISO_639:az',
   },
 
   {
-    id: 'ISO_639:BM',
+    id: 'https://w3id.org/idsa/code/BM',
     label: 'Bambara',
     sameAs: 'https://dbpedia.org/resource/ISO_639:bm',
   },
 
   {
-    id: 'ISO_639:BA',
+    id: 'https://w3id.org/idsa/code/BA',
     label: 'Bashkir',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ba',
   },
 
   {
-    id: 'ISO_639:EU',
+    id: 'https://w3id.org/idsa/code/EU',
     label: 'Basque',
     sameAs: 'https://dbpedia.org/resource/ISO_639:eu',
   },
 
   {
-    id: 'ISO_639:BE',
+    id: 'https://w3id.org/idsa/code/BE',
     label: 'Belarusian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:be',
   },
 
   {
-    id: 'ISO_639:BN',
+    id: 'https://w3id.org/idsa/code/BN',
     label: 'Bengali, Bangla',
     sameAs: 'https://dbpedia.org/resource/ISO_639:bn',
   },
 
   {
-    id: 'ISO_639:BH',
+    id: 'https://w3id.org/idsa/code/BH',
     label: 'Bihari',
     sameAs: 'https://dbpedia.org/resource/ISO_639:bh',
   },
 
   {
-    id: 'ISO_639:BI',
+    id: 'https://w3id.org/idsa/code/BI',
     label: 'Bislama',
     sameAs: 'https://dbpedia.org/resource/ISO_639:bi',
   },
 
   {
-    id: 'ISO_639:BS',
+    id: 'https://w3id.org/idsa/code/BS',
     label: 'Bosnian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:bs',
   },
 
   {
-    id: 'ISO_639:BR',
+    id: 'https://w3id.org/idsa/code/BR',
     label: 'Breton',
     sameAs: 'https://dbpedia.org/resource/ISO_639:br',
   },
 
   {
-    id: 'ISO_639:BG',
+    id: 'https://w3id.org/idsa/code/BG',
     label: 'Bulgarian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:bg',
   },
 
   {
-    id: 'ISO_639:MY',
+    id: 'https://w3id.org/idsa/code/MY',
     label: 'Burmese',
     sameAs: 'https://dbpedia.org/resource/ISO_639:my',
   },
 
   {
-    id: 'ISO_639:CA',
+    id: 'https://w3id.org/idsa/code/CA',
     label: 'Catalan',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ca',
   },
 
   {
-    id: 'ISO_639:CH',
+    id: 'https://w3id.org/idsa/code/CH',
     label: 'Chamorro',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ch',
   },
 
   {
-    id: 'ISO_639:CE',
+    id: 'https://w3id.org/idsa/code/CE',
     label: 'Chechen',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ce',
   },
 
   {
-    id: 'ISO_639:NY',
+    id: 'https://w3id.org/idsa/code/NY',
     label: 'Chichewa, Chewa, Nyanja',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ny',
   },
 
   {
-    id: 'ISO_639:ZH',
+    id: 'https://w3id.org/idsa/code/ZH',
     label: 'Chinese',
     sameAs: 'https://dbpedia.org/resource/ISO_639:zh',
   },
 
   {
-    id: 'ISO_639:CV',
+    id: 'https://w3id.org/idsa/code/CV',
     label: 'Chuvash',
     sameAs: 'https://dbpedia.org/resource/ISO_639:cv',
   },
 
   {
-    id: 'ISO_639:KW',
+    id: 'https://w3id.org/idsa/code/KW',
     label: 'Cornish',
     sameAs: 'https://dbpedia.org/resource/ISO_639:kw',
   },
 
   {
-    id: 'ISO_639:CO',
+    id: 'https://w3id.org/idsa/code/CO',
     label: 'Corsican',
     sameAs: 'https://dbpedia.org/resource/ISO_639:co',
   },
 
   {
-    id: 'ISO_639:CR',
+    id: 'https://w3id.org/idsa/code/CR',
     label: 'Cree',
     sameAs: 'https://dbpedia.org/resource/ISO_639:cr',
   },
 
   {
-    id: 'ISO_639:HR',
+    id: 'https://w3id.org/idsa/code/HR',
     label: 'Croatian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:hr',
   },
 
   {
-    id: 'ISO_639:CS',
+    id: 'https://w3id.org/idsa/code/CS',
     label: 'Czech',
     sameAs: 'https://dbpedia.org/resource/ISO_639:cs',
   },
 
   {
-    id: 'ISO_639:DA',
+    id: 'https://w3id.org/idsa/code/DA',
     label: 'Danish',
     sameAs: 'https://dbpedia.org/resource/ISO_639:da',
   },
 
   {
-    id: 'ISO_639:DV',
+    id: 'https://w3id.org/idsa/code/DV',
     label: 'Divehi, Dhivehi, Maldivian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:dv',
   },
 
   {
-    id: 'ISO_639:NL',
+    id: 'https://w3id.org/idsa/code/NL',
     label: 'Dutch',
     sameAs: 'https://dbpedia.org/resource/ISO_639:nl',
   },
 
   {
-    id: 'ISO_639:DZ',
+    id: 'https://w3id.org/idsa/code/DZ',
     label: 'Dzongkha',
     sameAs: 'https://dbpedia.org/resource/ISO_639:dz',
   },
 
   {
-    id: 'ISO_639:EN',
+    id: 'https://w3id.org/idsa/code/EN',
     label: 'English',
     sameAs: 'https://dbpedia.org/resource/ISO_639:en',
   },
 
   {
-    id: 'ISO_639:EO',
+    id: 'https://w3id.org/idsa/code/EO',
     label: 'Esperanto',
     sameAs: 'https://dbpedia.org/resource/ISO_639:eo',
   },
 
   {
-    id: 'ISO_639:ET',
+    id: 'https://w3id.org/idsa/code/ET',
     label: 'Estonian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:et',
   },
 
   {
-    id: 'ISO_639:EE',
+    id: 'https://w3id.org/idsa/code/EE',
     label: 'Ewe',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ee',
   },
 
   {
-    id: 'ISO_639:FO',
+    id: 'https://w3id.org/idsa/code/FO',
     label: 'Faroese',
     sameAs: 'https://dbpedia.org/resource/ISO_639:fo',
   },
 
   {
-    id: 'ISO_639:FJ',
+    id: 'https://w3id.org/idsa/code/FJ',
     label: 'Fijian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:fj',
   },
 
   {
-    id: 'ISO_639:FI',
+    id: 'https://w3id.org/idsa/code/FI',
     label: 'Finnish',
     sameAs: 'https://dbpedia.org/resource/ISO_639:fi',
   },
 
   {
-    id: 'ISO_639:FR',
+    id: 'https://w3id.org/idsa/code/FR',
     label: 'French',
     sameAs: 'https://dbpedia.org/resource/ISO_639:fr',
   },
 
   {
-    id: 'ISO_639:FF',
+    id: 'https://w3id.org/idsa/code/FF',
     label: 'Fula, Fulah, Pulaar, Pular',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ff',
   },
 
   {
-    id: 'ISO_639:GL',
+    id: 'https://w3id.org/idsa/code/GL',
     label: 'Galician',
     sameAs: 'https://dbpedia.org/resource/ISO_639:gl',
   },
 
   {
-    id: 'ISO_639:KA',
+    id: 'https://w3id.org/idsa/code/KA',
     label: 'Georgian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ka',
   },
 
   {
-    id: 'ISO_639:DE',
+    id: 'https://w3id.org/idsa/code/DE',
     label: 'German',
     sameAs: 'https://dbpedia.org/resource/ISO_639:de',
   },
 
   {
-    id: 'ISO_639:EL',
+    id: 'https://w3id.org/idsa/code/EL',
     label: 'Greek (modern)',
     sameAs: 'https://dbpedia.org/resource/ISO_639:el',
   },
 
   {
-    id: 'ISO_639:GN',
+    id: 'https://w3id.org/idsa/code/GN',
     label: 'Guaraní',
     sameAs: 'https://dbpedia.org/resource/ISO_639:gn',
   },
 
   {
-    id: 'ISO_639:GU',
+    id: 'https://w3id.org/idsa/code/GU',
     label: 'Gujarati',
     sameAs: 'https://dbpedia.org/resource/ISO_639:gu',
   },
 
   {
-    id: 'ISO_639:HT',
+    id: 'https://w3id.org/idsa/code/HT',
     label: 'Haitian, Haitian Creole',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ht',
   },
 
   {
-    id: 'ISO_639:HA',
+    id: 'https://w3id.org/idsa/code/HA',
     label: 'Hausa',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ha',
   },
 
   {
-    id: 'ISO_639:HE',
+    id: 'https://w3id.org/idsa/code/HE',
     label: 'Hebrew (modern)',
     sameAs: 'https://dbpedia.org/resource/ISO_639:he',
   },
 
   {
-    id: 'ISO_639:HZ',
+    id: 'https://w3id.org/idsa/code/HZ',
     label: 'Herero',
     sameAs: 'https://dbpedia.org/resource/ISO_639:hz',
   },
 
   {
-    id: 'ISO_639:HI',
+    id: 'https://w3id.org/idsa/code/HI',
     label: 'Hindi',
     sameAs: 'https://dbpedia.org/resource/ISO_639:hi',
   },
 
   {
-    id: 'ISO_639:HO',
+    id: 'https://w3id.org/idsa/code/HO',
     label: 'Hiri Motu',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ho',
   },
 
   {
-    id: 'ISO_639:HU',
+    id: 'https://w3id.org/idsa/code/HU',
     label: 'Hungarian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:hu',
   },
 
   {
-    id: 'ISO_639:IA',
+    id: 'https://w3id.org/idsa/code/IA',
     label: 'Interlingua',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ia',
   },
 
   {
-    id: 'ISO_639:ID',
+    id: 'https://w3id.org/idsa/code/ID',
     label: 'Indonesian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:id',
   },
 
   {
-    id: 'ISO_639:IE',
+    id: 'https://w3id.org/idsa/code/IE',
     label: 'Interlingue',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ie',
   },
 
   {
-    id: 'ISO_639:GA',
+    id: 'https://w3id.org/idsa/code/GA',
     label: 'Irish',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ga',
   },
 
   {
-    id: 'ISO_639:IG',
+    id: 'https://w3id.org/idsa/code/IG',
     label: 'Igbo',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ig',
   },
 
   {
-    id: 'ISO_639:IK',
+    id: 'https://w3id.org/idsa/code/IK',
     label: 'Inupiaq',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ik',
   },
 
   {
-    id: 'ISO_639:IO',
+    id: 'https://w3id.org/idsa/code/IO',
     label: 'Ido',
     sameAs: 'https://dbpedia.org/resource/ISO_639:io',
   },
 
   {
-    id: 'ISO_639:IS',
+    id: 'https://w3id.org/idsa/code/IS',
     label: 'Icelandic',
     sameAs: 'https://dbpedia.org/resource/ISO_639:is',
   },
 
   {
-    id: 'ISO_639:IT',
+    id: 'https://w3id.org/idsa/code/IT',
     label: 'Italian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:it',
   },
 
   {
-    id: 'ISO_639:IU',
+    id: 'https://w3id.org/idsa/code/IU',
     label: 'Inuktitut',
     sameAs: 'https://dbpedia.org/resource/ISO_639:iu',
   },
 
   {
-    id: 'ISO_639:JA',
+    id: 'https://w3id.org/idsa/code/JA',
     label: 'Japanese',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ja',
   },
 
   {
-    id: 'ISO_639:JV',
+    id: 'https://w3id.org/idsa/code/JV',
     label: 'Javanese',
     sameAs: 'https://dbpedia.org/resource/ISO_639:jv',
   },
 
   {
-    id: 'ISO_639:KL',
+    id: 'https://w3id.org/idsa/code/KL',
     label: 'Kalaallisut, Greenlandic',
     sameAs: 'https://dbpedia.org/resource/ISO_639:kl',
   },
 
   {
-    id: 'ISO_639:KN',
+    id: 'https://w3id.org/idsa/code/KN',
     label: 'Kannada',
     sameAs: 'https://dbpedia.org/resource/ISO_639:kn',
   },
 
   {
-    id: 'ISO_639:KR',
+    id: 'https://w3id.org/idsa/code/KR',
     label: 'Kanuri',
     sameAs: 'https://dbpedia.org/resource/ISO_639:kr',
   },
 
   {
-    id: 'ISO_639:KS',
+    id: 'https://w3id.org/idsa/code/KS',
     label: 'Kashmiri',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ks',
   },
 
   {
-    id: 'ISO_639:KK',
+    id: 'https://w3id.org/idsa/code/KK',
     label: 'Kazakh',
     sameAs: 'https://dbpedia.org/resource/ISO_639:kk',
   },
 
   {
-    id: 'ISO_639:KM',
+    id: 'https://w3id.org/idsa/code/KM',
     label: 'Khmer',
     sameAs: 'https://dbpedia.org/resource/ISO_639:km',
   },
 
   {
-    id: 'ISO_639:KI',
+    id: 'https://w3id.org/idsa/code/KI',
     label: 'Kikuyu, Gikuyu',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ki',
   },
 
   {
-    id: 'ISO_639:RW',
+    id: 'https://w3id.org/idsa/code/RW',
     label: 'Kinyarwanda',
     sameAs: 'https://dbpedia.org/resource/ISO_639:rw',
   },
 
   {
-    id: 'ISO_639:KY',
+    id: 'https://w3id.org/idsa/code/KY',
     label: 'Kyrgyz',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ky',
   },
 
   {
-    id: 'ISO_639:KV',
+    id: 'https://w3id.org/idsa/code/KV',
     label: 'Komi',
     sameAs: 'https://dbpedia.org/resource/ISO_639:kv',
   },
 
   {
-    id: 'ISO_639:KG',
+    id: 'https://w3id.org/idsa/code/KG',
     label: 'Kongo',
     sameAs: 'https://dbpedia.org/resource/ISO_639:kg',
   },
 
   {
-    id: 'ISO_639:KO',
+    id: 'https://w3id.org/idsa/code/KO',
     label: 'Korean',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ko',
   },
 
   {
-    id: 'ISO_639:KU',
+    id: 'https://w3id.org/idsa/code/KU',
     label: 'Kurdish',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ku',
   },
 
   {
-    id: 'ISO_639:KJ',
+    id: 'https://w3id.org/idsa/code/KJ',
     label: 'Kwanyama, Kuanyama',
     sameAs: 'https://dbpedia.org/resource/ISO_639:kj',
   },
 
   {
-    id: 'ISO_639:LA',
+    id: 'https://w3id.org/idsa/code/LA',
     label: 'Latin',
     sameAs: 'https://dbpedia.org/resource/ISO_639:la',
   },
 
   {
-    id: 'ISO_639:LB',
+    id: 'https://w3id.org/idsa/code/LB',
     label: 'Luxembourgish, Letzeburgesch',
     sameAs: 'https://dbpedia.org/resource/ISO_639:lb',
   },
 
   {
-    id: 'ISO_639:LG',
+    id: 'https://w3id.org/idsa/code/LG',
     label: 'Ganda',
     sameAs: 'https://dbpedia.org/resource/ISO_639:lg',
   },
 
   {
-    id: 'ISO_639:LI',
+    id: 'https://w3id.org/idsa/code/LI',
     label: 'Limburgish, Limburgan, Limburger',
     sameAs: 'https://dbpedia.org/resource/ISO_639:li',
   },
 
   {
-    id: 'ISO_639:LN',
+    id: 'https://w3id.org/idsa/code/LN',
     label: 'Lingala',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ln',
   },
 
   {
-    id: 'ISO_639:LO',
+    id: 'https://w3id.org/idsa/code/LO',
     label: 'Lao',
     sameAs: 'https://dbpedia.org/resource/ISO_639:lo',
   },
 
   {
-    id: 'ISO_639:LT',
+    id: 'https://w3id.org/idsa/code/LT',
     label: 'Lithuanian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:lt',
   },
 
   {
-    id: 'ISO_639:LU',
+    id: 'https://w3id.org/idsa/code/LU',
     label: 'Luba-Katanga',
     sameAs: 'https://dbpedia.org/resource/ISO_639:lu',
   },
 
   {
-    id: 'ISO_639:LV',
+    id: 'https://w3id.org/idsa/code/LV',
     label: 'Latvian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:lv',
   },
 
   {
-    id: 'ISO_639:GV',
+    id: 'https://w3id.org/idsa/code/GV',
     label: 'Manx',
     sameAs: 'https://dbpedia.org/resource/ISO_639:gv',
   },
 
   {
-    id: 'ISO_639:MK',
+    id: 'https://w3id.org/idsa/code/MK',
     label: 'Macedonian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:mk',
   },
 
   {
-    id: 'ISO_639:MG',
+    id: 'https://w3id.org/idsa/code/MG',
     label: 'Malagasy',
     sameAs: 'https://dbpedia.org/resource/ISO_639:mg',
   },
 
   {
-    id: 'ISO_639:MS',
+    id: 'https://w3id.org/idsa/code/MS',
     label: 'Malay',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ms',
   },
 
   {
-    id: 'ISO_639:ML',
+    id: 'https://w3id.org/idsa/code/ML',
     label: 'Malayalam',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ml',
   },
 
   {
-    id: 'ISO_639:MT',
+    id: 'https://w3id.org/idsa/code/MT',
     label: 'Maltese',
     sameAs: 'https://dbpedia.org/resource/ISO_639:mt',
   },
 
   {
-    id: 'ISO_639:MI',
+    id: 'https://w3id.org/idsa/code/MI',
     label: 'Māori',
     sameAs: 'https://dbpedia.org/resource/ISO_639:mi',
   },
 
   {
-    id: 'ISO_639:MR',
+    id: 'https://w3id.org/idsa/code/MR',
     label: 'Marathi (Marāṭhī)',
     sameAs: 'https://dbpedia.org/resource/ISO_639:mr',
   },
 
   {
-    id: 'ISO_639:MH',
+    id: 'https://w3id.org/idsa/code/MH',
     label: 'Marshallese',
     sameAs: 'https://dbpedia.org/resource/ISO_639:mh',
   },
 
   {
-    id: 'ISO_639:MN',
+    id: 'https://w3id.org/idsa/code/MN',
     label: 'Mongolian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:mn',
   },
 
   {
-    id: 'ISO_639:NA',
+    id: 'https://w3id.org/idsa/code/NA',
     label: 'Nauruan',
     sameAs: 'https://dbpedia.org/resource/ISO_639:na',
   },
 
   {
-    id: 'ISO_639:NV',
+    id: 'https://w3id.org/idsa/code/NV',
     label: 'Navajo, Navaho',
     sameAs: 'https://dbpedia.org/resource/ISO_639:nv',
   },
 
   {
-    id: 'ISO_639:ND',
+    id: 'https://w3id.org/idsa/code/ND',
     label: 'Northern Ndebele',
     sameAs: 'https://dbpedia.org/resource/ISO_639:nd',
   },
 
   {
-    id: 'ISO_639:NE',
+    id: 'https://w3id.org/idsa/code/NE',
     label: 'Nepali',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ne',
   },
 
   {
-    id: 'ISO_639:NG',
+    id: 'https://w3id.org/idsa/code/NG',
     label: 'Ndonga',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ng',
   },
 
   {
-    id: 'ISO_639:NB',
+    id: 'https://w3id.org/idsa/code/NB',
     label: 'Norwegian Bokmål',
     sameAs: 'https://dbpedia.org/resource/ISO_639:nb',
   },
 
   {
-    id: 'ISO_639:NN',
+    id: 'https://w3id.org/idsa/code/NN',
     label: 'Norwegian Nynorsk',
     sameAs: 'https://dbpedia.org/resource/ISO_639:nn',
   },
 
   {
-    id: 'ISO_639:NO',
+    id: 'https://w3id.org/idsa/code/NO',
     label: 'Norwegian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:no',
   },
 
   {
-    id: 'ISO_639:II',
+    id: 'https://w3id.org/idsa/code/II',
     label: 'Nuosu',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ii',
   },
 
   {
-    id: 'ISO_639:NR',
+    id: 'https://w3id.org/idsa/code/NR',
     label: 'Southern Ndebele',
     sameAs: 'https://dbpedia.org/resource/ISO_639:nr',
   },
 
   {
-    id: 'ISO_639:OC',
+    id: 'https://w3id.org/idsa/code/OC',
     label: 'Occitan',
     sameAs: 'https://dbpedia.org/resource/ISO_639:oc',
   },
 
   {
-    id: 'ISO_639:OJ',
+    id: 'https://w3id.org/idsa/code/OJ',
     label: 'Ojibwe, Ojibwa',
     sameAs: 'https://dbpedia.org/resource/ISO_639:oj',
   },
 
   {
-    id: 'ISO_639:CU',
+    id: 'https://w3id.org/idsa/code/CU',
     label: 'Old Church Slavonic, Church Slavonic, Old Bulgarian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:cu',
   },
 
   {
-    id: 'ISO_639:OM',
+    id: 'https://w3id.org/idsa/code/OM',
     label: 'Oromo',
     sameAs: 'https://dbpedia.org/resource/ISO_639:om',
   },
 
   {
-    id: 'ISO_639:OR',
+    id: 'https://w3id.org/idsa/code/OR',
     label: 'Oriya',
     sameAs: 'https://dbpedia.org/resource/ISO_639:or',
   },
 
   {
-    id: 'ISO_639:OS',
+    id: 'https://w3id.org/idsa/code/OS',
     label: 'Ossetian, Ossetic',
     sameAs: 'https://dbpedia.org/resource/ISO_639:os',
   },
 
   {
-    id: 'ISO_639:PA',
+    id: 'https://w3id.org/idsa/code/PA',
     label: '(Eastern) Punjabi',
     sameAs: 'https://dbpedia.org/resource/ISO_639:pa',
   },
 
   {
-    id: 'ISO_639:PI',
+    id: 'https://w3id.org/idsa/code/PI',
     label: 'Pāli',
     sameAs: 'https://dbpedia.org/resource/ISO_639:pi',
   },
 
   {
-    id: 'ISO_639:FA',
+    id: 'https://w3id.org/idsa/code/FA',
     label: 'Persian (Farsi)',
     sameAs: 'https://dbpedia.org/resource/ISO_639:fa',
   },
 
   {
-    id: 'ISO_639:PL',
+    id: 'https://w3id.org/idsa/code/PL',
     label: 'Polish',
     sameAs: 'https://dbpedia.org/resource/ISO_639:pl',
   },
 
   {
-    id: 'ISO_639:PS',
+    id: 'https://w3id.org/idsa/code/PS',
     label: 'Pashto, Pushto',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ps',
   },
 
   {
-    id: 'ISO_639:PT',
+    id: 'https://w3id.org/idsa/code/PT',
     label: 'Portuguese',
     sameAs: 'https://dbpedia.org/resource/ISO_639:pt',
   },
 
   {
-    id: 'ISO_639:QU',
+    id: 'https://w3id.org/idsa/code/QU',
     label: 'Quechua',
     sameAs: 'https://dbpedia.org/resource/ISO_639:qu',
   },
 
   {
-    id: 'ISO_639:RM',
+    id: 'https://w3id.org/idsa/code/RM',
     label: 'Romansh',
     sameAs: 'https://dbpedia.org/resource/ISO_639:rm',
   },
 
   {
-    id: 'ISO_639:RN',
+    id: 'https://w3id.org/idsa/code/RN',
     label: 'Kirundi',
     sameAs: 'https://dbpedia.org/resource/ISO_639:rn',
   },
 
   {
-    id: 'ISO_639:RO',
+    id: 'https://w3id.org/idsa/code/RO',
     label: 'Romanian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ro',
   },
 
   {
-    id: 'ISO_639:RU',
+    id: 'https://w3id.org/idsa/code/RU',
     label: 'Russian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ru',
   },
 
   {
-    id: 'ISO_639:SA',
+    id: 'https://w3id.org/idsa/code/SA',
     label: 'Sanskrit (Saṁskṛta)',
     sameAs: 'https://dbpedia.org/resource/ISO_639:sa',
   },
 
   {
-    id: 'ISO_639:SC',
+    id: 'https://w3id.org/idsa/code/SC',
     label: 'Sardinian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:sc',
   },
 
   {
-    id: 'ISO_639:SD',
+    id: 'https://w3id.org/idsa/code/SD',
     label: 'Sindhi',
     sameAs: 'https://dbpedia.org/resource/ISO_639:sd',
   },
 
   {
-    id: 'ISO_639:SE',
+    id: 'https://w3id.org/idsa/code/SE',
     label: 'Northern Sami',
     sameAs: 'https://dbpedia.org/resource/ISO_639:se',
   },
 
   {
-    id: 'ISO_639:SM',
+    id: 'https://w3id.org/idsa/code/SM',
     label: 'Samoan',
     sameAs: 'https://dbpedia.org/resource/ISO_639:sm',
   },
 
   {
-    id: 'ISO_639:SG',
+    id: 'https://w3id.org/idsa/code/SG',
     label: 'Sango',
     sameAs: 'https://dbpedia.org/resource/ISO_639:sg',
   },
 
   {
-    id: 'ISO_639:SR',
+    id: 'https://w3id.org/idsa/code/SR',
     label: 'Serbian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:sr',
   },
 
   {
-    id: 'ISO_639:GD',
+    id: 'https://w3id.org/idsa/code/GD',
     label: 'Scottish Gaelic, Gaelic',
     sameAs: 'https://dbpedia.org/resource/ISO_639:gd',
   },
 
   {
-    id: 'ISO_639:SN',
+    id: 'https://w3id.org/idsa/code/SN',
     label: 'Shona',
     sameAs: 'https://dbpedia.org/resource/ISO_639:sn',
   },
 
   {
-    id: 'ISO_639:SI',
+    id: 'https://w3id.org/idsa/code/SI',
     label: 'Sinhalese, Sinhala',
     sameAs: 'https://dbpedia.org/resource/ISO_639:si',
   },
 
   {
-    id: 'ISO_639:SK',
+    id: 'https://w3id.org/idsa/code/SK',
     label: 'Slovak',
     sameAs: 'https://dbpedia.org/resource/ISO_639:sk',
   },
 
   {
-    id: 'ISO_639:SL',
+    id: 'https://w3id.org/idsa/code/SL',
     label: 'Slovene',
     sameAs: 'https://dbpedia.org/resource/ISO_639:sl',
   },
 
   {
-    id: 'ISO_639:SO',
+    id: 'https://w3id.org/idsa/code/SO',
     label: 'Somali',
     sameAs: 'https://dbpedia.org/resource/ISO_639:so',
   },
 
   {
-    id: 'ISO_639:ST',
+    id: 'https://w3id.org/idsa/code/ST',
     label: 'outhern Sotho',
     sameAs: 'https://dbpedia.org/resource/ISO_639:st',
   },
 
   {
-    id: 'ISO_639:ES',
+    id: 'https://w3id.org/idsa/code/ES',
     label: 'Spanish',
     sameAs: 'https://dbpedia.org/resource/ISO_639:es',
   },
 
   {
-    id: 'ISO_639:SU',
+    id: 'https://w3id.org/idsa/code/SU',
     label: 'Sundanese',
     sameAs: 'https://dbpedia.org/resource/ISO_639:su',
   },
 
   {
-    id: 'ISO_639:SW',
+    id: 'https://w3id.org/idsa/code/SW',
     label: 'Swahili',
     sameAs: 'https://dbpedia.org/resource/ISO_639:sw',
   },
 
   {
-    id: 'ISO_639:SS',
+    id: 'https://w3id.org/idsa/code/SS',
     label: 'Swati',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ss',
   },
 
   {
-    id: 'ISO_639:SV',
+    id: 'https://w3id.org/idsa/code/SV',
     label: 'Swedish',
     sameAs: 'https://dbpedia.org/resource/ISO_639:sv',
   },
 
   {
-    id: 'ISO_639:TA',
+    id: 'https://w3id.org/idsa/code/TA',
     label: 'Tamil',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ta',
   },
 
   {
-    id: 'ISO_639:TE',
+    id: 'https://w3id.org/idsa/code/TE',
     label: 'Telugu',
     sameAs: 'https://dbpedia.org/resource/ISO_639:te',
   },
 
   {
-    id: 'ISO_639:TG',
+    id: 'https://w3id.org/idsa/code/TG',
     label: 'Tajik',
     sameAs: 'https://dbpedia.org/resource/ISO_639:tg',
   },
 
   {
-    id: 'ISO_639:TH',
+    id: 'https://w3id.org/idsa/code/TH',
     label: 'Thai',
     sameAs: 'https://dbpedia.org/resource/ISO_639:th',
   },
 
   {
-    id: 'ISO_639:TI',
+    id: 'https://w3id.org/idsa/code/TI',
     label: 'Tigrinya',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ti',
   },
 
   {
-    id: 'ISO_639:BO',
+    id: 'https://w3id.org/idsa/code/BO',
     label: 'Tibetan Standard, Tibetan, Central',
     sameAs: 'https://dbpedia.org/resource/ISO_639:bo',
   },
 
   {
-    id: 'ISO_639:TK',
+    id: 'https://w3id.org/idsa/code/TK',
     label: 'Turkmen',
     sameAs: 'https://dbpedia.org/resource/ISO_639:tk',
   },
 
   {
-    id: 'ISO_639:TL',
+    id: 'https://w3id.org/idsa/code/TL',
     label: 'Tagalog',
     sameAs: 'https://dbpedia.org/resource/ISO_639:tl',
   },
 
   {
-    id: 'ISO_639:TN',
+    id: 'https://w3id.org/idsa/code/TN',
     label: 'Tswana',
     sameAs: 'https://dbpedia.org/resource/ISO_639:tn',
   },
 
   {
-    id: 'ISO_639:TO',
+    id: 'https://w3id.org/idsa/code/TO',
     label: 'Tonga (Tonga Islands)',
     sameAs: 'https://dbpedia.org/resource/ISO_639:to',
   },
 
   {
-    id: 'ISO_639:TR',
+    id: 'https://w3id.org/idsa/code/TR',
     label: 'Turkish',
     sameAs: 'https://dbpedia.org/resource/ISO_639:tr',
   },
 
   {
-    id: 'ISO_639:TS',
+    id: 'https://w3id.org/idsa/code/TS',
     label: 'Tsonga',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ts',
   },
 
   {
-    id: 'ISO_639:TT',
+    id: 'https://w3id.org/idsa/code/TT',
     label: 'Tatar',
     sameAs: 'https://dbpedia.org/resource/ISO_639:tt',
   },
 
   {
-    id: 'ISO_639:TW',
+    id: 'https://w3id.org/idsa/code/TW',
     label: 'Twi',
     sameAs: 'https://dbpedia.org/resource/ISO_639:tw',
   },
 
   {
-    id: 'ISO_639:TY',
+    id: 'https://w3id.org/idsa/code/TY',
     label: 'Tahitian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ty',
   },
 
   {
-    id: 'ISO_639:UG',
+    id: 'https://w3id.org/idsa/code/UG',
     label: 'Uyghur',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ug',
   },
 
   {
-    id: 'ISO_639:UK',
+    id: 'https://w3id.org/idsa/code/UK',
     label: 'Ukrainian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:uk',
   },
 
   {
-    id: 'ISO_639:UR',
+    id: 'https://w3id.org/idsa/code/UR',
     label: 'Urdu',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ur',
   },
 
   {
-    id: 'ISO_639:UZ',
+    id: 'https://w3id.org/idsa/code/UZ',
     label: 'Uzbek',
     sameAs: 'https://dbpedia.org/resource/ISO_639:uz',
   },
 
   {
-    id: 'ISO_639:VE',
+    id: 'https://w3id.org/idsa/code/VE',
     label: 'Venda',
     sameAs: 'https://dbpedia.org/resource/ISO_639:ve',
   },
 
   {
-    id: 'ISO_639:VI',
+    id: 'https://w3id.org/idsa/code/VI',
     label: 'Vietnamese',
     sameAs: 'https://dbpedia.org/resource/ISO_639:vi',
   },
 
   {
-    id: 'ISO_639:VO',
+    id: 'https://w3id.org/idsa/code/VO',
     label: 'Volapük',
     sameAs: 'https://dbpedia.org/resource/ISO_639:vo',
   },
 
   {
-    id: 'ISO_639:WA',
+    id: 'https://w3id.org/idsa/code/WA',
     label: 'Walloon',
     sameAs: 'https://dbpedia.org/resource/ISO_639:wa',
   },
 
   {
-    id: 'ISO_639:CY',
+    id: 'https://w3id.org/idsa/code/CY',
     label: 'Welsh',
     sameAs: 'https://dbpedia.org/resource/ISO_639:cy',
   },
 
   {
-    id: 'ISO_639:WO',
+    id: 'https://w3id.org/idsa/code/WO',
     label: 'Wolof',
     sameAs: 'https://dbpedia.org/resource/ISO_639:wo',
   },
 
   {
-    id: 'ISO_639:FY',
+    id: 'https://w3id.org/idsa/code/FY',
     label: 'Western Frisian',
     sameAs: 'https://dbpedia.org/resource/ISO_639:fy',
   },
 
   {
-    id: 'ISO_639:XH',
+    id: 'https://w3id.org/idsa/code/XH',
     label: 'Xhosa',
     sameAs: 'https://dbpedia.org/resource/ISO_639:xh',
   },
 
   {
-    id: 'ISO_639:YI',
+    id: 'https://w3id.org/idsa/code/YI',
     label: 'Yiddish',
     sameAs: 'https://dbpedia.org/resource/ISO_639:yi',
   },
 
   {
-    id: 'ISO_639:YO',
+    id: 'https://w3id.org/idsa/code/YO',
     label: 'Yoruba',
     sameAs: 'https://dbpedia.org/resource/ISO_639:yo',
   },
 
   {
-    id: 'ISO_639:ZA',
+    id: 'https://w3id.org/idsa/code/ZA',
     label: 'Zhuang, Chuang',
     sameAs: 'https://dbpedia.org/resource/ISO_639:za',
   },
 
   {
-    id: 'ISO_639:ZU',
+    id: 'https://w3id.org/idsa/code/ZU',
     label: 'Zulu',
     sameAs: 'https://dbpedia.org/resource/ISO_639:zu',
   }
