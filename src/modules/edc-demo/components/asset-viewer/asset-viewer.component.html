@@ -1,23 +1,29 @@
 <div *ngIf="filteredAssets$ | async as assets" id="wrapper">
   <div class="flex flex-row !space-x-[10px] items-start">
     <!-- Search Bar -->
-    <mat-form-field appearance="outline" class="search-form-field" color="primary">
+    <mat-form-field
+      class="search-form-field"
+      appearance="outline"
+      color="primary">
       <mat-label>Search assets</mat-label>
-      <input (input)="onSearch()" [(ngModel)]="searchText" matInput>
+      <input matInput [(ngModel)]="searchText" (input)="onSearch()" />
       <mat-icon matPrefix>search</mat-icon>
-      <button *ngIf="searchText" (click)="searchText=''; onSearch()" mat-icon-button matSuffix>
+      <button
+        *ngIf="searchText"
+        mat-icon-button
+        matSuffix
+        (click)="searchText = ''; onSearch()">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
 
     <!-- Create Button -->
     <button
-      (click)="onCreate()"
-      color="primary"
       id="create-button"
+      color="primary"
       mat-raised-button
-      style="margin-top: 8px; height: 44px;"
-    >
+      style="margin-top: 8px; height: 44px"
+      (click)="onCreate()">
       <mat-icon>add_circle_outline</mat-icon>
       Create asset
     </button>
@@ -26,9 +32,14 @@
     <div class="grow"></div>
 
     <!-- Paginator -->
-    <mat-paginator [length]="assets.length" hidePageSize="true" pageSize="contractDefinitions.length">
+    <mat-paginator
+      hidePageSize="true"
+      pageSize="contractDefinitions.length"
+      [length]="assets.length">
     </mat-paginator>
   </div>
 
-  <edc-demo-asset-list [assets]="assets" (assetClick)="onAssetClick($event)"></edc-demo-asset-list>
+  <edc-demo-asset-list
+    [assets]="assets"
+    (assetClick)="onAssetClick($event)"></edc-demo-asset-list>
 </div>

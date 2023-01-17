@@ -1,34 +1,51 @@
 <div id="wrapper">
-  <div style="display: flex; flex-direction: row;">
+  <div style="display: flex; flex-direction: row">
     <!-- Search Bar -->
     <mat-form-field class="search-form-field" color="accent">
       <mat-label>Search catalog</mat-label>
-      <input (input)="onSearch()" [(ngModel)]="searchText" matInput>
+      <input matInput [(ngModel)]="searchText" (input)="onSearch()" />
       <mat-icon matPrefix>search</mat-icon>
-      <button (click)="searchText=''; onSearch()" *ngIf="searchText" mat-icon-button matSuffix>
+      <button
+        *ngIf="searchText"
+        mat-icon-button
+        matSuffix
+        (click)="searchText = ''; onSearch()">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
 
     <!-- Catalog URL -->
-    <mat-form-field class="search-form-field mat-hint-text-ellipsis" color="accent" style="margin-left: 15px">
+    <mat-form-field
+      class="search-form-field mat-hint-text-ellipsis"
+      color="accent"
+      style="margin-left: 15px">
       <mat-label>Catalog URL</mat-label>
-      <input (input)="onCatalogUrlsChange()" [(ngModel)]="customCatalogUrl" matInput>
-      <mat-hint *ngIf="presetCatalogUrlsMessage" [matTooltip]="presetCatalogUrlsMessage">{{ presetCatalogUrlsMessage }}</mat-hint>
+      <input
+        matInput
+        [(ngModel)]="customCatalogUrl"
+        (input)="onCatalogUrlsChange()" />
+      <mat-hint
+        *ngIf="presetCatalogUrlsMessage"
+        [matTooltip]="presetCatalogUrlsMessage"
+        >{{ presetCatalogUrlsMessage }}</mat-hint
+      >
     </mat-form-field>
 
     <!-- Spacer -->
-    <div style="flex-grow: 1;"></div>
+    <div style="flex-grow: 1"></div>
 
     <!-- Pagination -->
-    <mat-paginator [length]="filteredContractOffers.length" hidePageSize="true"
-                   pageSize="filteredContractOffers.length">
+    <mat-paginator
+      hidePageSize="true"
+      pageSize="filteredContractOffers.length"
+      [length]="filteredContractOffers.length">
     </mat-paginator>
   </div>
 
   <edc-demo-contract-offer-list
     *ngIf="filteredContractOffers.length"
     [contractOffers]="filteredContractOffers"
-    (contractOfferClick)="onContractOfferClick($event)"
-  ></edc-demo-contract-offer-list>
+    (contractOfferClick)="
+      onContractOfferClick($event)
+    "></edc-demo-contract-offer-list>
 </div>

@@ -1,30 +1,31 @@
 #wrapper {
-    margin: 20px;
+  margin: 20px;
 }
 
 .transfer-history-table {
-    width: 100%;
+  width: 100%;
 }
 
 .transfer-history-table-header th {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .mat-table {
-    overflow-x: scroll;
+  overflow-x: scroll;
 }
 
-.mat-cell, .mat-header-cell {
+.mat-cell,
+.mat-header-cell {
   padding: 0px 10px;
 }
 
 .singleline-cell {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 mat-paginator {
-    display: inline-block;
-    background-color: transparent;
+  display: inline-block;
+  background-color: transparent;
 }
 
 .info-box {
@@ -43,5 +44,3 @@ mat-paginator {
 .action-button {
   margin-right: 5px;
 }
-
-

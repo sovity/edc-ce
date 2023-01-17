@@ -1,9 +1,10 @@
-import {FormControl, FormGroup, ɵFormGroupValue} from "@angular/forms";
+import {FormControl, FormGroup, ɵFormGroupValue} from '@angular/forms';
 
 /**
  * Form Value Type
  */
-export type NewPolicyDialogFormValue = ɵFormGroupValue<NewPolicyDialogFormModel>;
+export type NewPolicyDialogFormValue =
+  ɵFormGroupValue<NewPolicyDialogFormModel>;
 
 /**
  * Form Group Template Type
@@ -11,8 +12,13 @@ export type NewPolicyDialogFormValue = ɵFormGroupValue<NewPolicyDialogFormModel
 export interface NewPolicyDialogFormModel {
   id: FormControl<string>;
   policyType: FormControl<PolicyType>;
-  range: FormGroup<{ start: FormControl<Date | null>, end: FormControl<Date | null> }>;
+  range: FormGroup<{
+    start: FormControl<Date | null>;
+    end: FormControl<Date | null>;
+  }>;
   connectorId: FormControl<string>;
 }
 
-export type PolicyType = 'Time-Period-Restricted' | 'Connector-Restricted-Usage';
+export type PolicyType =
+  | 'Time-Period-Restricted'
+  | 'Connector-Restricted-Usage';

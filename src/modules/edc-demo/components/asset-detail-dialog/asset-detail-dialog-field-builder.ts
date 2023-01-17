@@ -1,54 +1,54 @@
 import {Injectable} from '@angular/core';
-import {Asset} from "../../models/asset";
-import {AssetDetailDialogField} from "./asset-detail-dialog-field";
-import {validUrlPattern} from "../../validators/url-validator";
-import {ActiveFeatureSet} from "../../../app/config/active-feature-set";
+import {ActiveFeatureSet} from '../../../app/config/active-feature-set';
+import {Asset} from '../../models/asset';
+import {validUrlPattern} from '../../validators/url-validator';
+import {AssetDetailDialogField} from './asset-detail-dialog-field';
 
 @Injectable()
 export class AssetDetailDialogFieldBuilder {
-  constructor(private activeFeatureSet: ActiveFeatureSet) {
-  }
+  constructor(private activeFeatureSet: ActiveFeatureSet) {}
 
   buildFields(asset: Asset): AssetDetailDialogField[] {
     const tryValue = (s?: string | null) => s || '-';
-    const tryUrl = (s?: string | null): string | undefined => s?.match(validUrlPattern) ? s : undefined
+    const tryUrl = (s?: string | null): string | undefined =>
+      s?.match(validUrlPattern) ? s : undefined;
 
     let fields: AssetDetailDialogField[] = [
       {
         icon: 'file_copy',
         label: 'Version',
         text: tryValue(asset.version),
-        additionalClasses: 'break-all'
+        additionalClasses: 'break-all',
       },
       {
         icon: 'category',
         label: 'Content Type',
         text: tryValue(asset.contentType),
-        additionalClasses: 'break-all'
+        additionalClasses: 'break-all',
       },
       {
         icon: 'language',
         label: 'Language',
         text: tryValue(asset.language?.label),
-        url: asset.language?.sameAs
+        url: asset.language?.sameAs,
       },
       {
         icon: 'apartment',
         label: 'Publisher',
         text: tryValue(asset.publisher),
-        url: tryUrl(asset.publisher)
+        url: tryUrl(asset.publisher),
       },
       {
         icon: 'bookmarks',
         label: 'Endpoint Documentation',
         text: tryValue(asset.endpointDocumentation),
-        url: tryUrl(asset.endpointDocumentation)
+        url: tryUrl(asset.endpointDocumentation),
       },
       {
         icon: 'gavel',
         label: 'Standard License',
         text: tryValue(asset.standardLicense),
-        url: tryUrl(asset.standardLicense)
+        url: tryUrl(asset.standardLicense),
       },
     ];
 
@@ -75,20 +75,18 @@ export class AssetDetailDialogFieldBuilder {
           label: 'Data Model',
           text: tryValue(asset.dataModel),
           url: tryUrl(asset.dataModel),
-          additionalClasses: 'break-all'
+          additionalClasses: 'break-all',
         },
-      )
+      );
     }
 
-    fields.push(
-      {
-        icon: 'account_circle',
-        label: 'Organization',
-        text: tryValue(asset.originatorOrganization),
-        url: tryUrl(asset.originator)
-      }
-    )
+    fields.push({
+      icon: 'account_circle',
+      label: 'Organization',
+      text: tryValue(asset.originatorOrganization),
+      url: tryUrl(asset.originator),
+    });
 
-    return fields
+    return fields;
   }
 }

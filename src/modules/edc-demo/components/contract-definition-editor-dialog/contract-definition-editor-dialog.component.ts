@@ -1,27 +1,31 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AssetService, ContractDefinitionService, PolicyDefinition, PolicyService} from "../../../edc-dmgmt-client";
-import {MatDialogRef} from "@angular/material/dialog";
-import {ContractDefinitionEditorDialogForm} from "./contract-definition-editor-dialog-form";
-import {AssetEntryBuilder} from "../../services/asset-entry-builder";
-import {finalize, takeUntil} from "rxjs/operators";
-import {Subject} from "rxjs";
-import {NotificationService} from "../../services/notification.service";
-import {ContractDefinitionEditorDialogResult} from "./contract-definition-editor-dialog-result";
-import {ValidationMessages} from "../../validators/validation-messages";
-import {Asset} from "../../models/asset";
-import {ContractDefinitionBuilder} from "../../services/contract-definition-builder";
-import {AssetPropertyMapper} from "../../services/asset-property-mapper";
-
+import {MatDialogRef} from '@angular/material/dialog';
+import {Subject} from 'rxjs';
+import {finalize, takeUntil} from 'rxjs/operators';
+import {
+  AssetService,
+  ContractDefinitionService,
+  PolicyDefinition,
+  PolicyService,
+} from '../../../edc-dmgmt-client';
+import {Asset} from '../../models/asset';
+import {AssetEntryBuilder} from '../../services/asset-entry-builder';
+import {AssetPropertyMapper} from '../../services/asset-property-mapper';
+import {ContractDefinitionBuilder} from '../../services/contract-definition-builder';
+import {NotificationService} from '../../services/notification.service';
+import {ValidationMessages} from '../../validators/validation-messages';
+import {ContractDefinitionEditorDialogForm} from './contract-definition-editor-dialog-form';
+import {ContractDefinitionEditorDialogResult} from './contract-definition-editor-dialog-result';
 
 @Component({
   selector: 'edc-demo-contract-definition-editor-dialog',
   templateUrl: './contract-definition-editor-dialog.component.html',
-  providers: [ContractDefinitionEditorDialogForm, AssetEntryBuilder]
+  providers: [ContractDefinitionEditorDialogForm, AssetEntryBuilder],
 })
 export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
   policies: PolicyDefinition[] = [];
   assets: Asset[] = [];
-  loading = false
+  loading = false;
 
   constructor(
     public form: ContractDefinitionEditorDialogForm,
@@ -33,52 +37,59 @@ export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
     private contractDefinitionBuilder: ContractDefinitionBuilder,
     private dialogRef: MatDialogRef<ContractDefinitionEditorDialog>,
     public validationMessages: ValidationMessages,
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
-    this.policyService.getAllPolicies().pipe(takeUntil(this.ngOnDestroy$))
-      .subscribe(polices => {
+    this.policyService
+      .getAllPolicies()
+      .pipe(takeUntil(this.ngOnDestroy$))
+      .subscribe((polices) => {
         this.policies = polices;
-        console.log(this.policies)
+        console.log(this.policies);
       });
-    this.assetService.getAllAssets().pipe(takeUntil(this.ngOnDestroy$))
-      .subscribe(assets => {
-        this.assets = assets.map(it => this.assetPropertyMapper.readProperties(it.properties));
+    this.assetService
+      .getAllAssets()
+      .pipe(takeUntil(this.ngOnDestroy$))
+      .subscribe((assets) => {
+        this.assets = assets.map((it) =>
+          this.assetPropertyMapper.readProperties(it.properties),
+        );
       });
   }
 
   onSave() {
-    const formValue = this.form.value
-    const contractDefinition = this.contractDefinitionBuilder.buildContractDefinition(formValue)
+    const formValue = this.form.value;
+    const contractDefinition =
+      this.contractDefinitionBuilder.buildContractDefinition(formValue);
 
     this.form.group.disable();
     this.loading = true;
-    this.contractDefinitionService.createContractDefinition(contractDefinition)
+    this.contractDefinitionService
+      .createContractDefinition(contractDefinition)
       .pipe(
         takeUntil(this.ngOnDestroy$),
         finalize(() => {
           this.form.group.enable();
           this.loading = false;
-        })
+        }),
       )
       .subscribe({
         complete: () => {
-          this.notificationService.showInfo("Successfully created policy.");
+          this.notificationService.showInfo('Successfully created policy.');
           this.close({refreshList: true});
         },
-        error: error => {
-          console.error("Failed creating asset!", error);
-          this.notificationService.showError("Failed creating policy!");
-        }
-      })
+        error: (error) => {
+          console.error('Failed creating asset!', error);
+          this.notificationService.showError('Failed creating policy!');
+        },
+      });
   }
 
   private close(params: ContractDefinitionEditorDialogResult) {
-    this.dialogRef.close(params)
+    this.dialogRef.close(params);
   }
 
-  isEqualId(a: { id: string }, b: { id: string }): boolean {
+  isEqualId(a: {id: string}, b: {id: string}): boolean {
     return a?.id === b?.id;
   }
 

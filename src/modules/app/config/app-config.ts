@@ -1,4 +1,4 @@
-import {EdcUiFeatureSet} from "./edc-ui-feature-set";
+import {EdcUiFeatureSet} from './edc-ui-feature-set';
 
 /**
  * Type-Safe Config as parsed from app-config.json

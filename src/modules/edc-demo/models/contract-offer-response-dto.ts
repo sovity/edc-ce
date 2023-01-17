@@ -1,4 +1,4 @@
-import {ContractOfferDto} from "./contract-offer-dto";
+import {ContractOfferDto} from './contract-offer-dto';
 
 /**
  * Contract Offer List (API Model)

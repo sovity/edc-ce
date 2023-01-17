@@ -1,5 +1,5 @@
-const {writeFileSync, existsSync, readFileSync} = require("fs");
-const dotenv = require('dotenv')
+const {writeFileSync, existsSync, readFileSync} = require('fs');
+const dotenv = require('dotenv');
 
 // Generate app-config.json from ENV Vars
 // Priority: ENV VAR > .env > .env.local-dev
@@ -14,10 +14,10 @@ const dotenv = require('dotenv')
  * @return vars (Record<string, string>)
  */
 const readEnvFileSync = (path) => {
-  if(existsSync(path)) {
+  if (existsSync(path)) {
     return dotenv.parse(readFileSync(path));
   }
-  return {}
+  return {};
 };
 
 /**
@@ -27,24 +27,27 @@ const readEnvFileSync = (path) => {
  * @param fn filter fn (applied to property name)
  * @return subset of obj
  */
-const objFilterKeys = (obj, fn) => Object.fromEntries(Object.entries(obj).filter(([k, _]) => fn(k)));
+const objFilterKeys = (obj, fn) =>
+  Object.fromEntries(Object.entries(obj).filter(([k, _]) => fn(k)));
 
 // Read ENV Vars from .env files as well
 const allProps = {
-  ...readEnvFileSync(".env.local-dev"),
-  ...readEnvFileSync(".env"),
-  ...process.env
-}
+  ...readEnvFileSync('.env.local-dev'),
+  ...readEnvFileSync('.env'),
+  ...process.env,
+};
 
 // Collect ENV Vars with prefix EDC_UI_
-const prefix = "EDC_UI_";
-const filteredProps = objFilterKeys(allProps, k => k.startsWith(prefix));
+const prefix = 'EDC_UI_';
+const filteredProps = objFilterKeys(allProps, (k) => k.startsWith(prefix));
 if (!Object.keys(filteredProps).length) {
-  console.warn(`No ${prefix} configuration properties are set in ENV, application might not be configured properly.`)
+  console.warn(
+    `No ${prefix} configuration properties are set in ENV, application might not be configured properly.`,
+  );
 }
 
 // Write app-config.json
-const output =  './src/assets/config/app-config.json'
+const output = './src/assets/config/app-config.json';
 const json = JSON.stringify(filteredProps);
 writeFileSync(output, json);
 

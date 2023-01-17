@@ -1,24 +1,23 @@
-import { TransportModeSelectItem } from './transport-mode-select-item';
+import {TransportModeSelectItem} from './transport-mode-select-item';
 
 export const TRANSPORT_MODE_SELECT_DATA: TransportModeSelectItem[] = [
   {
-    id: "Rail",
-    label: "Rail"
+    id: 'Rail',
+    label: 'Rail',
   },
 
   {
-    id: "Road",
-    label: "Road"
+    id: 'Road',
+    label: 'Road',
   },
 
   {
-    id: "Water",
-    label: "Water"
+    id: 'Water',
+    label: 'Water',
   },
 
   {
-    id: "Air",
-    label: "Air"
+    id: 'Air',
+    label: 'Air',
   },
-
 ];

@@ -1,5 +1,5 @@
 import {Component, HostBinding, Input} from '@angular/core';
-import {FormControl} from "@angular/forms";
+import {FormControl} from '@angular/forms';
 import {PolicyDefinition} from 'src/modules/edc-dmgmt-client';
 
 @Component({
@@ -11,13 +11,13 @@ export class PolicySelectComponent {
   label!: string;
 
   @Input()
-  control!: FormControl<PolicyDefinition | null>
+  control!: FormControl<PolicyDefinition | null>;
 
   @Input()
-  policies: PolicyDefinition[] = []
+  policies: PolicyDefinition[] = [];
 
-  @HostBinding("class.flex")
-  @HostBinding("class.flex-row")
+  @HostBinding('class.flex')
+  @HostBinding('class.flex-row')
   cls = true;
 
   compareWith(a: PolicyDefinition | null, b: PolicyDefinition | null): boolean {
@@ -27,6 +27,6 @@ export class PolicySelectComponent {
   policyId(a: PolicyDefinition | null): string {
     // EDC Milestone 7 changed PolicyDefinition.id to PolicyDefinition.uid
     // This is a temporary workaround
-    return a?.id || (a as any)?.uid || "no-policy-id-found";
+    return a?.id || (a as any)?.uid || 'no-policy-id-found';
   }
 }

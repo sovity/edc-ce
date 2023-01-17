@@ -1,6 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ContractViewerComponent } from './contract-viewer.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ContractViewerComponent} from './contract-viewer.component';
 
 describe('ContractViewerComponent', () => {
   let component: ContractViewerComponent;
@@ -8,9 +7,8 @@ describe('ContractViewerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ContractViewerComponent ]
-    })
-    .compileComponents();
+      declarations: [ContractViewerComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

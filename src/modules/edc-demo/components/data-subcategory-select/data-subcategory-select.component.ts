@@ -1,8 +1,8 @@
 import {Component, HostBinding, Input} from '@angular/core';
-import {FormControl} from "@angular/forms";
+import {FormControl} from '@angular/forms';
+import {DataCategorySelectItem} from '../data-category-select/data-category-select-item';
 import {DATA_SUBCATEGORY_SELECT_DATA} from './data-subcategory-select-data';
-import {DataSubcategorySelectItem} from "./data-subcategory-select-item";
-import {DataCategorySelectItem} from "../data-category-select/data-category-select-item";
+import {DataSubcategorySelectItem} from './data-subcategory-select-item';
 
 @Component({
   selector: 'data-subcategory-select',
@@ -13,16 +13,19 @@ export class DataSubcategorySelectComponent {
   label!: string;
 
   @Input()
-  dataCategory: DataCategorySelectItem | null = null
+  dataCategory: DataCategorySelectItem | null = null;
 
   @Input()
-  control!: FormControl<DataSubcategorySelectItem | null>
+  control!: FormControl<DataSubcategorySelectItem | null>;
 
-  @HostBinding("class.flex")
-  @HostBinding("class.flex-row")
-  cls = true
+  @HostBinding('class.flex')
+  @HostBinding('class.flex-row')
+  cls = true;
 
-  compareWith(a: DataSubcategorySelectItem | null, b: DataSubcategorySelectItem | null): boolean {
+  compareWith(
+    a: DataSubcategorySelectItem | null,
+    b: DataSubcategorySelectItem | null,
+  ): boolean {
     return a?.id === b?.id;
   }
 }

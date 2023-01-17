@@ -7,7 +7,9 @@
 @import 'https://fonts.googleapis.com/icon?family=Material+Icons';
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
-$custom-typography: mat.define-typography-config($font-family: 'Open Sans');
+$custom-typography: mat.define-typography-config(
+  $font-family: 'Open Sans',
+);
 @include mat.core($custom-typography);
 
 // Import theme and theme-dependant styles

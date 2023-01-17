@@ -1,7 +1,7 @@
-import { Component, HostBinding, Input } from '@angular/core';
-import { FormControl } from "@angular/forms";
-import { TRANSPORT_MODE_SELECT_DATA } from './transport-mode-select-data';
-import { TransportModeSelectItem } from "./transport-mode-select-item";
+import {Component, HostBinding, Input} from '@angular/core';
+import {FormControl} from '@angular/forms';
+import {TRANSPORT_MODE_SELECT_DATA} from './transport-mode-select-data';
+import {TransportModeSelectItem} from './transport-mode-select-item';
 
 @Component({
   selector: 'transport-mode-select',
@@ -12,15 +12,18 @@ export class TransportModeSelectComponent {
   label!: string;
 
   @Input()
-  control!: FormControl<TransportModeSelectItem | null>
+  control!: FormControl<TransportModeSelectItem | null>;
 
-  @HostBinding("class.flex")
-  @HostBinding("class.flex-row")
-  cls = true
+  @HostBinding('class.flex')
+  @HostBinding('class.flex-row')
+  cls = true;
 
-  items = TRANSPORT_MODE_SELECT_DATA
+  items = TRANSPORT_MODE_SELECT_DATA;
 
-  compareWith(a: TransportModeSelectItem | null, b: TransportModeSelectItem | null): boolean {
+  compareWith(
+    a: TransportModeSelectItem | null,
+    b: TransportModeSelectItem | null,
+  ): boolean {
     return a?.id === b?.id;
   }
 }

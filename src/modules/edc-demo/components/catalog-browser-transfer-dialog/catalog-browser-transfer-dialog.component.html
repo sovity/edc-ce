@@ -1,46 +1,42 @@
 <mat-dialog-content *ngIf="storageTypes as storageTypes">
+  <div>
+    <mat-form-field class="form-field-stretch" color="accent">
+      <mat-label>Type</mat-label>
+      <mat-select required [(ngModel)]="type">
+        <mat-option value="Json"> Json </mat-option>
+        <mat-option value="Rest-Api"> Rest-Api </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
-    <div>
-        <mat-form-field class="form-field-stretch" color="accent">
-            <mat-label>Type</mat-label>
-            <mat-select [(ngModel)]="type" required>
-                <mat-option value="Json">
-                    Json
-                </mat-option>
-                <mat-option value="Rest-Api">
-                    Rest-Api
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-
-    <div *ngIf="type == 'Json'">
-        <mat-form-field class="form-field-stretch" color="accent" id="form-field-permissions">
-            <mat-label>Data Destination (JSON)</mat-label>
-            <textarea [(ngModel)]="dataDestination" matInput></textarea>
-        </mat-form-field>
-    </div>
-    <div *ngIf="type == 'Rest-Api'">
-        <mat-form-field class="form-field-stretch" color="accent">
-            <mat-label>Destination Endpoint</mat-label>
-            <input [(ngModel)]="dataDestination" matInput>
-        </mat-form-field>
-    </div>
-
+  <div *ngIf="type == 'Json'">
+    <mat-form-field
+      id="form-field-permissions"
+      class="form-field-stretch"
+      color="accent">
+      <mat-label>Data Destination (JSON)</mat-label>
+      <textarea matInput [(ngModel)]="dataDestination"></textarea>
+    </mat-form-field>
+  </div>
+  <div *ngIf="type == 'Rest-Api'">
+    <mat-form-field class="form-field-stretch" color="accent">
+      <mat-label>Destination Endpoint</mat-label>
+      <input matInput [(ngModel)]="dataDestination" />
+    </mat-form-field>
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <div>
-        <button (click)="onTransfer()" color="primary" mat-raised-button>
-            <mat-icon>downloading</mat-icon>
-            Start transfer
-        </button>
+  <div>
+    <button color="primary" mat-raised-button (click)="onTransfer()">
+      <mat-icon>downloading</mat-icon>
+      Start transfer
+    </button>
 
-        <button color="primary" mat-dialog-close mat-raised-button>
-            <mat-icon>cancel</mat-icon>
-            Cancel
-        </button>
-    </div>
-    <!-- <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar> -->
-
+    <button color="primary" mat-dialog-close mat-raised-button>
+      <mat-icon>cancel</mat-icon>
+      Cancel
+    </button>
+  </div>
+  <!-- <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar> -->
 </mat-dialog-actions>

@@ -1,6 +1,6 @@
+import {Injectable} from '@angular/core';
+import {DATA_CATEGORY_SELECT_DATA} from './data-category-select-data';
 import {DataCategorySelectItem} from './data-category-select-item';
-import {Injectable} from "@angular/core";
-import {DATA_CATEGORY_SELECT_DATA} from "./data-category-select-data";
 
 /**
  * Access list of available DataCategorySelectItems
@@ -24,11 +24,11 @@ export class DataCategorySelectItemService {
     }
     return {
       id,
-      label: `Unknown (${id})`
+      label: `Unknown (${id})`,
     };
   }
 
   private buildItemsMap(): Map<string, DataCategorySelectItem> {
-    return new Map(DATA_CATEGORY_SELECT_DATA.map(it => [it.id, it]))
+    return new Map(DATA_CATEGORY_SELECT_DATA.map((it) => [it.id, it]));
   }
 }

@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {AppConfigService} from "../../app/config/app-config.service";
+import {AppConfigService} from '../../app/config/app-config.service';
 
 /**
  * Stores Catalog API URLs
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CatalogApiUrlService {
   /**
@@ -19,7 +19,9 @@ export class CatalogApiUrlService {
   private customCatalogApiUrls = new Array<string>();
 
   constructor(private appConfigService: AppConfigService) {
-    this.presetCatalogApiUrls = this.splitUrls(appConfigService.config.catalogUrl);
+    this.presetCatalogApiUrls = this.splitUrls(
+      appConfigService.config.catalogUrl,
+    );
   }
 
   /**
@@ -28,8 +30,8 @@ export class CatalogApiUrlService {
   getCatalogApiUrls(): string[] {
     return this.distinct([
       ...this.presetCatalogApiUrls,
-      ...this.customCatalogApiUrls
-    ])
+      ...this.customCatalogApiUrls,
+    ]);
   }
 
   /**
@@ -48,7 +50,12 @@ export class CatalogApiUrlService {
   }
 
   private splitUrls(commaJoinedUrls?: string | null): string[] {
-    return commaJoinedUrls?.split(",")?.map(url => url.trim())?.filter(url => url.length) ?? [];
+    return (
+      commaJoinedUrls
+        ?.split(',')
+        ?.map((url) => url.trim())
+        ?.filter((url) => url.length) ?? []
+    );
   }
 
   private distinct<T>(array: T[]): T[] {

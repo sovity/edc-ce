@@ -1,4 +1,4 @@
 export interface StorageType {
-    id: string;
-    name: string;
+  id: string;
+  name: string;
 }

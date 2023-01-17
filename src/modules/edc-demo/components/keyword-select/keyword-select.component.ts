@@ -1,8 +1,8 @@
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {Component, HostBinding, Input} from '@angular/core';
-import {FormControl} from "@angular/forms";
+import {FormControl} from '@angular/forms';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {removeOnce} from '../../utils/array-utils';
-import {COMMA, ENTER} from "@angular/cdk/keycodes";
 
 @Component({
   selector: 'keyword-select',
@@ -15,10 +15,10 @@ export class KeywordSelectComponent {
   label!: string;
 
   @Input()
-  control!: FormControl<string[]>
+  control!: FormControl<string[]>;
 
-  @HostBinding("class.flex")
-  @HostBinding("class.flex-row")
+  @HostBinding('class.flex')
+  @HostBinding('class.flex-row')
   cls = true;
 
   remove(keyword: string) {
@@ -28,7 +28,7 @@ export class KeywordSelectComponent {
   add(event: MatChipInputEvent): void {
     const keyword = (event.value || '').trim();
     if (keyword) {
-      this.control.setValue([...this.control.value, keyword])
+      this.control.setValue([...this.control.value, keyword]);
     }
     event.chipInput!.clear();
   }
