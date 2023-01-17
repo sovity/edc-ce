@@ -53,7 +53,7 @@ export class AssetDetailDialogFieldBuilder {
     ];
 
     // MDS Specific Fields
-    if (this.activeFeatureSet.isMds()) {
+    if (this.activeFeatureSet.hasMdsFields()) {
       fields.push(
         {
           icon: 'commute',

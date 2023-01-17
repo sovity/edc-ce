@@ -75,7 +75,9 @@
       </form>
     </mat-step>
     <!-- Step: Advanced -->
-    <mat-step *ngIf="'mds' | isActiveFeatureSet" [stepControl]="form.advanced">
+    <mat-step
+      *ngIf="'mds-fields' | isActiveFeature"
+      [stepControl]="form.advanced">
       <form [formGroup]="form.advanced">
         <ng-template matStepLabel>Advanced Information</ng-template>
         <div class="flex flex-col mt-[10px]">

@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
 import {AppConfigService} from './app-config.service';
-import {EdcUiFeatureSet} from './edc-ui-feature-set';
+import {EdcUiFeature} from './edc-ui-feature';
 
 @Injectable({providedIn: 'root'})
 export class ActiveFeatureSet {
   constructor(private appConfigService: AppConfigService) {}
 
-  isMds(): boolean {
-    return this.is('mds');
+  hasMdsFields(): boolean {
+    return this.has('mds-fields');
   }
 
-  is(featureSet: EdcUiFeatureSet): boolean {
-    return this.appConfigService.config.activeFeatureSet === featureSet;
+  has(feature: EdcUiFeature): boolean {
+    return this.appConfigService.config.features.has(feature);
   }
 }

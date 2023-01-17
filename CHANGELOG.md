@@ -1,11 +1,12 @@
 # Changelog
 
-All notable changes to this project will be documented in this file - formatted and maintained according to the rules
-documented on <http://keepachangelog.com>.
+All notable changes to this project will be documented in this file - formatted
+and maintained according to the rules documented on <http://keepachangelog.com>.
 
-This file will not cover changes about documentation, code clean-up, samples, or the CI pipeline. With each version
-(respectively milestone), the core features are highlighted. Relevant changes to existing implementations can be found
-in the detailed section referring to by linking pull requests or issues.
+This file will not cover changes about documentation, code clean-up, samples, or
+the CI pipeline. With each version (respectively milestone), the core features
+are highlighted. Relevant changes to existing implementations can be found in
+the detailed section referring to by linking pull requests or issues.
 
 ## Unreleased
 
@@ -15,10 +16,15 @@ in the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
+- Split mds and sovity profiles each into "open source" and "hosted by sovity"
+  variants.
+
 #### Changed
+
 - Changed configuration:
   - Removed `app.config.json`.
-  - Configuration via `EDC_UI_` environment variables in both local dev and docker container.
+  - Configuration via `EDC_UI_` environment variables in both local dev and
+    docker container.
   - See `app-config-properties.ts` for available properties.
   - Configuration via single environment variable `EDC_UI_CONFIG_JSON` possible.
 - Added prettier as code formatter.
@@ -35,6 +41,7 @@ in the detailed section referring to by linking pull requests or issues.
 ### Detailed Changes
 
 #### Added
+
 - Added support for connector restricted usage policy.
 - Added additional asset fields:
   - General fields (e.g. standard license).
@@ -45,7 +52,8 @@ in the detailed section referring to by linking pull requests or issues.
 - Asset Viewer:
   - Reworked cards to support to support some new fields.
   - Added new detail dialog showing asset details.
-  - Added field CONNECTOR ORIGINATOR ORGANIZATION to be fetched from app.config.json
+  - Added field CONNECTOR ORIGINATOR ORGANIZATION to be fetched from
+    app.config.json
 - Asset Create Dialog:
   - Divided asset creation into stages with an Angular Material Stepper.
   - Added title and fixed styling.
@@ -53,7 +61,8 @@ in the detailed section referring to by linking pull requests or issues.
   - Added validation for URL fields.
   - Added validation for ID field, no whitespaces.
   - Added ID generation from name.
-  - Added vocabulary for MDS specific fields: Data Category, Data Subcategory, Transport Mode.
+  - Added vocabulary for MDS specific fields: Data Category, Data Subcategory,
+    Transport Mode.
   - Added new MDS field: Data Subcategory
 - Policy Definition Dialog:
   - Added title and fixed styling.
@@ -63,11 +72,13 @@ in the detailed section referring to by linking pull requests or issues.
   - Added validation for required fields.
 
 #### Changed
+
 - Changed asset properties, especially ID property. See `asset-properties.ts`.
 
 #### Removed
 
 #### Fixed
+
 - Error-Message Displayed when Creating and Cancelling the Create-Policy-Dialog
 - Removed dead theming code at wrong places.
 - Fixed "black" accent color having black text on black background.
@@ -94,16 +105,21 @@ Supporting communication with milestone 7 EDC. Working Logout.
 ### Detailed Changes
 
 #### Added
+
 - Angular 14 and Angular Material 14
-- Add Help-Box (Zammad links) (https://github.com/sovity/edc-sovity-ui/issues/55)
-- Additional `logoutUrl` Property in app.config.json (https://github.com/sovity/edc-sovity-ui/issues/24)
+- Add Help-Box (Zammad links)
+  (https://github.com/sovity/edc-sovity-ui/issues/55)
+- Additional `logoutUrl` Property in app.config.json
+  (https://github.com/sovity/edc-sovity-ui/issues/24)
   - OAuth2-Proxy-Config has to be adapted
     - Setting: --whitelist-domain to {{KEYCLOAK_ASE_URL}}
   - Schema: {{EDC_UI_BASE_URL}}/oauth2/sign_out?rd={{KEYCLOAK_LOGOUT_URL}}
   - KEYCLOAK_LOGOUT_URL
     - all url encoded including {{KEYCLOAK_BASE_URL}} and {{EDC_UI_BASE_URL}}
-    - Schema: {{KEYCLOAK_BASE_URL}}%2Frealms%2Fsovity%2Fprotocol%2Fopenid-connect%2Flogout%3Fclient_id%3D{{OAUTH2_PROXY_KEYCLOAK_CLIENT_ID}}%26post_logout_redirect_uri%3D{{EDC_UI_BASE_URL}}
-- Support customizing the NGINX listen address (https://github.com/sovity/edc-sovity-ui/issues/42)
+    - Schema:
+      {{KEYCLOAK_BASE_URL}}%2Frealms%2Fsovity%2Fprotocol%2Fopenid-connect%2Flogout%3Fclient_id%3D{{OAUTH2_PROXY_KEYCLOAK_CLIENT_ID}}%26post_logout_redirect_uri%3D{{EDC_UI_BASE_URL}}
+- Support customizing the NGINX listen address
+  (https://github.com/sovity/edc-sovity-ui/issues/42)
   - Required Environment-Variables
     - NGINX_BIND
     - NGINX_PORT
@@ -111,13 +127,17 @@ Supporting communication with milestone 7 EDC. Working Logout.
 - Added MDS logo in the tool bar and added MDS theme
 - Added focus on nav-bar item
 - Added test server setup
-- Added Catalog Url Field in Catalog Browser (https://github.com/sovity/edc-sovity-ui/issues/83)
+- Added Catalog Url Field in Catalog Browser
+  (https://github.com/sovity/edc-sovity-ui/issues/83)
 
 #### Changed
+
 - Renamed policyDefinition `uid` field to `id`
-- Removed Logout-Button from Startpage and added it to the menu (https://github.com/sovity/edc-sovity-ui/issues/24)
+- Removed Logout-Button from Startpage and added it to the menu
+  (https://github.com/sovity/edc-sovity-ui/issues/24)
 
 #### Removed
+
 - Developer text description on start page
 
 #### Fixed
@@ -131,8 +151,11 @@ Passing multiple Catalog Urls.
 ### Detailed Changes
 
 #### Added
-- Support for Passing multiple Catalog Urls (https://github.com/sovity/edc-sovity-ui/issues/46)
-  - `catalogUrl` in `app.config.json` may be set to following pattern: {catalog1Url},{catalog2Url},...
+
+- Support for Passing multiple Catalog Urls
+  (https://github.com/sovity/edc-sovity-ui/issues/46)
+  - `catalogUrl` in `app.config.json` may be set to following pattern:
+    {catalog1Url},{catalog2Url},...
 
 #### Changed
 
@@ -150,7 +173,8 @@ Robustness and convenience improvements.
 
 #### Added
 
-- Field `originator` in `app.config.json` (https://github.com/sovity/edc-sovity-ui/pull/36)
+- Field `originator` in `app.config.json`
+  (https://github.com/sovity/edc-sovity-ui/pull/36)
 
 #### Changed
 
@@ -166,23 +190,28 @@ Robustness and convenience improvements.
     - Json: Passing a Data-Destination using Json
     - Rest-Api: Just passing a Url
 - PolicyDialog (https://github.com/sovity/edc-sovity-ui/pull/34)
-  - Removed fields (Assignee, Assigner, Permissions, Prohibitions and Obligations)
+  - Removed fields (Assignee, Assigner, Permissions, Prohibitions and
+    Obligations)
   - Added ComboBox for Choosing a fixed Policy
   - Added Time-Interval-Selection Component for Time-Restricted Policy
 
 #### Removed
 
-- `Deprovision` Button in Transfer History: Has been used for AzureBlob Storage before, but is not required for Rest-Api Transfers (https://github.com/sovity/edc-sovity-ui/pull/35) 
+- `Deprovision` Button in Transfer History: Has been used for AzureBlob Storage
+  before, but is not required for Rest-Api Transfers
+  (https://github.com/sovity/edc-sovity-ui/pull/35)
 
 #### Fixed
 
-- User-Input will be trimmed before sending it to the EDC-Backend (https://github.com/sovity/edc-sovity-ui/pull/39)
+- User-Input will be trimmed before sending it to the EDC-Backend
+  (https://github.com/sovity/edc-sovity-ui/pull/39)
 
 ## [0.0.1-ab1b6fd0-sovity1] 2022-08-31
 
 ### Overview
 
-First release of sovity EDC-Data-Dashboard. Adds support for connecting REST-APIs.
+First release of sovity EDC-Data-Dashboard. Adds support for connecting
+REST-APIs.
 
 ### Detailed Changes
 
@@ -194,9 +223,10 @@ First release of sovity EDC-Data-Dashboard. Adds support for connecting REST-API
 
 - Sorting Transfer History Entries by Created Date
 - Create Asset Dialog
-    - Field for arbitrary Data Destination
-    - Field for Originator
-      - Has to be set to connectors IDS Endpoint, for instance: http://daps-connector-a-controlplane-1:8282/api/v1/ids/data
+  - Field for arbitrary Data Destination
+  - Field for Originator
+    - Has to be set to connectors IDS Endpoint, for instance:
+      http://daps-connector-a-controlplane-1:8282/api/v1/ids/data
 - Transfer Dialog in Contracts
   - Field for arbitrary Data Destination
 

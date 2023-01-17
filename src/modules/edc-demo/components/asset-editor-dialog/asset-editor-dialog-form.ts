@@ -80,7 +80,7 @@ export class AssetEditorDialogForm {
     const validateIffMds = <T>(
       x: [T, ValidatorFn | ValidatorFn[]],
     ): [T, ValidatorFn | ValidatorFn[]] =>
-      this.activeFeatureSet.isMds() ? x : [x[0], []];
+      this.activeFeatureSet.hasMdsFields() ? x : [x[0], []];
 
     const metadata: FormGroup<AssetEditorDialogMetadataFormModel> =
       this.formBuilder.nonNullable.group({

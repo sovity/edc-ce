@@ -50,7 +50,7 @@ import {PolicySelectComponent} from './components/policy-select/policy-select.co
 import {PolicyViewComponent} from './components/policy-view/policy-view.component';
 import {TransferHistoryViewerComponent} from './components/transfer-history/transfer-history-viewer.component';
 import {TransportModeSelectComponent} from './components/transport-mode-select/transport-mode-select.component';
-import {IsActiveFeatureSetPipe} from './pipes/is-active-feature-set.pipe';
+import {IsActiveFeaturePipe} from './pipes/is-active-feature.pipe';
 import {ReplacePipe} from './pipes/replace.pipe';
 import {SafePipe} from './pipes/safe.pipe';
 
@@ -104,7 +104,7 @@ import {SafePipe} from './pipes/safe.pipe';
     NewPolicyDialogComponent,
     ConfirmationDialogComponent,
     LogoutComponent,
-    IsActiveFeatureSetPipe,
+    IsActiveFeaturePipe,
     LanguageSelectComponent,
     DataCategorySelectComponent,
     DataSubcategorySelectComponent,
@@ -127,7 +127,7 @@ import {SafePipe} from './pipes/safe.pipe';
     IntroductionComponent,
     NewPolicyDialogComponent,
     ContractViewerComponent,
-    IsActiveFeatureSetPipe,
+    IsActiveFeaturePipe,
   ],
 })
 export class EdcDemoModule {}

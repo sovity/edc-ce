@@ -1,14 +1,19 @@
-import {EdcUiFeatureSet} from './edc-ui-feature-set';
+import {EdcUiColorTheme} from './edc-ui-color-theme';
+import {EdcUiFeature} from './edc-ui-feature';
+import {EdcUiProfile} from './edc-ui-profile';
 
 /**
- * Type-Safe Config as parsed from app-config.json
+ * Type-Safe and interpreted App Config
  */
-export interface AppConfig {
-  activeFeatureSet: EdcUiFeatureSet;
+export type AppConfig = {
+  profile: EdcUiProfile;
+  theme: EdcUiColorTheme;
+  brandLogoSrc: string;
+  features: Set<EdcUiFeature>;
   dataManagementApiKey: string;
   dataManagementApiUrl: string;
   originator: string;
   catalogUrl: string;
   logoutUrl: string;
   originatorOrganization: string;
-}
+};
