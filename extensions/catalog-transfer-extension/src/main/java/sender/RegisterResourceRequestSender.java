@@ -76,6 +76,7 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                 .toList();
         var mediaType = getMediaType(registerResourceMessage);
         var publisher = getAssetPublisher(registerResourceMessage);
+        var standardLicense = getAssetStandardLicense(registerResourceMessage);
 
         var resource = new ResourceBuilder(registerResourceMessage.affectedResourceUri())
                 ._title_(new TypedLiteral(assetTitle, "en"))
@@ -84,6 +85,7 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                 ._version_(version)
                 ._keyword_(keywords)
                 ._publisher_(URI.create(publisher))
+                ._standardLicense_(URI.create(standardLicense))
                 ._representation_(new RepresentationBuilder()
                         ._language_(language)
                         ._mediaType_(new IANAMediaTypeBuilder()._filenameExtension_(mediaType).build())
@@ -91,6 +93,10 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                 .build();
         System.out.println(objectMapper.writeValueAsString(resource));
         return objectMapper.writeValueAsString(resource);
+    }
+
+    private String getAssetStandardLicense(RegisterResourceMessage registerResourceMessage) {
+        return getAssetProperty(registerResourceMessage, "asset:prop:standardLicense");
     }
 
     private String getAssetPublisher(RegisterResourceMessage registerResourceMessage) {
