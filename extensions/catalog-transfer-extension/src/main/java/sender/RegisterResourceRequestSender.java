@@ -82,6 +82,7 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
         var endpointDocumentation = getAssetEndpointDocumentation(registerResourceMessage);
         var transportMode = getAssetTransportMode(registerResourceMessage);
         var dataCategory = getAssetDataCategory(registerResourceMessage);
+        var dataSubcategory = getAssetDataSubcategory(registerResourceMessage);
 
         var resource = new ResourceBuilder(registerResourceMessage.affectedResourceUri())
                 ._title_(new TypedLiteral(assetTitle, "en"))
@@ -104,8 +105,13 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
         ObjectNode jsonNode = (ObjectNode) objectMapper.readTree(objectMapper.writeValueAsString(resource));
         jsonNode.set("http://w3id.org/mds#transportMode", getTransportModeJson(transportMode));
         jsonNode.set("http://w3id.org/mds#dataCategory", getDataCategory(dataCategory));
+        jsonNode.set("http://w3id.org/mds#dataSubcategory", getDataSubcategory(dataSubcategory));
         System.out.println(jsonNode);
         return objectMapper.writeValueAsString(jsonNode);
+    }
+
+    private ObjectNode getDataSubcategory(String dataSubcategory) {
+        return getPropertyJson(dataSubcategory);
     }
 
     private ObjectNode getTransportModeJson(String transportMode) {
@@ -122,6 +128,10 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
         transportModeJson.put("@value", property);
         transportModeJson.put("@type", "http://www.w3.org/2001/XMLSchema#string");
         return transportModeJson;
+    }
+
+    private String getAssetDataSubcategory(RegisterResourceMessage registerResourceMessage) {
+        return getAssetProperty(registerResourceMessage, "http://w3id.org/mds#dataSubcategory");
     }
 
     private String getAssetDataCategory(RegisterResourceMessage registerResourceMessage) {
