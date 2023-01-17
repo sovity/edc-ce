@@ -95,10 +95,7 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
     }
 
     private static List<String> getKeywords(RegisterResourceMessage registerResourceMessage) {
-        var keywords = "";
-        if (checkPropertyExists(registerResourceMessage, "asset:prop:keywords")) {
-            keywords = registerResourceMessage.asset().getProperties().get("asset:prop:keywords").toString();
-        }
+        var keywords = getAssetProperty(registerResourceMessage, "asset:prop:keywords");
         return new ArrayList<>(Arrays.asList(keywords.split(",")));
     }
 
