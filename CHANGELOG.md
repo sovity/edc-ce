@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 ### Feature:
 - Add connector description to broker message
 
+### Changed
+- Bump junit-jupiter-api from 5.8.1 to 5.9.2
+
 ## [1.0.1] - 2023-01-11 
 
 ### Fixed: 
