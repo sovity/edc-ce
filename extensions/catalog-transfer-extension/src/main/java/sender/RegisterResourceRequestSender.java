@@ -30,6 +30,7 @@ import org.eclipse.edc.protocol.ids.spi.domain.IdsConstants;
 import org.eclipse.edc.protocol.ids.util.CalendarUtil;
 import sender.message.RegisterResourceMessage;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -74,6 +75,7 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                 .map(k -> new TypedLiteral(k, "en"))
                 .toList();
         var mediaType = getMediaType(registerResourceMessage);
+        var publisher = getAssetPublisher(registerResourceMessage);
 
         var resource = new ResourceBuilder(registerResourceMessage.affectedResourceUri())
                 ._title_(new TypedLiteral(assetTitle, "en"))
@@ -81,6 +83,7 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                 ._language_(language)
                 ._version_(version)
                 ._keyword_(keywords)
+                ._publisher_(URI.create(publisher))
                 ._representation_(new RepresentationBuilder()
                         ._language_(language)
                         ._mediaType_(new IANAMediaTypeBuilder()._filenameExtension_(mediaType).build())
@@ -88,6 +91,10 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                 .build();
         System.out.println(objectMapper.writeValueAsString(resource));
         return objectMapper.writeValueAsString(resource);
+    }
+
+    private String getAssetPublisher(RegisterResourceMessage registerResourceMessage) {
+        return getAssetProperty(registerResourceMessage, "asset:prop:publisher");
     }
 
     private String getAssetLanguage(RegisterResourceMessage registerResourceMessage) {
