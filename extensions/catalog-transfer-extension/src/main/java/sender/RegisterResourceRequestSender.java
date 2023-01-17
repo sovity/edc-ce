@@ -14,7 +14,14 @@
 package sender;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.fraunhofer.iais.eis.*;
+import de.fraunhofer.iais.eis.DynamicAttributeToken;
+import de.fraunhofer.iais.eis.IANAMediaTypeBuilder;
+import de.fraunhofer.iais.eis.Language;
+import de.fraunhofer.iais.eis.Message;
+import de.fraunhofer.iais.eis.MessageProcessedNotificationMessageImpl;
+import de.fraunhofer.iais.eis.RepresentationBuilder;
+import de.fraunhofer.iais.eis.ResourceBuilder;
+import de.fraunhofer.iais.eis.ResourceUpdateMessageBuilder;
 import de.fraunhofer.iais.eis.util.TypedLiteral;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.MultipartSenderDelegate;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.IdsMultipartParts;
@@ -43,25 +50,29 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
     public Message buildMessageHeader(RegisterResourceMessage registerResourceMessage,
                                       DynamicAttributeToken token) throws Exception {
         return new ResourceUpdateMessageBuilder(registerResourceMessage.affectedResourceUri())
-                        ._modelVersion_(IdsConstants.INFORMATION_MODEL_VERSION)
-                        ._issued_(CalendarUtil.gregorianNow())
-                        ._securityToken_(token)
-                        ._issuerConnector_(registerResourceMessage.connectorBaseUrl())
-                        ._senderAgent_(registerResourceMessage.connectorBaseUrl())
-                        ._affectedResource_(registerResourceMessage.affectedResourceUri())
-                        .build();
+                ._modelVersion_(IdsConstants.INFORMATION_MODEL_VERSION)
+                ._issued_(CalendarUtil.gregorianNow())
+                ._securityToken_(token)
+                ._issuerConnector_(registerResourceMessage.connectorBaseUrl())
+                ._senderAgent_(registerResourceMessage.connectorBaseUrl())
+                ._affectedResource_(registerResourceMessage.affectedResourceUri())
+                .build();
     }
 
     @Override
     public String buildMessagePayload(RegisterResourceMessage registerResourceMessage) throws Exception {
         var assetTitle = getAssetTitle(registerResourceMessage);
         var assetDescription = getAssetDescription(registerResourceMessage);
-        var language = Language.EN;
+        var language = Arrays.stream(Language.values())
+                .filter(l -> l.getId().toString().equals(getAssetLanguage(registerResourceMessage)))
+                .findFirst()
+                .get();
+
         var version = getVersion(registerResourceMessage);
         var keywords = getKeywords(registerResourceMessage)
-                        .stream()
-                        .map(k -> new TypedLiteral(k, "en"))
-                        .toList();
+                .stream()
+                .map(k -> new TypedLiteral(k, "en"))
+                .toList();
         var mediaType = getMediaType(registerResourceMessage);
 
         var resource = new ResourceBuilder(registerResourceMessage.affectedResourceUri())
@@ -79,9 +90,13 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
         return objectMapper.writeValueAsString(resource);
     }
 
-    private static List<String> getKeywords(RegisterResourceMessage registerResourceMessage){
+    private String getAssetLanguage(RegisterResourceMessage registerResourceMessage) {
+        return getAssetProperty(registerResourceMessage, "asset:prop:language");
+    }
+
+    private static List<String> getKeywords(RegisterResourceMessage registerResourceMessage) {
         var keywords = "";
-        if(checkPropertyExists(registerResourceMessage, "asset:prop:keywords")) {
+        if (checkPropertyExists(registerResourceMessage, "asset:prop:keywords")) {
             keywords = registerResourceMessage.asset().getProperties().get("asset:prop:keywords").toString();
         }
         return new ArrayList<>(Arrays.asList(keywords.split(",")));
@@ -99,13 +114,13 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
         return getAssetProperty(registerResourceMessage, "asset:prop:name");
     }
 
-    private static String getVersion(RegisterResourceMessage registerResourceMessage){
+    private static String getVersion(RegisterResourceMessage registerResourceMessage) {
         return getAssetProperty(registerResourceMessage, "asset:prop:version");
     }
 
-    private static String getAssetProperty(RegisterResourceMessage registerResourceMessage, String property){
+    private static String getAssetProperty(RegisterResourceMessage registerResourceMessage, String property) {
         var result = "";
-        if(checkPropertyExists(registerResourceMessage, property)) {
+        if (checkPropertyExists(registerResourceMessage, property)) {
             result = registerResourceMessage.asset().getProperties().get(property).toString();
         }
         return result;
