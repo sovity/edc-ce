@@ -14,6 +14,7 @@
 package sender;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fraunhofer.iais.eis.DynamicAttributeToken;
 import de.fraunhofer.iais.eis.IANAMediaTypeBuilder;
 import de.fraunhofer.iais.eis.Language;
@@ -28,6 +29,7 @@ import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.Ids
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.MultipartResponse;
 import org.eclipse.edc.protocol.ids.spi.domain.IdsConstants;
 import org.eclipse.edc.protocol.ids.util.CalendarUtil;
+import org.jetbrains.annotations.NotNull;
 import sender.message.RegisterResourceMessage;
 
 import java.net.URI;
@@ -77,6 +79,8 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
         var mediaType = getMediaType(registerResourceMessage);
         var publisher = getAssetPublisher(registerResourceMessage);
         var standardLicense = getAssetStandardLicense(registerResourceMessage);
+        var endpointDocumentation = getAssetEndpointDocumentation(registerResourceMessage);
+        var transportMode = getAssetTransportMode(registerResourceMessage);
 
         var resource = new ResourceBuilder(registerResourceMessage.affectedResourceUri())
                 ._title_(new TypedLiteral(assetTitle, "en"))
@@ -90,9 +94,32 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                         ._language_(language)
                         ._mediaType_(new IANAMediaTypeBuilder()._filenameExtension_(mediaType).build())
                         .build())
+                //resource endpoint not working, resource not being shown
+//                ._resourceEndpoint_(new ConnectorEndpointBuilder()
+//                        ._endpointDocumentation_(URI.create(endpointDocumentation))
+//                        .build())
                 .build();
-        System.out.println(objectMapper.writeValueAsString(resource));
-        return objectMapper.writeValueAsString(resource);
+
+        ObjectNode jsonNode = (ObjectNode) objectMapper.readTree(objectMapper.writeValueAsString(resource));
+        jsonNode.set("http://w3id.org/mds#transportMode", getTransportModeJson(transportMode));
+        System.out.println(jsonNode);
+        return objectMapper.writeValueAsString(jsonNode);
+    }
+
+    @NotNull
+    private ObjectNode getTransportModeJson(String transportMode) {
+        ObjectNode transportModeJson = objectMapper.createObjectNode();
+        transportModeJson.put("@value", transportMode);
+        transportModeJson.put("@type", "http://www.w3.org/2001/XMLSchema#string");
+        return transportModeJson;
+    }
+
+    private String getAssetTransportMode(RegisterResourceMessage registerResourceMessage) {
+        return getAssetProperty(registerResourceMessage, "http://w3id.org/mds#dataCategory");
+    }
+
+    private String getAssetEndpointDocumentation(RegisterResourceMessage registerResourceMessage) {
+        return getAssetProperty(registerResourceMessage, "asset:prop:endpointDocumentation");
     }
 
     private String getAssetStandardLicense(RegisterResourceMessage registerResourceMessage) {
