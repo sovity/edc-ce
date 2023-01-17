@@ -66,7 +66,7 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
         var language = Arrays.stream(Language.values())
                 .filter(l -> l.getId().toString().equals(getAssetLanguage(registerResourceMessage)))
                 .findFirst()
-                .get();
+                .orElse(Language.EN);
 
         var version = getVersion(registerResourceMessage);
         var keywords = getKeywords(registerResourceMessage)
