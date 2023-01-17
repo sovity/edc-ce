@@ -79,30 +79,6 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
         return objectMapper.writeValueAsString(resource);
     }
 
-    private String getMediaType(RegisterResourceMessage registerResourceMessage) {
-        var mediaType = "";
-        if (checkPropertyExists(registerResourceMessage, "asset:prop:contenttype")) {
-            mediaType = registerResourceMessage.asset().getProperties().get("asset:prop:contenttype").toString();
-        }
-        return mediaType;
-    }
-
-    private static String getAssetDescription(RegisterResourceMessage registerResourceMessage) {
-        var assetDescription = "";
-        if (checkPropertyExists(registerResourceMessage, "asset:prop:description")) {
-            assetDescription = registerResourceMessage.asset().getProperties().get("asset:prop:description").toString();
-        }
-        return assetDescription;
-    }
-
-    private static String getAssetTitle(RegisterResourceMessage registerResourceMessage) {
-        var assetTitle = "";
-        if (checkPropertyExists(registerResourceMessage, "asset:prop:name")) {
-            assetTitle = registerResourceMessage.asset().getProperties().get("asset:prop:name").toString();
-        }
-        return assetTitle;
-    }
-
     private static List<String> getKeywords(RegisterResourceMessage registerResourceMessage){
         var keywords = "";
         if(checkPropertyExists(registerResourceMessage, "asset:prop:keywords")) {
@@ -111,12 +87,28 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
         return new ArrayList<>(Arrays.asList(keywords.split(",")));
     }
 
+    private static String getMediaType(RegisterResourceMessage registerResourceMessage) {
+        return getAssetProperty(registerResourceMessage, "asset:prop:contenttype");
+    }
+
+    private static String getAssetDescription(RegisterResourceMessage registerResourceMessage) {
+        return getAssetProperty(registerResourceMessage, "asset:prop:description");
+    }
+
+    private static String getAssetTitle(RegisterResourceMessage registerResourceMessage) {
+        return getAssetProperty(registerResourceMessage, "asset:prop:name");
+    }
+
     private static String getVersion(RegisterResourceMessage registerResourceMessage){
-        var version = "";
-        if(checkPropertyExists(registerResourceMessage, "asset:prop:version")) {
-            version = registerResourceMessage.asset().getProperties().get("asset:prop:version").toString();
+        return getAssetProperty(registerResourceMessage, "asset:prop:version");
+    }
+
+    private static String getAssetProperty(RegisterResourceMessage registerResourceMessage, String property){
+        var result = "";
+        if(checkPropertyExists(registerResourceMessage, property)) {
+            result = registerResourceMessage.asset().getProperties().get(property).toString();
         }
-        return version;
+        return result;
     }
 
     private static boolean checkPropertyExists(RegisterResourceMessage registerResourceMessage, String property) {
