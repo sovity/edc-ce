@@ -14,12 +14,7 @@
 package sender;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.fraunhofer.iais.eis.DynamicAttributeToken;
-import de.fraunhofer.iais.eis.Language;
-import de.fraunhofer.iais.eis.Message;
-import de.fraunhofer.iais.eis.MessageProcessedNotificationMessageImpl;
-import de.fraunhofer.iais.eis.ResourceBuilder;
-import de.fraunhofer.iais.eis.ResourceUpdateMessageBuilder;
+import de.fraunhofer.iais.eis.*;
 import de.fraunhofer.iais.eis.util.TypedLiteral;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.MultipartSenderDelegate;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.IdsMultipartParts;
@@ -63,10 +58,11 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
         var assetDescription = getAssetDescription(registerResourceMessage);
         var language = Language.EN;
         var version = getVersion(registerResourceMessage);
-        List<TypedLiteral> keywords = getKeywords(registerResourceMessage)
+        var keywords = getKeywords(registerResourceMessage)
                         .stream()
                         .map(k -> new TypedLiteral(k, "en"))
                         .toList();
+        var mediaType = getMediaType(registerResourceMessage);
 
         var resource = new ResourceBuilder(registerResourceMessage.affectedResourceUri())
                 ._title_(new TypedLiteral(assetTitle, "en"))
@@ -74,10 +70,21 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                 ._language_(language)
                 ._version_(version)
                 ._keyword_(keywords)
-//                ._representation_()
+                ._representation_(new RepresentationBuilder()
+                        ._language_(language)
+                        ._mediaType_(new IANAMediaTypeBuilder()._filenameExtension_(mediaType).build())
+                        .build())
                 .build();
         System.out.println(objectMapper.writeValueAsString(resource));
         return objectMapper.writeValueAsString(resource);
+    }
+
+    private String getMediaType(RegisterResourceMessage registerResourceMessage) {
+        var mediaType = "";
+        if (checkPropertyExists(registerResourceMessage, "asset:prop:contenttype")) {
+            mediaType = registerResourceMessage.asset().getProperties().get("asset:prop:contenttype").toString();
+        }
+        return mediaType;
     }
 
     private static String getAssetDescription(RegisterResourceMessage registerResourceMessage) {
