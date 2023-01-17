@@ -15,6 +15,7 @@ package sender;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.fraunhofer.iais.eis.ConnectorEndpointBuilder;
 import de.fraunhofer.iais.eis.DynamicAttributeToken;
 import de.fraunhofer.iais.eis.IANAMediaTypeBuilder;
 import de.fraunhofer.iais.eis.Language;
@@ -69,11 +70,10 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                 .filter(l -> l.getId().toString().equals(getAssetLanguage(registerResourceMessage)))
                 .findFirst()
                 .orElse(Language.EN);
-
         var version = getAssetVersion(registerResourceMessage);
         var keywords = getAssetKeywords(registerResourceMessage)
                 .stream()
-                .map(k -> new TypedLiteral(k, "en"))
+                .map(k -> new TypedLiteral(k, language.name()))
                 .toList();
         var mediaType = getAssetMediaType(registerResourceMessage);
         var publisher = getAssetPublisher(registerResourceMessage);
@@ -86,8 +86,8 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
         var geoReferenceMethod = getAssetGeoReferenceMethod(registerResourceMessage);
 
         var resource = new ResourceBuilder(registerResourceMessage.affectedResourceUri())
-                ._title_(new TypedLiteral(assetTitle, "en"))
-                ._description_(new TypedLiteral(assetDescription, "en"))
+                ._title_(new TypedLiteral(assetTitle, language.name()))
+                ._description_(new TypedLiteral(assetDescription, language.name()))
                 ._language_(language)
                 ._version_(version)
                 ._keyword_(keywords)
@@ -98,9 +98,10 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                         ._mediaType_(new IANAMediaTypeBuilder()._filenameExtension_(mediaType).build())
                         .build())
                 //resource endpoint not working, resource not being shown
-//                ._resourceEndpoint_(new ConnectorEndpointBuilder()
+//                ._resourceEndpoint_(List.of(new ConnectorEndpointBuilder()
+//                        ._accessURL_(URI.create(endpointDocumentation))
 //                        ._endpointDocumentation_(URI.create(endpointDocumentation))
-//                        .build())
+//                        .build()))
                 .build();
 
         ObjectNode json = (ObjectNode) objectMapper.readTree(objectMapper.writeValueAsString(resource));
