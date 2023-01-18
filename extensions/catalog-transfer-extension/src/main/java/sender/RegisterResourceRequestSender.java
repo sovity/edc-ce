@@ -113,26 +113,26 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
     }
 
     private ObjectNode getGeoReferenceMethodJson(String geoReferenceMethod) {
-        return getPropertyJson(geoReferenceMethod);
+        return buildStringProperty(geoReferenceMethod);
     }
 
     private ObjectNode getDataModelJson(String dataModel) {
-        return getPropertyJson(dataModel);
+        return buildStringProperty(dataModel);
     }
 
     private ObjectNode getDataSubcategoryJson(String dataSubcategory) {
-        return getPropertyJson(dataSubcategory);
+        return buildStringProperty(dataSubcategory);
     }
 
     private ObjectNode getTransportModeJson(String transportMode) {
-        return getPropertyJson(transportMode);
+        return buildStringProperty(transportMode);
     }
 
     private ObjectNode getDataCategoryJson(String dataCategory) {
-        return getPropertyJson(dataCategory);
+        return buildStringProperty(dataCategory);
     }
 
-    private ObjectNode getPropertyJson(String property) {
+    private ObjectNode buildStringProperty(String property) {
         ObjectNode transportModeJson = objectMapper.createObjectNode();
         transportModeJson.put("@value", property);
         transportModeJson.put("@type", "http://www.w3.org/2001/XMLSchema#string");
