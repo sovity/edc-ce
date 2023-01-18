@@ -1,5 +1,33 @@
 import {AppConfigProperties} from './app-config-properties';
-import {inferEdcUiProfileDataKeyTypes} from './edc-ui-profile-config';
+import {EdcUiFeature} from './edc-ui-feature';
+import {
+  EdcUiProfileConfig,
+  inferEdcUiProfileDataKeyTypes,
+} from './edc-ui-profile-config';
+
+type EdcUiTheme = Pick<
+  EdcUiProfileConfig,
+  'theme' | 'brandLogoSrc' | 'brandLogoStyle'
+>;
+
+const SOVITY_THEME: EdcUiTheme = {
+  theme: 'theme-sovity',
+  brandLogoSrc: '/assets/images/sovity_logo.svg',
+  brandLogoStyle: 'width: 70%;',
+};
+
+const MDS_THEME: EdcUiTheme = {
+  theme: 'theme-mds',
+  brandLogoSrc: '/assets/images/sovity_logo.svg',
+  brandLogoStyle: 'height: 57px; margin-top: 5px; margin-left: 5px;',
+};
+
+const MDS_FEATURES: EdcUiFeature[] = ['mds-fields'];
+
+const MANAGED_EDC_FEATURES: EdcUiFeature[] = [
+  'sovity-zammad-integration',
+  'logout-button',
+];
 
 /**
  * List of available profiles.
@@ -8,28 +36,20 @@ import {inferEdcUiProfileDataKeyTypes} from './edc-ui-profile-config';
  */
 export const EDC_UI_PROFILE_DATA = inferEdcUiProfileDataKeyTypes({
   'sovity-open-source': {
-    theme: 'theme-sovity',
-    brandLogoSrc: '/assets/images/sovity_logo.svg',
+    ...SOVITY_THEME,
     features: new Set(),
   },
   'sovity-hosted-by-sovity': {
-    theme: 'theme-sovity',
-    brandLogoSrc: '/assets/images/sovity_logo.svg',
-    features: new Set(['sovity-zammad-integration', 'logout-button']),
+    ...SOVITY_THEME,
+    features: new Set(MANAGED_EDC_FEATURES),
   },
   'mds-open-source': {
-    theme: 'theme-mds',
-    brandLogoSrc: '/assets/images/mds_logo.svg',
-    features: new Set(['mds-fields']),
+    ...MDS_THEME,
+    features: new Set(MDS_FEATURES),
   },
   'mds-hosted-by-sovity': {
-    theme: 'theme-mds',
-    brandLogoSrc: '/assets/images/mds_logo.svg',
-    features: new Set([
-      'mds-fields',
-      'sovity-zammad-integration',
-      'logout-button',
-    ]),
+    ...MDS_THEME,
+    features: new Set([...MDS_FEATURES, ...MANAGED_EDC_FEATURES]),
   },
 });
 

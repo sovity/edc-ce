@@ -9,6 +9,7 @@ export type AppConfig = {
   profile: EdcUiProfile;
   theme: EdcUiColorTheme;
   brandLogoSrc: string;
+  brandLogoStyle: string;
   features: Set<EdcUiFeature>;
   dataManagementApiKey: string;
   dataManagementApiUrl: string;

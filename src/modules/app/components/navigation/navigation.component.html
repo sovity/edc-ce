@@ -10,15 +10,16 @@
       <img
         width="70%"
         alt="Logo"
-        [attr.src]="appConfigService.config.brandLogoSrc" />
+        [attr.src]="appConfigService.config.brandLogoSrc"
+        [style]="appConfigService.config.brandLogoStyle" />
     </mat-toolbar>
     <mat-nav-list>
       <a *ngFor="let route of routes" [routerLink]="[route.path]">
         <mat-list-item
           *ngIf="
             route.component &&
-            (!route.data?.requiresFeature || (route.data!.requiresFeature!
-              | isActiveFeature))
+            (!route.data?.requiresFeature ||
+              (route.data!.requiresFeature! | isActiveFeature))
           "
           [routerLinkActive]="['is-active']">
           <mat-icon mat-list-icon>{{ route.data?.icon }}</mat-icon>
