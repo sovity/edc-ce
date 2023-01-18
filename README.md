@@ -66,7 +66,7 @@ Example of a client-ID entry:
 ### How do you get the SKI and AKI of a p12 and how do you convert it to a jks?
 You can use a script (if you're on WSL or Linux) to generate the SKI, AKI and jks file.
 
-0. Make sure you're on Linux or on a WSL bash console and have openssl and keytool installed
+0. Make sure you're on Linux or on a bash console (e.g. WSL or Git Bash) and have openssl and keytool installed
 1. Navigate in the console to the resources/docs directory
 2. Run the script ``./get_client.sh [filepath].p12 [password]`` and substitute [filepath] to the p12 certificate filepath and 
 [password] to the certificate password
