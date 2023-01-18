@@ -1,4 +1,4 @@
-FROM gradle:7.4.1-jdk17 AS build
+FROM gradle:7.6.0-jdk17 AS build
 
 COPY --chown=gradle:gradle . /home/gradle/project/
 WORKDIR /home/gradle/project/
@@ -37,5 +37,6 @@ ENV WEB_HTTP_IDS_PATH="/api/v1/ids"
 # Use "exec" for graceful termination (SIGINT) to reach JVM.
 # ARG can not be used in ENTRYPOINT so storing values in ENV variables
 ENV JVM_ARGS=$JVM_ARGS
+USER nonroot
 ENTRYPOINT [ "sh", "-c", \
     "exec java -Djava.util.logging.config.file=/app/logging.properties $JVM_ARGS -jar app.jar"]
