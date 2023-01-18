@@ -8,6 +8,7 @@ import {IntroductionComponent} from '../edc-demo/components/introduction/introdu
 import {LogoutComponent} from '../edc-demo/components/logout/logout.component';
 import {PolicyViewComponent} from '../edc-demo/components/policy-view/policy-view.component';
 import {TransferHistoryViewerComponent} from '../edc-demo/components/transfer-history/transfer-history-viewer.component';
+import {EdcUiFeature} from "./config/edc-ui-feature";
 
 export const routes: Routes = [
   {
@@ -48,7 +49,7 @@ export const routes: Routes = [
   {
     path: 'logout',
     component: LogoutComponent,
-    data: {title: 'Logout', icon: 'logout'},
+    data: {title: 'Logout', icon: 'logout', requiresFeature: 'logout-button' as EdcUiFeature},
   },
   {
     path: '',

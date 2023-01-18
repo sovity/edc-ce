@@ -3,4 +3,7 @@ export type EdcUiFeature =
   | 'mds-fields'
 
   // Enables support functionalities of connectors commercially hosted by sovity.
-  | 'sovity-zammad-integration';
+  | 'sovity-zammad-integration'
+
+  // Enables logout button to configured LOGOUT_URL
+  | 'logout-button';

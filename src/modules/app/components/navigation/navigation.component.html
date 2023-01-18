@@ -15,7 +15,11 @@
     <mat-nav-list>
       <a *ngFor="let route of routes" [routerLink]="[route.path]">
         <mat-list-item
-          *ngIf="route.component"
+          *ngIf="
+            route.component &&
+            (!route.data?.requiresFeature || (route.data!.requiresFeature!
+              | isActiveFeature))
+          "
           [routerLinkActive]="['is-active']">
           <mat-icon mat-list-icon>{{ route.data?.icon }}</mat-icon>
           <span matLine>{{ route.data?.title ?? route.path }}</span>

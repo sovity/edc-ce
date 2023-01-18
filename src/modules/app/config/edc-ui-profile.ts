@@ -15,7 +15,7 @@ export const EDC_UI_PROFILE_DATA = inferEdcUiProfileDataKeyTypes({
   'sovity-hosted-by-sovity': {
     theme: 'theme-sovity',
     brandLogoSrc: '/assets/images/sovity_logo.svg',
-    features: new Set(['sovity-zammad-integration']),
+    features: new Set(['sovity-zammad-integration', 'logout-button']),
   },
   'mds-open-source': {
     theme: 'theme-mds',
@@ -25,7 +25,11 @@ export const EDC_UI_PROFILE_DATA = inferEdcUiProfileDataKeyTypes({
   'mds-hosted-by-sovity': {
     theme: 'theme-mds',
     brandLogoSrc: '/assets/images/mds_logo.svg',
-    features: new Set(['mds-fields', 'sovity-zammad-integration']),
+    features: new Set([
+      'mds-fields',
+      'sovity-zammad-integration',
+      'logout-button',
+    ]),
   },
 });
 
