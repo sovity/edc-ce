@@ -50,7 +50,7 @@ public class LogMessageSender implements MultipartSenderDelegate<LogMessage, Str
 
     @Override
     public String buildMessagePayload(LogMessage logMessage) throws Exception {
-        JSONObject jo = new JSONObject();
+        var jo = new JSONObject();
         jo.put("AgreementId", logMessage.contractAgreement().getId());
         jo.put("AssetId", logMessage.contractAgreement().getAssetId());
         jo.put("ContractStartDate", logMessage.contractAgreement().getContractStartDate());
