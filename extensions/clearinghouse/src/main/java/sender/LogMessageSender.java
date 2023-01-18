@@ -22,6 +22,7 @@ import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.Ids
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.MultipartResponse;
 import org.eclipse.edc.protocol.ids.spi.domain.IdsConstants;
 import org.eclipse.edc.protocol.ids.util.CalendarUtil;
+import org.json.JSONObject;
 import sender.message.LogMessage;
 
 import java.util.List;
@@ -49,16 +50,16 @@ public class LogMessageSender implements MultipartSenderDelegate<LogMessage, Str
 
     @Override
     public String buildMessagePayload(LogMessage logMessage) throws Exception {
-        var id = logMessage.contractAgreement().getId();
-        var assetId = logMessage.contractAgreement().getAssetId();
-        var startDate = logMessage.contractAgreement().getContractStartDate();
-        var endDate = logMessage.contractAgreement().getContractEndDate();
-        var signingDate = logMessage.contractAgreement().getContractSigningDate();
-        var consumer = logMessage.contractAgreement().getConsumerAgentId();
-        var provider = logMessage.contractAgreement().getProviderAgentId();
-        var policy = logMessage.contractAgreement().getPolicy();
-        return id + " " + assetId + " " + startDate + " " + endDate + " " + signingDate + " " +
-                consumer + " " + provider + " " + policy;
+        JSONObject jo = new JSONObject();
+        jo.put("AgreementId", logMessage.contractAgreement().getId());
+        jo.put("AssetId", logMessage.contractAgreement().getAssetId());
+        jo.put("ContractStartDate", logMessage.contractAgreement().getContractStartDate());
+        jo.put("ContractEndDate", logMessage.contractAgreement().getContractEndDate());
+        jo.put("ContractSigningDate", logMessage.contractAgreement().getContractSigningDate());
+        jo.put("ConsumerAgentId", logMessage.contractAgreement().getConsumerAgentId());
+        jo.put("ProviderAgentId", logMessage.contractAgreement().getProviderAgentId());
+        jo.put("Policy", logMessage.contractAgreement().getPolicy());
+        return jo.toString();
     }
 
     @Override

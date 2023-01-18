@@ -9,6 +9,7 @@ val jupiterVersion: String by project
 val mockitoVersion: String by project
 val assertj: String by project
 val okHttpVersion: String by project
+val jsonVersion: String by project
 val theGroup: String by project
 val theVersion: String by project
 
@@ -23,6 +24,7 @@ dependencies {
     implementation("${edcGroup}:ids-jsonld-serdes:${edcVersion}")
 
     implementation("com.squareup.okhttp3:okhttp:${okHttpVersion}")
+    implementation("org.json:json:${jsonVersion}")
 
     testImplementation("org.assertj:assertj-core:${assertj}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiterVersion}")
