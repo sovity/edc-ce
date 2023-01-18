@@ -133,10 +133,10 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
     }
 
     private ObjectNode buildStringProperty(String property) {
-        ObjectNode transportModeJson = objectMapper.createObjectNode();
-        transportModeJson.put("@value", property);
-        transportModeJson.put("@type", "http://www.w3.org/2001/XMLSchema#string");
-        return transportModeJson;
+        var json = objectMapper.createObjectNode();
+        json.put("@value", property);
+        json.put("@type", "http://www.w3.org/2001/XMLSchema#string");
+        return json;
     }
 
     private String getAssetGeoReferenceMethod(RegisterResourceMessage registerResourceMessage) {
