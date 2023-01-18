@@ -56,8 +56,11 @@ docker build -f "docker/Dockerfile" -t "edc-ui:latest" .
 
 ### Configuring docker image
 
-At startup all ENV vars starting with `EDC_UI_` will be collected into a
-`assets/app-config.json` and served.
+ENV vars `EDC_UI_*` will be collected into `assets/app-config.json` at container
+startup and served.
+
+`NGINX_BIND` and `NGINX_PORT` are templated into `default.conf` and can be used
+to overwrite nginx bind address and port.
 
 ## Codegen for EDC REST API
 

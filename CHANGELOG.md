@@ -21,6 +21,7 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Changed
 
+- Releasing images now as `ghcr.io/sovity/edc-ui`.
 - Changed configuration:
   - Removed `app.config.json`.
   - Configuration via `EDC_UI_` environment variables in both local dev and
