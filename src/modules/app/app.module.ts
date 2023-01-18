@@ -1,4 +1,5 @@
 import {LayoutModule} from '@angular/cdk/layout';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatNativeDateModule} from '@angular/material/core';
@@ -13,6 +14,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {EdcDemoModule} from '../edc-demo/edc-demo.module';
 import {API_KEY, CONNECTOR_DATAMANAGEMENT_API} from '../edc-dmgmt-client';
+import {ApiKeyInterceptor} from './api-key.interceptor';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {NavigationComponent} from './components/navigation/navigation.component';
@@ -50,6 +52,8 @@ import {AppConfigService} from './config/app-config.service';
     // Provide individual properties of config for better Angular Component APIs
     provideConfigProperty(CONNECTOR_DATAMANAGEMENT_API, 'dataManagementApiUrl'),
     provideConfigProperty(API_KEY, 'dataManagementApiKey'),
+
+    {provide: HTTP_INTERCEPTORS, multi: true, useClass: ApiKeyInterceptor},
 
     MatDatepickerModule,
     {

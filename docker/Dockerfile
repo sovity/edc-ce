@@ -32,6 +32,6 @@ HEALTHCHECK --interval=2s --timeout=5s --retries=10 \
 # (1) Apply NGINX_BIND and NGINX_PORT to nginx.conf
 # (2) Create app-config.json from EDC_UI_* ENV Vars
 CMD esh -o /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.esh \
- && jq -n 'env' | jq 'with_entries( select(.key | startswith("EDC_UI_") ) )' > /usr/share/nginx/html/assets/config/app-config.json \
+ && jq -n 'env | with_entries( select(.key | startswith("EDC_UI_") ) )' > /usr/share/nginx/html/assets/config/app-config.json \
  && nginx -g "daemon off;"
 
