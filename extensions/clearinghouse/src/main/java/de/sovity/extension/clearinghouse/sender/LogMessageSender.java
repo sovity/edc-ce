@@ -15,6 +15,7 @@ package de.sovity.extension.clearinghouse.sender;
 
 import de.fraunhofer.iais.eis.ConnectorUpdateMessageBuilder;
 import de.fraunhofer.iais.eis.DynamicAttributeToken;
+import de.fraunhofer.iais.eis.LogMessageBuilder;
 import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.MessageProcessedNotificationMessageImpl;
 import de.sovity.extension.clearinghouse.sender.message.LogMessage;
@@ -38,13 +39,12 @@ public class LogMessageSender implements MultipartSenderDelegate<LogMessage, Str
     @Override
     public Message buildMessageHeader(LogMessage logMessage,
                                       DynamicAttributeToken token) throws Exception {
-        return new ConnectorUpdateMessageBuilder()
+        return new LogMessageBuilder()
                 ._modelVersion_(IdsConstants.INFORMATION_MODEL_VERSION)
                 ._issued_(CalendarUtil.gregorianNow())
                 ._securityToken_(token)
                 ._issuerConnector_(logMessage.connectorBaseUrl())
                 ._senderAgent_(logMessage.connectorBaseUrl())
-                ._affectedConnector_(logMessage.connectorBaseUrl())
                 .build();
     }
 
@@ -58,7 +58,6 @@ public class LogMessageSender implements MultipartSenderDelegate<LogMessage, Str
         jo.put("ContractSigningDate", logMessage.contractAgreement().getContractSigningDate());
         jo.put("ConsumerAgentId", logMessage.contractAgreement().getConsumerAgentId());
         jo.put("ProviderAgentId", logMessage.contractAgreement().getProviderAgentId());
-        jo.put("Policy", logMessage.contractAgreement().getPolicy());
         return jo.toString();
     }
 
