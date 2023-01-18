@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8fb24d62-4205-46dc-b360-5ee5654f7b73",
+		"_postman_id": "fc7ed4eb-1b10-40b9-be60-bfd4b0ca6f64",
 		"name": "MVD",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -28,7 +28,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"asset\": {\n        \"properties\": {\n            \"asset:prop:name\": \"test-document_{{participant_id}}-3\",\n            \"asset:prop:description\": \"test-document_{{participant_id}}\",\n            \"asset:prop:contenttype\": \"text/plain\",\n            \"asset:prop:version\": \"1.0\",\n            \"asset:prop:id\": \"test-document_{{participant_id}}-3\",\n            \"type\": \"AzureStorage\"\n        }\n    },\n    \"dataAddress\": {\n        \"properties\": {\n            \"type\": \"AzureStorage\",\n            \"account\": \"{{storage_account}}\",\n            \"container\": \"src-container\",\n            \"blobname\": \"text-document.txt\",\n            \"keyName\": \"{{storage_account}}-key1\"\n        }\n    }\n}",
+							"raw": "{\n    \"asset\": {\n        \"properties\": {\n            \"asset:prop:name\": \"test-document_{{participant_id}}-3\",\n            \"asset:prop:description\": \"test-document_{{participant_id}}\",\n            \"asset:prop:contenttype\": \"text/plain\",\n            \"asset:prop:version\": \"1.0\",\n            \"asset:prop:id\": \"test-document_{{participant_id}}-3\",\n            \"type\": \"AzureStorage\",\n            \"asset:prop:keywords\": \"keyword1,keyword2\",\n            \"asset:prop:language\": \"https://w3id.org/idsa/code/EN\",\n            \"asset:prop:publisher\": \"https://sovity.de\",\n            \"asset:prop:standardLicense\": \"https://creativecommons.org/licenses/by/4.0/\",\n            \"asset:prop:endpointDocumentation\": \"https://github.com/Mobility-Data-Space/mobility-data-space/wiki/MDS-Ontology\",\n            \"http://w3id.org/mds#transportMode\": \"Road\",\n            \"http://w3id.org/mds#dataCategory\": \"Traffic Information\",\n            \"http://w3id.org/mds#dataSubcategory\": \"Hazard Warnings\",\n            \"http://w3id.org/mds#dataModel\": \"CSV\",\n            \"http://w3id.org/mds#geoReferenceMethod\": \"Geo Ref Method Test\"\n        }\n    },\n    \"dataAddress\": {\n        \"properties\": {\n            \"type\": \"AzureStorage\",\n            \"account\": \"{{storage_account}}\",\n            \"container\": \"src-container\",\n            \"blobname\": \"text-document.txt\",\n            \"keyName\": \"{{storage_account}}-key1\"\n        }\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
