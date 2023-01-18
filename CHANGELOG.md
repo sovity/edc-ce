@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [X.X.X]
 
 ### Feature:
+- Add additional meta information to resource payload when publishing to broker
 - Add connector description to broker message
 - Add ClearingHouse Extension
 
