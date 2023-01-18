@@ -127,7 +127,7 @@ public class ClearingHouseExtension implements ServiceExtension {
             var urlString = context.getSetting(settingsPath, null);
             if (urlString == null && !EDC_CATALOG_URL.equals(settingsPath)) {
                 throw new EdcException(String.format("Could not initialize " +
-                        "CatalogTransferExtension: " +
+                        "ClearingHouseExtension: " +
                         "No url specified using setting %s", settingsPath));
             } else if (urlString == null) {
                 return null;

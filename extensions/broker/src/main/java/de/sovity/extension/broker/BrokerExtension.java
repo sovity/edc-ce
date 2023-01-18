@@ -27,7 +27,7 @@ import de.sovity.extension.broker.sender.QueryMessageRequestSender;
 import de.sovity.extension.broker.sender.RegisterConnectorRequestSender;
 import de.sovity.extension.broker.sender.RegisterResourceRequestSender;
 import de.sovity.extension.broker.sender.UnregisterResourceRequestSender;
-import de.sovity.extension.broker.sender.message.clearingdispatcher.IdsMultipartExtendedRemoteMessageDispatcher;
+import de.sovity.extension.broker.sender.message.brokerdispatcher.IdsMultipartExtendedRemoteMessageDispatcher;
 import de.sovity.extension.broker.serializer.MultiContextJsonLdSerializer;
 import de.sovity.extension.broker.service.IdsBrokerService;
 import de.sovity.extension.broker.service.IdsBrokerServiceImpl;

@@ -193,12 +193,10 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
     @Override
     public void on(Event<?> event) {
         if (event instanceof ContractDefinitionCreated contractDefinitionCreated) {
-            //ContractDefinitionCreated -> Send EDC-Asset as IDS-Resource to IDS-Broker
             var created = resolveCreatedAssets(contractDefinitionCreated);
             addResourcesToBroker(created, brokerBaseUrl);
 
         } else if (event instanceof ContractDefinitionDeleted contractDefinitionDeleted) {
-            //ContractDefinitionDeleted -> Remove EDC-Asset as IDS-Resource from IDS-Broker
             var deleted = resolveDeletedBrokerIds(contractDefinitionDeleted);
             removeResourcesFromBroker(deleted, brokerBaseUrl);
         }

@@ -13,7 +13,7 @@
  */
 package de.sovity.extension.broker.sender.message;
 
-import de.sovity.extension.broker.sender.message.clearingdispatcher.ExtendedMessageProtocol;
+import de.sovity.extension.broker.sender.message.brokerdispatcher.ExtendedMessageProtocol;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.spi.types.domain.message.RemoteMessage;
 

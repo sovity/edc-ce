@@ -72,7 +72,6 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
     @Override
     public void on(Event<?> event) {
         if (event instanceof ContractNegotiationConfirmed contractNegotiationConfirmed) {
-            //ContractNegotiationConfirmed -> Log to ClearingHouse
             var contractAgreement = resolveContractAgreement(contractNegotiationConfirmed);
             logContractAgreement(contractAgreement, clearingHouseLogUrl);
         }

@@ -11,7 +11,7 @@
  *       sovity GmbH - initial API and implementation
  *
  */
-package de.sovity.extension.broker.sender.message.clearingdispatcher;
+package de.sovity.extension.broker.sender.message.brokerdispatcher;
 
 import org.eclipse.edc.protocol.ids.spi.types.MessageProtocol;
 
