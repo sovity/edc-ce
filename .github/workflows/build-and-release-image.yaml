@@ -55,7 +55,7 @@ jobs:
             type=raw,value=${{ inputs.imageName }},enabled=${{ github.event_name == 'workflow_dispatch' }}
 
       - name: Build EDC-UI image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           file: docker/Dockerfile
           build-args: |
