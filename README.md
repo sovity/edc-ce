@@ -1,12 +1,4 @@
-<h2 align="center">EDC-Connector Extensions</h2>
-
-<p align="center">
-  <a href="https://github.com/sovity/edc-extensions/issues">Report Issue</a>
-  ·
-  <a href="https://github.com/sovity/edc-extensions/issues">Request Feature</a>
-  ·
-  <a href="https://github.com/sovity/edc-extensions/blob/main/LICENSE">License</a>
-</p>
+## EDC-Connector Extensions
 
 ## About The Project
 In this repo are different extensions of the EDC-Connector, among others a Broker-Extension to communicate with an IDS-Broker as well as a ClearingHouse-Extension to communicate with an IDS-ClearingHouse.
