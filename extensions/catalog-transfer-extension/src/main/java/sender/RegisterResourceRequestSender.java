@@ -104,31 +104,31 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                 .build();
 
         ObjectNode json = (ObjectNode) objectMapper.readTree(objectMapper.writeValueAsString(resource));
-        json.set("http://w3id.org/mds#transportMode", getTransportModeJson(transportMode));
-        json.set("http://w3id.org/mds#dataCategory", getDataCategoryJson(dataCategory));
-        json.set("http://w3id.org/mds#dataSubcategory", getDataSubcategoryJson(dataSubcategory));
-        json.set("http://w3id.org/mds#dataModel", getDataModelJson(dataModel));
-        json.set("http://w3id.org/mds#geoReferenceMethod", getGeoReferenceMethodJson(geoReferenceMethod));
+        json.set("http://w3id.org/mds#transportMode", buildTransportModeJson(transportMode));
+        json.set("http://w3id.org/mds#dataCategory", buildDataCategoryJson(dataCategory));
+        json.set("http://w3id.org/mds#dataSubcategory", buildDataSubcategoryJson(dataSubcategory));
+        json.set("http://w3id.org/mds#dataModel", buildDataModelJson(dataModel));
+        json.set("http://w3id.org/mds#geoReferenceMethod", buildGeoReferenceMethodJson(geoReferenceMethod));
         return objectMapper.writeValueAsString(json);
     }
 
-    private ObjectNode getGeoReferenceMethodJson(String geoReferenceMethod) {
+    private ObjectNode buildGeoReferenceMethodJson(String geoReferenceMethod) {
         return buildStringProperty(geoReferenceMethod);
     }
 
-    private ObjectNode getDataModelJson(String dataModel) {
+    private ObjectNode buildDataModelJson(String dataModel) {
         return buildStringProperty(dataModel);
     }
 
-    private ObjectNode getDataSubcategoryJson(String dataSubcategory) {
+    private ObjectNode buildDataSubcategoryJson(String dataSubcategory) {
         return buildStringProperty(dataSubcategory);
     }
 
-    private ObjectNode getTransportModeJson(String transportMode) {
+    private ObjectNode buildTransportModeJson(String transportMode) {
         return buildStringProperty(transportMode);
     }
 
-    private ObjectNode getDataCategoryJson(String dataCategory) {
+    private ObjectNode buildDataCategoryJson(String dataCategory) {
         return buildStringProperty(dataCategory);
     }
 
