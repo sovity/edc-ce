@@ -194,22 +194,24 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
     public void on(Event<?> event) {
         if (event instanceof ContractDefinitionCreated contractDefinitionCreated) {
             //ContractDefinitionCreated -> Send EDC-Asset as IDS-Resource to IDS-Broker
-            handleContractDefinitionCreated(contractDefinitionCreated);
+            var created = resolveCreatedAssets(contractDefinitionCreated);
+            addResourcesToBroker(created, brokerBaseUrl);
+
         } else if (event instanceof ContractDefinitionDeleted contractDefinitionDeleted) {
             //ContractDefinitionDeleted -> Remove EDC-Asset as IDS-Resource from IDS-Broker
-            handleContractDefinitionDeleted(contractDefinitionDeleted);
+            var deleted = resolveDeletedBrokerIds(contractDefinitionDeleted);
+            removeResourcesFromBroker(deleted, brokerBaseUrl);
         }
     }
 
-    private void handleContractDefinitionDeleted(ContractDefinitionDeleted contractDefinitionDeleted) {
+    private List<String> resolveDeletedBrokerIds(ContractDefinitionDeleted contractDefinitionDeleted) {
         var eventPayload = contractDefinitionDeleted.getPayload();
         var contractDefinitionId = eventPayload.getContractDefinitionId();
-        var deletedBrokerIds = getDeletedBrokerIds(brokerBaseUrl, contractDefinitionId);
 
-        removeResourcesFromBroker(deletedBrokerIds, brokerBaseUrl);
+        return getDeletedBrokerIds(brokerBaseUrl, contractDefinitionId);
     }
 
-    private void handleContractDefinitionCreated(ContractDefinitionCreated contractDefinitionCreated) {
+    private HashMap<String, Asset> resolveCreatedAssets(ContractDefinitionCreated contractDefinitionCreated) {
         var eventPayload = contractDefinitionCreated.getPayload();
         var contractDefinitionId = eventPayload.getContractDefinitionId();
         var contractDefinition = contractDefinitionStore.findById(contractDefinitionId);
@@ -223,7 +225,7 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
             resourceMap.put(resourceId, asset);
         }
 
-        addResourcesToBroker(resourceMap, brokerBaseUrl);
+        return resourceMap;
     }
 
     private List<Asset> getAssetsFromContractDefinition(ContractDefinition contractDefinition) {

@@ -73,16 +73,15 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
     public void on(Event<?> event) {
         if (event instanceof ContractNegotiationConfirmed contractNegotiationConfirmed) {
             //ContractNegotiationConfirmed -> Log to ClearingHouse
-            handleContractNegotiationConfirmed(contractNegotiationConfirmed);
+            var contractAgreement = resolveContractAgreement(contractNegotiationConfirmed);
+            logContractAgreement(contractAgreement, clearingHouseLogUrl);
         }
     }
 
-    private void handleContractNegotiationConfirmed(ContractNegotiationConfirmed contractNegotiationConfirmed) {
+    private ContractAgreement resolveContractAgreement(ContractNegotiationConfirmed contractNegotiationConfirmed) {
         var eventPayload = contractNegotiationConfirmed.getPayload();
         var contractNegotiationId = eventPayload.getContractNegotiationId();
         var contractNegotiation = contractNegotiationStore.find(contractNegotiationId);
-        var contractAgreement = contractNegotiation.getContractAgreement();
-
-        logContractAgreement(contractAgreement, clearingHouseLogUrl);
+        return contractNegotiation.getContractAgreement();
     }
 }
