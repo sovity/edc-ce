@@ -103,7 +103,7 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                         .build()))
                 .build();
 
-        ObjectNode json = (ObjectNode) objectMapper.readTree(objectMapper.writeValueAsString(resource));
+        var json = (ObjectNode) objectMapper.readTree(objectMapper.writeValueAsString(resource));
         json.set("http://w3id.org/mds#transportMode", buildTransportModeJson(transportMode));
         json.set("http://w3id.org/mds#dataCategory", buildDataCategoryJson(dataCategory));
         json.set("http://w3id.org/mds#dataSubcategory", buildDataSubcategoryJson(dataSubcategory));
