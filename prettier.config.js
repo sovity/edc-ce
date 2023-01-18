@@ -23,9 +23,13 @@ module.exports = {
 
   // @trivago/prettier-plugin-sort-imports
   importOrder: [
+    // this import needs to be on top or tests fail
+    '^zone.js/testing$',
+    // third parties first
     '^@angular/(.*)$',
     '^rxjs(/(.*))?$',
     '<THIRD_PARTY_MODULES>',
+    // rest after
     '^[./]',
   ],
   importOrderParserPlugins: [
