@@ -1,4 +1,4 @@
-## EDC-Connector Extensions
+# EDC-Connector Extensions
 
 ## About The Project
 In this repo are different extensions of the EDC-Connector, among others a Broker-Extension to communicate with an IDS-Broker as well as a ClearingHouse-Extension to communicate with an IDS-ClearingHouse.
