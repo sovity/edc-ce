@@ -5,7 +5,7 @@ WORKDIR /home/gradle/project/
 RUN gradle build --no-daemon
 
 # -buster is required to have apt available
-FROM openjdk:17-slim-buster
+FROM openjdk:18-slim-buster
 
 # Optional JVM arguments, such as memory settings
 ARG JVM_ARGS=""
