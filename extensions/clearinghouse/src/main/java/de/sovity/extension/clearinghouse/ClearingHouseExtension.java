@@ -55,9 +55,6 @@ public class ClearingHouseExtension implements ServiceExtension {
     @Setting
     public static final String CLEARINGHOUSE_LOG_URL_SETTING = "edc.clearinghouse.log.url";
 
-    @Setting
-    private static final String EDC_CATALOG_URL = "edc.catalog.url";
-
     @Inject
     private IdsApiConfiguration idsApiConfiguration;
 
@@ -125,12 +122,10 @@ public class ClearingHouseExtension implements ServiceExtension {
     private URL readUrlFromSettings(ServiceExtensionContext context, String settingsPath) {
         try {
             var urlString = context.getSetting(settingsPath, null);
-            if (urlString == null && !EDC_CATALOG_URL.equals(settingsPath)) {
+            if (urlString == null) {
                 throw new EdcException(String.format("Could not initialize " +
                         "ClearingHouseExtension: " +
                         "No url specified using setting %s", settingsPath));
-            } else if (urlString == null) {
-                return null;
             }
 
             return new URL(urlString);
