@@ -13,7 +13,6 @@
  */
 package de.sovity.extension.clearinghouse.sender;
 
-import de.fraunhofer.iais.eis.ConnectorUpdateMessageBuilder;
 import de.fraunhofer.iais.eis.DynamicAttributeToken;
 import de.fraunhofer.iais.eis.LogMessageBuilder;
 import de.fraunhofer.iais.eis.Message;
