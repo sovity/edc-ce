@@ -57,15 +57,6 @@ public class ClearingHouseExtension implements ServiceExtension {
     @Setting
     private static final String EDC_CATALOG_URL = "edc.catalog.url";
 
-    @Setting
-    private static final String UPDATE_INTERVAL_IN_SECONDS = "update.interval.in.seconds";
-
-    @Setting
-    private static final String EDC_CONNECTOR_NAME = "edc.connector.name";
-
-    @Setting
-    private static final String EDC_IDS_ENDPOINT = "edc.ids.endpoint";
-
     @Inject
     private IdsApiConfiguration idsApiConfiguration;
 
@@ -164,8 +155,6 @@ public class ClearingHouseExtension implements ServiceExtension {
         var monitor = context.getMonitor();
         var typeManager = context.getTypeManager();
         var objectMapper = typeManager.getMapper(TYPE_MANAGER_SERIALIZER_KEY);
-        //var connectorName = context.getSetting(EDC_CONNECTOR_NAME, "EDC");
-        //var endpoint = context.getSetting(EDC_IDS_ENDPOINT, "http://endpoint");
 
         var logMessageSender = new LogMessageSender();
 
