@@ -68,6 +68,13 @@ allprojects {
 
 subprojects {
     apply(plugin = "maven-publish")
+
+    val theGroup: String by project
+    val theVersion: String by project
+
+    group = theGroup
+    version = theVersion
+
     publishing {
         repositories {
             maven {

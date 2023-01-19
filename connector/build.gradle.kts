@@ -10,9 +10,8 @@ val edcGroup: String by project
 dependencies {
     implementation(project(":extensions:broker"))
     implementation(project(":extensions:clearinghouse"))
-    implementation(project(":extensions:policy-referringConnector"))
-    implementation(project(":extensions:policy-timeinterval"))
-
+    implementation(project(":extensions:policy-referring-connector"))
+    implementation(project(":extensions:policy-time-interval"))
     implementation("${edcGroup}:control-plane-core:${edcVersion}")
     implementation("${edcGroup}:api-observability:${edcVersion}")
     implementation("${edcGroup}:data-management-api:${edcVersion}")
