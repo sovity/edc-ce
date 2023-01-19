@@ -33,7 +33,7 @@ services:
       - "8181:8181"
       - "5005:5005"
     volumes:
-      - ../../resources:/resources
+      - ./resources:/resources
 
   edc-ui:
     image: ghcr.io/sovity/edc-ui:latest
