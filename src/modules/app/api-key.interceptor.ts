@@ -26,6 +26,8 @@ export class ApiKeyInterceptor implements HttpInterceptor {
   }
 
   private getApiKey() {
-    return this.appConfigService.config.dataManagementApiKey;
+    // First request will be to fetch the config (from APP_INITIALIZER)
+    // At that time config won't be set yet
+    return this.appConfigService.config?.dataManagementApiKey;
   }
 }
