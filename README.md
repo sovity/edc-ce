@@ -36,6 +36,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#about-the-project">About The Project</a></li>
+    <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#configuration">Configuration</a></li>
     <li><a href="#running-dev-mode">Running dev mode</a></li>
     <li><a href="#build-docker-image">Build docker image</a></li>
@@ -63,6 +64,20 @@ Our extension of EDC UI functionalities has been made open source and are
 compatible with stock EDC backends depending on selected configuration.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- GETTING STARTED -->
+
+## Getting Started
+
+The fastest way to get started is to run our
+[docker-compose.yaml](docs/getting-started/docker-compose.yaml).
+
+```shell
+cd docs/getting-started
+
+# Runs EDC and EDC UI at localhost:11000
+docker compose up
+```
 
 <!-- CONFIGURATION -->
 
