@@ -211,7 +211,7 @@ concatct@sovity.de
 [license-url]: https://github.com/sovity/edc-ui/blob/master/LICENSE.txt
 [linkedin-shield]:
   https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
+[linkedin-url]: https://www.linkedin.com/company/sovity
 [Angular.io]:
   https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white
 [Angular-url]: https://angular.io/
