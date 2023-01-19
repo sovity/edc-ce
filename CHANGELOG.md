@@ -16,6 +16,25 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
+#### Changed
+
+#### Removed
+
+#### Fixed
+
+## [v0.0.1-milestone-7-sovity1] 19.01.2023
+
+### Overview
+
+- Prepared this repository for its open source release:
+  - Better configuration via ENV Vars, documentation and CI.
+  - Changed versioning system to `$EDC_VERSION-sovity$EDC_UI_MINOR_VERSION`.
+  - Changed release image to `ghcr.io/sovity/edc-ui`.
+
+### Detailed Changes
+
+#### Added
+
 - Split mds and sovity profiles each into "open source" and "hosted by sovity"
   variants.
 
@@ -34,7 +53,8 @@ the detailed section referring to by linking pull requests or issues.
 #### Removed
 
 #### Fixed
-- Menu of Navigation bar hiding behind feedback widget  
+
+- Menu of Navigation bar hiding behind feedback widget
 
 ## [0.0.1-ab1b6fd0-sovity5] 17.01.2023
 
