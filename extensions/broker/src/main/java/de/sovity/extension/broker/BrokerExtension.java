@@ -251,6 +251,11 @@ public class BrokerExtension implements ServiceExtension {
     }
 
     @Override
+    public void shutdown(){
+        idsBrokerService.unregisterConnectorAtBroker(brokerBaseUrl);
+    }
+
+    @Override
     public void prepare() {
         ServiceExtension.super.prepare();
     }
