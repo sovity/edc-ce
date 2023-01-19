@@ -12,7 +12,11 @@ export class LanguageSelectItemService {
    * Partition LanguageSelectItems into highlighted and other.
    * Usability: See important options first and close to each other.
    */
-  highlightItemIds = ['LANG:MULTI_LINGUAL', 'ISO_639:DE', 'ISO_639:EN'];
+  highlightItemIds = [
+    'https://w3id.org/idsa/code/MULTI_LINGUAL',
+    'https://w3id.org/idsa/code/DE',
+    'https://w3id.org/idsa/code/EN',
+  ];
   highlightItems: LanguageSelectItem[];
   otherItems: LanguageSelectItem[];
   itemsById = associateBy(LANGUAGE_SELECT_DATA, (it) => it.id);
