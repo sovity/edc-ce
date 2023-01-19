@@ -34,6 +34,7 @@ the detailed section referring to by linking pull requests or issues.
 #### Removed
 
 #### Fixed
+- Menu of Navigation bar hiding behind feedback widget  
 
 ## [0.0.1-ab1b6fd0-sovity5] 17.01.2023
 

@@ -83,6 +83,10 @@ body {
   overflow: hidden;
 }
 
+.overflow-auto {
+  overflow: auto;
+}
+
 .flex {
   display: flex;
 }
@@ -139,6 +143,15 @@ body {
 // See https://tailwindcss.com/docs/flex-grow
 .grow {
   flex-grow: 1;
+}
+
+// See https://tailwindcss.com/docs/flex-shrink
+.shrink-0 {
+  flex-shrink: 0;
+}
+
+.shrink {
+  flex-shrink: 1;
 }
 
 // See https://tailwindcss.com/docs/align-items

@@ -6,14 +6,14 @@
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="(isHandset$ | async) === false">
-    <mat-toolbar class="custom-toolbar">
+    <mat-toolbar class="custom-toolbar shrink-0">
       <img
         width="70%"
         alt="Logo"
         [attr.src]="appConfigService.config.brandLogoSrc"
-        [style]="appConfigService.config.brandLogoStyle" />
+        [style]="appConfigService.config.brandLogoStyle"/>
     </mat-toolbar>
-    <mat-nav-list>
+    <mat-nav-list class="overflow-auto grow">
       <a *ngFor="let route of routes" [routerLink]="[route.path]">
         <mat-list-item
           *ngIf="
@@ -30,8 +30,8 @@
     <div
       *ngIf="'sovity-zammad-integration' | isActiveFeature"
       id="contact-form"
-      class="align-to-bottom">
-      <b>Do you have feedback or need help?</b>
+      class="align-to-bottom shrink-0">
+      <strong>Do you have feedback or need help?</strong>
       <p><em>Select &nbsp;<kbd>SAML</kbd>&nbsp; login on following page</em></p>
       <a
         href="https://sovity.zammad.com/#customer_ticket_new"
