@@ -10,11 +10,6 @@ val mockitoVersion: String by project
 val assertj: String by project
 val okHttpVersion: String by project
 val jsonVersion: String by project
-val theGroup: String by project
-val theVersion: String by project
-
-group = theGroup
-version = theVersion
 
 dependencies {
     implementation("${edcGroup}:control-plane-core:${edcVersion}")
