@@ -23,10 +23,7 @@ dependencies {
     implementation("${edcGroup}:monitor-jdk-logger:${edcVersion}")
 
     // IDS
-    implementation("${edcGroup}:ids:${edcVersion}") {
-        // Workaround for https://github.com/eclipse-dataspaceconnector/DataSpaceConnector/issues/1387
-        exclude(group = edcGroup, module = "ids-token-validation")
-    }
+    implementation("${edcGroup}:ids:${edcVersion}")
 
     // To use FileSystem vault e.g. -DuseFsVault="true".Only for non-production usages.
     val useFsVault: Boolean = System.getProperty("useFsVault", "true").toBoolean()
