@@ -1,7 +1,12 @@
-# EDC-Connector Broker Extension
-To get started, a sample docker-compose file is located in the resources/docs folder.
+# EDC-Connector Extensions
 
-## Run extension with EDC
+## About The Project
+In this repo are different extensions of the EDC-Connector, among others a Broker-Extension to communicate with an IDS-Broker as well as a ClearingHouse-Extension to communicate with an IDS-ClearingHouse.
+
+## Getting Started
+
+To get started and run the extensions with an EDC, a sample docker-compose file is located in the resources/docs folder.
+
 ### Configuration
 #### Basic Configuration
 - `EDC_IDS_TITLE`: _Title of the Connector_
@@ -15,6 +20,7 @@ To get started, a sample docker-compose file is located in the resources/docs fo
 #### MDS Environment Configuration
 The dev environment is set by default.
 - `EDC_BROKER_BASE_URL:` https://broker.dev.mobility-dataspace.eu
+- `EDC_CLEARINGHOUSE_LOG_URL`: https://clearing.dev.mobility-dataspace.eu/messages/log
 - `EDC_OAUTH_CLIENT_ID:` _To be able to start an EDC-Connector with the broker-extensions, the `SKI` and `AKI` of the connector certificate must be entered as `client-ID` in the docker-compose and the .jks must be placed under the path specified in the docker-compose (in the example in the folder `resources/vault/edc/`, see `EDC_KEYSTORE` setting)._
 - `EDC_OAUTH_TOKEN_URL:` https://daps.dev.mobility-dataspace.eu/token
 - `EDC_OAUTH_PROVIDER_JWKS_URL:` https://daps.dev.mobility-dataspace.eu/jwks.json
@@ -75,3 +81,6 @@ Copy the SKI:AKI combination and use it to start the EDC (optionally also save i
 
 ## License
 This project is licensed under the Apache License 2.0 - see [here](LICENSE) for details.
+
+## Contact
+Sovity GmbH Support - support@sovity.de 
