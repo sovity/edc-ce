@@ -54,24 +54,10 @@ public class LogMessageSender implements MultipartSenderDelegate<LogMessage, Str
         if (logMessage.eventToLog() instanceof ContractAgreement contractAgreement) {
             return buildContractAgreementPayload(contractAgreement);
         } else if (logMessage.eventToLog() instanceof TransferProcess transferProcess) {
-            var jo = new JSONObject();
-            //TODO: build payload for TransferProcess
-            return jo.toString();
+            return buildTransferProcessPayload(transferProcess);
         } else {
             return null;
         }
-    }
-
-    private String buildContractAgreementPayload(ContractAgreement contractAgreement) {
-        var jo = new JSONObject();
-        jo.put("AgreementId", contractAgreement.getId());
-        jo.put("AssetId", contractAgreement.getAssetId());
-        jo.put("ContractStartDate", contractAgreement.getContractStartDate());
-        jo.put("ContractEndDate", contractAgreement.getContractEndDate());
-        jo.put("ContractSigningDate", contractAgreement.getContractSigningDate());
-        jo.put("ConsumerAgentId", contractAgreement.getConsumerAgentId());
-        jo.put("ProviderAgentId", contractAgreement.getProviderAgentId());
-        return jo.toString();
     }
 
     @Override
@@ -87,5 +73,26 @@ public class LogMessageSender implements MultipartSenderDelegate<LogMessage, Str
     @Override
     public Class<LogMessage> getMessageType() {
         return LogMessage.class;
+    }
+
+    private String buildContractAgreementPayload(ContractAgreement contractAgreement) {
+        var jo = new JSONObject();
+        jo.put("AgreementId", contractAgreement.getId());
+        jo.put("AssetId", contractAgreement.getAssetId());
+        jo.put("ContractStartDate", contractAgreement.getContractStartDate());
+        jo.put("ContractEndDate", contractAgreement.getContractEndDate());
+        jo.put("ContractSigningDate", contractAgreement.getContractSigningDate());
+        jo.put("ConsumerAgentId", contractAgreement.getConsumerAgentId());
+        jo.put("ProviderAgentId", contractAgreement.getProviderAgentId());
+        return jo.toString();
+    }
+
+    private static String buildTransferProcessPayload(TransferProcess transferProcess) {
+        var jo = new JSONObject();
+        jo.put("transferProcessId", transferProcess.getId());
+        var dataRequest = transferProcess.getDataRequest();
+        jo.put("contractId", dataRequest.getContractId());
+        jo.put("connectorId", dataRequest.getConnectorId());
+        return jo.toString();
     }
 }
