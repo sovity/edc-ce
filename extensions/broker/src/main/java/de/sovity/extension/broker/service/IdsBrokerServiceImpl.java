@@ -16,6 +16,7 @@ package de.sovity.extension.broker.service;
 import de.sovity.extension.broker.sender.message.QueryMessage;
 import de.sovity.extension.broker.sender.message.RegisterConnectorMessage;
 import de.sovity.extension.broker.sender.message.RegisterResourceMessage;
+import de.sovity.extension.broker.sender.message.UnregisterConnectorMessage;
 import de.sovity.extension.broker.sender.message.UnregisterResourceMessage;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
@@ -89,6 +90,7 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
                     connectorServiceSettings.getMaintainer());
             dispatcherRegistry.send(Object.class, registerConnectorMessage,
                     () -> CONTEXT_BROKER_REGISTRATION);
+            monitor.info("Registering Connector at Broker.");
         } catch (MalformedURLException e) {
             throw new EdcException("Could not build brokerInfrastructureUrl", e);
         } catch (URISyntaxException e) {
@@ -99,7 +101,19 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
 
     @Override
     public void unregisterConnectorAtBroker(URL brokerBaseUrl) {
-
+        try {
+            var brokerInfrastructureUrl = new URL(String.format("%s/infrastructure",
+                    brokerBaseUrl));
+            var connectorBaseUrl = new URI(String.format("http://%s/", hostname.get()));
+            var unregisterConnectorMessage = new UnregisterConnectorMessage(brokerInfrastructureUrl, connectorBaseUrl);
+            dispatcherRegistry.send(Object.class, unregisterConnectorMessage, () -> CONTEXT_BROKER_REGISTRATION);
+            monitor.info("Unregistering Connector at Broker.");
+        } catch (MalformedURLException e) {
+            throw new EdcException("Could not build brokerInfrastructureUrl", e);
+        } catch (URISyntaxException e) {
+            throw new EdcException("Could not create connectorBaseUrl. Hostname can be set using:" +
+                    " edc.hostname", e);
+        }
     }
 
     @Override

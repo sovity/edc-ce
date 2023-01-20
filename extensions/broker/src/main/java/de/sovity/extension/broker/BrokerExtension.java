@@ -26,6 +26,7 @@ import de.fraunhofer.iais.eis.ResourceUpdateMessage;
 import de.sovity.extension.broker.sender.QueryMessageRequestSender;
 import de.sovity.extension.broker.sender.RegisterConnectorRequestSender;
 import de.sovity.extension.broker.sender.RegisterResourceRequestSender;
+import de.sovity.extension.broker.sender.UnregisterConnectorRequestSender;
 import de.sovity.extension.broker.sender.UnregisterResourceRequestSender;
 import de.sovity.extension.broker.sender.message.brokerdispatcher.IdsMultipartExtendedRemoteMessageDispatcher;
 import de.sovity.extension.broker.serializer.MultiContextJsonLdSerializer;
@@ -226,6 +227,7 @@ public class BrokerExtension implements ServiceExtension {
 
         var registerConnectorSender = new RegisterConnectorRequestSender(objectMapper, connectorName, endpoint, description);
         var registerResourceSender = new RegisterResourceRequestSender(objectMapper);
+        var unregisterConnectorSender = new UnregisterConnectorRequestSender();
         var unregisterResourceSender = new UnregisterResourceRequestSender();
         var queryMessageRequestSender = new QueryMessageRequestSender();
 
@@ -235,6 +237,7 @@ public class BrokerExtension implements ServiceExtension {
         dispatcher.register(registerResourceSender);
         dispatcher.register(unregisterResourceSender);
         dispatcher.register(queryMessageRequestSender);
+        dispatcher.register(unregisterConnectorSender);
         dispatcherRegistry.register(dispatcher);
     }
 
@@ -245,6 +248,11 @@ public class BrokerExtension implements ServiceExtension {
         } catch (Exception e) {
             monitor.severe(String.format("%s failed during startup: ", BROKER_EXTENSION), e);
         }
+    }
+
+    @Override
+    public void shutdown() {
+        idsBrokerService.unregisterConnectorAtBroker(brokerBaseUrl);
     }
 
     @Override
