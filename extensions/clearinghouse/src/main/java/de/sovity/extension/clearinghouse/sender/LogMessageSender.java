@@ -18,6 +18,8 @@ import de.fraunhofer.iais.eis.LogMessageBuilder;
 import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.MessageProcessedNotificationMessageImpl;
 import de.sovity.extension.clearinghouse.sender.message.LogMessage;
+import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
+import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.MultipartSenderDelegate;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.IdsMultipartParts;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.MultipartResponse;
@@ -49,14 +51,26 @@ public class LogMessageSender implements MultipartSenderDelegate<LogMessage, Str
 
     @Override
     public String buildMessagePayload(LogMessage logMessage) throws Exception {
+        if (logMessage.eventToLog() instanceof ContractAgreement contractAgreement) {
+            return buildContractAgreementPayload(contractAgreement);
+        } else if (logMessage.eventToLog() instanceof TransferProcess transferProcess) {
+            var jo = new JSONObject();
+            //TODO: build payload for TransferProcess
+            return jo.toString();
+        } else {
+            return null;
+        }
+    }
+
+    private String buildContractAgreementPayload(ContractAgreement contractAgreement) {
         var jo = new JSONObject();
-        jo.put("AgreementId", logMessage.contractAgreement().getId());
-        jo.put("AssetId", logMessage.contractAgreement().getAssetId());
-        jo.put("ContractStartDate", logMessage.contractAgreement().getContractStartDate());
-        jo.put("ContractEndDate", logMessage.contractAgreement().getContractEndDate());
-        jo.put("ContractSigningDate", logMessage.contractAgreement().getContractSigningDate());
-        jo.put("ConsumerAgentId", logMessage.contractAgreement().getConsumerAgentId());
-        jo.put("ProviderAgentId", logMessage.contractAgreement().getProviderAgentId());
+        jo.put("AgreementId", contractAgreement.getId());
+        jo.put("AssetId", contractAgreement.getAssetId());
+        jo.put("ContractStartDate", contractAgreement.getContractStartDate());
+        jo.put("ContractEndDate", contractAgreement.getContractEndDate());
+        jo.put("ContractSigningDate", contractAgreement.getContractSigningDate());
+        jo.put("ConsumerAgentId", contractAgreement.getConsumerAgentId());
+        jo.put("ProviderAgentId", contractAgreement.getProviderAgentId());
         return jo.toString();
     }
 

@@ -21,6 +21,7 @@ import de.sovity.extension.clearinghouse.service.IdsClearingHouseService;
 import de.sovity.extension.clearinghouse.service.IdsClearingHouseServiceImpl;
 import okhttp3.OkHttpClient;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
+import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.protocol.ids.api.configuration.IdsApiConfiguration;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
 import org.eclipse.edc.protocol.ids.jsonld.JsonLd;
@@ -71,6 +72,9 @@ public class ClearingHouseExtension implements ServiceExtension {
     private ContractNegotiationStore contractNegotiationStore;
 
     @Inject
+    private TransferProcessStore transferProcessStore;
+
+    @Inject
     private Hostname hostname;
 
     @Inject
@@ -113,6 +117,7 @@ public class ClearingHouseExtension implements ServiceExtension {
                 hostname,
                 clearingHouseLogUrl,
                 contractNegotiationStore,
+                transferProcessStore,
                 monitor);
 
         eventRouter.registerSync(eventSubscriber); //asynchronous dispatch - registerSync for synchronous dispatch
