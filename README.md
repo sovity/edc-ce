@@ -1,11 +1,25 @@
-# EDC-Connector Extensions
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/sovity/edc-ui">
+    <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
+  </a>
+
+<h3 align="center">EDC-Connector Extensions</h3>
+
+  <p align="center">
+    <a href="https://github.com/sovity/edc-extensions/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/sovity/edc-extensions/issues">Request Feature</a>
+  </p>
+</div>
 
 ## About The Project
 In this repo are different extensions of the EDC-Connector, among others a Broker-Extension to communicate with an IDS-Broker as well as a ClearingHouse-Extension to communicate with an IDS-ClearingHouse.
 
 ## Getting Started
 
-To get started and run the extensions with an EDC, a sample docker-compose file is located in the resources/docs folder.
+To get started and run the extensions with an EDC, a sample docker-compose file is located in the root folder.
 
 ### Configuration
 #### Basic Configuration
