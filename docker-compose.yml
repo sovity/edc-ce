@@ -1,23 +1,42 @@
 version: "3.8"
 services:
+  edc-ui:
+    image: ghcr.io/sovity/edc-ui:latest
+    container_name: edc-ui
+    ports:
+      - '11000:80'
+    environment:
+      - EDC_UI_ACTIVE_PROFILE=mds-open-source
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/data
+      - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
+      - EDC_UI_CATALOG_URLS=http://localhost:11002/api/v1/data/catalog?providerUrl=http://edc:11003/api/v1/ids/data
+      - EDC_UI_ASSET_PROP_ORIGINATOR=http://edc:11002/api/v1/ids/data
+      - EDC_UI_ASSET_PROP_ORIGINATOR_ORGANIZATION=Example GmbH
   edc:
     container_name: edc
     image: ghcr.io/sovity/edc-extensions:main
     environment:
-      IDS_WEBHOOK_ADDRESS: http://edc:8282
-      EDC_IDS_ID: urn:connector:catalog-transfer-edc
-      EDC_IDS_TITLE: "MDS Eclipse Dataspace Connector"
-      EDC_IDS_DESCRIPTION: "An MDS EDC Connector with MDS Broker Extension"
-      EDC_IDS_ENDPOINT: http://edc:8282/api/v1/ids
+      WEB_HTTP_PORT: 11001
+      WEB_HTTP_PATH: /api
+      WEB_HTTP_DATA_PORT: 11002
+      WEB_HTTP_DATA_PATH: /api/v1/data
+      WEB_HTTP_IDS_PORT: 11003
+      WEB_HTTP_IDS_PATH: /api/v1/ids
+      EDC_IDS_ID: urn:connector:example-connector
+      EDC_IDS_TITLE: 'Example GmbH EDC Connector'
+      EDC_IDS_DESCRIPTION: 'Minimally configured Open Source EDC built by sovity.'
+      EDC_IDS_ENDPOINT: http://edc:11003/api/v1/ids
+      IDS_WEBHOOK_ADDRESS: http://edc:11003
       EDC_IDS_CURATOR: https://example.com
       EDC_IDS_MAINTAINER: https://sovity.de
-      EDC_CONNECTOR_NAME: EDC-Connector
-      EDC_HOSTNAME: company1
-      EDC_VAULT: /resources/vault/edc/vault.properties
+      EDC_CONNECTOR_NAME: example-connector
+      EDC_HOSTNAME: edc
       EDC_API_AUTH_KEY: ApiKeyDefaultValue
-      EDC_WEB_REST_CORS_ENABLED: "true"
-      EDC_WEB_REST_CORS_HEADERS: "origin,content-type,accept,authorization,x-api-key"
-      EDC_WEB_REST_CORS_ORIGINS: "*"
+      EDC_WEB_REST_CORS_ENABLED: 'true'
+      EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
+      EDC_WEB_REST_CORS_ORIGINS: '*'
+
+      EDC_VAULT: /resources/vault/edc/vault.properties
       EDC_BROKER_BASE_URL: https://broker.dev.mobility-dataspace.eu
       EDC_CLEARINGHOUSE_LOG_URL: https://clearing.dev.mobility-dataspace.eu/messages/log
       EDC_KEYSTORE: /resources/vault/edc/keystore.jks
@@ -29,25 +48,12 @@ services:
       EDC_OAUTH_PROVIDER_JWKS_URL: https://daps.dev.mobility-dataspace.eu/jwks.json
       EDC_OAUTH_PROVIDER_AUDIENCE: idsc:IDS_CONNECTORS_ALL
     ports:
-      - "9191:9191"
-      - "8181:8181"
-      - "5005:5005"
+      - '11001:11001'
+      - '11002:11002'
+      - '11003:11003'
+      - '5005:5005'
     volumes:
       - ./resources:/resources
-
-  edc-ui:
-    image: ghcr.io/sovity/edc-ui:latest
-    container_name: edc-ui
-    restart: unless-stopped
-    ports:
-      - "81:80"
-    environment:
-      - EDC_UI_ACTIVE_PROFILE=sovity-open-source
-      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:9191/api/v1/data
-      - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
-      - EDC_UI_CATALOG_URLS=http://localhost:9191/api/v1/data/catalog?providerUrl=http://edc:8282/api/v1/ids/data
-      - EDC_UI_ASSET_PROP_ORIGINATOR=http://edc:8282/api/v1/ids/data
-      - EDC_UI_ASSET_PROP_ORIGINATOR_ORGANIZATION=Connector A GmbH
 
 volumes:
   db:
