@@ -18,7 +18,7 @@ const SOVITY_THEME: EdcUiTheme = {
 
 const MDS_THEME: EdcUiTheme = {
   theme: 'theme-mds',
-  brandLogoSrc: '/assets/images/sovity_logo.svg',
+  brandLogoSrc: '/assets/images/mds_logo.svg',
   brandLogoStyle: 'height: 57px; margin-top: 5px; margin-left: 5px;',
 };
 
