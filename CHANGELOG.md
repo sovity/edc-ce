@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [X.X.X]
 
+## [1.1.0] - 2023-01-23
+
 ### Feature:
 - Add additional meta information to resource payload when publishing to broker
 - Add connector description to broker message

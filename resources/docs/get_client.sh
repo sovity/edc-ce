@@ -19,7 +19,12 @@ CRT_FILE="./cert.crt"
 
 if [ -n "$P12_FILE" ]; then
     [ ! -f "$P12_FILE" ] && (echo "Cert not found"; exit 1)
-    openssl pkcs12 -in "$P12_FILE" -clcerts -nokeys -out "$CRT_FILE" -passin "pass:$PASSWORD"
+    if [[ $(openssl version) == *"1.1.1"* ]];
+    then
+        openssl pkcs12 -in "$P12_FILE" -clcerts -nokeys -out "$CRT_FILE" -passin "pass:$PASSWORD"
+    else
+        openssl pkcs12 -in "$P12_FILE" -clcerts -nokeys -legacy -out "$CRT_FILE" -passin "pass:$PASSWORD"
+    fi
     openssl x509 -in "$CRT_FILE" -text > "$TEMP_FILE"
     keytool -importkeystore -srckeystore "$P12_FILE" -srcstoretype pkcs12 -destkeystore "$JKS_FILE" -deststoretype jks -deststorepass "$PASSWORD" -srcstorepass "$PASSWORD" -noprompt 2>/dev/null
 fi
