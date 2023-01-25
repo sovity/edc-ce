@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    ignore:
+      # Major Angular updates should be done manually
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-patch"]
+      - dependency-name: "@angular-devkit/*"
+        update-types: ["version-update:semver-patch"]

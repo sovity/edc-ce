@@ -6,10 +6,6 @@
 *.htm           text diff=html
 *.html          text diff=html
 
-# NPM
-*.lock            text -diff
-package-lock.json text -diff
-
 # Exclude files from exporting
 .gitattributes export-ignore
 .gitignore     export-ignore
