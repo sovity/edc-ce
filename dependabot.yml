@@ -7,6 +7,6 @@ updates:
     ignore:
       # Major Angular updates should be done manually
       - dependency-name: "@angular/*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-major"]
       - dependency-name: "@angular-devkit/*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-major"]
