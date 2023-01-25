@@ -14,6 +14,7 @@
 package de.sovity.extension.clearinghouse;
 
 import de.fraunhofer.iais.eis.Artifact;
+import de.fraunhofer.iais.eis.LogMessage;
 import de.sovity.extension.clearinghouse.sender.LogMessageSender;
 import de.sovity.extension.clearinghouse.sender.message.clearingdispatcher.IdsMultipartClearingRemoteMessageDispatcher;
 import de.sovity.extension.clearinghouse.serializer.MultiContextJsonLdSerializer;
@@ -149,6 +150,8 @@ public class ClearingHouseExtension implements ServiceExtension {
     private void registerCommonTypes(TypeManager typeManager) {
         typeManager.registerSerializer(TYPE_MANAGER_SERIALIZER_KEY, Artifact.class,
                 new MultiContextJsonLdSerializer<>(Artifact.class, CONTEXT_MAP));
+        typeManager.registerSerializer(TYPE_MANAGER_SERIALIZER_KEY, LogMessage.class,
+                new MultiContextJsonLdSerializer<>(LogMessage.class, CONTEXT_MAP));
     }
 
     private void registerClearingHouseMessageSenders(ServiceExtensionContext context) {
