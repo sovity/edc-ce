@@ -24,9 +24,11 @@ jobs:
           output: 'trivy-results.sarif'
 
       - name: License Check
+        uses: aquasecurity/trivy-action@master
         run: trivy fs  --format table --exit-code  1 --ignore-unfixed --vuln-type  os,library --security-checks  secret --severity  UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL .
 
       - name: License Check 2
+        uses: aquasecurity/trivy-action@master
         run: trivy fs --security-checks license --severity UNKNOWN,HIGH,CRITICAL --license-full
 
       - name: Upload Trivy scan results to GitHub Security tab
