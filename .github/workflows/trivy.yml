@@ -23,13 +23,15 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
 
-      - name: License Check
+      - name: Run security checks
         uses: aquasecurity/trivy-action@master
-        run: trivy fs  --format table --exit-code  1 --ignore-unfixed --vuln-type  os,library --security-checks  secret --severity  UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL .
-
-      - name: License Check 2
-        uses: aquasecurity/trivy-action@master
-        run: trivy fs --security-checks license --severity UNKNOWN,HIGH,CRITICAL --license-full
+        with:
+          scan-type: 'fs'
+          security-checks: 'license'
+          ignore-unfixed: true
+          license-full: true
+          format: 'sarif'
+          output: 'trivy-results.sarif'
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
