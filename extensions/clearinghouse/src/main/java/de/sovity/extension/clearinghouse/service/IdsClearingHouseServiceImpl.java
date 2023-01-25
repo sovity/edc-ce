@@ -31,6 +31,7 @@ import org.eclipse.edc.spi.system.Hostname;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.UUID;
 
 public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, EventSubscriber {
 
@@ -91,12 +92,19 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
 
     @Override
     public void on(Event<?> event) {
-        if (event instanceof ContractNegotiationConfirmed contractNegotiationConfirmed) {
-            var contractAgreement = resolveContractAgreement(contractNegotiationConfirmed);
-            logContractAgreement(contractAgreement, clearingHouseLogUrl);
-        } else if (event instanceof TransferProcessCompleted transferProcessCompleted) {
-            var transferProcess = resolveTransferProcess(transferProcessCompleted);
-            logTransferProcess(transferProcess, clearingHouseLogUrl);
+        try {
+            var randomPid = UUID.randomUUID();
+            var extendedUrl = new URL(clearingHouseLogUrl + "/" + randomPid);
+
+            if (event instanceof ContractNegotiationConfirmed contractNegotiationConfirmed) {
+                var contractAgreement = resolveContractAgreement(contractNegotiationConfirmed);
+                logContractAgreement(contractAgreement, extendedUrl);
+            } else if (event instanceof TransferProcessCompleted transferProcessCompleted) {
+                var transferProcess = resolveTransferProcess(transferProcessCompleted);
+                logTransferProcess(transferProcess, extendedUrl);
+            }
+        } catch (Exception e) {
+            throw new EdcException("Could not create extended clearinghouse url.");
         }
     }
 
