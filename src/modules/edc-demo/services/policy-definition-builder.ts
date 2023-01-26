@@ -40,7 +40,6 @@ export class PolicyDefinitionBuilder {
     return {
       edctype: 'dataspaceconnector:permission',
       id: null,
-      target: 'urn:artifact:urn:artifact:bitcoin',
       action: {type: 'USE'},
       constraints: [
         {
@@ -66,7 +65,6 @@ export class PolicyDefinitionBuilder {
     return {
       edctype: 'dataspaceconnector:permission',
       id: null,
-      target: 'urn:artifact:urn:artifact:bitcoin',
       action: {type: 'USE'},
       constraints: [
         {

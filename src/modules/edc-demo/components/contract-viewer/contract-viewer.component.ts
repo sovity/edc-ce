@@ -9,6 +9,7 @@ import {
   ContractAgreementDto,
   ContractAgreementService,
   DataAddress,
+  DataAddressDto,
   TransferId,
   TransferProcessService,
   TransferRequestDto,
@@ -65,78 +66,34 @@ export class ContractViewerComponent implements OnInit {
     return '';
   }
 
-  getAsset(assetId?: string): Observable<Asset> {
-    return assetId
-      ? this.assetService
-          .getAsset(assetId)
-          .pipe(
-            map((a) => this.assetPropertyMapper.readProperties(a.properties)),
-          )
-      : of();
-  }
-
   onTransferClicked(contract: ContractAgreementDto) {
     const dialogRef = this.dialog.open(CatalogBrowserTransferDialog);
 
     dialogRef
       .afterClosed()
-      .pipe(first())
-      .subscribe((result) => {
-        const dataDestination: DataAddress = result.dataDestination;
-        this.createTransferRequest(contract, dataDestination)
-          .pipe(switchMap((trq) => this.transferService.initiateTransfer(trq)))
-          .subscribe(
-            (transferId) => {
-              this.startPolling(transferId, contract.id!);
-            },
-            (error) => {
-              console.error(error);
-              this.notificationService.showError('Error initiating transfer');
-            },
-          );
+      .pipe(
+        map((result) => result.dataDestination as DataAddressDto),
+        first(),
+        switchMap((dataAddressDto) =>
+          this.contractAgreementService.initiateTransfer(
+            contract.id,
+            dataAddressDto,
+          ),
+        ),
+      )
+      .subscribe({
+        next: (transferId) => {
+          this.startPolling(transferId, contract.id!);
+        },
+        error: (error) => {
+          console.error(error);
+          this.notificationService.showError('Error initiating transfer');
+        },
       });
   }
 
   isTransferInProgress(contractId: string): boolean {
     return !!this.runningTransfers.find((rt) => rt.contractId === contractId);
-  }
-
-  private createTransferRequest(
-    contract: ContractAgreementDto,
-    dataDestination: DataAddress,
-  ): Observable<TransferRequestDto> {
-    return this.getOfferedAssetForId(contract.assetId!).pipe(
-      map((offeredAsset) => {
-        return {
-          assetId: offeredAsset.id,
-          contractId: contract.id,
-          connectorId: 'consumer', //doesn't matter, but cannot be null
-          dataDestination: dataDestination,
-          managedResources: false,
-          transferType: {isFinite: true}, //must be there, otherwise NPE on backend
-          connectorAddress: offeredAsset.originator!,
-          protocol: 'ids-multipart',
-        };
-      }),
-    );
-  }
-
-  /**
-   * This method is used to obtain that URL of the connector that is offering a particular asset from the catalog.
-   * This is a bit of a hack, because currently there is no "clean" way to get the counter-party's URL for a ContractAgreement.
-   *
-   * @param assetId Asset ID of the asset that is associated with the contract.
-   */
-  private getOfferedAssetForId(assetId: string): Observable<Asset> {
-    return this.catalogService.getContractOffers().pipe(
-      map((offers) =>
-        offers.find((o) => `urn:artifact:${o.asset.id}` === assetId),
-      ),
-      map((o) => {
-        if (o) return o.asset;
-        else throw new Error(`No offer found for asset ID ${assetId}`);
-      }),
-    );
   }
 
   private startPolling(transferProcessId: TransferId, contractId: string) {

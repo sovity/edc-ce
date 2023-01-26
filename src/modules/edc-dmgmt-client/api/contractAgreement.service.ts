@@ -24,6 +24,9 @@ import { ContractAgreementDto } from '../model/contractAgreementDto';
 // @ts-ignore
 import {API_KEY, BASE_PATH, COLLECTION_FORMATS, CONNECTOR_DATAMANAGEMENT_API} from '../variables';
 import { Configuration }                                     from '../configuration';
+import {TransferRequestDto} from "../model/transferRequestDto";
+import {TransferId} from "../model/transferId";
+import {DataAddressDto} from "../model/dataAddressDto";
 
 
 
@@ -224,5 +227,23 @@ export class ContractAgreementService {
             }
         );
     }
+  initiateTransfer(id: string, dataAddressDto: DataAddressDto): Observable<TransferId> {
+    if (id == null) {
+      throw new Error('Required parameter id was null or undefined when calling initiateTransfer.');
+    }
 
+    if (dataAddressDto == null) {
+      throw new Error('Required parameter dataAddressDto was null or undefined when calling initiateTransfer.');
+    }
+
+    let url = `${this.configuration.basePath}/contractagreements/${encodeURIComponent(String(id))}/initiatetransfer`;
+    return this.httpClient.post<TransferId>(
+      url,
+      dataAddressDto,
+      {
+        withCredentials: this.configuration.withCredentials,
+        headers: this.defaultHeaders,
+      }
+    );
+  }
 }
