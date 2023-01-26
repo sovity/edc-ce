@@ -1,6 +1,9 @@
 import {Component, HostBinding, Input} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {PolicyDefinition} from 'src/modules/edc-dmgmt-client';
+import {
+  PolicyDefinition,
+  policyDefinitionId,
+} from 'src/modules/edc-dmgmt-client';
 
 @Component({
   selector: 'policy-select',
@@ -24,9 +27,7 @@ export class PolicySelectComponent {
     return this.policyId(a) === this.policyId(b);
   }
 
-  policyId(a: PolicyDefinition | null): string {
-    // EDC Milestone 7 changed PolicyDefinition.id to PolicyDefinition.uid
-    // This is a temporary workaround
-    return a?.id || (a as any)?.uid || 'no-policy-id-found';
+  policyId(a: PolicyDefinition | null): string | null {
+    return a ? policyDefinitionId(a) : null;
   }
 }

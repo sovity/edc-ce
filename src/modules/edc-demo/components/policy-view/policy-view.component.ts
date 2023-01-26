@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {first, map, switchMap} from 'rxjs/operators';
-import {PolicyDefinition, PolicyService} from '../../../edc-dmgmt-client';
+import {PolicyDefinition, policyDefinitionId, PolicyService} from '../../../edc-dmgmt-client';
 import {NotificationService} from '../../services/notification.service';
 import {
   ConfirmDialogModel,
@@ -73,14 +73,14 @@ export class PolicyViewComponent implements OnInit {
   }
 
   delete(policy: PolicyDefinition) {
-    const dialogData = ConfirmDialogModel.forDelete('policy', policy.id || policy.uid as string);
+    const dialogData = ConfirmDialogModel.forDelete('policy', this.id(policy));
     const ref = this.dialog.open(ConfirmationDialogComponent, {
       maxWidth: '20%',
       data: dialogData,
     });
     ref.afterClosed().subscribe((res) => {
       if (res) {
-        this.policyService.deletePolicy(policy.id).subscribe({
+        this.policyService.deletePolicy(this.id(policy)).subscribe({
           complete: () => {
             this.fetch$.next(null);
             this.notificationService.showInfo('Successfully deleted policy.');
@@ -94,7 +94,7 @@ export class PolicyViewComponent implements OnInit {
     });
   }
 
-  id(x: any): string {
-    return x?.id || x?.uid;
+  id(policyDefinition: PolicyDefinition): string {
+    return policyDefinitionId(policyDefinition);
   }
 }

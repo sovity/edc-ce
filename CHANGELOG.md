@@ -22,6 +22,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Fixed
 
+- Fixed additional PolicyDefinition uid vs id issues.
+
 ## [v0.0.1-milestone-7-sovity1] 19.01.2023
 
 ### Overview
