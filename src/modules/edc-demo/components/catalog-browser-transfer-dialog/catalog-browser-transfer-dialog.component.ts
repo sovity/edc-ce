@@ -14,7 +14,6 @@ export class CatalogBrowserTransferDialog {
   type: string = 'Json';
 
   constructor(
-    @Inject('STORAGE_TYPES') public storageTypes: StorageType[],
     private dialogRef: MatDialogRef<CatalogBrowserTransferDialog>,
     @Inject(MAT_DIALOG_DATA) contractDefinition?: any,
   ) {}
