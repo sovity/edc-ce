@@ -239,7 +239,7 @@ export class ContractAgreementService {
     let url = `${this.configuration.basePath}/transfer`;
     return this.httpClient.post<TransferId>(
       url,
-      {contractAgreementId: id, dataAddress: dataAddressDto},
+      {contractAgreementId: id, dataDestination: dataAddressDto},
       {
         withCredentials: this.configuration.withCredentials,
         headers: this.defaultHeaders,
