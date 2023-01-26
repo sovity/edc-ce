@@ -1,0 +1,19 @@
+format: table
+vulnerability:
+  type:
+    - os
+    - library
+  ignore-unfixed: true
+scan:
+  # Same as '--security-checks'
+  # Default depends on subcommand
+  security-checks:
+    - license
+license-full: true
+output: 'trivy-results.sarif'
+severity:
+  - UNKNOWN
+  - LOW
+  - MEDIUM
+  - HIGH
+  - CRITICAL
