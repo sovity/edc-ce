@@ -202,7 +202,7 @@ Distributed under the Apache 2.0 License. See `LICENSE` for more information.
 
 ## Contact
 
-concatct@sovity.de
+contact@sovity.de
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
