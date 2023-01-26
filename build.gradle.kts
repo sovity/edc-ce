@@ -7,6 +7,7 @@ plugins {
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+    implementation("org.springframework:spring-beans:[5.0,6.0)")
 }
 
 tasks.getByName<Test>("test") {
@@ -86,5 +87,11 @@ subprojects {
                 }
             }
         }
+    }
+}
+
+configurations {
+    compileClasspath {
+        resolutionStrategy.activateDependencyLocking()
     }
 }
