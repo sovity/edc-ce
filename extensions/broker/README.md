@@ -1,5 +1,5 @@
-# EDC-Connector Broker Extensions
-To get started, a sample docker-compose file is located in the /resources/docs folder.
+# EDC-Connector Broker Extension
+To get started, a sample docker-compose file is located in the root folder.
 
 ## Configuration
 Settings required for this extension:
@@ -13,4 +13,4 @@ Settings required for this extension:
 This project is licensed under the Apache License 2.0.
 
 ## Contact
-sovity GmbH support - support@sovity.de
+Sovity GmbH - contact@sovity.de
