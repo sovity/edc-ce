@@ -18,7 +18,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
-          security-checks: 'vuln,secret,config'
+          security-checks: 'vuln,secret,config,license'
           ignore-unfixed: true
           format: 'table'
 
