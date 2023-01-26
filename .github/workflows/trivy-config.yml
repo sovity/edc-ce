@@ -5,8 +5,6 @@ vulnerability:
     - library
   ignore-unfixed: true
 scan:
-  # Same as '--security-checks'
-  # Default depends on subcommand
   security-checks:
     - license
 license-full: true

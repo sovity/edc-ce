@@ -21,7 +21,6 @@ jobs:
           security-checks: 'vuln,secret,config'
           ignore-unfixed: true
           format: 'sarif'
-          output: 'trivy-results.sarif'
 
       - name: Run license scanner
         uses: aquasecurity/trivy-action@master
