@@ -25,6 +25,7 @@ import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.Ids
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.MultipartResponse;
 import org.eclipse.edc.protocol.ids.spi.domain.IdsConstants;
 import org.eclipse.edc.protocol.ids.util.CalendarUtil;
+import org.eclipse.edc.spi.EdcException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -56,7 +57,8 @@ public class LogMessageSender implements MultipartSenderDelegate<LogMessage, Str
         } else if (logMessage.eventToLog() instanceof TransferProcess transferProcess) {
             return buildTransferProcessPayload(transferProcess);
         } else {
-            return null;
+            throw new EdcException(String.format("ObjectType %s not supported in LogMessageSender",
+                    logMessage.eventToLog().getClass()));
         }
     }
 
@@ -87,7 +89,7 @@ public class LogMessageSender implements MultipartSenderDelegate<LogMessage, Str
         return jo.toString();
     }
 
-    private static String buildTransferProcessPayload(TransferProcess transferProcess) {
+    private String buildTransferProcessPayload(TransferProcess transferProcess) {
         var jo = new JSONObject();
         jo.put("transferProcessId", transferProcess.getId());
         var dataRequest = transferProcess.getDataRequest();
