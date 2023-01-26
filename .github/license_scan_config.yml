@@ -1,0 +1,14 @@
+format: table
+vulnerability:
+  type:
+    - os
+    - library
+  ignore-unfixed: true
+scan:
+  security-checks:
+    - license
+license-full: true
+severity:
+  - UNKNOWN
+  - HIGH
+  - CRITICAL
