@@ -20,7 +20,7 @@ jobs:
           scan-type: 'fs'
           security-checks: 'vuln,secret,config'
           ignore-unfixed: true
-          format: 'sarif'
+          format: 'table'
 
       - name: Run license scanner
         uses: aquasecurity/trivy-action@master
