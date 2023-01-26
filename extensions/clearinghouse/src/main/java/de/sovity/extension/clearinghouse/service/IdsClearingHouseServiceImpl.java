@@ -39,7 +39,7 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
 
     private final RemoteMessageDispatcherRegistry dispatcherRegistry;
     private final ConnectorServiceSettings connectorServiceSettings;
-    private final Hostname hostname;
+    private final URI connectorBaseUrl;
     private final URL clearingHouseLogUrl;
     private final ContractNegotiationStore contractNegotiationStore;
     private final TransferProcessStore transferProcessStore;
@@ -55,39 +55,31 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
             Monitor monitor) {
         this.dispatcherRegistry = dispatcherRegistry;
         this.connectorServiceSettings = connectorServiceSettings;
-        this.hostname = hostname;
         this.clearingHouseLogUrl = clearingHouseLogUrl;
         this.contractNegotiationStore = contractNegotiationStore;
         this.transferProcessStore = transferProcessStore;
         this.monitor = monitor;
+
+        try {
+            connectorBaseUrl = getConnectorBaseUrl(hostname);
+        } catch (URISyntaxException e) {
+            throw new EdcException("Could not create connectorBaseUrl. Hostname can be set using:" +
+                    " edc.hostname", e);
+        }
     }
 
     @Override
     public void logContractAgreement(ContractAgreement contractAgreement, URL clearingHouseLogUrl) {
         monitor.info("Logging contract agreement to ClearingHouse");
-        try {
-            var connectorBaseUrl = getConnectorBaseUrl();
-            var logMessage = new LogMessage(clearingHouseLogUrl, connectorBaseUrl, contractAgreement);
-
-            dispatcherRegistry.send(Object.class, logMessage, () -> CONTEXT_CLEARINGHOUSE);
-        } catch (URISyntaxException e) {
-            throw new EdcException("Could not create connectorBaseUrl. Hostname can be set using:" +
-                    " edc.hostname", e);
-        }
+        var logMessage = new LogMessage(clearingHouseLogUrl, connectorBaseUrl, contractAgreement);
+        dispatcherRegistry.send(Object.class, logMessage, () -> CONTEXT_CLEARINGHOUSE);
     }
 
     @Override
     public void logTransferProcess(TransferProcess transferProcess, URL clearingHouseLogUrl) {
         monitor.info("Logging transferprocess to ClearingHouse");
-        try {
-            var connectorBaseUrl = getConnectorBaseUrl();
-            var logMessage = new LogMessage(clearingHouseLogUrl, connectorBaseUrl, transferProcess);
-
-            dispatcherRegistry.send(Object.class, logMessage, () -> CONTEXT_CLEARINGHOUSE);
-        } catch (URISyntaxException e) {
-            throw new EdcException("Could not create connectorBaseUrl. Hostname can be set using:" +
-                    " edc.hostname", e);
-        }
+        var logMessage = new LogMessage(clearingHouseLogUrl, connectorBaseUrl, transferProcess);
+        dispatcherRegistry.send(Object.class, logMessage, () -> CONTEXT_CLEARINGHOUSE);
     }
 
     @Override
@@ -121,7 +113,7 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
         return transferProcessStore.find(transferProcessId);
     }
 
-    private URI getConnectorBaseUrl() throws URISyntaxException {
+    private URI getConnectorBaseUrl(Hostname hostname) throws URISyntaxException {
         return new URI(String.format("http://%s/", hostname.get()));
     }
 }
