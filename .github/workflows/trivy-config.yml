@@ -10,7 +10,6 @@ scan:
   security-checks:
     - license
 license-full: true
-output: 'trivy-results.sarif'
 severity:
   - UNKNOWN
   - LOW
