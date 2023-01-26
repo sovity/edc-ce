@@ -97,4 +97,4 @@ Copy the SKI:AKI combination and use it to start the EDC (optionally also save i
 This project is licensed under the Apache License 2.0 - see [here](LICENSE) for details.
 
 ## Contact
-Sovity GmbH Support - support@sovity.de 
+Sovity GmbH - contact@sovity.de 
