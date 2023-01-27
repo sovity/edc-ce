@@ -30,6 +30,8 @@ To get started and run the extensions with an EDC, a sample docker-compose file 
 - `EDC_CONNECTOR_NAME:` _The name of the connector_
 - `EDC_HOSTNAME:` _The host of the connector_
 - `EDC_API_AUTH_KEY:` _The API authorization key of management API_
+- `POLICY_BROKER_BLACKLIST:` _Comma-separated list of policy values that should not be published at broker. 
+Common use case would be to not publish resources that have a REFERRING_CONNECTOR policy_
       
 #### MDS Environment Configuration
 The dev environment is set by default.
