@@ -250,7 +250,6 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
 
         if (hasReferringPolicy) {
             monitor.info("Not publishing resource at broker due to possible policy breach.");
-            throw new EdcException("Could not publish resource");
         } else {
             var assetsFromContractDefinition = getAssetsFromContractDefinition(contractDefinition);
             for (var asset : assetsFromContractDefinition) {
@@ -281,7 +280,7 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
                 .map(AtomicConstraint::getLeftExpression)
                 .map(LiteralExpression.class::cast)
                 .map(LiteralExpression::getValue)
-                .anyMatch(value -> value.equals("REFERRING_CONNECTOR"));
+                .anyMatch(value -> value.equals(policyBrokerBlacklist));
     }
 
     private List<Asset> getAssetsFromContractDefinition(ContractDefinition contractDefinition) {
