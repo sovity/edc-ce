@@ -66,7 +66,7 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
 
     private final AssetIndex assetIndex;
 
-    private final String policyBrokerBlacklist;
+    private final List<String> policyBrokerBlacklist;
 
     private final Monitor monitor;
 
@@ -78,7 +78,7 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
             PolicyDefinitionStore policyDefinitionStore,
             URL brokerBaseUrl,
             AssetIndex assetIndex,
-            String policyBrokerBlacklist,
+            List<String> policyBrokerBlacklist,
             Monitor monitor) {
         this.dispatcherRegistry = dispatcherRegistry;
         this.connectorServiceSettings = connectorServiceSettings;
@@ -284,7 +284,7 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
                 .map(AtomicConstraint::getLeftExpression)
                 .map(LiteralExpression.class::cast)
                 .map(LiteralExpression::getValue)
-                .anyMatch(value -> value.equals(policyBrokerBlacklist));
+                .anyMatch(policyBrokerBlacklist::contains);
     }
 
     private List<Asset> getAssetsFromContractDefinition(ContractDefinition contractDefinition) {

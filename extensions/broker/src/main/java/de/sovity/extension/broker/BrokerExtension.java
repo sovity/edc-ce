@@ -50,9 +50,12 @@ import org.eclipse.edc.spi.system.Hostname;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.types.TypeManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class BrokerExtension implements ServiceExtension {
@@ -121,7 +124,7 @@ public class BrokerExtension implements ServiceExtension {
     @Override
     public void initialize(ServiceExtensionContext context) {
         brokerBaseUrl = readUrlFromSettings(context, BROKER_BASE_URL_SETTING);
-        var policyBrokerBlacklist = context.getSetting(POLICY_BROKER_BLACKLIST, "");
+        var policyBrokerBlacklist = getPolicyBrokerBlacklist(context);
         monitor = context.getMonitor();
 
         registerSerializerBrokerMessages(context);
@@ -153,7 +156,7 @@ public class BrokerExtension implements ServiceExtension {
             RemoteMessageDispatcherRegistry dispatcherRegistry,
             Hostname hostname) {
         var connectorServiceSettings = new ConnectorServiceSettings(context, context.getMonitor());
-        var policyBrokerBlacklist = context.getSetting(POLICY_BROKER_BLACKLIST, "");
+        var policyBrokerBlacklist = getPolicyBrokerBlacklist(context);
         idsBrokerService = new IdsBrokerServiceImpl(
                 dispatcherRegistry,
                 connectorServiceSettings,
@@ -164,6 +167,11 @@ public class BrokerExtension implements ServiceExtension {
                 assetIndex,
                 policyBrokerBlacklist,
                 monitor);
+    }
+
+    @NotNull
+    private ArrayList<String> getPolicyBrokerBlacklist(ServiceExtensionContext context) {
+        return new ArrayList<>(List.of(context.getSetting(POLICY_BROKER_BLACKLIST, "").split(",")));
     }
 
     private URL readUrlFromSettings(ServiceExtensionContext context, String settingsPath) {
