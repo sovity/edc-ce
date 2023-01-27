@@ -34,6 +34,7 @@ import de.sovity.extension.broker.service.IdsBrokerService;
 import de.sovity.extension.broker.service.IdsBrokerServiceImpl;
 import okhttp3.OkHttpClient;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
+import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
 import org.eclipse.edc.protocol.ids.jsonld.JsonLd;
 import org.eclipse.edc.protocol.ids.service.ConnectorServiceSettings;
@@ -98,6 +99,9 @@ public class BrokerExtension implements ServiceExtension {
     private ContractDefinitionStore contractDefinitionStore;
 
     @Inject
+    private PolicyDefinitionStore policyDefinitionStore;
+
+    @Inject
     private EventRouter eventRouter;
 
     private IdsBrokerService idsBrokerService;
@@ -131,6 +135,7 @@ public class BrokerExtension implements ServiceExtension {
                 connectorServiceSettings,
                 hostname,
                 contractDefinitionStore,
+                policyDefinitionStore,
                 brokerBaseUrl,
                 assetIndex,
                 monitor);
@@ -148,6 +153,7 @@ public class BrokerExtension implements ServiceExtension {
                 connectorServiceSettings,
                 hostname,
                 contractDefinitionStore,
+                policyDefinitionStore,
                 brokerBaseUrl,
                 assetIndex,
                 monitor);

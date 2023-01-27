@@ -20,6 +20,11 @@ import de.sovity.extension.broker.sender.message.UnregisterConnectorMessage;
 import de.sovity.extension.broker.sender.message.UnregisterResourceMessage;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
+import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
+import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
+import org.eclipse.edc.policy.model.AtomicConstraint;
+import org.eclipse.edc.policy.model.LiteralExpression;
+import org.eclipse.edc.policy.model.Rule;
 import org.eclipse.edc.protocol.ids.service.ConnectorServiceSettings;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.asset.AssetIndex;
@@ -55,6 +60,8 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
 
     private final ContractDefinitionStore contractDefinitionStore;
 
+    private final PolicyDefinitionStore policyDefinitionStore;
+
     private final URL brokerBaseUrl;
 
     private final AssetIndex assetIndex;
@@ -66,6 +73,7 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
             ConnectorServiceSettings connectorServiceSettings,
             Hostname hostname,
             ContractDefinitionStore contractDefinitionStore,
+            PolicyDefinitionStore policyDefinitionStore,
             URL brokerBaseUrl,
             AssetIndex assetIndex,
             Monitor monitor) {
@@ -73,6 +81,7 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
         this.connectorServiceSettings = connectorServiceSettings;
         this.hostname = hostname;
         this.contractDefinitionStore = contractDefinitionStore;
+        this.policyDefinitionStore = policyDefinitionStore;
         this.brokerBaseUrl = brokerBaseUrl;
         this.assetIndex = assetIndex;
         this.monitor = monitor;
@@ -229,15 +238,50 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
         var contractDefinition = contractDefinitionStore.findById(contractDefinitionId);
 
         var resourceMap = new HashMap<String, Asset>();
-        var assetsFromContractDefinition = getAssetsFromContractDefinition(contractDefinition);
-        for (var asset : assetsFromContractDefinition) {
-            var resourceId = String.format("%s-%s",
-                    contractDefinition.getId(),
-                    asset.getId());
-            resourceMap.put(resourceId, asset);
+        var contractPolicyId = contractDefinition.getContractPolicyId();
+        var accessPolicyId = contractDefinition.getAccessPolicyId();
+
+        // If there is a REFERRING_CONNECTOR policy in the contractPolicy or accessPolicy the resource won't
+        // be sent to the broker.
+        var contractConstraints = getConstraints(policyDefinitionStore.findById(contractPolicyId));
+        var accessConstraints = getConstraints(policyDefinitionStore.findById(accessPolicyId));
+        var hasReferringPolicy = containsReferringConnectorPolicy(contractConstraints)
+                || containsReferringConnectorPolicy(accessConstraints);
+
+        if (hasReferringPolicy) {
+            monitor.info("Not publishing resource at broker due to possible policy breach.");
+            throw new EdcException("Could not publish resource");
+        } else {
+            var assetsFromContractDefinition = getAssetsFromContractDefinition(contractDefinition);
+            for (var asset : assetsFromContractDefinition) {
+                var resourceId = String.format("%s-%s",
+                        contractDefinition.getId(),
+                        asset.getId());
+                resourceMap.put(resourceId, asset);
+            }
         }
 
         return resourceMap;
+    }
+
+    private List<AtomicConstraint> getConstraints(PolicyDefinition contractPolicy) {
+        return contractPolicy
+                .getPolicy()
+                .getPermissions()
+                .stream()
+                .map(Rule::getConstraints)
+                .flatMap(List::stream)
+                .map(AtomicConstraint.class::cast)
+                .toList();
+    }
+
+    private boolean containsReferringConnectorPolicy(List<AtomicConstraint> constraints) {
+        return constraints
+                .stream()
+                .map(AtomicConstraint::getLeftExpression)
+                .map(LiteralExpression.class::cast)
+                .map(LiteralExpression::getValue)
+                .anyMatch(value -> value.equals("REFERRING_CONNECTOR"));
     }
 
     private List<Asset> getAssetsFromContractDefinition(ContractDefinition contractDefinition) {
