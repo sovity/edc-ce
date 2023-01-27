@@ -85,14 +85,15 @@ public class IdsClearingHouseServiceImpl implements IdsClearingHouseService, Eve
     @Override
     public void on(Event<?> event) {
         try {
-            var randomPid = UUID.randomUUID();
-            var extendedUrl = new URL(clearingHouseLogUrl + "/" + randomPid);
-
             if (event instanceof ContractNegotiationConfirmed contractNegotiationConfirmed) {
                 var contractAgreement = resolveContractAgreement(contractNegotiationConfirmed);
+                var pid = UUID.nameUUIDFromBytes(contractAgreement.getId().getBytes()).toString();
+                var extendedUrl = new URL(clearingHouseLogUrl + "/" + pid);
                 logContractAgreement(contractAgreement, extendedUrl);
             } else if (event instanceof TransferProcessCompleted transferProcessCompleted) {
                 var transferProcess = resolveTransferProcess(transferProcessCompleted);
+                var pid = UUID.nameUUIDFromBytes(transferProcess.getId().getBytes()).toString();
+                var extendedUrl = new URL(clearingHouseLogUrl + "/" + pid);
                 logTransferProcess(transferProcess, extendedUrl);
             }
         } catch (Exception e) {
