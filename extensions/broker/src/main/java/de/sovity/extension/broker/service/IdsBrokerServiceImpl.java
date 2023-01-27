@@ -249,8 +249,8 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
         // be sent to the broker.
         var contractConstraints = getConstraints(policyDefinitionStore.findById(contractPolicyId));
         var accessConstraints = getConstraints(policyDefinitionStore.findById(accessPolicyId));
-        var hasReferringPolicy = containsReferringConnectorPolicy(contractConstraints)
-                || containsReferringConnectorPolicy(accessConstraints);
+        var hasReferringPolicy = containsReferringConnectorPolicy(contractConstraints) ||
+                containsReferringConnectorPolicy(accessConstraints);
 
         if (hasReferringPolicy) {
             monitor.info("Not publishing resource at broker due to possible policy breach.");
