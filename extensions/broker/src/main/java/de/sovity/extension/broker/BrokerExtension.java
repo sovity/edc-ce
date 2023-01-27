@@ -79,6 +79,9 @@ public class BrokerExtension implements ServiceExtension {
     @Setting
     private static final String EDC_IDS_DESCRIPTION = "edc.ids.description";
 
+    @Setting
+    private static final String POLICY_BROKER_BLACKLIST = "policy.broker.blacklist";
+
 
     @Inject
     private RemoteMessageDispatcherRegistry dispatcherRegistry;
@@ -118,6 +121,7 @@ public class BrokerExtension implements ServiceExtension {
     @Override
     public void initialize(ServiceExtensionContext context) {
         brokerBaseUrl = readUrlFromSettings(context, BROKER_BASE_URL_SETTING);
+        var policyBrokerBlacklist = context.getSetting(POLICY_BROKER_BLACKLIST, "");
         monitor = context.getMonitor();
 
         registerSerializerBrokerMessages(context);
@@ -138,6 +142,7 @@ public class BrokerExtension implements ServiceExtension {
                 policyDefinitionStore,
                 brokerBaseUrl,
                 assetIndex,
+                policyBrokerBlacklist,
                 monitor);
         eventRouter.registerSync(eventSubscriber); //asynchronous dispatch - registerSync for synchronous dispatch
         context.registerService(IdsBrokerService.class, eventSubscriber);
@@ -148,6 +153,7 @@ public class BrokerExtension implements ServiceExtension {
             RemoteMessageDispatcherRegistry dispatcherRegistry,
             Hostname hostname) {
         var connectorServiceSettings = new ConnectorServiceSettings(context, context.getMonitor());
+        var policyBrokerBlacklist = context.getSetting(POLICY_BROKER_BLACKLIST, "");
         idsBrokerService = new IdsBrokerServiceImpl(
                 dispatcherRegistry,
                 connectorServiceSettings,
@@ -156,6 +162,7 @@ public class BrokerExtension implements ServiceExtension {
                 policyDefinitionStore,
                 brokerBaseUrl,
                 assetIndex,
+                policyBrokerBlacklist,
                 monitor);
     }
 

@@ -66,6 +66,8 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
 
     private final AssetIndex assetIndex;
 
+    private final String policyBrokerBlacklist;
+
     private final Monitor monitor;
 
     public IdsBrokerServiceImpl(
@@ -76,6 +78,7 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
             PolicyDefinitionStore policyDefinitionStore,
             URL brokerBaseUrl,
             AssetIndex assetIndex,
+            String policyBrokerBlacklist,
             Monitor monitor) {
         this.dispatcherRegistry = dispatcherRegistry;
         this.connectorServiceSettings = connectorServiceSettings;
@@ -84,6 +87,7 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
         this.policyDefinitionStore = policyDefinitionStore;
         this.brokerBaseUrl = brokerBaseUrl;
         this.assetIndex = assetIndex;
+        this.policyBrokerBlacklist = policyBrokerBlacklist;
         this.monitor = monitor;
     }
 
