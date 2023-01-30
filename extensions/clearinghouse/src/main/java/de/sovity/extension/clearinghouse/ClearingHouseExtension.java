@@ -14,6 +14,7 @@
 package de.sovity.extension.clearinghouse;
 
 import de.fraunhofer.iais.eis.Artifact;
+import de.fraunhofer.iais.eis.LogMessage;
 import de.sovity.extension.clearinghouse.sender.LogMessageSender;
 import de.sovity.extension.clearinghouse.sender.message.clearingdispatcher.IdsMultipartClearingRemoteMessageDispatcher;
 import de.sovity.extension.clearinghouse.serializer.MultiContextJsonLdSerializer;
@@ -21,6 +22,7 @@ import de.sovity.extension.clearinghouse.service.IdsClearingHouseService;
 import de.sovity.extension.clearinghouse.service.IdsClearingHouseServiceImpl;
 import okhttp3.OkHttpClient;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
+import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.protocol.ids.api.configuration.IdsApiConfiguration;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
 import org.eclipse.edc.protocol.ids.jsonld.JsonLd;
@@ -71,6 +73,9 @@ public class ClearingHouseExtension implements ServiceExtension {
     private ContractNegotiationStore contractNegotiationStore;
 
     @Inject
+    private TransferProcessStore transferProcessStore;
+
+    @Inject
     private Hostname hostname;
 
     @Inject
@@ -113,6 +118,7 @@ public class ClearingHouseExtension implements ServiceExtension {
                 hostname,
                 clearingHouseLogUrl,
                 contractNegotiationStore,
+                transferProcessStore,
                 monitor);
 
         eventRouter.registerSync(eventSubscriber); //asynchronous dispatch - registerSync for synchronous dispatch
@@ -144,6 +150,8 @@ public class ClearingHouseExtension implements ServiceExtension {
     private void registerCommonTypes(TypeManager typeManager) {
         typeManager.registerSerializer(TYPE_MANAGER_SERIALIZER_KEY, Artifact.class,
                 new MultiContextJsonLdSerializer<>(Artifact.class, CONTEXT_MAP));
+        typeManager.registerSerializer(TYPE_MANAGER_SERIALIZER_KEY, LogMessage.class,
+                new MultiContextJsonLdSerializer<>(LogMessage.class, CONTEXT_MAP));
     }
 
     private void registerClearingHouseMessageSenders(ServiceExtensionContext context) {

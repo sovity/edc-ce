@@ -14,6 +14,7 @@
 package de.sovity.extension.clearinghouse.service;
 
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
+import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 
 import java.net.URL;
 
@@ -22,4 +23,6 @@ public interface IdsClearingHouseService {
     void logContractAgreement(ContractAgreement contractAgreement,
                               URL clearingHouseLogUrl);
 
+    void logTransferProcess(TransferProcess transferProcess,
+                            URL clearingHouseLogUrl);
 }

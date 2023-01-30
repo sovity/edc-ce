@@ -18,11 +18,14 @@ import de.fraunhofer.iais.eis.LogMessageBuilder;
 import de.fraunhofer.iais.eis.Message;
 import de.fraunhofer.iais.eis.MessageProcessedNotificationMessageImpl;
 import de.sovity.extension.clearinghouse.sender.message.LogMessage;
+import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
+import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.MultipartSenderDelegate;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.IdsMultipartParts;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.MultipartResponse;
 import org.eclipse.edc.protocol.ids.spi.domain.IdsConstants;
 import org.eclipse.edc.protocol.ids.util.CalendarUtil;
+import org.eclipse.edc.spi.EdcException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -49,15 +52,14 @@ public class LogMessageSender implements MultipartSenderDelegate<LogMessage, Str
 
     @Override
     public String buildMessagePayload(LogMessage logMessage) throws Exception {
-        var jo = new JSONObject();
-        jo.put("AgreementId", logMessage.contractAgreement().getId());
-        jo.put("AssetId", logMessage.contractAgreement().getAssetId());
-        jo.put("ContractStartDate", logMessage.contractAgreement().getContractStartDate());
-        jo.put("ContractEndDate", logMessage.contractAgreement().getContractEndDate());
-        jo.put("ContractSigningDate", logMessage.contractAgreement().getContractSigningDate());
-        jo.put("ConsumerAgentId", logMessage.contractAgreement().getConsumerAgentId());
-        jo.put("ProviderAgentId", logMessage.contractAgreement().getProviderAgentId());
-        return jo.toString();
+        if (logMessage.eventToLog() instanceof ContractAgreement contractAgreement) {
+            return buildContractAgreementPayload(contractAgreement);
+        } else if (logMessage.eventToLog() instanceof TransferProcess transferProcess) {
+            return buildTransferProcessPayload(transferProcess);
+        } else {
+            throw new EdcException(String.format("ObjectType %s not supported in LogMessageSender",
+                    logMessage.eventToLog().getClass()));
+        }
     }
 
     @Override
@@ -73,5 +75,26 @@ public class LogMessageSender implements MultipartSenderDelegate<LogMessage, Str
     @Override
     public Class<LogMessage> getMessageType() {
         return LogMessage.class;
+    }
+
+    private String buildContractAgreementPayload(ContractAgreement contractAgreement) {
+        var jo = new JSONObject();
+        jo.put("AgreementId", contractAgreement.getId());
+        jo.put("AssetId", contractAgreement.getAssetId());
+        jo.put("ContractStartDate", contractAgreement.getContractStartDate());
+        jo.put("ContractEndDate", contractAgreement.getContractEndDate());
+        jo.put("ContractSigningDate", contractAgreement.getContractSigningDate());
+        jo.put("ConsumerAgentId", contractAgreement.getConsumerAgentId());
+        jo.put("ProviderAgentId", contractAgreement.getProviderAgentId());
+        return jo.toString();
+    }
+
+    private String buildTransferProcessPayload(TransferProcess transferProcess) {
+        var jo = new JSONObject();
+        jo.put("transferProcessId", transferProcess.getId());
+        var dataRequest = transferProcess.getDataRequest();
+        jo.put("contractId", dataRequest.getContractId());
+        jo.put("connectorId", dataRequest.getConnectorId());
+        return jo.toString();
     }
 }
