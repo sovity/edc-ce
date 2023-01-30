@@ -20,8 +20,8 @@ export class CatalogBrowserComponent implements OnInit, OnDestroy {
   filteredContractOfferAssets: Asset[] = [];
 
   searchText = '';
-  customCatalogUrl = '';
-  presetCatalogUrlsMessage = '';
+  customProviders = '';
+  presetProvidersMessage = '';
   private fetch$ = new BehaviorSubject(null);
 
   constructor(
@@ -49,7 +49,7 @@ export class CatalogBrowserComponent implements OnInit, OnDestroy {
           (it) => it.asset,
         );
       });
-    this.presetCatalogUrlsMessage = this.buildPresetCatalogUrlsMessage();
+    this.presetProvidersMessage = this.buildPresetCatalogUrlsMessage();
   }
 
   onSearch() {
@@ -67,12 +67,12 @@ export class CatalogBrowserComponent implements OnInit, OnDestroy {
   }
 
   onCatalogUrlsChange(): void {
-    this.catalogApiUrlService.setCustomApiUrlString(this.customCatalogUrl);
+    this.catalogApiUrlService.setCustomProvidersAsString(this.customProviders);
     this.fetch$.next(null);
   }
 
   private buildPresetCatalogUrlsMessage(): string {
-    const urls = this.catalogApiUrlService.getPresetApiUrls();
+    const urls = this.catalogApiUrlService.getPresetProviders();
     if (!urls.length) {
       return '';
     }
@@ -88,6 +88,6 @@ export class CatalogBrowserComponent implements OnInit, OnDestroy {
     this.ngOnDestroy$.complete();
 
     // Reset selected additional catalog urls
-    this.catalogApiUrlService.setCustomApiUrlString('');
+    this.catalogApiUrlService.setCustomProviders([]);
   }
 }

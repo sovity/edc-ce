@@ -3,8 +3,8 @@
     <!-- Search Bar -->
     <mat-form-field class="search-form-field" color="accent">
       <mat-label>Search catalog</mat-label>
-      <input matInput [(ngModel)]="searchText" (input)="onSearch()" />
       <mat-icon matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="searchText" (input)="onSearch()" />
       <button
         *ngIf="searchText"
         mat-icon-button
@@ -19,15 +19,17 @@
       class="search-form-field mat-hint-text-ellipsis"
       color="accent"
       style="margin-left: 15px">
-      <mat-label>Catalog URL</mat-label>
+      <mat-label>Connector URLs</mat-label>
+      <mat-icon matPrefix>link</mat-icon>
       <input
         matInput
-        [(ngModel)]="customCatalogUrl"
-        (input)="onCatalogUrlsChange()" />
+        [(ngModel)]="customProviders"
+        (input)="onCatalogUrlsChange()"
+      placeholder="https://other-connector.com/v1/ids/data"/>
       <mat-hint
-        *ngIf="presetCatalogUrlsMessage"
-        [matTooltip]="presetCatalogUrlsMessage"
-        >{{ presetCatalogUrlsMessage }}</mat-hint
+        *ngIf="presetProvidersMessage"
+        [matTooltip]="presetProvidersMessage"
+        >{{ presetProvidersMessage }}</mat-hint
       >
     </mat-form-field>
 

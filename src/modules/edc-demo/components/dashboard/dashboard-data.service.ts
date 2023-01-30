@@ -132,7 +132,7 @@ export class DashboardDataService {
   private numCatalogs(): Observable<Partial<DashboardData>> {
     return of({
       numCatalogs: Fetched.ready(
-        this.catalogApiUrlService.getPresetApiUrls().length,
+        this.catalogApiUrlService.getPresetProviders().length,
       ),
     });
   }
