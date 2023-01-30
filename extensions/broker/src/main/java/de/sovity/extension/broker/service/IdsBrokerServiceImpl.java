@@ -249,10 +249,10 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
         // be sent to the broker.
         var contractConstraints = getConstraints(policyDefinitionStore.findById(contractPolicyId));
         var accessConstraints = getConstraints(policyDefinitionStore.findById(accessPolicyId));
-        var hasReferringPolicy = containsReferringConnectorPolicy(contractConstraints) ||
-                containsReferringConnectorPolicy(accessConstraints);
+        var hasBrokerBlacklistedPolicy = containsBlacklistedPolicy(contractConstraints) ||
+                containsBlacklistedPolicy(accessConstraints);
 
-        if (hasReferringPolicy) {
+        if (hasBrokerBlacklistedPolicy) {
             monitor.info("Not publishing resource at broker due to possible policy breach.");
         } else {
             var assetsFromContractDefinition = getAssetsFromContractDefinition(contractDefinition);
@@ -278,7 +278,7 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
                 .toList();
     }
 
-    private boolean containsReferringConnectorPolicy(List<AtomicConstraint> constraints) {
+    private boolean containsBlacklistedPolicy(List<AtomicConstraint> constraints) {
         return constraints
                 .stream()
                 .map(AtomicConstraint::getLeftExpression)
