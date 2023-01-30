@@ -242,15 +242,7 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
         var contractDefinition = contractDefinitionStore.findById(contractDefinitionId);
 
         var resourceMap = new HashMap<String, Asset>();
-        var contractPolicyId = contractDefinition.getContractPolicyId();
-        var accessPolicyId = contractDefinition.getAccessPolicyId();
-
-        // If there is a REFERRING_CONNECTOR policy in the contractPolicy or accessPolicy the resource won't
-        // be sent to the broker.
-        var contractConstraints = getConstraints(policyDefinitionStore.findById(contractPolicyId));
-        var accessConstraints = getConstraints(policyDefinitionStore.findById(accessPolicyId));
-        var hasBrokerBlacklistedPolicy = containsBlacklistedPolicy(contractConstraints) ||
-                containsBlacklistedPolicy(accessConstraints);
+        var hasBrokerBlacklistedPolicy = checkForBlacklistedPolicy(contractDefinition);
 
         if (hasBrokerBlacklistedPolicy) {
             monitor.info("Not publishing resource at broker due to possible policy breach.");
@@ -265,6 +257,16 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
         }
 
         return resourceMap;
+    }
+
+    private boolean checkForBlacklistedPolicy(ContractDefinition contractDefinition) {
+        var contractPolicyId = contractDefinition.getContractPolicyId();
+        var accessPolicyId = contractDefinition.getAccessPolicyId();
+
+        var contractConstraints = getConstraints(policyDefinitionStore.findById(contractPolicyId));
+        var accessConstraints = getConstraints(policyDefinitionStore.findById(accessPolicyId));
+        return containsBlacklistedPolicy(contractConstraints) ||
+                containsBlacklistedPolicy(accessConstraints);
     }
 
     private List<AtomicConstraint> getConstraints(PolicyDefinition contractPolicy) {
