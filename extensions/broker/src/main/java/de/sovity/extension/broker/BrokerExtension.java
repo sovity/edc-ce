@@ -34,6 +34,7 @@ import de.sovity.extension.broker.service.IdsBrokerService;
 import de.sovity.extension.broker.service.IdsBrokerServiceImpl;
 import okhttp3.OkHttpClient;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
+import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
 import org.eclipse.edc.protocol.ids.jsonld.JsonLd;
 import org.eclipse.edc.protocol.ids.service.ConnectorServiceSettings;
@@ -49,9 +50,12 @@ import org.eclipse.edc.spi.system.Hostname;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.types.TypeManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class BrokerExtension implements ServiceExtension {
@@ -78,6 +82,9 @@ public class BrokerExtension implements ServiceExtension {
     @Setting
     private static final String EDC_IDS_DESCRIPTION = "edc.ids.description";
 
+    @Setting
+    private static final String POLICY_BROKER_BLACKLIST = "policy.broker.blacklist";
+
 
     @Inject
     private RemoteMessageDispatcherRegistry dispatcherRegistry;
@@ -98,6 +105,9 @@ public class BrokerExtension implements ServiceExtension {
     private ContractDefinitionStore contractDefinitionStore;
 
     @Inject
+    private PolicyDefinitionStore policyDefinitionStore;
+
+    @Inject
     private EventRouter eventRouter;
 
     private IdsBrokerService idsBrokerService;
@@ -114,6 +124,7 @@ public class BrokerExtension implements ServiceExtension {
     @Override
     public void initialize(ServiceExtensionContext context) {
         brokerBaseUrl = readUrlFromSettings(context, BROKER_BASE_URL_SETTING);
+        var policyBrokerBlacklist = getPolicyBrokerBlacklist(context);
         monitor = context.getMonitor();
 
         registerSerializerBrokerMessages(context);
@@ -131,8 +142,10 @@ public class BrokerExtension implements ServiceExtension {
                 connectorServiceSettings,
                 hostname,
                 contractDefinitionStore,
+                policyDefinitionStore,
                 brokerBaseUrl,
                 assetIndex,
+                policyBrokerBlacklist,
                 monitor);
         eventRouter.registerSync(eventSubscriber); //asynchronous dispatch - registerSync for synchronous dispatch
         context.registerService(IdsBrokerService.class, eventSubscriber);
@@ -143,14 +156,22 @@ public class BrokerExtension implements ServiceExtension {
             RemoteMessageDispatcherRegistry dispatcherRegistry,
             Hostname hostname) {
         var connectorServiceSettings = new ConnectorServiceSettings(context, context.getMonitor());
+        var policyBrokerBlacklist = getPolicyBrokerBlacklist(context);
         idsBrokerService = new IdsBrokerServiceImpl(
                 dispatcherRegistry,
                 connectorServiceSettings,
                 hostname,
                 contractDefinitionStore,
+                policyDefinitionStore,
                 brokerBaseUrl,
                 assetIndex,
+                policyBrokerBlacklist,
                 monitor);
+    }
+
+    @NotNull
+    private ArrayList<String> getPolicyBrokerBlacklist(ServiceExtensionContext context) {
+        return new ArrayList<>(List.of(context.getSetting(POLICY_BROKER_BLACKLIST, "").split(",")));
     }
 
     private URL readUrlFromSettings(ServiceExtensionContext context, String settingsPath) {
