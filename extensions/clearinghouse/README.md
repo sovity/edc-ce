@@ -11,7 +11,7 @@ Settings required for this extension:
 With this extension, the EDC-Connector can log to the ClearingHouse and gets a _201 Created_ with a _MessageProcessedNotificationMessage_ back in response.
 
 Following event Use-Cases are logged to the ClearingHouse:
-- Confimed ContractAgreements
+- Confirmed ContractAgreements
 - Completed Data-Transferprocesses
 
 ## License
