@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Feature:
 - Add setting `POLICY_BROKER_BLACKLIST` to blacklist policies from being published to broker
+- ContractAgreementTransferApi-Extension: Providing an endpoint to start a data-transfer for a contract-agreement
 
 ### Changed
 - Extend get_client script to add support for OpenSSL version 3.x 
