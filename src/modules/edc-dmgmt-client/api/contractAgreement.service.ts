@@ -236,10 +236,10 @@ export class ContractAgreementService {
       throw new Error('Required parameter dataAddressDto was null or undefined when calling initiateTransfer.');
     }
 
-    let url = `${this.configuration.basePath}/transfer`;
+    let url = `${this.configuration.basePath}/contractagreements/${encodeURIComponent(id)}/transfer`;
     return this.httpClient.post<TransferId>(
       url,
-      {contractAgreementId: id, dataDestination: dataAddressDto},
+      dataAddressDto,
       {
         withCredentials: this.configuration.withCredentials,
         headers: this.defaultHeaders,

@@ -9,7 +9,7 @@ services:
       - EDC_UI_ACTIVE_PROFILE=sovity-open-source
       - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/data
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
-      - EDC_UI_CATALOG_URLS=http://localhost:11002/api/v1/data/catalog?providerUrl=http://edc:11003/api/v1/ids/data
+      - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/ids/data
       - EDC_UI_ASSET_PROP_ORIGINATOR=http://edc:11002/api/v1/ids/data
       - EDC_UI_ASSET_PROP_ORIGINATOR_ORGANIZATION=Example GmbH
 
