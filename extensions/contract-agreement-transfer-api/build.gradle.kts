@@ -18,11 +18,18 @@ dependencies {
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
 
-
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
     testImplementation("${edcGroup}:http:${edcVersion}")
     testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+}
+
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            from(components["java"])
+        }
+    }
 }
