@@ -15,7 +15,8 @@
 package de.sovity.edc.extension.contractagreementtransferapi;
 
 import de.sovity.edc.extension.contractagreementtransferapi.controller.ContractAgreementTransferApiController;
-import de.sovity.edc.extension.contractagreementtransferapi.controller.TransferRequestDtoToDataRequestTransformer;
+import de.sovity.edc.extension.contractagreementtransferapi.service.ContractNegotiationByAgreementService;
+import de.sovity.edc.extension.contractagreementtransferapi.service.DataRequestService;
 import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
 import org.eclipse.edc.connector.api.datamanagement.configuration.DataManagementApiConfiguration;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
@@ -54,10 +55,17 @@ public class ContractAgreementTransferApiExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        transformerRegistry.register(new TransferRequestDtoToDataRequestTransformer(contractNegotiationService, contractAgreementService));
         var monitor = context.getMonitor();
-
-        var controller = new ContractAgreementTransferApiController(monitor, transferProcessService, transformerRegistry);
+        var contractNegotiationByAgreementService =
+                new ContractNegotiationByAgreementService(contractNegotiationService);
+        var dataRequestService = new DataRequestService(
+                contractAgreementService,
+                contractNegotiationByAgreementService);
+        var controller = new ContractAgreementTransferApiController(
+                monitor,
+                transferProcessService,
+                transformerRegistry,
+                dataRequestService);
         webService.registerResource(config.getContextAlias(), controller);
     }
 }

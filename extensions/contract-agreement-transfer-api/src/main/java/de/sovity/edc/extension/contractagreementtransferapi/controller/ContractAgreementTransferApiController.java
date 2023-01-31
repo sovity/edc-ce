@@ -14,42 +14,51 @@
 
 package de.sovity.edc.extension.contractagreementtransferapi.controller;
 
+import de.sovity.edc.extension.contractagreementtransferapi.service.DataRequestService;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.edc.api.model.IdResponseDto;
 import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
+import org.eclipse.edc.connector.api.datamanagement.asset.model.DataAddressDto;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
-import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
 import org.eclipse.edc.spi.monitor.Monitor;
+import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 
 import java.time.Clock;
 
 @Produces({MediaType.APPLICATION_JSON})
-@Path("/transfer")
+@Path("/contractagreements")
 public class ContractAgreementTransferApiController {
     private final Monitor monitor;
     private final TransferProcessService transferProcessService;
     private final DtoTransformerRegistry transformerRegistry;
+    private final DataRequestService dataRequestService;
 
     public ContractAgreementTransferApiController(
             Monitor monitor,
             TransferProcessService transferProcessService,
-            DtoTransformerRegistry transformerRegistry) {
+            DtoTransformerRegistry transformerRegistry,
+            DataRequestService dataRequestService) {
         this.monitor = monitor;
         this.transferProcessService = transferProcessService;
         this.transformerRegistry = transformerRegistry;
+        this.dataRequestService = dataRequestService;
     }
 
     @POST
-    public IdResponseDto initiateTransfer(ContractAgreementTransferRequestDto transferRequest) {
-        var transformResult = transformerRegistry.transform(transferRequest, DataRequest.class);
+    @Path("/{contractAgreementId}/transfer")
+    public IdResponseDto initiateTransfer(@PathParam("contractAgreementId") @NotNull String contractAgreementId, DataAddressDto dataAddressDto) {
+        var transformResult = transformerRegistry.transform(dataAddressDto, DataAddress.class);
         if (transformResult.failed()) {
             throw new InvalidRequestException(transformResult.getFailureMessages());
         }
-        var dataRequest = transformResult.getContent();
+        var dataRequest = dataRequestService.buildDataRequest(contractAgreementId,
+                transformResult.getContent());
         monitor.debug("Starting transfer for asset " + dataRequest.getAssetId());
 
         var result = transferProcessService.initiateTransfer(dataRequest);
@@ -64,5 +73,6 @@ public class ContractAgreementTransferApiController {
             throw new InvalidRequestException(result.getFailureMessages());
         }
     }
+
 
 }

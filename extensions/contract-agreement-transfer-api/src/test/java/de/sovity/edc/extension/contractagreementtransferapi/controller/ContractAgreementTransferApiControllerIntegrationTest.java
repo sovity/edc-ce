@@ -15,6 +15,7 @@
 package de.sovity.edc.extension.contractagreementtransferapi.controller;
 
 import io.restassured.http.ContentType;
+import org.eclipse.edc.connector.api.datamanagement.asset.model.DataAddressDto;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -23,7 +24,6 @@ import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.spi.query.QuerySpec;
-import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,8 +70,8 @@ public class ContractAgreementTransferApiControllerIntegrationTest {
                 .header("x-api-key", authKey)
                 .when()
                 .contentType(ContentType.JSON)
-                .body(getTransferRequestDto(agreementId))
-                .post("/transfer")
+                .body(getDataAddressDto())
+                .post(String.format("/contractagreements/%s/transfer", agreementId))
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
@@ -87,17 +87,11 @@ public class ContractAgreementTransferApiControllerIntegrationTest {
         Assertions.assertEquals(COUNTER_PARTY_ADDRESS, dataRequest.getConnectorAddress());
     }
 
-    private ContractAgreementTransferRequestDto getTransferRequestDto(String agreementId) {
-        var dataAddress = DataAddress.Builder.newInstance()
+    private DataAddressDto getDataAddressDto() {
+        return DataAddressDto.Builder.newInstance()
                 .properties(Map.of(
                         "type", "HttpData",
                         "baseUrl", "http://localhost"))
-                .build();
-
-        return ContractAgreementTransferRequestDto.Builder.newInstance()
-                .id(UUID.randomUUID().toString())
-                .contractAgreementId(agreementId)
-                .dataDestination(dataAddress)
                 .build();
     }
 

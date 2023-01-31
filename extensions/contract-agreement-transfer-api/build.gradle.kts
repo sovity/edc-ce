@@ -11,6 +11,7 @@ dependencies {
     api("${edcGroup}:control-plane-spi:${edcVersion}")
     api("${edcGroup}:transfer-spi:${edcVersion}")
     implementation("${edcGroup}:api-core:${edcVersion}")
+    implementation("${edcGroup}:asset-api:${edcVersion}")
     implementation("${edcGroup}:data-management-api-configuration:${edcVersion}")
     implementation("${edcGroup}:transfer-process-api:${edcVersion}")
 
