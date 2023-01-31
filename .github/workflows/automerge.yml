@@ -11,6 +11,7 @@ jobs:
 
   automerge:
     runs-on: ubuntu-latest
+    continue-on-error: true
     permissions:
       pull-requests: write
       contents: write
