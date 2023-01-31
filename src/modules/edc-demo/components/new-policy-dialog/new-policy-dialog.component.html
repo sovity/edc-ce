@@ -52,7 +52,10 @@
       *ngIf="form.policyType == 'Connector-Restricted-Usage'"
       color="accent">
       <mat-label>Connector ID</mat-label>
-      <input matInput [formControl]="form.group.controls.connectorId" />
+      <input
+        matInput
+        placeholder="https://other-connector.com/api/v1/ids/data"
+        [formControl]="form.group.controls.connectorId" />
     </mat-form-field>
   </div>
 </mat-dialog-content>

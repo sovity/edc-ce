@@ -4,9 +4,11 @@ import {Asset} from '../../models/asset';
 import {validUrlPattern} from '../../validators/url-validator';
 import {AssetDetailDialogField} from './asset-detail-dialog-field';
 
+
 @Injectable()
 export class AssetDetailDialogFieldBuilder {
-  constructor(private activeFeatureSet: ActiveFeatureSet) {}
+  constructor(private activeFeatureSet: ActiveFeatureSet) {
+  }
 
   buildFields(asset: Asset): AssetDetailDialogField[] {
     const tryValue = (s?: string | null) => s || '-';
@@ -80,12 +82,19 @@ export class AssetDetailDialogFieldBuilder {
       );
     }
 
-    fields.push({
-      icon: 'account_circle',
-      label: 'Organization',
-      text: tryValue(asset.originatorOrganization),
-      url: tryUrl(asset.originator),
-    });
+    fields.push(
+      {
+        icon: 'link',
+        label: 'Connector ID',
+        text: tryValue(asset.originator),
+        url: tryUrl(asset.originator),
+      },
+      {
+        icon: 'account_circle',
+        label: 'Organization',
+        text: tryValue(asset.originatorOrganization),
+      }
+    );
 
     return fields;
   }

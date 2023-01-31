@@ -18,10 +18,11 @@ the detailed section referring to by linking pull requests or issues.
 
 - Dashboard with KPIs and charts.
 - Current Connector Organization & URL on Landing Page / Dashboard
-- Catalog URLs no longer need to be prefixed with own connector. Just entering
-  target Connector URL suffices.
+- Simplified adding of data sources in Catalog Browser via Connector ID.
 
 #### Changed
+
+- Connector URL is now called Connector ID, fixed naming and added good placeholders.
 
 #### Removed
 

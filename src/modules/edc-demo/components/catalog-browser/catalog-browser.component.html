@@ -14,18 +14,18 @@
       </button>
     </mat-form-field>
 
-    <!-- Catalog URL -->
+    <!-- Connector IDs / Catalog URLs -->
     <mat-form-field
       class="search-form-field mat-hint-text-ellipsis"
       color="accent"
       style="margin-left: 15px">
-      <mat-label>Connector URLs</mat-label>
+      <mat-label>Connector IDs</mat-label>
       <mat-icon matPrefix>link</mat-icon>
       <input
         matInput
+        placeholder="https://other-connector.com/api/v1/ids/data"
         [(ngModel)]="customProviders"
-        (input)="onCatalogUrlsChange()"
-      placeholder="https://other-connector.com/v1/ids/data"/>
+        (input)="onCatalogUrlsChange()" />
       <mat-hint
         *ngIf="presetProvidersMessage"
         [matTooltip]="presetProvidersMessage"

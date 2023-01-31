@@ -1,28 +1,27 @@
 import {Injectable} from '@angular/core';
 import {AppConfigService} from '../../app/config/app-config.service';
 
-
 /**
- * Stores Catalog API URLs
+ * Builds Catalog fetch URLs. Stores preset and user configured Connector IDs.
  */
 @Injectable({
   providedIn: 'root',
 })
 export class CatalogApiUrlService {
   /**
+   * Preset Connector IDs to be used in catalog.
+   *
    * From app-config.json, not user editable
    */
   private readonly presetProviders = new Array<string>();
 
   /**
-   * User-editable
+   * User-added Connector IDs
    */
   private customProviders = new Array<string>();
 
   constructor(private appConfigService: AppConfigService) {
-    this.presetProviders = this.splitUrls(
-      appConfigService.config.catalogUrl,
-    );
+    this.presetProviders = this.splitUrls(appConfigService.config.catalogUrl);
   }
 
   /**
@@ -32,7 +31,7 @@ export class CatalogApiUrlService {
     return this.distinct([
       ...this.presetProviders,
       ...this.customProviders,
-    ]).map(url => this.buildCatalogApiUrl(url));
+    ]).map((url) => this.buildCatalogApiUrl(url));
   }
 
   /**
@@ -42,31 +41,30 @@ export class CatalogApiUrlService {
     return this.presetProviders;
   }
 
-  setCustomProvidersAsString(apiUrlString: string) {
-    this.setCustomProviders(this.splitUrls(apiUrlString));
+  setCustomProvidersAsString(connectorIdsCommaSeparated: string) {
+    this.setCustomProviders(this.splitUrls(connectorIdsCommaSeparated));
   }
 
-  setCustomProviders(apiUrls: string[]) {
-    this.customProviders = apiUrls;
+  setCustomProviders(connectorIds: string[]) {
+    this.customProviders = connectorIds;
   }
 
   /**
    * We fetch catalogs by proxying them through our own backend.
    *
-   * @param catalogUrl target connector url (or legacy full url)
+   * @param connectorId target connector id (or legacy full url
+   * targeted at own connector with query param providerUrl)
    * @return full url for fetching catalog
    */
-  private buildCatalogApiUrl(catalogUrl: string) {
-    const baseUrl = this.appConfigService.config.dataManagementApiUrl;
-
-    // Still support manually built URLs
-    const prefix = `${baseUrl}/catalog?providerUrl=`;
-    if (catalogUrl.startsWith(prefix)) {
-      return catalogUrl;
+  private buildCatalogApiUrl(connectorId: string) {
+    // Detect legacy URLs
+    const prefix = `${this.appConfigService.config.dataManagementApiUrl}/catalog?providerUrl=`;
+    if (connectorId.startsWith(prefix)) {
+      return connectorId;
     }
 
-    // But prefer just entering connector URLs
-    return `${prefix}${encodeURIComponent(catalogUrl)}`;
+    // Build Catalog API URL from Connector ID
+    return `${prefix}${encodeURIComponent(connectorId)}`;
   }
 
   private splitUrls(commaJoinedUrls?: string | null): string[] {
