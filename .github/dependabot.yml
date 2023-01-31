@@ -17,6 +17,12 @@ updates:
     open-pull-requests-limit: 30
     labels:
       - "dependencies"
+    ignore:
+      # Major Angular updates should be done manually
+      - dependency-name: "@angular/*"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "@angular-devkit/*"
+        update-types: [ "version-update:semver-major" ]
   - package-ecosystem: "docker"
     directory: "/docker"
     schedule:
@@ -25,4 +31,3 @@ updates:
     open-pull-requests-limit: 30
     labels:
       - "dependencies"
-      
