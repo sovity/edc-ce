@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import {Observable, from, of} from 'rxjs';
@@ -8,13 +8,10 @@ import {
   AssetService,
   ContractAgreementDto,
   ContractAgreementService,
-  DataAddress,
   DataAddressDto,
   TransferId,
   TransferProcessService,
-  TransferRequestDto,
 } from '../../../edc-dmgmt-client';
-import {Asset} from '../../models/asset';
 import {TransferProcessStates} from '../../models/transfer-process-states';
 import {AssetPropertyMapper} from '../../services/asset-property-mapper';
 import {CatalogBrowserService} from '../../services/catalog-browser.service';

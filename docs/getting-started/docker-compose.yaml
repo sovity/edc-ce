@@ -25,7 +25,8 @@ services:
       WEB_HTTP_IDS_PATH: /api/v1/ids
       EDC_IDS_ID: urn:connector:example-connector
       EDC_IDS_TITLE: 'Example GmbH EDC Connector'
-      EDC_IDS_DESCRIPTION: 'Minimally configured Open Source EDC built by sovity.'
+      EDC_IDS_DESCRIPTION:
+        'Minimally configured Open Source EDC built by sovity.'
       EDC_IDS_ENDPOINT: http://edc:11003/api/v1/ids
       IDS_WEBHOOK_ADDRESS: http://edc:11003
       EDC_IDS_CURATOR: https://example.com

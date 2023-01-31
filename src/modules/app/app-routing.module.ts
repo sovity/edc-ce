@@ -4,7 +4,7 @@ import {AssetViewerComponent} from '../edc-demo/components/asset-viewer/asset-vi
 import {CatalogBrowserComponent} from '../edc-demo/components/catalog-browser/catalog-browser.component';
 import {ContractDefinitionViewerComponent} from '../edc-demo/components/contract-definition-viewer/contract-definition-viewer.component';
 import {ContractViewerComponent} from '../edc-demo/components/contract-viewer/contract-viewer.component';
-import {IntroductionComponent} from '../edc-demo/components/introduction/introduction.component';
+import {DashboardComponent} from '../edc-demo/components/dashboard/dashboard.component';
 import {LogoutComponent} from '../edc-demo/components/logout/logout.component';
 import {PolicyViewComponent} from '../edc-demo/components/policy-view/policy-view.component';
 import {TransferHistoryViewerComponent} from '../edc-demo/components/transfer-history/transfer-history-viewer.component';
@@ -12,9 +12,9 @@ import {EdcUiFeature} from './config/edc-ui-feature';
 
 export const routes: Routes = [
   {
-    path: 'introduction',
-    component: IntroductionComponent,
-    data: {title: 'Getting Started', icon: 'info_outline'},
+    path: 'dashboard',
+    component: DashboardComponent,
+    data: {title: 'Dashboard', icon: 'data_usage'},
   },
   {
     path: 'catalog-browser',
@@ -57,7 +57,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'introduction',
+    redirectTo: 'dashboard',
     pathMatch: 'full',
   },
 ];

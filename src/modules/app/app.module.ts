@@ -12,6 +12,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NgChartsModule} from 'ng2-charts';
 import {EdcDemoModule} from '../edc-demo/edc-demo.module';
 import {API_KEY, CONNECTOR_DATAMANAGEMENT_API} from '../edc-dmgmt-client';
 import {ApiKeyInterceptor} from './api-key.interceptor';
@@ -39,6 +40,7 @@ import {AppConfigService} from './config/app-config.service';
     MatSnackBarModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    NgChartsModule.forRoot(),
   ],
   declarations: [AppComponent, NavigationComponent],
   providers: [

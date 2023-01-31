@@ -1,0 +1,35 @@
+<mat-card class="grow !flex flex-col justify-start items-center">
+  <div class="flex flex-col justify-center items-center" style="height: 120px">
+    <mat-icon
+      *ngIf="kpi.isError"
+      style="font-size: 80px; width: 80px; height: 80px"
+      color="warn"
+      >error
+    </mat-icon>
+    <mat-progress-spinner
+      *ngIf="kpi.isLoading"
+      style="width: 80px; height: 80px"
+      diameter="80"
+      color="primary"
+      mode="indeterminate">
+    </mat-progress-spinner>
+    <div
+      *ngIf="kpi.isReady"
+      class="flex flex-col justify-center items-center overflow-hidden w-full"
+      style="height: 80px">
+      <span [style.font-size.px]="fontSize(kpi.data)">{{
+        kpi.data | number
+      }}</span>
+    </div>
+  </div>
+  <div
+    class="flex justify-center items-center uppercase text-center"
+    style="font-size: 0.9em; height: 40px">
+    <div *ngIf="kpi.isError" class="text-warn">
+      {{ kpi.error.failureMessage }}
+    </div>
+    <div *ngIf="kpi.isLoading || kpi.isReady" class="text-slate">
+      {{ label }}
+    </div>
+  </div>
+</mat-card>

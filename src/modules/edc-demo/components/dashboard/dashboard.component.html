@@ -1,0 +1,185 @@
+<div class="flex flex-row gap-[16px]" style="margin: 24px">
+  <div class="grow flex flex-col gap-[16px]">
+    <div class="flex flex-row gap-[16px]">
+      <mat-card style="width: calc(50% - 8px)">
+        <mat-card-title>Transfer Processes</mat-card-title>
+        <mat-card-subtitle>Incoming Data</mat-card-subtitle>
+        <div class="flex flex-row justify-center items-center">
+          <edc-demo-dashboard-donut-chart
+            style="margin-bottom: 24px"
+            [data]="data.transfersChart"></edc-demo-dashboard-donut-chart>
+        </div>
+      </mat-card>
+
+      <mat-card style="width: calc(50% - 8px)">
+        <mat-card-title>Contract Agreements</mat-card-title>
+        <mat-card-subtitle>Incoming Data</mat-card-subtitle>
+        <div class="flex flex-row justify-evenly">
+          <edc-demo-dashboard-donut-chart
+            style="margin-bottom: 24px"
+            [data]="
+              data.contractAgreementChart
+            "></edc-demo-dashboard-donut-chart>
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="flex flex-row flex-wrap gap-[16px]">
+      <edc-demo-dashboard-kpi-card
+        style="flex: 1 1 0"
+        label="Your Data Offerings"
+        [kpi]="data.numContractDefinitions"></edc-demo-dashboard-kpi-card>
+
+      <edc-demo-dashboard-kpi-card
+        style="flex: 1 1 0"
+        label="Your Assets"
+        [kpi]="data.numAssets"></edc-demo-dashboard-kpi-card>
+
+      <edc-demo-dashboard-kpi-card
+        style="flex: 1 1 0"
+        label="Your Policies"
+        [kpi]="data.numPolicies"></edc-demo-dashboard-kpi-card>
+
+      <edc-demo-dashboard-kpi-card
+        style="flex: 1 1 0"
+        label="Preconfigured Catalogs"
+        [kpi]="data.numCatalogs"></edc-demo-dashboard-kpi-card>
+    </div>
+  </div>
+
+  <div class="shrink-0 flex flex-col gap-[16px]" style="width: 420px">
+    <mat-card>
+      <mat-card-title>EDC Connector</mat-card-title>
+      <mat-card-subtitle>{{ data.connectorOrganization }}</mat-card-subtitle>
+      <mat-form-field class="w-full">
+        <mat-label>Connector URL</mat-label>
+        <input
+          #input
+          matInput
+          ngDefaultControl
+          readonly
+          [ngModel]="data.connectorUrl"
+          (focus)="input.select()" />
+        <mat-icon matPrefix>link</mat-icon>
+        <button
+          mat-icon-button
+          matSuffix
+          [cdkCopyToClipboard]="data.connectorUrl"
+          (click)="input.focus(); input.select()">
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      </mat-form-field>
+    </mat-card>
+    <mat-card *ngIf="'open-source-marketing' | isActiveFeature">
+      <mat-card-title>Get Managed EDC</mat-card-title>
+      <mat-card-subtitle>Connector-as-a-Service</mat-card-subtitle>
+      <div>
+        <p class="text-justify">
+          To join data spaces like <b>Mobility Data Space</b> or
+          <b>Catena-X</b> within minutes, consider the managed solution by
+          <a class="link" href="https://sovity.de" target="_blank">sovity</a> -
+          the <b>Connector-as-a-Service (CaaS)</b> based on open-source software
+          enriched with <b>key enterprise features</b>.
+        </p>
+        <div class="flex flex-row !space-x-[10px]">
+          <a
+            color="primary"
+            href="https://sovity.de"
+            mat-button
+            mat-flat-button
+            target="_blank">
+            sovity
+          </a>
+          <a
+            color="secondary"
+            href="mailto:contact@sovity.de"
+            mat-stroked-button
+            target="_blank">
+            Contact
+          </a>
+        </div>
+      </div>
+    </mat-card>
+    <mat-card>
+      <mat-card-title>About EDC</mat-card-title>
+      <mat-card-subtitle>Eclipse Dataspace Components</mat-card-subtitle>
+      <div>
+        <p class="text-justify">
+          The <b>Eclipse Dataspace Components</b> framework facilitates
+          sovereign, inter-organizational data exchange.
+        </p>
+        <p class="text-justify">
+          It implements the <b>International Data Spaces</b> standard (IDS) as
+          well as relevant protocols associated with <b>GAIA-X</b>.
+        </p>
+        <p class="text-justify">
+          The framework is designed as extensible as possible to encourage
+          integrations into various data ecosystems.
+        </p>
+        <div class="flex flex-row !space-x-[10px]">
+          <a
+            color="secondary"
+            href="https://github.com/eclipse-dataspaceconnector/DataSpaceConnector"
+            mat-stroked-button
+            target="_blank">
+            GitHub
+          </a>
+        </div>
+      </div>
+    </mat-card>
+    <mat-card>
+      <mat-card-title>About EDC UI</mat-card-title>
+      <mat-card-subtitle>Data Dashboard</mat-card-subtitle>
+      <div>
+        <p class="text-justify">
+          Example use cases, that you can try out with this application, are:
+        </p>
+        <ul class="list-style-material-icons-check">
+          <li>
+            View the asset catalog available to you in your Dataspace using the
+            <a class="link" [routerLink]="['/catalog-browser']"
+              >Catalog Browser</a
+            >
+          </li>
+          <li>
+            Negotiate a contract for data sharing in your Dataspace using the
+            <a class="link" [routerLink]="['/catalog-browser']"
+              >Catalog Browser</a
+            >
+          </li>
+          <li>
+            View your existing contracts in the
+            <a class="link" [routerLink]="['/contracts']">Contracts</a> page
+          </li>
+          <li>
+            Transfer an asset in your Dataspace using the
+            <a class="link" [routerLink]="['/contracts']">Contracts</a> page
+          </li>
+          <li>
+            View which assets have been transferred in your Dataspace in the
+            <a class="link" [routerLink]="['/transfer-history']"
+              >Transfer History</a
+            >
+            page
+          </li>
+          <li>
+            View and create assets using the
+            <a class="link" [routerLink]="['/my-assets']">Assets</a> page
+          </li>
+          <li>
+            View and create policies and apply these to assets in your Dataspace
+            using the
+            <a class="link" [routerLink]="['/policies']">Policies</a> page
+          </li>
+          <li>
+            Publish a new asset into your Dataspace using the
+            <a class="link" [routerLink]="['/contract-definitions']"
+              >Contract Definitions</a
+            >
+            page
+          </li>
+        </ul>
+      </div>
+    </mat-card>
+  </div>
+</div>

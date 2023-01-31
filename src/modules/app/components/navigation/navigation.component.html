@@ -11,7 +11,7 @@
         width="70%"
         alt="Logo"
         [attr.src]="appConfigService.config.brandLogoSrc"
-        [style]="appConfigService.config.brandLogoStyle"/>
+        [style]="appConfigService.config.brandLogoStyle" />
     </mat-toolbar>
     <mat-nav-list class="overflow-auto grow">
       <a *ngFor="let route of routes" [routerLink]="[route.path]">

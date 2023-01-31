@@ -26,6 +26,7 @@
     "@angular/router": "^14.2.12",
     "@ng-apimock/core": "^3.6.0",
     "dotenv": "^16.0.3",
+    "ng2-charts": "^4.1.1",
     "rxjs": "^7.8.0",
     "tslib": "^2.3.0",
     "url-join": "^5.0.0",
@@ -35,6 +36,7 @@
     "@angular-devkit/build-angular": "^14.2.10",
     "@angular/cli": "^14.2.10",
     "@angular/compiler-cli": "^14.2.12",
+    "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@types/jasmine": "^4.3.1",
     "@types/node": "^18.11.18",
     "jasmine-core": "^4.5.0",
@@ -44,6 +46,7 @@
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
     "prettier": "^2.8.3",
+    "prettier-plugin-organize-attributes": "^0.0.5",
     "typescript": "^4.8.4"
   }
 }

@@ -6,4 +6,7 @@ export type EdcUiFeature =
   | 'sovity-zammad-integration'
 
   // Enables logout button to configured LOGOUT_URL
-  | 'logout-button';
+  | 'logout-button'
+
+  // Enables marketing for sovity in open-source variants
+  | 'open-source-marketing';

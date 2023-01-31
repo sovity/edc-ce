@@ -98,12 +98,12 @@
         [ngSwitch]="negotiationState"
         (click)="onNegotiateClick()">
         <ng-container *ngSwitchCase="'ready'">Negotiate</ng-container>
-        <ng-container *ngSwitchCase="'negotiating'"
-          >Negotiating...</ng-container
-        >
-        <ng-container *ngSwitchCase="'negotiated'"
-          >Successfully Negotiated</ng-container
-        >
+        <ng-container *ngSwitchCase="'negotiating'">
+          Negotiating...
+        </ng-container>
+        <ng-container *ngSwitchCase="'negotiated'">
+          Successfully Negotiated
+        </ng-container>
       </button>
     </div>
   </div>

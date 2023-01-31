@@ -1,10 +1,8 @@
 import {Injectable} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import {environment} from '../../../environments/environment';
 import {
   ContractNegotiationDto,
-  NegotiationId,
   NegotiationInitiateRequestDto,
 } from '../../edc-dmgmt-client';
 import {ContractOffer} from '../models/contract-offer';

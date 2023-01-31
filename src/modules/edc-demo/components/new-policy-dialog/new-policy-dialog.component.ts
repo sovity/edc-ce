@@ -1,9 +1,8 @@
-import {Component, Inject, OnDestroy} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {finalize, takeUntil} from 'rxjs/operators';
-import {AssetService, PolicyService} from '../../../edc-dmgmt-client';
-import {StorageType} from '../../models/storage-type';
+import {PolicyService} from '../../../edc-dmgmt-client';
 import {AssetEntryBuilder} from '../../services/asset-entry-builder';
 import {NotificationService} from '../../services/notification.service';
 import {PolicyDefinitionBuilder} from '../../services/policy-definition-builder';

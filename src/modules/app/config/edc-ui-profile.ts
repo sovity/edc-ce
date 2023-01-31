@@ -24,6 +24,8 @@ const MDS_THEME: EdcUiTheme = {
 
 const MDS_FEATURES: EdcUiFeature[] = ['mds-fields'];
 
+const OPEN_SOURCE_EDC_FEATURES: EdcUiFeature[] = ['open-source-marketing'];
+
 const MANAGED_EDC_FEATURES: EdcUiFeature[] = [
   'sovity-zammad-integration',
   'logout-button',
@@ -37,7 +39,7 @@ const MANAGED_EDC_FEATURES: EdcUiFeature[] = [
 export const EDC_UI_PROFILE_DATA = inferEdcUiProfileDataKeyTypes({
   'sovity-open-source': {
     ...SOVITY_THEME,
-    features: new Set(),
+    features: new Set(OPEN_SOURCE_EDC_FEATURES),
   },
   'sovity-hosted-by-sovity': {
     ...SOVITY_THEME,
@@ -45,7 +47,7 @@ export const EDC_UI_PROFILE_DATA = inferEdcUiProfileDataKeyTypes({
   },
   'mds-open-source': {
     ...MDS_THEME,
-    features: new Set(MDS_FEATURES),
+    features: new Set([...MDS_FEATURES, ...OPEN_SOURCE_EDC_FEATURES]),
   },
   'mds-hosted-by-sovity': {
     ...MDS_THEME,

@@ -16,10 +16,12 @@ $custom-typography: mat.define-typography-config(
 .theme-sovity {
   @include mat.all-component-themes(sovityColors.$theme);
   --link-color: #{sovityColors.$link-color};
+  --warn-color: #{mat.get-color-from-palette(map-get(sovityColors.$theme, warn))};
 }
 .theme-mds {
   @include mat.all-component-themes(mdsColors.$theme);
   --link-color: #{mdsColors.$link-color};
+  --warn-color: #{mat.get-color-from-palette(map-get(mdsColors.$theme, warn))};
 }
 
 // fix paginator background, it was white before, but our background is gray

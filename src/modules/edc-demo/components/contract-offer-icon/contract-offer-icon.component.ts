@@ -1,10 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  HostBinding,
-  Input,
-  Output,
-} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {ContractOffer} from '../../models/contract-offer';
 import {ContractNegotiationService} from '../../services/contract-negotiation.service';
 

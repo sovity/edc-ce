@@ -5,15 +5,7 @@ import {
   HttpParams,
 } from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {
-  EMPTY,
-  MonoTypeOperatorFunction,
-  Observable,
-  OperatorFunction,
-  forkJoin,
-  of,
-  pluck,
-} from 'rxjs';
+import {EMPTY, Observable, OperatorFunction, forkJoin, of} from 'rxjs';
 import {catchError, map, timeout} from 'rxjs/operators';
 import {
   API_KEY,
@@ -24,9 +16,7 @@ import {
   TransferProcessService,
   TransferRequestDto,
 } from '../../edc-dmgmt-client';
-import {Asset} from '../models/asset';
 import {ContractOffer} from '../models/contract-offer';
-import {ContractOfferDto} from '../models/contract-offer-dto';
 import {ContractOfferResponseDto} from '../models/contract-offer-response-dto';
 import {AssetPropertyMapper} from './asset-property-mapper';
 import {CatalogApiUrlService} from './catalog-api-url.service';

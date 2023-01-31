@@ -1,7 +1,6 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {DataAddress} from '../../../edc-dmgmt-client';
-import {StorageType} from '../../models/storage-type';
 
 @Component({
   selector: 'edc-demo-catalog-browser-transfer-dialog',

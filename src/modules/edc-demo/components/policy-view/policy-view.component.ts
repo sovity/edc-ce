@@ -2,7 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {first, map, switchMap} from 'rxjs/operators';
-import {PolicyDefinition, policyDefinitionId, PolicyService} from '../../../edc-dmgmt-client';
+import {
+  PolicyDefinition,
+  PolicyService,
+  policyDefinitionId,
+} from '../../../edc-dmgmt-client';
 import {NotificationService} from '../../services/notification.service';
 import {
   ConfirmDialogModel,

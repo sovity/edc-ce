@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {AppConfigService} from '../../../app/config/app-config.service';
 import {
   TransferProcessDto,
   TransferProcessService,

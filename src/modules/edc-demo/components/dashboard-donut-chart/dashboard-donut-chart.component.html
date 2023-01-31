@@ -1,0 +1,29 @@
+<mat-icon
+  *ngIf="data.isError"
+  style="font-size: 80px; width: 80px; height: 80px"
+  color="warn"
+  >error
+</mat-icon>
+<mat-progress-spinner
+  *ngIf="data.isLoading"
+  style="width: 80px; height: 80px"
+  diameter="80"
+  color="primary"
+  mode="indeterminate">
+</mat-progress-spinner>
+<canvas
+  *ngIf="data.isReady"
+  baseChart
+  [labels]="data.data.labels"
+  [datasets]="data.data.datasets"
+  [options]="data.data.options"
+  [legend]="true"
+  [type]="'doughnut'">
+</canvas>
+<div
+  class="flex justify-center items-center uppercase text-center"
+  style="font-size: 0.9em">
+  <div *ngIf="data.isError" class="text-warn">
+    {{ data.error.failureMessage }}
+  </div>
+</div>

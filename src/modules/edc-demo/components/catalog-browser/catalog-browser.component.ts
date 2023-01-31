@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {BehaviorSubject, sampleTime} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, Subject, sampleTime} from 'rxjs';
+import {map, switchMap, takeUntil} from 'rxjs/operators';
 import {Asset} from '../../models/asset';
 import {ContractOffer} from '../../models/contract-offer';
 import {CatalogApiUrlService} from '../../services/catalog-api-url.service';
@@ -15,7 +15,7 @@ import {AssetDetailDialog} from '../asset-detail-dialog/asset-detail-dialog.comp
   templateUrl: './catalog-browser.component.html',
   styleUrls: ['./catalog-browser.component.scss'],
 })
-export class CatalogBrowserComponent implements OnInit {
+export class CatalogBrowserComponent implements OnInit, OnDestroy {
   filteredContractOffers: ContractOffer[] = [];
   filteredContractOfferAssets: Asset[] = [];
 
@@ -41,6 +41,7 @@ export class CatalogBrowserComponent implements OnInit {
             contractOffer.asset.name?.toLowerCase()?.includes(searchText),
           );
         }),
+        takeUntil(this.ngOnDestroy$),
       )
       .subscribe((filteredContractOffers) => {
         this.filteredContractOffers = filteredContractOffers;
@@ -78,5 +79,15 @@ export class CatalogBrowserComponent implements OnInit {
     return `Already using${
       urls.length > 1 ? ` (${urls.length})` : ''
     }: ${urls.join(', ')}`;
+  }
+
+  ngOnDestroy$ = new Subject();
+
+  ngOnDestroy() {
+    this.ngOnDestroy$.next(null);
+    this.ngOnDestroy$.complete();
+
+    // Reset selected additional catalog urls
+    this.catalogApiUrlService.setCustomApiUrlString('');
   }
 }

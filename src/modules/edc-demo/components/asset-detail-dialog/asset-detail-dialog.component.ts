@@ -4,13 +4,12 @@ import {
   MatDialog,
   MatDialogRef,
 } from '@angular/material/dialog';
-import {Observable, Subject, switchMap} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {filter, finalize, takeUntil} from 'rxjs/operators';
 import {AssetService} from '../../../edc-dmgmt-client';
 import {Asset} from '../../models/asset';
 import {ContractNegotiationService} from '../../services/contract-negotiation.service';
 import {NotificationService} from '../../services/notification.service';
-import {validUrlPattern} from '../../validators/url-validator';
 import {
   ConfirmDialogModel,
   ConfirmationDialogComponent,

@@ -1,3 +1,4 @@
+import {ClipboardModule} from '@angular/cdk/clipboard';
 import {CommonModule} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
@@ -25,22 +26,31 @@ import {MatTableModule} from '@angular/material/table';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterModule} from '@angular/router';
+import {NgChartsModule} from 'ng2-charts';
 import {AssetDetailDialog} from './components/asset-detail-dialog/asset-detail-dialog.component';
 import {AssetEditorDialog} from './components/asset-editor-dialog/asset-editor-dialog.component';
 import {AssetListComponent} from './components/asset-list/asset-list.component';
 import {AssetViewerComponent} from './components/asset-viewer/asset-viewer.component';
-import {CatalogBrowserTransferDialog} from './components/catalog-browser-transfer-dialog/catalog-browser-transfer-dialog.component';
+import {
+  CatalogBrowserTransferDialog
+} from './components/catalog-browser-transfer-dialog/catalog-browser-transfer-dialog.component';
 import {CatalogBrowserComponent} from './components/catalog-browser/catalog-browser.component';
 import {ConfirmationDialogComponent} from './components/confirmation-dialog/confirmation-dialog.component';
-import {ContractDefinitionEditorDialog} from './components/contract-definition-editor-dialog/contract-definition-editor-dialog.component';
-import {ContractDefinitionViewerComponent} from './components/contract-definition-viewer/contract-definition-viewer.component';
+import {
+  ContractDefinitionEditorDialog
+} from './components/contract-definition-editor-dialog/contract-definition-editor-dialog.component';
+import {
+  ContractDefinitionViewerComponent
+} from './components/contract-definition-viewer/contract-definition-viewer.component';
 import {ContractOfferIconComponent} from './components/contract-offer-icon/contract-offer-icon.component';
 import {ContractOfferListComponent} from './components/contract-offer-list/contract-offer-list.component';
 import {ContractViewerComponent} from './components/contract-viewer/contract-viewer.component';
+import {DashboardKpiCardComponent} from './components/dashboard-kpi-card/dashboard-kpi-card.component';
+import {DashboardDonutChartComponent} from './components/dashboard-donut-chart/dashboard-donut-chart.component';
+import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {DataCategorySelectComponent} from './components/data-category-select/data-category-select.component';
 import {DataSubcategoryItemsPipe} from './components/data-subcategory-select/data-subcategory-items.pipe';
 import {DataSubcategorySelectComponent} from './components/data-subcategory-select/data-subcategory-select.component';
-import {IntroductionComponent} from './components/introduction/introduction.component';
 import {KeywordSelectComponent} from './components/keyword-select/keyword-select.component';
 import {LanguageSelectComponent} from './components/language-select/language-select.component';
 import {LogoutComponent} from './components/logout/logout.component';
@@ -53,6 +63,7 @@ import {TransportModeSelectComponent} from './components/transport-mode-select/t
 import {IsActiveFeaturePipe} from './pipes/is-active-feature.pipe';
 import {ReplacePipe} from './pipes/replace.pipe';
 import {SafePipe} from './pipes/safe.pipe';
+
 
 @NgModule({
   imports: [
@@ -83,51 +94,54 @@ import {SafePipe} from './pipes/safe.pipe';
     MatTooltipModule,
     MatStepperModule,
     MatChipsModule,
+    ClipboardModule,
+    NgChartsModule,
   ],
   declarations: [
-    CatalogBrowserComponent,
-    TransferHistoryViewerComponent,
-    ContractDefinitionViewerComponent,
-    AssetViewerComponent,
-    AssetEditorDialog,
-    IntroductionComponent,
-    ContractDefinitionEditorDialog,
-    CatalogBrowserTransferDialog,
-    ContractViewerComponent,
-    CatalogBrowserTransferDialog,
-    SafePipe,
-    ReplacePipe,
-    PolicyViewComponent,
-    PolicyRuleViewerComponent,
-    CatalogBrowserTransferDialog,
-    ContractViewerComponent,
-    NewPolicyDialogComponent,
-    ConfirmationDialogComponent,
-    LogoutComponent,
-    IsActiveFeaturePipe,
-    LanguageSelectComponent,
-    DataCategorySelectComponent,
-    DataSubcategorySelectComponent,
-    DataSubcategoryItemsPipe,
-    TransportModeSelectComponent,
-    KeywordSelectComponent,
-    AssetListComponent,
     AssetDetailDialog,
-    ContractOfferListComponent,
+    AssetEditorDialog,
+    AssetListComponent,
+    AssetViewerComponent,
+    CatalogBrowserComponent,
+    CatalogBrowserTransferDialog,
+    CatalogBrowserTransferDialog,
+    CatalogBrowserTransferDialog,
+    ConfirmationDialogComponent,
+    ContractDefinitionEditorDialog,
+    ContractDefinitionViewerComponent,
     ContractOfferIconComponent,
+    ContractOfferListComponent,
+    ContractViewerComponent,
+    ContractViewerComponent,
+    DashboardComponent,
+    DashboardDonutChartComponent,
+    DashboardKpiCardComponent,
+    DataCategorySelectComponent,
+    DataSubcategoryItemsPipe,
+    DataSubcategorySelectComponent,
+    IsActiveFeaturePipe,
+    KeywordSelectComponent,
+    LanguageSelectComponent,
+    LogoutComponent,
+    NewPolicyDialogComponent,
+    PolicyRuleViewerComponent,
     PolicySelectComponent,
+    PolicyViewComponent,
+    ReplacePipe,
+    SafePipe,
+    TransferHistoryViewerComponent,
+    TransportModeSelectComponent,
   ],
   exports: [
     CatalogBrowserComponent,
     TransferHistoryViewerComponent,
     ContractDefinitionViewerComponent,
     AssetViewerComponent,
-    IntroductionComponent,
     PolicyRuleViewerComponent,
-    IntroductionComponent,
     NewPolicyDialogComponent,
     ContractViewerComponent,
     IsActiveFeaturePipe,
   ],
 })
-export class EdcDemoModule {}
+export class EdcDemoModule {
+}

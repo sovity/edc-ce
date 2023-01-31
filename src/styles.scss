@@ -51,6 +51,21 @@ body {
   width: 300px;
 }
 
+.list-style-material-icons-check {
+  list-style-type: none;
+  padding-inline-start: 8px;
+
+  li {
+    margin-top: 8px;
+
+    &:before {
+      margin-right: 8px;
+      content: 'check';
+      font-family: 'Material Icons';
+    }
+  }
+}
+
 // hrefs
 .link {
   color: var(--link-color);
@@ -79,6 +94,14 @@ body {
   max-width: calc(100% / 3);
 }
 
+.w-1\/2 {
+  width: calc(100% / 2);
+  max-width: calc(100% / 2);
+}
+.min-h-\[300px\]  {
+  min-height: 300px;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -89,6 +112,10 @@ body {
 
 .flex {
   display: flex;
+}
+
+.\!flex {
+  display: flex !important;
 }
 
 .flex-wrap {
@@ -115,6 +142,22 @@ body {
   margin-top: 16px;
 }
 
+.space-y-\[20px\] > * + * {
+  margin-top: 20px;
+}
+
+.space-x-\[20px\] > * + * {
+  margin-left: 20px;
+}
+
+.p-\[20px\] {
+  padding: 20px;
+}
+
+.m-\[20px\] {
+  margin: 20px;
+}
+
 .mt-\[10px\] {
   margin-top: 10px;
 }
@@ -124,11 +167,11 @@ body {
 }
 
 .gap-\[10px\] {
-  margin: -10px;
+  gap: 10px;
+}
 
-  & > * {
-    margin: 10px;
-  }
+.gap-\[16px\] {
+  gap: 16px;
 }
 
 // See https://tailwindcss.com/docs/flex-direction
@@ -214,6 +257,10 @@ body {
   color: rgba(0, 0, 0, 0.54);
 }
 
+.text-warn {
+  color: var(--warn-color);
+}
+
 // See https://tailwindcss.com/docs/font-size
 .text-sm {
   font-size: 0.8em;
@@ -222,6 +269,10 @@ body {
 // See https://tailwindcss.com/docs/text-align
 .text-center {
   text-align: center;
+}
+
+.text-justify {
+  text-align: justify;
 }
 
 // See https://tailwindcss.com/docs/whitespace
