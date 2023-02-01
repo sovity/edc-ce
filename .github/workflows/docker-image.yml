@@ -10,11 +10,17 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME_BASE: ${{ github.repository_owner }}
+  IMAGE_NAME: edc
 
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        imageVariants: [
+          { "buildArgs": "", "imageSuffix": "" },
+          { "buildArgs": "-Pdev-edc", "imageSuffix": "-mds" } ]
     timeout-minutes: 30
     permissions:
       contents: read
@@ -35,7 +41,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BASE }}/${{ env.IMAGE_NAME }}${{ matrix.imageVariants.imageSuffix }}
           tags: |
             type=schedule
             type=semver,pattern={{version}}
@@ -44,6 +50,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
             type=sha
+            type=raw,value=latest,enable={{is_default_branch}}
       - name: Build and push EDC image
         uses: docker/build-push-action@v4
         with:
@@ -51,3 +58,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BUILD_ARGS=${{ matrix.imageVariants.buildArgs }}

@@ -1,8 +1,10 @@
 FROM gradle:7.6.0-jdk17 AS build
 
+ARG BUILD_ARGS
+
 COPY --chown=gradle:gradle . /home/gradle/project/
 WORKDIR /home/gradle/project/
-RUN gradle build --no-daemon
+RUN gradle build --no-daemon $BUILD_ARGS
 
 # -buster is required to have apt available
 FROM openjdk:17-slim-buster
