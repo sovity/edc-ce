@@ -14,7 +14,7 @@ services:
       - EDC_UI_ASSET_PROP_ORIGINATOR_ORGANIZATION=Example GmbH
   edc:
     container_name: edc
-    image: ghcr.io/sovity/edc-extensions:main
+    image: ghcr.io/sovity/edc-mds:latest
     environment:
       WEB_HTTP_PORT: 11001
       WEB_HTTP_PATH: /api

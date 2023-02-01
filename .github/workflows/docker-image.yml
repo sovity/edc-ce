@@ -19,8 +19,8 @@ jobs:
     strategy:
       matrix:
         imageVariants: [
-          { "buildArgs": "", "imageSuffix": "" },
-          { "buildArgs": "-Pdev-edc", "imageSuffix": "-mds" } ]
+          { "buildArgs": "", "imageSuffix": "-mds" },
+          { "buildArgs": "-Pdev-edc", "imageSuffix": "" } ]
     timeout-minutes: 30
     permissions:
       contents: read
