@@ -32,7 +32,7 @@ import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 import java.time.Clock;
 
 @Produces({MediaType.APPLICATION_JSON})
-@Path("/contractagreements")
+@Path("/contract-agreements-transfer/contractagreements")
 public class ContractAgreementTransferApiController {
     private final Monitor monitor;
     private final TransferProcessService transferProcessService;

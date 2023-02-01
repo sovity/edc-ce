@@ -71,7 +71,7 @@ public class ContractAgreementTransferApiControllerIntegrationTest {
                 .when()
                 .contentType(ContentType.JSON)
                 .body(getDataAddressDto())
-                .post(String.format("/contractagreements/%s/transfer", agreementId))
+                .post(String.format("/contract-agreements-transfer/contractagreements/%s/transfer", agreementId))
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
