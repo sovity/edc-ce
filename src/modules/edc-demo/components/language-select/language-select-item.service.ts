@@ -42,7 +42,7 @@ export class LanguageSelectItemService {
   }
 
   english(): LanguageSelectItem {
-    return this.findById('ISO_639:EN');
+    return this.findById('https://w3id.org/idsa/code/EN');
   }
 
   private buildHighlightItems(): LanguageSelectItem[] {
