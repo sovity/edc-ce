@@ -19,6 +19,7 @@ the detailed section referring to by linking pull requests or issues.
 - Dashboard with KPIs and charts.
 - Current Connector Organization & URL on Landing Page / Dashboard
 - Simplified adding of data sources in Catalog Browser via Connector ID.
+- Source code version of deployed edc-ui can now be accessed under /assets/config/version.txt 
 
 #### Changed
 

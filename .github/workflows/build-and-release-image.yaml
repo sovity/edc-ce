@@ -40,6 +40,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Store last commit's author, message and SHA
+        run: |
+          echo "Saving local commit details in src/assets/version.txt"
+          git log -1 > src/assets/config/version.txt
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
@@ -58,6 +63,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           file: docker/Dockerfile
+          context: .
           build-args: |
             EDC_UI_CONFIGURATION=production
           push: true
