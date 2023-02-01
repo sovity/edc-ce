@@ -52,7 +52,7 @@ jobs:
             type=sha
             type=raw,value=latest,enable={{is_default_branch}}
       - name: Build and push EDC image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           file: connector/Dockerfile
           push: true
