@@ -16,10 +16,27 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
+#### Changed
+
+#### Removed
+
+#### Fixed
+
+## [v0.0.1-milestone-7-sovity2] 01.02.2023
+
+### Overview
+
+A new dashboard and other quality of life improvements.
+
+### Detailed Changes
+
+#### Added
+
 - Dashboard with KPIs and charts.
 - Current Connector Organization & URL on Landing Page / Dashboard
 - Simplified adding of data sources in Catalog Browser via Connector ID.
-- Source code version of deployed edc-ui can now be accessed under /assets/config/version.txt 
+- Source code version of deployed edc-ui can now be accessed under
+  /assets/config/version.txt
 
 #### Changed
 
@@ -32,11 +49,11 @@ the detailed section referring to by linking pull requests or issues.
 
 - Fixed additional PolicyDefinition uid vs id issues.
 - Fixed E-Mail in README.MD
-- Added API Endpoint to workaround extension that fixex an API problem:
-  - Could not start transfer proceses with just contract agreement ids when
+- Added API Endpoint to workaround extension that fixes an API problem:
+  - Could not start transfer processes with just contract agreement ids when
     asset came from a custom catalog provider.
-  - It would needs the asset's originator url.
-  - Since contract agreements dont contain the asset and catalogs are not
+  - It would need the asset's originator url.
+  - Since contract agreements don't contain the asset and catalogs are not
     guaranteed to still contain said asset's details due to policies, a new
     endpoint / extension was required.
 - Fixed MDS Logo not working.
