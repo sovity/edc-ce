@@ -2,8 +2,9 @@ import {Fetched} from '../../models/fetched';
 import {DonutChartData} from '../dashboard-donut-chart/donut-chart-data';
 
 export interface DashboardData {
-  transfersChart: Fetched<DonutChartData>;
-  contractAgreementChart: Fetched<DonutChartData>;
+  incomingTransfersChart: Fetched<DonutChartData>;
+  outgoingTransfersChart: Fetched<DonutChartData>;
+  numContractAgreements: Fetched<number>;
   numAssets: Fetched<number>;
   numCatalogEntries: Fetched<number>;
   numContractDefinitions: Fetched<number>;
@@ -15,8 +16,9 @@ export interface DashboardData {
 
 export function defaultDashboardData(): DashboardData {
   return {
-    transfersChart: Fetched.empty(),
-    contractAgreementChart: Fetched.empty(),
+    incomingTransfersChart: Fetched.empty(),
+    outgoingTransfersChart: Fetched.empty(),
+    numContractAgreements: Fetched.empty(),
     numAssets: Fetched.empty(),
     numCatalogEntries: Fetched.empty(),
     numPolicies: Fetched.empty(),

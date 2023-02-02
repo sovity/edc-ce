@@ -1,703 +1,126 @@
 [
   {
-    "id": "01e7ebf5-06d8-4f04-be25-87d0187e5d6e",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1666613301462,
-    "createdTimestamp": 1666613289328,
+    "createdAt": 1675344948954,
+    "updatedAt": 1675344960579,
+    "id": "be0cac12-bb43-420e-aa29-d66bb3d0e0ac",
+    "type": "CONSUMER",
+    "state": "COMPLETED",
+    "stateTimestamp": 1675344960579,
     "errorDetail": null,
     "dataRequest": {
-      "assetId": "urn:artifact:electrocharging",
-      "contractId": "charging-contract-time-restricted:e658135d-708e-43da-ab7d-fb12c92f8022",
-      "connectorId": "edc"
+      "id": "c9fec9a2-1243-4738-9576-d70bf4558687",
+      "assetId": "urn:artifact:example-asset",
+      "contractId": "my-data-offer:5816a60b-86c1-489a-b26a-ed129947f973",
+      "connectorId": "consumer"
     },
     "dataDestination": {
       "properties": {
-        "baseUrl": "https://webhook.site/cbd8c44a-c6ce-4542-bdb8-c8624530e886",
+        "baseUrl": "https://webhook.site/ab9ba683-77d3-4d66-9c79-03b9724927eb",
         "type": "HttpData"
       }
     }
   },
   {
-    "id": "0782b782-bb96-4743-a4e0-d88fd10ce8a1",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1663918662671,
-    "createdTimestamp": 1663918657743,
+    "createdAt": 1675346050941,
+    "updatedAt": 1675346062120,
+    "id": "81cdf4cf-8427-480f-9662-8a29d66ddd3b",
+    "type": "CONSUMER",
+    "state": "COMPLETED",
+    "stateTimestamp": 1675346062120,
     "errorDetail": null,
     "dataRequest": {
-      "assetId": "urn:artifact:bitcoin2",
-      "contractId": "newdef:eb934d1f-6582-4bab-85e6-af19a76f7e2b",
-      "connectorId": "edc"
+      "id": "92658c7a-9485-421f-a4be-ab186e7b190e",
+      "assetId": "urn:artifact:example-asset",
+      "contractId": "my-data-offer:5816a60b-86c1-489a-b26a-ed129947f973",
+      "connectorId": "consumer"
     },
     "dataDestination": {
       "properties": {
-        "baseUrl": "https://webhook.site/fc7f6e62-3da7-4e8a-bab4-c9bc35fd2a8c",
+        "baseUrl": "asd",
         "type": "HttpData"
       }
     }
   },
   {
-    "id": "0a53a891-ea63-48be-9f42-858481aa0411",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1664376123588,
-    "createdTimestamp": 1664376122713,
+    "createdAt": 1675346295640,
+    "updatedAt": 1675346304201,
+    "id": "339b2a27-3b66-49f5-8b43-6a400d5914b5",
+    "type": "CONSUMER",
+    "state": "COMPLETED",
+    "stateTimestamp": 1675346304201,
     "errorDetail": null,
     "dataRequest": {
-      "assetId": "urn:artifact:emissions",
-      "contractId": "my-def:cbffb0e5-47ce-4165-beb6-c7477bfd77ed",
-      "connectorId": "edc"
+      "id": "101eb0ff-8a1c-4879-a9d3-02a378a4f7c7",
+      "assetId": "urn:artifact:example-asset",
+      "contractId": "my-data-offer:5816a60b-86c1-489a-b26a-ed129947f973",
+      "connectorId": "consumer"
     },
     "dataDestination": {
       "properties": {
-        "baseUrl": "https://webhook.site/01d5988f-b2f9-42e5-a586-785aa1b5f6e9",
+        "baseUrl": "https://webhook.site/ab9ba683-77d3-4d66-9c79-03b9724927eb",
         "type": "HttpData"
       }
     }
   },
   {
-    "id": "0a792f6c-29fb-4883-883d-5494c54fe2c5",
+    "createdAt": 1675346968148,
+    "updatedAt": 1675346969520,
+    "id": "47240a35-d8fc-41d9-b020-07b87f3cc7b6",
     "type": "PROVIDER",
+    "state": "IN_PROGRESS",
+    "stateTimestamp": 1675346969520,
+    "errorDetail": null,
+    "dataRequest": {
+      "id": "de881e9a-3ea8-4f05-9318-1aef45601581",
+      "assetId": "urn:artifact:pallene-asset",
+      "contractId": "pallene-asset-def:80de309c-0f0a-4eaf-a169-727c0ca6575b",
+      "connectorId": "urn:connector:edc"
+    },
+    "dataDestination": {
+      "properties": {
+        "baseUrl": "https://webhook.site/ab9ba683-77d3-4d66-9c79-03b9724927eb",
+        "type": "HttpData"
+      }
+    }
+  },
+  {
+    "createdAt": 1675346958929,
+    "updatedAt": 1675347017414,
+    "id": "8a31794f-d6be-449a-a037-eed8c63424df",
+    "type": "CONSUMER",
     "state": "ERROR",
-    "stateTimestamp": 1663862379423,
-    "createdTimestamp": 1663862377412,
-    "errorDetail": "Fatal error processing transfer request: 0a792f6c-29fb-4883-883d-5494c54fe2c5. Error details: Failed to delegate data transfer to Data Plane: Failed to find data plane instance supporting request: def78942-fa4c-4c9d-9537-30e34754bd12",
+    "stateTimestamp": 1675347017414,
+    "errorDetail": "TransferProcessManager: attempt #8 failed to send transfer. Retry limit exceeded, TransferProcess 8a31794f-d6be-449a-a037-eed8c63424df moves to ERROR state. Cause: org.eclipse.edc.spi.EdcException: Received class de.fraunhofer.iais.eis.RejectionMessageImpl but expected [class de.fraunhofer.iais.eis.RequestInProcessMessageImpl].",
     "dataRequest": {
-      "assetId": "urn:artifact:bitcoin2",
-      "contractId": "newdef:eb934d1f-6582-4bab-85e6-af19a76f7e2b",
-      "connectorId": "edc"
+      "id": "ba2dca23-ed46-496e-b121-1556958a7ec6",
+      "assetId": "urn:artifact:pallene-asset",
+      "contractId": "pallene-asset-def:80de309c-0f0a-4eaf-a169-727c0ca6575b",
+      "connectorId": "consumer"
     },
     "dataDestination": {
       "properties": {
-        "baseUrl": "https://webhook.site/fc7f6e62-3da7-4e8a-bab4-c9bc35fd2a8c",
-        "type": "HttpdData"
+        "baseUrl": "https://webhook.site/ab9ba683-77d3-4d66-9c79-03b9724927eb",
+        "type": "HttpData"
       }
     }
   },
   {
-    "id": "0eb4f28e-a09c-4566-a80c-fbc01cb8789b",
+    "createdAt": 1675347001981,
+    "updatedAt": 1675347005464,
+    "id": "d25328ce-bbf4-4623-991b-63b2b529f259",
     "type": "PROVIDER",
     "state": "IN_PROGRESS",
-    "stateTimestamp": 1663920132963,
-    "createdTimestamp": 1663920131891,
+    "stateTimestamp": 1675347005464,
     "errorDetail": null,
     "dataRequest": {
-      "assetId": "urn:artifact:bitcoin2",
-      "contractId": "newdef:eb934d1f-6582-4bab-85e6-af19a76f7e2b",
-      "connectorId": "edc"
+      "id": "7cf62113-67e8-4e17-935c-14ba0e2592d6",
+      "assetId": "urn:artifact:pallene-asset",
+      "contractId": "pallene-asset-def:80de309c-0f0a-4eaf-a169-727c0ca6575b",
+      "connectorId": "urn:connector:edc"
     },
     "dataDestination": {
       "properties": {
-        "baseUrl": "https://webhook.site/fc7f6e62-3da7-4e8a-bab4-c9bc35fd2a8c",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "0fa78dc0-ad39-489e-a715-3030e9d60a96",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1665990627918,
-    "createdTimestamp": 1665990623105,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:emissions",
-      "contractId": "emissions-end-of-the-year-offering:f0879036-19ce-40ca-91bd-a0373b6422be",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/f0fc5991-ffaa-42e0-b7ff-97c281cb28de",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "160525ee-3655-4c8e-8a2b-16064a549b4c",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1665990613710,
-    "createdTimestamp": 1665990605799,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:emissions",
-      "contractId": "emissions-end-of-the-year-offering:f0879036-19ce-40ca-91bd-a0373b6422be",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "1ab9fa21-1fe4-48dc-b8cd-570afe626eeb",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1666613099415,
-    "createdTimestamp": 1666613094387,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:emissions",
-      "contractId": "emissions-end-of-the-year-offering:addc4818-fa4b-48b2-9fd7-18013ce7db83",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/cbd8c44a-c6ce-4542-bdb8-c8624530e886",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "1cae85e2-0b2c-45f3-a7c5-406f1d858dbe",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1665990571916,
-    "createdTimestamp": 1665990562060,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:emissions",
-      "contractId": "emissions-end-of-the-year-offering:f0879036-19ce-40ca-91bd-a0373b6422be",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/5d0c2326-3c99-4142-8de0-6abb660bf89a",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "3d824daf-ac6f-43a8-b9a8-f8623a415cd2",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1665761091642,
-    "createdTimestamp": 1665761075078,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:electrocharging",
-      "contractId": "charging-contract-time-restricted:e658135d-708e-43da-ab7d-fb12c92f8022",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/f0fc5991-ffaa-42e0-b7ff-97c281cb28de",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "42612358-1323-4b4b-9a02-4691cd3568f8",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1665763065482,
-    "createdTimestamp": 1665763059664,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:sharedmobilityescooter",
-      "contractId": "escooterswiss-contract-definition:74ffb23c-8781-4edb-a716-10b2422afa2a",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/f0fc5991-ffaa-42e0-b7ff-97c281cb28de",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "44dfdc20-2708-4bc9-a831-7fd146fb7f0d",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1663862245960,
-    "createdTimestamp": 1663862243640,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:bitcoin2",
-      "contractId": "newdef:eb934d1f-6582-4bab-85e6-af19a76f7e2b",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/fc7f6e62-3da7-4e8a-bab4-c9bc35fd2a8c",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "4de224db-5ce1-482d-84e1-4ed400b82a1e",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1665667289556,
-    "createdTimestamp": 1665667281895,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:ethereum2",
-      "contractId": "ETH-Value:74557248-d6b6-44d5-9ce5-7ee12d61a264",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/573a7997-f99d-45c2-ba73-89dbee88c884",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "52210369-1721-4a33-b539-63ce68cf0e32",
-    "type": "PROVIDER",
-    "state": "INITIAL",
-    "stateTimestamp": 1669991133345,
-    "createdTimestamp": 1669991133345,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:emissions",
-      "contractId": "emissions-end-of-the-year-offering:addc4818-fa4b-48b2-9fd7-18013ce7db83",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/9faf3601-0086-427a-834c-f0dbe2083271",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "5fbe3b17-8b48-42ec-86c3-9bf20b1ef5c7",
-    "type": "PROVIDER",
-    "state": "ERROR",
-    "stateTimestamp": 1665585256794,
-    "createdTimestamp": 1665585252099,
-    "errorDetail": "Fatal error processing transfer request: 5fbe3b17-8b48-42ec-86c3-9bf20b1ef5c7. Error details: Failed to delegate data transfer to Data Plane: Failed to find data plane instance supporting request: 54910780-68a4-4b86-a30e-f9e2bfc12829",
-    "dataRequest": {
-      "assetId": "urn:artifact:emissions",
-      "contractId": "Test-Offer:76fcacef-81e3-4013-b4e8-470956cb0553",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/573a7997-f99d-45c2-ba73-89dbee88c884",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "6dc3a5d7-4e2e-4479-85aa-1deadd017812",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1663861124279,
-    "createdTimestamp": 1663861119535,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:bitcoin2",
-      "contractId": "newdef:eb934d1f-6582-4bab-85e6-af19a76f7e2b",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/fc7f6e62-3da7-4e8a-bab4-c9bc35fd2a8c",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "7ba94e5e-a410-4ff5-ab3c-74fda31f9993",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1665990310961,
-    "createdTimestamp": 1665990303414,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:emissions",
-      "contractId": "emissions-end-of-the-year-offering:f0879036-19ce-40ca-91bd-a0373b6422be",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://api.v2.emissions-api.org/ui/#/default/emissionsapi.web.get_statistics",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "7bed9f83-3729-4acd-942f-7af59dcfabdc",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1665996595140,
-    "createdTimestamp": 1665996587206,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:methane-emissions-timeseries",
-      "contractId": "Methane-contract-definition:f38308ac-6048-4a7f-9c4d-605d6e1619fc",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/f0fc5991-ffaa-42e0-b7ff-97c281cb28de",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "7e518499-4cc6-41b0-904e-178576f57b73",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1666613128584,
-    "createdTimestamp": 1666613122401,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:sharedmobilityescooter",
-      "contractId": "escooterswiss-contract-definition:74ffb23c-8781-4edb-a716-10b2422afa2a",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/cbd8c44a-c6ce-4542-bdb8-c8624530e886",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "7f38979c-4365-44c6-95c2-002d6b0c386e",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1665762999623,
-    "createdTimestamp": 1665762984247,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:sharedmobilityescooter",
-      "contractId": "escooterswiss-contract-definition:74ffb23c-8781-4edb-a716-10b2422afa2a",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/#!/f0fc5991-ffaa-42e0-b7ff-97c281cb28de",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "8266f500-11e4-4ddc-92ab-3034be838405",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1665646019559,
-    "createdTimestamp": 1665646003627,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:ethereum",
-      "contractId": "Ethereum-Offer:e305fa90-7f44-4d20-b1bf-7dd2aa1cf33c",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/573a7997-f99d-45c2-ba73-89dbee88c884",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "8dea2c3e-0565-4f44-9b90-a0513760e8f6",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1665641622734,
-    "createdTimestamp": 1665641618200,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:emissions",
-      "contractId": "emissions-end-of-the-year-offering:3401a040-5c10-47ae-8cd6-8c313b1bf141",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/573a7997-f99d-45c2-ba73-89dbee88c884",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "95ec8d52-55bb-42d4-8b31-8654a521b3e6",
-    "type": "PROVIDER",
-    "state": "INITIAL",
-    "stateTimestamp": 1669991241364,
-    "createdTimestamp": 1669991241364,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:methane-emissions-timeseries",
-      "contractId": "Methane-contract-definition:f38308ac-6048-4a7f-9c4d-605d6e1619fc",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/9faf3601-0086-427a-834c-f0dbe2083271",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "a5906d54-6d23-4b6e-9b5e-ce0f6a6a79a3",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1663861199193,
-    "createdTimestamp": 1663861195060,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:bitcoin2",
-      "contractId": "newdef:eb934d1f-6582-4bab-85e6-af19a76f7e2b",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/fc7f6e62-3da7-4e8a-bab4-c9bc35fd2a8c",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "ab87740e-8016-4f77-8433-7bd784057038",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1663862502244,
-    "createdTimestamp": 1663862500626,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:bitcoin2",
-      "contractId": "newdef:eb934d1f-6582-4bab-85e6-af19a76f7e2b",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/fc7f6e62-3da7-4e8a-bab4-c9bc35fd2a8c",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "aef4a5b8-872c-4ea7-9795-3a13762d6e38",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1663862540341,
-    "createdTimestamp": 1663862539169,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:bitcoin2",
-      "contractId": "newdef:eb934d1f-6582-4bab-85e6-af19a76f7e2b",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/fc7f6e62-3da7-4e8a-bab4-c9bc35fd2a8c",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "b1b09337-ff72-47ab-97f6-948fc47a749b",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1663862154945,
-    "createdTimestamp": 1663862152257,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:bitcoin2",
-      "contractId": "newdef:eb934d1f-6582-4bab-85e6-af19a76f7e2b",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/fc7f6e62-3da7-4e8a-bab4-c9bc35fd2a8c",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "b5acf6c9-ef4f-4c17-a9cd-21f6f6c1fce9",
-    "type": "PROVIDER",
-    "state": "ERROR",
-    "stateTimestamp": 1665584115779,
-    "createdTimestamp": 1665584107274,
-    "errorDetail": "Fatal error processing transfer request: b5acf6c9-ef4f-4c17-a9cd-21f6f6c1fce9. Error details: Failed to delegate data transfer to Data Plane: Failed to find data plane instance supporting request: 73b92180-fe0f-4d38-9c52-243ad67f10f7",
-    "dataRequest": {
-      "assetId": "urn:artifact:emissions",
-      "contractId": "my-def:cbffb0e5-47ce-4165-beb6-c7477bfd77ed",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/86b9b7e6-eb27-4c5f-b7e5-336d5f157f15",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "b841d90a-fa0d-4338-a6e6-105cb3fed586",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1663861655137,
-    "createdTimestamp": 1663861651666,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:bitcoin2",
-      "contractId": "newdef:eb934d1f-6582-4bab-85e6-af19a76f7e2b",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/fc7f6e62-3da7-4e8a-bab4-c9bc35fd2a8c",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "c0ea01e6-bd3d-4e4e-9f2b-61f2f2dcb409",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1663861751346,
-    "createdTimestamp": 1663861748350,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:bitcoin2",
-      "contractId": "newdef:eb934d1f-6582-4bab-85e6-af19a76f7e2b",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/fc7f6e62-3da7-4e8a-bab4-c9bc35fd2a8c",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "caa77598-37d6-4c2a-980f-ab3a235555b9",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1666613259931,
-    "createdTimestamp": 1666613252325,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:electrocharging",
-      "contractId": "charging-contract-time-restricted:e658135d-708e-43da-ab7d-fb12c92f8022",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://apps.apple.com/ch/app/voi-scooters-get-magic-wheels/id1395921017",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "d3e021dc-8045-4fc6-b67b-42b8ba4c3e6c",
-    "type": "PROVIDER",
-    "state": "INITIAL",
-    "stateTimestamp": 1671105075947,
-    "createdTimestamp": 1671105075947,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:chargingstationswalkthrough",
-      "contractId": "Charging-Stations-Walkthrough:ded2dc49-decc-4f00-8aac-c735b3ec196d",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/f5812eb0-d8c5-436f-bf3c-0c63df2a3cc5",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "d87a8eb2-8c93-4c9a-b435-f13a0d2626a8",
-    "type": "PROVIDER",
-    "state": "ERROR",
-    "stateTimestamp": 1665584150250,
-    "createdTimestamp": 1665584144809,
-    "errorDetail": "Fatal error processing transfer request: d87a8eb2-8c93-4c9a-b435-f13a0d2626a8. Error details: Failed to delegate data transfer to Data Plane: Failed to find data plane instance supporting request: 36236b8c-1a78-4fd6-b5dd-882f79c52fdb",
-    "dataRequest": {
-      "assetId": "urn:artifact:emissions",
-      "contractId": "my-def:cbffb0e5-47ce-4165-beb6-c7477bfd77ed",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/573a7997-f99d-45c2-ba73-89dbee88c884",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "da5efa6a-84f9-40f6-984c-eab44b53989a",
-    "type": "PROVIDER",
-    "state": "INITIAL",
-    "stateTimestamp": 1669983283389,
-    "createdTimestamp": 1669983283389,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:emissions",
-      "contractId": "emissions-end-of-the-year-offering:addc4818-fa4b-48b2-9fd7-18013ce7db83",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "dc7d74f4-7241-4bfc-a7c7-6ba6691c01f8",
-    "type": "PROVIDER",
-    "state": "INITIAL",
-    "stateTimestamp": 1671105204624,
-    "createdTimestamp": 1671105204624,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:chargingstationswalkthrough",
-      "contractId": "Charging-Stations-Walkthrough:ded2dc49-decc-4f00-8aac-c735b3ec196d",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/f5812eb0-d8c5-436f-bf3c-0c63df2a3cc5",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "e12e9c98-2a56-469c-95eb-50f51d447498",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1665641427954,
-    "createdTimestamp": 1665641420810,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:emissions",
-      "contractId": "emissions-end-of-the-year-offering:3401a040-5c10-47ae-8cd6-8c313b1bf141",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/b4583f23-78c6-4e12-b08f-b9664348f7b6",
-        "type": "HttpData"
-      }
-    }
-  },
-  {
-    "id": "f25baed9-fe47-4228-9af8-b06d0dfb452f",
-    "type": "PROVIDER",
-    "state": "IN_PROGRESS",
-    "stateTimestamp": 1665761041451,
-    "createdTimestamp": 1665761036642,
-    "errorDetail": null,
-    "dataRequest": {
-      "assetId": "urn:artifact:electrocharging",
-      "contractId": "charging-contract-time-restricted:e658135d-708e-43da-ab7d-fb12c92f8022",
-      "connectorId": "edc"
-    },
-    "dataDestination": {
-      "properties": {
-        "baseUrl": "https://webhook.site/#!/f0fc5991-ffaa-42e0-b7ff-97c281cb28de",
+        "baseUrl": "https://webhook.site/ab9ba683-77d3-4d66-9c79-03b9724927eb",
         "type": "HttpData"
       }
     }

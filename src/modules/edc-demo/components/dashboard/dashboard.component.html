@@ -2,23 +2,23 @@
   <div class="grow flex flex-col gap-[16px]">
     <div class="flex flex-row gap-[16px]">
       <mat-card style="width: calc(50% - 8px)">
-        <mat-card-title>Transfer Processes</mat-card-title>
-        <mat-card-subtitle>Incoming Data</mat-card-subtitle>
+        <mat-card-title>Incoming Data</mat-card-title>
+        <mat-card-subtitle>Transfer Processes</mat-card-subtitle>
         <div class="flex flex-row justify-center items-center">
           <edc-demo-dashboard-donut-chart
-            style="margin-bottom: 24px"
-            [data]="data.transfersChart"></edc-demo-dashboard-donut-chart>
+            [data]="
+              data.incomingTransfersChart
+            "></edc-demo-dashboard-donut-chart>
         </div>
       </mat-card>
 
       <mat-card style="width: calc(50% - 8px)">
-        <mat-card-title>Contract Agreements</mat-card-title>
-        <mat-card-subtitle>Incoming Data</mat-card-subtitle>
-        <div class="flex flex-row justify-evenly">
+        <mat-card-title>Outgoing Data</mat-card-title>
+        <mat-card-subtitle>Transfer Processes</mat-card-subtitle>
+        <div class="flex flex-row justify-center items-center">
           <edc-demo-dashboard-donut-chart
-            style="margin-bottom: 24px"
             [data]="
-              data.contractAgreementChart
+              data.outgoingTransfersChart
             "></edc-demo-dashboard-donut-chart>
         </div>
       </mat-card>
@@ -44,6 +44,11 @@
         style="flex: 1 1 0"
         label="Preconfigured Catalogs"
         [kpi]="data.numCatalogs"></edc-demo-dashboard-kpi-card>
+
+      <edc-demo-dashboard-kpi-card
+        style="flex: 1 1 0"
+        label="Contract Agreements"
+        [kpi]="data.numContractAgreements"></edc-demo-dashboard-kpi-card>
     </div>
   </div>
 

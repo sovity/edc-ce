@@ -15,8 +15,11 @@ import {Fetched} from '../../models/fetched';
 import {TransferProcessStates} from '../../models/transfer-process-states';
 import {CatalogApiUrlService} from '../../services/catalog-api-url.service';
 import {CatalogBrowserService} from '../../services/catalog-browser.service';
+import {TransferProcessUtils} from '../../services/transfer-process-utils';
+import {DonutChartData} from '../dashboard-donut-chart/donut-chart-data';
 import {ChartColorService} from './chart-color.service';
 import {DashboardData, defaultDashboardData} from './dashboard-data';
+
 
 @Injectable({providedIn: 'root'})
 export class DashboardDataService {
@@ -30,7 +33,9 @@ export class DashboardDataService {
     private transferProcessService: TransferProcessService,
     private assetService: AssetService,
     private chartColorService: ChartColorService,
-  ) {}
+    private transferProcessUtils: TransferProcessUtils,
+  ) {
+  }
 
   /**
    * Fetch {@link DashboardData}.
@@ -77,15 +82,11 @@ export class DashboardDataService {
 
   private contractAgreementKpis(): Observable<Partial<DashboardData>> {
     return this.contractAgreementService.getAllAgreements().pipe(
-      map((contractAgreements) =>
-        this.buildContractAgreementsChart(contractAgreements),
-      ),
+      map((contractAgreements) => contractAgreements.length),
       Fetched.wrap({
         failureMessage: 'Failed fetching contract agreements.',
       }),
-      map((contractAgreementChart) => ({
-        contractAgreementChart,
-      })),
+      map((numContractAgreements) => ({numContractAgreements})),
     );
   }
 
@@ -125,7 +126,7 @@ export class DashboardDataService {
     return of({
       connectorUrl: this.appConfigService.config.originator,
       connectorOrganization:
-        this.appConfigService.config.originatorOrganization,
+      this.appConfigService.config.originatorOrganization,
     });
   }
 
@@ -139,23 +140,25 @@ export class DashboardDataService {
 
   private transferProcessKpis(): Observable<Partial<DashboardData>> {
     return this.transferProcessService.getAllTransferProcesses().pipe(
-      map((transferData) => this.buildTransferChart(transferData)),
       Fetched.wrap({
         failureMessage: 'Failed fetching transfer processes.',
       }),
-      map((transfersChart) => ({transfersChart})),
+      map((transferData) => ({
+        incomingTransfersChart: transferData.map((it) =>
+          this.buildTransferChart(it, 'incoming'),
+        ),
+        outgoingTransfersChart: transferData.map((it) =>
+          this.buildTransferChart(it, 'outgoing'),
+        ),
+      })),
     );
   }
 
   private buildContractAgreementsChart(list: ContractAgreementDto[]) {
     const total = list.length;
-    const transferable = list.filter(
-      this.isTransferableContractAgreement,
-    ).length;
 
     const elements = [
-      {label: 'Transferable', amount: transferable},
-      {label: 'Not Transferable', amount: total - transferable},
+      {label: 'Contract Agreements (Incoming & Outgoing)', amount: total},
     ].filter((it) => it.amount != 0);
 
     return {
@@ -171,24 +174,43 @@ export class DashboardDataService {
     };
   }
 
-  private buildTransferChart(transfers: TransferProcessDto[]) {
+  private buildTransferChart(
+    transfers: TransferProcessDto[],
+    direction: 'incoming' | 'outgoing',
+  ): DonutChartData {
+    const filteredTransfers =
+      direction === 'incoming'
+        ? transfers.filter((it) => this.transferProcessUtils.isIncoming(it))
+        : transfers.filter((it) => this.transferProcessUtils.isOutgoing(it));
+
     // Use the keys of the TransferProcessesStates Enum as order
     const order = Object.keys(TransferProcessStates);
-    const states = [...new Set(transfers.map((it) => it.state))].sort(
+    const states = [...new Set(filteredTransfers.map((it) => it.state))].sort(
       (a, b) => order.indexOf(a) - order.indexOf(b),
     );
 
+    const colorsByState = new Map<string, string>()
+    colorsByState.set('IN_PROGRESS', '#7eb0d5');
+    colorsByState.set('ERROR', '#fd7f6f');
+    colorsByState.set('COMPLETED', '#b2e061');
+    const defaultColor = '#bd7ebe';
+
     const amountsByState = states.map(
-      (state) => transfers.filter((it) => it.state === state).length,
+      (state) => filteredTransfers.filter((it) => it.state === state).length,
     );
 
     return {
+      totalLabel: 'Total',
+      totalValue: filteredTransfers.length,
+      isEmpty: !filteredTransfers.length,
+      emptyMessage: `No ${direction} transfer processes.`,
+
       labels: states,
       datasets: [
         {
           label: 'Number of Transfer Processes',
           data: amountsByState,
-          backgroundColor: this.chartColorService.getColors(states.length, 0),
+          backgroundColor: states.map(it => colorsByState.get(it) ?? defaultColor),
         },
       ],
       options: {responsive: false},
