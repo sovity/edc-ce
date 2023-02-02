@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.1.1] - 2023-02-01
+## [1.2.0] - 2023-02-02
 
 ### Feature:
 - Add setting `POLICY_BROKER_BLACKLIST` to blacklist policies from being published to broker
