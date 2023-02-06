@@ -22,6 +22,10 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Fixed
 
+## [v0.0.1-milestone-7-sovity3] 06.02.2023
+
+### Fixed
+
 - Fixed dashboard splitting transfers and contract agreements in incoming /
   outgoing. Contract Agreements currently cannot be distinguished as incoming /
   outgoing.
