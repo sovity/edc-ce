@@ -227,7 +227,7 @@
 	"variable": [
 		{
 			"key": "data_management_url",
-			"value": "http://localhost:9191/api/v1/data",
+			"value": "http://localhost:11002/api/v1/data",
 			"type": "default"
 		},
 		{
