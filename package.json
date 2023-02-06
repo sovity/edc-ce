@@ -38,7 +38,7 @@
     "@angular/compiler-cli": "^14.2.12",
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@types/jasmine": "^4.3.1",
-    "@types/node": "^18.11.18",
+    "@types/node": "^18.11.19",
     "jasmine-core": "^4.5.0",
     "karma": "^6.4.1",
     "karma-chrome-launcher": "~3.1.0",
