@@ -4,7 +4,7 @@ To get started, a sample docker-compose file is located in the root folder.
 ## Configuration
 Settings required for this extension:
 
-- `EDC_CLEARINGHOUSE_LOG_URL`: https://clearing.dev.mobility-dataspace.eu/messages/log
+- `EDC_CLEARINGHOUSE_LOG_URL`: https://clearing.test.mobility-dataspace.eu/messages/log
 
 ## Logging
 

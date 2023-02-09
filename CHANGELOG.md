@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [x.x.x]
+
+### Fixed:
+- Set _test_ as default MDS environment (in docs and docker-compose)
+- Updated ports of Postman collection json file
+
 ## [1.2.0] - 2023-02-02
 
 ### Feature:
