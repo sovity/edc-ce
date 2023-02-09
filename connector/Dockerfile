@@ -20,6 +20,8 @@ RUN apt update \
     && rm -rf /var/cache/apt/archives /var/lib/apt/lists
 
 WORKDIR /app
+RUN echo "test"
+RUN echo $(ls)
 
 COPY --from=build /home/gradle/project/connector/build/libs/app.jar /app
 COPY ./connector/src/main/resources/logging.properties /app
