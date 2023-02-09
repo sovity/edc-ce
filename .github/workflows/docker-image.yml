@@ -33,7 +33,7 @@ jobs:
       - name: Store last commit's author, message and SHA
           run: |
             echo "Saving local commit details in src/assets/version.txt"
-            echo ls
+            echo $(ls)
 #            git log -1 > src/assets/config/version.txt
 
       - name: Log in to the Container registry

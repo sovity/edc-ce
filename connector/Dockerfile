@@ -4,7 +4,9 @@ ARG BUILD_ARGS
 
 COPY --chown=gradle:gradle . /home/gradle/project/
 WORKDIR /home/gradle/project/
+RUN echo $(ls)
 RUN gradle build --no-daemon $BUILD_ARGS
+RUN echo $(ls)
 
 # -buster is required to have apt available
 FROM openjdk:17-slim-buster
