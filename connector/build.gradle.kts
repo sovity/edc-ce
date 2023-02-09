@@ -18,6 +18,7 @@ dependencies {
         implementation("${edcGroup}:ids:${edcVersion}")
         implementation(project(":extensions:contract-agreement-transfer-api"))
     } else {
+        implementation(project(":extensions:version"))
         implementation(project(":extensions:broker"))
         implementation(project(":extensions:clearinghouse"))
         implementation(project(":extensions:policy-referring-connector"))
