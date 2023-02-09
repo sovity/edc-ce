@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [x.x.x]
+
+### Fixed:
+- Added unregister connector to puml diagram
+
 ## [1.2.0] - 2023-02-02
 
 ### Feature:
