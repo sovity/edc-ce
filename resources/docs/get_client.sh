@@ -31,7 +31,12 @@ fi
 
 SKI="$(grep -A1 "Subject Key Identifier"  "$TEMP_FILE" | tail -n 1 | tr -d ' ')"
 AKI="$(grep -A1 "Authority Key Identifier"  "$TEMP_FILE" | tail -n 1 | tr -d ' ')"
-echo "$SKI:$AKI"
+
+if [[ $AKI == "keyid"* ]]; then
+	echo "$SKI:$AKI"
+else
+	echo "$SKI:keyid:$AKI"
+fi
 
 rm "$TEMP_FILE"
 rm "$CRT_FILE"
