@@ -40,5 +40,11 @@ else de-register assets
     activate Broker
         Broker -> EDC: MessageProcessedNotificationMessage
     deactivate Broker
+else unregister connector
+    Actor -> EDC: Stop EDC
+    EDC -> Broker: ConnectorUnavailableMessage
+        activate Broker
+            Broker -> EDC: MessageProcessedNotificationMessage
+        deactivate Broker
 end
 @enduml

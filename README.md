@@ -34,12 +34,12 @@ To get started and run the extensions with an EDC, a sample docker-compose file 
 Common use case would be to not publish resources that have a REFERRING_CONNECTOR policy_
       
 #### MDS Environment Configuration
-The dev environment is set by default.
-- `EDC_BROKER_BASE_URL:` https://broker.dev.mobility-dataspace.eu
-- `EDC_CLEARINGHOUSE_LOG_URL`: https://clearing.dev.mobility-dataspace.eu/messages/log
+The mds-test environment is set by default.
+- `EDC_BROKER_BASE_URL:` https://broker.test.mobility-dataspace.eu
+- `EDC_CLEARINGHOUSE_LOG_URL`: https://clearing.test.mobility-dataspace.eu/messages/log
 - `EDC_OAUTH_CLIENT_ID:` _To be able to start an EDC-Connector with the broker-extensions, the `SKI` and `AKI` of the connector certificate must be entered as `client-ID` in the docker-compose and the .jks must be placed under the path specified in the docker-compose (in the example in the folder `resources/vault/edc/`, see `EDC_KEYSTORE` setting)._
-- `EDC_OAUTH_TOKEN_URL:` https://daps.dev.mobility-dataspace.eu/token
-- `EDC_OAUTH_PROVIDER_JWKS_URL:` https://daps.dev.mobility-dataspace.eu/jwks.json
+- `EDC_OAUTH_TOKEN_URL:` https://daps.test.mobility-dataspace.eu/token
+- `EDC_OAUTH_PROVIDER_JWKS_URL:` https://daps.test.mobility-dataspace.eu/jwks.json
 
 ### Start
 1. Login into GitHub Container Registry (GHCR): `$ docker login ghcr.io`.
