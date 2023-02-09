@@ -20,9 +20,7 @@ import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
-import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.spi.agent.ParticipantAgent;
-import org.eclipse.edc.spi.result.Result;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -30,6 +28,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Map;
 
+import static de.sovity.edc.extension.policy.AlwaysTruePolicyConstants.POLICY_DEFINITION_ID;
 import static java.util.Objects.requireNonNull;
 
 @ApiTest
@@ -39,10 +38,10 @@ class AlwaysTruePolicyExtensionTest {
     @Test
     void alwaysTruePolicyDef(PolicyEngine policyEngine, PolicyDefinitionService policyDefinitionService) {
         // arrange
-        PolicyDefinition alwaysTrue = alwaysTruePolicy(policyDefinitionService);
+        var alwaysTrue = alwaysTruePolicy(policyDefinitionService);
 
         // act
-        Result<Policy> result = policyEngine.evaluate(
+        var result = policyEngine.evaluate(
                 ContractDefinitionService.CATALOGING_SCOPE,
                 alwaysTrue.getPolicy(),
                 participantAgent()
@@ -54,8 +53,8 @@ class AlwaysTruePolicyExtensionTest {
 
     @NotNull
     private PolicyDefinition alwaysTruePolicy(PolicyDefinitionService policyDefinitionService) {
-        PolicyDefinition alwaysTrue = policyDefinitionService.findById(AlwaysTruePolicyConstants.POLICY_DEFINITION_ID);
-        requireNonNull(alwaysTrue, "Policy Definition does not exist: " + AlwaysTruePolicyConstants.POLICY_DEFINITION_ID);
+        var alwaysTrue = policyDefinitionService.findById(POLICY_DEFINITION_ID);
+        requireNonNull(alwaysTrue, "Policy Definition does not exist: " + POLICY_DEFINITION_ID);
         return alwaysTrue;
     }
 
