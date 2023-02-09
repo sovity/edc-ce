@@ -37,15 +37,15 @@ services:
       EDC_WEB_REST_CORS_ORIGINS: '*'
 
       EDC_VAULT: /resources/vault/edc/vault.properties
-      EDC_BROKER_BASE_URL: https://broker.dev.mobility-dataspace.eu
-      EDC_CLEARINGHOUSE_LOG_URL: https://clearing.dev.mobility-dataspace.eu/messages/log
+      EDC_BROKER_BASE_URL: https://broker.test.mobility-dataspace.eu
+      EDC_CLEARINGHOUSE_LOG_URL: https://clearing.test.mobility-dataspace.eu/messages/log
       EDC_KEYSTORE: /resources/vault/edc/keystore.jks
       EDC_KEYSTORE_PASSWORD: password
       EDC_OAUTH_PUBLIC_KEY_ALIAS: 1
       EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
       EDC_OAUTH_CLIENT_ID:
-      EDC_OAUTH_TOKEN_URL: https://daps.dev.mobility-dataspace.eu/token
-      EDC_OAUTH_PROVIDER_JWKS_URL: https://daps.dev.mobility-dataspace.eu/jwks.json
+      EDC_OAUTH_TOKEN_URL: https://daps.test.mobility-dataspace.eu/token
+      EDC_OAUTH_PROVIDER_JWKS_URL: https://daps.test.mobility-dataspace.eu/jwks.json
       EDC_OAUTH_PROVIDER_AUDIENCE: idsc:IDS_CONNECTORS_ALL
     ports:
       - '11001:11001'
