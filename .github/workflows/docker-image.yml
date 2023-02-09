@@ -34,7 +34,7 @@ jobs:
         run: |
           echo "Saving local commit details in src/assets/version.txt"
           echo $(ls)
-#            git log -1 > src/assets/config/version.txt
+          git log -1 > extensions/version/src/main/resources/version.txt
 
       - name: Log in to the Container registry
         uses: docker/login-action@v2
