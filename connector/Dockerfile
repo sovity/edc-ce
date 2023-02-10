@@ -4,9 +4,7 @@ ARG BUILD_ARGS
 
 COPY --chown=gradle:gradle . /home/gradle/project/
 WORKDIR /home/gradle/project/
-RUN echo $(ls)
 RUN gradle build --no-daemon $BUILD_ARGS
-RUN echo $(ls)
 
 # -buster is required to have apt available
 FROM openjdk:17-slim-buster
@@ -21,11 +19,8 @@ RUN apt update \
 
 WORKDIR /app
 
-
 COPY --from=build /home/gradle/project/connector/build/libs/app.jar /app
 COPY ./connector/src/main/resources/logging.properties /app
-RUN echo "test"
-RUN echo $(ls)
 
 EXPOSE 8181
 EXPOSE 9191
