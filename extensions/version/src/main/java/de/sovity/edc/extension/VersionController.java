@@ -25,6 +25,7 @@ public class VersionController {
         var is = classloader.getResourceAsStream("jar-last-commit-info.txt");
         var scanner = new Scanner(Objects.requireNonNull(is)).useDelimiter("\\A");
         var result = scanner.hasNext() ? scanner.next() : "";
+        //TODO: check for system-env last commit infroatmion, if present, append extension information
         monitor.info(result);
         return result;
     }
