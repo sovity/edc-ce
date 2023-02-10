@@ -10,11 +10,8 @@ plugins {
 dependencies {
     api("${edcGroup}:core-spi:${edcVersion}")
     api("${edcGroup}:control-plane-spi:${edcVersion}")
-    api("${edcGroup}:transfer-spi:${edcVersion}")
     implementation("${edcGroup}:api-core:${edcVersion}")
-    implementation("${edcGroup}:asset-api:${edcVersion}")
     implementation("${edcGroup}:data-management-api-configuration:${edcVersion}")
-    implementation("${edcGroup}:transfer-process-api:${edcVersion}")
 
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
