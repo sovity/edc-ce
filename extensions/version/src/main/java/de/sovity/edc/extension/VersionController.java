@@ -22,7 +22,7 @@ public class VersionController {
     @Path("/")
     public String getCommitInformation() {
         var classloader = Thread.currentThread().getContextClassLoader();
-        var is = classloader.getResourceAsStream("version.txt");
+        var is = classloader.getResourceAsStream("jar-last-commit-info.txt");
         var scanner = new Scanner(Objects.requireNonNull(is)).useDelimiter("\\A");
         var result = scanner.hasNext() ? scanner.next() : "";
         monitor.info(result);
