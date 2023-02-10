@@ -10,6 +10,7 @@ val edcGroup: String by project
 dependencies {
 
     if (project.hasProperty("dev-edc")) {
+        implementation(project(":extensions:version"))
         implementation("${edcGroup}:control-plane-core:${edcVersion}")
         implementation("${edcGroup}:api-observability:${edcVersion}")
         implementation("${edcGroup}:iam-mock:${edcVersion}")
