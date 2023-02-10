@@ -6,8 +6,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.edc.spi.monitor.Monitor;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Objects;
 import java.util.Scanner;
 
 @Produces({MediaType.APPLICATION_JSON})
@@ -21,16 +20,12 @@ public class VersionController {
 
     @GET
     @Path("/")
-    public String getCommitInformation() throws IOException {
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("version.txt");
-        Scanner s = new Scanner(is).useDelimiter("\\A");
-        String result = s.hasNext() ? s.next() : "";
+    public String getCommitInformation() {
+        var classloader = Thread.currentThread().getContextClassLoader();
+        var is = classloader.getResourceAsStream("version.txt");
+        var scanner = new Scanner(Objects.requireNonNull(is)).useDelimiter("\\A");
+        var result = scanner.hasNext() ? scanner.next() : "";
         monitor.info(result);
         return result;
-    }
-
-    private ClassLoader getContextClassLoader() {
-        return Thread.currentThread().getContextClassLoader();
     }
 }
