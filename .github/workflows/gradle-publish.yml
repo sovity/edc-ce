@@ -32,6 +32,12 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
+    - name: Store last commit's author, message and SHA
+      run: |
+        echo "Saving local commit details in src/assets/version.txt"
+        echo $(ls)
+        git log -1 > extensions/version/src/main/resources/version.txt
+
     - name: Build with Gradle
       uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef
       with:
