@@ -14,6 +14,7 @@
     </mat-chip>
     <input
       placeholder="Add keyword..."
+      [matChipInputAddOnBlur]="true"
       [matChipInputFor]="chipList"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       (matChipInputTokenEnd)="add($event)" />

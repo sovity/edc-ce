@@ -1,4 +1,4 @@
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {COMMA, ENTER, SEMICOLON} from '@angular/cdk/keycodes';
 import {Component, HostBinding, Input} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatChipInputEvent} from '@angular/material/chips';
@@ -9,7 +9,7 @@ import {removeOnce} from '../../utils/array-utils';
   templateUrl: 'keyword-select.component.html',
 })
 export class KeywordSelectComponent {
-  separatorKeysCodes: number[] = [ENTER, COMMA];
+  separatorKeysCodes: number[] = [ENTER, COMMA, SEMICOLON];
 
   @Input()
   label!: string;
@@ -26,10 +26,13 @@ export class KeywordSelectComponent {
   }
 
   add(event: MatChipInputEvent): void {
-    const keyword = (event.value || '').trim();
-    if (keyword) {
-      this.control.setValue([...this.control.value, keyword]);
+    const keywords = (event.value || '')
+      .split(/[,;]/)
+      .map((it) => it.trim())
+      .filter((it) => it);
+    if (keywords.length) {
+      this.control.setValue([...this.control.value, ...keywords]);
     }
-    event.chipInput!.clear();
+    event.chipInput.clear();
   }
 }
