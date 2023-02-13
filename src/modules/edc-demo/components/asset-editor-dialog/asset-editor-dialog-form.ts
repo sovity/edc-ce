@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ActiveFeatureSet} from '../../../app/config/active-feature-set';
+import {DataAddressType} from '../data-address-type-select/data-address-type';
 import {DataCategorySelectItem} from '../data-category-select/data-category-select-item';
 import {LanguageSelectItemService} from '../language-select/language-select-item.service';
 import {
   AssetEditorDialogFormModel,
   AssetEditorDialogFormValue,
 } from './asset-editor-dialog-form-model';
-import {DataAddressType} from './data-address-type';
 import {AssetAdvancedFormBuilder} from './model/asset-advanced-form-builder';
 import {AssetAdvancedFormModel} from './model/asset-advanced-form-model';
 import {AssetDatasourceFormBuilder} from './model/asset-datasource-form-builder';

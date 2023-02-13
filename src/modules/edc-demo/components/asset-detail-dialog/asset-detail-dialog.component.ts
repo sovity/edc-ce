@@ -79,7 +79,7 @@ export class AssetDetailDialog implements OnDestroy {
       maxWidth: '20%',
       data: dialogData,
     });
-    return ref.afterClosed().pipe(filter((it) => it));
+    return ref.afterClosed().pipe(filter((it) => !!it));
   }
 
   private blockingRequest<T>(opts: {

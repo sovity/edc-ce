@@ -72,7 +72,7 @@ export class CatalogBrowserComponent implements OnInit, OnDestroy {
     const data = AssetDetailDialogData.forContractOffer(contractOffer);
     const ref = this.matDialog.open(AssetDetailDialog, {data});
     ref.afterClosed().subscribe((result: AssetDetailDialogResult) => {
-      if (result.refreshList) {
+      if (result?.refreshList) {
         this.fetch$.next(null);
       }
     });

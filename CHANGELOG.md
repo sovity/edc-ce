@@ -25,7 +25,12 @@ the detailed section referring to by linking pull requests or issues.
 #### Removed
 
 #### Fixed
+
 - Placeholder URLs missing "/control/" path
+- Fixed Keyword select not adding keywords on input field blur, causing loss of
+  input.
+- Fixed transfer dialog submitting on cancel
+- Fixed transfer dialog validation not working
 
 ## [v0.0.1-milestone-7-sovity3] 06.02.2023
 

@@ -30,20 +30,29 @@ import {AppConfigService} from './config/app-config.service';
 
 @NgModule({
   imports: [
-    BrowserModule,
-    AppRoutingModule,
+    // Angular
     BrowserAnimationsModule,
-    LayoutModule,
-    MatToolbarModule,
+    BrowserModule,
+
+    // Angular Material
     MatButtonModule,
-    MatSidenavModule,
+    MatDatepickerModule,
     MatIconModule,
     MatListModule,
-    EdcDemoModule,
-    MatSnackBarModule,
-    MatDatepickerModule,
     MatNativeDateModule,
+    MatSidenavModule,
+    MatSnackBarModule,
+    MatToolbarModule,
+
+    // Third Party
     NgChartsModule.forRoot(),
+
+    // Feature Modules
+    EdcDemoModule,
+    LayoutModule,
+
+    // Routing
+    AppRoutingModule,
   ],
   declarations: [AppComponent, NavigationComponent],
   providers: [

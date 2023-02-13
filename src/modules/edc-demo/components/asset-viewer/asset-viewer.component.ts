@@ -64,7 +64,7 @@ export class AssetViewerComponent implements OnInit {
   onCreate() {
     const ref = this.dialog.open(AssetEditorDialog);
     ref.afterClosed().subscribe((result: AssetEditorDialogResult) => {
-      if (result.refreshList) {
+      if (result?.refreshList) {
         this.refresh();
       }
     });
@@ -77,7 +77,7 @@ export class AssetViewerComponent implements OnInit {
       maxHeight: '90vh',
     });
     ref.afterClosed().subscribe((result: AssetDetailDialogResult) => {
-      if (result.refreshList) {
+      if (result?.refreshList) {
         this.refresh();
       }
     });

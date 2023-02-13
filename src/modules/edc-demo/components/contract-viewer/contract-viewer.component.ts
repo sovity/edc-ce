@@ -2,22 +2,20 @@ import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import {from} from 'rxjs';
-import {filter, first, map, switchMap, tap} from 'rxjs/operators';
+import {filter, switchMap, tap} from 'rxjs/operators';
 import {
   AssetService,
   ContractAgreementDto,
   ContractAgreementService,
-  DataAddressDto,
   TransferId,
-  TransferProcessService,
 } from '../../../edc-dmgmt-client';
 import {Fetched} from '../../models/fetched';
 import {TransferProcessStates} from '../../models/transfer-process-states';
 import {CatalogBrowserService} from '../../services/catalog-browser.service';
 import {NotificationService} from '../../services/notification.service';
-import {
-  CatalogBrowserTransferDialog
-} from '../catalog-browser-transfer-dialog/catalog-browser-transfer-dialog.component';
+import {ContractAgreementTransferDialogData} from '../contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-data';
+import {ContractAgreementTransferDialogResult} from '../contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-result';
+import {ContractAgreementTransferDialog} from '../contract-agreement-transfer-dialog/contract-agreement-transfer-dialog.component';
 
 interface RunningTransferProcess {
   processId: string;
@@ -39,12 +37,10 @@ export class ContractViewerComponent implements OnInit {
     private contractAgreementService: ContractAgreementService,
     private assetService: AssetService,
     public dialog: MatDialog,
-    private transferService: TransferProcessService,
     private catalogService: CatalogBrowserService,
     private router: Router,
     private notificationService: NotificationService,
-  ) {
-  }
+  ) {}
 
   private static isFinishedState(state: string): boolean {
     return ['COMPLETED', 'ERROR', 'ENDED'].includes(state);
@@ -68,28 +64,16 @@ export class ContractViewerComponent implements OnInit {
   }
 
   onTransferClicked(contract: ContractAgreementDto) {
-    const dialogRef = this.dialog.open(CatalogBrowserTransferDialog);
+    const data: ContractAgreementTransferDialogData = {
+      contractId: contract.id,
+    };
+    const dialogRef = this.dialog.open(ContractAgreementTransferDialog, {data});
 
     dialogRef
       .afterClosed()
-      .pipe(
-        map((result) => result.dataDestination as DataAddressDto),
-        first(),
-        switchMap((dataAddressDto) =>
-          this.contractAgreementService.initiateTransfer(
-            contract.id,
-            dataAddressDto,
-          ),
-        ),
-      )
-      .subscribe({
-        next: (transferId) => {
-          this.startPolling(transferId, contract.id!);
-        },
-        error: (error) => {
-          console.error(error);
-          this.notificationService.showError('Error initiating transfer');
-        },
+      .pipe(filter((it) => !!it))
+      .subscribe((result: ContractAgreementTransferDialogResult) => {
+        this.startPolling(result.transferProcessId, result.contractId);
       });
   }
 

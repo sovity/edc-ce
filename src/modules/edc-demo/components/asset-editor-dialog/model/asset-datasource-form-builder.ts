@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {switchDisabledControls} from '../../../utils/form-group-utils';
 import {jsonValidator} from '../../../validators/json-validator';
 import {urlValidator} from '../../../validators/url-validator';
-import {DataAddressType} from '../data-address-type';
+import {DataAddressType} from '../../data-address-type-select/data-address-type';
 import {
   AssetDatasourceFormModel,
   AssetDatasourceFormValue,
@@ -43,8 +43,8 @@ export class AssetDatasourceFormBuilder {
       });
 
     switchDisabledControls<AssetDatasourceFormValue>(datasource, (value) => {
-      const customDatasourceJson =
-        value.dataAddressType === 'Custom-Datasource-Json';
+      const customDataAddressJson =
+        value.dataAddressType === 'Custom-Data-Address-Json';
 
       const http = value.dataAddressType === 'Http';
       const requestBody = !!value.httpRequestBodyEnabled;
@@ -59,7 +59,7 @@ export class AssetDatasourceFormBuilder {
         endpointDocumentation: true,
 
         // Custom Datasource JSON
-        dataDestination: customDatasourceJson,
+        dataDestination: customDataAddressJson,
 
         // Http Datasource Fields
         httpUrl: http,

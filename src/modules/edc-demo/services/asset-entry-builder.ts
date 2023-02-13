@@ -29,7 +29,7 @@ export class AssetEntryBuilder {
     datasource: AssetEditorDialogFormValue['datasource'],
   ): DataAddressDto {
     switch (datasource?.dataAddressType) {
-      case 'Custom-Datasource-Json':
+      case 'Custom-Data-Address-Json':
         return JSON.parse(datasource.dataDestination?.trim() ?? '');
       case 'Http':
         const httpDatasourceProperties =

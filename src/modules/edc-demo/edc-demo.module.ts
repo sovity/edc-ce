@@ -31,23 +31,18 @@ import {AssetDetailDialog} from './components/asset-detail-dialog/asset-detail-d
 import {AssetEditorDialog} from './components/asset-editor-dialog/asset-editor-dialog.component';
 import {AssetListComponent} from './components/asset-list/asset-list.component';
 import {AssetViewerComponent} from './components/asset-viewer/asset-viewer.component';
-import {
-  CatalogBrowserTransferDialog
-} from './components/catalog-browser-transfer-dialog/catalog-browser-transfer-dialog.component';
 import {CatalogBrowserComponent} from './components/catalog-browser/catalog-browser.component';
 import {ConfirmationDialogComponent} from './components/confirmation-dialog/confirmation-dialog.component';
-import {
-  ContractDefinitionEditorDialog
-} from './components/contract-definition-editor-dialog/contract-definition-editor-dialog.component';
-import {
-  ContractDefinitionViewerComponent
-} from './components/contract-definition-viewer/contract-definition-viewer.component';
+import {ContractAgreementTransferDialog} from './components/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog.component';
+import {ContractDefinitionEditorDialog} from './components/contract-definition-editor-dialog/contract-definition-editor-dialog.component';
+import {ContractDefinitionViewerComponent} from './components/contract-definition-viewer/contract-definition-viewer.component';
 import {ContractOfferIconComponent} from './components/contract-offer-icon/contract-offer-icon.component';
 import {ContractOfferListComponent} from './components/contract-offer-list/contract-offer-list.component';
 import {ContractViewerComponent} from './components/contract-viewer/contract-viewer.component';
 import {DashboardDonutChartComponent} from './components/dashboard-donut-chart/dashboard-donut-chart.component';
 import {DashboardKpiCardComponent} from './components/dashboard-kpi-card/dashboard-kpi-card.component';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
+import {DataAddressTypeSelectComponent} from './components/data-address-type-select/data-address-type-select.component';
 import {DataCategorySelectComponent} from './components/data-category-select/data-category-select.component';
 import {DataSubcategoryItemsPipe} from './components/data-subcategory-select/data-subcategory-items.pipe';
 import {DataSubcategorySelectComponent} from './components/data-subcategory-select/data-subcategory-select.component';
@@ -67,14 +62,19 @@ import {IsActiveFeaturePipe} from './pipes/is-active-feature.pipe';
 import {ReplacePipe} from './pipes/replace.pipe';
 import {SafePipe} from './pipes/safe.pipe';
 
-
 @NgModule({
   imports: [
-    ClipboardModule,
+    // Angular
     CommonModule,
-    FlexLayoutModule,
-    FormsModule,
     HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule,
+
+    // Angular CDK
+    ClipboardModule,
+
+    // Angular Material
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
@@ -96,9 +96,12 @@ import {SafePipe} from './pipes/safe.pipe';
     MatTableModule,
     MatTabsModule,
     MatTooltipModule,
+
+    // Angular Flex Layout (deprecated)
+    FlexLayoutModule,
+
+    // NgCharts
     NgChartsModule,
-    ReactiveFormsModule,
-    RouterModule,
   ],
   declarations: [
     AssetDetailDialog,
@@ -106,10 +109,8 @@ import {SafePipe} from './pipes/safe.pipe';
     AssetListComponent,
     AssetViewerComponent,
     CatalogBrowserComponent,
-    CatalogBrowserTransferDialog,
-    CatalogBrowserTransferDialog,
-    CatalogBrowserTransferDialog,
     ConfirmationDialogComponent,
+    ContractAgreementTransferDialog,
     ContractDefinitionEditorDialog,
     ContractDefinitionViewerComponent,
     ContractOfferIconComponent,
@@ -119,6 +120,7 @@ import {SafePipe} from './pipes/safe.pipe';
     DashboardComponent,
     DashboardDonutChartComponent,
     DashboardKpiCardComponent,
+    DataAddressTypeSelectComponent,
     DataCategorySelectComponent,
     DataSubcategoryItemsPipe,
     DataSubcategorySelectComponent,
@@ -149,5 +151,4 @@ import {SafePipe} from './pipes/safe.pipe';
     TransferHistoryViewerComponent,
   ],
 })
-export class EdcDemoModule {
-}
+export class EdcDemoModule {}

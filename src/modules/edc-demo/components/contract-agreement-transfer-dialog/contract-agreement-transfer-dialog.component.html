@@ -1,0 +1,59 @@
+<h1 mat-dialog-title>Initiate Transfer</h1>
+<mat-dialog-content class="w-[800px]">
+  <form [formGroup]="form.formGroup">
+    <ng-template matStepLabel>Datasource Information</ng-template>
+    <div class="flex flex-col mt-[10px]">
+      <!-- Data Address Type -->
+      <data-address-type-select
+        label="Datasink Type"
+        mode="Datasink"
+        [control]="
+          form.formGroup.controls.dataAddressType
+        "></data-address-type-select>
+
+      <!-- Datasink Config JSON (Json) -->
+      <mat-form-field
+        *ngIf="
+          form.dataAddressType === 'Custom-Data-Address-Json' &&
+            form.formGroup.controls.dataDestination;
+          let ctrl
+        "
+        color="accent">
+        <mat-label>Custom Datasink Config (JSON)</mat-label>
+        <textarea matInput [formControl]="ctrl" [placeholder]="'{}'"></textarea>
+        <mat-error *ngIf="ctrl.invalid && ctrl.errors?.jsonInvalid">
+          {{ validationMessages.invalidJsonMessage }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Source Endpoint (Rest-Api) -->
+      <mat-form-field
+        *ngIf="
+          form.dataAddressType === 'Http' && form.formGroup.controls.httpUrl;
+          let ctrl
+        "
+        class="form-field"
+        color="accent">
+        <mat-label>REST-API Endpoint (GET)</mat-label>
+        <input matInput [formControl]="ctrl" [placeholder]="'https://'" />
+        <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
+          {{ validationMessages.invalidUrlMessage }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="flex flex-row justify-end">
+  <button mat-dialog-close mat-button color="default" [disabled]="loading">
+    Cancel
+  </button>
+
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="!form.formGroup.valid || loading"
+    (click)="onSave()">
+    Create
+  </button>
+</mat-dialog-actions>

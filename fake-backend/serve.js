@@ -47,6 +47,13 @@ app.get('/api/v1/data/contractagreements', (req, res) => {
   res.json(contractAgreements);
 });
 
+app.post(
+  '/api/v1/data/contract-agreements-transfer/contractagreements/:contractAgreementId/transfer',
+  (req, res) => {
+    res.json('{}');
+  },
+);
+
 app.get('/api/v1/data/catalog', (req, res) => {
   let providerUrl = req.query.providerUrl;
   if (providerUrl === 'http://existing-other-connector/v1/ids/data') {
