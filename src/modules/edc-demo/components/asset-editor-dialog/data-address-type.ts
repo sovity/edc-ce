@@ -1,1 +1,1 @@
-export type DataAddressType = 'Json' | 'Rest-Api';
+export type DataAddressType = 'Custom-Datasource-Json' | 'Http';

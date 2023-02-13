@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {switchValidation} from '../../utils/form-group-utils';
+import {switchDisabledControlsByField} from '../../utils/form-group-utils';
 import {dateRangeRequired} from '../../validators/date-range-required';
 import {noWhitespaceValidator} from '../../validators/no-whitespace-validator';
 import {LanguageSelectItemService} from '../language-select/language-select-item.service';
@@ -41,24 +41,23 @@ export class NewPolicyDialogForm {
           'Connector-Restricted-Usage' as PolicyType,
           Validators.required,
         ],
-        range: this.formBuilder.group({
-          start: null as Date | null,
-          end: null as Date | null,
-        }),
-        connectorId: '',
+        range: this.formBuilder.group(
+          {
+            start: null as Date | null,
+            end: null as Date | null,
+          },
+          {validators: dateRangeRequired},
+        ),
+        connectorId: ['', Validators.required],
       });
 
     // Switch validation depending on selected policy type
-    switchValidation({
+    switchDisabledControlsByField({
       formGroup,
       switchCtrl: formGroup.controls.policyType,
-      validators: {
-        'Connector-Restricted-Usage': {
-          connectorId: Validators.required,
-        },
-        'Time-Period-Restricted': {
-          range: dateRangeRequired,
-        },
+      enabledControlsByValue: {
+        'Connector-Restricted-Usage': ['connectorId'],
+        'Time-Period-Restricted': ['range'],
       },
     });
 

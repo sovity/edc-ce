@@ -36,7 +36,7 @@ export class PolicyDefinitionBuilder {
 
   private buildConnectorRestrictedUsagePermission(
     formValue: NewPolicyDialogFormValue,
-  ) {
+  ): Permission {
     return {
       edctype: 'dataspaceconnector:permission',
       id: null,
@@ -61,7 +61,7 @@ export class PolicyDefinitionBuilder {
 
   private buildTimePeriodRestrictionPermission(
     formValue: NewPolicyDialogFormValue,
-  ) {
+  ): Permission {
     return {
       edctype: 'dataspaceconnector:permission',
       id: null,

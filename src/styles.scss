@@ -66,6 +66,14 @@ body {
   }
 }
 
+.section-title {
+  margin: 16px 3px;
+  text-transform: uppercase;
+  color: #373737;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+
 // hrefs
 .link {
   color: var(--link-color);
@@ -160,6 +168,10 @@ body {
 
 .mt-\[10px\] {
   margin-top: 10px;
+}
+
+.mb-\[10px\] {
+  margin-bottom: 10px;
 }
 
 .mt-\[50px\] {

@@ -4,7 +4,10 @@ import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
+import {
+  MAT_FORM_FIELD_DEFAULT_OPTIONS,
+  MatFormFieldDefaultOptions,
+} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -60,7 +63,10 @@ import {AppConfigService} from './config/app-config.service';
     MatDatepickerModule,
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-      useValue: {appearance: 'outline'},
+      useValue: {
+        appearance: 'outline',
+        color: 'accent',
+      } as MatFormFieldDefaultOptions,
     },
   ],
   bootstrap: [AppComponent],

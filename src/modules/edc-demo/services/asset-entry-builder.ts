@@ -1,11 +1,17 @@
 import {Injectable} from '@angular/core';
 import {AssetEntryDto, DataAddressDto} from '../../edc-dmgmt-client';
 import {AssetEditorDialogFormValue} from '../components/asset-editor-dialog/asset-editor-dialog-form-model';
+import {HttpDatasourceFormMapper} from '../components/asset-editor-dialog/model/http-datasource-form-mapper';
+import {HttpDatasourceProperties} from '../models/http-datasource-properties';
+import {removeNullValues} from '../utils/record-utils';
 import {AssetPropertyMapper} from './asset-property-mapper';
 
 @Injectable()
 export class AssetEntryBuilder {
-  constructor(private assetPropertyMapper: AssetPropertyMapper) {}
+  constructor(
+    private assetPropertyMapper: AssetPropertyMapper,
+    private httpDatasourceFormMapper: HttpDatasourceFormMapper,
+  ) {}
 
   /**
    * Build {@link AssetEntryDto} from {@link AssetEditorDialogFormValue}
@@ -14,9 +20,7 @@ export class AssetEntryBuilder {
    * @return asset create dto
    */
   buildAssetEntry(formValue: AssetEditorDialogFormValue): AssetEntryDto {
-    let properties = this.uncheckedCast(
-      this.assetPropertyMapper.buildProperties(formValue),
-    );
+    let properties = this.assetPropertyMapper.buildProperties(formValue);
     const dataAddress = this.buildDataAddressDto(formValue.datasource);
     return {asset: {properties}, dataAddress};
   }
@@ -25,13 +29,17 @@ export class AssetEntryBuilder {
     datasource: AssetEditorDialogFormValue['datasource'],
   ): DataAddressDto {
     switch (datasource?.dataAddressType) {
-      case 'Json':
+      case 'Custom-Datasource-Json':
         return JSON.parse(datasource.dataDestination?.trim() ?? '');
-      case 'Rest-Api':
+      case 'Http':
+        const httpDatasourceProperties =
+          this.httpDatasourceFormMapper.buildHttpDatasourceProperties(
+            datasource,
+          );
         return {
           properties: {
             type: 'HttpData',
-            baseUrl: datasource.baseUrl?.trim() ?? '',
+            ...this.encodeHttpDatasourceProperties(httpDatasourceProperties),
           },
         };
       default:
@@ -41,9 +49,23 @@ export class AssetEntryBuilder {
     }
   }
 
-  private uncheckedCast(
-    props: Record<string, string | null>,
+  private encodeHttpDatasourceProperties(
+    httpDatasource: HttpDatasourceProperties,
   ): Record<string, string> {
-    return props as Record<string, string>;
+    const props: Record<string, string | null> = {
+      baseUrl: httpDatasource.url,
+      method: httpDatasource.method,
+      body: httpDatasource.body,
+      contentType: httpDatasource.contentType,
+      authKey: httpDatasource.authHeaderName,
+      authCode: httpDatasource.authHeaderValue,
+      secretName: httpDatasource.authHeaderSecretName,
+      ...Object.fromEntries(
+        Object.entries(httpDatasource.headers).map(
+          ([headerName, headerValue]) => [`header:${headerName}`, headerValue],
+        ),
+      ),
+    };
+    return removeNullValues(props);
   }
 }

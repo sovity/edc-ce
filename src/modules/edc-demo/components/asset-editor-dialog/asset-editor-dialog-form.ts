@@ -1,31 +1,19 @@
 import {Injectable} from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
-import {concat, distinctUntilChanged, of, pairwise} from 'rxjs';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {ActiveFeatureSet} from '../../../app/config/active-feature-set';
-import {switchValidation} from '../../utils/form-group-utils';
-import {jsonValidator} from '../../validators/json-validator';
-import {noWhitespaceValidator} from '../../validators/no-whitespace-validator';
-import {requiresPrefixValidator} from '../../validators/requires-prefix-validator';
-import {urlValidator} from '../../validators/url-validator';
 import {DataCategorySelectItem} from '../data-category-select/data-category-select-item';
-import {DataSubcategorySelectItem} from '../data-subcategory-select/data-subcategory-select-item';
-import {LanguageSelectItem} from '../language-select/language-select-item';
 import {LanguageSelectItemService} from '../language-select/language-select-item.service';
-import {TransportModeSelectItem} from '../transport-mode-select/transport-mode-select-item';
 import {
-  AssetEditorDialogAdvancedFormModel,
-  AssetEditorDialogDatasourceFormModel,
   AssetEditorDialogFormModel,
   AssetEditorDialogFormValue,
-  AssetEditorDialogMetadataFormModel,
 } from './asset-editor-dialog-form-model';
 import {DataAddressType} from './data-address-type';
+import {AssetAdvancedFormBuilder} from './model/asset-advanced-form-builder';
+import {AssetAdvancedFormModel} from './model/asset-advanced-form-model';
+import {AssetDatasourceFormBuilder} from './model/asset-datasource-form-builder';
+import {AssetDatasourceFormModel} from './model/asset-datasource-form-model';
+import {AssetMetadataFormBuilder} from './model/asset-metadata-form-builder';
+import {AssetMetadataFormModel} from './model/asset-metadata-form-model';
 
 /**
  * Handles AngularForms for AssetEditorDialog
@@ -42,7 +30,7 @@ export class AssetEditorDialogForm {
   /**
    * FormGroup for stepper step "Advanced"
    */
-  advanced = this.all.controls.advanced;
+  advanced = this.all.controls.advanced!!;
 
   /**
    * FormGroup for stepper step "Data Source"
@@ -60,7 +48,7 @@ export class AssetEditorDialogForm {
    * Quick access to selected data category
    */
   get dataCategory(): DataCategorySelectItem | null {
-    return this.advanced.controls.dataCategory.value;
+    return this.advanced!!.controls.dataCategory.value;
   }
 
   /**
@@ -74,95 +62,40 @@ export class AssetEditorDialogForm {
     private formBuilder: FormBuilder,
     private languageSelectItemService: LanguageSelectItemService,
     private activeFeatureSet: ActiveFeatureSet,
+    private assetMetadataFormBuilder: AssetMetadataFormBuilder,
+    private assetAdvancedFormBuilder: AssetAdvancedFormBuilder,
+    private assetDatasourceFormBuilder: AssetDatasourceFormBuilder,
   ) {}
 
   buildFormGroup(): FormGroup<AssetEditorDialogFormModel> {
-    const validateIffMds = <T>(
-      x: [T, ValidatorFn | ValidatorFn[]],
-    ): [T, ValidatorFn | ValidatorFn[]] =>
-      this.activeFeatureSet.hasMdsFields() ? x : [x[0], []];
+    const metadata: FormGroup<AssetMetadataFormModel> =
+      this.assetMetadataFormBuilder.buildFormGroup();
 
-    const metadata: FormGroup<AssetEditorDialogMetadataFormModel> =
+    const datasource: FormGroup<AssetDatasourceFormModel> =
+      this.assetDatasourceFormBuilder.buildFormGroup();
+
+    const formGroup: FormGroup<AssetEditorDialogFormModel> =
       this.formBuilder.nonNullable.group({
-        id: [
-          '',
-          [
-            Validators.required,
-            noWhitespaceValidator,
-            requiresPrefixValidator('urn:artifact:'),
-          ],
-        ],
-        name: ['', Validators.required],
-        version: '',
-        contenttype: '',
-        description: '',
-        keywords: [new Array<string>()],
-        language:
-          this.languageSelectItemService.english() as LanguageSelectItem | null,
+        metadata,
+        datasource,
       });
 
-    // generate id from names
-    this.initIdGeneration(metadata.controls.id, metadata.controls.name);
+    if (this.activeFeatureSet.hasMdsFields()) {
+      const advanced: FormGroup<AssetAdvancedFormModel> =
+        this.assetAdvancedFormBuilder.buildFormGroup();
+      formGroup.addControl('advanced', advanced);
+    }
 
-    const advanced: FormGroup<AssetEditorDialogAdvancedFormModel> =
-      this.formBuilder.nonNullable.group({
-        dataModel: '',
-        dataCategory: validateIffMds([
-          null as DataCategorySelectItem | null,
-          Validators.required,
-        ]),
-        dataSubcategory: null as DataSubcategorySelectItem | null,
-        transportMode: null as TransportModeSelectItem | null,
-        geoReferenceMethod: '',
-      });
-
-    const datasource: FormGroup<AssetEditorDialogDatasourceFormModel> =
-      this.formBuilder.nonNullable.group({
-        dataAddressType: 'Json' as DataAddressType,
-        dataDestination: '',
-        baseUrl: ['', urlValidator],
-        publisher: ['', urlValidator],
-        standardLicense: ['', urlValidator],
-        endpointDocumentation: ['', urlValidator],
-      });
-
-    // Switch validation depending on selected datasource type
-    switchValidation({
-      formGroup: datasource,
-      switchCtrl: datasource.controls.dataAddressType,
-      validators: {
-        Json: {
-          dataDestination: [Validators.required, jsonValidator],
-        },
-        'Rest-Api': {
-          baseUrl: [Validators.required, urlValidator],
-        },
-      },
-    });
-
-    return this.formBuilder.nonNullable.group({
-      metadata,
-      advanced,
-      datasource,
-    });
+    return formGroup;
   }
 
-  private initIdGeneration(id: FormControl<string>, name: FormControl<string>) {
-    concat(of(name.value), name.valueChanges)
-      .pipe(distinctUntilChanged(), pairwise())
-      .subscribe(([previousName, currentName]) => {
-        if (!id.value || id.value == this.generateId(previousName)) {
-          // Generate ID, but leave field untouched if it was edited
-          id.setValue(this.generateId(currentName));
-        }
-      });
+  onHttpHeadersAddClick() {
+    this.datasource.controls.httpHeaders.push(
+      this.assetDatasourceFormBuilder.buildHeaderFormGroup(),
+    );
   }
 
-  private generateId(name: string) {
-    const normalizedName = name
-      .replace(':', '')
-      .replaceAll(' ', '-')
-      .toLowerCase();
-    return `urn:artifact:${normalizedName}`;
+  onHttpHeadersRemoveClick(index: number) {
+    this.datasource.controls.httpHeaders.removeAt(index);
   }
 }

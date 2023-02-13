@@ -8,19 +8,30 @@ import {NotificationService} from '../../services/notification.service';
 import {ValidationMessages} from '../../validators/validation-messages';
 import {AssetEditorDialogForm} from './asset-editor-dialog-form';
 import {AssetEditorDialogResult} from './asset-editor-dialog-result';
+import {AssetAdvancedFormBuilder} from './model/asset-advanced-form-builder';
+import {AssetDatasourceFormBuilder} from './model/asset-datasource-form-builder';
+import {AssetMetadataFormBuilder} from './model/asset-metadata-form-builder';
 
 @Component({
   selector: 'edc-demo-asset-editor-dialog',
   templateUrl: './asset-editor-dialog.component.html',
-  providers: [AssetEditorDialogForm, AssetEntryBuilder],
+  providers: [
+    AssetAdvancedFormBuilder,
+    AssetDatasourceFormBuilder,
+    AssetEditorDialogForm,
+    AssetEntryBuilder,
+    AssetMetadataFormBuilder,
+  ],
 })
 export class AssetEditorDialog implements OnDestroy {
   loading = false;
 
+  methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'];
+
   constructor(
     public form: AssetEditorDialogForm,
     public validationMessages: ValidationMessages,
-    private assetEntryDtoBuilder: AssetEntryBuilder,
+    private assetEntryBuilder: AssetEntryBuilder,
     private notificationService: NotificationService,
     private assetService: AssetService,
     private dialogRef: MatDialogRef<AssetEditorDialog>,
@@ -28,7 +39,7 @@ export class AssetEditorDialog implements OnDestroy {
 
   onSave() {
     const formValue = this.form.value;
-    const assetEntryDto = this.assetEntryDtoBuilder.buildAssetEntry(formValue);
+    const assetEntryDto = this.assetEntryBuilder.buildAssetEntry(formValue);
 
     this.form.all.disable();
     this.loading = true;

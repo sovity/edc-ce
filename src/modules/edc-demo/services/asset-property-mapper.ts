@@ -7,6 +7,7 @@ import {DataSubcategorySelectItemService} from '../components/data-subcategory-s
 import {LanguageSelectItemService} from '../components/language-select/language-select-item.service';
 import {TransportModeSelectItemService} from '../components/transport-mode-select/transport-mode-select-item.service';
 import {Asset} from '../models/asset';
+import {removeNullValues} from '../utils/record-utils';
 import {trimmedOrNull} from '../utils/string-utils';
 import {AssetProperties} from './asset-properties';
 
@@ -78,7 +79,7 @@ export class AssetPropertyMapper {
 
   buildProperties(
     formValue: AssetEditorDialogFormValue,
-  ): Record<string, string | null> {
+  ): Record<string, string> {
     const {metadata, advanced, datasource} = formValue;
     const props: Record<string, string | null> = {};
     props[AssetProperties.id] = trimmedOrNull(metadata?.id);
@@ -93,7 +94,7 @@ export class AssetPropertyMapper {
     props[AssetProperties.keywords] = trimmedOrNull(
       metadata?.keywords?.join(', '),
     );
-    props[AssetProperties.contentType] = trimmedOrNull(metadata?.contenttype);
+    props[AssetProperties.contentType] = trimmedOrNull(metadata?.contentType);
     props[AssetProperties.description] = trimmedOrNull(metadata?.description);
     props[AssetProperties.language] = metadata?.language?.id ?? null;
 
@@ -116,14 +117,6 @@ export class AssetPropertyMapper {
       props[AssetProperties.transportMode] =
         advanced?.transportMode?.id ?? null;
     }
-    return this.removeNullValues(props);
-  }
-
-  private removeNullValues(
-    obj: Record<string, string | null>,
-  ): Record<string, string> {
-    return Object.fromEntries(
-      Object.entries(obj).filter(([_, v]) => v != null) as [string, string][],
-    );
+    return removeNullValues(props);
   }
 }

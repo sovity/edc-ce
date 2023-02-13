@@ -16,6 +16,9 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
+- Additional Http Datasource Properties: method, content type, request body,
+  auth header/value, headers
+
 #### Changed
 
 #### Removed
