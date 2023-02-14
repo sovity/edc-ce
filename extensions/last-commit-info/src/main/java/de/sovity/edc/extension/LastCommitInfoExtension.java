@@ -28,7 +28,6 @@ public class LastCommitInfoExtension implements ServiceExtension {
     private DataManagementApiConfiguration config;
     @Inject
     private WebService webService;
-    private Monitor monitor;
 
 
     @Override
@@ -38,11 +37,8 @@ public class LastCommitInfoExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        monitor = context.getMonitor();
         var lastCommitInfoService = new LastCommitInfoService(context);
-        var controller = new LastCommitInfoController(monitor, lastCommitInfoService);
+        var controller = new LastCommitInfoController(lastCommitInfoService);
         webService.registerResource(config.getContextAlias(), controller);
-
     }
-
 }
