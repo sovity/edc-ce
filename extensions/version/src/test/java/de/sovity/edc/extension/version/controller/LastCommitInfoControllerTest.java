@@ -29,7 +29,7 @@ import static org.hamcrest.Matchers.containsString;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
-public class LastCommitInfoControllerTest {
+class LastCommitInfoControllerTest {
 
     private final int dataPort = getFreePort();
     private final String authKey = "123456";
