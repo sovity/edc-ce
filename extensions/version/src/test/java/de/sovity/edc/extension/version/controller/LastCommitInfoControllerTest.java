@@ -29,7 +29,7 @@ import static org.hamcrest.Matchers.containsString;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
-public class VersionControllerTest {
+public class LastCommitInfoControllerTest {
 
     private final int dataPort = getFreePort();
     private final String authKey = "123456";
@@ -52,7 +52,7 @@ public class VersionControllerTest {
                 .header("x-api-key", authKey)
                 .when()
                 .contentType(ContentType.TEXT)
-                .get(String.format("/version"))
+                .get(String.format("/last-commit-info"))
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON);
