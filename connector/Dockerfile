@@ -3,9 +3,6 @@ FROM gradle:7.6.0-jdk17 AS build
 ARG EDC_LAST_COMMIT_INFO="The GitHub Pipeline will replace this string during build time with the commit information (SHA, author and commit message) of the built image."
 ARG BUILD_ARGS
 
-ENV EDC_LAST_COMMIT_INFO_ENV=$EDC_LAST_COMMIT_INFO
-RUN echo $EDC_LAST_COMMIT_INFO_ENV
-
 COPY --chown=gradle:gradle . /home/gradle/project/
 WORKDIR /home/gradle/project/
 RUN gradle build --no-daemon $BUILD_ARGS
@@ -39,6 +36,7 @@ ENV WEB_HTTP_DATA_PORT="9191"
 ENV WEB_HTTP_DATA_PATH="/api/v1/data"
 ENV WEB_HTTP_IDS_PORT="8282"
 ENV WEB_HTTP_IDS_PATH="/api/v1/ids"
+ENV EDC_LAST_COMMIT_INFO_ENV=$EDC_LAST_COMMIT_INFO
 
 # Use "exec" for graceful termination (SIGINT) to reach JVM.
 # ARG can not be used in ENTRYPOINT so storing values in ENV variables
