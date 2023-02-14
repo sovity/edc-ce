@@ -34,9 +34,9 @@ jobs:
         id: last-commit-information
         run: |
           echo "Saving local commit details."
-          echo "LAST_COMMIT_INFORMATION<<EOF" >> $GITHUB_ENV
-          export LAST_COMMIT_INFORMATION=$(git log -1)
-          echo "$LAST_COMMIT_INFORMATION" >> $GITHUB_ENV
+          echo "LAST_COMMIT_INFO<<EOF" >> $GITHUB_ENV
+          export LAST_COMMIT_INFO=$(git log -1)
+          echo "$LAST_COMMIT_INFO" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Log in to the Container registry
@@ -70,4 +70,4 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BUILD_ARGS=${{ matrix.imageVariants.buildArgs }}
-            EDC_LAST_COMMIT_INFO="${{env.LAST_COMMIT_INFORMATION}}"
+            EDC_LAST_COMMIT_INFO="${{env.LAST_COMMIT_INFO}}"
