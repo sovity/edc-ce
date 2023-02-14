@@ -79,4 +79,4 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BUILD_ARGS=${{ matrix.imageVariants.buildArgs }}
-            EDC_LAST_COMMIT_INFO="{{env.LAST_COMMIT_INFORMATION}}"
+            EDC_LAST_COMMIT_INFO="${{env.LAST_COMMIT_INFORMATION}}"
