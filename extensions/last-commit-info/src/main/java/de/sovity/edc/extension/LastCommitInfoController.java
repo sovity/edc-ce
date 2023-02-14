@@ -33,11 +33,4 @@ public class LastCommitInfoController {
     public String getLastCommitInformation() {
         return lastCommitInfoService.getLastCommitInfo();
     }
-
-    @GET
-    @Path("/env")
-    public String getLastEnvCommitInformation() {
-        return lastCommitInfoService.getEnvLastCommitInfo();
-    }
-
 }

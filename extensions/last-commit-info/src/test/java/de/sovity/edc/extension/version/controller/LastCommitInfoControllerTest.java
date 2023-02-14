@@ -42,7 +42,7 @@ class LastCommitInfoControllerTest {
                 "web.http.data.port", String.valueOf(dataPort),
                 "web.http.data.path", "/api/v1/data",
                 "edc.api.auth.key", authKey,
-                "edc.last.commit.info.env", "Will be set by pipeline."));
+                "edc.last.commit.info", "Will be set by pipeline. Will contain ENV variable"));
     }
 
     @Test
@@ -58,6 +58,7 @@ class LastCommitInfoControllerTest {
                 .statusCode(200)
                 .contentType(ContentType.JSON);
         request.assertThat().body(containsString("Pipeline"));
+
     }
 
     @Test
@@ -68,10 +69,11 @@ class LastCommitInfoControllerTest {
                 .header("x-api-key", authKey)
                 .when()
                 .contentType(ContentType.TEXT)
-                .get(String.format("/last-commit-info/env"))
+                .get(String.format("/last-commit-info"))
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON);
-        request.assertThat().body(containsString("pipeline"));
+        request.assertThat().body(containsString("ENV"));
+
     }
 }
