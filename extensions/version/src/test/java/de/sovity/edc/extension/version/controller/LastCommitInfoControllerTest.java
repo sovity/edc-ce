@@ -61,7 +61,7 @@ class LastCommitInfoControllerTest {
     }
 
     @Test
-    void testEnvLastCommitInfo(){
+    void testEnvLastCommitInfo() {
         var request = given()
                 .baseUri("http://localhost:" + dataPort)
                 .basePath("/api/v1/data")
