@@ -3,8 +3,9 @@ FROM gradle:7.6.0-jdk17 AS build
 ARG EDC_LAST_COMMIT_INFO="The GitHub Pipeline will replace this string during build time with the commit information (SHA, author and commit message) of the built image."
 ARG BUILD_ARGS
 
+ENV EDC_LAST_COMMIT_INFO_ENV=$EDC_LAST_COMMIT_INFO
 RUN echo "Args: "
-RUN echo $EDC_LAST_COMMTI_INFO
+RUN echo $EDC_LAST_COMMIT_INFO_ENV
 RUN echo $BUILD_ARGS
 
 COPY --chown=gradle:gradle . /home/gradle/project/
