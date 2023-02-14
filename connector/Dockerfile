@@ -4,9 +4,7 @@ ARG EDC_LAST_COMMIT_INFO="The GitHub Pipeline will replace this string during bu
 ARG BUILD_ARGS
 
 ENV EDC_LAST_COMMIT_INFO_ENV=$EDC_LAST_COMMIT_INFO
-RUN echo "Args: "
 RUN echo $EDC_LAST_COMMIT_INFO_ENV
-RUN echo $BUILD_ARGS
 
 COPY --chown=gradle:gradle . /home/gradle/project/
 WORKDIR /home/gradle/project/
