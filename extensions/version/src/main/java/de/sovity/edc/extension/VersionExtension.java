@@ -11,6 +11,7 @@
  *       sovity GmbH - initial API and implementation
  *
  */
+
 package de.sovity.edc.extension;
 
 import org.eclipse.edc.connector.api.datamanagement.configuration.DataManagementApiConfiguration;
