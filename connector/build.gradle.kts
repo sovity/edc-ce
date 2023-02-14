@@ -17,6 +17,7 @@ dependencies {
         implementation("${edcGroup}:auth-tokenbased:${edcVersion}")
         implementation("${edcGroup}:data-management-api:${edcVersion}")
         implementation("${edcGroup}:ids:${edcVersion}")
+        implementation(project(":extensions:policy-always-true"))
         implementation(project(":extensions:contract-agreement-transfer-api"))
     } else {
         implementation(project(":extensions:version"))
@@ -25,6 +26,7 @@ dependencies {
         implementation(project(":extensions:policy-referring-connector"))
         implementation(project(":extensions:policy-time-interval"))
         implementation(project(":extensions:contract-agreement-transfer-api"))
+        implementation(project(":extensions:policy-always-true"))
         implementation("${edcGroup}:control-plane-core:${edcVersion}")
         implementation("${edcGroup}:api-observability:${edcVersion}")
         implementation("${edcGroup}:data-management-api:${edcVersion}")
