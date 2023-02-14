@@ -37,7 +37,7 @@ jobs:
           echo 'LAST_COMMIT_INFORMATION<<EOF' >> $GITHUB_OUTPUT
           export INFORMATION=$(git log -1)
           echo "$INFORMATION" >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Log in to the Container registry
         uses: docker/login-action@v2
