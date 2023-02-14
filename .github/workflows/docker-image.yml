@@ -34,7 +34,7 @@ jobs:
         id: last-commit-information
         run: |
           echo "Saving local commit details."
-          echo 'LAST_COMMIT_INFORMATION<<EOF' >> $GITHUB_OUTPUT
+          echo 'LAST_COMMIT_INFORMATION<<EOF' >> $GITHUB_ENV
           export INFORMATION=$(git log -1)
           echo "$INFORMATION" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
