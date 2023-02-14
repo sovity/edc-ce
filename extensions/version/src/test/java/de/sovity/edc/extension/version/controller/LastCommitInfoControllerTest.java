@@ -41,11 +41,12 @@ public class LastCommitInfoControllerTest {
                 "web.http.path", "/api",
                 "web.http.data.port", String.valueOf(dataPort),
                 "web.http.data.path", "/api/v1/data",
-                "edc.api.auth.key", authKey));
+                "edc.api.auth.key", authKey,
+                "edc.last.commit.info.env", "Will be set by pipeline."));
     }
 
     @Test
-    void startTransferProcessForAgreementId() {
+    void testJarLastCommitInfo() {
         var request = given()
                 .baseUri("http://localhost:" + dataPort)
                 .basePath("/api/v1/data")
@@ -57,5 +58,20 @@ public class LastCommitInfoControllerTest {
                 .statusCode(200)
                 .contentType(ContentType.JSON);
         request.assertThat().body(containsString("Pipeline"));
+    }
+
+    @Test
+    void testEnvLastCommitInfo(){
+        var request = given()
+                .baseUri("http://localhost:" + dataPort)
+                .basePath("/api/v1/data")
+                .header("x-api-key", authKey)
+                .when()
+                .contentType(ContentType.TEXT)
+                .get(String.format("/last-commit-info/env"))
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON);
+        request.assertThat().body(containsString("pipeline"));
     }
 }

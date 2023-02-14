@@ -7,10 +7,10 @@ import java.util.Scanner;
 
 public class LastCommitInfoService {
 
-    private final String envLastCommitInfo;
+    private final ServiceExtensionContext context;
 
     public LastCommitInfoService(ServiceExtensionContext context) {
-        envLastCommitInfo = context.getSetting("edc.last.commit.info.env", "");
+        this.context = context;
     }
 
     public String getLastCommitInfo(){
@@ -29,7 +29,6 @@ public class LastCommitInfoService {
     }
 
     public String getEnvLastCommitInfo() {
-        return envLastCommitInfo;
+        return context.getSetting("edc.last.commit.info.env", "");
     }
-
 }

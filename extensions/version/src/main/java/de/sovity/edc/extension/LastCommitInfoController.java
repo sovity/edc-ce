@@ -26,4 +26,12 @@ public class LastCommitInfoController {
         return result;
     }
 
+    @GET
+    @Path("/env")
+    public String getLastEnvCommitInformation() {
+        String result = lastCommitInfoService.getEnvLastCommitInfo();
+        monitor.info(result);
+        return result;
+    }
+
 }
