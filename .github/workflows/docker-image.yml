@@ -35,7 +35,8 @@ jobs:
         run: |
           echo "Saving local commit details."
           echo 'LAST_COMMIT_INFORMATION<<EOF' >> $GITHUB_OUTPUT
-          echo "$(git log -1)" >> $GITHUB_ENV
+          export INFORMATION=$(git log -1)
+          echo "$INFORMATION" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_OUTPUT
 
       - name: Log in to the Container registry
