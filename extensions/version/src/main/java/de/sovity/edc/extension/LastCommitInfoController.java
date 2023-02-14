@@ -35,7 +35,7 @@ public class LastCommitInfoController {
     @GET
     @Path("/")
     public String getLastCommitInformation() {
-        String result = lastCommitInfoService.getLastCommitInfo();
+        var result = lastCommitInfoService.getLastCommitInfo();
         monitor.info(result);
         return result;
     }
@@ -43,7 +43,7 @@ public class LastCommitInfoController {
     @GET
     @Path("/env")
     public String getLastEnvCommitInformation() {
-        String result = lastCommitInfoService.getEnvLastCommitInfo();
+        var result = lastCommitInfoService.getEnvLastCommitInfo();
         monitor.info(result);
         return result;
     }
