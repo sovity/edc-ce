@@ -1,6 +1,8 @@
 FROM gradle:7.6.0-jdk17 AS build
 
-ARG EDC_LAST_COMMIT_INFO="The GitHub Pipeline will replace this string during build time with the commit information (SHA, author and commit message) of the built image."
+# Github pipeline sets this to the last commit information.
+# This build arg is later converted to an ENV variable, since the github action didn't support ENVs we used build args.
+ARG EDC_LAST_COMMIT_INFO_ENV="The docker container was built outside of github actions and you didn't provide the build arg EDC_LAST_COMMIT_INFO_ARG, so there's no last commit info."
 ARG BUILD_ARGS
 
 COPY --chown=gradle:gradle . /home/gradle/project/
@@ -36,7 +38,7 @@ ENV WEB_HTTP_DATA_PORT="9191"
 ENV WEB_HTTP_DATA_PATH="/api/v1/data"
 ENV WEB_HTTP_IDS_PORT="8282"
 ENV WEB_HTTP_IDS_PATH="/api/v1/ids"
-ENV EDC_LAST_COMMIT_INFO_ENV=$EDC_LAST_COMMIT_INFO
+ENV EDC_LAST_COMMIT_INFO=$EDC_LAST_COMMIT_INFO_ENV
 
 # Use "exec" for graceful termination (SIGINT) to reach JVM.
 # ARG can not be used in ENTRYPOINT so storing values in ENV variables

@@ -43,6 +43,6 @@ public class LastCommitInfoService {
     }
 
     public String getEnvLastCommitInfo() {
-        return context.getSetting("edc.last.commit.info.env", "");
+        return context.getSetting("edc.last.commit.info", "");
     }
 }
