@@ -21,9 +21,9 @@ import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.web.spi.WebService;
 
-public class VersionExtension implements ServiceExtension {
+public class LastCommitInfoExtension implements ServiceExtension {
 
-    public static final String BROKER_EXTENSION = "VersionExtension";
+    public static final String EXTENSION_NAME = "LastCommitInfoExtension";
     @Inject
     private DataManagementApiConfiguration config;
     @Inject
@@ -33,7 +33,7 @@ public class VersionExtension implements ServiceExtension {
 
     @Override
     public String name() {
-        return BROKER_EXTENSION;
+        return EXTENSION_NAME;
     }
 
     @Override
