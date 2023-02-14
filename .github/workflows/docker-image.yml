@@ -33,8 +33,10 @@ jobs:
       - name: Store last commit's author, message and SHA
         id: last-commit-information
         run: |
-          echo "Saving local commit details in src/assets/version.txt"
-          echo "LAST_COMMIT_INFORMATION=$(git log -1)<<EOFMARKER" >> $GITHUB_ENV
+          echo "Saving local commit details."
+          echo 'LAST_COMMIT_INFORMATION<<EOF' >> $GITHUB_OUTPUT
+          echo "$(git log -1)" >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_OUTPUT
 
       - name: Log in to the Container registry
         uses: docker/login-action@v2
