@@ -1,12 +1,24 @@
 package de.sovity.edc.extension;
 
+import org.eclipse.edc.spi.system.ServiceExtensionContext;
+
 import java.util.Objects;
 import java.util.Scanner;
 
 public class LastCommitInfoService {
 
+    private final String envLastCommitInfo;
+
+    public LastCommitInfoService(ServiceExtensionContext context) {
+        envLastCommitInfo = context.getSetting("edc.last.commit.info.env", "");
+    }
+
     public String getLastCommitInfo(){
-        return null;
+        var result = "Env Last Commit Info: \n";
+        result += getEnvLastCommitInfo() + "\n";
+        result += "Jar Last Commit Info: \n";
+        result += getJarLastCommitInfo();
+        return result;
     }
 
     public String getJarLastCommitInfo() {
@@ -17,7 +29,7 @@ public class LastCommitInfoService {
     }
 
     public String getEnvLastCommitInfo() {
-        return null;
+        return envLastCommitInfo;
     }
 
 }

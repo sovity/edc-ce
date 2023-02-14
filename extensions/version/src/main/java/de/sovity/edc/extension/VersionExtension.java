@@ -38,8 +38,7 @@ public class VersionExtension implements ServiceExtension {
     @Override
     public void initialize(ServiceExtensionContext context) {
         monitor = context.getMonitor();
-        var lastCommitInfoService = new LastCommitInfoService();
-        monitor.info("--- initialized version extension ---");
+        var lastCommitInfoService = new LastCommitInfoService(context);
         var controller = new LastCommitInfoController(monitor, lastCommitInfoService);
         webService.registerResource(config.getContextAlias(), controller);
 
