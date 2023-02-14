@@ -13,7 +13,7 @@ public class LastCommitInfoService {
         this.context = context;
     }
 
-    public String getLastCommitInfo(){
+    public String getLastCommitInfo() {
         var result = "Env Last Commit Info: \n";
         result += getEnvLastCommitInfo() + "\n";
         result += "Jar Last Commit Info: \n";
