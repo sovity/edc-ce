@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject} from 'rxjs';
-import {first, map, switchMap} from 'rxjs/operators';
+import {filter, map, switchMap} from 'rxjs/operators';
 import {
   ContractDefinitionDto,
   ContractDefinitionService,
@@ -92,7 +92,7 @@ export class ContractDefinitionViewerComponent implements OnInit {
     const dialogRef = this.dialog.open(ContractDefinitionEditorDialog);
     dialogRef
       .afterClosed()
-      .pipe(first())
+      .pipe(filter((it) => it))
       .subscribe((result: ContractDefinitionEditorDialogResult) => {
         if (result.refreshList) {
           this.refresh();
