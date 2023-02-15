@@ -2,22 +2,16 @@ import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject} from 'rxjs';
 import {first, map, switchMap} from 'rxjs/operators';
-import {
-  PolicyDefinition,
-  PolicyService,
-  policyDefinitionId,
-} from '../../../edc-dmgmt-client';
+import {PolicyDefinition, PolicyService} from '../../../edc-dmgmt-client';
 import {Fetched} from '../../models/fetched';
 import {NotificationService} from '../../services/notification.service';
-import {
-  ConfirmDialogModel,
-  ConfirmationDialogComponent,
-} from '../confirmation-dialog/confirmation-dialog.component';
 import {NewPolicyDialogResult} from '../new-policy-dialog/new-policy-dialog-result';
 import {NewPolicyDialogComponent} from '../new-policy-dialog/new-policy-dialog.component';
+import {PolicyCard} from '../policy-cards/policy-card';
+import {PolicyCardBuilder} from '../policy-cards/policy-card-builder';
 
 export interface PolicyList {
-  filteredPolicies: PolicyDefinition[];
+  policyCards: PolicyCard[];
   numTotalPolicies: number;
 }
 
@@ -29,11 +23,13 @@ export interface PolicyList {
 export class PolicyViewComponent implements OnInit {
   policyList: Fetched<PolicyList> = Fetched.empty();
   searchText: string = '';
+  deleteBusy = false;
   private fetch$ = new BehaviorSubject(null);
 
   constructor(
     private policyService: PolicyService,
     private notificationService: NotificationService,
+    private policyCardBuilder: PolicyCardBuilder,
     private readonly dialog: MatDialog,
   ) {}
 
@@ -43,11 +39,11 @@ export class PolicyViewComponent implements OnInit {
         switchMap(() => {
           return this.policyService.getAllPolicies().pipe(
             map(
-              (policies): PolicyList => ({
-                filteredPolicies: policies.filter((policy) =>
-                  this.isFiltered(policy, this.searchText),
+              (policyDefinitions): PolicyList => ({
+                policyCards: this.policyCardBuilder.buildPolicyCards(
+                  this.filterPolicies(policyDefinitions),
                 ),
-                numTotalPolicies: policies.length,
+                numTotalPolicies: policyDefinitions.length,
               }),
             ),
             Fetched.wrap({
@@ -75,8 +71,16 @@ export class PolicyViewComponent implements OnInit {
       });
   }
 
-  private refresh() {
+  refresh() {
     this.fetch$.next(null);
+  }
+
+  private filterPolicies(
+    policyDefinitions: PolicyDefinition[],
+  ): PolicyDefinition[] {
+    return policyDefinitions.filter((policy) =>
+      this.isFiltered(policy, this.searchText),
+    );
   }
 
   /**
@@ -85,31 +89,5 @@ export class PolicyViewComponent implements OnInit {
    */
   private isFiltered(policy: PolicyDefinition, searchText: string) {
     return JSON.stringify(policy).includes(searchText);
-  }
-
-  delete(policy: PolicyDefinition) {
-    const dialogData = ConfirmDialogModel.forDelete('policy', this.id(policy));
-    const ref = this.dialog.open(ConfirmationDialogComponent, {
-      maxWidth: '20%',
-      data: dialogData,
-    });
-    ref.afterClosed().subscribe((res) => {
-      if (res) {
-        this.policyService.deletePolicy(this.id(policy)).subscribe({
-          complete: () => {
-            this.fetch$.next(null);
-            this.notificationService.showInfo('Successfully deleted policy.');
-          },
-          error: (err) => {
-            console.error(err);
-            this.notificationService.showError('Failed deleting policy.');
-          },
-        });
-      }
-    });
-  }
-
-  id(policyDefinition: PolicyDefinition): string {
-    return policyDefinitionId(policyDefinition);
   }
 }

@@ -1,11 +1,16 @@
 import {Injectable} from '@angular/core';
-import {Constraint, Permission, PolicyDefinition} from '../../edc-dmgmt-client';
+import {addDays} from 'date-fns';
+import {Permission, PolicyDefinition} from '../../edc-dmgmt-client';
 import {NewPolicyDialogFormValue} from '../components/new-policy-dialog/new-policy-dialog-form-model';
+import {PolicyDefinitionUtils} from './policy-definition-utils';
+import {ExpressionLeftSideConstants} from './policy-type-ext';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PolicyDefinitionBuilder {
+  constructor(private policyDefinitionUtils: PolicyDefinitionUtils) {}
+
   /**
    * Build {@link PolicyDefinition} from {@link NewPolicyDialogFormValue}
    *
@@ -26,73 +31,51 @@ export class PolicyDefinitionBuilder {
     let policyType = formValue.policyType;
     switch (policyType) {
       case 'Time-Period-Restricted':
-        return [this.buildTimePeriodRestrictionPermission(formValue)];
+        return this.buildTimePeriodRestrictionPermissions(formValue);
       case 'Connector-Restricted-Usage':
-        return [this.buildConnectorRestrictedUsagePermission(formValue)];
+        return this.buildConnectorRestrictedUsagePermissions(formValue);
       default:
         throw new Error(`Unknown policyType: ${policyType}`);
     }
   }
 
-  private buildConnectorRestrictedUsagePermission(
+  private buildConnectorRestrictedUsagePermissions(
     formValue: NewPolicyDialogFormValue,
-  ): Permission {
-    return {
-      edctype: 'dataspaceconnector:permission',
-      id: null,
-      action: {type: 'USE'},
-      constraints: [
-        {
-          edctype: 'AtomicConstraint',
-          leftExpression: {
-            edctype: 'dataspaceconnector:literalexpression',
-            value: 'REFERRING_CONNECTOR',
-          },
-          operator: 'EQ',
-          rightExpression: {
-            edctype: 'dataspaceconnector:literalexpression',
-            value: formValue.connectorId,
-          },
-        } as Constraint,
-      ],
-      duties: [],
-    } as Permission;
+  ): Permission[] {
+    return [
+      this.policyDefinitionUtils.buildPermission({
+        constraints: [
+          this.policyDefinitionUtils.buildAtomicConstraint(
+            'REFERRING_CONNECTOR',
+            'EQ',
+            formValue.connectorId!,
+          ),
+        ],
+      }),
+    ];
   }
 
-  private buildTimePeriodRestrictionPermission(
+  private buildTimePeriodRestrictionPermissions(
     formValue: NewPolicyDialogFormValue,
-  ): Permission {
-    return {
-      edctype: 'dataspaceconnector:permission',
-      id: null,
-      action: {type: 'USE'},
-      constraints: [
-        {
-          edctype: 'AtomicConstraint',
-          leftExpression: {
-            edctype: 'dataspaceconnector:literalexpression',
-            value: 'POLICY_EVALUATION_TIME',
-          },
-          operator: 'GT',
-          rightExpression: {
-            edctype: 'dataspaceconnector:literalexpression',
-            value: formValue.range?.start?.toISOString()!,
-          },
-        } as Constraint,
-        {
-          edctype: 'AtomicConstraint',
-          leftExpression: {
-            edctype: 'dataspaceconnector:literalexpression',
-            value: 'POLICY_EVALUATION_TIME',
-          },
-          operator: 'LT',
-          rightExpression: {
-            edctype: 'dataspaceconnector:literalexpression',
-            value: formValue.range?.end?.toISOString()!,
-          },
-        },
-      ],
-      duties: [],
-    } as Permission;
+  ): Permission[] {
+    const start = formValue.range!!.start!!;
+    const end = addDays(formValue.range!!.end!!, 1);
+
+    return [
+      this.policyDefinitionUtils.buildPermission({
+        constraints: [
+          this.policyDefinitionUtils.buildAtomicConstraint(
+            ExpressionLeftSideConstants.PolicyEvaluationTime,
+            'GEQ',
+            start.toISOString()!,
+          ),
+          this.policyDefinitionUtils.buildAtomicConstraint(
+            ExpressionLeftSideConstants.PolicyEvaluationTime,
+            'LT',
+            end.toISOString()!,
+          ),
+        ],
+      }),
+    ];
   }
 }

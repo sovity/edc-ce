@@ -15,8 +15,9 @@ the detailed section referring to by linking pull requests or issues.
 ### Detailed Changes
 
 #### Added
-- Reworked page loading, empty messages and error states
 
+- Reworked page loading, empty messages and error states
+- Reworked policy list, new cards, new detail dialog.
 - Additional Http Datasource Properties: method, content type, request body,
   auth header/value, headers
 
@@ -31,6 +32,7 @@ the detailed section referring to by linking pull requests or issues.
   input.
 - Fixed transfer dialog submitting on cancel
 - Fixed transfer dialog validation not working
+- Fix exception on contract definition dialog cancel
 
 ## [v0.0.1-milestone-7-sovity3] 06.02.2023
 

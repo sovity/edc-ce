@@ -143,8 +143,16 @@ body {
   flex-wrap: wrap;
 }
 
+.flex-even-sized {
+  flex: 1 1 0;
+}
+
 .space-x-\[5px\] > * + * {
   margin-left: 5px;
+}
+
+.space-x-\[4px\] > * + * {
+  margin-left: 4px;
 }
 
 .space-x-\[10px\] > * + * {

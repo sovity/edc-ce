@@ -6,6 +6,7 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatDialogModule} from '@angular/material/dialog';
@@ -27,6 +28,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterModule} from '@angular/router';
 import {NgChartsModule} from 'ng2-charts';
+import {NgxJsonViewerModule} from 'ngx-json-viewer';
 import {AssetDetailDialog} from './components/asset-detail-dialog/asset-detail-dialog.component';
 import {AssetEditorDialog} from './components/asset-editor-dialog/asset-editor-dialog.component';
 import {AssetListComponent} from './components/asset-list/asset-list.component';
@@ -48,11 +50,13 @@ import {DataSubcategoryItemsPipe} from './components/data-subcategory-select/dat
 import {DataSubcategorySelectComponent} from './components/data-subcategory-select/data-subcategory-select.component';
 import {EmptyStateComponent} from './components/empty-state/empty-state.component';
 import {ErrorStateComponent} from './components/error-state/error-state.component';
+import {JsonDialogComponent} from './components/json-dialog/json-dialog.component';
 import {KeywordSelectComponent} from './components/keyword-select/keyword-select.component';
 import {LanguageSelectComponent} from './components/language-select/language-select.component';
 import {LoadingStateComponent} from './components/loading-state/loading-state.component';
 import {LogoutComponent} from './components/logout/logout.component';
 import {NewPolicyDialogComponent} from './components/new-policy-dialog/new-policy-dialog.component';
+import {PolicyCardsComponent} from './components/policy-cards/policy-cards.component';
 import {PolicyRuleViewerComponent} from './components/policy-rule-viewer/policy-rule-viewer.component';
 import {PolicySelectComponent} from './components/policy-select/policy-select.component';
 import {PolicyViewComponent} from './components/policy-view/policy-view.component';
@@ -77,6 +81,7 @@ import {SafePipe} from './pipes/safe.pipe';
     // Angular Material
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatChipsModule,
     MatDatepickerModule,
     MatDialogModule,
@@ -100,8 +105,9 @@ import {SafePipe} from './pipes/safe.pipe';
     // Angular Flex Layout (deprecated)
     FlexLayoutModule,
 
-    // NgCharts
+    // Third Party
     NgChartsModule,
+    NgxJsonViewerModule,
   ],
   declarations: [
     AssetDetailDialog,
@@ -127,11 +133,13 @@ import {SafePipe} from './pipes/safe.pipe';
     EmptyStateComponent,
     ErrorStateComponent,
     IsActiveFeaturePipe,
+    JsonDialogComponent,
     KeywordSelectComponent,
     LanguageSelectComponent,
     LoadingStateComponent,
     LogoutComponent,
     NewPolicyDialogComponent,
+    PolicyCardsComponent,
     PolicyRuleViewerComponent,
     PolicySelectComponent,
     PolicyViewComponent,

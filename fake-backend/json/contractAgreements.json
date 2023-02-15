@@ -29,7 +29,7 @@
               },
               "rightExpression": {
                 "edctype": "dataspaceconnector:literalexpression",
-                "value": "2022-08-31T00:00:00.001Z"
+                "value": "2022-08-31T00:00:00.000Z"
               },
               "operator": "GT"
             },
@@ -41,7 +41,7 @@
               },
               "rightExpression": {
                 "edctype": "dataspaceconnector:literalexpression",
-                "value": "2023-08-31T23:59:59.000Z"
+                "value": "2023-08-31T00:00:00.000Z"
               },
               "operator": "LT"
             }
@@ -835,7 +835,7 @@
               },
               "rightExpression": {
                 "edctype": "dataspaceconnector:literalexpression",
-                "value": "2022-08-31T00:00:00.001Z"
+                "value": "2022-08-31T00:00:00.000Z"
               },
               "operator": "GT"
             },
@@ -847,7 +847,7 @@
               },
               "rightExpression": {
                 "edctype": "dataspaceconnector:literalexpression",
-                "value": "2023-08-31T23:59:59.000Z"
+                "value": "2023-08-31T00:00:00.000Z"
               },
               "operator": "LT"
             }

@@ -20,7 +20,6 @@ import {DonutChartData} from '../dashboard-donut-chart/donut-chart-data';
 import {ChartColorService} from './chart-color.service';
 import {DashboardData, defaultDashboardData} from './dashboard-data';
 
-
 @Injectable({providedIn: 'root'})
 export class DashboardDataService {
   constructor(
@@ -34,8 +33,7 @@ export class DashboardDataService {
     private assetService: AssetService,
     private chartColorService: ChartColorService,
     private transferProcessUtils: TransferProcessUtils,
-  ) {
-  }
+  ) {}
 
   /**
    * Fetch {@link DashboardData}.
@@ -74,7 +72,7 @@ export class DashboardDataService {
     return this.contractDefinitionService.getAllContractDefinitions().pipe(
       map((contractDefinitions) => contractDefinitions.length),
       Fetched.wrap({
-        failureMessage: 'Failed fetching number of contract definitions.'
+        failureMessage: 'Failed fetching number of contract definitions.',
       }),
       map((numContractDefinitions) => ({numContractDefinitions})),
     );
@@ -126,7 +124,7 @@ export class DashboardDataService {
     return of({
       connectorUrl: this.appConfigService.config.originator,
       connectorOrganization:
-      this.appConfigService.config.originatorOrganization,
+        this.appConfigService.config.originatorOrganization,
     });
   }
 
@@ -189,7 +187,7 @@ export class DashboardDataService {
       (a, b) => order.indexOf(a) - order.indexOf(b),
     );
 
-    const colorsByState = new Map<string, string>()
+    const colorsByState = new Map<string, string>();
     colorsByState.set('IN_PROGRESS', '#7eb0d5');
     colorsByState.set('ERROR', '#fd7f6f');
     colorsByState.set('COMPLETED', '#b2e061');
@@ -210,7 +208,9 @@ export class DashboardDataService {
         {
           label: 'Number of Transfer Processes',
           data: amountsByState,
-          backgroundColor: states.map(it => colorsByState.get(it) ?? defaultColor),
+          backgroundColor: states.map(
+            (it) => colorsByState.get(it) ?? defaultColor,
+          ),
         },
       ],
       options: {responsive: false},

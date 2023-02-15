@@ -1,7 +1,7 @@
-@use 'sass:map';
 @use '@angular/material' as mat;
 @use 'theme-colors' as sovityColors;
 @use 'theme-colors.mds' as mdsColors;
+@use 'theme-generated-variables' as themeGeneratedVars;
 
 // Import styles that aren't theme dependant (including typography)
 @import 'https://fonts.googleapis.com/icon?family=Material+Icons';
@@ -15,13 +15,17 @@ $custom-typography: mat.define-typography-config(
 // Import theme and theme-dependant styles
 .theme-sovity {
   @include mat.all-component-themes(sovityColors.$theme);
-  --link-color: #{sovityColors.$link-color};
-  --warn-color: #{mat.get-color-from-palette(map-get(sovityColors.$theme, warn))};
+  @include themeGeneratedVars.theme-vars(
+    sovityColors.$theme,
+    sovityColors.$link-color
+  );
 }
 .theme-mds {
   @include mat.all-component-themes(mdsColors.$theme);
-  --link-color: #{mdsColors.$link-color};
-  --warn-color: #{mat.get-color-from-palette(map-get(mdsColors.$theme, warn))};
+  @include themeGeneratedVars.theme-vars(
+    mdsColors.$theme,
+    mdsColors.$link-color
+  );
 }
 
 // fix paginator background, it was white before, but our background is gray

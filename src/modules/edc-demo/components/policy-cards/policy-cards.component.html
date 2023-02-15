@@ -1,0 +1,49 @@
+<div *ngIf="!policyCards.length" class="text-center mt-[50px] w-full">
+  No policies found.
+</div>
+
+<div class="flex flex-row flex-wrap gap-[16px] justify-start">
+  <mat-card
+    *ngFor="let policyCard of policyCards"
+    style="width: 400px; min-height: 120px">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>policy</mat-icon>
+      <mat-card-title>
+        <a
+          class="link"
+          href="javascript:void(0)"
+          (click)="onPolicyDetailClick(policyCard)">
+          {{ policyCard.id }}
+        </a>
+      </mat-card-title>
+      <mat-card-subtitle>Policy</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="flex flex-col space-y-[16px]">
+      <div
+        *ngIf="!policyCard.isRegular"
+        class="flex flex-col"
+        style="margin: 0 4px">
+        <div class="text-slate text-sm uppercase tracking-wider">
+          Irregular Policy
+        </div>
+        <div
+          *ngFor="let irregularity of policyCard.irregularities"
+          class="text-sm text-warn">
+          {{ irregularity }}
+        </div>
+      </div>
+      <div *ngIf="policyCard.constraints.length" class="flex flex-col">
+        <div class="text-slate text-sm uppercase tracking-wider">
+          Constraints
+        </div>
+        <div
+          *ngFor="let constraint of policyCard.constraints"
+          class="flex flex-row space-x-[5px]">
+          <div>{{ constraint.left }}</div>
+          <div>{{ constraint.operator }}</div>
+          <div>{{ constraint.right }}</div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

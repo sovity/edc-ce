@@ -47,11 +47,14 @@ export class ContractViewerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.contractAgreementService.getAllAgreements().pipe(
-      Fetched.wrap({
-        failureMessage: "Failed fetching contracts.",
-      }))
-      .subscribe((contractList) => this.contractList = contractList);
+    this.contractAgreementService
+      .getAllAgreements()
+      .pipe(
+        Fetched.wrap({
+          failureMessage: 'Failed fetching contracts.',
+        }),
+      )
+      .subscribe((contractList) => (this.contractList = contractList));
   }
 
   asDate(epochSeconds?: number): string {

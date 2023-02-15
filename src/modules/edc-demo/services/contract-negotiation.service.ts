@@ -50,9 +50,7 @@ export class ContractNegotiationService {
     }
   }
 
-  updateNegotiationList() {
-
-  }
+  updateNegotiationList() {}
 
   isBusy(contractOffer: ContractOffer) {
     return (
