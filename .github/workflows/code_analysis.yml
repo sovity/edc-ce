@@ -1,0 +1,79 @@
+name: Code Analysis
+
+on:
+    workflow_dispatch:
+    push:
+    pull_request:
+        branches: [ main ]
+        paths-ignore:
+            - '**.md'
+            - 'docs/**'
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    is_java_project:
+        runs-on: ubuntu-latest
+        outputs:
+            pom_exists: ${{ steps.check_files.outputs.files_exists }}
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v3
+          - name: Check file existence
+            id: check_files
+            uses: andstor/file-existence-action@v2
+            with:
+              files: "pom.xml"
+    setup:
+        needs: [is_java_project]
+        runs-on: ubuntu-latest
+        if: needs.is_java_project.outputs.pom_exists == 'true'
+        outputs:
+            branch_name: ${{ steps.get_branch_name.outputs.HEAD_REF }}
+        steps:
+            - name: Build branch name
+              id: get_branch_name
+              run: |
+                  HEAD_REF=$(echo "${GITHUB_HEAD_REF}" | sed 's_/_\-_g' )
+                  echo ::set-output name=HEAD_REF::"${HEAD_REF}"
+    run_checkstyle:
+        needs: [is_java_project,setup]
+        runs-on: ubuntu-latest
+        if: needs.is_java_project.outputs.pom_exists == 'true'
+        steps:
+            - uses: actions/checkout@v3
+            - name: Set up JDK ${{ matrix.java }}
+              uses: actions/setup-java@v3
+              with:
+                  distribution: 'temurin'
+                  java-version: '17'
+            - name: Cache maven packages
+              uses: actions/cache@v3
+              with:
+                  path: ~/.m2
+                  key: ${{ runner.os }}-${{ needs.setup.outputs.branch_name }}-style-${{ hashFiles('**/pom.xml') }}
+                  restore-keys: ${{ runner.os }}-${{ needs.setup.outputs.branch_name }}-style-
+            - name: Run style checks
+              run: mvn -B checkstyle:check --file pom.xml
+
+    spotbugs:
+        needs: [is_java_project,setup]
+        if: needs.is_java_project.outputs.pom_exists == 'true'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Set up JDK ${{ matrix.java }}
+              uses: actions/setup-java@v3
+              with:
+                  distribution: 'temurin'
+                  java-version: '17'
+            - name: Cache maven packages
+              uses: actions/cache@v3
+              with:
+                  path: ~/.m2
+                  key: ${{ runner.os }}-${{ needs.setup.outputs.branch_name }}-analysis-${{ hashFiles('**/pom.xml') }}
+                  restore-keys: ${{ runner.os }}-${{ needs.setup.outputs.branch_name }}-analysis-
+            - name: Run static code analysis
+              run: mvn -B compile spotbugs:check --file pom.xml
