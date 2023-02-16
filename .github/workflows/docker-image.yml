@@ -30,6 +30,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Store last commit's author, message and SHA
+        id: last-commit-information
+        run: |
+          echo "Saving local commit details."
+          echo "LAST_COMMIT_INFO<<EOF" >> $GITHUB_ENV
+          export LAST_COMMIT_INFO=$(git log -1)
+          echo "$LAST_COMMIT_INFO" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - name: Log in to the Container registry
         uses: docker/login-action@v2
         with:
@@ -55,8 +64,10 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           file: connector/Dockerfile
+          context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BUILD_ARGS=${{ matrix.imageVariants.buildArgs }}
+            EDC_LAST_COMMIT_INFO_ARG="${{env.LAST_COMMIT_INFO}}"

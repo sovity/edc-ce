@@ -10,6 +10,7 @@ val edcGroup: String by project
 dependencies {
 
     if (project.hasProperty("dev-edc")) {
+        implementation(project(":extensions:last-commit-info"))
         implementation("${edcGroup}:control-plane-core:${edcVersion}")
         implementation("${edcGroup}:api-observability:${edcVersion}")
         implementation("${edcGroup}:iam-mock:${edcVersion}")
@@ -19,6 +20,7 @@ dependencies {
         implementation(project(":extensions:policy-always-true"))
         implementation(project(":extensions:contract-agreement-transfer-api"))
     } else {
+        implementation(project(":extensions:last-commit-info"))
         implementation(project(":extensions:broker"))
         implementation(project(":extensions:clearinghouse"))
         implementation(project(":extensions:policy-referring-connector"))

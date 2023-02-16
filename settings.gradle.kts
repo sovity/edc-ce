@@ -1,5 +1,6 @@
 rootProject.name = "edc-extensions"
 
+include(":extensions:last-commit-info")
 include(":extensions:broker")
 include(":extensions:clearinghouse")
 include(":extensions:contract-agreement-transfer-api")
