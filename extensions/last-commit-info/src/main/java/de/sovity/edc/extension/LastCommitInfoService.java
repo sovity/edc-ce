@@ -16,6 +16,7 @@ package de.sovity.edc.extension;
 
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -40,9 +41,9 @@ public class LastCommitInfoService {
     }
 
     public String getJarLastCommitInfo() {
-        var classloader = Thread.currentThread().getContextClassLoader();
-        var is = classloader.getResourceAsStream("jar-last-commit-info.txt");
-        var scanner = new Scanner(Objects.requireNonNull(is)).useDelimiter("\\A");
+        var classLoader = Thread.currentThread().getContextClassLoader();
+        var is = classLoader.getResourceAsStream("jar-last-commit-info.txt");
+        var scanner = new Scanner(Objects.requireNonNull(is), StandardCharsets.UTF_8).useDelimiter("\\A");
         return scanner.hasNext() ? scanner.next() : "";
     }
 
