@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [x.x.x]
 
+### Feature:
+- Last Commit Info Extension
+
 ### Fixed:
 - add if-else switch to get_client.sh for AKI `keyid` keyword
 - Set _test_ as default MDS environment (in docs and docker-compose)
