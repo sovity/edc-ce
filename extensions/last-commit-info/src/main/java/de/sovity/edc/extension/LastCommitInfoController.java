@@ -29,7 +29,6 @@ public class LastCommitInfoController {
     }
 
     @GET
-    @Path("/")
     public String getLastCommitInfo() {
         return lastCommitInfoService.getLastCommitInfo();
     }
