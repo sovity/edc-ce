@@ -1,4 +1,4 @@
-name: Adds all issues to project board
+name: Add issue to project action
 
 on:
   issues:
@@ -6,8 +6,8 @@ on:
       - opened
 
 jobs:
-  add-to-project:
-    name: Add issue to project
+    add_issue_to_project:
+    name: add_issue_to_project
     runs-on: ubuntu-latest
     steps:
       - uses: actions/add-to-project@v0.4.0
