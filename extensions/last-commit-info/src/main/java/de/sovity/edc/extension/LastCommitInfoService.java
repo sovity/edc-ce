@@ -31,12 +31,12 @@ public class LastCommitInfoService {
     public String getLastCommitInfo() {
         var result = "";
 
-        if (!getEnvLastCommitInfo().equals("")){
+        if (!getEnvLastCommitInfo().equals("")) {
             result += "Env Last Commit Info: \n";
             result += getEnvLastCommitInfo() + "\n";
         }
 
-        if(!getEnvLastCommitInfo().equals(getJarLastCommitInfo())){
+        if (!getEnvLastCommitInfo().equals(getJarLastCommitInfo())) {
             result += "Jar Last Commit Info: \n";
             result += getJarLastCommitInfo();
         }

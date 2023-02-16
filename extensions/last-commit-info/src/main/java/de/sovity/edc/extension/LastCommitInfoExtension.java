@@ -16,7 +16,6 @@ package de.sovity.edc.extension;
 
 import org.eclipse.edc.connector.api.datamanagement.configuration.DataManagementApiConfiguration;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
-import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.web.spi.WebService;
