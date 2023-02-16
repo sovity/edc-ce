@@ -1,0 +1,51 @@
+name: Code Analysis
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+
+jobs:
+  is_java_project:
+    runs-on: ubuntu-latest
+    outputs:
+      pom_exists: ${{ steps.check_files.outputs.files_exists }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Check file existence
+        id: check_files
+        uses: andstor/file-existence-action@v2
+        with:
+          files: "pom.xml"
+  run_checkstyle:
+    needs: [is_java_project]
+    runs-on: ubuntu-latest
+    if: needs.is_java_project.outputs.pom_exists == 'true'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: "maven"
+      - name: Run style checks
+        run: mvn -B checkstyle:check --file pom.xml
+  spotbugs:
+    needs: [is_java_project]
+    if: needs.is_java_project.outputs.pom_exists == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: "maven"
+      - name: Run static code analysis
+        run: mvn -B compile spotbugs:check --file pom.xml
