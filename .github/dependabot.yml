@@ -1,28 +1,52 @@
 version: 2
 updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly" # default = monday
-    open-pull-requests-limit: 30
-    target-branch: "main"
-    labels:
-      - "dependencies"
-      - "github"
-  - package-ecosystem: "gradle"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    target-branch: "main"
-    open-pull-requests-limit: 30
-    labels:
-      - "dependencies"
-  - package-ecosystem: "docker"
-    directory: "/connector"
-    schedule:
-      interval: "daily"
-    target-branch: "main"
-    open-pull-requests-limit: 30
-    labels:
-      - "dependencies"
-      
+# GitHub Actions
+    - package-ecosystem: "github-actions"
+      directory: "/"
+      schedule:
+          interval: "weekly"
+      target-branch: "main"
+      open-pull-requests-limit: 30
+      labels:
+          - "dependencies"
+          - "github"
+# Docker
+    - package-ecosystem: "docker"
+      directory: "/"
+      schedule:
+          interval: "daily"
+      target-branch: "main"
+      open-pull-requests-limit: 30
+      labels:
+          - "dependencies"
+          - "docker"
+# Gradle
+    - package-ecosystem: "gradle"
+      directory: "/"
+      schedule:
+          interval: "daily"
+      target-branch: "main"
+      open-pull-requests-limit: 30
+      labels:
+          - "dependencies"
+          - "java"
+# Maven
+    - package-ecosystem: "maven"
+      directory: "/"
+      schedule:
+          interval: "daily"
+      target-branch: "main"
+      open-pull-requests-limit: 30
+      labels:
+          - "dependencies"
+          - "java"
+# NPM
+    - package-ecosystem: "npm"
+      directory: "/"
+      schedule:
+          interval: "daily"
+      target-branch: "main"
+      open-pull-requests-limit: 30
+      labels:
+          - "dependencies"
+          - "javascript"
