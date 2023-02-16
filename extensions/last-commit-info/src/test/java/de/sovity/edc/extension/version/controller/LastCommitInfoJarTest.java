@@ -22,7 +22,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import static de.sovity.edc.extension.version.controller.TestUtils.createConfiguration;
 import static de.sovity.edc.extension.version.controller.TestUtils.mockRequest;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)

@@ -30,7 +30,7 @@ public class LastCommitInfoController {
 
     @GET
     @Path("/")
-    public String getLastCommitInformation() {
+    public String getLastCommitInfo() {
         return lastCommitInfoService.getLastCommitInfo();
     }
 }

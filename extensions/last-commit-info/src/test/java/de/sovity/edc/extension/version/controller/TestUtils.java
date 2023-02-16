@@ -25,25 +25,25 @@ import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 
 public class TestUtils {
 
-    private static final int dataPort = getFreePort();
-    private static final String authKey = "123456";
+    private static final int DATA_PORT = getFreePort();
+    private static final String AUTH_KEY = "123456";
 
     @NotNull
     static Map<String, String> createConfiguration(String commitInfo) {
         return Map.of(
                 "web.http.port", String.valueOf(getFreePort()),
                 "web.http.path", "/api",
-                "web.http.data.port", String.valueOf(dataPort),
+                "web.http.data.port", String.valueOf(DATA_PORT),
                 "web.http.data.path", "/api/v1/data",
-                "edc.api.auth.key", authKey,
+                "edc.api.auth.key", AUTH_KEY,
                 "edc.last.commit.info", commitInfo);
     }
 
     static ValidatableResponse mockRequest() {
         return given()
-                .baseUri("http://localhost:" + dataPort)
+                .baseUri("http://localhost:" + DATA_PORT)
                 .basePath("/api/v1/data")
-                .header("x-api-key", authKey)
+                .header("x-api-key", AUTH_KEY)
                 .when()
                 .contentType(ContentType.TEXT)
                 .get(String.format("/last-commit-info"))

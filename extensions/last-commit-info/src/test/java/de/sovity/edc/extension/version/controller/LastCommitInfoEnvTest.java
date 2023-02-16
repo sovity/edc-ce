@@ -51,7 +51,7 @@ class LastCommitInfoEnvTest {
     void testOnlyEnv() throws FileNotFoundException {
         var classLoader = Thread.currentThread().getContextClassLoader();
         var is = classLoader.getResourceAsStream("jar-last-commit-info.txt");
-        PrintWriter prw= new PrintWriter ("src/test/resources/jar-last-commit-info.txt");
+        PrintWriter prw = new PrintWriter("src/test/resources/jar-last-commit-info.txt");
         prw.println("These text will replace all your file content");
         prw.close();
 
@@ -62,7 +62,7 @@ class LastCommitInfoEnvTest {
 
     @AfterAll
     static void fixFile() throws FileNotFoundException {
-        PrintWriter prw= new PrintWriter ("src/test/resources/jar-last-commit-info.txt");
+        PrintWriter prw= new PrintWriter("src/test/resources/jar-last-commit-info.txt");
         prw.println("pipeline");
         prw.close();
     }
