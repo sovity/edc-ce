@@ -49,16 +49,13 @@ public class AlwaysTruePolicyExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        var alwaysTruePolicyService = new AlwaysTruePolicyService(
-                ruleBindingRegistry,
-                policyEngine
-        );
-        var alwaysTruePolicyDefinitionService = new AlwaysTruePolicyDefinitionService(
-                policyDefinitionService
-        );
-
+        var alwaysTruePolicyService = new AlwaysTruePolicyService(ruleBindingRegistry, policyEngine);
         alwaysTruePolicyService.registerPolicy();
+    }
 
+    @Override
+    public void start() {
+        var alwaysTruePolicyDefinitionService = new AlwaysTruePolicyDefinitionService(policyDefinitionService);
         if (!alwaysTruePolicyDefinitionService.exists()) {
             monitor.info("Creating Always True Policy Definition.");
             alwaysTruePolicyDefinitionService.create();

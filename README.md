@@ -95,6 +95,9 @@ You can use a script (if you're on WSL or Linux) to generate the SKI, AKI and jk
 3. The jks file will be generated in the same folder as your p12 file and the SKI/AKI combination is printed out in the console.
 Copy the SKI:AKI combination and use it to start the EDC (optionally also save it to your password manager).
 
+### Where should the connector certificate be stored?
+In the default configuration the connector certificate should be stored inside a `keystore.jks` in a folder `resources/vault/edc/` next to the docker-compose. The path and keystore name can be edited in the env-variable `EDC_KEYSTORE`.
+
 ## License
 This project is licensed under the Apache License 2.0 - see [here](LICENSE) for details.
 
