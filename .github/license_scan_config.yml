@@ -9,6 +9,5 @@ scan:
     - license
 license-full: true
 severity:
-  - UNKNOWN
   - HIGH
   - CRITICAL

@@ -1,14 +1,56 @@
 version: 2
 updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly" # default = monday
-    open-pull-requests-limit: 30
-    target-branch: "main"
-    labels:
-      - "dependencies"
-      - "github"
+# GitHub Actions
+    - package-ecosystem: "github-actions"
+      directory: "/"
+      schedule:
+          interval: "weekly"
+      target-branch: "main"
+      open-pull-requests-limit: 30
+      labels:
+          - "dependencies"
+          - "github"
+# Docker
+    - package-ecosystem: "docker"
+      directory: "/"
+      schedule:
+          interval: "daily"
+      target-branch: "main"
+      open-pull-requests-limit: 30
+      labels:
+          - "dependencies"
+          - "docker"
+# Gradle
+    - package-ecosystem: "gradle"
+      directory: "/"
+      schedule:
+          interval: "daily"
+      target-branch: "main"
+      open-pull-requests-limit: 30
+      labels:
+          - "dependencies"
+          - "java"
+# Maven
+    - package-ecosystem: "maven"
+      directory: "/"
+      schedule:
+          interval: "daily"
+      target-branch: "main"
+      open-pull-requests-limit: 30
+      labels:
+          - "dependencies"
+          - "java"
+# NPM
+    - package-ecosystem: "npm"
+      directory: "/"
+      schedule:
+          interval: "daily"
+      target-branch: "main"
+      open-pull-requests-limit: 30
+      labels:
+          - "dependencies"
+          - "javascript"
+# NPM
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -23,11 +65,13 @@ updates:
         update-types: [ "version-update:semver-major" ]
       - dependency-name: "@angular-devkit/*"
         update-types: [ "version-update:semver-major" ]
-  - package-ecosystem: "docker"
-    directory: "/docker"
-    schedule:
-      interval: "daily"
-    target-branch: "main"
-    open-pull-requests-limit: 30
-    labels:
-      - "dependencies"
+# Docker
+    - package-ecosystem: "docker"
+      directory: "/docker"
+      schedule:
+          interval: "daily"
+      target-branch: "main"
+      open-pull-requests-limit: 30
+      labels:
+          - "dependencies"
+          - "docker"
