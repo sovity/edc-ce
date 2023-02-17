@@ -1,56 +1,46 @@
 version: 2
 updates:
-# GitHub Actions
-    - package-ecosystem: "github-actions"
-      directory: "/"
-      schedule:
-          interval: "weekly"
-      target-branch: "main"
-      open-pull-requests-limit: 30
-      labels:
-          - "dependencies"
-          - "github"
-# Docker
-    - package-ecosystem: "docker"
-      directory: "/"
-      schedule:
-          interval: "daily"
-      target-branch: "main"
-      open-pull-requests-limit: 30
-      labels:
-          - "dependencies"
-          - "docker"
-# Gradle
-    - package-ecosystem: "gradle"
-      directory: "/"
-      schedule:
-          interval: "daily"
-      target-branch: "main"
-      open-pull-requests-limit: 30
-      labels:
-          - "dependencies"
-          - "java"
-# Maven
-    - package-ecosystem: "maven"
-      directory: "/"
-      schedule:
-          interval: "daily"
-      target-branch: "main"
-      open-pull-requests-limit: 30
-      labels:
-          - "dependencies"
-          - "java"
-# NPM
-    - package-ecosystem: "npm"
-      directory: "/"
-      schedule:
-          interval: "daily"
-      target-branch: "main"
-      open-pull-requests-limit: 30
-      labels:
-          - "dependencies"
-          - "javascript"
-# NPM
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+        interval: "weekly"
+    target-branch: "main"
+    open-pull-requests-limit: 30
+    labels:
+        - "dependencies"
+        - "github"
+  # Docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+        interval: "daily"
+    target-branch: "main"
+    open-pull-requests-limit: 30
+    labels:
+        - "dependencies"
+        - "docker"
+  # Gradle
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+        interval: "daily"
+    target-branch: "main"
+    open-pull-requests-limit: 30
+    labels:
+        - "dependencies"
+        - "java"
+  # Maven
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+        interval: "daily"
+    target-branch: "main"
+    open-pull-requests-limit: 30
+    labels:
+        - "dependencies"
+        - "java"
+  # NPM
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -59,19 +49,20 @@ updates:
     open-pull-requests-limit: 30
     labels:
       - "dependencies"
+      - "javascript"
     ignore:
       # Major Angular updates should be done manually
       - dependency-name: "@angular/*"
         update-types: [ "version-update:semver-major" ]
       - dependency-name: "@angular-devkit/*"
         update-types: [ "version-update:semver-major" ]
-# Docker
-    - package-ecosystem: "docker"
-      directory: "/docker"
-      schedule:
-          interval: "daily"
-      target-branch: "main"
-      open-pull-requests-limit: 30
-      labels:
-          - "dependencies"
-          - "docker"
+  # Docker
+  - package-ecosystem: "docker"
+    directory: "/docker"
+    schedule:
+        interval: "daily"
+    target-branch: "main"
+    open-pull-requests-limit: 30
+    labels:
+        - "dependencies"
+        - "docker"
