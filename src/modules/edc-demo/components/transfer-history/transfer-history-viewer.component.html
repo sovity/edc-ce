@@ -1,18 +1,42 @@
 <div id="wrapper">
-  <div *ngIf="transferProcesses$ | async as transferProcesses">
-    <button mat-raised-button color="primary" (click)="loadTransferProcesses()">
-      <mat-icon>cached</mat-icon>
-      Refresh
-    </button>
-    <mat-paginator
-      pageSize="transferProcesses.length"
-      hidePageSize="true"
-      [length]="transferProcesses.length"></mat-paginator>
-
+  <button mat-raised-button color="primary" (click)="loadTransferProcesses()">
+    <mat-icon>cached</mat-icon>
+    Refresh
+  </button>
+  <mat-paginator
+    *ngIf="transferProcessesList.isReady"
+    pageSize="transferProcessesList.data.transferProcesses.length"
+    hidePageSize="true"
+    [length]="
+      transferProcessesList.data.transferProcesses.length
+    "></mat-paginator>
+  <div class="flex flex-row justify-center">
+    <edc-demo-loading-state
+      *ngIf="transferProcessesList.isLoading"
+      class="min-h-[35rem]"></edc-demo-loading-state>
+    <edc-demo-error-state
+      *ngIf="transferProcessesList.isError"
+      class="min-h-[35rem]"
+      [errorMessage]="
+        transferProcessesList.error.failureMessage
+      "></edc-demo-error-state>
+    <edc-demo-empty-state
+      *ngIf="
+        transferProcessesList.isReady &&
+        !transferProcessesList.data.transferProcesses.length
+      "
+      class="min-h-[35rem]"
+      [emptyMessage]="'No transfer history found.'"></edc-demo-empty-state>
+  </div>
+  <div
+    *ngIf="
+      transferProcessesList.isReady &&
+      !!transferProcessesList.data.transferProcesses.length
+    ">
     <table
       class="transfer-history-table"
       mat-table
-      [dataSource]="transferProcesses">
+      [dataSource]="transferProcessesList.data.transferProcesses">
       <ng-container matColumnDef="id">
         <th *matHeaderCellDef mat-header-cell scope="col">Id</th>
         <td *matCellDef="let item" mat-cell>{{ item.id }}</td>
@@ -46,7 +70,9 @@
 
       <ng-container matColumnDef="assetId">
         <th *matHeaderCellDef mat-header-cell scope="col">AssetId</th>
-        <td *matCellDef="let item" mat-cell>{{ item.dataRequest.assetId }}</td>
+        <td *matCellDef="let item" mat-cell>
+          {{ item.dataRequest.assetId }}
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="contractId">

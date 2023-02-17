@@ -16,7 +16,7 @@ RUN npm run ng build --no-progress --configuration=production
 # Stage 3: Serve app with nginx
 FROM nginx:1.23.3-alpine
 
-RUN apk update && apk add jq esh
+RUN apk update && apk add jq esh --no-cache
 
 COPY --from=build /app/dist/edc-demo-client /usr/share/nginx/html
 COPY --from=build /app/src/assets /usr/share/nginx/html/assets

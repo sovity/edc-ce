@@ -1,4 +1,4 @@
-<div *ngIf="filteredAssets$ | async as assets" id="wrapper">
+<div id="wrapper">
   <div class="flex flex-row !space-x-[10px] items-start">
     <!-- Search Bar -->
     <mat-form-field
@@ -33,13 +33,36 @@
 
     <!-- Paginator -->
     <mat-paginator
+      *ngIf="assetList.isReady"
       hidePageSize="true"
       pageSize="contractDefinitions.length"
-      [length]="assets.length">
+      [length]="assetList.data.filteredAssets.length">
     </mat-paginator>
   </div>
 
-  <edc-demo-asset-list
-    [assets]="assets"
-    (assetClick)="onAssetClick($event)"></edc-demo-asset-list>
+  <div class="flex flex-row justify-center">
+    <edc-demo-loading-state
+      *ngIf="assetList.isLoading"
+      class="min-h-[35rem]"></edc-demo-loading-state>
+    <edc-demo-error-state
+      *ngIf="assetList.isError"
+      class="min-h-[35rem]"
+      [errorMessage]="assetList.error.failureMessage"></edc-demo-error-state>
+    <edc-demo-empty-state
+      *ngIf="
+        assetList.isReady &&
+        (!assetList.data.numTotalAssets ||
+          !assetList.data.filteredAssets.length)
+      "
+      class="min-h-[35rem]"
+      [emptyMessage]="
+        'No assets found with given filter.'
+      "></edc-demo-empty-state>
+  </div>
+  <div class="flex flex-row flex-wrap">
+    <edc-demo-asset-list
+      *ngIf="assetList.isReady && !!assetList.data.numTotalAssets"
+      [assets]="assetList.data.filteredAssets"
+      (assetClick)="onAssetClick($event)"></edc-demo-asset-list>
+  </div>
 </div>

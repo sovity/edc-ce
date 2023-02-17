@@ -1,6 +1,4 @@
-<div
-  *ngIf="filteredContractDefinitions$ | async as contractDefinitions"
-  id="wrapper">
+<div id="wrapper">
   <div class="flex flex-row">
     <!-- Search -->
     <mat-form-field
@@ -35,14 +33,45 @@
 
     <!-- Paginator -->
     <mat-paginator
+      *ngIf="contractDefinitionList.isReady"
       hidePageSize="true"
       pageSize="10"
-      [length]="contractDefinitions?.length"></mat-paginator>
+      [length]="
+        contractDefinitionList.data.filteredContractDefinitions.length
+      "></mat-paginator>
   </div>
-
-  <div fxLayout="row wrap" fxLayoutAlign="start start">
+  <div class="flex flex-row justify-center">
+    <edc-demo-loading-state
+      *ngIf="contractDefinitionList.isLoading"
+      class="min-h-[35rem]"></edc-demo-loading-state>
+    <edc-demo-error-state
+      *ngIf="contractDefinitionList.isError"
+      class="min-h-[35rem]"
+      [errorMessage]="
+        contractDefinitionList.error.failureMessage
+      "></edc-demo-error-state>
+    <edc-demo-empty-state
+      *ngIf="
+        contractDefinitionList.isReady &&
+        (!contractDefinitionList.data.numTotalContractDefinitions ||
+          !contractDefinitionList.data.filteredContractDefinitions.length)
+      "
+      class="min-h-[35rem]"
+      [emptyMessage]="
+        'No Contract Definitions with given filter.'
+      "></edc-demo-empty-state>
+  </div>
+  <div
+    *ngIf="
+      contractDefinitionList.isReady &&
+      !!contractDefinitionList.data.numTotalContractDefinitions
+    "
+    class="flex flex-row flex-wrap">
     <mat-card
-      *ngFor="let contractDefinition of contractDefinitions"
+      *ngFor="
+        let contractDefinition of contractDefinitionList.data
+          .filteredContractDefinitions
+      "
       class="contract-definition-card">
       <mat-card-header>
         <mat-icon mat-card-avatar>policy</mat-icon>

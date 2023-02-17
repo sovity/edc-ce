@@ -45,14 +45,17 @@ import {
 import {ContractOfferIconComponent} from './components/contract-offer-icon/contract-offer-icon.component';
 import {ContractOfferListComponent} from './components/contract-offer-list/contract-offer-list.component';
 import {ContractViewerComponent} from './components/contract-viewer/contract-viewer.component';
-import {DashboardKpiCardComponent} from './components/dashboard-kpi-card/dashboard-kpi-card.component';
 import {DashboardDonutChartComponent} from './components/dashboard-donut-chart/dashboard-donut-chart.component';
+import {DashboardKpiCardComponent} from './components/dashboard-kpi-card/dashboard-kpi-card.component';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {DataCategorySelectComponent} from './components/data-category-select/data-category-select.component';
 import {DataSubcategoryItemsPipe} from './components/data-subcategory-select/data-subcategory-items.pipe';
 import {DataSubcategorySelectComponent} from './components/data-subcategory-select/data-subcategory-select.component';
+import {EmptyStateComponent} from './components/empty-state/empty-state.component';
+import {ErrorStateComponent} from './components/error-state/error-state.component';
 import {KeywordSelectComponent} from './components/keyword-select/keyword-select.component';
 import {LanguageSelectComponent} from './components/language-select/language-select.component';
+import {LoadingStateComponent} from './components/loading-state/loading-state.component';
 import {LogoutComponent} from './components/logout/logout.component';
 import {NewPolicyDialogComponent} from './components/new-policy-dialog/new-policy-dialog.component';
 import {PolicyRuleViewerComponent} from './components/policy-rule-viewer/policy-rule-viewer.component';
@@ -67,35 +70,35 @@ import {SafePipe} from './pipes/safe.pipe';
 
 @NgModule({
   imports: [
-    CommonModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatCardModule,
-    MatGridListModule,
-    FlexLayoutModule,
-    MatExpansionModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatIconModule,
-    MatDividerModule,
-    MatSlideToggleModule,
-    MatTabsModule,
-    MatProgressBarModule,
-    MatListModule,
-    RouterModule,
-    MatProgressSpinnerModule,
-    MatDatepickerModule,
-    MatTooltipModule,
-    MatStepperModule,
-    MatChipsModule,
     ClipboardModule,
+    CommonModule,
+    FlexLayoutModule,
+    FormsModule,
+    HttpClientModule,
+    MatButtonModule,
+    MatCardModule,
+    MatChipsModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatDividerModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatGridListModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatStepperModule,
+    MatTableModule,
+    MatTabsModule,
+    MatTooltipModule,
     NgChartsModule,
+    ReactiveFormsModule,
+    RouterModule,
   ],
   declarations: [
     AssetDetailDialog,
@@ -119,9 +122,12 @@ import {SafePipe} from './pipes/safe.pipe';
     DataCategorySelectComponent,
     DataSubcategoryItemsPipe,
     DataSubcategorySelectComponent,
+    EmptyStateComponent,
+    ErrorStateComponent,
     IsActiveFeaturePipe,
     KeywordSelectComponent,
     LanguageSelectComponent,
+    LoadingStateComponent,
     LogoutComponent,
     NewPolicyDialogComponent,
     PolicyRuleViewerComponent,
@@ -133,14 +139,14 @@ import {SafePipe} from './pipes/safe.pipe';
     TransportModeSelectComponent,
   ],
   exports: [
-    CatalogBrowserComponent,
-    TransferHistoryViewerComponent,
-    ContractDefinitionViewerComponent,
     AssetViewerComponent,
-    PolicyRuleViewerComponent,
-    NewPolicyDialogComponent,
+    CatalogBrowserComponent,
+    ContractDefinitionViewerComponent,
     ContractViewerComponent,
     IsActiveFeaturePipe,
+    NewPolicyDialogComponent,
+    PolicyRuleViewerComponent,
+    TransferHistoryViewerComponent,
   ],
 })
 export class EdcDemoModule {

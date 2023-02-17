@@ -1,4 +1,4 @@
-<div *ngIf="filteredPolicies$ | async as policyDefinitions" id="wrapper">
+<div id="wrapper">
   <div class="flex flex-row">
     <!-- Search -->
     <mat-form-field
@@ -33,13 +33,37 @@
 
     <!-- Paginator -->
     <mat-paginator
+      *ngIf="policyList.isReady"
       hidePageSize="true"
       pageSize="10"
-      [length]="policyDefinitions?.length"></mat-paginator>
+      [length]="policyList.data.filteredPolicies.length"></mat-paginator>
   </div>
 
-  <div fxLayout="column" fxLayoutAlign="space-around stretch">
-    <mat-card *ngFor="let policyDef of policyDefinitions" class="policy-card">
+  <div class="flex flex-row justify-center">
+    <edc-demo-loading-state
+      *ngIf="policyList.isLoading"
+      class="min-h-[35rem]"></edc-demo-loading-state>
+    <edc-demo-error-state
+      *ngIf="policyList.isError"
+      class="min-h-[35rem]"
+      [errorMessage]="policyList.error.failureMessage"></edc-demo-error-state>
+    <edc-demo-empty-state
+      *ngIf="
+        policyList.isReady &&
+        (!policyList.data.numTotalPolicies ||
+          !policyList.data.filteredPolicies.length)
+      "
+      class="min-h-[35rem]"
+      [emptyMessage]="
+        'No policy found with given filter.'
+      "></edc-demo-empty-state>
+  </div>
+  <div
+    *ngIf="policyList.isReady && !!policyList.data.numTotalPolicies"
+    class="flex flex-row flex-wrap gap-[16px]">
+    <mat-card
+      *ngFor="let policyDef of policyList.data.filteredPolicies"
+      class="policy-card">
       <mat-card-header>
         <mat-icon mat-card-avatar>policy</mat-icon>
         <mat-card-title

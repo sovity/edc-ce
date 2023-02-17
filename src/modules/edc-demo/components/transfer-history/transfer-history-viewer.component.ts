@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {
   TransferProcessDto,
   TransferProcessService,
 } from '../../../edc-dmgmt-client';
+import {Fetched} from '../../models/fetched';
 import {
   ConfirmDialogModel,
   ConfirmationDialogComponent,
@@ -26,7 +26,9 @@ export class TransferHistoryViewerComponent implements OnInit {
     'assetId',
     'contractId',
   ];
-  transferProcesses$: Observable<TransferProcessDto[]> = of([]);
+  transferProcessesList: Fetched<{
+    transferProcesses: Array<TransferProcessDto>;
+  }> = Fetched.empty();
 
   constructor(
     private transferProcessService: TransferProcessService,
@@ -59,25 +61,24 @@ export class TransferHistoryViewerComponent implements OnInit {
     });
   }
 
-  // showStorageExplorerLink(transferProcess: TransferProcessDto) {
-  //     return transferProcess.dataDestination?.properties?.type === 'AzureStorage' && transferProcess.state === 'COMPLETED';
-  // }
-  //
-  // showDeprovisionButton(transferProcess: TransferProcessDto) {
-  //     return ['COMPLETED', 'PROVISIONED', 'REQUESTED', 'REQUESTED_ACK', 'IN_PROGRESS', 'STREAMING'].includes(transferProcess.state);
-  // }
-
   loadTransferProcesses() {
-    this.transferProcesses$ = this.transferProcessService
+    this.transferProcessService
       .getAllTransferProcesses()
       .pipe(
-        map((transferProcesses) =>
-          transferProcesses.sort(function (a, b) {
+        map((transferProcesses) => ({
+          transferProcesses: transferProcesses.sort(function (a, b) {
             return (
               b.createdTimestamp?.valueOf()! - a.createdTimestamp?.valueOf()!
             );
           }),
-        ),
+        })),
+        Fetched.wrap({
+          failureMessage: 'Failed fetching transfer history.',
+        }),
+      )
+      .subscribe(
+        (transferProcessesList) =>
+          (this.transferProcessesList = transferProcessesList),
       );
   }
 

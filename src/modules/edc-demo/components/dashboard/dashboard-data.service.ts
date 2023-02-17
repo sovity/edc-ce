@@ -74,7 +74,7 @@ export class DashboardDataService {
     return this.contractDefinitionService.getAllContractDefinitions().pipe(
       map((contractDefinitions) => contractDefinitions.length),
       Fetched.wrap({
-        failureMessage: 'Failed fetching number of contract definitions.',
+        failureMessage: 'Failed fetching number of contract definitions.'
       }),
       map((numContractDefinitions) => ({numContractDefinitions})),
     );

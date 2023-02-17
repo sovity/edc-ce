@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {first, map, switchMap} from 'rxjs/operators';
 import {
   PolicyDefinition,
   PolicyService,
   policyDefinitionId,
 } from '../../../edc-dmgmt-client';
+import {Fetched} from '../../models/fetched';
 import {NotificationService} from '../../services/notification.service';
 import {
   ConfirmDialogModel,
@@ -15,13 +16,18 @@ import {
 import {NewPolicyDialogResult} from '../new-policy-dialog/new-policy-dialog-result';
 import {NewPolicyDialogComponent} from '../new-policy-dialog/new-policy-dialog.component';
 
+export interface PolicyList {
+  filteredPolicies: PolicyDefinition[];
+  numTotalPolicies: number;
+}
+
 @Component({
   selector: 'app-policy-view',
   templateUrl: './policy-view.component.html',
   styleUrls: ['./policy-view.component.scss'],
 })
 export class PolicyViewComponent implements OnInit {
-  filteredPolicies$: Observable<PolicyDefinition[]> = of([]);
+  policyList: Fetched<PolicyList> = Fetched.empty();
   searchText: string = '';
   private fetch$ = new BehaviorSubject(null);
 
@@ -32,20 +38,25 @@ export class PolicyViewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.filteredPolicies$ = this.fetch$.pipe(
-      switchMap(() => {
-        const contractDefinitions$ = this.policyService.getAllPolicies();
-        return !!this.searchText
-          ? contractDefinitions$.pipe(
-              map((policies) =>
-                policies.filter((policy) =>
+    this.fetch$
+      .pipe(
+        switchMap(() => {
+          return this.policyService.getAllPolicies().pipe(
+            map(
+              (policies): PolicyList => ({
+                filteredPolicies: policies.filter((policy) =>
                   this.isFiltered(policy, this.searchText),
                 ),
-              ),
-            )
-          : contractDefinitions$;
-      }),
-    );
+                numTotalPolicies: policies.length,
+              }),
+            ),
+            Fetched.wrap({
+              failureMessage: 'Failed fetching policies.',
+            }),
+          );
+        }),
+      )
+      .subscribe((policyList) => (this.policyList = policyList));
   }
 
   onSearch() {

@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
-import {Observable, from, of} from 'rxjs';
+import {from} from 'rxjs';
 import {filter, first, map, switchMap, tap} from 'rxjs/operators';
-import {AppConfigService} from '../../../app/config/app-config.service';
 import {
   AssetService,
   ContractAgreementDto,
@@ -12,11 +11,13 @@ import {
   TransferId,
   TransferProcessService,
 } from '../../../edc-dmgmt-client';
+import {Fetched} from '../../models/fetched';
 import {TransferProcessStates} from '../../models/transfer-process-states';
-import {AssetPropertyMapper} from '../../services/asset-property-mapper';
 import {CatalogBrowserService} from '../../services/catalog-browser.service';
 import {NotificationService} from '../../services/notification.service';
-import {CatalogBrowserTransferDialog} from '../catalog-browser-transfer-dialog/catalog-browser-transfer-dialog.component';
+import {
+  CatalogBrowserTransferDialog
+} from '../catalog-browser-transfer-dialog/catalog-browser-transfer-dialog.component';
 
 interface RunningTransferProcess {
   processId: string;
@@ -30,7 +31,7 @@ interface RunningTransferProcess {
   styleUrls: ['./contract-viewer.component.scss'],
 })
 export class ContractViewerComponent implements OnInit {
-  contracts$: Observable<ContractAgreementDto[]> = of([]);
+  contractList: Fetched<ContractAgreementDto[]> = Fetched.empty();
   private runningTransfers: RunningTransferProcess[] = [];
   private pollingHandleTransfer?: any;
 
@@ -42,16 +43,19 @@ export class ContractViewerComponent implements OnInit {
     private catalogService: CatalogBrowserService,
     private router: Router,
     private notificationService: NotificationService,
-    private appConfigService: AppConfigService,
-    private assetPropertyMapper: AssetPropertyMapper,
-  ) {}
+  ) {
+  }
 
   private static isFinishedState(state: string): boolean {
     return ['COMPLETED', 'ERROR', 'ENDED'].includes(state);
   }
 
   ngOnInit(): void {
-    this.contracts$ = this.contractAgreementService.getAllAgreements();
+    this.contractAgreementService.getAllAgreements().pipe(
+      Fetched.wrap({
+        failureMessage: "Failed fetching contracts.",
+      }))
+      .subscribe((contractList) => this.contractList = contractList);
   }
 
   asDate(epochSeconds?: number): string {

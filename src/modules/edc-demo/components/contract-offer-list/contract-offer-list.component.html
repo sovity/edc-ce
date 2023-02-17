@@ -1,7 +1,3 @@
-<div *ngIf="!contractOffers.length" class="text-center mt-[50px] w-full">
-  No contract offers found.
-</div>
-
 <mat-card *ngFor="let contractOffer of contractOffers" class="asset-card">
   <ng-container *ngIf="contractOffer.asset; let asset">
     <mat-card-header>

@@ -93,6 +93,14 @@ body {
   width: 100%;
 }
 
+.w-\[80px\] {
+  width: 80px;
+}
+
+.h-\[80px\] {
+  height: 80px;
+}
+
 .w-\[800px\] {
   width: 800px;
 }
@@ -106,8 +114,13 @@ body {
   width: calc(100% / 2);
   max-width: calc(100% / 2);
 }
-.min-h-\[300px\]  {
+
+.min-h-\[300px\] {
   min-height: 300px;
+}
+
+.min-h-\[35rem\] {
+  min-height: 35rem;
 }
 
 .overflow-hidden {
@@ -167,6 +180,10 @@ body {
 }
 
 .mt-\[10px\] {
+  margin-top: 10px;
+}
+
+.mt-\[40px\] {
   margin-top: 10px;
 }
 
