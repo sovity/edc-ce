@@ -38,7 +38,7 @@ jobs:
       run: |
         echo "Saving local commit details in src/assets/version.txt"
         echo $(ls)
-        git log -1 > extensions/version/src/main/resources/version.txt
+        git log -1 > extensions/last-commit-info/src/main/resources/version.txt
 
     - name: Build with Gradle
       uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef
