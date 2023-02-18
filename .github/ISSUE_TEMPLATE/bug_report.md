@@ -34,18 +34,18 @@ Steps to reproduce the behavior:
 
 _Add any other context about the problem here._
 
--   Environment: Which instance or deployment were you using when the error occurred? Staging, Productive, Connector-URL, etc.?
--   Used version: If a specific component was used, which Version did you use? E.g. EDC v1.0.0
--   Time: When did the error occur? Exact timestamp (incl. time zone; assumed CET/CEST if missing) if possible.
--   Logs: Error log or further information
--   Parameter: Request contents or information entered
--   OS: [e.g. iOS, Windows]
--   ...
+- Environment: Which instance or deployment were you using when the error occurred? Staging, Productive, Connector-URL, etc.?
+- Used version: If a specific component was used, which Version did you use? E.g. EDC v1.0.0
+- Time: When did the error occur? Exact timestamp (incl. time zone; assumed CET/CEST if missing) if possible.
+- Logs: Error log or further information
+- Parameter: Request contents or information entered
+- OS: [e.g. iOS, Windows]
+- ...
 
 ## Possible Implementation and Work Breakdown
 
 _You already know the root cause of the erroneous state and how to fix it? Feel free to share your thoughts._
 
--   [ ] Task 1
--   [ ] Task 2
--   ...
+- [ ] Task 1
+- [ ] Task 2
+- ...
