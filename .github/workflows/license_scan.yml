@@ -1,23 +1,22 @@
 name: Trivy License Scan
 
 on:
-    pull_request:
-        branches: [ "main" ]
-
+  pull_request:
+    branches: ["main"]
 
 jobs:
-    license_scan:
-        name: license_scan
-        runs-on: ubuntu-latest
-        timeout-minutes: 30
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v3
+  license_scan:
+    name: license_scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-            - name: Run license scanner
-              uses: aquasecurity/trivy-action@master
-              with:
-                  scan-type: 'rootfs'
-                  scan-ref: '.'
-                  trivy-config: ".github/license_scan_config.yml"
-                  exit-code: 1
+      - name: Run license scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "rootfs"
+          scan-ref: "."
+          trivy-config: ".github/license_scan_config.yml"
+          exit-code: 1
