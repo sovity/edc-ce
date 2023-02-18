@@ -12,7 +12,7 @@ assignees: ""
 
 _A clear and concise description of what the customer wants to happen._
 
--   As a USER who PRECONDITIONS, I want to DO_THING, so I can ACCOMPLISH_GOAL.
+- As a USER who PRECONDITIONS, I want to DO_THING, so I can ACCOMPLISH_GOAL.
 
 ## Which Areas Would Be Affected?
 
@@ -34,6 +34,6 @@ _Add more on who asked for this, i.e. company, person, how much they pay us, wha
 
 _If possible, provide a (brief!) solution proposal._
 
--   [ ] Step 1
--   [ ] Step 2
--   ...
+- [ ] Step 1
+- [ ] Step 2
+- ...
