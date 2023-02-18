@@ -16,16 +16,16 @@ _Brief summary of what this Epic is, whether it's a larger project, goal, or use
 
 _Which requirements do you have to be fulfilled?_
 
--   Requirement 1
--   Requirement 2
+- Requirement 1
+- Requirement 2
 
 ## Work Breakdown
 
 _Create Stories which can be converted into issues_
 
--   [ ] Story 1
--   [ ] Story 2
--   ...
+- [ ] Story 1
+- [ ] Story 2
+- ...
 
 ## Initiative / goal
 
@@ -39,9 +39,9 @@ _What is your hypothesis on the success of this Epic? Describe how success will 
 
 _Define what is a must-have for launch and in-scope. Keep this section fluid and dynamic until you lock-in priority during planning._
 
--   Criteria 1
--   Criteria 2
--   ...
+- Criteria 1
+- Criteria 2
+- ...
 
 ## Stakeholders
 
@@ -55,6 +55,6 @@ _What's the timeline for this Epic, what resources are needed, and what might po
 
 _Which questions are open? From whom do you need more input to fully specify the epic?_
 
--   Question 1
--   Question 2
--   ...
+- Question 1
+- Question 2
+- ...
