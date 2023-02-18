@@ -50,3 +50,13 @@ updates:
     labels:
       - "dependencies"
       - "javascript"
+  # Docker
+  - package-ecosystem: "docker"
+    directory: "/connector"
+    schedule:
+      interval: "daily"
+    target-branch: "main"
+    open-pull-requests-limit: 30
+    labels:
+      - "dependencies"
+      - "docker"
