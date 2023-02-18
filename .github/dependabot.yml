@@ -4,42 +4,42 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-        interval: "weekly"
+      interval: "weekly"
     target-branch: "main"
     open-pull-requests-limit: 30
     labels:
-        - "dependencies"
-        - "github"
+      - "dependencies"
+      - "github"
   # Docker
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
-        interval: "daily"
+      interval: "daily"
     target-branch: "main"
     open-pull-requests-limit: 30
     labels:
-        - "dependencies"
-        - "docker"
+      - "dependencies"
+      - "docker"
   # Gradle
   - package-ecosystem: "gradle"
     directory: "/"
     schedule:
-        interval: "daily"
+      interval: "daily"
     target-branch: "main"
     open-pull-requests-limit: 30
     labels:
-        - "dependencies"
-        - "java"
+      - "dependencies"
+      - "java"
   # Maven
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
-        interval: "daily"
+      interval: "daily"
     target-branch: "main"
     open-pull-requests-limit: 30
     labels:
-        - "dependencies"
-        - "java"
+      - "dependencies"
+      - "java"
   # NPM
   - package-ecosystem: "npm"
     directory: "/"
