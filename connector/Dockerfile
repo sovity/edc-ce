@@ -1,4 +1,4 @@
-FROM gradle:7.6.0-jdk17 AS build
+FROM gradle:8.0.0-jdk17 AS build
 
 # Github pipeline sets this to the last commit information.
 # This build arg is later converted to an ENV variable, since the github action didn't support ENVs we used build args.
