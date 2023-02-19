@@ -11,6 +11,6 @@ jobs:
       - uses: actions/add-to-project@v0.4.0
         with:
           project-url: https://github.com/orgs/sovity/projects/9
+          github-token: ${{ secrets.ADD_ISSUE_TO_PROJECT_PAT }}
           labeled: dependencies
           label-operator: NOT
-          github-token: ${{ secrets.ADD_ISSUE_TO_PROJECT_PAT }}
