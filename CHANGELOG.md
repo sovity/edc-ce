@@ -16,6 +16,20 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
+#### Changed
+
+#### Removed
+
+#### Fixed
+
+## [v0.0.1-milestone-7-sovity4] 20.02.2023
+
+### Overview
+
+### Detailed Changes
+
+#### Added
+
 - Reworked page loading, empty messages and error states
 - Reworked policy list, new cards, new detail dialog.
 - Additional Http Datasource Properties: method, content type, request body,
