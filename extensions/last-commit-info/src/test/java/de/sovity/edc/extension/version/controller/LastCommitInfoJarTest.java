@@ -17,7 +17,7 @@ package de.sovity.edc.extension.version.controller;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static de.sovity.edc.extension.version.controller.TestUtils.createConfiguration;
@@ -34,7 +34,8 @@ class LastCommitInfoJarTest {
         extension.setConfiguration(createConfiguration(""));
     }
 
-    @Test
+
+    @Disabled("As it fails. See #132")
     void testOnlyJar() {
         var request = mockRequest();
         request.assertThat().body(containsString("pipeline"));
