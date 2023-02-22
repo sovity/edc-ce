@@ -22,6 +22,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Fixed
 
+- Compatibility section in README.md
+
 ## [v0.0.1-milestone-7-sovity4] 20.02.2023
 
 ### Overview

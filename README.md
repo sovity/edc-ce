@@ -36,6 +36,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#about-the-project">About The Project</a></li>
+    <li><a href="#compatibility">Compatibility</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#configuration">Configuration</a></li>
     <li><a href="#running-dev-mode">Running dev mode</a></li>
@@ -60,8 +61,25 @@ enterprise-ready managed "Connector-as-a-Service" services, bringing
 out-of-the-box fully configured DAPS and integrations to existing other
 dataspace technologies.
 
-Our extension of EDC UI functionalities has been made open source and are
-compatible with stock EDC backends depending on selected configuration.
+Our extension of EDC DataDashboard functionalities has been made open source and
+will be kept compatible to mostly stock EDCs with minimal API extending
+extensions. See [Compatibility](#compatibility).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- COMPATIBILITY -->
+
+## Compatibility
+
+Our compatibility target for the profile `sovity-open-source` is our open-source
+built
+[ghcr.io/sovity/edc](https://github.com/sovity/edc-extensions/pkgs/container/edc)
+by
+[sovity/edc-extensions/blob/main/connector](https://github.com/sovity/edc-extensions/blob/main/connector).
+
+See
+https://github.com/sovity/edc-extensions/blob/main/connector/build.gradle.kts#L12
+for a list of extensions used.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -78,6 +96,8 @@ cd docs/getting-started
 # Runs EDC and EDC UI at localhost:11000
 docker compose up
 ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONFIGURATION -->
 
