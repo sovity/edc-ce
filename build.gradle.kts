@@ -9,10 +9,6 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 }
 
-tasks.getByName<Test>("test") {
-    useJUnitPlatform()
-}
-
 val downloadArtifact: Configuration by configurations.creating {
     isTransitive = false
 }
@@ -46,6 +42,13 @@ tasks{
 allprojects {
     apply(plugin = "java")
     apply(plugin = "checkstyle")
+
+    tasks.getByName<Test>("test") {
+        useJUnitPlatform()
+        testLogging {
+            events("passed", "skipped", "failed")
+        }
+    }
 
     checkstyle {
         toolVersion = "9.0"
