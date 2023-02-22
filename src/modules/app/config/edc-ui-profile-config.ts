@@ -5,7 +5,7 @@ import {AppConfig} from './app-config';
  */
 export type EdcUiProfileConfig = Pick<
   AppConfig,
-  'theme' | 'brandLogoSrc' | 'brandLogoStyle' | 'features'
+  'theme' | 'brandFaviconSrc' | 'brandLogoSrc' | 'brandLogoStyle' | 'features'
 >;
 
 /**

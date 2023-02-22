@@ -7,17 +7,19 @@ import {
 
 type EdcUiTheme = Pick<
   EdcUiProfileConfig,
-  'theme' | 'brandLogoSrc' | 'brandLogoStyle'
+  'theme' | 'brandFaviconSrc' | 'brandLogoSrc' | 'brandLogoStyle'
 >;
 
 const SOVITY_THEME: EdcUiTheme = {
   theme: 'theme-sovity',
+  brandFaviconSrc: '/assets/images/sovity_favicon-192x192.png',
   brandLogoSrc: '/assets/images/sovity_logo.svg',
   brandLogoStyle: 'width: 70%;',
 };
 
 const MDS_THEME: EdcUiTheme = {
   theme: 'theme-mds',
+  brandFaviconSrc: '/assets/images/mds_favicon.ico',
   brandLogoSrc: '/assets/images/mds_logo.svg',
   brandLogoStyle: 'height: 57px; margin-top: 5px; margin-left: 5px;',
 };

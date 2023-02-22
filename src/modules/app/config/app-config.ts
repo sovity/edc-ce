@@ -8,6 +8,7 @@ import {EdcUiProfile} from './edc-ui-profile';
 export type AppConfig = {
   profile: EdcUiProfile;
   theme: EdcUiColorTheme;
+  brandFaviconSrc: string;
   brandLogoSrc: string;
   brandLogoStyle: string;
   features: Set<EdcUiFeature>;
