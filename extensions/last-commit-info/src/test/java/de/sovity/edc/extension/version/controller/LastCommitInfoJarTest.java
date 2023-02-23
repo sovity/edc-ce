@@ -17,12 +17,12 @@ package de.sovity.edc.extension.version.controller;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static de.sovity.edc.extension.version.controller.TestUtils.createConfiguration;
 import static de.sovity.edc.extension.version.controller.TestUtils.mockRequest;
-import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.containsStringIgnoringCase;
 import static org.hamcrest.Matchers.not;
 
 @ApiTest
@@ -34,11 +34,10 @@ class LastCommitInfoJarTest {
         extension.setConfiguration(createConfiguration(""));
     }
 
-
-    @Disabled("As it fails. See #132")
+    @Test
     void testOnlyJar() {
         var request = mockRequest();
-        request.assertThat().body(containsString("pipeline"));
-        request.assertThat().body(not(containsString("env")));
+        request.assertThat().body(containsStringIgnoringCase("pipeline"));
+        request.assertThat().body(not(containsStringIgnoringCase("env")));
     }
 }
