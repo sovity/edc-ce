@@ -17,13 +17,11 @@ package de.sovity.edc.extension.version.controller;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static de.sovity.edc.extension.version.controller.TestUtils.createConfiguration;
 import static de.sovity.edc.extension.version.controller.TestUtils.mockRequest;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.containsStringIgnoringCase;
 import static org.hamcrest.Matchers.not;
 
