@@ -1,10 +1,12 @@
 import {Injectable} from '@angular/core';
 import {
+  Action,
   Constraint,
   Permission,
   Policy,
   PolicyDefinition,
 } from '../../edc-dmgmt-client';
+import {cleanJson} from '../components/json-dialog/clean-json';
 import {
   AtomicConstraint,
   EdcTypes,
@@ -24,62 +26,97 @@ export class PolicyDefinitionUtils {
    * @param policyDefinition
    */
   getPolicyIrregularities(policyDefinition: PolicyDefinition): string[] {
+    policyDefinition = cleanJson(policyDefinition) as PolicyDefinition;
+
     const irregularities: string[] = [];
-    const checkConstraint = (prefix: string, constraint: Constraint) => {
-      if (!this.isAtomicConstraint(constraint)) {
-        irregularities.push(prefix);
+
+    const defaultKeys = ['edctype', '@type'];
+    const checkKeys = <T>(
+      prefix: string,
+      value: T | null | undefined,
+      allowedKeys: (keyof T)[],
+    ) => {
+      if (value != null) {
+        Object.keys(value).forEach((key) => {
+          if (
+            !allowedKeys.includes(key as keyof T) &&
+            !defaultKeys.includes(key)
+          ) {
+            irregularities.push(`${prefix}.${key} was set`);
+          }
+        });
       } else {
-        if (!this.isLiteralExpression(constraint.leftExpression)) {
-          irregularities.push(
-            `${prefix}.leftExpression is not literal expression`,
+        irregularities.push(`${prefix} was not set`);
+      }
+    };
+
+    const checkEdctype = <T, R>(
+      prefix: string,
+      value: T | null | undefined,
+      typeChecker: (item: any) => item is R,
+      isNotMessage: string,
+      ifOkFn?: (value: R) => void,
+    ) => {
+      if (typeChecker(value)) {
+        if (ifOkFn) ifOkFn(value);
+      } else {
+        irregularities.push(`${prefix} is not ${isNotMessage}`);
+      }
+    };
+
+    const checkConstraint = (prefix: string, constraint: Constraint) => {
+      checkEdctype(
+        prefix,
+        constraint,
+        this.isAtomicConstraint,
+        'an atomic constraint',
+        (constraint) => {
+          checkKeys(prefix, constraint, [
+            'leftExpression',
+            'operator',
+            'rightExpression',
+          ]);
+          checkEdctype(
+            `${prefix}.leftExpression`,
+            constraint.leftExpression,
+            this.isLiteralExpression,
+            'a literal expression',
           );
-        }
-        if (!this.isLiteralExpression(constraint.rightExpression)) {
-          irregularities.push(
-            `${prefix}.rightExpression is not literal expression`,
+          checkEdctype(
+            `${prefix}.rightExpression`,
+            constraint.rightExpression,
+            this.isLiteralExpression,
+            'a literal expression',
           );
-        }
+        },
+      );
+    };
+
+    const checkAction = (prefix: string, action: Action | undefined) => {
+      checkKeys(prefix, action, ['type']);
+      if (action && action.type !== 'USE') {
+        irregularities.push(`${prefix}.type wasn't 'USE'`);
       }
     };
 
     const checkPermission = (prefix: string, permission: Permission) => {
-      if (!this.isPermission(permission)) {
-        irregularities.push(prefix);
-      } else {
-        if (permission.action?.type !== 'USE') {
-          irregularities.push(`${prefix}.action was not USE`);
-        }
-        if (permission.assigner) {
-          irregularities.push(`${prefix}.assigner was set`);
-        }
-        if (permission.assignee) {
-          irregularities.push(`${prefix}.assignee was set`);
-        }
-        if (permission.duties?.length) {
-          irregularities.push(`${prefix}.duties was non-empty`);
-        }
-        permission.constraints?.forEach((constraint, index) =>
-          checkConstraint(`${prefix}.constraints[${index}]`, constraint),
-        );
-      }
+      checkEdctype(
+        prefix,
+        permission,
+        this.isPermission,
+        'a permission',
+        (permission) => {
+          checkKeys(prefix, permission, ['constraints', 'action']);
+          checkAction(`${prefix}.action`, permission.action);
+          permission.constraints?.forEach((constraint, index) =>
+            checkConstraint(`${prefix}.constraints[${index}]`, constraint),
+          );
+        },
+      );
     };
 
     const checkPolicy = (prefix: string, policy: Policy) => {
-      if (policy.inheritsFrom) {
-        irregularities.push(`${prefix}.inheritsFrom was set`);
-      }
-      if (policy.assigner) {
-        irregularities.push(`${prefix}.assigner was set`);
-      }
-      if (policy.assignee) {
-        irregularities.push(`${prefix}.assignee was set`);
-      }
-      if (policy.obligations?.length) {
-        irregularities.push(`${prefix}.obligations was set`);
-      }
-      if (policy.prohibitions?.length) {
-        irregularities.push(`${prefix}.prohibitions was set`);
-      }
+      checkKeys(prefix, policy, ['type', 'permissions']);
       if (!policy.permissions?.length) {
         irregularities.push(`${prefix}.permissions is empty`);
       } else if (policy.permissions.length > 1) {

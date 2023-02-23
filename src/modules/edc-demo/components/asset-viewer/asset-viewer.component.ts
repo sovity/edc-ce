@@ -71,7 +71,7 @@ export class AssetViewerComponent implements OnInit {
   }
 
   onAssetClick(asset: Asset) {
-    const data = AssetDetailDialogData.forAssetDetails(asset);
+    const data = AssetDetailDialogData.forAssetDetails(asset, true);
     const ref = this.dialog.open(AssetDetailDialog, {
       data,
       maxHeight: '90vh',

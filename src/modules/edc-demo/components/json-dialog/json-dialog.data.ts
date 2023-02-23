@@ -6,7 +6,7 @@ export interface JsonDialogData {
   subtitle: string;
   icon: string;
   objectForJson: unknown;
-  actionButton: DialogButton;
+  actionButton?: DialogButton;
 }
 
 export interface DialogButton {

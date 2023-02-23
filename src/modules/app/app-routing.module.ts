@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {AssetViewerComponent} from '../edc-demo/components/asset-viewer/asset-viewer.component';
 import {CatalogBrowserComponent} from '../edc-demo/components/catalog-browser/catalog-browser.component';
-import {ContractDefinitionViewerComponent} from '../edc-demo/components/contract-definition-viewer/contract-definition-viewer.component';
+import {ContractDefinitionPageComponent} from '../edc-demo/components/contract-definition-page/contract-definition-page.component';
 import {ContractViewerComponent} from '../edc-demo/components/contract-viewer/contract-viewer.component';
 import {DashboardComponent} from '../edc-demo/components/dashboard/dashboard.component';
 import {LogoutComponent} from '../edc-demo/components/logout/logout.component';
@@ -33,7 +33,7 @@ export const routes: Routes = [
   },
   {
     path: 'contract-definitions',
-    component: ContractDefinitionViewerComponent,
+    component: ContractDefinitionPageComponent,
     data: {title: 'Contract Definitions', icon: 'rule'},
   },
   {

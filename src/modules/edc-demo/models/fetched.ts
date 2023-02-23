@@ -49,6 +49,14 @@ export class Fetched<T> {
     );
   }
 
+  /**
+   * Get data or fall back to default value
+   * @param defaultValue value to fall back to if no data is present
+   */
+  orElse<R>(defaultValue: R): T | R {
+    return this.isReady ? this.data : defaultValue;
+  }
+
   static empty<T>(): Fetched<T> {
     return new Fetched<T>('not-loaded', undefined, undefined);
   }
@@ -66,7 +74,7 @@ export class Fetched<T> {
   }
 
   /**
-   * Wraps request into multiple emissions that track state.
+   * RXJS Operator: Wraps request into multiple emissions that track state.
    *
    * @param opts adit
    */
@@ -84,6 +92,26 @@ export class Fetched<T> {
           }),
         ),
       );
+  }
+
+  /**
+   * RXJS Operator: Map fetched value
+   *
+   * @param mapFn mapping fn applied to data if present
+   */
+  static map<T, R>(
+    mapFn: (value: T) => R,
+  ): OperatorFunction<Fetched<T>, Fetched<R>> {
+    return (obs) => obs.pipe(map((fetched) => fetched.map(mapFn)));
+  }
+
+  /**
+   * RXJS Operator: Get value or fall back to default value
+   *
+   * @param defaultValue value to fall back to if no data is present
+   */
+  static orElse<T, R>(defaultValue: R): OperatorFunction<Fetched<T>, T | R> {
+    return (obs) => obs.pipe(map((fetched) => fetched.orElse(defaultValue)));
   }
 }
 

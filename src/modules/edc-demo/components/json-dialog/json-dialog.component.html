@@ -13,11 +13,18 @@
 </div>
 
 <div mat-dialog-content>
-  <div class="flex flex-col" style="width: 40rem; height: 70vh">
-    <ngx-json-viewer
-      class="grow shrink-0"
-      [json]="visibleJson"></ngx-json-viewer>
-  </div>
+  <ngx-json-viewer
+    class="grow shrink-0"
+    style="
+      display: block;
+      min-width: 40rem;
+      min-height: 60vh;
+      max-width: 40rem;
+      max-height: 60vh;
+    "
+    [json]="visibleJson"
+    [expanded]="true"
+    [depth]="-1"></ngx-json-viewer>
 </div>
 
 <div class="w-full flex flex-row justify-between" mat-dialog-actions>
@@ -34,6 +41,7 @@
       Cancel
     </button>
     <button
+      *ngIf="data.actionButton"
       mat-button
       mat-flat-button
       color="{{ data.actionButton.color }}"

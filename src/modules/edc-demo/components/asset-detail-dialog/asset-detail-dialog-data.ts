@@ -6,10 +6,14 @@ export class AssetDetailDialogData {
     public mode: 'asset-details' | 'contract-offer',
     public asset: Asset,
     public contractOffer: ContractOffer | null,
+    public allowDelete: boolean,
   ) {}
 
-  static forAssetDetails(asset: Asset): AssetDetailDialogData {
-    return new AssetDetailDialogData('asset-details', asset, null);
+  static forAssetDetails(
+    asset: Asset,
+    allowDelete: boolean,
+  ): AssetDetailDialogData {
+    return new AssetDetailDialogData('asset-details', asset, null, allowDelete);
   }
 
   static forContractOffer(contractOffer: ContractOffer): AssetDetailDialogData {
@@ -17,6 +21,7 @@ export class AssetDetailDialogData {
       'contract-offer',
       contractOffer.asset!,
       contractOffer,
+      false,
     );
   }
 }

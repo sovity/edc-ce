@@ -36,8 +36,9 @@ import {AssetViewerComponent} from './components/asset-viewer/asset-viewer.compo
 import {CatalogBrowserComponent} from './components/catalog-browser/catalog-browser.component';
 import {ConfirmationDialogComponent} from './components/confirmation-dialog/confirmation-dialog.component';
 import {ContractAgreementTransferDialog} from './components/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog.component';
+import {ContractDefinitionCardsComponent} from './components/contract-definition-cards/contract-definition-cards.component';
 import {ContractDefinitionEditorDialog} from './components/contract-definition-editor-dialog/contract-definition-editor-dialog.component';
-import {ContractDefinitionViewerComponent} from './components/contract-definition-viewer/contract-definition-viewer.component';
+import {ContractDefinitionPageComponent} from './components/contract-definition-page/contract-definition-page.component';
 import {ContractOfferIconComponent} from './components/contract-offer-icon/contract-offer-icon.component';
 import {ContractOfferListComponent} from './components/contract-offer-list/contract-offer-list.component';
 import {ContractViewerComponent} from './components/contract-viewer/contract-viewer.component';
@@ -117,8 +118,9 @@ import {SafePipe} from './pipes/safe.pipe';
     CatalogBrowserComponent,
     ConfirmationDialogComponent,
     ContractAgreementTransferDialog,
+    ContractDefinitionCardsComponent,
     ContractDefinitionEditorDialog,
-    ContractDefinitionViewerComponent,
+    ContractDefinitionPageComponent,
     ContractOfferIconComponent,
     ContractOfferListComponent,
     ContractViewerComponent,
@@ -151,7 +153,7 @@ import {SafePipe} from './pipes/safe.pipe';
   exports: [
     AssetViewerComponent,
     CatalogBrowserComponent,
-    ContractDefinitionViewerComponent,
+    ContractDefinitionPageComponent,
     ContractViewerComponent,
     IsActiveFeaturePipe,
     NewPolicyDialogComponent,

@@ -1,4 +1,12 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -6,20 +14,24 @@ import {
 } from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {filter, finalize, takeUntil} from 'rxjs/operators';
-import cleanDeep from 'clean-deep';
+import {NgxJsonViewerComponent} from 'ngx-json-viewer';
 import {ConfirmationDialogComponent} from '../confirmation-dialog/confirmation-dialog.component';
+import {cleanJson} from './clean-json';
 import {DialogButton, JsonDialogData} from './json-dialog.data';
 
 @Component({
   selector: 'app-json-dialog',
   templateUrl: './json-dialog.component.html',
 })
-export class JsonDialogComponent implements OnInit, OnDestroy {
+export class JsonDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   busy = false;
 
   removeNulls = true;
 
   visibleJson: unknown = {};
+
+  @ViewChild(NgxJsonViewerComponent, {read: ElementRef})
+  jsonViewer!: ElementRef;
 
   constructor(
     public dialogRef: MatDialogRef<JsonDialogComponent>,
@@ -31,9 +43,13 @@ export class JsonDialogComponent implements OnInit, OnDestroy {
     this.updateVisibleJson();
   }
 
+  ngAfterViewInit() {
+    this.jsonViewer.nativeElement.scrollIntoView();
+  }
+
   updateVisibleJson() {
     this.visibleJson = this.removeNulls
-      ? cleanDeep(this.data.objectForJson, {emptyStrings: false})
+      ? cleanJson(this.data.objectForJson)
       : this.data.objectForJson;
   }
 

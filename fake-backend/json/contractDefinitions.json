@@ -1,27 +1,15 @@
 [
   {
-    "accessPolicyId": "time-restricted-policy -2",
-    "contractPolicyId": "time-restricted-policy -2",
+    "accessPolicyId": "end-of-the-year",
+    "contractPolicyId": "end-of-the-year",
     "criteria": [
       {
         "operandLeft": "asset:prop:id",
         "operator": "in",
-        "operandRight": ["urn:artifact:bitcoin3"]
+        "operandRight": ["urn:artifact:db-rail-network-2023-jan"]
       }
     ],
     "id": "offering"
-  },
-  {
-    "accessPolicyId": "time-restricted",
-    "contractPolicyId": "time-restricted",
-    "criteria": [
-      {
-        "operandLeft": "asset:prop:id",
-        "operator": "in",
-        "operandRight": ["urn:artifact:bitcoin"]
-      }
-    ],
-    "id": "bitcoin-3-contract"
   },
   {
     "accessPolicyId": "end-of-the-year",
@@ -34,18 +22,6 @@
       }
     ],
     "id": "emissions-end-of-the-year-offering"
-  },
-  {
-    "accessPolicyId": "end-of-the-year",
-    "contractPolicyId": "end-of-the-year",
-    "criteria": [
-      {
-        "operandLeft": "asset:prop:id",
-        "operator": "in",
-        "operandRight": ["urn:artifact:ethereum2"]
-      }
-    ],
-    "id": "ETH-Value"
   },
   {
     "accessPolicyId": "time-restricted-usage-221017",

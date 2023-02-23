@@ -6,7 +6,7 @@
         {
           "edctype": "dataspaceconnector:permission",
           "uid": null,
-          "target": "urn:artifact:urn:artifact:bitcoin",
+          "target": null,
           "action": {
             "type": "USE",
             "includedIn": null,
@@ -62,7 +62,7 @@
         {
           "edctype": "dataspaceconnector:permission",
           "uid": null,
-          "target": "urn:artifact:urn:artifact:bitcoin",
+          "target": null,
           "action": {
             "type": "USE",
             "includedIn": null,
@@ -118,7 +118,7 @@
         {
           "edctype": "dataspaceconnector:permission",
           "uid": null,
-          "target": "urn:artifact:urn:artifact:bitcoin",
+          "target": null,
           "action": {
             "type": "USE",
             "includedIn": null,
@@ -174,7 +174,7 @@
         {
           "edctype": "dataspaceconnector:permission",
           "uid": null,
-          "target": "urn:artifact:urn:artifact:bitcoin",
+          "target": null,
           "action": {
             "type": "USE",
             "includedIn": null,
@@ -230,7 +230,7 @@
         {
           "edctype": "dataspaceconnector:permission",
           "uid": null,
-          "target": "urn:artifact:urn:artifact:bitcoin",
+          "target": null,
           "action": {
             "type": "USE",
             "includedIn": null,
@@ -286,7 +286,7 @@
         {
           "edctype": "dataspaceconnector:permission",
           "uid": null,
-          "target": "urn:artifact:urn:artifact:bitcoin",
+          "target": null,
           "action": {
             "type": "USE",
             "includedIn": null,
@@ -342,7 +342,7 @@
         {
           "edctype": "dataspaceconnector:permission",
           "uid": null,
-          "target": "urn:artifact:urn:artifact:bitcoin",
+          "target": null,
           "action": {
             "type": "USE",
             "includedIn": null,
@@ -398,7 +398,7 @@
         {
           "edctype": "dataspaceconnector:permission",
           "uid": null,
-          "target": "urn:artifact:urn:artifact:bitcoin",
+          "target": null,
           "action": {
             "type": "USE",
             "includedIn": null,

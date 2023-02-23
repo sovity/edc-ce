@@ -82,7 +82,7 @@
       <button mat-dialog-close mat-button [disabled]="loading">Close</button>
 
       <button
-        *ngIf="data.mode === 'asset-details'"
+        *ngIf="data.allowDelete"
         mat-raised-button
         color="warn"
         [disabled]="loading"

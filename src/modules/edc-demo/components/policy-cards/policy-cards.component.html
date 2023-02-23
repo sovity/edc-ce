@@ -1,7 +1,3 @@
-<div *ngIf="!policyCards.length" class="text-center mt-[50px] w-full">
-  No policies found.
-</div>
-
 <div class="flex flex-row flex-wrap gap-[16px] justify-start">
   <mat-card
     *ngFor="let policyCard of policyCards"
@@ -19,10 +15,7 @@
       <mat-card-subtitle>Policy</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="flex flex-col space-y-[16px]">
-      <div
-        *ngIf="!policyCard.isRegular"
-        class="flex flex-col"
-        style="margin: 0 4px">
+      <div *ngIf="!policyCard.isRegular" class="flex flex-col">
         <div class="text-slate text-sm uppercase tracking-wider">
           Irregular Policy
         </div>

@@ -9,6 +9,7 @@ export class EmptyStateComponent {
   @HostBinding('class.flex-col')
   @HostBinding('class.justify-center')
   @HostBinding('class.uppercase')
+  @HostBinding('class.text-slate')
   cls = true;
 
   @Input()
