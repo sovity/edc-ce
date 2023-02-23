@@ -10,6 +10,7 @@ import {AssetProperties} from '../../services/asset-properties';
 import {PolicyDefinitionUtils} from '../../services/policy-definition-utils';
 import {Operator, OperatorSymbols} from '../../services/policy-type-ext';
 import {associateBy} from '../../utils/map-utils';
+import {assetSearchTargets} from '../../utils/search-utils';
 import {
   ContractDefinitionCard,
   ContractDefinitionCardCriterionValue,
@@ -118,7 +119,7 @@ export class ContractDefinitionCardBuilder {
             return {
               type: 'asset',
               asset,
-              searchTargets: [asset.id, asset.name, ...asset.keywords],
+              searchTargets: assetSearchTargets(asset),
             };
           }
         }

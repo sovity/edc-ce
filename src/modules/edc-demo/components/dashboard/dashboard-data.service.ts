@@ -14,7 +14,7 @@ import {
 import {Fetched} from '../../models/fetched';
 import {TransferProcessStates} from '../../models/transfer-process-states';
 import {CatalogApiUrlService} from '../../services/catalog-api-url.service';
-import {CatalogBrowserService} from '../../services/catalog-browser.service';
+import {ContractOfferService} from '../../services/contract-offer.service';
 import {TransferProcessUtils} from '../../services/transfer-process-utils';
 import {DonutChartData} from '../dashboard-donut-chart/donut-chart-data';
 import {ChartColorService} from './chart-color.service';
@@ -24,7 +24,7 @@ import {DashboardData, defaultDashboardData} from './dashboard-data';
 export class DashboardDataService {
   constructor(
     private appConfigService: AppConfigService,
-    private catalogBrowserService: CatalogBrowserService,
+    private catalogBrowserService: ContractOfferService,
     private contractDefinitionService: ContractDefinitionService,
     private contractAgreementService: ContractAgreementService,
     private policyService: PolicyService,
@@ -101,7 +101,7 @@ export class DashboardDataService {
   }
 
   private catalogBrowserKpis(): Observable<Partial<DashboardData>> {
-    return this.catalogBrowserService.getContractOffers().pipe(
+    return this.catalogBrowserService.getAllContractOffers().pipe(
       map((contractDefinitions) => contractDefinitions.length),
       Fetched.wrap({
         failureMessage: 'Failed fetching data offers.',

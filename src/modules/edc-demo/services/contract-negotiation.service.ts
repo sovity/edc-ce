@@ -1,14 +1,19 @@
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {
+  ContractNegotiationService as ContractNegotiationApiService,
   ContractNegotiationDto,
   NegotiationInitiateRequestDto,
+  TransferProcessDto,
+  TransferProcessService,
+  TransferRequestDto,
 } from '../../edc-dmgmt-client';
 import {ContractOffer} from '../models/contract-offer';
 import {NegotiationResult} from '../models/negotiation-result';
 import {TransferProcessStates} from '../models/transfer-process-states';
-import {CatalogBrowserService} from './catalog-browser.service';
 import {NotificationService} from './notification.service';
 
 interface RunningTransferProcess {
@@ -33,7 +38,8 @@ export class ContractNegotiationService {
   private pollingHandleNegotiation?: any;
 
   constructor(
-    private catalogBrowserService: CatalogBrowserService,
+    private contractNegotiationService: ContractNegotiationApiService,
+    private transferProcessService: TransferProcessService,
     private router: Router,
     private notificationService: NotificationService,
   ) {
@@ -96,7 +102,7 @@ export class ContractNegotiationService {
 
     const finishedNegotiationStates = ['CONFIRMED', 'DECLINED', 'ERROR'];
 
-    this.catalogBrowserService.initiateNegotiation(initiateRequest).subscribe(
+    this.initiateNegotiation(initiateRequest).subscribe(
       (negotiationId) => {
         this.finishedNegotiations.delete(initiateRequest.offer.offerId);
         this.runningNegotiations.set(initiateRequest.offer.offerId, {
@@ -108,9 +114,8 @@ export class ContractNegotiationService {
           // there are no active negotiations
           this.pollingHandleNegotiation = setInterval(() => {
             for (const negotiation of this.runningNegotiations.values()) {
-              this.catalogBrowserService
-                .getNegotiationState(negotiation.id)
-                .subscribe((updatedNegotiation) => {
+              this.getNegotiationState(negotiation.id).subscribe(
+                (updatedNegotiation) => {
                   if (
                     finishedNegotiationStates.includes(updatedNegotiation.state)
                   ) {
@@ -135,7 +140,8 @@ export class ContractNegotiationService {
                     clearInterval(this.pollingHandleNegotiation);
                     this.pollingHandleNegotiation = undefined;
                   }
-                });
+                },
+              );
             }
           }, 1000);
         }
@@ -144,6 +150,38 @@ export class ContractNegotiationService {
         console.error(error);
         this.notificationService.showError('Error starting negotiation');
       },
+    );
+  }
+
+  private initiateTransfer(
+    transferRequest: TransferRequestDto,
+  ): Observable<string> {
+    return this.transferProcessService
+      .initiateTransfer(transferRequest)
+      .pipe(map((t) => t.id!));
+  }
+
+  getTransferProcessesById(id: string): Observable<TransferProcessDto> {
+    return this.transferProcessService.getTransferProcess(id);
+  }
+
+  private initiateNegotiation(
+    initiateDto: NegotiationInitiateRequestDto,
+  ): Observable<string> {
+    return this.contractNegotiationService
+      .initiateContractNegotiation(initiateDto, 'body', false)
+      .pipe(map((t) => t.id!));
+  }
+
+  private getNegotiationState(id: string): Observable<ContractNegotiationDto> {
+    return this.contractNegotiationService.getNegotiation(id);
+  }
+
+  private getAgreementForNegotiation(
+    contractId: string,
+  ): Observable<ContractNegotiationDto> {
+    return this.contractNegotiationService.getAgreementForNegotiation(
+      contractId,
     );
   }
 }

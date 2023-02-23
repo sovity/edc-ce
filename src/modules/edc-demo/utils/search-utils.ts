@@ -1,3 +1,5 @@
+import {Asset} from '../models/asset';
+
 /**
  * Simple search that tries to find all search query words in target strings of given items
  * @param items item list
@@ -21,4 +23,12 @@ export function search<T>(
       .filter((it) => it) as string[];
     return words.every((word) => targets.some((value) => value.includes(word)));
   });
+}
+
+/**
+ * Common code for searching assets
+ * @param asset
+ */
+export function assetSearchTargets(asset: Asset): (string | null)[] {
+  return [asset.id, asset.name, ...asset.keywords];
 }

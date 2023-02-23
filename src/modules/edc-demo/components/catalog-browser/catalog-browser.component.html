@@ -4,12 +4,12 @@
     <mat-form-field class="search-form-field" color="accent">
       <mat-label>Search catalog</mat-label>
       <mat-icon matPrefix>search</mat-icon>
-      <input matInput [(ngModel)]="searchText" (input)="onSearch()" />
+      <input matInput [formControl]="searchText" />
       <button
-        *ngIf="searchText"
+        *ngIf="searchText.value"
         mat-icon-button
         matSuffix
-        (click)="searchText = ''; onSearch()">
+        (click)="searchText.setValue('')">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
@@ -18,7 +18,13 @@
     <mat-form-field
       class="search-form-field mat-hint-text-ellipsis"
       color="accent"
-      style="margin-left: 15px">
+      style="margin-left: 15px"
+      matBadgeColor="warn"
+      [matBadge]="
+        data.requestTotals.isSomeFailed
+          ? data.requestTotals.numFailed
+          : undefined
+      ">
       <mat-label>Connector Endpoints</mat-label>
       <mat-icon matPrefix>link</mat-icon>
       <input
@@ -31,6 +37,38 @@
         [matTooltip]="presetProvidersMessage"
         >{{ presetProvidersMessage }}</mat-hint
       >
+      <button
+        *ngIf="!data.requestTotals.isDone && !data.requestTotals.isSomeFailed"
+        matSuffix
+        mat-icon-button
+        matTooltip="Click for details"
+        (click)="onShowFetchDetails()">
+        <mat-progress-spinner
+          matSuffix
+          style="width: 20px; height: 20px"
+          diameter="20"
+          color="primary"
+          mode="indeterminate">
+        </mat-progress-spinner>
+      </button>
+      <button
+        *ngIf="data.requestTotals.isSomeFailed"
+        matSuffix
+        color="warn"
+        mat-icon-button
+        matTooltip="Click for failed catalog details"
+        (click)="onShowFetchDetails()">
+        <mat-icon>warning</mat-icon>
+      </button>
+      <button
+        *ngIf="data.requestTotals.isDone && !data.requestTotals.isSomeFailed"
+        matSuffix
+        color="primary"
+        mat-icon-button
+        matTooltip="Click for details"
+        (click)="onShowFetchDetails()">
+        <mat-icon>info</mat-icon>
+      </button>
     </mat-form-field>
 
     <!-- Spacer -->
@@ -38,42 +76,40 @@
 
     <!-- Pagination -->
     <mat-paginator
-      *ngIf="contractOffersList.isReady"
+      *ngIf="data.requestTotals.isSomeReady"
       hidePageSize="true"
-      pageSize="filteredContractOffers.length"
-      [length]="contractOffersList.data.filteredContractOffers.length">
+      [pageSize]="data.filteredContractOffers.length"
+      [length]="data.numTotalContractOffers">
     </mat-paginator>
   </div>
   <div class="flex flex-row justify-center">
+    <edc-demo-empty-state
+      *ngIf="data.requestTotals.isNothingReady && !data.requests.length"
+      class="min-h-[35rem]"
+      emptyMessage="Please enter other connector endpoints to fetch catalogs."></edc-demo-empty-state>
     <edc-demo-loading-state
-      *ngIf="contractOffersList.isLoading"
+      *ngIf="
+        data.requestTotals.isNothingReady &&
+        data.requests.length &&
+        !data.requestTotals.isDone
+      "
       class="min-h-[35rem]"></edc-demo-loading-state>
     <edc-demo-error-state
-      *ngIf="contractOffersList.isError"
+      *ngIf="data.requestTotals.isAllFailed"
       class="min-h-[35rem]"
-      [errorMessage]="
-        contractOffersList.error.failureMessage
-      "></edc-demo-error-state>
+      errorMessage="All catalog fetches failed"></edc-demo-error-state>
     <edc-demo-empty-state
       *ngIf="
-        contractOffersList.isReady &&
-        (!contractOffersList.data.numTotalContractOffer ||
-          !contractOffersList.data.filteredContractOffers.length)
+        data.requestTotals.isSomeReady && !data.filteredContractOffers.length
       "
       class="min-h-[35rem]"
-      [emptyMessage]="
-        'No contract offers found with this filter'
-      "></edc-demo-empty-state>
+      emptyMessage="No contract offers found with this filter"></edc-demo-empty-state>
   </div>
   <div
-    *ngIf="
-      contractOffersList.isReady &&
-      !!contractOffersList.data.numTotalContractOffer
-    "
+    *ngIf="data.requestTotals.isSomeReady && !!data.numTotalContractOffers"
     class="flex flex-row flex-wrap">
     <edc-demo-contract-offer-list
-      *ngIf="contractOffersList.data.numTotalContractOffer"
-      [contractOffers]="contractOffersList.data.filteredContractOffers"
+      [contractOffers]="data.filteredContractOffers"
       (contractOfferClick)="
         onContractOfferClick($event)
       "></edc-demo-contract-offer-list>

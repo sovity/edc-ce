@@ -4,6 +4,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatBadgeModule} from '@angular/material/badge';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -33,6 +34,7 @@ import {AssetDetailDialog} from './components/asset-detail-dialog/asset-detail-d
 import {AssetEditorDialog} from './components/asset-editor-dialog/asset-editor-dialog.component';
 import {AssetListComponent} from './components/asset-list/asset-list.component';
 import {AssetViewerComponent} from './components/asset-viewer/asset-viewer.component';
+import {CatalogBrowserFetchDetailDialogComponent} from './components/catalog-browser-fetch-detail-dialog/catalog-browser-fetch-detail-dialog.component';
 import {CatalogBrowserComponent} from './components/catalog-browser/catalog-browser.component';
 import {ConfirmationDialogComponent} from './components/confirmation-dialog/confirmation-dialog.component';
 import {ContractAgreementTransferDialog} from './components/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog.component';
@@ -80,6 +82,7 @@ import {SafePipe} from './pipes/safe.pipe';
     ClipboardModule,
 
     // Angular Material
+    MatBadgeModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
@@ -116,6 +119,7 @@ import {SafePipe} from './pipes/safe.pipe';
     AssetListComponent,
     AssetViewerComponent,
     CatalogBrowserComponent,
+    CatalogBrowserFetchDetailDialogComponent,
     ConfirmationDialogComponent,
     ContractAgreementTransferDialog,
     ContractDefinitionCardsComponent,

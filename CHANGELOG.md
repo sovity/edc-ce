@@ -17,6 +17,7 @@ the detailed section referring to by linking pull requests or issues.
 #### Added
 
 - Added Additional Http Datasink properties.
+- Catalog Browser now shows if individual Connector Endpoints were unreachable.
 
 #### Changed
 

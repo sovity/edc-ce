@@ -25,13 +25,10 @@ export class CatalogApiUrlService {
   }
 
   /**
-   * Get all configured catalog API URLs
+   * Get all configured catalog URLs
    */
-  getCatalogApiUrls(): string[] {
-    return this.distinct([
-      ...this.presetProviders,
-      ...this.customProviders,
-    ]).map((url) => this.buildCatalogApiUrl(url));
+  getAllProviders() {
+    return this.distinct([...this.presetProviders, ...this.customProviders]);
   }
 
   /**
@@ -56,7 +53,7 @@ export class CatalogApiUrlService {
    * targeted at own connector with query param providerUrl)
    * @return full url for fetching catalog
    */
-  private buildCatalogApiUrl(connectorEndpoint: string) {
+  buildCatalogApiUrl(connectorEndpoint: string) {
     // Detect legacy URLs
     const prefix = `${this.appConfigService.config.dataManagementApiUrl}/catalog?providerUrl=`;
     if (connectorEndpoint.startsWith(prefix)) {

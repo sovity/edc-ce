@@ -11,7 +11,8 @@ import {
 } from '../../../edc-dmgmt-client';
 import {Fetched} from '../../models/fetched';
 import {TransferProcessStates} from '../../models/transfer-process-states';
-import {CatalogBrowserService} from '../../services/catalog-browser.service';
+import {ContractNegotiationService} from '../../services/contract-negotiation.service';
+import {ContractOfferService} from '../../services/contract-offer.service';
 import {NotificationService} from '../../services/notification.service';
 import {ContractAgreementTransferDialogData} from '../contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-data';
 import {ContractAgreementTransferDialogResult} from '../contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-result';
@@ -34,10 +35,11 @@ export class ContractViewerComponent implements OnInit {
   private pollingHandleTransfer?: any;
 
   constructor(
+    private contractNegotiationService: ContractNegotiationService,
     private contractAgreementService: ContractAgreementService,
     private assetService: AssetService,
     public dialog: MatDialog,
-    private catalogService: CatalogBrowserService,
+    private catalogService: ContractOfferService,
     private router: Router,
     private notificationService: NotificationService,
   ) {}
@@ -106,7 +108,9 @@ export class ContractViewerComponent implements OnInit {
         .pipe(
           // fetch from API
           switchMap((t) =>
-            this.catalogService.getTransferProcessesById(t.processId),
+            this.contractNegotiationService.getTransferProcessesById(
+              t.processId,
+            ),
           ),
           // only use finished ones
           filter((tpDto) =>
@@ -126,16 +130,16 @@ export class ContractViewerComponent implements OnInit {
             );
           }),
         )
-        .subscribe(
-          () => {
+        .subscribe({
+          next: () => {
             // clear interval if necessary
             if (this.runningTransfers.length === 0) {
               clearInterval(this.pollingHandleTransfer);
               this.pollingHandleTransfer = undefined;
             }
           },
-          (error) => this.notificationService.showError(error),
-        );
+          error: (error) => this.notificationService.showError(error),
+        });
     };
   }
 }

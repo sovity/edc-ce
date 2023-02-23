@@ -58,8 +58,14 @@ app.get('/api/v1/data/catalog', (req, res) => {
   let providerUrl = req.query.providerUrl;
   if (providerUrl === 'http://existing-other-connector/v1/ids/data') {
     res.json(catalog1);
-  } else if (providerUrl === 'https://test.gg') {
+  } else if (providerUrl === 'https://test') {
     res.json(catalog2);
+  } else if (providerUrl === 'http://status-502') {
+    return res.status(502).json({message: 'Target IDS Endpoint unreachable'});
+  } else if (providerUrl === 'http://status-500') {
+    return res.status(500).json({message: 'Internal Server Error'});
+  } else if (providerUrl === 'http://timeout') {
+    return res.status(0);
   } else {
     res.json({contractOffers: []});
   }

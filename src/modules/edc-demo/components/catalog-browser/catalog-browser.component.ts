@@ -1,19 +1,25 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {FormControl} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
-import {BehaviorSubject, Observable, Subject, sampleTime} from 'rxjs';
-import {map, switchMap, takeUntil} from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  distinctUntilChanged,
+  sampleTime,
+} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {ContractOffer} from '../../models/contract-offer';
-import {Fetched} from '../../models/fetched';
 import {CatalogApiUrlService} from '../../services/catalog-api-url.service';
-import {CatalogBrowserService} from '../../services/catalog-browser.service';
+import {ContractOfferService} from '../../services/contract-offer.service';
+import {value$} from '../../utils/form-group-utils';
 import {AssetDetailDialogData} from '../asset-detail-dialog/asset-detail-dialog-data';
 import {AssetDetailDialogResult} from '../asset-detail-dialog/asset-detail-dialog-result';
 import {AssetDetailDialog} from '../asset-detail-dialog/asset-detail-dialog.component';
-
-export interface ContractOfferList {
-  filteredContractOffers: ContractOffer[];
-  numTotalContractOffer: number;
-}
+import {CatalogBrowserFetchDetailDialogComponent} from '../catalog-browser-fetch-detail-dialog/catalog-browser-fetch-detail-dialog.component';
+import {CatalogBrowserFetchDetailDialogData} from '../catalog-browser-fetch-detail-dialog/catalog-browser-fetch-detail-dialog.data';
+import {CatalogBrowserPageService} from './catalog-browser-page-service';
+import {emptyCatalogBrowserPageData} from './catalog-browser-page.data';
 
 @Component({
   selector: 'edc-demo-catalog-browser',
@@ -21,51 +27,31 @@ export interface ContractOfferList {
   styleUrls: ['./catalog-browser.component.scss'],
 })
 export class CatalogBrowserComponent implements OnInit, OnDestroy {
-  contractOffersList: Fetched<ContractOfferList> = Fetched.empty();
-  searchText = '';
+  data = emptyCatalogBrowserPageData();
+  data$ = new BehaviorSubject(this.data);
+  searchText = new FormControl('');
   customProviders = '';
   presetProvidersMessage = '';
   private fetch$ = new BehaviorSubject(null);
 
   constructor(
-    private catalogBrowserService: CatalogBrowserService,
+    private catalogBrowserPageService: CatalogBrowserPageService,
+    private catalogBrowserService: ContractOfferService,
     private catalogApiUrlService: CatalogApiUrlService,
     private matDialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
-    this.fetch$
-      .pipe(
-        sampleTime(200),
-        switchMap(
-          (): Observable<Fetched<ContractOfferList>> =>
-            this.catalogBrowserService.getContractOffers().pipe(
-              map(
-                (contractOffers): ContractOfferList => ({
-                  filteredContractOffers: contractOffers.filter(
-                    (contractOffer) =>
-                      contractOffer.asset.name
-                        ?.toLowerCase()
-                        ?.includes(this.searchText.toLowerCase()),
-                  ),
-                  numTotalContractOffer: contractOffers.length,
-                }),
-              ),
-              Fetched.wrap({
-                failureMessage: 'Failed fetching contract offers.',
-              }),
-            ),
-        ),
-        takeUntil(this.ngOnDestroy$),
+    this.catalogBrowserPageService
+      .contractOfferPageData$(
+        this.fetch$.pipe(sampleTime(200)),
+        this.searchText$(),
       )
-      .subscribe((contractOffersList) => {
-        this.contractOffersList = contractOffersList;
+      .subscribe((data) => {
+        this.data = data;
+        this.data$.next(data);
       });
     this.presetProvidersMessage = this.buildPresetCatalogUrlsMessage();
-  }
-
-  onSearch() {
-    this.fetch$.next(null);
   }
 
   onContractOfferClick(contractOffer: ContractOffer) {
@@ -76,6 +62,14 @@ export class CatalogBrowserComponent implements OnInit, OnDestroy {
         this.fetch$.next(null);
       }
     });
+  }
+
+  onShowFetchDetails() {
+    const data: CatalogBrowserFetchDetailDialogData = {
+      data$: this.data$,
+      refresh: () => this.fetch$.next(null),
+    };
+    this.matDialog.open(CatalogBrowserFetchDetailDialogComponent, {data});
   }
 
   onCatalogUrlsChange(): void {
@@ -91,6 +85,13 @@ export class CatalogBrowserComponent implements OnInit, OnDestroy {
     return `Already using${
       urls.length > 1 ? ` (${urls.length})` : ''
     }: ${urls.join(', ')}`;
+  }
+
+  private searchText$(): Observable<string> {
+    return (value$(this.searchText) as Observable<string>).pipe(
+      map((it) => (it ?? '').trim()),
+      distinctUntilChanged(),
+    );
   }
 
   ngOnDestroy$ = new Subject();
