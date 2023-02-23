@@ -98,6 +98,10 @@ Copy the SKI:AKI combination and use it to start the EDC (optionally also save i
 ### Where should the connector certificate be stored?
 In the default configuration the connector certificate should be stored inside a `keystore.jks` in a folder `resources/vault/edc/` next to the docker-compose. The path and keystore name can be edited in the env-variable `EDC_KEYSTORE`.
 
+## Backward Compatibility and Migration Support
+It is NOT a goal of this project to provide backward compatibility to the previous implementations.
+
+
 ## License
 This project is licensed under the Apache License 2.0 - see [here](LICENSE) for details.
 
