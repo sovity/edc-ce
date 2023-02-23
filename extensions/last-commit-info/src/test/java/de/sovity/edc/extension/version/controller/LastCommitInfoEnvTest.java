@@ -24,6 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static de.sovity.edc.extension.version.controller.TestUtils.createConfiguration;
 import static de.sovity.edc.extension.version.controller.TestUtils.mockRequest;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.containsStringIgnoringCase;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
@@ -34,11 +35,10 @@ class LastCommitInfoEnvTest {
         extension.setConfiguration(createConfiguration("env"));
     }
 
-    @Disabled("As it fails. See #132")
     @Test
     void testEnvAndJar() {
         var request = mockRequest();
-        request.assertThat().body(containsString("pipeline"));
-        request.assertThat().body(containsString("env"));
+        request.assertThat().body(containsStringIgnoringCase("pipeline"));
+        request.assertThat().body(containsStringIgnoringCase("env"));
     }
 }
