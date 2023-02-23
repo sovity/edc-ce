@@ -30,7 +30,7 @@ export const AppConfigProperties = {
   dataManagementApiKey: 'EDC_UI_DATA_MANAGEMENT_API_KEY',
 
   /**
-   * Pre-configured Connector IDs to be used in catalog browser, comma separated.
+   * Pre-configured Other Connector Endpoints to be used in catalog browser, comma separated.
    */
   catalogUrls: 'EDC_UI_CATALOG_URLS',
 

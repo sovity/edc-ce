@@ -83,7 +83,7 @@ export class AssetDetailDialogFieldBuilder {
     fields.push(
       {
         icon: 'link',
-        label: 'Connector ID',
+        label: 'Connector Endpoint',
         text: tryValue(asset.originator),
         url: tryUrl(asset.originator),
       },

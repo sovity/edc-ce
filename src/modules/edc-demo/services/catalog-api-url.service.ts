@@ -2,21 +2,21 @@ import {Injectable} from '@angular/core';
 import {AppConfigService} from '../../app/config/app-config.service';
 
 /**
- * Builds Catalog fetch URLs. Stores preset and user configured Connector IDs.
+ * Builds Catalog fetch URLs. Stores preset and user configured Connector Endpoints.
  */
 @Injectable({
   providedIn: 'root',
 })
 export class CatalogApiUrlService {
   /**
-   * Preset Connector IDs to be used in catalog.
+   * Preset Connector Endpoints to be used in catalog.
    *
    * From app-config.json, not user editable
    */
   private readonly presetProviders = new Array<string>();
 
   /**
-   * User-added Connector IDs
+   * User-added Connector Endpoints
    */
   private customProviders = new Array<string>();
 
@@ -52,19 +52,19 @@ export class CatalogApiUrlService {
   /**
    * We fetch catalogs by proxying them through our own backend.
    *
-   * @param connectorId target connector id (or legacy full url
+   * @param connectorEndpoint target connector endpoint (or legacy full url
    * targeted at own connector with query param providerUrl)
    * @return full url for fetching catalog
    */
-  private buildCatalogApiUrl(connectorId: string) {
+  private buildCatalogApiUrl(connectorEndpoint: string) {
     // Detect legacy URLs
     const prefix = `${this.appConfigService.config.dataManagementApiUrl}/catalog?providerUrl=`;
-    if (connectorId.startsWith(prefix)) {
-      return connectorId;
+    if (connectorEndpoint.startsWith(prefix)) {
+      return connectorEndpoint;
     }
 
-    // Build Catalog API URL from Connector ID
-    return `${prefix}${encodeURIComponent(connectorId)}`;
+    // Build Catalog API URL from Connector Endpoint
+    return `${prefix}${encodeURIComponent(connectorEndpoint)}`;
   }
 
   private splitUrls(commaJoinedUrls?: string | null): string[] {

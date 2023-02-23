@@ -99,7 +99,7 @@ export class CatalogBrowserComponent implements OnInit, OnDestroy {
     this.ngOnDestroy$.next(null);
     this.ngOnDestroy$.complete();
 
-    // Reset selected Connector IDs
+    // Reset selected Connector Endpoints
     this.catalogApiUrlService.setCustomProviders([]);
   }
 }

@@ -20,6 +20,10 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Changed
 
+- Renamed Connector ID to Connector Endpoint to emphasize differentiate:
+  - Connector ID: Configured in certificate, contained in DAT.
+  - Connector Endpoint: Configured IDS Endpoint
+
 #### Removed
 
 #### Fixed
