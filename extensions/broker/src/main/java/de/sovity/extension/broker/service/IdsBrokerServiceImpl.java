@@ -276,6 +276,14 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
     }
 
     private List<AtomicConstraint> getConstraints(PolicyDefinition contractPolicy) {
+        if (contractPolicy == null) {
+            return List.of();
+        } else {
+            return getConstraintsFromPolicy(contractPolicy);
+        }
+    }
+
+    private List<AtomicConstraint> getConstraintsFromPolicy(PolicyDefinition contractPolicy) {
         return contractPolicy
                 .getPolicy()
                 .getPermissions()
