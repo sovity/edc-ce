@@ -79,8 +79,17 @@ export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
           this.close({refreshList: true});
         },
         error: (error) => {
-          console.error('Failed creating asset!', error);
-          this.notificationService.showError('Failed creating policy!');
+          if (error.status == 409) {
+            this.notificationService.showError(
+              'Contract Definition ID already taken.',
+            );
+          } else if (error.status >= 500) {
+            this.notificationService.showError(
+              'Error creating contract definition: ' +
+                (error?.error?.message ?? '???'),
+            );
+          }
+          console.error('Error creating contract definition!', error);
         },
       });
   }
