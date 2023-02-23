@@ -149,6 +149,8 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
         } catch (URISyntaxException e) {
             throw new EdcException("Could not create connectorBaseUrl. Hostname can be set using:" +
                     " edc.hostname", e);
+        } catch (Exception e) {
+            throw new EdcException("Infrastructure Host Exception", e);
         }
     }
 
@@ -170,6 +172,8 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
         } catch (URISyntaxException e) {
             throw new EdcException("Could not create connectorBaseUrl. Hostname can be set using:" +
                     " edc.hostname", e);
+        } catch (Exception e) {
+            throw new EdcException("Infrastructure Host Exception", e);
         }
     }
 
@@ -195,6 +199,8 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
                     " edc.hostname", e);
         } catch (ExecutionException | InterruptedException e) {
             throw new EdcException("Failed to receive result message", e);
+        } catch (Exception e) {
+            throw new EdcException("Infrastructure Host Exception", e);
         }
     }
 
