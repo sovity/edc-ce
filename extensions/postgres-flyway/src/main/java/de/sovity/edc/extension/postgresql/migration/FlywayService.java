@@ -1,4 +1,4 @@
-package de.sovity.edc.extension.postgresql.flyway;
+package de.sovity.edc.extension.postgresql.migration;
 
 import de.sovity.edc.extension.postgresql.connection.DriverManagerConnectionFactory;
 import de.sovity.edc.extension.postgresql.connection.JdbcConnectionProperties;
@@ -63,7 +63,8 @@ public class FlywayService {
     private void handleSuccessfulMigration(String datasourceName, MigrateResult migrateResult) {
         if (migrateResult.migrationsExecuted > 0) {
             monitor.info(String.format(
-                    "Successfully migrated database for datasource %s from version %s to version %s",
+                    "Successfully migrated database for datasource %s from version %s to version " +
+                            "%s",
                     datasourceName,
                     migrateResult.initialSchemaVersion,
                     migrateResult.targetSchemaVersion));
