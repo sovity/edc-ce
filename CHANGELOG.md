@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Set _test_ as default MDS environment (in docs and docker-compose)
 - Updated ports of Postman collection json file
 - Added unregister connector to puml diagram
+- Cannot fetch own catalog due to wrong port mapping
 
 ## [1.2.0] - 2023-02-02
 
