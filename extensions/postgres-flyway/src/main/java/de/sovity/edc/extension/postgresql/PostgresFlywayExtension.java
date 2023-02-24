@@ -1,20 +1,16 @@
 package de.sovity.edc.extension.postgresql;
 
+import de.sovity.edc.extension.postgresql.connection.JdbcConnectionProperties;
+import de.sovity.edc.extension.postgresql.flyway.FlywayService;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
-import org.eclipse.edc.sql.datasource.ConnectionFactoryDataSource;
+import org.eclipse.edc.spi.system.configuration.Config;
 
 import java.util.List;
 
 public class PostgresFlywayExtension implements ServiceExtension {
 
-    private static final List<String> ENTITY_NAME_LIST = List.of(
-            "asset",
-            "contractdefinition",
-            "contractnegotiation",
-            "dataplaneinstance",
-            "policy",
-            "transferprocess");
+    private static final String EDC_DATASOURCE_PREFIX = "edc.datasource";
 
     private FlywayService flywayService;
 
@@ -25,21 +21,22 @@ public class PostgresFlywayExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        initFlywayService(context);
-        migrateEntityList();
+        flywayService = new FlywayService(context.getMonitor());
+        migrateEntityList(context.getConfig());
     }
 
-    private void initFlywayService(ServiceExtensionContext context) {
-        var jdbcConnectionProperties = new JdbcConnectionProperties(context.getConfig());
-        var connectionFactory = new DriverManagerConnectionFactory(jdbcConnectionProperties);
-        var dataSource = new ConnectionFactoryDataSource(connectionFactory);
-        flywayService = new FlywayService(context.getMonitor(), dataSource);
-    }
-
-    private void migrateEntityList() {
-        for (String entityName : ENTITY_NAME_LIST) {
-            flywayService.migrateDatabase(entityName);
+    private void migrateEntityList(Config config) {
+        for (String datasourceName : getDataSourceNames(config)) {
+            var jdbcConnectionProperties = new JdbcConnectionProperties(config, datasourceName);
+            flywayService.migrateDatabase(datasourceName, jdbcConnectionProperties);
         }
+    }
+
+    private List<String> getDataSourceNames(Config config) {
+        var edcDatasourceConfig = config.getConfig(EDC_DATASOURCE_PREFIX);
+        return edcDatasourceConfig.partition().toList().stream()
+                .map(Config::currentNode)
+                .toList();
     }
 
 }

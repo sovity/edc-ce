@@ -47,6 +47,32 @@ services:
       EDC_OAUTH_TOKEN_URL: https://daps.test.mobility-dataspace.eu/token
       EDC_OAUTH_PROVIDER_JWKS_URL: https://daps.test.mobility-dataspace.eu/jwks.json
       EDC_OAUTH_PROVIDER_AUDIENCE: idsc:IDS_CONNECTORS_ALL
+
+      EDC_DATASOURCE_ASSET_NAME: asset
+      EDC_DATASOURCE_ASSET_URL: jdbc:postgresql://postgresql:5432/edc
+      EDC_DATASOURCE_ASSET_USER: edc
+      EDC_DATASOURCE_ASSET_PASSWORD: edc
+      EDC_DATASOURCE_CONTRACTDEFINITION_NAME: contractdefinition
+      EDC_DATASOURCE_CONTRACTDEFINITION_URL: jdbc:postgresql://postgresql:5432/edc
+      EDC_DATASOURCE_CONTRACTDEFINITION_USER: edc
+      EDC_DATASOURCE_CONTRACTDEFINITION_PASSWORD: edc
+      EDC_DATASOURCE_CONTRACTNEGOTIATION_NAME: contractnegotiation
+      EDC_DATASOURCE_CONTRACTNEGOTIATION_URL: jdbc:postgresql://postgresql:5432/edc
+      EDC_DATASOURCE_CONTRACTNEGOTIATION_USER: edc
+      EDC_DATASOURCE_CONTRACTNEGOTIATION_PASSWORD: edc
+      EDC_DATASOURCE_POLICY_NAME: policy
+      EDC_DATASOURCE_POLICY_URL: jdbc:postgresql://postgresql:5432/edc
+      EDC_DATASOURCE_POLICY_USER: edc
+      EDC_DATASOURCE_POLICY_PASSWORD: edc
+      EDC_DATASOURCE_TRANSFERPROCESS_NAME: transferprocess
+      EDC_DATASOURCE_TRANSFERPROCESS_URL: jdbc:postgresql://postgresql:5432/edc
+      EDC_DATASOURCE_TRANSFERPROCESS_USER: edc
+      EDC_DATASOURCE_TRANSFERPROCESS_PASSWORD: edc
+      EDC_DATASOURCE_DATAPLANEINSTANCE_NAME: dataplaneinstance
+      EDC_DATASOURCE_DATAPLANEINSTANCE_URL: jdbc:postgresql://postgresql:5432/edc
+      EDC_DATASOURCE_DATAPLANEINSTANCE_USER: edc
+      EDC_DATASOURCE_DATAPLANEINSTANCE_PASSWORD: edc
+
     ports:
       - '11001:11001'
       - '11002:11002'
@@ -54,6 +80,17 @@ services:
       - '5005:5005'
     volumes:
       - ./resources:/resources
+  postgresql:
+    image: docker.io/bitnami/postgresql:11
+    container_name: postgresql
+    restart: always
+    environment:
+      POSTGRESQL_USERNAME: edc
+      POSTGRESQL_PASSWORD: edc
+      POSTGRESQL_DATABASE: edc
+    volumes:
+      - 'postgresql:/bitnami/postgresql'
 
 volumes:
-  db:
+  postgresql:
+    driver: local

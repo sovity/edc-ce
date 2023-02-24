@@ -1,4 +1,4 @@
-package de.sovity.edc.extension.postgresql;
+package de.sovity.edc.extension.postgresql.connection;
 
 import org.eclipse.edc.spi.persistence.EdcPersistenceException;
 import org.eclipse.edc.sql.ConnectionFactory;
