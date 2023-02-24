@@ -1,0 +1,2 @@
+de.sovity.edc.extension.postgresql.PostgresFlywayExtension
+de.sovity.edc.extension.postgresql.DataPlaneInstanceStatementsProviderExtension

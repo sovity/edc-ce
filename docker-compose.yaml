@@ -47,6 +47,10 @@ services:
       EDC_OAUTH_TOKEN_URL: https://daps.test.mobility-dataspace.eu/token
       EDC_OAUTH_PROVIDER_JWKS_URL: https://daps.test.mobility-dataspace.eu/jwks.json
       EDC_OAUTH_PROVIDER_AUDIENCE: idsc:IDS_CONNECTORS_ALL
+
+      EDC_FLYWAY_POSTGRES_JDBC_URL: jdbc:postgresql://postgresql:5432/edc
+      EDC_FLYWAY_POSTGRES_JDBC_USER: edc
+      EDC_FLYWAY_POSTGRES_JDBC_PASSWORD: edc
     ports:
       - '11001:11001'
       - '11002:11002'
@@ -54,6 +58,17 @@ services:
       - '5005:5005'
     volumes:
       - ./resources:/resources
+  postgresql:
+    image: docker.io/bitnami/postgresql:11
+    container_name: postgresql
+    restart: always
+    environment:
+      POSTGRESQL_USERNAME: edc
+      POSTGRESQL_PASSWORD: edc
+      POSTGRESQL_DATABASE: edc
+    volumes:
+      - 'postgresql:/bitnami/postgresql'
 
 volumes:
-  db:
+  postgresql:
+    driver: local
