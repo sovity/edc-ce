@@ -174,51 +174,6 @@
             Add Additional Header
           </button>
         </div>
-
-        <div class="section-title">Payload</div>
-
-        <!-- Add Payload Button -->
-        <div class="flex flex-row mb-[10px]">
-          <button
-            *ngIf="!form.all.controls.httpRequestBodyEnabled.value"
-            mat-button
-            color="primary"
-            (click)="form.all.controls.httpRequestBodyEnabled.setValue(true)">
-            Add Payload
-          </button>
-        </div>
-
-        <ng-container *ngIf="form.all.controls.httpRequestBodyEnabled.value">
-          <!-- Request Content Type -->
-          <mat-form-field class="grow">
-            <mat-label>Content Type</mat-label>
-            <input
-              matInput
-              [formControl]="form.all.controls.httpContentType"
-              [placeholder]="'application/json'" />
-          </mat-form-field>
-
-          <!-- Request Body -->
-          <mat-form-field
-            *ngIf="form.all.controls.httpRequestBodyValue; let ctrl">
-            <mat-label>Body</mat-label>
-            <textarea
-              matInput
-              placeholder='{"some": "JSON"}'
-              [formControl]="ctrl"></textarea>
-          </mat-form-field>
-        </ng-container>
-
-        <!-- Remove Payload Button -->
-        <div class="flex flex-row mb-[10px]">
-          <button
-            *ngIf="form.all.controls.httpRequestBodyEnabled.value"
-            mat-button
-            color="warn"
-            (click)="form.all.controls.httpRequestBodyEnabled.setValue(false)">
-            Remove Payload
-          </button>
-        </div>
       </ng-container>
     </div>
   </form>
@@ -234,6 +189,6 @@
     color="primary"
     [disabled]="!form.all.valid || loading"
     (click)="onSave()">
-    Create
+    Initiate Transfer
   </button>
 </mat-dialog-actions>

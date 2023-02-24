@@ -47,6 +47,7 @@ export class HttpRequestParamsMapper {
       | ContractAgreementTransferDialogFormValue
       | undefined,
   ): HttpRequestParams {
+    // Common Values
     let authHeaderName: string | null = null;
     if (formValue?.httpAuthHeaderType !== 'None') {
       authHeaderName = formValue?.httpAuthHeaderName?.trim() || null;
@@ -63,14 +64,19 @@ export class HttpRequestParamsMapper {
         formValue?.httpAuthHeaderSecretName?.trim() || null;
     }
 
+    // Datasource Specific Values
+    let datasourceFormValue = formValue as AssetDatasourceFormValue;
+    let body = datasourceFormValue?.httpRequestBodyValue || null;
+    let contentType = datasourceFormValue?.httpContentType || null;
+
     return {
       url: formValue?.httpUrl?.trim() ?? '',
       method: formValue?.httpMethod?.trim().toUpperCase() ?? '',
       authHeaderName,
       authHeaderValue,
       authHeaderSecretName,
-      body: formValue?.httpRequestBodyValue || null,
-      contentType: formValue?.httpContentType || null,
+      body,
+      contentType,
       headers: this.buildHttpHeaders(formValue?.httpHeaders ?? []),
     };
   }
