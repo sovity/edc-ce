@@ -20,6 +20,7 @@ dependencies {
         implementation(project(":extensions:policy-always-true"))
         implementation(project(":extensions:contract-agreement-transfer-api"))
     } else {
+        // Control-plane
         implementation(project(":extensions:last-commit-info"))
         implementation(project(":extensions:broker"))
         implementation(project(":extensions:clearinghouse"))
@@ -33,6 +34,15 @@ dependencies {
         implementation("${edcGroup}:configuration-filesystem:${edcVersion}")
         implementation("${edcGroup}:http:${edcVersion}")
         implementation("${edcGroup}:control-plane-aggregate-services:${edcVersion}")
+
+        // Control-plane to Data-plane
+        implementation("${edcGroup}:data-plane-transfer-client:${edcVersion}")
+
+        // Data-plane
+        implementation("${edcGroup}:data-plane-http:${edcVersion}")
+        implementation("${edcGroup}:data-plane-framework:${edcVersion}")
+        implementation("${edcGroup}:data-plane-core:${edcVersion}")
+        implementation("${edcGroup}:data-plane-util:${edcVersion}")
 
         // JDK Logger
         implementation("${edcGroup}:monitor-jdk-logger:${edcVersion}")
