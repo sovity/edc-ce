@@ -16,16 +16,31 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
+#### Changed
+
+#### Removed
+
+#### Fixed
+
+## [v0.0.1-milestone-7-sovity5] 24.02.2023
+
+### Overview
+
+New contract definition list, catalog status info and Http Datasink fields.
+
+### Detailed Changes
+
+#### Added
+
 - Added Additional Http Datasink properties.
 - Catalog Browser now shows if individual Connector Endpoints were unreachable.
+- Reworked Contract Definition cards.
 
 #### Changed
 
 - Renamed Connector ID to Connector Endpoint to emphasize differentiate:
   - Connector ID: Configured in certificate, contained in DAT.
   - Connector Endpoint: Configured IDS Endpoint
-
-#### Removed
 
 #### Fixed
 
