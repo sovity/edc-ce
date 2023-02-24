@@ -5,8 +5,9 @@
   </button>
   <mat-paginator
     *ngIf="transferProcessesList.isReady"
-    pageSize="transferProcessesList.data.transferProcesses.length"
-    hidePageSize="true"
+    [hidePageSize]="true"
+    [disabled]="true"
+    [pageSize]="transferProcessesList.data.transferProcesses.length"
     [length]="
       transferProcessesList.data.transferProcesses.length
     "></mat-paginator>

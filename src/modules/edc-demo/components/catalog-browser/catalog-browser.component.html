@@ -77,7 +77,8 @@
     <!-- Pagination -->
     <mat-paginator
       *ngIf="data.requestTotals.isSomeReady"
-      hidePageSize="true"
+      [hidePageSize]="true"
+      [disabled]="true"
       [pageSize]="data.filteredContractOffers.length"
       [length]="data.numTotalContractOffers">
     </mat-paginator>

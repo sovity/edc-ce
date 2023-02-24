@@ -34,8 +34,9 @@
     <!-- Paginator -->
     <mat-paginator
       *ngIf="assetList.isReady"
-      hidePageSize="true"
-      pageSize="contractDefinitions.length"
+      [hidePageSize]="true"
+      [disabled]="true"
+      [pageSize]="assetList.data.numTotalAssets"
       [length]="assetList.data.filteredAssets.length">
     </mat-paginator>
   </div>

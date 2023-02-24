@@ -34,9 +34,10 @@
     <!-- Paginator -->
     <mat-paginator
       *ngIf="policyList.isReady"
-      hidePageSize="true"
-      pageSize="10"
-      [length]="policyList.data.policyCards.length"></mat-paginator>
+      [hidePageSize]="true"
+      [disabled]="true"
+      [pageSize]="policyList.data.policyCards.length"
+      [length]="policyList.data.numTotalPolicies"></mat-paginator>
   </div>
 
   <div class="flex flex-row justify-center">

@@ -34,10 +34,11 @@
     <!-- Paginator -->
     <mat-paginator
       *ngIf="contractDefinitionList.isReady"
-      hidePageSize="true"
-      pageSize="10"
+      [hidePageSize]="true"
+      [disabled]="true"
+      [pageSize]="contractDefinitionList.data.contractDefinitionCards.length"
       [length]="
-        contractDefinitionList.data.contractDefinitionCards.length
+        contractDefinitionList.data.numTotalContractDefinitions
       "></mat-paginator>
   </div>
 
