@@ -1,16 +1,14 @@
 import {Injectable} from '@angular/core';
 import {AssetEntryDto, DataAddressDto} from '../../edc-dmgmt-client';
 import {AssetEditorDialogFormValue} from '../components/asset-editor-dialog/asset-editor-dialog-form-model';
-import {HttpDatasourceFormMapper} from '../components/asset-editor-dialog/model/http-datasource-form-mapper';
-import {HttpDatasourceProperties} from '../models/http-datasource-properties';
-import {removeNullValues} from '../utils/record-utils';
 import {AssetPropertyMapper} from './asset-property-mapper';
+import {HttpRequestParamsMapper} from './http-params-mapper.service';
 
 @Injectable()
 export class AssetEntryBuilder {
   constructor(
     private assetPropertyMapper: AssetPropertyMapper,
-    private httpDatasourceFormMapper: HttpDatasourceFormMapper,
+    private httpRequestParamsMapper: HttpRequestParamsMapper,
   ) {}
 
   /**
@@ -32,40 +30,11 @@ export class AssetEntryBuilder {
       case 'Custom-Data-Address-Json':
         return JSON.parse(datasource.dataDestination?.trim() ?? '');
       case 'Http':
-        const httpDatasourceProperties =
-          this.httpDatasourceFormMapper.buildHttpDatasourceProperties(
-            datasource,
-          );
-        return {
-          properties: {
-            type: 'HttpData',
-            ...this.encodeHttpDatasourceProperties(httpDatasourceProperties),
-          },
-        };
+        return this.httpRequestParamsMapper.buildHttpDataAddressDto(datasource);
       default:
         throw new Error(
           `Invalid data address type: ${datasource?.dataAddressType}`,
         );
     }
-  }
-
-  private encodeHttpDatasourceProperties(
-    httpDatasource: HttpDatasourceProperties,
-  ): Record<string, string> {
-    const props: Record<string, string | null> = {
-      baseUrl: httpDatasource.url,
-      method: httpDatasource.method,
-      body: httpDatasource.body,
-      contentType: httpDatasource.contentType,
-      authKey: httpDatasource.authHeaderName,
-      authCode: httpDatasource.authHeaderValue,
-      secretName: httpDatasource.authHeaderSecretName,
-      ...Object.fromEntries(
-        Object.entries(httpDatasource.headers).map(
-          ([headerName, headerValue]) => [`header:${headerName}`, headerValue],
-        ),
-      ),
-    };
-    return removeNullValues(props);
   }
 }

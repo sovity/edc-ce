@@ -7,6 +7,7 @@ import {
   DataAddressDto,
 } from '../../../edc-dmgmt-client';
 import {AssetEntryBuilder} from '../../services/asset-entry-builder';
+import {HttpRequestParamsMapper} from '../../services/http-params-mapper.service';
 import {NotificationService} from '../../services/notification.service';
 import {ValidationMessages} from '../../validators/validation-messages';
 import {ContractAgreementTransferDialogData} from './contract-agreement-transfer-dialog-data';
@@ -22,21 +23,24 @@ import {ContractAgreementTransferDialogResult} from './contract-agreement-transf
 export class ContractAgreementTransferDialog implements OnDestroy {
   loading = false;
 
+  methods = ['POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'];
+
   constructor(
     public form: ContractAgreementTransferDialogForm,
     public validationMessages: ValidationMessages,
     private dialogRef: MatDialogRef<ContractAgreementTransferDialog>,
     private contractAgreementService: ContractAgreementService,
     private notificationService: NotificationService,
+    private httpRequestParamsMapper: HttpRequestParamsMapper,
     @Inject(MAT_DIALOG_DATA) private data: ContractAgreementTransferDialogData,
   ) {}
 
   onSave() {
-    if (this.loading && !this.form.formGroup.valid) {
+    if (this.loading && !this.form.all.valid) {
       return;
     }
     this.loading = true;
-    this.form.formGroup.disable();
+    this.form.all.disable();
 
     this.contractAgreementService
       .initiateTransfer(
@@ -46,7 +50,7 @@ export class ContractAgreementTransferDialog implements OnDestroy {
       .pipe(
         finalize(() => {
           this.loading = false;
-          this.form.formGroup.enable();
+          this.form.all.enable();
         }),
       )
       .subscribe({
@@ -69,12 +73,7 @@ export class ContractAgreementTransferDialog implements OnDestroy {
       case 'Custom-Data-Address-Json':
         return JSON.parse(formValue.dataDestination?.trim()!!);
       case 'Http':
-        return {
-          properties: {
-            type: 'HttpData',
-            baseUrl: formValue.httpUrl!!.trim(),
-          },
-        };
+        return this.httpRequestParamsMapper.buildHttpDataAddressDto(formValue);
       default:
         throw new Error(
           `Invalid Data Address Type ${formValue.dataAddressType}`,

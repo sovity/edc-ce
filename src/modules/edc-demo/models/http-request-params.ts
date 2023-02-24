@@ -1,4 +1,4 @@
-export interface HttpDatasourceProperties {
+export interface HttpRequestParams {
   /**
    * URL the request is sent to
    */
