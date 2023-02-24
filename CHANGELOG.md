@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Feature:
 - Last Commit Info Extension
+- Persistence into PostgreSQL Database
 
 ### Fixed:
 - add if-else switch to get_client.sh for AKI `keyid` keyword
