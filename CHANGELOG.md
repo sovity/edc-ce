@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [x.x.x]
+## [1.3.0] - 2023-02-27
 
 ### Feature:
 - Last Commit Info Extension
