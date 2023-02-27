@@ -32,9 +32,9 @@ export const routes: Routes = [
     data: {title: 'Transfer History', icon: 'assignment'},
   },
   {
-    path: 'contract-definitions',
-    component: ContractDefinitionPageComponent,
-    data: {title: 'Contract Definitions', icon: 'rule'},
+    path: 'my-assets', // must not be "assets" to prevent conflict with assets directory
+    component: AssetViewerComponent,
+    data: {title: 'Assets', icon: 'upload'},
   },
   {
     path: 'policies',
@@ -42,9 +42,9 @@ export const routes: Routes = [
     data: {title: 'Policies', icon: 'policy'},
   },
   {
-    path: 'my-assets', // must not be "assets" to prevent conflict with assets directory
-    component: AssetViewerComponent,
-    data: {title: 'Assets', icon: 'upload'},
+    path: 'contract-definitions',
+    component: ContractDefinitionPageComponent,
+    data: {title: 'Contract Definitions', icon: 'rule'},
   },
   {
     path: 'logout',
