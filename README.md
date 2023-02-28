@@ -24,22 +24,21 @@ To get started and run the extensions with an EDC, a sample docker-compose file 
 ### Configuration
 #### Basic Configuration
 - `EDC_IDS_TITLE`: _Title of the Connector_
-- `EDC_IDS_DESCRIPTION`: _Description of the Connector_
-- `EDC_IDS_ENDPOINT`: _URL of the Connectors endpoint_
-- `EDC_IDS_CURATOR:` _URL of the curator, i.e. the company, which configures data offerings etc._
 - `EDC_CONNECTOR_NAME:` _The name of the connector_
+- `EDC_IDS_DESCRIPTION`: _Description of the Connector_
+- `EDC_IDS_CURATOR:` _URL of the curator, i.e. the company, which configures data offerings etc._
 - `EDC_HOSTNAME:` _The host of the connector_
+- `EDC_IDS_ENDPOINT`: _URL of the Connectors endpoint_
 - `EDC_API_AUTH_KEY:` _The API authorization key of management API_
-- `POLICY_BROKER_BLACKLIST:` _Comma-separated list of policy values that should not be published at broker. 
-Common use case would be to not publish resources that have a REFERRING_CONNECTOR policy_
       
-#### MDS Environment Configuration
+#### Data Space Configuration
 The mds-test environment is set by default.
-- `EDC_BROKER_BASE_URL:` https://broker.test.mobility-dataspace.eu
-- `EDC_CLEARINGHOUSE_LOG_URL`: https://clearing.test.mobility-dataspace.eu/messages/log
 - `EDC_OAUTH_CLIENT_ID:` _To be able to start an EDC-Connector with the broker-extensions, the `SKI` and `AKI` of the connector certificate must be entered as `client-ID` in the docker-compose and the .jks must be placed under the path specified in the docker-compose (in the example in the folder `resources/vault/edc/`, see `EDC_KEYSTORE` setting)._
+- `EDC_KEYSTORE:` _Relative path to the keystore file_ 
 - `EDC_OAUTH_TOKEN_URL:` https://daps.test.mobility-dataspace.eu/token
 - `EDC_OAUTH_PROVIDER_JWKS_URL:` https://daps.test.mobility-dataspace.eu/jwks.json
+- `EDC_BROKER_BASE_URL:` https://broker.test.mobility-dataspace.eu
+- `EDC_CLEARINGHOUSE_LOG_URL`: https://clearing.test.mobility-dataspace.eu/messages/log
 
 ### Start
 1. Login into GitHub Container Registry (GHCR): `$ docker login ghcr.io`.
