@@ -1,0 +1,793 @@
+{
+	"info": {
+		"_postman_id": "012700d5-2a48-43fc-9935-ea3646ecda93",
+		"name": "EDC Http Pull",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add Dataplane Instance",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"mydpf\",\r\n    \"edctype\": \"dataspaceconnector:dataplaneinstance\",\r\n    \"url\": \"http://daps-connector-a-dataplane-1:9999/api/dataplane/control/transfer\",\r\n    \"properties\": {\r\n        \"publicApiUrl\": \"http://daps-connector-a-dataplane-1:8185/public\"\r\n    },\r\n    \"allowedSourceTypes\": [\"HttpData\", \"HttpProxy\", \"HttpPush\"],\r\n    \"allowedDestTypes\": [\"HttpData\", \"HttpProxy\", \"HttpPush\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{CONTROL_PLANE_DPF_URL}}/dataplane/instances",
+					"host": [
+						"{{CONTROL_PLANE_DPF_URL}}"
+					],
+					"path": [
+						"dataplane",
+						"instances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show Registered Dataplanes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{CONTROL_PLANE_DPF_URL}}/dataplane/instances",
+					"host": [
+						"{{CONTROL_PLANE_DPF_URL}}"
+					],
+					"path": [
+						"dataplane",
+						"instances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "1 Create Asset",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"asset\": {\n        \"properties\": {\n            \"asset:prop:name\": \"http pull test\",\n            \"asset:prop:description\": \"http pull\",\n            \"asset:prop:id\": \"urn:artifact:http-pull\"\n        }\n    },\n    \"dataAddress\": {\n        \"properties\": {\n            \"type\": \"HttpData\",\n            \"baseUrl\": \"https://google.de\"\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/data/assets",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"data",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "1 Delete Asset",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"asset\": {\n        \"properties\": {\n            \"asset:prop:name\": \"text-document\",\n            \"asset:prop:contenttype\": \"text/plain\",\n            \"asset:prop:version\": \"1.0\",\n            \"asset:prop:id\": \"text-document\",\n            \"type\": \"AzureStorage\"\n        }\n    },\n    \"dataAddress\": {\n        \"properties\": {\n            \"type\": \"AzureStorage\",\n            \"account\": \"{{storage_account}}\",\n            \"container\": \"src-container\",\n            \"blobname\": \"text-document.txt\",\n            \"keyName\": \"{{storage_account}}-key1\"\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/data/assets/text-document",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"data",
+						"assets",
+						"text-document"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(get all assets)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{BASE_URL}}/data/assets/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"data",
+						"assets",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Catalog through Connector",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{BASE_URL}}/data/catalog?providerUrl=http://daps-connector-a-controlplane-1:8282/api/v1/ids/data",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"data",
+						"catalog"
+					],
+					"query": [
+						{
+							"key": "X-Api-Key",
+							"value": "pass",
+							"disabled": true
+						},
+						{
+							"key": "providerUrl",
+							"value": "http://daps-connector-a-controlplane-1:8282/api/v1/ids/data"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2 Create Policy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"policy-id-2\",\n    \"policy\": {\n        \"permissions\": [\n            {\n                \"edctype\": \"dataspaceconnector:permission\",\n                \"uid\": null,\n                \"target\": \"urn:artifact:http-pull\",\n                \"action\": {\n                    \"type\": \"USE\",\n                    \"includedIn\": null,\n                    \"constraint\": null\n                },\n                \"assignee\": null,\n                \"assigner\": null,\n                \"constraints\": [],\n                \"duties\": []\n            }\n        ],\n        \"prohibitions\": [],\n        \"obligations\": [],\n        \"extensibleProperties\": {},\n        \"inheritsFrom\": null,\n        \"assigner\": null,\n        \"assignee\": null,\n        \"target\": null,\n        \"@type\": {\n            \"@policytype\": \"set\"\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/data/policydefinitions",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"data",
+						"policydefinitions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(2 Create Policy Time-Ristricted)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"policy\": {\n        \"type\": \"SET\",\n        \"permissions\": [\n            {\n                \"edctype\": \"dataspaceconnector:permission\",\n                \"uid\": null,\n                \"target\": \"urn:artifact:http-pull\",\n                \"action\": {\n                    \"type\": \"USE\",\n                    \"includedIn\": null,\n                    \"constraint\": null\n                },\n                \"assignee\": null,\n                \"assigner\": null,\n                \"constraints\": [\n                    {\n                        \"edctype\": \"AtomicConstraint\",\n                        \"leftExpression\": {\n                            \"edctype\": \"dataspaceconnector:literalexpression\",\n                            \"value\": \"POLICY_EVALUATION_TIME\"\n                        },\n                        \"operator\": \"GT\",\n                        \"rightExpression\": {\n                            \"edctype\": \"dataspaceconnector:literalexpression\",\n                            \"value\": \"2018-12-31T23:00:00.000Z\"\n                        }\n                    },\n                    {\n                        \"edctype\": \"AtomicConstraint\",\n                        \"leftExpression\": {\n                            \"edctype\": \"dataspaceconnector:literalexpression\",\n                            \"value\": \"POLICY_EVALUATION_TIME\"\n                        },\n                        \"operator\": \"LT\",\n                        \"rightExpression\": {\n                            \"edctype\": \"dataspaceconnector:literalexpression\",\n                            \"value\": \"2023-12-31T23:00:00.000Z\"\n                        }\n                    }\n                ],\n                \"duties\": []\n            }\n        ]\n    },\n    \"id\": \"policy-id-2\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/data/policydefinitions",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"data",
+						"policydefinitions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(get all policies)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{BASE_URL}}/data/policydefinitions",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"data",
+						"policydefinitions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3 Create ContractDefinition",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"contract-definition-id-2\",\n    \"accessPolicyId\": \"policy-id-2\",\n    \"contractPolicyId\": \"policy-id-2\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/data/contractdefinitions",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"data",
+						"contractdefinitions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(get all contractdefinitions)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"connectorId\": \"provider\",\r\n  \"connectorAddress\": \"http://daps-connector-a-controlplane-1:8282/api/v1/ids/data\",\r\n  \"protocol\": \"ids-multipart\",\r\n  \"offer\": {\r\n    \"offerId\": \"contract-definition-id-2:contract-negotiation-id-2\",\r\n    \"assetId\": \"urn:artifact:http-pull\",\r\n    \"policy\": {\r\n      \"uid\": \"contract-definition-id-2\",\r\n      \"permissions\": [\r\n        {\r\n          \"edctype\": \"dataspaceconnector:permission\",\r\n          \"uid\": null,\r\n          \"target\": \"urn:artifact:http-pull\",\r\n          \"action\": {\r\n            \"type\": \"USE\",\r\n            \"includedIn\": null,\r\n            \"constraint\": null\r\n          },\r\n          \"assignee\": null,\r\n          \"assigner\": null,\r\n          \"constraints\": [],\r\n          \"duties\": []\r\n        }\r\n      ],\r\n      \"prohibitions\": [],\r\n      \"obligations\": [],\r\n      \"extensibleProperties\": {},\r\n      \"inheritsFrom\": null,\r\n      \"assigner\": null,\r\n      \"assignee\": null,\r\n      \"target\": null,\r\n      \"@type\": {\r\n        \"@policytype\": \"set\"\r\n      }\r\n    },\r\n    \"asset\": {\r\n      \"properties\": {\r\n        \"ids:byteSize\": null,\r\n        \"asset:prop:id\": \"endpoint-http-data-text-document\",\r\n        \"ids:fileName\": null\r\n      }\r\n    }\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/data/contractdefinitions",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"data",
+						"contractdefinitions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. Contract Offer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"connectorId\": \"provider\",\r\n  \"connectorAddress\": \"http://edc:8282/api/v1/ids/data\",\r\n  \"protocol\": \"ids-multipart\",\r\n  \"offer\": {\r\n    \"offerId\": \"contract-definition-id-2:contract-negotiation-id-2\",\r\n    \"assetId\": \"urn:artifact:http-pull\",\r\n    \"policy\": {\r\n      \"uid\": \"contract-definition-id-2\",\r\n      \"permissions\": [\r\n        {\r\n          \"edctype\": \"dataspaceconnector:permission\",\r\n          \"uid\": null,\r\n          \"target\": \"urn:artifact:http-pull\",\r\n          \"action\": {\r\n            \"type\": \"USE\",\r\n            \"includedIn\": null,\r\n            \"constraint\": null\r\n          },\r\n          \"assignee\": null,\r\n          \"assigner\": null,\r\n          \"constraints\": [],\r\n          \"duties\": []\r\n        }\r\n      ],\r\n      \"prohibitions\": [],\r\n      \"obligations\": [],\r\n      \"extensibleProperties\": {},\r\n      \"inheritsFrom\": null,\r\n      \"assigner\": null,\r\n      \"assignee\": null,\r\n      \"target\": null,\r\n      \"@type\": {\r\n        \"@policytype\": \"set\"\r\n      }\r\n    },\r\n    \"asset\": {\r\n      \"properties\": {\r\n        \"ids:byteSize\": null,\r\n        \"asset:prop:id\": \"urn:artifact:http-pull\",\r\n        \"ids:fileName\": null\r\n      }\r\n    }\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL_2}}/data/contractnegotiations",
+					"host": [
+						"{{BASE_URL_2}}"
+					],
+					"path": [
+						"data",
+						"contractnegotiations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(4. Contract Offer Time-Restricted)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"connectorId\": \"provider\",\r\n    \"connectorAddress\": \"http://edc:8282/api/v1/ids/data\",\r\n    \"protocol\": \"ids-multipart\",\r\n    \"offer\": {\r\n        \"offerId\": \"contract-definition-id-3:contract-negotiation-id-2\",\r\n        \"assetId\": \"urn:artifact:http-pull\",\r\n        \"policy\": {\r\n            \"uid\": \"policy-id-2\",\r\n            \"type\": \"SET\",\r\n            \"permissions\": [\r\n                {\r\n                    \"edctype\": \"dataspaceconnector:permission\",\r\n                    \"uid\": null,\r\n                    \"target\": \"urn:artifact:http-pull\",\r\n                    \"action\": {\r\n                        \"type\": \"USE\",\r\n                        \"includedIn\": null,\r\n                        \"constraint\": null\r\n                    },\r\n                    \"assignee\": null,\r\n                    \"assigner\": null,\r\n                    \"constraints\": [\r\n                        {\r\n                            \"edctype\": \"AtomicConstraint\",\r\n                            \"leftExpression\": {\r\n                                \"edctype\": \"dataspaceconnector:literalexpression\",\r\n                                \"value\": \"POLICY_EVALUATION_TIME\"\r\n                            },\r\n                            \"operator\": \"GT\",\r\n                            \"rightExpression\": {\r\n                                \"edctype\": \"dataspaceconnector:literalexpression\",\r\n                                \"value\": \"2018-12-31T23:00:00.000Z\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"edctype\": \"AtomicConstraint\",\r\n                            \"leftExpression\": {\r\n                                \"edctype\": \"dataspaceconnector:literalexpression\",\r\n                                \"value\": \"POLICY_EVALUATION_TIME\"\r\n                            },\r\n                            \"operator\": \"LT\",\r\n                            \"rightExpression\": {\r\n                                \"edctype\": \"dataspaceconnector:literalexpression\",\r\n                                \"value\": \"2023-12-31T23:00:00.000Z\"\r\n                            }\r\n                        }\r\n                    ],\r\n                    \"duties\": []\r\n                }\r\n            ]\r\n        }\r\n    },\r\n    \"asset\": {\r\n        \"properties\": {\r\n            \"ids:byteSize\": null,\r\n            \"asset:prop:id\": \"urn:artifact:http-pull\",\r\n            \"ids:fileName\": null\r\n        }\r\n    }\r\n}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL_2}}/data/contractnegotiations",
+					"host": [
+						"{{BASE_URL_2}}"
+					],
+					"path": [
+						"data",
+						"contractnegotiations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Contract Offer",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{BASE_URL}}/data/contractnegotiations",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"data",
+						"contractnegotiations"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel Contract Offer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{BASE_URL}}/data/contractnegotiations/3f009db0-775d-4dfc-a965-decdf5a76aea/cancel",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"data",
+						"contractnegotiations",
+						"3f009db0-775d-4dfc-a965-decdf5a76aea",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Decline Contract Offer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{BASE_URL}}/data/contractnegotiations/88687cb0-1d97-40c5-86c2-ad744afed538/decline",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"data",
+						"contractnegotiations",
+						"88687cb0-1d97-40c5-86c2-ad744afed538",
+						"decline"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4.1 Get ContractNegotiation",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{BASE_URL}}/data/contractnegotiations/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"data",
+						"contractnegotiations",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5. Request Data Pull",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"protocol\": \"ids-multipart\",\r\n  \"assetId\": \"urn:artifact:http-pull\",\r\n  \"contractId\": \"contract-definition-id-2:274bdef2-c33a-43d2-b489-9061fbf6a215\",\r\n  \"dataDestination\": {\r\n    \"properties\": {\r\n        \"type\": \"HttpData\",\r\n        \"baseUrl\": \"https://webhook.site/d306ae36-f178-4634-bf5f-024e2e7eeb4b\",\r\n        \"assetId\": \"urn:artifact:http-pull\"\r\n    }\r\n  },\r\n  \"transferType\": {\r\n    \"contentType\": \"application/octet-stream\",\r\n    \"isFinite\": true\r\n  },\r\n  \"managedResources\": false,\r\n  \"connectorAddress\": \"http://edc:8282/api/v1/ids/data\",\r\n  \"connectorId\": \"consumer\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL_2}}/data/transferprocess",
+					"host": [
+						"{{BASE_URL_2}}"
+					],
+					"path": [
+						"data",
+						"transferprocess"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Transfer Process",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"protocol\": \"ids-multipart\",\r\n  \"assetId\": \"assetId-rest-text-document\",\r\n  \"contractId\": \"4a75736e-001d-4364-8bd4-9888490edb56abc-2:9df253dd-d523-431f-97ac-f2e90372c0b3\",\r\n  \"dataDestination\": {\r\n    \"properties\": {\r\n        \"type\": \"HttpData\",\r\n        \"assetId\": \"consumer-rest-text-document\"\r\n    }\r\n  },\r\n  \"transferType\": {\r\n    \"contentType\": \"application/octet-stream\",\r\n    \"isFinite\": true\r\n  },\r\n  \"managedResources\": false,\r\n  \"connectorAddress\": \"http://daps-connector-a-controlplane-1:8282/api/v1/ids/data\",\r\n  \"connectorId\": \"consumer\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/data/transferprocess/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"data",
+						"transferprocess",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel Transfer Process",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "pass",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"protocol\": \"ids-multipart\",\r\n  \"assetId\": \"assetId-rest-text-document\",\r\n  \"contractId\": \"4a75736e-001d-4364-8bd4-9888490edb56abc-2:9df253dd-d523-431f-97ac-f2e90372c0b3\",\r\n  \"dataDestination\": {\r\n    \"properties\": {\r\n        \"type\": \"HttpData\",\r\n        \"assetId\": \"consumer-rest-text-document\"\r\n    }\r\n  },\r\n  \"transferType\": {\r\n    \"contentType\": \"application/octet-stream\",\r\n    \"isFinite\": true\r\n  },\r\n  \"managedResources\": false,\r\n  \"connectorAddress\": \"http://daps-connector-a-controlplane-1:8282/api/v1/ids/data\",\r\n  \"connectorId\": \"consumer\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/data/transferprocess/c715355b-1e4b-49a9-9ef0-956405e88fe3/cancel",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"data",
+						"transferprocess",
+						"c715355b-1e4b-49a9-9ef0-956405e88fe3",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Log to Clearing",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "payload",
+							"value": "{\"ContractStartDate\":2174654950,\"AgreementId\":\"4a75736e-001d-4364-8bd4-9888490edb52:afe12c37-69e9-4bee-8d62-8025bf94a6ba\",\"ContractEndDate\":1706190956,\"ContractSigningDate\":1674654956,\"ConsumerAgentId\":\"urn:connector:consumer\",\"ProviderAgentId\":\"urn:connector:provider\",\"AssetId\":\"test-document_company2-4\"}",
+							"type": "default"
+						},
+						{
+							"key": "header",
+							"value": "{\"ids:modelVersion\":\"4.1.3\",\"ids:issued\":{\"@value\":\"2023-01-27T14:12:13.271Z\",\"@type\":\"http://www.w3.org/2001/XMLSchema#dateTimeStamp\"},\"ids:issuerConnector\":{\"@id\":\"http://company1/\"},\"ids:senderAgent\":{\"@id\":\"http://company1/\"},\"ids:securityToken\":{\"@type\":\"ids:DynamicAttributeToken\",\"@id\":\"https://w3id.org/idsa/autogen/dynamicAttributeToken/a97b0513-770b-4737-b6b8-8404eec5675b\",\"ids:tokenValue\":\"eyJ0eXAiOiJhdCtqd3QiLCJraWQiOiJjNGI1ZWY4NDk4NTNiY2RlZjNjZjA1Njc5ODExNzU3NzUxODNhMGZlNmMyZDkwZjliYTkwNTM4YTlmOWEyODE0IiwiYWxnIjoiUlMyNTYifQ.eyJzY29wZSI6Imlkc2M6SURTX0NPTk5FQ1RPUl9BVFRSSUJVVEVTX0FMTCIsImF1ZCI6WyJpZHNjOklEU19DT05ORUNUT1JTX0FMTCJdLCJpc3MiOiJodHRwczovL2RhcHMudGVzdC5tb2JpbGl0eS1kYXRhc3BhY2UuZXUiLCJzdWIiOiI3Rjo3NjpGQjoxOTpFNzpGQTo3MjozMTo4OToxQzo5Njo2OTpFMjo4MTpGMDpCRTpDNDo1MDpCMjo5NDprZXlpZDo2RDoyQjozOTo1QTpBNzo3QTpCQTpGNDo5RDo5NTpEQTpBRjo4Qzo0Mjo5RjpDODo4QTo2ODoxODo4NyIsIm5iZiI6MTY3NDgyODczMiwiaWF0IjoxNjc0ODI4NzMyLCJqdGkiOiI4MzU1YjIwZS05N2Q4LTQzMGEtOThmZC0wMGVlNzgwOGE4YTMiLCJleHAiOjE2NzQ4MzIzMzIsImNsaWVudF9pZCI6IjdGOjc2OkZCOjE5OkU3OkZBOjcyOjMxOjg5OjFDOjk2OjY5OkUyOjgxOkYwOkJFOkM0OjUwOkIyOjk0OmtleWlkOjZEOjJCOjM5OjVBOkE3OjdBOkJBOkY0OjlEOjk1OkRBOkFGOjhDOjQyOjlGOkM4OjhBOjY4OjE4Ojg3Iiwic2VjdXJpdHlQcm9maWxlIjoiaWRzYzpCQVNFX1NFQ1VSSVRZX1BST0ZJTEUiLCJyZWZlcnJpbmdDb25uZWN0b3IiOiJodHRwczovL2Nvbm5lY3Rvci1zb3ZpdHktbWRzLXRlc3QucHJvZC1zb3ZpdHkuYXp1cmUuc292aXR5LmlvIiwiQHR5cGUiOiJpZHM6RGF0UGF5bG9hZCIsIkBjb250ZXh0IjoiaHR0cHM6Ly93M2lkLm9yZy9pZHNhL2NvbnRleHRzL2NvbnRleHQuanNvbmxkIiwidHJhbnNwb3J0Q2VydHNTaGEyNTYiOiIwN2ZhM2VhNWEyZGMyZTQ0OWQzYzY5MDhjYzhmMDhiZmE0MDg1MTFlZTEyOGQ3ZDY4NmE4ODRiMzExMGMzZWU5In0.AsqDTcGGKU4Em2FBCFcM0tKwqfU0AbUI7MrFbB_qeznmURv3MOz3v3ZeiTvw3dE6e8phvXeh6FeJiPNPhFe8XDEWKNr9LCi0tod8QBTLHnldxRSEc8HI561fKSRfT-KvmMxLIIhZpiG3Bf9xE2OuS4rCUTTxuB4w5Hkt5BPfEjdLd7npQNcq5jAOnOyyrfmFxG174ihUotqFn23SAdkIFv2Otd7XJUN8BgoDK6_KnLU2nOtJGzHQ848_u_jX3GRKib71C6T-0T4raiB7_sj2nCeTraUoB084IAezwoEEhz_pMEI2N9wK6z4GJ98YlHgcyXSLIdcKP5jzmqd6BMX7UPA_ItdTt1hlagAQiv_uqIHmU0FivUFQcSsyr5MKDRB095PHW-IGRrmfBknCQ2jBacbbWM5voeVxjhvqtqPeuAZlQgKB3vViCldARCs0Z-AUEizymTXpbuMkKvmQhAF004g17CCpIZEXwo7bLXuv2mc2q3UFcFQTRu8QI1ILGv8lGP2CWydKWos1VQEq14ce9ESZR-meYEJI6lKGCOCmPTtlrUSXi9tIAsw5Kwn7KMk_EzRdJyCS_hLE3GxsMy98nRYzIAQMSuz4kugpSpsTvgFqf4EUKFihfiawTf830v7TUcA4mZf5MKlB6goK8NRhvLQAhQ62uzlXwowSV9JMemk\",\"ids:tokenFormat\":{\"@id\":\"https://w3id.org/idsa/code/JWT\"}},\"@id\":\"https://w3id.org/idsa/autogen/logMessage/9e3622e5-abf1-45c0-a4b9-a43e40eca350\",\"@context\":{\"ids\":\"https://w3id.org/idsa/core/\",\"cat\":\"http://w3id.org/mds/data-categories#\",\"idsc\":\"https://w3id.org/idsa/code/\"},\"@type\":\"ids:LogMessage\"}",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://clearing.test.mobility-dataspace.eu/messages/log/5512921c-1d8d-49b5-8cf2-ff2bae47b58c",
+					"protocol": "https",
+					"host": [
+						"clearing",
+						"test",
+						"mobility-dataspace",
+						"eu"
+					],
+					"path": [
+						"messages",
+						"log",
+						"5512921c-1d8d-49b5-8cf2-ff2bae47b58c"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "clientId",
+				"value": "control-plane",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "redirect_uri",
+				"value": "http://localhost:8583/*",
+				"type": "string"
+			},
+			{
+				"key": "useBrowser",
+				"value": false,
+				"type": "boolean"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "http://localhost:9191/realms/sovity/protocol/openid-connect/token",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "http://localhost:9191/realms/sovity/protocol/openid-connect/auth",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+					"    console.log(response.json());",
+					"});",
+					"pm.environment.set(\"variable_key\", \"variable_value\");"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:9191/api/v1",
+			"type": "default"
+		},
+		{
+			"key": "BASE_URL_2",
+			"value": "http://localhost:9192/api/v1",
+			"type": "default"
+		}
+	]
+}
