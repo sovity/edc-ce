@@ -13,6 +13,8 @@ services:
       - EDC_UI_ASSET_PROP_ORIGINATOR=http://edc:11003/api/v1/ids/data
   edc:
     image: ghcr.io/sovity/edc-mds:latest
+    depends_on:
+      - postgresql
     environment:
       # Basic Configuration
       EDC_IDS_TITLE: 'Example GmbH EDC Connector'
@@ -61,7 +63,6 @@ services:
       - ./resources:/resources
   postgresql:
     image: docker.io/bitnami/postgresql:11
-    container_name: postgresql
     restart: always
     environment:
       POSTGRESQL_USERNAME: edc
