@@ -2,7 +2,6 @@ version: "3.8"
 services:
   edc-ui:
     image: ghcr.io/sovity/edc-ui:latest
-    container_name: edc-ui
     ports:
       - '11000:80'
     environment:
@@ -13,7 +12,6 @@ services:
       - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/ids/data
       - EDC_UI_ASSET_PROP_ORIGINATOR=http://edc:11003/api/v1/ids/data
   edc:
-    container_name: edc
     image: ghcr.io/sovity/edc-mds:latest
     environment:
       # Basic Configuration
