@@ -1,15 +1,34 @@
-# Extension: policy-always-true
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/sovity/edc-ui">
+    <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
+  </a>
 
-Creates Policy Definition `Always True` / `always-true`.
+<h3 align="center">EDC-Connector Extension:<br />Last Commit Info</h3>
 
-Also adds `always-true` policy to get this done.
+  <p align="center">
+    <a href="https://github.com/sovity/edc-extensions/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/sovity/edc-extensions/issues">Request Feature</a>
+  </p>
+</div>
+
+## About this Extension
+This extension creates a Policy Definition `always-true` on EDC startup.
 
 ## Why does this extension exist?
 
-When creating a contract definition one must specify both an access policy and a contract policy.
+While the default behavior for contract definitions with empty policies is not "default deny", 
+our UI will be ensuring non-empty access and contract policies.
 
-While testing EDC data transfers, access policies and contract policies matter less important, however, one is forced to
-create one to use one.
+Therefore, it is of interest to have an `always-true` policy to explicitly enable full access in contract definitions.
 
-Instead of being forced to create policy definitions, the default policy definition created by this extension with
-ID `always-true` adds a usable policy definition out-of-the-box, so one can use policies where they actually matter.
+Since much of EDC production use is still testing of MVPs the ability to "just create a contract definition" is
+much welcomed.
+
+## License
+Apache License 2.0 - see [LICENSE](../../LICENSE)
+
+## Contact
+Sovity GmbH - contact@sovity.de
