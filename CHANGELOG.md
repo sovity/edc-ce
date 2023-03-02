@@ -22,6 +22,16 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Fixed
 
+## [v0.0.1-milestone-7-sovity6] 02.03.2023
+
+#### Changed
+
+- Navigation Item Order: Switched Contract Definitions and Asset Viewer
+
+#### Fixed
+
+- Fixed Contract Definition Page Button Typo.
+
 ## [v0.0.1-milestone-7-sovity5] 24.02.2023
 
 ### Overview
