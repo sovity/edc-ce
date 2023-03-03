@@ -40,7 +40,10 @@ public class TimeIntervalFunction implements AtomicConstraintFunction<Permission
             var nowDate = new Date();
             return switch (operator) {
                 case LT -> nowDate.before(policyDate);
+                case LEQ -> nowDate.before(policyDate) || nowDate.equals(policyDate);
                 case GT -> nowDate.after(policyDate);
+                case GEQ -> nowDate.after(policyDate) || nowDate.equals(policyDate);
+                case EQ -> nowDate.equals(policyDate);
                 default -> false;
             };
         } catch (ParseException e) {
