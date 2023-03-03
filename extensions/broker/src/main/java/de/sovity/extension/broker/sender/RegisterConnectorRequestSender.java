@@ -70,7 +70,7 @@ public class RegisterConnectorRequestSender implements MultipartSenderDelegate<R
     @Override
     public String buildMessagePayload(RegisterConnectorMessage registerConnectorMessage) throws Exception {
         var connectorEndpoint = new ConnectorEndpointBuilder(new URI("http://endpointid"))
-                ._accessURL_(new URI(endpoint))
+                ._accessURL_(new URI(endpoint + "/data"))
                 .build();
         var resourceCatalog = new ResourceCatalogBuilder()
                 .build();
