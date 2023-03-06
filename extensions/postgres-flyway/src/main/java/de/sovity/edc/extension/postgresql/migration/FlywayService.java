@@ -42,6 +42,7 @@ public class FlywayService {
         var migrationTableName = String.format("flyway_schema_history_%s", datasourceName);
         var migrationScriptLocation = String.join("/", MIGRATION_LOCATION_BASE, datasourceName);
         final var flyway = Flyway.configure()
+                .envVars()
                 .baselineVersion(MigrationVersion.fromVersion("0.0.0"))
                 .failOnMissingLocations(true)
                 .dataSource(dataSource)
