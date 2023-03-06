@@ -18,6 +18,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Changed
 
+- Updated the icon for Fetch Status option in the catalog browser
+
 #### Removed
 
 #### Fixed
