@@ -39,6 +39,7 @@ import static org.eclipse.edc.protocol.ids.jsonld.JsonLd.getObjectMapper;
 public class RegisterConnectorRequestSender implements MultipartSenderDelegate<RegisterConnectorMessage,
         String> {
 
+    public static final String DATA_ENDPOINT = "/data";
     private ObjectMapper objectMapper;
     private String connectorName;
     private String endpoint;
@@ -69,8 +70,9 @@ public class RegisterConnectorRequestSender implements MultipartSenderDelegate<R
 
     @Override
     public String buildMessagePayload(RegisterConnectorMessage registerConnectorMessage) throws Exception {
+        var accessUrl = String.format("%s%s", endpoint, DATA_ENDPOINT);
         var connectorEndpoint = new ConnectorEndpointBuilder(new URI("http://endpointid"))
-                ._accessURL_(new URI(endpoint))
+                ._accessURL_(new URI(accessUrl))
                 .build();
         var resourceCatalog = new ResourceCatalogBuilder()
                 .build();
