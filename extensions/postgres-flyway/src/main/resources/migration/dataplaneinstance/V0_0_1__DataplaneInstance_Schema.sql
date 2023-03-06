@@ -8,7 +8,7 @@
 --  SPDX-License-Identifier: Apache-2.0
 --
 --  Contributors:
---       sovity GmbH - Init for DataplaneInstances
+--       sovity GmbH - initial API and implementation for DataplaneInstances
 --
 --
 CREATE TABLE IF NOT EXISTS edc_data_plane_instance
