@@ -22,6 +22,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Fixed
 
+- Fixed closing of side nav-bar on pressing escape button
+
 ## [v0.0.1-milestone-7-sovity7] 06.03.2023
 
 ### Overview
