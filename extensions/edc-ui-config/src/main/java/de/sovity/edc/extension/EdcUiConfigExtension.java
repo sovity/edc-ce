@@ -37,7 +37,7 @@ public class EdcUiConfigExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        var edcUiConfigService = new EdcUiConfigService(context);
+        var edcUiConfigService = new EdcUiConfigService(context.getConfig());
         var controller = new EdcUiConfigController(edcUiConfigService);
         webService.registerResource(config.getContextAlias(), controller);
     }

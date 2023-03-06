@@ -49,11 +49,11 @@ class EdcUiConfigNothingSetTest {
                 .body("EDC_UI_DAPS_OAUTH_JWKS_URL", equalTo(missingMessage("EDC_UI_DAPS_OAUTH_JWKS_URL", "edc.oauth.provider.jwks.url")));
     }
 
-    private String missingMessage(String edcUiPropName, String contextPropName) {
+    private String missingMessage(String uiName, String backendName) {
         return String.format(
                 "Unset %s in EDC backend is required for EDC UI property %s.",
-                contextPropName,
-                edcUiPropName
+                backendName,
+                uiName
         );
     }
 }

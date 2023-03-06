@@ -14,7 +14,7 @@
 
 package de.sovity.edc.extension;
 
-import org.eclipse.edc.spi.system.ServiceExtensionContext;
+import org.eclipse.edc.spi.system.configuration.Config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,44 +27,44 @@ import static java.util.stream.Collectors.toMap;
 
 public class EdcUiConfigService {
 
-    private final ServiceExtensionContext context;
+    private final Config config;
 
-    public EdcUiConfigService(ServiceExtensionContext context) {
-        this.context = context;
+    public EdcUiConfigService(Config config) {
+        this.config = config;
     }
 
     public Map<String, String> getEdcUiProperties() {
-        var props = new HashMap<>(this.getMappedContextProperties());
-        props.put(EdcUiConfigProperty.CONNECTOR_ENDPOINT.getEdcUiPropertyName(), this.buildConnectorEndpoint());
-        props.putAll(this.mapKeys(this.getEdcUiContextProperties(), this::toFullCapsSnakeCase));
+        var props = new HashMap<>(this.mapBackendProperties());
+        props.put(EdcUiConfigProperty.CONNECTOR_ENDPOINT.getUiName(), this.buildConnectorEndpoint());
+        props.putAll(this.mapPrefixedProperties("edc.ui."));
         return props;
     }
 
-    private Map<String, String> getMappedContextProperties() {
+    private Map<String, String> mapBackendProperties() {
         return stream(EdcUiConfigProperty.values())
-                .filter(it -> it.getContextPropertyOrNull() != null)
+                .filter(it -> it.getBackendNameOrNull() != null)
                 .collect(toMap(
-                        EdcUiConfigProperty::getEdcUiPropertyName,
-                        property -> this.getMappedContextPropertyValue(
-                                property.getEdcUiPropertyName(),
-                                property.getContextPropertyOrNull()
+                        EdcUiConfigProperty::getUiName,
+                        property -> this.getMappedPropertyValue(
+                                property.getUiName(),
+                                property.getBackendNameOrNull()
                         )
                 ));
     }
 
-    private String getMappedContextPropertyValue(String edcUiPropertyName, String contextPropertyName) {
-        return context.getConfig().getString(
-                contextPropertyName,
+    private String getMappedPropertyValue(String uiName, String backendName) {
+        return config.getString(
+                backendName,
                 String.format(
                         "Unset %s in EDC backend is required for EDC UI property %s.",
-                        contextPropertyName,
-                        edcUiPropertyName
+                        backendName,
+                        uiName
                 )
         );
     }
 
-    private Map<String, String> getEdcUiContextProperties() {
-        return context.getConfig().getRelativeEntries("edc.ui.");
+    private Map<String, String> mapPrefixedProperties(String prefix) {
+        return this.mapKeys(config.getRelativeEntries(prefix), this::toFullCapsSnakeCase);
     }
 
     private String toFullCapsSnakeCase(String edcPropertyName) {
@@ -80,7 +80,7 @@ public class EdcUiConfigService {
     }
 
     private String getIdsEndpoint() {
-        return context.getConfig().getString(
+        return config.getString(
                 "edc.ids.endpoint",
                 "http://property.edc-ids-endpoint.not.set.in.edc.backend/ids"
         );

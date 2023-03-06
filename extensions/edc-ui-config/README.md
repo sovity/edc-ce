@@ -16,15 +16,14 @@
 
 ## About this Extension
 
-Our [EDC UI](https://github.com/sovity/edc-ui/) requires many configuration properties which exist in the EDC Backend
-Context Properties.
+Our [EDC UI](https://github.com/sovity/edc-ui/) requires many configuration properties which exist in the EDC Backend.
 
-This extension provides an endpoint in the data management API `/edc-ui-config` which allows our EDC UI to retrieve 
+This extension provides an endpoint in the data management API `/edc-ui-config` which allows our EDC UI to retrieve
 additional `EDC_UI_` properties from the backend.
 
-It will pass all context properties starting with `edc.ui.` in general.
+It will pass all config properties starting with `edc.ui.` in general.
 
-It will build `EDC_UI_` properties from backend properties where possible. 
+It will build `EDC_UI_` properties from backend properties where possible.
 
 This excludes the Data Management API Endpoint URL and API keys or other sensitive data.
 

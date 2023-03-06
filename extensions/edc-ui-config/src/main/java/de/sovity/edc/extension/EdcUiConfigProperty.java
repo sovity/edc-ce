@@ -33,38 +33,38 @@ public enum EdcUiConfigProperty {
     /**
      * The property name to be sent to EDC UI.
      */
-    private final String edcUiPropertyName;
+    private final String uiName;
 
     /**
-     * The context property name in EDC Backend.
+     * The config property name in EDC Backend.
      * <br>
-     * If non-null, value is taken from this context property.
+     * If non-null, value is taken from this config property.
      * <br>
      * If null, value is expected to be built manually.
      */
-    private final String contextPropertyOrNull;
+    private final String backendNameOrNull;
 
-    EdcUiConfigProperty(String edcUiPropertyName, String contextPropertyOrNull) {
-        this.edcUiPropertyName = requireNonNull(edcUiPropertyName, "edcUiPropertyName");
-        this.contextPropertyOrNull = contextPropertyOrNull;
+    EdcUiConfigProperty(String uiName, String backendNameOrNull) {
+        this.uiName = requireNonNull(uiName, "edcUiPropertyName");
+        this.backendNameOrNull = backendNameOrNull;
     }
 
     /**
-     * See @link {@link #edcUiPropertyName}
+     * See @link {@link #uiName}
      *
-     * @return See @link {@link #edcUiPropertyName}
+     * @return See @link {@link #uiName}
      */
-    public String getEdcUiPropertyName() {
-        return edcUiPropertyName;
+    public String getUiName() {
+        return uiName;
     }
 
 
     /**
-     * See {@link #contextPropertyOrNull}
+     * See {@link #backendNameOrNull}
      *
-     * @return {@link #contextPropertyOrNull}
+     * @return {@link #backendNameOrNull}
      */
-    public String getContextPropertyOrNull() {
-        return contextPropertyOrNull;
+    public String getBackendNameOrNull() {
+        return backendNameOrNull;
     }
 }
