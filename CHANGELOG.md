@@ -16,14 +16,37 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
-- More Connector Self-Description properties in Dashboard.
-- Info texts to differentiate Connector ID and Connector Endpoint.
-
 #### Changed
 
 #### Removed
 
 #### Fixed
+
+## [v0.0.1-milestone-7-sovity7] 06.03.2023
+
+### Overview
+
+More Connector Self-Description properties in Dashboard.
+
+### Detailed Changes
+
+#### Added
+
+- Added Connector Self-Description property grid in Dashboard.
+- Added info texts to differentiate Connector ID and Connector Endpoint.
+- Added support for loading additional config from `EDC_UI_CONFIG_URL` on
+  startup.
+
+#### Changed
+
+- Deprecated property `EDC_UI_ASSET_PROP_ORIGINATOR` in favor of
+  `EDC_UI_CONNECTOR_ENDPOINT`.
+- Deprecated property `EDC_UI_ASSET_PROP_ORIGINATOR_ORGANIZATION_NAME` in favor
+  of `EDC_UI_CURATOR_ORGANIZATION_NAME`.
+
+#### Fixed
+
+- Fixed Contract Definition successfully created message.
 
 ## [v0.0.1-milestone-7-sovity6] 02.03.2023
 
