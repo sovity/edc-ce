@@ -98,7 +98,7 @@ Copy the SKI:AKI combination and use it to start the EDC (optionally also save i
 In the default configuration the connector certificate should be stored inside a `keystore.jks` in a folder `resources/vault/edc/` next to the docker-compose. The path and keystore name can be edited in the env-variable `EDC_KEYSTORE`.
 
 ### Can I run a connector locally and consume data from an online connector?
-No, locally run connectors cannot exchange data with online connectors. They mus have a proper URL and be accesible from the data provider.
+No, locally run connectors cannot exchange data with online connectors. A connector must have a proper URL + configuration and be accesible from the data provider via REST calls.
 
 ## Backward Compatibility and Migration Support
 It is NOT a goal of this project to provide backward compatibility to the previous implementations.
