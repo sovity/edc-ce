@@ -14,7 +14,7 @@ export const AssetProperties = {
 
   // our asset properties
   keywords: 'asset:prop:keywords',
-  originatorOrganization: 'asset:prop:originatorOrganization',
+  curatorOrganizationName: 'asset:prop:curatorOrganizationName',
   language: 'asset:prop:language',
   publisher: 'asset:prop:publisher',
   standardLicense: 'asset:prop:standardLicense',
@@ -26,4 +26,9 @@ export const AssetProperties = {
   dataModel: 'http://w3id.org/mds#dataModel', // guessed
   geoReferenceMethod: 'http://w3id.org/mds#geoReferenceMethod', // guessed
   transportMode: 'http://w3id.org/mds#transportMode',
+
+  /**
+   * @deprecated use {@link AssetProperties.curatorOrganizationName} instead
+   */
+  _legacyCuratorOrganizationName: 'asset:prop:originatorOrganization',
 };

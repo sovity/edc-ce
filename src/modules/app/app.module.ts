@@ -26,6 +26,7 @@ import {loadAppConfigOnStartup} from './config/app-config-initializer';
 import {provideConfigProperty} from './config/app-config-injection-utils';
 import {AppConfigBuilder} from './config/app-config.builder';
 import {AppConfigFetcher} from './config/app-config.fetcher';
+import {AppConfigMerger} from './config/app-config.merger';
 import {AppConfigService} from './config/app-config.service';
 
 @NgModule({
@@ -56,6 +57,7 @@ import {AppConfigService} from './config/app-config.service';
   ],
   declarations: [AppComponent, NavigationComponent],
   providers: [
+    AppConfigMerger,
     AppConfigFetcher,
     AppConfigBuilder,
     AppConfigService,

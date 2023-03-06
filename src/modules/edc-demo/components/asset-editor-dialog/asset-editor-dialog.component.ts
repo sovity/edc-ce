@@ -54,7 +54,7 @@ export class AssetEditorDialog implements OnDestroy {
       )
       .subscribe({
         complete: () => {
-          this.notificationService.showInfo('Successfully created');
+          this.notificationService.showInfo('Successfully created asset');
           this.close({refreshList: true});
         },
         error: (error) => {

@@ -8,7 +8,7 @@ import {DashboardComponent} from '../edc-demo/components/dashboard/dashboard.com
 import {LogoutComponent} from '../edc-demo/components/logout/logout.component';
 import {PolicyViewComponent} from '../edc-demo/components/policy-view/policy-view.component';
 import {TransferHistoryViewerComponent} from '../edc-demo/components/transfer-history/transfer-history-viewer.component';
-import {EdcUiFeature} from './config/edc-ui-feature';
+import {EdcUiFeature} from './config/profiles/edc-ui-feature';
 
 export const routes: Routes = [
   {

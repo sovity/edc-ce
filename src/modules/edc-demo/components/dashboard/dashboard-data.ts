@@ -10,8 +10,6 @@ export interface DashboardData {
   numContractDefinitions: Fetched<number>;
   numPolicies: Fetched<number>;
   numCatalogs: Fetched<number>;
-  connectorUrl: string;
-  connectorOrganization: string;
 }
 
 export function defaultDashboardData(): DashboardData {
@@ -24,7 +22,5 @@ export function defaultDashboardData(): DashboardData {
     numPolicies: Fetched.empty(),
     numContractDefinitions: Fetched.empty(),
     numCatalogs: Fetched.empty(),
-    connectorUrl: '',
-    connectorOrganization: '',
   };
 }

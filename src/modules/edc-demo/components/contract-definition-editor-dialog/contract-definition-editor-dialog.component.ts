@@ -75,7 +75,9 @@ export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
       )
       .subscribe({
         complete: () => {
-          this.notificationService.showInfo('Successfully created policy.');
+          this.notificationService.showInfo(
+            'Successfully created contract definition.',
+          );
           this.close({refreshList: true});
         },
         error: (error) => {

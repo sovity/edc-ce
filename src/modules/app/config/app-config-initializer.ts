@@ -1,5 +1,4 @@
 import {APP_INITIALIZER, Provider} from '@angular/core';
-import {environment} from '../../../environments/environment';
 import {AppConfig} from './app-config';
 import {AppConfigBuilder} from './app-config.builder';
 import {AppConfigFetcher} from './app-config.fetcher';
@@ -20,7 +19,7 @@ export const loadAppConfigOnStartup = (): Provider => ({
     ) =>
     () =>
       fetcher
-        .fetchConfigJson()
+        .fetchEffectiveConfig('/assets/config/app-config.json', null)
         .then((json) => builder.buildAppConfig(json))
         .then((config: AppConfig) => service.setConfig(config)),
 });

@@ -61,7 +61,9 @@ export class AssetPropertyMapper {
       version: props[AssetProperties.version],
       contentType: props[AssetProperties.contentType],
       originator: props[AssetProperties.originator],
-      originatorOrganization: props[AssetProperties.originatorOrganization],
+      originatorOrganization:
+        props[AssetProperties.curatorOrganizationName] ??
+        props[AssetProperties._legacyCuratorOrganizationName],
       keywords,
       description: props[AssetProperties.description],
       language,
@@ -86,10 +88,10 @@ export class AssetPropertyMapper {
     props[AssetProperties.name] = trimmedOrNull(metadata?.name);
     props[AssetProperties.version] = trimmedOrNull(metadata?.version);
     props[AssetProperties.originator] = trimmedOrNull(
-      this.appConfigService.config.originator,
+      this.appConfigService.config.connectorEndpoint,
     );
-    props[AssetProperties.originatorOrganization] = trimmedOrNull(
-      this.appConfigService.config.originatorOrganization,
+    props[AssetProperties.curatorOrganizationName] = trimmedOrNull(
+      this.appConfigService.config.curatorOrganizationName,
     );
     props[AssetProperties.keywords] = trimmedOrNull(
       metadata?.keywords?.join(', '),

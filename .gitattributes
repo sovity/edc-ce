@@ -15,6 +15,7 @@
 *.bash     text eol=lf
 *.fish     text eol=lf
 *.sh       text eol=lf
+*.env       text eol=lf
 
 # Windows Scripts need crlf
 *.bat      text eol=crlf

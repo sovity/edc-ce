@@ -16,6 +16,9 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
+- More Connector Self-Description properties in Dashboard.
+- Info texts to differentiate Connector ID and Connector Endpoint.
+
 #### Changed
 
 #### Removed

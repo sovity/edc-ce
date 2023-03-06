@@ -1,21 +1,42 @@
-import {EdcUiColorTheme} from './edc-ui-color-theme';
-import {EdcUiFeature} from './edc-ui-feature';
-import {EdcUiProfile} from './edc-ui-profile';
+import {EdcUiColorTheme} from './profiles/edc-ui-color-theme';
+import {EdcUiFeature} from './profiles/edc-ui-feature';
+import {EdcUiProfile} from './profiles/edc-ui-profile';
 
 /**
  * Type-Safe and interpreted App Config
+ *
+ * See {@link AppConfigProperties} for available ENV Vars.
  */
-export type AppConfig = {
+export interface AppConfig {
+  // selected profile
   profile: EdcUiProfile;
+  features: Set<EdcUiFeature>;
+
+  // selected theme (by profile)
   theme: EdcUiColorTheme;
   brandFaviconSrc: string;
   brandLogoSrc: string;
   brandLogoStyle: string;
-  features: Set<EdcUiFeature>;
-  dataManagementApiKey: string;
+
+  // EDC Backend Endpoints
+  connectorEndpoint: string;
   dataManagementApiUrl: string;
-  originator: string;
-  catalogUrl: string;
-  logoutUrl: string;
-  originatorOrganization: string;
-};
+  dataManagementApiKey: string;
+  logoutUrl: string; // requires feature flag logout-button
+
+  // Other EDC Backend Endpoints
+  catalogUrls: string;
+
+  // Connector Self-Description
+  connectorId: string;
+  connectorName: string;
+  connectorIdsId: string;
+  connectorIdsTitle: string;
+  connectorIdsDescription: string;
+  curatorUrl: string;
+  curatorOrganizationName: string;
+  dapsOauthTokenUrl: string;
+  dapsOauthJwksUrl: string;
+  maintainerUrl: string;
+  maintainerOrganizationName: string;
+}

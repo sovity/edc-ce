@@ -21,7 +21,7 @@ export class CatalogApiUrlService {
   private customProviders = new Array<string>();
 
   constructor(private appConfigService: AppConfigService) {
-    this.presetProviders = this.splitUrls(appConfigService.config.catalogUrl);
+    this.presetProviders = this.splitUrls(appConfigService.config.catalogUrls);
   }
 
   /**

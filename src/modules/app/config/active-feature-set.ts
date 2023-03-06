@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AppConfigService} from './app-config.service';
-import {EdcUiFeature} from './edc-ui-feature';
+import {EdcUiFeature} from './profiles/edc-ui-feature';
 
 @Injectable({providedIn: 'root'})
 export class ActiveFeatureSet {

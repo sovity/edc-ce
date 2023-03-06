@@ -45,7 +45,6 @@ export class DashboardDataService {
     const sources: Observable<Partial<DashboardData>>[] = [
       this.assetKpis(),
       this.catalogBrowserKpis(),
-      this.connectorInformation(),
       this.contractAgreementKpis(),
       this.contractDefinitionKpis(),
       this.numCatalogs(),
@@ -120,14 +119,6 @@ export class DashboardDataService {
     );
   }
 
-  private connectorInformation(): Observable<Partial<DashboardData>> {
-    return of({
-      connectorUrl: this.appConfigService.config.originator,
-      connectorOrganization:
-        this.appConfigService.config.originatorOrganization,
-    });
-  }
-
   private numCatalogs(): Observable<Partial<DashboardData>> {
     return of({
       numCatalogs: Fetched.ready(
@@ -150,26 +141,6 @@ export class DashboardDataService {
         ),
       })),
     );
-  }
-
-  private buildContractAgreementsChart(list: ContractAgreementDto[]) {
-    const total = list.length;
-
-    const elements = [
-      {label: 'Contract Agreements (Incoming & Outgoing)', amount: total},
-    ].filter((it) => it.amount != 0);
-
-    return {
-      labels: elements.map((it) => it.label),
-      datasets: [
-        {
-          label: 'Contract Agreements',
-          data: elements.map((it) => it.amount),
-          backgroundColor: this.chartColorService.getColors(elements.length, 3),
-        },
-      ],
-      options: {responsive: false},
-    };
   }
 
   private buildTransferChart(

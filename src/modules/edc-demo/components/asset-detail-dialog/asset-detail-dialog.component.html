@@ -41,39 +41,8 @@
   </div>
 
   <!-- Properties -->
-  <div
-    class="flex flex-row flex-wrap gap-[10px] justify-start"
-    style="margin-top: 10px">
-    <div
-      *ngFor="let prop of props"
-      class="flex flex-row space-x-[10px] overflow-hidden"
-      style="width: calc(100% / 3 - 20px)">
-      <!-- Property Icon -->
-      <mat-icon style="flex-shrink: 0; margin-top: 6px">{{
-        prop.icon
-      }}</mat-icon>
-      <div class="flex flex-col">
-        <!-- Property Label -->
-        <div class="uppercase text-slate text-sm">{{ prop.label }}</div>
-
-        <!-- Property Value (URL) -->
-        <a
-          *ngIf="prop.url"
-          class="link break-all"
-          target="_blank"
-          rel="noreferrer"
-          [ngClass]="prop.additionalClasses"
-          [attr.href]="prop.url"
-          >{{ prop.text }}</a
-        >
-
-        <!-- Property Value (Text) -->
-        <span *ngIf="!prop.url" [ngClass]="prop.additionalClasses">{{
-          prop.text
-        }}</span>
-      </div>
-    </div>
-  </div>
+  <edc-demo-property-grid class="mt-[10px]" [props]="props">
+  </edc-demo-property-grid>
 </mat-dialog-content>
 
 <mat-dialog-actions>

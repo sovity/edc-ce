@@ -1,4 +1,4 @@
-export interface AssetDetailDialogField {
+export interface PropertyGridField {
   icon: string;
   label: string;
   text: string;

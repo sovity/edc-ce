@@ -48,15 +48,19 @@
     </mat-form-field>
 
     <!-- Connector ID -->
-    <mat-form-field
-      *ngIf="form.policyType == 'Connector-Restricted-Usage'"
-      color="accent">
-      <mat-label>Connector ID</mat-label>
-      <input
-        matInput
-        placeholder="https://other-connector.com"
-        [formControl]="form.group.controls.connectorId" />
-    </mat-form-field>
+    <ng-container *ngIf="form.policyType == 'Connector-Restricted-Usage'">
+      <mat-form-field color="accent">
+        <mat-label>Connector ID</mat-label>
+        <input
+          matInput
+          placeholder="https://other-connector.com"
+          [formControl]="form.group.controls.connectorId" />
+        <mat-hint>
+          The Connector ID and can be found in the dashboard of given EDC and
+          differs from the Connector Endpoint .
+        </mat-hint>
+      </mat-form-field>
+    </ng-container>
   </div>
 </mat-dialog-content>
 

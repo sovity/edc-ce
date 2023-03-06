@@ -50,31 +50,49 @@
         label="Contract Agreements"
         [kpi]="data.numContractAgreements"></edc-demo-dashboard-kpi-card>
     </div>
+
+    <mat-card>
+      <mat-card-title>Connector Properties</mat-card-title>
+      <mat-card-subtitle>Additional Properties</mat-card-subtitle>
+      <edc-demo-property-grid [props]="connectorProperties" [columns]="3">
+      </edc-demo-property-grid>
+    </mat-card>
   </div>
 
   <div class="shrink-0 flex flex-col gap-[16px]" style="width: 420px">
     <mat-card>
       <mat-card-title>EDC Connector</mat-card-title>
-      <mat-card-subtitle>{{ data.connectorOrganization }}</mat-card-subtitle>
-      <mat-form-field class="w-full">
+      <mat-card-subtitle>
+        {{ config.connectorIdsTitle }}
+      </mat-card-subtitle>
+      <p *ngIf="config.connectorIdsDescription" class="text-justify">
+        {{ config.connectorIdsDescription }}
+      </p>
+      <p class="text-justify">
+        Share the following Connector Endpoint to let others access your EDC
+        Connector's catalog. This is especially useful when using
+        connector-restricted data offers which won't show up in brokers.
+      </p>
+      <mat-form-field class="w-full" style="margin-bottom: -10px">
         <mat-label>Connector Endpoint</mat-label>
         <input
           #input
           matInput
           ngDefaultControl
           readonly
-          [ngModel]="data.connectorUrl"
+          [ngModel]="config.connectorEndpoint"
           (focus)="input.select()" />
         <mat-icon matPrefix>link</mat-icon>
         <button
           mat-icon-button
           matSuffix
-          [cdkCopyToClipboard]="data.connectorUrl"
+          [cdkCopyToClipboard]="config.connectorEndpoint"
           (click)="input.focus(); input.select()">
           <mat-icon>content_copy</mat-icon>
         </button>
       </mat-form-field>
     </mat-card>
+
     <mat-card *ngIf="'open-source-marketing' | isActiveFeature">
       <mat-card-title>Get Managed EDC</mat-card-title>
       <mat-card-subtitle>Connector-as-a-Service</mat-card-subtitle>
@@ -82,25 +100,24 @@
         <p class="text-justify">
           To join data spaces like <b>Mobility Data Space</b> or
           <b>Catena-X</b> within minutes, consider the managed solution by
-          <a class="link" href="https://sovity.de" target="_blank">sovity</a> -
-          the <b>Connector-as-a-Service (CaaS)</b> based on open-source software
-          enriched with <b>key enterprise features</b>.
+          <a class="link" href="https://sovity.de" target="_blank">sovity</a>
+          - the <b>Connector-as-a-Service (CaaS)</b> based on open-source
+          software enriched with <b>key enterprise features</b>.
         </p>
         <div class="flex flex-row !space-x-[10px]">
           <a
             color="primary"
-            href="https://sovity.de"
-            mat-button
+            href="mailto:contact@sovity.de"
             mat-flat-button
             target="_blank">
-            sovity
+            Contact
           </a>
           <a
             color="secondary"
-            href="mailto:contact@sovity.de"
+            href="https://sovity.de"
             mat-stroked-button
             target="_blank">
-            Contact
+            sovity
           </a>
         </div>
       </div>

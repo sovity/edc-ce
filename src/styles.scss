@@ -74,6 +74,10 @@ body {
   letter-spacing: 0.04em;
 }
 
+.mat-form-field-any-size-hint .mat-form-field-subscript-wrapper {
+  position: unset !important;
+}
+
 // hrefs
 .link {
   color: var(--link-color);

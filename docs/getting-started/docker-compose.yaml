@@ -2,38 +2,41 @@ version: '3.8'
 services:
   edc-ui:
     image: ghcr.io/sovity/edc-ui:latest
-    container_name: edc-ui
     ports:
       - '11000:80'
     environment:
-      - EDC_UI_ACTIVE_PROFILE=sovity-open-source
-      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/data
-      - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
-      - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/ids/data
-      - EDC_UI_ASSET_PROP_ORIGINATOR=http://edc:11003/api/v1/ids/data
-      - EDC_UI_ASSET_PROP_ORIGINATOR_ORGANIZATION=Example GmbH
+      EDC_UI_ACTIVE_PROFILE: sovity-open-source
+      EDC_UI_DATA_MANAGEMENT_API_URL: http://localhost:11002/api/v1/data
+      EDC_UI_DATA_MANAGEMENT_API_KEY: ApiKeyDefaultValue
+      EDC_UI_CONFIG_URL: edc-ui-config
+
+      # Optionally add other preconfigured other connector endpoints for catalog browser
+      EDC_UI_CATALOG_URLS: http://edc:11003/api/v1/ids/data
 
   edc:
-    container_name: edc
     image: ghcr.io/sovity/edc:latest
     environment:
+      # Basic Configuration
+      EDC_CONNECTOR_NAME: 'example-connector'
+      EDC_IDS_ID: urn:connector:example-connector
+      EDC_IDS_TITLE: 'Example GmbH EDC Connector'
+      EDC_IDS_DESCRIPTION: 'Minimal configured Open Source EDC built by sovity'
+      EDC_IDS_CURATOR: https://example-gmbh.com
+      EDC_UI_CURATOR_ORGANIZATION_NAME: Example GmbH
+      EDC_HOSTNAME: edc
+      IDS_WEBHOOK_ADDRESS: http://edc:11003
+      EDC_IDS_ENDPOINT: http://edc:11003/api/v1/ids
+      EDC_API_AUTH_KEY: ApiKeyDefaultValue
+
+      # Deployment Configuration
       WEB_HTTP_PORT: 11001
       WEB_HTTP_PATH: /api
       WEB_HTTP_DATA_PORT: 11002
       WEB_HTTP_DATA_PATH: /api/v1/data
       WEB_HTTP_IDS_PORT: 11003
       WEB_HTTP_IDS_PATH: /api/v1/ids
-      EDC_IDS_ID: urn:connector:example-connector
-      EDC_IDS_TITLE: 'Example GmbH EDC Connector'
-      EDC_IDS_DESCRIPTION:
-        'Minimally configured Open Source EDC built by sovity.'
-      EDC_IDS_ENDPOINT: http://edc:11003/api/v1/ids
-      IDS_WEBHOOK_ADDRESS: http://edc:11003
-      EDC_IDS_CURATOR: https://example.com
       EDC_IDS_MAINTAINER: https://sovity.de
-      EDC_CONNECTOR_NAME: example-connector
-      EDC_HOSTNAME: edc
-      EDC_API_AUTH_KEY: ApiKeyDefaultValue
+      EDC_UI_MAINTAINER_ORGANIZATION_NAME: sovity GmbH
       EDC_WEB_REST_CORS_ENABLED: 'true'
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
       EDC_WEB_REST_CORS_ORIGINS: '*'

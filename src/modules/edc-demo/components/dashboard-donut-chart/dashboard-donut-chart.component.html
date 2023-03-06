@@ -1,16 +1,4 @@
-<mat-icon
-  *ngIf="data.isError"
-  style="font-size: 80px; width: 80px; height: 80px"
-  color="warn"
-  >error
-</mat-icon>
-<mat-progress-spinner
-  *ngIf="data.isLoading"
-  style="width: 80px; height: 80px"
-  diameter="80"
-  color="primary"
-  mode="indeterminate">
-</mat-progress-spinner>
+<edc-demo-loading-state *ngIf="data.isLoading"></edc-demo-loading-state>
 <ng-container *ngIf="data.isReady && !data.data.isEmpty">
   <canvas
     baseChart
@@ -31,21 +19,11 @@
     {{ data.data.totalLabel }}: {{ data.data.totalValue | number }}
   </div>
 </ng-container>
-<ng-container *ngIf="data.isReady && data.data.isEmpty">
-  <div
-    style="
-      text-transform: uppercase;
-      font-size: 12px;
-      color: #424242;
-      margin-top: 8px;
-    ">
-    {{ data.data.emptyMessage }}
-  </div>
-</ng-container>
-<div
-  class="flex justify-center items-center uppercase text-center"
-  style="font-size: 0.9em">
-  <div *ngIf="data.isError" class="text-warn">
-    {{ data.error.failureMessage }}
-  </div>
-</div>
+<edc-demo-empty-state
+  *ngIf="data.isReady && data.data.isEmpty"
+  [emptyMessage]="data.data.emptyMessage">
+</edc-demo-empty-state>
+<edc-demo-error-state
+  *ngIf="data.isError"
+  [errorMessage]="data.error.failureMessage">
+</edc-demo-error-state>
