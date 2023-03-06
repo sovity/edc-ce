@@ -8,7 +8,7 @@
  *  SPDX-License-Identifier: Apache-2.0
  *
  *  Contributors:
- *       sovity GmbH - init
+ *       sovity GmbH - initial API and implementation
  *
  */
 
