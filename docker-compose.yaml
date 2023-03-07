@@ -18,8 +18,8 @@ services:
       # Basic Configuration
       EDC_CONNECTOR_NAME: 'example-connector'
       EDC_IDS_ID: urn:connector:example-connector
-      EDC_IDS_TITLE: 'Example GmbH EDC Connector'
-      EDC_IDS_DESCRIPTION: 'Minimal configured Open Source EDC built by sovity'
+      EDC_IDS_TITLE: 'Example GmbH MDS EDC Connector'
+      EDC_IDS_DESCRIPTION: 'Community Edition EDC Connector built by sovity with open-source extensions. Configured for compatibility and usage in the Mobility Data Space (MDS).'
       EDC_IDS_CURATOR: https://example-gmbh.com
       EDC_UI_CURATOR_ORGANIZATION_NAME: Example GmbH
       EDC_HOSTNAME: edc
