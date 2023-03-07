@@ -16,10 +16,15 @@ package de.sovity.edc.extension.postgresql;
 
 import de.sovity.edc.extension.postgresql.migration.DatabaseMigrationManager;
 import de.sovity.edc.extension.postgresql.migration.FlywayService;
+import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 
 public class PostgresFlywayExtension implements ServiceExtension {
+
+
+    @Setting
+    public static final String EDC_DATASOURCE_REPAIR_SETTING = "edc.flyway.repair";
 
     @Override
     public String name() {
@@ -28,7 +33,8 @@ public class PostgresFlywayExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        var flywayService = new FlywayService(context.getMonitor());
+        var tryRepairOnFailedMigration = context.getSetting(EDC_DATASOURCE_REPAIR_SETTING, false);
+        var flywayService = new FlywayService(context.getMonitor(), tryRepairOnFailedMigration);
         var migrationManager = new DatabaseMigrationManager(context.getConfig(), flywayService);
         migrationManager.migrateAllDataSources();
     }
