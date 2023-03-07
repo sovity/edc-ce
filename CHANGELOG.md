@@ -18,9 +18,21 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Changed
 
-- Updated the icon for Fetch Status option in the catalog browser
-
 #### Removed
+
+#### Fixed
+
+## [v0.0.1-milestone-7-sovity8] 07.03.2023
+
+### Overview
+
+Minor UI fixes.
+
+### Detailed Changes
+
+#### Changed
+
+- Updated the icon for Fetch Status option in the catalog browser
 
 #### Fixed
 
