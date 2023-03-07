@@ -25,6 +25,8 @@ the detailed section referring to by linking pull requests or issues.
 #### Fixed
 
 - Fixed closing of side nav-bar on pressing escape button
+- Fixed "Your Contract Definitions" being called "Your Data Offers" in the
+  dashboard.
 
 ## [v0.0.1-milestone-7-sovity7] 06.03.2023
 

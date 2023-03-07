@@ -1,5 +1,50 @@
 [
   {
+    "createdAt": 1677833530781,
+    "id": "always-true",
+    "policy": {
+      "permissions": [
+        {
+          "edctype": "dataspaceconnector:permission",
+          "uid": null,
+          "target": null,
+          "action": {
+            "type": "USE",
+            "includedIn": null,
+            "constraint": null
+          },
+          "assignee": null,
+          "assigner": null,
+          "constraints": [
+            {
+              "edctype": "AtomicConstraint",
+              "leftExpression": {
+                "edctype": "dataspaceconnector:literalexpression",
+                "value": "ALWAYS_TRUE"
+              },
+              "rightExpression": {
+                "edctype": "dataspaceconnector:literalexpression",
+                "value": "true"
+              },
+              "operator": "EQ"
+            }
+          ],
+          "duties": []
+        }
+      ],
+      "prohibitions": [],
+      "obligations": [],
+      "extensibleProperties": {},
+      "inheritsFrom": null,
+      "assigner": null,
+      "assignee": null,
+      "target": null,
+      "@type": {
+        "@policytype": "set"
+      }
+    }
+  },
+  {
     "uid": "time-restricted-policy",
     "policy": {
       "permissions": [
