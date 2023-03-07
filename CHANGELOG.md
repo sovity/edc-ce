@@ -2,7 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
-## [x.x.x]
+## [1.5.0] - 2023-03-07
+
+- `EDC_FLYWAY_REPAIR=true` variable can now be set to run flyway repair when migrations failed
 
 ## [1.4.0] - 2023-03-06
 
