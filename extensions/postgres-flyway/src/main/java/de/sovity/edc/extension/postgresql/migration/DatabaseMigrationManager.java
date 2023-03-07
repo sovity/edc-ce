@@ -30,6 +30,13 @@ public class DatabaseMigrationManager {
         this.flywayService = flywayService;
     }
 
+    public void repairAllDataSources() {
+        for (String datasourceName : getDataSourceNames(config)) {
+            var jdbcConnectionProperties = new JdbcConnectionProperties(config, datasourceName);
+            flywayService.repair(datasourceName, jdbcConnectionProperties);
+        }
+    }
+
     public void migrateAllDataSources() {
         for (String datasourceName : getDataSourceNames(config)) {
             var jdbcConnectionProperties = new JdbcConnectionProperties(config, datasourceName);

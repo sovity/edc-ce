@@ -30,6 +30,7 @@ public class PostgresFlywayExtension implements ServiceExtension {
     public void initialize(ServiceExtensionContext context) {
         var flywayService = new FlywayService(context.getMonitor());
         var migrationManager = new DatabaseMigrationManager(context.getConfig(), flywayService);
+        migrationManager.repairAllDataSources();
         migrationManager.migrateAllDataSources();
     }
 
