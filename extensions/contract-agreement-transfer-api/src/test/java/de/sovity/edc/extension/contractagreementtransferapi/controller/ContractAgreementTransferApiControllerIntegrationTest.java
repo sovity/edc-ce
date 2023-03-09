@@ -15,7 +15,7 @@
 package de.sovity.edc.extension.contractagreementtransferapi.controller;
 
 import io.restassured.http.ContentType;
-import org.eclipse.edc.connector.api.datamanagement.asset.model.DataAddressDto;
+import org.eclipse.edc.connector.api.management.asset.model.DataAddressDto;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;

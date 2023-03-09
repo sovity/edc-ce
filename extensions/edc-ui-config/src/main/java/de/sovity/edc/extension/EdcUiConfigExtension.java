@@ -14,7 +14,7 @@
 
 package de.sovity.edc.extension;
 
-import org.eclipse.edc.connector.api.datamanagement.configuration.DataManagementApiConfiguration;
+import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
@@ -25,7 +25,7 @@ public class EdcUiConfigExtension implements ServiceExtension {
     public static final String EXTENSION_NAME = "EdcUiConfigExtension";
 
     @Inject
-    private DataManagementApiConfiguration config;
+    private ManagementApiConfiguration config;
 
     @Inject
     private WebService webService;
