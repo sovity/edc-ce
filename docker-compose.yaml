@@ -55,6 +55,9 @@ services:
       EDC_FLYWAY_POSTGRES_JDBC_URL: jdbc:postgresql://postgresql:5432/edc
       EDC_FLYWAY_POSTGRES_JDBC_USER: edc
       EDC_FLYWAY_POSTGRES_JDBC_PASSWORD: edc
+
+      # Extension Configuration
+      POLICY_BROKER_BLACKLIST: REFERRING_CONNECTOR
     ports:
       - '11001:11001'
       - '11002:11002'
