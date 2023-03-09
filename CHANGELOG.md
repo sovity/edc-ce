@@ -2,8 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.1] - UNRELEASED
+
+### Changed
+- Updated to EDC-Connector 0.0.1-milestone-8.
+
 ## [1.5.0] - 2023-03-07
 
+### Feature
 - `EDC_FLYWAY_REPAIR=true` variable can now be set to run flyway repair when migrations failed
 
 ## [1.4.0] - 2023-03-06
