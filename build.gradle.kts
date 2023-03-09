@@ -16,20 +16,19 @@ val downloadArtifact: Configuration by configurations.creating {
 
 val identityHubVersion: String by project
 val registrationServiceVersion: String by project
-val theVersion: String by project
-val theGroup: String by project
 
 // task that downloads the RegSrv CLI and IH CLI
 val getJars by tasks.registering(Copy::class) {
     outputs.upToDateWhen { false } //always download
 
     from(downloadArtifact)
-        // strip away the version string
-        .rename { s -> s.replace("-${identityHubVersion}", "")
-            .replace("-${registrationServiceVersion}", "")
-            .replace("-all", "")
-        }
-    into(layout.projectDirectory.dir("resources/cli-tools"))
+            // strip away the version string
+            .rename { s ->
+                s.replace("-${identityHubVersion}", "")
+                        .replace("-${registrationServiceVersion}", "")
+                        .replace("-all", "")
+            }
+    into(layout.projectDirectory.dir("libs/cli-tools"))
 }
 
 // run the download jars task after the "jar" task
@@ -58,8 +57,8 @@ allprojects {
 
     checkstyle {
         toolVersion = "9.0"
-        configFile = rootProject.file("resources/checkstyle-config.xml")
-        configDirectory.set(rootProject.file("resources"))
+        configFile = rootProject.file("docs/dev/checkstyle/checkstyle-config.xml")
+        configDirectory.set(rootProject.file("docs/dev/checkstyle"))
         maxErrors = 0 // does not tolerate errors
     }
 
@@ -78,11 +77,12 @@ allprojects {
 subprojects {
     apply(plugin = "maven-publish")
 
-    val theGroup: String by project
-    val theVersion: String by project
+    val sovityEdcExtensionsGroup: String by project
+    val sovityEdcExtensionsVersion: String by project
+    val sovityEdcCeGroup: String by project
 
-    group = theGroup
-    version = theVersion
+    group = if (name.contains("connector")) sovityEdcCeGroup else sovityEdcExtensionsGroup
+    version = sovityEdcExtensionsVersion
 
     publishing {
         repositories {

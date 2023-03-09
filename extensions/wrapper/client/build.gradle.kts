@@ -2,8 +2,8 @@ val edcVersion: String by project
 val edcGroup: String by project
 val restAssured: String by project
 
-val edcClientGroup: String by project
-group = edcClientGroup
+val sovityEdcClientGroup: String by project
+group = sovityEdcClientGroup
 
 
 plugins {

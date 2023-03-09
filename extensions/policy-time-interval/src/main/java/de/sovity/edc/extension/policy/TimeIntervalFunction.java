@@ -44,6 +44,7 @@ public class TimeIntervalFunction implements AtomicConstraintFunction<Permission
                 case GT -> nowDate.after(policyDate);
                 case GEQ -> nowDate.after(policyDate) || nowDate.equals(policyDate);
                 case EQ -> nowDate.equals(policyDate);
+                case NEQ -> !nowDate.equals(policyDate);
                 default -> false;
             };
         } catch (ParseException e) {

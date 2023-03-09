@@ -1,11 +1,27 @@
-# Extension: postgres-flyway
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/sovity/edc-extensions">
+    <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
+  </a>
 
-Provides all functionalities to persist EDC data in a PostgreSQL database.
+<h3 align="center">EDC-Connector Extension:<br />PostgreSQL + Flyway</h3>
 
-## Why does this extension exist?
+  <p align="center">
+    <a href="https://github.com/sovity/edc-extensions/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/sovity/edc-extensions/issues">Request Feature</a>
+  </p>
+</div>
 
-This extension contains all edc-Extensions that are required to persist EDC data in a PostgreSQL
-database. This includes the edc-stores for the following edc-types:
+## About this Extension Package
+
+This extension bundles all functionalities for using the EDC with PostgreSQL persistence. It also includes the required
+Flyway migrations and extensions.
+
+### Details
+
+This extensions includes the edc-stores for the following edc-types:
 
 - asset
 - contractdefinition
@@ -19,3 +35,16 @@ PostgreSQL-Database are provided.
 
 The tables are prepared using Flyway, which executes the .sql scripts included in
 the `resources/migration` folder.
+
+## Why does this extension exist?
+
+While the EDC is providing possibilities for individual persistence of stores, our goal is to provide a single working
+extension package to allow switching to a well-managed PostgreSQL persistence at ease.
+
+## License
+
+Apache License 2.0 - see [LICENSE](../../LICENSE)
+
+## Contact
+
+sovity GmbH - contact@sovity.de

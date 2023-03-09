@@ -5,7 +5,7 @@
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
-<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Client:<br />Java API Client</h3>
+<h3 align="center">EDC-Connector Extension Package:<br />Sovity Minimal EDC Extensions</h3>
 
   <p align="center">
     <a href="https://github.com/sovity/edc-extensions/issues">Report Bug</a>
@@ -14,15 +14,16 @@
   </p>
 </div>
 
-## About this component
+## About this Extension Package
 
-Java API Client Library to be imported and used in Use Case Applications.
+This extension packages common sovity EDC Extensions between all Community Editions and Enterprise Editions.
 
-## Why does this component exist?
+See [build.gradle.kts](build.gradle.kts) for the list of contained extensions.
 
-Use Case Applications will otherwise have to use the Data Management API. By offering a Java Client we can not
-only offer comfortable use of the EDC but also provide our own simplified workflows and additional functionalities
-seamlessly.
+## Why does this extension exist?
+
+This extensions allows us to e.g. add a new policy and have it rolled out across all Community Editions and Enterprise
+Editions with minimal effort.
 
 ## License
 
