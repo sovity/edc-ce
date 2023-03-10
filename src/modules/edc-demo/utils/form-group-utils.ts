@@ -180,13 +180,13 @@ export function flattenControls(
 /**
  * Control's value as observable that also emits current value.
  */
-export function value$<T>(ctrl: AbstractControl<T>): Observable<T> {
+export function value$<T>(ctrl: AbstractControl<unknown>): Observable<T> {
   return concat(
     new Observable<T>((obs) => {
-      obs.next(ctrl.value);
+      obs.next(ctrl.value as T);
       obs.complete();
     }),
-    ctrl.valueChanges,
+    ctrl.valueChanges as Observable<T>,
   );
 }
 

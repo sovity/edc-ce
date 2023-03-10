@@ -1,0 +1,24 @@
+<div class="flex flex-col mt-[10px]">
+  <mat-form-field class="grow form-field" color="accent">
+    <mat-label>{{ label }}</mat-label>
+    <mat-select multiple [formControl]="control" [compareWith]="isEqualId">
+      <mat-option *ngFor="let asset of assets" [value]="asset">
+        <div *ngIf="asset.name" class="flex flex-col">
+          {{ asset.name }}
+        </div>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="flex flex-row !space-x-[10px] items-start">
+    <mat-card *ngFor="let asset of control.value">
+      <mat-card-content>
+        <a
+          class="link"
+          href="javascript:void(0)"
+          (click)="onAssetClick(asset!!)">
+          {{ asset.name }}
+        </a>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

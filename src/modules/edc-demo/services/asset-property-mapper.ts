@@ -3,13 +3,16 @@ import {ActiveFeatureSet} from '../../app/config/active-feature-set';
 import {AppConfigService} from '../../app/config/app-config.service';
 import {AssetEditorDialogFormValue} from '../components/asset-editor-dialog/asset-editor-dialog-form-model';
 import {DataCategorySelectItemService} from '../components/data-category-select/data-category-select-item.service';
-import {DataSubcategorySelectItemService} from '../components/data-subcategory-select/data-subcategory-select-item.service';
+import {
+  DataSubcategorySelectItemService
+} from '../components/data-subcategory-select/data-subcategory-select-item.service';
 import {LanguageSelectItemService} from '../components/language-select/language-select-item.service';
 import {TransportModeSelectItemService} from '../components/transport-mode-select/transport-mode-select-item.service';
 import {Asset} from '../models/asset';
 import {removeNullValues} from '../utils/record-utils';
 import {trimmedOrNull} from '../utils/string-utils';
 import {AssetProperties} from './asset-properties';
+
 
 /**
  * Maps between EDC Asset and our type safe asset
@@ -25,28 +28,29 @@ export class AssetPropertyMapper {
     private dataSubcategorySelectItemService: DataSubcategorySelectItemService,
     private appConfigService: AppConfigService,
     private activeFeatureSet: ActiveFeatureSet,
-  ) {}
+  ) {
+  }
 
   readProperties(props: Record<string, string | null>): Asset {
     const language = props[AssetProperties.language]
       ? this.languageSelectItemService.findById(
-          props[AssetProperties.language]!,
-        )
+        props[AssetProperties.language]!,
+      )
       : null;
     const dataCategory = props[AssetProperties.dataCategory]
       ? this.dataCategorySelectItemService.findById(
-          props[AssetProperties.dataCategory]!,
-        )
+        props[AssetProperties.dataCategory]!,
+      )
       : null;
     const dataSubcategory = props[AssetProperties.dataSubcategory]
       ? this.dataSubcategorySelectItemService.findById(
-          props[AssetProperties.dataSubcategory]!,
-        )
+        props[AssetProperties.dataSubcategory]!,
+      )
       : null;
     const transportMode = props[AssetProperties.transportMode]
       ? this.transportModeSelectItemService.findById(
-          props[AssetProperties.transportMode]!,
-        )
+        props[AssetProperties.transportMode]!,
+      )
       : null;
     const keywords = (props[AssetProperties.keywords] ?? '')
       .split(',')
@@ -63,7 +67,7 @@ export class AssetPropertyMapper {
       originator: props[AssetProperties.originator],
       originatorOrganization:
         props[AssetProperties.curatorOrganizationName] ??
-        props[AssetProperties._legacyCuratorOrganizationName],
+        props[AssetProperties._legacyCuratorOrganizationName] ?? 'Unknown Organization',
       keywords,
       description: props[AssetProperties.description],
       language,

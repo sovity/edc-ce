@@ -20,6 +20,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Removed
 
+- Made asset IDs less prominent in favor of Organization Name
+
 #### Fixed
 
 ## [v0.0.1-milestone-7-sovity8] 07.03.2023

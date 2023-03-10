@@ -14,20 +14,21 @@ export class AssetPropertyGridBuilder {
   buildPropertyGrid(asset: Asset): PropertyGridField[] {
     let fields: PropertyGridField[] = [
       {
+        icon: 'category',
+        label: 'ID',
+        ...this.propertyGridUtils.guessValue(asset.id),
+      },
+      {
         icon: 'file_copy',
         label: 'Version',
         ...this.propertyGridUtils.guessValue(asset.version),
-      },
-      {
-        icon: 'category',
-        label: 'Content Type',
-        ...this.propertyGridUtils.guessValue(asset.contentType),
       },
       {
         icon: 'language',
         label: 'Language',
         ...this.propertyGridUtils.guessValue(asset.language?.label),
       },
+
       {
         icon: 'apartment',
         label: 'Publisher',
@@ -42,6 +43,11 @@ export class AssetPropertyGridBuilder {
         icon: 'gavel',
         label: 'Standard License',
         ...this.propertyGridUtils.guessValue(asset.standardLicense),
+      },
+      {
+        icon: 'category',
+        label: 'Content Type',
+        ...this.propertyGridUtils.guessValue(asset.contentType),
       },
     ];
 

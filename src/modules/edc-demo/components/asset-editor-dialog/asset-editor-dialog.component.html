@@ -13,23 +13,35 @@
               <input matInput [formControl]="form.metadata.controls.name" />
             </mat-form-field>
 
-            <!-- ID -->
-            <mat-form-field
-              *ngIf="form.metadata.controls.id; let ctrl"
-              class="grow">
-              <mat-label>Id</mat-label>
+            <!-- Version -->
+            <mat-form-field class="grow">
+              <mat-label>Version</mat-label>
               <input
-                placeholder="urn:artifact:..."
                 matInput
-                [formControl]="ctrl" />
-              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
-                {{ validationMessages.invalidWhitespacesMessage }}
-              </mat-error>
-              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.requiresPrefix">
-                {{ validationMessages.invalidPrefix('ID', 'urn:artifact') }}
-              </mat-error>
+                [formControl]="form.metadata.controls.version"
+                [placeholder]="'1.0'" />
             </mat-form-field>
           </div>
+
+          <!-- ID -->
+          <mat-form-field
+            *ngIf="form.metadata.controls.id; let ctrl"
+            class="grow">
+            <mat-label>Id</mat-label>
+            <input
+              placeholder="urn:artifact:..."
+              matInput
+              [formControl]="ctrl" />
+            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
+              {{ validationMessages.invalidWhitespacesMessage }}
+            </mat-error>
+            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.requiresPrefix">
+              {{ validationMessages.invalidPrefix('ID', 'urn:artifact') }}
+            </mat-error>
+            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.idAlreadyExists">
+              {{ validationMessages.idExistsErrorMessage }}
+            </mat-error>
+          </mat-form-field>
 
           <!-- Description -->
           <mat-form-field>
@@ -53,15 +65,6 @@
                 matInput
                 [formControl]="form.metadata.controls.contentType"
                 [placeholder]="'text/plain'" />
-            </mat-form-field>
-
-            <!-- Version -->
-            <mat-form-field class="grow">
-              <mat-label>Version</mat-label>
-              <input
-                matInput
-                [formControl]="form.metadata.controls.version"
-                [placeholder]="'1.0'" />
             </mat-form-field>
           </div>
 

@@ -27,17 +27,11 @@
       [policies]="policies"></policy-select>
 
     <!-- Assets -->
-    <mat-form-field
+    <asset-select
       *ngIf="form.group.controls.assets; let ctrl"
-      id="form-field-contract-assets"
-      color="accent">
-      <mat-label>Assets</mat-label>
-      <mat-select multiple [formControl]="ctrl" [compareWith]="isEqualId">
-        <mat-option *ngFor="let asset of assets" [value]="asset">
-          {{ asset.id }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+      label="Assets"
+      [control]="form.group.controls.assets"
+      [assets]="assets"></asset-select>
   </div>
 </mat-dialog-content>
 

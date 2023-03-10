@@ -1,10 +1,13 @@
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {concat, distinctUntilChanged, of, pairwise} from 'rxjs';
+import {combineLatest, distinctUntilChanged, pairwise} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {value$} from '../../../utils/form-group-utils';
 import {noWhitespaceValidator} from '../../../validators/no-whitespace-validator';
 import {requiresPrefixValidator} from '../../../validators/requires-prefix-validator';
 import {LanguageSelectItem} from '../../language-select/language-select-item';
 import {LanguageSelectItemService} from '../../language-select/language-select-item.service';
+import {AssetsIdValidatorBuilder} from '../assets-id-validator-builder';
 import {AssetMetadataFormModel} from './asset-metadata-form-model';
 
 @Injectable()
@@ -12,6 +15,7 @@ export class AssetMetadataFormBuilder {
   constructor(
     private formBuilder: FormBuilder,
     private languageSelectItemService: LanguageSelectItemService,
+    private assetsIdValidatorBuilder: AssetsIdValidatorBuilder,
   ) {}
 
   buildFormGroup(): FormGroup<AssetMetadataFormModel> {
@@ -24,6 +28,7 @@ export class AssetMetadataFormBuilder {
             noWhitespaceValidator,
             requiresPrefixValidator('urn:artifact:'),
           ],
+          [this.assetsIdValidatorBuilder.assetIdDoesNotExistsValidator()],
         ],
         name: ['', Validators.required],
         version: '',
@@ -34,28 +39,43 @@ export class AssetMetadataFormBuilder {
           this.languageSelectItemService.english() as LanguageSelectItem | null,
       });
 
-    // generate id from names
-    this.initIdGeneration(metadata.controls.id, metadata.controls.name);
+    // generate id from name and version(if available)
+    this.initIdGeneration(
+      metadata.controls.id,
+      metadata.controls.name,
+      metadata.controls.version,
+    );
 
     return metadata;
   }
 
-  private initIdGeneration(id: FormControl<string>, name: FormControl<string>) {
-    concat(of(name.value), name.valueChanges)
-      .pipe(distinctUntilChanged(), pairwise())
+  private initIdGeneration(
+    idCtrl: FormControl<string>,
+    nameCtrl: FormControl<string>,
+    versionCtrl: FormControl<string>,
+  ) {
+    combineLatest([
+      value$<string>(nameCtrl).pipe(distinctUntilChanged()),
+      value$<string>(versionCtrl).pipe(distinctUntilChanged()),
+    ])
+      .pipe(
+        map(([name, version]) => this.generateId(name, version)),
+        pairwise(),
+      )
       .subscribe(([previousName, currentName]) => {
-        if (!id.value || id.value == this.generateId(previousName)) {
-          // Generate ID, but leave field untouched if it was edited
-          id.setValue(this.generateId(currentName));
+        if (!idCtrl.value || idCtrl.value == previousName) {
+          idCtrl.setValue(currentName);
         }
       });
   }
 
-  private generateId(name: string) {
+  private generateId(name: string | null, version: string | null) {
+    if (!name) return 'urn:artifact:';
     const normalizedName = name
       .replace(':', '')
       .replaceAll(' ', '-')
       .toLowerCase();
+    if (version) return `urn:artifact:${normalizedName}:${version}`;
     return `urn:artifact:${normalizedName}`;
   }
 }
