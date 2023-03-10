@@ -17,6 +17,7 @@ dependencies {
     implementation("${edcGroup}:ids-api-multipart-dispatcher-v1:${edcVersion}")
     implementation("${edcGroup}:ids-api-configuration:${edcVersion}")
     implementation("${edcGroup}:ids-jsonld-serdes:${edcVersion}")
+    implementation("${edcGroup}:http-spi:${edcVersion}")
 
     implementation("com.squareup.okhttp3:okhttp:${okHttpVersion}")
     implementation("org.json:json:${jsonVersion}")
