@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.1] - UNRELEASED
+
+### Fixed
+
+- Missing blacklist entry for referring connector policy in docker-compose `POLICY_BROKER_BLACKLIST: REFERRING_CONNECTOR` 
+
 ## [1.5.0] - 2023-03-07
+
+### Feature
 
 - `EDC_FLYWAY_REPAIR=true` variable can now be set to run flyway repair when migrations failed
 
