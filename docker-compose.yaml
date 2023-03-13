@@ -38,10 +38,12 @@ services:
       # Deployment Configuration
       WEB_HTTP_PORT: 11001
       WEB_HTTP_PATH: /api
-      WEB_HTTP_DATA_PORT: 11002
-      WEB_HTTP_DATA_PATH: /api/v1/data
+      WEB_HTTP_CONTROL_PORT: 11002
+      WEB_HTTP_CONTROL_PATH: /api/v1/data
       WEB_HTTP_IDS_PORT: 11003
       WEB_HTTP_IDS_PATH: /api/v1/ids
+      WEB_HTTP_MANAGEMENT_PORT: 11004
+      WEB_HTTP_MANAGEMENT_PATH: /api/v1/management
       EDC_IDS_MAINTAINER: https://sovity.de
       EDC_UI_MAINTAINER_ORGANIZATION_NAME: sovity GmbH
       EDC_WEB_REST_CORS_ENABLED: 'true'
@@ -62,6 +64,7 @@ services:
       - '11001:11001'
       - '11002:11002'
       - '11003:11003'
+      - '11004:11004'
       - '5005:5005'
     volumes:
       - ./resources:/resources

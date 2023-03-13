@@ -37,6 +37,8 @@ dependencies {
         implementation("${edcGroup}:configuration-filesystem:${edcVersion}")
         implementation("${edcGroup}:http:${edcVersion}")
         implementation("${edcGroup}:control-plane-aggregate-services:${edcVersion}")
+        implementation("${edcGroup}:control-api-configuration:${edcVersion}")
+        implementation("${edcGroup}:management-api-configuration:${edcVersion}")
 
         // Control-plane to Data-plane
         implementation("${edcGroup}:transfer-data-plane:${edcVersion}")
