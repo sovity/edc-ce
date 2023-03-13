@@ -8,7 +8,7 @@
 --  SPDX-License-Identifier: Apache-2.0
 --
 --  Contributors:
---       sovity GmbH - Update Tables to Milestone-7 EDC
+--       sovity GmbH - Update Tables to Milestone-8 EDC
 --
 --
 ALTER TABLE edc_contract_definitions ADD validity BIGINT;
