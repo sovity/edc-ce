@@ -40,6 +40,7 @@ dependencies {
 
         // Control-plane to Data-plane
         implementation("${edcGroup}:transfer-data-plane:${edcVersion}")
+        implementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
         implementation("${edcGroup}:data-plane-selector-client:${edcVersion}")
 
         // Data-plane
