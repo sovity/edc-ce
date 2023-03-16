@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "012700d5-2a48-43fc-9935-ea3646ecda93",
+		"_postman_id": "42be2be0-1aa4-418e-8cf1-da123d0c2555",
 		"name": "EDC Http Pull",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -98,53 +98,6 @@
 		},
 		{
 			"name": "1 Delete Asset",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "X-Api-Key",
-						"value": "pass",
-						"type": "default"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"asset\": {\n        \"properties\": {\n            \"asset:prop:name\": \"text-document\",\n            \"asset:prop:contenttype\": \"text/plain\",\n            \"asset:prop:version\": \"1.0\",\n            \"asset:prop:id\": \"text-document\",\n            \"type\": \"AzureStorage\"\n        }\n    },\n    \"dataAddress\": {\n        \"properties\": {\n            \"type\": \"AzureStorage\",\n            \"account\": \"{{storage_account}}\",\n            \"container\": \"src-container\",\n            \"blobname\": \"text-document.txt\",\n            \"keyName\": \"{{storage_account}}-key1\"\n        }\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{BASE_URL}}/management/assets/text-document",
-					"host": [
-						"{{BASE_URL}}"
-					],
-					"path": [
-						"management",
-						"assets",
-						"text-document"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Catalog through Connector",
 			"event": [
 				{
 					"listen": "test",
@@ -627,86 +580,6 @@
 						"management",
 						"transferprocess",
 						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Health",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "X-Api-Key",
-						"value": "ApiKeyDefaultValue",
-						"type": "default"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"protocol\": \"ids-multipart\",\r\n  \"assetId\": \"assetId-rest-text-document\",\r\n  \"contractId\": \"4a75736e-001d-4364-8bd4-9888490edb56abc-2:9df253dd-d523-431f-97ac-f2e90372c0b3\",\r\n  \"dataDestination\": {\r\n    \"properties\": {\r\n        \"type\": \"HttpData\",\r\n        \"assetId\": \"consumer-rest-text-document\"\r\n    }\r\n  },\r\n  \"transferType\": {\r\n    \"contentType\": \"application/octet-stream\",\r\n    \"isFinite\": true\r\n  },\r\n  \"managedResources\": false,\r\n  \"connectorAddress\": \"http://daps-connector-a-controlplane-1:8282/api/v1/ids/data\",\r\n  \"connectorId\": \"consumer\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:11004/api/v1/management/check/health",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "11004",
-					"path": [
-						"api",
-						"v1",
-						"management",
-						"check",
-						"health"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Health Old",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "X-Api-Key",
-						"value": "ApiKeyDefaultValue",
-						"type": "default"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"protocol\": \"ids-multipart\",\r\n  \"assetId\": \"assetId-rest-text-document\",\r\n  \"contractId\": \"4a75736e-001d-4364-8bd4-9888490edb56abc-2:9df253dd-d523-431f-97ac-f2e90372c0b3\",\r\n  \"dataDestination\": {\r\n    \"properties\": {\r\n        \"type\": \"HttpData\",\r\n        \"assetId\": \"consumer-rest-text-document\"\r\n    }\r\n  },\r\n  \"transferType\": {\r\n    \"contentType\": \"application/octet-stream\",\r\n    \"isFinite\": true\r\n  },\r\n  \"managedResources\": false,\r\n  \"connectorAddress\": \"http://daps-connector-a-controlplane-1:8282/api/v1/ids/data\",\r\n  \"connectorId\": \"consumer\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:11001/api/check/health",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "11001",
-					"path": [
-						"api",
-						"check",
-						"health"
 					]
 				}
 			},
