@@ -1,7 +1,7 @@
 package de.sovity.edc.ext.wrapper;
 
-import de.sovity.edc.ext.wrapper.implementation.example.ExampleResourceImpl;
 import de.sovity.edc.ext.wrapper.implementation.example.ExampleApiService;
+import de.sovity.edc.ext.wrapper.implementation.example.ExampleResourceImpl;
 import de.sovity.edc.ext.wrapper.implementation.example.services.IdsEndpointService;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.system.configuration.Config;

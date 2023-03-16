@@ -17,8 +17,8 @@ import java.net.URI;
 public class EdcClientFactory {
 
     public static EdcClient newClient(EdcClientBuilder builder) {
-        String dataManagementUrl = builder.dataManagementUrl();
-        String dataManagementApiKey = builder.dataManagementApiKey();
+        var dataManagementUrl = builder.dataManagementUrl();
+        var dataManagementApiKey = builder.dataManagementApiKey();
 
         var exampleResource = instantiateResource(ExampleResource.class, dataManagementUrl, dataManagementApiKey);
 

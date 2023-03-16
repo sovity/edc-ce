@@ -11,7 +11,7 @@ dependencies {
     api("${edcGroup}:core-spi:${edcVersion}")
     api("${edcGroup}:control-plane-spi:${edcVersion}")
     implementation("${edcGroup}:api-core:${edcVersion}")
-    implementation("${edcGroup}:data-management-api-configuration:${edcVersion}")
+    implementation("${edcGroup}:management-api-configuration:${edcVersion}")
     implementation(project(":extensions:wrapper:wrapper-api"))
     implementation("org.apache.commons:commons-lang3:3.12.0")
 

@@ -19,8 +19,8 @@ public class ExampleService {
 
         var exampleResult = new ExampleResult();
         exampleResult.setName(query.getName());
-        exampleResult.setItem(new ExampleItem("example"));
-        exampleResult.setList(query.getList().stream().map(ExampleItem::new).toList());
+        exampleResult.setMyNestedItem(new ExampleItem("example"));
+        exampleResult.setMyNestedList(query.getList().stream().map(ExampleItem::new).toList());
         exampleResult.setIdsEndpoint(idsEndpointService.getIdsEndpoint());
         return exampleResult;
     }
