@@ -18,7 +18,7 @@ import de.sovity.edc.extension.contractagreementtransferapi.controller.ContractA
 import de.sovity.edc.extension.contractagreementtransferapi.service.ContractNegotiationByAgreementService;
 import de.sovity.edc.extension.contractagreementtransferapi.service.DataRequestService;
 import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
-import org.eclipse.edc.connector.api.datamanagement.configuration.DataManagementApiConfiguration;
+import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
@@ -34,7 +34,7 @@ public class ContractAgreementTransferApiExtension implements ServiceExtension {
     private WebService webService;
 
     @Inject
-    private DataManagementApiConfiguration config;
+    private ManagementApiConfiguration config;
 
     @Inject
     private DtoTransformerRegistry transformerRegistry;

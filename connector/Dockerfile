@@ -26,7 +26,7 @@ COPY --from=build /home/gradle/project/connector/build/libs/app.jar /app
 COPY ./connector/src/main/resources/logging.properties /app
 
 # health status is determined by the availability of the /health endpoint
-HEALTHCHECK --interval=5s --timeout=5s --retries=10 CMD curl -H "X-Api-Key: $EDC_API_AUTH_KEY" --fail http://localhost:8181/api/check/health
+HEALTHCHECK --interval=5s --timeout=5s --retries=10 CMD curl -H "X-Api-Key: $EDC_API_AUTH_KEY" --fail http://localhost:11002/api/v1/management/check/health
 
 ENV EDC_LAST_COMMIT_INFO=$EDC_LAST_COMMIT_INFO_ARG
 

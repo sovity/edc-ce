@@ -34,8 +34,8 @@ public class TestUtils {
         Map<String, String> props = new HashMap<>();
         props.put("web.http.port", String.valueOf(getFreePort()));
         props.put("web.http.path", "/api");
-        props.put("web.http.data.port", String.valueOf(DATA_PORT));
-        props.put("web.http.data.path", "/api/v1/data");
+        props.put("web.http.management.port", String.valueOf(DATA_PORT));
+        props.put("web.http.management.path", "/api/v1/data");
         props.put("edc.api.auth.key", API_KEY);
         props.putAll(additionalProps);
         return props;

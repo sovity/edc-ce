@@ -15,7 +15,7 @@
 package de.sovity.edc.extension.contractagreementtransferapi.controller;
 
 import io.restassured.http.ContentType;
-import org.eclipse.edc.connector.api.datamanagement.asset.model.DataAddressDto;
+import org.eclipse.edc.connector.api.management.asset.model.DataAddressDto;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -49,8 +49,8 @@ public class ContractAgreementTransferApiControllerIntegrationTest {
         extension.setConfiguration(Map.of(
                 "web.http.port", String.valueOf(getFreePort()),
                 "web.http.path", "/api",
-                "web.http.data.port", String.valueOf(dataPort),
-                "web.http.data.path", "/api/v1/data",
+                "web.http.management.port", String.valueOf(dataPort),
+                "web.http.management.path", "/api/v1/data",
                 "edc.api.auth.key", authKey));
     }
 

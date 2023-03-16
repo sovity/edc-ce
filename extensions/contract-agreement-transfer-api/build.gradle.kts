@@ -12,7 +12,7 @@ dependencies {
     api("${edcGroup}:transfer-spi:${edcVersion}")
     implementation("${edcGroup}:api-core:${edcVersion}")
     implementation("${edcGroup}:asset-api:${edcVersion}")
-    implementation("${edcGroup}:data-management-api-configuration:${edcVersion}")
+    implementation("${edcGroup}:management-api-configuration:${edcVersion}")
     implementation("${edcGroup}:transfer-process-api:${edcVersion}")
 
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")

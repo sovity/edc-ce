@@ -32,7 +32,6 @@ import de.sovity.extension.broker.sender.message.brokerdispatcher.IdsMultipartEx
 import de.sovity.extension.broker.serializer.MultiContextJsonLdSerializer;
 import de.sovity.extension.broker.service.IdsBrokerService;
 import de.sovity.extension.broker.service.IdsBrokerServiceImpl;
-import okhttp3.OkHttpClient;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
@@ -44,6 +43,7 @@ import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.event.EventRouter;
+import org.eclipse.edc.spi.http.EdcHttpClient;
 import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.Hostname;
@@ -93,7 +93,7 @@ public class BrokerExtension implements ServiceExtension {
     private Hostname hostname;
 
     @Inject
-    private OkHttpClient okHttpClient;
+    private EdcHttpClient edcHttpClient;
 
     @Inject
     private DynamicAttributeTokenService dynamicAttributeTokenService;
@@ -238,7 +238,7 @@ public class BrokerExtension implements ServiceExtension {
     }
 
     private void registerBrokerMessageSenders(ServiceExtensionContext context) {
-        var httpClient = context.getService(OkHttpClient.class);
+        var httpClient = context.getService(EdcHttpClient.class);
         var monitor = context.getMonitor();
         var typeManager = context.getTypeManager();
         var objectMapper = typeManager.getMapper(TYPE_MANAGER_SERIALIZER_KEY);

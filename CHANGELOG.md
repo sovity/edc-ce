@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - Missing blacklist entry for referring connector policy in docker-compose `POLICY_BROKER_BLACKLIST: REFERRING_CONNECTOR` 
 
+### Changed
+
+- Updated to EDC-Connector 0.0.1-milestone-8.
+
 ## [1.5.0] - 2023-03-07
 
 ### Feature

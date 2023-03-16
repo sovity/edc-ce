@@ -20,7 +20,6 @@ import de.sovity.extension.clearinghouse.sender.message.clearingdispatcher.IdsMu
 import de.sovity.extension.clearinghouse.serializer.MultiContextJsonLdSerializer;
 import de.sovity.extension.clearinghouse.service.IdsClearingHouseService;
 import de.sovity.extension.clearinghouse.service.IdsClearingHouseServiceImpl;
-import okhttp3.OkHttpClient;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.protocol.ids.api.configuration.IdsApiConfiguration;
@@ -33,6 +32,7 @@ import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.event.EventRouter;
+import org.eclipse.edc.spi.http.EdcHttpClient;
 import org.eclipse.edc.spi.iam.IdentityService;
 import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
 import org.eclipse.edc.spi.monitor.Monitor;
@@ -79,7 +79,7 @@ public class ClearingHouseExtension implements ServiceExtension {
     private Hostname hostname;
 
     @Inject
-    private OkHttpClient okHttpClient;
+    private EdcHttpClient edcHttpClient;
 
     @Inject
     private DynamicAttributeTokenService dynamicAttributeTokenService;
@@ -155,7 +155,7 @@ public class ClearingHouseExtension implements ServiceExtension {
     }
 
     private void registerClearingHouseMessageSenders(ServiceExtensionContext context) {
-        var httpClient = context.getService(OkHttpClient.class);
+        var httpClient = context.getService(EdcHttpClient.class);
         var monitor = context.getMonitor();
         var typeManager = context.getTypeManager();
         var objectMapper = typeManager.getMapper(TYPE_MANAGER_SERIALIZER_KEY);

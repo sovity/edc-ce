@@ -14,7 +14,7 @@ dependencies {
         implementation("${edcGroup}:api-observability:${edcVersion}")
         implementation("${edcGroup}:iam-mock:${edcVersion}")
         implementation("${edcGroup}:auth-tokenbased:${edcVersion}")
-        implementation("${edcGroup}:data-management-api:${edcVersion}")
+        implementation("${edcGroup}:management-api:${edcVersion}")
         implementation("${edcGroup}:ids:${edcVersion}")
         implementation(project(":extensions:policy-always-true"))
         implementation(project(":extensions:contract-agreement-transfer-api"))
@@ -33,13 +33,17 @@ dependencies {
         implementation(project(":extensions:postgres-flyway"))
         implementation("${edcGroup}:control-plane-core:${edcVersion}")
         implementation("${edcGroup}:api-observability:${edcVersion}")
-        implementation("${edcGroup}:data-management-api:${edcVersion}")
+        implementation("${edcGroup}:management-api:${edcVersion}")
         implementation("${edcGroup}:configuration-filesystem:${edcVersion}")
         implementation("${edcGroup}:http:${edcVersion}")
         implementation("${edcGroup}:control-plane-aggregate-services:${edcVersion}")
+        implementation("${edcGroup}:control-api-configuration:${edcVersion}")
+        implementation("${edcGroup}:management-api-configuration:${edcVersion}")
 
         // Control-plane to Data-plane
-        implementation("${edcGroup}:data-plane-transfer-client:${edcVersion}")
+        implementation("${edcGroup}:transfer-data-plane:${edcVersion}")
+        implementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
+        implementation("${edcGroup}:data-plane-selector-client:${edcVersion}")
 
         // Data-plane
         implementation("${edcGroup}:data-plane-http:${edcVersion}")
