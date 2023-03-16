@@ -7,7 +7,7 @@ services:
     environment:
       - EDC_UI_ACTIVE_PROFILE=mds-open-source
       - EDC_UI_CONFIG_URL=edc-ui-config
-      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/data
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/management
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
       - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/ids/data
   edc:
