@@ -39,7 +39,7 @@ public class WrapperExtension implements ServiceExtension {
         var wrapperExtensionContextBuilder = new WrapperExtensionContextBuilder(context.getConfig());
         var wrapperExtensionContext = wrapperExtensionContextBuilder.buildContext();
 
-        wrapperExtensionContext.resources().forEach(resource ->
+        wrapperExtensionContext.jaxRsResources().forEach(resource ->
                 webService.registerResource(dataManagementApiConfiguration.getContextAlias(), resource));
     }
 }

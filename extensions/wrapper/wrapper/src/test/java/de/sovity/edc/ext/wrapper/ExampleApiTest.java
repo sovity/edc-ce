@@ -28,18 +28,18 @@ import static org.hamcrest.Matchers.equalTo;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
-class TestApiTest {
+class ExampleApiTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-        extension.setConfiguration(createConfiguration(""));
+        extension.setConfiguration(createConfiguration());
     }
 
     @Test
-    void test() {
-        var request = TestUtils.test(new ExampleQuery("a", List.of("b")));
-        request.assertThat()
+    void exampleEndpoint() {
+        TestUtils.exampleEndpoint(new ExampleQuery("a", List.of("b")))
+                .assertThat()
                 .body("name", equalTo("a"))
-                .body("list[0].name", equalTo("b"));
+                .body("myNestedList[0].name", equalTo("b"));
     }
 }

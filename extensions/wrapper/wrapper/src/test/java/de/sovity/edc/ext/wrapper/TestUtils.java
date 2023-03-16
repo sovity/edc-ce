@@ -17,6 +17,7 @@ package de.sovity.edc.ext.wrapper;
 import de.sovity.edc.ext.wrapper.api.example.model.ExampleQuery;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import io.restassured.specification.RequestSpecification;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -31,7 +32,7 @@ public class TestUtils {
     public static final String IDS_ENDPOINT = "http://localhost:" + DATA_PORT + "/api/v1/data/ids";
 
     @NotNull
-    static Map<String, String> createConfiguration(String commitInfo) {
+    static Map<String, String> createConfiguration() {
         return Map.of(
                 "web.http.port", String.valueOf(getFreePort()),
                 "web.http.path", "/api",
@@ -41,18 +42,21 @@ public class TestUtils {
                 "edc.ids.endpoint", IDS_ENDPOINT);
     }
 
-    static ValidatableResponse test(ExampleQuery testQuery) {
+    private static RequestSpecification givenDmgmtEndpoint() {
         return given()
                 .baseUri("http://localhost:" + DATA_PORT)
                 .basePath("/api/v1/data")
-                .header("x-api-key", AUTH_KEY)
+                .header("x-api-key", AUTH_KEY);
+    }
+
+    static ValidatableResponse exampleEndpoint(ExampleQuery exampleQuery) {
+        return givenDmgmtEndpoint()
                 .when()
                 .contentType(ContentType.JSON)
-                .body(testQuery)
-                .post("/wrapper/test")
+                .body(exampleQuery)
+                .post("/wrapper/example")
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON);
     }
-
 }

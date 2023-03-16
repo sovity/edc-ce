@@ -27,7 +27,7 @@ public class TestUtils {
     public static final String IDS_ENDPOINT = "http://localhost:" + DATA_PORT + "/api/v1/data/ids";
 
     @NotNull
-    static Map<String, String> createConfiguration(String commitInfo) {
+    static Map<String, String> createConfiguration() {
         return Map.of(
                 "web.http.port", String.valueOf(getFreePort()),
                 "web.http.path", "/api",

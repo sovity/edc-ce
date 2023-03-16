@@ -25,20 +25,23 @@ import java.util.List;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
-class EdcClientTest {
+class ExampleClientTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-        extension.setConfiguration(TestUtils.createConfiguration(""));
+        extension.setConfiguration(TestUtils.createConfiguration());
     }
 
     @Test
-    void test() {
-        var client = EdcClientBuilder.newClient(TestUtils.DMGMT_ENDPOINT, TestUtils.DMGMT_API_KEY);
+    void exampleEndpoint() {
+        var client = EdcClient.builder()
+                .dataManagementUrl(TestUtils.DMGMT_ENDPOINT)
+                .dataManagementApiKey(TestUtils.DMGMT_API_KEY)
+                .build();
 
-        var result = client.exampleClient().example(new ExampleQuery("a", List.of("b")));
+        var result = client.exampleClient().exampleEndpoint(new ExampleQuery("a", List.of("b")));
 
         Validate.isTrue(result.getName().equals("a"));
-        Validate.isTrue(result.getList().get(0).getName().equals("b"));
+        Validate.isTrue(result.getMyNestedList().get(0).getName().equals("b"));
     }
 }

@@ -28,7 +28,7 @@ services:
       EDC_API_AUTH_KEY: ApiKeyDefaultValue
 
       # Data Space Configuration
-      EDC_OAUTH_CLIENT_ID: 7F:76:FB:19:E7:FA:72:31:89:1C:96:69:E2:81:F0:BE:C4:50:B2:94:keyid:6D:2B:39:5A:A7:7A:BA:F4:9D:95:DA:AF:8C:42:9F:C8:8A:68:18:87
+      EDC_OAUTH_CLIENT_ID:
       EDC_KEYSTORE: /resources/vault/edc/keystore.jks
       EDC_OAUTH_TOKEN_URL: https://daps.test.mobility-dataspace.eu/token
       EDC_OAUTH_PROVIDER_JWKS_URL: https://daps.test.mobility-dataspace.eu/jwks.json
