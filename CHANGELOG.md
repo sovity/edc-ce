@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.1] - 2023-03-17
+
+- Adapt docker-compose file to work with released container-images
+
 ## [1.5.0] - 2023-03-07
 
 - `EDC_FLYWAY_REPAIR=true` variable can now be set to run flyway repair when migrations failed
