@@ -68,6 +68,75 @@ services:
       - '5005:5005'
     volumes:
       - ./resources:/resources
+
+  edc-ui2:
+    image: ghcr.io/sovity/edc-ui:latest
+    ports:
+      - '12000:80'
+    environment:
+      - EDC_UI_ACTIVE_PROFILE=mds-open-source
+      - EDC_UI_CONFIG_URL=edc-ui-config
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:12002/api/v1/management
+      - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
+      - EDC_UI_CATALOG_URLS=http://edc2:12003/api/v1/ids/data
+  edc2:
+    image: ghcr.io/sovity/edc-mds:latest
+    depends_on:
+      - postgresql
+    environment:
+      # Basic Configuration
+      EDC_CONNECTOR_NAME: 'example-connector2'
+      EDC_IDS_ID: urn:connector:example-connector2
+      EDC_IDS_TITLE: 'Example GmbH EDC Connector 2'
+      EDC_IDS_DESCRIPTION: 'Community Edition EDC Connector built by sovity with open-source extensions.'
+      EDC_IDS_CURATOR: https://example-gmbh.com
+      EDC_UI_CURATOR_ORGANIZATION_NAME: Example GmbH
+      EDC_HOSTNAME: edc2
+      IDS_WEBHOOK_ADDRESS: http://edc2:12003
+      EDC_IDS_ENDPOINT: http://edc2:12003/api/v1/ids
+      EDC_API_AUTH_KEY: ApiKeyDefaultValue
+
+      # Data Space Configuration
+      EDC_OAUTH_CLIENT_ID:
+      EDC_KEYSTORE: /resources/vault/edc/keystore.jks
+      EDC_OAUTH_TOKEN_URL: https://daps.test.mobility-dataspace.eu/token
+      EDC_OAUTH_PROVIDER_JWKS_URL: https://daps.test.mobility-dataspace.eu/jwks.json
+      EDC_BROKER_BASE_URL: https://broker.test.mobility-dataspace.eu
+      EDC_CLEARINGHOUSE_LOG_URL: https://clearing.test.mobility-dataspace.eu/messages/log
+
+      # Deployment Configuration
+      WEB_HTTP_PORT: 12001
+      WEB_HTTP_PATH: /api
+      WEB_HTTP_MANAGEMENT_PORT: 12002
+      WEB_HTTP_MANAGEMENT_PATH: /api/v1/management
+      WEB_HTTP_PROTOCOL_PORT: 12003
+      WEB_HTTP_PROTOCOL_PATH: /api/v1/ids
+      WEB_HTTP_CONTROL_PORT: 12004
+      WEB_HTTP_CONTROL_PATH: /api/v1/control
+      EDC_IDS_MAINTAINER: https://sovity.de
+      EDC_UI_MAINTAINER_ORGANIZATION_NAME: sovity GmbH
+      EDC_WEB_REST_CORS_ENABLED: 'true'
+      EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
+      EDC_WEB_REST_CORS_ORIGINS: '*'
+      EDC_VAULT: /resources/vault/edc/vault.properties
+      EDC_KEYSTORE_PASSWORD: password
+      EDC_OAUTH_CERTIFICATE_ALIAS: 1
+      EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
+      EDC_OAUTH_PROVIDER_AUDIENCE: idsc:IDS_CONNECTORS_ALL
+      EDC_FLYWAY_POSTGRES_JDBC_URL: jdbc:postgresql://postgresql2:5432/edc
+      EDC_FLYWAY_POSTGRES_JDBC_USER: edc
+      EDC_FLYWAY_POSTGRES_JDBC_PASSWORD: edc
+
+      # Extension Configuration
+      POLICY_BROKER_BLACKLIST: REFERRING_CONNECTOR
+    ports:
+      - '12001:12001'
+      - '12002:12002'
+      - '12003:12003'
+      - '12004:12004'
+    volumes:
+      - ./resources:/resources
+
   postgresql:
     image: docker.io/bitnami/postgresql:11
     restart: always
@@ -78,6 +147,20 @@ services:
     volumes:
       - 'postgresql:/bitnami/postgresql'
 
+  postgresql2:
+    image: docker.io/bitnami/postgresql:11
+    restart: always
+    environment:
+      POSTGRESQL_USERNAME: edc
+      POSTGRESQL_PASSWORD: edc
+      POSTGRESQL_DATABASE: edc
+    volumes:
+      - 'postgresql2:/bitnami/postgresql'
+    ports:
+      - '5433:5432'
+
 volumes:
   postgresql:
+    driver: local
+  postgresql2:
     driver: local
