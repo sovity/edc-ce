@@ -10,7 +10,10 @@
             <!-- Name -->
             <mat-form-field class="grow">
               <mat-label>Name</mat-label>
-              <input matInput [formControl]="form.metadata.controls.name" />
+              <input
+                matInput
+                autocomplete="new-name"
+                [formControl]="form.metadata.controls.name" />
             </mat-form-field>
 
             <!-- Version -->
@@ -18,6 +21,7 @@
               <mat-label>Version</mat-label>
               <input
                 matInput
+                autocomplete="new-id"
                 [formControl]="form.metadata.controls.version"
                 [placeholder]="'1.0'" />
             </mat-form-field>
@@ -31,6 +35,7 @@
             <input
               placeholder="urn:artifact:..."
               matInput
+              autocomplete="new-id"
               [formControl]="ctrl" />
             <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
               {{ validationMessages.invalidWhitespacesMessage }}
@@ -232,6 +237,7 @@
                 <input
                   matInput
                   placeholder="Authorization"
+                  autocomplete="new-auth-header-name"
                   [formControl]="form.datasource.controls.httpAuthHeaderName" />
               </mat-form-field>
 
@@ -297,6 +303,7 @@
                 <input
                   matInput
                   placeholder="Header"
+                  autocomplete="new-header-name"
                   [formControl]="header.controls.headerName" />
               </mat-form-field>
 
@@ -306,6 +313,7 @@
                 <input
                   matInput
                   placeholder="..."
+                  autocomplete="new-header-value"
                   [formControl]="header.controls.headerValue" />
               </mat-form-field>
 
@@ -351,6 +359,7 @@
                 <mat-label>Content Type</mat-label>
                 <input
                   matInput
+                  autocomplete="new-content-type"
                   [formControl]="form.datasource.controls.httpContentType"
                   [placeholder]="'application/json'" />
               </mat-form-field>
@@ -362,6 +371,7 @@
                 <textarea
                   matInput
                   placeholder='{"some": "JSON"}'
+                  autocomplete="new-request-body"
                   [formControl]="ctrl"></textarea>
               </mat-form-field>
             </ng-container>

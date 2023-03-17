@@ -7,7 +7,7 @@
       id="form-field-id"
       color="accent">
       <mat-label>ID</mat-label>
-      <input matInput [formControl]="ctrl" />
+      <input matInput autocomplete="new-id" [formControl]="ctrl" />
       <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{
         validationMessages.invalidWhitespacesMessage
       }}</mat-error>
@@ -54,6 +54,7 @@
         <input
           matInput
           placeholder="https://other-connector.com"
+          autocomplete="new-id"
           [formControl]="form.group.controls.connectorId" />
         <mat-hint>
           The Connector ID and can be found in the dashboard of given EDC and
