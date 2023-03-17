@@ -6,6 +6,7 @@
     <edc-demo-error-state
       *ngIf="contractList.isError"
       class="min-h-[35rem]"
+      [error]="contractList.errorOrUndefined?.error"
       [errorMessage]="contractList.error.failureMessage"></edc-demo-error-state>
     <edc-demo-empty-state
       *ngIf="contractList.isReady && !contractList.data.length"

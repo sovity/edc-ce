@@ -47,6 +47,7 @@
     <edc-demo-error-state
       *ngIf="policyList.isError"
       class="min-h-[35rem]"
+      [error]="policyList.errorOrUndefined?.error"
       [errorMessage]="policyList.error.failureMessage"></edc-demo-error-state>
     <edc-demo-empty-state
       *ngIf="

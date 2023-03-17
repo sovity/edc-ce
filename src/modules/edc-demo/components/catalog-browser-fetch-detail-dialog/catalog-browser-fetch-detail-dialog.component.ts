@@ -53,13 +53,13 @@ export class CatalogBrowserFetchDetailDialogComponent
         return [
           `Status ${error.status}`,
           `EDC Backend failed fetching other connector catalog.`,
-          `Backend message: ${this.httpErrorRepsonseMessage(error)}`,
+          `Backend message: ${this.httpErrorResponseMessage(error)}`,
         ];
       } else {
         return [
           `Status ${error.status}`,
           `EDC Backend Error`,
-          `Backend message: ${this.httpErrorRepsonseMessage(error)}`,
+          `Backend message: ${this.httpErrorResponseMessage(error)}`,
         ];
       }
     } else {
@@ -67,7 +67,7 @@ export class CatalogBrowserFetchDetailDialogComponent
     }
   }
 
-  private httpErrorRepsonseMessage(error: HttpErrorResponse) {
+  private httpErrorResponseMessage(error: HttpErrorResponse) {
     const childError = error.error;
     if (childError?.message) {
       return childError.message;

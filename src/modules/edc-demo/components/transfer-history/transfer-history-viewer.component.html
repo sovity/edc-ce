@@ -18,6 +18,7 @@
     <edc-demo-error-state
       *ngIf="transferProcessesList.isError"
       class="min-h-[35rem]"
+      [error]="transferProcessesList.errorOrUndefined?.error"
       [errorMessage]="
         transferProcessesList.error.failureMessage
       "></edc-demo-error-state>

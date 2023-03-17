@@ -29,6 +29,8 @@ the detailed section referring to by linking pull requests or issues.
 
 - Removed password suggestions for ID and related fields in Chrome
 
+- Fixed handling of http error response code 401 when user logout from edc-ui
+
 ## [v0.0.1-milestone-7-sovity8] 07.03.2023
 
 ### Overview

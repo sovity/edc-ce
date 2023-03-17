@@ -48,6 +48,7 @@
     <edc-demo-error-state
       *ngIf="assetList.isError"
       class="min-h-[35rem]"
+      [error]="assetList.errorOrUndefined?.error"
       [errorMessage]="assetList.error.failureMessage"></edc-demo-error-state>
     <edc-demo-empty-state
       *ngIf="
