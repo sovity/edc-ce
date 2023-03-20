@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Updated to EDC-Connector 0.0.1-milestone-8.
+- Added a subsequent resource-id filtering after sparql query, to filter out resources that do not belong to the connector.
 
 ## [1.5.0] - 2023-03-07
 
