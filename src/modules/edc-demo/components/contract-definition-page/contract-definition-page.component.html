@@ -49,10 +49,7 @@
     <edc-demo-error-state
       *ngIf="contractDefinitionList.isError"
       class="min-h-[35rem]"
-      [error]="contractDefinitionList.errorOrUndefined?.error"
-      [errorMessage]="
-        contractDefinitionList.error.failureMessage
-      "></edc-demo-error-state>
+      [error]="contractDefinitionList.errorOrUndefined"></edc-demo-error-state>
     <edc-demo-empty-state
       *ngIf="
         contractDefinitionList.isReady &&

@@ -1,15 +1,6 @@
-<div *ngIf="error?.status === 401; else else_condition">
-  <div class="flex flex-row justify-center items-center">
-    <mat-icon class="w-[80px] h-[80px]" color="warn">refresh</mat-icon>
-  </div>
-  <div class="text-warn text-center mt-[10px] w-full">
-    <p>{{ 'Error: ' + error?.status }}</p>
-    <p>{{ 'Your session has most likely expired. Please refresh the page.' }}</p>
-  </div>
+<mat-icon class="mat-icon-[80px]" color="warn">{{
+  error?.failureIcon
+}}</mat-icon>
+<div class="text-warn text-center mt-[10px] w-full uppercase">
+  {{ error?.failureMessage }}
 </div>
-<ng-template #else_condition>
-  <mat-icon class="w-[80px] h-[80px]" color="warn">error</mat-icon>
-  <div class="text-warn text-center mt-[10px] w-full">
-    {{ errorMessage }}
-  </div>
-</ng-template>

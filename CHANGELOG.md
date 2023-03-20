@@ -22,13 +22,11 @@ the detailed section referring to by linking pull requests or issues.
 
 - Removed asset id from asset details and replaced the same with organization
   name
-
 - Made asset IDs less prominent in favor of Organization Name
 
 #### Fixed
 
 - Removed password suggestions for ID and related fields in Chrome
-
 - Fixed handling of http error response code 401 when user logout from edc-ui
 
 - Bumped minor dependencies

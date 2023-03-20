@@ -1,4 +1,5 @@
 import {Component, HostBinding, Input} from '@angular/core';
+import {FetchError} from '../../models/fetched';
 
 @Component({
   selector: 'edc-demo-error-state',
@@ -9,12 +10,8 @@ export class ErrorStateComponent {
   @HostBinding('class.flex-col')
   @HostBinding('class.justify-center')
   @HostBinding('class.items-center')
-  @HostBinding('class.uppercase')
   cls = true;
 
   @Input()
-  error: any;
-
-  @Input()
-  errorMessage = '';
+  error: FetchError | undefined;
 }

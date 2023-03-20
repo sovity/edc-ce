@@ -1,3 +1,4 @@
+import {HttpErrorResponse} from '@angular/common/http';
 import {OperatorFunction, concat, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 
@@ -70,7 +71,11 @@ export class Fetched<T> {
   }
 
   static error<T>(failureMessage: string, error: any): Fetched<T> {
-    return new Fetched<T>('error', undefined, {failureMessage, error});
+    return Fetched.error2(mapFetchError(failureMessage, error));
+  }
+
+  static error2<T>(fetchError: FetchError): Fetched<T> {
+    return new Fetched<T>('error', undefined, fetchError);
   }
 
   /**
@@ -125,6 +130,28 @@ export type FetchedState = 'not-loaded' | 'loading' | 'ready' | 'error';
  * since stack traces might have useless technical error messages.
  */
 export interface FetchError {
+  type: 'error' | '401';
   failureMessage: string;
+  failureIcon: string;
   error: any;
+}
+
+export function mapFetchError(failureMessage: string, error: any): FetchError {
+  if (error instanceof HttpErrorResponse) {
+    if (error.status === 401) {
+      return {
+        type: '401',
+        failureIcon: 'refresh',
+        failureMessage: 'Session most likely expired. Please refresh browser.',
+        error,
+      };
+    }
+  }
+
+  return {
+    type: 'error',
+    failureIcon: 'error',
+    failureMessage,
+    error,
+  };
 }
