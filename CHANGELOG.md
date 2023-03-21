@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## [2.0.1] - 2023-03-21
+
+### Fixed
+
+- Bug in migration scripts, default values are now set.
+
 ## [2.0.0] - 2023-03-20
 
 ### Fixed
