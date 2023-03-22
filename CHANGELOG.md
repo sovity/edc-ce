@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Fixed
+
+- Bug in migration scripts, for existing contract negotiations the embedded JSON array of contract offers was missing
+  contractStart, contractEnd.
+
 ## [2.0.1] - 2023-03-21
 
 ### Fixed
