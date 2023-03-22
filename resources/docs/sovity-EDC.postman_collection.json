@@ -1,55 +1,10 @@
 {
 	"info": {
 		"_postman_id": "42be2be0-1aa4-418e-8cf1-da123d0c2555",
-		"name": "EDC Http Pull",
+		"name": "sovity EDC",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
-		{
-			"name": "Add Dataplane Instance",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"id\": \"mydpf\",\r\n    \"edctype\": \"dataspaceconnector:dataplaneinstance\",\r\n    \"url\": \"http://daps-connector-a-dataplane-1:9999/api/dataplane/control/transfer\",\r\n    \"properties\": {\r\n        \"publicApiUrl\": \"http://daps-connector-a-dataplane-1:8185/public\"\r\n    },\r\n    \"allowedSourceTypes\": [\"HttpData\", \"HttpProxy\", \"HttpPush\"],\r\n    \"allowedDestTypes\": [\"HttpData\", \"HttpProxy\", \"HttpPush\"]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{CONTROL_PLANE_DPF_URL}}/dataplane/instances",
-					"host": [
-						"{{CONTROL_PLANE_DPF_URL}}"
-					],
-					"path": [
-						"dataplane",
-						"instances"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Show Registered Dataplanes",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{CONTROL_PLANE_DPF_URL}}/dataplane/instances",
-					"host": [
-						"{{CONTROL_PLANE_DPF_URL}}"
-					],
-					"path": [
-						"dataplane",
-						"instances"
-					]
-				}
-			},
-			"response": []
-		},
 		{
 			"name": "1 Create Asset",
 			"event": [
@@ -144,53 +99,7 @@
 			"response": []
 		},
 		{
-			"name": "2 Create Policy",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "X-Api-Key",
-						"value": "ApiKeyDefaultValue",
-						"type": "default"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"id\": \"policy-id-2\",\n    \"policy\": {\n        \"permissions\": [\n            {\n                \"edctype\": \"dataspaceconnector:permission\",\n                \"uid\": null,\n                \"target\": \"urn:artifact:http-pull\",\n                \"action\": {\n                    \"type\": \"USE\",\n                    \"includedIn\": null,\n                    \"constraint\": null\n                },\n                \"assignee\": null,\n                \"assigner\": null,\n                \"constraints\": [],\n                \"duties\": []\n            }\n        ],\n        \"prohibitions\": [],\n        \"obligations\": [],\n        \"extensibleProperties\": {},\n        \"inheritsFrom\": null,\n        \"assigner\": null,\n        \"assignee\": null,\n        \"target\": null,\n        \"@type\": {\n            \"@policytype\": \"set\"\n        }\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{BASE_URL}}/management/policydefinitions",
-					"host": [
-						"{{BASE_URL}}"
-					],
-					"path": [
-						"management",
-						"policydefinitions"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "(2 Create Policy Time-Ristricted)",
+			"name": "2 Create Policy Time-Ristricted",
 			"event": [
 				{
 					"listen": "test",
@@ -336,6 +245,38 @@
 					"path": [
 						"management",
 						"contractdefinitions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete ContractDefinition 1 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/management/contractdefinitions/contract-definition-id-2",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"management",
+						"contractdefinitions",
+						"contract-definition-id-2"
 					]
 				}
 			},
@@ -516,7 +457,7 @@
 			"response": []
 		},
 		{
-			"name": "5. Request Data Pull",
+			"name": "5. Request Data Push",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -682,12 +623,12 @@
 	"variable": [
 		{
 			"key": "BASE_URL",
-			"value": "http://localhost:11004/api/v1",
+			"value": "http://localhost:8383/api/v1",
 			"type": "default"
 		},
 		{
 			"key": "BASE_URL_2",
-			"value": "http://localhost:11003/api/v1",
+			"value": "http://localhost:12002/api/v1",
 			"type": "default"
 		}
 	]
