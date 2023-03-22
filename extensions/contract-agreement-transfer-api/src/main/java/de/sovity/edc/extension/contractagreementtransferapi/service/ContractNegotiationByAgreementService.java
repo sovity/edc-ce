@@ -12,7 +12,6 @@
  *
  */
 
-
 package de.sovity.edc.extension.contractagreementtransferapi.service;
 
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;

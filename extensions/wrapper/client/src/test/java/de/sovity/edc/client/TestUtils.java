@@ -11,6 +11,7 @@
  *       sovity GmbH - initial API and implementation
  *
  */
+
 package de.sovity.edc.client;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,8 +23,8 @@ import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 public class TestUtils {
 
     private static final int DATA_PORT = getFreePort();
-    public static final String DMGMT_API_KEY = "123456";
-    public static final String DMGMT_ENDPOINT = "http://localhost:" + DATA_PORT + "/api/v1/data";
+    public static final String MANAGEMENT_API_KEY = "123456";
+    public static final String MANAGEMENT_ENDPOINT = "http://localhost:" + DATA_PORT + "/api/v1/data";
     public static final String IDS_ENDPOINT = "http://localhost:" + DATA_PORT + "/api/v1/data/ids";
 
     @NotNull
@@ -33,7 +34,7 @@ public class TestUtils {
                 "web.http.path", "/api",
                 "web.http.management.port", String.valueOf(DATA_PORT),
                 "web.http.management.path", "/api/v1/data",
-                "edc.api.auth.key", DMGMT_API_KEY,
+                "edc.api.auth.key", MANAGEMENT_API_KEY,
                 "edc.ids.endpoint", IDS_ENDPOINT);
     }
 }

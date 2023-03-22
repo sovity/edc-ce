@@ -42,7 +42,7 @@ public class TestUtils {
                 "edc.ids.endpoint", IDS_ENDPOINT);
     }
 
-    private static RequestSpecification givenDmgmtEndpoint() {
+    private static RequestSpecification givenManagementEndpoint() {
         return given()
                 .baseUri("http://localhost:" + DATA_PORT)
                 .basePath("/api/v1/data")
@@ -50,7 +50,7 @@ public class TestUtils {
     }
 
     static ValidatableResponse exampleEndpoint(ExampleQuery exampleQuery) {
-        return givenDmgmtEndpoint()
+        return givenManagementEndpoint()
                 .when()
                 .contentType(ContentType.JSON)
                 .body(exampleQuery)

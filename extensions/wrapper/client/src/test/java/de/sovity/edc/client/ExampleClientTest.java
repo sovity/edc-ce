@@ -11,6 +11,7 @@
  *       sovity GmbH - initial API and implementation
  *
  */
+
 package de.sovity.edc.client;
 
 import de.sovity.edc.ext.wrapper.api.example.model.ExampleQuery;
@@ -35,8 +36,8 @@ class ExampleClientTest {
     @Test
     void exampleEndpoint() {
         var client = EdcClient.builder()
-                .dataManagementUrl(TestUtils.DMGMT_ENDPOINT)
-                .dataManagementApiKey(TestUtils.DMGMT_API_KEY)
+                .managementApiUrl(TestUtils.MANAGEMENT_ENDPOINT)
+                .managementApiKey(TestUtils.MANAGEMENT_API_KEY)
                 .build();
 
         var result = client.exampleClient().exampleEndpoint(new ExampleQuery("a", List.of("b")));
