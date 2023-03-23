@@ -10,6 +10,9 @@ plugins {
 dependencies {
     api("${edcGroup}:core-spi:${edcVersion}")
     api("${edcGroup}:control-plane-spi:${edcVersion}")
+    api("${edcGroup}:policy-definition-api:${edcVersion}")
+    api("${edcGroup}:contract-definition-api:${edcVersion}")
+    api("${edcGroup}:transfer-process-api:${edcVersion}")
     implementation("${edcGroup}:api-core:${edcVersion}")
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
     implementation(project(":extensions:wrapper:wrapper-api"))

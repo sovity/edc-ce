@@ -25,7 +25,7 @@ dependencies {
 
 swaggerSources {
     register("wrapper").configure {
-        setInputFile(file("${project.buildDir}/swagger/edcapiwrapper.yaml"))
+        setInputFile(file("${project.buildDir}/swagger/edc-api-wrapper.yaml"))
     }
 }
 
@@ -39,7 +39,7 @@ publishing {
 
 tasks.withType<io.swagger.v3.plugins.gradle.tasks.ResolveTask> {
     outputDir = file("$buildDir/swagger")
-    outputFileName = "edcapiwrapper"
+    outputFileName = "edc-api-wrapper"
     prettyPrint = true
     outputFormat = io.swagger.v3.plugins.gradle.tasks.ResolveTask.Format.YAML
     classpath = java.sourceSets["main"].runtimeClasspath
@@ -47,10 +47,10 @@ tasks.withType<io.swagger.v3.plugins.gradle.tasks.ResolveTask> {
 }
 
 openApiGenerate {
-    generatorName.set("kotlin")
-    inputSpec.set("${project.buildDir}/swagger/edcapiwrapper.yaml")
+    generatorName.set("java")
+    inputSpec.set("${project.buildDir}/swagger/edc-api-wrapper.yaml")
 }
 
 openApiValidate {
-    inputSpec.set("${project.buildDir}/swagger/edcapiwrapper.yaml")
+    inputSpec.set("${project.buildDir}/swagger/edc-api-wrapper.yaml")
 }
