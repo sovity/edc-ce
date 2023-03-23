@@ -11,7 +11,7 @@ services:
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
       - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/ids/data
   edc:
-    image: ghcr.io/sovity/edc-mds:2.0.1
+    image: ghcr.io/sovity/edc-mds:2.0.2
     depends_on:
       - postgresql
     environment:
