@@ -14,25 +14,25 @@
 
 package de.sovity.edc.client;
 
-import de.sovity.edc.ext.wrapper.api.example.ExampleResource;
-import de.sovity.edc.ext.wrapper.api.example.model.ExampleQuery;
-
-import java.util.List;
+import de.sovity.edc.client.gen.api.ExampleApi;
+import de.sovity.edc.client.gen.api.UseCaseApi;
+import lombok.Value;
+import lombok.experimental.Accessors;
 
 /**
  * API Client for our EDC API Wrapper.
- *
- * @param exampleClient Example API
  */
-public record EdcClient(
-        ExampleResource exampleClient
-) {
+@Value
+@Accessors(fluent = true)
+public class EdcClient {
+    ExampleApi exampleApi;
+    UseCaseApi useCaseApi;
+
     public static EdcClientBuilder builder() {
         return new EdcClientBuilder();
     }
 
     public void testConnection() {
-        // TODO implement better connection test
-        exampleClient.exampleEndpoint(new ExampleQuery("", List.of()));
+        useCaseApi.kpiEndpoint();
     }
 }

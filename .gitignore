@@ -37,7 +37,8 @@ build
 **/out
 *.hprof
 
-.env
+**/.env
+!.env
 !connector/.env
 
 # Log files

@@ -12,12 +12,11 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.kpi;
+package de.sovity.edc.ext.wrapper.api.usecase;
 
-import de.sovity.edc.ext.wrapper.api.ui.kpi.model.KpiResult;
+import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -25,12 +24,12 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 @OpenAPIDefinition(info = @Info(title = "Wrapper KPI API", version = "1.0.0"))
-@Path("/wrapper/ui/kpi")
-@Tag(name = "Wrapper KPI API", description = "Wrapper KPI UI API endpoint")
+@Path("wrapper/use-case-api")
+@Tag(name = "Use Case", description = "EDC Connector KPI Endpoint")
 public interface KpiResource {
 
     @GET
+    @Path("kpis")
     @Produces(MediaType.APPLICATION_JSON)
-    @Schema(description = "This is the KPI endpoint of the Wrapper UI API.")
     KpiResult kpiEndpoint();
 }

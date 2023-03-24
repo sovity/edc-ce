@@ -54,7 +54,16 @@ public class TestUtils {
                 .when()
                 .contentType(ContentType.JSON)
                 .body(exampleQuery)
-                .post("/wrapper/example")
+                .post("/wrapper/example-api/example")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON);
+    }
+
+    static ValidatableResponse kpiEndpoint() {
+        return givenManagementEndpoint()
+                .when()
+                .get("/wrapper/use-case-api/kpis")
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON);

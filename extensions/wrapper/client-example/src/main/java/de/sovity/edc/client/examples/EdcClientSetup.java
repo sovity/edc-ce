@@ -40,7 +40,11 @@ public class EdcClientSetup {
                 .managementApiUrl(managementApiUrl)
                 .managementApiKey(managementApiKey)
                 .build();
+        testEdcConnection(client);
+        return client;
+    }
 
+    private void testEdcConnection(EdcClient client) {
         if (Boolean.TRUE.equals(testConnection)) {
             LOG.info("Testing EDC connection...");
             client.testConnection();
@@ -48,7 +52,5 @@ public class EdcClientSetup {
         } else {
             LOG.info("Skipping EDC connection test.");
         }
-
-        return client;
     }
 }

@@ -26,12 +26,13 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 @OpenAPIDefinition(info = @Info(title = "Wrapper Example API", version = "1.0.0"))
-@Path("/wrapper/example")
-@Tag(name = "Wrapper Example API", description = "Our EDC API Wrapper POC example endpoint")
+@Path("wrapper/example-api")
+@Tag(name = "Example", description = "Our EDC API Wrapper POC example endpoint")
 public interface ExampleResource {
 
 
     @POST
+    @Path("example")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     ExampleResult exampleEndpoint(ExampleQuery query);

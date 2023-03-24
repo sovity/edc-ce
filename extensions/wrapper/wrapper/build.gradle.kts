@@ -8,6 +8,9 @@ plugins {
 }
 
 dependencies {
+    annotationProcessor("org.projectlombok:lombok:1.18.26")
+    compileOnly("org.projectlombok:lombok:1.18.26")
+
     api("${edcGroup}:core-spi:${edcVersion}")
     api("${edcGroup}:control-plane-spi:${edcVersion}")
     api("${edcGroup}:policy-definition-api:${edcVersion}")

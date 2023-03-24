@@ -16,6 +16,14 @@ package de.sovity.edc.ext.wrapper;
 
 import java.util.List;
 
+
+/**
+ * Manual Dependency Injection result
+ *
+ * @param jaxRsResources Jax RS Resource implementations to register. Implementations of
+ *                       APIs supported by our EDC API Client that don't have their own
+ *                       extension should land here.
+ */
 public record WrapperExtensionContext(
         List<Object> jaxRsResources
 ) {

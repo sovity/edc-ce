@@ -43,6 +43,12 @@ allprojects {
     apply(plugin = "java")
     apply(plugin = "checkstyle")
 
+    tasks.withType<JavaCompile> {
+        options.encoding = "UTF-8"
+        sourceCompatibility = JavaVersion.VERSION_17.toString()
+        targetCompatibility = JavaVersion.VERSION_17.toString()
+    }
+
     tasks.getByName<Test>("test") {
         useJUnitPlatform()
         testLogging {

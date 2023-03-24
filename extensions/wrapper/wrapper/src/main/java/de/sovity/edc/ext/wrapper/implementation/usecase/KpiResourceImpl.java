@@ -12,10 +12,10 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.implementation.ui.kpi;
+package de.sovity.edc.ext.wrapper.implementation.usecase;
 
-import de.sovity.edc.ext.wrapper.api.ui.kpi.KpiResource;
-import de.sovity.edc.ext.wrapper.api.ui.kpi.model.KpiResult;
+import de.sovity.edc.ext.wrapper.api.usecase.KpiResource;
+import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

@@ -30,17 +30,19 @@ import java.util.List;
 @RequiredArgsConstructor
 @Schema(description = "This is the result of the example endpoint.")
 public class ExampleResult {
-    @Schema(description = "Some name field", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Some name field", required = true)
     private String name;
 
     @Schema(description = "Some nested object. This documentation should disappear in favor of the " +
-            "documentation of TestItem due to constraints of the OpenAPI file format.", requiredMode = Schema.RequiredMode.REQUIRED)
+            "documentation of TestItem due to constraints of the OpenAPI file format.", required = true)
     private ExampleItem myNestedItem;
 
-    @Schema(description = "Some array of nested objects", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Some array of nested objects", required = true)
     private List<ExampleItem> myNestedList;
 
-    @Schema(description = "Configured IDS Endpoint", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Configured IDS Endpoint", required = true)
     private String idsEndpoint;
+
+    private ExampleEnum myEnum;
 }
 

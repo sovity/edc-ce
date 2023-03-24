@@ -30,12 +30,12 @@ public class ExampleApiService {
 
     public ExampleResult exampleEndpoint(@NonNull ExampleQuery query) {
         requireNonNull(query.getName(), "name must not be null");
-        Validate.notEmpty(query.getList(), "list must not be empty");
+        Validate.notEmpty(query.getMyNestedList(), "list must not be empty");
 
         var testResult = new ExampleResult();
         testResult.setName(query.getName());
         testResult.setMyNestedItem(new ExampleItem("test"));
-        testResult.setMyNestedList(query.getList().stream().map(ExampleItem::new).toList());
+        testResult.setMyNestedList(query.getMyNestedList().stream().map(ExampleItem::new).toList());
         testResult.setIdsEndpoint(idsEndpointService.getIdsEndpoint());
         return testResult;
     }

@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.kpi.model;
+package de.sovity.edc.ext.wrapper.api.usecase.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -28,15 +28,15 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @Schema(description = "EDC-status-defining KPIs")
 public class KpiResult {
-    @Schema(description = "Counts of assets", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Counts of assets", required = true)
     private Integer assetsCount;
 
-    @Schema(description = "Counts of policies", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Counts of policies", required = true)
     private Integer policiesCount;
 
-    @Schema(description = "Counts of contract definitions", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Counts of contract definitions", required = true)
     private Integer contractDefinitionsCount;
 
-    @Schema(description = "Counts of transfer processes", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Counts of transfer processes", required = true)
     private Integer transferProcessesCount;
 }

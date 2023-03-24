@@ -15,11 +15,13 @@
 package de.sovity.edc.client.examples;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.ext.wrapper.api.example.model.ExampleQuery;
+import de.sovity.edc.client.gen.model.ExampleQuery;
+import de.sovity.edc.client.gen.model.ExampleResult;
 
-import java.util.List;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -31,18 +33,15 @@ public class GreetingResource {
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String idsEndpoint() {
-        return "Backend-fetched IDS Endpoint: %s".formatted(getIdsEndpoint());
+    public String greeting() {
+        return "Backend-fetched KPI Information:%n%s".formatted(edcClient.useCaseApi().kpiEndpoint().toString());
     }
 
-    /**
-     * Example method that consumes our EDC Java Client.
-     *
-     * @return IDS Endpoint URL
-     */
-    private String getIdsEndpoint() {
-        var query = new ExampleQuery("A", List.of("B"));
-        var result = edcClient.exampleClient().exampleEndpoint(query);
-        return result.getIdsEndpoint();
+    @POST
+    @Path("example")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ExampleResult example(ExampleQuery query) {
+        return edcClient.exampleApi().exampleEndpoint(query);
     }
 }

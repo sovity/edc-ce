@@ -29,12 +29,12 @@ public class ExampleService {
 
     public ExampleResult example(@NonNull ExampleQuery query) {
         requireNonNull(query.getName(), "name must not be null");
-        Validate.notEmpty(query.getList(), "list must not be empty");
+        Validate.notEmpty(query.getMyNestedList(), "list must not be empty");
 
         var exampleResult = new ExampleResult();
         exampleResult.setName(query.getName());
         exampleResult.setMyNestedItem(new ExampleItem("example"));
-        exampleResult.setMyNestedList(query.getList().stream().map(ExampleItem::new).toList());
+        exampleResult.setMyNestedList(query.getMyNestedList().stream().map(ExampleItem::new).toList());
         exampleResult.setIdsEndpoint(idsEndpointService.getIdsEndpoint());
         return exampleResult;
     }

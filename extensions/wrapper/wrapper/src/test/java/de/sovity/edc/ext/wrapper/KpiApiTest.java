@@ -12,39 +12,30 @@
  *
  */
 
-package de.sovity.edc.client;
+package de.sovity.edc.ext.wrapper;
 
-import de.sovity.edc.client.gen.model.ExampleItem;
-import de.sovity.edc.client.gen.model.ExampleQuery;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import static de.sovity.edc.ext.wrapper.TestUtils.createConfiguration;
+import static org.hamcrest.Matchers.equalTo;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
-class ExampleClientTest {
+class KpiApiTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-        extension.setConfiguration(TestUtils.createConfiguration());
+        extension.setConfiguration(createConfiguration());
     }
 
     @Test
     void exampleEndpoint() {
-        var client = EdcClient.builder()
-                .managementApiUrl(TestUtils.MANAGEMENT_ENDPOINT)
-                .managementApiKey(TestUtils.MANAGEMENT_API_KEY)
-                .build();
-
-        var result = client.exampleApi().exampleEndpoint(new ExampleQuery("a", List.of("b")));
-
-        assertThat(result.getName()).isEqualTo("a");
-        assertThat(result.getMyNestedList()).containsExactly(new ExampleItem("b"));
+        TestUtils.kpiEndpoint()
+                .assertThat()
+                .body("assetsCount", equalTo(0));
     }
 }

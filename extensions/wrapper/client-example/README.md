@@ -20,15 +20,24 @@ Example Quarkus Application that uses our Java API Client Library.
 
 ## Getting Started
 
+From the root folder of this repository execute the following:
+
 ```shell script
-# Build EDC Dev Image
-# TODO
 
-# Launch Dev Docker Compose with Dev Image
-# TODO
+# Build Dev EDC
+docker build -f "connector/Dockerfile" -t "edc-dev-for-api-wrapper" --build-arg BUILD_ARGS="-Pdev-edc" .
 
-# Launch Example Quarkus Application
+# Fetch up-to-date UI
+docker compose -f docker-compose-dev.yaml pull
+
+# Launch Dev EDCs
+EDC_IMAGE=edc-dev-for-api-wrapper EDC_UI_ACTIVE_PROFILE=sovity-open-source docker compose -f docker-compose-dev.yaml up --scale postgresql=0 --scale postgresql2=0 -d
+
+# Launch Quarkus Application
 ./gradlew :extensions:wrapper:client-example:quarkusDev
+
+# Shut down Dev EDCs
+docker compose -f docker-compose-dev.yaml down -t 1
 ```
 
 ## License

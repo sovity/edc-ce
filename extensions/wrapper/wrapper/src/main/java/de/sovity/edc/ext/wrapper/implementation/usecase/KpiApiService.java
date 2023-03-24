@@ -12,9 +12,9 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.implementation.ui.kpi;
+package de.sovity.edc.ext.wrapper.implementation.usecase;
 
-import de.sovity.edc.ext.wrapper.api.ui.kpi.model.KpiResult;
+import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
