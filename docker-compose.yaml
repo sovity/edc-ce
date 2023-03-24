@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   edc-ui:
-    image: ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity1
+    image: ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity2
     ports:
       - '11000:80'
     environment:
@@ -11,7 +11,7 @@ services:
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
       - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/ids/data
   edc:
-    image: ghcr.io/sovity/edc-mds:2.0.2
+    image: ghcr.io/sovity/edc-mds:2.0.3
     depends_on:
       - postgresql
     environment:
