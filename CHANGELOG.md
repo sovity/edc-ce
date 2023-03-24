@@ -22,11 +22,23 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Fixed
 
+## [v0.0.1-milestone-8-sovity2] 24.03.2023
+
+### Overview
+
+Bugfixes for our productive connectors.
+
+### Detailed Changes
+
+#### Fixed
+
+- Fixed implicit limit of 50 being applied to all views.
+
 ## [v0.0.1-milestone-8-sovity1] 20.03.2023
 
 ### Overview
 
-Organization names are now prominent in both asset cards and contract offer 
+Organization names are now prominent in both asset cards and contract offer
 cards.
 
 ### Detailed Changes
