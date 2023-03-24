@@ -100,31 +100,12 @@
 		},
 		{
 			"name": "2 Create Policy Time-Ristricted",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
-							"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
 			"request": {
 				"method": "POST",
-				"header": [
-					{
-						"key": "X-Api-Key",
-						"value": "pass",
-						"type": "default"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"policy\": {\n        \"type\": \"SET\",\n        \"permissions\": [\n            {\n                \"edctype\": \"dataspaceconnector:permission\",\n                \"uid\": null,\n                \"target\": \"urn:artifact:http-pull\",\n                \"action\": {\n                    \"type\": \"USE\",\n                    \"includedIn\": null,\n                    \"constraint\": null\n                },\n                \"assignee\": null,\n                \"assigner\": null,\n                \"constraints\": [\n                    {\n                        \"edctype\": \"AtomicConstraint\",\n                        \"leftExpression\": {\n                            \"edctype\": \"dataspaceconnector:literalexpression\",\n                            \"value\": \"POLICY_EVALUATION_TIME\"\n                        },\n                        \"operator\": \"GT\",\n                        \"rightExpression\": {\n                            \"edctype\": \"dataspaceconnector:literalexpression\",\n                            \"value\": \"2018-12-31T23:00:00.000Z\"\n                        }\n                    },\n                    {\n                        \"edctype\": \"AtomicConstraint\",\n                        \"leftExpression\": {\n                            \"edctype\": \"dataspaceconnector:literalexpression\",\n                            \"value\": \"POLICY_EVALUATION_TIME\"\n                        },\n                        \"operator\": \"LT\",\n                        \"rightExpression\": {\n                            \"edctype\": \"dataspaceconnector:literalexpression\",\n                            \"value\": \"2023-12-31T23:00:00.000Z\"\n                        }\n                    }\n                ],\n                \"duties\": []\n            }\n        ]\n    },\n    \"id\": \"policy-id-2\"\n}",
+					"raw": "{\r\n    \"id\": \"mydpf\",\r\n    \"edctype\": \"dataspaceconnector:dataplaneinstance\",\r\n    \"url\": \"http://daps-connector-a-dataplane-1:9999/api/dataplane/control/transfer\",\r\n    \"properties\": {\r\n        \"publicApiUrl\": \"http://daps-connector-a-dataplane-1:8185/public\"\r\n    },\r\n    \"allowedSourceTypes\": [\"HttpData\", \"HttpProxy\", \"HttpPush\"],\r\n    \"allowedDestTypes\": [\"HttpData\", \"HttpProxy\", \"HttpPush\"]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -623,7 +604,7 @@
 	"variable": [
 		{
 			"key": "BASE_URL",
-			"value": "http://localhost:8383/api/v1",
+			"value": "http://localhost:11002/api/v1",
 			"type": "default"
 		},
 		{
