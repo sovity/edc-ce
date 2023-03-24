@@ -63,7 +63,7 @@ export class TransferHistoryViewerComponent implements OnInit {
 
   loadTransferProcesses() {
     this.transferProcessService
-      .getAllTransferProcesses()
+      .getAllTransferProcesses(0, 10_000_000)
       .pipe(
         map((transferProcesses) => ({
           transferProcesses: transferProcesses.sort(function (a, b) {

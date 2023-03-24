@@ -50,7 +50,7 @@ export class ContractViewerComponent implements OnInit {
 
   ngOnInit(): void {
     this.contractAgreementService
-      .getAllAgreements()
+      .getAllAgreements(0, 10_000_000)
       .pipe(
         Fetched.wrap({
           failureMessage: 'Failed fetching contracts.',

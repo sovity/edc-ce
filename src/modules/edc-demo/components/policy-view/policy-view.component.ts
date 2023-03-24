@@ -37,7 +37,7 @@ export class PolicyViewComponent implements OnInit {
     this.fetch$
       .pipe(
         switchMap(() => {
-          return this.policyService.getAllPolicies().pipe(
+          return this.policyService.getAllPolicies(0, 10_000_000).pipe(
             map(
               (policyDefinitions): PolicyList => ({
                 policyCards: this.policyCardBuilder.buildPolicyCards(

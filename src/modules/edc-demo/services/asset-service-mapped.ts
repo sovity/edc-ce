@@ -19,7 +19,7 @@ export class AssetServiceMapped {
 
   fetchAssets(): Observable<Asset[]> {
     return this.assetService
-      .getAllAssets()
+      .getAllAssets(0, 10_000_000)
       .pipe(
         map((assets) =>
           assets.map((asset) =>

@@ -37,7 +37,7 @@ export class AssetViewerComponent implements OnInit {
     this.fetch$
       .pipe(
         switchMap(() => {
-          return this.assetService.getAllAssets().pipe(
+          return this.assetService.getAllAssets(0, 10_000_000).pipe(
             map(
               (assets): AssetList => ({
                 filteredAssets: assets

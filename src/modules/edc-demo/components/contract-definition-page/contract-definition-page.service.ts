@@ -61,14 +61,14 @@ export class ContractDefinitionPageService {
 
   fetchCards(): Observable<Fetched<ContractDefinitionCard[]>> {
     return combineLatest([
-      this.contractDefinitionService.getAllContractDefinitions(),
+      this.contractDefinitionService.getAllContractDefinitions(0, 10_000_000),
       this.assetServiceMapped.fetchAssets().pipe(
         catchError((err) => {
           console.warn('Failed fetching assets.', err);
           return of([]);
         }),
       ),
-      this.policyService.getAllPolicies().pipe(
+      this.policyService.getAllPolicies(0, 10_000_000).pipe(
         catchError((err) => {
           console.warn('Failed fetching policy definitions.', err);
           return of([]);

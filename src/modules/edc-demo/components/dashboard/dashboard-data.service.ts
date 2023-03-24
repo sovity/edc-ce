@@ -60,7 +60,7 @@ export class DashboardDataService {
   }
 
   private policyKpis(): Observable<Partial<DashboardData>> {
-    return this.policyService.getAllPolicies().pipe(
+    return this.policyService.getAllPolicies(0, 10_000_000).pipe(
       map((policies) => policies.length),
       Fetched.wrap({failureMessage: 'Failed fetching number of policies.'}),
       map((numPolicies) => ({numPolicies})),
@@ -68,17 +68,19 @@ export class DashboardDataService {
   }
 
   private contractDefinitionKpis(): Observable<Partial<DashboardData>> {
-    return this.contractDefinitionService.getAllContractDefinitions().pipe(
-      map((contractDefinitions) => contractDefinitions.length),
-      Fetched.wrap({
-        failureMessage: 'Failed fetching number of contract definitions.',
-      }),
-      map((numContractDefinitions) => ({numContractDefinitions})),
-    );
+    return this.contractDefinitionService
+      .getAllContractDefinitions(0, 10_000_000)
+      .pipe(
+        map((contractDefinitions) => contractDefinitions.length),
+        Fetched.wrap({
+          failureMessage: 'Failed fetching number of contract definitions.',
+        }),
+        map((numContractDefinitions) => ({numContractDefinitions})),
+      );
   }
 
   private contractAgreementKpis(): Observable<Partial<DashboardData>> {
-    return this.contractAgreementService.getAllAgreements().pipe(
+    return this.contractAgreementService.getAllAgreements(0, 10_000_000).pipe(
       map((contractAgreements) => contractAgreements.length),
       Fetched.wrap({
         failureMessage: 'Failed fetching contract agreements.',
@@ -110,7 +112,7 @@ export class DashboardDataService {
   }
 
   private assetKpis(): Observable<Partial<DashboardData>> {
-    return this.assetService.getAllAssets().pipe(
+    return this.assetService.getAllAssets(0, 10_000_000).pipe(
       map((assets) => assets.length),
       Fetched.wrap({
         failureMessage: 'Failed fetching assets.',
@@ -128,19 +130,21 @@ export class DashboardDataService {
   }
 
   private transferProcessKpis(): Observable<Partial<DashboardData>> {
-    return this.transferProcessService.getAllTransferProcesses().pipe(
-      Fetched.wrap({
-        failureMessage: 'Failed fetching transfer processes.',
-      }),
-      map((transferData) => ({
-        incomingTransfersChart: transferData.map((it) =>
-          this.buildTransferChart(it, 'incoming'),
-        ),
-        outgoingTransfersChart: transferData.map((it) =>
-          this.buildTransferChart(it, 'outgoing'),
-        ),
-      })),
-    );
+    return this.transferProcessService
+      .getAllTransferProcesses(0, 10_000_000)
+      .pipe(
+        Fetched.wrap({
+          failureMessage: 'Failed fetching transfer processes.',
+        }),
+        map((transferData) => ({
+          incomingTransfersChart: transferData.map((it) =>
+            this.buildTransferChart(it, 'incoming'),
+          ),
+          outgoingTransfersChart: transferData.map((it) =>
+            this.buildTransferChart(it, 'outgoing'),
+          ),
+        })),
+      );
   }
 
   private buildTransferChart(

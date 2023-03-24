@@ -51,14 +51,16 @@ export class ContractOfferService {
 
   getContractOffers(connectorEndpoint: string): Observable<ContractOffer[]> {
     let url = this.catalogApiUrlService.buildCatalogApiUrl(connectorEndpoint);
-    return this.httpClient.get<ContractOfferResponseDto>(url).pipe(
-      map(({contractOffers}) => contractOffers),
-      map((contractOffers) =>
-        contractOffers.map((contractOffer) =>
-          this.buildContractOffer(contractOffer),
+    return this.httpClient
+      .get<ContractOfferResponseDto>(url + '&limit=10000000')
+      .pipe(
+        map(({contractOffers}) => contractOffers),
+        map((contractOffers) =>
+          contractOffers.map((contractOffer) =>
+            this.buildContractOffer(contractOffer),
+          ),
         ),
-      ),
-    );
+      );
   }
 
   private buildContractOffer(
