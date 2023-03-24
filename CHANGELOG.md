@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## [2.0.3] - 2023-03-24
+
+### Fixed
+
+- Bug in postman collection, ports needed to be updated due to release 2.0.2.
 
 ## [2.0.2] - 2023-03-23
 
