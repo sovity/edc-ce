@@ -28,15 +28,15 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @Schema(description = "EDC-status-defining KPIs")
 public class KpiResult {
-    @Schema(description = "Counts of assets", required = true)
+    @Schema(description = "Counts of assets", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer assetsCount;
 
-    @Schema(description = "Counts of policies", required = true)
+    @Schema(description = "Counts of policies", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer policiesCount;
 
-    @Schema(description = "Counts of contract definitions", required = true)
+    @Schema(description = "Counts of contract definitions", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer contractDefinitionsCount;
 
-    @Schema(description = "Counts of transfer processes", required = true)
+    @Schema(description = "Counts of transfer processes", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer transferProcessesCount;
 }

@@ -7,7 +7,7 @@ ARG BUILD_ARGS
 
 COPY --chown=gradle:gradle . /home/gradle/project/
 WORKDIR /home/gradle/project/
-RUN gradle build --no-daemon $BUILD_ARGS
+RUN --mount=type=cache,target=/home/gradle/.gradle/caches gradle build --no-daemon $BUILD_ARGS
 
 # -buster is required to have apt available
 FROM openjdk:17-slim-buster

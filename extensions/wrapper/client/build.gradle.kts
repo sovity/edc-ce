@@ -21,7 +21,7 @@ val openapiYaml = configurations.create("openapiGenerator")
 
 dependencies {
     // We only need the openapi.yaml file from this dependency
-    openapiYaml(project(":extensions:wrapper:wrapper-api")) {
+    openapiYaml(project(":extensions:wrapper:wrapper")) {
         isTransitive = false
     }
 
@@ -110,8 +110,8 @@ tasks.getByName<JavaCompile>("compileJava") {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
     withSourcesJar()
     withJavadocJar()
 }

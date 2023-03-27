@@ -33,7 +33,7 @@ val getJars by tasks.registering(Copy::class) {
 }
 
 // run the download jars task after the "jar" task
-tasks{
+tasks {
     jar {
         finalizedBy(getJars)
     }

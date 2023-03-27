@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.implementation.example.services;
+package de.sovity.edc.ext.wrapper.api.example.services;
 
 import de.sovity.edc.ext.wrapper.api.example.model.ExampleItem;
 import de.sovity.edc.ext.wrapper.api.example.model.ExampleQuery;

@@ -14,6 +14,8 @@
 
 package de.sovity.edc.ext.wrapper;
 
+import io.restassured.http.ContentType;
+import io.restassured.response.ValidatableResponse;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static de.sovity.edc.ext.wrapper.TestUtils.createConfiguration;
+import static de.sovity.edc.ext.wrapper.TestUtils.givenManagementEndpoint;
 import static org.hamcrest.Matchers.equalTo;
 
 @ApiTest
@@ -32,9 +35,18 @@ class KpiApiTest {
         extension.setConfiguration(createConfiguration());
     }
 
+    ValidatableResponse whenKpiEndpoint() {
+        return givenManagementEndpoint()
+                .when()
+                .get("/wrapper/use-case-api/kpis")
+                .then()
+                .statusCode(200)
+                .contentType(ContentType.JSON);
+    }
+
     @Test
     void exampleEndpoint() {
-        TestUtils.kpiEndpoint()
+        whenKpiEndpoint()
                 .assertThat()
                 .body("assetsCount", equalTo(0));
     }

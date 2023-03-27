@@ -23,6 +23,7 @@ Example Quarkus Application that uses our Java API Client Library.
 From the root folder of this repository execute the following:
 
 ```shell script
+# Use WSL or Git Bash
 
 # Build Dev EDC
 docker build -f "connector/Dockerfile" -t "edc-dev-for-api-wrapper" --build-arg BUILD_ARGS="-Pdev-edc" .
@@ -46,4 +47,4 @@ Apache License 2.0 - see [LICENSE](../../LICENSE)
 
 ## Contact
 
-sovity GmbH - contact@sovity.de 
+sovity GmbH - contact@sovity.de

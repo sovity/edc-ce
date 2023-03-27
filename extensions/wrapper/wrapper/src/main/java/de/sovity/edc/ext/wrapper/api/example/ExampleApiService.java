@@ -12,12 +12,12 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.implementation.example;
+package de.sovity.edc.ext.wrapper.api.example;
 
 import de.sovity.edc.ext.wrapper.api.example.model.ExampleItem;
 import de.sovity.edc.ext.wrapper.api.example.model.ExampleQuery;
 import de.sovity.edc.ext.wrapper.api.example.model.ExampleResult;
-import de.sovity.edc.ext.wrapper.implementation.example.services.IdsEndpointService;
+import de.sovity.edc.ext.wrapper.api.example.services.IdsEndpointService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;

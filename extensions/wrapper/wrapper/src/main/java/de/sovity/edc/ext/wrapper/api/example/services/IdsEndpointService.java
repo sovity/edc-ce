@@ -12,18 +12,16 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.implementation.usecase;
+package de.sovity.edc.ext.wrapper.api.example.services;
 
-import de.sovity.edc.ext.wrapper.api.usecase.KpiResource;
-import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.edc.spi.system.configuration.Config;
 
 @RequiredArgsConstructor
-public class KpiResourceImpl implements KpiResource {
-    private final KpiApiService kpiApiService;
+public class IdsEndpointService {
+    private final Config config;
 
-    @Override
-    public KpiResult kpiEndpoint() {
-        return kpiApiService.kpiEndpoint();
+    public String getIdsEndpoint() {
+        return config.getString("edc.ids.endpoint");
     }
 }

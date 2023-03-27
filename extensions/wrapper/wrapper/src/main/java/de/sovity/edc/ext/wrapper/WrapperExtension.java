@@ -18,6 +18,7 @@ import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfi
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
+import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.system.ServiceExtension;
@@ -28,17 +29,19 @@ public class WrapperExtension implements ServiceExtension {
 
     public static final String EXTENSION_NAME = "WrapperExtension";
     @Inject
-    private ManagementApiConfiguration dataManagementApiConfiguration;
-    @Inject
-    private WebService webService;
-    @Inject
     private AssetIndex assetIndex;
-    @Inject
-    private PolicyDefinitionStore policyDefinitionStore;
     @Inject
     private ContractDefinitionStore contractDefinitionStore;
     @Inject
+    private ManagementApiConfiguration dataManagementApiConfiguration;
+    @Inject
+    private PolicyDefinitionStore policyDefinitionStore;
+    @Inject
+    private PolicyEngine policyEngine;
+    @Inject
     private TransferProcessStore transferProcessStore;
+    @Inject
+    private WebService webService;
 
     @Override
     public String name() {
@@ -49,10 +52,11 @@ public class WrapperExtension implements ServiceExtension {
     public void initialize(ServiceExtensionContext context) {
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
                 assetIndex,
-                policyDefinitionStore,
+                context.getConfig(),
                 contractDefinitionStore,
-                transferProcessStore,
-                context.getConfig()
+                policyDefinitionStore,
+                policyEngine,
+                transferProcessStore
         );
 
         wrapperExtensionContext.jaxRsResources().forEach(resource ->

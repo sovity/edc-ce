@@ -14,15 +14,18 @@
 
 package de.sovity.edc.ext.wrapper;
 
-import de.sovity.edc.ext.wrapper.implementation.example.ExampleApiService;
-import de.sovity.edc.ext.wrapper.implementation.example.ExampleResourceImpl;
-import de.sovity.edc.ext.wrapper.implementation.example.services.IdsEndpointService;
-import de.sovity.edc.ext.wrapper.implementation.usecase.KpiApiService;
-import de.sovity.edc.ext.wrapper.implementation.usecase.KpiResourceImpl;
+import de.sovity.edc.ext.wrapper.api.example.ExampleApiService;
+import de.sovity.edc.ext.wrapper.api.example.ExampleResource;
+import de.sovity.edc.ext.wrapper.api.example.services.IdsEndpointService;
+import de.sovity.edc.ext.wrapper.api.usecase.KpiApiService;
+import de.sovity.edc.ext.wrapper.api.usecase.KpiResource;
+import de.sovity.edc.ext.wrapper.api.usecase.SupportedPolicyApiService;
+import de.sovity.edc.ext.wrapper.api.usecase.SupportedPolicyResource;
 import lombok.NoArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
+import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.system.configuration.Config;
@@ -42,15 +45,16 @@ import java.util.List;
 public class WrapperExtensionContextBuilder {
     public static WrapperExtensionContext buildContext(
             AssetIndex assetIndex,
-            PolicyDefinitionStore policyDefinitionStore,
+            Config config,
             ContractDefinitionStore contractDefinitionStore,
-            TransferProcessStore transferProcessStore,
-            Config config
+            PolicyDefinitionStore policyDefinitionStore,
+            PolicyEngine policyEngine,
+            TransferProcessStore transferProcessStore
     ) {
         // Example API
         var idsEndpointService = new IdsEndpointService(config);
         var exampleApiService = new ExampleApiService(idsEndpointService);
-        var exampleResource = new ExampleResourceImpl(exampleApiService);
+        var exampleResource = new ExampleResource(exampleApiService);
 
         // Use Case API
         var kpiApiService = new KpiApiService(
@@ -59,12 +63,15 @@ public class WrapperExtensionContextBuilder {
                 contractDefinitionStore,
                 transferProcessStore
         );
-        var kpiResource = new KpiResourceImpl(kpiApiService);
+        var kpiResource = new KpiResource(kpiApiService);
+        var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
+        var supportedPolicyResource = new SupportedPolicyResource(supportedPolicyApiService);
 
         // Collect all JAX-RS resources
         return new WrapperExtensionContext(List.of(
                 exampleResource,
-                kpiResource
+                kpiResource,
+                supportedPolicyResource
         ));
     }
 }

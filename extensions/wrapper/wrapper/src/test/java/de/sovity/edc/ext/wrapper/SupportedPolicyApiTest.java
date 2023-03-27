@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.wrapper;
 
-import de.sovity.edc.ext.wrapper.api.example.model.ExampleQuery;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -23,37 +22,32 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.List;
-
 import static de.sovity.edc.ext.wrapper.TestUtils.createConfiguration;
 import static de.sovity.edc.ext.wrapper.TestUtils.givenManagementEndpoint;
 import static org.hamcrest.Matchers.equalTo;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
-class ExampleApiTest {
+class SupportedPolicyApiTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
         extension.setConfiguration(createConfiguration());
     }
 
-    ValidatableResponse whenExampleEndpoint(ExampleQuery exampleQuery) {
+    static ValidatableResponse whenSupportedPolicyFunctions() {
         return givenManagementEndpoint()
                 .when()
-                .contentType(ContentType.JSON)
-                .body(exampleQuery)
-                .post("/wrapper/example-api/example")
+                .get("/wrapper/use-case-api/supported-policy-functions")
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON);
     }
 
     @Test
-    void exampleEndpoint() {
-        whenExampleEndpoint(new ExampleQuery("a", List.of("b")))
+    void supportedPolicies() {
+        whenSupportedPolicyFunctions()
                 .assertThat()
-                .body("name", equalTo("a"))
-                .body("myNestedList[0].name", equalTo("b"));
+                .body(equalTo("[\"ALWAYS_TRUE\"]"));
     }
 }

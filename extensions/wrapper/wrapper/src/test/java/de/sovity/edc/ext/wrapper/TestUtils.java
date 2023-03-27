@@ -14,9 +14,6 @@
 
 package de.sovity.edc.ext.wrapper;
 
-import de.sovity.edc.ext.wrapper.api.example.model.ExampleQuery;
-import io.restassured.http.ContentType;
-import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,30 +39,10 @@ public class TestUtils {
                 "edc.ids.endpoint", IDS_ENDPOINT);
     }
 
-    private static RequestSpecification givenManagementEndpoint() {
+    static RequestSpecification givenManagementEndpoint() {
         return given()
                 .baseUri("http://localhost:" + DATA_PORT)
                 .basePath("/api/v1/data")
                 .header("x-api-key", AUTH_KEY);
-    }
-
-    static ValidatableResponse exampleEndpoint(ExampleQuery exampleQuery) {
-        return givenManagementEndpoint()
-                .when()
-                .contentType(ContentType.JSON)
-                .body(exampleQuery)
-                .post("/wrapper/example-api/example")
-                .then()
-                .statusCode(200)
-                .contentType(ContentType.JSON);
-    }
-
-    static ValidatableResponse kpiEndpoint() {
-        return givenManagementEndpoint()
-                .when()
-                .get("/wrapper/use-case-api/kpis")
-                .then()
-                .statusCode(200)
-                .contentType(ContentType.JSON);
     }
 }

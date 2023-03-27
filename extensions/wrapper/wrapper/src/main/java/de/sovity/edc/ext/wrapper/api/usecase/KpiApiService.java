@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.implementation.usecase;
+package de.sovity.edc.ext.wrapper.api.usecase;
 
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import lombok.RequiredArgsConstructor;

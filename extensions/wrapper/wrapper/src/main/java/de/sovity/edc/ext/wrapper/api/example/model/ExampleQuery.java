@@ -31,9 +31,9 @@ import java.util.List;
 @Schema(description = "This is the query of the example endpoint.")
 public class ExampleQuery {
 
-    @Schema(required = true)
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 
-    @Schema(required = true)
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private List<String> myNestedList;
 }
