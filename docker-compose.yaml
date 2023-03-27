@@ -1,17 +1,17 @@
 version: "3.8"
 services:
   edc-ui:
-    image: ghcr.io/sovity/edc-ui:0.0.1-milestone-7-sovity8
+    image: ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity2
     ports:
       - '11000:80'
     environment:
       - EDC_UI_ACTIVE_PROFILE=mds-open-source
       - EDC_UI_CONFIG_URL=edc-ui-config
-      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/data
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/management
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
       - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/ids/data
   edc:
-    image: ghcr.io/sovity/edc-mds:1.5.0
+    image: ghcr.io/sovity/edc-mds:2.0.3
     depends_on:
       - postgresql
     environment:
@@ -38,10 +38,12 @@ services:
       # Deployment Configuration
       WEB_HTTP_PORT: 11001
       WEB_HTTP_PATH: /api
-      WEB_HTTP_DATA_PORT: 11002
-      WEB_HTTP_DATA_PATH: /api/v1/data
-      WEB_HTTP_IDS_PORT: 11003
-      WEB_HTTP_IDS_PATH: /api/v1/ids
+      WEB_HTTP_MANAGEMENT_PORT: 11002
+      WEB_HTTP_MANAGEMENT_PATH: /api/v1/management
+      WEB_HTTP_PROTOCOL_PORT: 11003
+      WEB_HTTP_PROTOCOL_PATH: /api/v1/ids
+      WEB_HTTP_CONTROL_PORT: 11004
+      WEB_HTTP_CONTROL_PATH: /api/v1/control
       EDC_IDS_MAINTAINER: https://sovity.de
       EDC_UI_MAINTAINER_ORGANIZATION_NAME: sovity GmbH
       EDC_WEB_REST_CORS_ENABLED: 'true'
@@ -49,7 +51,7 @@ services:
       EDC_WEB_REST_CORS_ORIGINS: '*'
       EDC_VAULT: /resources/vault/edc/vault.properties
       EDC_KEYSTORE_PASSWORD: password
-      EDC_OAUTH_PUBLIC_KEY_ALIAS: 1
+      EDC_OAUTH_CERTIFICATE_ALIAS: 1
       EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
       EDC_OAUTH_PROVIDER_AUDIENCE: idsc:IDS_CONNECTORS_ALL
       EDC_FLYWAY_POSTGRES_JDBC_URL: jdbc:postgresql://postgresql:5432/edc

@@ -2,16 +2,49 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.5.1] - UNRELEASED
+## UNRELEASED
+
+### Feature
 
 ### Fixed
 
-- Missing blacklist entry for referring connector policy in docker-compose `POLICY_BROKER_BLACKLIST: REFERRING_CONNECTOR` 
+### Changed
+
+## [2.0.3] - 2023-03-24
+
+### Fixed
+
+- Bug in postman collection, ports needed to be updated due to release 2.0.2.
+
+## [2.0.2] - 2023-03-23
+
+### Fixed
+
+- Bug in migration scripts, for existing contract negotiations the embedded JSON array of contract offers was missing
+  contractStart, contractEnd.
+
+## [2.0.1] - 2023-03-21
+
+### Fixed
+
+- Bug in migration scripts, default values are now set.
+
+## [2.0.0] - 2023-03-20
+
+### Fixed
+
+- Missing blacklist entry for referring connector policy in docker-compose `POLICY_BROKER_BLACKLIST: REFERRING_CONNECTOR`
 
 ### Changed
 
 - Updated to EDC-Connector 0.0.1-milestone-8.
 - Added a subsequent resource-id filtering after sparql query, to filter out resources that do not belong to the connector.
+
+## [1.5.1] - 2023-03-17
+
+### Fixed
+
+- Changed docker-compose file to use released instead of latest versions of EDC-Connector and EDC-UI
 
 ## [1.5.0] - 2023-03-07
 
