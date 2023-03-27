@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
 
@@ -191,7 +192,10 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
                     String.class,
                     queryMessage,
                     () -> CONTEXT_BROKER_REGISTRATION);
-            return parseQueryResponse(resultMessageCompletableFuture.get());
+            var idList = parseQueryResponse(resultMessageCompletableFuture.get());
+            return idList.stream().filter(id -> id
+                    .startsWith(String.format("https://%s/", hostname.get())))
+                    .collect(Collectors.toList());
         } catch (MalformedURLException e) {
             throw new EdcException("Could not build brokerInfrastructureUrl", e);
         } catch (URISyntaxException e) {
