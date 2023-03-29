@@ -33,7 +33,7 @@ val getJars by tasks.registering(Copy::class) {
 }
 
 // run the download jars task after the "jar" task
-tasks{
+tasks {
     jar {
         finalizedBy(getJars)
     }
@@ -42,6 +42,12 @@ tasks{
 allprojects {
     apply(plugin = "java")
     apply(plugin = "checkstyle")
+
+    tasks.withType<JavaCompile> {
+        options.encoding = "UTF-8"
+        sourceCompatibility = JavaVersion.VERSION_17.toString()
+        targetCompatibility = JavaVersion.VERSION_17.toString()
+    }
 
     tasks.getByName<Test>("test") {
         useJUnitPlatform()

@@ -20,6 +20,7 @@ dependencies {
         implementation(project(":extensions:contract-agreement-transfer-api"))
         implementation(project(":extensions:last-commit-info"))
         implementation(project(":extensions:edc-ui-config"))
+        implementation(project(":extensions:wrapper:wrapper"))
     } else {
         // Control-plane
         implementation(project(":extensions:broker"))
