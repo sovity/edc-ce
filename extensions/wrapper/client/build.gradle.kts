@@ -34,7 +34,7 @@ dependencies {
     implementation("io.gsonfire:gson-fire:1.8.5")
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
     implementation("org.apache.commons:commons-lang3:3.12.0")
-    implementation("jakarta.annotation:jakarta.annotation-api:1.3.5")
+    implementation("jakarta.annotation:jakarta.annotation-api:2.1.1")
 
     // Lombok
     compileOnly("org.projectlombok:lombok:1.18.26")
