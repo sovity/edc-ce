@@ -20,6 +20,7 @@ import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStor
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
+import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
 
@@ -67,6 +68,7 @@ public class KpiApiService {
             switch (type) {
                 case PROVIDER -> outgoingDataCount++;
                 case CONSUMER -> incomingDataCount++;
+                default -> throw new EdcException("Unexpected transferProcess type: " + type);
             }
         }
     }
