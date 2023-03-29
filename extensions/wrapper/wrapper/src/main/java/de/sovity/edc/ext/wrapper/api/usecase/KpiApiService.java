@@ -26,7 +26,6 @@ import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @RequiredArgsConstructor
 public class KpiApiService {
