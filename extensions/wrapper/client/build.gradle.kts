@@ -9,7 +9,7 @@ group = edcClientGroup
 plugins {
     `java-library`
     `maven-publish`
-    id("org.openapi.generator") version "6.3.0"
+    id("org.openapi.generator") version "6.4.0"
 }
 
 repositories {
