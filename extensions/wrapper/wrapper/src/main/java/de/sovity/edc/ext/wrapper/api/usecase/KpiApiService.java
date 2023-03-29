@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.usecase;
 
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
+import de.sovity.edc.ext.wrapper.api.usecase.model.TransferProcessDto;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
@@ -24,6 +25,9 @@ import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RequiredArgsConstructor
 public class KpiApiService {
     private final AssetIndex assetIndex;
@@ -32,9 +36,6 @@ public class KpiApiService {
     private final TransferProcessStore transferProcessStore;
     private final ContractAgreementService contractAgreementService;
 
-    private int incomingDataCount;
-    private int outgoingDataCount;
-
     public KpiResult kpiEndpoint() {
         var querySpec = QuerySpec.Builder.newInstance().build();
 
@@ -42,35 +43,41 @@ public class KpiApiService {
         var policiesCount = getPoliciesCount(querySpec);
         var contractDefinitionsCount = getContractDefinitionsCount(querySpec);
         var contractAgreements = getContractAgreementsCount(querySpec);
-        getTransferProcessesCount(querySpec);
+        var transferProcessDto = getTransferProcessesDto(querySpec);
 
         return new KpiResult(
                 assetsCount,
                 policiesCount,
                 contractDefinitionsCount,
                 contractAgreements,
-                incomingDataCount,
-                outgoingDataCount);
+                transferProcessDto);
     }
 
     private int getContractAgreementsCount(QuerySpec querySpec) {
         return contractAgreementService.query(querySpec).getContent().toList().size();
     }
 
-    private void getTransferProcessesCount(QuerySpec querySpec) {
-        incomingDataCount = 0;
-        outgoingDataCount = 0;
-
+    private TransferProcessDto getTransferProcessesDto(QuerySpec querySpec) {
         var transferProcesses = transferProcessStore.findAll(querySpec).toList();
+        var outgoingTransferProcessCounts = new HashMap<Integer, Integer>();
+        var incomingTransferProcessCounts = new HashMap<Integer, Integer>();
 
         for (var transferProcess : transferProcesses) {
             var type = transferProcess.getType();
             switch (type) {
-                case PROVIDER -> outgoingDataCount++;
-                case CONSUMER -> incomingDataCount++;
+                case PROVIDER -> outgoingTransferProcessCounts.put(transferProcess.getState(),
+                        outgoingTransferProcessCounts.getOrDefault(transferProcess.getState(), 0) + 1);
+                case CONSUMER -> incomingTransferProcessCounts.put(transferProcess.getState(),
+                        incomingTransferProcessCounts.getOrDefault(transferProcess.getState(), 0) + 1);
                 default -> throw new EdcException("Unexpected transferProcess type: " + type);
             }
         }
+
+        var transferProcessDto = new TransferProcessDto();
+        transferProcessDto.setOutgoingTransferProcessCounts(outgoingTransferProcessCounts);
+        transferProcessDto.setIncomingTransferProcessCounts(incomingTransferProcessCounts);
+
+        return transferProcessDto;
     }
 
     private int getContractDefinitionsCount(QuerySpec querySpec) {
