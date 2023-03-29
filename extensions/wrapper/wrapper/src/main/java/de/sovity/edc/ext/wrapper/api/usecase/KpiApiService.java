@@ -18,6 +18,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
+import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
@@ -28,6 +29,10 @@ public class KpiApiService {
     private final PolicyDefinitionStore policyDefinitionStore;
     private final ContractDefinitionStore contractDefinitionStore;
     private final TransferProcessStore transferProcessStore;
+    private final ContractAgreementService contractAgreementService;
+
+    private int incomingDataCount;
+    private int outgoingDataCount;
 
     public KpiResult kpiEndpoint() {
         var querySpec = QuerySpec.Builder.newInstance().build();
@@ -35,14 +40,35 @@ public class KpiApiService {
         var assetsCount = getAssetsCount(querySpec);
         var policiesCount = getPoliciesCount(querySpec);
         var contractDefinitionsCount = getContractDefinitionsCount(querySpec);
-        var transferProcessesCount = getTransferProcessesCount(querySpec);
+        var contractAgreements = getContractAgreementsCount(querySpec);
+        getTransferProcessesCount(querySpec);
 
-        return new KpiResult(assetsCount, policiesCount, contractDefinitionsCount, transferProcessesCount);
+        return new KpiResult(
+                assetsCount,
+                policiesCount,
+                contractDefinitionsCount,
+                contractAgreements,
+                incomingDataCount,
+                outgoingDataCount);
     }
 
-    private int getTransferProcessesCount(QuerySpec querySpec) {
+    private int getContractAgreementsCount(QuerySpec querySpec) {
+        return contractAgreementService.query(querySpec).getContent().toList().size();
+    }
+
+    private void getTransferProcessesCount(QuerySpec querySpec) {
+        incomingDataCount = 0;
+        outgoingDataCount = 0;
+
         var transferProcesses = transferProcessStore.findAll(querySpec).toList();
-        return transferProcesses.size();
+
+        for (var transferProcess : transferProcesses) {
+            var type = transferProcess.getType();
+            switch (type) {
+                case PROVIDER -> outgoingDataCount++;
+                case CONSUMER -> incomingDataCount++;
+            }
+        }
     }
 
     private int getContractDefinitionsCount(QuerySpec querySpec) {

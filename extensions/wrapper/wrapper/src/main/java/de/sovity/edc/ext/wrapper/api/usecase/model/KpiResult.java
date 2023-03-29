@@ -37,6 +37,12 @@ public class KpiResult {
     @Schema(description = "Counts of contract definitions", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer contractDefinitionsCount;
 
-    @Schema(description = "Counts of transfer processes", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Integer transferProcessesCount;
+    @Schema(description = "Counts of contract agreements", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Integer contractAgreementsCount;
+
+    @Schema(description = "Counts of incoming TransferProcesses", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Integer incomingTransferProcessesCount;
+
+    @Schema(description = "Counts of outgoing TransferProcesses", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Integer outgoingTransferProcessesCount;
 }

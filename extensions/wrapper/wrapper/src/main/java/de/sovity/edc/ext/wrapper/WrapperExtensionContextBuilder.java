@@ -24,6 +24,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.SupportedPolicyResource;
 import lombok.NoArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
+import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
@@ -49,7 +50,8 @@ public class WrapperExtensionContextBuilder {
             ContractDefinitionStore contractDefinitionStore,
             PolicyDefinitionStore policyDefinitionStore,
             PolicyEngine policyEngine,
-            TransferProcessStore transferProcessStore
+            TransferProcessStore transferProcessStore,
+            ContractAgreementService contractAgreementService
     ) {
         // Example API
         var idsEndpointService = new IdsEndpointService(config);
@@ -61,7 +63,8 @@ public class WrapperExtensionContextBuilder {
                 assetIndex,
                 policyDefinitionStore,
                 contractDefinitionStore,
-                transferProcessStore
+                transferProcessStore,
+                contractAgreementService
         );
         var kpiResource = new KpiResource(kpiApiService);
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
