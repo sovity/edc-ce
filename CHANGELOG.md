@@ -4,16 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ## UNRELEASED
 
-### Feature
+### Major Changes
+
+- Changed EDC Docker Image Variants to `edc-dev`, `edc-ce` and `edc-ce-mds`.
+- Changed Java Maven Artifact GroupIds to `de.sovity.edc.ext` and `de.sovity.edc`
+- Renamed `broker` to `ids-broker-client`.
+- Renamed `clearinghouse` to `ids-clearinghouse-client`.
+
+### Minor Changes
 
 - EDC API Wrapper + EDC API Client Bootstrap
-- broker-extension: Re-register assets at broker at connector startupt
+- Added Docker Image Tag `release` for latest releases.
+- Added Sovity Minimal Extension Package.
 
-### Changed
+### Patch Changes
 
+- Reworked Project, Docker Image and Extension documentations.
+- broker-extension: Re-register assets at broker at connector startup
 - broker-extension: Added a subsequent resource-id filtering after sparql query, to filter out resources that do not belong to the connector.
-
-### Dependencies
 - bump org.openapi.generator from 6.3.0 to 6.4.0
 - bump io.quarkus.platform:quarkus-bom
 - bump io.quarkus from 2.16.4.Final to 2.16.5.Final

@@ -2,7 +2,7 @@
 
 if [ ! $# -eq 2 ]
   then
-    echo "Provide X509 keystore file as parameter along keystore's password, e.g. \"$ get_client.sh ./mycert.p12 PASSWORD\""
+    echo "Provide X509 keystore file as parameter along keystore's password, e.g. \"$ generate_ski_aki.sh ./mycert.p12 PASSWORD\""
     exit 1
 fi
 

@@ -1,11 +1,11 @@
 name: EDC Image CI
 
 on:
-   push:
+  push:
     branches: [ main ]
-   release:
-     types: [published]
-   pull_request:
+  release:
+    types: [ published ]
+  pull_request:
     branches: [ main ]
 
 env:
@@ -19,8 +19,25 @@ jobs:
     strategy:
       matrix:
         imageVariants: [
-          { "buildArgs": "", "imageSuffix": "-mds" },
-          { "buildArgs": "-Pdev-edc", "imageSuffix": "" } ]
+          {
+            "imageName": "edc-dev",
+            "title": "EDC Connector (Dev)",
+            "description": "Extended EDC Connector built by sovity. This dev version contains no persistence or auth and can be used to quickly start a locally running EDC + EDC UI.",
+            "buildArgs": "-Pfs-vault -Pdmgmt-api-key"
+          },
+          {
+            "imageName": "edc-ce",
+            "title": "EDC Connector (Community Edition)",
+            "description": "Extended Community Edition EDC Connector built by sovity. Contains sovity's Community Edition EDC extensions and requires dataspace credentials to join an existing dataspace.",
+            "buildArgs": "-Pfs-vault -Pdmgmt-api-key -Ppostgres-flyway -Poauth2"
+          },
+          {
+            "imageName": "edc-ce-mds",
+            "title": "MDS EDC Connector (Community Edition)",
+            "description": "MDS Community Edition EDC Connector built by sovity. Configured for compatibility with the Mobility Data Space (MDS). This EDC requires dataspace credentials, an ids broker and an ids clearing house.",
+            "buildArgs": "-Pfs-vault -Pdmgmt-api-key -Ppostgres-flyway -Poauth2 -Pmds"
+          }
+        ]
     timeout-minutes: 30
     permissions:
       contents: read
@@ -50,7 +67,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BASE }}/${{ env.IMAGE_NAME }}${{ matrix.imageVariants.imageSuffix }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BASE }}/${{ matrix.imageVariants.imageName }}
+          labels: |
+            org.opencontainers.image.title=${{ matrix.imageVariants.title }}
+            org.opencontainers.image.description=${{ matrix.imageVariants.description }}
           tags: |
             type=schedule
             type=semver,pattern={{version}}
@@ -60,6 +80,7 @@ jobs:
             type=ref,event=pr
             type=sha
             type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=release,enable=${{ startsWith(github.ref, 'refs/tags/') }}
       - name: Build and push EDC image
         uses: docker/build-push-action@v4
         with:
@@ -70,4 +91,4 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BUILD_ARGS=${{ matrix.imageVariants.buildArgs }}
-            EDC_LAST_COMMIT_INFO_ARG="${{env.LAST_COMMIT_INFO}}"
+            EDC_LAST_COMMIT_INFO_ARG="${{ env.LAST_COMMIT_INFO }}"
