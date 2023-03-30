@@ -1,111 +1,175 @@
+<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+
+<a name="readme-top"></a>
+
+<!-- PROJECT SHIELDS -->
+
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url] [![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![Apache 2.0][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
+
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/sovity/edc-ui">
-    <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
-  </a>
+<a href="https://github.com/sovity/edc-extensions">
+<img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
+</a>
 
-<h3 align="center">EDC-Connector Extensions</h3>
-
-  <p align="center">
-    <a href="https://github.com/sovity/edc-extensions/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/sovity/edc-extensions/issues">Request Feature</a>
-  </p>
+<h3 align="center">EDC Extensions & EDC Community Edition</h3>
+<p align="center" style="padding-bottom:16px">
+Extended EDC Connector by sovity.
+<br />
+<a href="https://github.com/sovity/edc-extensions/issues">Report Bug</a>
+·
+<a href="https://github.com/sovity/edc-extensions/issues">Request Feature</a>
+</p>
 </div>
 
+<!-- TABLE OF CONTENTS -->
+<details>
+   <summary>Table of Contents</summary>
+   <ol>
+      <li><a href="#about-the-project">About The Project</a></li>
+      <li><a href="#our-edc-community-edition">Our EDC Community Edition</a></li>
+      <li><a href="#our-edc-extensions">Our EDC Extensions</a></li>
+      <li><a href="#compatibility">Compatibility</a></li>
+      <li><a href="#getting-started">Getting Started</a></li>
+      <li><a href="#contributing">Contributing</a></li>
+      <li><a href="#license">License</a></li>
+      <li><a href="#contact">Contact</a></li>
+   </ol>
+</details>
+
+<!-- ABOUT THE PROJECT -->
+
 ## About The Project
-In this repo are different extensions of the EDC-Connector, among others a Broker-Extension to communicate with an IDS-Broker as well as a ClearingHouse-Extension to communicate with an IDS-ClearingHouse.
+
+[Eclipse Dataspace Components](https://github.com/eclipse-edc) is a framework
+for building dataspaces, exchanging data securely with ensured data
+sovereignity.
+
+[sovity](https://sovity.de/) extends the EDC Connector's functionality with extensions to offer
+enterprise-ready managed services like "Connector-as-a-Service", out-of-the-box fully configured DAPS
+and integrations to existing other data space technologies.
+
+This repository contains both our EDC Community Editions and our
+EDC Extensions.
+
+Check out our [Getting Started Section](#getting-started) on how to run a local copy.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- COMPATIBILITY -->
+
+## Our EDC Community Edition
+
+Our EDC Community Edition takes available EDC Open Source extensions and combines them with our own
+open source extensions from this repository to build ready-to-use EDC Docker Images.
+
+See [here](./connector/README.md) for a list of our EDC Community Edition Docker Images.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Our EDC Extensions
+
+Feel free to explore our [EDC Extensions](./extensions).
+
+Critical extensions for compatibility with our EDC UI or general usability we packaged into
+our [Sovity EDC Extensions Package](./extensions/sovity-edc-extensions-package).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Compatibility
+
+Our EDC Community Edition and extensions are targeted to run with
+our [sovity/edc-ui](https://github.com/sovity/edc-ui).
+
+Our extensions and EDC Community Edition will use the current EDC Milestone with a certain delay.
+
+There is no support for past milestones, as there is no support for past EDC milestones.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- GETTING STARTED -->
 
 ## Getting Started
 
-To get started and run the extensions with an EDC, a sample docker-compose file is located in the root folder.
+The fastest way to get started is our [Getting Started Guide](./docs/getting-started/README.md)
+which takes you through the steops of configuring and starting our
+[docker-compose.yaml](docker-compose.yaml).
 
-### Configuration
-#### Basic Configuration
-- `EDC_IDS_TITLE`: _Title of the Connector_
-- `EDC_CONNECTOR_NAME:` _The name of the connector_
-- `EDC_IDS_DESCRIPTION`: _Description of the Connector_
-- `EDC_IDS_CURATOR:` _URL of the curator, i.e. the company, which configures data offerings etc._
-- `EDC_HOSTNAME:` _The host of the connector_
-- `EDC_IDS_ENDPOINT`: _URL of the Connectors endpoint_
-- `EDC_API_AUTH_KEY:` _The API authorization key of management API_
-      
-#### Data Space Configuration
-The mds-test environment is set by default.
-- `EDC_OAUTH_CLIENT_ID:` _To be able to start an EDC-Connector with the broker-extensions, the `SKI` and `AKI` of the connector certificate must be entered as `client-ID` in the docker-compose and the .jks must be placed under the path specified in the docker-compose (in the example in the folder `resources/vault/edc/`, see `EDC_KEYSTORE` setting)._
-- `EDC_KEYSTORE:` _Relative path to the keystore file_ 
-- `EDC_OAUTH_TOKEN_URL:` https://daps.test.mobility-dataspace.eu/token
-- `EDC_OAUTH_PROVIDER_JWKS_URL:` https://daps.test.mobility-dataspace.eu/jwks.json
-- `EDC_BROKER_BASE_URL:` https://broker.test.mobility-dataspace.eu
-- `EDC_CLEARINGHOUSE_LOG_URL`: https://clearing.test.mobility-dataspace.eu/messages/log
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Start
-1. Login into GitHub Container Registry (GHCR): `$ docker login ghcr.io`.
-2. Start via `$ docker compose up` in the docker-compose file folder
 
-### Test extension
-Use Postman (https://github.com/postmanlabs) and import collection located at `resources/docs/postman_collection.json`. Depending on your configuration changes, you need to adjust variables on collection `MDV > Variables > Current Value`
-- `api_key` needs to be aligned with `EDC_API_AUTH_KEY`
+<!-- CONTRIBUTING -->
 
-To test Broker functionality, simply execute steps
-1. `Publish Asset 1`
-2. `Publish Policy 1`
-3. `Publish ContractDefinition 1`: You will see a notification about registering resource at broker, which will then be reflected in the Broker's UI.
-4. `Delete ContractDefinition 1`: You will see a notification about unregistering the resource at broker.
+## Contributing
 
-### Additional Meta Information
-The Broker Extension supports the following additional meta information to be sent to the broker:
-```
-- id: "asset:prop:id"
-- name: "asset:prop:name"
-- contentType: "asset:prop:contenttype"
-- description: "asset:prop:description"
-- version: "asset:prop:version"
-- keywords: "asset:prop:keywords"
-- language: 'asset:prop:language'
-- publisher: "asset:prop:publisher"
-- standardLicense: "asset:prop:standardLicense"
-- endpointDocumentation: "asset:prop:endpointDocumentation"
+Contributions are what make the open source community such an amazing place to
+learn, inspire, and create. Any contributions you make are **greatly
+appreciated**.
 
-MDS-specific properties:
-- dataCategory: 'http://w3id.org/mds#dataCategory'
-- dataSubcategory: 'http://w3id.org/mds#dataSubcategory'
-- dataModel: 'http://w3id.org/mds#dataModel'
-- geoReferenceMethod: 'http://w3id.org/mds#geoReferenceMethod'
-- transportMode: 'http://w3id.org/mds#transportMode'
-```
+If you have a suggestion that would make this better, please fork the repo and
+create a pull request. You can also simply open an issue with the tag
+"enhancement". Don't forget to give the project a star! Thanks again!
 
-For an example of how the API calls are to be made, see the postman collection, where examples of the properties are
-also shown.
-## FAQ 
-### What should the client ID entry look like?
-Example of a client-ID entry:
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-`EDC_OAUTH_CLIENT_ID: 7X:7Y:...:B2:94:keyid:6A:2B:...:28:80`
+Our contribution guide can be found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-### How do you get the SKI and AKI of a p12 and how do you convert it to a jks?
-You can use a script (if you're on WSL or Linux) to generate the SKI, AKI and jks file.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-0. Make sure you're on Linux or on a bash console (e.g. WSL or Git Bash) and have openssl and keytool installed
-1. Navigate in the console to the resources/docs directory
-2. Run the script ``./get_client.sh [filepath].p12 [password]`` and substitute [filepath] to the p12 certificate filepath and 
-[password] to the certificate password
-3. The jks file will be generated in the same folder as your p12 file and the SKI/AKI combination is printed out in the console.
-Copy the SKI:AKI combination and use it to start the EDC (optionally also save it to your password manager).
-
-### Where should the connector certificate be stored?
-In the default configuration the connector certificate should be stored inside a `keystore.jks` in a folder `resources/vault/edc/` next to the docker-compose. The path and keystore name can be edited in the env-variable `EDC_KEYSTORE`.
-
-### Can I run a connector locally and consume data from an online connector?
-No, locally run connectors cannot exchange data with online connectors. A connector must have a proper URL + configuration and be accesible from the data provider via REST calls.
-
-## Backward Compatibility and Migration Support
-It is NOT a goal of this project to provide backward compatibility to the previous implementations.
-
+<!-- LICENSE -->
 
 ## License
-This project is licensed under the Apache License 2.0 - see [here](LICENSE) for details.
+
+Distributed under the Apache 2.0 License. See `LICENSE` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- CONTACT -->
 
 ## Contact
-Sovity GmbH - contact@sovity.de 
+
+contact@sovity.de
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
+[contributors-shield]:
+https://img.shields.io/github/contributors/sovity/edc-extensions.svg?style=for-the-badge
+
+[contributors-url]: https://github.com/sovity/edc-extensions/graphs/contributors
+
+[forks-shield]:
+https://img.shields.io/github/forks/sovity/edc-extensions.svg?style=for-the-badge
+
+[forks-url]: https://github.com/sovity/edc-extensions/network/members
+
+[stars-shield]:
+https://img.shields.io/github/stars/sovity/edc-extensions.svg?style=for-the-badge
+
+[stars-url]: https://github.com/sovity/edc-extensions/stargazers
+
+[issues-shield]:
+https://img.shields.io/github/issues/sovity/edc-extensions.svg?style=for-the-badge
+
+[issues-url]: https://github.com/sovity/edc-extensions/issues
+
+[license-shield]:
+https://img.shields.io/github/license/sovity/edc-extensions.svg?style=for-the-badge
+
+[license-url]: https://github.com/sovity/edc-extensions/blob/master/LICENSE.txt
+
+[linkedin-shield]:
+https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+
+[linkedin-url]: https://www.linkedin.com/company/sovity
