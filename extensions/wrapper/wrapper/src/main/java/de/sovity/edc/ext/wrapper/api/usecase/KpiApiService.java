@@ -64,14 +64,7 @@ public class KpiApiService {
         var querySpec = QuerySpec.Builder.newInstance().build();
         var transferProcesses = transferProcessStore.findAll(querySpec).toList();
 
-        var outgoing = getOutgoing(transferProcesses);
-        var incoming = getIncoming(transferProcesses);
-
-        var transferProcessDto = new TransferProcessStatesDto();
-        transferProcessDto.setOutgoingTransferProcessCounts(outgoing);
-        transferProcessDto.setIncomingTransferProcessCounts(incoming);
-
-        return transferProcessDto;
+        return new TransferProcessStatesDto(getIncoming(transferProcesses), getOutgoing(transferProcesses));
     }
 
     private Map<TransferProcessStates, Long> getIncoming(List<TransferProcess> transferProcesses) {
