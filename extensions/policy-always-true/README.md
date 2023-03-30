@@ -5,7 +5,7 @@
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
-<h3 align="center">EDC-Connector Extension:<br />Last Commit Info</h3>
+<h3 align="center">EDC-Connector Extension:<br />Always True Policy</h3>
 
   <p align="center">
     <a href="https://github.com/sovity/edc-extensions/issues">Report Bug</a>
