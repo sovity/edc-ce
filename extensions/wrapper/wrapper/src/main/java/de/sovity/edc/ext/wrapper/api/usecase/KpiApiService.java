@@ -25,7 +25,6 @@ import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -42,13 +41,11 @@ public class KpiApiService {
     private final ContractAgreementService contractAgreementService;
 
     public KpiResult kpiEndpoint() {
-        var querySpec = QuerySpec.Builder.newInstance().build();
-
-        var assetsCount = getAssetsCount(querySpec);
-        var policiesCount = getPoliciesCount(querySpec);
-        var contractDefinitionsCount = getContractDefinitionsCount(querySpec);
-        var contractAgreements = getContractAgreementsCount(querySpec);
-        var transferProcessDto = getTransferProcessesDto(querySpec);
+        var assetsCount = getAssetsCount();
+        var policiesCount = getPoliciesCount();
+        var contractDefinitionsCount = getContractDefinitionsCount();
+        var contractAgreements = getContractAgreementsCount();
+        var transferProcessDto = getTransferProcessesDto();
 
         return new KpiResult(
                 assetsCount,
@@ -58,50 +55,51 @@ public class KpiApiService {
                 transferProcessDto);
     }
 
-    private int getContractAgreementsCount(QuerySpec querySpec) {
+    private int getContractAgreementsCount() {
+        var querySpec = QuerySpec.Builder.newInstance().build();
         return contractAgreementService.query(querySpec).getContent().toList().size();
     }
 
-    private TransferProcessStatesDto getTransferProcessesDto(QuerySpec querySpec) {
+    private TransferProcessStatesDto getTransferProcessesDto() {
+        var querySpec = QuerySpec.Builder.newInstance().build();
         var transferProcesses = transferProcessStore.findAll(querySpec).toList();
 
         var outgoing = getOutgoing(transferProcesses);
         var incoming = getIncoming(transferProcesses);
 
-        return getTransferProcessStatesDto(outgoing, incoming);
-    }
-
-    @NotNull
-    private static TransferProcessStatesDto getTransferProcessStatesDto(Map<TransferProcessStates, Long> outgoing, Map<TransferProcessStates, Long> incoming) {
         var transferProcessDto = new TransferProcessStatesDto();
         transferProcessDto.setOutgoingTransferProcessCounts(outgoing);
         transferProcessDto.setIncomingTransferProcessCounts(incoming);
+
         return transferProcessDto;
     }
 
-    private static Map<TransferProcessStates, Long> getIncoming(List<TransferProcess> transferProcesses) {
+    private Map<TransferProcessStates, Long> getIncoming(List<TransferProcess> transferProcesses) {
         return transferProcesses.stream()
                 .filter(it -> it.getType() == TransferProcess.Type.CONSUMER)
                 .collect(groupingBy(it -> TransferProcessStates.from(it.getState()), counting()));
     }
 
-    private static Map<TransferProcessStates, Long> getOutgoing(List<TransferProcess> transferProcesses) {
+    private Map<TransferProcessStates, Long> getOutgoing(List<TransferProcess> transferProcesses) {
         return transferProcesses.stream()
                 .filter(it -> it.getType() == TransferProcess.Type.PROVIDER)
                 .collect(groupingBy(it -> TransferProcessStates.from(it.getState()), counting()));
     }
 
-    private int getContractDefinitionsCount(QuerySpec querySpec) {
+    private int getContractDefinitionsCount() {
+        var querySpec = QuerySpec.Builder.newInstance().build();
         var contractDefinitions = contractDefinitionStore.findAll(querySpec).toList();
         return contractDefinitions.size();
     }
 
-    private int getPoliciesCount(QuerySpec querySpec) {
+    private int getPoliciesCount() {
+        var querySpec = QuerySpec.Builder.newInstance().build();
         var policies = policyDefinitionStore.findAll(querySpec).toList();
         return policies.size();
     }
 
-    private int getAssetsCount(QuerySpec querySpec) {
+    private int getAssetsCount() {
+        var querySpec = QuerySpec.Builder.newInstance().build();
         var assets = assetIndex.queryAssets(querySpec).toList();
         return assets.size();
     }
