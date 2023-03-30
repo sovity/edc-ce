@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   edc-ui:
-    image: ${RELEASE_EDC_IMAGE}
+    image: ${RELEASE_EDC_UI_IMAGE}
     ports:
       - '11000:80'
     environment:
@@ -11,7 +11,7 @@ services:
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
       - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/ids/data
   edc:
-    image: ${RELEASE_EDC_UI_IMAGE}
+    image: ${RELEASE_EDC_IMAGE}
     depends_on:
       - postgresql
     environment:
@@ -29,7 +29,7 @@ services:
 
       # Data Space Configuration
       EDC_OAUTH_CLIENT_ID:
-      EDC_KEYSTORE: /resources/vault/edc/keystore.jks
+      EDC_KEYSTORE: /secrets/keystore.jks
       EDC_OAUTH_TOKEN_URL: https://daps.test.mobility-dataspace.eu/token
       EDC_OAUTH_PROVIDER_JWKS_URL: https://daps.test.mobility-dataspace.eu/jwks.json
       EDC_BROKER_BASE_URL: https://broker.test.mobility-dataspace.eu
@@ -49,7 +49,7 @@ services:
       EDC_WEB_REST_CORS_ENABLED: 'true'
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
-      EDC_VAULT: /resources/vault/edc/vault.properties
+      EDC_VAULT: /secrets/example-fs-vault.properties
       EDC_KEYSTORE_PASSWORD: password
       EDC_OAUTH_CERTIFICATE_ALIAS: 1
       EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
@@ -67,7 +67,7 @@ services:
       - '11004:11004'
       - '5005:5005'
     volumes:
-      - ./resources:/resources
+      - ./docs/getting-started/secrets:/secrets
   postgresql:
     image: docker.io/bitnami/postgresql:11
     restart: always
