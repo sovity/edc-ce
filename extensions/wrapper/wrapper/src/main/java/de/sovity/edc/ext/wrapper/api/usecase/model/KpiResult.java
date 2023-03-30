@@ -42,5 +42,5 @@ public class KpiResult {
 
     @Schema(description = "Counts of incoming and outgoing TransferProcesses and status",
             requiredMode = Schema.RequiredMode.REQUIRED)
-    private TransferProcessDto transferProcessDto;
+    private TransferProcessStatesDto transferProcessDto;
 }
