@@ -9,7 +9,7 @@ group = edcClientGroup
 plugins {
     `java-library`
     `maven-publish`
-    id("org.openapi.generator") version "6.3.0"
+    id("org.openapi.generator") version "6.4.0"
 }
 
 repositories {
@@ -26,7 +26,7 @@ dependencies {
     }
 
     // Generated Client's Dependencies
-    implementation("io.swagger:swagger-annotations:1.6.8")
+    implementation("io.swagger:swagger-annotations:1.6.10")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
