@@ -16,20 +16,20 @@ services:
       - postgresql
     environment:
       # Basic Configuration
-      EDC_CONNECTOR_NAME: 'example-connector'
-      EDC_IDS_ID: urn:connector:example-connector
-      EDC_IDS_TITLE: 'Example GmbH EDC Connector'
-      EDC_IDS_DESCRIPTION: 'Community Edition EDC Connector built by sovity with open-source extensions.'
-      EDC_IDS_CURATOR: https://example-gmbh.com
-      EDC_UI_CURATOR_ORGANIZATION_NAME: Example GmbH
+      EDC_CONNECTOR_NAME: 'sovity-connector'
+      EDC_IDS_ID: urn:connector:sovity-connector
+      EDC_IDS_TITLE: 'sovity GmbH EDC Connector'
+      EDC_IDS_DESCRIPTION: 'A demo connector for testing purpose built by sovity'
+      EDC_IDS_CURATOR: https://sovity.de
+      EDC_UI_CURATOR_ORGANIZATION_NAME: sovity GmbH
       EDC_HOSTNAME: edc
       IDS_WEBHOOK_ADDRESS: http://edc:11003
       EDC_IDS_ENDPOINT: http://edc:11003/api/v1/ids
       EDC_API_AUTH_KEY: ApiKeyDefaultValue
 
       # Data Space Configuration
-      EDC_OAUTH_CLIENT_ID:
-      EDC_KEYSTORE: /secrets/keystore.jks
+      EDC_OAUTH_CLIENT_ID: 35:76:5C:F3:09:0E:D1:98:7E:A7:C3:77:7C:37:A4:0C:D6:39:2E:6E:keyid:6D:2B:39:5A:A7:7A:BA:F4:9D:95:DA:AF:8C:42:9F:C8:8A:68:18:87
+      EDC_KEYSTORE: /secrets/sovity-demo-test.sovity.io.jks
       EDC_OAUTH_TOKEN_URL: https://daps.test.mobility-dataspace.eu/token
       EDC_OAUTH_PROVIDER_JWKS_URL: https://daps.test.mobility-dataspace.eu/jwks.json
       EDC_BROKER_BASE_URL: https://broker.test.mobility-dataspace.eu

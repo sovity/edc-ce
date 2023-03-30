@@ -17,13 +17,13 @@
 <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
 </a>
 
-<h3 align="center">EDC Extensions & EDC Community Edition</h3>
+<h3 align="center">EDC Community Edition & EDC Extensions</h3>
 <p align="center" style="padding-bottom:16px">
 Extended EDC Connector by sovity.
 <br />
-<a href="https://github.com/sovity/edc-extensions/issues">Report Bug</a>
+<a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
 ·
-<a href="https://github.com/sovity/edc-extensions/issues">Request Feature</a>
+<a href="https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md">Request Feature</a>
 </p>
 </div>
 
@@ -46,24 +46,22 @@ Extended EDC Connector by sovity.
 
 ## About The Project
 
-[Eclipse Dataspace Components](https://github.com/eclipse-edc) is a framework
-for building dataspaces, exchanging data securely with ensured data
-sovereignity.
+[Eclipse Dataspace Components](https://github.com/eclipse-edc) (EDC) is a framework
+for building dataspaces, exchanging data securely with ensured data sovereignty.
 
 [sovity](https://sovity.de/) extends the EDC Connector's functionality with extensions to offer
 enterprise-ready managed services like "Connector-as-a-Service", out-of-the-box fully configured DAPS
-and integrations to existing other data space technologies.
+and integrations to existing other dataspace technologies.
 
-This repository contains both our EDC Community Editions and our
-EDC Extensions.
+This repository contains both our EDC Community Editions with pre-configured EDC Extensions.
 
-Check out our [Getting Started Section](#getting-started) on how to run a local copy.
+Check out our [Getting Started Section](#getting-started) on how to run a local sovity EDC Community Edition.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- COMPATIBILITY -->
 
-## Our EDC Community Edition
+## sovity EDC Community Edition
 
 Our EDC Community Edition takes available EDC Open Source extensions and combines them with our own
 open source extensions from this repository to build ready-to-use EDC Docker Images.
@@ -72,12 +70,12 @@ See [here](./connector/README.md) for a list of our EDC Community Edition Docker
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Our EDC Extensions
+## sovity EDC Extensions
 
-Feel free to explore our [EDC Extensions](./extensions).
+Feel free to explore and use our [EDC Extensions](./extensions) with your EDC setup.
 
-Critical extensions for compatibility with our EDC UI or general usability we packaged into
-our [Sovity EDC Extensions Package](./extensions/sovity-edc-extensions-package).
+We packaged critical extensions for compatibility with our EDC UI and general usability features into
+[sovity EDC Extensions Package](./extensions/sovity-edc-extensions-package).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -86,9 +84,9 @@ our [Sovity EDC Extensions Package](./extensions/sovity-edc-extensions-package).
 Our EDC Community Edition and extensions are targeted to run with
 our [sovity/edc-ui](https://github.com/sovity/edc-ui).
 
-Our extensions and EDC Community Edition will use the current EDC Milestone with a certain delay.
-
-There is no support for past milestones, as there is no support for past EDC milestones.
+Our extensions and EDC Community Edition will use the current EDC Milestone with a certain delay
+to ensure reliability with a new release. Earlier releases currently are not supported, but will be
+supported, once the base EDC has a reliable version.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -97,7 +95,7 @@ There is no support for past milestones, as there is no support for past EDC mil
 ## Getting Started
 
 The fastest way to get started is our [Getting Started Guide](./docs/getting-started/README.md)
-which takes you through the steops of configuring and starting our
+which takes you through the steps of configuring and starting via
 [docker-compose.yaml](docker-compose.yaml).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -111,17 +109,10 @@ Contributions are what make the open source community such an amazing place to
 learn, inspire, and create. Any contributions you make are **greatly
 appreciated**.
 
-If you have a suggestion that would make this better, please fork the repo and
-create a pull request. You can also simply open an issue with the tag
-"enhancement". Don't forget to give the project a star! Thanks again!
+If you have a suggestion that would improve this project, please fork the repo and
+create a pull request. You can also simply open a [feature request](https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md). Don't forget to leave the project a ⭐, if you like the effort put into this version!
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-Our contribution guide can be found in [CONTRIBUTING.md](CONTRIBUTING.md).
+Our contribution guideline can be found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
