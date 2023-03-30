@@ -25,6 +25,7 @@ import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -67,10 +68,14 @@ public class KpiApiService {
         var outgoing = getOutgoing(transferProcesses);
         var incoming = getIncoming(transferProcesses);
 
+        return getTransferProcessStatesDto(outgoing, incoming);
+    }
+
+    @NotNull
+    private static TransferProcessStatesDto getTransferProcessStatesDto(Map<TransferProcessStates, Long> outgoing, Map<TransferProcessStates, Long> incoming) {
         var transferProcessDto = new TransferProcessStatesDto();
         transferProcessDto.setOutgoingTransferProcessCounts(outgoing);
         transferProcessDto.setIncomingTransferProcessCounts(incoming);
-
         return transferProcessDto;
     }
 
