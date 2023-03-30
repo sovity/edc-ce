@@ -102,14 +102,29 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
                     connectorBaseUrl,
                     connectorServiceSettings.getCurator(),
                     connectorServiceSettings.getMaintainer());
+            monitor.info("Registering Connector at Broker.");
             dispatcherRegistry.send(Object.class, registerConnectorMessage,
                     () -> CONTEXT_BROKER_REGISTRATION);
-            monitor.info("Registering Connector at Broker.");
+
+            monitor.info("Registering existing contractdefinition assets at Broker.");
+            registerExistingResources(brokerBaseUrl);
         } catch (MalformedURLException e) {
             throw new EdcException("Could not build brokerInfrastructureUrl", e);
         } catch (URISyntaxException e) {
             throw new EdcException("Could not create connectorBaseUrl. Hostname can be set using:" +
                     " edc.hostname", e);
+        }
+    }
+
+    private void registerExistingResources(URL brokerBaseUrl) {
+        var querySpec = new QuerySpec();
+        var contractDefinitions = contractDefinitionStore.findAll(querySpec).toList();
+        for (var contractDefinition : contractDefinitions) {
+            var assetHashmap = getAssetHashMap(contractDefinition.getId());
+            for (var resourceId : assetHashmap.keySet()) {
+                var asset = assetHashmap.get(resourceId);
+                registerResourceAtBroker(brokerBaseUrl, resourceId, asset);
+            }
         }
     }
 
@@ -239,16 +254,7 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
         }
     }
 
-    private List<String> resolveDeletedBrokerIds(ContractDefinitionDeleted contractDefinitionDeleted) {
-        var eventPayload = contractDefinitionDeleted.getPayload();
-        var contractDefinitionId = eventPayload.getContractDefinitionId();
-
-        return getDeletedBrokerIds(brokerBaseUrl, contractDefinitionId);
-    }
-
-    private HashMap<String, Asset> resolveCreatedAssets(ContractDefinitionCreated contractDefinitionCreated) {
-        var eventPayload = contractDefinitionCreated.getPayload();
-        var contractDefinitionId = eventPayload.getContractDefinitionId();
+    public HashMap<String, Asset> getAssetHashMap(String contractDefinitionId) {
         var contractDefinition = contractDefinitionStore.findById(contractDefinitionId);
 
         var resourceMap = new HashMap<String, Asset>();
@@ -265,6 +271,20 @@ public class IdsBrokerServiceImpl implements IdsBrokerService, EventSubscriber {
                 resourceMap.put(resourceId, asset);
             }
         }
+        return resourceMap;
+    }
+
+    private List<String> resolveDeletedBrokerIds(ContractDefinitionDeleted contractDefinitionDeleted) {
+        var eventPayload = contractDefinitionDeleted.getPayload();
+        var contractDefinitionId = eventPayload.getContractDefinitionId();
+
+        return getDeletedBrokerIds(brokerBaseUrl, contractDefinitionId);
+    }
+
+    private HashMap<String, Asset> resolveCreatedAssets(ContractDefinitionCreated contractDefinitionCreated) {
+        var eventPayload = contractDefinitionCreated.getPayload();
+        var contractDefinitionId = eventPayload.getContractDefinitionId();
+        HashMap<String, Asset> resourceMap = getAssetHashMap(contractDefinitionId);
 
         return resourceMap;
     }
