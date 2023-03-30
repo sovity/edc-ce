@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Feature
 
 - EDC API Wrapper + EDC API Client Bootstrap
+- wrapper-extension: added contractAgreements- and transferProcessesCounts
 
 ### Fixed
 
