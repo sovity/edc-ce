@@ -6,11 +6,19 @@ All notable changes to this project will be documented in this file.
 
 ### Feature
 
+- EDC API Wrapper + EDC API Client Bootstrap
+
 ### Fixed
 
 ### Changed
 
 - Added a subsequent resource-id filtering after sparql query, to filter out resources that do not belong to the connector.
+- bump org.openapi.generator from 6.3.0 to 6.4.0
+- bump io.quarkus.platform:quarkus-bom
+- bump io.quarkus from 2.16.4.Final to 2.16.5.Final
+- bump io.swagger.core.v3.swagger-gradle-plugin
+- bump io.swagger.core.v3:swagger-annotations-jakarta
+- bump io.swagger:swagger-annotations from 1.6.8 to 1.6.10
 
 ## [2.0.3] - 2023-03-24
 

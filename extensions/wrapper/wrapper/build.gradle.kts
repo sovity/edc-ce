@@ -5,9 +5,9 @@ val restAssured: String by project
 plugins {
     `java-library`
     `maven-publish`
-    id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.8" //./gradlew clean resolve
+    id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.9" //./gradlew clean resolve
     id("org.hidetake.swagger.generator") version "2.19.2" //./gradlew generateSwaggerUI
-    id("org.openapi.generator") version "6.3.0" //./gradlew openApiValidate && ./gradlew openApiGenerate
+    id("org.openapi.generator") version "6.4.0" //./gradlew openApiValidate && ./gradlew openApiGenerate
 }
 
 dependencies {
@@ -24,7 +24,7 @@ dependencies {
 
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
-    implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.8")
+    implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.9")
     implementation("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.9")
     implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
