@@ -17,17 +17,20 @@ package de.sovity.edc.ext.wrapper.api.usecase;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementResult;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class ContractAgreementApiService {
     private final AssetIndex assetIndex;
     private final ContractAgreementService contractAgreementService;
+    private final ContractNegotiationStore contractNegotiationStore;
 
     public ContractAgreementResult contractAgreementEndpoint() {
         var querySpec = QuerySpec.Builder.newInstance().build();
@@ -37,11 +40,13 @@ public class ContractAgreementApiService {
         for (var contractAgreement : contractAgreements) {
             var asset = assetIndex.findById(contractAgreement.getAssetId());
             var policy = contractAgreement.getPolicy();
+            var negotiations = contractNegotiationStore
+                    .queryNegotiations(querySpec)
+                    .filter(it -> it.getContractAgreement().getId().equals(contractAgreement.getId())).toList();
 
-            //TODO: contract negotiation details of contractagreement
             //TODO: transfer history of contractagreement
 
-            contractAgreementDtos.add(new ContractAgreementDto(contractAgreement, List.of(asset), List.of(policy)));
+            contractAgreementDtos.add(new ContractAgreementDto(contractAgreement, List.of(asset), List.of(policy), negotiations));
         }
 
         return new ContractAgreementResult(contractAgreementDtos);
