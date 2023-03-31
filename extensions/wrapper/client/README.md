@@ -16,13 +16,7 @@
 
 ## About this component
 
-Java API Client Library to be imported and used in Use Case Applications.
-
-## Why does this component exist?
-
-Use Case Applications will otherwise have to use the Data Management API. By offering a Java Client we can not
-only offer comfortable use of the EDC but also provide our own simplified workflows and additional functionalities
-seamlessly.
+Java API Client Library to be imported and used in arbitrary applications like use-case backends.
 
 ## License
 

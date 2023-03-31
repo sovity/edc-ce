@@ -16,7 +16,7 @@
 
 ## About this component
 
-Implementation of our Wrapper API Specification, also contains the EDC Extension part which will register the Endpoints
+Implementation of Wrapper API Specification, contains the EDC Extension part which will register the API endpoints
 in the EDC.
 
 ## License

@@ -16,13 +16,7 @@
 
 ## About this component
 
-TypeScript Client Library to be imported and used in either Use Case Applications or our EDC UI.
-
-## Why does this component exist?
-
-Our EDC UI or Use Case Applications will otherwise have to use the Data Management API. By offering this client we can
-not only offer comfortable use of the EDC but also provide our own simplified workflows and additional functionalities
-seamlessly.
+TypeScript Client Library to be imported and used in arbitrary applications like frontends or nodejs projects.
 
 ## License
 

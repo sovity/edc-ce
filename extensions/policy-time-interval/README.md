@@ -16,15 +16,15 @@
 
 ## About this Extension
 
-This extension adds a policy function that validates the consuming time moment.
+This extension adds a policy function that validates the time of data consumption.
 
 Adds permission function with left side expression `POLICY_EVALUATION_TIME` and supported
-operators `EQ`, `NEQ`, `LT`, `LEQ`, `GT`, `GEQ`. The right side expression is expected to be in the date
+operators `EQ`, `NEQ`, `LT`, `LEQ`, `GT`, `GEQ`. The right side expression is expected to be in the following date
 format `yyyy-MM-dd'T'HH:mm:ss.SSSXXX`.
 
 ## Why does this extension exist?
 
-Limiting data offers to specific valid durations is most comfortable when its done automatically.
+Limiting data offers to specific valid durations.
 
 ## License
 

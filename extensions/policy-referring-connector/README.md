@@ -16,11 +16,11 @@
 
 ## About this Extension
 
-This extension adds a policy function that allows validating the consuming EDC Connector's DAT Claim
-value `referringConnector`. This would allow you to limit access to your data offer to specific consumers.
+This extension adds a policy function that allows validating the consuming EDC Connector's DAT claim
+value `referringConnector`. This allows to limit data-offer access to specific consumers.
 
-Adds permission function with left side expression `REFERRING_CONNECTOR` with the only currently supported
-operator being `EQ`.
+Adds permission function with left side expression `REFERRING_CONNECTOR` with the currently supported
+`EQ` operator.
 
 ## Why does this extension exist?
 

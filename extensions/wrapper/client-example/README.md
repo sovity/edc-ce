@@ -16,7 +16,7 @@
 
 ## About this component
 
-Example Quarkus Application that uses our Java API Client Library.
+Example Quarkus Application that uses the Java API Client Library.
 
 ## Getting Started
 
