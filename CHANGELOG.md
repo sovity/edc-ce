@@ -15,7 +15,7 @@ All notable changes to this project will be documented in this file.
 
 - EDC API Wrapper + EDC API Client Bootstrap
 - Added Docker Image Tag `release` for latest releases.
-- Added Sovity Minimal Extension Package.
+- Added sovity Minimal Extension Package.
 - broker-extension: Re-register assets at broker at connector startupt
 - wrapper-extension: added contractAgreements- and transferProcessesCounts
 

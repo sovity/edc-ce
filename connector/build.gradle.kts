@@ -31,7 +31,7 @@ dependencies {
     // JDK Logger
     implementation("${edcGroup}:monitor-jdk-logger:${edcVersion}")
 
-    // Sovity Extensions Package
+    // sovity Extensions Package
     implementation(project(":extensions:sovity-edc-extensions-package"))
 
     // Optional: PostgreSQL + Flyway

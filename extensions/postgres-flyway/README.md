@@ -8,9 +8,9 @@
 <h3 align="center">EDC-Connector Extension:<br />PostgreSQL + Flyway</h3>
 
   <p align="center">
-    <a href="https://github.com/sovity/edc-extensions/issues">Report Bug</a>
+    <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
     ·
-    <a href="https://github.com/sovity/edc-extensions/issues">Request Feature</a>
+    <a href="https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md">Request Feature</a>
   </p>
 </div>
 
@@ -21,7 +21,7 @@ Flyway migrations and extensions.
 
 ### Details
 
-This extensions includes the edc-stores for the following edc-types:
+The extension includes the edc-stores for the following edc-types:
 
 - asset
 - contractdefinition
@@ -30,7 +30,7 @@ This extensions includes the edc-stores for the following edc-types:
 - policy
 - transferprocess
 
-Futhermore the `ConnectionsPool`, `transaction`-Extensions and the JDBC-Driver for the
+Futhermore, the `ConnectionsPool`, `transaction`-Extensions and the JDBC-Driver for the
 PostgreSQL-Database are provided.
 
 The tables are prepared using Flyway, which executes the .sql scripts included in
@@ -38,8 +38,8 @@ the `resources/migration` folder.
 
 ## Why does this extension exist?
 
-While the EDC is providing possibilities for individual persistence of stores, our goal is to provide a single working
-extension package to allow switching to a well-managed PostgreSQL persistence at ease.
+While the EDC is providing capabilities for individual persistence stores, our goal is to provide a single working
+extension package to allow switching to a well-managed PostgreSQL persistence.
 
 ## License
 

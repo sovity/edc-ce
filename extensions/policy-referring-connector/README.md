@@ -8,24 +8,24 @@
 <h3 align="center">EDC-Connector Extension:<br />Referring Connector Restricted Policy</h3>
 
   <p align="center">
-    <a href="https://github.com/sovity/edc-extensions/issues">Report Bug</a>
+    <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
     ·
-    <a href="https://github.com/sovity/edc-extensions/issues">Request Feature</a>
+    <a href="https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md">Request Feature</a>
   </p>
 </div>
 
 ## About this Extension
 
-This extension adds a policy function that allows validating the consuming EDC Connector's DAT Claim
-value `referringConnector`. This would allow you to limit access to your data offer to specific consumers.
+This extension adds a policy function that allows validating the consuming EDC Connector's DAT claim
+value `referringConnector`. This allows to limit data-offer access to specific consumers.
 
-Adds permisison function with left side expression `REFERRING_CONNECTOR` with the only currently supported
-operator being `EQ`.
+Adds permission function with left side expression `REFERRING_CONNECTOR` with the currently supported
+`EQ` operator.
 
 ## Why does this extension exist?
 
-Especially in data spaces with brokers not all data offers should be pushed to the broker. Some data offers are only
-for certain consumers, and this extension allows exactly that.
+Especially in data spaces where data is shared with business partners for specific purposes, data assets need to
+be offered to desired consumers only.
 
 ## License
 
