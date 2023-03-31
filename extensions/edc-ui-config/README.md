@@ -8,9 +8,9 @@
 <h3 align="center">EDC-Connector Extension:<br />EDC UI Extension Config</h3>
 
   <p align="center">
-    <a href="https://github.com/sovity/edc-extensions/issues">Report Bug</a>
+    <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
     ·
-    <a href="https://github.com/sovity/edc-extensions/issues">Request Feature</a>
+    <a href="https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md">Request Feature</a>
   </p>
 </div>
 
@@ -30,9 +30,6 @@ This excludes the Management Endpoint API URL itself, API keys or other sensitiv
 ## Why does this extension exist?
 
 By not having to repeat ourselves when configuring the EDC UI, we save time and reduce the risk of errors.
-
-This extension was created when we decided to add more information to the EDC UI, which would have required us to
-update the EDC UI configuration in many places.
 
 ## License
 

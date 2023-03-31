@@ -5,12 +5,12 @@
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
-<h3 align="center">EDC-Connector Extension:<br />IDS Broker Client Extensions</h3>
+<h3 align="center">EDC-Connector Extension:<br />Broker Client Extension</h3>
 
   <p align="center">
-    <a href="https://github.com/sovity/edc-extensions/issues">Report Bug</a>
+    <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
     ·
-    <a href="https://github.com/sovity/edc-extensions/issues">Request Feature</a>
+    <a href="https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md">Request Feature</a>
   </p>
 </div>
 
@@ -25,8 +25,10 @@ connector restrictions.
 
 ## Why does this extension exist?
 
-The Mobility Data Space (MDS) realizes their data space with the centralized catalog approach. They implemented an IDS
-Broker and needed an EDC Extension to take over communication.
+A centralized catalog has many advantages like:
+- Have a look at available data assets, offered in a data space, before joining the data space as a participant
+- See what data are offered by other participants, instead of fetching data catalogs manually
+-
 
 ## Sequence Diagram
 
@@ -37,17 +39,16 @@ Broker and needed an EDC Extension to take over communication.
 
 ### Supported Asset Properties
 The Broker Extension supports the following additional meta information to be sent to the broker:
-```
-- id: "asset:prop:id"
-- name: "asset:prop:name"
-- contentType: "asset:prop:contenttype"
-- description: "asset:prop:description"
-- version: "asset:prop:version"
-- keywords: "asset:prop:keywords"
+- id: 'asset:prop:id'
+- name: 'asset:prop:name'
+- contentType: 'asset:prop:contenttype'
+- description: 'asset:prop:description'
+- version: 'asset:prop:version'
+- keywords: 'asset:prop:keywords'
 - language: 'asset:prop:language'
-- publisher: "asset:prop:publisher"
-- standardLicense: "asset:prop:standardLicense"
-- endpointDocumentation: "asset:prop:endpointDocumentation"
+- publisher: 'asset:prop:publisher'
+- standardLicense: 'asset:prop:standardLicense'
+- endpointDocumentation: 'asset:prop:endpointDocumentation'
 
 MDS-specific properties:
 - dataCategory: 'http://w3id.org/mds#dataCategory'
@@ -55,19 +56,11 @@ MDS-specific properties:
 - dataModel: 'http://w3id.org/mds#dataModel'
 - geoReferenceMethod: 'http://w3id.org/mds#geoReferenceMethod'
 - transportMode: 'http://w3id.org/mds#transportMode'
-```
 
-## Getting Started
-
-Check out the [Getting Started](https://github.com/sovity/edc-extensions/tree/main/connector#getting-started) section of
-our EDC Community Edition.
-
-Our EDC Community Edition is built with both the clearing house and broker extensions and is ready to be used in the
-Mobility Data Space (MDS).
 
 ## Configuration
 
-The Broker URL can be configured with the ENV Var:
+The Broker URL can be configured with the ENV var:
 
 ```dotenv
 EDC_BROKER_BASE_URL=https://broker.test.mobility-dataspace.eu
