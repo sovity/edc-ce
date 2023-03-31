@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
+import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 
@@ -41,4 +42,7 @@ public class ContractAgreementDto {
 
     @Schema(description = "EDC Contract-Agreement policies")
     private List<Policy> policies;
+
+    @Schema(description = "EDC Contract-Agreement contract negotiations")
+    private List<ContractNegotiation> contractNegotiations;
 }
