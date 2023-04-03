@@ -20,7 +20,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 
 import java.util.List;
 
