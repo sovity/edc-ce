@@ -24,7 +24,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import static de.sovity.edc.ext.wrapper.TestUtils.createConfiguration;
 import static de.sovity.edc.ext.wrapper.TestUtils.givenManagementEndpoint;
-import static org.hamcrest.Matchers.equalTo;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
