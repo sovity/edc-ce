@@ -8,15 +8,15 @@
 <h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Client:<br />Wrapper API Implementation</h3>
 
   <p align="center">
-    <a href="https://github.com/sovity/edc-extensions/issues">Report Bug</a>
+    <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
     ·
-    <a href="https://github.com/sovity/edc-extensions/issues">Request Feature</a>
+    <a href="https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md">Request Feature</a>
   </p>
 </div>
 
 ## About this component
 
-Implementation of our Wrapper API Specification, also contains the EDC Extension part which will register the Endpoints
+Implementation of Wrapper API Specification, contains the EDC Extension part which will register the API endpoints
 in the EDC.
 
 ## License

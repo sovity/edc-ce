@@ -8,9 +8,9 @@
 <h3 align="center">EDC-Connector Extension:<br />Always True Policy</h3>
 
   <p align="center">
-    <a href="https://github.com/sovity/edc-extensions/issues">Report Bug</a>
+    <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
     ·
-    <a href="https://github.com/sovity/edc-extensions/issues">Request Feature</a>
+    <a href="https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md">Request Feature</a>
   </p>
 </div>
 
@@ -23,9 +23,6 @@ While the default behavior for contract definitions with empty policies is not "
 our UI will be ensuring non-empty access and contract policies.
 
 Therefore, it is of interest to have an `always-true` policy to explicitly enable full access in contract definitions.
-
-Since much of EDC production use is still testing of MVPs the ability to "just create a contract definition" is
-much welcomed.
 
 ## License
 Apache License 2.0 - see [LICENSE](../../LICENSE)
