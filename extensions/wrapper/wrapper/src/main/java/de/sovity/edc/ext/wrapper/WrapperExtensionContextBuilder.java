@@ -24,9 +24,11 @@ import de.sovity.edc.ext.wrapper.api.usecase.KpiResource;
 import de.sovity.edc.ext.wrapper.api.usecase.SupportedPolicyApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.SupportedPolicyResource;
 import lombok.NoArgsConstructor;
+import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
+import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
@@ -53,7 +55,9 @@ public class WrapperExtensionContextBuilder {
             PolicyDefinitionStore policyDefinitionStore,
             PolicyEngine policyEngine,
             TransferProcessStore transferProcessStore,
-            ContractAgreementService contractAgreementService
+            ContractAgreementService contractAgreementService,
+            ContractNegotiationStore contractNegotiationStore,
+            TransferProcessService transferProcessService
     ) {
         // Example API
         var idsEndpointService = new IdsEndpointService(config);
@@ -70,7 +74,7 @@ public class WrapperExtensionContextBuilder {
         var kpiResource = new KpiResource(kpiApiService);
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
         var supportedPolicyResource = new SupportedPolicyResource(supportedPolicyApiService);
-        var contractAgreementApiService = new ContractAgreementApiService(assetIndex, contractAgreementService);
+        var contractAgreementApiService = new ContractAgreementApiService(assetIndex, contractAgreementService, contractNegotiationStore, transferProcessService);
         var contractAgreementResource = new ContractAgreementResource(contractAgreementApiService);
 
         // Collect all JAX-RS resources
