@@ -31,8 +31,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Schema(description = "status-defining Contract-Agreements")
 public class ContractAgreementDto {
-    @Schema(description = "EDC Contract-Agreements")
-    private ContractAgreementDtoData contractAgreement;
+    @Schema(description = "Contract-Agreement Dto")
+    private String id;
 
     @Schema(description = "EDC Contract-Agreement asset")
     private AssetDto asset;
