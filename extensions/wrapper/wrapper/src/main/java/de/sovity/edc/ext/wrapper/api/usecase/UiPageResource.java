@@ -24,7 +24,7 @@ import jakarta.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 
 @Path("wrapper/ui/pages")
-@Tag(name = "Use Case", description = "EDC Connector Contract-Agreement Endpoint")
+@Tag(name = "UI", description = "EDC UI Endpoints")
 @RequiredArgsConstructor
 public class UiPageResource {
     private final ContractAgreementPageService contractAgreementApiService;
@@ -32,7 +32,7 @@ public class UiPageResource {
     @GET
     @Path("contract-agreement-page")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Wrapper Contract-Agreement API.")
+    @Operation(description = "Collect all data for Contract Agreement Page")
     public ContractAgreementPage contractAgreementEndpoint() {
         return contractAgreementApiService.contractAgreementPage();
     }

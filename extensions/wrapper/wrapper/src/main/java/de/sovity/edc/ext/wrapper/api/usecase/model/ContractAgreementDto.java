@@ -29,7 +29,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "EDC-status-defining Contract-Agreements")
+@Schema(description = "status-defining Contract-Agreements")
 public class ContractAgreementDto {
     @Schema(description = "EDC Contract-Agreements")
     private ContractAgreementDtoDto contractAgreement;

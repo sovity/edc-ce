@@ -28,6 +28,6 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @Schema(description = "Contract-Agreement Dto")
 public class ContractAgreementDtoDto {
-    @Schema(description = "EDC Contract-Agreement Dto")
+    @Schema(description = "Contract-Agreement Dto")
     private String id;
 }
