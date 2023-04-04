@@ -44,8 +44,8 @@ public class ContractAgreementDto {
     @Schema(description = "EDC Contract-Agreement policy")
     private Policy policy;
 
-    @Schema(description = "EDC Contract-Agreement contract negotiation")
-    private ContractNegotiation contractNegotiation;
+    @Schema(description = "EDC Contract-Agreement contract negotiations")
+    private List<ContractNegotiation> contractNegotiations;
 
     @Schema(description = "EDC Contract-Agreement transfer processes")
     private List<TransferProcess> transferProcesses;
