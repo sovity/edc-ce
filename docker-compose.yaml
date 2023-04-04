@@ -49,7 +49,6 @@ services:
       EDC_WEB_REST_CORS_ENABLED: 'true'
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
-      EDC_VAULT: /secrets/example-fs-vault.properties
       EDC_KEYSTORE_PASSWORD: password
       EDC_OAUTH_CERTIFICATE_ALIAS: 1
       EDC_OAUTH_PRIVATE_KEY_ALIAS: 1

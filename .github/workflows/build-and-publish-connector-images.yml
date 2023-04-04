@@ -23,7 +23,7 @@ jobs:
             "imageName": "edc-dev",
             "title": "EDC Connector (Dev)",
             "description": "Extended EDC Connector built by sovity. This dev version contains no persistence or auth and can be used to quickly start a locally running EDC + EDC UI.",
-            "buildArgs": "-Pfs-vault -Pdmgmt-api-key"
+            "buildArgs": "-Pdmgmt-api-key"
           },
           {
             "imageName": "edc-ce",
