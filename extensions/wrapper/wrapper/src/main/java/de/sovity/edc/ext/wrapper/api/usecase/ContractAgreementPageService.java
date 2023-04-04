@@ -45,20 +45,18 @@ public class ContractAgreementPageService {
 
     public ContractAgreementPage contractAgreementPage() {
         var querySpec = QuerySpec.Builder.newInstance().build();
-        var contractAgreementDtos = new ArrayList<ContractAgreementDto>();
         var contractAgreements = contractAgreementService.query(querySpec).getContent().toList();
         var negotiations = getNegotiations().stream().collect(groupingBy(it -> it.getContractAgreement().getId()));
 
-        contractAgreements.forEach(contractAgreement -> {
-            var assetDto = buildAssetDto(contractAgreement);
-            var policy = contractAgreement.getPolicy();
-            var transferProcessesDtos = buildTransferprocessDtos(contractAgreement);
-            var contractNegotiationDtos = buildContractNegotiationDtos(contractAgreement, negotiations);
-
-            contractAgreementDtos.add(new ContractAgreementDto(
-                    contractAgreement.getId(), assetDto, policy, contractNegotiationDtos, transferProcessesDtos
-            ));
-        });
+        var contractAgreementDtos = contractAgreements.stream().map(it ->
+            new ContractAgreementDto(
+                    it.getId(),
+                    buildAssetDto(it),
+                    it.getPolicy(),
+                    buildContractNegotiationDtos(it, negotiations),
+                    buildTransferprocessDtos(it)
+            )
+        ).toList();
 
         return new ContractAgreementPage(contractAgreementDtos);
     }
