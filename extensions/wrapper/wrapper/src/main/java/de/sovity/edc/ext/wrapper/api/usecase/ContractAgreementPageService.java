@@ -55,7 +55,7 @@ public class ContractAgreementPageService {
             var assetDto = buildAssetDto(contractAgreement);
             var policy = contractAgreement.getPolicy();
             var transferProcessesDtos = buildTransferprocessDtos(contractAgreement);
-            var contractNegotiationDtos = buildContractNegotiationDtos(negotiations, contractAgreement);
+            var contractNegotiationDtos = buildContractNegotiationDtos(contractAgreement, negotiations);
 
             contractAgreementDtos.add(new ContractAgreementDto(
                     contractAgreementDtoDto, assetDto, policy, contractNegotiationDtos, transferProcessesDtos
@@ -65,7 +65,7 @@ public class ContractAgreementPageService {
         return new ContractAgreementPage(contractAgreementDtos);
     }
 
-    private ArrayList<ContractNegotiationDto> buildContractNegotiationDtos(Map<String, List<ContractNegotiation>> negotiations, ContractAgreement contractAgreement) {
+    private ArrayList<ContractNegotiationDto> buildContractNegotiationDtos(ContractAgreement contractAgreement, Map<String, List<ContractNegotiation>> negotiations) {
         var agreementNegotiations = negotiations.getOrDefault(contractAgreement.getId(), List.of());
         var contractNegotiationDtos = new ArrayList<ContractNegotiationDto>();
 
