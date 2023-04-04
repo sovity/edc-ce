@@ -128,7 +128,7 @@ services:
       POSTGRESQL_PASSWORD: edc
       POSTGRESQL_DATABASE: edc
     volumes:
-      - 'postgresql:/bitnami/postgresql'
+      - 'postgresql2:/bitnami/postgresql'
 
 volumes:
   postgresql:
