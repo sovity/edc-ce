@@ -52,10 +52,10 @@ public class ContractAgreementPageService {
 
         for (var contractAgreement : contractAgreements) {
             var contractAgreementDtoDto = new ContractAgreementDtoDto(contractAgreement.getId());
-            var assetDto = getAssetDto(contractAgreement);
+            var assetDto = buildAssetDto(contractAgreement);
             var policy = contractAgreement.getPolicy();
-            var transferProcessesDtos = getTransferprocessDtos(contractAgreement);
-            var contractNegotiationDtos = getContractNegotiationDtos(negotiations, contractAgreement);
+            var transferProcessesDtos = buildTransferprocessDtos(contractAgreement);
+            var contractNegotiationDtos = buildContractNegotiationDtos(negotiations, contractAgreement);
 
             contractAgreementDtos.add(new ContractAgreementDto(
                     contractAgreementDtoDto, assetDto, policy, contractNegotiationDtos, transferProcessesDtos
@@ -65,7 +65,7 @@ public class ContractAgreementPageService {
         return new ContractAgreementPage(contractAgreementDtos);
     }
 
-    private ArrayList<ContractNegotiationDto> getContractNegotiationDtos(Map<String, List<ContractNegotiation>> negotiations, ContractAgreement contractAgreement) {
+    private ArrayList<ContractNegotiationDto> buildContractNegotiationDtos(Map<String, List<ContractNegotiation>> negotiations, ContractAgreement contractAgreement) {
         var agreementNegotiations = negotiations.getOrDefault(contractAgreement.getId(), List.of());
         var contractNegotiationDtos = new ArrayList<ContractNegotiationDto>();
 
@@ -75,7 +75,7 @@ public class ContractAgreementPageService {
         return contractNegotiationDtos;
     }
 
-    private ArrayList<TransferprocessDto> getTransferprocessDtos(ContractAgreement contractAgreement) {
+    private ArrayList<TransferprocessDto> buildTransferprocessDtos(ContractAgreement contractAgreement) {
         var transferProcesses = getTransferProcesses(contractAgreement);
         var transferProcessesDtos = new ArrayList<TransferprocessDto>();
         for (var transferProcess : transferProcesses) {
@@ -84,7 +84,7 @@ public class ContractAgreementPageService {
         return transferProcessesDtos;
     }
 
-    private AssetDto getAssetDto(ContractAgreement contractAgreement) {
+    private AssetDto buildAssetDto(ContractAgreement contractAgreement) {
         var assetId = getAsset(contractAgreement).getId();
         var assetDto = new AssetDto(assetId);
         return assetDto;
