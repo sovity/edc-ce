@@ -15,9 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.usecase;
 
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementPage;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
