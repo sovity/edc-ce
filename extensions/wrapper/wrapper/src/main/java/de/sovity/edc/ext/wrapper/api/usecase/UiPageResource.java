@@ -25,7 +25,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 
-@OpenAPIDefinition(info = @Info(title = "Wrapper Contract-Agreement API", version = "1.0.0"))
 @Path("wrapper/ui/pages")
 @Tag(name = "Use Case", description = "EDC Connector Contract-Agreement Endpoint")
 @RequiredArgsConstructor
