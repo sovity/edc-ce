@@ -5,38 +5,28 @@ services:
     ports:
       - '11000:80'
     environment:
-      EDC_UI_ACTIVE_PROFILE: sovity-open-source
-      EDC_UI_DATA_MANAGEMENT_API_URL: http://localhost:11002/api/v1/data
-      EDC_UI_DATA_MANAGEMENT_API_KEY: ApiKeyDefaultValue
-      EDC_UI_CONFIG_URL: edc-ui-config
-
-      # Optionally add other preconfigured other connector endpoints for catalog browser
-      EDC_UI_CATALOG_URLS: http://edc:11003/api/v1/ids/data
-
+      - EDC_UI_ACTIVE_PROFILE=sovity-open-source
+      - EDC_UI_CONFIG_URL=edc-ui-config
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/management
+      - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
+      - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/ids/data
   edc:
-    image: ghcr.io/sovity/edc:latest
+    image: ghcr.io/sovity/edc-dev:latest
     environment:
-      # Basic Configuration
-      EDC_CONNECTOR_NAME: 'example-connector'
-      EDC_IDS_ID: urn:connector:example-connector
-      EDC_IDS_TITLE: 'Example GmbH EDC Connector'
-      EDC_IDS_DESCRIPTION: 'Minimal configured Open Source EDC built by sovity'
-      EDC_IDS_CURATOR: https://example-gmbh.com
-      EDC_UI_CURATOR_ORGANIZATION_NAME: Example GmbH
-      EDC_HOSTNAME: edc
-      IDS_WEBHOOK_ADDRESS: http://edc:11003
-      EDC_IDS_ENDPOINT: http://edc:11003/api/v1/ids
+      MY_EDC_NAME_KEBAB_CASE: 'example-connector'
+      MY_EDC_TITLE: 'EDC Connector'
+      MY_EDC_DESCRIPTION: 'Community Edition EDC Connector by sovity'
+      MY_EDC_CURATOR_URL: 'https://example.com'
+      MY_EDC_CURATOR_NAME: 'Example GmbH'
+      MY_EDC_MAINTAINER_URL: 'https://sovity.de'
+      MY_EDC_MAINTAINER_NAME: 'sovity GmbH'
+
+      # Data Management API Key
       EDC_API_AUTH_KEY: ApiKeyDefaultValue
 
-      # Deployment Configuration
-      WEB_HTTP_PORT: 11001
-      WEB_HTTP_PATH: /api
-      WEB_HTTP_DATA_PORT: 11002
-      WEB_HTTP_DATA_PATH: /api/v1/data
-      WEB_HTTP_IDS_PORT: 11003
-      WEB_HTTP_IDS_PATH: /api/v1/ids
-      EDC_IDS_MAINTAINER: https://sovity.de
-      EDC_UI_MAINTAINER_ORGANIZATION_NAME: sovity GmbH
+      MY_EDC_FQDN: 'edc'
+      MY_EDC_PROTOCOL: 'http://'
+      MY_EDC_IDS_BASE_URL: 'http://edc:11003' # adds missing port
       EDC_WEB_REST_CORS_ENABLED: 'true'
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
@@ -44,4 +34,7 @@ services:
       - '11001:11001'
       - '11002:11002'
       - '11003:11003'
-      - '5005:5005'
+      - '11004:11004'
+      - '11005:5005'
+    volumes:
+      - ./secrets:/secrets

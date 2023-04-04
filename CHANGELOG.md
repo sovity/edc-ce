@@ -22,6 +22,9 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Fixed
 
+- Fixed getting started docker-compose-yaml to use the newly renamed `edc-dev`
+  image.
+
 ## [v0.0.1-milestone-8-sovity2] 24.03.2023
 
 ### Overview
