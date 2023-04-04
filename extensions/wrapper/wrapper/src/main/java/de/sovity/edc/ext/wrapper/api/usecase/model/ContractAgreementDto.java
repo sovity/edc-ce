@@ -33,19 +33,19 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "EDC-status-defining Contract-Agreementss")
+@Schema(description = "EDC-status-defining Contract-Agreements")
 public class ContractAgreementDto {
     @Schema(description = "EDC Contract-Agreements")
     private ContractAgreement contractAgreement;
 
-    @Schema(description = "EDC Contract-Agreement assets")
-    private List<Asset> assets;
+    @Schema(description = "EDC Contract-Agreement asset")
+    private Asset asset;
 
-    @Schema(description = "EDC Contract-Agreement policies")
-    private List<Policy> policies;
+    @Schema(description = "EDC Contract-Agreement policy")
+    private Policy policy;
 
-    @Schema(description = "EDC Contract-Agreement contract negotiations")
-    private List<ContractNegotiation> contractNegotiations;
+    @Schema(description = "EDC Contract-Agreement contract negotiation")
+    private ContractNegotiation contractNegotiation;
 
     @Schema(description = "EDC Contract-Agreement transfer processes")
     private List<TransferProcess> transferProcesses;

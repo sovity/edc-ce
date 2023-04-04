@@ -29,7 +29,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Schema(description = "EDC-status-defining Contract-Agreementss")
-public class ContractAgreementResult {
+public class ContractAgreementPage {
     @Schema(description = "EDC Contract-Agreements")
     private List<ContractAgreementDto> contractAgreements;
 }
