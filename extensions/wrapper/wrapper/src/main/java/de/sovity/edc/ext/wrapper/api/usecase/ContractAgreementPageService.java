@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper.api.usecase;
 
 import de.sovity.edc.ext.wrapper.api.usecase.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementDtoDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractNegotiationDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.TransferprocessDto;
@@ -50,6 +51,8 @@ public class ContractAgreementPageService {
         var negotiations = getNegotiations().stream().collect(groupingBy(it -> it.getContractAgreement().getId()));
 
         for (var contractAgreement : contractAgreements) {
+            var contractAgreementDtoDto = new ContractAgreementDtoDto(contractAgreement.getId());
+
             var assetId = getAsset(contractAgreement).getId();
             var assetDto = new AssetDto(assetId);
 
@@ -69,7 +72,7 @@ public class ContractAgreementPageService {
             }
 
             contractAgreementDtos.add(new ContractAgreementDto(
-                    contractAgreement, assetDto, policy, contractNegotiationDtos, transferProcessesDtos
+                    contractAgreementDtoDto, assetDto, policy, contractNegotiationDtos, transferProcessesDtos
             ));
         }
 
