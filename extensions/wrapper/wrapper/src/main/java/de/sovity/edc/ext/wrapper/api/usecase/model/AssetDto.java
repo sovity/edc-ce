@@ -21,7 +21,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
+import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.policy.model.Policy;
+import org.eclipse.edc.spi.types.domain.asset.Asset;
 
 import java.util.List;
 
@@ -30,20 +33,8 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "EDC-status-defining Contract-Agreements")
-public class ContractAgreementDto {
-    @Schema(description = "EDC Contract-Agreements")
-    private ContractAgreement contractAgreement;
-
-    @Schema(description = "EDC Contract-Agreement asset")
-    private AssetDto asset;
-
-    @Schema(description = "EDC Contract-Agreement policy")
-    private Policy policy;
-
-    @Schema(description = "EDC Contract-Agreement contract negotiations")
-    private List<ContractNegotiationDto> contractNegotiations;
-
-    @Schema(description = "EDC Contract-Agreement transfer processes")
-    private List<TransferprocessDto> transferProcesses;
+@Schema(description = "AssetDto")
+public class AssetDto {
+    @Schema(description = "ID of asset")
+    private String id;
 }
