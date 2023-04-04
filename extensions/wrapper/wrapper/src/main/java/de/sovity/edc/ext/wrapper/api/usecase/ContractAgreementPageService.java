@@ -14,8 +14,11 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase;
 
+import de.sovity.edc.ext.wrapper.api.usecase.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementPage;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ContractNegotiationDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.TransferprocessDto;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
@@ -47,13 +50,26 @@ public class ContractAgreementPageService {
         var negotiations = getNegotiations().stream().collect(groupingBy(it -> it.getContractAgreement().getId()));
 
         for (var contractAgreement : contractAgreements) {
-            var asset = getAsset(contractAgreement);
+            var assetId = getAsset(contractAgreement).getId();
+            var assetDto = new AssetDto(assetId);
+
             var policy = contractAgreement.getPolicy();
+
             var transferProcesses = getTransferProcesses(contractAgreement);
+            var transferProcessesDtos = new ArrayList<TransferprocessDto>();
+            for (var transferProcess : transferProcesses) {
+                transferProcessesDtos.add(new TransferprocessDto(transferProcess.getId()));
+            }
+
             var agreementNegotiations = negotiations.getOrDefault(contractAgreement.getId(), List.of());
+            var contractNegotiationDtos = new ArrayList<ContractNegotiationDto>();
+
+            for (var agreementNegotiation : agreementNegotiations) {
+                contractNegotiationDtos.add(new ContractNegotiationDto(agreementNegotiation.getId()));
+            }
 
             contractAgreementDtos.add(new ContractAgreementDto(
-                    contractAgreement, asset, policy, agreementNegotiations, transferProcesses
+                    contractAgreement, assetDto, policy, contractNegotiationDtos, transferProcessesDtos
             ));
         }
 
