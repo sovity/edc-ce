@@ -50,7 +50,7 @@ public class ContractAgreementPageService {
         var contractAgreements = contractAgreementService.query(querySpec).getContent().toList();
         var negotiations = getNegotiations().stream().collect(groupingBy(it -> it.getContractAgreement().getId()));
 
-        for (var contractAgreement : contractAgreements) {
+        contractAgreements.forEach(contractAgreement -> {
             var contractAgreementDtoDto = new ContractAgreementDtoData(contractAgreement.getId());
             var assetDto = buildAssetDto(contractAgreement);
             var policy = contractAgreement.getPolicy();
@@ -60,7 +60,7 @@ public class ContractAgreementPageService {
             contractAgreementDtos.add(new ContractAgreementDto(
                     contractAgreementDtoDto, assetDto, policy, contractNegotiationDtos, transferProcessesDtos
             ));
-        }
+        });
 
         return new ContractAgreementPage(contractAgreementDtos);
     }
