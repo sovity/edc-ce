@@ -31,6 +31,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.stream.Collectors.groupingBy;
+
 @RequiredArgsConstructor
 public class ContractAgreementPageService {
     private final AssetIndex assetIndex;
@@ -42,15 +44,16 @@ public class ContractAgreementPageService {
         var querySpec = QuerySpec.Builder.newInstance().build();
         var contractAgreementDtos = new ArrayList<ContractAgreementDto>();
         var contractAgreements = contractAgreementService.query(querySpec).getContent().toList();
+        var negotiations = getNegotiations().stream().collect(groupingBy(it -> it.getContractAgreement().getId()));
 
         for (var contractAgreement : contractAgreements) {
             var asset = getAsset(contractAgreement);
             var policy = contractAgreement.getPolicy();
-            var negotiation = getNegotiation(contractAgreement);
             var transferProcesses = getTransferProcesses(contractAgreement);
+            var agreementNegotiations = negotiations.getOrDefault(contractAgreement.getId(), List.of());
 
             contractAgreementDtos.add(new ContractAgreementDto(
-                    contractAgreement, asset, policy, negotiation, transferProcesses
+                    contractAgreement, asset, policy, agreementNegotiations, transferProcesses
             ));
         }
 
@@ -58,11 +61,9 @@ public class ContractAgreementPageService {
     }
 
     @NotNull
-    private ContractNegotiation getNegotiation(ContractAgreement contractAgreement) {
+    private List<ContractNegotiation> getNegotiations() {
         var querySpec = QuerySpec.Builder.newInstance().build();
-        return contractNegotiationStore
-                .queryNegotiations(querySpec)
-                .filter(it -> it.getContractAgreement().getId().equals(contractAgreement.getId())).findFirst().get();
+        return contractNegotiationStore.queryNegotiations(querySpec).toList();
     }
 
     private Asset getAsset(ContractAgreement contractAgreement) {
