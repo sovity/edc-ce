@@ -30,10 +30,10 @@ import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -52,24 +52,10 @@ public class ContractAgreementPageService {
 
         for (var contractAgreement : contractAgreements) {
             var contractAgreementDtoDto = new ContractAgreementDtoDto(contractAgreement.getId());
-
-            var assetId = getAsset(contractAgreement).getId();
-            var assetDto = new AssetDto(assetId);
-
+            var assetDto = getAssetDto(contractAgreement);
             var policy = contractAgreement.getPolicy();
-
-            var transferProcesses = getTransferProcesses(contractAgreement);
-            var transferProcessesDtos = new ArrayList<TransferprocessDto>();
-            for (var transferProcess : transferProcesses) {
-                transferProcessesDtos.add(new TransferprocessDto(transferProcess.getId()));
-            }
-
-            var agreementNegotiations = negotiations.getOrDefault(contractAgreement.getId(), List.of());
-            var contractNegotiationDtos = new ArrayList<ContractNegotiationDto>();
-
-            for (var agreementNegotiation : agreementNegotiations) {
-                contractNegotiationDtos.add(new ContractNegotiationDto(agreementNegotiation.getId()));
-            }
+            var transferProcessesDtos = getTransferprocessDtos(contractAgreement);
+            var contractNegotiationDtos = getContractNegotiationDtos(negotiations, contractAgreement);
 
             contractAgreementDtos.add(new ContractAgreementDto(
                     contractAgreementDtoDto, assetDto, policy, contractNegotiationDtos, transferProcessesDtos
@@ -79,7 +65,31 @@ public class ContractAgreementPageService {
         return new ContractAgreementPage(contractAgreementDtos);
     }
 
-    @NotNull
+    private static ArrayList<ContractNegotiationDto> getContractNegotiationDtos(Map<String, List<ContractNegotiation>> negotiations, ContractAgreement contractAgreement) {
+        var agreementNegotiations = negotiations.getOrDefault(contractAgreement.getId(), List.of());
+        var contractNegotiationDtos = new ArrayList<ContractNegotiationDto>();
+
+        for (var agreementNegotiation : agreementNegotiations) {
+            contractNegotiationDtos.add(new ContractNegotiationDto(agreementNegotiation.getId()));
+        }
+        return contractNegotiationDtos;
+    }
+
+    private ArrayList<TransferprocessDto> getTransferprocessDtos(ContractAgreement contractAgreement) {
+        var transferProcesses = getTransferProcesses(contractAgreement);
+        var transferProcessesDtos = new ArrayList<TransferprocessDto>();
+        for (var transferProcess : transferProcesses) {
+            transferProcessesDtos.add(new TransferprocessDto(transferProcess.getId()));
+        }
+        return transferProcessesDtos;
+    }
+
+    private AssetDto getAssetDto(ContractAgreement contractAgreement) {
+        var assetId = getAsset(contractAgreement).getId();
+        var assetDto = new AssetDto(assetId);
+        return assetDto;
+    }
+
     private List<ContractNegotiation> getNegotiations() {
         var querySpec = QuerySpec.Builder.newInstance().build();
         return contractNegotiationStore.queryNegotiations(querySpec).toList();
