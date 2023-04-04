@@ -28,7 +28,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "EDC-status-defining Contract-Agreementss")
+@Schema(description = "All data required for our UI's Contract Agreement Page.")
 public class ContractAgreementPage {
     @Schema(description = "EDC Contract-Agreements")
     private List<ContractAgreementDto> contractAgreements;
