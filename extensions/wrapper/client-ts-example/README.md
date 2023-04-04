@@ -5,7 +5,7 @@
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
-<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Client:<br />Quarkus Example Project</h3>
+<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Client:<br />TypeScript API Client Example</h3>
 
   <p align="center">
     <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
@@ -16,7 +16,9 @@
 
 ## About this component
 
-Example Quarkus Application that uses the Java API Client Library.
+Example Project that consumes the TypeScript API Client Library.
+
+The dependency itself is not part of the package.json as it is expected to be built and linked via `npm link`.
 
 ## Getting Started
 
@@ -34,8 +36,14 @@ docker compose -f docker-compose-dev.yaml pull
 # Launch Dev EDCs
 DEV_EDC_IMAGE=edc-dev-for-api-wrapper EDC_UI_ACTIVE_PROFILE=sovity-open-source docker compose -f docker-compose-dev.yaml up --scale postgresql=0 --scale postgresql2=0 -d
 
-# Launch Quarkus Application
-./gradlew :extensions:wrapper:client-example:quarkusDev
+# Generate OpenAPI & TypeScript Code
+./gradlew :extensions:wrapper:wrapper:clean :extensions:wrapper:wrapper:build
+
+# Build Client Library
+(cd extensions/wrapper/client-ts && npm install && npm run build)
+
+# Run Example Project
+(cd extensions/wrapper/client-ts-example && npm install && npm link ../client-ts && npm run dev)
 
 # Shut down Dev EDCs
 docker compose -f docker-compose-dev.yaml down -t 1
