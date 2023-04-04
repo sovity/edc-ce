@@ -32,7 +32,7 @@ import java.util.List;
 @Schema(description = "status-defining Contract-Agreements")
 public class ContractAgreementDto {
     @Schema(description = "EDC Contract-Agreements")
-    private ContractAgreementDtoDto contractAgreement;
+    private ContractAgreementDtoData contractAgreement;
 
     @Schema(description = "EDC Contract-Agreement asset")
     private AssetDto asset;

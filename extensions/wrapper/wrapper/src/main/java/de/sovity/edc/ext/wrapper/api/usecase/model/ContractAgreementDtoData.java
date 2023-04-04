@@ -27,7 +27,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Schema(description = "Contract-Agreement Dto")
-public class ContractAgreementDtoDto {
+public class ContractAgreementDtoData {
     @Schema(description = "Contract-Agreement Dto")
     private String id;
 }
