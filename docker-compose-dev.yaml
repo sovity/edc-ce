@@ -44,7 +44,6 @@ services:
       MY_EDC_JDBC_URL: jdbc:postgresql://postgresql:5432/edc
       MY_EDC_JDBC_USER: edc
       MY_EDC_JDBC_PASSWORD: edc
-      EDC_VAULT: /secrets/example-fs-vault.properties
       EDC_WEB_REST_CORS_ENABLED: 'true'
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
@@ -110,7 +109,6 @@ services:
       MY_EDC_JDBC_URL: jdbc:postgresql://postgresql2:5432/edc
       MY_EDC_JDBC_USER: edc
       MY_EDC_JDBC_PASSWORD: edc
-      EDC_VAULT: /secrets/example-fs-vault.properties
       EDC_WEB_REST_CORS_ENABLED: 'true'
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
