@@ -65,29 +65,21 @@ public class ContractAgreementPageService {
         return new ContractAgreementPage(contractAgreementDtos);
     }
 
-    private ArrayList<ContractNegotiationDto> buildContractNegotiationDtos(ContractAgreement contractAgreement, Map<String, List<ContractNegotiation>> negotiations) {
+    private List<ContractNegotiationDto> buildContractNegotiationDtos(ContractAgreement contractAgreement, Map<String, List<ContractNegotiation>> negotiations) {
         var agreementNegotiations = negotiations.getOrDefault(contractAgreement.getId(), List.of());
-        var contractNegotiationDtos = new ArrayList<ContractNegotiationDto>();
-
-        for (var agreementNegotiation : agreementNegotiations) {
-            contractNegotiationDtos.add(new ContractNegotiationDto(agreementNegotiation.getId()));
-        }
-        return contractNegotiationDtos;
+        return agreementNegotiations.stream()
+                .map(it -> new ContractNegotiationDto(it.getId()))
+                .toList();
     }
 
-    private ArrayList<TransferprocessDto> buildTransferprocessDtos(ContractAgreement contractAgreement) {
+    private List<TransferprocessDto> buildTransferprocessDtos(ContractAgreement contractAgreement) {
         var transferProcesses = getTransferProcesses(contractAgreement);
-        var transferProcessesDtos = new ArrayList<TransferprocessDto>();
-        for (var transferProcess : transferProcesses) {
-            transferProcessesDtos.add(new TransferprocessDto(transferProcess.getId()));
-        }
-        return transferProcessesDtos;
+        return transferProcesses.stream().map(it -> new TransferprocessDto(it.getId())).toList();
     }
 
     private AssetDto buildAssetDto(ContractAgreement contractAgreement) {
         var assetId = getAsset(contractAgreement).getId();
-        var assetDto = new AssetDto(assetId);
-        return assetDto;
+        return new AssetDto(assetId);
     }
 
     private List<ContractNegotiation> getNegotiations() {
@@ -101,13 +93,9 @@ public class ContractAgreementPageService {
 
     private List<TransferProcess> getTransferProcesses(ContractAgreement contractAgreement) {
         var querySpec = QuerySpec.Builder.newInstance().build();
-        var transferProcesses = new ArrayList<TransferProcess>();
         var processStream = transferProcessService.query(querySpec).getContent();
-        processStream.forEach(transferProcess -> {
-            if (transferProcess.getDataRequest().getContractId().equals(contractAgreement.getId())) {
-                transferProcesses.add(transferProcess);
-            }
-        });
-        return transferProcesses;
+        return processStream
+                .filter(transferProcess -> transferProcess.getDataRequest().getContractId().equals(contractAgreement.getId()))
+                .toList();
     }
 }
