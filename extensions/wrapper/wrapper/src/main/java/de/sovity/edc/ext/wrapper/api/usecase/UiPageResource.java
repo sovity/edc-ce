@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase;
 
-import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementResult;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementPage;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -26,17 +26,17 @@ import jakarta.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 
 @OpenAPIDefinition(info = @Info(title = "Wrapper Contract-Agreement API", version = "1.0.0"))
-@Path("wrapper/pages")
+@Path("wrapper/ui/pages")
 @Tag(name = "Use Case", description = "EDC Connector Contract-Agreement Endpoint")
 @RequiredArgsConstructor
-public class ContractAgreementResource {
-    private final ContractAgreementApiService contractAgreementService;
+public class UiPageResource {
+    private final ContractAgreementPageService contractAgreementApiService;
 
     @GET
-    @Path("contract-agreement")
+    @Path("contract-agreement-page")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Wrapper Contract-Agreement API.")
-    public ContractAgreementResult contractAgreementEndpoint() {
-        return contractAgreementService.contractAgreementEndpoint();
+    public ContractAgreementPage contractAgreementEndpoint() {
+        return contractAgreementApiService.contractAgreementPage();
     }
 }

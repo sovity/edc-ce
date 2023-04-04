@@ -15,7 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.usecase;
 
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementDto;
-import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementResult;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementPage;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
@@ -23,7 +23,6 @@ import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiat
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
-import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
@@ -33,41 +32,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class ContractAgreementApiService {
+public class ContractAgreementPageService {
     private final AssetIndex assetIndex;
     private final ContractAgreementService contractAgreementService;
     private final ContractNegotiationStore contractNegotiationStore;
     private final TransferProcessService transferProcessService;
 
-    public ContractAgreementResult contractAgreementEndpoint() {
+    public ContractAgreementPage contractAgreementPage() {
         var querySpec = QuerySpec.Builder.newInstance().build();
         var contractAgreementDtos = new ArrayList<ContractAgreementDto>();
         var contractAgreements = contractAgreementService.query(querySpec).getContent().toList();
 
         for (var contractAgreement : contractAgreements) {
             var asset = getAsset(contractAgreement);
-            var policy = getPolicy(contractAgreement);
-            var negotiations = getNegotiations(contractAgreement);
+            var policy = contractAgreement.getPolicy();
+            var negotiation = getNegotiation(contractAgreement);
             var transferProcesses = getTransferProcesses(contractAgreement);
 
             contractAgreementDtos.add(new ContractAgreementDto(
-                    contractAgreement, List.of(asset), List.of(policy), negotiations, transferProcesses
+                    contractAgreement, asset, policy, negotiation, transferProcesses
             ));
         }
 
-        return new ContractAgreementResult(contractAgreementDtos);
+        return new ContractAgreementPage(contractAgreementDtos);
     }
 
     @NotNull
-    private List<ContractNegotiation> getNegotiations(ContractAgreement contractAgreement) {
+    private ContractNegotiation getNegotiation(ContractAgreement contractAgreement) {
         var querySpec = QuerySpec.Builder.newInstance().build();
         return contractNegotiationStore
                 .queryNegotiations(querySpec)
-                .filter(it -> it.getContractAgreement().getId().equals(contractAgreement.getId())).toList();
-    }
-
-    private static Policy getPolicy(ContractAgreement contractAgreement) {
-        return contractAgreement.getPolicy();
+                .filter(it -> it.getContractAgreement().getId().equals(contractAgreement.getId())).findFirst().get();
     }
 
     private Asset getAsset(ContractAgreement contractAgreement) {

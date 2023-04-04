@@ -37,7 +37,7 @@ class ContractAgreementApiTest {
     ValidatableResponse whenKpiEndpoint() {
         return givenManagementEndpoint()
                 .when()
-                .get("wrapper/pages/contract-agreement")
+                .get("wrapper/ui/pages/contract-agreement-page")
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON);
