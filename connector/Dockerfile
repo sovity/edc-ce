@@ -20,7 +20,8 @@ ARG JVM_ARGS=""
 # Install curl, then delete apt indexes to save image space
 RUN apt update \
     && apt install -y curl \
-    && rm -rf /var/cache/apt/archives /var/lib/apt/lists
+    && rm -rf /var/cache/apt/archives /var/lib/apt/lists \
+    && touch /emtpy-properties-file.properties
 
 WORKDIR /app
 
