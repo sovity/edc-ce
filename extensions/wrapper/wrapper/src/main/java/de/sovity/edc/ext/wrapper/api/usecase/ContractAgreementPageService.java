@@ -65,7 +65,7 @@ public class ContractAgreementPageService {
         return new ContractAgreementPage(contractAgreementDtos);
     }
 
-    private static ArrayList<ContractNegotiationDto> getContractNegotiationDtos(Map<String, List<ContractNegotiation>> negotiations, ContractAgreement contractAgreement) {
+    private ArrayList<ContractNegotiationDto> getContractNegotiationDtos(Map<String, List<ContractNegotiation>> negotiations, ContractAgreement contractAgreement) {
         var agreementNegotiations = negotiations.getOrDefault(contractAgreement.getId(), List.of());
         var contractNegotiationDtos = new ArrayList<ContractNegotiationDto>();
 
