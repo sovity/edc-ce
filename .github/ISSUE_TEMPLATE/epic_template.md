@@ -2,7 +2,7 @@
 name: Epic
 about: Help us with new ideas
 title: ""
-labels: "epic"
+labels: "kind/epic"
 assignees: ""
 ---
 
