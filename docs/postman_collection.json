@@ -52,6 +52,52 @@
 			"response": []
 		},
 		{
+			"name": "1 Create Asset MDS",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "ApiKeyDefaultValue",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"asset\": {\n        \"properties\": {\n            \"asset:prop:name\": \"test-document\",\n            \"asset:prop:description\": \"test-document\",\n            \"asset:prop:id\": \"test-document\",\n            \"asset:prop:contenttype\": \"text/plain\",\n            \"asset:prop:version\": \"1.0\",\n            \"type\": \"AzureStorage\",\n            \"asset:prop:keywords\": \"keyword1,keyword2\",\n            \"asset:prop:language\": \"https://w3id.org/idsa/code/EN\",\n            \"asset:prop:publisher\": \"https://sovity.de/\",\n            \"asset:prop:standardLicense\":\"https://creativecommons.org/licenses/by/4.0/\",\n            \"asset:prop:endpointDocumentation\":\"https://github.com/Mobility-Data-Space/mobility-data-space/wiki/MDS-Ontology\",\n            \"http://w3id.org/mds#transportMode\": \"Road\",\n            \"http://w3id.org/mds#dataCategory\": \"Traffic Information\",\n            \"http://w3id.org/mds#dataSubcategory\": \"Hazard Warnings\",\n            \"http://w3id.org/mds#dataModel\": \"CSV\",\n            \"http://w3id.org/mds#geoReferenceMethod\": \"Geo Ref Method Test\"\n        }\n    },\n    \"dataAddress\": {\n        \"properties\": {\n            \"type\": \"HttpData\",\n            \"baseUrl\": \"https://google.de\"\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/management/assets",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"management",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "1 Delete Asset",
 			"event": [
 				{
