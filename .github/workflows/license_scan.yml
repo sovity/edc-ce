@@ -18,5 +18,6 @@ jobs:
         with:
           scan-type: "rootfs"
           scan-ref: "."
-          trivy-config: ".github/license_scan_config.yml"
+          scanners: "license"
+          severity: "CRITICAL,HIGH"
           exit-code: 1
