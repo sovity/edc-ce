@@ -71,7 +71,7 @@
 				"header": [
 					{
 						"key": "X-Api-Key",
-						"value": "pass",
+						"value": "ApiKeyDefaultValue",
 						"type": "default"
 					}
 				],
@@ -85,27 +85,46 @@
 					}
 				},
 				"url": {
-					"raw": "{{BASE_URL}}/management/assets/text-document",
+					"raw": "{{BASE_URL}}/management/assets/urn:artifact:http-pull",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
 						"management",
 						"assets",
-						"text-document"
+						"urn:artifact:http-pull"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "2 Create Policy Time-Ristricted",
+			"name": "2 Create Policy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204 No Content (if new asset) or 409 Conflict (if asset already exists)\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204, 409])",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "ApiKeyDefaultValue",
+						"type": "default"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": \"mydpf\",\r\n    \"edctype\": \"dataspaceconnector:dataplaneinstance\",\r\n    \"url\": \"http://daps-connector-a-dataplane-1:9999/api/dataplane/control/transfer\",\r\n    \"properties\": {\r\n        \"publicApiUrl\": \"http://daps-connector-a-dataplane-1:8185/public\"\r\n    },\r\n    \"allowedSourceTypes\": [\"HttpData\", \"HttpProxy\", \"HttpPush\"],\r\n    \"allowedDestTypes\": [\"HttpData\", \"HttpProxy\", \"HttpPush\"]\r\n}",
+					"raw": "{\n  \"id\": \"policy-id-2\",\n  \"policy\": {\n    \"permissions\": [\n      {\n        \"edctype\": \"dataspaceconnector:permission\",\n        \"id\": null,\n        \"target\": \"urn:artifact:http-pull\",\n        \"action\": {\n          \"type\": \"USE\",\n          \"includedIn\": null,\n          \"constraint\": null\n        },\n        \"assignee\": null,\n        \"assigner\": null,\n        \"constraints\": [],\n        \"duties\": []\n      }\n    ],\n    \"prohibitions\": [],\n    \"obligations\": [],\n    \"extensibleProperties\": {},\n    \"inheritsFrom\": null,\n    \"assigner\": null,\n    \"assignee\": null,\n    \"target\": null,\n    \"@type\": {\n      \"@policytype\": \"set\"\n    }\n  }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -232,7 +251,7 @@
 			"response": []
 		},
 		{
-			"name": "Delete ContractDefinition 1 Copy",
+			"name": "Delete ContractDefinition",
 			"event": [
 				{
 					"listen": "test",
@@ -276,40 +295,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"connectorId\": \"provider\",\r\n  \"connectorAddress\": \"http://edc:8282/api/v1/ids/data\",\r\n  \"protocol\": \"ids-multipart\",\r\n  \"offer\": {\r\n    \"offerId\": \"contract-definition-id-2:contract-negotiation-id-2\",\r\n    \"assetId\": \"urn:artifact:http-pull\",\r\n    \"policy\": {\r\n      \"uid\": \"contract-definition-id-2\",\r\n      \"permissions\": [\r\n        {\r\n          \"edctype\": \"dataspaceconnector:permission\",\r\n          \"uid\": null,\r\n          \"target\": \"urn:artifact:http-pull\",\r\n          \"action\": {\r\n            \"type\": \"USE\",\r\n            \"includedIn\": null,\r\n            \"constraint\": null\r\n          },\r\n          \"assignee\": null,\r\n          \"assigner\": null,\r\n          \"constraints\": [],\r\n          \"duties\": []\r\n        }\r\n      ],\r\n      \"prohibitions\": [],\r\n      \"obligations\": [],\r\n      \"extensibleProperties\": {},\r\n      \"inheritsFrom\": null,\r\n      \"assigner\": null,\r\n      \"assignee\": null,\r\n      \"target\": null,\r\n      \"@type\": {\r\n        \"@policytype\": \"set\"\r\n      }\r\n    },\r\n    \"asset\": {\r\n      \"properties\": {\r\n        \"ids:byteSize\": null,\r\n        \"asset:prop:id\": \"urn:artifact:http-pull\",\r\n        \"ids:fileName\": null\r\n      }\r\n    }\r\n  }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{BASE_URL_2}}/management/contractnegotiations",
-					"host": [
-						"{{BASE_URL_2}}"
-					],
-					"path": [
-						"management",
-						"contractnegotiations"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "(4. Contract Offer Time-Restricted)",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "X-Api-Key",
-						"value": "pass",
-						"type": "default"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"connectorId\": \"provider\",\r\n    \"connectorAddress\": \"http://edc:8282/api/v1/ids/data\",\r\n    \"protocol\": \"ids-multipart\",\r\n    \"offer\": {\r\n        \"offerId\": \"contract-definition-id-3:contract-negotiation-id-2\",\r\n        \"assetId\": \"urn:artifact:http-pull\",\r\n        \"policy\": {\r\n            \"uid\": \"policy-id-2\",\r\n            \"type\": \"SET\",\r\n            \"permissions\": [\r\n                {\r\n                    \"edctype\": \"dataspaceconnector:permission\",\r\n                    \"uid\": null,\r\n                    \"target\": \"urn:artifact:http-pull\",\r\n                    \"action\": {\r\n                        \"type\": \"USE\",\r\n                        \"includedIn\": null,\r\n                        \"constraint\": null\r\n                    },\r\n                    \"assignee\": null,\r\n                    \"assigner\": null,\r\n                    \"constraints\": [\r\n                        {\r\n                            \"edctype\": \"AtomicConstraint\",\r\n                            \"leftExpression\": {\r\n                                \"edctype\": \"dataspaceconnector:literalexpression\",\r\n                                \"value\": \"POLICY_EVALUATION_TIME\"\r\n                            },\r\n                            \"operator\": \"GT\",\r\n                            \"rightExpression\": {\r\n                                \"edctype\": \"dataspaceconnector:literalexpression\",\r\n                                \"value\": \"2018-12-31T23:00:00.000Z\"\r\n                            }\r\n                        },\r\n                        {\r\n                            \"edctype\": \"AtomicConstraint\",\r\n                            \"leftExpression\": {\r\n                                \"edctype\": \"dataspaceconnector:literalexpression\",\r\n                                \"value\": \"POLICY_EVALUATION_TIME\"\r\n                            },\r\n                            \"operator\": \"LT\",\r\n                            \"rightExpression\": {\r\n                                \"edctype\": \"dataspaceconnector:literalexpression\",\r\n                                \"value\": \"2023-12-31T23:00:00.000Z\"\r\n                            }\r\n                        }\r\n                    ],\r\n                    \"duties\": []\r\n                }\r\n            ]\r\n        }\r\n    },\r\n    \"asset\": {\r\n        \"properties\": {\r\n            \"ids:byteSize\": null,\r\n            \"asset:prop:id\": \"urn:artifact:http-pull\",\r\n            \"ids:fileName\": null\r\n        }\r\n    }\r\n}\r\n}",
+					"raw": "{\r\n    \"connectorId\": \"provider\",\r\n    \"connectorAddress\": \"http://edc:11003/api/v1/ids/data\",\r\n    \"protocol\": \"ids-multipart\",\r\n    \"offer\": {\r\n        \"offerId\": \"contract-definition-id-2:contract-negotiation-id-2\",\r\n        \"assetId\": \"urn:artifact:http-pull\",\r\n        \"policy\": {\r\n            \"uid\": \"policy-id-2\",\r\n            \"type\": \"SET\",\r\n            \"permissions\": [\r\n                {\r\n                    \"edctype\": \"dataspaceconnector:permission\",\r\n                    \"uid\": null,\r\n                    \"target\": \"urn:artifact:http-pull\",\r\n                    \"action\": {\r\n                        \"type\": \"USE\",\r\n                        \"includedIn\": null,\r\n                        \"constraint\": null\r\n                    },\r\n                    \"assignee\": null,\r\n                    \"assigner\": null,\r\n                    \"constraints\": [],\r\n                    \"duties\": []\r\n                }\r\n            ]\r\n        }\r\n    },\r\n    \"asset\": {\r\n        \"properties\": {\r\n            \"ids:byteSize\": null,\r\n            \"asset:prop:id\": \"urn:artifact:http-pull\",\r\n            \"ids:fileName\": null\r\n        }\r\n    }\r\n}\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -336,7 +322,7 @@
 				"header": [
 					{
 						"key": "X-Api-Key",
-						"value": "pass",
+						"value": "ApiKeyDefaultValue",
 						"type": "default"
 					}
 				],
