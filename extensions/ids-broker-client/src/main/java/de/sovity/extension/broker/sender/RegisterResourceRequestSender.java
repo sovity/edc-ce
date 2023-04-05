@@ -40,9 +40,12 @@ import java.util.List;
 import static org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.util.ResponseUtil.parseMultipartStringResponse;
 import static org.eclipse.edc.protocol.ids.jsonld.JsonLd.getObjectMapper;
 
-public class RegisterResourceRequestSender implements MultipartSenderDelegate<RegisterResourceMessage,
-        String> {
-
+public class RegisterResourceRequestSender implements MultipartSenderDelegate<RegisterResourceMessage, String> {
+    public static final String MDS_GEO_REFERENCE_METHOD = "http://w3id.org/mds#geoReferenceMethod";
+    public static final String MDS_DATA_MODEL = "http://w3id.org/mds#dataModel";
+    public static final String MDS_DATA_SUBCATEGORY = "http://w3id.org/mds#dataSubcategory";
+    public static final String MDS_DATA_CATEGORY = "http://w3id.org/mds#dataCategory";
+    public static final String MDS_TRANSPORT_MODE = "http://w3id.org/mds#transportMode";
     private ObjectMapper objectMapper;
 
     public RegisterResourceRequestSender(ObjectMapper objectMapper) {
@@ -104,12 +107,42 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                 .build();
 
         var json = (ObjectNode) objectMapper.readTree(objectMapper.writeValueAsString(resource));
-        json.set("http://w3id.org/mds#transportMode", buildTransportModeJson(transportMode));
-        json.set("http://w3id.org/mds#dataCategory", buildDataCategoryJson(dataCategory));
-        json.set("http://w3id.org/mds#dataSubcategory", buildDataSubcategoryJson(dataSubcategory));
-        json.set("http://w3id.org/mds#dataModel", buildDataModelJson(dataModel));
-        json.set("http://w3id.org/mds#geoReferenceMethod", buildGeoReferenceMethodJson(geoReferenceMethod));
+        buildTransportMode(transportMode, json);
+        buildDataCategory(dataCategory, json);
+        buildDataSubcategory(dataSubcategory, json);
+        buildDataModel(dataModel, json);
+        buildGeoReferenceMethod(geoReferenceMethod, json);
         return objectMapper.writeValueAsString(json);
+    }
+
+    private void buildGeoReferenceMethod(String geoReferenceMethod, ObjectNode json) {
+        if (geoReferenceMethod != null && !geoReferenceMethod.isBlank()) {
+            json.set(MDS_GEO_REFERENCE_METHOD, buildGeoReferenceMethodJson(geoReferenceMethod));
+        }
+    }
+
+    private void buildDataModel(String dataModel, ObjectNode json) {
+        if (dataModel != null && !dataModel.isBlank()) {
+            json.set(MDS_DATA_MODEL, buildDataModelJson(dataModel));
+        }
+    }
+
+    private void buildDataSubcategory(String dataSubcategory, ObjectNode json) {
+        if (dataSubcategory != null && !dataSubcategory.isBlank()) {
+            json.set(MDS_DATA_SUBCATEGORY, buildDataSubcategoryJson(dataSubcategory));
+        }
+    }
+
+    private void buildDataCategory(String dataCategory, ObjectNode json) {
+        if (dataCategory != null && !dataCategory.isBlank()) {
+            json.set(MDS_DATA_CATEGORY, buildDataCategoryJson(dataCategory));
+        }
+    }
+
+    private void buildTransportMode(String transportMode, ObjectNode json) {
+        if (transportMode != null && !transportMode.isBlank()) {
+            json.set(MDS_TRANSPORT_MODE, buildTransportModeJson(transportMode));
+        }
     }
 
     private ObjectNode buildGeoReferenceMethodJson(String geoReferenceMethod) {
@@ -140,23 +173,23 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
     }
 
     private String getAssetGeoReferenceMethod(RegisterResourceMessage registerResourceMessage) {
-        return getAssetProperty(registerResourceMessage, "http://w3id.org/mds#geoReferenceMethod");
+        return getAssetProperty(registerResourceMessage, MDS_GEO_REFERENCE_METHOD);
     }
 
     private String getAssetDataModel(RegisterResourceMessage registerResourceMessage) {
-        return getAssetProperty(registerResourceMessage, "http://w3id.org/mds#dataModel");
+        return getAssetProperty(registerResourceMessage, MDS_DATA_MODEL);
     }
 
     private String getAssetDataSubcategory(RegisterResourceMessage registerResourceMessage) {
-        return getAssetProperty(registerResourceMessage, "http://w3id.org/mds#dataSubcategory");
+        return getAssetProperty(registerResourceMessage, MDS_DATA_SUBCATEGORY);
     }
 
     private String getAssetDataCategory(RegisterResourceMessage registerResourceMessage) {
-        return getAssetProperty(registerResourceMessage, "http://w3id.org/mds#dataCategory");
+        return getAssetProperty(registerResourceMessage, MDS_DATA_CATEGORY);
     }
 
     private String getAssetTransportMode(RegisterResourceMessage registerResourceMessage) {
-        return getAssetProperty(registerResourceMessage, "http://w3id.org/mds#transportMode");
+        return getAssetProperty(registerResourceMessage, MDS_TRANSPORT_MODE);
     }
 
     private String getAssetEndpointDocumentation(RegisterResourceMessage registerResourceMessage) {
