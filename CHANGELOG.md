@@ -11,6 +11,9 @@ All notable changes to this project will be documented in this file.
 - Wrong image tag in env file
 - `EDC_IDS_ENDPOINT` was not set correctly on image build
 
+### Changed
+- Reverted docker-compose.yaml to run only one connector
+
 ## [3.0.0] - 2023-04-04
 
 ### Major Changes
