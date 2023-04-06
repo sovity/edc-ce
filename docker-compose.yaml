@@ -5,7 +5,7 @@ services:
     ports:
       - '11000:80'
     environment:
-      - EDC_UI_ACTIVE_PROFILE=mds-open-source
+      - EDC_UI_ACTIVE_PROFILE=${EDC_UI_ACTIVE_PROFILE}
       - EDC_UI_CONFIG_URL=edc-ui-config
       - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/management
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
@@ -15,57 +15,44 @@ services:
     depends_on:
       - postgresql
     environment:
-      # Basic Configuration
-      EDC_CONNECTOR_NAME: 'example-connector'
-      EDC_IDS_ID: urn:connector:example-connector
-      EDC_IDS_TITLE: 'Example GmbH EDC Connector'
-      EDC_IDS_DESCRIPTION: 'Community Edition EDC Connector built by sovity with open-source extensions.'
-      EDC_IDS_CURATOR: https://example-gmbh.com
-      EDC_UI_CURATOR_ORGANIZATION_NAME: Example GmbH
-      EDC_HOSTNAME: edc
-      IDS_WEBHOOK_ADDRESS: http://edc:11003
-      EDC_IDS_ENDPOINT: http://edc:11003/api/v1/ids
+      MY_EDC_NAME_KEBAB_CASE: "example-connector"
+      MY_EDC_TITLE: "EDC Connector"
+      MY_EDC_DESCRIPTION: "Community Edition EDC Connector by sovity"
+      MY_EDC_CURATOR_URL: "https://example.com"
+      MY_EDC_CURATOR_NAME: "Example GmbH"
+      MY_EDC_MAINTAINER_URL: "https://sovity.de"
+      MY_EDC_MAINTAINER_NAME: "sovity GmbH"
+
+      # Data Management API Key
       EDC_API_AUTH_KEY: ApiKeyDefaultValue
 
       # Data Space Configuration
-      EDC_OAUTH_CLIENT_ID:
-      EDC_KEYSTORE: /secrets/keystore.jks
+      EDC_OAUTH_CLIENT_ID: ${EDC_OAUTH_CLIENT_ID}
       EDC_OAUTH_TOKEN_URL: https://daps.test.mobility-dataspace.eu/token
       EDC_OAUTH_PROVIDER_JWKS_URL: https://daps.test.mobility-dataspace.eu/jwks.json
       EDC_BROKER_BASE_URL: https://broker.test.mobility-dataspace.eu
       EDC_CLEARINGHOUSE_LOG_URL: https://clearing.test.mobility-dataspace.eu/messages/log
-
-      # Deployment Configuration
-      WEB_HTTP_PORT: 11001
-      WEB_HTTP_PATH: /api
-      WEB_HTTP_MANAGEMENT_PORT: 11002
-      WEB_HTTP_MANAGEMENT_PATH: /api/v1/management
-      WEB_HTTP_PROTOCOL_PORT: 11003
-      WEB_HTTP_PROTOCOL_PATH: /api/v1/ids
-      WEB_HTTP_CONTROL_PORT: 11004
-      WEB_HTTP_CONTROL_PATH: /api/v1/control
-      EDC_IDS_MAINTAINER: https://sovity.de
-      EDC_UI_MAINTAINER_ORGANIZATION_NAME: sovity GmbH
-      EDC_WEB_REST_CORS_ENABLED: 'true'
-      EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
-      EDC_WEB_REST_CORS_ORIGINS: '*'
-      EDC_VAULT: /secrets/example-fs-vault.properties
+      EDC_KEYSTORE: /secrets/keystore.jks
       EDC_KEYSTORE_PASSWORD: password
       EDC_OAUTH_CERTIFICATE_ALIAS: 1
       EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
-      EDC_OAUTH_PROVIDER_AUDIENCE: idsc:IDS_CONNECTORS_ALL
-      EDC_FLYWAY_POSTGRES_JDBC_URL: jdbc:postgresql://postgresql:5432/edc
-      EDC_FLYWAY_POSTGRES_JDBC_USER: edc
-      EDC_FLYWAY_POSTGRES_JDBC_PASSWORD: edc
 
-      # Extension Configuration
-      POLICY_BROKER_BLACKLIST: REFERRING_CONNECTOR
+      MY_EDC_PROTOCOL: "http://"
+      MY_EDC_FQDN: "edc"
+      MY_EDC_IDS_BASE_URL: "http://edc:11003"
+
+      MY_EDC_JDBC_URL: jdbc:postgresql://postgresql:5432/edc
+      MY_EDC_JDBC_USER: edc
+      MY_EDC_JDBC_PASSWORD: edc
+      EDC_WEB_REST_CORS_ENABLED: 'true'
+      EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
+      EDC_WEB_REST_CORS_ORIGINS: '*'
     ports:
       - '11001:11001'
       - '11002:11002'
       - '11003:11003'
       - '11004:11004'
-      - '5005:5005'
+      - '11005:5005'
     volumes:
       - ./docs/getting-started/secrets:/secrets
   postgresql:
@@ -78,6 +65,73 @@ services:
     volumes:
       - 'postgresql:/bitnami/postgresql'
 
+  edc-ui2:
+    image: ${RELEASE_EDC_UI_IMAGE}
+    ports:
+      - '22000:80'
+    environment:
+      - EDC_UI_ACTIVE_PROFILE=${EDC_UI_ACTIVE_PROFILE}
+      - EDC_UI_CONFIG_URL=edc-ui-config
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:22002/api/v1/management
+      - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
+      - EDC_UI_CATALOG_URLS=http://edc:22003/api/v1/ids/data
+  edc2:
+    image: ${RELEASE_EDC_IMAGE}
+    depends_on:
+      - postgresql2
+    environment:
+      MY_EDC_NAME_KEBAB_CASE: "example-connector"
+      MY_EDC_TITLE: "EDC Connector"
+      MY_EDC_DESCRIPTION: "Community Edition EDC Connector by sovity"
+      MY_EDC_CURATOR_URL: "https://example.com"
+      MY_EDC_CURATOR_NAME: "Example GmbH"
+      MY_EDC_MAINTAINER_URL: "https://sovity.de"
+      MY_EDC_MAINTAINER_NAME: "sovity GmbH"
+
+      # Data Management API Key
+      EDC_API_AUTH_KEY: ApiKeyDefaultValue
+
+      # Data Space Configuration
+      EDC_OAUTH_CLIENT_ID: ${EDC_OAUTH_CLIENT_ID}
+      EDC_OAUTH_TOKEN_URL: https://daps.test.mobility-dataspace.eu/token
+      EDC_OAUTH_PROVIDER_JWKS_URL: https://daps.test.mobility-dataspace.eu/jwks.json
+      EDC_BROKER_BASE_URL: https://broker.test.mobility-dataspace.eu
+      EDC_CLEARINGHOUSE_LOG_URL: https://clearing.test.mobility-dataspace.eu/messages/log
+      EDC_KEYSTORE: /secrets/keystore.jks
+      EDC_KEYSTORE_PASSWORD: password
+      EDC_OAUTH_CERTIFICATE_ALIAS: 1
+      EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
+
+      MY_EDC_PROTOCOL: "http://"
+      MY_EDC_FQDN: "edc2"
+      MY_EDC_IDS_BASE_URL: "http://edc2:11003"
+
+      MY_EDC_JDBC_URL: jdbc:postgresql://postgresql2:5432/edc
+      MY_EDC_JDBC_USER: edc
+      MY_EDC_JDBC_PASSWORD: edc
+      EDC_WEB_REST_CORS_ENABLED: 'true'
+      EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
+      EDC_WEB_REST_CORS_ORIGINS: '*'
+    ports:
+      - '22001:11001'
+      - '22002:11002'
+      - '22003:11003'
+      - '22004:11004'
+      - '22005:5005'
+    volumes:
+      - ./docs/getting-started/secrets:/secrets
+  postgresql2:
+    image: docker.io/bitnami/postgresql:11
+    restart: always
+    environment:
+      POSTGRESQL_USERNAME: edc
+      POSTGRESQL_PASSWORD: edc
+      POSTGRESQL_DATABASE: edc
+    volumes:
+      - 'postgresql2:/bitnami/postgresql'
+
 volumes:
   postgresql:
+    driver: local
+  postgresql2:
     driver: local

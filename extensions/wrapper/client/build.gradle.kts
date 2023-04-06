@@ -9,7 +9,7 @@ group = sovityEdcClientGroup
 plugins {
     `java-library`
     `maven-publish`
-    id("org.openapi.generator") version "6.4.0"
+    id("org.openapi.generator") version "6.5.0"
 }
 
 repositories {

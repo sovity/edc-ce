@@ -2,7 +2,7 @@
 name: Feature Request
 about: Help us with new features
 title: ""
-labels: "enhancement"
+labels: "kind/enhancement"
 assignees: ""
 ---
 
