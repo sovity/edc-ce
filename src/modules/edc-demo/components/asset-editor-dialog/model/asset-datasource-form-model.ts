@@ -24,10 +24,6 @@ export interface AssetDatasourceFormModel {
   httpUrl: FormControl<string>;
   httpMethod: FormControl<string>;
 
-  httpRequestBodyEnabled: FormControl<boolean>;
-  httpRequestBodyValue: FormControl<string>;
-  httpContentType: FormControl<string>;
-
   httpAuthHeaderType: FormControl<HttpDatasourceAuthHeaderType>;
   httpAuthHeaderName: FormControl<string>;
   httpAuthHeaderValue: FormControl<string>;

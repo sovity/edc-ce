@@ -20,6 +20,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Removed
 
+- Removed Datasource Payload support, it is probably only intended for Push
+
 #### Fixed
 
 - Fixed getting started docker-compose-yaml to use the newly renamed `edc-dev`

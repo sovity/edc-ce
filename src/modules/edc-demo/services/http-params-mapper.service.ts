@@ -27,8 +27,6 @@ export class HttpRequestParamsMapper {
       type: 'HttpData',
       baseUrl: httpRequestParams.url,
       method: httpRequestParams.method,
-      body: httpRequestParams.body,
-      contentType: httpRequestParams.contentType,
       authKey: httpRequestParams.authHeaderName,
       authCode: httpRequestParams.authHeaderValue,
       secretName: httpRequestParams.authHeaderSecretName,
@@ -66,8 +64,6 @@ export class HttpRequestParamsMapper {
 
     // Datasource Specific Values
     let datasourceFormValue = formValue as AssetDatasourceFormValue;
-    let body = datasourceFormValue?.httpRequestBodyValue || null;
-    let contentType = datasourceFormValue?.httpContentType || null;
 
     return {
       url: formValue?.httpUrl?.trim() ?? '',
@@ -75,8 +71,6 @@ export class HttpRequestParamsMapper {
       authHeaderName,
       authHeaderValue,
       authHeaderSecretName,
-      body,
-      contentType,
       headers: this.buildHttpHeaders(formValue?.httpHeaders ?? []),
     };
   }

@@ -336,60 +336,6 @@
                 Add Additional Header
               </button>
             </div>
-
-            <div class="section-title">Payload</div>
-
-            <!-- Add Payload Button -->
-            <div class="flex flex-row mb-[10px]">
-              <button
-                *ngIf="!form.datasource.controls.httpRequestBodyEnabled.value"
-                mat-button
-                color="primary"
-                (click)="
-                  form.datasource.controls.httpRequestBodyEnabled.setValue(true)
-                ">
-                Add Payload
-              </button>
-            </div>
-
-            <ng-container
-              *ngIf="form.datasource.controls.httpRequestBodyEnabled.value">
-              <!-- Request Content Type -->
-              <mat-form-field class="grow">
-                <mat-label>Content Type</mat-label>
-                <input
-                  matInput
-                  autocomplete="new-content-type"
-                  [formControl]="form.datasource.controls.httpContentType"
-                  [placeholder]="'application/json'" />
-              </mat-form-field>
-
-              <!-- Request Body -->
-              <mat-form-field
-                *ngIf="form.datasource.controls.httpRequestBodyValue; let ctrl">
-                <mat-label>Body</mat-label>
-                <textarea
-                  matInput
-                  placeholder='{"some": "JSON"}'
-                  autocomplete="new-request-body"
-                  [formControl]="ctrl"></textarea>
-              </mat-form-field>
-            </ng-container>
-
-            <!-- Remove Payload Button -->
-            <div class="flex flex-row mb-[10px]">
-              <button
-                *ngIf="form.datasource.controls.httpRequestBodyEnabled.value"
-                mat-button
-                color="warn"
-                (click)="
-                  form.datasource.controls.httpRequestBodyEnabled.setValue(
-                    false
-                  )
-                ">
-                Remove Payload
-              </button>
-            </div>
           </ng-container>
 
           <div class="section-title">Metadata</div>

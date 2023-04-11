@@ -28,10 +28,6 @@ export class AssetDatasourceFormBuilder {
         httpUrl: ['', [Validators.required, urlValidator]],
         httpMethod: ['GET', Validators.required],
 
-        httpRequestBodyEnabled: [false],
-        httpRequestBodyValue: ['', Validators.required],
-        httpContentType: ['', Validators.required],
-
         httpAuthHeaderType: ['None' as HttpDatasourceAuthHeaderType],
         httpAuthHeaderName: ['', Validators.required],
         httpAuthHeaderValue: ['', Validators.required],
@@ -47,7 +43,6 @@ export class AssetDatasourceFormBuilder {
         value.dataAddressType === 'Custom-Data-Address-Json';
 
       const http = value.dataAddressType === 'Http';
-      const requestBody = !!value.httpRequestBodyEnabled;
       const httpAuth = value.httpAuthHeaderType !== 'None';
       const httpAuthByValue = value.httpAuthHeaderType === 'Value';
       const httpAuthByVault = value.httpAuthHeaderType === 'Vault-Secret';
@@ -64,10 +59,6 @@ export class AssetDatasourceFormBuilder {
         // Http Datasource Fields
         httpUrl: http,
         httpMethod: http,
-
-        httpRequestBodyEnabled: http,
-        httpRequestBodyValue: http && requestBody,
-        httpContentType: http && requestBody,
 
         httpAuthHeaderType: http,
         httpAuthHeaderName: http && httpAuth,
