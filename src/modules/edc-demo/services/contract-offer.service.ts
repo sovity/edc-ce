@@ -33,7 +33,7 @@ export class ContractOfferService {
     const sources = catalogUrls.map((it) =>
       this.getContractOffers(it).pipe(
         timeout({
-          first: 5000,
+          first: 15000,
           with: () => {
             console.warn(`Timed out fetching catalog of ${it}`);
             return of([]);
