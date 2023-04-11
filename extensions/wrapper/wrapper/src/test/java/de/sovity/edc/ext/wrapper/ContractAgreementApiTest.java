@@ -22,8 +22,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.util.ArrayList;
+
 import static de.sovity.edc.ext.wrapper.TestUtils.createConfiguration;
 import static de.sovity.edc.ext.wrapper.TestUtils.givenManagementEndpoint;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
@@ -34,7 +37,7 @@ class ContractAgreementApiTest {
         extension.setConfiguration(createConfiguration());
     }
 
-    ValidatableResponse whenKpiEndpoint() {
+    ValidatableResponse whenContractAgreementEndpoint() {
         return givenManagementEndpoint()
                 .when()
                 .get("wrapper/ui/pages/contract-agreement-page")
@@ -45,6 +48,8 @@ class ContractAgreementApiTest {
 
     @Test
     void exampleEndpoint() {
-        whenKpiEndpoint();
+        whenContractAgreementEndpoint()
+                .assertThat()
+                .body("contractAgreements", equalTo(new ArrayList<>()));
     }
 }
