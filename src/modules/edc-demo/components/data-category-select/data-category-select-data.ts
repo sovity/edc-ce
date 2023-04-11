@@ -2,19 +2,19 @@ import {DataCategorySelectItem} from './data-category-select-item';
 
 export const DATA_CATEGORY_SELECT_DATA: DataCategorySelectItem[] = [
   {
-    id: 'TrafficInformation',
+    id: 'Traffic Information',
     label: 'Traffic Information',
   },
   {
-    id: 'RoadworksRoadConditions',
+    id: 'Roadworks and Road Conditions',
     label: 'Roadworks and Road Conditions',
   },
   {
-    id: 'TrafficFlowInformation',
+    id: 'Traffic Flow Information',
     label: 'Traffic Flow Information',
   },
   {
-    id: 'ParkingInformation',
+    id: 'Parking Information',
     label: 'Parking Information',
   },
   {
@@ -22,23 +22,23 @@ export const DATA_CATEGORY_SELECT_DATA: DataCategorySelectItem[] = [
     label: 'Electromobility',
   },
   {
-    id: 'TrafficSignsSpeedInformation',
+    id: 'Traffic Signs and Speed Information',
     label: 'Traffic Signs and Speed Information',
   },
   {
-    id: 'WeatherInformation',
+    id: 'Weather Information',
     label: 'Weather Information',
   },
   {
-    id: 'PublicTransportInformation',
+    id: 'Public Transport Information',
     label: 'Public Transport Information',
   },
   {
-    id: 'SharedOnDemandMobility',
+    id: 'Shared and On-Demand Mobility',
     label: 'Shared and On-Demand Mobility',
   },
   {
-    id: 'InfrastructureLogistics',
+    id: 'Infrastructure and Logistics',
     label: 'Infrastructure and Logistics',
   },
   {

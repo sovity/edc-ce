@@ -3,187 +3,187 @@ import {DataSubcategorySelectItem} from './data-subcategory-select-item';
 export const DATA_SUBCATEGORY_SELECT_DATA: DataSubcategorySelectItem[] = [
   {
     id: 'Accidents',
-    dataCategoryId: 'TrafficInformation',
+    dataCategoryId: 'Traffic Information',
     label: 'Accidents',
   },
 
   {
-    id: 'HazardWarnings',
-    dataCategoryId: 'TrafficInformation',
+    id: 'Hazard Warnings',
+    dataCategoryId: 'Traffic Information',
     label: 'Hazard Warnings',
   },
 
   {
     id: 'Roadworks',
-    dataCategoryId: 'RoadworksRoadConditions',
+    dataCategoryId: 'Roadworks and Road Conditions',
     label: 'Roadworks',
   },
 
   {
-    id: 'RoadConditions',
-    dataCategoryId: 'RoadworksRoadConditions',
+    id: 'Road Conditions',
+    dataCategoryId: 'Roadworks and Road Conditions',
     label: 'Road Conditions',
   },
 
   {
-    id: 'RealtimeTrafficFlowData',
-    dataCategoryId: 'TrafficFlowInformation',
+    id: 'Realtime Traffic Flow Data',
+    dataCategoryId: 'Traffic Flow Information',
     label: 'Realtime Traffic Flow Data',
   },
 
   {
-    id: 'ForecastTrafficFlowData',
-    dataCategoryId: 'TrafficFlowInformation',
+    id: 'Forecast Traffic Flow Data',
+    dataCategoryId: 'Traffic Flow Information',
     label: 'Forecast Traffic Flow Data',
   },
 
   {
-    id: 'AvailabilityForecast',
-    dataCategoryId: 'ParkingInformation',
+    id: 'Availability and Forecast',
+    dataCategoryId: 'Parking Information',
     label: 'Availability and Forecast',
   },
 
   {
     id: 'Prices',
-    dataCategoryId: 'ParkingInformation',
+    dataCategoryId: 'Parking Information',
     label: 'Prices',
   },
 
   {
-    id: 'LocationOfChargingStation',
+    id: 'Location of Charging Station',
     dataCategoryId: 'Electromobility',
     label: 'Location of Charging Station',
   },
 
   {
-    id: 'PricesAtChargingStation',
+    id: 'Prices at Charging Station',
     dataCategoryId: 'Electromobility',
     label: 'Prices at Charging Station',
   },
 
   {
-    id: 'AvailabilityOfChargingStation',
+    id: 'Availability of Charging Station',
     dataCategoryId: 'Electromobility',
     label: 'Availability of Charging Station',
   },
 
   {
-    id: 'DynamicSpeedInformation',
-    dataCategoryId: 'TrafficSignsSpeedInformation',
+    id: 'Dynamic Speed Information',
+    dataCategoryId: 'Traffic Signs and Speed Information',
     label: 'Dynamic Speed Information',
   },
 
   {
-    id: 'DynamicTrafficSigns',
-    dataCategoryId: 'TrafficSignsSpeedInformation',
+    id: 'Dynamic Traffic Signs',
+    dataCategoryId: 'Traffic Signs and Speed Information',
     label: 'Dynamic Traffic Signs',
   },
 
   {
-    id: 'StaticTrafficSigns',
-    dataCategoryId: 'TrafficSignsSpeedInformation',
+    id: 'Static Traffic Signs',
+    dataCategoryId: 'Traffic Signs and Speed Information',
     label: 'Static Traffic Signs',
   },
 
   {
-    id: 'CurrentWeatherConditions',
-    dataCategoryId: 'WeatherInformation',
+    id: 'Current Weather Conditions',
+    dataCategoryId: 'Weather Information',
     label: 'Current weather conditions',
   },
 
   {
-    id: 'WeatherForecast ',
-    dataCategoryId: 'WeatherInformation',
+    id: 'Weather Forecast ',
+    dataCategoryId: 'Weather Information',
     label: 'Weather Forecast ',
   },
 
   {
-    id: 'SpecialEventsDisruptions',
-    dataCategoryId: 'WeatherInformation',
+    id: 'Special Events or Disruptions',
+    dataCategoryId: 'Weather Information',
     label: 'Special Events or Disruptions',
   },
 
   {
     id: 'Timetables',
-    dataCategoryId: 'PublicTransportInformation',
+    dataCategoryId: 'Public Transport Information',
     label: 'Timetables',
   },
 
   {
     id: 'Fare',
-    dataCategoryId: 'PublicTransportInformation',
+    dataCategoryId: 'Public Transport Information',
     label: 'Fare',
   },
 
   {
-    id: 'LocationInformation',
-    dataCategoryId: 'PublicTransportInformation',
+    id: 'Location Information',
+    dataCategoryId: 'Public Transport Information',
     label: 'Location Information',
   },
 
   {
-    id: 'VehicleInformation ',
-    dataCategoryId: 'SharedOnDemandMobility',
+    id: 'Vehicle Information ',
+    dataCategoryId: 'Shared and On-Demand Mobilit',
     label: 'Vehicle information',
   },
 
   {
     id: 'Availability ',
-    dataCategoryId: 'SharedOnDemandMobility',
+    dataCategoryId: 'Shared and On-Demand Mobilit',
     label: 'Availability',
   },
 
   {
     id: 'Location ',
-    dataCategoryId: 'SharedOnDemandMobility',
+    dataCategoryId: 'Shared and On-Demand Mobilit',
     label: 'Location',
   },
 
   {
     id: 'Range ',
-    dataCategoryId: 'SharedOnDemandMobility',
+    dataCategoryId: 'Shared and On-Demand Mobilit',
     label: 'Range',
   },
 
   {
-    id: 'GeneralInformationAboutPlanningOfRoutes',
-    dataCategoryId: 'InfrastructureLogistics',
+    id: 'General Information About Planning Of Routess',
+    dataCategoryId: 'Infrastructure and Logistics',
     label: 'General Information About Planning Of Routes',
   },
 
   {
-    id: 'PedestrianNetworks',
-    dataCategoryId: 'InfrastructureLogistics',
+    id: 'Pedestrian Networks',
+    dataCategoryId: 'Infrastructure and Logistics',
     label: 'Pedestrian Networks',
   },
 
   {
-    id: 'CyclingNetworks',
-    dataCategoryId: 'InfrastructureLogistics',
+    id: 'Cycling Networks',
+    dataCategoryId: 'Infrastructure and Logistics',
     label: 'Cycling Networks',
   },
 
   {
-    id: 'RoadNetwork',
-    dataCategoryId: 'InfrastructureLogistics',
+    id: 'Road Network',
+    dataCategoryId: 'Infrastructure and Logistics',
     label: 'Road Network',
   },
 
   {
-    id: 'WaterRoutes',
-    dataCategoryId: 'InfrastructureLogistics',
+    id: 'Water Routes',
+    dataCategoryId: 'Infrastructure and Logistics',
     label: 'Water Routes',
   },
 
   {
-    id: 'CargoLogistics',
-    dataCategoryId: 'InfrastructureLogistics',
+    id: 'Cargo Logistics',
+    dataCategoryId: 'Infrastructure and Logistics',
     label: 'Cargo and Logistics',
   },
 
   {
-    id: 'TollInformation',
-    dataCategoryId: 'InfrastructureLogistics',
+    id: 'Toll Information',
+    dataCategoryId: 'Infrastructure and Logistics',
     label: 'Toll Information',
   },
 ];

@@ -24,6 +24,7 @@ the detailed section referring to by linking pull requests or issues.
 
 - Fixed getting started docker-compose-yaml to use the newly renamed `edc-dev`
   image.
+- Fixed labels of MDS categories and sub-categories.
 
 ## [v0.0.1-milestone-8-sovity2] 24.03.2023
 
