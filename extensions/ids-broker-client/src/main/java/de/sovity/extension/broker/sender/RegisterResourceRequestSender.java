@@ -31,6 +31,7 @@ import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.Ids
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.response.MultipartResponse;
 import org.eclipse.edc.protocol.ids.spi.domain.IdsConstants;
 import org.eclipse.edc.protocol.ids.util.CalendarUtil;
+import org.eclipse.edc.util.string.StringUtils;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -107,62 +108,42 @@ public class RegisterResourceRequestSender implements MultipartSenderDelegate<Re
                 .build();
 
         var json = (ObjectNode) objectMapper.readTree(objectMapper.writeValueAsString(resource));
-        buildTransportMode(transportMode, json);
-        buildDataCategory(dataCategory, json);
-        buildDataSubcategory(dataSubcategory, json);
-        buildDataModel(dataModel, json);
-        buildGeoReferenceMethod(geoReferenceMethod, json);
+        setTransportMode(json, transportMode);
+        setDataCategory(json, dataCategory);
+        setDataSubcategory(json, dataSubcategory);
+        setDataModel(json, dataModel);
+        setGeoReferenceMethod(json, geoReferenceMethod);
         return objectMapper.writeValueAsString(json);
     }
 
-    private void buildGeoReferenceMethod(String geoReferenceMethod, ObjectNode json) {
-        if (geoReferenceMethod != null && !geoReferenceMethod.isBlank()) {
-            json.set(MDS_GEO_REFERENCE_METHOD, buildGeoReferenceMethodJson(geoReferenceMethod));
+    private void setGeoReferenceMethod(ObjectNode json, String geoReferenceMethod) {
+        if (!StringUtils.isNullOrBlank(geoReferenceMethod)) {
+            json.set(MDS_GEO_REFERENCE_METHOD, buildStringProperty(geoReferenceMethod));
         }
     }
 
-    private void buildDataModel(String dataModel, ObjectNode json) {
-        if (dataModel != null && !dataModel.isBlank()) {
-            json.set(MDS_DATA_MODEL, buildDataModelJson(dataModel));
+    private void setDataModel(ObjectNode json, String dataModel) {
+        if (!StringUtils.isNullOrBlank(dataModel)) {
+            json.set(MDS_DATA_MODEL, buildStringProperty(dataModel));
         }
     }
 
-    private void buildDataSubcategory(String dataSubcategory, ObjectNode json) {
-        if (dataSubcategory != null && !dataSubcategory.isBlank()) {
-            json.set(MDS_DATA_SUBCATEGORY, buildDataSubcategoryJson(dataSubcategory));
+    private void setDataSubcategory(ObjectNode json, String dataSubcategory) {
+        if (!StringUtils.isNullOrBlank(dataSubcategory)) {
+            json.set(MDS_DATA_SUBCATEGORY, buildStringProperty(dataSubcategory));
         }
     }
 
-    private void buildDataCategory(String dataCategory, ObjectNode json) {
-        if (dataCategory != null && !dataCategory.isBlank()) {
-            json.set(MDS_DATA_CATEGORY, buildDataCategoryJson(dataCategory));
+    private void setDataCategory(ObjectNode json, String dataCategory) {
+        if (!StringUtils.isNullOrBlank(dataCategory)) {
+            json.set(MDS_DATA_CATEGORY, buildStringProperty(dataCategory));
         }
     }
 
-    private void buildTransportMode(String transportMode, ObjectNode json) {
-        if (transportMode != null && !transportMode.isBlank()) {
-            json.set(MDS_TRANSPORT_MODE, buildTransportModeJson(transportMode));
+    private void setTransportMode(ObjectNode json, String transportMode) {
+        if (!StringUtils.isNullOrBlank(transportMode)) {
+            json.set(MDS_TRANSPORT_MODE, buildStringProperty(transportMode));
         }
-    }
-
-    private ObjectNode buildGeoReferenceMethodJson(String geoReferenceMethod) {
-        return buildStringProperty(geoReferenceMethod);
-    }
-
-    private ObjectNode buildDataModelJson(String dataModel) {
-        return buildStringProperty(dataModel);
-    }
-
-    private ObjectNode buildDataSubcategoryJson(String dataSubcategory) {
-        return buildStringProperty(dataSubcategory);
-    }
-
-    private ObjectNode buildTransportModeJson(String transportMode) {
-        return buildStringProperty(transportMode);
-    }
-
-    private ObjectNode buildDataCategoryJson(String dataCategory) {
-        return buildStringProperty(dataCategory);
     }
 
     private ObjectNode buildStringProperty(String property) {
