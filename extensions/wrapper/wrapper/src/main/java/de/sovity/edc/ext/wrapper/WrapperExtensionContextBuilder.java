@@ -69,7 +69,8 @@ public class WrapperExtensionContextBuilder {
                 assetIndex,
                 policyDefinitionStore,
                 contractDefinitionStore,
-                transferProcessStore
+                transferProcessStore,
+                contractAgreementService
         );
         var kpiResource = new KpiResource(kpiApiService);
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
