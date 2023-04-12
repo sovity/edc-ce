@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Minor Changes
+- feat: wrapper contract agreement api
+
+### Patch Changes
+- wrapper: added contractAgreements- and transferProcessesCounts
+- fix: broker extension provides empty fields
+- fix: update postman collection
+
 ## [3.0.1] - 2023-04-06
 
 ### Fixed
@@ -28,8 +36,7 @@ All notable changes to this project will be documented in this file.
 - EDC API Wrapper + EDC API Client Bootstrap
 - Added Docker Image Tag `release` for latest releases.
 - Added sovity Minimal Extension Package.
-- broker-extension: Re-register assets at broker at connector startupt
-- wrapper-extension: added contractAgreements- and transferProcessesCounts
+- broker-extension: Re-register assets at broker at connector startup
 
 ### Patch Changes
 
