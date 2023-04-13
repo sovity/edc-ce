@@ -45,7 +45,6 @@ export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
       .pipe(takeUntil(this.ngOnDestroy$))
       .subscribe((polices) => {
         this.policies = polices;
-        console.log(this.policies);
       });
     this.assetService
       .getAllAssets(0, 10_000_000)

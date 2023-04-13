@@ -122,7 +122,6 @@ export function switchDisabledControlsByField2<
     const keys = opts.enabledControlsByValue.get(opts.switchCtrl.value);
     keys
       ?.map((it) => {
-        console.log('enabling', it);
         return it;
       })
       ?.map(ctrl)
@@ -134,7 +133,6 @@ export function switchDisabledControlsByField2<
     fields
       .filter((it) => !keys?.includes(it))
       ?.map((it) => {
-        console.log('disabling', it);
         return it;
       })
       .map(ctrl)

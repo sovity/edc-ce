@@ -16,6 +16,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgChartsModule} from 'ng2-charts';
+import {PreviousRouteListener} from '../edc-demo/components/logout/previous-route-listener';
 import {EdcDemoModule} from '../edc-demo/edc-demo.module';
 import {API_KEY, CONNECTOR_DATAMANAGEMENT_API} from '../edc-dmgmt-client';
 import {ApiKeyInterceptor} from './api-key.interceptor';
@@ -71,7 +72,7 @@ import {AppConfigService} from './config/app-config.service';
 
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: ApiKeyInterceptor},
 
-    MatDatepickerModule,
+    PreviousRouteListener,
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: {
@@ -82,4 +83,9 @@ import {AppConfigService} from './config/app-config.service';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(
+    // Ensure PreviousRouteListener is instantiated
+    previousRouteListener: PreviousRouteListener,
+  ) {}
+}
