@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {filter, map} from 'rxjs/operators';
+import {LoginPollingService} from '../edc-demo/services/login-polling.service';
 import {ActiveFeatureSet} from './config/active-feature-set';
 import {AppConfigService} from './config/app-config.service';
 
@@ -17,6 +18,7 @@ export class AppComponent implements OnInit {
     private configService: AppConfigService,
     private activeFeatureSet: ActiveFeatureSet,
     private activatedRoute: ActivatedRoute,
+    private loginPollingService: LoginPollingService,
   ) {}
 
   ngOnInit(): void {
@@ -37,5 +39,7 @@ export class AppComponent implements OnInit {
       });
 
     window.document.body.classList.add(this.configService.config.theme);
+
+    this.loginPollingService.startPolling();
   }
 }
