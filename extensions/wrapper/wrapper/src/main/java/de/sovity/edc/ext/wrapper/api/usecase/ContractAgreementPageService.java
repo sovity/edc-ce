@@ -75,17 +75,7 @@ public class ContractAgreementPageService {
     private AssetDto buildAssetDto(ContractAgreement contractAgreement) {
         var asset = getAsset(contractAgreement);
         var assetId = asset.getId();
-        var description = asset.getDescription();
-        var name = asset.getName();
-        var contentType = asset.getContentType();
-        var version = asset.getVersion();
-
-        var properties = Map.of(
-                "name", name,
-                "description", description,
-                "contentType", contentType,
-                "version", version
-        );
+        var properties = asset.getProperties();
 
         return new AssetDto(assetId, properties);
     }
