@@ -30,6 +30,7 @@ import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,7 +76,10 @@ public class ContractAgreementPageService {
     private AssetDto buildAssetDto(ContractAgreement contractAgreement) {
         var asset = getAsset(contractAgreement);
         var assetId = asset.getId();
-        var properties = asset.getProperties();
+        var properties = new HashMap<String, String>();
+        asset.getProperties().forEach(
+                (key, value) -> properties.put(key, value.toString())
+        );
 
         return new AssetDto(assetId, properties);
     }

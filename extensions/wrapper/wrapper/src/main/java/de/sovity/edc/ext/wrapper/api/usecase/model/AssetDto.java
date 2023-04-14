@@ -34,5 +34,5 @@ public class AssetDto {
     private String id;
 
     @Schema(description = "Asset properties")
-    private Map<String, Object> properties;
+    private Map<String, String> properties;
 }
