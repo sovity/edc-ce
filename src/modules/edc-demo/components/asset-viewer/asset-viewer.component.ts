@@ -42,7 +42,9 @@ export class AssetViewerComponent implements OnInit {
               (assets): AssetList => ({
                 filteredAssets: assets
                   .map((asset) =>
-                    this.assetPropertyMapper.readProperties(asset.properties),
+                    this.assetPropertyMapper.buildAssetFromProperties(
+                      asset.properties,
+                    ),
                   )
                   .filter((asset) => asset.name?.includes(this.searchText)),
                 numTotalAssets: assets.length,

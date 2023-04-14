@@ -68,7 +68,7 @@ export class ContractOfferService {
   ): ContractOffer {
     return {
       ...contractOfferDto,
-      asset: this.assetPropertyMapper.readProperties(
+      asset: this.assetPropertyMapper.buildAssetFromProperties(
         contractOfferDto.asset.properties,
       ),
     };

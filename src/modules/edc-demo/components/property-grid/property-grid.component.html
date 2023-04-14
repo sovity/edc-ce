@@ -10,7 +10,7 @@
   <mat-icon style="flex-shrink: 0; margin-top: 6px">{{ prop.icon }}</mat-icon>
   <div class="flex flex-col">
     <!-- Property Label -->
-    <div class="uppercase text-slate text-sm">{{ prop.label }}</div>
+    <div class="uppercase text-slate text-sm break-all">{{ prop.label }}</div>
 
     <!-- Property Value (URL) -->
     <a
@@ -23,9 +23,21 @@
       >{{ prop.text }}</a
     >
 
+    <!-- Property Value (OnClick Event) -->
+    <a
+      *ngIf="!prop.url && prop.onclick"
+      class="link break-all"
+      href="javascript:void(0)"
+      [ngClass]="prop.additionalClasses"
+      (click)="prop.onclick()"
+      >{{ prop.text }}</a
+    >
+
     <!-- Property Value (Text) -->
-    <span *ngIf="!prop.url" [ngClass]="prop.additionalClasses">{{
-      prop.text
-    }}</span>
+    <span
+      *ngIf="!(prop.url || prop.onclick)"
+      [ngClass]="prop.additionalClasses"
+      >{{ prop.text }}</span
+    >
   </div>
 </div>

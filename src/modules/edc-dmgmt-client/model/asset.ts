@@ -12,6 +12,5 @@
 
 
 export interface Asset {
-    properties?: { [key: string]: string; };
+  properties?: { [key: string]: string; };
 }
-

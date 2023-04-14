@@ -11,7 +11,6 @@ export class PropertyGrid {
 
   @Input()
   columns: number = 3;
-
   @HostBinding('class.flex')
   @HostBinding('class.flex-row')
   @HostBinding('class.flex-wrap')

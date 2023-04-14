@@ -7,7 +7,7 @@
       id="form-field-id"
       color="accent">
       <mat-label>ID</mat-label>
-      <input matInput autocomplete="new-id" [formControl]="ctrl" />
+      <input matInput autocomplete="off" [formControl]="ctrl" />
       <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{
         validationMessages.invalidWhitespacesMessage
       }}</mat-error>

@@ -66,12 +66,20 @@ body {
   }
 }
 
-.section-title {
+.form-section-title {
   margin: 16px 3px;
   text-transform: uppercase;
   color: #373737;
   font-size: 14px;
   letter-spacing: 0.04em;
+}
+
+.property-grid-group-title {
+  margin: 30px 3px 15px 3px;
+  text-transform: uppercase;
+  color: #373737;
+  font-size: 14px;
+  letter-spacing: 0.05em;
 }
 
 .mat-form-field-any-size-hint .mat-form-field-subscript-wrapper {
@@ -193,6 +201,10 @@ body {
 
 .mt-\[10px\] {
   margin-top: 10px;
+}
+
+.mt-\[15px\] {
+  margin-top: 15px;
 }
 
 .mt-\[40px\] {

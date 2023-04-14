@@ -14,20 +14,20 @@ import {
   ConfirmDialogModel,
   ConfirmationDialogComponent,
 } from '../confirmation-dialog/confirmation-dialog.component';
-import {PropertyGridField} from '../property-grid/property-grid-field';
+import {PropertyGridGroup} from '../property-grid-group/property-grid-group';
 import {AssetDetailDialogData} from './asset-detail-dialog-data';
 import {AssetDetailDialogResult} from './asset-detail-dialog-result';
-import {AssetPropertyGridBuilder} from './asset-property-grid-builder';
+import {AssetPropertyGridGroupBuilder} from './asset-property-grid-group-builder';
 
 @Component({
   selector: 'edc-demo-asset-detail-dialog',
   templateUrl: './asset-detail-dialog.component.html',
   styleUrls: ['./asset-detail-dialog.component.scss'],
-  providers: [AssetPropertyGridBuilder],
+  providers: [AssetPropertyGridGroupBuilder],
 })
 export class AssetDetailDialog implements OnDestroy {
   asset: Asset;
-  props: PropertyGridField[];
+  propGroups: PropertyGridGroup[];
 
   loading = false;
 
@@ -48,11 +48,15 @@ export class AssetDetailDialog implements OnDestroy {
     private matDialogRef: MatDialogRef<AssetDetailDialog>,
     @Inject(MAT_DIALOG_DATA)
     public data: AssetDetailDialogData,
-    private assetPropertyGridBuilder: AssetPropertyGridBuilder,
+    private assetPropertyGridGroupBuilder: AssetPropertyGridGroupBuilder,
     public contractNegotiationService: ContractNegotiationService,
   ) {
     this.asset = this.data.asset;
-    this.props = this.assetPropertyGridBuilder.buildPropertyGrid(this.asset);
+    this.propGroups =
+      this.assetPropertyGridGroupBuilder.buildPropertyGridGroups(
+        this.asset,
+        this.data.contractOffer?.policy,
+      );
   }
 
   onDeleteClick() {

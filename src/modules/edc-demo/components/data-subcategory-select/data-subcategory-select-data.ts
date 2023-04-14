@@ -123,30 +123,30 @@ export const DATA_SUBCATEGORY_SELECT_DATA: DataSubcategorySelectItem[] = [
 
   {
     id: 'Vehicle Information ',
-    dataCategoryId: 'Shared and On-Demand Mobilit',
+    dataCategoryId: 'Shared and On-Demand Mobility',
     label: 'Vehicle information',
   },
 
   {
     id: 'Availability ',
-    dataCategoryId: 'Shared and On-Demand Mobilit',
+    dataCategoryId: 'Shared and On-Demand Mobility',
     label: 'Availability',
   },
 
   {
     id: 'Location ',
-    dataCategoryId: 'Shared and On-Demand Mobilit',
+    dataCategoryId: 'Shared and On-Demand Mobility',
     label: 'Location',
   },
 
   {
     id: 'Range ',
-    dataCategoryId: 'Shared and On-Demand Mobilit',
+    dataCategoryId: 'Shared and On-Demand Mobility',
     label: 'Range',
   },
 
   {
-    id: 'General Information About Planning Of Routess',
+    id: 'General Information About Planning Of Routes',
     dataCategoryId: 'Infrastructure and Logistics',
     label: 'General Information About Planning Of Routes',
   },

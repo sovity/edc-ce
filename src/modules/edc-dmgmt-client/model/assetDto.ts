@@ -12,6 +12,6 @@
 
 
 export interface AssetDto {
-    properties: { [key: string]: string; };
+  properties: { [key: string]: string; };
 }
 

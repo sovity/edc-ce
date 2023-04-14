@@ -3,12 +3,14 @@
  *
  * SSOT for asset property string names
  */
+
 export const AssetProperties = {
   // edc asset properties
   id: 'asset:prop:id', // needs to start with urn:artifact:
   name: 'asset:prop:name',
   contentType: 'asset:prop:contenttype',
   originator: 'asset:prop:originator',
+  originatorOrganization: 'asset:prop:originatorOrganization',
   description: 'asset:prop:description',
   version: 'asset:prop:version',
 

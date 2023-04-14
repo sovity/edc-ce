@@ -3,7 +3,6 @@ import {EdcUiProfile} from './edc-ui-profile';
 import {EdcUiProfileConfig} from './edc-ui-profile-config';
 import {EDC_UI_PROFILE_DATA} from './edc-ui-profile-data';
 
-
 /**
  * Find profile (or default to first)
  * @param profile profile

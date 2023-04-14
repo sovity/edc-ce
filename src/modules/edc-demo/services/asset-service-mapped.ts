@@ -23,7 +23,7 @@ export class AssetServiceMapped {
       .pipe(
         map((assets) =>
           assets.map((asset) =>
-            this.assetPropertyMapper.readProperties(asset.properties),
+            this.assetPropertyMapper.buildAssetFromProperties(asset.properties),
           ),
         ),
       );

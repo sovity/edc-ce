@@ -3,5 +3,6 @@ export interface PropertyGridField {
   label: string;
   text: string;
   url?: string;
+  onclick?: () => void;
   additionalClasses?: string;
 }

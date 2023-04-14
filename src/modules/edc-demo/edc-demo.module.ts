@@ -35,23 +35,13 @@ import {AssetEditorDialog} from './components/asset-editor-dialog/asset-editor-d
 import {AssetListComponent} from './components/asset-list/asset-list.component';
 import {AssetSelectComponent} from './components/asset-select/asset-select.component';
 import {AssetViewerComponent} from './components/asset-viewer/asset-viewer.component';
-import {
-  CatalogBrowserFetchDetailDialogComponent
-} from './components/catalog-browser-fetch-detail-dialog/catalog-browser-fetch-detail-dialog.component';
+import {CatalogBrowserFetchDetailDialogComponent} from './components/catalog-browser-fetch-detail-dialog/catalog-browser-fetch-detail-dialog.component';
 import {CatalogBrowserComponent} from './components/catalog-browser/catalog-browser.component';
 import {ConfirmationDialogComponent} from './components/confirmation-dialog/confirmation-dialog.component';
-import {
-  ContractAgreementTransferDialog
-} from './components/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog.component';
-import {
-  ContractDefinitionCardsComponent
-} from './components/contract-definition-cards/contract-definition-cards.component';
-import {
-  ContractDefinitionEditorDialog
-} from './components/contract-definition-editor-dialog/contract-definition-editor-dialog.component';
-import {
-  ContractDefinitionPageComponent
-} from './components/contract-definition-page/contract-definition-page.component';
+import {ContractAgreementTransferDialog} from './components/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog.component';
+import {ContractDefinitionCardsComponent} from './components/contract-definition-cards/contract-definition-cards.component';
+import {ContractDefinitionEditorDialog} from './components/contract-definition-editor-dialog/contract-definition-editor-dialog.component';
+import {ContractDefinitionPageComponent} from './components/contract-definition-page/contract-definition-page.component';
 import {ContractOfferIconComponent} from './components/contract-offer-icon/contract-offer-icon.component';
 import {ContractOfferListComponent} from './components/contract-offer-list/contract-offer-list.component';
 import {ContractViewerComponent} from './components/contract-viewer/contract-viewer.component';
@@ -74,13 +64,13 @@ import {PolicyCardsComponent} from './components/policy-cards/policy-cards.compo
 import {PolicyRuleViewerComponent} from './components/policy-rule-viewer/policy-rule-viewer.component';
 import {PolicySelectComponent} from './components/policy-select/policy-select.component';
 import {PolicyViewComponent} from './components/policy-view/policy-view.component';
+import {PropertyGridGroupComponent} from './components/property-grid-group/property-grid-group.component';
 import {PropertyGrid} from './components/property-grid/property-grid.component';
 import {TransferHistoryViewerComponent} from './components/transfer-history/transfer-history-viewer.component';
 import {TransportModeSelectComponent} from './components/transport-mode-select/transport-mode-select.component';
 import {IsActiveFeaturePipe} from './pipes/is-active-feature.pipe';
 import {ReplacePipe} from './pipes/replace.pipe';
 import {SafePipe} from './pipes/safe.pipe';
-
 
 @NgModule({
   imports: [
@@ -164,10 +154,12 @@ import {SafePipe} from './pipes/safe.pipe';
     PolicySelectComponent,
     PolicyViewComponent,
     PropertyGrid,
+    PropertyGridGroupComponent,
     ReplacePipe,
     SafePipe,
     TransferHistoryViewerComponent,
     TransportModeSelectComponent,
+    AssetSelectComponent,
   ],
   exports: [
     AssetViewerComponent,
@@ -180,5 +172,4 @@ import {SafePipe} from './pipes/safe.pipe';
     TransferHistoryViewerComponent,
   ],
 })
-export class EdcDemoModule {
-}
+export class EdcDemoModule {}

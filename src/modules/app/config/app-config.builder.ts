@@ -11,7 +11,6 @@ export class AppConfigBuilder {
    * @param vars env vars
    */
   buildAppConfig(vars: Record<string, string | null>): AppConfig {
-
     const {profile, profileConfig} = getProfileOrFallback(
       vars[AppConfigProperties.activeProfile],
     );

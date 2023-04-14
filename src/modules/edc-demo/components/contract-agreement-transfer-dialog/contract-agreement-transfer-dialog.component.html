@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>Initiate Transfer</h1>
 <mat-dialog-content class="w-[800px]">
   <form [formGroup]="form.all">
-    <div class="section-title">Datasink</div>
+    <div class="form-section-title">Datasink</div>
     <div class="flex flex-col mt-[10px]">
       <!-- Data Address Type -->
       <data-address-type-select
@@ -52,7 +52,7 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="section-title">Authentication</div>
+        <div class="form-section-title">Authentication</div>
 
         <!-- Add Authentication Button -->
         <div
@@ -129,7 +129,7 @@
           </button>
         </div>
 
-        <div class="section-title">Additional Headers</div>
+        <div class="form-section-title">Additional Headers</div>
 
         <div
           *ngFor="

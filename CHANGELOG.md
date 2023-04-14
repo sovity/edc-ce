@@ -17,6 +17,9 @@ the detailed section referring to by linking pull requests or issues.
 #### Added
 
 - Added login polling to prevent auto-logout when page is open.
+- Showing all asset properties for assets and contract offers via an "Additional
+  Properties" section.
+- Showing policies for contract offers in the asset details dialog.
 
 #### Changed
 

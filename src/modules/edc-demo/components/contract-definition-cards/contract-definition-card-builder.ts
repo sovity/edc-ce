@@ -7,7 +7,6 @@ import {
 } from '../../../edc-dmgmt-client';
 import {Asset} from '../../models/asset';
 import {AssetProperties} from '../../services/asset-properties';
-import {PolicyDefinitionUtils} from '../../services/policy-definition-utils';
 import {Operator, OperatorSymbols} from '../../services/policy-type-ext';
 import {associateBy} from '../../utils/map-utils';
 import {assetSearchTargets} from '../../utils/search-utils';
@@ -19,8 +18,6 @@ import {
 
 @Injectable({providedIn: 'root'})
 export class ContractDefinitionCardBuilder {
-  constructor(private policyDefinitionUtils: PolicyDefinitionUtils) {}
-
   buildContractDefinitionCards(
     contractDefinitions: ContractDefinitionDto[],
     assets: Asset[],
