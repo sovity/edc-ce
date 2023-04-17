@@ -32,8 +32,10 @@ import org.eclipse.edc.spi.types.domain.asset.Asset;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toMap;
 
 @RequiredArgsConstructor
 public class ContractAgreementPageService {
@@ -73,8 +75,15 @@ public class ContractAgreementPageService {
     }
 
     private AssetDto buildAssetDto(ContractAgreement contractAgreement) {
-        var assetId = getAsset(contractAgreement).getId();
-        return new AssetDto(assetId);
+        var asset = getAsset(contractAgreement);
+        var assetId = asset.getId();
+        var properties = mapValues(asset.getProperties(), Object::toString);
+
+        return new AssetDto(assetId, properties);
+    }
+
+    private <K, T, R> Map<K, R> mapValues(Map<K, T> map, Function<T, R> mapFn) {
+        return map.entrySet().stream().collect(toMap(Map.Entry::getKey, e -> mapFn.apply(e.getValue())));
     }
 
     private List<ContractNegotiation> getNegotiations() {

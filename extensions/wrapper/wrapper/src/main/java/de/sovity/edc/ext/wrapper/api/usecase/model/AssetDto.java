@@ -21,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Map;
+
 @Getter
 @Setter
 @ToString
@@ -30,4 +32,7 @@ import lombok.ToString;
 public class AssetDto {
     @Schema(description = "ID of asset")
     private String id;
+
+    @Schema(description = "Asset properties")
+    private Map<String, String> properties;
 }
