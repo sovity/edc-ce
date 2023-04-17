@@ -30,6 +30,7 @@ import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +70,14 @@ public class ContractAgreementPageService {
 
     private List<TransferprocessDto> buildTransferprocessDtos(ContractAgreement contractAgreement) {
         var transferProcesses = getTransferProcesses(contractAgreement);
-        return transferProcesses.stream().map(it -> new TransferprocessDto(it.getId())).toList();
+
+        return transferProcesses.stream().map(it -> new TransferprocessDto(
+                it.getId(),
+                it.getCreatedAt(),
+                it.getUpdatedAt(),
+                it.getState(),
+                it.getErrorDetail()
+        )).toList();
     }
 
     private AssetDto buildAssetDto(ContractAgreement contractAgreement) {

@@ -30,4 +30,16 @@ import lombok.ToString;
 public class TransferprocessDto {
     @Schema(description = "ID of transferprocess")
     private String id;
+
+    @Schema(description = "transferprocess ceated at")
+    private long createdAt;
+
+    @Schema(description = "transferprocess updated at")
+    private long updatedAt;
+
+    @Schema(description = "transferprocess state")
+    private int state;
+
+    @Schema(description = "transferprocess errorDetail")
+    private String errorDetail;
 }
