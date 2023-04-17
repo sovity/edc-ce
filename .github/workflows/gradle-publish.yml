@@ -39,14 +39,14 @@ jobs:
         git log -1 > extensions/last-commit-info/src/main/resources/version.txt
 
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@6095a76664413da4c8c134ee32e8a8ae900f0f1f
+      uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
       with:
         arguments: build
 
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
     # the publishing section of your build.gradle
     - name: Publish to GitHub Packages
-      uses: gradle/gradle-build-action@6095a76664413da4c8c134ee32e8a8ae900f0f1f
+      uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
       with:
         arguments: publish
       env:
