@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.usecase.model;
+package de.sovity.edc.ext.wrapper.api.ui.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -21,13 +21,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "TransferprocessDto")
-public class TransferprocessDto {
-    @Schema(description = "ID of transferprocess")
-    private String id;
+@Schema(description = "All data required for our UI's Contract Agreement Page.")
+public class ContractAgreementPage {
+    @Schema(description = "EDC Contract-Agreements")
+    private List<ContractAgreementDto> contractAgreements;
 }

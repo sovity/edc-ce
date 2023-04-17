@@ -12,9 +12,10 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.usecase;
+package de.sovity.edc.ext.wrapper.api.ui;
 
-import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
+import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementPageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.GET;
@@ -23,14 +24,14 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 
-@Path("wrapper/ui/pages")
+@Path("wrapper/ui")
 @Tag(name = "UI", description = "EDC UI Endpoints")
 @RequiredArgsConstructor
-public class UiPageResource {
+public class UiResource {
     private final ContractAgreementPageService contractAgreementApiService;
 
     @GET
-    @Path("contract-agreement-page")
+    @Path("pages/contract-agreement-page")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Collect all data for Contract Agreement Page")
     public ContractAgreementPage contractAgreementEndpoint() {

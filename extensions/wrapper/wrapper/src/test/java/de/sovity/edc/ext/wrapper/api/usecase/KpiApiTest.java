@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper;
+package de.sovity.edc.ext.wrapper.api.usecase;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
@@ -28,26 +28,26 @@ import static org.hamcrest.Matchers.equalTo;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
-class SupportedPolicyApiTest {
+class KpiApiTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
         extension.setConfiguration(createConfiguration());
     }
 
-    static ValidatableResponse whenSupportedPolicyFunctions() {
+    ValidatableResponse whenKpiEndpoint() {
         return givenManagementEndpoint()
                 .when()
-                .get("/wrapper/use-case-api/supported-policy-functions")
+                .get("/wrapper/use-case-api/kpis")
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON);
     }
 
     @Test
-    void supportedPolicies() {
-        whenSupportedPolicyFunctions()
+    void exampleEndpoint() {
+        whenKpiEndpoint()
                 .assertThat()
-                .body(equalTo("[\"ALWAYS_TRUE\"]"));
+                .body("assetsCount", equalTo(0));
     }
 }

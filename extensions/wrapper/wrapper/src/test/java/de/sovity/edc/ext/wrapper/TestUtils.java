@@ -29,7 +29,7 @@ public class TestUtils {
     public static final String IDS_ENDPOINT = "http://localhost:" + DATA_PORT + "/api/v1/data/ids";
 
     @NotNull
-    static Map<String, String> createConfiguration() {
+    public static Map<String, String> createConfiguration() {
         return Map.of(
                 "web.http.port", String.valueOf(getFreePort()),
                 "web.http.path", "/api",
@@ -39,7 +39,7 @@ public class TestUtils {
                 "edc.ids.endpoint", IDS_ENDPOINT);
     }
 
-    static RequestSpecification givenManagementEndpoint() {
+    public static RequestSpecification givenManagementEndpoint() {
         return given()
                 .baseUri("http://localhost:" + DATA_PORT)
                 .basePath("/api/v1/data")
