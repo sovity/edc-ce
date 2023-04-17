@@ -93,6 +93,12 @@ The fastest way to get started is to run our
 ```shell
 cd docs/getting-started
 
+# Pull latest images
+docker compose pull
+
+# On ARM64, e.g. MAC with M1, you need to cross compile your own UI image
+# (cd ../../ && docker buildx build -f "docker/Dockerfile" --platform linux/arm64 -t "ghcr.io/sovity/edc-ui:latest" .)
+
 # Runs EDC and EDC UI at localhost:11000
 docker compose up
 ```
