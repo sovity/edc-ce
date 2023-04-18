@@ -15,6 +15,7 @@
 package de.sovity.edc.client;
 
 import de.sovity.edc.client.gen.api.ExampleApi;
+import de.sovity.edc.client.gen.api.UiApi;
 import de.sovity.edc.client.gen.api.UseCaseApi;
 import lombok.Value;
 import lombok.experimental.Accessors;
@@ -26,6 +27,7 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class EdcClient {
     ExampleApi exampleApi;
+    UiApi uiApi;
     UseCaseApi useCaseApi;
 
     public static EdcClientBuilder builder() {
