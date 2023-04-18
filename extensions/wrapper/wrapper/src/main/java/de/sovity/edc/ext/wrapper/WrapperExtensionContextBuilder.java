@@ -17,12 +17,12 @@ package de.sovity.edc.ext.wrapper;
 import de.sovity.edc.ext.wrapper.api.example.ExampleApiService;
 import de.sovity.edc.ext.wrapper.api.example.ExampleResource;
 import de.sovity.edc.ext.wrapper.api.example.services.IdsEndpointService;
-import de.sovity.edc.ext.wrapper.api.usecase.ContractAgreementPageService;
+import de.sovity.edc.ext.wrapper.api.ui.UiResource;
+import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementPageService;
 import de.sovity.edc.ext.wrapper.api.usecase.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.KpiResource;
 import de.sovity.edc.ext.wrapper.api.usecase.SupportedPolicyApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.SupportedPolicyResource;
-import de.sovity.edc.ext.wrapper.api.usecase.UiPageResource;
 import lombok.NoArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
@@ -64,6 +64,15 @@ public class WrapperExtensionContextBuilder {
         var exampleApiService = new ExampleApiService(idsEndpointService);
         var exampleResource = new ExampleResource(exampleApiService);
 
+        // UI API
+        var contractAgreementApiService = new ContractAgreementPageService(
+                assetIndex,
+                contractAgreementService,
+                contractNegotiationStore,
+                transferProcessService
+        );
+        var uiResource = new UiResource(contractAgreementApiService);
+
         // Use Case API
         var kpiApiService = new KpiApiService(
                 assetIndex,
@@ -75,15 +84,13 @@ public class WrapperExtensionContextBuilder {
         var kpiResource = new KpiResource(kpiApiService);
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
         var supportedPolicyResource = new SupportedPolicyResource(supportedPolicyApiService);
-        var contractAgreementApiService = new ContractAgreementPageService(assetIndex, contractAgreementService, contractNegotiationStore, transferProcessService);
-        var contractAgreementResource = new UiPageResource(contractAgreementApiService);
 
         // Collect all JAX-RS resources
         return new WrapperExtensionContext(List.of(
                 exampleResource,
                 kpiResource,
                 supportedPolicyResource,
-                contractAgreementResource
+                uiResource
         ));
     }
 }

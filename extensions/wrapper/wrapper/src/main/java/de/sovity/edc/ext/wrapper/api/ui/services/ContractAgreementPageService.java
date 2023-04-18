@@ -12,13 +12,13 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.usecase;
+package de.sovity.edc.ext.wrapper.api.ui.services;
 
-import de.sovity.edc.ext.wrapper.api.usecase.model.AssetDto;
-import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementDto;
-import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementPage;
-import de.sovity.edc.ext.wrapper.api.usecase.model.ContractNegotiationDto;
-import de.sovity.edc.ext.wrapper.api.usecase.model.TransferprocessDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.AssetDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.TransferprocessDto;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;

@@ -12,8 +12,9 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper;
+package de.sovity.edc.ext.wrapper.api.example;
 
+import de.sovity.edc.ext.wrapper.api.example.model.ExampleQuery;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -22,23 +23,27 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.util.List;
+
 import static de.sovity.edc.ext.wrapper.TestUtils.createConfiguration;
 import static de.sovity.edc.ext.wrapper.TestUtils.givenManagementEndpoint;
 import static org.hamcrest.Matchers.equalTo;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
-class KpiApiTest {
+class ExampleApiTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
         extension.setConfiguration(createConfiguration());
     }
 
-    ValidatableResponse whenKpiEndpoint() {
+    ValidatableResponse whenExampleEndpoint(ExampleQuery exampleQuery) {
         return givenManagementEndpoint()
                 .when()
-                .get("/wrapper/use-case-api/kpis")
+                .contentType(ContentType.JSON)
+                .body(exampleQuery)
+                .post("/wrapper/example-api/example")
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON);
@@ -46,8 +51,9 @@ class KpiApiTest {
 
     @Test
     void exampleEndpoint() {
-        whenKpiEndpoint()
+        whenExampleEndpoint(new ExampleQuery("a", List.of("b")))
                 .assertThat()
-                .body("assetsCount", equalTo(0));
+                .body("name", equalTo("a"))
+                .body("myNestedList[0].name", equalTo("b"));
     }
 }

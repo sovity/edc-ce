@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper;
+package de.sovity.edc.ext.wrapper.api.ui;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
