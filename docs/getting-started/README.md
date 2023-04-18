@@ -82,11 +82,11 @@ To further try out our EDC Backend without the UI, try our Postman Collection:
 3. Depending on your configuration changes, you need to adjust variables on collection `MDV > Variables > Current Value`
 4. `api_key` needs to be aligned with `EDC_API_AUTH_KEY`
 5. To test the MDS Broker functionality, simply execute steps
-    1. `Publish Asset 1`
-    2. `Publish Policy 1`
-    3. `Publish ContractDefinition 1`: You will see a notification about registering resource at broker, which will then
+    1. `1 Create Asset`
+    2. `2 Create Policy`
+    3. `3 Create ContractDefinition`: You will see a notification about registering resource at broker, which will then
        be reflected in the Broker's UI.
-    4. `Delete ContractDefinition 1`: You will see a notification about unregistering the resource at broker.
+    4. `Delete ContractDefinition`: You will see a notification about unregistering the resource at broker.
 
 ## Docker Compose File Variants
 
