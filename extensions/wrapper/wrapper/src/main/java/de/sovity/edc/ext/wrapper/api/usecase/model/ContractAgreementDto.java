@@ -44,5 +44,5 @@ public class ContractAgreementDto {
     private List<ContractNegotiationDto> contractNegotiations;
 
     @Schema(description = "EDC Contract-Agreement transfer processes")
-    private List<TransferprocessDto> transferProcesses;
+    private List<TransferProcessDto> transferProcesses;
 }

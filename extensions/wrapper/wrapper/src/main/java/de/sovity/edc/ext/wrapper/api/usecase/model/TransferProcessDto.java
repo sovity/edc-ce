@@ -27,7 +27,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Schema(description = "TransferprocessDto")
-public class TransferprocessDto {
+public class TransferProcessDto {
     @Schema(description = "ID of transferprocess")
     private String id;
 

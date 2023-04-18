@@ -18,7 +18,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractNegotiationDto;
-import de.sovity.edc.ext.wrapper.api.usecase.model.TransferprocessDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.TransferProcessDto;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
@@ -30,7 +30,6 @@ import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,10 +67,10 @@ public class ContractAgreementPageService {
                 .toList();
     }
 
-    private List<TransferprocessDto> buildTransferprocessDtos(ContractAgreement contractAgreement) {
+    private List<TransferProcessDto> buildTransferprocessDtos(ContractAgreement contractAgreement) {
         var transferProcesses = getTransferProcesses(contractAgreement);
 
-        return transferProcesses.stream().map(it -> new TransferprocessDto(
+        return transferProcesses.stream().map(it -> new TransferProcessDto(
                 it.getId(),
                 it.getCreatedAt(),
                 it.getUpdatedAt(),
