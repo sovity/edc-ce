@@ -1,5 +1,5 @@
-import { EdcClientOptions } from "./EdcClientOptions";
-import { Configuration, ExampleApi, UseCaseApi } from "./generated";
+import {EdcClientOptions} from "./EdcClientOptions";
+import {Configuration, ExampleApi, UIApi, UseCaseApi} from "./generated";
 
 /**
  * Configure & Build new EDC Client
@@ -9,6 +9,7 @@ export function buildEdcClient(opts: EdcClientOptions) {
   const config = buildConfiguration(opts);
   return {
     exampleApi: new ExampleApi(config),
+    uiApi: new UIApi(config),
     useCaseApi: new UseCaseApi(config),
   };
 }
