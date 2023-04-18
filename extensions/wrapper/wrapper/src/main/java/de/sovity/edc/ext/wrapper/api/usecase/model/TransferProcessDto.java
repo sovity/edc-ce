@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 
 import java.time.OffsetDateTime;
 
@@ -40,7 +41,7 @@ public class TransferProcessDto {
     private OffsetDateTime updatedAt;
 
     @Schema(description = "transferprocess state")
-    private int state;
+    private TransferProcessStates state;
 
     @Schema(description = "transferprocess errorDetail")
     private String errorDetail;

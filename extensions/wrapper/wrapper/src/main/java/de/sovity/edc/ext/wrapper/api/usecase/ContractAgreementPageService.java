@@ -26,6 +26,7 @@ import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiat
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
+import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
@@ -77,7 +78,7 @@ public class ContractAgreementPageService {
                 it.getId(),
                 OffsetDateTime.ofInstant(Instant.ofEpochMilli(it.getCreatedAt()), ZoneOffset.UTC),
                 OffsetDateTime.ofInstant(Instant.ofEpochMilli(it.getUpdatedAt()), ZoneOffset.UTC),
-                it.getState(),
+                TransferProcessStates.from(it.getState()),
                 it.getErrorDetail()
         )).toList();
     }
