@@ -18,7 +18,7 @@
 
 TypeScript Client Library to be imported and used in arbitrary applications like frontends or nodejs projects.
 
-You can find our API Wrapper Project [here](../).
+You can find our API Wrapper Project [here](https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper).
 
 ## How to install
 
@@ -41,11 +41,11 @@ const edcClient: EdcClient = buildEdcClient({
 let kpiData: KpiResult = await edcClient.useCaseApi.kpiEndpoint();
 ```
 
-An minimal example project using our typescript API client can be found [here](../client-ts-example).
+A minimal example project using our typescript API client can be found [here](https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper/client-ts-example).
 
 ## License
 
-Apache License 2.0 - see [LICENSE](../../LICENSE)
+Apache License 2.0 - see [LICENSE](https://github.com/sovity/edc-extensions/blob/main/LICENSE)
 
 ## Contact
 
