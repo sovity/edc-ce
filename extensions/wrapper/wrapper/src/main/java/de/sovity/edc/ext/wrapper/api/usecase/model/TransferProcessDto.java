@@ -21,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 @ToString
@@ -32,10 +34,10 @@ public class TransferProcessDto {
     private String id;
 
     @Schema(description = "transferprocess ceated at")
-    private long createdAt;
+    private OffsetDateTime createdAt;
 
     @Schema(description = "transferprocess updated at")
-    private long updatedAt;
+    private OffsetDateTime updatedAt;
 
     @Schema(description = "transferprocess state")
     private int state;

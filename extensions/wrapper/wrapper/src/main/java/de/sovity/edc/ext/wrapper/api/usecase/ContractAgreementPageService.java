@@ -30,6 +30,9 @@ import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 
@@ -72,8 +75,8 @@ public class ContractAgreementPageService {
 
         return transferProcesses.stream().map(it -> new TransferProcessDto(
                 it.getId(),
-                it.getCreatedAt(),
-                it.getUpdatedAt(),
+                OffsetDateTime.ofInstant(Instant.ofEpochMilli(it.getCreatedAt()), ZoneOffset.UTC),
+                OffsetDateTime.ofInstant(Instant.ofEpochMilli(it.getUpdatedAt()), ZoneOffset.UTC),
                 it.getState(),
                 it.getErrorDetail()
         )).toList();
