@@ -16,6 +16,7 @@
 
 ## About this component
 
+TypeScript Client Library to be imported and used in arbitrary applications like frontends or NodeJS projects.
 TypeScript Client Library to be imported and used in arbitrary applications like
 frontends or nodejs projects.
 
