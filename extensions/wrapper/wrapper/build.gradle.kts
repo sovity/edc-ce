@@ -54,8 +54,28 @@ tasks.withType<io.swagger.v3.plugins.gradle.tasks.ResolveTask> {
     resourcePackages = setOf("de.sovity.edc.ext.wrapper.api")
 }
 
+
+task<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiGenerateTypeScriptClient") {
+    dependsOn("resolve")
+    generatorName.set("typescript-fetch")
+    configOptions.set(mutableMapOf(
+            "supportsES6" to "true",
+            "npmVersion" to "8.15.0",
+            "typescriptThreePlus" to "true",
+    ))
+
+    inputSpec.set(openapiFile)
+    val outputDirectory = buildFile.parentFile.resolve("../client-ts/src/generated").normalize()
+    outputDir.set(outputDirectory.toString())
+
+    doLast {
+        outputDirectory.resolve("src/generated").renameTo(outputDirectory)
+    }
+}
+
 tasks.withType<org.gradle.jvm.tasks.Jar> {
     dependsOn("resolve")
+    dependsOn("openApiGenerateTypeScriptClient")
     from(openapiFileDir) {
         include(openapiFileFilename)
     }

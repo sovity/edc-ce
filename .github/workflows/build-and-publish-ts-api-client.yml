@@ -1,0 +1,79 @@
+name: TypeScript API Client Library
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [ published ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-publish-npm-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: FranzDiebold/github-env-vars-action@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+          cache-dependency-path: ./extensions/wrapper/client-ts/package-lock.json
+      - name: Generate openapi.yaml & Client Code
+        run: |
+          ./gradlew :extensions:wrapper:wrapper:clean :extensions:wrapper:wrapper:build -x test --no-daemon
+      - name: Decide Package Version
+        working-directory: ./extensions/wrapper/client-ts
+        run: |
+          # We re-use the maven module version
+          VERSION=$(cat ../../../gradle.properties | sed -n "s/^sovityEdcExtensionsVersion=\(.*\)$/\1/p")
+
+          # We add the date in milis as "pre-release" version to ensure re-running the pipeline does not fail
+          # due to a version already existing
+          DATE_IN_UTC_MILIS="$(date +%s%3N)"
+          if [[ "$VERSION" == *-SNAPSHOT ]]; then
+            VERSION="$VERSION.$DATE_IN_UTC_MILIS"
+          else
+            VERSION="$VERSION-$DATE_IN_UTC_MILIS"
+          fi
+
+          # Updates package.json
+          npm version $VERSION
+      - name: NPM Package Dist Tag
+        run: |
+          if [ "${{ startsWith(github.ref, 'refs/tags/') }}" == "true" ]; then
+            # Only releases will build with the latest tag
+            # Other tags will be ignored for default npm installs
+            DIST_TAG=latest
+          elif [ "$CI_REF_NAME" = "refs/heads/main" ]; then
+            # The next tag is a common tag used for unstable versions
+            DIST_TAG=next
+          else
+            # Branches and PRs will be built under special tags
+            DIST_TAG=$CI_REF_SLUG
+          fi
+          echo "DIST_TAG=$DIST_TAG" >> $GITHUB_ENV
+      - name: Build NPM Library
+        working-directory: ./extensions/wrapper/client-ts
+        run: |
+          npm ci && npm run build
+      - name: Publish NPM Library
+        working-directory: ./extensions/wrapper/client-ts
+        run: |
+          npm set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
+          npm set //registry.npmjs.org/:username $NODE_USER
+          npm publish --access public --tag "${{ env.DIST_TAG }}"
+        env:
+          NODE_USER: richardtreier-sovity
+          NODE_AUTH_TOKEN: ${{ secrets.SOVITY_EDC_CLIENT_NPM_AUTH }}
