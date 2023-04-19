@@ -16,6 +16,7 @@ dependencies {
 
     implementation("${edcGroup}:api-core:${edcVersion}")
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
+    implementation(project(":extensions:wrapper:wrapper-ee-api"))
     api("${edcGroup}:contract-definition-api:${edcVersion}")
     api("${edcGroup}:control-plane-spi:${edcVersion}")
     api("${edcGroup}:core-spi:${edcVersion}")
@@ -67,6 +68,10 @@ task<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiGenera
     inputSpec.set(openapiFile)
     val outputDirectory = buildFile.parentFile.resolve("../client-ts/src/generated").normalize()
     outputDir.set(outputDirectory.toString())
+
+    doFirst {
+        project.delete(fileTree(outputDirectory).exclude("**/.gitignore"))
+    }
 
     doLast {
         outputDirectory.resolve("src/generated").renameTo(outputDirectory)

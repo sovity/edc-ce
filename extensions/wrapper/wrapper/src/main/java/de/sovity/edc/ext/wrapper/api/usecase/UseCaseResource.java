@@ -15,9 +15,9 @@
 package de.sovity.edc.ext.wrapper.api.usecase;
 
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
+import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -25,12 +25,14 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 
-@OpenAPIDefinition(info = @Info(title = "Wrapper KPI API", version = "1.0.0"))
+import java.util.List;
+
 @Path("wrapper/use-case-api")
-@Tag(name = "Use Case", description = "EDC Connector KPI Endpoint")
+@Tag(name = "Use Case", description = "Generic Use Case Application API Endpoints.")
 @RequiredArgsConstructor
-public class KpiResource {
+public class UseCaseResource {
     private final KpiApiService kpiApiService;
+    private final SupportedPolicyApiService supportedPolicyApiService;
 
     @GET
     @Path("kpis")
@@ -38,5 +40,13 @@ public class KpiResource {
     @Operation(description = "Basic KPIs about the running EDC Connector.")
     public KpiResult kpiEndpoint() {
         return kpiApiService.kpiEndpoint();
+    }
+
+    @GET
+    @Path("supported-policy-functions")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "List available functions in policies, prohibitions and obligations.")
+    public List<String> getSupportedFunctions() {
+        return supportedPolicyApiService.getSupportedFunctions();
     }
 }

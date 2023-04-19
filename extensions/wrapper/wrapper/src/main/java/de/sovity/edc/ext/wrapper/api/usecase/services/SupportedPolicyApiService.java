@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.usecase;
+package de.sovity.edc.ext.wrapper.api.usecase.services;
 
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;

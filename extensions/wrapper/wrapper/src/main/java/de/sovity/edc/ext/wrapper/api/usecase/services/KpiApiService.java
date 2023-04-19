@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.usecase;
+package de.sovity.edc.ext.wrapper.api.usecase.services;
 
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import de.sovity.edc.ext.wrapper.api.usecase.model.TransferProcessStatesDto;
