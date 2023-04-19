@@ -36,6 +36,17 @@ PostgreSQL-Database are provided.
 The tables are prepared using Flyway, which executes the .sql scripts included in
 the `resources/migration` folder.
 
+There are Sovity EDC Community Edition specific migration scripts in the folder `resources/migration/default`.
+
+### Configuration
+
+Additional Migration Scripts can be added by specifiying the configuration property
+`edc.flyway.additional.migration.locations`. Values are comma separated and need to be correct [FlyWay migration
+script locations](https://flywaydb.org/documentation/configuration/parameters/locations). These migration scripts need
+to be compatible to the migrations in `resources/migration/default`.
+
+For further configuration options, please refer to the configuration of our Community Edition EDC and its .env file.
+
 ## Why does this extension exist?
 
 While the EDC is providing capabilities for individual persistence stores, our goal is to provide a single working
