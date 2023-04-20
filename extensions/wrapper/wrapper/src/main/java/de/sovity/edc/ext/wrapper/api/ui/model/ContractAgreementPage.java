@@ -16,20 +16,13 @@ package de.sovity.edc.ext.wrapper.api.ui.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import java.util.List;
 
-@Getter
-@Setter
-@ToString
+@Data
 @AllArgsConstructor
-@RequiredArgsConstructor
-@Schema(description = "All data required for our UI's Contract Agreement Page.")
 public class ContractAgreementPage {
-    @Schema(description = "EDC Contract-Agreements")
-    private List<ContractAgreementDto> contractAgreements;
+    @Schema(description = "Contract Agreement Cards", requiredMode = Schema.RequiredMode.REQUIRED)
+    private List<ContractAgreementCard> contractAgreements;
 }

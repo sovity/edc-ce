@@ -14,6 +14,9 @@
 
 package de.sovity.edc.client;
 
+import de.sovity.edc.client.gen.model.ConnectorLimits;
+import de.sovity.edc.client.gen.model.ContractAgreementPage;
+import de.sovity.edc.client.gen.model.KpiResult;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
