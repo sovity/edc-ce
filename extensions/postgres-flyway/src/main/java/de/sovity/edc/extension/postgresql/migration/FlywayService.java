@@ -25,6 +25,8 @@ import org.flywaydb.core.api.MigrationVersion;
 import org.flywaydb.core.api.output.MigrateResult;
 import org.flywaydb.core.api.output.RepairResult;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.sql.DataSource;
 
 public class FlywayService {
@@ -41,8 +43,10 @@ public class FlywayService {
 
     public void migrateDatabase(
             String datasourceName,
-            JdbcConnectionProperties jdbcConnectionProperties) {
-        var flyway = setupFlyway(datasourceName, jdbcConnectionProperties);
+            JdbcConnectionProperties jdbcConnectionProperties,
+            List<String> additionalMigrationLocations
+    ) {
+        var flyway = setupFlyway(datasourceName, jdbcConnectionProperties, additionalMigrationLocations);
         try {
             var migrateResult = flyway.migrate();
             handleFlywayMigrationResult(datasourceName, migrateResult);
@@ -86,17 +90,24 @@ public class FlywayService {
 
     private Flyway setupFlyway(
             String datasourceName,
-            JdbcConnectionProperties jdbcConnectionProperties) {
+            JdbcConnectionProperties jdbcConnectionProperties,
+            List<String> additionalMigrationLocations
+    ) {
         var dataSource = getDataSource(jdbcConnectionProperties);
         var migrationTableName = String.format("flyway_schema_history_%s", datasourceName);
-        var migrationScriptLocation = String.join("/", MIGRATION_LOCATION_BASE, datasourceName);
+        var migrationLocations = new ArrayList<String>();
+        migrationLocations.add(String.join("/", MIGRATION_LOCATION_BASE, datasourceName));
+        migrationLocations.addAll(additionalMigrationLocations);
+        migrationLocations.forEach(migrationLocation -> monitor.info(
+                "Using migration location for %s: %s".formatted(datasourceName, migrationLocation)
+        ));
         return Flyway.configure()
                 .baselineVersion(MigrationVersion.fromVersion("0.0.0"))
                 .baselineOnMigrate(true)
                 .failOnMissingLocations(true)
                 .dataSource(dataSource)
                 .table(migrationTableName)
-                .locations(migrationScriptLocation)
+                .locations(migrationLocations.toArray(new String[0]))
                 .load();
     }
 
