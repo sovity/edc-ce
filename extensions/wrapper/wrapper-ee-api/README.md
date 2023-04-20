@@ -5,7 +5,8 @@
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
-<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Client:<br />Wrapper API Implementation</h3>
+<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Client:<br />EDC Enterprise Edition API
+Specification</h3>
 
   <p align="center">
     <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
@@ -16,9 +17,10 @@
 
 ## About this component
 
-EDC extension which provides API implementations for most of the Wrapper API endpoints. Excluded endpoints are either
-implemented in other Community Edition EDC Extensions or implemented closed source, e.g. our Enterprise Edition API
-endpoints.
+Specification of Enterprise Edition API endpoints to be included in our API Client generation for ease of use.
+
+These can either be API endpoints for our Enterprise Edition EDC UI or Enterprise Edition EDC Extensions we want to
+make available for use with our generated API clients.
 
 ## License
 

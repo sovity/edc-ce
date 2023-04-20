@@ -20,6 +20,17 @@ Java API Client Library to be imported and used in arbitrary applications like u
 
 An example project using this client can be found [here](../client-example).
 
+## Installation
+
+```xml
+<!-- Requires the GitHub Maven Registry -->
+<dependency>
+  <groupId>de.sovity.edc</groupId>
+  <artifactId>client</artifactId>
+  <version>${sovity-edc-extensions.version}</version>
+</dependency>
+```
+
 ## License
 
 Apache License 2.0 - see [LICENSE](../../LICENSE)
