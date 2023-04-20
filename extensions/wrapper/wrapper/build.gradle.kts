@@ -21,6 +21,7 @@ dependencies {
     implementation(project(":extensions:wrapper:wrapper-common-api"))
     implementation(project(":extensions:wrapper:wrapper-ee-api"))
     api("${edcGroup}:contract-definition-api:${edcVersion}")
+    api("${edcGroup}:asset-api:${edcVersion}")
     api("${edcGroup}:control-plane-spi:${edcVersion}")
     api("${edcGroup}:core-spi:${edcVersion}")
     api("${edcGroup}:policy-definition-api:${edcVersion}")

@@ -14,6 +14,8 @@
 
 package de.sovity.edc.ext.wrapper;
 
+import de.sovity.edc.ext.wrapper.api.offering.OfferingResource;
+import de.sovity.edc.ext.wrapper.api.offering.services.OfferingService;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementPageCardBuilder;
@@ -23,6 +25,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import lombok.NoArgsConstructor;
+import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
@@ -54,7 +57,8 @@ public class WrapperExtensionContextBuilder {
             TransferProcessStore transferProcessStore,
             ContractAgreementService contractAgreementService,
             ContractNegotiationStore contractNegotiationStore,
-            TransferProcessService transferProcessService
+            TransferProcessService transferProcessService,
+            DtoTransformerRegistry dtoTransformerRegistry
     ) {
         // UI API
         var transferProcessStateService = new TransferProcessStateService();
@@ -81,10 +85,15 @@ public class WrapperExtensionContextBuilder {
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
         var useCaseResource = new UseCaseResource(kpiApiService, supportedPolicyApiService);
 
+        var offeringService = new OfferingService(assetIndex, policyDefinitionStore,
+                contractDefinitionStore, dtoTransformerRegistry);
+        var offeringResource = new OfferingResource(offeringService);
+
         // Collect all JAX-RS resources
         return new WrapperExtensionContext(List.of(
                 uiResource,
-                useCaseResource
+                useCaseResource,
+                offeringResource
         ));
     }
 }
