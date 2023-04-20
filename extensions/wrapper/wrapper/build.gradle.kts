@@ -18,6 +18,7 @@ dependencies {
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
     implementation(project(":extensions:wrapper:wrapper-ee-api"))
     api("${edcGroup}:contract-definition-api:${edcVersion}")
+    api("${edcGroup}:asset-api:${edcVersion}")
     api("${edcGroup}:control-plane-spi:${edcVersion}")
     api("${edcGroup}:core-spi:${edcVersion}")
     api("${edcGroup}:policy-definition-api:${edcVersion}")
