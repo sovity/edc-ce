@@ -1,0 +1,118 @@
+package de.sovity.edc.ext.wrapper.api.offering;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.restassured.http.ContentType;
+import io.restassured.response.ValidatableResponse;
+import org.eclipse.edc.junit.annotations.ApiTest;
+import org.eclipse.edc.junit.extensions.EdcExtension;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import java.io.File;
+import java.io.IOException;
+
+import static de.sovity.edc.ext.wrapper.TestUtils.createConfiguration;
+import static de.sovity.edc.ext.wrapper.TestUtils.givenManagementEndpoint;
+
+@ApiTest
+@ExtendWith(EdcExtension.class)
+public class OfferingServiceTest {
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static JsonNode contractOfferValid;
+    private ObjectNode contractOffer;
+
+    private static final String ASSET_ENTRY_KEY = "assetEntryDto";
+    private static final String POLICY_DEFINITION_REQUEST = "policyDefinitionRequestDto";
+    private static final String CONTRACT_DEFINITION_REQUEST = "contractDefinitionRequestDto";
+    private static final String MISSING_PROPERTY_TEXT = "missing required creator property";
+
+    @BeforeAll
+    static void init() throws IOException {
+        ClassLoader classLoader = OfferingServiceTest.class.getClassLoader();
+        contractOfferValid = MAPPER.readTree(new File(
+                classLoader.getResource("offering/contract-offer-valid.json").getFile()));
+    }
+
+    @BeforeEach
+    void setUp(EdcExtension extension) throws JsonProcessingException {
+        extension.setConfiguration(createConfiguration());
+        contractOffer = (ObjectNode) MAPPER.readTree(contractOfferValid.toString());
+    }
+
+    ValidatableResponse whenCreateOfferingEndpoint(String body) {
+        return givenManagementEndpoint()
+                .when()
+                .contentType(ContentType.JSON)
+                .body(body)
+                .post("/wrapper/offering/contract-offer")
+                .then()
+                .log()
+                .all();
+    }
+
+    ValidatableResponse whenJsonPropertyMissing(String property) {
+        contractOffer.remove(property);
+        return whenCreateOfferingEndpoint(contractOffer.toString());
+    }
+
+    @Test
+    void shouldCreateOffer() {
+        ValidatableResponse validatableResponse = whenCreateOfferingEndpoint(contractOfferValid.toString());
+        validatableResponse
+                .assertThat()
+                .statusCode(204);
+    }
+
+    @Test
+    void shouldNotCreateOfferMissingAssetEntry() {
+        whenJsonPropertyMissing(ASSET_ENTRY_KEY)
+                .assertThat()
+                .statusCode(400)
+                .contentType(ContentType.TEXT)
+                .body(Matchers.containsStringIgnoringCase(MISSING_PROPERTY_TEXT))
+                .body(Matchers.containsStringIgnoringCase(ASSET_ENTRY_KEY));
+    }
+
+    @Test
+    void shouldNotCreateOfferMissingPolicyDefinitionRequest() {
+        whenJsonPropertyMissing(POLICY_DEFINITION_REQUEST)
+                .assertThat()
+                .statusCode(400)
+                .contentType(ContentType.TEXT)
+                .body(Matchers.containsStringIgnoringCase(MISSING_PROPERTY_TEXT))
+                .body(Matchers.containsStringIgnoringCase(POLICY_DEFINITION_REQUEST));
+    }
+
+    @Test
+    void shouldNotCreateOfferMissingContractDefinitionRequest() {
+        whenJsonPropertyMissing(CONTRACT_DEFINITION_REQUEST)
+                .assertThat()
+                .statusCode(400)
+                .contentType(ContentType.TEXT)
+                .body(Matchers.containsStringIgnoringCase(MISSING_PROPERTY_TEXT))
+                .body(Matchers.containsStringIgnoringCase(CONTRACT_DEFINITION_REQUEST));
+    }
+
+    @Test
+    void shouldNotCreateOfferEmptyRequestBody() {
+        // ToDo: How to throw 400 instead of 500?
+        whenCreateOfferingEndpoint("")
+                .assertThat()
+                .statusCode(400);
+    }
+
+    @Test
+    void shouldNotCreateOfferGarbageRequestBody() {
+        whenCreateOfferingEndpoint("asdf")
+                .assertThat()
+                .statusCode(400);
+    }
+
+}

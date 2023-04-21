@@ -4,9 +4,10 @@ import de.sovity.edc.ext.wrapper.api.offering.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.offering.services.OfferingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 
@@ -19,9 +20,9 @@ public class OfferingResource {
 
     @POST
     @Path("contract-offer")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Creates an offering")
-    public void createOfferingEndpoint(CreateOfferingDto dto) {
+    public void createOfferingEndpoint(@Valid CreateOfferingDto dto) {
         offeringService.create(dto);
     }
 }
