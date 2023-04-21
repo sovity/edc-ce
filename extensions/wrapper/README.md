@@ -23,6 +23,7 @@ contains multiple components:
     - EDC UI
     - Use Cases
     - Further APIs
+- An [EDC Extension](./wrapper) serving the implementations
 - Auto generated
     - [Java API Client](./client)
     - [TypeScript API Client](./client-ts)

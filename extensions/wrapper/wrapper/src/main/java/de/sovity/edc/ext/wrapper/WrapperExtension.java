@@ -61,7 +61,6 @@ public class WrapperExtension implements ServiceExtension {
     public void initialize(ServiceExtensionContext context) {
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
                 assetIndex,
-                context.getConfig(),
                 contractDefinitionStore,
                 policyDefinitionStore,
                 policyEngine,

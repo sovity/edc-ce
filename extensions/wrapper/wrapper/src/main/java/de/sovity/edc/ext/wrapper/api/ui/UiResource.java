@@ -25,7 +25,7 @@ import jakarta.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 
 @Path("wrapper/ui")
-@Tag(name = "UI", description = "EDC UI Endpoints")
+@Tag(name = "UI", description = "EDC UI API Endpoints")
 @RequiredArgsConstructor
 public class UiResource {
     private final ContractAgreementPageService contractAgreementApiService;

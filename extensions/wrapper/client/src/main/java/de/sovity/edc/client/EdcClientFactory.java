@@ -15,7 +15,8 @@
 package de.sovity.edc.client;
 
 import de.sovity.edc.client.gen.ApiClient;
-import de.sovity.edc.client.gen.api.ExampleApi;
+import de.sovity.edc.client.gen.api.EnterpriseEditionApi;
+import de.sovity.edc.client.gen.api.UiApi;
 import de.sovity.edc.client.gen.api.UseCaseApi;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -33,8 +34,9 @@ public class EdcClientFactory {
                 .addDefaultHeader("x-api-key", builder.managementApiKey());
 
         return new EdcClient(
-                new ExampleApi(apiClient),
-                new UseCaseApi(apiClient)
+                new UiApi(apiClient),
+                new UseCaseApi(apiClient),
+                new EnterpriseEditionApi(apiClient)
         );
     }
 }

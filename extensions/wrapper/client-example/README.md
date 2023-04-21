@@ -26,13 +26,13 @@ From the root folder of this repository execute the following:
 # Use WSL or Git Bash
 
 # Build Dev EDC
-docker build -f "connector/Dockerfile" -t "edc-dev-for-api-wrapper" --build-arg BUILD_ARGS="-Pdev-edc" .
+docker build -f "connector/Dockerfile" -t "edc-dev-for-api-wrapper" --build-arg BUILD_ARGS="-Pdmgmt-api-key" .
 
 # Fetch up-to-date UI
 docker compose -f docker-compose-dev.yaml pull
 
 # Launch Dev EDCs
-EDC_IMAGE=edc-dev-for-api-wrapper EDC_UI_ACTIVE_PROFILE=sovity-open-source docker compose -f docker-compose-dev.yaml up --scale postgresql=0 --scale postgresql2=0 -d
+DEV_EDC_IMAGE=edc-dev-for-api-wrapper EDC_UI_ACTIVE_PROFILE=sovity-open-source docker compose -f docker-compose-dev.yaml up --scale postgresql=0 --scale postgresql2=0 -d
 
 # Launch Quarkus Application
 ./gradlew :extensions:wrapper:client-example:quarkusDev

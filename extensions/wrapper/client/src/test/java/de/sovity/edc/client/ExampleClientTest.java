@@ -14,21 +14,17 @@
 
 package de.sovity.edc.client;
 
-import de.sovity.edc.client.gen.model.ExampleItem;
-import de.sovity.edc.client.gen.model.ExampleQuery;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
-class ExampleClientTest {
+class UseCaseClientTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
@@ -36,15 +32,14 @@ class ExampleClientTest {
     }
 
     @Test
-    void exampleEndpoint() {
+    void kpiEndpoint() {
         var client = EdcClient.builder()
                 .managementApiUrl(TestUtils.MANAGEMENT_ENDPOINT)
                 .managementApiKey(TestUtils.MANAGEMENT_API_KEY)
                 .build();
 
-        var result = client.exampleApi().exampleEndpoint(new ExampleQuery("a", List.of("b")));
+        var result = client.useCaseApi().kpiEndpoint();
 
-        assertThat(result.getName()).isEqualTo("a");
-        assertThat(result.getMyNestedList()).containsExactly(new ExampleItem("b"));
+        assertThat(result.getAssetsCount()).isZero();
     }
 }
