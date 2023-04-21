@@ -1,0 +1,39 @@
+{
+  "assetEntryDto": {
+    "asset": {
+      "id": "mock",
+      "properties": {
+        "key": "value"
+      }
+    },
+    "dataAddress": {
+      "properties": {
+        "type": "mock"
+      }
+    }
+  },
+  "policyDefinitionRequestDto": {
+    "id": "mock",
+    "policy": {
+      "uid": "mock",
+      "permissions": [],
+      "prohibitions": [],
+      "obligations": [],
+      "extensibleProperties": {},
+      "inheritsFrom": null,
+      "assigner": null,
+      "assignee": null,
+      "target": null,
+      "@type": {
+        "@policytype": "set"
+      }
+    }
+  },
+  "contractDefinitionRequestDto": {
+    "id": "mock",
+    "accessPolicyId": "mock",
+    "contractPolicyId": "mock",
+    "validity": 10,
+    "criteria": []
+  }
+}
