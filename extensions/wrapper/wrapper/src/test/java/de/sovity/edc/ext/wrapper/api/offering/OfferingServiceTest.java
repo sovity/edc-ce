@@ -65,8 +65,7 @@ public class OfferingServiceTest {
 
     @Test
     void shouldCreateOffer() {
-        ValidatableResponse validatableResponse = whenCreateOfferingEndpoint(contractOfferValid.toString());
-        validatableResponse
+        whenCreateOfferingEndpoint(contractOfferValid.toString())
                 .assertThat()
                 .statusCode(204);
     }
