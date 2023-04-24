@@ -32,6 +32,7 @@ public class OfferingServiceTest {
     private static final String POLICY_DEFINITION_REQUEST = "policyDefinitionRequestDto";
     private static final String CONTRACT_DEFINITION_REQUEST = "contractDefinitionRequestDto";
     private static final String MISSING_PROPERTY_TEXT = "missing required creator property";
+    private static final String NO_REQUEST_BODY_ERROR = "No CreateOfferingDto provided";
 
     @BeforeAll
     static void init() throws IOException {
@@ -102,10 +103,11 @@ public class OfferingServiceTest {
 
     @Test
     void shouldNotCreateOfferEmptyRequestBody() {
-        // ToDo: How to throw 400 instead of 500?
         whenCreateOfferingEndpoint("")
                 .assertThat()
-                .statusCode(400);
+                .statusCode(400)
+                .contentType(ContentType.TEXT)
+                .body(Matchers.equalTo(NO_REQUEST_BODY_ERROR));
     }
 
     @Test

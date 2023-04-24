@@ -9,6 +9,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 
 @Path("wrapper/offering")
@@ -22,7 +23,12 @@ public class OfferingResource {
     @Path("contract-offer")
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Creates an offering")
-    public void createOfferingEndpoint(@Valid CreateOfferingDto dto) {
+    public Response createOfferingEndpoint(@Valid CreateOfferingDto dto) {
+        if (dto == null) {
+            String error = "No CreateOfferingDto provided";
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+        }
         offeringService.create(dto);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 }
