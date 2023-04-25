@@ -63,10 +63,13 @@ public class ContractAgreementPageCardBuilder {
     ) {
         return transferProcesses.stream()
                 .map(transferProcess -> {
+                    TransferProcessStates state = TransferProcessStates.from(transferProcess.getState());
+
                     var dto = new ContractAgreementTransfer();
                     dto.setTransferProcessId(transferProcess.getId());
                     dto.setLastUpdatedDate(utcMillisToOffsetDateTime(transferProcess.getUpdatedAt()));
-                    dto.setState(TransferProcessStates.from(transferProcess.getState()));
+                    dto.setState(state);
+                    dto.setRunning(TransferProcessStateUtils.isRunning(state));
                     dto.setErrorMessage(transferProcess.getErrorDetail());
                     return dto;
                 })

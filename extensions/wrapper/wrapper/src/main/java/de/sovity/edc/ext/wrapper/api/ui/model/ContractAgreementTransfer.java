@@ -37,6 +37,8 @@ public class ContractAgreementTransfer {
     private OffsetDateTime lastUpdatedDate;
     @Schema(description = "Current Status", requiredMode = Schema.RequiredMode.REQUIRED)
     private TransferProcessStates state;
+    @Schema(description = "If current status means that transfer is in progress.", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Boolean running;
     @Schema(description = "Error Message")
     private String errorMessage;
 
