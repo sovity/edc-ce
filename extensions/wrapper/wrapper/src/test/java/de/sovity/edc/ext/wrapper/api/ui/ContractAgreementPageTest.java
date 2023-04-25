@@ -56,7 +56,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 class ContractAgreementPageTest {
     LocalDate today = LocalDate.parse("2019-04-01");
     ZonedDateTime todayAsZonedDateTime = today.atStartOfDay(ZoneId.systemDefault());
-    long todayEpochMillis = todayAsZonedDateTime.toInstant().toEpochMilli();;
+    long todayEpochMillis = todayAsZonedDateTime.toInstant().toEpochMilli();
     long todayEpochSeconds = todayAsZonedDateTime.toInstant().getEpochSecond();
 
     @BeforeEach
