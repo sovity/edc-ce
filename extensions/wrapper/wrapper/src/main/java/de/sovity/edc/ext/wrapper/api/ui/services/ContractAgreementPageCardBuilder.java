@@ -17,7 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui.services;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransfer;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferProcess;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDto;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -61,23 +61,23 @@ public class ContractAgreementPageCardBuilder {
     }
 
     @NotNull
-    private List<ContractAgreementTransfer> buildTransferProcesses(
-            @NonNull List<TransferProcess> transferProcesses
+    private List<ContractAgreementTransferProcess> buildTransferProcesses(
+            @NonNull List<TransferProcess> transferProcessEntities
     ) {
-        return transferProcesses.stream()
+        return transferProcessEntities.stream()
                 .map(this::buildContractAgreementTransfer)
-                .sorted(Comparator.comparing(ContractAgreementTransfer::getLastUpdatedDate).reversed())
+                .sorted(Comparator.comparing(ContractAgreementTransferProcess::getLastUpdatedDate).reversed())
                 .toList();
     }
 
     @NotNull
-    private ContractAgreementTransfer buildContractAgreementTransfer(TransferProcess transferProcess) {
-        var dto = new ContractAgreementTransfer();
-        dto.setTransferProcessId(transferProcess.getId());
-        dto.setLastUpdatedDate(utcMillisToOffsetDateTime(transferProcess.getUpdatedAt()));
-        dto.setState(transferProcessStateService.buildTransferStateInfo(transferProcess.getState()));
-        dto.setErrorMessage(transferProcess.getErrorDetail());
-        return dto;
+    private ContractAgreementTransferProcess buildContractAgreementTransfer(TransferProcess transferProcessEntity) {
+        var transferProcess = new ContractAgreementTransferProcess();
+        transferProcess.setTransferProcessId(transferProcessEntity.getId());
+        transferProcess.setLastUpdatedDate(utcMillisToOffsetDateTime(transferProcessEntity.getUpdatedAt()));
+        transferProcess.setState(transferProcessStateService.buildTransferProcessState(transferProcessEntity.getState()));
+        transferProcess.setErrorMessage(transferProcessEntity.getErrorDetail());
+        return transferProcess;
     }
 
     @NotNull

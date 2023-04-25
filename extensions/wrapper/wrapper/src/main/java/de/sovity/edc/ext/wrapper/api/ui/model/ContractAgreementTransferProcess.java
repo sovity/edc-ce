@@ -21,17 +21,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "Transfer Process State interpreted")
-public class TransferStateInfo {
-    @Schema(description = "State name or 'CUSTOM'. State names only exist for original EDC Transfer Process States.", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String name;
-    @Schema(description = "State code", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Integer code;
-    @Schema(description = "Whether we are running, in an error state or done.", requiredMode = Schema.RequiredMode.REQUIRED)
-    private TransferSimplifiedState simplifiedState;
+@Schema(description = "A Contract Agreement's Transfer Process")
+public class ContractAgreementTransferProcess {
+    @Schema(description = "Transfer Process ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String transferProcessId;
+    @Schema(description = "Last Change Date", requiredMode = Schema.RequiredMode.REQUIRED)
+    private OffsetDateTime lastUpdatedDate;
+    @Schema(description = "Current State", requiredMode = Schema.RequiredMode.REQUIRED)
+    private TransferProcessState state;
+    @Schema(description = "Error Message")
+    private String errorMessage;
+
 }

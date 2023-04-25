@@ -14,8 +14,8 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.services;
 
-import de.sovity.edc.ext.wrapper.api.ui.model.TransferSimplifiedState;
-import de.sovity.edc.ext.wrapper.api.ui.model.TransferStateInfo;
+import de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState;
+import de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessState;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
@@ -32,12 +32,12 @@ public class TransferProcessStateService {
      * @return if running
      */
     @NotNull
-    public TransferStateInfo buildTransferStateInfo(int code) {
-        var dto = new TransferStateInfo();
-        dto.setCode(code);
-        dto.setName(getName(code));
-        dto.setSimplifiedState(getSimplifiedState(code));
-        return dto;
+    public TransferProcessState buildTransferProcessState(int code) {
+        var transferProcessState = new TransferProcessState();
+        transferProcessState.setCode(code);
+        transferProcessState.setName(getName(code));
+        transferProcessState.setSimplifiedState(getSimplifiedState(code));
+        return transferProcessState;
     }
 
     /**
@@ -73,13 +73,13 @@ public class TransferProcessStateService {
     }
 
     @NotNull
-    private TransferSimplifiedState getSimplifiedState(int code) {
+    private TransferProcessSimplifiedState getSimplifiedState(int code) {
         if (isError(code)) {
-            return TransferSimplifiedState.ERROR;
+            return TransferProcessSimplifiedState.ERROR;
         }
         if (isRunning(code)) {
-            return TransferSimplifiedState.RUNNING;
+            return TransferProcessSimplifiedState.RUNNING;
         }
-        return TransferSimplifiedState.OK;
+        return TransferProcessSimplifiedState.OK;
     }
 }

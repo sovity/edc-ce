@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.services;
 
-import de.sovity.edc.ext.wrapper.api.ui.model.TransferSimplifiedState;
+import de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,64 +33,64 @@ class TransferProcessStateServiceTest {
     @Test
     void testError() {
         int code = TransferProcessStates.ERROR.code();
-        var result = transferProcessStateService.buildTransferStateInfo(code);
+        var result = transferProcessStateService.buildTransferProcessState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("ERROR");
-        assertThat(result.getSimplifiedState()).isEqualTo(TransferSimplifiedState.ERROR);
+        assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.ERROR);
     }
 
     @Test
     void testRunning() {
         int code = TransferProcessStates.INITIAL.code();
-        var result = transferProcessStateService.buildTransferStateInfo(code);
+        var result = transferProcessStateService.buildTransferProcessState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("INITIAL");
-        assertThat(result.getSimplifiedState()).isEqualTo(TransferSimplifiedState.RUNNING);
+        assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.RUNNING);
     }
 
     @Test
     void testOk() {
         int code = TransferProcessStates.COMPLETED.code();
-        var result = transferProcessStateService.buildTransferStateInfo(code);
+        var result = transferProcessStateService.buildTransferProcessState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("COMPLETED");
-        assertThat(result.getSimplifiedState()).isEqualTo(TransferSimplifiedState.OK);
+        assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
     }
 
     @Test
     void testDeprovisioning() {
         // Edge case, de-provisioning is not considered "RUNNING" anymore.
         int code = TransferProcessStates.DEPROVISIONING.code();
-        var result = transferProcessStateService.buildTransferStateInfo(code);
+        var result = transferProcessStateService.buildTransferProcessState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("DEPROVISIONING");
-        assertThat(result.getSimplifiedState()).isEqualTo(TransferSimplifiedState.OK);
+        assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
     }
 
     @Test
     void testCustomError() {
         int code = -100;
-        var result = transferProcessStateService.buildTransferStateInfo(code);
+        var result = transferProcessStateService.buildTransferProcessState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("CUSTOM");
-        assertThat(result.getSimplifiedState()).isEqualTo(TransferSimplifiedState.ERROR);
+        assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.ERROR);
     }
 
     @Test
     void testCustomRunning() {
         int code = 299;
-        var result = transferProcessStateService.buildTransferStateInfo(code);
+        var result = transferProcessStateService.buildTransferProcessState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("CUSTOM");
-        assertThat(result.getSimplifiedState()).isEqualTo(TransferSimplifiedState.RUNNING);
+        assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.RUNNING);
     }
 
     @Test
     void testCustomOk() {
         int code = 2000;
-        var result = transferProcessStateService.buildTransferStateInfo(code);
+        var result = transferProcessStateService.buildTransferProcessState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("CUSTOM");
-        assertThat(result.getSimplifiedState()).isEqualTo(TransferSimplifiedState.OK);
+        assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
     }
 }
