@@ -15,6 +15,8 @@
 package de.sovity.edc.ext.wrapper;
 
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
+import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementDataFetcher;
+import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementPageCardBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementPageService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
@@ -54,11 +56,15 @@ public class WrapperExtensionContextBuilder {
             TransferProcessService transferProcessService
     ) {
         // UI API
-        var contractAgreementApiService = new ContractAgreementPageService(
-                assetIndex,
+        var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder();
+        var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
                 contractAgreementService,
                 contractNegotiationStore,
                 transferProcessService
+        );
+        var contractAgreementApiService = new ContractAgreementPageService(
+                contractAgreementDataFetcher,
+                contractAgreementPageCardBuilder
         );
         var uiResource = new UiResource(contractAgreementApiService);
 

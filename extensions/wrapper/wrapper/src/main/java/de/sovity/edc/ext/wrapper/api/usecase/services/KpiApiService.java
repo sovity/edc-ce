@@ -52,18 +52,16 @@ public class KpiApiService {
                 policiesCount,
                 contractDefinitionsCount,
                 contractAgreements,
-                transferProcessDto);
+                transferProcessDto
+        );
     }
 
     private int getContractAgreementsCount() {
-        var querySpec = QuerySpec.Builder.newInstance().build();
-        return contractAgreementService.query(querySpec).getContent().toList().size();
+        return contractAgreementService.query(QuerySpec.max()).getContent().toList().size();
     }
 
     private TransferProcessStatesDto getTransferProcessesDto() {
-        var querySpec = QuerySpec.Builder.newInstance().build();
-        var transferProcesses = transferProcessStore.findAll(querySpec).toList();
-
+        var transferProcesses = transferProcessStore.findAll(QuerySpec.max()).toList();
         return new TransferProcessStatesDto(getIncoming(transferProcesses), getOutgoing(transferProcesses));
     }
 
@@ -80,20 +78,17 @@ public class KpiApiService {
     }
 
     private int getContractDefinitionsCount() {
-        var querySpec = QuerySpec.Builder.newInstance().build();
-        var contractDefinitions = contractDefinitionStore.findAll(querySpec).toList();
+        var contractDefinitions = contractDefinitionStore.findAll(QuerySpec.max()).toList();
         return contractDefinitions.size();
     }
 
     private int getPoliciesCount() {
-        var querySpec = QuerySpec.Builder.newInstance().build();
-        var policies = policyDefinitionStore.findAll(querySpec).toList();
+        var policies = policyDefinitionStore.findAll(QuerySpec.max()).toList();
         return policies.size();
     }
 
     private int getAssetsCount() {
-        var querySpec = QuerySpec.Builder.newInstance().build();
-        var assets = assetIndex.queryAssets(querySpec).toList();
+        var assets = assetIndex.queryAssets(QuerySpec.max()).toList();
         return assets.size();
     }
 }

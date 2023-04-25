@@ -26,8 +26,10 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "ContractNegotiationDto")
-public class ContractNegotiationDto {
-    @Schema(description = "ID of contract negotiation")
-    private String id;
+@Schema(description = "Policy Details")
+public class PolicyDto {
+    @Schema(description = "Legacy JSON as built by the Management API. Will be replaced " +
+            "in the future by a type-safe variant without polymorphisms that can be used " +
+            "for our generated clients.", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Object legacyPolicy;
 }

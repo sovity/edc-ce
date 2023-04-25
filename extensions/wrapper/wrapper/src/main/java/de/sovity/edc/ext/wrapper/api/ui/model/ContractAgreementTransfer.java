@@ -20,23 +20,24 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 
 import java.time.OffsetDateTime;
-import java.util.Map;
 
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "Asset Details")
-public class AssetDto {
-    @Schema(description = "ID of asset", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String assetId;
+@Schema(description = "A Contract Agreement's Transfer Process")
+public class ContractAgreementTransfer {
+    @Schema(description = "Transfer Process ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String transferProcessId;
+    @Schema(description = "Last Change Date", requiredMode = Schema.RequiredMode.REQUIRED)
+    private OffsetDateTime lastUpdatedDate;
+    @Schema(description = "Current Status", requiredMode = Schema.RequiredMode.REQUIRED)
+    private TransferProcessStates state;
+    @Schema(description = "Error Message")
+    private String errorMessage;
 
-    @Schema(description = "Creation Date of asset", requiredMode = Schema.RequiredMode.REQUIRED)
-    private OffsetDateTime createdAt;
-
-    @Schema(description = "Asset properties", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Map<String, String> properties;
 }
