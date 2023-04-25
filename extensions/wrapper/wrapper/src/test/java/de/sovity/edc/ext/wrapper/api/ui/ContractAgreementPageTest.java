@@ -23,6 +23,7 @@ import org.eclipse.edc.connector.contract.spi.types.offer.ContractOffer;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
+import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.policy.model.Action;
@@ -80,7 +81,7 @@ class ContractAgreementPageTest {
     ) {
         contractNegotiationStore.save(contractDefinition(1));
 
-        transferProcessStore.save(transferProcess(1, 1));
+        transferProcessStore.save(transferProcess(1, 1, TransferProcessStates.COMPLETED.code()));
 
         whenContractAgreementEndpoint()
                 .assertThat()
@@ -100,11 +101,13 @@ class ContractAgreementPageTest {
                 .body("contractAgreements[0].transferProcesses", hasSize(1))
                 .body("contractAgreements[0].transferProcesses[0].transferProcessId", equalTo("my-transfer-1-1"))
                 .body("contractAgreements[0].transferProcesses[0].lastUpdatedDate", endsWith("Z"))
-                .body("contractAgreements[0].transferProcesses[0].state", equalTo("UNSAVED"))
+                .body("contractAgreements[0].transferProcesses[0].state.name", equalTo("COMPLETED"))
+                .body("contractAgreements[0].transferProcesses[0].state.code", equalTo(800))
+                .body("contractAgreements[0].transferProcesses[0].state.simplifiedState", equalTo("OK"))
                 .body("contractAgreements[0].transferProcesses[0].errorMessage", equalTo("my-error-message-1"));
     }
 
-    private TransferProcess transferProcess(int contract, int transfer) {
+    private TransferProcess transferProcess(int contract, int transfer, int code) {
         var dataRequest = DataRequest.Builder.newInstance()
                 .contractId("my-contract-agreement-" + contract)
                 .assetId("my-asset-" + contract)
@@ -117,6 +120,7 @@ class ContractAgreementPageTest {
                 .build();
         return TransferProcess.Builder.newInstance()
                 .id("my-transfer-" + contract + "-" + transfer)
+                .state(code)
                 .type(TransferProcess.Type.PROVIDER)
                 .dataRequest(dataRequest)
                 .contentDataAddress(DataAddress.Builder.newInstance().type("HttpData").build())

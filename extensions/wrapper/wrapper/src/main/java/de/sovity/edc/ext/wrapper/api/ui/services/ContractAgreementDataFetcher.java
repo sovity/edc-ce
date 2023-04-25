@@ -24,6 +24,7 @@ import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -40,10 +41,10 @@ public class ContractAgreementDataFetcher {
      *
      * @return {@link ContractAgreementData}s
      */
+    @NotNull
     public List<ContractAgreementData> getContractAgreements() {
         var agreements = getAllContractAgreements();
 
-        // A ContractAgreement has multiple ContractNegotiations when doing a loopback consumption
         var negotiations = getAllContractNegotiations().stream()
                 .filter(it -> it.getContractAgreement() != null)
                 .collect(groupingBy(it -> it.getContractAgreement().getId()));
@@ -51,6 +52,7 @@ public class ContractAgreementDataFetcher {
         var transfers = getAllTransferProcesses().stream()
                 .collect(groupingBy(it -> it.getDataRequest().getContractId()));
 
+        // A ContractAgreement has multiple ContractNegotiations when doing a loopback consumption
         return agreements.stream()
                 .flatMap(agreement -> negotiations.getOrDefault(agreement.getId(), List.of()).stream()
                         .map(negotiation -> {
@@ -61,22 +63,26 @@ public class ContractAgreementDataFetcher {
                 .toList();
     }
 
+    @NotNull
     private List<ContractNegotiation> getAllContractNegotiations() {
         return contractNegotiationStore.queryNegotiations(QuerySpec.max()).toList();
     }
 
+    @NotNull
     private List<ContractAgreement> getAllContractAgreements() {
         return contractAgreementService.query(QuerySpec.max()).getContent().toList();
     }
 
+    @NotNull
     private List<TransferProcess> getAllTransferProcesses() {
         return transferProcessService.query(QuerySpec.max()).getContent().toList();
     }
 
+    @NotNull
     private Asset findAssetInNegotiation(ContractAgreement agreement, ContractNegotiation negotiation) {
         // Agreements have a single assetId
         // The negotiation has multiple contract offers
-        // Find the asset from the contract offer
+        // Find the asset from the contract offers
         return negotiation.getContractOffers().stream()
                 .map(ContractOffer::getAsset)
                 .filter(it -> agreement.getAssetId().equals(it.getId()))

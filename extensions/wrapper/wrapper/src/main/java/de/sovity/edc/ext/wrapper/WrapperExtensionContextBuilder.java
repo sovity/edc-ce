@@ -18,6 +18,7 @@ import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementPageCardBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementPageService;
+import de.sovity.edc.ext.wrapper.api.ui.services.TransferProcessStateService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
@@ -56,7 +57,8 @@ public class WrapperExtensionContextBuilder {
             TransferProcessService transferProcessService
     ) {
         // UI API
-        var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder();
+        var transferProcessStateService = new TransferProcessStateService();
+        var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(transferProcessStateService);
         var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
                 contractAgreementService,
                 contractNegotiationStore,

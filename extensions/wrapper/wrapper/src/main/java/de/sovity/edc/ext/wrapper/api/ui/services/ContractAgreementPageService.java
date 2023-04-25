@@ -17,6 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui.services;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 
@@ -25,6 +26,7 @@ public class ContractAgreementPageService {
     private final ContractAgreementDataFetcher contractAgreementDataFetcher;
     private final ContractAgreementPageCardBuilder contractAgreementPageCardBuilder;
 
+    @NotNull
     public ContractAgreementPage contractAgreementPage() {
         var agreements = contractAgreementDataFetcher.getContractAgreements();
 
