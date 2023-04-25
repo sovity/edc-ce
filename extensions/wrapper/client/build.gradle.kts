@@ -1,6 +1,7 @@
 val edcVersion: String by project
 val edcGroup: String by project
 val restAssured: String by project
+val assertj: String by project
 
 val sovityEdcClientGroup: String by project
 group = sovityEdcClientGroup
@@ -46,7 +47,7 @@ dependencies {
     testImplementation(project(":extensions:wrapper:wrapper"))
     testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
-    testImplementation("org.assertj:assertj-core:3.24.2")
+    testImplementation("org.assertj:assertj-core:${assertj}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 }
 

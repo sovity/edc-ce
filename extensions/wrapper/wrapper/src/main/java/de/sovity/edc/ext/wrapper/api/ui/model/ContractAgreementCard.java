@@ -58,6 +58,6 @@ public class ContractAgreementCard {
     @Schema(description = "Contract Policy", requiredMode = Schema.RequiredMode.REQUIRED)
     private PolicyDto contractPolicy;
 
-    @Schema(description = "EDC Contract-Agreement transfer processes", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<ContractAgreementTransfer> transferProcesses;
+    @Schema(description = "Contract Agreement's Transfer Processes", requiredMode = Schema.RequiredMode.REQUIRED)
+    private List<ContractAgreementTransferProcess> transferProcesses;
 }

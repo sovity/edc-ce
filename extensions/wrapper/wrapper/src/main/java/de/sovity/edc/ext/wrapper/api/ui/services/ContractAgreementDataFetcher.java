@@ -24,12 +24,11 @@ import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toMap;
 
 @RequiredArgsConstructor
 public class ContractAgreementDataFetcher {
@@ -42,44 +41,48 @@ public class ContractAgreementDataFetcher {
      *
      * @return {@link ContractAgreementData}s
      */
+    @NotNull
     public List<ContractAgreementData> getContractAgreements() {
         var agreements = getAllContractAgreements();
 
         var negotiations = getAllContractNegotiations().stream()
                 .filter(it -> it.getContractAgreement() != null)
-                .collect(toMap(it -> it.getContractAgreement().getId(), identity()));
+                .collect(groupingBy(it -> it.getContractAgreement().getId()));
 
         var transfers = getAllTransferProcesses().stream()
                 .collect(groupingBy(it -> it.getDataRequest().getContractId()));
 
+        // A ContractAgreement has multiple ContractNegotiations when doing a loopback consumption
         return agreements.stream()
-                .filter(agreement -> negotiations.containsKey(agreement.getId()))
-                .map(agreement -> {
-                    var negotiation = negotiations.get(agreement.getId());
-                    var asset = findAssetInNegotiations(agreement, negotiation);
-                    var contractTransfers = transfers.getOrDefault(agreement.getId(), List.of());
-
-                    return new ContractAgreementData(agreement, negotiation, asset, contractTransfers);
-                })
+                .flatMap(agreement -> negotiations.getOrDefault(agreement.getId(), List.of()).stream()
+                        .map(negotiation -> {
+                            var asset = findAssetInNegotiation(agreement, negotiation);
+                            var contractTransfers = transfers.getOrDefault(agreement.getId(), List.of());
+                            return new ContractAgreementData(agreement, negotiation, asset, contractTransfers);
+                        }))
                 .toList();
     }
 
+    @NotNull
     private List<ContractNegotiation> getAllContractNegotiations() {
         return contractNegotiationStore.queryNegotiations(QuerySpec.max()).toList();
     }
 
+    @NotNull
     private List<ContractAgreement> getAllContractAgreements() {
         return contractAgreementService.query(QuerySpec.max()).getContent().toList();
     }
 
+    @NotNull
     private List<TransferProcess> getAllTransferProcesses() {
         return transferProcessService.query(QuerySpec.max()).getContent().toList();
     }
 
-    private Asset findAssetInNegotiations(ContractAgreement agreement, ContractNegotiation negotiation) {
+    @NotNull
+    private Asset findAssetInNegotiation(ContractAgreement agreement, ContractNegotiation negotiation) {
         // Agreements have a single assetId
         // The negotiation has multiple contract offers
-        // Find the asset from the contract offer
+        // Find the asset from the contract offers
         return negotiation.getContractOffers().stream()
                 .map(ContractOffer::getAsset)
                 .filter(it -> agreement.getAssetId().equals(it.getId()))

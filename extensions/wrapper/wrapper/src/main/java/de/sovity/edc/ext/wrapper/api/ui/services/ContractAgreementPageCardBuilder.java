@@ -17,16 +17,16 @@ package de.sovity.edc.ext.wrapper.api.ui.services;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransfer;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferProcess;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDto;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
-import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.List;
@@ -37,7 +37,9 @@ import static de.sovity.edc.ext.wrapper.utils.MapUtils.mapValues;
 
 @RequiredArgsConstructor
 public class ContractAgreementPageCardBuilder {
+    private final TransferProcessStateService transferProcessStateService;
 
+    @NotNull
     public ContractAgreementCard buildContractAgreementCard(
             @NonNull ContractAgreement agreement,
             @NonNull ContractNegotiation negotiation,
@@ -58,26 +60,32 @@ public class ContractAgreementPageCardBuilder {
         return card;
     }
 
-    private List<ContractAgreementTransfer> buildTransferProcesses(
-            @NonNull List<TransferProcess> transferProcesses
+    @NotNull
+    private List<ContractAgreementTransferProcess> buildTransferProcesses(
+            @NonNull List<TransferProcess> transferProcessEntities
     ) {
-        return transferProcesses.stream()
-                .map(transferProcess -> {
-                    var dto = new ContractAgreementTransfer();
-                    dto.setTransferProcessId(transferProcess.getId());
-                    dto.setLastUpdatedDate(utcMillisToOffsetDateTime(transferProcess.getUpdatedAt()));
-                    dto.setState(TransferProcessStates.from(transferProcess.getState()));
-                    dto.setErrorMessage(transferProcess.getErrorDetail());
-                    return dto;
-                })
-                .sorted(Comparator.comparing(ContractAgreementTransfer::getLastUpdatedDate).reversed())
+        return transferProcessEntities.stream()
+                .map(this::buildContractAgreementTransfer)
+                .sorted(Comparator.comparing(ContractAgreementTransferProcess::getLastUpdatedDate).reversed())
                 .toList();
     }
 
+    @NotNull
+    private ContractAgreementTransferProcess buildContractAgreementTransfer(TransferProcess transferProcessEntity) {
+        var transferProcess = new ContractAgreementTransferProcess();
+        transferProcess.setTransferProcessId(transferProcessEntity.getId());
+        transferProcess.setLastUpdatedDate(utcMillisToOffsetDateTime(transferProcessEntity.getUpdatedAt()));
+        transferProcess.setState(transferProcessStateService.buildTransferProcessState(transferProcessEntity.getState()));
+        transferProcess.setErrorMessage(transferProcessEntity.getErrorDetail());
+        return transferProcess;
+    }
+
+    @NotNull
     private PolicyDto buildPolicyDto(@NonNull Policy policy) {
         return new PolicyDto(policy);
     }
 
+    @NotNull
     private AssetDto buildAssetDto(@NonNull Asset asset) {
         var createdAt = utcMillisToOffsetDateTime(asset.getCreatedAt());
         var properties = mapValues(asset.getProperties(), Object::toString);

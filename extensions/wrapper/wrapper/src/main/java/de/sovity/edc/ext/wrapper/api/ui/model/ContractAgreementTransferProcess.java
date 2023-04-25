@@ -20,7 +20,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 
 import java.time.OffsetDateTime;
 
@@ -30,13 +29,13 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Schema(description = "A Contract Agreement's Transfer Process")
-public class ContractAgreementTransfer {
+public class ContractAgreementTransferProcess {
     @Schema(description = "Transfer Process ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String transferProcessId;
     @Schema(description = "Last Change Date", requiredMode = Schema.RequiredMode.REQUIRED)
     private OffsetDateTime lastUpdatedDate;
-    @Schema(description = "Current Status", requiredMode = Schema.RequiredMode.REQUIRED)
-    private TransferProcessStates state;
+    @Schema(description = "Current State", requiredMode = Schema.RequiredMode.REQUIRED)
+    private TransferProcessState state;
     @Schema(description = "Error Message")
     private String errorMessage;
 
