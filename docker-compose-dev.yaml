@@ -9,7 +9,7 @@ services:
       - EDC_UI_CONFIG_URL=edc-ui-config
       - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/management
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
-      - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/ids/data
+      - EDC_UI_CATALOG_URLS=http://edc2:11003/api/v1/ids/data
   edc:
     image: ${DEV_EDC_IMAGE}
     depends_on:
@@ -76,7 +76,7 @@ services:
       - EDC_UI_CONFIG_URL=edc-ui-config
       - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:22002/api/v1/management
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
-      - EDC_UI_CATALOG_URLS=http://edc:22003/api/v1/ids/data
+      - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/ids/data
   edc2:
     image: ${DEV_EDC_IMAGE}
     depends_on:

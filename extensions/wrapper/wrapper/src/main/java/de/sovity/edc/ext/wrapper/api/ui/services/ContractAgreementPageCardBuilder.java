@@ -32,6 +32,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcMillisToOffsetDateTime;
+import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcSecondsToOffsetDateTime;
 import static de.sovity.edc.ext.wrapper.utils.MapUtils.mapValues;
 
 @RequiredArgsConstructor
@@ -48,9 +49,9 @@ public class ContractAgreementPageCardBuilder {
         card.setDirection(ContractAgreementDirection.fromType(negotiation.getType()));
         card.setCounterPartyAddress(negotiation.getCounterPartyAddress());
         card.setCounterPartyId(negotiation.getCounterPartyId());
-        card.setContractSigningDate(utcMillisToOffsetDateTime(agreement.getContractSigningDate()));
-        card.setContractStartDate(utcMillisToOffsetDateTime(agreement.getContractStartDate()));
-        card.setContractEndDate(utcMillisToOffsetDateTime(agreement.getContractEndDate()));
+        card.setContractSigningDate(utcSecondsToOffsetDateTime(agreement.getContractSigningDate()));
+        card.setContractStartDate(utcSecondsToOffsetDateTime(agreement.getContractStartDate()));
+        card.setContractEndDate(utcSecondsToOffsetDateTime(agreement.getContractEndDate()));
         card.setAsset(buildAssetDto(asset));
         card.setContractPolicy(buildPolicyDto(agreement.getPolicy()));
         card.setTransferProcesses(buildTransferProcesses(transferProcesses));

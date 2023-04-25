@@ -23,4 +23,21 @@ public class EdcDateUtils {
         }
         return OffsetDateTime.ofInstant(java.time.Instant.ofEpochMilli(utcMillis), java.time.ZoneOffset.UTC);
     }
+
+    /**
+     * Build {@link OffsetDateTime} from UTC seconds since epoch.
+     * <p>
+     * The EDC framework only uses longs to represent dates.
+     * <p>
+     * We want to use real date types in our code.
+     *
+     * @param utcSeconds seconds since epoch in UTC
+     * @return {@link OffsetDateTime} or null
+     */
+    public static OffsetDateTime utcSecondsToOffsetDateTime(Long utcSeconds) {
+        if (utcSeconds == null) {
+            return null;
+        }
+        return OffsetDateTime.ofInstant(java.time.Instant.ofEpochSecond(utcSeconds), java.time.ZoneOffset.UTC);
+    }
 }

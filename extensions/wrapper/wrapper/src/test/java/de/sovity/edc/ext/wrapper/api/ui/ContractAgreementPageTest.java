@@ -56,7 +56,8 @@ import static org.hamcrest.core.IsEqual.equalTo;
 class ContractAgreementPageTest {
     LocalDate today = LocalDate.parse("2019-04-01");
     ZonedDateTime todayAsZonedDateTime = today.atStartOfDay(ZoneId.systemDefault());
-    long todayAsLong = todayAsZonedDateTime.toInstant().toEpochMilli();
+    long todayEpochMillis = todayAsZonedDateTime.toInstant().toEpochMilli();;
+    long todayEpochSeconds = todayAsZonedDateTime.toInstant().getEpochSecond();
 
     @BeforeEach
     void setUp(EdcExtension extension) {
@@ -127,9 +128,9 @@ class ContractAgreementPageTest {
         var agreement = ContractAgreement.Builder.newInstance()
                 .id("my-contract-agreement-" + contract)
                 .assetId("my-asset-" + contract)
-                .contractSigningDate(todayAsLong)
-                .contractStartDate(todayAsZonedDateTime.toInstant().toEpochMilli())
-                .contractEndDate(todayAsZonedDateTime.plusDays(2L * contract).toInstant().toEpochMilli())
+                .contractSigningDate(todayEpochSeconds)
+                .contractStartDate(todayAsZonedDateTime.toInstant().getEpochSecond())
+                .contractEndDate(todayAsZonedDateTime.plusDays(2L * contract).toInstant().getEpochSecond())
                 .providerAgentId("idk")
                 .consumerAgentId("idk")
                 .policy(alwaysTrue())
@@ -175,7 +176,7 @@ class ContractAgreementPageTest {
         return Asset.Builder.newInstance()
                 .id("my-asset-" + suffix)
                 .property("some-property", "X")
-                .createdAt(todayAsLong)
+                .createdAt(todayEpochMillis)
                 .build();
     }
 

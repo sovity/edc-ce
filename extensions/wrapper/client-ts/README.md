@@ -17,8 +17,7 @@
 ## About this component
 
 TypeScript Client Library to be imported and used in arbitrary applications like
-frontends or NodeJS projects. TypeScript Client Library to be imported and used
-in arbitrary applications like frontends or nodejs projects.
+frontends or NodeJS projects.
 
 You can find our API Wrapper Project
 [here](https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper).
