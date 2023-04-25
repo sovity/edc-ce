@@ -56,7 +56,7 @@ jobs:
             # Only releases will build with the latest tag
             # Other tags will be ignored for default npm installs
             DIST_TAG=latest
-          elif [ "$CI_REF_NAME" = "refs/heads/main" ]; then
+          elif [ "$CI_REF_NAME" == "main" ]; then
             # The next tag is a common tag used for unstable versions
             DIST_TAG=next
           else
