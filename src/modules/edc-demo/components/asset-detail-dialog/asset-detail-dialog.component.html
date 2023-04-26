@@ -1,8 +1,15 @@
-<div class="mat-card-header">
+<div class="mat-card-header" mat-dialog-title removeClass="mat-dialog-title">
   <mat-icon
     *ngIf="data.mode === 'asset-details'"
     style="font-size: 40px; width: 40px; height: 40px; min-width: 40px">
     upload
+  </mat-icon>
+  <mat-icon
+    *ngIf="data.mode === 'contract-agreement'"
+    style="font-size: 40px; width: 40px; height: 40px; min-width: 40px">
+    {{
+      data.contractAgreement!!.direction === 'PROVIDING' ? 'upload' : 'download'
+    }}
   </mat-icon>
   <edc-demo-contract-offer-icon
     *ngIf="data.mode === 'contract-offer'"
@@ -17,12 +24,14 @@
   </div>
 </div>
 
-<mat-dialog-content class="flex flex-col space-y-[10px]">
+<div class="flex flex-col space-y-[10px]" mat-dialog-content>
   <!-- Progress Bar -->
   <mat-progress-bar
     *ngIf="
-      data.mode === 'contract-offer' &&
-      contractNegotiationService.isBusy(data.contractOffer!)
+      (data.mode === 'contract-offer' &&
+        contractNegotiationService.isBusy(data.contractOffer!)) ||
+      (data.mode === 'contract-agreement' &&
+        data.contractAgreement!.isInProgress)
     "
     color="primary"
     mode="indeterminate"></mat-progress-bar>
@@ -40,10 +49,21 @@
     </mat-chip-list>
   </div>
 
+  <!-- Transfer History -->
+  <ng-container *ngIf="data.mode === 'contract-agreement'">
+    <div
+      class="flex flex-row flex-wrap property-grid-group-title"
+      [style.margin-top.px]="30">
+      Transfer History
+    </div>
+    <transfer-history-mini-list [contractAgreement]="data.contractAgreement!!">
+    </transfer-history-mini-list>
+  </ng-container>
+
   <!-- Properties -->
   <edc-demo-property-grid-group class="mt-[15px]" [propGroups]="propGroups">
   </edc-demo-property-grid-group>
-</mat-dialog-content>
+</div>
 
 <mat-dialog-actions>
   <div class="w-full flex flex-row justify-end">
@@ -73,6 +93,14 @@
         <ng-container *ngSwitchCase="'negotiated'">
           Successfully Negotiated
         </ng-container>
+      </button>
+
+      <button
+        *ngIf="data.mode === 'contract-agreement'"
+        mat-raised-button
+        color="primary"
+        (click)="onTransferClick()">
+        Transfer
       </button>
     </div>
   </div>

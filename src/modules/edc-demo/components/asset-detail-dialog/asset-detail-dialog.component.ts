@@ -4,7 +4,7 @@ import {
   MatDialog,
   MatDialogRef,
 } from '@angular/material/dialog';
-import {Observable, Subject} from 'rxjs';
+import {Observable, Subject, isObservable} from 'rxjs';
 import {filter, finalize, takeUntil} from 'rxjs/operators';
 import {AssetService} from '../../../edc-dmgmt-client';
 import {Asset} from '../../models/asset';
@@ -14,11 +14,20 @@ import {
   ConfirmDialogModel,
   ConfirmationDialogComponent,
 } from '../confirmation-dialog/confirmation-dialog.component';
+import {ContractAgreementTransferDialogData} from '../contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-data';
+import {ContractAgreementTransferDialog} from '../contract-agreement-transfer-dialog/contract-agreement-transfer-dialog.component';
 import {PropertyGridGroup} from '../property-grid-group/property-grid-group';
 import {AssetDetailDialogData} from './asset-detail-dialog-data';
 import {AssetDetailDialogResult} from './asset-detail-dialog-result';
 import {AssetPropertyGridGroupBuilder} from './asset-property-grid-group-builder';
 
+/**
+ * Asset Detail Dialog
+ * Contract Agreement Detail Dialog
+ * Contract Offer Detail Dialog
+ * <p>
+ * All in one! If that's a good idea remains to be seen.
+ */
 @Component({
   selector: 'edc-demo-asset-detail-dialog',
   templateUrl: './asset-detail-dialog.component.html',
@@ -26,8 +35,9 @@ import {AssetPropertyGridGroupBuilder} from './asset-property-grid-group-builder
   providers: [AssetPropertyGridGroupBuilder],
 })
 export class AssetDetailDialog implements OnDestroy {
-  asset: Asset;
-  propGroups: PropertyGridGroup[];
+  data!: AssetDetailDialogData;
+  asset!: Asset;
+  propGroups!: PropertyGridGroup[];
 
   loading = false;
 
@@ -47,15 +57,27 @@ export class AssetDetailDialog implements OnDestroy {
     private matDialog: MatDialog,
     private matDialogRef: MatDialogRef<AssetDetailDialog>,
     @Inject(MAT_DIALOG_DATA)
-    public data: AssetDetailDialogData,
+    private _data: AssetDetailDialogData | Observable<AssetDetailDialogData>,
     private assetPropertyGridGroupBuilder: AssetPropertyGridGroupBuilder,
     public contractNegotiationService: ContractNegotiationService,
   ) {
+    if (isObservable(this._data)) {
+      this._data
+        .pipe(takeUntil(this.ngOnDestroy$))
+        .subscribe((data) => this.setData(data));
+    } else {
+      this.setData(this._data);
+    }
+  }
+
+  setData(data: AssetDetailDialogData) {
+    this.data = data;
     this.asset = this.data.asset;
     this.propGroups =
       this.assetPropertyGridGroupBuilder.buildPropertyGridGroups(
-        this.asset,
-        this.data.contractOffer?.policy,
+        this.data.asset,
+        this.data.contractAgreement,
+        this.data.policy,
       );
   }
 
@@ -72,6 +94,15 @@ export class AssetDetailDialog implements OnDestroy {
 
   onNegotiateClick() {
     this.contractNegotiationService.negotiate(this.data.contractOffer!);
+  }
+
+  onTransferClick() {
+    const data: ContractAgreementTransferDialogData = {
+      contractId: this.data.contractAgreement?.contractAgreementId!!,
+    };
+    const dialogRef = this.matDialog.open(ContractAgreementTransferDialog, {
+      data,
+    });
   }
 
   private confirmDelete(): Observable<boolean> {

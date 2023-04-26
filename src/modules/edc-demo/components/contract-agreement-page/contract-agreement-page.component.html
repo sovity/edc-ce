@@ -1,0 +1,57 @@
+<div id="wrapper">
+  <div class="flex flex-row">
+    <!-- Search -->
+    <mat-form-field
+      class="search-form-field"
+      appearance="outline"
+      color="accent">
+      <mat-label>Search contract agreements...</mat-label>
+      <input matInput [formControl]="searchText" />
+      <mat-icon matPrefix>search</mat-icon>
+      <button
+        *ngIf="searchText.value"
+        mat-icon-button
+        matSuffix
+        (click)="searchText.setValue('')">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <!-- Spacer -->
+    <div class="grow"></div>
+
+    <!-- Paginator -->
+    <mat-paginator
+      *ngIf="page.isReady"
+      [hidePageSize]="true"
+      [disabled]="true"
+      [pageSize]="page.data.contractAgreements.length"
+      [length]="page.data.numTotalContractAgreements"></mat-paginator>
+  </div>
+
+  <div class="flex flex-row justify-center">
+    <edc-demo-loading-state
+      *ngIf="page.isLoading"
+      class="min-h-[35rem]"></edc-demo-loading-state>
+    <edc-demo-error-state
+      *ngIf="page.isError"
+      class="min-h-[35rem]"
+      [error]="page.errorOrUndefined"></edc-demo-error-state>
+    <edc-demo-empty-state
+      *ngIf="
+        page.isReady &&
+        (!page.data.numTotalContractAgreements ||
+          !page.data.contractAgreements.length)
+      "
+      class="min-h-[35rem]"
+      [emptyMessage]="
+        'No contract agreements found with given filter.'
+      "></edc-demo-empty-state>
+  </div>
+  <edc-demo-contract-agreement-cards
+    *ngIf="page.isReady && !!page.data.contractAgreements.length"
+    [contractAgreements]="page.data.contractAgreements"
+    (contractAgreementClick)="
+      onContractAgreementClick($event)
+    "></edc-demo-contract-agreement-cards>
+</div>

@@ -25,6 +25,7 @@
     "@angular/platform-browser-dynamic": "^14.3.0",
     "@angular/router": "^14.3.0",
     "@ng-apimock/core": "^3.6.0",
+    "@sovity.de/edc-client": "3.0.2-SNAPSHOT.1682426736636",
     "clean-deep": "^3.4.0",
     "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",

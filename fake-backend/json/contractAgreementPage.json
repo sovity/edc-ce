@@ -1,0 +1,242 @@
+{
+  "contractAgreements": [
+    {
+      "contractAgreementId": "my-own-asset-cd:f52a5d30-6356-4a55-a75a-3c45d7a88c3e",
+      "direction": "PROVIDING",
+      "counterPartyAddress": "http://edc2:11003/api/v1/ids/data",
+      "counterPartyId": "urn:connector:example-connector",
+      "contractSigningDate": "2022-03-20T11:18:59.659Z",
+      "contractStartDate": "2022-03-20T11:18:59.659Z",
+      "contractEndDate": "2022-04-20T20:04:35.658Z",
+      "asset": {
+        "assetId": "urn:artifact:my-own-asset",
+        "createdAt": "2023-04-24T12:33:46.779Z",
+        "properties": {
+          "asset:prop:keywords": "example, keyword",
+          "asset:prop:name": "My Own Asset",
+          "asset:prop:curatorOrganizationName": "Example GmbH",
+          "asset:prop:description": "This is an example Asset that will be provided by this connector!",
+          "asset:prop:id": "urn:artifact:my-own-asset",
+          "asset:prop:originator": "http://edc:11003/api/v1/ids/data",
+          "asset:prop:language": "https://w3id.org/idsa/code/EN"
+        }
+      },
+      "contractPolicy": {
+        "legacyPolicy": {
+          "permissions": [
+            {
+              "edctype": "dataspaceconnector:permission",
+              "uid": null,
+              "target": "urn:artifact:my-own-asset",
+              "action": {
+                "type": "USE",
+                "includedIn": null,
+                "constraint": null
+              },
+              "assignee": null,
+              "assigner": null,
+              "constraints": [
+                {
+                  "edctype": "AtomicConstraint",
+                  "leftExpression": {
+                    "edctype": "dataspaceconnector:literalexpression",
+                    "value": "ALWAYS_TRUE"
+                  },
+                  "rightExpression": {
+                    "edctype": "dataspaceconnector:literalexpression",
+                    "value": "true"
+                  },
+                  "operator": "EQ"
+                }
+              ],
+              "duties": []
+            }
+          ],
+          "prohibitions": [],
+          "obligations": [],
+          "extensibleProperties": {},
+          "inheritsFrom": null,
+          "assigner": null,
+          "assignee": null,
+          "target": "urn:artifact:my-own-asset",
+          "@type": {
+            "@policytype": "set"
+          }
+        }
+      },
+      "transferProcesses": [
+        {
+          "transferProcessId": "2679d234-3340-44bf-a96b-c88b57838033",
+          "lastUpdatedDate": "2023-04-24T12:34:52.896Z",
+          "state": {
+            "code": 600,
+            "name": "IN_PROGRESS",
+            "simplifiedState": "RUNNING"
+          },
+          "errorMessage": null
+        },
+        {
+          "transferProcessId": "c2863791-c8f3-49e7-8137-7fadaa36b4e4",
+          "lastUpdatedDate": "2023-04-24T12:34:40.801Z",
+          "state": {
+            "code": 800,
+            "name": "COMPLETED",
+            "simplifiedState": "OK"
+          },
+          "errorMessage": null
+        },
+        {
+          "transferProcessId": "f3ee5129-1909-4d7b-a6fe-a25994d67b56",
+          "lastUpdatedDate": "2023-04-24T12:34:36.735Z",
+          "state": {
+            "code": 900,
+            "name": "DEPROVISIONING",
+            "simplifiedState": "OK"
+          },
+          "errorMessage": null
+        },
+        {
+          "transferProcessId": "2cf2c9be-3b8c-4768-b10e-c1d9f9874e62",
+          "lastUpdatedDate": "2023-04-24T12:34:31.674Z",
+          "state": {
+            "code": -1,
+            "name": "ERROR",
+            "simplifiedState": "ERROR"
+          },
+          "errorMessage": "Something went wrong!"
+        }
+      ]
+    },
+    {
+      "contractAgreementId": "my-test-asset-cd:6ebbc301-9b1e-4cd7-9f17-97b5b7867531",
+      "direction": "CONSUMING",
+      "counterPartyAddress": "http://edc2:11003/api/v1/ids/data",
+      "counterPartyId": "my-connector",
+      "contractSigningDate": "2022-03-25T11:18:59.659Z",
+      "contractStartDate": "2022-03-25T11:18:59.659Z",
+      "contractEndDate": "2022-05-01T20:04:35.658Z",
+      "asset": {
+        "assetId": "urn:artifact:my-test-asset",
+        "createdAt": "2023-04-24T12:32:28.492Z",
+        "properties": {
+          "asset:prop:id": "urn:artifact:my-test-asset"
+        }
+      },
+      "contractPolicy": {
+        "legacyPolicy": {
+          "permissions": [
+            {
+              "edctype": "dataspaceconnector:permission",
+              "uid": null,
+              "target": "urn:artifact:my-test-asset",
+              "action": {
+                "type": "USE",
+                "includedIn": null,
+                "constraint": null
+              },
+              "assignee": null,
+              "assigner": null,
+              "constraints": [
+                {
+                  "edctype": "AtomicConstraint",
+                  "leftExpression": {
+                    "edctype": "dataspaceconnector:literalexpression",
+                    "value": "ALWAYS_TRUE"
+                  },
+                  "rightExpression": {
+                    "edctype": "dataspaceconnector:literalexpression",
+                    "value": "true"
+                  },
+                  "operator": "EQ"
+                }
+              ],
+              "duties": []
+            }
+          ],
+          "prohibitions": [],
+          "obligations": [],
+          "extensibleProperties": {},
+          "inheritsFrom": null,
+          "assigner": null,
+          "assignee": null,
+          "target": "urn:artifact:my-test-asset",
+          "@type": {
+            "@policytype": "set"
+          }
+        }
+      },
+      "transferProcesses": [
+        {
+          "transferProcessId": "522138de-349d-4b68-9356-7e5929f053e0",
+          "lastUpdatedDate": "2023-04-24T12:32:43.027Z",
+          "state": {
+            "code": 800,
+            "name": "COMPLETED",
+            "simplifiedState": "OK"
+          },
+          "errorMessage": null
+        }
+      ]
+    },
+    {
+      "contractAgreementId": "my-test-asset-2-cd:6ebbc301-9b1e-4cd7-9f17-08b5b7867533",
+      "direction": "CONSUMING",
+      "counterPartyAddress": "http://edc2:11003/api/v1/ids/data",
+      "counterPartyId": "my-connector",
+      "contractSigningDate": "2022-03-25T11:18:59.659Z",
+      "contractStartDate": "2022-03-25T11:18:59.659Z",
+      "contractEndDate": "2022-05-01T20:04:35.658Z",
+      "asset": {
+        "assetId": "urn:artifact:my-test-asset-2",
+        "createdAt": "2023-04-24T12:32:28.492Z",
+        "properties": {
+          "asset:prop:id": "urn:artifact:my-test-asset-2"
+        }
+      },
+      "contractPolicy": {
+        "legacyPolicy": {
+          "permissions": [
+            {
+              "edctype": "dataspaceconnector:permission",
+              "uid": null,
+              "target": "urn:artifact:my-test-asset-2",
+              "action": {
+                "type": "USE",
+                "includedIn": null,
+                "constraint": null
+              },
+              "assignee": null,
+              "assigner": null,
+              "constraints": [
+                {
+                  "edctype": "AtomicConstraint",
+                  "leftExpression": {
+                    "edctype": "dataspaceconnector:literalexpression",
+                    "value": "ALWAYS_TRUE"
+                  },
+                  "rightExpression": {
+                    "edctype": "dataspaceconnector:literalexpression",
+                    "value": "true"
+                  },
+                  "operator": "EQ"
+                }
+              ],
+              "duties": []
+            }
+          ],
+          "prohibitions": [],
+          "obligations": [],
+          "extensibleProperties": {},
+          "inheritsFrom": null,
+          "assigner": null,
+          "assignee": null,
+          "target": "urn:artifact:my-test-asset-2",
+          "@type": {
+            "@policytype": "set"
+          }
+        }
+      },
+      "transferProcesses": []
+    }
+  ]
+}

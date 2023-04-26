@@ -3,6 +3,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {ActiveFeatureSet} from '../../../app/config/active-feature-set';
 import {Policy} from '../../../edc-dmgmt-client';
 import {Asset} from '../../models/asset';
+import {ContractAgreementCardMapped} from '../contract-agreement-cards/contract-agreement-card-mapped';
 import {JsonDialogComponent} from '../json-dialog/json-dialog.component';
 import {JsonDialogData} from '../json-dialog/json-dialog.data';
 import {PropertyGridGroup} from '../property-grid-group/property-grid-group';
@@ -19,31 +20,32 @@ export class AssetPropertyGridGroupBuilder {
 
   buildPropertyGridGroups(
     asset: Asset,
-    policy: Policy | undefined,
+    contractAgreement: ContractAgreementCardMapped | null,
+    policy: Policy | null,
   ): PropertyGridGroup[] {
-    let fieldGroups = [
-      this.buildDefaultPropertiesGroup(asset),
-      this.buildAdditionalPropertiesGroup(asset),
-    ];
-
-    if (policy) {
-      fieldGroups.push({
-        groupLabel: 'Policies',
-        properties: [
-          {
-            icon: 'policy',
-            label: 'Contract Policy',
-            text: 'Show Policy Details',
-            onclick: () => this.onShowPolicyDetailsClick(asset, policy),
-          },
-        ],
-      });
+    let fieldGroups: PropertyGridGroup[];
+    if (contractAgreement != null) {
+      fieldGroups = [
+        this.buildContractAgreementGroup(contractAgreement),
+        this.buildPolicyGroup(asset, policy!!),
+        this.buildAssetPropertiesGroup(asset, 'Assets'),
+        this.buildAdditionalPropertiesGroup(asset),
+      ];
+    } else {
+      fieldGroups = [
+        this.buildAssetPropertiesGroup(asset, null),
+        this.buildAdditionalPropertiesGroup(asset),
+        this.buildPolicyGroup(asset, policy!!),
+      ];
     }
 
     return fieldGroups.filter((it) => it.properties.length);
   }
 
-  private buildDefaultPropertiesGroup(asset: Asset): PropertyGridGroup {
+  private buildAssetPropertiesGroup(
+    asset: Asset,
+    groupLabel: string | null,
+  ): PropertyGridGroup {
     const fields: PropertyGridField[] = [
       {
         icon: 'category',
@@ -98,7 +100,7 @@ export class AssetPropertyGridGroupBuilder {
     }
 
     return {
-      groupLabel: null,
+      groupLabel,
       properties: fields,
     };
   }
@@ -169,13 +171,98 @@ export class AssetPropertyGridGroupBuilder {
     return fields;
   }
 
-  private onShowPolicyDetailsClick(asset: Asset, policyDetails: Policy) {
+  private onShowPolicyDetailsClick(
+    asset: Asset,
+    policyDetails: Policy,
+    title: string,
+  ) {
     const data: JsonDialogData = {
-      title: 'Contract Policy',
+      title,
       subtitle: asset.name,
       icon: 'policy',
       objectForJson: policyDetails,
     };
     this.matDialog.open(JsonDialogComponent, {data});
+  }
+
+  private buildPolicyGroup(asset: Asset, contractPolicy: Policy | null) {
+    let properties: PropertyGridField[] = [];
+    if (contractPolicy) {
+      properties.push({
+        icon: 'policy',
+        label: 'Contract Policy',
+        text: 'Show Policy Details',
+        onclick: () =>
+          this.onShowPolicyDetailsClick(
+            asset,
+            contractPolicy,
+            'Contract Policy',
+          ),
+      });
+    }
+    return {groupLabel: 'Policies', properties};
+  }
+
+  private buildContractAgreementGroup(
+    contractAgreement: ContractAgreementCardMapped,
+  ) {
+    return {
+      groupLabel: 'Contract Agreement',
+      properties: [
+        {
+          icon: 'category',
+          label: 'Signed',
+          ...this.propertyGridUtils.guessValue(
+            this.propertyGridUtils.formatDate(
+              contractAgreement.contractSigningDate,
+            ),
+          ),
+        },
+        {
+          icon: 'category',
+          label: 'Valid From',
+          ...this.propertyGridUtils.guessValue(
+            this.propertyGridUtils.formatDate(
+              contractAgreement.contractStartDate,
+            ),
+          ),
+        },
+        {
+          icon: 'category',
+          label: 'Valid To',
+          ...this.propertyGridUtils.guessValue(
+            this.propertyGridUtils.formatDate(
+              contractAgreement.contractEndDate,
+            ),
+          ),
+        },
+        {
+          icon: 'policy',
+          label: 'Direction',
+          ...this.propertyGridUtils.guessValue(contractAgreement.direction),
+        },
+        {
+          icon: 'link',
+          label: 'Other Connector Endpoint',
+          ...this.propertyGridUtils.guessValue(
+            contractAgreement.counterPartyAddress,
+          ),
+        },
+        {
+          icon: 'link',
+          label: 'Other Connector ID',
+          ...this.propertyGridUtils.guessValue(
+            contractAgreement.counterPartyId,
+          ),
+        },
+        {
+          icon: 'category',
+          label: 'Contract Agreement ID',
+          ...this.propertyGridUtils.guessValue(
+            contractAgreement.contractAgreementId,
+          ),
+        },
+      ],
+    };
   }
 }

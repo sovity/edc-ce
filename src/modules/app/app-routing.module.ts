@@ -2,8 +2,8 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {AssetViewerComponent} from '../edc-demo/components/asset-viewer/asset-viewer.component';
 import {CatalogBrowserComponent} from '../edc-demo/components/catalog-browser/catalog-browser.component';
+import {ContractAgreementPageComponent} from '../edc-demo/components/contract-agreement-page/contract-agreement-page.component';
 import {ContractDefinitionPageComponent} from '../edc-demo/components/contract-definition-page/contract-definition-page.component';
-import {ContractViewerComponent} from '../edc-demo/components/contract-viewer/contract-viewer.component';
 import {DashboardComponent} from '../edc-demo/components/dashboard/dashboard.component';
 import {LogoutComponent} from '../edc-demo/components/logout/logout.component';
 import {PolicyViewComponent} from '../edc-demo/components/policy-view/policy-view.component';
@@ -23,7 +23,7 @@ export const routes: Routes = [
   },
   {
     path: 'contracts',
-    component: ContractViewerComponent,
+    component: ContractAgreementPageComponent,
     data: {title: 'Contracts', icon: 'attachment'},
   },
   {

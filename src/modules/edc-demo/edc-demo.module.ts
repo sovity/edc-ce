@@ -30,6 +30,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterModule} from '@angular/router';
 import {NgChartsModule} from 'ng2-charts';
 import {NgxJsonViewerModule} from 'ngx-json-viewer';
+import {AgoComponent} from './components/ago/ago.component';
+import {AgoPipe} from './components/ago/ago.pipe';
 import {AssetDetailDialog} from './components/asset-detail-dialog/asset-detail-dialog.component';
 import {AssetEditorDialog} from './components/asset-editor-dialog/asset-editor-dialog.component';
 import {AssetListComponent} from './components/asset-list/asset-list.component';
@@ -38,13 +40,14 @@ import {AssetViewerComponent} from './components/asset-viewer/asset-viewer.compo
 import {CatalogBrowserFetchDetailDialogComponent} from './components/catalog-browser-fetch-detail-dialog/catalog-browser-fetch-detail-dialog.component';
 import {CatalogBrowserComponent} from './components/catalog-browser/catalog-browser.component';
 import {ConfirmationDialogComponent} from './components/confirmation-dialog/confirmation-dialog.component';
+import {ContractAgreementCardsComponent} from './components/contract-agreement-cards/contract-agreement-cards.component';
+import {ContractAgreementPageComponent} from './components/contract-agreement-page/contract-agreement-page.component';
 import {ContractAgreementTransferDialog} from './components/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog.component';
 import {ContractDefinitionCardsComponent} from './components/contract-definition-cards/contract-definition-cards.component';
 import {ContractDefinitionEditorDialog} from './components/contract-definition-editor-dialog/contract-definition-editor-dialog.component';
 import {ContractDefinitionPageComponent} from './components/contract-definition-page/contract-definition-page.component';
 import {ContractOfferIconComponent} from './components/contract-offer-icon/contract-offer-icon.component';
 import {ContractOfferListComponent} from './components/contract-offer-list/contract-offer-list.component';
-import {ContractViewerComponent} from './components/contract-viewer/contract-viewer.component';
 import {DashboardDonutChartComponent} from './components/dashboard-donut-chart/dashboard-donut-chart.component';
 import {DashboardKpiCardComponent} from './components/dashboard-kpi-card/dashboard-kpi-card.component';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
@@ -52,6 +55,7 @@ import {DataAddressTypeSelectComponent} from './components/data-address-type-sel
 import {DataCategorySelectComponent} from './components/data-category-select/data-category-select.component';
 import {DataSubcategoryItemsPipe} from './components/data-subcategory-select/data-subcategory-items.pipe';
 import {DataSubcategorySelectComponent} from './components/data-subcategory-select/data-subcategory-select.component';
+import {DateComponent} from './components/date/date.component';
 import {EmptyStateComponent} from './components/empty-state/empty-state.component';
 import {ErrorStateComponent} from './components/error-state/error-state.component';
 import {JsonDialogComponent} from './components/json-dialog/json-dialog.component';
@@ -66,8 +70,10 @@ import {PolicySelectComponent} from './components/policy-select/policy-select.co
 import {PolicyViewComponent} from './components/policy-view/policy-view.component';
 import {PropertyGridGroupComponent} from './components/property-grid-group/property-grid-group.component';
 import {PropertyGrid} from './components/property-grid/property-grid.component';
+import {TransferHistoryMiniListComponent} from './components/transfer-history-mini-list/transfer-history-mini-list.component';
 import {TransferHistoryViewerComponent} from './components/transfer-history/transfer-history-viewer.component';
 import {TransportModeSelectComponent} from './components/transport-mode-select/transport-mode-select.component';
+import {RemoveClassDirective} from './directives/remove-class.directive';
 import {IsActiveFeaturePipe} from './pipes/is-active-feature.pipe';
 import {ReplacePipe} from './pipes/replace.pipe';
 import {SafePipe} from './pipes/safe.pipe';
@@ -117,22 +123,25 @@ import {SafePipe} from './pipes/safe.pipe';
     NgxJsonViewerModule,
   ],
   declarations: [
+    AgoComponent,
+    AgoPipe,
     AssetDetailDialog,
     AssetEditorDialog,
     AssetListComponent,
+    AssetSelectComponent,
     AssetSelectComponent,
     AssetViewerComponent,
     CatalogBrowserComponent,
     CatalogBrowserFetchDetailDialogComponent,
     ConfirmationDialogComponent,
+    ContractAgreementCardsComponent,
+    ContractAgreementPageComponent,
     ContractAgreementTransferDialog,
     ContractDefinitionCardsComponent,
     ContractDefinitionEditorDialog,
     ContractDefinitionPageComponent,
     ContractOfferIconComponent,
     ContractOfferListComponent,
-    ContractViewerComponent,
-    ContractViewerComponent,
     DashboardComponent,
     DashboardDonutChartComponent,
     DashboardKpiCardComponent,
@@ -140,6 +149,7 @@ import {SafePipe} from './pipes/safe.pipe';
     DataCategorySelectComponent,
     DataSubcategoryItemsPipe,
     DataSubcategorySelectComponent,
+    DateComponent,
     EmptyStateComponent,
     ErrorStateComponent,
     IsActiveFeaturePipe,
@@ -155,21 +165,13 @@ import {SafePipe} from './pipes/safe.pipe';
     PolicyViewComponent,
     PropertyGrid,
     PropertyGridGroupComponent,
+    RemoveClassDirective,
     ReplacePipe,
     SafePipe,
+    TransferHistoryMiniListComponent,
     TransferHistoryViewerComponent,
     TransportModeSelectComponent,
-    AssetSelectComponent,
   ],
-  exports: [
-    AssetViewerComponent,
-    CatalogBrowserComponent,
-    ContractDefinitionPageComponent,
-    ContractViewerComponent,
-    IsActiveFeaturePipe,
-    NewPolicyDialogComponent,
-    PolicyRuleViewerComponent,
-    TransferHistoryViewerComponent,
-  ],
+  exports: [IsActiveFeaturePipe],
 })
 export class EdcDemoModule {}

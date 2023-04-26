@@ -3,21 +3,35 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 
+const json = (jsonFile) =>
+  JSON.parse(fs.readFileSync(path.resolve(jsonFile)).toString());
+
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    allowedHeaders: [
+      'origin',
+      'content-type',
+      'accept',
+      'authorization',
+      'x-api-key',
+    ],
+    credentials: true,
+    origin: true,
+  }),
+);
 
-function json(jsonFile) {
-  return JSON.parse(fs.readFileSync(path.resolve(jsonFile)).toString());
-}
+// Check API Key
+app.use((req, res, next) => {
+  if (req.header('x-api-key') !== 'no-api-key-required-in-local-dev') {
+    res.status(401);
+    res.json({message: 'Unauthorized'});
+    return;
+  }
+  next();
+});
 
-const assets = json('json/assets.json');
-const policyDefinitions = json('json/policyDefinitions.json');
-const contractDefinitions = json('json/contractDefinitions.json');
-const transferProcess = json('json/transferProcess.json');
-const contractAgreements = json('json/contractAgreements.json');
-const catalog1 = json('json/catalog1.json');
-const catalog2 = json('json/catalog2.json');
-
+// Content Type & Status
 app.use((req, res, next) => {
   res.header('Content-Type', 'application/json');
   res.status(200);
@@ -27,33 +41,35 @@ app.use((req, res, next) => {
 // Delay Responses
 app.use((req, res, next) => setTimeout(next, 1000));
 
+// Management API
+
+const assets = json('json/assets.json');
 app.get('/api/v1/data/assets', (req, res) => {
   res.json(assets);
 });
 
+const policyDefinitions = json('json/policyDefinitions.json');
 app.get('/api/v1/data/policydefinitions', (req, res) => {
   res.json(policyDefinitions);
 });
 
+const contractDefinitions = json('json/contractDefinitions.json');
 app.get('/api/v1/data/contractdefinitions', (req, res) => {
   res.json(contractDefinitions);
 });
 
+const transferProcess = json('json/transferProcess.json');
 app.get('/api/v1/data/transferprocess', (req, res) => {
   res.json(transferProcess);
 });
 
+const contractAgreements = json('json/contractAgreements.json');
 app.get('/api/v1/data/contractagreements', (req, res) => {
   res.json(contractAgreements);
 });
 
-app.post(
-  '/api/v1/data/contract-agreements-transfer/contractagreements/:contractAgreementId/transfer',
-  (req, res) => {
-    res.json('{}');
-  },
-);
-
+const catalog1 = json('json/catalog1.json');
+const catalog2 = json('json/catalog2.json');
 app.get('/api/v1/data/catalog', (req, res) => {
   let providerUrl = req.query.providerUrl;
   if (providerUrl === 'http://existing-other-connector/v1/ids/data') {
@@ -69,6 +85,20 @@ app.get('/api/v1/data/catalog', (req, res) => {
   } else {
     res.json({contractOffers: []});
   }
+});
+
+// Contract Agreement Transfer Extension
+app.post(
+  '/api/v1/data/contract-agreements-transfer/contractagreements/:contractAgreementId/transfer',
+  (req, res) => {
+    res.json('{}');
+  },
+);
+
+// UI API Wrapper
+const contractAgreementPage = json('json/contractAgreementPage.json');
+app.get('/api/v1/data/wrapper/ui/pages/contract-agreement-page', (_, res) => {
+  res.json(contractAgreementPage);
 });
 
 app.listen(3000, function () {
