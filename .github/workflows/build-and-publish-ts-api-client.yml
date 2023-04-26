@@ -32,6 +32,7 @@ jobs:
         run: |
           ./gradlew :extensions:wrapper:wrapper:clean :extensions:wrapper:wrapper:build -x test --no-daemon
       - name: NPM Package Dist Tag & Version
+        working-directory: ./extensions/wrapper/client-ts
         run: |
           if [ "${{ startsWith(github.ref, 'refs/tags/') }}" == "true" ]; then
             # Full Release
