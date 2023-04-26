@@ -31,6 +31,42 @@ An example project using this client can be found [here](../client-example).
 </dependency>
 ```
 
+## Usage
+
+### Example using API Key Auth
+
+```java
+import de.sovity.edc.client.EdcClient;
+
+// Example using our Community Edition EDC
+EdcClient client = EdcClient.builder()
+        .managementApiUrl("http://localhost:11002/api/v1/management")
+        .managementApiKey("ApiKeyDefaultValue")
+        .build();
+
+KpiResult kpiResult = client.useCaseApi().kpiEndpoint();
+```
+
+### Example using OAuth2 Client Credentials
+
+```java
+import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.client.oauth2.OAuth2ClientCredentials;
+import de.sovity.edc.client.oauth2.SovityKeycloakUrls;
+
+// Example using our Community Edition EDC
+EdcClient client = EdcClient.builder()
+        .managementApiUrl("https://your-connector.prod-sovity.azure.sovity.io/control/data")
+        .oauth2ClientCredentials(OAuth2ClientCredentials.builder()
+            .tokenUrl(SovityKeycloakUrls.PRODUCTION)
+            .clientId("my-edc-app")
+            .clientSecret("...")
+            .build())
+        .build();
+
+KpiResult kpiResult = client.useCaseApi().kpiEndpoint();
+```
+
 ## License
 
 Apache License 2.0 - see [LICENSE](../../LICENSE)

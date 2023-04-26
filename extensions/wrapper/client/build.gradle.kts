@@ -37,6 +37,8 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("jakarta.annotation:jakarta.annotation-api:1.3.5")
 
+    implementation("com.google.oauth-client:google-oauth-client:1.34.1")
+
     // Lombok
     compileOnly("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok:1.18.26")
