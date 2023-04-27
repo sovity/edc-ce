@@ -48,6 +48,7 @@ public class ContractAgreementPageCardBuilder {
     ) {
         ContractAgreementCard card = new ContractAgreementCard();
         card.setContractAgreementId(agreement.getId());
+        card.setContractNegotiationId(negotiation.getId());
         card.setDirection(ContractAgreementDirection.fromType(negotiation.getType()));
         card.setCounterPartyAddress(negotiation.getCounterPartyAddress());
         card.setCounterPartyId(negotiation.getCounterPartyId());
