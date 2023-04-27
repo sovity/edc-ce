@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## [3.1.0] - 2023-04-27
 
 ### Minor Changes
 - feat: wrapper contract agreement api
