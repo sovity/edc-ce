@@ -54,7 +54,7 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.oauth2.OAuth2ClientCredentials;
 import de.sovity.edc.client.oauth2.SovityKeycloakUrls;
 
-// Example using our Community Edition EDC
+// Example using a productive Connector-as-a-Service (CaaS) EDC Connector
 EdcClient client = EdcClient.builder()
         .managementApiUrl("https://your-connector.prod-sovity.azure.sovity.io/control/data")
         .oauth2ClientCredentials(OAuth2ClientCredentials.builder()
