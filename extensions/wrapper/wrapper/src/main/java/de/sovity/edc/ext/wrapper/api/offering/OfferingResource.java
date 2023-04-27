@@ -13,7 +13,7 @@ import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 
 @Path("wrapper/offering")
-@Tag(name = "Offering", description = "EDC UI API Endpoints")
+@Tag(name = "Offering", description = "EDC Contract Offering API Endpoints")
 @RequiredArgsConstructor
 public class OfferingResource {
 

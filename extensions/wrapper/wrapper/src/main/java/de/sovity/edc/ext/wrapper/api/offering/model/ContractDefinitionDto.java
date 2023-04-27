@@ -1,10 +1,14 @@
 package de.sovity.edc.ext.wrapper.api.offering.model;
 
-import java.util.List;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.eclipse.edc.api.model.CriterionDto;
+
+import java.util.List;
 
 /**
  * Dto for contract definition. A contract definition serves as a template for contract offers.
