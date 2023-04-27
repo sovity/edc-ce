@@ -18,7 +18,10 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgChartsModule} from 'ng2-charts';
 import {PreviousRouteListener} from '../edc-demo/components/logout/previous-route-listener';
 import {EdcDemoModule} from '../edc-demo/edc-demo.module';
-import {API_KEY, CONNECTOR_DATAMANAGEMENT_API} from '../edc-dmgmt-client';
+import {
+  API_KEY,
+  CONNECTOR_DATAMANAGEMENT_API,
+} from '../edc-dmgmt-client/variables';
 import {ApiKeyInterceptor} from './api-key.interceptor';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -67,8 +70,8 @@ import {AppConfigService} from './config/app-config.service';
     loadAppConfigOnStartup(),
 
     // Provide individual properties of config for better Angular Component APIs
-    provideConfigProperty(CONNECTOR_DATAMANAGEMENT_API, 'dataManagementApiUrl'),
-    provideConfigProperty(API_KEY, 'dataManagementApiKey'),
+    provideConfigProperty(CONNECTOR_DATAMANAGEMENT_API, 'managementApiUrl'),
+    provideConfigProperty(API_KEY, 'managementApiKey'),
 
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: ApiKeyInterceptor},
 

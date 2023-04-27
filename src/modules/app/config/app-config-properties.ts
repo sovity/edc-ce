@@ -33,12 +33,12 @@ export const AppConfigProperties = {
   /**
    * EDC Backend URL
    */
-  dataManagementApiUrl: 'EDC_UI_DATA_MANAGEMENT_API_URL',
+  managementApiUrl: 'EDC_UI_MANAGEMENT_API_URL',
 
   /**
    * Hard-Coded API key (?)
    */
-  dataManagementApiKey: 'EDC_UI_DATA_MANAGEMENT_API_KEY',
+  managementApiKey: 'EDC_UI_MANAGEMENT_API_KEY',
 
   /**
    * Logout URL.
@@ -128,4 +128,18 @@ export const AppConfigProperties = {
    * @deprecated Use {@link curatorOrganizationName} instead.
    */
   _legacyCuratorOrganizationName: 'EDC_UI_ASSET_PROP_ORIGINATOR_ORGANIZATION',
+
+  /**
+   * Same as {@link managementApiUrl}.
+   *
+   * @deprecated Use {@link managementApiUrl} instead.
+   */
+  _legacyManagementApiUrl: 'EDC_UI_DATA_MANAGEMENT_API_URL',
+
+  /**
+   * Same as {@link managementApiKey}.
+   *
+   * @deprecated Use {@link managementApiKey} instead.
+   */
+  _legacyManagementApiKey: 'EDC_UI_DATA_MANAGEMENT_API_KEY',
 };

@@ -55,7 +55,7 @@ export class CatalogApiUrlService {
    */
   buildCatalogApiUrl(connectorEndpoint: string) {
     // Detect legacy URLs
-    const prefix = `${this.appConfigService.config.dataManagementApiUrl}/catalog?providerUrl=`;
+    const prefix = `${this.appConfigService.config.managementApiUrl}/catalog?providerUrl=`;
     if (connectorEndpoint.startsWith(prefix)) {
       return connectorEndpoint;
     }

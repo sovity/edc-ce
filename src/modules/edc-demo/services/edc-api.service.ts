@@ -21,8 +21,8 @@ export class EdcApiService {
 
   private edcClient() {
     return buildEdcClient({
-      managementApiUrl: this.appConfigService.config.dataManagementApiUrl,
-      managementApiKey: this.appConfigService.config.dataManagementApiKey,
+      managementApiUrl: this.appConfigService.config.managementApiUrl,
+      managementApiKey: this.appConfigService.config.managementApiKey,
     });
   }
 }

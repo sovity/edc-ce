@@ -25,11 +25,10 @@ export class AppConfigBuilder {
         vars[AppConfigProperties.connectorEndpoint] ??
         vars[AppConfigProperties._legacyConnectorEndpoint] ??
         'https://no-connector-endpoint-configured',
-      dataManagementApiKey:
-        vars[AppConfigProperties.dataManagementApiKey] ??
-        'no-api-key-configured',
-      dataManagementApiUrl:
-        vars[AppConfigProperties.dataManagementApiUrl] ??
+      managementApiKey:
+        this.getManagementApiKey(vars) ?? 'no-api-key-configured',
+      managementApiUrl:
+        this.getManagementApiUrl(vars) ??
         'https://no-backend-api-url-configured',
       logoutUrl:
         vars[AppConfigProperties.logoutUrl] ??
@@ -74,5 +73,19 @@ export class AppConfigBuilder {
         vars[AppConfigProperties.maintainerOrganizationName] ??
         'No Maintainer Organization Name Configured',
     };
+  }
+
+  getManagementApiKey(vars: Record<string, string | null>): string | null {
+    return (
+      vars[AppConfigProperties.managementApiKey] ??
+      vars[AppConfigProperties._legacyManagementApiKey]
+    );
+  }
+
+  getManagementApiUrl(vars: Record<string, string | null>): string | null {
+    return (
+      vars[AppConfigProperties.managementApiUrl] ??
+      vars[AppConfigProperties._legacyManagementApiUrl]
+    );
   }
 }

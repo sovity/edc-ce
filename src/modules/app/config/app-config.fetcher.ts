@@ -4,6 +4,7 @@ import {firstValueFrom} from 'rxjs';
 import urlJoin from 'url-join';
 import {validUrlPattern} from '../../edc-demo/validators/url-validator';
 import {AppConfigProperties} from './app-config-properties';
+import {AppConfigBuilder} from './app-config.builder';
 import {AppConfigMerger} from './app-config.merger';
 
 @Injectable()
@@ -11,6 +12,7 @@ export class AppConfigFetcher {
   constructor(
     private http: HttpClient,
     private appConfigMerger: AppConfigMerger,
+    private appConfigBuilder: AppConfigBuilder,
   ) {}
 
   /**
@@ -27,7 +29,7 @@ export class AppConfigFetcher {
 
     const additionalConfigUrl = this.buildAdditionConfigUrl(config);
     if (additionalConfigUrl) {
-      apiKey = config[AppConfigProperties.dataManagementApiKey] ?? apiKey;
+      apiKey = this.appConfigBuilder.getManagementApiKey(config) ?? apiKey;
       const additionalConfig = await this.fetchEffectiveConfig(
         additionalConfigUrl,
         apiKey,
@@ -71,11 +73,11 @@ export class AppConfigFetcher {
 
     // Relative URL
     const dataManagementApiUrl =
-      config[AppConfigProperties.dataManagementApiUrl];
+      this.appConfigBuilder.getManagementApiUrl(config);
 
     if (!dataManagementApiUrl) {
       console.error(
-        `Invalid value for ${AppConfigProperties.configUrl} and ${AppConfigProperties.dataManagementApiUrl}. Could not build Additional Config URL:`,
+        `Invalid value for ${AppConfigProperties.configUrl} and ${AppConfigProperties.managementApiUrl}. Could not build Additional Config URL:`,
         relativeUrl,
         dataManagementApiUrl,
       );

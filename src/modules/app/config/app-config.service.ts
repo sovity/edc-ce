@@ -18,8 +18,8 @@ export class AppConfigService {
     console.log('Using AppConfig:', config);
     this.config = config;
     this.edcClient = buildEdcClient({
-      managementApiUrl: config.dataManagementApiUrl,
-      managementApiKey: config.dataManagementApiKey,
+      managementApiUrl: config.managementApiUrl,
+      managementApiKey: config.managementApiKey,
     });
     this.faviconService.setFavicon(config.brandFaviconSrc);
   }
