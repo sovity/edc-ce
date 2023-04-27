@@ -34,6 +34,9 @@ public class ContractAgreementCard {
     @Schema(description = "Contract Agreement ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String contractAgreementId;
 
+    @Schema(description = "Contract Negotiation ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String contractNegotiationId;
+
     @Schema(description = "Incoming vs Outgoing", requiredMode = Schema.RequiredMode.REQUIRED)
     private ContractAgreementDirection direction;
 

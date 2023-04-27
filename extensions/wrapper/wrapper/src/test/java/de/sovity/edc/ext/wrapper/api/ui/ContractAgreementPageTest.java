@@ -87,6 +87,7 @@ class ContractAgreementPageTest {
                 .assertThat()
                 .body("contractAgreements", hasSize(1))
                 .body("contractAgreements[0].contractAgreementId", equalTo("my-contract-agreement-1"))
+                .body("contractAgreements[0].contractNegotiationId", equalTo("my-contract-negotiation-1"))
                 .body("contractAgreements[0].direction", equalTo("PROVIDING"))
                 .body("contractAgreements[0].counterPartyAddress", equalTo("http://other-connector"))
                 .body("contractAgreements[0].counterPartyId", equalTo("urn:connector:other-connector"))
