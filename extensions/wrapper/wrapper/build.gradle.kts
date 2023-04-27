@@ -1,3 +1,7 @@
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+
 val edcVersion: String by project
 val edcGroup: String by project
 val restAssured: String by project
@@ -54,6 +58,26 @@ tasks.withType<io.swagger.v3.plugins.gradle.tasks.ResolveTask> {
     classpath = java.sourceSets["main"].runtimeClasspath
     buildClasspath = classpath
     resourcePackages = setOf("de.sovity.edc.ext.wrapper.api")
+
+    /**
+     * Replace incomplete and add missing model schemas
+     * in the 'build/swagger/edc-api-wrapper.yaml' open API specification.
+     * The schemas defined in the 'edc-schemas.yaml' file are used for this.
+     */
+    doLast {
+        val objectMapper = ObjectMapper(YAMLFactory())
+        val openApi = objectMapper.readTree(File(openapiFile)) as ObjectNode
+        val model = objectMapper.readTree(File("${project.projectDir}/edc-schemas.yaml")) as ObjectNode
+        val openApiSchemas = openApi.get("components").get("schemas") as ObjectNode
+        for (schema in model.get("schemas").fields()) {
+            if (openApiSchemas.has(schema.key)) {
+                openApiSchemas.replace(schema.key, schema.value)
+            } else {
+                openApiSchemas.set(schema.key, schema.value)
+            }
+        }
+        File(openapiFile).writeText(openApi.toPrettyString())
+    }
 }
 
 
