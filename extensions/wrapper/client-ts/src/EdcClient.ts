@@ -1,5 +1,6 @@
 import {
     Configuration,
+    ConfigurationParameters,
     EnterpriseEditionApi,
     UIApi,
     UseCaseApi,
@@ -24,7 +25,8 @@ export function buildEdcClient(opts: EdcClientOptions) {
         headers: {
             'x-api-key': opts.managementApiKey ?? 'ApiKeyDefaultValue',
         },
-        credentials: 'include',
+        credentials: 'same-origin',
+        ...opts.configOverrides,
     });
 
     return {
@@ -40,4 +42,5 @@ export function buildEdcClient(opts: EdcClientOptions) {
 export interface EdcClientOptions {
     managementApiUrl: string;
     managementApiKey?: string;
+    configOverrides?: Partial<ConfigurationParameters>;
 }
