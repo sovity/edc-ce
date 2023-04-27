@@ -1,6 +1,5 @@
 package de.sovity.edc.ext.wrapper.api.offering.services;
 
-import de.sovity.edc.ext.wrapper.api.offering.model.ContractDefinitionDto;
 import de.sovity.edc.ext.wrapper.api.offering.model.CreateOfferingDto;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.api.transformer.DtoTransformerRegistry;

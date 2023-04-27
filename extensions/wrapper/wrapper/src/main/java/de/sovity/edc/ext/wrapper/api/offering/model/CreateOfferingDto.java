@@ -2,12 +2,14 @@ package de.sovity.edc.ext.wrapper.api.offering.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import org.eclipse.edc.connector.api.management.asset.model.AssetEntryDto;
 import org.eclipse.edc.connector.api.management.contractdefinition.model.ContractDefinitionRequestDto;
 import org.eclipse.edc.connector.api.management.policy.model.PolicyDefinitionRequestDto;
 
 @Getter
+@Schema(description = "Test")
 public class CreateOfferingDto {
 
     private final AssetEntryDto assetEntryDto;
