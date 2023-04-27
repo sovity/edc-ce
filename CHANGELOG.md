@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - wrapper: added contractAgreements- and transferProcessesCounts
 - fix: broker extension provides empty fields
 - fix: update postman collection
+- bump org.junit.jupiter:junit-jupiter-api from 5.9.2 to 5.9.3
 
 ## [3.0.1] - 2023-04-06
 
