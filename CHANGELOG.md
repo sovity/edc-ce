@@ -42,6 +42,9 @@ information is now displayed.
 
 #### Changed
 
+- Marked `EDC_UI_DATA_MANAGEMENT_API_URL` as deprecated in favor of `EDC_UI_MANAGEMENT_API_URL`.
+- Marked `EDC_UI_DATA_MANAGEMENT_API_KEY` as deprecated in favor of `EDC_UI_MANAGEMENT_API_KEY`.
+
 #### Removed
 
 - Removed Datasource Payload support, it is probably only intended for Push
