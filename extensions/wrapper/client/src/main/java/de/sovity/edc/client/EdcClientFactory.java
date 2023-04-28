@@ -18,9 +18,10 @@ import de.sovity.edc.client.gen.ApiClient;
 import de.sovity.edc.client.gen.api.EnterpriseEditionApi;
 import de.sovity.edc.client.gen.api.UiApi;
 import de.sovity.edc.client.gen.api.UseCaseApi;
-import de.sovity.edc.client.oauth2.Oauth2ClientCredentialsAuthenticator;
-import de.sovity.edc.client.oauth2.Oauth2ClientCredentialsHandler;
-import de.sovity.edc.client.oauth2.Oauth2ClientCredentialsInterceptor;
+import de.sovity.edc.client.oauth2.OAuth2CredentialsAuthenticator;
+import de.sovity.edc.client.oauth2.OAuth2CredentialsStore;
+import de.sovity.edc.client.oauth2.OAuth2CredentialsInterceptor;
+import de.sovity.edc.client.oauth2.OAuth2TokenFetcher;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -41,11 +42,12 @@ public class EdcClientFactory {
         }
 
         if (builder.oauth2ClientCredentials() != null) {
-            var handler = new Oauth2ClientCredentialsHandler(builder.oauth2ClientCredentials());
+            var tokenFetcher = new OAuth2TokenFetcher(builder.oauth2ClientCredentials());
+            var handler = new OAuth2CredentialsStore(tokenFetcher);
             var httpClient = apiClient.getHttpClient()
                     .newBuilder()
-                    .addInterceptor(new Oauth2ClientCredentialsInterceptor(handler))
-                    .authenticator(new Oauth2ClientCredentialsAuthenticator(handler))
+                    .addInterceptor(new OAuth2CredentialsInterceptor(handler))
+                    .authenticator(new OAuth2CredentialsAuthenticator(handler))
                     .build();
             apiClient.setHttpClient(httpClient);
         }

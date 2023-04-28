@@ -52,13 +52,13 @@ KpiResult kpiResult = client.useCaseApi().kpiEndpoint();
 ```java
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.oauth2.OAuth2ClientCredentials;
-import de.sovity.edc.client.oauth2.SovityKeycloakUrls;
+import de.sovity.edc.client.oauth2.SovityKeycloakUrl;
 
 // Example using a productive Connector-as-a-Service (CaaS) EDC Connector
 EdcClient client = EdcClient.builder()
         .managementApiUrl("https://your-connector.prod-sovity.azure.sovity.io/control/data")
         .oauth2ClientCredentials(OAuth2ClientCredentials.builder()
-            .tokenUrl(SovityKeycloakUrls.PRODUCTION)
+            .tokenUrl(SovityKeycloakUrl.PRODUCTION)
             .clientId("my-edc-app")
             .clientSecret("...")
             .build())

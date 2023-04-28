@@ -22,14 +22,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
+/**
+ * OkHttp Interceptor: Adds Bearer Token to requests
+ */
 @RequiredArgsConstructor
-public class Oauth2ClientCredentialsInterceptor implements Interceptor {
-    private final Oauth2ClientCredentialsHandler oauth2ClientCredentialsHandler;
+public class OAuth2CredentialsInterceptor implements Interceptor {
+    private final OAuth2CredentialsStore credentialsStore;
 
     @NotNull
     @Override
     public Response intercept(Chain chain) throws IOException {
-        String accessToken = oauth2ClientCredentialsHandler.getAccessToken();
+        String accessToken = credentialsStore.getAccessToken();
         Request request = OkHttpRequestUtils.withBearerToken(chain.request(), accessToken);
         return chain.proceed(request);
     }
