@@ -16,6 +16,25 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
+#### Changed
+
+#### Removed
+
+#### Fixed
+
+## [v0.0.1-milestone-8-sovity3] 28.04.2023
+
+### Overview
+
+Reworked Contract Agreement Page, improved stability and full contract offer
+information is now displayed.
+
+### Detailed Changes
+
+#### Added
+
+- Reworked the Contract Agreement Page, it now uses its own dedicated API
+  Wrapper endpoint.
 - Added login polling to prevent auto-logout when page is open.
 - Showing all asset properties for assets and contract offers via an "Additional
   Properties" section.
