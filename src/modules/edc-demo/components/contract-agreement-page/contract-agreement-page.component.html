@@ -38,20 +38,43 @@
       class="min-h-[35rem]"
       [error]="page.errorOrUndefined"></edc-demo-error-state>
     <edc-demo-empty-state
+      *ngIf="page.isReady && !page.data.numTotalContractAgreements"
+      class="min-h-[35rem]"
+      [emptyMessage]="'No contract agreements yet.'"></edc-demo-empty-state>
+    <edc-demo-empty-state
       *ngIf="
         page.isReady &&
-        (!page.data.numTotalContractAgreements ||
-          !page.data.contractAgreements.length)
+        page.data.numTotalContractAgreements &&
+        !(
+          page.data.consumingContractAgreements.length +
+          page.data.providingContractAgreements.length
+        )
       "
       class="min-h-[35rem]"
       [emptyMessage]="
         'No contract agreements found with given filter.'
       "></edc-demo-empty-state>
   </div>
-  <edc-demo-contract-agreement-cards
+
+  <div
     *ngIf="page.isReady && !!page.data.contractAgreements.length"
-    [contractAgreements]="page.data.contractAgreements"
-    (contractAgreementClick)="
-      onContractAgreementClick($event)
-    "></edc-demo-contract-agreement-cards>
+    class="flex flex-col space-y-[20px]">
+    <edc-demo-contract-agreement-cards
+      *ngIf="page.data.consumingContractAgreements.length"
+      [contractAgreements]="page.data.consumingContractAgreements"
+      (contractAgreementClick)="
+        onContractAgreementClick($event)
+      "></edc-demo-contract-agreement-cards>
+
+    <ng-container *ngIf="page.data.providingContractAgreements.length">
+      <edc-demo-horizontal-section-divider text="Providing Contract Agreements">
+      </edc-demo-horizontal-section-divider>
+
+      <edc-demo-contract-agreement-cards
+        [contractAgreements]="page.data.providingContractAgreements"
+        (contractAgreementClick)="
+          onContractAgreementClick($event)
+        "></edc-demo-contract-agreement-cards>
+    </ng-container>
+  </div>
 </div>

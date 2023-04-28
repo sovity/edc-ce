@@ -58,6 +58,7 @@ import {DataSubcategorySelectComponent} from './components/data-subcategory-sele
 import {DateComponent} from './components/date/date.component';
 import {EmptyStateComponent} from './components/empty-state/empty-state.component';
 import {ErrorStateComponent} from './components/error-state/error-state.component';
+import {HorizontalSectionDividerComponent} from './components/horizontal-section-divider/horizontal-section-divider.component';
 import {JsonDialogComponent} from './components/json-dialog/json-dialog.component';
 import {KeywordSelectComponent} from './components/keyword-select/keyword-select.component';
 import {LanguageSelectComponent} from './components/language-select/language-select.component';
@@ -152,6 +153,7 @@ import {SafePipe} from './pipes/safe.pipe';
     DateComponent,
     EmptyStateComponent,
     ErrorStateComponent,
+    HorizontalSectionDividerComponent,
     IsActiveFeaturePipe,
     JsonDialogComponent,
     KeywordSelectComponent,

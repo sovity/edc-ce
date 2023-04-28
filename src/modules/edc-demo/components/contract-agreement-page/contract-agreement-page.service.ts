@@ -1,7 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Observable, combineLatest, concat, interval} from 'rxjs';
 import {filter, map, switchMap} from 'rxjs/operators';
-import {ContractAgreementCard} from '@sovity.de/edc-client';
+import {
+  ContractAgreementCard,
+  ContractAgreementPage,
+} from '@sovity.de/edc-client';
 import {Fetched} from '../../models/fetched';
 import {EdcApiService} from '../../services/edc-api.service';
 import {ContractAgreementCardMapped} from '../contract-agreement-cards/contract-agreement-card-mapped';
@@ -42,14 +45,29 @@ export class ContractAgreementPageService {
   private fetchData(): Observable<Fetched<ContractAgreementPageData>> {
     return this.edcApiService.getContractAgreementPage().pipe(
       Fetched.wrap({failureMessage: 'Failed fetching contract definitions'}),
-      Fetched.map((contractAgreementPage) => ({
-        contractAgreements: this.mapContractAgreements(
-          contractAgreementPage.contractAgreements,
-        ),
-        numTotalContractAgreements:
-          contractAgreementPage.contractAgreements.length,
-      })),
+      Fetched.map((contractAgreementPage) =>
+        this.buildContractAgreementPageData(contractAgreementPage),
+      ),
     );
+  }
+
+  private buildContractAgreementPageData(
+    contractAgreementPage: ContractAgreementPage,
+  ): ContractAgreementPageData {
+    let contractAgreements = this.mapContractAgreements(
+      contractAgreementPage.contractAgreements,
+    );
+    return {
+      contractAgreements,
+      consumingContractAgreements: contractAgreements.filter(
+        (it) => it.direction === 'CONSUMING',
+      ),
+      providingContractAgreements: contractAgreements.filter(
+        (it) => it.direction === 'PROVIDING',
+      ),
+      numTotalContractAgreements:
+        contractAgreementPage.contractAgreements.length,
+    };
   }
 
   private mapContractAgreements(
@@ -68,10 +86,16 @@ export class ContractAgreementPageService {
   ): ContractAgreementPageData {
     return {
       ...contractAgreementPage,
-      contractAgreements: this.contractAgreementCardMappedService.filter(
-        contractAgreementPage.contractAgreements,
-        searchText,
-      ),
+      consumingContractAgreements:
+        this.contractAgreementCardMappedService.filter(
+          contractAgreementPage.consumingContractAgreements,
+          searchText,
+        ),
+      providingContractAgreements:
+        this.contractAgreementCardMappedService.filter(
+          contractAgreementPage.providingContractAgreements,
+          searchText,
+        ),
     };
   }
 

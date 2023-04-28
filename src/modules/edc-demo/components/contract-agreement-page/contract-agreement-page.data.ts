@@ -6,5 +6,7 @@ export type ContractAgreementPageData = Omit<
   'contractAgreements'
 > & {
   contractAgreements: ContractAgreementCardMapped[];
+  consumingContractAgreements: ContractAgreementCardMapped[];
+  providingContractAgreements: ContractAgreementCardMapped[];
   numTotalContractAgreements: number;
 };

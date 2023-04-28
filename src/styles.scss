@@ -314,6 +314,10 @@ body {
   color: var(--warn-color);
 }
 
+.bg-muted {
+  background: rgba(0, 0, 0, 0.12);
+}
+
 // See https://tailwindcss.com/docs/font-size
 .text-sm {
   font-size: 0.8em;
