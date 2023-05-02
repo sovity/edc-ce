@@ -24,23 +24,18 @@ public class LastCommitInfoService {
 
     private final ServiceExtensionContext context;
 
+
+
     public LastCommitInfoService(ServiceExtensionContext context) {
         this.context = context;
     }
 
-    public String getLastCommitInfo() {
-        var result = "";
+    public LastCommitInfo getLastCommitInfo() {
+        var result = new LastCommitInfo();
+        result.setEnvLastCommitInfo(getEnvLastCommitInfo());
 
-        if (!getEnvLastCommitInfo().equals("")) {
-            result += "Env Last Commit Info: \n";
-            result += getEnvLastCommitInfo() + "\n";
-        }
 
-        if (!getEnvLastCommitInfo().equals(getJarLastCommitInfo())) {
-            result += "Jar Last Commit Info: \n";
-            result += getJarLastCommitInfo();
-        }
-
+        result.setJarLastCommitInfo(getJarLastCommitInfo());
         return result;
     }
 
