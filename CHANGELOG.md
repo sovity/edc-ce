@@ -22,6 +22,9 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Fixed
 
+- Fixed bug in contract definition page that prevented the entire page from
+  showing when any contract definition used a non-array operatorRight.
+
 ## [v0.0.1-milestone-8-sovity3] 28.04.2023
 
 ### Overview
@@ -42,8 +45,10 @@ information is now displayed.
 
 #### Changed
 
-- Marked `EDC_UI_DATA_MANAGEMENT_API_URL` as deprecated in favor of `EDC_UI_MANAGEMENT_API_URL`.
-- Marked `EDC_UI_DATA_MANAGEMENT_API_KEY` as deprecated in favor of `EDC_UI_MANAGEMENT_API_KEY`.
+- Marked `EDC_UI_DATA_MANAGEMENT_API_URL` as deprecated in favor of
+  `EDC_UI_MANAGEMENT_API_URL`.
+- Marked `EDC_UI_DATA_MANAGEMENT_API_KEY` as deprecated in favor of
+  `EDC_UI_MANAGEMENT_API_KEY`.
 
 #### Removed
 

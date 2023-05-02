@@ -70,5 +70,29 @@
       }
     ],
     "id": "Charging Station - Walkthrough"
+  },
+  {
+    "id": "example-using-asset-prop-id-eq",
+    "accessPolicyId": "end-of-the-year",
+    "contractPolicyId": "end-of-the-year",
+    "criteria": [
+      {
+        "operandLeft": "asset:prop:id",
+        "operator": "eq",
+        "operandRight": "urn:artifact:db-rail-network-2023-jan"
+      }
+    ]
+  },
+  {
+    "id": "example-using-asset-prop-usecase-eq",
+    "accessPolicyId": "end-of-the-year",
+    "contractPolicyId": "end-of-the-year",
+    "criteria": [
+      {
+        "operandLeft": "asset:prop:usecase",
+        "operator": "eq",
+        "operandRight": "urn:usecase:my-example-usecase"
+      }
+    ]
   }
 ]
