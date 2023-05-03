@@ -20,7 +20,7 @@ import lombok.Data;
 
 @Data
 @Schema(description = "Available and used resources of a connector.")
-final public class FileStorageUploadResult {
+public final class FileStorageUploadResult {
     @NotBlank
     @Schema(description = "Identifier of the file storage object.", requiredMode = Schema.RequiredMode.REQUIRED)
     String fileStorageId;

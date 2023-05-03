@@ -23,7 +23,7 @@ import java.util.Map;
 
 @Data
 @Schema(description = "Available and used resources of a connector.")
-final public class FileStorageAssetCreateRequest {
+public final class FileStorageAssetCreateRequest {
 
     @NotBlank
     @Schema(description = "Identifier of the file storage object", requiredMode = Schema.RequiredMode.REQUIRED)

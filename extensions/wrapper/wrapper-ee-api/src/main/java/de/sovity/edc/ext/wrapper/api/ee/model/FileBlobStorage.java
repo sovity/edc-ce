@@ -16,12 +16,14 @@ package de.sovity.edc.ext.wrapper.api.ee.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.LinkedList;
 
+@EqualsAndHashCode(callSuper = false)
 @Data
 @Schema(description = "Available and used resources of a connector.")
-final public class FileBlobStorage extends FileStorage
+public final class FileBlobStorage extends FileStorage
 {
     @Schema(description = "List of tags created for the file on the remote blob store.")
     LinkedList<String> tags;
