@@ -42,18 +42,15 @@ public class OAuth2TokenFetcher {
                 .add("client_id", clientCredentials.getClientId())
                 .add("client_secret", clientCredentials.getClientSecret())
                 .build();
+
         var request = new Request.Builder()
                 .url(clientCredentials.getTokenUrl())
                 .post(formData)
                 .build();
-        return executeRequest(request, OAuth2TokenResponse.class);
-    }
 
-
-    private <T> T executeRequest(Request request, Class<T> returnType) {
         // Re-use the Utils for OkHttp from the OpenAPI generator
         Call call = apiClient.getHttpClient().newCall(request);
-        ApiResponse<T> response = apiClient.execute(call, returnType);
+        ApiResponse<OAuth2TokenResponse> response = apiClient.execute(call, OAuth2TokenResponse.class);
         return response.getData();
     }
 }

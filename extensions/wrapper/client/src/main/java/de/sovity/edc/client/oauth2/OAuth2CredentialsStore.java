@@ -37,7 +37,6 @@ public class OAuth2CredentialsStore {
         }
     }
 
-
     public String refreshAccessToken() {
         synchronized (this) {
             fetchAccessTokenInternal();

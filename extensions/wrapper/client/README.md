@@ -33,7 +33,7 @@ An example project using this client can be found [here](../client-example).
 
 ## Usage
 
-### Example using API Key Auth
+### Example Using API Key Auth
 
 ```java
 import de.sovity.edc.client.EdcClient;
@@ -47,7 +47,7 @@ EdcClient client = EdcClient.builder()
 KpiResult kpiResult = client.useCaseApi().kpiEndpoint();
 ```
 
-### Example using OAuth2 Client Credentials
+### Example Using OAuth2 Client Credentials
 
 ```java
 import de.sovity.edc.client.EdcClient;
