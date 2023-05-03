@@ -16,11 +16,23 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
-- Added "Show Details" option to each entry in Transfer History Page
-
 #### Changed
 
 #### Removed
+
+#### Fixed
+
+## [v0.0.1-milestone-8-sovity4] 03.05.2023
+
+### Overview
+
+Bugfixes and minor UI improvements.
+
+### Detailed Changes
+
+#### Added
+
+- Added "Show Details" option to each entry in Transfer History Page
 
 #### Fixed
 
