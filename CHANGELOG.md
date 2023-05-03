@@ -16,6 +16,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
+- Added "Show Details" option to each entry in Transfer History Page
+
 #### Changed
 
 #### Removed

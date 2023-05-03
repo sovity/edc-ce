@@ -10,6 +10,8 @@ import {
   ConfirmDialogModel,
   ConfirmationDialogComponent,
 } from '../confirmation-dialog/confirmation-dialog.component';
+import {JsonDialogComponent} from '../json-dialog/json-dialog.component';
+import {JsonDialogData} from '../json-dialog/json-dialog.data';
 
 @Component({
   selector: 'edc-demo-transfer-history',
@@ -25,6 +27,7 @@ export class TransferHistoryViewerComponent implements OnInit {
     'connectorId',
     'assetId',
     'contractId',
+    'details',
   ];
   transferProcessesList: Fetched<{
     transferProcesses: Array<TransferProcessDto>;
@@ -34,6 +37,16 @@ export class TransferHistoryViewerComponent implements OnInit {
     private transferProcessService: TransferProcessService,
     private dialog: MatDialog,
   ) {}
+
+  onTransferHistoryDetailsClick(item: TransferProcessDto) {
+    const data: JsonDialogData = {
+      title: item.id,
+      subtitle: 'Transfer History Details',
+      icon: 'assignment',
+      objectForJson: item,
+    };
+    this.dialog.open(JsonDialogComponent, {data});
+  }
 
   ngOnInit(): void {
     this.loadTransferProcesses();

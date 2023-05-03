@@ -37,14 +37,14 @@
       mat-table
       [dataSource]="transferProcessesList.data.transferProcesses">
       <ng-container matColumnDef="id">
-        <th *matHeaderCellDef mat-header-cell scope="col">Id</th>
+        <th *matHeaderCellDef mat-header-cell scope="col">ID</th>
         <td *matCellDef="let item" mat-cell>{{ item.id }}</td>
       </ng-container>
 
       <ng-container matColumnDef="creationDate">
         <th *matHeaderCellDef mat-header-cell scope="col">Created</th>
         <td *matCellDef="let item" mat-cell>
-          {{ asDate(item.createdTimestamp) }}
+          {{ asDate(item.createdAt) }}
         </td>
       </ng-container>
 
@@ -61,23 +61,35 @@
       </ng-container>
 
       <ng-container matColumnDef="connectorId">
-        <th *matHeaderCellDef mat-header-cell scope="col">ConnectorId</th>
+        <th *matHeaderCellDef mat-header-cell scope="col">Connector ID</th>
         <td *matCellDef="let item" mat-cell>
           {{ item.dataRequest.connectorId }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="assetId">
-        <th *matHeaderCellDef mat-header-cell scope="col">AssetId</th>
+        <th *matHeaderCellDef mat-header-cell scope="col">Asset ID</th>
         <td *matCellDef="let item" mat-cell>
           {{ item.dataRequest.assetId }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="contractId">
-        <th *matHeaderCellDef mat-header-cell scope="col">ContractId</th>
+        <th *matHeaderCellDef mat-header-cell scope="col">Contract ID</th>
         <td *matCellDef="let item" mat-cell>
           {{ item.dataRequest.contractId }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="details">
+        <th *matHeaderCellDef mat-header-cell scope="col">Details</th>
+        <td *matCellDef="let item" mat-cell>
+          <a
+            class="link"
+            href="javascript:void(0)"
+            (click)="onTransferHistoryDetailsClick(item)">
+            {{ 'Show Details' }}
+          </a>
         </td>
       </ng-container>
 

@@ -4,9 +4,9 @@
     "updatedAt": 1675344960579,
     "id": "be0cac12-bb43-420e-aa29-d66bb3d0e0ac",
     "type": "CONSUMER",
-    "state": "COMPLETED",
+    "state": "ERROR",
     "stateTimestamp": 1675344960579,
-    "errorDetail": null,
+    "errorDetail": "TransferProcessManager: attempt #8 failed to send transfer. Retry limit exceeded, TransferProcess 1317d0da-cdc6-42ab-b54b-1f90bcfed508 moves to ERROR state. Cause: java.net.SocketException: Connection reset",
     "dataRequest": {
       "id": "c9fec9a2-1243-4738-9576-d70bf4558687",
       "assetId": "urn:artifact:example-asset",
