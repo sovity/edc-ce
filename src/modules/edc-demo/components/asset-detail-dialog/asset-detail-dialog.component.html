@@ -96,7 +96,10 @@
       </button>
 
       <button
-        *ngIf="data.mode === 'contract-agreement'"
+        *ngIf="
+          data.mode === 'contract-agreement' &&
+          data.contractAgreement?.direction === 'CONSUMING'
+        "
         mat-raised-button
         color="primary"
         (click)="onTransferClick()">

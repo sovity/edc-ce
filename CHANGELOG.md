@@ -26,6 +26,8 @@ the detailed section referring to by linking pull requests or issues.
 
 - Fixed bug in contract definition page that prevented the entire page from
   showing when any contract definition used a non-array operatorRight.
+- Fixed contract agreement transfer button being available for providing
+  contract agreements.
 
 ## [v0.0.1-milestone-8-sovity3] 28.04.2023
 
