@@ -15,16 +15,25 @@
 package de.sovity.edc.ext.wrapper.api.ee.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 @Schema(description = "Available and used resources of a connector.")
 final public class FileStorageUploadResult {
-    @Schema(description = "Identifier of the file storage object", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank
+    @Schema(description = "Identifier of the file storage object.", requiredMode = Schema.RequiredMode.REQUIRED)
     String fileStorageId;
 
-    //ToDo: wondering if this is required. In the end the amount of bytes can be easily calculated.
-    // It might also impact the formatting in the UI.
-    @Schema(description = "Size of the file expressed in a readable format of amount of MB's.", requiredMode = Schema.RequiredMode.REQUIRED)
-    String fileSizeReadable;
+    @NotBlank
+    @Schema(description = "File name which contains the value for the KEY_ASSET_FILE_NAME asset property value.", requiredMode = Schema.RequiredMode.REQUIRED)
+    String fileName;
+
+    @NotBlank
+    @Schema(description = "File extension which contains the value for the KEY_ASSET_FILE_EXTENSION asset property value.", requiredMode = Schema.RequiredMode.REQUIRED)
+    String fileExtension;
+
+    @NotBlank
+    @Schema(description = "Size of the file in bytes which contains the value for the KEY_ASSET_BYTE_SIZE asset property value", requiredMode = Schema.RequiredMode.REQUIRED)
+    String byteSize;
 }

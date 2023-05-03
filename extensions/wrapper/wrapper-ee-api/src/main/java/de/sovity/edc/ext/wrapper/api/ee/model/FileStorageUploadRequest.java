@@ -14,14 +14,20 @@
 package de.sovity.edc.ext.wrapper.api.ee.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.NonNull;
 
 @Data
 @Schema(description = "Available and used resources of a connector.")
 final public class FileStorageUploadRequest {
+    @NotBlank
     @Schema(description = "Original name of the uploaded file.", requiredMode = Schema.RequiredMode.REQUIRED)
     String fileName;
 
+    @NotNull
     @Schema(description = "Binary content of the uploaded file.", requiredMode = Schema.RequiredMode.REQUIRED)
     byte[] data;
 }
