@@ -30,20 +30,26 @@ import org.eclipse.edc.spi.monitor.Monitor;
 
 import java.util.Objects;
 
+import static de.sovity.edc.extension.policy.ReferringConnectorValidationExtension.BUSINESS_PARTNER_NUMBER_CONSTRAINT_KEY;
+
 /**
  * Abstract class for referringConnector validation. This class may be inherited from the EDC
  * policy enforcing functions for duties, permissions and prohibitions.
  */
 public abstract class AbstractReferringConnectorValidation {
     private static final String FAIL_EVALUATION_BECAUSE_RIGHT_VALUE_NOT_STRING =
-            "Failing evaluation because of invalid referring connector constraint. For operator 'EQ' right value must be of type 'String'. Unsupported type: '%s'";
+            "Failing evaluation because of invalid referring connector constraint. For operator " +
+                    "'EQ' right value must be of type 'String'. Unsupported type: '%s'";
     private static final String FAIL_EVALUATION_BECAUSE_UNSUPPORTED_OPERATOR =
-            "Failing evaluation because of invalid referring connector constraint. As operator only 'EQ' is supported. Unsupported operator: '%s'";
+            "Failing evaluation because of invalid referring connector constraint. As operator " +
+                    "only 'EQ' is supported. Unsupported operator: '%s'";
 
     private final Monitor monitor;
+    private final String leftExpressionKey;
 
-    protected AbstractReferringConnectorValidation(Monitor monitor) {
+    protected AbstractReferringConnectorValidation(Monitor monitor, String leftExpressionKey) {
         this.monitor = Objects.requireNonNull(monitor);
+        this.leftExpressionKey = leftExpressionKey;
     }
 
     private static final String REFERRING_CONNECTOR_CLAIM = "referringConnector";
@@ -51,17 +57,19 @@ public abstract class AbstractReferringConnectorValidation {
     /**
      * Evaluation function.
      *
-     * @param operator operator of the constraint
-     * @param rightValue right value fo the constraint, that contains a referring connector
+     * @param operator      operator of the constraint
+     * @param rightValue    right value fo the constraint, that contains a referring connector
      * @param policyContext context of the policy with claims
      * @return true if claims are from the constrained referring connector
      */
-    protected boolean evaluate(final Operator operator, final Object rightValue, final PolicyContext policyContext) {
+    protected boolean evaluate(final Operator operator, final Object rightValue,
+                               final PolicyContext policyContext) {
         if (policyContext.hasProblems() && !policyContext.getProblems().isEmpty()) {
             var problems = String.join(", ", policyContext.getProblems());
             var message =
                     String.format(
-                            "ReferringConnectorValidation: Rejecting PolicyContext with problems. Problems: %s",
+                            "ReferringConnectorValidation: Rejecting PolicyContext with problems." +
+                                    " Problems: %s",
                             problems);
             monitor.debug(message);
             return false;
@@ -87,7 +95,8 @@ public abstract class AbstractReferringConnectorValidation {
         if (operator == Operator.EQ) {
             return isReferringConnector(referringConnectorClaim, rightValue, policyContext);
         } else {
-            final var message = String.format(FAIL_EVALUATION_BECAUSE_UNSUPPORTED_OPERATOR, operator);
+            final var message = String.format(FAIL_EVALUATION_BECAUSE_UNSUPPORTED_OPERATOR,
+                    operator);
             monitor.warning(message);
             policyContext.reportProblem(message);
             return false;
@@ -98,14 +107,16 @@ public abstract class AbstractReferringConnectorValidation {
      * Validates if value set in policy and if value interpretable.
      *
      * @param referringConnectorClaim of the participant
-     * @param referringConnector object of rightValue of constraint
+     * @param referringConnector      object of rightValue of constraint
      * @return true if object is string and successfully evaluated against the claim
      */
     private boolean isReferringConnector(
-            String referringConnectorClaim, Object referringConnector, PolicyContext policyContext) {
+            String referringConnectorClaim, Object referringConnector,
+            PolicyContext policyContext) {
         //no right value set in policy
         if (referringConnector == null) {
-            final var message = String.format(FAIL_EVALUATION_BECAUSE_RIGHT_VALUE_NOT_STRING, "null");
+            final var message = String.format(FAIL_EVALUATION_BECAUSE_RIGHT_VALUE_NOT_STRING,
+                    "null");
             monitor.warning(message);
             policyContext.reportProblem(message);
             return false;
@@ -123,18 +134,21 @@ public abstract class AbstractReferringConnectorValidation {
         }
 
         //evaluate
-        return isAllowedReferingConnector(referringConnectorClaim, (String) referringConnector);
+        return isAllowedReferringConnector(referringConnectorClaim, (String) referringConnector);
     }
 
     /**
      * Main evaluation, evaluates if claim is allowed referringConnector.
      *
      * @param referringConnectorClaim of the participant
-     * @param referringConnector object of rightValue of constraint
+     * @param referringConnector      object of rightValue of constraint
      * @return true if claim equals the referringConnector
      */
-    private static boolean isAllowedReferingConnector(
+    private boolean isAllowedReferringConnector(
             String referringConnectorClaim, String referringConnector) {
+        if (BUSINESS_PARTNER_NUMBER_CONSTRAINT_KEY.equals(leftExpressionKey)) {
+            return referringConnectorClaim.contains(referringConnector);
+        }
         return referringConnectorClaim.equals(referringConnector);
     }
 }

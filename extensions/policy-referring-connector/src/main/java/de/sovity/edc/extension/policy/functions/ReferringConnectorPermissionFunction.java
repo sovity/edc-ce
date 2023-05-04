@@ -34,8 +34,8 @@ import org.eclipse.edc.spi.monitor.Monitor;
 public class ReferringConnectorPermissionFunction extends AbstractReferringConnectorValidation
         implements AtomicConstraintFunction<Permission> {
 
-    public ReferringConnectorPermissionFunction(Monitor monitor) {
-        super(monitor);
+    public ReferringConnectorPermissionFunction(Monitor monitor, String leftExpressionKey) {
+        super(monitor, leftExpressionKey);
     }
 
     @Override
