@@ -34,8 +34,8 @@ import org.eclipse.edc.spi.monitor.Monitor;
 public class ReferringConnectorDutyFunction extends AbstractReferringConnectorValidation
         implements AtomicConstraintFunction<Duty> {
 
-    public ReferringConnectorDutyFunction(Monitor monitor) {
-        super(monitor);
+    public ReferringConnectorDutyFunction(Monitor monitor, String leftExpressionKey) {
+        super(monitor, leftExpressionKey);
     }
 
     @Override
