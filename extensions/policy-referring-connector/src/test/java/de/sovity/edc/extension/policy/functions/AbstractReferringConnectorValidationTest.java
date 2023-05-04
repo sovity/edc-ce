@@ -38,6 +38,8 @@ import org.mockito.Mockito;
 import java.util.Collections;
 import java.util.List;
 
+import static de.sovity.edc.extension.policy.ReferringConnectorValidationExtension.REFERRING_CONNECTOR_CONSTRAINT_KEY;
+
 class AbstractReferringConnectorValidationTest {
 
     private AbstractReferringConnectorValidation validation;
@@ -55,7 +57,7 @@ class AbstractReferringConnectorValidationTest {
 
         Mockito.when(policyContext.getParticipantAgent()).thenReturn(participantAgent);
 
-        validation = new AbstractReferringConnectorValidation(monitor) {};
+        validation = new AbstractReferringConnectorValidation(monitor, REFERRING_CONNECTOR_CONSTRAINT_KEY) {};
     }
 
     @ParameterizedTest

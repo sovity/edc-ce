@@ -109,10 +109,10 @@ public class ReferringConnectorValidationExtension implements ServiceExtension {
 
     private void registerPolicyFunctions(String leftExpressionKey, Monitor monitor) {
         policyEngine.registerFunction(ALL_SCOPES, Duty.class, leftExpressionKey,
-                new ReferringConnectorDutyFunction(monitor));
+                new ReferringConnectorDutyFunction(monitor, leftExpressionKey));
         policyEngine.registerFunction(ALL_SCOPES, Permission.class, leftExpressionKey,
-                new ReferringConnectorPermissionFunction(monitor));
+                new ReferringConnectorPermissionFunction(monitor, leftExpressionKey));
         policyEngine.registerFunction(ALL_SCOPES, Prohibition.class, leftExpressionKey,
-                new ReferringConnectorProhibitionFunction(monitor));
+                new ReferringConnectorProhibitionFunction(monitor, leftExpressionKey));
     }
 }
