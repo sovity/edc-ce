@@ -15,37 +15,40 @@
 package de.sovity.edc.ext.wrapper.api.ee.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.math.BigInteger;
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.Map;
 
-@Data
-@Schema(description = "Available and used resources of a connector.")
-public class FileStorage {
-    @NotBlank
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(description = "File storage resource of a connector.")
+public class StoredFile {
     @Schema(description = "Identifier of the file storage object", requiredMode = Schema.RequiredMode.REQUIRED)
     String id;
 
-    @NotBlank
-    @Schema(description = "Original name of the file.", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "File name which contains the value for the KEY_ASSET_FILE_NAME asset property value.", requiredMode = Schema.RequiredMode.REQUIRED)
     String fileName;
 
-    @NotBlank
-    @Schema(description = "Size of the file expressed in bytes.", requiredMode = Schema.RequiredMode.REQUIRED, maximum = "1048576")
-    BigInteger byteSize;
+    @Schema(description = "File extension which contains the value for the KEY_ASSET_FILE_EXTENSION asset property value.", requiredMode = Schema.RequiredMode.REQUIRED)
+    String fileExtension;
+
+    @Schema(description = "Size of the file in bytes which contains the value for the KEY_ASSET_BYTE_SIZE asset property value", requiredMode = Schema.RequiredMode.REQUIRED)
+    String byteSize;
 
     @Schema(description = "Map containing the asset properties of the storage object.")
     Map<String, String> assetProperties;
 
-    @NotNull
     @Schema(description = "Creation date of the FileStore object.", requiredMode = Schema.RequiredMode.REQUIRED)
-    Date creationDate;
+    OffsetDateTime creationDate;
 
-    @NotNull
     @Schema(description = "Date of the last modification of the FileStore object.", requiredMode = Schema.RequiredMode.REQUIRED)
-    Date lastModifiedDate;
+    OffsetDateTime lastModifiedDate;
 }

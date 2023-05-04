@@ -15,20 +15,14 @@
 package de.sovity.edc.ext.wrapper.api.ee;
 
 import de.sovity.edc.ext.wrapper.api.ee.model.ConnectorLimits;
-import de.sovity.edc.ext.wrapper.api.ee.model.FileStorageUploadResult;
-import de.sovity.edc.ext.wrapper.api.ee.model.FileBlobStorage;
-import de.sovity.edc.ext.wrapper.api.ee.model.FileStorageUploadRequest;
-import de.sovity.edc.ext.wrapper.api.ee.model.FileStorageAssetCreateRequest;
+import de.sovity.edc.ext.wrapper.api.ee.model.StoredFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Our EDC Enterprise Edition API Endpoints to be included in our generated EDC API Wrapper Clients
@@ -43,22 +37,22 @@ public interface EnterpriseEditionResource {
     ConnectorLimits connectorLimits();
 
     @POST
-    @Path("file-storage/blob-store/files")
+    @Path("file-storage/files}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Upload a file to the remote blob store.")
-    FileStorageUploadResult blobStoreUploadFile(FileStorageUploadRequest request);
+    @Operation(description = "Upload a file to the file storage.")
+    StoredFile blobStoreUploadFile(String fileName, byte[] data);
 
     @GET
-    @Path("file-storage/blob-store/files")
+    @Path("file-storage/files")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Get all uploaded files stored on the remote blob store.")
-    LinkedList<FileBlobStorage> blobStoreListFiles();
+    @Operation(description = "Get all uploaded files from the file storage.")
+    ArrayList<StoredFile> listStoredFiles();
 
     @POST
-    @Path("file-storage/blob-store/assets")
+    @Path("file-storage/{storedFileId}/assets")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Create the blob store file storage asset.")
-    FileBlobStorage createAsset(FileStorageAssetCreateRequest request);
+    @Operation(description = "Create the file storage asset.")
+    StoredFile createAsset(@PathParam("storedFileId") String id, Map<String, String> assetProperties);
 }
