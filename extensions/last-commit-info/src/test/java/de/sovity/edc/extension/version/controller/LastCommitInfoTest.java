@@ -56,6 +56,9 @@ class LastCommitInfoTest {
                 .contentType(ContentType.JSON);
 
         request.assertThat().body("envLastCommitInfo", equalTo("test env commit message"))
-                .body("jarLastCommitInfo", equalTo("test jar commit message\n"));
+                .body("envLastBuildDate", equalTo("2023-05-05T14:30:00Z"))
+                .body("jarLastCommitInfo", equalTo("test jar commit message\n"))
+                .body("jarLastBuildDate", equalTo("2023-05-05T14:30:00Z"));
+
     }
 }

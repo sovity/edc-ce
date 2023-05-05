@@ -23,7 +23,6 @@ import jakarta.ws.rs.core.MediaType;
 @Path("/last-commit-info")
 public class LastCommitInfoController {
     private final LastCommitInfoService lastCommitInfoService;
-    //private final LastCommitInfo lastCommitInfo;
 
     public LastCommitInfoController(LastCommitInfoService lastCommitInfoService) {
         this.lastCommitInfoService = lastCommitInfoService;
@@ -32,7 +31,6 @@ public class LastCommitInfoController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public LastCommitInfo getLastCommitInfo() {
-        System.out.println("the commit info : "+lastCommitInfoService.getLastCommitInfo());
         return lastCommitInfoService.getLastCommitInfo();
     }
 }
