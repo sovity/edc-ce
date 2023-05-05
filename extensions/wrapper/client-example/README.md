@@ -43,7 +43,7 @@ docker compose -f docker-compose-dev.yaml down -t 1
 
 ## License
 
-Apache License 2.0 - see [LICENSE](../../LICENSE)
+Apache License 2.0 - see [LICENSE](../../../LICENSE)
 
 ## Contact
 
