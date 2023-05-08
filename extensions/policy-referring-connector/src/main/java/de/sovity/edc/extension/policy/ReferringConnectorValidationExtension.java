@@ -33,6 +33,7 @@ import org.eclipse.edc.policy.model.Duty;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Prohibition;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
+import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 
@@ -55,7 +56,7 @@ public class ReferringConnectorValidationExtension implements ServiceExtension {
      *     }
      * }
      * </pre>
-     *
+     * <p>
      * Constraint:
      * <pre>
      *       {
@@ -73,8 +74,10 @@ public class ReferringConnectorValidationExtension implements ServiceExtension {
      * </pre>
      */
     public static final String REFERRING_CONNECTOR_CONSTRAINT_KEY = "REFERRING_CONNECTOR";
+    public static final String BUSINESS_PARTNER_NUMBER_CONSTRAINT_KEY = "BusinessPartnerNumber";
 
-    public ReferringConnectorValidationExtension() {}
+    public ReferringConnectorValidationExtension() {
+    }
 
     public ReferringConnectorValidationExtension(final RuleBindingRegistry ruleBindingRegistry,
                                                  final PolicyEngine policyEngine) {
@@ -97,15 +100,19 @@ public class ReferringConnectorValidationExtension implements ServiceExtension {
     public void initialize(ServiceExtensionContext context) {
         final var monitor = context.getMonitor();
 
-        final var dutyFunction = new ReferringConnectorDutyFunction(monitor);
-        final var permissionFunction = new ReferringConnectorPermissionFunction(monitor);
-        final var prohibitionFunction = new ReferringConnectorProhibitionFunction(monitor);
-
         ruleBindingRegistry.bind("USE", ALL_SCOPES);
         ruleBindingRegistry.bind(REFERRING_CONNECTOR_CONSTRAINT_KEY, ALL_SCOPES);
 
-        policyEngine.registerFunction(ALL_SCOPES, Duty.class, REFERRING_CONNECTOR_CONSTRAINT_KEY, dutyFunction);
-        policyEngine.registerFunction(ALL_SCOPES, Permission.class, REFERRING_CONNECTOR_CONSTRAINT_KEY, permissionFunction);
-        policyEngine.registerFunction(ALL_SCOPES, Prohibition.class, REFERRING_CONNECTOR_CONSTRAINT_KEY, prohibitionFunction);
+        registerPolicyFunctions(REFERRING_CONNECTOR_CONSTRAINT_KEY, monitor);
+        registerPolicyFunctions(BUSINESS_PARTNER_NUMBER_CONSTRAINT_KEY, monitor);
+    }
+
+    private void registerPolicyFunctions(String leftExpressionKey, Monitor monitor) {
+        policyEngine.registerFunction(ALL_SCOPES, Duty.class, leftExpressionKey,
+                new ReferringConnectorDutyFunction(monitor));
+        policyEngine.registerFunction(ALL_SCOPES, Permission.class, leftExpressionKey,
+                new ReferringConnectorPermissionFunction(monitor));
+        policyEngine.registerFunction(ALL_SCOPES, Prohibition.class, leftExpressionKey,
+                new ReferringConnectorProhibitionFunction(monitor));
     }
 }

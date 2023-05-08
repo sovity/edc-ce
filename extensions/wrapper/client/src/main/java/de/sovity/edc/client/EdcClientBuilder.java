@@ -14,6 +14,7 @@
 
 package de.sovity.edc.client;
 
+import de.sovity.edc.client.oauth2.OAuth2ClientCredentials;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -22,8 +23,20 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(fluent = true, chain = true)
 public class EdcClientBuilder {
+    /**
+     * Management API Base URL, e.g. https://my-connector.com/control/management
+     */
     private String managementApiUrl;
+
+    /**
+     * Enables EDC Management API Key authentication.
+     */
     private String managementApiKey = "ApiKeyDefaultValue";
+
+    /**
+     * Enables OAuth2 "Client Credentials Flow" authentication.
+     */
+    private OAuth2ClientCredentials oauth2ClientCredentials;
 
     public EdcClient build() {
         return EdcClientFactory.newClient(this);
