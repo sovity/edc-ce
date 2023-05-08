@@ -43,7 +43,7 @@ const edcClient: EdcClient = buildEdcClient({
 let kpiData: KpiResult = await edcClient.useCaseApi.kpiEndpoint();
 ```
 
-A minimal example project using our typescript API client can be found
+A minimal example project using the typescript API client can be found
 [here](https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper/client-ts-example).
 
 ## License

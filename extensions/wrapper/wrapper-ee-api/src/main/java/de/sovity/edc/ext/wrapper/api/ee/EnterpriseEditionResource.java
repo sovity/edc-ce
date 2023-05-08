@@ -22,11 +22,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-/**
- * Our EDC Enterprise Edition API Endpoints to be included in our generated EDC API Wrapper Clients
- */
 @Path("wrapper/ee")
-@Tag(name = "Enterprise Edition", description = "EDC Enterprise Edition API Endpoints. Included here for ease of use.")
+@Tag(name = "Enterprise Edition", description = "EDC Enterprise Edition API Endpoints. Requires our Enterprise Edition EDC Extensions.")
 public interface EnterpriseEditionResource {
 
     @GET
