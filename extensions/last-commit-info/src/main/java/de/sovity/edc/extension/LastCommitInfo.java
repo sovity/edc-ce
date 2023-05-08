@@ -25,4 +25,6 @@ public class LastCommitInfo {
     private String envLastBuildDate;
     private String jarLastCommitInfo;
     private String jarLastBuildDate;
+
+
 }
