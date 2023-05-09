@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Observable, combineLatest, throwError} from 'rxjs';
-import {map, switchMap, timeout} from 'rxjs/operators';
+import {Observable, combineLatest} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
 import {ContractOffer} from '../../models/contract-offer';
 import {Fetched} from '../../models/fetched';
 import {MultiFetched} from '../../models/multi-fetched';
@@ -64,13 +64,9 @@ export class CatalogBrowserPageService {
     // Prepare to fetch individual Catalogs
     const urls = this.catalogApiUrlService.getAllProviders();
     const sources = urls.map((it) =>
-      this.contractOfferService.getContractOffers(it).pipe(
-        timeout({
-          first: 5000,
-          with: () => throwError(() => new Error(`Timed out after 5s.`)),
-        }),
-        Fetched.wrap({failureMessage: 'Failed fetching catalog.'}),
-      ),
+      this.contractOfferService
+        .getContractOffers(it)
+        .pipe(Fetched.wrap({failureMessage: 'Failed fetching catalog.'})),
     );
 
     return combineLatest(sources).pipe(

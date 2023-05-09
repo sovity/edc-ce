@@ -18,6 +18,9 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Changed
 
+- Catalog Page now has no timeouts.
+- Catalog Page now displays partial results.
+
 #### Removed
 
 #### Fixed

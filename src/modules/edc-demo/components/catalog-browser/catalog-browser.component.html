@@ -38,7 +38,7 @@
         >{{ presetProvidersMessage }}</mat-hint
       >
       <button
-        *ngIf="!data.requestTotals.isDone && !data.requestTotals.isSomeFailed"
+        *ngIf="!data.requestTotals.isDone"
         matSuffix
         mat-icon-button
         matTooltip="Click for details"
@@ -52,7 +52,7 @@
         </mat-progress-spinner>
       </button>
       <button
-        *ngIf="data.requestTotals.isSomeFailed"
+        *ngIf="data.requestTotals.isDone && data.requestTotals.isSomeFailed"
         matSuffix
         color="warn"
         mat-icon-button
