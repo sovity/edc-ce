@@ -16,56 +16,48 @@ package de.sovity.edc.extension;
 
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 public class LastCommitInfoService {
 
     private final ServiceExtensionContext context;
 
+    private String readFileInCurrentClassClasspath(String path) {
+        var classLoader = LastCommitInfoService.class.getClassLoader();
+        var is = classLoader.getResourceAsStream(path);
+        var scanner = new Scanner(Objects.requireNonNull(is), StandardCharsets.UTF_8).useDelimiter("\\A");
+        return scanner.hasNext() ? scanner.next() : "";
+    }
 
     public LastCommitInfoService(ServiceExtensionContext context) {
         this.context = context;
     }
 
-    public LastCommitInfo getLastCommitInfo() throws IOException {
-        var result = new LastCommitInfo();
-        result.setEnvLastCommitInfo(getEnvLastCommitInfo());
-        result.setEnvLastBuildDate(getEnvLastCommitDate());
-
-        result.setJarLastCommitInfo(getJarInfo().get(0));
-        result.setJarLastBuildDate(getJarInfo().get(1));
-        return result;
-    }
-
-    public List<String> getJarInfo() throws IOException {
-
-        var jarInfo = new ArrayList<String>();
-        var classLoader = Thread.currentThread().getContextClassLoader();
-        var is = classLoader.getResourceAsStream("jar-last-commit-info.txt");
-        var scanner = new Scanner(Objects.requireNonNull(is), StandardCharsets.UTF_8).useDelimiter("\\A");
-        jarInfo.add(scanner.hasNext() ? scanner.next() : "");
-
-        Manifest manifest = new Manifest(is);
-        Attributes attributes = manifest.getMainAttributes();
-        jarInfo.add(attributes.getValue("Build-Date"));
-
-        return jarInfo;
+    public String getJarLastCommitInfo() {
+        return this.readFileInCurrentClassClasspath("jar-last-commit-info.txt");
     }
 
     public String getEnvLastCommitInfo() {
         return context.getSetting("edc.last.commit.info", "");
     }
 
-    public String getEnvLastCommitDate() {
-        return context.getSetting("edc.env.last.commit.date", "");
+    public String getLatestJarBuildDate() {
+        return readFileInCurrentClassClasspath("jar-latest-build-date-info.txt");
     }
 
+    public String getLatestEnvBuildDate() {
+        return context.getSetting("edc.env.latest.build.date", "");
+    }
 
+    public LastCommitInfo getLastCommitInfo() {
+        var lastCommitInfo = new LastCommitInfo();
+        lastCommitInfo.setEnvLastCommitInfo(getEnvLastCommitInfo());
+        lastCommitInfo.setJarLastCommitInfo(getJarLastCommitInfo());
+
+        lastCommitInfo.setJarLatestBuildDate(getLatestJarBuildDate());
+        lastCommitInfo.setEnvLatestBuildDate(getLatestEnvBuildDate());
+        return lastCommitInfo;
+    }
 }

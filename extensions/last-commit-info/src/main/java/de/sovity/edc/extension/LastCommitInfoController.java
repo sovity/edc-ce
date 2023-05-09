@@ -19,7 +19,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-import java.io.IOException;
 
 @Produces({MediaType.APPLICATION_JSON})
 @Path("/last-commit-info")
@@ -32,7 +31,7 @@ public class LastCommitInfoController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public LastCommitInfo getLastCommitInfo() throws IOException {
+    public LastCommitInfo getLastCommitInfo() {
         return lastCommitInfoService.getLastCommitInfo();
     }
 }

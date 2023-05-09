@@ -20,11 +20,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LastCommitInfo {
-
     private String envLastCommitInfo;
-    private String envLastBuildDate;
+    private String envLatestBuildDate;
     private String jarLastCommitInfo;
-    private String jarLastBuildDate;
-
-
+    private String jarLatestBuildDate;
 }
