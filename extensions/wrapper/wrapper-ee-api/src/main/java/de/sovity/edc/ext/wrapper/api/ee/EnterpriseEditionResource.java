@@ -58,30 +58,30 @@ public interface EnterpriseEditionResource {
                description = "Upload a file to the file storage. <br> On a successful upload to the file storage " +
                        "a StoredFile object is returned. <br> The assetProperties remain empty and are only added upon " +
                        "a asset create request.")
-    @RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA,
-                                    schema = @Schema(type = "object",
-                                                     requiredProperties = {"fileName", "fileContent"}),
-                                    schemaProperties = { @SchemaProperty(name = "fileName",
-                                                                         schema = @Schema(type = "string",
-                                                                                          format = "string",
-                                                                                          example = "myFile.txt")
+    @RequestBody(content =
+            @Content(mediaType = MediaType.MULTIPART_FORM_DATA,
+                     schema = @Schema(type = "object",
+                                      requiredProperties = {"fileName", "fileContent"}),
+                     schemaProperties = { @SchemaProperty(name = "fileName",
+                                                          schema = @Schema(type = "string",
+                                                                           format = "string",
+                                                                           example = "myFile.txt")
                                                          ),
-                                                         @SchemaProperty(name = "fileContent",
-                                                                         schema = @Schema(type = "string",
-                                                                                          format = "binary",
-                                                                                          example = "fileContent")
+                                          @SchemaProperty(name = "fileContent",
+                                                          schema = @Schema(type = "string",
+                                                                           format = "binary",
+                                                                           example = "fileContent")
                                                          )
-                                    }
-                )
+                    }
+            )
     )
 
     @ApiResponses(value ={
             @ApiResponse(responseCode = "200",
                          description = "File successfully uploaded to the file storage.",
-                         content = @Content(schema = @Schema(implementation = StoredFile.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid request"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+                         content = @Content(schema = @Schema(implementation = StoredFile.class))
+            )}
+    )
     StoredFile uploadStoredFile(
             @Parameter(description = "The name of the file.",
                        required = true,
@@ -100,12 +100,12 @@ public interface EnterpriseEditionResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Get all uploaded files.",
                description = "Get all uploaded files from the file storage.")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200",
-                                         description = "Successfully processed the list of StoreFile objects.",
-                                         content = @Content(array = @ArraySchema(schema = @Schema(implementation = StoredFile.class)))),
-                            @ApiResponse(responseCode = "400", description = "Invalid request"),
-                            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                         description = "Successfully processed the list of StoreFile objects.",
+                         content = @Content(array = @ArraySchema(schema = @Schema(implementation = StoredFile.class)))
+            )}
+    )
     List<StoredFile> listStoredFiles();
 
     @POST
@@ -114,12 +114,12 @@ public interface EnterpriseEditionResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Create the file storage asset.",
                description = "Create the file storage asset for the given stored file id.")
-    @ApiResponses(value ={@ApiResponse(responseCode = "200",
-                                       description = "File store asset successfully created.",
-                                       content = @Content(schema = @Schema(implementation = StoredFile.class))),
-                          @ApiResponse(responseCode = "400", description = "Invalid request"),
-                          @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @ApiResponses(value ={
+            @ApiResponse(responseCode = "200",
+                         description = "File store asset successfully created.",
+                         content = @Content(schema = @Schema(implementation = StoredFile.class))
+            )}
+    )
     StoredFile createStoredFileAsset(
             @Parameter(name = "storedFileId",
                        in = ParameterIn.PATH,
