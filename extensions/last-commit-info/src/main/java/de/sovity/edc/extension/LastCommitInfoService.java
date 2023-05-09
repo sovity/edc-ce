@@ -44,11 +44,11 @@ public class LastCommitInfoService {
     }
 
     public String getLatestJarBuildDate() {
-        return readFileInCurrentClassClasspath("jar-latest-build-date-info.txt");
+        return readFileInCurrentClassClasspath("jar-last-build-date-info.txt");
     }
 
     public String getLatestEnvBuildDate() {
-        return context.getSetting("edc.env.latest.build.date", "");
+        return context.getSetting("edc.last.build.date", "");
     }
 
     public LastCommitInfo getLastCommitInfo() {
@@ -56,8 +56,8 @@ public class LastCommitInfoService {
         lastCommitInfo.setEnvLastCommitInfo(getEnvLastCommitInfo());
         lastCommitInfo.setJarLastCommitInfo(getJarLastCommitInfo());
 
-        lastCommitInfo.setJarLatestBuildDate(getLatestJarBuildDate());
-        lastCommitInfo.setEnvLatestBuildDate(getLatestEnvBuildDate());
+        lastCommitInfo.setJarLastBuildDate(getLatestJarBuildDate());
+        lastCommitInfo.setEnvLastBuildDate(getLatestEnvBuildDate());
         return lastCommitInfo;
     }
 }
