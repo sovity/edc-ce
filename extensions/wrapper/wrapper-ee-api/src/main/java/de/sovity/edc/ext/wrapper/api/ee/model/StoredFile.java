@@ -29,26 +29,47 @@ import java.util.Map;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "File storage resource of a connector.")
+@Schema(description = "Represents a stored file in the file storage extension")
 public class StoredFile {
-    @Schema(description = "Identifier of the file storage object", requiredMode = Schema.RequiredMode.REQUIRED)
-    String id;
+    @Schema(description = "Identifier of the StoredFile object",
+            example = "toBeDefined",
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    private String storedFileId;
 
-    @Schema(description = "File name which contains the value for the KEY_ASSET_FILE_NAME asset property value.", requiredMode = Schema.RequiredMode.REQUIRED)
-    String fileName;
+    @Schema(description = "The name of file.",
+            example = "afilename.csv",
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    private String fileName;
 
-    @Schema(description = "File extension which contains the value for the KEY_ASSET_FILE_EXTENSION asset property value.", requiredMode = Schema.RequiredMode.REQUIRED)
-    String fileExtension;
+    @Schema(description = "The extension of the file.",
+            example = "csv",
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    private String fileExtension;
 
-    @Schema(description = "Size of the file in bytes which contains the value for the KEY_ASSET_BYTE_SIZE asset property value", requiredMode = Schema.RequiredMode.REQUIRED)
-    String byteSize;
+    @Schema(description = "The media type of the file.",
+            example = "text/csv",
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    private String mediaType;
 
-    @Schema(description = "Map containing the asset properties of the storage object.")
-    Map<String, String> assetProperties;
+    @Schema(description = "Size of the file in bytes.",
+            example = "1024",
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    private String byteSize;
 
-    @Schema(description = "Creation date of the FileStore object.", requiredMode = Schema.RequiredMode.REQUIRED)
-    OffsetDateTime creationDate;
+    @Schema(description = "Map containing the asset properties of the stored file." +
+            "<br> An empty map is set as a response to a file storage request. <br> Only upon a asset creation request " +
+            "the asset properties are set.",
+            example = "{\"asset-key-x\": \"assetKeyValueX\",\n \"asset-key-y\": \"assetKeyValueY\"}",
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    private Map<String, String> assetProperties;
 
-    @Schema(description = "Date of the last modification of the FileStore object.", requiredMode = Schema.RequiredMode.REQUIRED)
-    OffsetDateTime lastModifiedDate;
+    @Schema(description = "Creation date of the StoredFile object.",
+            example = "2023-05-05T12:00:00.000+02:00",
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    private OffsetDateTime creationDate;
+
+    @Schema(description = "Date of the last modification of the StoredFile object.",
+            example = "2023-05-05T14:00:00.000+02:00",
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    private OffsetDateTime lastModifiedDate;
 }
