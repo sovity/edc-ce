@@ -18,12 +18,22 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Changed
 
-- Catalog Page now has no timeouts.
-- Catalog Page now displays partial results.
-
 #### Removed
 
 #### Fixed
+
+## [v0.0.1-milestone-8-sovity5] 09.05.2023
+
+### Overview
+
+Removed catalog browser timeouts.
+
+### Detailed Changes
+
+#### Changed
+
+- Catalog Page now has no timeouts.
+- Catalog Page now displays partial results.
 
 ## [v0.0.1-milestone-8-sovity4] 03.05.2023
 
