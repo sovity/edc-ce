@@ -1,0 +1,61 @@
+version: "3.8"
+services:
+  edc:
+    build:
+      dockerfile: connector/Dockerfile
+    depends_on:
+      - postgresql
+    environment:
+      MY_EDC_NAME_KEBAB_CASE: "example-connector"
+      MY_EDC_TITLE: "EDC Connector"
+      MY_EDC_DESCRIPTION: "Community Edition EDC Connector by sovity"
+      MY_EDC_CURATOR_URL: "https://example.com"
+      MY_EDC_CURATOR_NAME: "Example GmbH"
+      MY_EDC_MAINTAINER_URL: "https://sovity.de"
+      MY_EDC_MAINTAINER_NAME: "sovity GmbH"
+
+      # Data Management API Key
+      EDC_API_AUTH_KEY: ApiKeyDefaultValue
+
+      # Data Space Configuration
+      EDC_OAUTH_CLIENT_ID:
+      EDC_OAUTH_TOKEN_URL: https://daps.test.mobility-dataspace.eu/token
+      EDC_OAUTH_PROVIDER_JWKS_URL: https://daps.test.mobility-dataspace.eu/jwks.json
+      EDC_BROKER_BASE_URL: https://broker.test.mobility-dataspace.eu
+      EDC_CLEARINGHOUSE_LOG_URL: https://clearing.test.mobility-dataspace.eu/messages/log
+      EDC_KEYSTORE: /secrets/keystore.jks
+      EDC_KEYSTORE_PASSWORD: password
+      EDC_OAUTH_CERTIFICATE_ALIAS: 1
+      EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
+
+      MY_EDC_PROTOCOL: "http://"
+      MY_EDC_FQDN: "edc"
+      MY_EDC_IDS_BASE_URL: "http://edc:11003"
+
+      MY_EDC_JDBC_URL: jdbc:postgresql://postgresql:5432/edc
+      MY_EDC_JDBC_USER: edc
+      MY_EDC_JDBC_PASSWORD: edc
+      EDC_WEB_REST_CORS_ENABLED: 'true'
+      EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
+      EDC_WEB_REST_CORS_ORIGINS: '*'
+    ports:
+      - '11001:11001'
+      - '11002:11002'
+      - '11003:11003'
+      - '11004:11004'
+      - '11005:5005'
+    volumes:
+      - ./docs/getting-started/secrets:/secrets
+  postgresql:
+    image: docker.io/bitnami/postgresql:11
+    restart: always
+    environment:
+      POSTGRESQL_USERNAME: edc
+      POSTGRESQL_PASSWORD: edc
+      POSTGRESQL_DATABASE: edc
+    volumes:
+      - 'postgresql:/bitnami/postgresql'
+
+volumes:
+  postgresql:
+    driver: local
