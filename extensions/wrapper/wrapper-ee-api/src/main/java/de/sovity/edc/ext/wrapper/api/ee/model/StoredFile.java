@@ -32,7 +32,7 @@ import java.util.Map;
 @Schema(description = "Represents a stored file in the file storage extension")
 public class StoredFile {
     @Schema(description = "Identifier of the StoredFile object",
-            example = "toBeDefined",
+            example = "a-stored-file-001",
             requiredMode = Schema.RequiredMode.REQUIRED)
     private String storedFileId;
 
@@ -59,7 +59,7 @@ public class StoredFile {
     @Schema(description = "Map containing the asset properties of the stored file." +
             "<br> An empty map is set as a response to a file storage request. <br> Only upon a asset creation request " +
             "the asset properties are set.",
-            example = "{\"asset-key-x\": \"assetKeyValueX\",\n \"asset-key-y\": \"assetKeyValueY\"}",
+            example = "{\"asset:prop:id\": \"some-asset-1\",\n \"asset:prop:originator\": \"http://my-example-connector/api/v1/ids\"}",
             requiredMode = Schema.RequiredMode.REQUIRED)
     private Map<String, String> assetProperties;
 
