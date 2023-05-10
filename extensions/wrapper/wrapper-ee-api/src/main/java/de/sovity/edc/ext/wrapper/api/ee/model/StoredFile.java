@@ -32,7 +32,7 @@ import java.util.Map;
 @Schema(description = "Represents a stored file in the file storage extension")
 public class StoredFile {
     @Schema(description = "Identifier of the StoredFile object",
-            example = "a-stored-file-001",
+            example = "stored-file-001",
             requiredMode = Schema.RequiredMode.REQUIRED)
     private String storedFileId;
 

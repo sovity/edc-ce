@@ -110,7 +110,7 @@ public interface EnterpriseEditionResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Create the file storage asset.",
+            summary = "Create a file storage asset.",
             description = "Create an asset using the stored file as data source."
     )
     StoredFile createStoredFileAsset(
@@ -118,7 +118,7 @@ public interface EnterpriseEditionResource {
                     name = "storedFileId",
                     in = ParameterIn.PATH,
                     description = "The id of the StoredFile object.",
-                    schema = @Schema(example = "a-stored-file-001")
+                    schema = @Schema(example = "stored-file-001")
             ) String storedFileId,
 
             @Parameter(
