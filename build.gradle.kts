@@ -77,11 +77,7 @@ allprojects {
 subprojects {
     apply(plugin = "maven-publish")
 
-    val sovityEdcExtensionsGroup: String by project
     val sovityEdcExtensionsVersion: String by project
-    val sovityEdcCeGroup: String by project
-
-    group = if (name.contains("connector")) sovityEdcCeGroup else sovityEdcExtensionsGroup
     version = sovityEdcExtensionsVersion
 
     publishing {

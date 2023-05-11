@@ -39,7 +39,7 @@ import java.util.Map;
  * Our EDC Enterprise Edition API Endpoints to be included in our generated EDC API Wrapper Clients
  */
 @Path("wrapper/ee")
-@Tag(name = "Enterprise Edition", description = "EDC Enterprise Edition API Endpoints. Included here for ease of use.")
+@Tag(name = "Enterprise Edition", description = "EDC Enterprise Edition API Endpoints. Requires our Enterprise Edition EDC Extensions.")
 public interface EnterpriseEditionResource {
     @GET
     @Path("connector-limits")

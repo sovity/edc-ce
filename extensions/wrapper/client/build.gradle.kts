@@ -3,9 +3,6 @@ val edcGroup: String by project
 val restAssured: String by project
 val assertj: String by project
 
-val sovityEdcClientGroup: String by project
-group = sovityEdcClientGroup
-
 
 plugins {
     `java-library`
@@ -17,7 +14,7 @@ repositories {
     mavenCentral()
 }
 
-// By using a separate configuration we can skip having the Java Code in our classpath
+// By using a separate configuration we can skip having the Extension Jar in our runtime classpath
 val openapiYaml = configurations.create("openapiGenerator")
 
 dependencies {
@@ -122,6 +119,9 @@ tasks.withType<Javadoc> {
     fullOptions.tags = listOf("http.response.details:a:Http Response Details")
     fullOptions.addStringOption("Xdoclint:none", "-quiet")
 }
+
+val sovityEdcGroup: String by project
+group = sovityEdcGroup
 
 publishing {
     publications {

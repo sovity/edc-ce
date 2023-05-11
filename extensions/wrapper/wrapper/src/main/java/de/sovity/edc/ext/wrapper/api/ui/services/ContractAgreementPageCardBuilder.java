@@ -14,11 +14,11 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.services;
 
-import de.sovity.edc.ext.wrapper.api.ui.model.AssetDto;
+import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferProcess;
-import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDto;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
@@ -48,6 +48,7 @@ public class ContractAgreementPageCardBuilder {
     ) {
         ContractAgreementCard card = new ContractAgreementCard();
         card.setContractAgreementId(agreement.getId());
+        card.setContractNegotiationId(negotiation.getId());
         card.setDirection(ContractAgreementDirection.fromType(negotiation.getType()));
         card.setCounterPartyAddress(negotiation.getCounterPartyAddress());
         card.setCounterPartyId(negotiation.getCounterPartyId());

@@ -14,6 +14,8 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
+import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,6 +35,9 @@ import java.util.List;
 public class ContractAgreementCard {
     @Schema(description = "Contract Agreement ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String contractAgreementId;
+
+    @Schema(description = "Contract Negotiation ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String contractNegotiationId;
 
     @Schema(description = "Incoming vs Outgoing", requiredMode = Schema.RequiredMode.REQUIRED)
     private ContractAgreementDirection direction;
