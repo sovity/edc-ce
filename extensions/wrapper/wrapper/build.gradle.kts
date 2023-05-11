@@ -90,6 +90,9 @@ tasks.withType<org.gradle.jvm.tasks.Jar> {
     }
 }
 
+val sovityEdcExtensionGroup: String by project
+group = sovityEdcExtensionGroup
+
 publishing {
     publications {
         create<MavenPublication>(project.name) {

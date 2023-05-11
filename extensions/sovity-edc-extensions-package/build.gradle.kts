@@ -20,6 +20,9 @@ dependencies {
     api(project(":extensions:wrapper:wrapper"))
 }
 
+val sovityEdcExtensionGroup: String by project
+group = sovityEdcExtensionGroup
+
 publishing {
     publications {
         create<MavenPublication>(project.name) {
