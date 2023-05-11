@@ -3,9 +3,6 @@ val edcGroup: String by project
 val restAssured: String by project
 val assertj: String by project
 
-val sovityEdcClientGroup: String by project
-group = sovityEdcClientGroup
-
 
 plugins {
     `java-library`
@@ -122,6 +119,9 @@ tasks.withType<Javadoc> {
     fullOptions.tags = listOf("http.response.details:a:Http Response Details")
     fullOptions.addStringOption("Xdoclint:none", "-quiet")
 }
+
+val sovityEdcGroup: String by project
+group = sovityEdcGroup
 
 publishing {
     publications {

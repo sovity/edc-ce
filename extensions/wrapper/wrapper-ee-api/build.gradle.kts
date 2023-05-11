@@ -1,6 +1,3 @@
-val sovityEdcClientGroup: String by project
-group = sovityEdcClientGroup
-
 plugins {
     `java-library`
     `maven-publish`
@@ -20,6 +17,8 @@ dependencies {
     implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
 }
 
+val sovityEdcGroup: String by project
+group = sovityEdcGroup
 
 publishing {
     publications {

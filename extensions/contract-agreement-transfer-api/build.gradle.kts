@@ -33,3 +33,6 @@ publishing {
         }
     }
 }
+
+val sovityEdcExtensionGroup: String by project
+group = sovityEdcExtensionGroup
