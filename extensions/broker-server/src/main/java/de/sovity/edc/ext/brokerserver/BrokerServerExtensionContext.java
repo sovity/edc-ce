@@ -14,6 +14,8 @@
 
 package de.sovity.edc.ext.brokerserver;
 
+import de.sovity.edc.ext.brokerserver.services.BrokerServerInitializer;
+
 import java.util.List;
 
 
@@ -22,5 +24,7 @@ import java.util.List;
  *
  * @param jaxRsResources Jax RS Resource implementations to register.
  */
-public record BrokerServerExtensionContext(List<Object> jaxRsResources) {
+public record BrokerServerExtensionContext(
+        List<Object> jaxRsResources,
+        BrokerServerInitializer brokerServerInitializer) {
 }

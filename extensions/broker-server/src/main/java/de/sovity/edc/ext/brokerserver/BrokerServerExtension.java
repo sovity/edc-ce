@@ -16,6 +16,7 @@ package de.sovity.edc.ext.brokerserver;
 
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
+import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.web.spi.WebService;
@@ -23,6 +24,9 @@ import org.eclipse.edc.web.spi.WebService;
 public class BrokerServerExtension implements ServiceExtension {
 
     public static final String EXTENSION_NAME = "BrokerServerExtension";
+
+    @Setting
+    public static final String KNOWN_CONNECTORS = "edc.brokerserver.known.connectors";
 
     @Inject
     private ManagementApiConfiguration managementApiConfiguration;
@@ -37,10 +41,11 @@ public class BrokerServerExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        var brokerServerExtensionContext = BrokerServerExtensionContextBuilder.buildContext();
+        var services = BrokerServerExtensionContextBuilder.buildContext(context.getConfig());
+        services.brokerServerInitializer().initializeConnectorList();
 
         String managementApiGroup = managementApiConfiguration.getContextAlias();
-        brokerServerExtensionContext.jaxRsResources().forEach(resource ->
+        services.jaxRsResources().forEach(resource ->
                 webService.registerResource(managementApiGroup, resource));
     }
 }

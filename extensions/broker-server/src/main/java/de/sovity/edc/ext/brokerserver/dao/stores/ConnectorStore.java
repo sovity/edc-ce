@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class InMemoryConnectorStore {
+public class ConnectorStore {
     private final Map<String, ConnectorRecord> connectorsById = new HashMap<>();
 
     public Stream<ConnectorRecord> findAll() {

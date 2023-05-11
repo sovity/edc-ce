@@ -14,8 +14,11 @@
 
 package de.sovity.edc.ext.brokerserver;
 
+import de.sovity.edc.ext.brokerserver.dao.stores.ConnectorStore;
+import de.sovity.edc.ext.brokerserver.services.BrokerServerInitializer;
 import lombok.NoArgsConstructor;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
+import org.eclipse.edc.spi.system.configuration.Config;
 
 import java.util.List;
 
@@ -30,7 +33,9 @@ import java.util.List;
  */
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class BrokerServerExtensionContextBuilder {
-    public static BrokerServerExtensionContext buildContext() {
-        return new BrokerServerExtensionContext(List.of());
+    public static BrokerServerExtensionContext buildContext(Config config) {
+        var connectorStore = new ConnectorStore();
+        var brokerServerInitializer = new BrokerServerInitializer(connectorStore, config);
+        return new BrokerServerExtensionContext(List.of(), brokerServerInitializer);
     }
 }

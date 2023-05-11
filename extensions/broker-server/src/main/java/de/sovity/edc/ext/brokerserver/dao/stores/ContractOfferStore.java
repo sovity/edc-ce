@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class InMemoryContractOfferStore {
+public class ContractOfferStore {
     private final Map<String, ContractOfferRecord> contractOffersById = new HashMap<>();
 
     public Stream<ContractOfferRecord> findAll() {
