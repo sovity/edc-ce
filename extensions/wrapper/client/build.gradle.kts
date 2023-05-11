@@ -17,7 +17,7 @@ repositories {
     mavenCentral()
 }
 
-// By using a separate configuration we can skip having the Java Code in our classpath
+// By using a separate configuration we can skip having the Extension Jar in our runtime classpath
 val openapiYaml = configurations.create("openapiGenerator")
 
 dependencies {
