@@ -56,7 +56,7 @@ allprojects {
     }
 
     checkstyle {
-        toolVersion = "9.0"
+        toolVersion = "10.9.3"
         configFile = rootProject.file("docs/dev/checkstyle/checkstyle-config.xml")
         configDirectory.set(rootProject.file("docs/dev/checkstyle"))
         maxErrors = 0 // does not tolerate errors
