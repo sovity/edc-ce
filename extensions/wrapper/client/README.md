@@ -51,20 +51,31 @@ KpiResult kpiResult = client.useCaseApi().kpiEndpoint();
 
 ```java
 import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.client.gen.model.KpiResult;
 import de.sovity.edc.client.oauth2.OAuth2ClientCredentials;
 import de.sovity.edc.client.oauth2.SovityKeycloakUrl;
 
-// Example using a productive Connector-as-a-Service (CaaS) EDC Connector
-EdcClient client = EdcClient.builder()
-        .managementApiUrl("https://your-connector.prod-sovity.azure.sovity.io/control/data")
-        .oauth2ClientCredentials(OAuth2ClientCredentials.builder()
-            .tokenUrl(SovityKeycloakUrl.PRODUCTION)
-            .clientId("my-edc-app")
-            .clientSecret("...")
-            .build())
-        .build();
+public class Wrapper {
 
-KpiResult kpiResult = client.useCaseApi().kpiEndpoint();
+    public static final String CONNECTOR_ENDPOINT =
+            "https://{{your-connector}}.prod-sovity.azure.sovity.io/control/data";
+    public static final String CLIENT_ID = "my-edc-app";
+    public static final String CLIENT_SECRET = "...";
+
+    public Wrapper() {
+        // Example using a productive Connector-as-a-Service (CaaS) EDC Connector
+        EdcClient client = EdcClient.builder()
+                .managementApiUrl(CONNECTOR_ENDPOINT)
+                .oauth2ClientCredentials(OAuth2ClientCredentials.builder()
+                        .tokenUrl(SovityKeycloakUrl.PRODUCTION)
+                        .clientId(CLIENT_ID)
+                        .clientSecret(CLIENT_SECRET)
+                        .build())
+                .build();
+        KpiResult kpiResult = client.useCaseApi().kpiEndpoint();
+        System.out.println(kpiResult);
+    }
+}
 ```
 
 ## License
