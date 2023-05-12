@@ -29,13 +29,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           cache-dependency-path: ./extensions/wrapper/client-ts/package-lock.json
       - name: Generate openapi.yaml & Client Code
-        with:
-          # The Core EDC depends on a dependency in the Fraunhofer IAIS Maven Nexus
-          # Because that nexus is currently only 40% available, it keeps crashing the pipelines
-          # The following retries alleviate the issue slightly
-          retry_on: error
-          timeout_seconds: 5
-          max_attempts: 4
         run: |
           ./gradlew :extensions:wrapper:wrapper:clean :extensions:wrapper:wrapper:build -x test --no-daemon
       - name: NPM Package Dist Tag & Version
