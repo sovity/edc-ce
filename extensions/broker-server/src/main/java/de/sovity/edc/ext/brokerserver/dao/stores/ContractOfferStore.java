@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.brokerserver.dao.stores;
 
 import de.sovity.edc.ext.brokerserver.dao.models.ContractOfferRecord;
+import org.apache.commons.lang3.Validate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +33,7 @@ public class ContractOfferStore {
     }
 
     public ContractOfferRecord save(ContractOfferRecord contractOffer) {
+        Validate.notBlank(contractOffer.getId(), "Need Contract Offer ID");
         return contractOffersById.put(contractOffer.getId(), contractOffer);
     }
 }

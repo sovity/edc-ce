@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.brokerserver.dao.stores;
 
 import de.sovity.edc.ext.brokerserver.dao.models.ConnectorRecord;
+import org.apache.commons.lang3.Validate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +33,7 @@ public class ConnectorStore {
     }
 
     public ConnectorRecord save(ConnectorRecord connector) {
+        Validate.notBlank(connector.getId(), "Need Connector ID");
         return connectorsById.put(connector.getId(), connector);
     }
 }

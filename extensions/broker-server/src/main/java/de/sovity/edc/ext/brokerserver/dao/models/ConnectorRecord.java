@@ -23,6 +23,11 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.OffsetDateTime;
 
+/**
+ * Connector Database Row that can be inserted or updated.
+ * <p>
+ * Represents metadata for another connector in the dataspace.
+ */
 @Getter
 @ToString
 @Builder(toBuilder = true)
@@ -38,5 +43,5 @@ public class ConnectorRecord {
     OffsetDateTime lastUpdate;
     OffsetDateTime offlineSince;
     OffsetDateTime createdAt;
-    OnlineStatus onlineStatus;
+    ConnectorOnlineStatus onlineStatus;
 }

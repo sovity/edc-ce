@@ -7,7 +7,7 @@ plugins {
 val edcVersion: String by project
 val edcGroup: String by project
 
-val sovityEdcExtensionsGroup: String by project
+val sovityEdcExtensionGroup: String by project
 val sovityEdcExtensionsVersion: String by project
 
 dependencies {
@@ -25,7 +25,7 @@ dependencies {
 
     // Optional: PostgreSQL + Flyway
     if (project.hasProperty("postgres-flyway")) {
-        implementation("${sovityEdcExtensionsGroup}:postgres-flyway:${sovityEdcExtensionsVersion}")
+        implementation("${sovityEdcExtensionGroup}:postgres-flyway:${sovityEdcExtensionsVersion}")
     }
 
     // Optional: Connector-To-Connector IAM

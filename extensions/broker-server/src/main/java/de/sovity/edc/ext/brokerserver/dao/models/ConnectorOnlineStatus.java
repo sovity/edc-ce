@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.dao.models;
 
-public enum OnlineStatus {
+public enum ConnectorOnlineStatus {
     ONLINE,
     OFFLINE
 }

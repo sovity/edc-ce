@@ -8,10 +8,13 @@ val jupiterVersion: String by project
 val mockitoVersion: String by project
 val assertj: String by project
 val okHttpVersion: String by project
+val sovityEdcGroup: String by project
+val sovityEdcExtensionsVersion: String by project
 
 dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.26")
     compileOnly("org.projectlombok:lombok:1.18.26")
+    implementation("org.apache.commons:commons-lang3:3.12.0")
 
     implementation("${edcGroup}:control-plane-core:${edcVersion}")
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
@@ -19,6 +22,8 @@ dependencies {
     implementation("${edcGroup}:ids-api-multipart-dispatcher-v1:${edcVersion}")
     implementation("${edcGroup}:ids-api-configuration:${edcVersion}")
     implementation("${edcGroup}:ids-jsonld-serdes:${edcVersion}")
+
+    api("${sovityEdcGroup}:wrapper-broker-api:${sovityEdcExtensionsVersion}")
 
     implementation("com.squareup.okhttp3:okhttp:${okHttpVersion}")
 
