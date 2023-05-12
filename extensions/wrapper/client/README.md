@@ -55,15 +55,18 @@ import de.sovity.edc.client.gen.model.KpiResult;
 import de.sovity.edc.client.oauth2.OAuth2ClientCredentials;
 import de.sovity.edc.client.oauth2.SovityKeycloakUrl;
 
-public class Wrapper {
+/**
+ * Example using a productive Connector-as-a-Service (CaaS) EDC Connector
+ */
+public class WrapperClientExample {
 
     public static final String CONNECTOR_ENDPOINT =
             "https://{{your-connector}}.prod-sovity.azure.sovity.io/control/data";
     public static final String CLIENT_ID = "my-edc-app";
     public static final String CLIENT_SECRET = "...";
 
-    public Wrapper() {
-        // Example using a productive Connector-as-a-Service (CaaS) EDC Connector
+    public static void main(String[] args) {
+        // Configure Client
         EdcClient client = EdcClient.builder()
                 .managementApiUrl(CONNECTOR_ENDPOINT)
                 .oauth2ClientCredentials(OAuth2ClientCredentials.builder()
@@ -72,6 +75,8 @@ public class Wrapper {
                         .clientSecret(CLIENT_SECRET)
                         .build())
                 .build();
+
+        // EDC API Wrapper APIs are now available for use
         KpiResult kpiResult = client.useCaseApi().kpiEndpoint();
         System.out.println(kpiResult);
     }
