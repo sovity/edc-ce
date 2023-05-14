@@ -17,10 +17,9 @@ Specification</h3>
 
 ## About this component
 
-Specification of Enterprise Edition API endpoints to be included in our API Client generation for ease of use.
+Specification of Enterprise Edition API endpoints to be included in API Client generation.
 
-These can either be API endpoints for our Enterprise Edition EDC UI or Enterprise Edition EDC Extensions we want to
-make available for use with our generated API clients.
+These endpoints require our EDC Enterprise Edition.
 
 ## License
 
