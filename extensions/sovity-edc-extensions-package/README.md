@@ -21,7 +21,7 @@ See [build.gradle.kts](build.gradle.kts) for a list of contained extensions.
 
 ## Why does this extension exist?
 
-The extension allows, for example, us to add a new policy and have it rolled out across all Editions managed and
+The extension allows to add a new policy and have it rolled out across all editions managed and
 maintained by sovity.
 
 ## License
