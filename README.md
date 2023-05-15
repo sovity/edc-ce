@@ -24,12 +24,11 @@ Broker Backend &amp; EDC Extensions.
    <summary>Table of Contents</summary>
    <ol>
       <li><a href="#about-the-project">About The Project</a></li>
+      <li><a href="#requirements">Requirements</a></li>
       <li><a href="#license">License</a></li>
       <li><a href="#contact">Contact</a></li>
    </ol>
 </details>
-
-<!-- ABOUT THE PROJECT -->
 
 ## About The Project
 
@@ -47,15 +46,25 @@ This IDS Broker is written on basis of the EDC and should be used in tandem with
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- LICENSE -->
+## Requirements
+
+For development, access to the GitHub Maven Registry is required.
+
+To access the GitHub Maven Registry you need to provide the following properties, e.g. by providing
+a `~/.gradle/gradle.properties`.
+
+```properties
+gpr.user={your github username}
+gpr.key={your github pat with packages.read}
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## License
 
 Distributed under the Apache 2.0 License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- CONTACT -->
 
 ## Contact
 
