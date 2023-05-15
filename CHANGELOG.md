@@ -16,11 +16,16 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
+- Tooltips for Asset Properties that show the asset property names.
+
 #### Changed
 
 #### Removed
 
 #### Fixed
+
+- Fixed Card titles exploding when containing too large words.
+- Fixed missing section header for consuming contract agreements.
 
 ## [v0.0.1-milestone-8-sovity5] 09.05.2023
 

@@ -137,3 +137,8 @@ body {
   height: 28px !important;
   line-height: 28px !important;
 }
+
+.mat-card-header-text {
+  overflow-wrap: break-word;
+  overflow: hidden;
+}

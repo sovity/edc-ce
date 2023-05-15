@@ -22,6 +22,6 @@ export class PropertyGridUtils {
       return '';
     }
 
-    return formatDate(date, 'EEEE yyyy-MM-dd hh:mm', this.locale);
+    return formatDate(date, 'yyyy-MM-dd HH:mm:ss', this.locale);
   }
 }

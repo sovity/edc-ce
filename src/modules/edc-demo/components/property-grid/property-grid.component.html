@@ -7,10 +7,18 @@
   class="flex flex-row space-x-[10px] overflow-hidden"
   [style.width]="'calc(100% / ' + columns + ' - ' + (columns - 1) * 10 + 'px)'">
   <!-- Property Icon -->
-  <mat-icon style="flex-shrink: 0; margin-top: 6px">{{ prop.icon }}</mat-icon>
+  <mat-icon
+    style="flex-shrink: 0; margin-top: 6px"
+    [attr.title]="prop.labelTitle"
+    >{{ prop.icon }}</mat-icon
+  >
   <div class="flex flex-col">
     <!-- Property Label -->
-    <div class="uppercase text-slate text-sm break-all">{{ prop.label }}</div>
+    <div
+      class="uppercase text-slate text-sm break-all"
+      [attr.title]="prop.labelTitle">
+      {{ prop.label }}
+    </div>
 
     <!-- Property Value (URL) -->
     <a

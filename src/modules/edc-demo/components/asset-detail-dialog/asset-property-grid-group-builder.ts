@@ -3,6 +3,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {ActiveFeatureSet} from '../../../app/config/active-feature-set';
 import {Policy} from '../../../edc-dmgmt-client';
 import {Asset} from '../../models/asset';
+import {AssetProperties} from '../../services/asset-properties';
 import {ContractAgreementCardMapped} from '../contract-agreement-cards/contract-agreement-card-mapped';
 import {JsonDialogComponent} from '../json-dialog/json-dialog.component';
 import {JsonDialogData} from '../json-dialog/json-dialog.data';
@@ -50,47 +51,56 @@ export class AssetPropertyGridGroupBuilder {
       {
         icon: 'category',
         label: 'ID',
+        labelTitle: AssetProperties.id,
         ...this.propertyGridUtils.guessValue(asset.id),
       },
       {
         icon: 'file_copy',
         label: 'Version',
+        labelTitle: AssetProperties.version,
         ...this.propertyGridUtils.guessValue(asset.version),
       },
       {
         icon: 'language',
         label: 'Language',
+        labelTitle: AssetProperties.language,
         ...this.propertyGridUtils.guessValue(asset.language?.label),
       },
 
       {
         icon: 'apartment',
         label: 'Publisher',
+        labelTitle: AssetProperties.publisher,
         ...this.propertyGridUtils.guessValue(asset.publisher),
       },
       {
         icon: 'bookmarks',
         label: 'Endpoint Documentation',
+        labelTitle: AssetProperties.endpointDocumentation,
         ...this.propertyGridUtils.guessValue(asset.endpointDocumentation),
       },
       {
         icon: 'gavel',
         label: 'Standard License',
+        labelTitle: AssetProperties.standardLicense,
         ...this.propertyGridUtils.guessValue(asset.standardLicense),
       },
       {
         icon: 'link',
         label: 'Connector Endpoint',
+        labelTitle: AssetProperties.originator,
         ...this.propertyGridUtils.guessValue(asset.originator),
       },
       {
         icon: 'account_circle',
         label: 'Organization',
+        labelTitle: AssetProperties.originatorOrganization,
         ...this.propertyGridUtils.guessValue(asset.originatorOrganization),
       },
       {
         icon: 'category',
         label: 'Content Type',
+        labelTitle: AssetProperties.contentType,
         ...this.propertyGridUtils.guessValue(asset.contentType),
       },
     ];
@@ -117,6 +127,7 @@ export class AssetPropertyGridGroupBuilder {
         return {
           icon: 'category ',
           label: prop.key,
+          labelTitle: prop.key,
           ...this.propertyGridUtils.guessValue(prop.value),
         };
       }),
@@ -137,6 +148,7 @@ export class AssetPropertyGridGroupBuilder {
       fields.push({
         icon: 'commute',
         label: 'Transport Mode',
+        labelTitle: AssetProperties.transportMode,
         ...this.propertyGridUtils.guessValue(asset.transportMode?.label),
       });
     }
@@ -144,6 +156,7 @@ export class AssetPropertyGridGroupBuilder {
       fields.push({
         icon: 'commute',
         label: 'Data Category',
+        labelTitle: AssetProperties.dataCategory,
         ...this.propertyGridUtils.guessValue(asset.dataCategory?.label),
       });
     }
@@ -151,6 +164,7 @@ export class AssetPropertyGridGroupBuilder {
       fields.push({
         icon: 'commute',
         label: 'Data Subcategory',
+        labelTitle: AssetProperties.dataSubcategory,
         ...this.propertyGridUtils.guessValue(asset.dataSubcategory?.label),
       });
     }
@@ -158,6 +172,7 @@ export class AssetPropertyGridGroupBuilder {
       fields.push({
         icon: 'category',
         label: 'Data Model',
+        labelTitle: AssetProperties.dataModel,
         ...this.propertyGridUtils.guessValue(asset.dataModel),
       });
     }
@@ -165,6 +180,7 @@ export class AssetPropertyGridGroupBuilder {
       fields.push({
         icon: 'commute',
         label: 'Geo Reference Method',
+        labelTitle: AssetProperties.geoReferenceMethod,
         ...this.propertyGridUtils.guessValue(asset.geoReferenceMethod),
       });
     }
