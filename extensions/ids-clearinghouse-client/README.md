@@ -27,7 +27,7 @@ Notary logging is a crucial part of dataspaces to ensure compliance and non-repu
 
 ## Getting Started
 
-Our MDS Community Edition EDC is built with both the clearing house and broker extensions and is ready to
+Our MDS Community Edition EDC is built with both the Clearing House and Broker extensions and is ready to
 be used in the Mobility Data Space (MDS).
 
 ## Configuration
