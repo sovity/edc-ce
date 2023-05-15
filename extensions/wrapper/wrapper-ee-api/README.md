@@ -5,7 +5,7 @@
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
-<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Client:<br />EDC Enterprise Edition API
+<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Clients:<br />sovity Enterprise Edition EDC API
 Specification</h3>
 
   <p align="center">
@@ -17,9 +17,9 @@ Specification</h3>
 
 ## About this component
 
-Specification of Enterprise Edition API endpoints to be included in API Client generation.
+Specification of sovity Enterprise Edition EDC API endpoints to be included in API Client generation.
 
-These endpoints require our EDC Enterprise Edition.
+These endpoints require our sovity Enterprise Edition EDC Extensions.
 
 ## License
 

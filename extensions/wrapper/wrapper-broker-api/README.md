@@ -5,7 +5,7 @@
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
-<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Client:<br />Broker Server / Broker UI API
+<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Clients:<br />Broker Server / Broker UI API
 Specification</h3>
 
   <p align="center">

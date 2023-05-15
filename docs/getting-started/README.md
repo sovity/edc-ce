@@ -5,7 +5,7 @@
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
-<h3 align="center">EDC-Connector:<br />sovity EDC Community Edition</h3>
+<h3 align="center">sovity Community Edition EDC:<br />Getting Started</h3>
 
   <p align="center">
     <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
@@ -29,7 +29,7 @@ The following example shows you how to fully configure an MDS EDC.
    MY_EDC_TITLE: "EDC Connector"
 
    # Connector Description Text
-   MY_EDC_DESCRIPTION: "Community Edition EDC Connector by sovity"
+   MY_EDC_DESCRIPTION: "sovity Community Edition EDC Connector"
 
    # Connector Curator
    # The company using the EDC Connector, configuring data offers, etc.

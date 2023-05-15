@@ -16,13 +16,13 @@
 
 ## About this Extension Package
 
-This extension packages common sovity EDC Extensions between all Community and Enterprise Editions.
+This extension packages common [sovity Community Edition EDC Extensions](..) used in all sovity EDC Connectors.
 See [build.gradle.kts](build.gradle.kts) for a list of contained extensions.
 
 ## Why does this extension exist?
 
-The extension allows for example to add a new policy and have it rolled out across all Editions managed and maintained
-by sovity.
+The extension allows, for example, us to add a new policy and have it rolled out across all Editions managed and
+maintained by sovity.
 
 ## License
 
