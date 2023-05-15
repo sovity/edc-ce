@@ -34,7 +34,7 @@ jobs:
           {
             "imageName": "edc-ce-mds",
             "title": "MDS Community Edition EDC Connector",
-            "description": "EDC Connector built by sovity and onfigured for compatibility with the Mobility Data Space (MDS). This EDC requires dataspace credentials, an ids broker and an ids clearing house.",
+            "description": "EDC Connector built by sovity and configured for compatibility with the Mobility Data Space (MDS). This EDC requires dataspace credentials, an IDS broker and an IDS Clearing House.",
             "buildArgs": "-Pfs-vault -Pdmgmt-api-key -Ppostgres-flyway -Poauth2 -Pmds"
           }
         ]
