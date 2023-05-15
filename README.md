@@ -17,7 +17,7 @@
     <img src="src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
-<h3 align="center">EDC UI</h3>
+<h3 align="center">sovity EDC UI</h3>
 
   <p align="center">
     UI for sovity's extended EDC-Connector.
