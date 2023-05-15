@@ -14,6 +14,7 @@ dependencies {
     api("jakarta.servlet:jakarta.servlet-api:5.0.0")
 
     implementation("org.apache.commons:commons-lang3:3.12.0")
+    implementation("org.glassfish.jersey.media:jersey-media-multipart:3.0.8")
 }
 
 val sovityEdcGroup: String by project

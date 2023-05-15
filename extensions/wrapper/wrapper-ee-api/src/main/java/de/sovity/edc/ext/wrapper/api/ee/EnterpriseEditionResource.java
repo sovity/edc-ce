@@ -19,19 +19,14 @@ import de.sovity.edc.ext.wrapper.api.ee.model.StoredFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.enums.ParameterStyle;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.media.SchemaProperty;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -57,43 +52,18 @@ public interface EnterpriseEditionResource {
                 "a StoredFile object is returned. <br> The assetProperties remain empty and are only added upon " +
                 "a asset create request."
     )
-    @RequestBody(
-            content = @Content(
-                    mediaType = MediaType.MULTIPART_FORM_DATA,
-                    schema = @Schema(
-                            type = "object",
-                            requiredProperties = {"fileName", "fileContent"}),
-                    schemaProperties = {
-                            @SchemaProperty(
-                                    name = "fileName",
-                                    schema = @Schema(
-                                            type = "string",
-                                            format = "string",
-                                            example = "myFile.txt")
-                            ),
-                            @SchemaProperty(
-                                    name = "fileContent",
-                                    schema = @Schema(
-                                            type = "string",
-                                            format = "binary",
-                                            example = "fileContent")
-                            )
-                    }
-            )
-    )
-
     StoredFile uploadStoredFile(
             @Parameter(
-                    description = "The name of the file.",
-                    required = true,
-                    style = ParameterStyle.FORM
-            ) String fileName,
+                    schema = @Schema(
+                            description = "The file content to upload.",
+                            type="string",
+                            format = "binary"))
+            @FormDataParam("file")
+            InputStream fileContent,
 
-            @Parameter(
-                    description = "The file content to upload.",
-                    required = true,
-                    style = ParameterStyle.FORM
-            ) byte[] fileContent
+            @Parameter(hidden = true)
+            @FormDataParam("file")
+            FormDataContentDisposition fileDetail
     );
 
     @GET
@@ -114,6 +84,7 @@ public interface EnterpriseEditionResource {
             description = "Create an asset using the stored file as data source."
     )
     StoredFile createStoredFileAsset(
+            @PathParam("storedFileId")
             @Parameter(
                     name = "storedFileId",
                     in = ParameterIn.PATH,
