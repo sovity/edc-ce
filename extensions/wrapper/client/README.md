@@ -5,7 +5,7 @@
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
-<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Client:<br />Java API Client</h3>
+<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Clients:<br />Java API Client</h3>
 
   <p align="center">
     <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
@@ -40,12 +40,11 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.KpiResult;
 
 /**
- * Example using our Community Edition EDC
+ * Example using a sovity Community Edition EDC Connector
  */
 public class WrapperClientExample {
 
-    public static final String CONNECTOR_ENDPOINT =
-            "https://{{your-connector}}.prod-sovity.azure.sovity.io/control/data";
+    public static final String CONNECTOR_ENDPOINT = "http://localhost:11002/api/v1/management";
     public static final String CONNECTOR_API_KEY = "...";
 
     public static void main(String[] args) {
@@ -78,7 +77,7 @@ public class WrapperClientExample {
 
     public static final String CONNECTOR_ENDPOINT =
             "https://{{your-connector}}.prod-sovity.azure.sovity.io/control/data";
-    public static final String CLIENT_ID = "my-edc-app";
+    public static final String CLIENT_ID = "{{your-connector}}-app";
     public static final String CLIENT_SECRET = "...";
 
     public static void main(String[] args) {

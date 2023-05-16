@@ -18,7 +18,8 @@
 
 This extension communicates contract agreements and data transfers to an IDS Clearing House.
 
-On successful contract agreements / data transfers, the extension will send IDS LogMessages and expect a `201 Created` HTTP response.
+On successful contract agreements / data transfers, the extension will send IDS LogMessages and expect a `201 Created`
+HTTP response.
 
 ## Why does this extension exist?
 
@@ -26,11 +27,8 @@ Notary logging is a crucial part of dataspaces to ensure compliance and non-repu
 
 ## Getting Started
 
-Check out the [Getting Started](https://github.com/sovity/edc-extensions/tree/main/connector#getting-started) section of
-our EDC Community Edition.
-
-Our EDC Community Edition is built with both the clearing house and broker extensions and is ready to be used in the
-Mobility Data Space (MDS).
+Our MDS Community Edition EDC is built with both the Clearing House and Broker extensions and is ready to
+be used in the Mobility Data Space (MDS).
 
 ## Configuration
 
