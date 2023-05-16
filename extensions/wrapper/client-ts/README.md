@@ -5,7 +5,7 @@
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
-<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Client:<br />TypeScript API Client</h3>
+<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Clients:<br />TypeScript API Client</h3>
 
   <p align="center">
     <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
@@ -43,7 +43,7 @@ const edcClient: EdcClient = buildEdcClient({
 let kpiData: KpiResult = await edcClient.useCaseApi.kpiEndpoint();
 ```
 
-A minimal example project using our typescript API client can be found
+A minimal example project using the typescript API client can be found
 [here](https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper/client-ts-example).
 
 ## License

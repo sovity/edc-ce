@@ -21,20 +21,20 @@ jobs:
         imageVariants: [
           {
             "imageName": "edc-dev",
-            "title": "EDC Connector (Dev)",
+            "title": "sovity Dev EDC Connector",
             "description": "Extended EDC Connector built by sovity. This dev version contains no persistence or auth and can be used to quickly start a locally running EDC + EDC UI.",
             "buildArgs": "-Pdmgmt-api-key"
           },
           {
             "imageName": "edc-ce",
-            "title": "EDC Connector (Community Edition)",
-            "description": "Extended Community Edition EDC Connector built by sovity. Contains sovity's Community Edition EDC extensions and requires dataspace credentials to join an existing dataspace.",
+            "title": "sovity Community Edition EDC Connector",
+            "description": "EDC Connector built by sovity. Contains sovity's Community Edition EDC extensions and requires dataspace credentials to join an existing dataspace.",
             "buildArgs": "-Pfs-vault -Pdmgmt-api-key -Ppostgres-flyway -Poauth2"
           },
           {
             "imageName": "edc-ce-mds",
-            "title": "MDS EDC Connector (Community Edition)",
-            "description": "MDS Community Edition EDC Connector built by sovity. Configured for compatibility with the Mobility Data Space (MDS). This EDC requires dataspace credentials, an ids broker and an ids clearing house.",
+            "title": "MDS Community Edition EDC Connector",
+            "description": "EDC Connector built by sovity and configured for compatibility with the Mobility Data Space (MDS). This EDC requires dataspace credentials, an IDS broker and an IDS Clearing House.",
             "buildArgs": "-Pfs-vault -Pdmgmt-api-key -Ppostgres-flyway -Poauth2 -Pmds"
           }
         ]
@@ -84,13 +84,6 @@ jobs:
       - name: Build and push EDC image
         uses: docker/build-push-action@v4
         with:
-          # The Core EDC depends on a dependency in the Fraunhofer IAIS Maven Nexus
-          # Because that nexus is currently only 40% available, it keeps crashing the pipelines
-          # The following retries alleviate the issue slightly
-          retry_on: error
-          timeout_seconds: 5
-          max_attempts: 4
-
           file: connector/Dockerfile
           context: .
           push: true
