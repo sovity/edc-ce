@@ -8,13 +8,16 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
 
 @Path("wrapper/offering")
 @Tag(name = "Offering", description = "EDC Contract Offering API Endpoints")
 @RequiredArgsConstructor
+@Produces(MediaType.APPLICATION_JSON)
 public class OfferingResource {
 
     private final OfferingService offeringService;
@@ -26,8 +29,9 @@ public class OfferingResource {
     public Response createOfferingEndpoint(@Valid CreateOfferingDto dto) {
         if (dto == null) {
             String error = "No CreateOfferingDto provided";
-            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+            return Response.status(Status.BAD_REQUEST).entity(error).build();
         }
+
         offeringService.create(dto);
         return Response.status(Response.Status.NO_CONTENT).build();
     }

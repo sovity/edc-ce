@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import org.eclipse.edc.connector.api.management.asset.model.AssetEntryDto;
 import org.eclipse.edc.connector.api.management.contractdefinition.model.ContractDefinitionRequestDto;
-import org.eclipse.edc.connector.api.management.policy.model.PolicyDefinitionRequestDto;
 
 @Getter
 @Schema(description = "Test")

@@ -1,12 +1,12 @@
-package de.sovity.edc.ext.wrapper.api.offering.model;
+package de.sovity.edc.ext.wrapper.api.common.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * The set of supported expression operators. Not all operators may be supported for particular expression types.
  */
-@Schema(description = "Test")
-public enum Operator {
+@Schema(description = "Operator for constraints")
+public enum OperatorDto {
     /**
      * Operator expressing equality of two operands
      */

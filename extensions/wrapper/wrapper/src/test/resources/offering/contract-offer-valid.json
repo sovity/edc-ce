@@ -15,15 +15,14 @@
   "policyDefinitionRequestDto": {
     "id": "mock",
     "policy": {
-      "uid": "mock",
-      "permissions": [],
-      "prohibitions": [],
-      "obligations": [],
-      "extensibleProperties": {},
-      "inheritsFrom": null,
-      "assigner": null,
-      "assignee": null,
-      "target": null,
+      "permission": {
+        "action": "USE",
+        "constraintDto": {
+          "leftExpression": "string",
+          "operatorDto": "EQ",
+          "rightExpression": "string"
+        }
+      },
       "@type": {
         "@policytype": "set"
       }

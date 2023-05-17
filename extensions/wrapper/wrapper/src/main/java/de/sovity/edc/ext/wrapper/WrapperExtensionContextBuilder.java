@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper;
 
 import de.sovity.edc.ext.wrapper.api.offering.OfferingResource;
 import de.sovity.edc.ext.wrapper.api.offering.services.OfferingService;
+import de.sovity.edc.ext.wrapper.api.offering.services.PolicyMappingService;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementPageCardBuilder;
@@ -85,8 +86,10 @@ public class WrapperExtensionContextBuilder {
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
         var useCaseResource = new UseCaseResource(kpiApiService, supportedPolicyApiService);
 
+        // Offering
+        var policyMappingService = new PolicyMappingService();
         var offeringService = new OfferingService(assetIndex, policyDefinitionStore,
-                contractDefinitionStore, dtoTransformerRegistry);
+                contractDefinitionStore, dtoTransformerRegistry, policyMappingService);
         var offeringResource = new OfferingResource(offeringService);
 
         // Collect all JAX-RS resources

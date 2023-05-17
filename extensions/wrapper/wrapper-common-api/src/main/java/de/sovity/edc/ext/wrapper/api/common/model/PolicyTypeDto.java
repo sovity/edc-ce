@@ -1,4 +1,4 @@
-package de.sovity.edc.ext.wrapper.api.offering.model;
+package de.sovity.edc.ext.wrapper.api.common.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -11,19 +11,19 @@ import java.util.Map;
  * The types of {@link Policy}.
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-@Schema(description = "Test")
-public enum PolicyType {
+@Schema(description = "Currently supported is type: SET")
+public enum PolicyTypeDto {
     SET("set"), OFFER("offer"), CONTRACT("contract");
 
     @JsonProperty("@policytype")
     private String type;
 
-    PolicyType(@JsonProperty("@policytype") String type) {
+    PolicyTypeDto(@JsonProperty("@policytype") String type) {
         this.type = type;
     }
 
     @JsonCreator
-    public static PolicyType fromObject(Map<String, Object> object) {
+    public static PolicyTypeDto fromObject(Map<String, Object> object) {
         if (SET.type.equals(object.get("@policytype"))) {
             return SET;
         } else if (OFFER.type.equals(object.get("@policytype"))) {
