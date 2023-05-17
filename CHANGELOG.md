@@ -4,12 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ## [x.x.x] - UNRELEASED
 
+## [3.2.0] - 2023-05-17
+
+### Minor Changes
+
+- API Wrapper now supports OAuth2 Client Credentials Auth.
+- API Wrapper now contains initial Broker Server API Spec.
+- API Wrapper now contains initial File Storage Enterprise Edition API Spec.
+- API Wrapper Contract Agreement Page Cards now contain Contract Negotiation IDs.
+
+### Patch Changes
+
+- Bumped EDC UI version to `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity5` in production `docker-compose.yaml`. This
+  fixes a CORS-related issue.
+
 ## [3.1.0] - 2023-04-27
 
 ### Minor Changes
+
 - feat: wrapper contract agreement api
 
 ### Patch Changes
+
 - wrapper: added contractAgreements- and transferProcessesCounts
 - fix: broker extension provides empty fields
 - fix: update postman collection
@@ -23,6 +39,7 @@ All notable changes to this project will be documented in this file.
 - `EDC_IDS_ENDPOINT` was not set correctly on image build
 
 ### Changed
+
 - Reverted docker-compose.yaml to run only one connector
 
 ## [3.0.0] - 2023-04-04
@@ -45,7 +62,8 @@ All notable changes to this project will be documented in this file.
 
 - Reworked Project, Docker Image and Extension documentations.
 - broker-extension: Re-register assets at broker at connector startup
-- broker-extension: Added a subsequent resource-id filtering after sparql query, to filter out resources that do not belong to the connector.
+- broker-extension: Added a subsequent resource-id filtering after sparql query, to filter out resources that do not
+  belong to the connector.
 - bump org.openapi.generator from 6.3.0 to 6.5.0
 - bump io.quarkus from 2.16.4.Final to 2.16.6.Final
 - bump io.quarkus.platform:quarkus-bom from 2.16.5.Final to 2.16.6.Final
@@ -76,7 +94,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Missing blacklist entry for referring connector policy in docker-compose `POLICY_BROKER_BLACKLIST: REFERRING_CONNECTOR`
+- Missing blacklist entry for referring connector policy in
+  docker-compose `POLICY_BROKER_BLACKLIST: REFERRING_CONNECTOR`
 
 ### Changed
 
