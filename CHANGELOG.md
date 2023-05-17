@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [x.x.x] - UNRELEASED
 
+### Patch Changes
+
+- Fix API Wrapper Broker Server API Spec not showing in client libraries.
+
 ## [3.2.0] - 2023-05-17
 
 ### Minor Changes
