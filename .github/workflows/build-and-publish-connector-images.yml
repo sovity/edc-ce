@@ -1,4 +1,4 @@
-name: EDC Image CI
+name: EDC Docker Images
 
 on:
   push:
