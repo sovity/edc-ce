@@ -105,7 +105,7 @@ public class OfferingServiceTest {
         whenCreateOfferingEndpoint("")
                 .assertThat()
                 .statusCode(400)
-                .contentType(ContentType.TEXT)
+                .contentType(ContentType.JSON)
                 .body(Matchers.equalTo(NO_REQUEST_BODY_ERROR));
     }
 
