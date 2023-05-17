@@ -19,5 +19,4 @@ public class PolicyDefinitionRequestDto {
     private String id;
     @Schema(description = "ToDo", requiredMode = Schema.RequiredMode.REQUIRED)
     private PolicyDto policy;
-
 }
