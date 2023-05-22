@@ -1,14 +1,16 @@
 package de.sovity.edc.ext.wrapper.api.common.model;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.util.Map;
-
 /**
- * The types of {@link Policy}.
+ * Possible types of policies. Copied from EDC policy-model.
+ *
+ * @author tim.dahlmanns@isst.fraunhofer.de
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @Schema(description = "Currently supported is type: SET")
@@ -16,12 +18,18 @@ public enum PolicyTypeDto {
     SET("set"), OFFER("offer"), CONTRACT("contract");
 
     @JsonProperty("@policytype")
-    private String type;
+    private final String type;
 
     PolicyTypeDto(@JsonProperty("@policytype") String type) {
         this.type = type;
     }
 
+    /**
+     * JSON creator for policy type. For details see EDC policy model.
+     *
+     * @param object Policy type.
+     * @return DTO of policy type.
+     */
     @JsonCreator
     public static PolicyTypeDto fromObject(Map<String, Object> object) {
         if (SET.type.equals(object.get("@policytype"))) {

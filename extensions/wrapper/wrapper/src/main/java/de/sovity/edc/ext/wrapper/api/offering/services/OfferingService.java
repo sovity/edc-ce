@@ -15,6 +15,11 @@ import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 
+/**
+ * Service for all the features of the wrapper regarding offers.
+ *
+ * @author tim.dahlmanns@isst.fraunhofer.de
+ */
 @RequiredArgsConstructor
 public class OfferingService {
 
@@ -24,6 +29,11 @@ public class OfferingService {
     private final DtoTransformerRegistry dtoTransformerRegistry;
     private final PolicyMappingService policyMappingService;
 
+    /**
+     * Creates the asset, policy and contract definition in the connector.
+     *
+     * @param createOfferingDto DTO containing the necessary data.
+     */
     public void create(CreateOfferingDto createOfferingDto) {
         createAsset(createOfferingDto.getAssetEntryDto());
         createPolicyDefinition(createOfferingDto.getPolicyDefinitionRequestDto());

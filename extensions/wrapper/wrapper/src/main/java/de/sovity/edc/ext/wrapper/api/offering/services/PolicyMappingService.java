@@ -1,9 +1,10 @@
 package de.sovity.edc.ext.wrapper.api.offering.services;
 
-import de.sovity.edc.ext.wrapper.api.common.model.ConstraintDto;
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.sovity.edc.ext.wrapper.api.common.model.ConstraintDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import org.eclipse.edc.policy.model.Action;
 import org.eclipse.edc.policy.model.AndConstraint;
 import org.eclipse.edc.policy.model.AtomicConstraint;
@@ -15,8 +16,20 @@ import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
 
+/**
+ * Mapper class to convert a {@link PolicyDto} to an EDC {@link Policy}.
+ *
+ * @author tim.dahlmanns@isst.fraunhofer.de
+ */
 public class PolicyMappingService {
 
+
+    /**
+     * Converts a {@link PolicyDto} to an DC {@link Policy}.
+     *
+     * @param dto The {@link PolicyDto}.
+     * @return An EDC {@link Policy}
+     */
     public Policy policyDtoToPolicy(PolicyDto dto) {
         return Policy.Builder.newInstance()
                 .type(PolicyType.valueOf(dto.getType().getType().toUpperCase()))
@@ -36,7 +49,8 @@ public class PolicyMappingService {
         List<Constraint> constraints = new ArrayList<>();
 
         if (dto.getPermission().getConstraintDto() != null) {
-            constraints.add(constraintDtoToAtomicConstraint(dto.getPermission().getConstraintDto()));
+            constraints.add(
+                    constraintDtoToAtomicConstraint(dto.getPermission().getConstraintDto()));
 
         }
 
