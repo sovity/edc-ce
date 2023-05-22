@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -38,9 +39,11 @@ public class PolicyDto {
 
     @Schema(description = "ToDo", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonProperty("@type")
+    @NonNull
     private PolicyTypeDto type;
 
     @Schema(description = "ToDo", requiredMode = RequiredMode.REQUIRED)
+    @NonNull
     private PermissionDto permission;
 
     public PolicyDto(Object legacyPolicy) {

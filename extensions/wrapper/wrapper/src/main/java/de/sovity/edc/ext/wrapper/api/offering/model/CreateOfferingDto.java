@@ -7,6 +7,10 @@ import lombok.Getter;
 import org.eclipse.edc.connector.api.management.asset.model.AssetEntryDto;
 import org.eclipse.edc.connector.api.management.contractdefinition.model.ContractDefinitionRequestDto;
 
+/**
+ * ToDo
+ *
+ */
 @Getter
 @Schema(description = "Test")
 public class CreateOfferingDto {
@@ -18,7 +22,8 @@ public class CreateOfferingDto {
     @JsonCreator
     public CreateOfferingDto(
             @JsonProperty(value = "assetEntryDto", required = true) AssetEntryDto assetEntryDto,
-            @JsonProperty(value = "policyDefinitionRequestDto", required = true) PolicyDefinitionRequestDto policyDefinitionRequestDto,
+            @JsonProperty(value = "policyDefinitionRequestDto", required = true)
+            PolicyDefinitionRequestDto policyDefinitionRequestDto,
             @JsonProperty(value = "contractDefinitionRequestDto", required = true) ContractDefinitionRequestDto contractDefinitionRequestDto) {
         this.assetEntryDto = assetEntryDto;
         this.policyDefinitionRequestDto = policyDefinitionRequestDto;

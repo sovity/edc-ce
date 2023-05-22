@@ -30,8 +30,8 @@
   },
   "contractDefinitionRequestDto": {
     "id": "mock",
-    "accessPolicyId": "mock",
-    "contractPolicyId": "mock",
+    "accessPolicyId": "test",
+    "contractPolicyId": "test",
     "validity": 10,
     "criteria": []
   }
