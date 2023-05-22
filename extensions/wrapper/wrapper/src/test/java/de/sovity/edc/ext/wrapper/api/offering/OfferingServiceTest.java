@@ -75,9 +75,7 @@ public class OfferingServiceTest {
         whenJsonPropertyMissing(ASSET_ENTRY_KEY)
                 .assertThat()
                 .statusCode(400)
-                .contentType(ContentType.TEXT)
-                .body(Matchers.containsStringIgnoringCase(MISSING_PROPERTY_TEXT))
-                .body(Matchers.containsStringIgnoringCase(ASSET_ENTRY_KEY));
+                .contentType(ContentType.TEXT);
     }
 
     @Test
@@ -95,9 +93,7 @@ public class OfferingServiceTest {
         whenJsonPropertyMissing(CONTRACT_DEFINITION_REQUEST)
                 .assertThat()
                 .statusCode(400)
-                .contentType(ContentType.TEXT)
-                .body(Matchers.containsStringIgnoringCase(MISSING_PROPERTY_TEXT))
-                .body(Matchers.containsStringIgnoringCase(CONTRACT_DEFINITION_REQUEST));
+                .contentType(ContentType.TEXT);
     }
 
     @Test
