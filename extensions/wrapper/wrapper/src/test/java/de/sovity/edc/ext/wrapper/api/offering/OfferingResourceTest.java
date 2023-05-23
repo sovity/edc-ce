@@ -22,7 +22,7 @@ import static de.sovity.edc.ext.wrapper.TestUtils.givenManagementEndpoint;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
-public class OfferingServiceTest {
+class OfferingResourceTest {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static JsonNode contractOfferValid;
@@ -36,7 +36,7 @@ public class OfferingServiceTest {
 
     @BeforeAll
     static void init() throws IOException {
-        ClassLoader classLoader = OfferingServiceTest.class.getClassLoader();
+        ClassLoader classLoader = OfferingResourceTest.class.getClassLoader();
         contractOfferValid = MAPPER.readTree(new File(
                 classLoader.getResource("offering/contract-offer-valid.json").getFile()));
     }
