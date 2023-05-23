@@ -29,7 +29,7 @@ jobs:
             "imageName": "broker-server-ce",
             "title": "Broker Server (Community Edition)",
             "description": "EDC IDS Broker Server. Contains DB extensions and requires dataspace credentials to join an existing dataspace.",
-            "buildArgs": "-Pfs-vault -Pdmgmt-api-key -Ppostgres-flyway -Poauth2"
+            "buildArgs": "-Pdmgmt-api-key -Pfs-vault -Poauth2"
           }
         ]
     timeout-minutes: 30
@@ -37,17 +37,30 @@ jobs:
       contents: read
       packages: write
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: edc
+          POSTGRES_PASSWORD: edc
+          POSTGRES_DB: edc
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       - name: Log in to the Container registry
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
@@ -74,7 +87,11 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          network: host
           build-args: |
             USERNAME=${{ github.actor }}
             TOKEN=${{ secrets.GITHUB_TOKEN }}
             BUILD_ARGS=${{ matrix.imageVariants.buildArgs }}
+            TEST_POSTGRES_JDBC_URL=jdbc:postgresql://localhost:5432/edc
+            TEST_POSTGRES_JDBC_USER=edc
+            TEST_POSTGRES_JDBC_PASSWORD=edc

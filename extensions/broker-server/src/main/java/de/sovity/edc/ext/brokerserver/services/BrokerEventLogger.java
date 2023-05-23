@@ -14,11 +14,11 @@
 
 package de.sovity.edc.ext.brokerserver.services;
 
-import de.sovity.edc.ext.brokerserver.dao.models.ConnectorRecord;
 import de.sovity.edc.ext.brokerserver.dao.models.LogEventRecord;
 import de.sovity.edc.ext.brokerserver.dao.models.LogEventStatus;
 import de.sovity.edc.ext.brokerserver.dao.models.LogEventType;
 import de.sovity.edc.ext.brokerserver.dao.stores.LogEventStore;
+import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
 import lombok.RequiredArgsConstructor;
 
 import java.time.OffsetDateTime;
@@ -32,7 +32,7 @@ public class BrokerEventLogger {
 
     public void logConnectorUpdate(ConnectorRecord connector, LogEventStatus outcome) {
         var logEntry = LogEventRecord.builder()
-                .connectorId(connector.getId())
+                .connectorEndpoint(connector.getEndpoint())
                 .userMessage(getConnectorUpdatedMessage(outcome))
                 .type(LogEventType.CONNECTOR_UPDATED)
                 .createdAt(OffsetDateTime.now())

@@ -23,10 +23,8 @@ dependencies {
     // JDK Logger
     implementation("${edcGroup}:monitor-jdk-logger:${edcVersion}")
 
-    // Optional: PostgreSQL + Flyway
-    if (project.hasProperty("postgres-flyway")) {
-        implementation("${sovityEdcExtensionGroup}:postgres-flyway:${sovityEdcExtensionsVersion}")
-    }
+    // Broker Server + PostgreSQL + Flyway
+    implementation(project(":extensions:broker-server"))
 
     // Optional: Connector-To-Connector IAM
     if (project.hasProperty("oauth2")) {

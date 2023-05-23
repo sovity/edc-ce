@@ -60,7 +60,7 @@ public class LogEventRecord {
     /**
      * Connector reference, if applicable
      */
-    String connectorId;
+    String connectorEndpoint;
 
     /**
      * Contract Offer reference, if applicable

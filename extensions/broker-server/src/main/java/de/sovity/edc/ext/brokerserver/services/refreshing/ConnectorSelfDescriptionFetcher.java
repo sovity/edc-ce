@@ -14,20 +14,17 @@
 
 package de.sovity.edc.ext.brokerserver.services.refreshing;
 
-import de.sovity.edc.ext.brokerserver.dao.models.ConnectorRecord;
-
 /**
  * Fetch Connector Metadata.
  */
 public class ConnectorSelfDescriptionFetcher {
 
     /**
-     * Fetches Connector metadata and returns an updated {@link ConnectorRecord}
+     * Fetches Connector metadata
      *
-     * @param connector existing / stubbed connector db row
-     * @return updated connector db row
+     * @param endpoint existing connector endpoint
      */
-    public ConnectorRecord updateConnector(ConnectorRecord connector) {
+    public String fetchSelfDescription(String endpoint) {
         // TODO implement
         throw new IllegalArgumentException("Not yet implemented");
     }
