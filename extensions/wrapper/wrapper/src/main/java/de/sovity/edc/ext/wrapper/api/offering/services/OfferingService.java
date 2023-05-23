@@ -30,38 +30,56 @@ public class OfferingService {
     private final PolicyMappingService policyMappingService;
 
     /**
-     * Creates the asset, policy and contract definition in the connector.
+     * Creates the asset, policy and contract definition in the connector. First, transforms the
+     * inputs to the EDC model and then persists them. If persisting one fails, none are persisted.
      *
      * @param createOfferingDto DTO containing the necessary data.
      */
     public void create(CreateOfferingDto createOfferingDto) {
-        createAsset(createOfferingDto.getAssetEntryDto());
-        createPolicyDefinition(createOfferingDto.getPolicyDefinitionRequestDto());
-        createContractDefinition(createOfferingDto.getContractDefinitionRequestDto());
+        var asset = transformAsset(createOfferingDto.getAssetEntryDto());
+        var dataAddress = transformDataAddress(createOfferingDto.getAssetEntryDto());
+        var policy = transformPolicy(createOfferingDto.getPolicyDefinitionRequestDto());
+        var contractDefinition = transformContractDefinition(createOfferingDto
+                .getContractDefinitionRequestDto());
+
+        persist(asset, dataAddress, policy, contractDefinition);
     }
 
-    private void createAsset(AssetEntryDto dto) {
-        var asset = dtoTransformerRegistry.transform(dto.getAsset(), Asset.class)
+    private Asset transformAsset(AssetEntryDto dto) {
+        return dtoTransformerRegistry.transform(dto.getAsset(), Asset.class)
                 .orElseThrow(failure -> new InvalidRequestException(failure.getFailureDetail()));
-        var dataAddress = dtoTransformerRegistry.transform(dto.getDataAddress(),
-                        DataAddress.class)
-                .orElseThrow(failure -> new InvalidRequestException(failure.getFailureDetail()));
-        assetIndex.accept(asset, dataAddress);
     }
 
-    private void createPolicyDefinition(PolicyDefinitionRequestDto dto) {
-        PolicyDefinition policyDefinition = PolicyDefinition.Builder.newInstance()
+    private DataAddress transformDataAddress(AssetEntryDto dto) {
+        return dtoTransformerRegistry.transform(dto.getDataAddress(), DataAddress.class)
+                .orElseThrow(failure -> new InvalidRequestException(failure.getFailureDetail()));
+    }
+
+    private PolicyDefinition transformPolicy(PolicyDefinitionRequestDto dto) {
+        var policy = policyMappingService.policyDtoToPolicy(dto.getPolicy());
+        return PolicyDefinition.Builder.newInstance()
                 .id(dto.getId())
-                .policy(policyMappingService.policyDtoToPolicy(dto.getPolicy()))
+                .policy(policy)
                 .build();
-
-        policyDefinitionStore.save(policyDefinition);
     }
 
-    private void createContractDefinition(ContractDefinitionRequestDto dto) {
-        var result = dtoTransformerRegistry.transform(dto, ContractDefinition.class)
+    private ContractDefinition transformContractDefinition(ContractDefinitionRequestDto dto) {
+        return dtoTransformerRegistry.transform(dto, ContractDefinition.class)
                 .orElseThrow(failure -> new InvalidRequestException(failure.getFailureDetail()));
+    }
 
-        contractDefinitionStore.save(result);
+    private void persist(Asset asset, DataAddress dataAddress, PolicyDefinition policyDefinition,
+                         ContractDefinition contractDefinition) {
+        try {
+            assetIndex.accept(asset, dataAddress);
+            policyDefinitionStore.save(policyDefinition);
+            contractDefinitionStore.save(contractDefinition);
+        } catch (Exception e) {
+            // Persist all or none (deleteById methods do not fail if ID not found)
+            assetIndex.deleteById(asset.getId());
+            policyDefinitionStore.deleteById(policyDefinition.getId());
+            contractDefinitionStore.deleteById(contractDefinition.getId());
+            throw e;
+        }
     }
 }
