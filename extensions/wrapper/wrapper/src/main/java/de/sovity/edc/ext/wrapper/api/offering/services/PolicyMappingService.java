@@ -25,7 +25,7 @@ public class PolicyMappingService {
 
 
     /**
-     * Converts a {@link PolicyDto} to an DC {@link Policy}.
+     * Converts a {@link PolicyDto} to an EDC {@link Policy}.
      *
      * @param dto The {@link PolicyDto}.
      * @return An EDC {@link Policy}
@@ -46,7 +46,7 @@ public class PolicyMappingService {
     }
 
     private Permission constraintsToPermission(PolicyDto dto) {
-        List<Constraint> constraints = new ArrayList<>();
+        var constraints = new ArrayList<Constraint>();
 
         if (dto.getPermission().getConstraintDto() != null) {
             constraints.add(
@@ -55,22 +55,22 @@ public class PolicyMappingService {
         }
 
         if (dto.getPermission().getAndConstraintDtos() != null) {
-            List<Constraint> andConstraints = new ArrayList<>();
+            var andConstraints = new ArrayList<Constraint>();
             for (ConstraintDto dtoConstraint : dto.getPermission().getAndConstraintDtos()) {
                 andConstraints.add(constraintDtoToAtomicConstraint(dtoConstraint));
             }
-            AndConstraint andConstraint = AndConstraint.Builder.newInstance()
+            var andConstraint = AndConstraint.Builder.newInstance()
                     .constraints(andConstraints)
                     .build();
             constraints.add(andConstraint);
         }
 
         if (dto.getPermission().getOrConstraintDtos() != null) {
-            List<Constraint> orConstraints = new ArrayList<>();
+            var orConstraints = new ArrayList<Constraint>();
             for (ConstraintDto dtoConstraint : dto.getPermission().getOrConstraintDtos()) {
                 orConstraints.add(constraintDtoToAtomicConstraint(dtoConstraint));
             }
-            OrConstraint orConstraint = OrConstraint.Builder.newInstance()
+            var orConstraint = OrConstraint.Builder.newInstance()
                     .constraints(orConstraints)
                     .build();
             constraints.add(orConstraint);
