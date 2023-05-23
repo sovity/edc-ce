@@ -25,4 +25,9 @@ public class ConnectorQueries {
     public Stream<ConnectorRecord> findAll(DSLContext dslContext) {
         return dslContext.selectFrom(Tables.CONNECTOR).stream();
     }
+
+    public ConnectorRecord findByEndpoint(DSLContext dsl, String endpoint) {
+        var c = Tables.CONNECTOR;
+        return dsl.selectFrom(c).where(c.ENDPOINT.eq(endpoint)).fetchOne();
+    }
 }

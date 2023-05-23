@@ -18,8 +18,9 @@ import de.sovity.edc.ext.brokerserver.dao.models.LogEventRecord;
 import de.sovity.edc.ext.brokerserver.dao.models.LogEventStatus;
 import de.sovity.edc.ext.brokerserver.dao.models.LogEventType;
 import de.sovity.edc.ext.brokerserver.dao.stores.LogEventStore;
-import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
+import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorChangeTracker;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.time.OffsetDateTime;
 
@@ -30,15 +31,30 @@ import java.time.OffsetDateTime;
 public class BrokerEventLogger {
     private final LogEventStore logEventStore;
 
-    public void logConnectorUpdate(ConnectorRecord connector, LogEventStatus outcome) {
-        var logEntry = LogEventRecord.builder()
-                .connectorEndpoint(connector.getEndpoint())
+    public void logConnectorUpdateSuccess(String connectorEndpoint, ConnectorChangeTracker changes) {
+        var status = changes.isEmpty() ? LogEventStatus.UNCHANGED : LogEventStatus.UPDATED;
+        var logEntry = connectorUpdateLogEntry(connectorEndpoint, status).toBuilder()
+                .userMessage(changes.getLogMessage())
+                .build();
+        this.logEventStore.save(logEntry);
+    }
+
+    public void logConnectorUpdateFailure(String connectorEndpoint, String message, Throwable exceptionOrNull) {
+        var logEntry = connectorUpdateLogEntry(connectorEndpoint, LogEventStatus.ERROR).toBuilder()
+                .userMessage(message)
+                .error(exceptionOrNull == null ? null : ExceptionUtils.getStackTrace(exceptionOrNull))
+                .build();
+        this.logEventStore.save(logEntry);
+    }
+
+    private LogEventRecord connectorUpdateLogEntry(String connectorEndpoint, LogEventStatus outcome) {
+        return LogEventRecord.builder()
+                .connectorEndpoint(connectorEndpoint)
                 .userMessage(getConnectorUpdatedMessage(outcome))
                 .type(LogEventType.CONNECTOR_UPDATED)
                 .createdAt(OffsetDateTime.now())
                 .status(outcome)
                 .build();
-        this.logEventStore.save(logEntry);
     }
 
     private static String getConnectorUpdatedMessage(LogEventStatus outcome) {

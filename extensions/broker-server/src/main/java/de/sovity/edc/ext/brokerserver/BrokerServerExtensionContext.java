@@ -16,15 +16,18 @@ package de.sovity.edc.ext.brokerserver;
 
 import de.sovity.edc.ext.brokerserver.services.BrokerServerInitializer;
 import de.sovity.edc.ext.wrapper.api.broker.BrokerServerResource;
+import org.eclipse.edc.spi.message.RemoteMessageDispatcher;
 
 
 /**
  * Manual Dependency Injection result
  *
+ * @param remoteMessageDispatcher IDS Message Client
  * @param brokerServerResource    REST Resource with API Endpoint implementations
  * @param brokerServerInitializer Startup Logic
  */
 public record BrokerServerExtensionContext(
+        RemoteMessageDispatcher remoteMessageDispatcher,
         BrokerServerResource brokerServerResource,
         BrokerServerInitializer brokerServerInitializer
 ) {

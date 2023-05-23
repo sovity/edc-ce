@@ -26,7 +26,7 @@ public class ContractOfferFetcher {
      * @param connectorEndpoint connector endpoint
      * @return updated connector db row
      */
-    public List<ContractOffer> fetchContractOffers(String connectorEndpoint) {
+    public List<ContractOffer> fetch(String connectorEndpoint) {
         // TODO implement
         throw new IllegalArgumentException("Not yet implemented");
     }

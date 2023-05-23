@@ -73,6 +73,11 @@ public class LogEventRecord {
     String userMessage;
 
     /**
+     * Error Stack Trace
+     */
+    String error;
+
+    /**
      * Execution time in milliseconds, if recorded / applicable
      */
     Long executionTimeInMs;

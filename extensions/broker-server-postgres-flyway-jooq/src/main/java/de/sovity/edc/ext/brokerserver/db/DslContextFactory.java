@@ -33,7 +33,7 @@ public class DslContextFactory {
      * @param <R> return type
      * @return new {@link DSLContext} + opened transaction
      */
-    public <R> R transaction(Function<DSLContext, R> function) {
+    public <R> R transactionResult(Function<DSLContext, R> function) {
         return newDslContext().transactionResult(transaction -> function.apply(transaction.dsl()));
     }
 

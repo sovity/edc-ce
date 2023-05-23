@@ -18,27 +18,33 @@ import de.sovity.edc.ext.brokerserver.BrokerServerExtension;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
+import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdater;
+import de.sovity.edc.ext.brokerserver.utils.UrlUtils;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
 
-import java.net.URI;
 import java.time.OffsetDateTime;
-import java.util.Arrays;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class BrokerServerInitializer {
     private final DslContextFactory dslContextFactory;
     private final Config config;
 
+    private final ConnectorUpdater connectorUpdater;
+
     public void onStartup() {
-        dslContextFactory.transaction(this::initializeConnectorList);
+        List<String> connectorEndpoints = getPreconfiguredConnectorEndpoints();
+        dslContextFactory.transaction(dsl -> initializeConnectorList(dsl, connectorEndpoints));
+
+        // TODO fill queue rather than execute in loop
+        connectorEndpoints.forEach(connectorUpdater::updateConnector);
     }
 
-    private void initializeConnectorList(DSLContext dsl) {
-        var endpoints = config.getString(BrokerServerExtension.KNOWN_CONNECTORS).split(",");
-        var connectorRecords = Arrays.stream(endpoints)
+    private void initializeConnectorList(DSLContext dsl, List<String> connectorEndpoints) {
+        var connectorRecords = connectorEndpoints.stream()
                 .map(String::trim)
                 .map(this::newConnectorRow)
                 .toList();
@@ -47,7 +53,7 @@ public class BrokerServerInitializer {
 
     @NotNull
     private ConnectorRecord newConnectorRow(String endpoint) {
-        var connectorId = getEverythingBeforeThePath(endpoint);
+        var connectorId = UrlUtils.getEverythingBeforeThePath(endpoint);
 
         var connector = new ConnectorRecord();
         connector.setEndpoint(endpoint);
@@ -60,24 +66,7 @@ public class BrokerServerInitializer {
         return connector;
     }
 
-    /**
-     * Returns everything before the URLs path.
-     * <p>
-     * Example: http://www.example.com/path/to/my/file.html -> http://www.example.com
-     * Example 2: http://www.example.com:9000/path/to/my/file.html -> http://www.example.com:9000
-     *
-     * @param url url
-     * @return protocol, host, port
-     */
-    private String getEverythingBeforeThePath(String url) {
-        var uri = URI.create(url);
-        String scheme = uri.getScheme(); // "http"
-        String authority = uri.getAuthority(); // "www.example.com"
-        int port = uri.getPort(); // -1 (no port specified)
-        String everythingBeforePath = scheme + "://" + authority;
-        if (port != -1) {
-            everythingBeforePath += ":" + port;
-        }
-        return everythingBeforePath;
+    private List<String> getPreconfiguredConnectorEndpoints() {
+        return List.of(config.getString(BrokerServerExtension.KNOWN_CONNECTORS).split(","));
     }
 }

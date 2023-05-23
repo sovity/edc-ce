@@ -38,7 +38,7 @@ public class ConnectorApiService {
     private final PaginationMetadataUtils paginationMetadataUtils;
 
     public ConnectorPageResult connectorPage(ConnectorPageQuery query) {
-        return dslContextFactory.transaction(dsl -> {
+        return dslContextFactory.transactionResult(dsl -> {
             Objects.requireNonNull(query, "query must not be null");
 
             var connectors = connectorQueries.findAll(dsl)
