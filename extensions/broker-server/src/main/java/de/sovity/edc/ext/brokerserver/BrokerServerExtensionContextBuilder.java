@@ -24,6 +24,7 @@ import de.sovity.edc.ext.brokerserver.services.BrokerServerInitializer;
 import de.sovity.edc.ext.brokerserver.services.api.CatalogApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorApiService;
 import de.sovity.edc.ext.brokerserver.services.api.PaginationMetadataUtils;
+import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueue;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorSelfDescriptionFetcher;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdateFailureWriter;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdateSuccessWriter;
@@ -90,7 +91,11 @@ public class BrokerServerExtensionContextBuilder {
                 dslContextFactory,
                 monitor
         );
-        var brokerServerInitializer = new BrokerServerInitializer(dslContextFactory, config, connectorUpdater);
+
+        // Queue
+        var connectorQueue = new ConnectorQueue();
+
+        var brokerServerInitializer = new BrokerServerInitializer(dslContextFactory, config, connectorQueue);
 
         // UI Capabilities
         var paginationMetadataUtils = new PaginationMetadataUtils();

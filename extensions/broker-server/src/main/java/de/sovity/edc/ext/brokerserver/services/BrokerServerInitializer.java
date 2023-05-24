@@ -18,7 +18,8 @@ import de.sovity.edc.ext.brokerserver.BrokerServerExtension;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
-import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdater;
+import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueue;
+import de.sovity.edc.ext.brokerserver.services.queue.ConnectorRefreshPriority;
 import de.sovity.edc.ext.brokerserver.utils.UrlUtils;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.system.configuration.Config;
@@ -32,15 +33,13 @@ import java.util.List;
 public class BrokerServerInitializer {
     private final DslContextFactory dslContextFactory;
     private final Config config;
-
-    private final ConnectorUpdater connectorUpdater;
+    private final ConnectorQueue connectorQueue;
 
     public void onStartup() {
         List<String> connectorEndpoints = getPreconfiguredConnectorEndpoints();
         dslContextFactory.transaction(dsl -> initializeConnectorList(dsl, connectorEndpoints));
 
-        // TODO fill queue rather than execute in loop
-        connectorEndpoints.forEach(connectorUpdater::updateConnector);
+        connectorEndpoints.forEach(it -> connectorQueue.add(new ConnectorQueueEntry(it, OffsetDateTime.now(), ConnectorRefreshPriority.ADDED_ON_STARTUP)));
     }
 
     private void initializeConnectorList(DSLContext dsl, List<String> connectorEndpoints) {
