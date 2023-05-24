@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.services.refreshing;
 
-import de.sovity.edc.ext.brokerserver.dao.stores.ConnectorQueries;
+import de.sovity.edc.ext.brokerserver.dao.queries.ConnectorQueries;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
 import lombok.RequiredArgsConstructor;

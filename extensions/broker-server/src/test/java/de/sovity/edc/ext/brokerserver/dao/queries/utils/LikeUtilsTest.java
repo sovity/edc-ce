@@ -12,10 +12,15 @@
  *
  */
 
-package de.sovity.edc.ext.brokerserver.services.queue;
+package de.sovity.edc.ext.brokerserver.dao.queries.utils;
 
-public class ConnectorRefreshPriority {
-    public static final int ADMIN_REQUESTED = 1;
-    public static final int ADDED_ON_STARTUP = 10;
-    public static final int SCHEDULED_REFRESH = 100;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class LikeUtilsTest {
+    @Test
+    void escape() {
+        assertThat(LikeUtils.escape("a\\b_c%d")).isEqualTo("a\\\\b\\_c\\%d");
+    }
 }

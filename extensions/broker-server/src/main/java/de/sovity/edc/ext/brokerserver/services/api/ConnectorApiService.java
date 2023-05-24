@@ -14,9 +14,9 @@
 
 package de.sovity.edc.ext.brokerserver.services.api;
 
-import de.sovity.edc.ext.brokerserver.dao.stores.ConnectorQueries;
+import de.sovity.edc.ext.brokerserver.dao.models.ConnectorPageDbRow;
+import de.sovity.edc.ext.brokerserver.dao.queries.ConnectorQueries;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
-import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorListEntry;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorOnlineStatus;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageQuery;
@@ -24,10 +24,8 @@ import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageResult;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageSortingItem;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageSortingType;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,21 +39,21 @@ public class ConnectorApiService {
         return dslContextFactory.transactionResult(dsl -> {
             Objects.requireNonNull(query, "query must not be null");
 
-            var connectors = connectorQueries.findAll(dsl)
-                    .map(ConnectorApiService::buildConnectorListEntry)
-                    .sorted(Comparator.comparing(ConnectorListEntry::getTitle))
-                    .toList();
+            var connectorDbRows = connectorQueries.forConnectorPage(dsl, query.getSearchQuery(), query.getSorting());
 
             var result = new ConnectorPageResult();
             result.setAvailableSortings(buildAvailableSortings());
-            result.setPaginationMetadata(paginationMetadataUtils.buildDummyPaginationMetadata(connectors.size()));
-            result.setConnectors(connectors);
+            result.setPaginationMetadata(paginationMetadataUtils.buildDummyPaginationMetadata(connectorDbRows.size()));
+            result.setConnectors(buildConnectorListEntries(connectorDbRows));
             return result;
         });
     }
 
-    @NotNull
-    private static ConnectorListEntry buildConnectorListEntry(ConnectorRecord it) {
+    private List<ConnectorListEntry> buildConnectorListEntries(List<ConnectorPageDbRow> connectorDbRows) {
+        return connectorDbRows.stream().map(this::buildConnectorListEntry).toList();
+    }
+
+    private ConnectorListEntry buildConnectorListEntry(ConnectorPageDbRow it) {
         ConnectorListEntry dto = new ConnectorListEntry();
         dto.setId(it.getEndpoint());
         dto.setIdsId(it.getIdsId());
@@ -66,11 +64,11 @@ public class ConnectorApiService {
         dto.setLastFetchAt(it.getLastUpdate());
         dto.setOnlineStatus(getOnlineStatus(it));
         dto.setOfflineSince(it.getOfflineSince());
-        dto.setNumContractOffers(-1);
+        dto.setNumContractOffers(it.getNumDataOffers());
         return dto;
     }
 
-    private static ConnectorOnlineStatus getOnlineStatus(ConnectorRecord it) {
+    private static ConnectorOnlineStatus getOnlineStatus(ConnectorPageDbRow it) {
         return switch (it.getOnlineStatus()) {
             case ONLINE -> ConnectorOnlineStatus.ONLINE;
             case OFFLINE -> ConnectorOnlineStatus.OFFLINE;
@@ -78,7 +76,6 @@ public class ConnectorApiService {
         };
     }
 
-    @NotNull
     private static List<ConnectorPageSortingItem> buildAvailableSortings() {
         return Arrays.stream(ConnectorPageSortingType.values()).map(it -> new ConnectorPageSortingItem(it, it.getTitle())).toList();
     }

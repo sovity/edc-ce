@@ -16,7 +16,8 @@ package de.sovity.edc.ext.brokerserver.services.refreshing;
 
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
-import de.sovity.edc.ext.brokerserver.services.BrokerEventLogger;
+import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventErrorMessage;
+import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.EdcException;
 import org.jooq.DSLContext;
@@ -35,12 +36,18 @@ public class ConnectorUpdateFailureWriter {
         connector.update();
 
         // Log Event
-        Throwable stackTrace = shouldLogStacktrace(e) ? e : null;
-        String message = "Failed updating connector: %s".formatted(e.getMessage());
-        brokerEventLogger.logConnectorUpdateFailure(connector.getEndpoint(), message, stackTrace);
+        brokerEventLogger.logConnectorUpdateFailure(dsl, connector.getEndpoint(), getFailureMessage(e));
     }
 
-    private boolean shouldLogStacktrace(Throwable e) {
+    public BrokerEventErrorMessage getFailureMessage(Throwable e) {
+        if (isUnexpectedException(e)) {
+            return BrokerEventErrorMessage.ofStackTrace("Unexpected exception during connector update.", e);
+        }
+
+        return BrokerEventErrorMessage.ofMessage("Failed updating connector.");
+    }
+
+    private boolean isUnexpectedException(Throwable e) {
         return !(e instanceof EdcException);
     }
 }

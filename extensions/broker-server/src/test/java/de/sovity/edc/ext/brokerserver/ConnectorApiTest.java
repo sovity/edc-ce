@@ -46,6 +46,8 @@ class ConnectorApiTest {
     void testQueryConnectors() {
         var result = edcClient().brokerServerApi().connectorPage(new ConnectorPageQuery());
         assertThat(result.getConnectors()).hasSize(1);
-        assertThat(result.getConnectors().get(0).getEndpoint()).isEqualTo("https://example.com/ids/data");
+
+        var connector = result.getConnectors().get(0);
+        assertThat(connector.getEndpoint()).isEqualTo("https://example.com/ids/data");
     }
 }

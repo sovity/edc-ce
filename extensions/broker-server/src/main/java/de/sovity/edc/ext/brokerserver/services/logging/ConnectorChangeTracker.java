@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.brokerserver.services.refreshing;
+package de.sovity.edc.ext.brokerserver.services.logging;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -47,7 +47,8 @@ public class ConnectorChangeTracker {
         return selfDescriptionChanges.isEmpty();
     }
 
-    public String getLogMessage() {
+    @Override
+    public String toString() {
         if (isEmpty()) {
             return "Connector is up to date.";
         }

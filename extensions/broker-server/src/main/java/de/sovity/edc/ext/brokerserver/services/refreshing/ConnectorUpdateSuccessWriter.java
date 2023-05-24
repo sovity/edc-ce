@@ -16,7 +16,8 @@ package de.sovity.edc.ext.brokerserver.services.refreshing;
 
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
-import de.sovity.edc.ext.brokerserver.services.BrokerEventLogger;
+import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
+import de.sovity.edc.ext.brokerserver.services.logging.ConnectorChangeTracker;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractOffer;
 import org.jooq.DSLContext;
@@ -43,7 +44,7 @@ public class ConnectorUpdateSuccessWriter {
         // TODO
 
         // Log Event
-        brokerEventLogger.logConnectorUpdateSuccess(connector.getEndpoint(), changes);
+        brokerEventLogger.logConnectorUpdateSuccess(dsl, connector.getEndpoint(), changes);
     }
 
     private static void updateConnector(ConnectorRecord connector, ConnectorSelfDescription selfDescription, ConnectorChangeTracker changes) {
