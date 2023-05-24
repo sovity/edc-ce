@@ -34,8 +34,8 @@ plugins {
 
 dependencies {
     api("org.jooq:jooq:3.16.4")
-    jooqGenerator("org.postgresql:postgresql:42.5.0")
-    flywayMigration("org.postgresql:postgresql:42.5.0")
+    jooqGenerator("org.postgresql:postgresql:42.6.0")
+    flywayMigration("org.postgresql:postgresql:42.6.0")
 
     annotationProcessor("org.projectlombok:lombok:1.18.26")
     compileOnly("org.projectlombok:lombok:1.18.26")
