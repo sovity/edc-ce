@@ -44,7 +44,7 @@ public class PolicyDto {
             + "for our generated clients.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Object legacyPolicy;
 
-    @Schema(description = "Type of the policy. Usually 'USE'",
+    @Schema(description = "Type of the policy. Usually 'SET'",
             requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonProperty("@type")
     @NonNull

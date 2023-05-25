@@ -3,7 +3,6 @@ package de.sovity.edc.ext.wrapper.api.common.model;
 import java.util.List;
 import java.util.Objects;
 
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,7 +38,12 @@ public class PermissionDto {
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private List<ConstraintDto> orConstraintDtos;
 
+    /**
+     * Builder for PermissionDto.
+     */
     public static class Builder {
+
+        /** The DTO to build. */
         private final PermissionDto permissionDto;
 
         private Builder() {
@@ -50,26 +54,55 @@ public class PermissionDto {
             return new Builder();
         }
 
+        /**
+         * Sets the permission's action.
+         *
+         * @param action the action
+         * @return the builder
+         */
         public Builder action(String action) {
             this.permissionDto.action = action;
             return this;
         }
 
+        /**
+         * Sets the permission's constraint.
+         *
+         * @param constraintDto the constraint
+         * @return the builder
+         */
         public Builder constraint(ConstraintDto constraintDto) {
             this.permissionDto.constraintDto = constraintDto;
             return this;
         }
 
+        /**
+         * Sets a list of constraints for the permission that all need to be fulfilled.
+         *
+         * @param constraintDtos the constraints
+         * @return the builder
+         */
         public Builder andConstraint(List<ConstraintDto> constraintDtos) {
             this.permissionDto.andConstraintDtos = constraintDtos;
             return this;
         }
 
+        /**
+         * Sets a list of constraints for the permission of which one needs to be fulfilled.
+         *
+         * @param constraintDtos the constraints
+         * @return the builder
+         */
         public Builder orConstraint(List<ConstraintDto> constraintDtos) {
             this.permissionDto.orConstraintDtos = constraintDtos;
             return this;
         }
 
+        /**
+         * Returns the DTO.
+         *
+         * @return the DTO
+         */
         public PermissionDto build() {
             Objects.requireNonNull(this.permissionDto.action);
             return permissionDto;

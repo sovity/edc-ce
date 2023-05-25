@@ -14,14 +14,26 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Provides the endpoints for managing offerings.
+ *
+ * @author Ronja Quensel (ronja.quensel@isst.fraunhofer.de)
+ */
 @Path("wrapper/offering")
 @Tag(name = "Offering", description = "EDC Contract Offering API Endpoints")
 @RequiredArgsConstructor
 @Produces(MediaType.APPLICATION_JSON)
 public class OfferingResource {
 
+    /** Service for managing offerings. */
     private final OfferingService offeringService;
 
+    /**
+     * Creates a new offering consisting of asset, policy definition and contract definition.
+     *
+     * @param dto contains all required information for the offering.
+     * @return a 204 response, if creating the offering was successful.
+     */
     @POST
     @Path("contract-offer")
     @Consumes(MediaType.APPLICATION_JSON)
