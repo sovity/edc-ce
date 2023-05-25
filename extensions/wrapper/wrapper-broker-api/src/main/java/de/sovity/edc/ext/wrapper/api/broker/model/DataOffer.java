@@ -23,19 +23,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Contract Offer")
-public class ContractOfferDto {
+@Schema(description = "Data Offer")
+public class DataOffer {
     @Schema(description = "Connector Information", requiredMode = Schema.RequiredMode.REQUIRED)
-    private ContractOfferConnectorInfo connectorInfo;
+    private DataOfferConnectorInfo connectorInfo;
     @Schema(description = "Asset", requiredMode = Schema.RequiredMode.REQUIRED)
     private AssetDto asset;
-
-    @Schema(description = "Policy", requiredMode = Schema.RequiredMode.REQUIRED)
-    private PolicyDto policy;
+    @Schema(description = "Policies this data offer is available under", requiredMode = Schema.RequiredMode.REQUIRED)
+    private List<PolicyDto> policy;
 }
 

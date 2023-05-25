@@ -17,7 +17,7 @@
 <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
 </a>
 
-<h3 align="center">EDC Community Edition & EDC Extensions</h3>
+<h3 align="center">sovity Community Edition EDC</h3>
 <p align="center" style="padding-bottom:16px">
 Extended EDC Connector by sovity.
 <br />
@@ -32,8 +32,8 @@ Extended EDC Connector by sovity.
    <summary>Table of Contents</summary>
    <ol>
       <li><a href="#about-the-project">About The Project</a></li>
-      <li><a href="#our-edc-community-edition">Our EDC Community Edition</a></li>
-      <li><a href="#our-edc-extensions">Our EDC Extensions</a></li>
+      <li><a href="#our-edc-community-edition">sovity Community Edition EDC</a></li>
+      <li><a href="#our-edc-extensions">sovity Community Edition EDC Extensions</a></li>
       <li><a href="#compatibility">Compatibility</a></li>
       <li><a href="#getting-started">Getting Started</a></li>
       <li><a href="#contributing">Contributing</a></li>
@@ -53,24 +53,24 @@ for building dataspaces, exchanging data securely with ensured data sovereignty.
 enterprise-ready managed services like "Connector-as-a-Service", out-of-the-box fully configured DAPS
 and integrations to existing other dataspace technologies.
 
-This repository contains both our EDC Community Editions with pre-configured EDC Extensions.
+This repository contains our sovity Community Edition EDCs, containing pre-configured Open Source EDC Extensions.
 
-Check out our [Getting Started Section](#getting-started) on how to run a local sovity EDC Community Edition.
+Check out our [Getting Started Section](#getting-started) on how to run a local sovity Community Edition EDC.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- COMPATIBILITY -->
 
-## sovity EDC Community Edition
+## sovity Community Edition EDC
 
-Our EDC Community Edition takes available EDC Open Source extensions and combines them with our own
-open source extensions from this repository to build ready-to-use EDC Docker Images.
+Our sovity Community Edition EDC takes available Open Source EDC Extensions and combines them with our own
+open source EDC Extensions from this repository to build ready-to-use EDC Docker Images.
 
-See [here](./connector/README.md) for a list of our EDC Community Edition Docker Images.
+See [here](./connector/README.md) for a list of our sovity Community Edition EDC Docker Images.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## sovity EDC Extensions
+## sovity Community Edition EDC Extensions
 
 Feel free to explore and use our [EDC Extensions](./extensions) with your EDC setup.
 
@@ -81,10 +81,10 @@ We packaged critical extensions for compatibility with our EDC UI and general us
 
 ## Compatibility
 
-Our EDC Community Edition and extensions are targeted to run with
+Our sovity Community Edition EDC and sovity Community Edition EDC Extensions are targeted to run with
 our [sovity/edc-ui](https://github.com/sovity/edc-ui).
 
-Our extensions and EDC Community Edition will use the current EDC Milestone with a certain delay
+Our sovity Community Edition EDC will use the current EDC Milestone with a certain delay
 to ensure reliability with a new release. Earlier releases currently are not supported, but will be
 supported, once the base EDC has a reliable version.
 

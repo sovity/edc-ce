@@ -29,7 +29,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "A Contract Offer's Connector Status")
-public class ContractOfferConnectorInfo {
+public class DataOfferConnectorInfo {
     @Schema(description = "Connector Endpoint", example = "https://my-test.connector/control/ids/data", requiredMode = Schema.RequiredMode.REQUIRED)
     private String endpoint;
 

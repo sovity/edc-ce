@@ -5,7 +5,7 @@
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
-<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Client:<br />Common API Models</h3>
+<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Clients:<br />Common API Models</h3>
 
   <p align="center">
     <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
@@ -16,7 +16,8 @@
 
 ## About this module
 
-Common API models between the sovity EDC Community Edition API, sovity EDC Enterprise Edition API or Broker Server API.
+Common API models between the sovity Community Edition EDC API, sovity Enterprise Edition EDC API and/or the Broker
+Server API.
 
 ## Why does this module exist?
 
