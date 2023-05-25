@@ -14,8 +14,13 @@
 
 package de.sovity.edc.ext.brokerserver.db;
 
+import de.sovity.edc.ext.brokerserver.db.utils.JdbcCredentials;
+import org.jooq.DSLContext;
+import org.jooq.exception.DataAccessException;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+
+import java.util.function.Consumer;
 
 public interface TestDatabase extends BeforeAllCallback, AfterAllCallback {
     String getJdbcUrl();
@@ -23,4 +28,33 @@ public interface TestDatabase extends BeforeAllCallback, AfterAllCallback {
     String getJdbcUser();
 
     String getJdbcPassword();
+
+    /**
+     * New {@link DslContextFactory} from the test database's credentials
+     *
+     * @return {@link DslContextFactory}
+     */
+    default DslContextFactory getDslContextFactory() {
+        var jdbcCredentials = new JdbcCredentials(getJdbcUrl(), getJdbcUser(), getJdbcPassword());
+        var dataSource = DataSourceFactory.fromJdbcCredentials(jdbcCredentials);
+        return new DslContextFactory(dataSource);
+    }
+
+    /**
+     * Runs given code within a test transaction.
+     * <br>
+     * Globally hijacks all {@link DslContextFactory}s to use this test transaction.
+     *
+     * @param code code to run within the test transaction
+     */
+    default void testTransaction(Consumer<DSLContext> code) {
+        try {
+            getDslContextFactory().transaction(dsl -> DslContextFactoryHijacker.withParentDslContext(dsl, () -> {
+                code.accept(dsl);
+                throw new TestDatabaseCancelTransactionException();
+            }));
+        } catch (TestDatabaseCancelTransactionException e) {
+            // Ignore
+        }
+    }
 }

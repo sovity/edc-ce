@@ -44,6 +44,8 @@ public class TestUtils {
         config.put(PostgresFlywayExtension.JDBC_URL, testDatabase.getJdbcUrl());
         config.put(PostgresFlywayExtension.JDBC_USER, testDatabase.getJdbcUser());
         config.put(PostgresFlywayExtension.JDBC_PASSWORD, testDatabase.getJdbcPassword());
+        config.put(PostgresFlywayExtension.FLYWAY_CLEAN_ENABLE, "true");
+        config.put(PostgresFlywayExtension.FLYWAY_CLEAN, "true");
         config.putAll(getCoreEdcJdbcConfig(testDatabase));
         config.put(BrokerServerExtension.KNOWN_CONNECTORS, String.join(",", connectorEndpoints));
         return config;

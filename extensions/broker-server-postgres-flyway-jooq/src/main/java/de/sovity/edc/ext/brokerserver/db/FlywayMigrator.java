@@ -35,6 +35,12 @@ public class FlywayMigrator {
      * Run migrations and potentially run flyway repair
      */
     public void migrateAndRepair() {
+        if (config.getBoolean(PostgresFlywayExtension.FLYWAY_CLEAN, false)) {
+            monitor.info("Cleaning database before migrations, since %s=true and %s=true.".formatted(
+                    PostgresFlywayExtension.FLYWAY_CLEAN_ENABLE, PostgresFlywayExtension.FLYWAY_CLEAN
+            ));
+            flyway.clean();
+        }
         try {
             migrate();
         } catch (FlywayException e) {

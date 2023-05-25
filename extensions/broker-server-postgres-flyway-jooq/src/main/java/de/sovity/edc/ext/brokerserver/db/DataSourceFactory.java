@@ -32,12 +32,29 @@ import javax.sql.DataSource;
 public class DataSourceFactory {
     private final Config config;
 
+    /**
+     * Create a new {@link DataSource} from EDC Config.
+     *
+     * @return {@link DataSource}.
+     */
     public DataSource newDataSource() {
         var jdbcCredentials = JdbcCredentials.fromConfig(config);
+        return fromJdbcCredentials(jdbcCredentials);
+    }
+
+    /**
+     * Create a new {@link DataSource} from JDBC Credentials.
+     * <br>
+     * This method was extracted into a static method, so we can call it from our Test Code.
+     *
+     * @param jdbcCredentials jdbc credentials
+     * @return {@link DataSource}
+     */
+    public static DataSource fromJdbcCredentials(JdbcCredentials jdbcCredentials) {
         return new ConnectionFactoryDataSource(() -> newConnection(jdbcCredentials));
     }
 
-    private Connection newConnection(JdbcCredentials jdbcCredentials) {
+    private static Connection newConnection(JdbcCredentials jdbcCredentials) {
         try {
             return DriverManager.getConnection(
                     jdbcCredentials.jdbcUrl(),

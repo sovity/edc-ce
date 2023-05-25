@@ -16,7 +16,6 @@ package de.sovity.edc.ext.brokerserver.services.api;
 
 import de.sovity.edc.ext.brokerserver.dao.models.ConnectorPageDbRow;
 import de.sovity.edc.ext.brokerserver.dao.queries.ConnectorQueries;
-import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorListEntry;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorOnlineStatus;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageQuery;
@@ -24,6 +23,7 @@ import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageResult;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageSortingItem;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageSortingType;
 import lombok.RequiredArgsConstructor;
+import org.jooq.DSLContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,22 +31,19 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 public class ConnectorApiService {
-    private final DslContextFactory dslContextFactory;
     private final ConnectorQueries connectorQueries;
     private final PaginationMetadataUtils paginationMetadataUtils;
 
-    public ConnectorPageResult connectorPage(ConnectorPageQuery query) {
-        return dslContextFactory.transactionResult(dsl -> {
-            Objects.requireNonNull(query, "query must not be null");
+    public ConnectorPageResult connectorPage(DSLContext dsl, ConnectorPageQuery query) {
+        Objects.requireNonNull(query, "query must not be null");
 
-            var connectorDbRows = connectorQueries.forConnectorPage(dsl, query.getSearchQuery(), query.getSorting());
+        var connectorDbRows = connectorQueries.forConnectorPage(dsl, query.getSearchQuery(), query.getSorting());
 
-            var result = new ConnectorPageResult();
-            result.setAvailableSortings(buildAvailableSortings());
-            result.setPaginationMetadata(paginationMetadataUtils.buildDummyPaginationMetadata(connectorDbRows.size()));
-            result.setConnectors(buildConnectorListEntries(connectorDbRows));
-            return result;
-        });
+        var result = new ConnectorPageResult();
+        result.setAvailableSortings(buildAvailableSortings());
+        result.setPaginationMetadata(paginationMetadataUtils.buildDummyPaginationMetadata(connectorDbRows.size()));
+        result.setConnectors(buildConnectorListEntries(connectorDbRows));
+        return result;
     }
 
     private List<ConnectorListEntry> buildConnectorListEntries(List<ConnectorPageDbRow> connectorDbRows) {
@@ -68,7 +65,7 @@ public class ConnectorApiService {
         return dto;
     }
 
-    private static ConnectorOnlineStatus getOnlineStatus(ConnectorPageDbRow it) {
+    private ConnectorOnlineStatus getOnlineStatus(ConnectorPageDbRow it) {
         return switch (it.getOnlineStatus()) {
             case ONLINE -> ConnectorOnlineStatus.ONLINE;
             case OFFLINE -> ConnectorOnlineStatus.OFFLINE;
@@ -76,7 +73,7 @@ public class ConnectorApiService {
         };
     }
 
-    private static List<ConnectorPageSortingItem> buildAvailableSortings() {
+    private List<ConnectorPageSortingItem> buildAvailableSortings() {
         return Arrays.stream(ConnectorPageSortingType.values()).map(it -> new ConnectorPageSortingItem(it, it.getTitle())).toList();
     }
 }

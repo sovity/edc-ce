@@ -15,15 +15,19 @@
 package de.sovity.edc.ext.brokerserver.db;
 
 import lombok.RequiredArgsConstructor;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.flywaydb.core.Flyway;
 
 import javax.sql.DataSource;
+
+import static de.sovity.edc.ext.brokerserver.db.PostgresFlywayExtension.FLYWAY_CLEAN_ENABLE;
 
 /**
  * Quickly launch {@link Flyway} from EDC Config
  */
 @RequiredArgsConstructor
 public class FlywayFactory {
+    private final Config config;
 
     /**
      * Configure and launch {@link Flyway}.
@@ -35,6 +39,7 @@ public class FlywayFactory {
         return Flyway.configure()
                 .baselineOnMigrate(true)
                 .dataSource(dataSource)
+                .cleanDisabled(!config.getBoolean(FLYWAY_CLEAN_ENABLE, false))
                 .table("flyway_schema_history")
                 .locations("classpath:db/migration")
                 .load();

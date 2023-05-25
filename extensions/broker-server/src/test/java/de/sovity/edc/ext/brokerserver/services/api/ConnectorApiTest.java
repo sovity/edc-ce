@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.brokerserver;
+package de.sovity.edc.ext.brokerserver.services.api;
 
 import de.sovity.edc.client.gen.model.ConnectorPageQuery;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;

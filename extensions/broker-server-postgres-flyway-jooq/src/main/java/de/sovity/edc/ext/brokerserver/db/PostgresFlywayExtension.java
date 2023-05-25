@@ -30,6 +30,10 @@ public class PostgresFlywayExtension implements ServiceExtension {
     public static final String JDBC_PASSWORD = "edc.datasource.default.jdbcpassword";
     @Setting
     public static final String FLYWAY_REPAIR = "edc.flyway.repair";
+    @Setting
+    public static final String FLYWAY_CLEAN_ENABLE = "edc.flyway.clean.enable";
+    @Setting
+    public static final String FLYWAY_CLEAN = "edc.flyway.clean";
 
     @Provider
     public DataPlaneInstanceStatements dataPlaneInstanceStatements() {
@@ -49,7 +53,7 @@ public class PostgresFlywayExtension implements ServiceExtension {
         var dataSourceFactory = new DataSourceFactory(config);
         var dataSource = dataSourceFactory.newDataSource();
 
-        var flywayFactory = new FlywayFactory();
+        var flywayFactory = new FlywayFactory(config);
         var flyway = flywayFactory.setupFlyway(dataSource);
         var flywayMigrator = new FlywayMigrator(flyway, config, monitor);
         flywayMigrator.migrateAndRepair();

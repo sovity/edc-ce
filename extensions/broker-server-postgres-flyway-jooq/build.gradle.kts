@@ -34,6 +34,8 @@ plugins {
 
 dependencies {
     api("org.jooq:jooq:3.16.4")
+    api("com.github.t9t.jooq:jooq-postgresql-json:4.0.0")
+
     jooqGenerator("org.postgresql:postgresql:42.6.0")
     flywayMigration("org.postgresql:postgresql:42.6.0")
 

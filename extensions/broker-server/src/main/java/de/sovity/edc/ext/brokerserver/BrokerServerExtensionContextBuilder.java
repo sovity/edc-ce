@@ -15,12 +15,15 @@
 package de.sovity.edc.ext.brokerserver;
 
 import de.sovity.edc.ext.brokerserver.dao.queries.ConnectorQueries;
+import de.sovity.edc.ext.brokerserver.dao.queries.DataOfferQueries;
 import de.sovity.edc.ext.brokerserver.db.DataSourceFactory;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.services.BrokerServerInitializer;
+import de.sovity.edc.ext.brokerserver.services.api.AssetPropertyParser;
 import de.sovity.edc.ext.brokerserver.services.api.CatalogApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorApiService;
 import de.sovity.edc.ext.brokerserver.services.api.PaginationMetadataUtils;
+import de.sovity.edc.ext.brokerserver.services.api.PolicyDtoBuilder;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
 import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueue;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorSelfDescriptionFetcher;
@@ -61,6 +64,7 @@ public class BrokerServerExtensionContextBuilder {
             RemoteMessageDispatcherRegistry dispatcherRegistry
     ) {
         // Dao
+        var dataOfferQueries = new DataOfferQueries();
         var dataSourceFactory = new DataSourceFactory(config);
         var dataSource = dataSourceFactory.newDataSource();
         var dslContextFactory = new DslContextFactory(dataSource);
@@ -87,6 +91,9 @@ public class BrokerServerExtensionContextBuilder {
                 dslContextFactory,
                 monitor
         );
+        var policyDtoBuilder = new PolicyDtoBuilder(objectMapper);
+        var assetPropertyParser = new AssetPropertyParser(objectMapper);
+        var paginationMetadataUtils = new PaginationMetadataUtils();
 
         // Queue
         var connectorQueue = new ConnectorQueue();
@@ -94,16 +101,21 @@ public class BrokerServerExtensionContextBuilder {
         var brokerServerInitializer = new BrokerServerInitializer(dslContextFactory, config, connectorQueue);
 
         // UI Capabilities
-        var paginationMetadataUtils = new PaginationMetadataUtils();
         var catalogApiService = new CatalogApiService(
-                paginationMetadataUtils
+                paginationMetadataUtils,
+                dataOfferQueries,
+                policyDtoBuilder,
+                assetPropertyParser
         );
         var connectorApiService = new ConnectorApiService(
-                dslContextFactory,
                 connectorQueries,
                 paginationMetadataUtils
         );
-        var brokerServerResource = new BrokerServerResourceImpl(connectorApiService, catalogApiService);
+        var brokerServerResource = new BrokerServerResourceImpl(
+                dslContextFactory,
+                connectorApiService,
+                catalogApiService
+        );
         return new BrokerServerExtensionContext(remoteMessageDispatcher, brokerServerResource, brokerServerInitializer);
     }
 }

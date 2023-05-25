@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver;
 
+import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.services.api.CatalogApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorApiService;
 import de.sovity.edc.ext.wrapper.api.broker.BrokerServerResource;
@@ -29,16 +30,17 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public class BrokerServerResourceImpl implements BrokerServerResource {
+    private final DslContextFactory dslContextFactory;
     private final ConnectorApiService connectorApiService;
     private final CatalogApiService catalogApiService;
 
     @Override
     public CatalogPageResult catalogPage(CatalogPageQuery query) {
-        return catalogApiService.catalogPage(query);
+        return dslContextFactory.transactionResult(dsl -> catalogApiService.catalogPage(dsl, query));
     }
 
     @Override
     public ConnectorPageResult connectorPage(ConnectorPageQuery query) {
-        return connectorApiService.connectorPage(query);
+        return dslContextFactory.transactionResult(dsl -> connectorApiService.connectorPage(dsl, query));
     }
 }

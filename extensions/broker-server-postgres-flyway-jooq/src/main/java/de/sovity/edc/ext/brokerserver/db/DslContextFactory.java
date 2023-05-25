@@ -5,6 +5,7 @@ import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.sql.DataSource;
@@ -22,7 +23,8 @@ public class DslContextFactory {
      * @return new {@link DSLContext}
      */
     public DSLContext newDslContext() {
-        return DSL.using(dataSource, SQLDialect.POSTGRES);
+        var globalDslContextForDbTests = DslContextFactoryHijacker.getParentDslContext();
+        return Objects.requireNonNullElseGet(globalDslContextForDbTests, () -> DSL.using(dataSource, SQLDialect.POSTGRES));
     }
 
     /**
