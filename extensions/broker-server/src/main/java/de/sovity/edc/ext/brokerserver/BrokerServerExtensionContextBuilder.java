@@ -19,6 +19,8 @@ import de.sovity.edc.ext.brokerserver.dao.queries.DataOfferQueries;
 import de.sovity.edc.ext.brokerserver.db.DataSourceFactory;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.services.BrokerServerInitializer;
+import de.sovity.edc.ext.brokerserver.services.ConnectorCreator;
+import de.sovity.edc.ext.brokerserver.services.KnownConnectorsInitializer;
 import de.sovity.edc.ext.brokerserver.services.api.AssetPropertyParser;
 import de.sovity.edc.ext.brokerserver.services.api.CatalogApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorApiService;
@@ -26,6 +28,7 @@ import de.sovity.edc.ext.brokerserver.services.api.PaginationMetadataUtils;
 import de.sovity.edc.ext.brokerserver.services.api.PolicyDtoBuilder;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
 import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueue;
+import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueueFiller;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorSelfDescriptionFetcher;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdateFailureWriter;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdateSuccessWriter;
@@ -33,6 +36,9 @@ import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdater;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ContractOfferFetcher;
 import de.sovity.edc.ext.brokerserver.services.refreshing.sender.DescriptionRequestSender;
 import de.sovity.edc.ext.brokerserver.services.refreshing.sender.IdsMultipartExtendedRemoteMessageDispatcher;
+import de.sovity.edc.ext.brokerserver.services.schedules.ConnectorRefreshJob;
+import de.sovity.edc.ext.brokerserver.services.schedules.QuartzScheduleInitializer;
+import de.sovity.edc.ext.brokerserver.services.schedules.utils.CronJobRef;
 import lombok.NoArgsConstructor;
 import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
 import org.eclipse.edc.protocol.ids.spi.service.DynamicAttributeTokenService;
@@ -42,6 +48,8 @@ import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.spi.types.TypeManager;
+
+import java.util.List;
 
 
 /**
@@ -94,11 +102,23 @@ public class BrokerServerExtensionContextBuilder {
         var policyDtoBuilder = new PolicyDtoBuilder(objectMapper);
         var assetPropertyParser = new AssetPropertyParser(objectMapper);
         var paginationMetadataUtils = new PaginationMetadataUtils();
-
-        // Queue
         var connectorQueue = new ConnectorQueue();
+        var connectorQueueFiller = new ConnectorQueueFiller(connectorQueue, connectorQueries);
+        var connectorCreator = new ConnectorCreator(connectorQueries);
+        var knownConnectorsInitializer = new KnownConnectorsInitializer(config, connectorQueue, connectorCreator);
 
-        var brokerServerInitializer = new BrokerServerInitializer(dslContextFactory, config, connectorQueue);
+        // Schedules
+        List<CronJobRef<?>> jobs = List.of(
+                new CronJobRef<>(
+                        BrokerServerExtension.CRON_CONNECTOR_REFRESH,
+                        ConnectorRefreshJob.class,
+                        () -> new ConnectorRefreshJob(dslContextFactory, connectorQueueFiller)
+                )
+        );
+
+        // Startup
+        var quartzScheduleInitializer = new QuartzScheduleInitializer(config, monitor, jobs);
+        var brokerServerInitializer = new BrokerServerInitializer(dslContextFactory, knownConnectorsInitializer, quartzScheduleInitializer);
 
         // UI Capabilities
         var catalogApiService = new CatalogApiService(

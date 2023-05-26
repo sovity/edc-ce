@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.brokerserver.services.api;
 
 import de.sovity.edc.client.gen.model.ConnectorPageQuery;
+import de.sovity.edc.ext.brokerserver.BrokerServerExtension;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
 import de.sovity.edc.ext.brokerserver.db.TestDatabaseFactory;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -24,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import java.util.List;
+import java.util.Map;
 
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
 import static de.sovity.edc.ext.brokerserver.TestUtils.edcClient;
@@ -39,7 +40,9 @@ class ConnectorApiTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-        extension.setConfiguration(createConfiguration(TEST_DATABASE, List.of("https://example.com/ids/data")));
+        extension.setConfiguration(createConfiguration(TEST_DATABASE, Map.of(
+                BrokerServerExtension.KNOWN_CONNECTORS, "https://example.com/ids/data"
+        )));
     }
 
     @Test

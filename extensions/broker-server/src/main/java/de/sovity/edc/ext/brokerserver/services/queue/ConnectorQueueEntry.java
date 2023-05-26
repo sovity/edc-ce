@@ -12,19 +12,26 @@
  *
  */
 
-package de.sovity.edc.ext.brokerserver.services;
+package de.sovity.edc.ext.brokerserver.services.queue;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.OffsetDateTime;
 import java.util.Comparator;
 
-public record ConnectorQueueEntry(String endpoint,
-                                  OffsetDateTime lastUpdate,
-                                  int priority) implements Comparable<ConnectorQueueEntry> {
+
+@Getter
+@RequiredArgsConstructor
+@EqualsAndHashCode(of = "endpoint", callSuper = false)
+public class ConnectorQueueEntry implements Comparable<ConnectorQueueEntry> {
     private static final Comparator<ConnectorQueueEntry> COMPARATOR = Comparator
-            .comparing(ConnectorQueueEntry::priority)
-            .thenComparing(ConnectorQueueEntry::lastUpdate);
+            .comparing(ConnectorQueueEntry::getPriority);
+
+    @NotNull
+    private final String endpoint;
+    private final int priority;
 
     @Override
     public int compareTo(@NotNull ConnectorQueueEntry connectorQueueEntry) {

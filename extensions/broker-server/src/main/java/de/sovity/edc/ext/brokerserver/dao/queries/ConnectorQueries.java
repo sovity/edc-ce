@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.brokerserver.dao.queries;
 
 import de.sovity.edc.ext.brokerserver.dao.models.ConnectorPageDbRow;
+import de.sovity.edc.ext.brokerserver.dao.queries.utils.PostgresqlUtils;
 import de.sovity.edc.ext.brokerserver.dao.queries.utils.SearchUtils;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.Connector;
@@ -26,18 +27,32 @@ import org.jooq.Field;
 import org.jooq.OrderField;
 import org.jooq.impl.DSL;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class ConnectorQueries {
 
-    public Stream<ConnectorRecord> findAll(DSLContext dslContext) {
-        return dslContext.selectFrom(Tables.CONNECTOR).stream();
+    public Stream<ConnectorRecord> findAll(DSLContext dsl) {
+        return dsl.selectFrom(Tables.CONNECTOR).stream();
     }
 
     public ConnectorRecord findByEndpoint(DSLContext dsl, String endpoint) {
         var c = Tables.CONNECTOR;
         return dsl.selectFrom(c).where(c.ENDPOINT.eq(endpoint)).fetchOne();
+    }
+
+    public Set<String> findConnectorsForScheduledRefresh(DSLContext dsl) {
+        var c = Tables.CONNECTOR;
+        return dsl.select(c.ENDPOINT).from(c).fetchSet(c.ENDPOINT);
+    }
+
+    public Set<String> findExistingConnectors(DSLContext dsl, Collection<String> connectorEndpoints) {
+        var c = Tables.CONNECTOR;
+        return dsl.select(c.ENDPOINT).from(c)
+                .where(PostgresqlUtils.in(c.ENDPOINT, connectorEndpoints))
+                .fetchSet(c.ENDPOINT);
     }
 
     public List<ConnectorPageDbRow> forConnectorPage(DSLContext dsl, String searchQuery, ConnectorPageSortingType sorting) {

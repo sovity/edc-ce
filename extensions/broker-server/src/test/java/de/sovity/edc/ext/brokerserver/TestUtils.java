@@ -33,7 +33,10 @@ public class TestUtils {
     public static final String IDS_ENDPOINT = "http://localhost:" + DATA_PORT + "/api/v1/data/ids";
 
     @NotNull
-    public static Map<String, String> createConfiguration(TestDatabase testDatabase, List<String> connectorEndpoints) {
+    public static Map<String, String> createConfiguration(
+            TestDatabase testDatabase,
+            Map<String, String> additionalConfigProperties
+    ) {
         Map<String, String> config = new HashMap<>();
         config.put("web.http.port", String.valueOf(getFreePort()));
         config.put("web.http.path", "/api");
@@ -47,7 +50,7 @@ public class TestUtils {
         config.put(PostgresFlywayExtension.FLYWAY_CLEAN_ENABLE, "true");
         config.put(PostgresFlywayExtension.FLYWAY_CLEAN, "true");
         config.putAll(getCoreEdcJdbcConfig(testDatabase));
-        config.put(BrokerServerExtension.KNOWN_CONNECTORS, String.join(",", connectorEndpoints));
+        config.putAll(additionalConfigProperties);
         return config;
     }
 

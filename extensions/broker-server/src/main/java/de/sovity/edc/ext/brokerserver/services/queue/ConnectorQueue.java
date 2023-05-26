@@ -14,18 +14,20 @@
 
 package de.sovity.edc.ext.brokerserver.services.queue;
 
-import de.sovity.edc.ext.brokerserver.services.ConnectorQueueEntry;
-
+import java.util.Collection;
 import java.util.concurrent.PriorityBlockingQueue;
 
 public class ConnectorQueue {
-    private final PriorityBlockingQueue<ConnectorQueueEntry> connectorQueueEntries = new PriorityBlockingQueue<>();
+    private final PriorityBlockingQueue<ConnectorQueueEntry> queue = new PriorityBlockingQueue<>();
 
-    public void add(ConnectorQueueEntry entry) {
-        connectorQueueEntries.add(entry);
+    public String poll() {
+        return queue.poll().getEndpoint();
     }
 
-    public ConnectorQueueEntry poll() {
-        return connectorQueueEntries.poll();
+    public void addAll(Collection<String> endpoints, int priority) {
+        var entries = endpoints.stream()
+                .map(endpoint -> new ConnectorQueueEntry(endpoint, priority))
+                .toList();
+        queue.addAll(entries);
     }
 }

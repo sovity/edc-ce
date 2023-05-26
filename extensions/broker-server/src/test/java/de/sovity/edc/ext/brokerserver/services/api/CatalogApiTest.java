@@ -30,13 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.util.List;
 import java.util.Map;
 
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
@@ -52,7 +46,7 @@ class CatalogApiTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-        extension.setConfiguration(createConfiguration(TEST_DATABASE, List.of("https://example.com/ids/data")));
+        extension.setConfiguration(createConfiguration(TEST_DATABASE, Map.of()));
     }
 
     @Test
