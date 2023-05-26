@@ -12,15 +12,16 @@
  *
  */
 
-package de.sovity.edc.extension.version.controller;
+package de.sovity.edc.extension;
 
-import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
+import lombok.Getter;
+import lombok.Setter;
 
-
-public class TestUtils {
-
-    public static final String AUTH_KEY = "123456";
-    public static final int DATA_PORT = getFreePort();
-
-
+@Getter
+@Setter
+public class LastCommitInfo {
+    private String envLastCommitInfo;
+    private String envLastBuildDate;
+    private String jarLastCommitInfo;
+    private String jarLastBuildDate;
 }
