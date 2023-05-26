@@ -14,8 +14,8 @@ val restAssured: String by project
 val testcontainersVersion: String by project
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:1.18.26")
-    compileOnly("org.projectlombok:lombok:1.18.26")
+    annotationProcessor("org.projectlombok:lombok:1.18.28")
+    compileOnly("org.projectlombok:lombok:1.18.28")
     implementation("org.apache.commons:commons-lang3:3.12.0")
 
     implementation("${edcGroup}:control-plane-core:${edcVersion}")
@@ -30,8 +30,8 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:${okHttpVersion}")
 
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.26")
-    testCompileOnly("org.projectlombok:lombok:1.18.26")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.28")
+    testCompileOnly("org.projectlombok:lombok:1.18.28")
     testImplementation("org.assertj:assertj-core:${assertj}")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")

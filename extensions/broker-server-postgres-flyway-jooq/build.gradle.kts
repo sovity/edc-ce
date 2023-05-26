@@ -39,8 +39,8 @@ dependencies {
     jooqGenerator("org.postgresql:postgresql:42.6.0")
     flywayMigration("org.postgresql:postgresql:42.6.0")
 
-    annotationProcessor("org.projectlombok:lombok:1.18.26")
-    compileOnly("org.projectlombok:lombok:1.18.26")
+    annotationProcessor("org.projectlombok:lombok:1.18.28")
+    compileOnly("org.projectlombok:lombok:1.18.28")
     implementation("org.apache.commons:commons-lang3:3.12.0")
 
     implementation("${edcGroup}:core-spi:${edcVersion}")
