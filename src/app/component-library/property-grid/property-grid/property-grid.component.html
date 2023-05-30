@@ -1,0 +1,58 @@
+<empty-state
+  *ngIf="!props?.length"
+  class=""
+  emptyMessage="No properties."></empty-state>
+<div
+  *ngFor="let prop of props"
+  class="flex flex-row space-x-[10px] overflow-hidden"
+  [style.width]="'calc(100% / ' + columns + ' - ' + (columns - 1) * 10 + 'px)'">
+  <!-- Property Icon -->
+  <mat-icon
+    style="flex-shrink: 0; margin-top: 6px"
+    [attr.title]="prop.labelTitle"
+    >{{ prop.icon }}</mat-icon
+  >
+  <div class="flex flex-col">
+    <!-- Property Label -->
+    <div
+      class="uppercase text-slate text-sm break-all"
+      [attr.title]="prop.labelTitle">
+      {{ prop.label }}
+    </div>
+
+    <!-- Property Value (URL) -->
+    <a
+      *ngIf="prop.url"
+      class="link break-all"
+      target="_blank"
+      rel="noreferrer"
+      [ngClass]="prop.additionalClasses"
+      [attr.href]="prop.url"
+      >{{ prop.text }}</a
+    >
+
+    <!-- Property Value (OnClick Event) -->
+    <a
+      *ngIf="!prop.url && prop.onclick"
+      class="link break-all"
+      href="javascript:void(0)"
+      [ngClass]="prop.additionalClasses"
+      (click)="prop.onclick()"
+      >{{ prop.text }}</a
+    >
+
+    <!-- Property Value (Text) -->
+    <span
+      *ngIf="!(prop.url || prop.onclick)"
+      [ngClass]="prop.additionalClasses"
+      >{{ prop.text }}</span
+    >
+  </div>
+  <button
+    *ngIf="prop.copyButton"
+    mat-icon-button
+    color="accent"
+    [cdkCopyToClipboard]="prop.url ?? prop.text">
+    <mat-icon>content_copy</mat-icon>
+  </button>
+</div>

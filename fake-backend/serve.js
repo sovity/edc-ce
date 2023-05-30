@@ -101,6 +101,12 @@ app.get('/api/v1/data/wrapper/ui/pages/contract-agreement-page', (_, res) => {
   res.json(contractAgreementPage);
 });
 
+// Broker API Wrapper
+const brokerCatalog = json('json/brokerCatalog.json');
+app.post('/api/v1/data/wrapper/broker/catalog-page', (_, res) => {
+  res.json(brokerCatalog);
+});
+
 app.listen(3000, function () {
   console.log('Fake Backend listening on port 3000');
 });

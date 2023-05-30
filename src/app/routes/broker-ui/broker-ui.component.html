@@ -1,0 +1,46 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    class="sidenav"
+    #drawer
+    fixedInViewport
+    [disableClose]="true"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false">
+    <mat-toolbar class="custom-toolbar shrink-0">
+      <img
+        width="70%"
+        alt="Logo"
+        [attr.src]="config.brandLogoSrc"
+        [style]="config.brandLogoStyle" />
+    </mat-toolbar>
+    <mat-nav-list class="overflow-auto grow">
+      <a *ngFor="let route of routes" [routerLink]="[route.path]">
+        <mat-list-item
+          *ngIf="
+            route.component &&
+            (!route.data?.requiresFeature ||
+              (route.data!.requiresFeature! | isActiveFeature))
+          "
+          [routerLinkActive]="['is-active']">
+          <mat-icon mat-list-icon>{{ route.data?.icon }}</mat-icon>
+          <span matLine>{{ route.data?.title ?? route.path }}</span>
+        </mat-list-item>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        *ngIf="isHandset$ | async"
+        type="button"
+        mat-icon-button
+        aria-label="Toggle sidenav"
+        (click)="drawer.toggle()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>{{ titleUtilsService.title$ | async }}</span>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

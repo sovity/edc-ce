@@ -1,0 +1,109 @@
+<div class="mat-card-header" mat-dialog-title removeClass="mat-dialog-title">
+  <mat-icon *ngIf="data.mode === 'asset-details'" class="mat-icon-[40px]">
+    upload
+  </mat-icon>
+  <mat-icon *ngIf="data.mode === 'broker-data-offer'" class="mat-icon-[40px]">
+    sim_card
+  </mat-icon>
+  <mat-icon *ngIf="data.mode === 'contract-agreement'" class="mat-icon-[40px]">
+    {{
+      data.contractAgreement!!.direction === 'PROVIDING' ? 'upload' : 'download'
+    }}
+  </mat-icon>
+  <contract-offer-icon
+    *ngIf="data.mode === 'contract-offer'"
+    [contractOffer]="data.contractOffer!"></contract-offer-icon>
+  <div class="mat-card-header-text">
+    <div class="mat-card-title">
+      {{ asset.name }}
+    </div>
+    <div class="mat-card-subtitle">
+      {{ asset.originatorOrganization }}
+    </div>
+  </div>
+</div>
+
+<div class="flex flex-col space-y-[10px]" mat-dialog-content>
+  <!-- Progress Bar -->
+  <mat-progress-bar
+    *ngIf="
+      (data.mode === 'contract-offer' &&
+        contractNegotiationService.isBusy(data.contractOffer!)) ||
+      (data.mode === 'contract-agreement' &&
+        data.contractAgreement!.isInProgress)
+    "
+    color="primary"
+    mode="indeterminate"></mat-progress-bar>
+
+  <!-- Description -->
+  <div class="whitespace-pre-line">
+    {{ asset.description }}
+    <i *ngIf="!asset.description">No description.</i>
+  </div>
+
+  <!-- Tag List -->
+  <div *ngIf="asset.keywords.length">
+    <mat-chip-list aria-label="Tags">
+      <mat-chip *ngFor="let keyword of asset.keywords">{{ keyword }}</mat-chip>
+    </mat-chip-list>
+  </div>
+
+  <!-- Transfer History -->
+  <ng-container *ngIf="data.mode === 'contract-agreement'">
+    <div
+      class="flex flex-row flex-wrap property-grid-group-title"
+      [style.margin-top.px]="30">
+      Transfer History
+    </div>
+    <transfer-history-mini-list [contractAgreement]="data.contractAgreement!!">
+    </transfer-history-mini-list>
+  </ng-container>
+
+  <!-- Properties -->
+  <property-grid-group class="mt-[15px]" [propGroups]="propGroups">
+  </property-grid-group>
+</div>
+
+<mat-dialog-actions>
+  <div class="w-full flex flex-row justify-end">
+    <div>
+      <button mat-dialog-close mat-button [disabled]="loading">Close</button>
+
+      <button
+        *ngIf="data.allowDelete"
+        mat-raised-button
+        color="warn"
+        [disabled]="loading"
+        (click)="onDeleteClick()">
+        Delete
+      </button>
+
+      <button
+        *ngIf="data.mode === 'contract-offer'"
+        mat-raised-button
+        color="primary"
+        [disabled]="negotiationState != 'ready'"
+        [ngSwitch]="negotiationState"
+        (click)="onNegotiateClick()">
+        <ng-container *ngSwitchCase="'ready'">Negotiate</ng-container>
+        <ng-container *ngSwitchCase="'negotiating'">
+          Negotiating...
+        </ng-container>
+        <ng-container *ngSwitchCase="'negotiated'">
+          Successfully Negotiated
+        </ng-container>
+      </button>
+
+      <button
+        *ngIf="
+          data.mode === 'contract-agreement' &&
+          data.contractAgreement?.direction === 'CONSUMING'
+        "
+        mat-raised-button
+        color="primary"
+        (click)="onTransferClick()">
+        Transfer
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

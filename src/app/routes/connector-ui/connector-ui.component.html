@@ -1,0 +1,67 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    class="sidenav"
+    #drawer
+    fixedInViewport
+    [disableClose]="true"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false">
+    <mat-toolbar class="custom-toolbar shrink-0">
+      <img
+        width="70%"
+        alt="Logo"
+        [attr.src]="config.brandLogoSrc"
+        [style]="config.brandLogoStyle" />
+    </mat-toolbar>
+    <mat-nav-list class="overflow-auto grow">
+      <a *ngFor="let route of routes" [routerLink]="[route.path]">
+        <mat-list-item
+          *ngIf="
+            route.component &&
+            (!route.data?.requiresFeature ||
+              (route.data!.requiresFeature! | isActiveFeature))
+          "
+          [routerLinkActive]="['is-active']">
+          <mat-icon mat-list-icon>{{ route.data?.icon }}</mat-icon>
+          <span matLine>{{ route.data?.title ?? route.path }}</span>
+        </mat-list-item>
+      </a>
+    </mat-nav-list>
+    <div
+      *ngIf="'sovity-zammad-integration' | isActiveFeature"
+      id="contact-form"
+      class="align-to-bottom shrink-0">
+      <strong>Do you have feedback or need help?</strong>
+      <p><em>Select &nbsp;<kbd>SAML</kbd>&nbsp; login on following page</em></p>
+      <a
+        href="https://sovity.zammad.com/#customer_ticket_new"
+        target="_blank"
+        mat-raised-button
+        color="primary">
+        CREATE TICKET
+      </a>
+      <a
+        href="https://sovity.zammad.com/#knowledge_base/1/locale/en-us"
+        target="_blank"
+        mat-raised-button
+        color="primary">
+        TUTORIAL & FAQ
+      </a>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        *ngIf="isHandset$ | async"
+        type="button"
+        mat-icon-button
+        aria-label="Toggle sidenav"
+        (click)="drawer.toggle()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>{{ titleService.getTitle() }}</span>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

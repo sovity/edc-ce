@@ -1,0 +1,52 @@
+<div class="mat-card-header" mat-dialog-title removeClass="mat-dialog-title">
+  <mat-icon class="mat-icon-[40px]">
+    {{ data.icon }}
+  </mat-icon>
+  <div class="mat-card-header-text">
+    <div class="mat-card-title">
+      {{ data.title }}
+    </div>
+    <div class="mat-card-subtitle">
+      {{ data.subtitle }}
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-content>
+  <ngx-json-viewer
+    class="grow shrink-0"
+    style="
+      display: block;
+      min-width: 40rem;
+      min-height: 60vh;
+      max-width: 40rem;
+      max-height: 60vh;
+    "
+    [json]="visibleJson"
+    [expanded]="true"
+    [depth]="-1"></ngx-json-viewer>
+</div>
+
+<div class="w-full flex flex-row justify-between" mat-dialog-actions>
+  <div>
+    <mat-checkbox
+      class="example-margin"
+      [(ngModel)]="removeNulls"
+      (ngModelChange)="updateVisibleJson()"
+      >Cleaned JSON
+    </mat-checkbox>
+  </div>
+  <div class="flex flex-row">
+    <button mat-dialog-close mat-button color="default" [disabled]="busy">
+      Cancel
+    </button>
+    <button
+      *ngIf="data.actionButton"
+      mat-flat-button
+      color="{{ data.actionButton.color }}"
+      [disabled]="busy"
+      (click)="onAction(data.actionButton)">
+      {{ data.actionButton.text }}
+    </button>
+  </div>
+</div>

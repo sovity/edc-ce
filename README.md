@@ -41,7 +41,6 @@
     <li><a href="#configuration">Configuration</a></li>
     <li><a href="#running-dev-mode">Running dev mode</a></li>
     <li><a href="#build-docker-image">Build docker image</a></li>
-    <li><a href="#codegen-for-data-management-api">Codegen for Data-Management API</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -110,7 +109,7 @@ docker compose up
 ## Configuration
 
 A list of all available configuration properties can be found
-[here](src/modules/app/config/app-config-properties.ts).
+[here](src/app/core/config/app-config-properties.ts).
 
 In general, all ENV vars `EDC_UI_*` are written to an `assets/app-config.json`,
 either before starting the angular build server or before starting the nginx to
@@ -175,22 +174,6 @@ startup and served.
 
 `NGINX_BIND` and `NGINX_PORT` are templated into `default.conf` and can be used
 to overwrite nginx bind address and port.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- CODEGEN FOR DATA MANAGEMENT API -->
-
-## Codegen for Data-Management API
-
-1. Optionally update `openapi/openapi.yaml`.
-2. Regenerate models and services:
-   ```shell
-   docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate -i /local/openapi/openapi.yaml -g typescript-angular -o /local/src/modules/edc-dmgmt-client/
-   ```
-
-> Please note that some client classes were edited manually after generation.
-> When regenerating the classes for the API update be careful especially not to
-> overwrite service `constructor` methods using the generator!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

@@ -1,0 +1,68 @@
+<div id="wrapper">
+  <div class="flex flex-row !space-x-[10px] items-start">
+    <!-- Search Bar -->
+    <mat-form-field
+      class="search-form-field"
+      appearance="outline"
+      color="primary">
+      <mat-label>Search assets</mat-label>
+      <input matInput [(ngModel)]="searchText" (input)="onSearch()" />
+      <mat-icon matPrefix>search</mat-icon>
+      <button
+        *ngIf="searchText"
+        mat-icon-button
+        matSuffix
+        (click)="searchText = ''; onSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <!-- Create Button -->
+    <button
+      id="create-button"
+      color="primary"
+      mat-raised-button
+      style="margin-top: 8px; height: 44px"
+      (click)="onCreate()">
+      <mat-icon>add_circle_outline</mat-icon>
+      Create asset
+    </button>
+
+    <!-- Spacer -->
+    <div class="grow"></div>
+
+    <!-- Paginator -->
+    <mat-paginator
+      *ngIf="assetList.isReady"
+      [hidePageSize]="true"
+      [disabled]="true"
+      [pageSize]="assetList.data.numTotalAssets"
+      [length]="assetList.data.filteredAssets.length">
+    </mat-paginator>
+  </div>
+
+  <div class="flex flex-row justify-center">
+    <loading-state
+      *ngIf="assetList.isLoading"
+      class="min-h-[35rem]"></loading-state>
+    <error-state
+      *ngIf="assetList.isError"
+      class="min-h-[35rem]"
+      [error]="assetList.errorOrUndefined"></error-state>
+    <empty-state
+      *ngIf="
+        assetList.isReady &&
+        (!assetList.data.numTotalAssets ||
+          !assetList.data.filteredAssets.length)
+      "
+      class="min-h-[35rem]"
+      [emptyMessage]="'No assets found with given filter.'"></empty-state>
+  </div>
+
+  <div class="flex flex-row flex-wrap">
+    <asset-cards
+      *ngIf="assetList.isReady && !!assetList.data.numTotalAssets"
+      [assets]="assetList.data.filteredAssets"
+      (assetClick)="onAssetClick($event)"></asset-cards>
+  </div>
+</div>

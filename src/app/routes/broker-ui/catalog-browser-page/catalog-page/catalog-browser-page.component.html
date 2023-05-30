@@ -1,0 +1,53 @@
+<div id="wrapper">
+  <div class="flex flex-row">
+    <!-- Search Bar -->
+    <mat-form-field class="search-form-field" color="accent">
+      <mat-label>Search Data Offers</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [formControl]="searchText" />
+      <button
+        *ngIf="searchText.value"
+        mat-icon-button
+        matSuffix
+        (click)="searchText.setValue('')">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <!-- Spacer -->
+    <div style="flex-grow: 1"></div>
+  </div>
+  <div class="flex flex-row justify-center">
+    <empty-state
+      *ngIf="
+        data.fetchedDataOffers.isReady &&
+        !data.fetchedDataOffers.data.dataOffers.length
+      "
+      class="min-h-[35rem]"
+      emptyMessage="Please enter other connector endpoints to fetch catalogs."></empty-state>
+    <loading-state
+      *ngIf="data.fetchedDataOffers.isLoading"
+      class="min-h-[35rem]"></loading-state>
+    <error-state
+      *ngIf="data.fetchedDataOffers.isError"
+      class="min-h-[35rem]"
+      [error]="data.fetchedDataOffers.error"></error-state>
+    <empty-state
+      *ngIf="
+        data.fetchedDataOffers.isReady &&
+        !data.fetchedDataOffers.data.dataOffers.length
+      "
+      class="min-h-[35rem]"
+      emptyMessage="No contract offers found with this filter"></empty-state>
+  </div>
+  <div
+    *ngIf="
+      data.fetchedDataOffers.isReady &&
+      data.fetchedDataOffers.data.dataOffers.length
+    "
+    class="flex flex-row flex-wrap">
+    <data-offer-cards
+      [dataOffers]="data.fetchedDataOffers.data.dataOffers"
+      (dataOfferClick)="onDataOfferClick($event)"></data-offer-cards>
+  </div>
+</div>
