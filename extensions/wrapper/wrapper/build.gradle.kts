@@ -12,8 +12,8 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:1.18.26")
-    compileOnly("org.projectlombok:lombok:1.18.26")
+    annotationProcessor("org.projectlombok:lombok:1.18.28")
+    compileOnly("org.projectlombok:lombok:1.18.28")
 
     implementation("${edcGroup}:api-core:${edcVersion}")
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
