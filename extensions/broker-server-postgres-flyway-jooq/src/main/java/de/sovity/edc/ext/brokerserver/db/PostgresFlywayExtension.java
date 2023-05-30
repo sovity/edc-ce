@@ -25,9 +25,9 @@ public class PostgresFlywayExtension implements ServiceExtension {
     @Setting(required = true)
     public static final String JDBC_URL = "edc.datasource.default.url";
     @Setting(required = true)
-    public static final String JDBC_USER = "edc.datasource.default.jdbcuser";
+    public static final String JDBC_USER = "edc.datasource.default.user";
     @Setting(required = true)
-    public static final String JDBC_PASSWORD = "edc.datasource.default.jdbcpassword";
+    public static final String JDBC_PASSWORD = "edc.datasource.default.password";
     @Setting
     public static final String FLYWAY_REPAIR = "edc.flyway.repair";
     @Setting
