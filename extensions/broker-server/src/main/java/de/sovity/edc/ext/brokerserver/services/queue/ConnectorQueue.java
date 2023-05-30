@@ -20,10 +20,22 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class ConnectorQueue {
     private final PriorityBlockingQueue<ConnectorQueueEntry> queue = new PriorityBlockingQueue<>();
 
-    public String poll() {
-        return queue.poll().getEndpoint();
+    /**
+     * Get the next item. Waits by blocking current thread.
+     *
+     * @return the next item
+     * @throws InterruptedException on thread interruption
+     */
+    public String take() throws InterruptedException {
+        return queue.take().getEndpoint();
     }
 
+    /**
+     * Enqueues connectors for update.
+     *
+     * @param endpoints connector endpoints
+     * @param priority  priority from {@link ConnectorRefreshPriority}
+     */
     public void addAll(Collection<String> endpoints, int priority) {
         var entries = endpoints.stream()
                 .map(endpoint -> new ConnectorQueueEntry(endpoint, priority))

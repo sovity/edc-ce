@@ -53,7 +53,7 @@ public class ConnectorApiService {
     private ConnectorListEntry buildConnectorListEntry(ConnectorPageDbRow it) {
         ConnectorListEntry dto = new ConnectorListEntry();
         dto.setId(it.getEndpoint());
-        dto.setIdsId(it.getIdsId());
+        dto.setIdsId("TODO Remove this once this field is not part of the client anymore.");
         dto.setEndpoint(it.getEndpoint());
         dto.setTitle(it.getTitle());
         dto.setDescription(it.getDescription());

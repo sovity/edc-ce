@@ -18,47 +18,46 @@ import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
 import de.sovity.edc.ext.brokerserver.services.logging.ConnectorChangeTracker;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferWriter;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOffer;
+import de.sovity.edc.ext.brokerserver.services.refreshing.selfdescription.ConnectorSelfDescription;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.connector.contract.spi.types.offer.ContractOffer;
 import org.jooq.DSLContext;
 
 import java.time.OffsetDateTime;
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
 
 @RequiredArgsConstructor
 public class ConnectorUpdateSuccessWriter {
     private final BrokerEventLogger brokerEventLogger;
+    private final DataOfferWriter dataOfferWriter;
 
     public void handleConnectorOnline(
             DSLContext dsl,
             ConnectorRecord connector,
             ConnectorSelfDescription selfDescription,
-            List<ContractOffer> contractOffers
+            Collection<FetchedDataOffer> dataOffers
     ) {
         // Track changes for final log message
         ConnectorChangeTracker changes = new ConnectorChangeTracker();
         updateConnector(connector, selfDescription, changes);
 
-        // Update contract offers (if changed)
-        // TODO
+        // Update data offers
+        dataOfferWriter.updateDataOffers(dsl, connector.getEndpoint(), dataOffers);
 
         // Log Event
         brokerEventLogger.logConnectorUpdateSuccess(dsl, connector.getEndpoint(), changes);
     }
 
     private static void updateConnector(ConnectorRecord connector, ConnectorSelfDescription selfDescription, ConnectorChangeTracker changes) {
-        if (!Objects.equals(selfDescription.idsId(), connector.getIdsId())) {
-            changes.addSelfDescriptionChange("IDS Connector ID");
-            connector.setIdsId(selfDescription.idsId());
-        }
         if (!Objects.equals(selfDescription.title(), connector.getTitle())) {
             changes.addSelfDescriptionChange("Title");
-            connector.setIdsId(selfDescription.title());
+            connector.setTitle(selfDescription.title());
         }
         if (!Objects.equals(selfDescription.description(), connector.getDescription())) {
             changes.addSelfDescriptionChange("Description");
-            connector.setIdsId(selfDescription.description());
+            connector.setDescription(selfDescription.description());
         }
         connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);
         connector.setLastUpdate(OffsetDateTime.now());

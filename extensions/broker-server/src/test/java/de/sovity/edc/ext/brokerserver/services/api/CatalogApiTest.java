@@ -58,7 +58,6 @@ class CatalogApiTest {
             var connector = dsl.newRecord(Tables.CONNECTOR);
             connector.setTitle("Example Connector");
             connector.setDescription("My example Connector...");
-            connector.setIdsId("urn:connector:my-connector");
             connector.setConnectorId("http://my-connector");
             connector.setEndpoint("http://my-connector/ids/data");
             connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);

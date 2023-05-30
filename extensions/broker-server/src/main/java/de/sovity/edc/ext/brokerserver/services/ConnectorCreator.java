@@ -54,7 +54,6 @@ public class ConnectorCreator {
         connector.setConnectorId(connectorId);
         connector.setTitle("Unknown Connector");
         connector.setDescription("Awaiting initial crawling of given connector.");
-        connector.setIdsId("");
         connector.setCreatedAt(OffsetDateTime.now());
         connector.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
         return connector;

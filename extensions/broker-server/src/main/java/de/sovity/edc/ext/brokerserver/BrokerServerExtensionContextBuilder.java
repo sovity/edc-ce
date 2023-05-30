@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.brokerserver;
 
 import de.sovity.edc.ext.brokerserver.dao.queries.ConnectorQueries;
+import de.sovity.edc.ext.brokerserver.dao.queries.DataOfferContractOfferQueries;
 import de.sovity.edc.ext.brokerserver.dao.queries.DataOfferQueries;
 import de.sovity.edc.ext.brokerserver.db.DataSourceFactory;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
@@ -29,22 +30,24 @@ import de.sovity.edc.ext.brokerserver.services.api.PolicyDtoBuilder;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
 import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueue;
 import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueueFiller;
-import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorSelfDescriptionFetcher;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdateFailureWriter;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdateSuccessWriter;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdater;
-import de.sovity.edc.ext.brokerserver.services.refreshing.ContractOfferFetcher;
-import de.sovity.edc.ext.brokerserver.services.refreshing.sender.DescriptionRequestSender;
-import de.sovity.edc.ext.brokerserver.services.refreshing.sender.IdsMultipartExtendedRemoteMessageDispatcher;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.ContractOfferFetcher;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.ContractOfferRecordUpdater;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferBuilder;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferFetcher;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferPatchApplier;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferPatchBuilder;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferRecordUpdater;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferWriter;
+import de.sovity.edc.ext.brokerserver.services.refreshing.selfdescription.ConnectorSelfDescriptionFetcher;
 import de.sovity.edc.ext.brokerserver.services.schedules.ConnectorRefreshJob;
 import de.sovity.edc.ext.brokerserver.services.schedules.QuartzScheduleInitializer;
 import de.sovity.edc.ext.brokerserver.services.schedules.utils.CronJobRef;
 import lombok.NoArgsConstructor;
-import org.eclipse.edc.protocol.ids.api.multipart.dispatcher.sender.IdsMultipartSender;
-import org.eclipse.edc.protocol.ids.spi.service.DynamicAttributeTokenService;
+import org.eclipse.edc.connector.spi.catalog.CatalogService;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
-import org.eclipse.edc.spi.http.EdcHttpClient;
-import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.spi.types.TypeManager;
@@ -66,10 +69,8 @@ public class BrokerServerExtensionContextBuilder {
     public static BrokerServerExtensionContext buildContext(
             Config config,
             Monitor monitor,
-            EdcHttpClient httpClient,
-            DynamicAttributeTokenService dynamicAttributeTokenService,
             TypeManager typeManager,
-            RemoteMessageDispatcherRegistry dispatcherRegistry
+            CatalogService catalogService
     ) {
         // Dao
         var dataOfferQueries = new DataOfferQueries();
@@ -78,20 +79,30 @@ public class BrokerServerExtensionContextBuilder {
         var dslContextFactory = new DslContextFactory(dataSource);
         var connectorQueries = new ConnectorQueries();
 
-        // IDS Message Client
-        var objectMapper = typeManager.getMapper();
-        var idsMultipartSender = new IdsMultipartSender(monitor, httpClient, dynamicAttributeTokenService, objectMapper);
-        var remoteMessageDispatcher = new IdsMultipartExtendedRemoteMessageDispatcher(idsMultipartSender);
-        var descriptionRequestSender = new DescriptionRequestSender();
 
         // Services
-        var connectorSelfDescriptionFetcher = new ConnectorSelfDescriptionFetcher(dispatcherRegistry);
+        var objectMapper = typeManager.getMapper();
+        var connectorSelfDescriptionFetcher = new ConnectorSelfDescriptionFetcher();
         var brokerEventLogger = new BrokerEventLogger();
-        var connectorUpdateSuccessWriter = new ConnectorUpdateSuccessWriter(brokerEventLogger);
+        var contractOfferRecordUpdater = new ContractOfferRecordUpdater();
+        var dataOfferRecordUpdater = new DataOfferRecordUpdater();
+        var dataOfferContractOfferQueries = new DataOfferContractOfferQueries();
+        var dataOfferPatchBuilder = new DataOfferPatchBuilder(
+                dataOfferContractOfferQueries,
+                dataOfferQueries,
+                dataOfferRecordUpdater,
+                contractOfferRecordUpdater
+        );
+        var dataOfferPatchApplier = new DataOfferPatchApplier();
+        var dataOfferWriter = new DataOfferWriter(dataOfferPatchBuilder, dataOfferPatchApplier);
+        var connectorUpdateSuccessWriter = new ConnectorUpdateSuccessWriter(brokerEventLogger, dataOfferWriter);
         var connectorUpdateFailureWriter = new ConnectorUpdateFailureWriter(brokerEventLogger);
-        var contractOfferFetcher = new ContractOfferFetcher();
+        var contractOfferFetcher = new ContractOfferFetcher(catalogService);
+        var fetchedDataOfferBuilder = new DataOfferBuilder(objectMapper);
+        var dataOfferFetcher = new DataOfferFetcher(contractOfferFetcher, fetchedDataOfferBuilder);
         var connectorUpdater = new ConnectorUpdater(
                 connectorSelfDescriptionFetcher,
+                dataOfferFetcher,
                 connectorUpdateSuccessWriter,
                 connectorUpdateFailureWriter,
                 contractOfferFetcher,
@@ -136,6 +147,6 @@ public class BrokerServerExtensionContextBuilder {
                 connectorApiService,
                 catalogApiService
         );
-        return new BrokerServerExtensionContext(remoteMessageDispatcher, brokerServerResource, brokerServerInitializer);
+        return new BrokerServerExtensionContext(brokerServerResource, brokerServerInitializer);
     }
 }

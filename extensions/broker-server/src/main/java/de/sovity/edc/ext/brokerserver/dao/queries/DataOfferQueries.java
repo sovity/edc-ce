@@ -23,6 +23,7 @@ import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.Connector;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.DataOffer;
+import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferRecord;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageSortingType;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
@@ -109,5 +110,10 @@ public class DataOfferQueries {
         );
 
         return DSL.multiset(query).convertFrom(it -> it.into(DataOfferContractOfferDbRow.class));
+    }
+
+    public List<DataOfferRecord> findByConnectorEndpoint(DSLContext dsl, String connectorEndpoint) {
+        var d = Tables.DATA_OFFER;
+        return dsl.selectFrom(d).where(d.CONNECTOR_ENDPOINT.eq(connectorEndpoint)).stream().toList();
     }
 }

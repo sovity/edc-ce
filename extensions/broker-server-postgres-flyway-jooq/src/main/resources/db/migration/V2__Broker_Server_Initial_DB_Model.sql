@@ -4,7 +4,6 @@ create table connector
 (
     endpoint      text                     not null,
     connector_id  text                     not null,
-    ids_id        text                     not null,
     title         text,
     description   text,
     last_update   timestamp with time zone,

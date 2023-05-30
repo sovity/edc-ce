@@ -12,7 +12,17 @@
  *
  */
 
-package de.sovity.edc.ext.brokerserver.services.refreshing;
+package de.sovity.edc.ext.brokerserver.services.refreshing.offers.model;
 
-public record ConnectorSelfDescription(String idsId, String title, String description) {
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class FetchedDataOfferContractOffer {
+    String contractOfferId;
+    String policyJson;
 }

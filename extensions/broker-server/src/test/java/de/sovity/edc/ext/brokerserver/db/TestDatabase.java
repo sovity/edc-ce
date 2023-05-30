@@ -16,7 +16,6 @@ package de.sovity.edc.ext.brokerserver.db;
 
 import de.sovity.edc.ext.brokerserver.db.utils.JdbcCredentials;
 import org.jooq.DSLContext;
-import org.jooq.exception.DataAccessException;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 
