@@ -8,6 +8,9 @@ import java.time.OffsetDateTime;
 @Data
 public class TransferHistoryEntryContractAgreementDetails {
 
+    @Schema(description = "Contract Agreement ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String contractAgreementId;
+
     @Schema(description = "Contract Agreements Start Date", requiredMode = Schema.RequiredMode.REQUIRED)
     private OffsetDateTime contractStartDate;
 
@@ -26,6 +29,4 @@ public class TransferHistoryEntryContractAgreementDetails {
     @Schema(description = "Asset Name", requiredMode = Schema.RequiredMode.REQUIRED)
     private String assetName;
 
-    @Schema(description = "Contract Policy Name", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String contractPolicyName;
 }

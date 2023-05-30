@@ -14,11 +14,15 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 public class TransferHistoryPage {
-    //private List<TransferHistoryEntry>
+    @Schema(description = "Transfer History Page Entries", requiredMode = Schema.RequiredMode.REQUIRED)
+    private List<TransferHistoryEntry> transferEntries;
 }
