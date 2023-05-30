@@ -25,6 +25,9 @@ public class TransferHistoryEntry {
     @Schema(description = "Transfer Process ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String transferProcessId;
 
+    @Schema(description = "connector Name", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String connectorName;
+
     @Schema(description = "Contract Agreement Details of Transfer Entry", requiredMode = Schema.RequiredMode.REQUIRED)
     private TransferHistoryEntryContractAgreementDetails contractAgreementDetails;
 
@@ -39,4 +42,7 @@ public class TransferHistoryEntry {
 
     @Schema(description = "Error Message")
     private String errorMessage;
+
+    @Schema(description = "Data Destination Properties of Transfer Entry")
+    private DataDestinationProperties dataDestinationProperties;
 }
