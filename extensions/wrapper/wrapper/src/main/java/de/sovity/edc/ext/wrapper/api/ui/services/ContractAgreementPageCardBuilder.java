@@ -83,7 +83,7 @@ public class ContractAgreementPageCardBuilder {
 
     @NotNull
     private PolicyDto buildPolicyDto(@NonNull Policy policy) {
-        return new PolicyDto(policy);
+        return PolicyDto.builder().legacyPolicy(policy.toString()).build();
     }
 
     @NotNull

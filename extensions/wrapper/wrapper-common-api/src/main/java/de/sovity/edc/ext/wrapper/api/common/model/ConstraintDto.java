@@ -27,7 +27,7 @@ public class ConstraintDto {
     private String leftExpression;
     @Schema(description = "Operator to connect both parts of the constraint.",
             requiredMode = Schema.RequiredMode.REQUIRED)
-    private OperatorDto operatorDto;
+    private OperatorDto operator;
     @Schema(description = "Right part of the constraint.",
             requiredMode = Schema.RequiredMode.REQUIRED)
     private String rightExpression;

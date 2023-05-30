@@ -1,5 +1,5 @@
 {
-  "assetEntryDto": {
+  "assetEntry": {
     "asset": {
       "id": "mock",
       "properties": {
@@ -12,23 +12,20 @@
       }
     }
   },
-  "policyDefinitionRequestDto": {
+  "policyDefinitionRequest": {
     "id": "mock",
     "policy": {
       "permission": {
-        "action": "USE",
-        "constraintDto": {
+        "constraint": {
           "leftExpression": "string",
-          "operatorDto": "EQ",
+          "operator": "EQ",
           "rightExpression": "string"
         }
       },
-      "@type": {
-        "@policytype": "set"
-      }
+      "type": "set"
     }
   },
-  "contractDefinitionRequestDto": {
+  "contractDefinitionRequest": {
     "id": "mock",
     "accessPolicyId": "test",
     "contractPolicyId": "test",

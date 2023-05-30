@@ -14,13 +14,11 @@
 
 package de.sovity.edc.ext.wrapper.api.common.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -33,28 +31,23 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
 @AllArgsConstructor
+@Builder(toBuilder = true)
 @RequiredArgsConstructor
 @Schema(description = "Type-Safe OpenAPI generator friendly Policy DTO that supports an opinionated"
         + " subset of the original EDC Policy Entity.")
 public class PolicyDto {
+
     @Schema(description = "Legacy JSON as built by the Management API. Will be replaced "
             + "in the future by a type-safe variant without polymorphisms that can be used "
             + "for our generated clients.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Object legacyPolicy;
+    private String legacyPolicy;
 
-    @Schema(description = "Type of the policy. Usually 'SET'",
-            requiredMode = Schema.RequiredMode.REQUIRED)
-    @JsonProperty("@type")
-    @NonNull
-    private PolicyTypeDto type;
+    @Schema(description = "Type of the policy, usually 'SET'. "
+            + "Supported are 'SET', 'OFFER' and 'CONTRACT'",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String type;
 
-    @Schema(description = "Permission for this policy", requiredMode = RequiredMode.REQUIRED)
-    @NonNull
+    @Schema(description = "Permission for this policy", requiredMode = RequiredMode.NOT_REQUIRED)
     private PermissionDto permission;
-
-    public PolicyDto(Object legacyPolicy) {
-        this.legacyPolicy = legacyPolicy;
-    }
 }

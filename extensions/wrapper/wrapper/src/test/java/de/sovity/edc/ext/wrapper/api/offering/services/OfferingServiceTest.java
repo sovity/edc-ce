@@ -1,13 +1,21 @@
 package de.sovity.edc.ext.wrapper.api.offering.services;
 
-import java.util.ArrayList;
-import java.util.Map;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyTypeDto;
 import de.sovity.edc.ext.wrapper.api.offering.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.offering.model.PolicyDefinitionRequestDto;
+import java.util.ArrayList;
+import java.util.Map;
 import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
 import org.eclipse.edc.connector.api.management.asset.model.AssetEntryDto;
 import org.eclipse.edc.connector.api.management.asset.model.AssetRequestDto;
@@ -28,16 +36,6 @@ import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
 
 class OfferingServiceTest {
 
@@ -232,10 +230,8 @@ class OfferingServiceTest {
     }
 
     private PolicyDefinitionRequestDto policyDefinitionDto() {
-        var permission = PermissionDto.Builder.newInstance()
-                .action("USE")
-                .build();
-        var policy = new PolicyDto(PolicyTypeDto.SET, permission);
+        var permission = PermissionDto.builder().build();
+        var policy = PolicyDto.builder().type("SET").permission(permission).build();
         return new PolicyDefinitionRequestDto("policy-id", policy);
     }
 

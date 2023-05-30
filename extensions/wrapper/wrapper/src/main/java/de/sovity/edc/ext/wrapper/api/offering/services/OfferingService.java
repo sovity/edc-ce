@@ -36,11 +36,11 @@ public class OfferingService {
      * @param createOfferingDto DTO containing the necessary data.
      */
     public void create(CreateOfferingDto createOfferingDto) {
-        var asset = transformAsset(createOfferingDto.getAssetEntryDto());
-        var dataAddress = transformDataAddress(createOfferingDto.getAssetEntryDto());
-        var policy = transformPolicy(createOfferingDto.getPolicyDefinitionRequestDto());
+        var asset = transformAsset(createOfferingDto.getAssetEntry());
+        var dataAddress = transformDataAddress(createOfferingDto.getAssetEntry());
+        var policy = transformPolicy(createOfferingDto.getPolicyDefinitionRequest());
         var contractDefinition = transformContractDefinition(createOfferingDto
-                .getContractDefinitionRequestDto());
+                .getContractDefinitionRequest());
 
         persist(asset, dataAddress, policy, contractDefinition);
     }

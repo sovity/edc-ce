@@ -1,20 +1,18 @@
 package de.sovity.edc.ext.wrapper.api.offering.services;
 
-import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import de.sovity.edc.ext.wrapper.api.common.model.ConstraintDto;
 import de.sovity.edc.ext.wrapper.api.common.model.OperatorDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyTypeDto;
+import java.util.List;
 import org.eclipse.edc.policy.model.AndConstraint;
 import org.eclipse.edc.policy.model.AtomicConstraint;
 import org.eclipse.edc.policy.model.OrConstraint;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class PolicyMappingServiceTest {
 
@@ -23,7 +21,7 @@ class PolicyMappingServiceTest {
     @Test
     void policyDtoToPolicy_noConstraints_returnPolicy() {
         // arrange
-        var dto = new PolicyDto(PolicyTypeDto.SET, new PermissionDto("USE"));
+        var dto = PolicyDto.builder().type("SET").build();
 
         // act
         var policy = mappingService.policyDtoToPolicy(dto);
@@ -40,10 +38,12 @@ class PolicyMappingServiceTest {
     void policyDtoToPolicy_atomicConstraint_returnPolicy() {
         // arrange
         var constraint = new ConstraintDto("left", OperatorDto.EQ, "right");
-        var dto = new PolicyDto(PolicyTypeDto.SET, PermissionDto.Builder.newInstance()
-                .action("USE")
-                .constraint(constraint)
-                .build());
+        var dto = PolicyDto.builder()
+                .type("SET")
+                .permission(PermissionDto.builder()
+                        .constraint(constraint)
+                        .build())
+                .build();
 
         // act
         var policy = mappingService.policyDtoToPolicy(dto);
@@ -62,10 +62,12 @@ class PolicyMappingServiceTest {
         // arrange
         var constraint1 = new ConstraintDto("left1", OperatorDto.EQ, "right1");
         var constraint2 = new ConstraintDto("left2", OperatorDto.EQ, "right2");
-        var dto = new PolicyDto(PolicyTypeDto.SET, PermissionDto.Builder.newInstance()
-                .action("USE")
-                .andConstraint(List.of(constraint1, constraint2))
-                .build());
+        var dto = PolicyDto.builder()
+                .type("SET")
+                .permission(PermissionDto.builder()
+                        .andConstraint(List.of(constraint1, constraint2))
+                        .build())
+                .build();
 
         // act
         var policy = mappingService.policyDtoToPolicy(dto);
@@ -87,10 +89,12 @@ class PolicyMappingServiceTest {
         // arrange
         var constraint1 = new ConstraintDto("left1", OperatorDto.EQ, "right1");
         var constraint2 = new ConstraintDto("left2", OperatorDto.EQ, "right2");
-        var dto = new PolicyDto(PolicyTypeDto.SET, PermissionDto.Builder.newInstance()
-                .action("USE")
-                .orConstraint(List.of(constraint1, constraint2))
-                .build());
+        var dto = PolicyDto.builder()
+                .type("SET")
+                .permission(PermissionDto.builder()
+                        .orConstraint(List.of(constraint1, constraint2))
+                        .build())
+                .build();
 
         // act
         var policy = mappingService.policyDtoToPolicy(dto);
@@ -112,12 +116,14 @@ class PolicyMappingServiceTest {
         // arrange
         var constraint1 = new ConstraintDto("left1", OperatorDto.EQ, "right1");
         var constraint2 = new ConstraintDto("left2", OperatorDto.EQ, "right2");
-        var dto = new PolicyDto(PolicyTypeDto.SET, PermissionDto.Builder.newInstance()
-                .action("USE")
-                .constraint(constraint1)
-                .andConstraint(List.of(constraint1, constraint2))
-                .orConstraint(List.of(constraint1, constraint2))
-                .build());
+        var dto = PolicyDto.builder()
+                .type("SET")
+                .permission(PermissionDto.builder()
+                        .constraint(constraint1)
+                        .andConstraint(List.of(constraint1, constraint2))
+                        .orConstraint(List.of(constraint1, constraint2))
+                        .build())
+                .build();
 
         // act
         var policy = mappingService.policyDtoToPolicy(dto);

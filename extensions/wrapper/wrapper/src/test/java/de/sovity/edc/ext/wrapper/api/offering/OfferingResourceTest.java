@@ -28,9 +28,9 @@ class OfferingResourceTest {
     private static JsonNode contractOfferValid;
     private ObjectNode contractOffer;
 
-    private static final String ASSET_ENTRY_KEY = "assetEntryDto";
-    private static final String POLICY_DEFINITION_REQUEST = "policyDefinitionRequestDto";
-    private static final String CONTRACT_DEFINITION_REQUEST = "contractDefinitionRequestDto";
+    private static final String ASSET_ENTRY_KEY = "assetEntry";
+    private static final String POLICY_DEFINITION_REQUEST = "policyDefinitionRequest";
+    private static final String CONTRACT_DEFINITION_REQUEST = "contractDefinitionRequest";
     private static final String MISSING_PROPERTY_TEXT = "missing required creator property";
     private static final String NO_REQUEST_BODY_ERROR = "No CreateOfferingDto provided";
 
