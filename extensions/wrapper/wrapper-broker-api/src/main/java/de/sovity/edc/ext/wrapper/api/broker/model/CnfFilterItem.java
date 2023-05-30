@@ -12,24 +12,25 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.model;
+package de.sovity.edc.ext.wrapper.api.broker.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
-@Schema(description = "Policy Details")
-public class PolicyDto {
-    @Schema(description = "Legacy JSON as built by the Management API. Will be replaced " +
-            "in the future by a type-safe variant without polymorphisms that can be used " +
-            "for our generated clients.", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Object legacyPolicy;
+@Schema(description = "Attribute Value")
+public class CnfFilterItem {
+    @Schema(description = "Value ID", example = "https://w3id.org/idsa/code/EN", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String id;
+    @Schema(description = "Value Title", example = "English", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String title;
 }
+

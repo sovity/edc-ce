@@ -14,6 +14,8 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
+import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

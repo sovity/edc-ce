@@ -26,9 +26,14 @@ connector restrictions.
 ## Why does this extension exist?
 
 A centralized catalog has many advantages like:
+
 - Have a look at available data assets, offered in a data space, before joining the data space as a participant
 - See what data are offered by other participants, instead of fetching data catalogs manually
--
+
+## Getting Started
+
+Our MDS Community Edition EDC is built with both the clearing house and broker extensions and is ready to
+be used in the Mobility Data Space (MDS).
 
 ## Sequence Diagram
 
@@ -36,9 +41,10 @@ A centralized catalog has many advantages like:
 
 <img src="./docs/broker-extension.png" alt="EDC IDS Broker Extension Sequence Diagram" width="200" />
 
-
 ### Supported Asset Properties
+
 The Broker Extension supports the following additional meta information to be sent to the broker:
+
 - id: 'asset:prop:id'
 - name: 'asset:prop:name'
 - contentType: 'asset:prop:contenttype'
@@ -51,12 +57,12 @@ The Broker Extension supports the following additional meta information to be se
 - endpointDocumentation: 'asset:prop:endpointDocumentation'
 
 MDS-specific properties:
+
 - dataCategory: 'http://w3id.org/mds#dataCategory'
 - dataSubcategory: 'http://w3id.org/mds#dataSubcategory'
 - dataModel: 'http://w3id.org/mds#dataModel'
 - geoReferenceMethod: 'http://w3id.org/mds#geoReferenceMethod'
 - transportMode: 'http://w3id.org/mds#transportMode'
-
 
 ## Configuration
 

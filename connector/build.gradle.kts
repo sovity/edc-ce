@@ -76,3 +76,6 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     mergeServiceFiles()
     archiveFileName.set("app.jar")
 }
+
+val sovityEdcGroup: String by project
+group = sovityEdcGroup

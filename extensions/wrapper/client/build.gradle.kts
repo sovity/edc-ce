@@ -3,21 +3,18 @@ val edcGroup: String by project
 val restAssured: String by project
 val assertj: String by project
 
-val sovityEdcClientGroup: String by project
-group = sovityEdcClientGroup
-
 
 plugins {
     `java-library`
     `maven-publish`
-    id("org.openapi.generator") version "6.5.0"
+    id("org.openapi.generator") version "6.6.0"
 }
 
 repositories {
     mavenCentral()
 }
 
-// By using a separate configuration we can skip having the Java Code in our classpath
+// By using a separate configuration we can skip having the Extension Jar in our runtime classpath
 val openapiYaml = configurations.create("openapiGenerator")
 
 dependencies {
@@ -27,7 +24,7 @@ dependencies {
     }
 
     // Generated Client's Dependencies
-    implementation("io.swagger:swagger-annotations:1.6.10")
+    implementation("io.swagger:swagger-annotations:1.6.11")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
@@ -38,8 +35,8 @@ dependencies {
     implementation("jakarta.annotation:jakarta.annotation-api:1.3.5")
 
     // Lombok
-    compileOnly("org.projectlombok:lombok:1.18.26")
-    annotationProcessor("org.projectlombok:lombok:1.18.26")
+    compileOnly("org.projectlombok:lombok:1.18.28")
+    annotationProcessor("org.projectlombok:lombok:1.18.28")
 
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
@@ -122,6 +119,9 @@ tasks.withType<Javadoc> {
     fullOptions.tags = listOf("http.response.details:a:Http Response Details")
     fullOptions.addStringOption("Xdoclint:none", "-quiet")
 }
+
+val sovityEdcGroup: String by project
+group = sovityEdcGroup
 
 publishing {
     publications {

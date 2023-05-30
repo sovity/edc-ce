@@ -32,6 +32,9 @@ tasks.getByName<Test>("test") {
 
 tasks.register("prepareKotlinBuildScriptModel"){}
 
+val sovityEdcExtensionGroup: String by project
+group = sovityEdcExtensionGroup
+
 publishing {
     publications {
         create<MavenPublication>(project.name) {

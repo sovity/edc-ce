@@ -14,6 +14,7 @@
 
 package de.sovity.edc.client;
 
+import de.sovity.edc.client.gen.api.BrokerServerApi;
 import de.sovity.edc.client.gen.api.EnterpriseEditionApi;
 import de.sovity.edc.client.gen.api.UiApi;
 import de.sovity.edc.client.gen.api.UseCaseApi;
@@ -29,6 +30,7 @@ public class EdcClient {
     UiApi uiApi;
     UseCaseApi useCaseApi;
     EnterpriseEditionApi enterpriseEditionApi;
+    BrokerServerApi brokerServerApi;
 
     public static EdcClientBuilder builder() {
         return new EdcClientBuilder();

@@ -34,6 +34,9 @@ tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
 
+val sovityEdcExtensionGroup: String by project
+group = sovityEdcExtensionGroup
+
 publishing {
     publications {
         create<MavenPublication>(project.name) {

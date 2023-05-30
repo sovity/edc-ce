@@ -24,6 +24,9 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
 }
 
+val sovityEdcExtensionGroup: String by project
+group = sovityEdcExtensionGroup
+
 publishing {
     publications {
         create<MavenPublication>(project.name) {
