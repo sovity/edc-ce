@@ -1,4 +1,4 @@
-package de.sovity.edc.ext.wrapper.api.offering.services;
+package de.sovity.edc.ext.wrapper.api.usecase.services;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -12,8 +12,10 @@ import static org.mockito.Mockito.when;
 
 import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
-import de.sovity.edc.ext.wrapper.api.offering.model.CreateOfferingDto;
-import de.sovity.edc.ext.wrapper.api.offering.model.PolicyDefinitionRequestDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
+import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
+import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
 import java.util.ArrayList;
 import java.util.Map;
 import org.eclipse.edc.api.transformer.DtoTransformerRegistry;

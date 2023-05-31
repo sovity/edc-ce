@@ -1,4 +1,4 @@
-package de.sovity.edc.ext.wrapper.api.offering.services;
+package de.sovity.edc.ext.wrapper.api.usecase.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,6 +6,7 @@ import de.sovity.edc.ext.wrapper.api.common.model.ConstraintDto;
 import de.sovity.edc.ext.wrapper.api.common.model.OperatorDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
+import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
 import java.util.List;
 import org.eclipse.edc.policy.model.AndConstraint;
 import org.eclipse.edc.policy.model.AtomicConstraint;

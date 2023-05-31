@@ -1,9 +1,10 @@
-package de.sovity.edc.ext.wrapper.api.offering.services;
+package de.sovity.edc.ext.wrapper.api.usecase.services;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import de.sovity.edc.ext.wrapper.api.common.model.ConstraintDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 import org.eclipse.edc.policy.model.Action;
 import org.eclipse.edc.policy.model.AndConstraint;
 import org.eclipse.edc.policy.model.AtomicConstraint;

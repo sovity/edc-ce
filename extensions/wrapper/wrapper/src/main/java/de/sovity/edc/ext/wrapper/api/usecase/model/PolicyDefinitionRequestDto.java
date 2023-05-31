@@ -1,4 +1,4 @@
-package de.sovity.edc.ext.wrapper.api.offering.model;
+package de.sovity.edc.ext.wrapper.api.usecase.model;
 
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import io.swagger.v3.oas.annotations.media.Schema;

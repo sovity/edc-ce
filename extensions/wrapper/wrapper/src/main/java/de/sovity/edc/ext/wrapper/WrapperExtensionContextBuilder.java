@@ -14,9 +14,8 @@
 
 package de.sovity.edc.ext.wrapper;
 
-import de.sovity.edc.ext.wrapper.api.offering.OfferingResource;
-import de.sovity.edc.ext.wrapper.api.offering.services.OfferingService;
-import de.sovity.edc.ext.wrapper.api.offering.services.PolicyMappingService;
+import java.util.List;
+
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementPageCardBuilder;
@@ -24,6 +23,8 @@ import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementPageService;
 import de.sovity.edc.ext.wrapper.api.ui.services.TransferProcessStateService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
+import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
+import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import lombok.NoArgsConstructor;
 import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
@@ -37,19 +38,18 @@ import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
 
-import java.util.List;
-
 
 /**
  * Manual Dependency Injection.
  * <p>
- * We want to develop as Java Backend Development is done, but we have
- * no CDI / DI Framework to rely on.
+ * We want to develop as Java Backend Development is done, but we have no CDI / DI Framework to rely
+ * on.
  * <p>
  * EDC {@link Inject} only works in {@link WrapperExtension}.
  */
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class WrapperExtensionContextBuilder {
+
     public static WrapperExtensionContext buildContext(
             AssetIndex assetIndex,
             ContractDefinitionStore contractDefinitionStore,
@@ -63,7 +63,8 @@ public class WrapperExtensionContextBuilder {
     ) {
         // UI API
         var transferProcessStateService = new TransferProcessStateService();
-        var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(transferProcessStateService);
+        var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
+                transferProcessStateService);
         var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
                 contractAgreementService,
                 contractNegotiationStore,
@@ -84,19 +85,16 @@ public class WrapperExtensionContextBuilder {
                 contractAgreementService
         );
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
-        var useCaseResource = new UseCaseResource(kpiApiService, supportedPolicyApiService);
-
-        // Offering
         var policyMappingService = new PolicyMappingService();
         var offeringService = new OfferingService(assetIndex, policyDefinitionStore,
                 contractDefinitionStore, dtoTransformerRegistry, policyMappingService);
-        var offeringResource = new OfferingResource(offeringService);
+        var useCaseResource = new UseCaseResource(kpiApiService, supportedPolicyApiService,
+                offeringService);
 
         // Collect all JAX-RS resources
         return new WrapperExtensionContext(List.of(
                 uiResource,
-                useCaseResource,
-                offeringResource
+                useCaseResource
         ));
     }
 }

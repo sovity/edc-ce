@@ -1,7 +1,7 @@
-package de.sovity.edc.ext.wrapper.api.offering.services;
+package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import de.sovity.edc.ext.wrapper.api.offering.model.CreateOfferingDto;
-import de.sovity.edc.ext.wrapper.api.offering.model.PolicyDefinitionRequestDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
 import org.eclipse.edc.connector.api.management.asset.model.AssetEntryDto;

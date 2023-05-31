@@ -1,4 +1,4 @@
-package de.sovity.edc.ext.wrapper.api.offering;
+package de.sovity.edc.ext.wrapper.api.usecase;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -38,7 +38,7 @@ class OfferingResourceTest {
     static void init() throws IOException {
         ClassLoader classLoader = OfferingResourceTest.class.getClassLoader();
         contractOfferValid = MAPPER.readTree(new File(
-                classLoader.getResource("offering/contract-offer-valid.json").getFile()));
+                classLoader.getResource("usecase/contract-offer-valid.json").getFile()));
     }
 
     @BeforeEach
@@ -52,7 +52,7 @@ class OfferingResourceTest {
                 .when()
                 .contentType(ContentType.JSON)
                 .body(body)
-                .post("/wrapper/offering/contract-offer")
+                .post("/wrapper/use-case-api/contract-offer")
                 .then()
                 .log()
                 .all();

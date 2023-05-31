@@ -1,4 +1,4 @@
-package de.sovity.edc.ext.wrapper.api.offering.model;
+package de.sovity.edc.ext.wrapper.api.usecase.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
