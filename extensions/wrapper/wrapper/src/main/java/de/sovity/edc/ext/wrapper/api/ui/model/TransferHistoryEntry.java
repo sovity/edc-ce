@@ -25,7 +25,6 @@ public class TransferHistoryEntry {
     @Schema(description = "Transfer Process ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String transferProcessId;
 
-
     @Schema(description = "Created Date", requiredMode = Schema.RequiredMode.REQUIRED)
     private OffsetDateTime createdDate;
 
@@ -42,8 +41,7 @@ public class TransferHistoryEntry {
     private ContractAgreementDirection direction;
 
     @Schema(description = "Other Connector's Endpoint", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String counterPartyAddress;
-
+    private String counterPartyConnectorEndpoint;
 
     @Schema(description = "Asset Name", requiredMode = Schema.RequiredMode.REQUIRED)
     private String assetName;
@@ -53,6 +51,5 @@ public class TransferHistoryEntry {
 
     @Schema(description = "Error Message")
     private String errorMessage;
-
 
 }
