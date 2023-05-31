@@ -3,6 +3,7 @@ package de.sovity.edc.ext.wrapper.api.offering.services;
 import de.sovity.edc.ext.wrapper.api.common.model.ConstraintDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import org.eclipse.edc.policy.model.Action;
 import org.eclipse.edc.policy.model.AndConstraint;
 import org.eclipse.edc.policy.model.AtomicConstraint;
@@ -40,7 +41,7 @@ public class PolicyMappingService {
                 .build();
     }
 
-    private AtomicConstraint constraintDtoToAtomicConstraint(ConstraintDto dto) {
+    private Constraint constraintDtoToAtomicConstraint(ConstraintDto dto) {
         return AtomicConstraint.Builder.newInstance()
                 .leftExpression(new LiteralExpression(dto.getLeftExpression()))
                 .rightExpression(new LiteralExpression(dto.getRightExpression()))
@@ -59,10 +60,9 @@ public class PolicyMappingService {
             }
 
             if (dto.getPermission().getAndConstraint() != null) {
-                var andConstraints = new ArrayList<Constraint>();
-                for (ConstraintDto dtoConstraint : dto.getPermission().getAndConstraint()) {
-                    andConstraints.add(constraintDtoToAtomicConstraint(dtoConstraint));
-                }
+                var andConstraints = dto.getPermission().getAndConstraint().stream()
+                        .map(this::constraintDtoToAtomicConstraint)
+                        .collect(Collectors.toList());
                 var andConstraint = AndConstraint.Builder.newInstance()
                         .constraints(andConstraints)
                         .build();
@@ -70,10 +70,9 @@ public class PolicyMappingService {
             }
 
             if (dto.getPermission().getOrConstraint() != null) {
-                var orConstraints = new ArrayList<Constraint>();
-                for (ConstraintDto dtoConstraint : dto.getPermission().getOrConstraint()) {
-                    orConstraints.add(constraintDtoToAtomicConstraint(dtoConstraint));
-                }
+                var orConstraints = dto.getPermission().getOrConstraint().stream()
+                        .map(this::constraintDtoToAtomicConstraint)
+                        .collect(Collectors.toList());
                 var orConstraint = OrConstraint.Builder.newInstance()
                         .constraints(orConstraints)
                         .build();
