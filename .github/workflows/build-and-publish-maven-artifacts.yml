@@ -32,11 +32,12 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
-    - name: Store last commit's author, message and SHA
+    - name: Store last commit info and build date
       run: |
         echo "Saving local commit details in src/assets/version.txt"
         echo $(ls)
-        git log -1 > extensions/last-commit-info/src/main/resources/version.txt
+        git log -1 > extensions/last-commit-info/src/main/resources/jar-last-commit-info.txt
+        echo $(date --utc +%FT%TZ) > extensions/last-commit-info/src/main/resources/jar-build-date.txt
 
     - name: Override artifact versions in release tags.
       run: |

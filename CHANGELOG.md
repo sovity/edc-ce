@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [x.x.x] - UNRELEASED
 
+### Minor Changes
+
+- Added build dates to Last Commit Info Extension
+
 ### Patch Changes
 
 - Fix API Wrapper Broker Server API Spec not showing in client libraries.

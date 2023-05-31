@@ -28,30 +28,42 @@ public class LastCommitInfoService {
         this.context = context;
     }
 
-    public String getLastCommitInfo() {
-        var result = "";
-
-        if (!getEnvLastCommitInfo().equals("")) {
-            result += "Env Last Commit Info: \n";
-            result += getEnvLastCommitInfo() + "\n";
-        }
-
-        if (!getEnvLastCommitInfo().equals(getJarLastCommitInfo())) {
-            result += "Jar Last Commit Info: \n";
-            result += getJarLastCommitInfo();
-        }
-
-        return result;
-    }
-
-    public String getJarLastCommitInfo() {
-        var classLoader = Thread.currentThread().getContextClassLoader();
-        var is = classLoader.getResourceAsStream("jar-last-commit-info.txt");
+    private String readFileInCurrentClassClasspath(String path) {
+        var classLoader = LastCommitInfoService.class.getClassLoader();
+        var is = classLoader.getResourceAsStream(path);
         var scanner = new Scanner(Objects.requireNonNull(is), StandardCharsets.UTF_8).useDelimiter("\\A");
         return scanner.hasNext() ? scanner.next() : "";
+    }
+
+
+    public String getJarLastCommitInfo() {
+        return this.readFileInCurrentClassClasspath("jar-last-commit-info.txt").trim();
     }
 
     public String getEnvLastCommitInfo() {
         return context.getSetting("edc.last.commit.info", "");
     }
+
+    public String getJarBuildDate() {
+        return readFileInCurrentClassClasspath("jar-build-date.txt").trim();
+    }
+
+    public String getEnvBuildDate() {
+        return context.getSetting("edc.build.date", "");
+    }
+
+    public LastCommitInfo getLastCommitInfo() {
+        var lastCommitInfo = new LastCommitInfo();
+        lastCommitInfo.setEnvLastCommitInfo(getEnvLastCommitInfo());
+        lastCommitInfo.setJarLastCommitInfo(getJarLastCommitInfo());
+
+        lastCommitInfo.setJarBuildDate(getJarBuildDate());
+        lastCommitInfo.setEnvBuildDate(getEnvBuildDate());
+        return lastCommitInfo;
+    }
 }
+
+
+
+
+

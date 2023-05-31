@@ -8,6 +8,9 @@ plugins {
 }
 
 dependencies {
+    annotationProcessor("org.projectlombok:lombok:1.18.28")
+    compileOnly("org.projectlombok:lombok:1.18.28")
+
     api("${edcGroup}:core-spi:${edcVersion}")
     api("${edcGroup}:control-plane-spi:${edcVersion}")
     implementation("${edcGroup}:api-core:${edcVersion}")
@@ -15,6 +18,9 @@ dependencies {
 
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
+
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.28")
+    testCompileOnly("org.projectlombok:lombok:1.18.28")
 
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
