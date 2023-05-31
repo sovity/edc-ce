@@ -1,16 +1,18 @@
 import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
+import {DataOfferListEntryContractOffer} from '@sovity.de/edc-client';
 import {ActiveFeatureSet} from '../../../core/config/active-feature-set';
 import {Policy} from '../../../core/services/api/legacy-managent-api-client';
 import {AssetProperties} from '../../../core/services/asset-properties';
 import {Asset} from '../../../core/services/models/asset';
-import {BrokerDataOffer} from '../../../routes/broker-ui/catalog-browser-page/catalog-page/mapping/broker-data-offer';
+import {BrokerDataOffer} from '../../../routes/broker-ui/catalog-page/catalog-page/mapping/broker-data-offer';
 import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
 import {JsonDialogComponent} from '../../json-dialog/json-dialog/json-dialog.component';
 import {JsonDialogData} from '../../json-dialog/json-dialog/json-dialog.data';
 import {PropertyGridGroup} from '../../property-grid/property-grid-group/property-grid-group';
 import {PropertyGridField} from '../../property-grid/property-grid/property-grid-field';
 import {PropertyGridFieldService} from '../../property-grid/property-grid/property-grid-field.service';
+import {formatDateAgo} from '../../ui-elements/ago/formatDateAgo';
 
 @Injectable()
 export class AssetPropertyGridGroupBuilder {
@@ -20,46 +22,7 @@ export class AssetPropertyGridGroupBuilder {
     private propertyGridUtils: PropertyGridFieldService,
   ) {}
 
-  buildPropertyGridGroups(
-    asset: Asset,
-    contractAgreement: ContractAgreementCardMapped | null,
-    brokerDataOffer: BrokerDataOffer | null,
-    policy: Policy | null,
-  ): PropertyGridGroup[] {
-    let fieldGroups: PropertyGridGroup[];
-    if (brokerDataOffer != null) {
-      fieldGroups = [
-        this.buildBrokerDataOfferConnectorEndpointFocusGroup(asset),
-        this.buildAssetPropertiesGroup(asset, 'Data Offer'),
-        this.buildAdditionalPropertiesGroup(asset),
-        ...brokerDataOffer.policy.map((it, i) =>
-          this.buildContractOfferGroup(
-            asset,
-            it.legacyPolicy,
-            i,
-            brokerDataOffer.policy.length,
-          ),
-        ),
-      ];
-    } else if (contractAgreement != null) {
-      fieldGroups = [
-        this.buildContractAgreementGroup(contractAgreement),
-        this.buildPolicyGroup(asset, policy!!),
-        this.buildAssetPropertiesGroup(asset, 'Assets'),
-        this.buildAdditionalPropertiesGroup(asset),
-      ];
-    } else {
-      fieldGroups = [
-        this.buildAssetPropertiesGroup(asset, null),
-        this.buildAdditionalPropertiesGroup(asset),
-        this.buildPolicyGroup(asset, policy!!),
-      ];
-    }
-
-    return fieldGroups.filter((it) => it.properties.length);
-  }
-
-  private buildAssetPropertiesGroup(
+  buildAssetPropertiesGroup(
     asset: Asset,
     groupLabel: string | null,
   ): PropertyGridGroup {
@@ -101,7 +64,7 @@ export class AssetPropertyGridGroupBuilder {
         labelTitle: AssetProperties.standardLicense,
         ...this.propertyGridUtils.guessValue(asset.standardLicense),
       },
-      this.buildConnectorEndpointField(asset),
+      this.buildConnectorEndpointField(asset.originator!!),
       {
         icon: 'account_circle',
         label: 'Organization',
@@ -126,7 +89,7 @@ export class AssetPropertyGridGroupBuilder {
     };
   }
 
-  private buildAdditionalPropertiesGroup(asset: Asset): PropertyGridGroup {
+  buildAdditionalPropertiesGroup(asset: Asset): PropertyGridGroup {
     const fields: PropertyGridField[] = [];
 
     if (!this.activeFeatureSet.hasMdsFields()) {
@@ -150,10 +113,7 @@ export class AssetPropertyGridGroupBuilder {
     };
   }
 
-  private buildMdsProperties(
-    asset: Asset,
-    includeEmpty: boolean,
-  ): PropertyGridField[] {
+  buildMdsProperties(asset: Asset, includeEmpty: boolean): PropertyGridField[] {
     const fields: PropertyGridField[] = [];
     if (includeEmpty || asset.transportMode) {
       fields.push({
@@ -198,7 +158,7 @@ export class AssetPropertyGridGroupBuilder {
     return fields;
   }
 
-  private onShowPolicyDetailsClick(
+  onShowPolicyDetailsClick(
     title: string,
     subtitle: string,
     policyDetails: Policy,
@@ -212,16 +172,15 @@ export class AssetPropertyGridGroupBuilder {
     this.matDialog.open(JsonDialogComponent, {data});
   }
 
-  private buildContractOfferGroup(
+  buildContractOfferGroup(
     asset: Asset,
-    contractPolicy: Policy | null,
+    contractOffer: DataOfferListEntryContractOffer,
     i: number,
     total: number,
   ) {
     const groupLabel = `Contract Offer ${total > 1 ? i + 1 : ''}`;
-    let properties: PropertyGridField[] = [];
-    if (contractPolicy) {
-      properties.push({
+    let properties: PropertyGridField[] = [
+      {
         icon: 'policy',
         label: 'Contract Policy',
         text: 'Show Policy Details',
@@ -229,14 +188,26 @@ export class AssetPropertyGridGroupBuilder {
           this.onShowPolicyDetailsClick(
             `${groupLabel} Contract Policy)`,
             asset.name,
-            contractPolicy,
+            contractOffer.contractPolicy.legacyPolicy as Policy,
           ),
-      });
-    }
+      },
+      {
+        icon: 'category',
+        label: 'Contract Offer ID',
+        ...this.propertyGridUtils.guessValue(contractOffer.contractOfferId),
+      },
+      {
+        icon: 'category',
+        label: 'Created At',
+        ...this.propertyGridUtils.guessValue(
+          this.propertyGridUtils.formatDate(contractOffer.createdAt),
+        ),
+      },
+    ];
     return {groupLabel, properties};
   }
 
-  private buildPolicyGroup(
+  buildPolicyGroup(
     asset: Asset,
     contractPolicy: Policy | null,
     groupLabel: string = 'Policies',
@@ -250,7 +221,7 @@ export class AssetPropertyGridGroupBuilder {
     return {groupLabel, properties};
   }
 
-  private buildContractPolicyField(contractPolicy: Policy, subtitle: string) {
+  buildContractPolicyField(contractPolicy: Policy, subtitle: string) {
     return {
       icon: 'policy',
       label: 'Contract Policy',
@@ -264,9 +235,7 @@ export class AssetPropertyGridGroupBuilder {
     };
   }
 
-  private buildContractAgreementGroup(
-    contractAgreement: ContractAgreementCardMapped,
-  ) {
+  buildContractAgreementGroup(contractAgreement: ContractAgreementCardMapped) {
     return {
       groupLabel: 'Contract Agreement',
       properties: [
@@ -327,24 +296,45 @@ export class AssetPropertyGridGroupBuilder {
     };
   }
 
-  private buildBrokerDataOfferConnectorEndpointFocusGroup(asset: Asset) {
+  buildBrokerDataOfferGroup(dataOffer: BrokerDataOffer): PropertyGridGroup {
+    const lastUpdate = formatDateAgo(
+      dataOffer.connectorOfflineSinceOrLastUpdatedAt,
+    );
     return {
       groupLabel: null,
       properties: [
         {
-          ...this.buildConnectorEndpointField(asset),
+          icon: 'today',
+          label: 'Updated At',
+          ...this.propertyGridUtils.guessValue(
+            this.propertyGridUtils.formatDate(dataOffer.updatedAt),
+          ),
+        },
+        {
+          ...this.buildConnectorEndpointField(dataOffer.connectorEndpoint),
           copyButton: true,
+        },
+        {
+          icon: 'link',
+          label: 'Status',
+          labelTitle: `Last updated ${lastUpdate}`,
+          text:
+            dataOffer.connectorOnlineStatus == 'ONLINE'
+              ? `Online`
+              : `Offline since ${lastUpdate}`,
+          additionalClasses:
+            dataOffer.connectorOnlineStatus == 'ONLINE' ? '' : 'text-warn',
         },
       ],
     };
   }
 
-  private buildConnectorEndpointField(asset: Asset): PropertyGridField {
+  buildConnectorEndpointField(endpoint: string): PropertyGridField {
     return {
       icon: 'link',
       label: 'Connector Endpoint',
       labelTitle: AssetProperties.originator,
-      ...this.propertyGridUtils.guessValue(asset.originator),
+      ...this.propertyGridUtils.guessValue(endpoint),
     };
   }
 }

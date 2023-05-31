@@ -102,9 +102,13 @@ app.get('/api/v1/data/wrapper/ui/pages/contract-agreement-page', (_, res) => {
 });
 
 // Broker API Wrapper
-const brokerCatalog = json('json/brokerCatalog.json');
+const brokerCatalogPage = json('json/brokerCatalogPage.json');
 app.post('/api/v1/data/wrapper/broker/catalog-page', (_, res) => {
-  res.json(brokerCatalog);
+  res.json(brokerCatalogPage);
+});
+const brokerConnectorPage = json('json/brokerConnectorPage.json');
+app.post('/api/v1/data/wrapper/broker/connector-page', (_, res) => {
+  res.json(brokerConnectorPage);
 });
 
 app.listen(3000, function () {

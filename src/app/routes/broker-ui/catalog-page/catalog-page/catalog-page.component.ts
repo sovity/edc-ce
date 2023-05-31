@@ -9,7 +9,7 @@ import {
   sampleTime,
 } from 'rxjs';
 import {map} from 'rxjs/operators';
-import {AssetDetailDialogData} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data';
+import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogResult} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-result';
 import {AssetDetailDialogComponent} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.component';
 import {value$} from '../../../../core/utils/form-group-utils';
@@ -18,27 +18,25 @@ import {CatalogPageDataService} from './catalog-page-data.service';
 import {BrokerDataOffer} from './mapping/broker-data-offer';
 
 @Component({
-  selector: 'catalog-browser-page',
-  templateUrl: './catalog-browser-page.component.html',
-  styleUrls: ['./catalog-browser-page.component.scss'],
+  selector: 'catalog-page',
+  templateUrl: './catalog-page.component.html',
+  styleUrls: ['./catalog-page.component.scss'],
 })
-export class CatalogBrowserPageComponent implements OnInit, OnDestroy {
+export class CatalogPageComponent implements OnInit, OnDestroy {
   data = emptyCatalogPageStateModel();
   data$ = new BehaviorSubject(this.data);
   searchText = new FormControl('');
   private fetch$ = new BehaviorSubject(null);
 
   constructor(
+    private assetDetailDialogDataService: AssetDetailDialogDataService,
     private catalogBrowserPageService: CatalogPageDataService,
     private matDialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
     this.catalogBrowserPageService
-      .contractOfferPageData$(
-        this.fetch$.pipe(sampleTime(200)),
-        this.searchText$(),
-      )
+      .catalogPageData$(this.fetch$.pipe(sampleTime(200)), this.searchText$())
       .subscribe((data) => {
         this.data = data;
         this.data$.next(data);
@@ -46,7 +44,8 @@ export class CatalogBrowserPageComponent implements OnInit, OnDestroy {
   }
 
   onDataOfferClick(dataOffer: BrokerDataOffer) {
-    const data = AssetDetailDialogData.forBrokerDataOffer(dataOffer);
+    const data =
+      this.assetDetailDialogDataService.brokerDataOfferDetails(dataOffer);
     const ref = this.matDialog.open(AssetDetailDialogComponent, {data});
     ref.afterClosed().subscribe((result: AssetDetailDialogResult) => {
       if (result?.refreshList) {

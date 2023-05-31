@@ -11,6 +11,7 @@ import {
   share,
 } from 'rxjs';
 import {filter, map, takeUntil} from 'rxjs/operators';
+import {AssetDetailDialogDataService} from 'src/app/component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogData} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data';
 import {AssetDetailDialogComponent} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.component';
 import {Fetched} from '../../../../core/services/models/fetched';
@@ -34,6 +35,7 @@ export class ContractAgreementPageComponent implements OnInit, OnDestroy {
   private fetch$ = new BehaviorSubject(null);
 
   constructor(
+    private assetDetailDialogDataService: AssetDetailDialogDataService,
     private matDialog: MatDialog,
     private contractAgreementPageService: ContractAgreementPageService,
   ) {}
@@ -50,7 +52,11 @@ export class ContractAgreementPageComponent implements OnInit, OnDestroy {
   onContractAgreementClick(card: ContractAgreementCardMapped) {
     const data$: Observable<AssetDetailDialogData> = this.card$(
       card.contractAgreementId,
-    ).pipe(map((it) => AssetDetailDialogData.forContractAgreement(it)));
+    ).pipe(
+      map((it) =>
+        this.assetDetailDialogDataService.contractAgreementDetails(it),
+      ),
+    );
     this.matDialog.open(AssetDetailDialogComponent, {
       data: data$,
       maxHeight: '90vh',

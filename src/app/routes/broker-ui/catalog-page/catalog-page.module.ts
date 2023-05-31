@@ -30,7 +30,7 @@ import {RouterModule} from '@angular/router';
 import {CatalogModule} from '../../../component-library/catalog/catalog.module';
 import {PipesAndDirectivesModule} from '../../../component-library/pipes-and-directives/pipes-and-directives.module';
 import {UiElementsModule} from '../../../component-library/ui-elements/ui-elements.module';
-import {CatalogBrowserPageComponent} from './catalog-page/catalog-browser-page.component';
+import {CatalogPageComponent} from './catalog-page/catalog-page.component';
 import {DataOfferCardsComponent} from './data-offer-cards/data-offer-cards.component';
 
 @NgModule({
@@ -75,7 +75,7 @@ import {DataOfferCardsComponent} from './data-offer-cards/data-offer-cards.compo
     PipesAndDirectivesModule,
     UiElementsModule,
   ],
-  declarations: [CatalogBrowserPageComponent, DataOfferCardsComponent],
-  exports: [CatalogBrowserPageComponent],
+  declarations: [CatalogPageComponent, DataOfferCardsComponent],
+  exports: [CatalogPageComponent],
 })
 export class CatalogPageModule {}

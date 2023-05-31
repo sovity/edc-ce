@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
-import {AssetDetailDialogData} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data';
+import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogComponent} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.component';
 import {Asset} from '../../../../core/services/models/asset';
 
@@ -19,14 +19,17 @@ export class AssetSelectComponent {
   @Input()
   assets: Asset[] = [];
 
-  constructor(private matDialog: MatDialog) {}
+  constructor(
+    private assetDetailDialogDataService: AssetDetailDialogDataService,
+    private matDialog: MatDialog,
+  ) {}
 
   isEqualId(a: Asset | null, b: Asset | null): boolean {
     return a?.id === b?.id;
   }
 
   onAssetClick(asset: Asset) {
-    const data = AssetDetailDialogData.forAssetDetails(asset, false);
+    const data = this.assetDetailDialogDataService.assetDetails(asset, false);
     this.matDialog.open(AssetDetailDialogComponent, {
       data,
       maxHeight: '90vh',

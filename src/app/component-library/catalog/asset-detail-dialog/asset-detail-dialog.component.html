@@ -1,17 +1,17 @@
 <div class="mat-card-header" mat-dialog-title removeClass="mat-dialog-title">
-  <mat-icon *ngIf="data.mode === 'asset-details'" class="mat-icon-[40px]">
+  <mat-icon *ngIf="data.type === 'asset-details'" class="mat-icon-[40px]">
     upload
   </mat-icon>
-  <mat-icon *ngIf="data.mode === 'broker-data-offer'" class="mat-icon-[40px]">
+  <mat-icon *ngIf="data.type === 'broker-data-offer'" class="mat-icon-[40px]">
     sim_card
   </mat-icon>
-  <mat-icon *ngIf="data.mode === 'contract-agreement'" class="mat-icon-[40px]">
+  <mat-icon *ngIf="data.type === 'contract-agreement'" class="mat-icon-[40px]">
     {{
       data.contractAgreement!!.direction === 'PROVIDING' ? 'upload' : 'download'
     }}
   </mat-icon>
   <contract-offer-icon
-    *ngIf="data.mode === 'contract-offer'"
+    *ngIf="data.type === 'contract-offer'"
     [contractOffer]="data.contractOffer!"></contract-offer-icon>
   <div class="mat-card-header-text">
     <div class="mat-card-title">
@@ -27,9 +27,9 @@
   <!-- Progress Bar -->
   <mat-progress-bar
     *ngIf="
-      (data.mode === 'contract-offer' &&
+      (data.type === 'contract-offer' &&
         contractNegotiationService.isBusy(data.contractOffer!)) ||
-      (data.mode === 'contract-agreement' &&
+      (data.type === 'contract-agreement' &&
         data.contractAgreement!.isInProgress)
     "
     color="primary"
@@ -49,7 +49,7 @@
   </div>
 
   <!-- Transfer History -->
-  <ng-container *ngIf="data.mode === 'contract-agreement'">
+  <ng-container *ngIf="data.type === 'contract-agreement'">
     <div
       class="flex flex-row flex-wrap property-grid-group-title"
       [style.margin-top.px]="30">
@@ -70,7 +70,7 @@
       <button mat-dialog-close mat-button [disabled]="loading">Close</button>
 
       <button
-        *ngIf="data.allowDelete"
+        *ngIf="data.showDeleteButton"
         mat-raised-button
         color="warn"
         [disabled]="loading"
@@ -79,7 +79,7 @@
       </button>
 
       <button
-        *ngIf="data.mode === 'contract-offer'"
+        *ngIf="data.type === 'contract-offer'"
         mat-raised-button
         color="primary"
         [disabled]="negotiationState != 'ready'"
@@ -96,7 +96,7 @@
 
       <button
         *ngIf="
-          data.mode === 'contract-agreement' &&
+          data.type === 'contract-agreement' &&
           data.contractAgreement?.direction === 'CONSUMING'
         "
         mat-raised-button

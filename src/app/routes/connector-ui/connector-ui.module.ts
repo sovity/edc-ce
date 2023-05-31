@@ -8,6 +8,8 @@ import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {AssetDetailDialogDataService} from '../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
+import {AssetPropertyGridGroupBuilder} from '../../component-library/catalog/asset-detail-dialog/asset-property-grid-group-builder';
 import {PipesAndDirectivesModule} from '../../component-library/pipes-and-directives/pipes-and-directives.module';
 import {UiElementsModule} from '../../component-library/ui-elements/ui-elements.module';
 import {AssetPageModule} from './asset-page/asset-page.module';
@@ -55,7 +57,11 @@ import {TransferHistoryPageModule} from './transfer-history-page/transfer-histor
     ConnectorUiRoutingModule,
   ],
   declarations: [ConnectorUiComponent],
-  providers: [PreviousRouteListener],
+  providers: [
+    PreviousRouteListener,
+    AssetPropertyGridGroupBuilder,
+    AssetDetailDialogDataService,
+  ],
 })
 export class ConnectorUiModule {
   constructor(previousRouteListener: PreviousRouteListener) {

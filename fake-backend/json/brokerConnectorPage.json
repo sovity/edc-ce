@@ -1,0 +1,30 @@
+{
+  "availableSortings": [
+    {"sorting": "MOST_RECENT", "title": "Most Recent"},
+    {"sorting": "TITLE", "title": "By Title"}
+  ],
+  "paginationMetadata": {
+    "numTotal": 2,
+    "numVisible": 2,
+    "pageOneBased": 2,
+    "pageSize": 1
+  },
+  "connectors": [
+    {
+      "id": "https://example.com",
+      "endpoint": "https://example.com/ids/data",
+      "createdAt": "2023-05-31T14:06:21.536182+02:00",
+      "onlineStatus": "OFFLINE",
+      "numContractOffers": 0
+    },
+    {
+      "id": "https://other-connector.com",
+      "endpoint": "https://other-connector.com/ids/data",
+      "createdAt": "2023-05-31T14:06:21.536182+02:00",
+      "lastSuccessfulRefreshAt": "2023-05-31T14:06:21.536182+02:00",
+      "lastRefreshAttemptAt": "2023-05-31T14:06:21.536182+02:00",
+      "onlineStatus": "ONLINE",
+      "numContractOffers": 2
+    }
+  ]
+}

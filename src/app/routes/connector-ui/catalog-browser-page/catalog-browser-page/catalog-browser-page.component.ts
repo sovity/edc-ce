@@ -9,7 +9,7 @@ import {
   sampleTime,
 } from 'rxjs';
 import {map} from 'rxjs/operators';
-import {AssetDetailDialogData} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data';
+import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogResult} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-result';
 import {AssetDetailDialogComponent} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.component';
 import {CatalogApiUrlService} from '../../../../core/services/api/catalog-api-url.service';
@@ -34,6 +34,7 @@ export class CatalogBrowserPageComponent implements OnInit, OnDestroy {
   private fetch$ = new BehaviorSubject(null);
 
   constructor(
+    private assetDetailDialogDataService: AssetDetailDialogDataService,
     private catalogBrowserPageService: CatalogBrowserPageService,
     private catalogApiUrlService: CatalogApiUrlService,
     private matDialog: MatDialog,
@@ -53,7 +54,8 @@ export class CatalogBrowserPageComponent implements OnInit, OnDestroy {
   }
 
   onContractOfferClick(contractOffer: ContractOffer) {
-    const data = AssetDetailDialogData.forContractOffer(contractOffer);
+    const data =
+      this.assetDetailDialogDataService.contractOfferDetails(contractOffer);
     const ref = this.matDialog.open(AssetDetailDialogComponent, {data});
     ref.afterClosed().subscribe((result: AssetDetailDialogResult) => {
       if (result?.refreshList) {

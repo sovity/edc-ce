@@ -15,18 +15,21 @@
         [style]="config.brandLogoStyle" />
     </mat-toolbar>
     <mat-nav-list class="overflow-auto grow">
-      <a *ngFor="let route of routes" [routerLink]="[route.path]">
-        <mat-list-item
-          *ngIf="
-            route.component &&
-            (!route.data?.requiresFeature ||
-              (route.data!.requiresFeature! | isActiveFeature))
-          "
-          [routerLinkActive]="['is-active']">
-          <mat-icon mat-list-icon>{{ route.data?.icon }}</mat-icon>
-          <span matLine>{{ route.data?.title ?? route.path }}</span>
-        </mat-list-item>
-      </a>
+      <ng-container *ngFor="let route of routes">
+        <a *ngIf="!route.data?.hideInNav" [routerLink]="[route.path]">
+          <mat-list-item
+            *ngIf="
+              route.component &&
+              (!route.data?.requiresFeature ||
+                (route.data!.requiresFeature! | isActiveFeature))
+            "
+            [routerLinkActive]="['is-active']"
+            [routerLinkActiveOptions]="{exact: route.data?.exactPathMatch}">
+            <mat-icon mat-list-icon>{{ route.data?.icon }}</mat-icon>
+            <span matLine>{{ route.data?.title ?? route.path }}</span>
+          </mat-list-item>
+        </a></ng-container
+      >
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

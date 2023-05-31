@@ -1,7 +1,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {Observable, concat, interval, of} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
-import {formatDistanceToNow} from 'date-fns';
+import {formatDateAgo} from './formatDateAgo';
 
 /**
  * Displays a date as estimated relative time (e.g. "3 days ago").
@@ -12,16 +12,8 @@ export class AgoPipe implements PipeTransform {
 
   transform(date?: Date | null): Observable<string> {
     return this.interval$.pipe(
-      map(() => this.ago(date)),
+      map(() => formatDateAgo(date)),
       distinctUntilChanged(),
     );
-  }
-
-  ago(date?: Date | null): string {
-    if (!date) {
-      return '';
-    }
-
-    return formatDistanceToNow(date, {addSuffix: true});
   }
 }

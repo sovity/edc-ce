@@ -11,7 +11,9 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {PipesAndDirectivesModule} from '../pipes-and-directives/pipes-and-directives.module';
 import {PropertyGridModule} from '../property-grid/property-grid.module';
 import {UiElementsModule} from '../ui-elements/ui-elements.module';
+import {AssetDetailDialogDataService} from './asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogComponent} from './asset-detail-dialog/asset-detail-dialog.component';
+import {AssetPropertyGridGroupBuilder} from './asset-detail-dialog/asset-property-grid-group-builder';
 import {ContractOfferCardsComponent} from './contract-offer-cards/contract-offer-cards.component';
 import {ContractOfferIconComponent} from './contract-offer-icon/contract-offer-icon.component';
 import {TransferHistoryMiniListComponent} from './transfer-history-mini-list/transfer-history-mini-list.component';
@@ -48,5 +50,6 @@ import {TransferHistoryMiniListComponent} from './transfer-history-mini-list/tra
     ContractOfferIconComponent,
     TransferHistoryMiniListComponent,
   ],
+  providers: [AssetPropertyGridGroupBuilder, AssetDetailDialogDataService],
 })
 export class CatalogModule {}

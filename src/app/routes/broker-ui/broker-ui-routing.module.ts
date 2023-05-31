@@ -1,17 +1,28 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {BrokerUiComponent} from './broker-ui.component';
-import {CatalogBrowserPageComponent} from './catalog-browser-page/catalog-page/catalog-browser-page.component';
+import {CatalogPageComponent} from './catalog-page/catalog-page/catalog-page.component';
+import {ConnectorPageComponent} from './connector-page/connector-page/connector-page.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: CatalogBrowserPageComponent,
+    component: CatalogPageComponent,
     data: {
       title: 'Data Offers',
       icon: 'sim_card',
+      exactPathMatch: true,
     },
     pathMatch: 'full',
+  },
+  {
+    path: 'connectors',
+    component: ConnectorPageComponent,
+    data: {
+      title: 'Connectors',
+      icon: 'link',
+      hideInNav: true,
+    },
   },
 ];
 

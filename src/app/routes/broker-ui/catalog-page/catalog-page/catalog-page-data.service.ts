@@ -15,7 +15,7 @@ export class CatalogPageDataService {
     private brokerCatalogMapper: BrokerCatalogMapper,
   ) {}
 
-  contractOfferPageData$(
+  catalogPageData$(
     refresh$: Observable<any>,
     searchText$: Observable<string>,
   ): Observable<CatalogPageData> {

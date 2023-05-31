@@ -12,7 +12,8 @@ import {PipesAndDirectivesModule} from '../../component-library/pipes-and-direct
 import {UiElementsModule} from '../../component-library/ui-elements/ui-elements.module';
 import {BrokerUiRoutingModule} from './broker-ui-routing.module';
 import {BrokerUiComponent} from './broker-ui.component';
-import {CatalogPageModule} from './catalog-browser-page/catalog-page.module';
+import {CatalogPageModule} from './catalog-page/catalog-page.module';
+import {ConnectorPageModule} from './connector-page/connector-page.module';
 
 @NgModule({
   imports: [
@@ -35,6 +36,7 @@ import {CatalogPageModule} from './catalog-browser-page/catalog-page.module';
 
     // Pages
     CatalogPageModule,
+    ConnectorPageModule,
 
     // Routing
     BrokerUiRoutingModule,

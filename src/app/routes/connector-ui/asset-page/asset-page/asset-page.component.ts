@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
-import {AssetDetailDialogData} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data';
+import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogResult} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-result';
 import {AssetDetailDialogComponent} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.component';
 import {AssetService} from '../../../../core/services/api/legacy-managent-api-client';
@@ -28,6 +28,7 @@ export class AssetPageComponent implements OnInit {
   private fetch$ = new BehaviorSubject(null);
 
   constructor(
+    private assetDetailDialogDataService: AssetDetailDialogDataService,
     private assetService: AssetService,
     private dialog: MatDialog,
     private assetPropertyMapper: AssetPropertyMapper,
@@ -73,7 +74,7 @@ export class AssetPageComponent implements OnInit {
   }
 
   onAssetClick(asset: Asset) {
-    const data = AssetDetailDialogData.forAssetDetails(asset, true);
+    const data = this.assetDetailDialogDataService.assetDetails(asset, true);
     const ref = this.dialog.open(AssetDetailDialogComponent, {
       data,
       maxHeight: '90vh',

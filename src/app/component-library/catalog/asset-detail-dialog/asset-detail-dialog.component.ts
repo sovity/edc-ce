@@ -19,7 +19,6 @@ import {
 import {PropertyGridGroup} from '../../property-grid/property-grid-group/property-grid-group';
 import {AssetDetailDialogData} from './asset-detail-dialog-data';
 import {AssetDetailDialogResult} from './asset-detail-dialog-result';
-import {AssetPropertyGridGroupBuilder} from './asset-property-grid-group-builder';
 
 /**
  * Asset Detail Dialog
@@ -32,7 +31,6 @@ import {AssetPropertyGridGroupBuilder} from './asset-property-grid-group-builder
   selector: 'asset-detail-dialog',
   templateUrl: './asset-detail-dialog.component.html',
   styleUrls: ['./asset-detail-dialog.component.scss'],
-  providers: [AssetPropertyGridGroupBuilder],
 })
 export class AssetDetailDialogComponent implements OnDestroy {
   data!: AssetDetailDialogData;
@@ -58,7 +56,6 @@ export class AssetDetailDialogComponent implements OnDestroy {
     private matDialogRef: MatDialogRef<AssetDetailDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     private _data: AssetDetailDialogData | Observable<AssetDetailDialogData>,
-    private assetPropertyGridGroupBuilder: AssetPropertyGridGroupBuilder,
     public contractNegotiationService: ContractNegotiationService,
   ) {
     if (isObservable(this._data)) {
@@ -73,13 +70,7 @@ export class AssetDetailDialogComponent implements OnDestroy {
   setData(data: AssetDetailDialogData) {
     this.data = data;
     this.asset = this.data.asset;
-    this.propGroups =
-      this.assetPropertyGridGroupBuilder.buildPropertyGridGroups(
-        this.data.asset,
-        this.data.contractAgreement,
-        this.data.brokerDataOffer,
-        this.data.policy,
-      );
+    this.propGroups = this.data.propertyGridGroups;
   }
 
   onDeleteClick() {
