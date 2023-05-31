@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementPageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,5 +37,13 @@ public class UiResource {
     @Operation(description = "Collect all data for Contract Agreement Page")
     public ContractAgreementPage contractAgreementEndpoint() {
         return contractAgreementApiService.contractAgreementPage();
+    }
+
+    @GET
+    @Path("pages/transfer-history-page")
+    @Produces(MediaType.APPLICATION_JSON)
+    public TransferHistoryPage transferHistoryPageEndpoint() {
+        // TODO: Implement
+        throw new IllegalStateException("Not yet implemented");
     }
 }
