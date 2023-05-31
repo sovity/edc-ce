@@ -33,6 +33,9 @@ public class BrokerServerExtension implements ServiceExtension {
     @Setting
     public static final String CRON_CONNECTOR_REFRESH = "edc.broker.server.cron.connector.refresh";
 
+    @Setting
+    public static final String NUM_THREADS = "edc.broker.server.num.threads";
+
     @Inject
     private ManagementApiConfiguration managementApiConfiguration;
 

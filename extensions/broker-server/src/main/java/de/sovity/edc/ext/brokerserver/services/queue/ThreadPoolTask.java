@@ -14,27 +14,24 @@
 
 package de.sovity.edc.ext.brokerserver.services.queue;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Comparator;
-
 
 @Getter
 @RequiredArgsConstructor
-@EqualsAndHashCode(of = "endpoint", callSuper = false)
-public class ConnectorQueueEntry implements Comparable<ConnectorQueueEntry> {
-    private static final Comparator<ConnectorQueueEntry> COMPARATOR = Comparator
-            .comparing(ConnectorQueueEntry::getPriority);
-
-    @NotNull
-    private final String endpoint;
+public class ThreadPoolTask implements Comparable<ThreadPoolTask>, Runnable {
     private final int priority;
+    private final Runnable task;
 
     @Override
-    public int compareTo(@NotNull ConnectorQueueEntry connectorQueueEntry) {
-        return COMPARATOR.compare(this, connectorQueueEntry);
+    public int compareTo(@NotNull ThreadPoolTask threadPoolTask) {
+        return priority - threadPoolTask.priority;
+    }
+
+    @Override
+    public void run() {
+        this.task.run();
     }
 }

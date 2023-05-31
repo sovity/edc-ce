@@ -45,6 +45,7 @@ public class ConnectorUpdater {
      */
     public void updateConnector(String connectorEndpoint) {
         try {
+            monitor.info("Updating connector: " + connectorEndpoint);
             ConnectorSelfDescription selfDescription = connectorSelfDescriptionFetcher.fetch(connectorEndpoint);
             var dataOffers = dataOfferFetcher.fetch(connectorEndpoint);
 
