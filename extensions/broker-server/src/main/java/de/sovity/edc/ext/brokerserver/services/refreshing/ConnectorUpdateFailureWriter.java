@@ -31,8 +31,7 @@ public class ConnectorUpdateFailureWriter {
     public void handleConnectorOffline(DSLContext dsl, ConnectorRecord connector, Throwable e) {
         // Update Connector
         connector.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
-        connector.setLastUpdate(OffsetDateTime.now());
-        connector.setOfflineSince(OffsetDateTime.now());
+        connector.setLastRefreshAttemptAt(OffsetDateTime.now());
         connector.update();
 
         // Log Event

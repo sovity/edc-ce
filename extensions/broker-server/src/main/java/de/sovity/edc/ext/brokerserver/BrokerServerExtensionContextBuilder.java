@@ -42,7 +42,6 @@ import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferPatchA
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferPatchBuilder;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferRecordUpdater;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferWriter;
-import de.sovity.edc.ext.brokerserver.services.refreshing.selfdescription.ConnectorSelfDescriptionFetcher;
 import de.sovity.edc.ext.brokerserver.services.schedules.ConnectorRefreshJob;
 import de.sovity.edc.ext.brokerserver.services.schedules.QuartzScheduleInitializer;
 import de.sovity.edc.ext.brokerserver.services.schedules.utils.CronJobRef;
@@ -83,7 +82,6 @@ public class BrokerServerExtensionContextBuilder {
 
         // Services
         var objectMapper = typeManager.getMapper();
-        var connectorSelfDescriptionFetcher = new ConnectorSelfDescriptionFetcher();
         var brokerEventLogger = new BrokerEventLogger();
         var contractOfferRecordUpdater = new ContractOfferRecordUpdater();
         var dataOfferRecordUpdater = new DataOfferRecordUpdater();
@@ -102,11 +100,9 @@ public class BrokerServerExtensionContextBuilder {
         var fetchedDataOfferBuilder = new DataOfferBuilder(objectMapper);
         var dataOfferFetcher = new DataOfferFetcher(contractOfferFetcher, fetchedDataOfferBuilder);
         var connectorUpdater = new ConnectorUpdater(
-                connectorSelfDescriptionFetcher,
                 dataOfferFetcher,
                 connectorUpdateSuccessWriter,
                 connectorUpdateFailureWriter,
-                contractOfferFetcher,
                 connectorQueries,
                 dslContextFactory,
                 monitor

@@ -52,8 +52,6 @@ public class ConnectorCreator {
         var connector = new ConnectorRecord();
         connector.setEndpoint(endpoint);
         connector.setConnectorId(connectorId);
-        connector.setTitle("Unknown Connector");
-        connector.setDescription("Awaiting initial crawling of given connector.");
         connector.setCreatedAt(OffsetDateTime.now());
         connector.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
         return connector;

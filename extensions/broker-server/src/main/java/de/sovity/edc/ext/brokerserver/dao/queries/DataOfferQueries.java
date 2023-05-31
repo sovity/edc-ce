@@ -47,7 +47,7 @@ public class DataOfferQueries {
         // This date should always be non-null
         // It's used in the UI to display the last relevant change date of a connector
         var offlineSinceOrLastUpdatedAt = DSL.coalesce(
-                DSL.case_(c.ONLINE_STATUS).when(ConnectorOnlineStatus.OFFLINE, c.OFFLINE_SINCE).else_(c.LAST_UPDATE),
+                c.LAST_SUCCESSFUL_REFRESH_AT,
                 c.CREATED_AT
         );
 
@@ -56,21 +56,18 @@ public class DataOfferQueries {
                 assetTitle,
                 assetDescription,
                 assetKeywords,
-                c.TITLE,
                 c.ENDPOINT
         ));
 
         return dsl.select(
                         assetId.as("assetId"),
-                        c.ENDPOINT.as("connectorEndpoint"),
-                        c.TITLE.as("connectorTitle"),
-                        c.DESCRIPTION.as("connectorDescription"),
-                        c.ONLINE_STATUS.as("connectorOnlineStatus"),
                         d.ASSET_PROPERTIES.cast(String.class).as("assetPropertiesJson"),
                         d.CREATED_AT,
                         d.UPDATED_AT,
-                        offlineSinceOrLastUpdatedAt.as("offlineSinceOrLastUpdatedAt"),
-                        getContractOffers(d.CONNECTOR_ENDPOINT, d.ASSET_ID).as("contractOffers")
+                        getContractOffers(d.CONNECTOR_ENDPOINT, d.ASSET_ID).as("contractOffers"),
+                        c.ENDPOINT.as("connectorEndpoint"),
+                        c.ONLINE_STATUS.as("connectorOnlineStatus"),
+                        offlineSinceOrLastUpdatedAt.as("connectorOfflineSinceOrLastUpdatedAt")
                 )
                 .from(c, d)
                 .where(
@@ -87,7 +84,7 @@ public class DataOfferQueries {
         if (sorting == null || sorting == CatalogPageSortingType.TITLE) {
             orderBy = List.of(assetTitle.asc(), c.ENDPOINT.asc());
         } else if (sorting == CatalogPageSortingType.MOST_RECENT) {
-            orderBy = List.of(d.CREATED_AT.desc(), c.TITLE.asc());
+            orderBy = List.of(d.CREATED_AT.desc(), c.ENDPOINT.asc());
         } else if (sorting == CatalogPageSortingType.ORIGINATOR) {
             orderBy = List.of(c.ENDPOINT.asc(), assetTitle.asc());
         } else {

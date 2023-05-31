@@ -28,13 +28,11 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DataOfferDbRow {
     String assetId;
-    String connectorEndpoint;
-    String connectorTitle;
-    String connectorDescription;
-    ConnectorOnlineStatus connectorOnlineStatus;
     String assetPropertiesJson;
     OffsetDateTime createdAt;
     OffsetDateTime updatedAt;
-    OffsetDateTime offlineSinceOrLastUpdatedAt;
     List<DataOfferContractOfferDbRow> contractOffers;
+    String connectorEndpoint;
+    ConnectorOnlineStatus connectorOnlineStatus;
+    OffsetDateTime connectorOfflineSinceOrLastUpdatedAt;
 }

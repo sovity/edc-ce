@@ -13,6 +13,10 @@ val sovityEdcExtensionsVersion: String by project
 val restAssured: String by project
 val testcontainersVersion: String by project
 
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
+}
+
 dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.28")
     compileOnly("org.projectlombok:lombok:1.18.28")
@@ -26,7 +30,7 @@ dependencies {
     implementation("${edcGroup}:ids-jsonld-serdes:${edcVersion}")
 
     api(project(":extensions:broker-server-postgres-flyway-jooq"))
-    api("${sovityEdcGroup}:wrapper-broker-api:${sovityEdcExtensionsVersion}")
+    api("${sovityEdcGroup}:wrapper-broker-api:${sovityEdcExtensionsVersion}") { isChanging = true }
 
     implementation("com.squareup.okhttp3:okhttp:${okHttpVersion}")
 

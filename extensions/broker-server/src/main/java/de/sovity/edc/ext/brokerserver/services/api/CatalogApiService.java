@@ -23,10 +23,8 @@ import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageSortingItem;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageSortingType;
 import de.sovity.edc.ext.wrapper.api.broker.model.CnfFilter;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorOnlineStatus;
-import de.sovity.edc.ext.wrapper.api.broker.model.DataOffer;
-import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferConnectorInfo;
-import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
+import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferListEntry;
+import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferListEntryContractOffer;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 
@@ -50,39 +48,42 @@ public class CatalogApiService {
         result.setAvailableSortings(buildAvailableSortings());
         result.setPaginationMetadata(paginationMetadataUtils.buildDummyPaginationMetadata(dataOfferDbRows.size()));
         result.setAvailableFilters(new CnfFilter(List.of()));
-        result.setDataOffers(buildDataOffers(dataOfferDbRows));
+        result.setDataOffers(buildDataOfferListEntries(dataOfferDbRows));
         return result;
     }
 
-    private List<DataOffer> buildDataOffers(List<DataOfferDbRow> dataOfferDbRows) {
-        return dataOfferDbRows.stream().map(this::buildDataOffer).toList();
+    private List<DataOfferListEntry> buildDataOfferListEntries(List<DataOfferDbRow> dataOfferDbRows) {
+        return dataOfferDbRows.stream()
+                .map(this::buildDataOfferListEntry)
+                .toList();
     }
 
-    private DataOffer buildDataOffer(DataOfferDbRow dataOfferDbRow) {
-        AssetDto assetDto = new AssetDto();
-        assetDto.setAssetId(dataOfferDbRow.getAssetId());
-        assetDto.setCreatedAt(dataOfferDbRow.getCreatedAt());
-        assetDto.setProperties(assetPropertyParser.parsePropertiesFromJsonString(dataOfferDbRow.getAssetPropertiesJson()));
-
-        DataOfferConnectorInfo connectorInfo = new DataOfferConnectorInfo();
-        connectorInfo.setEndpoint(dataOfferDbRow.getConnectorEndpoint());
-        connectorInfo.setTitle(dataOfferDbRow.getConnectorTitle());
-        connectorInfo.setDescription(dataOfferDbRow.getConnectorDescription());
-        connectorInfo.setOnlineStatus(getOnlineStatus(dataOfferDbRow));
-        connectorInfo.setOfflineSinceOrLastUpdatedAt(dataOfferDbRow.getOfflineSinceOrLastUpdatedAt());
-
-        DataOffer dataOffer = new DataOffer();
-        dataOffer.setAsset(assetDto);
-        dataOffer.setConnectorInfo(connectorInfo);
-        dataOffer.setPolicy(buildPolicies(dataOfferDbRow));
+    private DataOfferListEntry buildDataOfferListEntry(DataOfferDbRow dataOfferDbRow) {
+        var dataOffer = new DataOfferListEntry();
+        dataOffer.setAssetId(dataOfferDbRow.getAssetId());
+        dataOffer.setCreatedAt(dataOfferDbRow.getCreatedAt());
+        dataOffer.setUpdatedAt(dataOfferDbRow.getUpdatedAt());
+        dataOffer.setProperties(assetPropertyParser.parsePropertiesFromJsonString(dataOfferDbRow.getAssetPropertiesJson()));
+        dataOffer.setContractOffers(buildDataOfferListEntryContractOffers(dataOfferDbRow));
+        dataOffer.setConnectorEndpoint(dataOfferDbRow.getConnectorEndpoint());
+        dataOffer.setConnectorOfflineSinceOrLastUpdatedAt(dataOfferDbRow.getConnectorOfflineSinceOrLastUpdatedAt());
+        dataOffer.setConnectorOnlineStatus(getOnlineStatus(dataOfferDbRow));
         return dataOffer;
     }
 
-    private List<PolicyDto> buildPolicies(DataOfferDbRow dataOfferDbRow) {
+    private List<DataOfferListEntryContractOffer> buildDataOfferListEntryContractOffers(DataOfferDbRow dataOfferDbRow) {
         return dataOfferDbRow.getContractOffers().stream()
-                .map(DataOfferContractOfferDbRow::getPolicyJson)
-                .map(policyDtoBuilder::buildPolicyFromJson)
+                .map(this::buildDataOfferListEntryContractOffer)
                 .toList();
+    }
+
+    private DataOfferListEntryContractOffer buildDataOfferListEntryContractOffer(DataOfferContractOfferDbRow contractOfferDbRow) {
+        var contractOffer = new DataOfferListEntryContractOffer();
+        contractOffer.setContractOfferId(contractOfferDbRow.getContractOfferId());
+        contractOffer.setContractPolicy(policyDtoBuilder.buildPolicyFromJson(contractOfferDbRow.getPolicyJson()));
+        contractOffer.setCreatedAt(contractOfferDbRow.getCreatedAt());
+        contractOffer.setUpdatedAt(contractOfferDbRow.getUpdatedAt());
+        return contractOffer;
     }
 
     private ConnectorOnlineStatus getOnlineStatus(DataOfferDbRow dataOfferDbRow) {

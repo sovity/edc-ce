@@ -16,7 +16,6 @@ package de.sovity.edc.ext.brokerserver.services.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.client.gen.model.CatalogPageQuery;
-import de.sovity.edc.client.gen.model.DataOfferConnectorInfo;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
 import de.sovity.edc.ext.brokerserver.db.TestDatabaseFactory;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
@@ -33,6 +32,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.time.OffsetDateTime;
 import java.util.Map;
 
+import static de.sovity.edc.client.gen.model.DataOfferListEntry.ConnectorOnlineStatusEnum.ONLINE;
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
 import static de.sovity.edc.ext.brokerserver.TestUtils.edcClient;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,14 +56,12 @@ class CatalogApiTest {
             var today = OffsetDateTime.now().withNano(0);
 
             var connector = dsl.newRecord(Tables.CONNECTOR);
-            connector.setTitle("Example Connector");
-            connector.setDescription("My example Connector...");
             connector.setConnectorId("http://my-connector");
             connector.setEndpoint("http://my-connector/ids/data");
             connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);
             connector.setCreatedAt(today.minusDays(1));
-            connector.setLastUpdate(today);
-            connector.setOfflineSince(null);
+            connector.setLastRefreshAttemptAt(today);
+            connector.setLastSuccessfulRefreshAt(today);
             connector.insert();
 
             var dataOffer = dsl.newRecord(Tables.DATA_OFFER);
@@ -88,18 +86,16 @@ class CatalogApiTest {
             assertThat(result.getDataOffers()).hasSize(1);
 
             var dataOfferResult = result.getDataOffers().get(0);
-            assertThat(dataOfferResult.getConnectorInfo().getDescription()).isEqualTo("My example Connector...");
-            assertThat(dataOfferResult.getConnectorInfo().getEndpoint()).isEqualTo("http://my-connector/ids/data");
-            assertThat(dataOfferResult.getConnectorInfo().getOfflineSinceOrLastUpdatedAt()).isEqualTo(today);
-            assertThat(dataOfferResult.getConnectorInfo().getOnlineStatus()).isEqualTo(DataOfferConnectorInfo.OnlineStatusEnum.ONLINE);
-            assertThat(dataOfferResult.getConnectorInfo().getTitle()).isEqualTo("Example Connector");
-            assertThat(dataOfferResult.getAsset().getAssetId()).isEqualTo("urn:artifact:my-asset");
-            assertThat(dataOfferResult.getAsset().getProperties()).isEqualTo(Map.of(
+            assertThat(dataOfferResult.getConnectorEndpoint()).isEqualTo("http://my-connector/ids/data");
+            assertThat(dataOfferResult.getConnectorOfflineSinceOrLastUpdatedAt()).isEqualTo(today);
+            assertThat(dataOfferResult.getConnectorOnlineStatus()).isEqualTo(ONLINE);
+            assertThat(dataOfferResult.getAssetId()).isEqualTo("urn:artifact:my-asset");
+            assertThat(dataOfferResult.getProperties()).isEqualTo(Map.of(
                     "asset:prop:id", "urn:artifact:my-asset",
                     "asset:prop:name", "my-asset"
             ));
-            assertThat(dataOfferResult.getAsset().getCreatedAt()).isEqualTo(today.minusDays(5));
-            assertThat(toJson(dataOfferResult.getPolicy().get(0).getLegacyPolicy())).isEqualTo(toJson(dummyPolicy()));
+            assertThat(dataOfferResult.getCreatedAt()).isEqualTo(today.minusDays(5));
+            assertThat(toJson(dataOfferResult.getContractOffers().get(0).getContractPolicy().getLegacyPolicy())).isEqualTo(toJson(dummyPolicy()));
         });
     }
 

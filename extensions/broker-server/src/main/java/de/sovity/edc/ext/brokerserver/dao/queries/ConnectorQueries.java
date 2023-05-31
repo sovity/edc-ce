@@ -57,8 +57,7 @@ public class ConnectorQueries {
 
     public List<ConnectorPageDbRow> forConnectorPage(DSLContext dsl, String searchQuery, ConnectorPageSortingType sorting) {
         var c = Tables.CONNECTOR;
-        var filterBySearchQuery = SearchUtils.simpleSearch(searchQuery, List.of(
-                c.TITLE, c.DESCRIPTION, c.ENDPOINT, c.CONNECTOR_ID));
+        var filterBySearchQuery = SearchUtils.simpleSearch(searchQuery, List.of(c.ENDPOINT, c.CONNECTOR_ID));
         return dsl.select(c.asterisk(), dataOfferCount(c.ENDPOINT).as("numDataOffers"))
                 .from(c)
                 .where(filterBySearchQuery)
@@ -68,12 +67,16 @@ public class ConnectorQueries {
 
     @NotNull
     private List<OrderField<?>> sortConnectorPage(Connector c, ConnectorPageSortingType sorting) {
-        var alphabetically = c.TITLE.asc();
+        var alphabetically = c.ENDPOINT.asc();
         var recentFirst = c.CREATED_AT.desc();
-        if (sorting == ConnectorPageSortingType.MOST_RECENT) {
+
+        if (sorting == null || sorting == ConnectorPageSortingType.TITLE) {
+            return List.of(alphabetically, recentFirst);
+        } else if (sorting == ConnectorPageSortingType.MOST_RECENT) {
             return List.of(recentFirst, alphabetically);
         }
-        return List.of(alphabetically, recentFirst);
+
+        throw new IllegalArgumentException("Unhandled sorting type: " + sorting);
     }
 
     private Field<Long> dataOfferCount(Field<String> endpoint) {

@@ -28,11 +28,9 @@ import java.time.OffsetDateTime;
 public class ConnectorPageDbRow {
     String endpoint;
     String connectorId;
-    String title;
-    String description;
-    OffsetDateTime lastUpdate;
-    OffsetDateTime offlineSince;
-    OffsetDateTime createdAt;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime lastSuccessfulRefreshAt;
+    private OffsetDateTime lastRefreshAttemptAt;
     ConnectorOnlineStatus onlineStatus;
     Integer numDataOffers;
 }

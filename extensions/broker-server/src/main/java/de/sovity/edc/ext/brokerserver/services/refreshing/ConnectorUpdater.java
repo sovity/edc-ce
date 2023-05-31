@@ -17,10 +17,7 @@ package de.sovity.edc.ext.brokerserver.services.refreshing;
 import de.sovity.edc.ext.brokerserver.dao.queries.ConnectorQueries;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
-import de.sovity.edc.ext.brokerserver.services.refreshing.offers.ContractOfferFetcher;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferFetcher;
-import de.sovity.edc.ext.brokerserver.services.refreshing.selfdescription.ConnectorSelfDescription;
-import de.sovity.edc.ext.brokerserver.services.refreshing.selfdescription.ConnectorSelfDescriptionFetcher;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.monitor.Monitor;
 
@@ -29,11 +26,9 @@ import org.eclipse.edc.spi.monitor.Monitor;
  */
 @RequiredArgsConstructor
 public class ConnectorUpdater {
-    private final ConnectorSelfDescriptionFetcher connectorSelfDescriptionFetcher;
     private final DataOfferFetcher dataOfferFetcher;
     private final ConnectorUpdateSuccessWriter connectorUpdateSuccessWriter;
     private final ConnectorUpdateFailureWriter connectorUpdateFailureWriter;
-    private final ContractOfferFetcher contractOfferFetcher;
     private final ConnectorQueries connectorQueries;
     private final DslContextFactory dslContextFactory;
     private final Monitor monitor;
@@ -46,13 +41,12 @@ public class ConnectorUpdater {
     public void updateConnector(String connectorEndpoint) {
         try {
             monitor.info("Updating connector: " + connectorEndpoint);
-            ConnectorSelfDescription selfDescription = connectorSelfDescriptionFetcher.fetch(connectorEndpoint);
             var dataOffers = dataOfferFetcher.fetch(connectorEndpoint);
 
             // Update connector in a single transaction
             dslContextFactory.transaction(dsl -> {
                 ConnectorRecord connectorRecord = connectorQueries.findByEndpoint(dsl, connectorEndpoint);
-                connectorUpdateSuccessWriter.handleConnectorOnline(dsl, connectorRecord, selfDescription, dataOffers);
+                connectorUpdateSuccessWriter.handleConnectorOnline(dsl, connectorRecord, dataOffers);
             });
         } catch (Exception e) {
             try {

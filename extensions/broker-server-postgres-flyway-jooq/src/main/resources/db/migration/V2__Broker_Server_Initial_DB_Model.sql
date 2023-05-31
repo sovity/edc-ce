@@ -2,14 +2,12 @@ create type connector_online_status as enum ('ONLINE', 'OFFLINE');
 
 create table connector
 (
-    endpoint      text                     not null,
-    connector_id  text                     not null,
-    title         text,
-    description   text,
-    last_update   timestamp with time zone,
-    offline_since timestamp with time zone,
-    created_at    timestamp with time zone not null,
-    online_status connector_online_status  not null,
+    endpoint                   text                     not null,
+    connector_id               text                     not null,
+    created_at                 timestamp with time zone not null,
+    last_refresh_attempt_at    timestamp with time zone,
+    last_successful_refresh_at timestamp with time zone,
+    online_status              connector_online_status  not null,
 
     PRIMARY KEY (endpoint)
 );

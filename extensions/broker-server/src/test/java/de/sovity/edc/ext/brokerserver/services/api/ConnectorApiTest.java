@@ -27,6 +27,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.Map;
 
+import static de.sovity.edc.client.gen.model.ConnectorListEntry.OnlineStatusEnum.OFFLINE;
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
 import static de.sovity.edc.ext.brokerserver.TestUtils.edcClient;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,5 +53,6 @@ class ConnectorApiTest {
 
         var connector = result.getConnectors().get(0);
         assertThat(connector.getEndpoint()).isEqualTo("https://example.com/ids/data");
+        assertThat(connector.getOnlineStatus()).isEqualTo(OFFLINE);
     }
 }

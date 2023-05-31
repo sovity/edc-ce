@@ -53,14 +53,11 @@ public class ConnectorApiService {
     private ConnectorListEntry buildConnectorListEntry(ConnectorPageDbRow it) {
         ConnectorListEntry dto = new ConnectorListEntry();
         dto.setId(it.getEndpoint());
-        dto.setIdsId("TODO Remove this once this field is not part of the client anymore.");
         dto.setEndpoint(it.getEndpoint());
-        dto.setTitle(it.getTitle());
-        dto.setDescription(it.getDescription());
         dto.setCreatedAt(it.getCreatedAt());
-        dto.setLastFetchAt(it.getLastUpdate());
+        dto.setLastRefreshAttemptAt(it.getLastRefreshAttemptAt());
+        dto.setLastSuccessfulRefreshAt(it.getLastSuccessfulRefreshAt());
         dto.setOnlineStatus(getOnlineStatus(it));
-        dto.setOfflineSince(it.getOfflineSince());
         dto.setNumContractOffers(it.getNumDataOffers());
         return dto;
     }

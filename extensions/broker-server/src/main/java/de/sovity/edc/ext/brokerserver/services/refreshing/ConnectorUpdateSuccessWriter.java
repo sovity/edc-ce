@@ -20,13 +20,11 @@ import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
 import de.sovity.edc.ext.brokerserver.services.logging.ConnectorChangeTracker;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferWriter;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOffer;
-import de.sovity.edc.ext.brokerserver.services.refreshing.selfdescription.ConnectorSelfDescription;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 
 import java.time.OffsetDateTime;
 import java.util.Collection;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 public class ConnectorUpdateSuccessWriter {
@@ -36,12 +34,16 @@ public class ConnectorUpdateSuccessWriter {
     public void handleConnectorOnline(
             DSLContext dsl,
             ConnectorRecord connector,
-            ConnectorSelfDescription selfDescription,
             Collection<FetchedDataOffer> dataOffers
     ) {
+        OffsetDateTime now = OffsetDateTime.now();
+
         // Track changes for final log message
         ConnectorChangeTracker changes = new ConnectorChangeTracker();
-        updateConnector(connector, selfDescription, changes);
+        connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);
+        connector.setLastSuccessfulRefreshAt(now);
+        connector.setLastRefreshAttemptAt(now);
+        connector.update();
 
         // Update data offers
         dataOfferWriter.updateDataOffers(dsl, connector.getEndpoint(), dataOffers);
@@ -50,18 +52,4 @@ public class ConnectorUpdateSuccessWriter {
         brokerEventLogger.logConnectorUpdateSuccess(dsl, connector.getEndpoint(), changes);
     }
 
-    private static void updateConnector(ConnectorRecord connector, ConnectorSelfDescription selfDescription, ConnectorChangeTracker changes) {
-        if (!Objects.equals(selfDescription.title(), connector.getTitle())) {
-            changes.addSelfDescriptionChange("Title");
-            connector.setTitle(selfDescription.title());
-        }
-        if (!Objects.equals(selfDescription.description(), connector.getDescription())) {
-            changes.addSelfDescriptionChange("Description");
-            connector.setDescription(selfDescription.description());
-        }
-        connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);
-        connector.setLastUpdate(OffsetDateTime.now());
-        connector.setOfflineSince(null);
-        connector.update();
-    }
 }
