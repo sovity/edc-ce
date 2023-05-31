@@ -22,10 +22,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Schema(description = "Catalog's sorting options")
 public enum CatalogPageSortingType {
-    MATCH("by match"),
-    TITLE("by title"),
-    MOST_RECENT("most recent"),
-    ORIGINATOR("by connector");
+    MOST_RECENT("Most Recent"),
+    TITLE("By Title"),
+    ORIGINATOR("By Connector");
 
     private final String title;
 }
