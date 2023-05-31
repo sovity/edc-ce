@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Minor Changes
 
-- Updated the Last Commit Info Extension
+- Added build dates to Last Commit Info Extension
 
 ### Patch Changes
 
