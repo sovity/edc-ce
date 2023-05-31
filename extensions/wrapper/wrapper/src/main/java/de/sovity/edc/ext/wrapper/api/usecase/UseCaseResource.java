@@ -17,9 +17,9 @@ package de.sovity.edc.ext.wrapper.api.usecase;
 import java.util.List;
 
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
-import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
+import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +30,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
 
 
@@ -62,11 +61,6 @@ public class UseCaseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Creates an usecase")
     public Response createOfferingEndpoint(CreateOfferingDto dto) {
-        if (dto == null) {
-            String error = "No CreateOfferingDto provided";
-            return Response.status(Status.BAD_REQUEST).entity(error).build();
-        }
-
         offeringService.create(dto);
         return Response.status(Response.Status.NO_CONTENT).build();
     }

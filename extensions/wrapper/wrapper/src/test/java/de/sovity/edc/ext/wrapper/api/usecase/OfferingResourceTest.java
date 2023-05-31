@@ -31,7 +31,6 @@ class OfferingResourceTest {
     private static final String ASSET_ENTRY_KEY = "assetEntry";
     private static final String POLICY_DEFINITION_REQUEST = "policyDefinitionRequest";
     private static final String CONTRACT_DEFINITION_REQUEST = "contractDefinitionRequest";
-    private static final String MISSING_PROPERTY_TEXT = "missing required creator property";
     private static final String NO_REQUEST_BODY_ERROR = "No CreateOfferingDto provided";
 
     @BeforeAll
@@ -75,7 +74,8 @@ class OfferingResourceTest {
         whenJsonPropertyMissing(ASSET_ENTRY_KEY)
                 .assertThat()
                 .statusCode(400)
-                .contentType(ContentType.TEXT);
+                .contentType(ContentType.JSON)
+                .body(Matchers.containsStringIgnoringCase(ASSET_ENTRY_KEY));
     }
 
     @Test
@@ -83,8 +83,7 @@ class OfferingResourceTest {
         whenJsonPropertyMissing(POLICY_DEFINITION_REQUEST)
                 .assertThat()
                 .statusCode(400)
-                .contentType(ContentType.TEXT)
-                .body(Matchers.containsStringIgnoringCase(MISSING_PROPERTY_TEXT))
+                .contentType(ContentType.JSON)
                 .body(Matchers.containsStringIgnoringCase(POLICY_DEFINITION_REQUEST));
     }
 
@@ -93,7 +92,8 @@ class OfferingResourceTest {
         whenJsonPropertyMissing(CONTRACT_DEFINITION_REQUEST)
                 .assertThat()
                 .statusCode(400)
-                .contentType(ContentType.TEXT);
+                .contentType(ContentType.JSON)
+                .body(Matchers.containsStringIgnoringCase(CONTRACT_DEFINITION_REQUEST));
     }
 
     @Test
@@ -102,7 +102,7 @@ class OfferingResourceTest {
                 .assertThat()
                 .statusCode(400)
                 .contentType(ContentType.JSON)
-                .body(Matchers.equalTo(NO_REQUEST_BODY_ERROR));
+                .body(Matchers.containsStringIgnoringCase(NO_REQUEST_BODY_ERROR));
     }
 
     @Test

@@ -33,16 +33,30 @@ public class OfferingService {
      * Creates the asset, policy and contract definition in the connector. First, transforms the
      * inputs to the EDC model and then persists them. If persisting one fails, none are persisted.
      *
-     * @param createOfferingDto DTO containing the necessary data.
+     * @param dto DTO containing the necessary data.
      */
-    public void create(CreateOfferingDto createOfferingDto) {
-        var asset = transformAsset(createOfferingDto.getAssetEntry());
-        var dataAddress = transformDataAddress(createOfferingDto.getAssetEntry());
-        var policy = transformPolicy(createOfferingDto.getPolicyDefinitionRequest());
-        var contractDefinition = transformContractDefinition(createOfferingDto
+    public void create(CreateOfferingDto dto) {
+        validateInput(dto);
+
+        var asset = transformAsset(dto.getAssetEntry());
+        var dataAddress = transformDataAddress(dto.getAssetEntry());
+        var policy = transformPolicy(dto.getPolicyDefinitionRequest());
+        var contractDefinition = transformContractDefinition(dto
                 .getContractDefinitionRequest());
 
         persist(asset, dataAddress, policy, contractDefinition);
+    }
+
+    private void validateInput(CreateOfferingDto dto) {
+        if (dto == null) {
+            throw new InvalidRequestException("No CreateOfferingDto provided");
+        } else if (dto.getAssetEntry() == null) {
+            throw new InvalidRequestException("No AssetEntry provided");
+        } else if (dto.getPolicyDefinitionRequest() == null) {
+            throw new InvalidRequestException("No PolicyDefinitionRequest provided");
+        } else if (dto.getContractDefinitionRequest() == null) {
+            throw new InvalidRequestException("No ContractDefinitionRequest provided");
+        }
     }
 
     private Asset transformAsset(AssetEntryDto dto) {
