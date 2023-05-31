@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Minor Changes
 
 - Added build dates to Last Commit Info Extension
+- Added Transfer History Page model to API Wrapper
 
 ### Patch Changes
 
