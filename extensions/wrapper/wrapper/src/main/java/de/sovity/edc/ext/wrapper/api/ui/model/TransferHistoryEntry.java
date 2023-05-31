@@ -25,11 +25,6 @@ public class TransferHistoryEntry {
     @Schema(description = "Transfer Process ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String transferProcessId;
 
-    @Schema(description = "connector Name", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String connectorName;
-
-    @Schema(description = "Contract Agreement Details of Transfer Entry", requiredMode = Schema.RequiredMode.REQUIRED)
-    private TransferHistoryEntryContractAgreementDetails contractAgreementDetails;
 
     @Schema(description = "Created Date", requiredMode = Schema.RequiredMode.REQUIRED)
     private OffsetDateTime createdDate;
@@ -40,9 +35,24 @@ public class TransferHistoryEntry {
     @Schema(description = "Transfer History State", requiredMode = Schema.RequiredMode.REQUIRED)
     private TransferProcessState state;
 
+    @Schema(description = "Contract Agreement ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String contractAgreementId;
+
+    @Schema(description = "Incoming vs Outgoing", requiredMode = Schema.RequiredMode.REQUIRED)
+    private ContractAgreementDirection direction;
+
+    @Schema(description = "Other Connector's Endpoint", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String counterPartyAddress;
+
+
+    @Schema(description = "Asset Name", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String assetName;
+
+    @Schema(description = "Asset ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String assetId;
+
     @Schema(description = "Error Message")
     private String errorMessage;
 
-    @Schema(description = "Data Destination Properties of Transfer Entry")
-    private DataDestinationProperties dataDestinationProperties;
+
 }
