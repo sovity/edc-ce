@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.api.broker.model;
 
-import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -23,19 +22,25 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Contract Offer")
-public class ContractOfferDto {
-    @Schema(description = "Connector Information", requiredMode = Schema.RequiredMode.REQUIRED)
-    private ContractOfferConnectorInfo connectorInfo;
-    @Schema(description = "Asset", requiredMode = Schema.RequiredMode.REQUIRED)
-    private AssetDto asset;
+@Schema(description = "A contract offer a data offer is available under.")
+public class DataOfferListEntryContractOffer {
+    @Schema(description = "Contract Offer ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String contractOfferId;
 
-    @Schema(description = "Policy", requiredMode = Schema.RequiredMode.REQUIRED)
-    private PolicyDto policy;
+    @Schema(description = "Creation date in Broker", requiredMode = Schema.RequiredMode.REQUIRED)
+    private OffsetDateTime createdAt;
+
+    @Schema(description = "Update date in Broker", requiredMode = Schema.RequiredMode.REQUIRED)
+    private OffsetDateTime updatedAt;
+
+    @Schema(description = "Contract Policy", requiredMode = Schema.RequiredMode.REQUIRED)
+    private PolicyDto contractPolicy;
 }
 

@@ -5,7 +5,7 @@
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
-<h3 align="center">EDC-Connector:<br />sovity EDC Community Edition</h3>
+<h3 align="center">sovity Community Edition EDC:<br />Docker Images</h3>
 
   <p align="center">
     <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
@@ -14,7 +14,7 @@
   </p>
 </div>
 
-## sovity EDC Community Edition Docker Images
+## sovity Community Edition EDC Docker Images
 
 [Eclipse Dataspace Components](https://github.com/eclipse-edc) (EDC) is a framework
 for building dataspaces, exchanging data securely with ensured data
@@ -24,8 +24,8 @@ sovereignty.
 enterprise-ready managed services like "Connector-as-a-Service", out-of-the-box fully configured DAPS
 and integrations to existing other dataspace technologies.
 
-We believe in open source and actively contribute to open source community. Our EDC Community Edition packages available
-EDC Open Source extensions and combines them with our own open source extensions from this repository to build
+We believe in open source and actively contribute to open source community. Our sovity Community Edition EDC packages
+open source EDC Extensions and combines them with [our own open source EDC Extensions](../extensions) to build
 ready-to-use EDC Docker Images.
 
 Together with our [EDC UI](https://github.com/sovity/EDC-UI) Docker Images, it offers several of our extended EDC
@@ -33,9 +33,9 @@ functionalities for self-hosting purposes.
 
 ## Different Image Types
 
-Our EDC Community Edition builds several docker images in different configurations.
+Our sovity Community Edition EDC is built as several docker image variants in different configurations.
 
-| Docker Image                                                                     | Type                     | Purpose                                                                                                                                                 | Features                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| Docker Image                                                                     | Type                     | Purpose                                                                                                                                                     | Features                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 |----------------------------------------------------------------------------------|--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [edc-dev](https://github.com/sovity/edc-extensions/pkgs/container/edc-dev)       | Devevelopment            | <ul><li>Lightweight local development</li><li>Used in EDC UI's Getting Started section</li></ul>                                                            | <ul><li>Control- and Data-Plane</li><li>sovity Community Edition EDC Extensions</li><li>Management API Auth via API Keys</li><li>Mock IAM</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | [edc-ce](https://github.com/sovity/edc-extensions/pkgs/container/edc-ce)         | sovity Community Edition | <ul><li>Test sovity EDC features</li><li>Self-Deploy EDC</li></ul>                                                                                          | <ul><li>Control- and Data-Plane</li><li>sovity Community Edition EDC Extensions</li><li>Management API Auth via API Keys</li><li>DAPS Authentication</li><li>PostgreSQL Persistence & Flyway</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                            |
@@ -44,10 +44,10 @@ Our EDC Community Edition builds several docker images in different configuratio
 
 ## Image Tags
 
-| Tag     | Description                                 |
-|---------|---------------------------------------------|
-| latest  | latest version of our main branch           |
-| release | latest release of our EDC Community Edition |
+| Tag     | Description                                        |
+|---------|----------------------------------------------------|
+| latest  | latest version of our main branch                  |
+| release | latest release of our sovity Community Edition EDC |
 
 ## Configuration
 

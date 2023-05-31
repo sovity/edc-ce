@@ -14,8 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase;
 
-import java.util.List;
-
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
@@ -30,6 +28,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 

@@ -6,14 +6,14 @@ val assertj: String by project
 plugins {
     `java-library`
     `maven-publish`
-    id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.9" //./gradlew clean resolve
+    id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.10" //./gradlew clean resolve
     id("org.hidetake.swagger.generator") version "2.19.2" //./gradlew generateSwaggerUI
-    id("org.openapi.generator") version "6.5.0" //./gradlew openApiValidate && ./gradlew openApiGenerate
+    id("org.openapi.generator") version "6.6.0" //./gradlew openApiValidate && ./gradlew openApiGenerate
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:1.18.26")
-    compileOnly("org.projectlombok:lombok:1.18.26")
+    annotationProcessor("org.projectlombok:lombok:1.18.28")
+    compileOnly("org.projectlombok:lombok:1.18.28")
 
     implementation("${edcGroup}:api-core:${edcVersion}")
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
@@ -29,8 +29,8 @@ dependencies {
 
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
-    implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.9")
-    implementation("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.9")
+    implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.10")
+    implementation("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.10")
     implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
