@@ -33,29 +33,20 @@ public class ConnectorListEntry {
     @Schema(description = "Connector ID", example = "https://my-test.connector", requiredMode = Schema.RequiredMode.REQUIRED)
     private String id;
 
-    @Schema(description = "Connector IDS ID", example = "urn:connector:my-test-connector", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String idsId;
-
     @Schema(description = "Connector Endpoint", example = "https://my-test.connector/control/ids/data", requiredMode = Schema.RequiredMode.REQUIRED)
     private String endpoint;
 
-    @Schema(description = "Connector IDS Title", example = "My Test Connector", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String title;
-
-    @Schema(description = "Connector IDS Description", example = "Some EDC Connector", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String description;
-
-    @Schema(description = "Time the connector was added")
+    @Schema(description = "Creation date in Broker", requiredMode = Schema.RequiredMode.REQUIRED)
     private OffsetDateTime createdAt;
 
-    @Schema(description = "Last time the connector was attempted to be updated.")
-    private OffsetDateTime lastFetchAt;
+    @Schema(description = "Last time the connector was successfully refreshed.")
+    private OffsetDateTime lastSuccessfulRefreshAt;
+
+    @Schema(description = "Last time the connector was tried to be refreshed.")
+    private OffsetDateTime lastRefreshAttemptAt;
 
     @Schema(description = "Connector Online Status", requiredMode = Schema.RequiredMode.REQUIRED)
     private ConnectorOnlineStatus onlineStatus;
-
-    @Schema(description = "Last time the connector was created or successfully updated.")
-    private OffsetDateTime offlineSince;
 
     @Schema(description = "Number of known data offerings")
     private Integer numContractOffers;
