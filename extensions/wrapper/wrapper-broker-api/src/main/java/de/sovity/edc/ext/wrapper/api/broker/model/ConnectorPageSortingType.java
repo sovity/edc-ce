@@ -22,8 +22,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Schema(description = "Connector List Page's known sorting option IDs")
 public enum ConnectorPageSortingType {
-    TITLE("by title"),
-    MOST_RECENT("most recent");
+    MOST_RECENT("Most Recent"),
+    TITLE("By Title");
 
     private final String title;
 }
