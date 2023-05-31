@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.common.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.AllArgsConstructor;
@@ -41,7 +42,7 @@ public class PolicyDto {
     @Schema(description = "Legacy JSON as built by the Management API. Will be replaced "
             + "in the future by a type-safe variant without polymorphisms that can be used "
             + "for our generated clients.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String legacyPolicy;
+    private JsonNode legacyPolicy;
 
     @Schema(description = "Type of the policy, usually 'SET'. "
             + "Supported are 'SET', 'OFFER' and 'CONTRACT'",
