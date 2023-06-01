@@ -17,8 +17,12 @@ package de.sovity.edc.ext.brokerserver.services.queue;
 import de.sovity.edc.ext.brokerserver.BrokerServerExtension;
 import org.eclipse.edc.spi.system.configuration.Config;
 
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.stream.Collectors;
 
 public class ThreadPool {
     private final PriorityBlockingQueue<Runnable> queue;
@@ -33,7 +37,17 @@ public class ThreadPool {
         threadPoolExecutor.prestartAllCoreThreads();
     }
 
-    public void execute(int priority, Runnable runnable) {
-        queue.add(new ThreadPoolTask(priority, runnable));
+    public void execute(int priority, Runnable runnable, String endpoint) {
+        queue.add(new ThreadPoolTask(priority, runnable, endpoint));
+    }
+
+    public Set<String> getQueuedConnectorEndpoints() {
+        var queuedRunnables = new ArrayList<>(queue);
+
+        return queuedRunnables.stream().filter(ThreadPoolTask.class::isInstance)
+                .map(ThreadPoolTask.class::cast)
+                .map(ThreadPoolTask::getConnectorEndpoint)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 }

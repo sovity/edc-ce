@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 public class ThreadPoolTask implements Comparable<ThreadPoolTask>, Runnable {
     private final int priority;
     private final Runnable task;
+    private final String connectorEndpoint;
 
     @Override
     public int compareTo(@NotNull ThreadPoolTask threadPoolTask) {

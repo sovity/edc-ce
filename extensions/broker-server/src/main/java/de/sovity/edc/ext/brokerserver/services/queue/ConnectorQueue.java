@@ -17,6 +17,7 @@ package de.sovity.edc.ext.brokerserver.services.queue;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdater;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @RequiredArgsConstructor
@@ -31,8 +32,12 @@ public class ConnectorQueue {
      * @param priority  priority from {@link ConnectorRefreshPriority}
      */
     public void addAll(Collection<String> endpoints, int priority) {
+        var queuedConnectorEndpoints = threadPool.getQueuedConnectorEndpoints();
+        endpoints = new ArrayList<>(endpoints);
+        endpoints.removeIf(queuedConnectorEndpoints::contains);
+
         for (String endpoint : endpoints) {
-            threadPool.execute(priority, () -> connectorUpdater.updateConnector(endpoint));
+            threadPool.execute(priority, () -> connectorUpdater.updateConnector(endpoint), endpoint);
         }
     }
 }
