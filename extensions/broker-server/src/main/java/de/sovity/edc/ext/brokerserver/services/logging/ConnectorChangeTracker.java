@@ -44,7 +44,7 @@ public class ConnectorChangeTracker {
     }
 
     public boolean isEmpty() {
-        return selfDescriptionChanges.isEmpty();
+        return selfDescriptionChanges.isEmpty() && numOffersAdded == 0 && numOffersDeleted == 0 && numOffersUpdated == 0;
     }
 
     @Override

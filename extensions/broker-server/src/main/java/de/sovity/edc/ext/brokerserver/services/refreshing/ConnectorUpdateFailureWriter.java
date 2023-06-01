@@ -29,13 +29,15 @@ public class ConnectorUpdateFailureWriter {
     private final BrokerEventLogger brokerEventLogger;
 
     public void handleConnectorOffline(DSLContext dsl, ConnectorRecord connector, Throwable e) {
-        // Update Connector
-        connector.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
+        // Log Status Change and set status to offline if necessary
+        if (connector.getOnlineStatus() == ConnectorOnlineStatus.ONLINE) {
+            brokerEventLogger.logConnectorUpdateStatusChange(dsl, connector.getEndpoint(), ConnectorOnlineStatus.OFFLINE);
+            brokerEventLogger.logConnectorUpdateFailure(dsl, connector.getEndpoint(), getFailureMessage(e));
+            connector.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
+        }
+
         connector.setLastRefreshAttemptAt(OffsetDateTime.now());
         connector.update();
-
-        // Log Event
-        brokerEventLogger.logConnectorUpdateFailure(dsl, connector.getEndpoint(), getFailureMessage(e));
     }
 
     public BrokerEventErrorMessage getFailureMessage(Throwable e) {

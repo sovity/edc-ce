@@ -38,18 +38,25 @@ public class ConnectorUpdateSuccessWriter {
     ) {
         OffsetDateTime now = OffsetDateTime.now();
 
+        // Log Status Change and set status to online if necessary
+        if (connector.getOnlineStatus() == ConnectorOnlineStatus.OFFLINE) {
+            brokerEventLogger.logConnectorUpdateStatusChange(dsl, connector.getEndpoint(), ConnectorOnlineStatus.ONLINE);
+            connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);
+        }
+
         // Track changes for final log message
         ConnectorChangeTracker changes = new ConnectorChangeTracker();
-        connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);
         connector.setLastSuccessfulRefreshAt(now);
         connector.setLastRefreshAttemptAt(now);
         connector.update();
 
+        // Log Event if changes are present
+        if (!changes.isEmpty()) {
+            brokerEventLogger.logConnectorUpdateSuccess(dsl, connector.getEndpoint(), changes);
+        }
+
         // Update data offers
         dataOfferWriter.updateDataOffers(dsl, connector.getEndpoint(), dataOffers, changes);
-
-        // Log Event
-        brokerEventLogger.logConnectorUpdateSuccess(dsl, connector.getEndpoint(), changes);
     }
 
 }

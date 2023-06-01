@@ -17,6 +17,7 @@ package de.sovity.edc.ext.brokerserver.services.logging;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.BrokerEventStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.BrokerEventType;
+import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.BrokerEventLogRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -41,6 +42,23 @@ public class BrokerEventLogger {
         logEntry.setEventStatus(BrokerEventStatus.ERROR);
         logEntry.setUserMessage(errorMessage.message());
         logEntry.setErrorStack(errorMessage.stackTraceOrNull());
+        logEntry.insert();
+    }
+
+    public void logConnectorUpdateStatusChange(DSLContext dsl, String connectorEndpoint, ConnectorOnlineStatus status) {
+        var logEntry = connectorUpdateEntry(dsl, connectorEndpoint);
+        switch (status) {
+            case ONLINE:
+                logEntry.setUserMessage("Connector is online: " + connectorEndpoint);
+                logEntry.setEvent(BrokerEventType.CONNECTOR_STATUS_CHANGE_ONLINE);
+                break;
+            case OFFLINE:
+                logEntry.setUserMessage("Connector is offline: " + connectorEndpoint);
+                logEntry.setEvent(BrokerEventType.CONNECTOR_STATUS_CHANGE_OFFLINE);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown status: " + status + " for connector: " + connectorEndpoint);
+        }
         logEntry.insert();
     }
 
