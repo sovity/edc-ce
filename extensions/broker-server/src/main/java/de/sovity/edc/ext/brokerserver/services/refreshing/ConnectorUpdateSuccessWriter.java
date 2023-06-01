@@ -46,7 +46,7 @@ public class ConnectorUpdateSuccessWriter {
         connector.update();
 
         // Update data offers
-        dataOfferWriter.updateDataOffers(dsl, connector.getEndpoint(), dataOffers);
+        dataOfferWriter.updateDataOffers(dsl, connector.getEndpoint(), dataOffers, changes);
 
         // Log Event
         brokerEventLogger.logConnectorUpdateSuccess(dsl, connector.getEndpoint(), changes);

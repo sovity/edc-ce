@@ -24,16 +24,23 @@ import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.Connector;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.DataOffer;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferRecord;
+import de.sovity.edc.ext.brokerserver.services.BrokerServerSettings;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageSortingType;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.OrderField;
 import org.jooq.impl.DSL;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
+@RequiredArgsConstructor
 public class DataOfferQueries {
+    private final BrokerServerSettings brokerServerSettings;
+
     public List<DataOfferDbRow> forCatalogPage(DSLContext dsl, String searchQuery, CatalogPageSortingType sorting) {
         var c = Tables.CONNECTOR;
         var d = Tables.DATA_OFFER;
@@ -69,13 +76,31 @@ public class DataOfferQueries {
                         c.ONLINE_STATUS.as("connectorOnlineStatus"),
                         offlineSinceOrLastUpdatedAt.as("connectorOfflineSinceOrLastUpdatedAt")
                 )
-                .from(c, d)
+                .from(d)
+                .leftJoin(c).on(c.ENDPOINT.eq(d.CONNECTOR_ENDPOINT))
                 .where(
-                        c.ONLINE_STATUS.eq(ConnectorOnlineStatus.ONLINE),
-                        filterBySearchQuery
+                        filterBySearchQuery,
+                        onlyOnlineOrRecentlyOfflineConnectors(c)
                 )
                 .orderBy(getOrderBy(sorting, c, d, assetTitle))
                 .fetchInto(DataOfferDbRow.class);
+    }
+
+    @NotNull
+    private Condition onlyOnlineOrRecentlyOfflineConnectors(Connector c) {
+        var maxOfflineDuration = brokerServerSettings.getHideOfflineDataOffersAfter();
+
+        Condition maxOfflineDurationNotExceeded;
+        if (maxOfflineDuration == null) {
+            maxOfflineDurationNotExceeded = DSL.trueCondition();
+        } else {
+            maxOfflineDurationNotExceeded = c.LAST_SUCCESSFUL_REFRESH_AT.greaterThan(OffsetDateTime.now().minus(maxOfflineDuration));
+        }
+
+        return DSL.or(
+                c.ONLINE_STATUS.eq(ConnectorOnlineStatus.ONLINE),
+                maxOfflineDurationNotExceeded
+        );
     }
 
     @NotNull

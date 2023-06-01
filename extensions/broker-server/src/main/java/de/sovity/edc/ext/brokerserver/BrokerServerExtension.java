@@ -36,6 +36,9 @@ public class BrokerServerExtension implements ServiceExtension {
     @Setting
     public static final String NUM_THREADS = "edc.broker.server.num.threads";
 
+    @Setting
+    public static final String HIDE_OFFLINE_DATA_OFFERS_AFTER = "edc.broker.server.hide.offline.data.offers.after";
+
     @Inject
     private ManagementApiConfiguration managementApiConfiguration;
 

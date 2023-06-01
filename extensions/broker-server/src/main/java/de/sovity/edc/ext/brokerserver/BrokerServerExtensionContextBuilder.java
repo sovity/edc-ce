@@ -20,6 +20,7 @@ import de.sovity.edc.ext.brokerserver.dao.queries.DataOfferQueries;
 import de.sovity.edc.ext.brokerserver.db.DataSourceFactory;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.services.BrokerServerInitializer;
+import de.sovity.edc.ext.brokerserver.services.BrokerServerSettings;
 import de.sovity.edc.ext.brokerserver.services.ConnectorCreator;
 import de.sovity.edc.ext.brokerserver.services.KnownConnectorsInitializer;
 import de.sovity.edc.ext.brokerserver.services.api.AssetPropertyParser;
@@ -72,8 +73,10 @@ public class BrokerServerExtensionContextBuilder {
             TypeManager typeManager,
             CatalogService catalogService
     ) {
+        var brokerServerSettings = new BrokerServerSettings(config);
+
         // Dao
-        var dataOfferQueries = new DataOfferQueries();
+        var dataOfferQueries = new DataOfferQueries(brokerServerSettings);
         var dataSourceFactory = new DataSourceFactory(config);
         var dataSource = dataSourceFactory.newDataSource();
         var dslContextFactory = new DslContextFactory(dataSource);

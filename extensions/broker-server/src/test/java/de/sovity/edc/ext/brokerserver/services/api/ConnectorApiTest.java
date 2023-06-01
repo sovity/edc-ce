@@ -53,6 +53,7 @@ class ConnectorApiTest {
 
         var connector = result.getConnectors().get(0);
         assertThat(connector.getEndpoint()).isEqualTo("https://example.com/ids/data");
+        assertThat(connector.getId()).isEqualTo("https://example.com");
         assertThat(connector.getOnlineStatus()).isEqualTo(OFFLINE);
     }
 }

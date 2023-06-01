@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.services.refreshing.offers;
 
+import de.sovity.edc.ext.brokerserver.services.logging.ConnectorChangeTracker;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOffer;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -32,10 +33,14 @@ public class DataOfferWriter {
      * @param dsl               dsl
      * @param connectorEndpoint connector endpoint
      * @param fetchedDataOffers fetched data offers
+     * @param changes           change tracker for log message
      */
     @SneakyThrows
-    public void updateDataOffers(DSLContext dsl, String connectorEndpoint, Collection<FetchedDataOffer> fetchedDataOffers) {
+    public void updateDataOffers(DSLContext dsl, String connectorEndpoint, Collection<FetchedDataOffer> fetchedDataOffers, ConnectorChangeTracker changes) {
         var patch = dataOfferPatchBuilder.buildDataOfferPatch(dsl, connectorEndpoint, fetchedDataOffers);
+        changes.setNumOffersAdded(patch.getDataOffersToInsert().size());
+        changes.setNumOffersUpdated(patch.getDataOffersToUpdate().size());
+        changes.setNumOffersDeleted(patch.getDataOffersToDelete().size());
         dataOfferPatchApplier.writeDataOfferPatch(dsl, patch);
     }
 }

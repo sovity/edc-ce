@@ -47,11 +47,10 @@ public class ConnectorCreator {
 
     @NotNull
     private ConnectorRecord newConnectorRow(String endpoint) {
-        var connectorId = UrlUtils.getEverythingBeforeThePath(endpoint);
 
         var connector = new ConnectorRecord();
         connector.setEndpoint(endpoint);
-        connector.setConnectorId(connectorId);
+        connector.setConnectorId(UrlUtils.getEverythingBeforeThePath(endpoint));
         connector.setCreatedAt(OffsetDateTime.now());
         connector.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
         return connector;
