@@ -12,16 +12,25 @@
  *
  */
 
-package de.sovity.edc.ext.brokerserver.dao;
-
+package de.sovity.edc.ext.brokerserver.dao.queries.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.jooq.JSONB;
 
+/**
+ * Utilities for dealing with {@link org.jooq.JSONB} fields.
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AssetProperty {
-    public static final String ASSET_ID = "asset:prop:id";
-    public static final String ASSET_NAME = "asset:prop:name";
-    public static final String DESCRIPTION = "asset:prop:description";
-    public static final String KEYWORDS = "asset:prop:keywords";
+public class JsonbUtils {
+
+    /**
+     * Returns the data of the given {@link JSONB} or null.
+     *
+     * @param jsonb {@link org.jooq.JSON}
+     * @return data or null
+     */
+    public static String getDataOrNull(JSONB jsonb) {
+        return jsonb == null ? null : jsonb.data();
+    }
 }

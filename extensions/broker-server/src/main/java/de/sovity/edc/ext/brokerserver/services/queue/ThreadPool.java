@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class ThreadPool {
@@ -29,12 +30,11 @@ public class ThreadPool {
 
     public ThreadPool(Config config) {
         this.queue = new PriorityBlockingQueue<>();
-        var threadPoolExecutor = new ThreadPoolExecutor(1,
-                config.getInteger(BrokerServerExtension.NUM_THREADS, 1),
-                60,
-                java.util.concurrent.TimeUnit.SECONDS,
-                queue);
-        threadPoolExecutor.prestartAllCoreThreads();
+        int numThreads = config.getInteger(BrokerServerExtension.NUM_THREADS, 1);
+        if (numThreads > 0) {
+            var threadPoolExecutor = new ThreadPoolExecutor(1, numThreads, 60, TimeUnit.SECONDS, queue);
+            threadPoolExecutor.prestartAllCoreThreads();
+        }
     }
 
     public void execute(int priority, Runnable runnable, String endpoint) {

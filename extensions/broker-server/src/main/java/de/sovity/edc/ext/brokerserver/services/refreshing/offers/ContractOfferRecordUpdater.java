@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.services.refreshing.offers;
 
+import de.sovity.edc.ext.brokerserver.dao.queries.utils.JsonbUtils;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferContractOfferRecord;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferRecord;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOfferContractOffer;
@@ -41,10 +42,11 @@ public class ContractOfferRecordUpdater {
     public DataOfferContractOfferRecord newContractOffer(DataOfferRecord dataOffer, FetchedDataOfferContractOffer fetchedContractOffer) {
         var contractOffer = new DataOfferContractOfferRecord();
         contractOffer.setConnectorEndpoint(dataOffer.getConnectorEndpoint());
+        contractOffer.setContractOfferId(fetchedContractOffer.getContractOfferId());
         contractOffer.setAssetId(dataOffer.getAssetId());
         contractOffer.setCreatedAt(OffsetDateTime.now());
         updateContractOffer(contractOffer, fetchedContractOffer);
-        return null;
+        return contractOffer;
     }
 
     /**
@@ -55,11 +57,19 @@ public class ContractOfferRecordUpdater {
      * @return if anything was changed
      */
     public boolean updateContractOffer(DataOfferContractOfferRecord contractOffer, FetchedDataOfferContractOffer fetchedContractOffer) {
-        if (!Objects.equals(contractOffer.getPolicy().data(), fetchedContractOffer.getPolicyJson())) {
-            contractOffer.setPolicy(JSONB.jsonb(fetchedContractOffer.getPolicyJson()));
-            contractOffer.setUpdatedAt(OffsetDateTime.now());
-            return true;
+        var existingPolicy = JsonbUtils.getDataOrNull(contractOffer.getPolicy());
+        var fetchedPolicy = fetchedContractOffer.getPolicyJson();
+        var changed = false;
+
+        if (!Objects.equals(existingPolicy, fetchedPolicy)) {
+            contractOffer.setPolicy(JSONB.jsonb(fetchedPolicy));
+            changed = true;
         }
-        return false;
+
+        if (changed) {
+            contractOffer.setUpdatedAt(OffsetDateTime.now());
+        }
+
+        return changed;
     }
 }

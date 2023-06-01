@@ -26,6 +26,7 @@ import org.jooq.DSLContext;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -72,24 +73,35 @@ public class DataOfferPatchBuilder {
             var existing = match.existing();
             var fetched = match.fetched();
 
-            if (dataOfferRecordUpdater.updateDataOffer(existing, fetched)) {
+            // Update Contract Offers
+            var contractOffers = contractOffersByAssetId.getOrDefault(existing.getAssetId(), List.of());
+            var changed = patchContractOffers(patch, existing, contractOffers, fetched.getContractOffers());
+
+            // Update Data Offer (and update updatedAt if contractOffers changed)
+            changed = dataOfferRecordUpdater.updateDataOffer(existing, fetched, changed);
+
+            if (changed) {
                 patch.updateDataOffer(existing);
             }
-            var contractOffers = contractOffersByAssetId.getOrDefault(existing.getAssetId(), List.of());
-            patchContractOffers(patch, existing, contractOffers, fetched.getContractOffers());
         });
 
-        diff.removed().forEach(patch::deleteDataOffer);
+        diff.removed().forEach(dataOffer -> {
+            patch.deleteDataOffer(dataOffer);
+            var contractOffers = contractOffersByAssetId.getOrDefault(dataOffer.getAssetId(), List.of());
+            contractOffers.forEach(patch::deleteContractOffer);
+        });
 
         return patch;
     }
 
-    private void patchContractOffers(
+    private boolean patchContractOffers(
             DataOfferPatch patch,
             DataOfferRecord dataOffer,
             Collection<DataOfferContractOfferRecord> contractOffers,
             Collection<FetchedDataOfferContractOffer> fetchedContractOffers
     ) {
+        var hasUpdates = new AtomicBoolean(false);
+
         var diff = DiffUtils.compareLists(
                 contractOffers,
                 DataOfferContractOfferRecord::getContractOfferId,
@@ -100,6 +112,7 @@ public class DataOfferPatchBuilder {
         diff.added().forEach(fetched -> {
             var newRecord = contractOfferRecordUpdater.newContractOffer(dataOffer, fetched);
             patch.insertContractOffer(newRecord);
+            hasUpdates.set(true);
         });
 
         diff.updated().forEach(match -> {
@@ -108,9 +121,15 @@ public class DataOfferPatchBuilder {
 
             if (contractOfferRecordUpdater.updateContractOffer(existing, fetched)) {
                 patch.updateContractOffer(existing);
+                hasUpdates.set(true);
             }
         });
 
-        diff.removed().forEach(patch::deleteContractOffer);
+        diff.removed().forEach(existing -> {
+            patch.deleteContractOffer(existing);
+            hasUpdates.set(true);
+        });
+
+        return hasUpdates.get();
     }
 }

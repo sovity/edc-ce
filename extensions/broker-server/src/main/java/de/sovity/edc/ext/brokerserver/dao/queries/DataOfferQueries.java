@@ -47,7 +47,7 @@ public class DataOfferQueries {
 
         // Asset Properties from JSON to be used in sorting / filtering
         var assetId = JsonbDSL.extractPathText(d.ASSET_PROPERTIES, AssetProperty.ASSET_ID);
-        var assetTitle = DSL.coalesce(JsonbDSL.extractPathText(d.ASSET_PROPERTIES, AssetProperty.TITLE), assetId);
+        var assetTitle = DSL.coalesce(JsonbDSL.extractPathText(d.ASSET_PROPERTIES, AssetProperty.ASSET_NAME), assetId);
         var assetDescription = JsonbDSL.extractPathText(d.ASSET_PROPERTIES, AssetProperty.DESCRIPTION);
         var assetKeywords = JsonbDSL.extractPathText(d.ASSET_PROPERTIES, AssetProperty.KEYWORDS);
 

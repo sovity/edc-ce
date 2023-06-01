@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.services.refreshing.offers;
 
+import de.sovity.edc.ext.brokerserver.dao.queries.utils.JsonbUtils;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferRecord;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOffer;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class DataOfferRecordUpdater {
         dataOffer.setConnectorEndpoint(connectorEndpoint);
         dataOffer.setAssetId(fetchedDataOffer.getAssetId());
         dataOffer.setCreatedAt(OffsetDateTime.now());
-        updateDataOffer(dataOffer, fetchedDataOffer);
+        updateDataOffer(dataOffer, fetchedDataOffer, true);
         return dataOffer;
     }
 
@@ -51,15 +52,21 @@ public class DataOfferRecordUpdater {
      *
      * @param dataOffer        existing row
      * @param fetchedDataOffer changes to be incorporated
+     * @param changed          whether the data offer should be marked as updated simply because the contract offers changed
      * @return whether any fields were updated
      */
-    public boolean updateDataOffer(DataOfferRecord dataOffer, FetchedDataOffer fetchedDataOffer) {
-        String existingAssetProps = dataOffer.getAssetProperties().data();
-        String fetchedAssetProps = fetchedDataOffer.getAssetPropertiesJson();
+    public boolean updateDataOffer(DataOfferRecord dataOffer, FetchedDataOffer fetchedDataOffer, boolean changed) {
+        String existingAssetProps = JsonbUtils.getDataOrNull(dataOffer.getAssetProperties());
+        var fetchedAssetProps = fetchedDataOffer.getAssetPropertiesJson();
         if (!Objects.equals(fetchedAssetProps, existingAssetProps)) {
             dataOffer.setAssetProperties(JSONB.jsonb(fetchedAssetProps));
-            return true;
+            changed = true;
         }
-        return false;
+
+        if (changed) {
+            dataOffer.setUpdatedAt(OffsetDateTime.now());
+        }
+
+        return changed;
     }
 }

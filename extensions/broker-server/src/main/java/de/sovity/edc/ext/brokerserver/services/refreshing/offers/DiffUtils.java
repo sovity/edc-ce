@@ -50,7 +50,7 @@ public class DiffUtils {
         var keys = new HashSet<>(existingByKey.keySet());
         keys.addAll(fetchedByKey.keySet());
 
-        var result = new DiffResult<A, B>(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        var result = new DiffResult<A, B>();
 
         keys.forEach(key -> {
             var existingItem = existingByKey.get(key);
@@ -78,6 +78,9 @@ public class DiffUtils {
      * @param <B>     fetched item type
      */
     record DiffResult<A, B>(List<B> added, List<DiffResultMatch<A, B>> updated, List<A> removed) {
+        DiffResult() {
+            this(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        }
     }
 
     /**
