@@ -14,41 +14,13 @@
 
 package de.sovity.edc.extension.version.controller;
 
-import io.restassured.http.ContentType;
-import io.restassured.response.ValidatableResponse;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
-
-import static io.restassured.RestAssured.given;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
+
 
 public class TestUtils {
 
-    private static final int DATA_PORT = getFreePort();
-    private static final String AUTH_KEY = "123456";
+    public static final String AUTH_KEY = "123456";
+    public static final int DATA_PORT = getFreePort();
 
-    @NotNull
-    static Map<String, String> createConfiguration(String commitInfo) {
-        return Map.of(
-                "web.http.port", String.valueOf(getFreePort()),
-                "web.http.path", "/api",
-                "web.http.management.port", String.valueOf(DATA_PORT),
-                "web.http.management.path", "/api/v1/data",
-                "edc.api.auth.key", AUTH_KEY,
-                "edc.last.commit.info", commitInfo);
-    }
 
-    static ValidatableResponse mockRequest() {
-        return given()
-                .baseUri("http://localhost:" + DATA_PORT)
-                .basePath("/api/v1/data")
-                .header("x-api-key", AUTH_KEY)
-                .when()
-                .contentType(ContentType.TEXT)
-                .get(String.format("/last-commit-info"))
-                .then()
-                .statusCode(200)
-                .contentType(ContentType.JSON);
-    }
 }

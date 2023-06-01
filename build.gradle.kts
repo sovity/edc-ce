@@ -56,7 +56,7 @@ allprojects {
     }
 
     checkstyle {
-        toolVersion = "9.0"
+        toolVersion = "10.9.3"
         configFile = rootProject.file("docs/dev/checkstyle/checkstyle-config.xml")
         configDirectory.set(rootProject.file("docs/dev/checkstyle"))
         maxErrors = 0 // does not tolerate errors
@@ -77,11 +77,7 @@ allprojects {
 subprojects {
     apply(plugin = "maven-publish")
 
-    val sovityEdcExtensionsGroup: String by project
     val sovityEdcExtensionsVersion: String by project
-    val sovityEdcCeGroup: String by project
-
-    group = if (name.contains("connector")) sovityEdcCeGroup else sovityEdcExtensionsGroup
     version = sovityEdcExtensionsVersion
 
     publishing {

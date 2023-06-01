@@ -5,12 +5,12 @@
 # This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
 # For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-gradle
 
-name: Gradle Package
+name: Gradle Artifacts
 
 on:
   workflow_dispatch:
   release:
-    types: [published]
+    types: [ published ]
   push:
     branches: [ main ]
 
@@ -32,23 +32,31 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
-    - name: Store last commit's author, message and SHA
+    - name: Store last commit info and build date
       run: |
         echo "Saving local commit details in src/assets/version.txt"
         echo $(ls)
-        git log -1 > extensions/last-commit-info/src/main/resources/version.txt
+        git log -1 > extensions/last-commit-info/src/main/resources/jar-last-commit-info.txt
+        echo $(date --utc +%FT%TZ) > extensions/last-commit-info/src/main/resources/jar-build-date.txt
+
+    - name: Override artifact versions in release tags.
+      run: |
+        if [ "${{ startsWith(github.ref, 'refs/tags/') }}" == "true" ]; then
+          GRADLE_ARGS="-PsovityEdcExtensionsVersion=${GITHUB_REF#refs/tags/v}"
+        fi
+        echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
 
     - name: Build with Gradle
       uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
       with:
-        arguments: build
+        arguments: build ${{ env.GRADLE_ARGS }}
 
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
     # the publishing section of your build.gradle
     - name: Publish to GitHub Packages
       uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
       with:
-        arguments: publish
+        arguments: publish ${{ env.GRADLE_ARGS }}
       env:
         USERNAME: ${{ github.actor }}
         TOKEN: ${{ secrets.GITHUB_TOKEN }}

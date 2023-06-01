@@ -29,7 +29,8 @@ public class LastCommitInfoController {
     }
 
     @GET
-    public String getLastCommitInfo() {
+    @Produces(MediaType.APPLICATION_JSON)
+    public LastCommitInfo getLastCommitInfo() {
         return lastCommitInfoService.getLastCommitInfo();
     }
 }

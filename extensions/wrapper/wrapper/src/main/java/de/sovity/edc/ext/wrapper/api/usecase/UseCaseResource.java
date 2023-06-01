@@ -18,6 +18,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

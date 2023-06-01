@@ -12,6 +12,9 @@ dependencies {
     testImplementation("${edcGroup}:junit:${edcVersion}")
 }
 
+val sovityEdcExtensionGroup: String by project
+group = sovityEdcExtensionGroup
+
 publishing {
     publications {
         create<MavenPublication>(project.name) {
