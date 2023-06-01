@@ -34,7 +34,7 @@ public class BrokerServerSettings {
     }
 
     private Duration getDurationOrNull(@NonNull String configProperty) {
-        String durationAsString = config.getString(configProperty, "");
+        var durationAsString = config.getString(configProperty, "");
         if (StringUtils.isBlank(durationAsString)) {
             return null;
         }

@@ -32,13 +32,13 @@ public class KnownConnectorsInitializer {
     private final ConnectorCreator connectorCreator;
 
     public void addKnownConnectorsOnStartup(DSLContext dsl) {
-        List<String> connectorEndpoints = getKnownConnectorsConfigValue();
+        var connectorEndpoints = getKnownConnectorsConfigValue();
         connectorCreator.addConnectors(dsl, connectorEndpoints);
         connectorQueue.addAll(connectorEndpoints, ConnectorRefreshPriority.ADDED_ON_STARTUP);
     }
 
     private List<String> getKnownConnectorsConfigValue() {
-        String knownConnectorsString = config.getString(BrokerServerExtension.KNOWN_CONNECTORS, "");
+        var knownConnectorsString = config.getString(BrokerServerExtension.KNOWN_CONNECTORS, "");
         return Arrays.stream(knownConnectorsString.split(",")).map(String::trim).filter(StringUtils::isNotBlank).distinct().toList();
     }
 }

@@ -14,6 +14,9 @@
 
 package de.sovity.edc.ext.brokerserver.services.queue;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class ConnectorRefreshPriority {
     public static final int ADMIN_REQUESTED = 1;
     public static final int ADDED_ON_STARTUP = 10;

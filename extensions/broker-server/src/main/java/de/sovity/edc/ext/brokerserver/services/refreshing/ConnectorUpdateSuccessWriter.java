@@ -36,7 +36,7 @@ public class ConnectorUpdateSuccessWriter {
             ConnectorRecord connector,
             Collection<FetchedDataOffer> dataOffers
     ) {
-        OffsetDateTime now = OffsetDateTime.now();
+        var now = OffsetDateTime.now();
 
         // Log Status Change and set status to online if necessary
         if (connector.getOnlineStatus() == ConnectorOnlineStatus.OFFLINE) {
@@ -45,7 +45,7 @@ public class ConnectorUpdateSuccessWriter {
         }
 
         // Track changes for final log message
-        ConnectorChangeTracker changes = new ConnectorChangeTracker();
+        var changes = new ConnectorChangeTracker();
         connector.setLastSuccessfulRefreshAt(now);
         connector.setLastRefreshAttemptAt(now);
         connector.update();

@@ -34,10 +34,10 @@ public class UrlUtils {
      */
     public static String getEverythingBeforeThePath(String url) {
         var uri = URI.create(url);
-        String scheme = uri.getScheme(); // "http"
-        String authority = uri.getAuthority(); // "www.example.com"
+        var scheme = uri.getScheme(); // "http"
+        var authority = uri.getAuthority(); // "www.example.com"
         int port = uri.getPort(); // -1 (no port specified)
-        String everythingBeforePath = scheme + "://" + authority;
+        var everythingBeforePath = scheme + "://" + authority;
         if (port != -1) {
             everythingBeforePath += ":" + port;
         }

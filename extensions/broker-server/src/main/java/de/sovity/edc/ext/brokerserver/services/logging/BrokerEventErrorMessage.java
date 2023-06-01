@@ -34,7 +34,7 @@ public record BrokerEventErrorMessage(String message, String stackTraceOrNull) {
     }
 
     public static BrokerEventErrorMessage ofStackTrace(@NonNull String baseMessage, @NonNull Throwable cause) {
-        String message = baseMessage;
+        var message = baseMessage;
         message = StringUtils2.removeSuffix(message, ".");
         message = StringUtils2.removeSuffix(message, ":");
         message = "%s: %s".formatted(message, cause.getClass().getName());

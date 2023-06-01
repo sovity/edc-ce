@@ -53,7 +53,7 @@ public class ConnectorChangeTracker {
             return "Connector is up to date.";
         }
 
-        String msg = "Connector Updated.";
+        var msg = "Connector Updated.";
         if (!selfDescriptionChanges.isEmpty()) {
             msg += " Self-description changed: %s.".formatted(selfDescriptionChanges.stream().sorted().collect(joining()));
         }

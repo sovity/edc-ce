@@ -47,7 +47,6 @@ public class ConnectorCreator {
 
     @NotNull
     private ConnectorRecord newConnectorRow(String endpoint) {
-
         var connector = new ConnectorRecord();
         connector.setEndpoint(endpoint);
         connector.setConnectorId(UrlUtils.getEverythingBeforeThePath(endpoint));

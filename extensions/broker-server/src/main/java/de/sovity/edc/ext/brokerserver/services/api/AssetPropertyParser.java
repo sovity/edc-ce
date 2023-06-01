@@ -25,11 +25,11 @@ import java.util.Map;
 public class AssetPropertyParser {
     private final ObjectMapper objectMapper;
 
-    private final TypeReference<Map<String, String>> TYPE_TOKEN = new TypeReference<>() {
+    private final TypeReference<Map<String, String>> typeToken = new TypeReference<>() {
     };
 
     @SneakyThrows
     public Map<String, String> parsePropertiesFromJsonString(String assetPropertiesJson) {
-        return objectMapper.readValue(assetPropertiesJson, TYPE_TOKEN);
+        return objectMapper.readValue(assetPropertiesJson, typeToken);
     }
 }

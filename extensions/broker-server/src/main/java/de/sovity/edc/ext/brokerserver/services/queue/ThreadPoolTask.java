@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.services.queue;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Getter
 @RequiredArgsConstructor
+@EqualsAndHashCode(of = {"priority", "connectorEndpoint"})
 public class ThreadPoolTask implements Comparable<ThreadPoolTask>, Runnable {
     private final int priority;
     private final Runnable task;

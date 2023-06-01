@@ -51,7 +51,7 @@ public class ConnectorApiService {
     }
 
     private ConnectorListEntry buildConnectorListEntry(ConnectorPageDbRow it) {
-        ConnectorListEntry dto = new ConnectorListEntry();
+        var dto = new ConnectorListEntry();
         dto.setId(it.getConnectorId());
         dto.setEndpoint(it.getEndpoint());
         dto.setCreatedAt(it.getCreatedAt());
