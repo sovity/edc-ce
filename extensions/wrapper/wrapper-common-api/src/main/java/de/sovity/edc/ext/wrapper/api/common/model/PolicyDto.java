@@ -44,11 +44,6 @@ public class PolicyDto {
             + "for our generated clients.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private JsonNode legacyPolicy;
 
-    @Schema(description = "Type of the policy, usually 'SET'. "
-            + "Supported are 'SET', 'OFFER' and 'CONTRACT'",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String type;
-
     @Schema(description = "Permission for this policy", requiredMode = RequiredMode.NOT_REQUIRED)
     private PermissionDto permission;
 }

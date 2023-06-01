@@ -1,9 +1,10 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import de.sovity.edc.ext.wrapper.api.common.model.ConstraintDto;
+import de.sovity.edc.ext.wrapper.api.common.model.ExpressionDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import org.eclipse.edc.policy.model.Action;
 import org.eclipse.edc.policy.model.AndConstraint;
@@ -15,6 +16,7 @@ import org.eclipse.edc.policy.model.OrConstraint;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
+import org.eclipse.edc.policy.model.XoneConstraint;
 
 /**
  * Mapper class to convert a {@link PolicyDto} to an EDC {@link Policy}.
@@ -28,7 +30,6 @@ public class PolicyMappingService {
      */
     private static final String ACTION_TYPE = "USE";
 
-
     /**
      * Converts a {@link PolicyDto} to an EDC {@link Policy}.
      *
@@ -37,9 +38,43 @@ public class PolicyMappingService {
      */
     public Policy policyDtoToPolicy(PolicyDto dto) {
         return Policy.Builder.newInstance()
-                .type(PolicyType.valueOf(dto.getType().toUpperCase()))
-                .permission(constraintsToPermission(dto))
+                .type(PolicyType.SET)
+                .permission(permissionDtoToPermission(dto.getPermission()))
                 .build();
+    }
+
+    private Permission permissionDtoToPermission(PermissionDto dto) {
+        var builder = Permission.Builder.newInstance()
+                .action(Action.Builder.newInstance().type(ACTION_TYPE).build());
+        if (dto == null || dto.getConstraints() == null) { //TODO return null or builder.build for dto==null?
+            return builder.build();
+        }
+
+        Optional.ofNullable(expressionToConstraint(dto.getConstraints()))
+                .ifPresent(builder::constraint);
+        return builder.build();
+    }
+
+    private Constraint expressionToConstraint(ExpressionDto expression) {
+        return switch (expression.getType()) {
+            case EMPTY -> null;
+            case ATOMIC -> constraintDtoToAtomicConstraint(expression.getConstraint());
+            case AND ->  {
+                var builder = AndConstraint.Builder.newInstance();
+                expression.getAnd().forEach(c -> builder.constraint(expressionToConstraint(c)));
+                yield builder.build();
+            }
+            case OR -> {
+                var builder = OrConstraint.Builder.newInstance();
+                expression.getOr().forEach(c -> builder.constraint(expressionToConstraint(c)));
+                yield builder.build();
+            }
+            case XOR -> {
+                var builder = XoneConstraint.Builder.newInstance();
+                expression.getXor().forEach(c -> builder.constraint(expressionToConstraint(c)));
+                yield builder.build();
+            }
+        };
     }
 
     private Constraint constraintDtoToAtomicConstraint(ConstraintDto dto) {
@@ -47,43 +82,6 @@ public class PolicyMappingService {
                 .leftExpression(new LiteralExpression(dto.getLeftExpression()))
                 .rightExpression(new LiteralExpression(dto.getRightExpression()))
                 .operator(Operator.valueOf(dto.getOperator().toString()))
-                .build();
-    }
-
-    private Permission constraintsToPermission(PolicyDto dto) {
-        var constraints = new ArrayList<Constraint>();
-
-        if (dto.getPermission() != null) {
-            if (dto.getPermission().getConstraint() != null) {
-                constraints.add(
-                        constraintDtoToAtomicConstraint(dto.getPermission().getConstraint()));
-
-            }
-
-            if (dto.getPermission().getAndConstraint() != null) {
-                var andConstraints = dto.getPermission().getAndConstraint().stream()
-                        .map(this::constraintDtoToAtomicConstraint)
-                        .collect(Collectors.toList());
-                var andConstraint = AndConstraint.Builder.newInstance()
-                        .constraints(andConstraints)
-                        .build();
-                constraints.add(andConstraint);
-            }
-
-            if (dto.getPermission().getOrConstraint() != null) {
-                var orConstraints = dto.getPermission().getOrConstraint().stream()
-                        .map(this::constraintDtoToAtomicConstraint)
-                        .collect(Collectors.toList());
-                var orConstraint = OrConstraint.Builder.newInstance()
-                        .constraints(orConstraints)
-                        .build();
-                constraints.add(orConstraint);
-            }
-        }
-
-        return Permission.Builder.newInstance()
-                .constraints(constraints)
-                .action(Action.Builder.newInstance().type(ACTION_TYPE).build())
                 .build();
     }
 }
