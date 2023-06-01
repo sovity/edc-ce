@@ -16,13 +16,62 @@
     "id": "mock",
     "policy": {
       "permission": {
-        "constraint": {
-          "leftExpression": "string",
-          "operator": "EQ",
-          "rightExpression": "string"
+        "constraints": {
+          "constraint": {
+            "leftExpression": "string",
+            "operator": "EQ",
+            "rightExpression": "string"
+          },
+          "and": [
+            {
+              "constraint": {
+                "leftExpression": "string",
+                "operator": "EQ",
+                "rightExpression": "string"
+              }
+            },
+            {
+              "constraint": {
+                "leftExpression": "string",
+                "operator": "EQ",
+                "rightExpression": "string"
+              }
+            }
+          ],
+          "or": [
+            {
+              "constraint": {
+                "leftExpression": "string",
+                "operator": "EQ",
+                "rightExpression": "string"
+              }
+            },
+            {
+              "constraint": {
+                "leftExpression": "string",
+                "operator": "EQ",
+                "rightExpression": "string"
+              }
+            }
+          ],
+          "xor": [
+            {
+              "constraint": {
+                "leftExpression": "string",
+                "operator": "EQ",
+                "rightExpression": "string"
+              }
+            },
+            {
+              "constraint": {
+                "leftExpression": "string",
+                "operator": "EQ",
+                "rightExpression": "string"
+              }
+            }
+          ]
         }
-      },
-      "type": "set"
+      }
     }
   },
   "contractDefinitionRequest": {

@@ -1,10 +1,13 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import de.sovity.edc.ext.wrapper.api.common.model.ConstraintDto;
 import de.sovity.edc.ext.wrapper.api.common.model.ExpressionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.OperatorDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
+import java.util.List;
 import org.eclipse.edc.policy.model.AndConstraint;
 import org.eclipse.edc.policy.model.AtomicConstraint;
 import org.eclipse.edc.policy.model.Constraint;
@@ -15,10 +18,6 @@ import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
 import org.eclipse.edc.policy.model.XoneConstraint;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class PolicyMappingServiceTest {
 
