@@ -20,7 +20,7 @@ import lombok.Setter;
 @Builder(toBuilder = true)
 public class PermissionDto {
 
-    @Schema(description = "Possible constraint for the permission",
+    @Schema(description = "Possible constraints for the permission",
             requiredMode = RequiredMode.REQUIRED)
     private ExpressionDto constraints;
 }
