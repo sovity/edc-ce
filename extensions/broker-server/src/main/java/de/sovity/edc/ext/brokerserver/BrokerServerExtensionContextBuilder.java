@@ -100,7 +100,7 @@ public class BrokerServerExtensionContextBuilder {
         var dataOfferPatchApplier = new DataOfferPatchApplier();
         var dataOfferWriter = new DataOfferWriter(dataOfferPatchBuilder, dataOfferPatchApplier);
         var connectorUpdateSuccessWriter = new ConnectorUpdateSuccessWriter(brokerEventLogger, dataOfferWriter);
-        var connectorUpdateFailureWriter = new ConnectorUpdateFailureWriter(brokerEventLogger);
+        var connectorUpdateFailureWriter = new ConnectorUpdateFailureWriter(brokerEventLogger, monitor);
         var contractOfferFetcher = new ContractOfferFetcher(catalogService);
         var fetchedDataOfferBuilder = new DataOfferBuilder(objectMapper);
         var dataOfferFetcher = new DataOfferFetcher(contractOfferFetcher, fetchedDataOfferBuilder);
@@ -151,6 +151,11 @@ public class BrokerServerExtensionContextBuilder {
                 connectorApiService,
                 catalogApiService
         );
-        return new BrokerServerExtensionContext(brokerServerResource, brokerServerInitializer);
+        return new BrokerServerExtensionContext(
+                brokerServerResource,
+                brokerServerInitializer,
+                connectorUpdater,
+                connectorCreator
+        );
     }
 }

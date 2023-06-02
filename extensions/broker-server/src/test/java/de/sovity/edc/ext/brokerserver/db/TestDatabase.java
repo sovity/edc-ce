@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 
 import java.util.function.Consumer;
+import javax.sql.DataSource;
 
 public interface TestDatabase extends BeforeAllCallback, AfterAllCallback {
     String getJdbcUrl();
@@ -34,9 +35,18 @@ public interface TestDatabase extends BeforeAllCallback, AfterAllCallback {
      * @return {@link DslContextFactory}
      */
     default DslContextFactory getDslContextFactory() {
-        var jdbcCredentials = new JdbcCredentials(getJdbcUrl(), getJdbcUser(), getJdbcPassword());
-        var dataSource = DataSourceFactory.fromJdbcCredentials(jdbcCredentials);
+        var dataSource = getDataSource();
         return new DslContextFactory(dataSource);
+    }
+
+    /**
+     * Returns a {@link DataSource} to the test database
+     *
+     * @return {@link DataSource}
+     */
+    default DataSource getDataSource() {
+        var jdbcCredentials = new JdbcCredentials(getJdbcUrl(), getJdbcUser(), getJdbcPassword());
+        return DataSourceFactory.fromJdbcCredentials(jdbcCredentials);
     }
 
     /**

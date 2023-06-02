@@ -70,6 +70,9 @@ public class BrokerServerExtension implements ServiceExtension {
                 catalogService
         );
 
+        // This is a hack for tests, so we can access the running context from tests.
+        BrokerServerExtensionContext.instance = services;
+
         var managementApiGroup = managementApiConfiguration.getContextAlias();
         webService.registerResource(managementApiGroup, services.brokerServerResource());
     }

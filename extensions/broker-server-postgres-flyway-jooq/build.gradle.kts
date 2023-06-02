@@ -53,7 +53,7 @@ dependencies {
     implementation("${edcGroup}:transaction-local:${edcVersion}")
     implementation("org.postgresql:postgresql:${postgresVersion}")
 
-    implementation("org.flywaydb:flyway-core:${flywayVersion}")
+    api("org.flywaydb:flyway-core:${flywayVersion}")
 
     testImplementation("${edcGroup}:junit:${edcVersion}")
 }

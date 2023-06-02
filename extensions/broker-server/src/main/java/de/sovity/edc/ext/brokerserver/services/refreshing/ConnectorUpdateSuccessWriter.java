@@ -39,7 +39,7 @@ public class ConnectorUpdateSuccessWriter {
         var now = OffsetDateTime.now();
 
         // Log Status Change and set status to online if necessary
-        if (connector.getOnlineStatus() == ConnectorOnlineStatus.OFFLINE) {
+        if (connector.getOnlineStatus() == ConnectorOnlineStatus.OFFLINE || connector.getLastRefreshAttemptAt() == null) {
             brokerEventLogger.logConnectorUpdateStatusChange(dsl, connector.getEndpoint(), ConnectorOnlineStatus.ONLINE);
             connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);
         }

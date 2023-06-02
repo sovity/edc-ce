@@ -14,34 +14,21 @@
 
 package de.sovity.edc.ext.brokerserver.services.logging;
 
-import de.sovity.edc.ext.brokerserver.BrokerServerExtension;
+import de.sovity.edc.ext.brokerserver.db.FlywayTestUtils;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
 import de.sovity.edc.ext.brokerserver.db.TestDatabaseFactory;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
-import org.eclipse.edc.junit.annotations.ApiTest;
-import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import java.util.Map;
-
-import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
-
-@ApiTest
-@ExtendWith(EdcExtension.class)
-public class BrokerEventLoggerTest {
-
+class BrokerEventLoggerTest {
     @RegisterExtension
     private static final TestDatabase TEST_DATABASE = TestDatabaseFactory.getTestDatabase();
 
-    @BeforeEach
-    void setUp(EdcExtension extension) {
-        extension.setConfiguration(createConfiguration(TEST_DATABASE, Map.of(
-                BrokerServerExtension.KNOWN_CONNECTORS, "https://example.com/ids/data",
-                BrokerServerExtension.NUM_THREADS, "0"
-        )));
+    @BeforeAll
+    static void setup() {
+        FlywayTestUtils.migrate(TEST_DATABASE);
     }
 
     @Test

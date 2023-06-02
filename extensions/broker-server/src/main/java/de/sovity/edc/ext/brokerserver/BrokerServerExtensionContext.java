@@ -15,6 +15,8 @@
 package de.sovity.edc.ext.brokerserver;
 
 import de.sovity.edc.ext.brokerserver.services.BrokerServerInitializer;
+import de.sovity.edc.ext.brokerserver.services.ConnectorCreator;
+import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdater;
 import de.sovity.edc.ext.wrapper.api.broker.BrokerServerResource;
 
 
@@ -26,6 +28,16 @@ import de.sovity.edc.ext.wrapper.api.broker.BrokerServerResource;
  */
 public record BrokerServerExtensionContext(
         BrokerServerResource brokerServerResource,
-        BrokerServerInitializer brokerServerInitializer
+        BrokerServerInitializer brokerServerInitializer,
+
+        // Required for Integration Tests
+        ConnectorUpdater connectorUpdater,
+        ConnectorCreator connectorCreator
 ) {
+    /**
+     * This is a hack for our tests.
+     * <p>
+     * Right now we have no good way to access the context from tests.
+     */
+    public static BrokerServerExtensionContext instance;
 }

@@ -15,8 +15,10 @@
 package de.sovity.edc.ext.brokerserver.services.refreshing.offers;
 
 import de.sovity.edc.ext.brokerserver.dao.AssetProperty;
+import de.sovity.edc.ext.brokerserver.dao.queries.ConnectorQueries;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferContractOfferRecord;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferRecord;
+import de.sovity.edc.ext.brokerserver.services.ConnectorCreator;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOffer;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOfferContractOffer;
 import org.apache.commons.lang3.Validate;
@@ -65,6 +67,9 @@ class DataOfferWriterTestDataHelper {
     }
 
     public void initialize(DSLContext dsl) {
+        var connectorQueries = new ConnectorQueries();
+        var connectorCreator = new ConnectorCreator(connectorQueries);
+        connectorCreator.addConnector(dsl, connectorEndpoint);
         dsl.batchInsert(existingDataOffers).execute();
         dsl.batchInsert(existingContractOffers).execute();
     }

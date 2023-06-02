@@ -20,6 +20,7 @@ import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventErrorMessage;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.EdcException;
+import org.eclipse.edc.spi.monitor.Monitor;
 import org.jooq.DSLContext;
 
 import java.time.OffsetDateTime;
@@ -27,13 +28,15 @@ import java.time.OffsetDateTime;
 @RequiredArgsConstructor
 public class ConnectorUpdateFailureWriter {
     private final BrokerEventLogger brokerEventLogger;
+    private final Monitor monitor;
 
     public void handleConnectorOffline(DSLContext dsl, ConnectorRecord connector, Throwable e) {
         // Log Status Change and set status to offline if necessary
-        if (connector.getOnlineStatus() == ConnectorOnlineStatus.ONLINE) {
+        if (connector.getOnlineStatus() == ConnectorOnlineStatus.ONLINE || connector.getLastRefreshAttemptAt() == null) {
             brokerEventLogger.logConnectorUpdateStatusChange(dsl, connector.getEndpoint(), ConnectorOnlineStatus.OFFLINE);
             brokerEventLogger.logConnectorUpdateFailure(dsl, connector.getEndpoint(), getFailureMessage(e));
             connector.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
+            monitor.info("Connector is offline: " + connector.getEndpoint(), e);
         }
 
         connector.setLastRefreshAttemptAt(OffsetDateTime.now());

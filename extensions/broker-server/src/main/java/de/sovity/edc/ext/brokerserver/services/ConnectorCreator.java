@@ -30,6 +30,10 @@ import java.util.List;
 public class ConnectorCreator {
     private final ConnectorQueries connectorQueries;
 
+    public void addConnector(DSLContext dsl, String connectorEndpoint) {
+        addConnectors(dsl, List.of(connectorEndpoint));
+    }
+
     public void addConnectors(DSLContext dsl, List<String> connectorEndpoints) {
         // Don't create connectors that already exist
         var existingConnectors = connectorQueries.findExistingConnectors(dsl, connectorEndpoints);

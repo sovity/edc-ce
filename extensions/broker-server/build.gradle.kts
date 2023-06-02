@@ -22,12 +22,8 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.28")
     implementation("org.apache.commons:commons-lang3:3.12.0")
 
-    implementation("${edcGroup}:control-plane-core:${edcVersion}")
+    implementation("${edcGroup}:control-plane-spi:${edcVersion}")
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
-    implementation("${edcGroup}:ids-spi:${edcVersion}")
-    implementation("${edcGroup}:ids-api-multipart-dispatcher-v1:${edcVersion}")
-    implementation("${edcGroup}:ids-api-configuration:${edcVersion}")
-    implementation("${edcGroup}:ids-jsonld-serdes:${edcVersion}")
 
     api(project(":extensions:broker-server-postgres-flyway-jooq"))
     api("${sovityEdcGroup}:wrapper-broker-api:${sovityEdcExtensionsVersion}") { isChanging = true }
@@ -42,8 +38,12 @@ dependencies {
     testImplementation("${edcGroup}:junit:${edcVersion}")
     testImplementation("${edcGroup}:http:${edcVersion}")
     testImplementation("${edcGroup}:iam-mock:${edcVersion}")
-    testImplementation("io.rest-assured:rest-assured:${restAssured}")
+    testImplementation("${edcGroup}:ids:${edcVersion}")
+    testImplementation("${edcGroup}:management-api:${edcVersion}")
+    testImplementation("${edcGroup}:monitor-jdk-logger:${edcVersion}")
+    testImplementation("${edcGroup}:configuration-filesystem:${edcVersion}")
     testImplementation("${sovityEdcGroup}:client:${sovityEdcExtensionsVersion}")
+    testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation("org.testcontainers:testcontainers:${testcontainersVersion}")
     testImplementation("org.testcontainers:junit-jupiter:${testcontainersVersion}")
     testImplementation("org.testcontainers:postgresql:${testcontainersVersion}")

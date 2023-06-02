@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.services.refreshing.offers;
 
-import de.sovity.edc.ext.brokerserver.BrokerServerExtension;
+import de.sovity.edc.ext.brokerserver.db.FlywayTestUtils;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
 import de.sovity.edc.ext.brokerserver.db.TestDatabaseFactory;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferRecord;
@@ -22,34 +22,24 @@ import de.sovity.edc.ext.brokerserver.services.logging.ConnectorChangeTracker;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferWriterTestDataModels.Co;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferWriterTestDataModels.Do;
 import org.assertj.core.data.TemporalUnitLessThanOffset;
-import org.eclipse.edc.junit.annotations.ApiTest;
-import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Map;
 
-import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ApiTest
-@ExtendWith(EdcExtension.class)
 class DataOfferWriterTest {
 
     @RegisterExtension
     private static final TestDatabase TEST_DATABASE = TestDatabaseFactory.getTestDatabase();
 
-    @BeforeEach
-    void setUp(EdcExtension extension) {
-        extension.setConfiguration(createConfiguration(TEST_DATABASE, Map.of(
-                BrokerServerExtension.KNOWN_CONNECTORS, "https://example.com/ids/data",
-                BrokerServerExtension.NUM_THREADS, "0"
-        )));
+    @BeforeAll
+    static void setup() {
+        FlywayTestUtils.migrate(TEST_DATABASE);
     }
 
     @Test
