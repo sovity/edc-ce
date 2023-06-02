@@ -23,6 +23,12 @@ services:
       MY_EDC_MAINTAINER_URL: "https://sovity.de"
       MY_EDC_MAINTAINER_NAME: "sovity GmbH"
 
+      # Local Dev Broker Overrides
+      EDC_BROKER_SERVER_CRON_CONNECTOR_REFRESH: "*/20 * * ? * *"
+      EDC_BROKER_SERVER_NUM_THREADS: "1"
+      EDC_BROKER_SERVER_HIDE_OFFLINE_DATA_OFFERS_AFTER: "PT1M"
+      EDC_BROKER_SERVER_KNOWN_CONNECTORS: "http://connector:11003/api/v1/ids/data"
+
       # Data Management API Key
       EDC_API_AUTH_KEY: ApiKeyDefaultValue
 
