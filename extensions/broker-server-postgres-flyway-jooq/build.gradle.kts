@@ -21,7 +21,7 @@ val postgresVersion: String by project
 
 buildscript {
     dependencies {
-        classpath("org.testcontainers:postgresql:1.18.2")
+        classpath("org.testcontainers:postgresql:1.18.3")
     }
 }
 
