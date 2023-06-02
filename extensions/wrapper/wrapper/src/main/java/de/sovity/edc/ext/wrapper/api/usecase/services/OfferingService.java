@@ -70,11 +70,16 @@ public class OfferingService {
     }
 
     private PolicyDefinition transformPolicy(PolicyDefinitionRequestDto dto) {
-        var policy = policyMappingService.policyDtoToPolicy(dto.getPolicy());
-        return PolicyDefinition.Builder.newInstance()
-                .id(dto.getId())
-                .policy(policy)
-                .build();
+        try {
+            var policy = policyMappingService.policyDtoToPolicy(dto.getPolicy());
+            return PolicyDefinition.Builder.newInstance()
+                    .id(dto.getId())
+                    .policy(policy)
+                    .build();
+        } catch (IllegalArgumentException e) {
+            throw new InvalidRequestException(e.getMessage());
+        }
+
     }
 
     private ContractDefinition transformContractDefinition(ContractDefinitionRequestDto dto) {

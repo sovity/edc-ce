@@ -37,6 +37,11 @@ public class PolicyMappingService {
      * @return An EDC {@link Policy}
      */
     public Policy policyDtoToPolicy(PolicyDto dto) {
+        if (dto == null || dto.getPermission() == null) {
+            throw new IllegalArgumentException("Policy must not be null and must have a"
+                    + " permission.");
+        }
+
         return Policy.Builder.newInstance()
                 .type(PolicyType.SET)
                 .permission(permissionDtoToPermission(dto.getPermission()))
@@ -46,7 +51,7 @@ public class PolicyMappingService {
     private Permission permissionDtoToPermission(PermissionDto dto) {
         var builder = Permission.Builder.newInstance()
                 .action(Action.Builder.newInstance().type(ACTION_TYPE).build());
-        if (dto == null || dto.getConstraints() == null) { //TODO return null or builder.build for dto==null?
+        if (dto.getConstraints() == null) {
             return builder.build();
         }
 

@@ -10,12 +10,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
-import java.util.ArrayList;
-import java.util.Map;
 import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
 import org.eclipse.edc.connector.api.management.asset.model.AssetEntryDto;
 import org.eclipse.edc.connector.api.management.asset.model.AssetRequestDto;
@@ -141,7 +142,7 @@ class OfferingServiceTest {
     @Test
     void create_mappingPolicyFails_throwException() {
         // arrange
-        doThrow(RuntimeException.class).when(policyMappingService)
+        doThrow(IllegalArgumentException.class).when(policyMappingService)
                 .policyDtoToPolicy(policyDefinitionDto.getPolicy());
 
         // act && assert

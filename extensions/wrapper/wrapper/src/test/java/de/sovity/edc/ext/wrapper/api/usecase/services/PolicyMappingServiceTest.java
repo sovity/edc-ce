@@ -1,13 +1,15 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.util.List;
 
 import de.sovity.edc.ext.wrapper.api.common.model.ConstraintDto;
 import de.sovity.edc.ext.wrapper.api.common.model.ExpressionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.OperatorDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
-import java.util.List;
 import org.eclipse.edc.policy.model.AndConstraint;
 import org.eclipse.edc.policy.model.AtomicConstraint;
 import org.eclipse.edc.policy.model.Constraint;
@@ -24,9 +26,28 @@ class PolicyMappingServiceTest {
     private final PolicyMappingService mappingService = new PolicyMappingService();
 
     @Test
-    void policyDtoToPolicy_noConstraints_returnPolicy() {
+    void policyToPolicyDto_dtoNull_throwException() {
+        // act && assert
+        assertThatThrownBy(() -> mappingService.policyDtoToPolicy(null))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void policyToPolicyDto_permissionNull_throwException() {
         // arrange
         var dto = PolicyDto.builder().build();
+
+        // act && assert
+        assertThatThrownBy(() -> mappingService.policyDtoToPolicy(dto))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void policyDtoToPolicy_noConstraints_returnPolicy() {
+        // arrange
+        var dto = PolicyDto.builder()
+                .permission(PermissionDto.builder().build())
+                .build();
 
         // act
         var policy = mappingService.policyDtoToPolicy(dto);
@@ -146,6 +167,50 @@ class PolicyMappingServiceTest {
         var xoneConstraint = (XoneConstraint) permission.getConstraints().get(0);
         assertThat(xoneConstraint.getConstraints()).hasSize(2);
         xoneConstraint.getConstraints().forEach(this::assertAtomicConstraint);
+    }
+
+    @Test
+    void policyToPolicyDto_nestedLogicalConstraints_returnPolicy() {
+        // arrange
+        var constraint1 = new ConstraintDto("left1", OperatorDto.EQ, "right1");
+        var expression1 = new ExpressionDto(constraint1, null, null, null);
+        var constraint2 = new ConstraintDto("left2", OperatorDto.EQ, "right2");
+        var expression2 = new ExpressionDto(constraint2, null, null, null);
+
+        var andExpression1 = new ExpressionDto(null, List.of(expression1, expression2),
+                null, null);
+        var andExpression2 = new ExpressionDto(null, List.of(expression1, expression2),
+                null, null);
+
+        var orExpression = new ExpressionDto(null, null, List.of(andExpression1, andExpression2),
+                null);
+
+        var dto = PolicyDto.builder()
+                .permission(PermissionDto.builder()
+                        .constraints(orExpression)
+                        .build())
+                .build();
+
+        // act
+        var policy = mappingService.policyDtoToPolicy(dto);
+
+        // assert
+        assertPolicyAttributes(policy);
+
+        var permission = policy.getPermissions().get(0);
+        assertThat(permission.getAction().getType()).isEqualTo("USE");
+        assertThat(permission.getConstraints()).hasSize(1);
+        assertThat(permission.getConstraints().get(0)).isInstanceOf(OrConstraint.class);
+
+        var orConstraint = (OrConstraint) permission.getConstraints().get(0);
+        assertThat(orConstraint.getConstraints()).hasSize(2);
+        orConstraint.getConstraints().forEach(c -> {
+            assertThat(c).isInstanceOf(AndConstraint.class);
+            var andConstraint = (AndConstraint) c;
+            assertThat(andConstraint.getConstraints()).hasSize(2);
+            andConstraint.getConstraints().forEach(c2 -> assertThat(c2)
+                    .isInstanceOf(AtomicConstraint.class));
+        });
     }
 
     void assertPolicyAttributes(Policy policy) {
