@@ -29,6 +29,7 @@ import de.sovity.edc.ext.brokerserver.services.api.ConnectorApiService;
 import de.sovity.edc.ext.brokerserver.services.api.PaginationMetadataUtils;
 import de.sovity.edc.ext.brokerserver.services.api.PolicyDtoBuilder;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
+import de.sovity.edc.ext.brokerserver.services.logging.BrokerExecutionTimeLogger;
 import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueue;
 import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueueFiller;
 import de.sovity.edc.ext.brokerserver.services.queue.ThreadPool;
@@ -86,6 +87,7 @@ public class BrokerServerExtensionContextBuilder {
         // Services
         var objectMapper = typeManager.getMapper();
         var brokerEventLogger = new BrokerEventLogger();
+        var brokerExecutionTimeLogger = new BrokerExecutionTimeLogger();
         var contractOfferRecordUpdater = new ContractOfferRecordUpdater();
         var dataOfferRecordUpdater = new DataOfferRecordUpdater();
         var dataOfferContractOfferQueries = new DataOfferContractOfferQueries();
@@ -108,7 +110,8 @@ public class BrokerServerExtensionContextBuilder {
                 connectorUpdateFailureWriter,
                 connectorQueries,
                 dslContextFactory,
-                monitor
+                monitor,
+                brokerExecutionTimeLogger
         );
         var policyDtoBuilder = new PolicyDtoBuilder(objectMapper);
         var assetPropertyParser = new AssetPropertyParser(objectMapper);
