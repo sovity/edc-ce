@@ -63,10 +63,7 @@ create type broker_event_status as enum (
     'OK',
 
     -- Failures
-    'ERROR',
-
-    -- E.g. refreshes, that resulted in no changes
-    'UNCHANGED'
+    'ERROR'
 );
 
 create table broker_event_log

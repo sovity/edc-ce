@@ -31,50 +31,53 @@ import java.time.OffsetDateTime;
 public class BrokerEventLogger {
 
     public void logConnectorUpdateSuccess(DSLContext dsl, String connectorEndpoint, ConnectorChangeTracker changes) {
-        var logEntry = connectorUpdateEntry(dsl, connectorEndpoint);
-        logEntry.setEventStatus(getConnectorUpdateStatus(changes));
-        logEntry.setUserMessage(changes.toString());
+        var logEntry = logEntry(
+                dsl,
+                BrokerEventType.CONNECTOR_UPDATED,
+                connectorEndpoint,
+                changes.toString()
+        );
         logEntry.insert();
     }
 
     public void logConnectorUpdateFailure(DSLContext dsl, String connectorEndpoint, BrokerEventErrorMessage errorMessage) {
-        var logEntry = connectorUpdateEntry(dsl, connectorEndpoint);
+        var logEntry = logEntry(
+                dsl,
+                BrokerEventType.CONNECTOR_UPDATED,
+                connectorEndpoint,
+                errorMessage.message()
+        );
         logEntry.setEventStatus(BrokerEventStatus.ERROR);
-        logEntry.setUserMessage(errorMessage.message());
         logEntry.setErrorStack(errorMessage.stackTraceOrNull());
         logEntry.insert();
     }
 
     public void logConnectorUpdateStatusChange(DSLContext dsl, String connectorEndpoint, ConnectorOnlineStatus status) {
-        var logEntry = connectorUpdateEntry(dsl, connectorEndpoint);
-        switch (status) {
-            case ONLINE:
-                logEntry.setUserMessage("Connector is online: " + connectorEndpoint);
-                logEntry.setEvent(BrokerEventType.CONNECTOR_STATUS_CHANGE_ONLINE);
-                break;
-            case OFFLINE:
-                logEntry.setUserMessage("Connector is offline: " + connectorEndpoint);
-                logEntry.setEvent(BrokerEventType.CONNECTOR_STATUS_CHANGE_OFFLINE);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown status: " + status + " for connector: " + connectorEndpoint);
-        }
+        var logEntry = switch (status) {
+            case ONLINE -> logEntry(
+                    dsl,
+                    BrokerEventType.CONNECTOR_STATUS_CHANGE_ONLINE,
+                    connectorEndpoint,
+                    "Connector is online: " + connectorEndpoint
+            );
+            case OFFLINE -> logEntry(
+                    dsl,
+                    BrokerEventType.CONNECTOR_STATUS_CHANGE_OFFLINE,
+                    connectorEndpoint,
+                    "Connector is offline: " + connectorEndpoint
+            );
+            default -> throw new IllegalArgumentException("Unknown status: " + status + " for connector: " + connectorEndpoint);
+        };
         logEntry.insert();
     }
 
-    private BrokerEventLogRecord connectorUpdateEntry(DSLContext dsl, String connectorEndpoint) {
+    private BrokerEventLogRecord logEntry(DSLContext dsl, BrokerEventType eventType, String connectorEndpoint, String userMessage) {
         var logEntry = dsl.newRecord(Tables.BROKER_EVENT_LOG);
-        logEntry.setEvent(BrokerEventType.CONNECTOR_UPDATED);
+        logEntry.setEventStatus(BrokerEventStatus.OK);
+        logEntry.setEvent(eventType);
         logEntry.setConnectorEndpoint(connectorEndpoint);
         logEntry.setCreatedAt(OffsetDateTime.now());
+        logEntry.setUserMessage(userMessage);
         return logEntry;
-    }
-
-    private BrokerEventStatus getConnectorUpdateStatus(ConnectorChangeTracker changes) {
-        if (changes.isEmpty()) {
-            return BrokerEventStatus.UNCHANGED;
-        }
-
-        return BrokerEventStatus.OK;
     }
 }
