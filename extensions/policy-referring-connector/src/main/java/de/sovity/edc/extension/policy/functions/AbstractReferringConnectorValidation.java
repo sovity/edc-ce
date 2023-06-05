@@ -123,7 +123,7 @@ public abstract class AbstractReferringConnectorValidation {
         }
 
         //evaluate
-        return isAllowedReferingConnector(referringConnectorClaim, (String) referringConnector);
+        return isAllowedReferringConnector(referringConnectorClaim, (String) referringConnector);
     }
 
     /**
@@ -133,7 +133,7 @@ public abstract class AbstractReferringConnectorValidation {
      * @param referringConnector object of rightValue of constraint
      * @return true if claim equals the referringConnector
      */
-    private static boolean isAllowedReferingConnector(
+    private static boolean isAllowedReferringConnector(
             String referringConnectorClaim, String referringConnector) {
         return referringConnectorClaim.equals(referringConnector);
     }
