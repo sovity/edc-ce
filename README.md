@@ -24,7 +24,9 @@ Broker Backend &amp; EDC Extensions.
    <summary>Table of Contents</summary>
    <ol>
       <li><a href="#about-the-project">About The Project</a></li>
-      <li><a href="#requirements">Requirements</a></li>
+      <li><a href="#development">Development</a></li>
+      <li><a href="#releasing">Releasing</a></li>
+      <li><a href="#deployment">Deployment</a></li>
       <li><a href="#license">License</a></li>
       <li><a href="#contact">Contact</a></li>
    </ol>
@@ -46,7 +48,7 @@ This IDS Broker is written on basis of the EDC and should be used in tandem with
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Requirements
+## Development
 
 For development, access to the GitHub Maven Registry is required.
 
@@ -56,6 +58,83 @@ a `~/.gradle/gradle.properties`.
 ```properties
 gpr.user={your github username}
 gpr.key={your github pat with packages.read}
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Releasing
+
+Create an issue using the [release template](.github/ISSUE_TEMPLATE/release.md) and follow the instructions.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Deployment
+
+### Deployment Units
+
+| Deployment Unit                                                | Version / Details                                                                                                                 |
+|----------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                                                                             |
+| Postgresql                                                     | 15 or compatible version                                                                                                          |
+| Broker Backend                                                 | broker-server-ce:0.0.1                                                                                                            |
+| Broker UI                                                      | [edc-ui:0.0.1-milestone-8-sovity5](https://github.com/sovity/edc-ui/pkgs/container/edc-ui/91758285?tag=0.0.1-milestone-8-sovity5) |
+
+### Configuration
+
+There is a [docker-compose.yaml](docker-compose.yaml) to try out the broker locally. However, a productive release will
+require a few more configuration options, so you should only use it to check if the released version is roughly working
+or if it's broken.
+
+#### Reverse Proxy Configuration
+
+- The broker is meant to be served via TLS/HTTPS.
+- The broker is meant to be deployed with a reverse proxy merging the following ports:
+    - The UI's `80` port.
+    - The Backend's `11002` port.
+    - The Backend's `11003` port.
+
+#### Backend Configuration
+
+A productive configuration will require you to join a DAPS.
+
+For that you will need a SKI/AKI ClientID. Please refer
+to [edc-extension's Getting Started Guide](https://github.com/sovity/edc-extensions/tree/main/docs/getting-started#faq)
+on how to generate one.
+
+```yaml
+# Required: Fully Qualified Domain Name
+MY_EDC_FQDN: "example.com"
+
+# Required: DB
+MY_EDC_JDBC_URL: jdbc:postgresql://broker-postgresql:5432/edc
+MY_EDC_JDBC_USER: edc
+MY_EDC_JDBC_PASSWORD: edc
+
+# Required: List of EDCs to fetch
+EDC_BROKER_SERVER_KNOWN_CONNECTORS: "https://connector-a/ids/data,https://connector-b/ids/data"
+
+# Required: DAPS credentials
+EDC_OAUTH_TOKEN_URL: 'https://daps.test.mobility-dataspace.eu/token'
+EDC_OAUTH_PROVIDER_JWKS_URL: 'https://daps.test.mobility-dataspace.eu/jwks.json'
+EDC_OAUTH_CLIENT_ID: '_your SKI/AKI_'
+EDC_KEYSTORE: '_your keystore file_' # Needs to be available as file in the running container
+EDC_KEYSTORE_PASSWORD: '_your keystore password_'
+
+# Required: Management API Key
+EDC_API_AUTH_KEY: "ApiKeyDefaultValue"
+```
+
+#### UI Configuration
+
+```yaml
+# Required: Profile
+EDC_UI_ACTIVE_PROFILE: broker
+
+# Required: Management API URL
+EDC_UI_DATA_MANAGEMENT_API_URL: https://my-broker.com/backend/api/v1/management
+
+# Required: Management API Key
+EDC_API_AUTH_KEY: "ApiKeyDefaultValue"
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
