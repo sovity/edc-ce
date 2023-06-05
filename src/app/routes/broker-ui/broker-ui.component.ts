@@ -13,6 +13,7 @@ import {routes} from './broker-ui-routing.module';
   providers: [TitleUtilsService],
 })
 export class BrokerUiComponent implements OnInit {
+  currentYear = new Date().getFullYear();
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(

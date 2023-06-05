@@ -14,7 +14,7 @@
         [attr.src]="config.brandLogoSrc"
         [style]="config.brandLogoStyle" />
     </mat-toolbar>
-    <mat-nav-list class="overflow-auto grow">
+    <mat-nav-list class="overflow-auto grow !flex flex-col">
       <ng-container *ngFor="let route of routes">
         <a *ngIf="!route.data?.hideInNav" [routerLink]="[route.path]">
           <mat-list-item
@@ -30,6 +30,10 @@
           </mat-list-item>
         </a></ng-container
       >
+      <div class="grow"></div>
+      <div class="shrink-0 p-x-[15px] p-y-[10px]">
+        &copy; {{ currentYear }} Mobility Data Space
+      </div>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
