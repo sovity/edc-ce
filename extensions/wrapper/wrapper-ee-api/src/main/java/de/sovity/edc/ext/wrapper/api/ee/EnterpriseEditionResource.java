@@ -47,30 +47,6 @@ public interface EnterpriseEditionResource {
     @Operation(description = "Available and used resources of a connector.")
     ConnectorLimits connectorLimits();
 
-    @POST
-    @Path("file-storage/stored-files")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Operation(
-            summary = "Upload a file.",
-            description = "Upload a file to the file storage. <br> On a successful upload to the file storage " +
-                    "a StoredFile object is returned. <br> The assetProperties remain empty and are only added upon " +
-                    "a asset create request."
-    )
-    StoredFile uploadStoredFile(
-            @Parameter(
-                    schema = @Schema(
-                            description = "The file content to upload.",
-                            type = "string",
-                            format = "binary"))
-            @FormDataParam("file")
-            InputStream fileContent,
-
-            @Parameter(hidden = true)
-            @FormDataParam("file")
-            FormDataContentDisposition fileDetail
-    );
-
     @GET
     @Path("file-storage/stored-files")
     @Produces(MediaType.APPLICATION_JSON)
