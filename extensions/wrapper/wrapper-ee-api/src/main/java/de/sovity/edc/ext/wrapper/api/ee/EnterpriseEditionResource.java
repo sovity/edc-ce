@@ -28,10 +28,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -48,11 +45,20 @@ public interface EnterpriseEditionResource {
     ConnectorLimits connectorLimits();
 
     @GET
+    @Path("file-storage/tokens")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(
+            summary = "Get a token to upload a stored file.",
+            description = "Get a temporarily token that can be used to upload a stored file in a file storage."
+    )
+    StoredFile fileUploadToken();
+
+    @GET
     @Path("file-storage/stored-files")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
             summary = "Get all stored files.",
-            description = "Get all files stored in file storage"
+            description = "Get all files stored in a file storage."
     )
     List<StoredFile> listStoredFiles();
 

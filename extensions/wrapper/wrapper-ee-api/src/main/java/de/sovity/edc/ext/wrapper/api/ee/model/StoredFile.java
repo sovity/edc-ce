@@ -36,26 +36,6 @@ public class StoredFile {
             requiredMode = Schema.RequiredMode.REQUIRED)
     private String storedFileId;
 
-    @Schema(description = "The name of file.",
-            example = "afilename.csv",
-            requiredMode = Schema.RequiredMode.REQUIRED)
-    private String fileName;
-
-    @Schema(description = "The extension of the file.",
-            example = "csv",
-            requiredMode = Schema.RequiredMode.REQUIRED)
-    private String fileExtension;
-
-    @Schema(description = "The media type of the file.",
-            example = "text/csv",
-            requiredMode = Schema.RequiredMode.REQUIRED)
-    private String mediaType;
-
-    @Schema(description = "Size of the file in bytes.",
-            example = "1024",
-            requiredMode = Schema.RequiredMode.REQUIRED)
-    private String byteSize;
-
     @Schema(description = "Map containing the asset properties of the stored file." +
             "<br> An empty map is set as a response to a file storage request. <br> Only upon a asset creation request " +
             "the asset properties are set.",
