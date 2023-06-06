@@ -118,3 +118,8 @@ In the default configuration the connector certificate should be stored inside a
 
 ### Can I run a connector locally and consume data from an online connector?
 No, locally run connectors cannot exchange data with online connectors. A connector must have a proper URL + configuration and be accesible from the data provider via REST calls.
+
+## Further Documentation
+- [Manging a sovity EDC Connector via the API Wrapper Java Client Library](../getting-started/documentation/api_wrapper.md)
+- [How to share parameterized HTTP data sources to expose entire APIs](../getting-started/documentation/parameterized_assets.md)
+- [How Can a Pull-Data-Transfer Be Performed?](../getting-started/documentation/pull-data-transfer.md)
