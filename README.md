@@ -72,12 +72,12 @@ Create an issue using the [release template](.github/ISSUE_TEMPLATE/release.md) 
 
 ### Deployment Units
 
-| Deployment Unit                                                | Version / Details                                                                                                                 |
-|----------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                                                                             |
-| Postgresql                                                     | 15 or compatible version                                                                                                          |
-| Broker Backend                                                 | broker-server-ce:0.0.1                                                                                                            |
-| Broker UI                                                      | [edc-ui:0.0.1-milestone-8-sovity5](https://github.com/sovity/edc-ui/pkgs/container/edc-ui/91758285?tag=0.0.1-milestone-8-sovity5) |
+| Deployment Unit                                                | Version / Details                                                           |
+|----------------------------------------------------------------|-----------------------------------------------------------------------------|
+| Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                       |
+| Postgresql                                                     | 15 or compatible version                                                    |
+| Broker Backend                                                 | broker-server-ce, see [CHANGELOG.md](CHANGELOG.md) for compatible versions. |
+| Broker UI                                                      | edc-ui, see  [CHANGELOG.md](CHANGELOG.md) for compatible versions.          |
 
 ### Configuration
 

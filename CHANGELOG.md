@@ -21,7 +21,13 @@ Initial Broker PoC Release with a minimalistic feature set.
 
 ### Deployment Migration Notes
 
-Please view the [README.md](README.md#deployment) for initial deployment instructions.
+Please view the [Deployment Section in the README.md](README.md#deployment) for initial deployment instructions.
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:0.0.1`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity6`
+- Sovity EDC CE: [`3.3.0`](https://github.com/sovity/edc-extensions/tree/v3.3.0/connector)
 
 ### Major
 
