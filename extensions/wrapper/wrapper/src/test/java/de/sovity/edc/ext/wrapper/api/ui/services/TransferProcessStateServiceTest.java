@@ -33,10 +33,10 @@ class TransferProcessStateServiceTest {
 
     @Test
     void testError() {
-        int code = TransferProcessStates.ERROR.code();
+        int code = TransferProcessStates.SUSPENDED.code();
         var result = transferProcessStateService.buildTransferProcessState(code);
         assertThat(result.getCode()).isEqualTo(code);
-        assertThat(result.getName()).isEqualTo("ERROR");
+        assertThat(result.getName()).isEqualTo("SUSPENDED");
         assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.ERROR);
     }
 

@@ -82,7 +82,8 @@ public class WrapperExtensionContextBuilder {
         var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
                 contractAgreementService,
                 contractNegotiationStore,
-                transferProcessService
+                transferProcessService,
+                assetIndex
         );
         var contractAgreementApiService = new ContractAgreementPageApiService(
                 contractAgreementDataFetcher,
