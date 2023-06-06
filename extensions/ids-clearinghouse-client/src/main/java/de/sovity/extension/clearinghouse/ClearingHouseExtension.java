@@ -57,6 +57,9 @@ public class ClearingHouseExtension implements ServiceExtension {
     @Setting
     public static final String CLEARINGHOUSE_LOG_URL_SETTING = "edc.clearinghouse.log.url";
 
+    @Setting
+    private static final String CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED = "clearinghouse.client.extension.enabled";
+
     @Inject
     private IdsApiConfiguration idsApiConfiguration;
 
@@ -92,6 +95,7 @@ public class ClearingHouseExtension implements ServiceExtension {
     private URL clearingHouseLogUrl;
     private Monitor monitor;
 
+
     @Override
     public String name() {
         return CATALOG_TRANSFER_EXTENSION;
@@ -99,8 +103,16 @@ public class ClearingHouseExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        clearingHouseLogUrl = readUrlFromSettings(context, CLEARINGHOUSE_LOG_URL_SETTING);
         monitor = context.getMonitor();
+        var extensionEnabled = context.getSetting(CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED, false);
+
+        if (!extensionEnabled) {
+            monitor.info("Clearinghouse client extension is disabled.");
+            return;
+        }
+        monitor.info("Clearinghouse client extension is enabled.");
+
+        clearingHouseLogUrl = readUrlFromSettings(context, CLEARINGHOUSE_LOG_URL_SETTING);
 
         registerSerializerClearingHouseMessages(context);
         registerClearingHouseMessageSenders(context);

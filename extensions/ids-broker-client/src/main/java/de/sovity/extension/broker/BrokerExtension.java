@@ -85,6 +85,8 @@ public class BrokerExtension implements ServiceExtension {
     @Setting
     private static final String POLICY_BROKER_BLACKLIST = "policy.broker.blacklist";
 
+    @Setting
+    private static final String BROKER_CLIENT_EXTENSION_ENABLED = "broker.client.extension.enabled";
 
     @Inject
     private RemoteMessageDispatcherRegistry dispatcherRegistry;
@@ -116,6 +118,8 @@ public class BrokerExtension implements ServiceExtension {
 
     private Monitor monitor;
 
+    private boolean isExtensionEnabled = true;
+
     @Override
     public String name() {
         return BROKER_EXTENSION;
@@ -123,9 +127,20 @@ public class BrokerExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
+        monitor = context.getMonitor();
+        var extensionEnabled = context.getSetting(BROKER_CLIENT_EXTENSION_ENABLED, true);
+
+        if (!extensionEnabled) {
+            isExtensionEnabled = false;
+            monitor.info("Broker client extension is disabled.");
+            return;
+        }
+
+        monitor.info("Broker client extension is enabled.");
+
         brokerBaseUrl = readUrlFromSettings(context, BROKER_BASE_URL_SETTING);
         var policyBrokerBlacklist = getPolicyBrokerBlacklist(context);
-        monitor = context.getMonitor();
+
 
         registerSerializerBrokerMessages(context);
         registerBrokerMessageSenders(context);
@@ -264,6 +279,10 @@ public class BrokerExtension implements ServiceExtension {
 
     @Override
     public void start() {
+        if (!isExtensionEnabled) {
+            return;
+        }
+
         try {
             idsBrokerService.registerConnectorAtBroker(brokerBaseUrl);
         } catch (Exception e) {
@@ -273,6 +292,10 @@ public class BrokerExtension implements ServiceExtension {
 
     @Override
     public void shutdown() {
+        if (!isExtensionEnabled) {
+            return;
+        }
+
         idsBrokerService.unregisterConnectorAtBroker(brokerBaseUrl);
     }
 
