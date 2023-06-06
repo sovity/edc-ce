@@ -50,16 +50,16 @@ public class UseCaseResource {
     private final OfferingService offeringService;
 
     /**
-     * Creates a new usecase consisting of asset, policy definition and contract definition.
+     * Creates a new offer consisting of asset, policy definition and contract definition.
      *
-     * @param dto contains all required information for the usecase.
+     * @param dto contains all required information for the offer.
      * @return a 204 response, if creating the usecase was successful.
      */
     @POST
     @Path("contract-offer")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Creates an usecase")
-    public Response createOfferingEndpoint(CreateOfferingDto dto) {
+    @Operation(description = "Creates an offer")
+    public Response createOfferEndpoint(CreateOfferingDto dto) {
         offeringService.create(dto);
         return Response.status(Response.Status.NO_CONTENT).build();
     }

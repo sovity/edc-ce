@@ -18,7 +18,7 @@ import org.eclipse.edc.connector.api.management.contractdefinition.model.Contrac
 @Setter
 @ToString
 @AllArgsConstructor
-@NoArgsConstructor()
+@NoArgsConstructor
 @Schema(description = "Necessary data for creating an offer")
 public class CreateOfferingDto {
     private AssetEntryDto assetEntry;

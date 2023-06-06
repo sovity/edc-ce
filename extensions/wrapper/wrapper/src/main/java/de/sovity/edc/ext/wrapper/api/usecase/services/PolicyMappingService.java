@@ -2,7 +2,7 @@ package de.sovity.edc.ext.wrapper.api.usecase.services;
 
 import java.util.Optional;
 
-import de.sovity.edc.ext.wrapper.api.common.model.ConstraintDto;
+import de.sovity.edc.ext.wrapper.api.common.model.AtomicConstraintDto;
 import de.sovity.edc.ext.wrapper.api.common.model.ExpressionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
@@ -63,7 +63,7 @@ public class PolicyMappingService {
     private Constraint expressionToConstraint(ExpressionDto expression) {
         return switch (expression.getType()) {
             case EMPTY -> null;
-            case ATOMIC -> constraintDtoToAtomicConstraint(expression.getConstraint());
+            case ATOMIC_CONSTRAINT -> constraintDtoToAtomicConstraint(expression.getAtomicConstraint());
             case AND ->  {
                 var builder = AndConstraint.Builder.newInstance();
                 expression.getAnd().forEach(c -> builder.constraint(expressionToConstraint(c)));
@@ -82,7 +82,7 @@ public class PolicyMappingService {
         };
     }
 
-    private Constraint constraintDtoToAtomicConstraint(ConstraintDto dto) {
+    private Constraint constraintDtoToAtomicConstraint(AtomicConstraintDto dto) {
         return AtomicConstraint.Builder.newInstance()
                 .leftExpression(new LiteralExpression(dto.getLeftExpression()))
                 .rightExpression(new LiteralExpression(dto.getRightExpression()))

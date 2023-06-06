@@ -17,21 +17,24 @@
     "policy": {
       "permission": {
         "constraints": {
-          "constraint": {
+          "type": "ATOMIC_CONSTRAINT",
+          "atomicConstraint": {
             "leftExpression": "string",
             "operator": "EQ",
             "rightExpression": "string"
           },
           "and": [
             {
-              "constraint": {
+              "type": "ATOMIC_CONSTRAINT",
+              "atomicConstraint": {
                 "leftExpression": "string",
                 "operator": "EQ",
                 "rightExpression": "string"
               }
             },
             {
-              "constraint": {
+              "type": "ATOMIC_CONSTRAINT",
+              "atomicConstraint": {
                 "leftExpression": "string",
                 "operator": "EQ",
                 "rightExpression": "string"
@@ -40,14 +43,16 @@
           ],
           "or": [
             {
-              "constraint": {
+              "type": "ATOMIC_CONSTRAINT",
+              "atomicConstraint": {
                 "leftExpression": "string",
                 "operator": "EQ",
                 "rightExpression": "string"
               }
             },
             {
-              "constraint": {
+              "type": "ATOMIC_CONSTRAINT",
+              "atomicConstraint": {
                 "leftExpression": "string",
                 "operator": "EQ",
                 "rightExpression": "string"
@@ -56,14 +61,16 @@
           ],
           "xor": [
             {
-              "constraint": {
+              "type": "ATOMIC_CONSTRAINT",
+              "atomicConstraint": {
                 "leftExpression": "string",
                 "operator": "EQ",
                 "rightExpression": "string"
               }
             },
             {
-              "constraint": {
+              "type": "ATOMIC_CONSTRAINT",
+              "atomicConstraint": {
                 "leftExpression": "string",
                 "operator": "EQ",
                 "rightExpression": "string"

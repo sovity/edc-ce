@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -98,7 +99,6 @@ class ContractAgreementPageTest {
                 .body("contractAgreements[0].asset.createdAt", equalTo(todayPlusDays(0)))
                 .body("contractAgreements[0].asset.properties.\"asset:prop:id\"", equalTo("my-asset-1"))
                 .body("contractAgreements[0].asset.properties.some-property", equalTo("X"))
-                .body("contractAgreements[0].contractPolicy.legacyPolicy.permissions[0].constraints[0].leftExpression.value", equalTo("ALWAYS_TRUE"))
                 .body("contractAgreements[0].transferProcesses", hasSize(1))
                 .body("contractAgreements[0].transferProcesses[0].transferProcessId", equalTo("my-transfer-1-1"))
                 .body("contractAgreements[0].transferProcesses[0].lastUpdatedDate", endsWith("Z"))

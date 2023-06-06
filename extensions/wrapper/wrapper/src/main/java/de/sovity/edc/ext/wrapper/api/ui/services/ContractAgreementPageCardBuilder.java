@@ -18,6 +18,7 @@ import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcMillisToOffsetDate
 import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcSecondsToOffsetDateTime;
 import static de.sovity.edc.ext.wrapper.utils.MapUtils.mapValues;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
@@ -28,6 +29,7 @@ import java.util.Comparator;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
@@ -35,6 +37,7 @@ import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
 
+@Slf4j
 @RequiredArgsConstructor
 public class ContractAgreementPageCardBuilder {
     private final TransferProcessStateService transferProcessStateService;
@@ -88,7 +91,12 @@ public class ContractAgreementPageCardBuilder {
     @NotNull
     private PolicyDto buildPolicyDto(@NonNull Policy policy) {
         var mapper = new ObjectMapper();
-        return PolicyDto.builder().legacyPolicy(mapper.valueToTree(policy)).build();
+        try {
+            return PolicyDto.builder().legacyPolicy(mapper.writeValueAsString(policy)).build();
+        } catch (JsonProcessingException ex) {
+            log.error("Could not serialize policy: {}", ex.getMessage(), ex);
+            return PolicyDto.builder().build();
+        }
     }
 
     @NotNull
