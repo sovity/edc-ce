@@ -46,10 +46,10 @@ public class DataOfferQueries {
         var d = Tables.DATA_OFFER;
 
         // Asset Properties from JSON to be used in sorting / filtering
-        var assetId = JsonbDSL.extractPathText(d.ASSET_PROPERTIES, AssetProperty.ASSET_ID);
-        var assetTitle = DSL.coalesce(JsonbDSL.extractPathText(d.ASSET_PROPERTIES, AssetProperty.ASSET_NAME), assetId);
-        var assetDescription = JsonbDSL.extractPathText(d.ASSET_PROPERTIES, AssetProperty.DESCRIPTION);
-        var assetKeywords = JsonbDSL.extractPathText(d.ASSET_PROPERTIES, AssetProperty.KEYWORDS);
+        var assetId = JsonbDSL.fieldByKeyText(d.ASSET_PROPERTIES, AssetProperty.ASSET_ID);
+        var assetTitle = DSL.coalesce(JsonbDSL.fieldByKeyText(d.ASSET_PROPERTIES, AssetProperty.ASSET_NAME), assetId);
+        var assetDescription = JsonbDSL.fieldByKeyText(d.ASSET_PROPERTIES, AssetProperty.DESCRIPTION);
+        var assetKeywords = JsonbDSL.fieldByKeyText(d.ASSET_PROPERTIES, AssetProperty.KEYWORDS);
 
         // This date should always be non-null
         // It's used in the UI to display the last relevant change date of a connector
