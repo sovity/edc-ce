@@ -14,25 +14,21 @@
   </p>
 </div>
 
-## Broker Server Image
+## Image Variants
 
-The Broker Server Extension together with other EDC Extensions are built into Docker Images.
+The Broker Server is built in differnt variants:
 
-## Different Image Types
-
-Our EDC Community Edition builds several docker images in different configurations.
-
-| Docker Image                                                                                                | Type              | Purpose                                                                                          | Features                                                                                                                                                      |
-|-------------------------------------------------------------------------------------------------------------|-------------------|--------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [broker-server-dev](https://github.com/sovity/edc-broker-server-extension/pkgs/container/broker-server-dev) | Development       | <ul><li>Lightweight local development</li><li>Used in EDC UI's Getting Started section</li></ul> | <ul><li>IDS Broker Server Extension(s)</li><li>Management API Auth via API Keys</li><li>Mock IAM</li></ul>                                                    |
-| [broker-server-ce](https://github.com/sovity/edc-broker-server-extension/pkgs/container/broker-server-ce)   | Community Edition | <ul><li>Deploy the Broker Server</li></ul>                                                       | <ul><li>IDS Broker Server Extension(s)</li><li>Management API Auth via API Keys</li><li>DAPS Authentication</li><li>PostgreSQL Persistence & Flyway</li></ul> |
+| Docker Image                                                                                                | Type              | Purpose                                                                              | Features                                                                                                         |
+|-------------------------------------------------------------------------------------------------------------|-------------------|--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| [broker-server-dev](https://github.com/sovity/edc-broker-server-extension/pkgs/container/broker-server-dev) | Development       | <ul><li>Local Deployment via our `docker-compose.yaml`</li><li>E2E Testing</li></ul> | <ul><li>Broker Server Extension(s)</li><li>PostgreSQL Persistence & Flyway</li><li>Mock IAM</li></ul>            |
+| [broker-server-ce](https://github.com/sovity/edc-broker-server-extension/pkgs/container/broker-server-ce)   | Community Edition | <ul><li>Productive Deployment</li></ul>                                              | <ul><li>Broker Server Extension(s)</li><li>PostgreSQL Persistence & Flyway</li><li>DAPS Authentication</li></ul> |
 
 ## Image Tags
 
-| Tag     | Description                       |
-|---------|-----------------------------------|
-| latest  | latest version of our main branch |
-| release | latest release of this repository |
+| Tag           | Description                       |
+|---------------|-----------------------------------|
+| latest / main | latest version of our main branch |
+| release       | latest release of this repository |
 
 ## License
 
