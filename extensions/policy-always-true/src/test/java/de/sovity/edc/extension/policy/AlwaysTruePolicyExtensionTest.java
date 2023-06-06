@@ -14,15 +14,18 @@
 
 package de.sovity.edc.extension.policy;
 
-import org.eclipse.edc.connector.contract.spi.offer.ContractDefinitionService;
+import org.eclipse.edc.connector.contract.spi.offer.ContractDefinitionResolver;
+import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
 import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
 import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.spi.agent.ParticipantAgent;
+import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -30,19 +33,29 @@ import java.util.Map;
 
 import static de.sovity.edc.extension.policy.AlwaysTruePolicyConstants.POLICY_DEFINITION_ID;
 import static java.util.Objects.requireNonNull;
+import static org.mockito.Mockito.mock;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
 class AlwaysTruePolicyExtensionTest {
 
+    @BeforeEach
+    void setUp(EdcExtension extension) {
+        extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
+        extension.registerServiceMock(
+                DataPlaneInstanceStore.class,
+                mock(DataPlaneInstanceStore.class));
+    }
+
     @Test
-    void alwaysTruePolicyDef(PolicyEngine policyEngine, PolicyDefinitionService policyDefinitionService) {
+    void alwaysTruePolicyDef(PolicyEngine policyEngine,
+                             PolicyDefinitionService policyDefinitionService) {
         // arrange
         var alwaysTrue = alwaysTruePolicy(policyDefinitionService);
 
         // act
         var result = policyEngine.evaluate(
-                ContractDefinitionService.CATALOGING_SCOPE,
+                ContractDefinitionResolver.CATALOGING_SCOPE,
                 alwaysTrue.getPolicy(),
                 participantAgent()
         );

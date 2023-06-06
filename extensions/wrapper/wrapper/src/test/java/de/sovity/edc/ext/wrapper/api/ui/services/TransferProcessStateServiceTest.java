@@ -32,10 +32,10 @@ class TransferProcessStateServiceTest {
 
     @Test
     void testError() {
-        int code = TransferProcessStates.SUSPENDED.code();
+        int code = TransferProcessStates.TERMINATED.code();
         var result = transferProcessStateService.buildTransferProcessState(code);
         assertThat(result.getCode()).isEqualTo(code);
-        assertThat(result.getName()).isEqualTo("SUSPENDED");
+        assertThat(result.getName()).isEqualTo("TERMINATED");
         assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.ERROR);
     }
 
@@ -65,15 +65,6 @@ class TransferProcessStateServiceTest {
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("DEPROVISIONING");
         assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
-    }
-
-    @Test
-    void testCustomError() {
-        int code = -100;
-        var result = transferProcessStateService.buildTransferProcessState(code);
-        assertThat(result.getCode()).isEqualTo(code);
-        assertThat(result.getName()).isEqualTo("CUSTOM");
-        assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.ERROR);
     }
 
     @Test

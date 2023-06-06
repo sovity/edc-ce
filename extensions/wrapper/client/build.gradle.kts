@@ -2,6 +2,7 @@ val edcVersion: String by project
 val edcGroup: String by project
 val restAssured: String by project
 val assertj: String by project
+val mockitoVersion: String by project
 
 
 plugins {
@@ -44,6 +45,8 @@ dependencies {
     testImplementation(project(":extensions:wrapper:wrapper"))
     testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
+    testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
+    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.assertj:assertj-core:${assertj}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
 }

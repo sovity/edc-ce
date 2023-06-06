@@ -1,5 +1,6 @@
 val edcVersion: String by project
 val edcGroup: String by project
+val mockitoVersion: String by project
 
 plugins {
     `java-library`
@@ -14,6 +15,8 @@ dependencies {
 
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
+    testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
+    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
 }
