@@ -25,13 +25,10 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
         - [ ] Ensure the `Deployment Migration Notes` contains the compatible docker images.
         - [ ] Write or review a release summary.
         - [ ] Remove empty sections from the patch notes.
-    - [ ] Update
-      the [gradle.properties](https://github.com/sovity/edc-broker-server-extension/blob/main/gradle.properties) to
-      contain the released edc-extensions version.
-    - [ ] Set the broker server release version in
-      the [docker-compose's .env file](https://github.com/sovity/edc-broker-server-extension/blob/main/.env).
-    - [ ] Set the edc ui release version in
-      the [docker-compose's .env file](https://github.com/sovity/edc-broker-server-extension/blob/main/.env).
+    - [ ] Update the [gradle.properties](https://github.com/sovity/edc-broker-server-extension/blob/main/gradle.properties) to contain the released edc-extensions version.
+    - [ ] Set the broker server release version in the [docker-compose's .env file](https://github.com/sovity/edc-broker-server-extension/blob/main/.env).
+    - [ ] Set the EDC UI release version in the [docker-compose's .env file](https://github.com/sovity/edc-broker-server-extension/blob/main/.env).
+    - [ ] Set the EDC CE release version in the [docker-compose's .env file](https://github.com/sovity/edc-broker-server-extension/blob/main/.env).
     - [ ] Merge the `release-prep` PR.
 - [ ] Wait for the main branch to be green.
 - [ ] Test the `docker-compose.yaml` with `BROKER_IMAGE=ghcr.io/sovity/broker-server-dev:main`.
@@ -39,16 +36,11 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
 - [ ] Check if the pipeline built the release versions in the Actions-Section (or you won't see it).
 - [ ] Checkout the release tag and check test the `docker-compose.yaml`.
 - [ ] Check the contents of the Deployment Docs Zip from the GitHub Release.
+- [ ] Notify the deployment team with Deployment Docs Zip file attached to the release, which should now contain both product changes and a deployment migration guide.
 - [ ] `release-cleanup` PR:
-    - [ ] Revert the versions in the [docker-compose's .env file](.env) back to latest/main.
-    - [ ] Change the broker server release version references in
-      the [Deployment Section of our README.md](https://github.com/sovity/edc-broker-server-extension/blob/main/README.md#deployment)
-      to links to the package version.
-    - [ ] Change the broker server release version references in the Release Description to links to the package
-      version.
-    - [ ] Add the UI
-- [ ] Commit those changes in a `release-cleanup` PR.
-- [ ] Revisit the changed list of tasks and compare it with [.github/ISSUE_TEMPLATE/release.md]. Apply changes where it
-  makes sense.
-- [ ] Notify the deployment team with Deployment Docs Zip file attached to the release, which should now contain both
-  product changes and a deployment migration guide.
+    - [ ] Revert the versions in the [docker-compose's .env file](.env) back to latest for the EDC UI.
+    - [ ] Revert the versions in the [docker-compose's .env file](.env) back to latest for the EDC CE.
+    - [ ] Revert the versions in the [docker-compose's .env file](.env) back to latest for the Broker Server.
+    - [ ] Update the [gradle.properties](https://github.com/sovity/edc-broker-server-extension/blob/main/gradle.properties) to contain the edc-extensions version `0.0.1-SNAPSHOT`.
+    - [ ] Revisit the changed list of tasks and compare it with [.github/ISSUE_TEMPLATE/release.md](https://github.com/sovity/edc-broker-server-extension/blob/main/.github/ISSUE_TEMPLATE/release.md). Apply changes where it makes sense.
+    - [ ] Merge the `release-cleanup` PR.
