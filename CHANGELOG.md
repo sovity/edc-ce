@@ -16,16 +16,28 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
+#### Changed
+
+#### Removed
+
+#### Fixed
+
+## [v0.0.1-milestone-8-sovity6] 06.06.2023
+
+### Overview
+
+Added Broker UI and minor Connector UI improvements.
+
+### Detailed Changes
+
+#### Added
+
 - Added Broker PoC UI:
   - Refactored Module Structure
   - Added Catalog Page
   - Added Connector Page
   - Added Copyright Footer
 - Tooltips for Asset Properties that show the asset property names.
-
-#### Changed
-
-#### Removed
 
 #### Fixed
 
