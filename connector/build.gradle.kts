@@ -15,7 +15,7 @@ dependencies {
     implementation("${edcGroup}:configuration-filesystem:${edcVersion}")
     implementation("${edcGroup}:control-plane-aggregate-services:${edcVersion}")
     implementation("${edcGroup}:http:${edcVersion}")
-    implementation("${edcGroup}:ids:${edcVersion}")
+    implementation("${edcGroup}:dsp:${edcVersion}")
 
     // Control-plane to Data-plane
     implementation("${edcGroup}:transfer-data-plane:${edcVersion}")
