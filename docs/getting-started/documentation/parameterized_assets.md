@@ -1,4 +1,4 @@
-How to Enable Consumers Parameterized Data Source APIs
+How to share parameterized HTTP data sources to expose entire APIs
 ========
 
 Provider Asset
@@ -19,7 +19,7 @@ Create an `Custom Datasource Config (JSON)` asset over the edc-ui using the foll
 
 Start Transfer
 ========
-Start a transfer using the `transferprocess`-POST-Endpoint using the following JSON.
+Start a transfer using the `transferprocess`-POST-Endpoint on the management API using the following JSON.
 Make sure to update the `contractId` and `dataDestination`.
 The relevant fields for API parametrization are located in the properties of the `transferProcessDTO` (not in `dataDestination`).
 In this example `pathSegments`, `method` and `queryParams` are passed.
