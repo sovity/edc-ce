@@ -20,7 +20,7 @@ import lombok.ToString;
 @Schema(description =
         "Type-Safe OpenAPI generator friendly Constraint DTO that supports an opinionated"
                 + " subset of the original EDC Constraint Entity.")
-public class ConstraintDto {
+public class AtomicConstraintDto {
 
     @Schema(description = "Left part of the constraint.",
             requiredMode = Schema.RequiredMode.REQUIRED)
