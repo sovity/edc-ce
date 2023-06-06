@@ -2,7 +2,6 @@ rootProject.name = "edc-extensions"
 
 include(":extensions:contract-agreement-transfer-api")
 include(":extensions:edc-ui-config")
-include(":extensions:ids-broker-client")
 include(":extensions:last-commit-info")
 include(":extensions:policy-always-true")
 include(":extensions:policy-referring-connector")
