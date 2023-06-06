@@ -62,6 +62,8 @@ services:
       POSTGRESQL_USERNAME: edc
       POSTGRESQL_PASSWORD: edc
       POSTGRESQL_DATABASE: edc
+    ports:
+      - '54321:5432'
     volumes:
       - 'postgresql:/bitnami/postgresql'
 

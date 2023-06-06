@@ -4,14 +4,25 @@ All notable changes to this project will be documented in this file.
 
 ## [x.x.x] - UNRELEASED
 
-### Minor Changes
+### Deployment Migration Notes
 
-- Added build dates to Last Commit Info Extension
-- Added Transfer History Page model to API Wrapper
+### Major Changes
+
+### Minor Changes
 
 ### Patch Changes
 
-- Fix API Wrapper Broker Server API Spec not showing in client libraries.
+## [3.3.0] - 2023-06-06
+
+### Minor Changes
+
+- Added build dates to Last Commit Info Extension
+- Added Transfer History Page model to API Wrapper.
+- Finalize Broker Server API for PoC.
+
+### Patch Changes
+
+- Minor EE API adjustments.
 
 ## [3.2.0] - 2023-05-17
 
