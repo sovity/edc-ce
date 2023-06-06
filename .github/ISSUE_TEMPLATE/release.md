@@ -30,8 +30,9 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
   - [ ] If the core EDC version changed, update the `openapi.yaml`.
   - [ ] Update the Postman Collection if required.
   - [ ] Merge the `release-prep` PR.
+- [ ] Test the release `docker-compose.yaml` with `RELEASE_EDC_IMAGE=ghcr.io/sovity/edc-dev:latest`.
+- [ ] Test the postman collection against that running docker-compose.
 - [ ] Create a release and re-use the changelog section as release description, and the version as title.
 - [ ] Check if the pipeline built the release versions in the Actions-Section (or you won't see it).
-- [ ] Test the release `docker-compose.yaml`.
 - [ ] Revisit the changed list of tasks and compare it with [.github/ISSUE_TEMPLATE/release.md](https://github.com/sovity/edc-extensions/blob/main/.github/ISSUE_TEMPLATE/bug_report.md). Propose changes where it
   makes sense.
