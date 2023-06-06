@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "42be2be0-1aa4-418e-8cf1-da123d0c2555",
+		"_postman_id": "68ee6d40-b4f6-4db4-873b-c843de7159a0",
 		"name": "sovity EDC",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -197,7 +197,7 @@
 				"header": [
 					{
 						"key": "X-Api-Key",
-						"value": "pass",
+						"value": "ApiKeyDefaultValue",
 						"type": "default"
 					}
 				],
@@ -262,27 +262,15 @@
 		},
 		{
 			"name": "(get all contractdefinitions)",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [
 					{
 						"key": "X-Api-Key",
-						"value": "pass",
+						"value": "ApiKeyDefaultValue",
 						"type": "default"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"connectorId\": \"provider\",\r\n  \"connectorAddress\": \"http://daps-connector-a-controlplane-1:8282/api/v1/ids/data\",\r\n  \"protocol\": \"ids-multipart\",\r\n  \"offer\": {\r\n    \"offerId\": \"contract-definition-id-2:contract-negotiation-id-2\",\r\n    \"assetId\": \"urn:artifact:http-pull\",\r\n    \"policy\": {\r\n      \"uid\": \"contract-definition-id-2\",\r\n      \"permissions\": [\r\n        {\r\n          \"edctype\": \"dataspaceconnector:permission\",\r\n          \"uid\": null,\r\n          \"target\": \"urn:artifact:http-pull\",\r\n          \"action\": {\r\n            \"type\": \"USE\",\r\n            \"includedIn\": null,\r\n            \"constraint\": null\r\n          },\r\n          \"assignee\": null,\r\n          \"assigner\": null,\r\n          \"constraints\": [],\r\n          \"duties\": []\r\n        }\r\n      ],\r\n      \"prohibitions\": [],\r\n      \"obligations\": [],\r\n      \"extensibleProperties\": {},\r\n      \"inheritsFrom\": null,\r\n      \"assigner\": null,\r\n      \"assignee\": null,\r\n      \"target\": null,\r\n      \"@type\": {\r\n        \"@policytype\": \"set\"\r\n      }\r\n    },\r\n    \"asset\": {\r\n      \"properties\": {\r\n        \"ids:byteSize\": null,\r\n        \"asset:prop:id\": \"endpoint-http-data-text-document\",\r\n        \"ids:fileName\": null\r\n      }\r\n    }\r\n  }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "{{BASE_URL}}/management/contractdefinitions",
 					"host": [
@@ -313,7 +301,13 @@
 			],
 			"request": {
 				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "X-Api-Key",
+						"value": "ApiKeyDefaultValue",
+						"type": "default"
+					}
+				],
 				"url": {
 					"raw": "{{BASE_URL}}/management/contractdefinitions/contract-definition-id-2",
 					"host": [
@@ -399,7 +393,7 @@
 				"header": [
 					{
 						"key": "X-Api-Key",
-						"value": "pass",
+						"value": "ApiKeyDefaultValue",
 						"type": "default"
 					}
 				],
@@ -425,7 +419,7 @@
 				"header": [
 					{
 						"key": "X-Api-Key",
-						"value": "pass",
+						"value": "ApiKeyDefaultValue",
 						"type": "default"
 					}
 				],
@@ -512,7 +506,7 @@
 				"header": [
 					{
 						"key": "X-Api-Key",
-						"value": "pass",
+						"value": "ApiKeyDefaultValue",
 						"type": "default"
 					}
 				],
@@ -546,7 +540,7 @@
 				"header": [
 					{
 						"key": "X-Api-Key",
-						"value": "pass",
+						"value": "ApiKeyDefaultValue",
 						"type": "default"
 					}
 				],
