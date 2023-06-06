@@ -38,7 +38,6 @@ import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
-import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
@@ -77,7 +76,8 @@ public class WrapperExtensionContextBuilder {
     ) {
         // UI API
         var transferProcessStateService = new TransferProcessStateService();
-        var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
+        var contractAgreementPageCardBuilder =
+                new ContractAgreementPageCardBuilder(
                 transferProcessStateService);
         var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
                 contractAgreementService,
