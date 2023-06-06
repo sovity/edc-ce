@@ -81,7 +81,7 @@ class ContractAgreementPageTest {
     ) {
         contractNegotiationStore.save(contractDefinition(1));
 
-        transferProcessStore.save(transferProcess(1, 1, TransferProcessStates.COMPLETED.code()));
+        transferProcessStore.updateOrCreate(transferProcess(1, 1, TransferProcessStates.COMPLETED.code()));
 
         whenContractAgreementEndpoint()
                 .assertThat()
@@ -134,10 +134,6 @@ class ContractAgreementPageTest {
                 .id("my-contract-agreement-" + contract)
                 .assetId("my-asset-" + contract)
                 .contractSigningDate(todayEpochSeconds)
-                .contractStartDate(todayAsZonedDateTime.toInstant().getEpochSecond())
-                .contractEndDate(todayAsZonedDateTime.plusDays(2L * contract).toInstant().getEpochSecond())
-                .providerAgentId("idk")
-                .consumerAgentId("idk")
                 .policy(alwaysTrue())
                 .build();
 
@@ -145,24 +141,16 @@ class ContractAgreementPageTest {
         // Test this
         var irrelevantOffer = ContractOffer.Builder.newInstance()
                 .id("my-contract-offer-" + contract + "-irrelevant")
-                .asset(asset(contract + "-irrelevant"))
-                .contractStart(todayAsZonedDateTime.minusDays(contract))
-                .contractEnd(todayAsZonedDateTime.plusDays(contract))
-                .consumer(URI.create("http://other-connector"))
-                .offerStart(todayAsZonedDateTime.minusDays(2L * contract))
-                .offerEnd(todayAsZonedDateTime.plusDays(2L * contract))
+                .assetId(asset(contract + "-irrelevant").getId())
                 .policy(alwaysTrue())
+                .providerId(URI.create("http://other-connector").toString())
                 .build();
 
         var offer = ContractOffer.Builder.newInstance()
                 .id("my-contract-offer-" + contract)
-                .asset(asset(String.valueOf(contract)))
-                .contractStart(todayAsZonedDateTime)
-                .contractEnd(todayAsZonedDateTime.plusDays(2L * contract))
-                .consumer(URI.create("http://other-connector"))
-                .offerStart(todayAsZonedDateTime.minusDays(2L * contract))
-                .offerEnd(todayAsZonedDateTime.plusDays(2L * contract))
+                .assetId(asset(String.valueOf(contract)).getId())
                 .policy(alwaysTrue())
+                .providerId(URI.create("http://other-connector").toString())
                 .build();
 
         return ContractNegotiation.Builder.newInstance()

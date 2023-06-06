@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
+import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
@@ -62,7 +63,8 @@ public class WrapperExtensionContextBuilder {
         var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
                 contractAgreementService,
                 contractNegotiationStore,
-                transferProcessService
+                transferProcessService,
+                assetIndex
         );
         var contractAgreementApiService = new ContractAgreementPageService(
                 contractAgreementDataFetcher,
