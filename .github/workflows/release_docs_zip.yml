@@ -18,11 +18,6 @@ jobs:
           ARCHIVE_FILE_NAME="broker-server-release-${GITHUB_REF#refs/tags/v}-deployment-docs.zip"
           echo "ARCHIVE_FILE_NAME=$ARCHIVE_FILE_NAME" >> $GITHUB_ENV
           zip -r -q $ARCHIVE_FILE_NAME README.md CHANGELOG.md docker-compose.yaml .env connector/.env connector/Dockerfile connector/README.md
-      - name: Archive deployment-relevant documentation
-        uses: vimtor/action-zip@v1
-        with:
-          files: README.md CHANGELOG.md docker-compose.yaml .env connector/.env connector/Dockerfile connector/README.md
-          dest: ${{ env.ARCHIVE_FILE_NAME }}
       - name: Upload deployment-relevant documentation
         uses: svenstaro/upload-release-action@v2
         with:
