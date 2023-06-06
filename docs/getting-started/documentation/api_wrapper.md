@@ -1,12 +1,12 @@
-Manage Your EDC Connector Via Our EDC API Wrapper Java Client Library
+Manging the EDC Connector via the API Wrapper Java Client Library
 ========
 
 Introduction to the sovity EDC API Wrapper
 ========
-The EDC API Wrapper contains several APIs that are shipped with our Connector-as-a-Service (CaaS) EDC Connectors and are made accessible via our type-safe generated client libraries. Please note that most of these APIs are not yet complete and are under development:
-- **Use Case API**: Generic API for Use Case Applications. Its goal is to replace the Management API, so we can offer stable endpoints across milestones in our auto-generated client libraries. It's still in development, so expect many new endpoints to be added here in the near future.
-- **UI API**: API endpoints for our EDC UI: These endpoints might contain interesting data, that a Use Case Application might profit from, but expect these endpoints to be unstable and subject to change.
-- **Enterprise Edition API**: Special API endpoint only available in our Connector-as-a-Service (CaaS). Features such as File Storage are currently in development, but to be expected in the near future.
+The sovity EDC API Wrapper contains several APIs that are shipped with the Connector-as-a-Service (CaaS) sovity EDC Connectors and are made accessible via the type-safe generated client libraries. Please note that most of these APIs are not yet complete and are under development:
+- **Use Case API**: Generic API for Use Case Applications. Its goal is to replace the Management API, so there can be stable endpoints across milestones in the auto-generated client libraries. It's still in development, so expect many new endpoints to be added here in the near future.
+- **UI API**: API endpoints for the sovity EDC UI: These endpoints might contain interesting data, that a Use Case Application might profit from, but expect these endpoints to be unstable and subject to change.
+- **Enterprise Edition API**: Special API endpoint only available in the Connector-as-a-Service (CaaS). Features such as File Storage are currently in development, but to be expected in the near future.
 
 Using the Java Client Library
 ========
@@ -18,7 +18,7 @@ Connect your Maven or Gradle Project to the Github Maven Registry
 - Maven: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry#authenticating-to-github-packages
 - Gradle: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#authenticating-to-github-packages
 - This might require a Github Personal Access Token (PAT)
-Add our Java Client Library to your Maven/Gradle project: https://github.com/sovity/edc-extensions/packages/1825774
+Add the Java Client Library to your Maven/Gradle project: https://github.com/sovity/edc-extensions/packages/1825774
 
 Configuring The Client
 ========
