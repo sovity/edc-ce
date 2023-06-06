@@ -16,8 +16,7 @@ package de.sovity.edc.extension.contractagreementtransferapi;
 
 import de.sovity.edc.extension.contractagreementtransferapi.controller.ContractAgreementTransferApiController;
 import de.sovity.edc.extension.contractagreementtransferapi.service.ContractNegotiationByAgreementService;
-import de.sovity.edc.extension.contractagreementtransferapi.service.DataRequestService;
-import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
+import de.sovity.edc.extension.contractagreementtransferapi.service.TransferRequestService;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
@@ -25,6 +24,7 @@ import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.WebService;
 
 public class ContractAgreementTransferApiExtension implements ServiceExtension {
@@ -37,7 +37,7 @@ public class ContractAgreementTransferApiExtension implements ServiceExtension {
     private ManagementApiConfiguration config;
 
     @Inject
-    private DtoTransformerRegistry transformerRegistry;
+    private TypeTransformerRegistry typeTransformerRegistry;
 
     @Inject
     private ContractAgreementService contractAgreementService;
@@ -58,13 +58,13 @@ public class ContractAgreementTransferApiExtension implements ServiceExtension {
         var monitor = context.getMonitor();
         var contractNegotiationByAgreementService =
                 new ContractNegotiationByAgreementService(contractNegotiationService);
-        var dataRequestService = new DataRequestService(
+        var dataRequestService = new TransferRequestService(
                 contractAgreementService,
                 contractNegotiationByAgreementService);
         var controller = new ContractAgreementTransferApiController(
                 monitor,
                 transferProcessService,
-                transformerRegistry,
+                typeTransformerRegistry,
                 dataRequestService);
         webService.registerResource(config.getContextAlias(), controller);
     }
