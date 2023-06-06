@@ -15,14 +15,16 @@
 package de.sovity.edc.extension.contractagreementtransferapi.controller;
 
 import io.restassured.http.ContentType;
-import org.eclipse.edc.connector.api.management.asset.model.DataAddressDto;
+import org.eclipse.edc.api.model.DataAddressDto;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.policy.model.Policy;
+import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +37,8 @@ import java.util.UUID;
 import static io.restassured.RestAssured.given;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.mockito.Mockito.mock;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
@@ -46,6 +50,9 @@ public class ContractAgreementTransferApiControllerIntegrationTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
+        extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
+        extension.registerServiceMock(DataPlaneInstanceStore.class,
+                mock(DataPlaneInstanceStore.class));
         extension.setConfiguration(Map.of(
                 "web.http.port", String.valueOf(getFreePort()),
                 "web.http.path", "/api",
@@ -71,11 +78,13 @@ public class ContractAgreementTransferApiControllerIntegrationTest {
                 .when()
                 .contentType(ContentType.JSON)
                 .body(getDataAddressDto())
-                .post(String.format("/contract-agreements-transfer/contractagreements/%s/transfer", agreementId))
+                .post(String.format("/contract-agreements-transfer/contractagreements/%s/transfer"
+                        , agreementId))
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
-                .body("size()", is(2));
+                .body("createdAt", is(notNullValue())).and()
+                .body("@id", is(notNullValue()));
 
         // then
         var transferProcessOptional = transferProcessStore.findAll(QuerySpec.max()).findFirst();
@@ -110,8 +119,8 @@ public class ContractAgreementTransferApiControllerIntegrationTest {
     private ContractAgreement createContractAgreement(String agreementId) {
         return ContractAgreement.Builder.newInstance()
                 .id(agreementId)
-                .providerAgentId(UUID.randomUUID().toString())
-                .consumerAgentId(UUID.randomUUID().toString())
+                .providerId(UUID.randomUUID().toString())
+                .consumerId(UUID.randomUUID().toString())
                 .assetId(UUID.randomUUID().toString())
                 .policy(Policy.Builder.newInstance().build())
                 .build();
