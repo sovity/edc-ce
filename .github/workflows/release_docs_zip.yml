@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Archive deployment-relevant documentation.
         run: |
-          ARCHIVE_FILE_NAME="broker-server-docs-release-${GITHUB_REF#refs/tags/v}.zip"
+          ARCHIVE_FILE_NAME="broker-server-release-${GITHUB_REF#refs/tags/v}-deployment-docs.zip"
           echo "ARCHIVE_FILE_NAME=$ARCHIVE_FILE_NAME" >> $GITHUB_ENV
       - name: Archive deployment-relevant documentation
         uses: vimtor/action-zip@v1
@@ -23,8 +23,9 @@ jobs:
           files: README.md CHANGELOG.md docker-compose.yaml .env connector/.env connector/Dockerfile connector/README.md
           dest: ${{ env.ARCHIVE_FILE_NAME }}
       - name: Upload deployment-relevant documentation
-        uses: xresloader/upload-to-github-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: svenstaro/upload-release-action@v2
         with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ env.ARCHIVE_FILE_NAME }}
+          tag: ${{ github.ref }}
+          overwrite: true
