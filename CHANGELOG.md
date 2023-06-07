@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 
 ### Minor Changes
 
+- The Broker- and ClearingHouse-client-extensions can be dynamically enabled and disabled via properties (see Readme FAQ section).
 - Added build dates to Last Commit Info Extension
 - Added Transfer History Page model to API Wrapper.
 - Finalize Broker Server API for PoC.
