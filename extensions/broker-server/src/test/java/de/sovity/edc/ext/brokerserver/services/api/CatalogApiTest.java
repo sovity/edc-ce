@@ -19,6 +19,8 @@ import de.sovity.edc.client.gen.model.CatalogPageQuery;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
 import de.sovity.edc.ext.brokerserver.db.TestDatabaseFactory;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
+import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorContractOffersExceeded;
+import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorDataOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -62,6 +64,8 @@ class CatalogApiTest {
             connector.setCreatedAt(today.minusDays(1));
             connector.setLastRefreshAttemptAt(today);
             connector.setLastSuccessfulRefreshAt(today);
+            connector.setDataOffersExceeded(ConnectorDataOffersExceeded.OK);
+            connector.setContractOffersExceeded(ConnectorContractOffersExceeded.OK);
             connector.insert();
 
             var dataOffer = dsl.newRecord(Tables.DATA_OFFER);

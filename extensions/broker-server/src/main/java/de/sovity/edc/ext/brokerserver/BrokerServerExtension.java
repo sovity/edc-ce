@@ -39,6 +39,12 @@ public class BrokerServerExtension implements ServiceExtension {
     @Setting
     public static final String HIDE_OFFLINE_DATA_OFFERS_AFTER = "edc.broker.server.hide.offline.data.offers.after";
 
+    @Setting
+    public static final String MAX_DATA_OFFERS_PER_CONNECTOR = "edc.broker.server.max.data.offers.per.connector";
+
+    @Setting
+    public static final String MAX_CONTRACT_OFFERS_PER_CONNECTOR = "edc.broker.server.max.contract.offers.per.connector";
+
     @Inject
     private ManagementApiConfiguration managementApiConfiguration;
 

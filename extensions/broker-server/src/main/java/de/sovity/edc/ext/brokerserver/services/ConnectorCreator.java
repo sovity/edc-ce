@@ -15,6 +15,8 @@
 package de.sovity.edc.ext.brokerserver.services;
 
 import de.sovity.edc.ext.brokerserver.dao.queries.ConnectorQueries;
+import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorContractOffersExceeded;
+import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorDataOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
 import de.sovity.edc.ext.brokerserver.utils.CollectionUtils2;
@@ -56,6 +58,8 @@ public class ConnectorCreator {
         connector.setConnectorId(UrlUtils.getEverythingBeforeThePath(endpoint));
         connector.setCreatedAt(OffsetDateTime.now());
         connector.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
+        connector.setDataOffersExceeded(ConnectorDataOffersExceeded.OK);
+        connector.setContractOffersExceeded(ConnectorContractOffersExceeded.OK);
         return connector;
     }
 }

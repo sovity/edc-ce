@@ -18,6 +18,7 @@ import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
 import de.sovity.edc.ext.brokerserver.services.logging.ConnectorChangeTracker;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferLimitsEnforcer;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferWriter;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOffer;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ import java.util.Collection;
 public class ConnectorUpdateSuccessWriter {
     private final BrokerEventLogger brokerEventLogger;
     private final DataOfferWriter dataOfferWriter;
+    private final DataOfferLimitsEnforcer dataOfferLimitsEnforcer;
 
     public void handleConnectorOnline(
             DSLContext dsl,
@@ -37,6 +39,10 @@ public class ConnectorUpdateSuccessWriter {
             Collection<FetchedDataOffer> dataOffers
     ) {
         var now = OffsetDateTime.now();
+
+        // Limit data offers and log limitation if necessary
+        var limitedDataOffers = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
+        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(connector, limitedDataOffers);
 
         // Log Status Change and set status to online if necessary
         if (connector.getOnlineStatus() == ConnectorOnlineStatus.OFFLINE || connector.getLastRefreshAttemptAt() == null) {
@@ -56,7 +62,6 @@ public class ConnectorUpdateSuccessWriter {
         }
 
         // Update data offers
-        dataOfferWriter.updateDataOffers(dsl, connector.getEndpoint(), dataOffers, changes);
+        dataOfferWriter.updateDataOffers(dsl, connector.getEndpoint(), limitedDataOffers.abbreviatedDataOffers(), changes);
     }
-
 }
