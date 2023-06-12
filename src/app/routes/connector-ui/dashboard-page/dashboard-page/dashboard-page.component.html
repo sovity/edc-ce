@@ -50,8 +50,10 @@
     <mat-card>
       <mat-card-title>Connector Properties</mat-card-title>
       <mat-card-subtitle>Additional Properties</mat-card-subtitle>
-      <property-grid [props]="connectorProperties" [columns]="3">
-      </property-grid>
+      <property-grid-group
+        class="mt-[15px]"
+        [propGroups]="data.connectorProperties">
+      </property-grid-group>
     </mat-card>
   </div>
 

@@ -58,6 +58,26 @@ export class Fetched<T> {
     return this.isReady ? this.data : defaultValue;
   }
 
+  /**
+   * Map entire Fetched to a different type.
+   *
+   * @param opts functions matching the different possible states of Fetched. All need to return the return type.
+   * @return value of type R
+   */
+  match<R>(opts: {
+    ifOk: (value: T) => R;
+    ifError: (error: FetchError) => R;
+    ifLoading: () => R;
+  }): R {
+    if (this.isError) {
+      return opts.ifError(this.error);
+    } else if (this.isReady) {
+      return opts.ifOk(this.data);
+    } else {
+      return opts.ifLoading();
+    }
+  }
+
   static empty<T>(): Fetched<T> {
     return new Fetched<T>('not-loaded', undefined, undefined);
   }

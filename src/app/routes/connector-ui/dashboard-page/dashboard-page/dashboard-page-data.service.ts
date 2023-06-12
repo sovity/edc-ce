@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, merge, of, scan} from 'rxjs';
+import {Observable, combineLatest, merge, of, scan} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {CatalogApiUrlService} from '../../../../core/services/api/catalog-api-url.service';
 import {ContractOfferService} from '../../../../core/services/api/contract-offer.service';
@@ -11,6 +11,8 @@ import {
   TransferProcessDto,
   TransferProcessService,
 } from '../../../../core/services/api/legacy-managent-api-client';
+import {ConnectorInfoPropertyGridGroupBuilder} from '../../../../core/services/connector-info-property-grid-group-builder';
+import {LastCommitInfoService} from '../../../../core/services/last-commit-info.service';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {TransferProcessStates} from '../../../../core/services/models/transfer-process-states';
 import {TransferProcessUtils} from '../../../../core/services/transfer-process-utils';
@@ -28,6 +30,8 @@ export class DashboardPageDataService {
     private transferProcessService: TransferProcessService,
     private assetService: AssetService,
     private transferProcessUtils: TransferProcessUtils,
+    private lastCommitInfoService: LastCommitInfoService,
+    private connectorInfoPropertyGridGroupBuilder: ConnectorInfoPropertyGridGroupBuilder,
   ) {}
 
   /**
@@ -45,6 +49,7 @@ export class DashboardPageDataService {
       this.numCatalogs(),
       this.policyKpis(),
       this.transferProcessKpis(),
+      this.connectorProperties(),
     ];
 
     // We merge all results as they come in, constructing our DashboardData
@@ -173,5 +178,34 @@ export class DashboardPageDataService {
       ],
       options: {responsive: false},
     };
+  }
+
+  private connectorProperties(): Observable<Partial<DashboardPageData>> {
+    return combineLatest([
+      this.lastCommitInfoService.getLastCommitInfoData().pipe(
+        Fetched.wrap({
+          failureMessage: 'Failed fetching Env and Jar Last Commit Data',
+        }),
+      ),
+      this.lastCommitInfoService.getUiBuildDateDetails().pipe(
+        Fetched.wrap({
+          failureMessage: 'Failed fetching UI Last Build Date Data',
+        }),
+      ),
+      this.lastCommitInfoService.getUiCommitDetails().pipe(
+        Fetched.wrap({
+          failureMessage: 'Failed fetching UI Last Commit Data',
+        }),
+      ),
+    ]).pipe(
+      map(([lastCommitInfo, uiBuildDate, uiCommitDetails]) => ({
+        connectorProperties:
+          this.connectorInfoPropertyGridGroupBuilder.buildPropertyGridGroups(
+            lastCommitInfo,
+            uiBuildDate,
+            uiCommitDetails,
+          ),
+      })),
+    );
   }
 }

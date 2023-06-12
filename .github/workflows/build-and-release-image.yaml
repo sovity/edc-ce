@@ -44,6 +44,8 @@ jobs:
         run: |
           echo "Saving local commit details in src/assets/config/version.txt"
           git log -1 > src/assets/config/version.txt
+          echo "Saving build date to src/assets/config/ui-build-date.txt"
+          date --utc +%FT%TZ > src/assets/config/ui-build-date.txt
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta

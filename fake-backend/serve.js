@@ -68,6 +68,11 @@ app.get('/api/v1/data/contractagreements', (req, res) => {
   res.json(contractAgreements);
 });
 
+const lastCommitInfo = json('json/lastCommitInfo.json');
+app.get('/api/v1/data/last-commit-info', (req, res) => {
+  res.json(lastCommitInfo);
+});
+
 const catalog1 = json('json/catalog1.json');
 const catalog2 = json('json/catalog2.json');
 app.get('/api/v1/data/catalog', (req, res) => {

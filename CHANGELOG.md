@@ -16,6 +16,9 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
+- Added Connector Build date and Commit Information to Additional Properties
+  section in Dashboard
+
 #### Changed
 
 #### Removed
