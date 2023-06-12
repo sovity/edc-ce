@@ -53,7 +53,7 @@
     "karma-jasmine-html-reporter": "~2.0.0",
     "ngx-build-plus": "^14.0.0",
     "postcss-import": "^15.1.0",
-    "postcss-loader": "^7.3.2",
+    "postcss-loader": "^7.3.3",
     "postcss-scss": "^4.0.6",
     "prettier": "^2.8.8",
     "prettier-plugin-organize-attributes": "^0.0.5",
