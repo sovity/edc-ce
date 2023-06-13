@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Getter
@@ -30,12 +31,24 @@ import java.util.List;
 @AllArgsConstructor
 @Schema(description = "Connector Detail Page Data")
 public class ConnectorDetailResult {
-    @Schema(description = "Available sorting options", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<ConnectorPageSortingItem> availableSortings;
+    @Schema(description = "Connector ID", example = "https://my-test.connector", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String id;
 
-    @Schema(description = "Pagination Metadata", requiredMode = Schema.RequiredMode.REQUIRED)
-    private PaginationMetadata paginationMetadata;
+    @Schema(description = "Connector Endpoint", example = "https://my-test.connector/control/ids/data", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String endpoint;
 
-    @Schema(description = "Current page of connector list entries", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<ConnectorListEntry> connectors;
+    @Schema(description = "Creation date in Broker", requiredMode = Schema.RequiredMode.REQUIRED)
+    private OffsetDateTime createdAt;
+
+    @Schema(description = "Last time the connector was successfully refreshed.")
+    private OffsetDateTime lastSuccessfulRefreshAt;
+
+    @Schema(description = "Last time the connector was tried to be refreshed.")
+    private OffsetDateTime lastRefreshAttemptAt;
+
+    @Schema(description = "Connector Online Status", requiredMode = Schema.RequiredMode.REQUIRED)
+    private ConnectorOnlineStatus onlineStatus;
+
+    @Schema(description = "Number of known data offerings")
+    private Integer numContractOffers;
 }
