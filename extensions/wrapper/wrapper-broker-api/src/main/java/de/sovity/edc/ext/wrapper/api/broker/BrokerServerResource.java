@@ -47,7 +47,7 @@ public interface BrokerServerResource {
     ConnectorPageResult connectorPage(ConnectorPageQuery query);
 
     @POST
-    @Path("data-offer")
+    @Path("data-offer-detail-page")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Query data offer details")
