@@ -22,7 +22,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -30,7 +29,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Connector Detail Page Data")
-public class ConnectorDetailResult {
+public class ConnectorDetailPageResult {
     @Schema(description = "Connector ID", example = "https://my-test.connector", requiredMode = Schema.RequiredMode.REQUIRED)
     private String id;
 

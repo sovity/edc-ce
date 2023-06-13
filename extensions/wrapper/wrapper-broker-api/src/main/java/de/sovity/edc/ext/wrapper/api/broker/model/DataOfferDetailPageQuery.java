@@ -26,8 +26,8 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Data Offer Details Query")
-public class DataOfferPageQuery {
+@Schema(description = "Data Offer Detail Page Query")
+public class DataOfferDetailPageQuery {
     @Schema(description = "Connector Endpoint")
     private String connectorEndpoint;
 

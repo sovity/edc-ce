@@ -30,8 +30,8 @@ import java.util.Map;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Data Offer details.")
-public class DataOfferDetailResult {
+@Schema(description = "Data Offer Detail Page.")
+public class DataOfferDetailPageResult {
     @Schema(description = "ID of asset", requiredMode = Schema.RequiredMode.REQUIRED)
     private String assetId;
 
