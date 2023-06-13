@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.brokerserver.dao.models;
+package de.sovity.edc.ext.brokerserver.dao.pages.connector.model;
 
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import lombok.AccessLevel;
@@ -21,18 +21,16 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DataOfferDbRow {
-    String assetId;
-    String assetPropertiesJson;
-    OffsetDateTime createdAt;
-    OffsetDateTime updatedAt;
-    List<DataOfferContractOfferDbRow> contractOffers;
-    String connectorEndpoint;
-    ConnectorOnlineStatus connectorOnlineStatus;
-    OffsetDateTime connectorOfflineSinceOrLastUpdatedAt;
+public class ConnectorRs {
+    String endpoint;
+    String connectorId;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime lastSuccessfulRefreshAt;
+    private OffsetDateTime lastRefreshAttemptAt;
+    ConnectorOnlineStatus onlineStatus;
+    Integer numDataOffers;
 }

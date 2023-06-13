@@ -14,8 +14,8 @@
 
 package de.sovity.edc.ext.brokerserver.services.api;
 
-import de.sovity.edc.ext.brokerserver.dao.models.ConnectorPageDbRow;
-import de.sovity.edc.ext.brokerserver.dao.queries.ConnectorQueries;
+import de.sovity.edc.ext.brokerserver.dao.pages.connector.ConnectorPageQueryService;
+import de.sovity.edc.ext.brokerserver.dao.pages.connector.model.ConnectorRs;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorListEntry;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorOnlineStatus;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageQuery;
@@ -31,13 +31,13 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 public class ConnectorApiService {
-    private final ConnectorQueries connectorQueries;
+    private final ConnectorPageQueryService connectorPageQueryService;
     private final PaginationMetadataUtils paginationMetadataUtils;
 
     public ConnectorPageResult connectorPage(DSLContext dsl, ConnectorPageQuery query) {
         Objects.requireNonNull(query, "query must not be null");
 
-        var connectorDbRows = connectorQueries.forConnectorPage(dsl, query.getSearchQuery(), query.getSorting());
+        var connectorDbRows = connectorPageQueryService.queryConnectorPage(dsl, query.getSearchQuery(), query.getSorting());
 
         var result = new ConnectorPageResult();
         result.setAvailableSortings(buildAvailableSortings());
@@ -46,27 +46,27 @@ public class ConnectorApiService {
         return result;
     }
 
-    private List<ConnectorListEntry> buildConnectorListEntries(List<ConnectorPageDbRow> connectorDbRows) {
-        return connectorDbRows.stream().map(this::buildConnectorListEntry).toList();
+    private List<ConnectorListEntry> buildConnectorListEntries(List<ConnectorRs> connectors) {
+        return connectors.stream().map(this::buildConnectorListEntry).toList();
     }
 
-    private ConnectorListEntry buildConnectorListEntry(ConnectorPageDbRow it) {
+    private ConnectorListEntry buildConnectorListEntry(ConnectorRs connector) {
         var dto = new ConnectorListEntry();
-        dto.setId(it.getConnectorId());
-        dto.setEndpoint(it.getEndpoint());
-        dto.setCreatedAt(it.getCreatedAt());
-        dto.setLastRefreshAttemptAt(it.getLastRefreshAttemptAt());
-        dto.setLastSuccessfulRefreshAt(it.getLastSuccessfulRefreshAt());
-        dto.setOnlineStatus(getOnlineStatus(it));
-        dto.setNumContractOffers(it.getNumDataOffers());
+        dto.setId(connector.getConnectorId());
+        dto.setEndpoint(connector.getEndpoint());
+        dto.setCreatedAt(connector.getCreatedAt());
+        dto.setLastRefreshAttemptAt(connector.getLastRefreshAttemptAt());
+        dto.setLastSuccessfulRefreshAt(connector.getLastSuccessfulRefreshAt());
+        dto.setOnlineStatus(getOnlineStatus(connector));
+        dto.setNumContractOffers(connector.getNumDataOffers());
         return dto;
     }
 
-    private ConnectorOnlineStatus getOnlineStatus(ConnectorPageDbRow it) {
-        return switch (it.getOnlineStatus()) {
+    private ConnectorOnlineStatus getOnlineStatus(ConnectorRs connector) {
+        return switch (connector.getOnlineStatus()) {
             case ONLINE -> ConnectorOnlineStatus.ONLINE;
             case OFFLINE -> ConnectorOnlineStatus.OFFLINE;
-            default -> throw new IllegalStateException("Unknown ConnectorOnlineStatus from DAO for API: " + it.getOnlineStatus());
+            default -> throw new IllegalStateException("Unknown ConnectorOnlineStatus from DAO for API: " + connector.getOnlineStatus());
         };
     }
 

@@ -14,14 +14,15 @@
 
 package de.sovity.edc.ext.brokerserver.services.api;
 
-import de.sovity.edc.ext.brokerserver.dao.models.DataOfferContractOfferDbRow;
-import de.sovity.edc.ext.brokerserver.dao.models.DataOfferDbRow;
-import de.sovity.edc.ext.brokerserver.dao.queries.DataOfferQueries;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.CatalogQueryService;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.ContractOfferRs;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.DataOfferRs;
+import de.sovity.edc.ext.brokerserver.services.api.filtering.CatalogFilterService;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageQuery;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageResult;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageSortingItem;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageSortingType;
-import de.sovity.edc.ext.wrapper.api.broker.model.CnfFilter;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorOnlineStatus;
 import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferListEntry;
 import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferListEntryContractOffer;
@@ -35,49 +36,61 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CatalogApiService {
     private final PaginationMetadataUtils paginationMetadataUtils;
-    private final DataOfferQueries dataOfferQueries;
+    private final CatalogQueryService catalogQueryService;
     private final PolicyDtoBuilder policyDtoBuilder;
     private final AssetPropertyParser assetPropertyParser;
+    private final CatalogFilterService catalogFilterService;
 
     public CatalogPageResult catalogPage(DSLContext dsl, CatalogPageQuery query) {
         Objects.requireNonNull(query, "query must not be null");
 
-        var dataOfferDbRows = dataOfferQueries.forCatalogPage(dsl, query.getSearchQuery(), query.getSorting());
+
+        var filter = new CatalogQueryFilter(
+                query.getSearchQuery(),
+                catalogFilterService.getSelectedFiltersQuery(query.getFilter())
+        );
+
+        var catalogPageRs = catalogQueryService.queryCatalogPage(
+                dsl,
+                filter,
+                query.getSorting(),
+                catalogFilterService.getAvailableFiltersQuery()
+        );
 
         var result = new CatalogPageResult();
         result.setAvailableSortings(buildAvailableSortings());
-        result.setPaginationMetadata(paginationMetadataUtils.buildDummyPaginationMetadata(dataOfferDbRows.size()));
-        result.setAvailableFilters(new CnfFilter(List.of()));
-        result.setDataOffers(buildDataOfferListEntries(dataOfferDbRows));
+        result.setPaginationMetadata(paginationMetadataUtils.buildDummyPaginationMetadata(catalogPageRs.getDataOffers().size()));
+        result.setAvailableFilters(catalogFilterService.buildAvailableFilters(catalogPageRs.getAvailableFilterValues()));
+        result.setDataOffers(buildDataOfferListEntries(catalogPageRs.getDataOffers()));
         return result;
     }
 
-    private List<DataOfferListEntry> buildDataOfferListEntries(List<DataOfferDbRow> dataOfferDbRows) {
-        return dataOfferDbRows.stream()
+    private List<DataOfferListEntry> buildDataOfferListEntries(List<DataOfferRs> dataOfferRs) {
+        return dataOfferRs.stream()
                 .map(this::buildDataOfferListEntry)
                 .toList();
     }
 
-    private DataOfferListEntry buildDataOfferListEntry(DataOfferDbRow dataOfferDbRow) {
+    private DataOfferListEntry buildDataOfferListEntry(DataOfferRs dataOfferRs) {
         var dataOffer = new DataOfferListEntry();
-        dataOffer.setAssetId(dataOfferDbRow.getAssetId());
-        dataOffer.setCreatedAt(dataOfferDbRow.getCreatedAt());
-        dataOffer.setUpdatedAt(dataOfferDbRow.getUpdatedAt());
-        dataOffer.setProperties(assetPropertyParser.parsePropertiesFromJsonString(dataOfferDbRow.getAssetPropertiesJson()));
-        dataOffer.setContractOffers(buildDataOfferListEntryContractOffers(dataOfferDbRow));
-        dataOffer.setConnectorEndpoint(dataOfferDbRow.getConnectorEndpoint());
-        dataOffer.setConnectorOfflineSinceOrLastUpdatedAt(dataOfferDbRow.getConnectorOfflineSinceOrLastUpdatedAt());
-        dataOffer.setConnectorOnlineStatus(getOnlineStatus(dataOfferDbRow));
+        dataOffer.setAssetId(dataOfferRs.getAssetId());
+        dataOffer.setCreatedAt(dataOfferRs.getCreatedAt());
+        dataOffer.setUpdatedAt(dataOfferRs.getUpdatedAt());
+        dataOffer.setProperties(assetPropertyParser.parsePropertiesFromJsonString(dataOfferRs.getAssetPropertiesJson()));
+        dataOffer.setContractOffers(buildDataOfferListEntryContractOffers(dataOfferRs));
+        dataOffer.setConnectorEndpoint(dataOfferRs.getConnectorEndpoint());
+        dataOffer.setConnectorOfflineSinceOrLastUpdatedAt(dataOfferRs.getConnectorOfflineSinceOrLastUpdatedAt());
+        dataOffer.setConnectorOnlineStatus(getOnlineStatus(dataOfferRs));
         return dataOffer;
     }
 
-    private List<DataOfferListEntryContractOffer> buildDataOfferListEntryContractOffers(DataOfferDbRow dataOfferDbRow) {
-        return dataOfferDbRow.getContractOffers().stream()
+    private List<DataOfferListEntryContractOffer> buildDataOfferListEntryContractOffers(DataOfferRs dataOfferRs) {
+        return dataOfferRs.getContractOffers().stream()
                 .map(this::buildDataOfferListEntryContractOffer)
                 .toList();
     }
 
-    private DataOfferListEntryContractOffer buildDataOfferListEntryContractOffer(DataOfferContractOfferDbRow contractOfferDbRow) {
+    private DataOfferListEntryContractOffer buildDataOfferListEntryContractOffer(ContractOfferRs contractOfferDbRow) {
         var contractOffer = new DataOfferListEntryContractOffer();
         contractOffer.setContractOfferId(contractOfferDbRow.getContractOfferId());
         contractOffer.setContractPolicy(policyDtoBuilder.buildPolicyFromJson(contractOfferDbRow.getPolicyJson()));
@@ -86,11 +99,11 @@ public class CatalogApiService {
         return contractOffer;
     }
 
-    private ConnectorOnlineStatus getOnlineStatus(DataOfferDbRow dataOfferDbRow) {
-        return switch (dataOfferDbRow.getConnectorOnlineStatus()) {
+    private ConnectorOnlineStatus getOnlineStatus(DataOfferRs dataOfferRs) {
+        return switch (dataOfferRs.getConnectorOnlineStatus()) {
             case ONLINE -> ConnectorOnlineStatus.ONLINE;
             case OFFLINE -> ConnectorOnlineStatus.OFFLINE;
-            default -> throw new IllegalStateException("Unknown ConnectorOnlineStatus from DAO for API: " + dataOfferDbRow.getConnectorOnlineStatus());
+            default -> throw new IllegalStateException("Unknown ConnectorOnlineStatus from DAO for API: " + dataOfferRs.getConnectorOnlineStatus());
         };
     }
 

@@ -37,4 +37,8 @@ public class CollectionUtils2 {
         result.removeAll(b);
         return result;
     }
+
+    public static <T> boolean isNotEmpty(Collection<T> collection) {
+        return collection != null && !collection.isEmpty();
+    }
 }

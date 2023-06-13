@@ -12,18 +12,21 @@
  *
  */
 
-package de.sovity.edc.ext.brokerserver.dao.queries;
+package de.sovity.edc.ext.brokerserver.dao;
 
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
-import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferContractOfferRecord;
+import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferRecord;
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 
 import java.util.List;
 
-public class DataOfferContractOfferQueries {
+@RequiredArgsConstructor
+public class DataOfferQueries {
 
-    public List<DataOfferContractOfferRecord> findByConnectorEndpoint(DSLContext dsl, String connectorEndpoint) {
-        var co = Tables.DATA_OFFER_CONTRACT_OFFER;
-        return dsl.selectFrom(co).where(co.CONNECTOR_ENDPOINT.eq(connectorEndpoint)).stream().toList();
+    public List<DataOfferRecord> findByConnectorEndpoint(DSLContext dsl, String connectorEndpoint) {
+        var d = Tables.DATA_OFFER;
+        return dsl.selectFrom(d).where(d.CONNECTOR_ENDPOINT.eq(connectorEndpoint)).stream().toList();
     }
+
 }

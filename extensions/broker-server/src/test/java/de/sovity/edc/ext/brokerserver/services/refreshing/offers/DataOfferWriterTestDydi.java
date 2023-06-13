@@ -14,8 +14,8 @@
 
 package de.sovity.edc.ext.brokerserver.services.refreshing.offers;
 
-import de.sovity.edc.ext.brokerserver.dao.queries.DataOfferContractOfferQueries;
-import de.sovity.edc.ext.brokerserver.dao.queries.DataOfferQueries;
+import de.sovity.edc.ext.brokerserver.dao.DataOfferContractOfferQueries;
+import de.sovity.edc.ext.brokerserver.dao.DataOfferQueries;
 import de.sovity.edc.ext.brokerserver.services.BrokerServerSettings;
 import lombok.Value;
 import org.eclipse.edc.spi.system.configuration.Config;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.mock;
 class DataOfferWriterTestDydi {
     Config config = mock(Config.class);
     BrokerServerSettings brokerServerSettings = new BrokerServerSettings(config);
-    DataOfferQueries dataOfferQueries = new DataOfferQueries(brokerServerSettings);
+    DataOfferQueries dataOfferQueries = new DataOfferQueries();
     DataOfferContractOfferQueries dataOfferContractOfferQueries = new DataOfferContractOfferQueries();
     ContractOfferRecordUpdater contractOfferRecordUpdater = new ContractOfferRecordUpdater();
     DataOfferRecordUpdater dataOfferRecordUpdater = new DataOfferRecordUpdater();

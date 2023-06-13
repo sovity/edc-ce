@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.services;
 
-import de.sovity.edc.ext.brokerserver.dao.queries.ConnectorQueries;
+import de.sovity.edc.ext.brokerserver.dao.ConnectorQueries;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorContractOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorDataOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;

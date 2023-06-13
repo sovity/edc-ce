@@ -12,30 +12,19 @@
  *
  */
 
-package de.sovity.edc.ext.brokerserver.dao.queries.utils;
+package de.sovity.edc.ext.brokerserver.dao.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.TableLike;
 import org.jooq.impl.DSL;
 
-import java.util.Collection;
+import java.util.List;
 
-/**
- * PostgreSQL + JooQ Utils
- */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PostgresqlUtils {
-
-    /**
-     * Replaces the IN operation with "field = ANY(...)"
-     *
-     * @param field  field
-     * @param values values
-     * @return condition
-     */
-    public static Condition in(Field<String> field, Collection<String> values) {
-        return field.eq(DSL.any(values.toArray(String[]::new)));
+public class MultisetUtils {
+    public static <R> Field<List<R>> multiset(TableLike<?> table, Class<R> type) {
+        return DSL.multiset(table).convertFrom(it -> it.into(type));
     }
 }

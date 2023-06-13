@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.brokerserver.dao.queries.utils;
+package de.sovity.edc.ext.brokerserver.dao.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

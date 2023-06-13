@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.services.queue;
 
-import de.sovity.edc.ext.brokerserver.dao.queries.ConnectorQueries;
+import de.sovity.edc.ext.brokerserver.dao.ConnectorQueries;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 

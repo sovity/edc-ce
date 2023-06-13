@@ -6,13 +6,13 @@ create type connector_contract_offers_exceeded as enum ('OK', 'EXCEEDED');
 
 create table connector
 (
-    endpoint                   text                     not null,
-    connector_id               text                     not null,
-    created_at                 timestamp with time zone not null,
+    endpoint                   text                               not null,
+    connector_id               text                               not null,
+    created_at                 timestamp with time zone           not null,
     last_refresh_attempt_at    timestamp with time zone,
     last_successful_refresh_at timestamp with time zone,
-    online_status              connector_online_status  not null,
-    data_offers_exceeded       connector_data_offers_exceeded not null,
+    online_status              connector_online_status            not null,
+    data_offers_exceeded       connector_data_offers_exceeded     not null,
     contract_offers_exceeded   connector_contract_offers_exceeded not null,
 
     PRIMARY KEY (endpoint)
@@ -39,7 +39,7 @@ create table data_offer_contract_offer
     created_at         timestamp with time zone not null,
     updated_at         timestamp with time zone,
 
-    PRIMARY KEY (contract_offer_id),
+    PRIMARY KEY (connector_endpoint, asset_id, contract_offer_id),
     FOREIGN KEY (connector_endpoint, asset_id) REFERENCES data_offer (connector_endpoint, asset_id),
     FOREIGN KEY (connector_endpoint) REFERENCES connector (endpoint)
 );

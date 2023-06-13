@@ -14,9 +14,16 @@
 
 package de.sovity.edc.ext.brokerserver;
 
-import de.sovity.edc.ext.brokerserver.dao.queries.ConnectorQueries;
-import de.sovity.edc.ext.brokerserver.dao.queries.DataOfferContractOfferQueries;
-import de.sovity.edc.ext.brokerserver.dao.queries.DataOfferQueries;
+import de.sovity.edc.ext.brokerserver.dao.ConnectorQueries;
+import de.sovity.edc.ext.brokerserver.dao.DataOfferContractOfferQueries;
+import de.sovity.edc.ext.brokerserver.dao.DataOfferQueries;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.CatalogQueryAvailableFilterFetcher;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.CatalogQueryContractOfferFetcher;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.CatalogQueryDataOfferFetcher;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.CatalogQueryFilterService;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.CatalogQueryService;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.CatalogQuerySortingService;
+import de.sovity.edc.ext.brokerserver.dao.pages.connector.ConnectorPageQueryService;
 import de.sovity.edc.ext.brokerserver.db.DataSourceFactory;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.services.BrokerServerInitializer;
@@ -28,6 +35,8 @@ import de.sovity.edc.ext.brokerserver.services.api.CatalogApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorApiService;
 import de.sovity.edc.ext.brokerserver.services.api.PaginationMetadataUtils;
 import de.sovity.edc.ext.brokerserver.services.api.PolicyDtoBuilder;
+import de.sovity.edc.ext.brokerserver.services.api.filtering.CatalogFilterAttributeDefinitionService;
+import de.sovity.edc.ext.brokerserver.services.api.filtering.CatalogFilterService;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerExecutionTimeLogger;
 import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueue;
@@ -59,7 +68,7 @@ import java.util.List;
 
 
 /**
- * Manual Dependency Injection.
+ * Manual Dependency Injection (DYDI).
  * <p>
  * We want to develop as Java Backend Development is done, but we have
  * no CDI / DI Framework to rely on.
@@ -78,11 +87,18 @@ public class BrokerServerExtensionContextBuilder {
         var brokerServerSettings = new BrokerServerSettings(config);
 
         // Dao
-        var dataOfferQueries = new DataOfferQueries(brokerServerSettings);
+        var dataOfferQueries = new DataOfferQueries();
         var dataSourceFactory = new DataSourceFactory(config);
         var dataSource = dataSourceFactory.newDataSource();
         var dslContextFactory = new DslContextFactory(dataSource);
         var connectorQueries = new ConnectorQueries();
+        var catalogQuerySortingService = new CatalogQuerySortingService();
+        var catalogQueryFilterService = new CatalogQueryFilterService(brokerServerSettings);
+        var catalogQueryContractOfferFetcher = new CatalogQueryContractOfferFetcher();
+        var catalogQueryDataOfferFetcher = new CatalogQueryDataOfferFetcher(catalogQuerySortingService, catalogQueryFilterService, catalogQueryContractOfferFetcher);
+        var catalogQueryAvailableFilterFetcher = new CatalogQueryAvailableFilterFetcher(catalogQueryFilterService);
+        var catalogQueryService = new CatalogQueryService(catalogQueryDataOfferFetcher, catalogQueryAvailableFilterFetcher);
+        var connectorPageQueryService = new ConnectorPageQueryService();
 
 
         // Services
@@ -123,6 +139,8 @@ public class BrokerServerExtensionContextBuilder {
         var connectorQueueFiller = new ConnectorQueueFiller(connectorQueue, connectorQueries);
         var connectorCreator = new ConnectorCreator(connectorQueries);
         var knownConnectorsInitializer = new KnownConnectorsInitializer(config, connectorQueue, connectorCreator);
+        var catalogFilterAttributeDefinitionService = new CatalogFilterAttributeDefinitionService();
+        var catalogFilterService = new CatalogFilterService(catalogFilterAttributeDefinitionService);
 
         // Schedules
         List<CronJobRef<?>> jobs = List.of(
@@ -140,12 +158,13 @@ public class BrokerServerExtensionContextBuilder {
         // UI Capabilities
         var catalogApiService = new CatalogApiService(
                 paginationMetadataUtils,
-                dataOfferQueries,
+                catalogQueryService,
                 policyDtoBuilder,
-                assetPropertyParser
+                assetPropertyParser,
+                catalogFilterService
         );
         var connectorApiService = new ConnectorApiService(
-                connectorQueries,
+                connectorPageQueryService,
                 paginationMetadataUtils
         );
         var brokerServerResource = new BrokerServerResourceImpl(

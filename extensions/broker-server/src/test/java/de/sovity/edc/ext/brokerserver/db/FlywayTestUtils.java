@@ -16,7 +16,7 @@ package de.sovity.edc.ext.brokerserver.db;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.eclipse.edc.monitor.logger.LoggerMonitor;
+import org.eclipse.edc.spi.monitor.ConsoleMonitor;
 import org.eclipse.edc.spi.system.configuration.Config;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 public class FlywayTestUtils {
 
     public static void migrate(TestDatabase testDatabase) {
-        var monitor = new LoggerMonitor();
+        var monitor = new ConsoleMonitor();
         var config = mock(Config.class);
         when(config.getBoolean(eq(PostgresFlywayExtension.FLYWAY_CLEAN_ENABLE), any())).thenReturn(true);
         when(config.getBoolean(eq(PostgresFlywayExtension.FLYWAY_CLEAN), any())).thenReturn(true);
