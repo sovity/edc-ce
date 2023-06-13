@@ -9,10 +9,11 @@ RUN --mount=type=cache,target=/home/gradle/.gradle/caches gradle build --no-daem
 # -buster is required to have apt available
 FROM openjdk:17-slim-buster
 
-# Github pipeline sets this to the last commit information.
-# This build arg is later converted to an ENV variable, since the github action didn't support ENVs we used build args.
 ARG EDC_LAST_COMMIT_INFO_ARG="The docker container was built outside of github actions and you didn't provide the build arg EDC_LAST_COMMIT_INFO_ARG, so there's no last commit info."
 ENV EDC_LAST_COMMIT_INFO=$EDC_LAST_COMMIT_INFO_ARG
+
+ARG EDC_BUILD_DATE_ARG="The docker container was built outside of github actions and you didn't provide the build arg EDC_BUILD_DATE_ARG, so there's no build date."
+ENV EDC_BUILD_DATE=$EDC_BUILD_DATE_ARG
 
 # Optional JVM arguments, such as memory settings
 ARG JVM_ARGS=""

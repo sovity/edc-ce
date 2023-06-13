@@ -23,6 +23,10 @@ services:
       MY_EDC_MAINTAINER_URL: "https://sovity.de"
       MY_EDC_MAINTAINER_NAME: "sovity GmbH"
 
+      # Extension Configuration
+      BROKER_CLIENT_EXTENSION_ENABLED: true
+      CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED: true
+
       # Data Management API Key
       EDC_API_AUTH_KEY: ApiKeyDefaultValue
 
@@ -62,6 +66,8 @@ services:
       POSTGRESQL_USERNAME: edc
       POSTGRESQL_PASSWORD: edc
       POSTGRESQL_DATABASE: edc
+    ports:
+      - '54321:5432'
     volumes:
       - 'postgresql:/bitnami/postgresql'
 
