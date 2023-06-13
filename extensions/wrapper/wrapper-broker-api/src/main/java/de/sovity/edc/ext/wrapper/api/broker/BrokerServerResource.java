@@ -19,6 +19,7 @@ import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageResult;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageQuery;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageResult;
 import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferDetailResult;
+import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferPageQuery;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
@@ -50,5 +51,5 @@ public interface BrokerServerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Query data offer details")
-    DataOfferDetailResult dataOfferDetailPage(String connectorEndpoint, String assetId);
+    DataOfferDetailResult dataOfferDetailPage(DataOfferPageQuery query);
 }
