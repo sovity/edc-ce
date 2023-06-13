@@ -14,8 +14,6 @@
 
 package de.sovity.edc.ext.wrapper;
 
-import java.util.List;
-
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementPageCardBuilder;
@@ -37,6 +35,8 @@ import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
+
+import java.util.List;
 
 
 /**
