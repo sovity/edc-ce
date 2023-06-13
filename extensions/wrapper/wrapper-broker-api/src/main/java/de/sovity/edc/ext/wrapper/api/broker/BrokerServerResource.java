@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper.api.broker;
 
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageQuery;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageResult;
+import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorDetailResult;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageQuery;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageResult;
 import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferDetailResult;
@@ -52,4 +53,11 @@ public interface BrokerServerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Query data offer details")
     DataOfferDetailResult dataOfferDetailPage(DataOfferPageQuery query);
+
+    @POST
+    @Path("connector-detail-page")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Query known Connectors details")
+    ConnectorDetailResult connectorDetailPage(ConnectorPageQuery query);
 }
