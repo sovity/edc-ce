@@ -8,6 +8,7 @@ val jdbcDriver = "org.postgresql.Driver"
 val postgresContainer = "postgres:11-alpine"
 
 val migrationsDir = "src/main/resources/db/migration"
+val testDataDir = "src/main/resources/db/testdata"
 val jooqTargetPackage = "de.sovity.edc.ext.brokerserver.db.jooq"
 val jooqTargetSourceRoot = "build/generated/jooq"
 
@@ -115,7 +116,7 @@ flyway {
     cleanDisabled = false
     cleanOnValidationError = true
     baselineOnMigrate = true
-    locations = arrayOf("filesystem:${migrationsDir}")
+    locations = arrayOf("filesystem:${migrationsDir}", "filesystem:${testDataDir}")
     configurations = arrayOf("flywayMigration")
 }
 

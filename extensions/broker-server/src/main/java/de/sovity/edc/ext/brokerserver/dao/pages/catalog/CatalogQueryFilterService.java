@@ -36,7 +36,7 @@ public class CatalogQueryFilterService {
         var conditions = new ArrayList<Condition>();
         conditions.add(SearchUtils.simpleSearch(filter.searchQuery(), List.of(
                 fields.getAssetId(),
-                fields.getAssetTitle(),
+                fields.getAssetName(),
                 fields.getAssetDescription(),
                 fields.getAssetKeywords(),
                 fields.getConnectorTable().ENDPOINT

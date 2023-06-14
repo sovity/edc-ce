@@ -29,6 +29,7 @@ import org.jooq.JSONB;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferWriterTestDataModels.Co;
@@ -75,29 +76,33 @@ class DataOfferWriterTestDataHelper {
     }
 
     private DataOfferContractOfferRecord dummyContractOffer(Do dataOffer, Co contractOffer) {
-        return new DataOfferContractOfferRecord(
-                contractOffer.getId(),
-                connectorEndpoint,
-                dataOffer.getAssetId(),
-                JSONB.valueOf(dummyPolicyJson(contractOffer.getPolicyValue())),
-                old,
-                old
-        );
+        var contractOfferRecord = new DataOfferContractOfferRecord();
+        contractOfferRecord.setConnectorEndpoint(connectorEndpoint);
+        contractOfferRecord.setAssetId(dataOffer.getAssetId());
+        contractOfferRecord.setContractOfferId(contractOffer.getId());
+        contractOfferRecord.setPolicy(JSONB.valueOf(dummyPolicyJson(contractOffer.getPolicyValue())));
+        contractOfferRecord.setCreatedAt(old);
+        contractOfferRecord.setUpdatedAt(old);
+        return contractOfferRecord;
     }
 
     private DataOfferRecord dummyDataOffer(Do dataOffer) {
-        return new DataOfferRecord(
-                connectorEndpoint,
-                dataOffer.getAssetId(),
-                JSONB.valueOf(dummyAssetJson(dataOffer)),
-                old,
-                old
-        );
+        var assetName = Optional.of(dataOffer.getAssetName()).orElse(dataOffer.getAssetId());
+
+        var dataOfferRecord = new DataOfferRecord();
+        dataOfferRecord.setConnectorEndpoint(connectorEndpoint);
+        dataOfferRecord.setAssetId(dataOffer.getAssetId());
+        dataOfferRecord.setAssetName(assetName);
+        dataOfferRecord.setAssetProperties(JSONB.valueOf(dummyAssetJson(dataOffer)));
+        dataOfferRecord.setCreatedAt(old);
+        dataOfferRecord.setUpdatedAt(old);
+        return dataOfferRecord;
     }
 
     private FetchedDataOffer dummyFetchedDataOffer(Do dataOffer) {
         var fetchedDataOffer = new FetchedDataOffer();
         fetchedDataOffer.setAssetId(dataOffer.getAssetId());
+        fetchedDataOffer.setAssetName(dataOffer.getAssetName());
         fetchedDataOffer.setAssetPropertiesJson(dummyAssetJson(dataOffer));
 
         var contractOffersMapped = dataOffer.getContractOffers().stream().map(this::dummyFetchedContractOffer).collect(Collectors.toList());

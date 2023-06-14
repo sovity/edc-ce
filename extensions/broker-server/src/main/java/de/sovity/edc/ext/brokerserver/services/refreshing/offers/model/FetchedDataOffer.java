@@ -26,6 +26,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FetchedDataOffer {
     String assetId;
+    String assetName;
     String assetPropertiesJson;
     List<FetchedDataOfferContractOffer> contractOffers;
 }

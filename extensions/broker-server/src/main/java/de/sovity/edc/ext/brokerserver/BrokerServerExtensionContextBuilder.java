@@ -161,7 +161,8 @@ public class BrokerServerExtensionContextBuilder {
                 catalogQueryService,
                 policyDtoBuilder,
                 assetPropertyParser,
-                catalogFilterService
+                catalogFilterService,
+                brokerServerSettings
         );
         var connectorApiService = new ConnectorApiService(
                 connectorPageQueryService,

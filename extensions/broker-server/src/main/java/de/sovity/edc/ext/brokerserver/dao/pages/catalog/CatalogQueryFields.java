@@ -39,7 +39,7 @@ public class CatalogQueryFields {
 
     // Asset Properties from JSON to be used in sorting / filtering
     Field<String> assetId;
-    Field<String> assetTitle;
+    Field<String> assetName;
     Field<String> assetDescription;
     Field<String> assetKeywords;
 
@@ -51,7 +51,7 @@ public class CatalogQueryFields {
         this.connectorTable = connectorTable;
         this.dataOfferTable = dataOfferTable;
         assetId = dataOfferTable.ASSET_ID;
-        assetTitle = DSL.coalesce(getAssetProperty(AssetProperty.ASSET_NAME), assetId);
+        assetName = dataOfferTable.ASSET_NAME;
         assetDescription = getAssetProperty(AssetProperty.DESCRIPTION);
         assetKeywords = getAssetProperty(AssetProperty.KEYWORDS);
         offlineSinceOrLastUpdatedAt = DSL.coalesce(

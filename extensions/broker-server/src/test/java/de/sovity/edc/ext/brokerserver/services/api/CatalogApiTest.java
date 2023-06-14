@@ -21,6 +21,8 @@ import de.sovity.edc.client.gen.model.CnfFilterAttribute;
 import de.sovity.edc.client.gen.model.CnfFilterItem;
 import de.sovity.edc.client.gen.model.CnfFilterValue;
 import de.sovity.edc.client.gen.model.CnfFilterValueAttribute;
+import de.sovity.edc.client.gen.model.DataOfferListEntry;
+import de.sovity.edc.ext.brokerserver.BrokerServerExtension;
 import de.sovity.edc.ext.brokerserver.dao.AssetProperty;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
 import de.sovity.edc.ext.brokerserver.db.TestDatabaseFactory;
@@ -42,6 +44,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import static de.sovity.edc.client.gen.model.DataOfferListEntry.ConnectorOnlineStatusEnum.ONLINE;
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
@@ -57,7 +60,9 @@ class CatalogApiTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-        extension.setConfiguration(createConfiguration(TEST_DATABASE, Map.of()));
+        extension.setConfiguration(createConfiguration(TEST_DATABASE, Map.of(
+                BrokerServerExtension.CATALOG_PAGE_PAGE_SIZE, "10"
+        )));
     }
 
     @Test
@@ -198,9 +203,74 @@ class CatalogApiTest {
         });
     }
 
+    @Test
+    void testPagination_firstPage() {
+        TEST_DATABASE.testTransaction(dsl -> {
+            // arrange
+            var today = OffsetDateTime.now().withNano(0);
+
+            createConnector(dsl, today);
+            IntStream.range(0, 15).forEach(i -> createDataOffer(dsl, today, Map.of(
+                    AssetProperty.ASSET_ID, "urn:artifact:my-asset-%d".formatted(i)
+            )));
+            IntStream.range(0, 15).forEach(i -> createDataOffer(dsl, today, Map.of(
+                    AssetProperty.ASSET_ID, "urn:artifact:some-other-asset-%d".formatted(i)
+            )));
+
+
+            var query = new CatalogPageQuery();
+            query.setSearchQuery("my-asset");
+            query.setSorting(CatalogPageQuery.SortingEnum.TITLE);
+
+            var result = edcClient().brokerServerApi().catalogPage(query);
+            assertThat(result.getDataOffers()).extracting(DataOfferListEntry::getAssetId)
+                    .isEqualTo(IntStream.range(0, 10).mapToObj("urn:artifact:my-asset-%d"::formatted).toList());
+
+            var actual = result.getPaginationMetadata();
+            assertThat(actual.getPageOneBased()).isEqualTo(1);
+            assertThat(actual.getPageSize()).isEqualTo(10);
+            assertThat(actual.getNumVisible()).isEqualTo(10);
+            assertThat(actual.getNumTotal()).isEqualTo(15);
+        });
+    }
+
+    @Test
+    void testPagination_secondPage() {
+        TEST_DATABASE.testTransaction(dsl -> {
+            // arrange
+            var today = OffsetDateTime.now().withNano(0);
+
+            createConnector(dsl, today);
+            IntStream.range(0, 15).forEach(i -> createDataOffer(dsl, today, Map.of(
+                    AssetProperty.ASSET_ID, "urn:artifact:my-asset-%d".formatted(i)
+            )));
+            IntStream.range(0, 15).forEach(i -> createDataOffer(dsl, today, Map.of(
+                    AssetProperty.ASSET_ID, "urn:artifact:some-other-asset-%d".formatted(i)
+            )));
+
+
+            var query = new CatalogPageQuery();
+            query.setSearchQuery("my-asset");
+            query.setPageOneBased(2);
+            query.setSorting(CatalogPageQuery.SortingEnum.TITLE);
+
+            var result = edcClient().brokerServerApi().catalogPage(query);
+
+            assertThat(result.getDataOffers()).extracting(DataOfferListEntry::getAssetId)
+                    .isEqualTo(IntStream.range(10, 15).mapToObj("urn:artifact:my-asset-%d"::formatted).toList());
+
+            var actual = result.getPaginationMetadata();
+            assertThat(actual.getPageOneBased()).isEqualTo(2);
+            assertThat(actual.getPageSize()).isEqualTo(10);
+            assertThat(actual.getNumVisible()).isEqualTo(5);
+            assertThat(actual.getNumTotal()).isEqualTo(15);
+        });
+    }
+
     private void createDataOffer(DSLContext dsl, OffsetDateTime today, Map<String, String> assetProperties) {
         var dataOffer = dsl.newRecord(Tables.DATA_OFFER);
         dataOffer.setAssetId(assetProperties.get(AssetProperty.ASSET_ID));
+        dataOffer.setAssetName(assetProperties.getOrDefault(AssetProperty.ASSET_NAME, dataOffer.getAssetId()));
         dataOffer.setAssetProperties(JSONB.jsonb(assetProperties(assetProperties)));
         dataOffer.setConnectorEndpoint("http://my-connector/ids/data");
         dataOffer.setCreatedAt(today.minusDays(5));

@@ -28,9 +28,13 @@ public class BrokerServerSettings {
     @Getter
     private final Duration hideOfflineDataOffersAfter;
 
+    @Getter
+    private final int catalogPagePageSize;
+
     public BrokerServerSettings(Config config) {
         this.config = config;
-        this.hideOfflineDataOffersAfter = getDurationOrNull(BrokerServerExtension.HIDE_OFFLINE_DATA_OFFERS_AFTER);
+        hideOfflineDataOffersAfter = getDurationOrNull(BrokerServerExtension.HIDE_OFFLINE_DATA_OFFERS_AFTER);
+        catalogPagePageSize = config.getInteger(BrokerServerExtension.CATALOG_PAGE_PAGE_SIZE, 20);
     }
 
     private Duration getDurationOrNull(@NonNull String configProperty) {

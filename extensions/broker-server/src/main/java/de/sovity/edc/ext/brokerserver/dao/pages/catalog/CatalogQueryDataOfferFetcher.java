@@ -16,10 +16,14 @@ package de.sovity.edc.ext.brokerserver.dao.pages.catalog;
 
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.DataOfferRs;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.PageQuery;
 import de.sovity.edc.ext.brokerserver.dao.utils.MultisetUtils;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageSortingType;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Field;
+import org.jooq.Record;
+import org.jooq.SelectOnConditionStep;
+import org.jooq.SelectSelectStep;
 import org.jooq.impl.DSL;
 
 import java.util.List;
@@ -33,30 +37,56 @@ public class CatalogQueryDataOfferFetcher {
     /**
      * Query data offers
      *
-     * @param fields  query fields
-     * @param filter  filter
-     * @param sorting sorting
+     * @param fields    query fields
+     * @param filter    filter
+     * @param sorting   sorting
+     * @param pageQuery pagination
      * @return {@link Field} of {@link DataOfferRs}s
      */
-    public Field<List<DataOfferRs>> queryDataOffers(CatalogQueryFields fields, CatalogQueryFilter filter, CatalogPageSortingType sorting) {
+    public Field<List<DataOfferRs>> queryDataOffers(
+            CatalogQueryFields fields,
+            CatalogQueryFilter filter,
+            CatalogPageSortingType sorting,
+            PageQuery pageQuery
+    ) {
         var c = fields.getConnectorTable();
         var d = fields.getDataOfferTable();
 
-        var query = DSL.select(
-                        fields.getAssetId().as("assetId"),
-                        d.ASSET_PROPERTIES.cast(String.class).as("assetPropertiesJson"),
-                        d.CREATED_AT,
-                        d.UPDATED_AT,
-                        catalogQueryContractOfferFetcher.getContractOffers(fields).as("contractOffers"),
-                        c.ENDPOINT.as("connectorEndpoint"),
-                        c.ONLINE_STATUS.as("connectorOnlineStatus"),
-                        fields.getOfflineSinceOrLastUpdatedAt().as("connectorOfflineSinceOrLastUpdatedAt")
-                )
-                .from(d)
-                .leftJoin(c).on(c.ENDPOINT.eq(d.CONNECTOR_ENDPOINT))
+        var select = DSL.select(
+                fields.getAssetId().as("assetId"),
+                d.ASSET_PROPERTIES.cast(String.class).as("assetPropertiesJson"),
+                d.CREATED_AT,
+                d.UPDATED_AT,
+                catalogQueryContractOfferFetcher.getContractOffers(fields).as("contractOffers"),
+                c.ENDPOINT.as("connectorEndpoint"),
+                c.ONLINE_STATUS.as("connectorOnlineStatus"),
+                fields.getOfflineSinceOrLastUpdatedAt().as("connectorOfflineSinceOrLastUpdatedAt")
+        );
+
+        var query = from(select, fields)
                 .where(catalogQueryFilterService.filter(fields, filter))
-                .orderBy(catalogQuerySortingService.getOrderBy(fields, sorting));
+                .orderBy(catalogQuerySortingService.getOrderBy(fields, sorting))
+                .limit(pageQuery.offset(), pageQuery.limit());
 
         return MultisetUtils.multiset(query, DataOfferRs.class);
+    }
+
+    /**
+     * Query number of data offers
+     *
+     * @param fields query fields
+     * @param filter filter
+     * @return {@link Field} with number of data offers
+     */
+    public Field<Integer> queryNumDataOffers(CatalogQueryFields fields, CatalogQueryFilter filter) {
+        var query = from(DSL.select(DSL.count()), fields)
+                .where(catalogQueryFilterService.filter(fields, filter));
+        return DSL.field(query);
+    }
+
+    private <T extends Record> SelectOnConditionStep<T> from(SelectSelectStep<T> select, CatalogQueryFields fields) {
+        var c = fields.getConnectorTable();
+        var d = fields.getDataOfferTable();
+        return select.from(d).leftJoin(c).on(c.ENDPOINT.eq(d.CONNECTOR_ENDPOINT));
     }
 }

@@ -14,18 +14,5 @@
 
 package de.sovity.edc.ext.brokerserver.dao.pages.catalog.models;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
-
-import java.util.List;
-
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class CatalogPageRs {
-    String availableFilterValues;
-    List<DataOfferRs> dataOffers;
-    int numTotalDataOffers;
+public record PageQuery(int offset, int limit) {
 }

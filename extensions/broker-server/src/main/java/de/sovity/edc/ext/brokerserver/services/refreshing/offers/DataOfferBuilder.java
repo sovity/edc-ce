@@ -52,6 +52,7 @@ public class DataOfferBuilder {
     private FetchedDataOffer buildFetchedDataOffer(Asset asset, List<ContractOffer> offers) {
         var dataOffer = new FetchedDataOffer();
         dataOffer.setAssetId(asset.getId());
+        dataOffer.setAssetName(getAssetName(asset));
         dataOffer.setAssetPropertiesJson(getAssetPropertiesJson(asset));
         dataOffer.setContractOffers(buildFetchedDataOfferContractOffers(offers));
         return dataOffer;
@@ -75,6 +76,14 @@ public class DataOfferBuilder {
 
     private Collection<List<ContractOffer>> groupByAssetId(Collection<ContractOffer> contractOffers) {
         return contractOffers.stream().collect(groupingBy(offer -> offer.getAsset().getId())).values();
+    }
+
+    private String getAssetName(Asset asset) {
+        String assetName = asset.getName();
+        if (assetName == null) {
+            assetName = asset.getId();
+        }
+        return assetName;
     }
 
     @NotNull

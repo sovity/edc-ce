@@ -28,7 +28,7 @@ public class CatalogQuerySortingService {
         List<OrderField<?>> orderBy;
         if (sorting == null || sorting == CatalogPageSortingType.TITLE) {
             orderBy = List.of(
-                    fields.getAssetTitle().asc(),
+                    fields.getAssetName().asc(),
                     fields.getConnectorTable().ENDPOINT.asc()
             );
         } else if (sorting == CatalogPageSortingType.MOST_RECENT) {
@@ -39,7 +39,7 @@ public class CatalogQuerySortingService {
         } else if (sorting == CatalogPageSortingType.ORIGINATOR) {
             orderBy = List.of(
                     fields.getConnectorTable().ENDPOINT.asc(),
-                    fields.getAssetTitle().asc()
+                    fields.getAssetName().asc()
             );
         } else {
             throw new IllegalArgumentException("Unknown %s: %s".formatted(CatalogPageSortingType.class.getName(), sorting));

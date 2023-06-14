@@ -18,6 +18,7 @@ import de.sovity.edc.ext.brokerserver.dao.pages.catalog.CatalogQueryService;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.ContractOfferRs;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.DataOfferRs;
+import de.sovity.edc.ext.brokerserver.services.BrokerServerSettings;
 import de.sovity.edc.ext.brokerserver.services.api.filtering.CatalogFilterService;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageQuery;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageResult;
@@ -40,6 +41,7 @@ public class CatalogApiService {
     private final PolicyDtoBuilder policyDtoBuilder;
     private final AssetPropertyParser assetPropertyParser;
     private final CatalogFilterService catalogFilterService;
+    private final BrokerServerSettings brokerServerSettings;
 
     public CatalogPageResult catalogPage(DSLContext dsl, CatalogPageQuery query) {
         Objects.requireNonNull(query, "query must not be null");
@@ -50,16 +52,30 @@ public class CatalogApiService {
                 catalogFilterService.getSelectedFiltersQuery(query.getFilter())
         );
 
+        var pageQuery = paginationMetadataUtils.getPageQuery(
+                query.getPageOneBased(),
+                brokerServerSettings.getCatalogPagePageSize()
+        );
+
+        // execute db query
         var catalogPageRs = catalogQueryService.queryCatalogPage(
                 dsl,
                 filter,
                 query.getSorting(),
+                pageQuery,
                 catalogFilterService.getAvailableFiltersQuery()
+        );
+
+        var paginationMetadata = paginationMetadataUtils.buildPaginationMetadata(
+                query.getPageOneBased(),
+                brokerServerSettings.getCatalogPagePageSize(),
+                catalogPageRs.getDataOffers().size(),
+                catalogPageRs.getNumTotalDataOffers()
         );
 
         var result = new CatalogPageResult();
         result.setAvailableSortings(buildAvailableSortings());
-        result.setPaginationMetadata(paginationMetadataUtils.buildDummyPaginationMetadata(catalogPageRs.getDataOffers().size()));
+        result.setPaginationMetadata(paginationMetadata);
         result.setAvailableFilters(catalogFilterService.buildAvailableFilters(catalogPageRs.getAvailableFilterValues()));
         result.setDataOffers(buildDataOfferListEntries(catalogPageRs.getDataOffers()));
         return result;

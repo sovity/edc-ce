@@ -17,6 +17,7 @@ package de.sovity.edc.ext.brokerserver.dao.pages.catalog;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.AvailableFilterValuesQuery;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogPageRs;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.PageQuery;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageSortingType;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class CatalogQueryService {
      * @param dsl                         transaction
      * @param filter                      filter
      * @param sorting                     sorting
+     * @param pageQuery                   pagination
      * @param availableFilterValueQueries available filter value queries
      * @return {@link CatalogPageRs}
      */
@@ -42,6 +44,7 @@ public class CatalogQueryService {
             DSLContext dsl,
             CatalogQueryFilter filter,
             CatalogPageSortingType sorting,
+            PageQuery pageQuery,
             List<AvailableFilterValuesQuery> availableFilterValueQueries
     ) {
         var fields = new CatalogQueryFields(Tables.CONNECTOR, Tables.DATA_OFFER);
@@ -49,11 +52,14 @@ public class CatalogQueryService {
         var availableFilterValues = catalogQueryAvailableFilterFetcher
                 .queryAvailableFilterValues(fields, filter, availableFilterValueQueries);
 
-        var dataOffers = catalogQueryDataOfferFetcher.queryDataOffers(fields, filter, sorting);
+        var dataOffers = catalogQueryDataOfferFetcher.queryDataOffers(fields, filter, sorting, pageQuery);
+
+        var numTotalDataOffers = catalogQueryDataOfferFetcher.queryNumDataOffers(fields, filter);
 
         return dsl.select(
                 dataOffers.as("dataOffers"),
-                availableFilterValues.as("availableFilterValues")
+                availableFilterValues.as("availableFilterValues"),
+                numTotalDataOffers.as("numTotalDataOffers")
         ).fetchOneInto(CatalogPageRs.class);
     }
 
