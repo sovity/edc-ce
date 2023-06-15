@@ -2,6 +2,7 @@ val edcVersion: String by project
 val edcGroup: String by project
 val restAssured: String by project
 val mockitoVersion: String by project
+val lombokVersion: String by project
 
 plugins {
     `java-library`
@@ -9,8 +10,8 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:1.18.28")
-    compileOnly("org.projectlombok:lombok:1.18.28")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
     api("${edcGroup}:core-spi:${edcVersion}")
     api("${edcGroup}:control-plane-spi:${edcVersion}")
@@ -20,8 +21,8 @@ dependencies {
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
 
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.28")
-    testCompileOnly("org.projectlombok:lombok:1.18.28")
+    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
 
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
