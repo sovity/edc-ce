@@ -1,11 +1,13 @@
+val lombokVersion: String by project
+
 plugins {
     `java-library`
     `maven-publish`
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:1.18.28")
-    compileOnly("org.projectlombok:lombok:1.18.28")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
     api(project(":extensions:wrapper:wrapper-common-api"))
 

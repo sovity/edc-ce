@@ -3,6 +3,7 @@ val edcGroup: String by project
 val restAssured: String by project
 val assertj: String by project
 val mockitoVersion: String by project
+val lombokVersion: String by project
 
 
 plugins {
@@ -36,8 +37,8 @@ dependencies {
     implementation("jakarta.annotation:jakarta.annotation-api:1.3.5")
 
     // Lombok
-    compileOnly("org.projectlombok:lombok:1.18.28")
-    annotationProcessor("org.projectlombok:lombok:1.18.28")
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
 
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
