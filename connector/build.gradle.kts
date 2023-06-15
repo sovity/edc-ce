@@ -16,6 +16,8 @@ dependencies {
     implementation("${edcGroup}:control-plane-aggregate-services:${edcVersion}")
     implementation("${edcGroup}:http:${edcVersion}")
     implementation("${edcGroup}:dsp:${edcVersion}")
+    implementation("${edcGroup}:json-ld:${edcVersion}")
+    implementation("${edcGroup}:monitor-jdk-logger:${edcVersion}")
 
     // Control-plane to Data-plane
     implementation("${edcGroup}:transfer-data-plane:${edcVersion}")
