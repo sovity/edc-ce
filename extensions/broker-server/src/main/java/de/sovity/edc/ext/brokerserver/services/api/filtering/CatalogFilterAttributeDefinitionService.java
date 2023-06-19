@@ -31,6 +31,15 @@ public class CatalogFilterAttributeDefinitionService {
         );
     }
 
+    public CatalogFilterAttributeDefinition buildDataSpaceFilter() {
+        return new CatalogFilterAttributeDefinition(
+                "dataSpace",
+                "Data Space",
+                CatalogQueryFields::getDataSpace,
+                (fields, values) -> PostgresqlUtils.in(fields.getDataSpace(), values)
+        );
+    }
+
     @NotNull
     private Field<String> getValue(CatalogQueryFields fields, String assetProperty) {
         return DSL.coalesce(fields.getAssetProperty(assetProperty), DSL.value(""));

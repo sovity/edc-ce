@@ -18,7 +18,7 @@ import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilte
 import de.sovity.edc.ext.brokerserver.dao.utils.SearchUtils;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.Connector;
-import de.sovity.edc.ext.brokerserver.services.BrokerServerSettings;
+import de.sovity.edc.ext.brokerserver.services.config.BrokerServerSettings;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.Condition;

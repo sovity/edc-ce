@@ -61,8 +61,73 @@ class CatalogApiTest {
     @BeforeEach
     void setUp(EdcExtension extension) {
         extension.setConfiguration(createConfiguration(TEST_DATABASE, Map.of(
-                BrokerServerExtension.CATALOG_PAGE_PAGE_SIZE, "10"
+                BrokerServerExtension.CATALOG_PAGE_PAGE_SIZE, "10",
+                BrokerServerExtension.DEFAULT_CONNECTOR_DATASPACE, "MDS",
+                BrokerServerExtension.KNOWN_DATASPACES_ENDPOINTS, "Example1=http://my-connector/ids/data"
         )));
+    }
+
+    @Test
+    void testDataSpace_two_dataspaces_filter_for_one() {
+        TEST_DATABASE.testTransaction(dsl -> {
+            // arrange
+            var today = OffsetDateTime.now().withNano(0);
+
+            createConnector(dsl, today, "http://my-connector/ids/data"); // Dataspace: Example1
+            createConnector(dsl, today, "http://my-connector2/ids/data"); // Dataspace: MDS
+            createDataOffer(dsl, today, Map.of(
+                AssetProperty.ASSET_ID, "urn:artifact:my-asset",
+                AssetProperty.ASSET_NAME, "my-asset"
+            ), "http://my-connector/ids/data"); // Dataspace: Example1
+            createDataOffer(dsl, today, Map.of(
+                AssetProperty.ASSET_ID, "urn:artifact:my-asset",
+                AssetProperty.ASSET_NAME, "my-asset"
+            ), "http://my-connector2/ids/data"); // Dataspace: MDS
+
+            var query = new CatalogPageQuery();
+            query.setFilter(new CnfFilterValue(List.of(
+                new CnfFilterValueAttribute("dataSpace", List.of("MDS"))
+            )));
+
+            var result = edcClient().brokerServerApi().catalogPage(query);
+            assertThat(result.getDataOffers()).hasSize(1);
+
+            var dataOfferResult = result.getDataOffers().get(0);
+            assertThat(dataOfferResult.getConnectorEndpoint()).isEqualTo("http://my-connector2/ids/data");
+        });
+    }
+
+    @Test
+    void test_available_filter_values_to_filter_by() {
+        TEST_DATABASE.testTransaction(dsl -> {
+            // arrange
+            var today = OffsetDateTime.now().withNano(0);
+
+            createConnector(dsl, today, "http://my-connector/ids/data"); // Dataspace: Example1
+            createConnector(dsl, today, "http://my-connector2/ids/data"); // Dataspace: MDS
+            createDataOffer(dsl, today, Map.of(
+                AssetProperty.ASSET_ID, "urn:artifact:my-asset",
+                AssetProperty.ASSET_NAME, "my-asset",
+                AssetProperty.LANGUAGE, "de"
+            ), "http://my-connector/ids/data"); // Dataspace: Example1
+            createDataOffer(dsl, today, Map.of(
+                AssetProperty.ASSET_ID, "urn:artifact:my-asset",
+                AssetProperty.ASSET_NAME, "my-asset",
+                AssetProperty.LANGUAGE, "en"
+            ), "http://my-connector2/ids/data"); // Dataspace: MDS
+            createDataOffer(dsl, today, Map.of(
+                AssetProperty.ASSET_ID, "urn:artifact:my-asset2",
+                AssetProperty.ASSET_NAME, "my-asset",
+                AssetProperty.LANGUAGE, "fr"
+            ), "http://my-connector2/ids/data"); // Dataspace: MDS
+
+            // get all available filter values
+            var result = edcClient().brokerServerApi().catalogPage(new CatalogPageQuery()).getAvailableFilters();
+
+            // assert that the filter values are correct
+            var dataSpace = getAvailableFilter(edcClient().brokerServerApi().catalogPage(new CatalogPageQuery()), "dataSpace");
+            assertThat(dataSpace.getValues()).containsExactly(new CnfFilterItem("Example1", "Example1"), new CnfFilterItem("MDS", "MDS"));
+        });
     }
 
     @Test
@@ -71,11 +136,11 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today);
+            createConnector(dsl, today, "http://my-connector/ids/data");
             createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:my-asset",
                     AssetProperty.ASSET_NAME, "my-asset"
-            ));
+            ), "http://my-connector/ids/data");
 
 
             var result = edcClient().brokerServerApi().catalogPage(new CatalogPageQuery());
@@ -101,30 +166,30 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today);
+            createConnector(dsl, today, "http://my-connector/ids/data");
             createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:my-asset-1",
                     AssetProperty.DATA_CATEGORY, "my-category-1",
                     AssetProperty.TRANSPORT_MODE, "MY-TRANSPORT-MODE-1",
                     AssetProperty.DATA_SUBCATEGORY, "MY-SUBCATEGORY-2"
-            ));
+            ), "http://my-connector/ids/data");
             createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:my-asset-2",
                     AssetProperty.DATA_CATEGORY, "my-category-1",
                     AssetProperty.TRANSPORT_MODE, "my-transport-mode-2",
                     AssetProperty.DATA_SUBCATEGORY, "MY-SUBCATEGORY-2"
-            ));
+            ), "http://my-connector/ids/data");
             createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:my-asset-3",
                     AssetProperty.DATA_CATEGORY, "my-category-1",
                     AssetProperty.TRANSPORT_MODE, "MY-TRANSPORT-MODE-1",
                     AssetProperty.DATA_SUBCATEGORY, "my-subcategory-1"
-            ));
+            ), "http://my-connector/ids/data");
             createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:my-asset-4",
                     AssetProperty.DATA_CATEGORY, "my-category-1",
                     AssetProperty.TRANSPORT_MODE, ""
-            ));
+            ), "http://my-connector/ids/data");
 
 
             var result = edcClient().brokerServerApi().catalogPage(new CatalogPageQuery());
@@ -132,6 +197,7 @@ class CatalogApiTest {
             assertThat(result.getAvailableFilters().getFields())
                     .extracting(CnfFilterAttribute::getId)
                     .containsExactly(
+                            "dataSpace",
                             AssetProperty.DATA_CATEGORY,
                             AssetProperty.DATA_SUBCATEGORY,
                             AssetProperty.DATA_MODEL,
@@ -142,6 +208,7 @@ class CatalogApiTest {
             assertThat(result.getAvailableFilters().getFields())
                     .extracting(CnfFilterAttribute::getTitle)
                     .containsExactly(
+                        "Data Space",
                             "Data Category",
                             "Data Subcategory",
                             "Data Model",
@@ -178,14 +245,14 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today);
+            createConnector(dsl, today, "http://my-connector/ids/data");
             createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:my-asset-1",
                     AssetProperty.DATA_CATEGORY, "my-category"
-            ));
+            ), "http://my-connector/ids/data");
             createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:my-asset-2"
-            ));
+            ), "http://my-connector/ids/data");
 
 
             var query = new CatalogPageQuery();
@@ -209,13 +276,13 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today);
+            createConnector(dsl, today, "http://my-connector/ids/data");
             IntStream.range(0, 15).forEach(i -> createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:my-asset-%d".formatted(i)
-            )));
+            ), "http://my-connector/ids/data"));
             IntStream.range(0, 15).forEach(i -> createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:some-other-asset-%d".formatted(i)
-            )));
+            ), "http://my-connector/ids/data"));
 
 
             var query = new CatalogPageQuery();
@@ -240,13 +307,13 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today);
+            createConnector(dsl, today, "http://my-connector/ids/data");
             IntStream.range(0, 15).forEach(i -> createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:my-asset-%d".formatted(i)
-            )));
+            ), "http://my-connector/ids/data"));
             IntStream.range(0, 15).forEach(i -> createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:some-other-asset-%d".formatted(i)
-            )));
+            ), "http://my-connector/ids/data"));
 
 
             var query = new CatalogPageQuery();
@@ -267,19 +334,19 @@ class CatalogApiTest {
         });
     }
 
-    private void createDataOffer(DSLContext dsl, OffsetDateTime today, Map<String, String> assetProperties) {
+    private void createDataOffer(DSLContext dsl, OffsetDateTime today, Map<String, String> assetProperties, String connectorEndpoint) {
         var dataOffer = dsl.newRecord(Tables.DATA_OFFER);
         dataOffer.setAssetId(assetProperties.get(AssetProperty.ASSET_ID));
         dataOffer.setAssetName(assetProperties.getOrDefault(AssetProperty.ASSET_NAME, dataOffer.getAssetId()));
         dataOffer.setAssetProperties(JSONB.jsonb(assetProperties(assetProperties)));
-        dataOffer.setConnectorEndpoint("http://my-connector/ids/data");
+        dataOffer.setConnectorEndpoint(connectorEndpoint);
         dataOffer.setCreatedAt(today.minusDays(5));
         dataOffer.setUpdatedAt(today);
         dataOffer.insert();
 
         var contractOffer = dsl.newRecord(Tables.DATA_OFFER_CONTRACT_OFFER);
         contractOffer.setContractOfferId("my-contract-offer-1");
-        contractOffer.setConnectorEndpoint("http://my-connector/ids/data");
+        contractOffer.setConnectorEndpoint(connectorEndpoint);
         contractOffer.setAssetId(assetProperties.get(AssetProperty.ASSET_ID));
         contractOffer.setCreatedAt(today.minusDays(5));
         contractOffer.setUpdatedAt(today);
@@ -287,10 +354,10 @@ class CatalogApiTest {
         contractOffer.insert();
     }
 
-    private void createConnector(DSLContext dsl, OffsetDateTime today) {
+    private void createConnector(DSLContext dsl, OffsetDateTime today, String connectorEndpoint) {
         var connector = dsl.newRecord(Tables.CONNECTOR);
         connector.setConnectorId("http://my-connector");
-        connector.setEndpoint("http://my-connector/ids/data");
+        connector.setEndpoint(connectorEndpoint);
         connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);
         connector.setCreatedAt(today.minusDays(1));
         connector.setLastRefreshAttemptAt(today);

@@ -18,6 +18,7 @@ import com.github.t9t.jooq.json.JsonbDSL;
 import de.sovity.edc.ext.brokerserver.dao.AssetProperty;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.Connector;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.DataOffer;
+import de.sovity.edc.ext.brokerserver.services.config.DataSpaceConfig;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -42,12 +43,13 @@ public class CatalogQueryFields {
     Field<String> assetName;
     Field<String> assetDescription;
     Field<String> assetKeywords;
+    Field<String> dataSpace;
 
     // This date should always be non-null
     // It's used in the UI to display the last relevant change date of a connector
     Field<OffsetDateTime> offlineSinceOrLastUpdatedAt;
 
-    public CatalogQueryFields(Connector connectorTable, DataOffer dataOfferTable) {
+    public CatalogQueryFields(Connector connectorTable, DataOffer dataOfferTable, DataSpaceConfig dataSpaceConfig) {
         this.connectorTable = connectorTable;
         this.dataOfferTable = dataOfferTable;
         assetId = dataOfferTable.ASSET_ID;
@@ -58,6 +60,26 @@ public class CatalogQueryFields {
                 connectorTable.LAST_SUCCESSFUL_REFRESH_AT,
                 connectorTable.CREATED_AT
         );
+
+        dataSpace = buildDataSpaceField(connectorTable, dataSpaceConfig);
+    }
+
+    private Field<String> buildDataSpaceField(Connector connectorTable, DataSpaceConfig dataSpaceConfig) {
+        var endpoint = connectorTable.ENDPOINT;
+
+        var connectors = dataSpaceConfig.dataSpaceConnectors();
+        if (connectors.isEmpty()) {
+            return DSL.val(dataSpaceConfig.defaultDataSpace());
+        }
+
+        var first = connectors.get(0);
+        var dspCase = DSL.case_(endpoint).when(first.endpoint(), first.dataSpaceName());
+
+        for (var dsp : connectors.subList(1, connectors.size())) {
+            dspCase = dspCase.when(dsp.endpoint(), dsp.dataSpaceName());
+        }
+
+        return dspCase.else_(DSL.val(dataSpaceConfig.defaultDataSpace()));
     }
 
     public Field<String> getAssetProperty(String name) {

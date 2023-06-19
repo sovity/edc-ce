@@ -58,6 +58,7 @@ public class CatalogFilterService {
      */
     private List<CatalogFilterAttributeDefinition> getAvailableFilters() {
         return List.of(
+                catalogFilterAttributeDefinitionService.buildDataSpaceFilter(),
                 catalogFilterAttributeDefinitionService.fromAssetProperty(
                         AssetProperty.DATA_CATEGORY,
                         "Data Category"

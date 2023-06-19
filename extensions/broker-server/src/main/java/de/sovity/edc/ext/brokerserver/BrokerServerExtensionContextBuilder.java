@@ -27,7 +27,6 @@ import de.sovity.edc.ext.brokerserver.dao.pages.connector.ConnectorPageQueryServ
 import de.sovity.edc.ext.brokerserver.db.DataSourceFactory;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.services.BrokerServerInitializer;
-import de.sovity.edc.ext.brokerserver.services.BrokerServerSettings;
 import de.sovity.edc.ext.brokerserver.services.ConnectorCreator;
 import de.sovity.edc.ext.brokerserver.services.KnownConnectorsInitializer;
 import de.sovity.edc.ext.brokerserver.services.api.AssetPropertyParser;
@@ -37,6 +36,7 @@ import de.sovity.edc.ext.brokerserver.services.api.PaginationMetadataUtils;
 import de.sovity.edc.ext.brokerserver.services.api.PolicyDtoBuilder;
 import de.sovity.edc.ext.brokerserver.services.api.filtering.CatalogFilterAttributeDefinitionService;
 import de.sovity.edc.ext.brokerserver.services.api.filtering.CatalogFilterService;
+import de.sovity.edc.ext.brokerserver.services.config.BrokerServerSettingsFactory;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerExecutionTimeLogger;
 import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueue;
@@ -84,7 +84,8 @@ public class BrokerServerExtensionContextBuilder {
             TypeManager typeManager,
             CatalogService catalogService
     ) {
-        var brokerServerSettings = new BrokerServerSettings(config);
+        var brokerServerSettingsFactory = new BrokerServerSettingsFactory();
+        var brokerServerSettings = brokerServerSettingsFactory.buildBrokerServerSettings(config);
 
         // Dao
         var dataOfferQueries = new DataOfferQueries();

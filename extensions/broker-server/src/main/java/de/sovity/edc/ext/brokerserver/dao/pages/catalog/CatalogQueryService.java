@@ -19,6 +19,7 @@ import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogPageRs;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.PageQuery;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
+import de.sovity.edc.ext.brokerserver.services.config.DataSpaceConfig;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageSortingType;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -45,9 +46,10 @@ public class CatalogQueryService {
             CatalogQueryFilter filter,
             CatalogPageSortingType sorting,
             PageQuery pageQuery,
-            List<AvailableFilterValuesQuery> availableFilterValueQueries
+            List<AvailableFilterValuesQuery> availableFilterValueQueries,
+            DataSpaceConfig dataSpaceConfig
     ) {
-        var fields = new CatalogQueryFields(Tables.CONNECTOR, Tables.DATA_OFFER);
+        var fields = new CatalogQueryFields(Tables.CONNECTOR, Tables.DATA_OFFER, dataSpaceConfig);
 
         var availableFilterValues = catalogQueryAvailableFilterFetcher
                 .queryAvailableFilterValues(fields, filter, availableFilterValueQueries);

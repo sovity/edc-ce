@@ -18,7 +18,7 @@ import de.sovity.edc.ext.brokerserver.dao.pages.catalog.CatalogQueryService;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.ContractOfferRs;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.DataOfferRs;
-import de.sovity.edc.ext.brokerserver.services.BrokerServerSettings;
+import de.sovity.edc.ext.brokerserver.services.config.BrokerServerSettings;
 import de.sovity.edc.ext.brokerserver.services.api.filtering.CatalogFilterService;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageQuery;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageResult;
@@ -63,7 +63,8 @@ public class CatalogApiService {
                 filter,
                 query.getSorting(),
                 pageQuery,
-                catalogFilterService.getAvailableFiltersQuery()
+                catalogFilterService.getAvailableFiltersQuery(),
+                brokerServerSettings.getDataSpaceConfig()
         );
 
         var paginationMetadata = paginationMetadataUtils.buildPaginationMetadata(
