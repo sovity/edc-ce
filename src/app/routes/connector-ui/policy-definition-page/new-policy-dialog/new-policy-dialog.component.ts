@@ -31,7 +31,6 @@ export class NewPolicyDialogComponent implements OnDestroy {
     const formValue = this.form.value;
     const policyDefinition =
       this.policyDefinitionBuilder.buildPolicyDefinition(formValue);
-    console.log(policyDefinition);
     this.form.group.disable();
     this.loading = true;
     this.policyService
