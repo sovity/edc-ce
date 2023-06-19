@@ -37,8 +37,6 @@ export class NewPolicyDialogForm {
           'Connector-Restricted-Usage' as PolicyType,
           Validators.required,
         ],
-        rangeIsOpenEnded: [false, Validators.required],
-        rangeStart: [null as Date | null, Validators.required],
         range: this.formBuilder.group(
           {
             start: null as Date | null,
@@ -54,16 +52,13 @@ export class NewPolicyDialogForm {
       (value) => {
         const timePeriodRestricted =
           value.policyType === 'Time-Period-Restricted';
-        const openEnded = value.rangeIsOpenEnded!;
         const connecterRestrictedUsage =
           value.policyType === 'Connector-Restricted-Usage';
 
         return {
           id: true,
           policyType: true,
-          rangeIsOpenEnded: timePeriodRestricted,
-          rangeStart: timePeriodRestricted && openEnded,
-          range: timePeriodRestricted && !openEnded,
+          range: timePeriodRestricted,
           connectorId: connecterRestrictedUsage,
         };
       },

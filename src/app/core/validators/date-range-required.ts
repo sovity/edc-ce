@@ -9,7 +9,7 @@ export const dateRangeRequired: ValidatorFn = (
   control: AbstractControl,
 ): ValidationErrors | null => {
   const value: DateRange<Date> = control.value;
-  if (!value?.start || !value?.end || value.start > value.end) {
+  if (!value?.start || (value?.end && value.start > value.end)) {
     return {required: true};
   }
   return null;

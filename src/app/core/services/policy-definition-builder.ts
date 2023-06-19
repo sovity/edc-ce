@@ -62,23 +62,20 @@ export class PolicyDefinitionBuilder {
   private buildTimePeriodRestrictionPermissions(
     formValue: NewPolicyDialogFormValue,
   ): Permission[] {
-    if (formValue.rangeIsOpenEnded) {
-      const start = formValue.rangeStart!!;
+    const start = formValue.range!!.start!!;
+    const constraints: AtomicConstraint[] = [this.evaluationTime('GEQ', start)];
+    const end = formValue.range!!.end;
+    if (end) {
+      constraints.push(this.evaluationTime('LT', addDays(end, 1)));
       return [
         this.policyDefinitionUtils.buildPermission({
-          constraints: [this.evaluationTime('GEQ', start)],
+          constraints,
         }),
       ];
     } else {
-      const start = formValue.range!!.start!!;
-      const end = addDays(formValue.range!!.end!!, 1);
-
       return [
         this.policyDefinitionUtils.buildPermission({
-          constraints: [
-            this.evaluationTime('GEQ', start),
-            this.evaluationTime('LT', end),
-          ],
+          constraints: [this.evaluationTime('GEQ', start)],
         }),
       ];
     }

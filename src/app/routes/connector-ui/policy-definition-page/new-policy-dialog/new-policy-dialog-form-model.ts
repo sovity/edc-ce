@@ -12,8 +12,6 @@ export type NewPolicyDialogFormValue =
 export interface NewPolicyDialogFormModel {
   id: FormControl<string>;
   policyType: FormControl<PolicyType>;
-  rangeIsOpenEnded: FormControl<boolean>;
-  rangeStart: FormControl<Date | null>;
   range: FormGroup<{
     start: FormControl<Date | null>;
     end: FormControl<Date | null>;
