@@ -29,7 +29,9 @@ public class TestConnectorFactory implements ConnectorFactory {
             "contractdefinition",
             "contractnegotiation",
             "policy",
-            "transferprocess"
+            "transferprocess",
+            "dataplaneinstance",
+            "default"
     );
 
     private final String participantId;
