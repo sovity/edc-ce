@@ -2,7 +2,11 @@ import {Injectable} from '@angular/core';
 import {addDays} from 'date-fns';
 import {NewPolicyDialogFormValue} from '../../routes/connector-ui/policy-definition-page/new-policy-dialog/new-policy-dialog-form-model';
 import {Permission, PolicyDefinition} from './api/legacy-managent-api-client';
-import {ExpressionLeftSideConstants} from './api/policy-type-ext';
+import {
+  AtomicConstraint,
+  ExpressionLeftSideConstants,
+  Operator,
+} from './api/policy-type-ext';
 import {PolicyDefinitionUtils} from './policy-definition-utils';
 
 @Injectable({
@@ -58,24 +62,33 @@ export class PolicyDefinitionBuilder {
   private buildTimePeriodRestrictionPermissions(
     formValue: NewPolicyDialogFormValue,
   ): Permission[] {
-    const start = formValue.range!!.start!!;
-    const end = addDays(formValue.range!!.end!!, 1);
+    if (formValue.rangeIsOpenEnded) {
+      const start = formValue.rangeStart!!;
+      return [
+        this.policyDefinitionUtils.buildPermission({
+          constraints: [this.evaluationTime('GEQ', start)],
+        }),
+      ];
+    } else {
+      const start = formValue.range!!.start!!;
+      const end = addDays(formValue.range!!.end!!, 1);
 
-    return [
-      this.policyDefinitionUtils.buildPermission({
-        constraints: [
-          this.policyDefinitionUtils.buildAtomicConstraint(
-            ExpressionLeftSideConstants.PolicyEvaluationTime,
-            'GEQ',
-            start.toISOString()!,
-          ),
-          this.policyDefinitionUtils.buildAtomicConstraint(
-            ExpressionLeftSideConstants.PolicyEvaluationTime,
-            'LT',
-            end.toISOString()!,
-          ),
-        ],
-      }),
-    ];
+      return [
+        this.policyDefinitionUtils.buildPermission({
+          constraints: [
+            this.evaluationTime('GEQ', start),
+            this.evaluationTime('LT', end),
+          ],
+        }),
+      ];
+    }
+  }
+
+  private evaluationTime(operator: Operator, date: Date): AtomicConstraint {
+    return this.policyDefinitionUtils.buildAtomicConstraint(
+      ExpressionLeftSideConstants.PolicyEvaluationTime,
+      operator,
+      date.toISOString()!,
+    );
   }
 }

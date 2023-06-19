@@ -31,7 +31,6 @@ export class NewPolicyDialogComponent implements OnDestroy {
     const formValue = this.form.value;
     const policyDefinition =
       this.policyDefinitionBuilder.buildPolicyDefinition(formValue);
-
     this.form.group.disable();
     this.loading = true;
     this.policyService
@@ -49,7 +48,7 @@ export class NewPolicyDialogComponent implements OnDestroy {
           this.close({refreshList: true});
         },
         error: (error) => {
-          console.error('Failed creating asset!', error);
+          console.error('Failed creating Policy!', error);
           this.notificationService.showError('Failed creating policy!');
         },
       });

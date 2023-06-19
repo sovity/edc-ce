@@ -1,7 +1,7 @@
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import {MatNativeDateModule} from '@angular/material/core';
+import {MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatDialogModule} from '@angular/material/dialog';
 import {
@@ -59,6 +59,8 @@ import {
     provideAppConfigProperty(API_KEY, 'managementApiKey'),
 
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: ApiKeyInterceptor},
+
+    {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: {

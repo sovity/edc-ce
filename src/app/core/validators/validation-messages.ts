@@ -8,5 +8,6 @@ export class ValidationMessages {
   invalidPrefix = (field: string, prefix: string): string =>
     `${field} must start with "${prefix}".`;
   invalidDateRangeMessage = 'Need valid date range.';
+  invalidDateMessage = 'Must be valid date.';
   idExistsErrorMessage = 'ID already exists.';
 }

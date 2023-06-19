@@ -18,6 +18,7 @@ the detailed section referring to by linking pull requests or issues.
 
 - Added Connector Build date and Commit Information to Additional Properties
   section in Dashboard
+- Added Open-Ended Date Option to Time-Period-Restricted Policies
 
 #### Changed
 

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {switchDisabledControlsByField} from '../../../../core/utils/form-group-utils';
+import {switchDisabledControls} from '../../../../core/utils/form-group-utils';
 import {dateRangeRequired} from '../../../../core/validators/date-range-required';
 import {noWhitespaceValidator} from '../../../../core/validators/no-whitespace-validator';
 import {
@@ -30,13 +30,15 @@ export class NewPolicyDialogForm {
   constructor(private formBuilder: FormBuilder) {}
 
   buildFormGroup(): FormGroup<NewPolicyDialogFormModel> {
-    const formGroup: FormGroup<NewPolicyDialogFormModel> =
+    const newPolicyFormGroup: FormGroup<NewPolicyDialogFormModel> =
       this.formBuilder.nonNullable.group({
         id: ['', [Validators.required, noWhitespaceValidator]],
         policyType: [
           'Connector-Restricted-Usage' as PolicyType,
           Validators.required,
         ],
+        rangeIsOpenEnded: [false, Validators.required],
+        rangeStart: [null as Date | null, Validators.required],
         range: this.formBuilder.group(
           {
             start: null as Date | null,
@@ -47,16 +49,26 @@ export class NewPolicyDialogForm {
         connectorId: ['', Validators.required],
       });
 
-    // Switch validation depending on selected policy type
-    switchDisabledControlsByField({
-      formGroup,
-      switchCtrl: formGroup.controls.policyType,
-      enabledControlsByValue: {
-        'Connector-Restricted-Usage': ['connectorId'],
-        'Time-Period-Restricted': ['range'],
-      },
-    });
+    switchDisabledControls<NewPolicyDialogFormValue>(
+      newPolicyFormGroup,
+      (value) => {
+        const timePeriodRestricted =
+          value.policyType === 'Time-Period-Restricted';
+        const openEnded = value.rangeIsOpenEnded!;
+        const connecterRestrictedUsage =
+          value.policyType === 'Connector-Restricted-Usage';
 
-    return formGroup;
+        return {
+          id: true,
+          policyType: true,
+          rangeIsOpenEnded: timePeriodRestricted,
+          rangeStart: timePeriodRestricted && openEnded,
+          range: timePeriodRestricted && !openEnded,
+          connectorId: connecterRestrictedUsage,
+        };
+      },
+    );
+
+    return newPolicyFormGroup;
   }
 }

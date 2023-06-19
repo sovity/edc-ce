@@ -1,13 +1,13 @@
 <h1 mat-dialog-title>Create New Policy</h1>
 <mat-dialog-content class="w-[800px]">
-  <div class="flex flex-col mt-[10px]">
+  <div class="flex flex-col">
     <!--  ID -->
     <mat-form-field
       *ngIf="form.group.controls.id; let ctrl"
       id="form-field-id"
       color="accent">
       <mat-label>ID</mat-label>
-      <input matInput autocomplete="off" [formControl]="ctrl" />
+      <input matInput autocomplete="newvalue" [formControl]="ctrl" />
       <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{
         validationMessages.invalidWhitespacesMessage
       }}</mat-error>
@@ -25,27 +25,60 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <!-- Time Interval Type -->
+    <ng-container *ngIf="form.policyType === 'Time-Period-Restricted'">
+      <div class="w-full flex flex-row space-x-[20px]" mat-dialog-actions>
+        <label>Date Selection Criteria:</label>
+        <mat-checkbox
+          color="accent"
+          [formControl]="form.group.controls.rangeIsOpenEnded"
+          >Use open-ended date interval
+        </mat-checkbox>
+      </div>
+      <!-- Start Date  -->
+      <mat-form-field
+        *ngIf="
+          form.group.controls.rangeIsOpenEnded.value &&
+            form.group.controls.rangeStart;
+          let ctrl
+        "
+        class="mt-[20px]"
+        color="accent">
+        <mat-label>Choose start date</mat-label>
+        <input matInput [matDatepicker]="picker" [formControl]="ctrl" />
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="ctrl.hasError('matDatepickerParse')">
+          {{ validationMessages.invalidDateMessage }}
+        </mat-error>
+      </mat-form-field>
 
-    <!-- Date Range -->
-    <mat-form-field
-      *ngIf="
-        form.policyType == 'Time-Period-Restricted' &&
-          form.group.controls.range;
-        let ctrl
-      "
-      color="accent">
-      <mat-label>Time-Period</mat-label>
-      <mat-date-range-input [formGroup]="ctrl" [rangePicker]="picker">
-        <input matStartDate formControlName="start" placeholder="Start date" />
-        <input matEndDate formControlName="end" placeholder="End date" />
-      </mat-date-range-input>
-      <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-date-range-picker #picker></mat-date-range-picker>
-      <mat-error *ngIf="ctrl.invalid">{{
-        validationMessages.invalidDateRangeMessage
-      }}</mat-error>
-    </mat-form-field>
+      <!-- Date Range -->
+      <mat-form-field
+        *ngIf="
+          !form.group.controls.rangeIsOpenEnded.value &&
+            form.group.controls.range;
+          let ctrl
+        "
+        class="mt-[20px]"
+        color="accent">
+        <mat-label>Choose a range</mat-label>
+        <mat-date-range-input [formGroup]="ctrl" [rangePicker]="picker">
+          <input
+            matStartDate
+            formControlName="start"
+            placeholder="Start date" />
+          <input matEndDate formControlName="end" placeholder="End date" />
+        </mat-date-range-input>
+        <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+        <mat-error *ngIf="ctrl.invalid">{{
+          validationMessages.invalidDateRangeMessage
+        }}</mat-error>
+      </mat-form-field>
+    </ng-container>
 
     <!-- Connector ID -->
     <ng-container *ngIf="form.policyType == 'Connector-Restricted-Usage'">
