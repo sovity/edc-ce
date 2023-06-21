@@ -8,6 +8,7 @@ export class EmptyStateComponent {
   @HostBinding('class.flex')
   @HostBinding('class.flex-col')
   @HostBinding('class.justify-center')
+  @HostBinding('class.items-center')
   @HostBinding('class.uppercase')
   @HostBinding('class.text-slate')
   cls = true;
