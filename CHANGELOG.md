@@ -20,6 +20,7 @@ the detailed section referring to by linking pull requests or issues.
   section in Dashboard
 - Added Open-Ended Date Option to Time-Period-Restricted Policies
 - Broker UI: Added sorting, filtering and pagination to catalog page.
+- Broker UI: Added legal notice page.
 
 #### Changed
 
