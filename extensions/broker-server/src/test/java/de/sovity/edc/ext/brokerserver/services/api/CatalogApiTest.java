@@ -160,6 +160,28 @@ class CatalogApiTest {
         });
     }
 
+    /**
+     * Tests against an issue where empty available filter values resulted in NULLs
+     */
+    @Test
+    void testEmptyConnector() {
+        TEST_DATABASE.testTransaction(dsl -> {
+            // arrange
+            var today = OffsetDateTime.now().withNano(0);
+            createConnector(dsl, today, "http://my-connector/ids/data");
+
+            // act
+            var result = edcClient().brokerServerApi().catalogPage(new CatalogPageQuery());
+
+            // assert
+            assertThat(result.getDataOffers()).isEmpty();
+            assertThat(result.getAvailableFilters().getFields()).isNotEmpty();
+            assertThat(result.getAvailableSortings()).isNotEmpty();
+
+            // the most important thing is that the above code ran through as it crashed before
+        });
+    }
+
     @Test
     void testAvailableFilters_noFilter() {
         TEST_DATABASE.testTransaction(dsl -> {

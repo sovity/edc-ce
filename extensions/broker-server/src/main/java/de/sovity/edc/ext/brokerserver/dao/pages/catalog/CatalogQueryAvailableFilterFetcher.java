@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.Field;
 import org.jooq.JSON;
 import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +63,9 @@ public class CatalogQueryAvailableFilterFetcher {
         var c = fields.getConnectorTable();
         var d = fields.getDataOfferTable();
 
-        return DSL.select(DSL.arrayAggDistinct(currentFilter.valueQuery().getAttributeValueField(fields)))
+        var value = currentFilter.valueQuery().getAttributeValueField(fields);
+
+        return DSL.select(DSL.coalesce(DSL.arrayAggDistinct(value), DSL.array().cast(SQLDataType.VARCHAR.array())))
                 .from(d)
                 .leftJoin(c).on(c.ENDPOINT.eq(d.CONNECTOR_ENDPOINT))
                 .where(catalogQueryFilterService.filter(fields, searchQuery, otherFilters))
