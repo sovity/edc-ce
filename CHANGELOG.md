@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Patch
 
+- Fix: Data Offer Filter available values are no longer limited to the selected value if a value is selected.
+
 ## [v0.0.1] Broker PoC Release - 2023-06-02
 
 Initial Broker PoC Release with a minimalistic feature set.

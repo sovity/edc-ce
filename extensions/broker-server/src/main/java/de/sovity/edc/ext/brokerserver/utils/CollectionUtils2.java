@@ -18,8 +18,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -40,5 +42,11 @@ public class CollectionUtils2 {
 
     public static <T> boolean isNotEmpty(Collection<T> collection) {
         return collection != null && !collection.isEmpty();
+    }
+
+    public static <T> List<T> allElementsExceptForIndex(Collection<T> source, int skipIndex) {
+        var result = new ArrayList<>(source);
+        result.remove(skipIndex);
+        return result;
     }
 }

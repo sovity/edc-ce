@@ -96,9 +96,17 @@ public class BrokerServerExtensionContextBuilder {
         var catalogQuerySortingService = new CatalogQuerySortingService();
         var catalogQueryFilterService = new CatalogQueryFilterService(brokerServerSettings);
         var catalogQueryContractOfferFetcher = new CatalogQueryContractOfferFetcher();
-        var catalogQueryDataOfferFetcher = new CatalogQueryDataOfferFetcher(catalogQuerySortingService, catalogQueryFilterService, catalogQueryContractOfferFetcher);
+        var catalogQueryDataOfferFetcher = new CatalogQueryDataOfferFetcher(
+                catalogQuerySortingService,
+                catalogQueryFilterService,
+                catalogQueryContractOfferFetcher
+        );
         var catalogQueryAvailableFilterFetcher = new CatalogQueryAvailableFilterFetcher(catalogQueryFilterService);
-        var catalogQueryService = new CatalogQueryService(catalogQueryDataOfferFetcher, catalogQueryAvailableFilterFetcher);
+        var catalogQueryService = new CatalogQueryService(
+                catalogQueryDataOfferFetcher,
+                catalogQueryAvailableFilterFetcher,
+                brokerServerSettings
+        );
         var connectorPageQueryService = new ConnectorPageQueryService();
 
 
@@ -118,7 +126,11 @@ public class BrokerServerExtensionContextBuilder {
         );
         var dataOfferPatchApplier = new DataOfferPatchApplier();
         var dataOfferWriter = new DataOfferWriter(dataOfferPatchBuilder, dataOfferPatchApplier);
-        var connectorUpdateSuccessWriter = new ConnectorUpdateSuccessWriter(brokerEventLogger, dataOfferWriter, dataOfferLimitsEnforcer);
+        var connectorUpdateSuccessWriter = new ConnectorUpdateSuccessWriter(
+                brokerEventLogger,
+                dataOfferWriter,
+                dataOfferLimitsEnforcer
+        );
         var connectorUpdateFailureWriter = new ConnectorUpdateFailureWriter(brokerEventLogger, monitor);
         var contractOfferFetcher = new ContractOfferFetcher(catalogService);
         var fetchedDataOfferBuilder = new DataOfferBuilder(objectMapper);
@@ -139,7 +151,11 @@ public class BrokerServerExtensionContextBuilder {
         var connectorQueue = new ConnectorQueue(connectorUpdater, threadPool);
         var connectorQueueFiller = new ConnectorQueueFiller(connectorQueue, connectorQueries);
         var connectorCreator = new ConnectorCreator(connectorQueries);
-        var knownConnectorsInitializer = new KnownConnectorsInitializer(config, connectorQueue, connectorCreator);
+        var knownConnectorsInitializer = new KnownConnectorsInitializer(
+                config,
+                connectorQueue,
+                connectorCreator
+        );
         var catalogFilterAttributeDefinitionService = new CatalogFilterAttributeDefinitionService();
         var catalogFilterService = new CatalogFilterService(catalogFilterAttributeDefinitionService);
 
@@ -154,7 +170,11 @@ public class BrokerServerExtensionContextBuilder {
 
         // Startup
         var quartzScheduleInitializer = new QuartzScheduleInitializer(config, monitor, jobs);
-        var brokerServerInitializer = new BrokerServerInitializer(dslContextFactory, knownConnectorsInitializer, quartzScheduleInitializer);
+        var brokerServerInitializer = new BrokerServerInitializer(
+                dslContextFactory,
+                knownConnectorsInitializer,
+                quartzScheduleInitializer
+        );
 
         // UI Capabilities
         var catalogApiService = new CatalogApiService(

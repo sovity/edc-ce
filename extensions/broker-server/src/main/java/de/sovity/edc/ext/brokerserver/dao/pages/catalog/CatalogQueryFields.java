@@ -49,9 +49,12 @@ public class CatalogQueryFields {
     // It's used in the UI to display the last relevant change date of a connector
     Field<OffsetDateTime> offlineSinceOrLastUpdatedAt;
 
+    DataSpaceConfig dataSpaceConfig;
+
     public CatalogQueryFields(Connector connectorTable, DataOffer dataOfferTable, DataSpaceConfig dataSpaceConfig) {
         this.connectorTable = connectorTable;
         this.dataOfferTable = dataOfferTable;
+        this.dataSpaceConfig = dataSpaceConfig;
         assetId = dataOfferTable.ASSET_ID;
         assetName = dataOfferTable.ASSET_NAME;
         assetDescription = getAssetProperty(AssetProperty.DESCRIPTION);
@@ -84,5 +87,13 @@ public class CatalogQueryFields {
 
     public Field<String> getAssetProperty(String name) {
         return JsonbDSL.fieldByKeyText(dataOfferTable.ASSET_PROPERTIES, name);
+    }
+
+    public CatalogQueryFields withSuffix(String additionalSuffix) {
+        return new CatalogQueryFields(
+                connectorTable.as(connectorTable.getName() + "_" + additionalSuffix),
+                dataOfferTable.as(dataOfferTable.getName() + "_" + additionalSuffix),
+                dataSpaceConfig
+        );
     }
 }

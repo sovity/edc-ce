@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.dao.pages.catalog;
 
+import de.sovity.edc.ext.brokerserver.dao.AssetProperty;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
 import de.sovity.edc.ext.brokerserver.dao.utils.SearchUtils;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
@@ -27,22 +28,26 @@ import org.jooq.impl.DSL;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public class CatalogQueryFilterService {
     private final BrokerServerSettings brokerServerSettings;
 
-    public Condition filter(CatalogQueryFields fields, CatalogQueryFilter filter) {
+    public Condition filter(CatalogQueryFields fields, String searchQuery, List<CatalogQueryFilter> filters) {
         var conditions = new ArrayList<Condition>();
-        conditions.add(SearchUtils.simpleSearch(filter.searchQuery(), List.of(
+        conditions.add(SearchUtils.simpleSearch(searchQuery, List.of(
                 fields.getAssetId(),
                 fields.getAssetName(),
+                fields.getAssetProperty(AssetProperty.DATA_CATEGORY),
+                fields.getAssetProperty(AssetProperty.DATA_SUBCATEGORY),
                 fields.getAssetDescription(),
                 fields.getAssetKeywords(),
                 fields.getConnectorTable().ENDPOINT
         )));
         conditions.add(onlyOnlineOrRecentlyOfflineConnectors(fields.getConnectorTable()));
-        conditions.addAll(filter.selectedFilters().stream().map(it -> it.filterDataOffers(fields)).toList());
+        conditions.addAll(filters.stream().map(CatalogQueryFilter::queryFilterClauseOrNull)
+                .filter(Objects::nonNull).map(it -> it.filterDataOffers(fields)).toList());
         return DSL.and(conditions);
     }
 

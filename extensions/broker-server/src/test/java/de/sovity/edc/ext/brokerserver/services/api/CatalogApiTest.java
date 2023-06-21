@@ -76,17 +76,17 @@ class CatalogApiTest {
             createConnector(dsl, today, "http://my-connector/ids/data"); // Dataspace: Example1
             createConnector(dsl, today, "http://my-connector2/ids/data"); // Dataspace: MDS
             createDataOffer(dsl, today, Map.of(
-                AssetProperty.ASSET_ID, "urn:artifact:my-asset",
-                AssetProperty.ASSET_NAME, "my-asset"
+                    AssetProperty.ASSET_ID, "urn:artifact:my-asset",
+                    AssetProperty.ASSET_NAME, "my-asset"
             ), "http://my-connector/ids/data"); // Dataspace: Example1
             createDataOffer(dsl, today, Map.of(
-                AssetProperty.ASSET_ID, "urn:artifact:my-asset",
-                AssetProperty.ASSET_NAME, "my-asset"
+                    AssetProperty.ASSET_ID, "urn:artifact:my-asset",
+                    AssetProperty.ASSET_NAME, "my-asset"
             ), "http://my-connector2/ids/data"); // Dataspace: MDS
 
             var query = new CatalogPageQuery();
             query.setFilter(new CnfFilterValue(List.of(
-                new CnfFilterValueAttribute("dataSpace", List.of("MDS"))
+                    new CnfFilterValueAttribute("dataSpace", List.of("MDS"))
             )));
 
             var result = edcClient().brokerServerApi().catalogPage(query);
@@ -106,19 +106,19 @@ class CatalogApiTest {
             createConnector(dsl, today, "http://my-connector/ids/data"); // Dataspace: Example1
             createConnector(dsl, today, "http://my-connector2/ids/data"); // Dataspace: MDS
             createDataOffer(dsl, today, Map.of(
-                AssetProperty.ASSET_ID, "urn:artifact:my-asset",
-                AssetProperty.ASSET_NAME, "my-asset",
-                AssetProperty.LANGUAGE, "de"
+                    AssetProperty.ASSET_ID, "urn:artifact:my-asset",
+                    AssetProperty.ASSET_NAME, "my-asset",
+                    AssetProperty.LANGUAGE, "de"
             ), "http://my-connector/ids/data"); // Dataspace: Example1
             createDataOffer(dsl, today, Map.of(
-                AssetProperty.ASSET_ID, "urn:artifact:my-asset",
-                AssetProperty.ASSET_NAME, "my-asset",
-                AssetProperty.LANGUAGE, "en"
+                    AssetProperty.ASSET_ID, "urn:artifact:my-asset",
+                    AssetProperty.ASSET_NAME, "my-asset",
+                    AssetProperty.LANGUAGE, "en"
             ), "http://my-connector2/ids/data"); // Dataspace: MDS
             createDataOffer(dsl, today, Map.of(
-                AssetProperty.ASSET_ID, "urn:artifact:my-asset2",
-                AssetProperty.ASSET_NAME, "my-asset",
-                AssetProperty.LANGUAGE, "fr"
+                    AssetProperty.ASSET_ID, "urn:artifact:my-asset2",
+                    AssetProperty.ASSET_NAME, "my-asset",
+                    AssetProperty.LANGUAGE, "fr"
             ), "http://my-connector2/ids/data"); // Dataspace: MDS
 
             // get all available filter values
@@ -208,7 +208,7 @@ class CatalogApiTest {
             assertThat(result.getAvailableFilters().getFields())
                     .extracting(CnfFilterAttribute::getTitle)
                     .containsExactly(
-                        "Data Space",
+                            "Data Space",
                             "Data Category",
                             "Data Subcategory",
                             "Data Model",
@@ -248,10 +248,12 @@ class CatalogApiTest {
             createConnector(dsl, today, "http://my-connector/ids/data");
             createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:my-asset-1",
-                    AssetProperty.DATA_CATEGORY, "my-category"
+                    AssetProperty.DATA_CATEGORY, "my-category",
+                    AssetProperty.DATA_SUBCATEGORY, "my-subcategory"
             ), "http://my-connector/ids/data");
             createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset-2"
+                    AssetProperty.ASSET_ID, "urn:artifact:my-asset-2",
+                    AssetProperty.DATA_SUBCATEGORY, "my-other-subcategory"
             ), "http://my-connector/ids/data");
 
 
@@ -261,12 +263,18 @@ class CatalogApiTest {
             )));
 
             var result = edcClient().brokerServerApi().catalogPage(query);
-            var actual = getAvailableFilter(result, AssetProperty.DATA_CATEGORY);
 
-            assertThat(actual.getId()).isEqualTo(AssetProperty.DATA_CATEGORY);
-            assertThat(actual.getTitle()).isEqualTo("Data Category");
-            assertThat(actual.getValues()).extracting(CnfFilterItem::getId).containsExactly("");
-            assertThat(actual.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("");
+            var dataCategory = getAvailableFilter(result, AssetProperty.DATA_CATEGORY);
+            assertThat(dataCategory.getId()).isEqualTo(AssetProperty.DATA_CATEGORY);
+            assertThat(dataCategory.getTitle()).isEqualTo("Data Category");
+            assertThat(dataCategory.getValues()).extracting(CnfFilterItem::getId).containsExactly("my-category", "");
+            assertThat(dataCategory.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("my-category", "");
+
+            var dataSubcategory = getAvailableFilter(result, AssetProperty.DATA_SUBCATEGORY);
+            assertThat(dataSubcategory.getId()).isEqualTo(AssetProperty.DATA_SUBCATEGORY);
+            assertThat(dataSubcategory.getTitle()).isEqualTo("Data Subcategory");
+            assertThat(dataSubcategory.getValues()).extracting(CnfFilterItem::getId).containsExactly("my-other-subcategory");
+            assertThat(dataSubcategory.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("my-other-subcategory");
         });
     }
 

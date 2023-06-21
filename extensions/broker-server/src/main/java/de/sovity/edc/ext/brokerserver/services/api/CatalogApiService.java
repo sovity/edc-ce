@@ -15,11 +15,10 @@
 package de.sovity.edc.ext.brokerserver.services.api;
 
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.CatalogQueryService;
-import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.ContractOfferRs;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.DataOfferRs;
-import de.sovity.edc.ext.brokerserver.services.config.BrokerServerSettings;
 import de.sovity.edc.ext.brokerserver.services.api.filtering.CatalogFilterService;
+import de.sovity.edc.ext.brokerserver.services.config.BrokerServerSettings;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageQuery;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageResult;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageSortingItem;
@@ -47,10 +46,7 @@ public class CatalogApiService {
         Objects.requireNonNull(query, "query must not be null");
 
 
-        var filter = new CatalogQueryFilter(
-                query.getSearchQuery(),
-                catalogFilterService.getSelectedFiltersQuery(query.getFilter())
-        );
+        var filters = catalogFilterService.getCatalogQueryFilters(query.getFilter());
 
         var pageQuery = paginationMetadataUtils.getPageQuery(
                 query.getPageOneBased(),
@@ -60,11 +56,10 @@ public class CatalogApiService {
         // execute db query
         var catalogPageRs = catalogQueryService.queryCatalogPage(
                 dsl,
-                filter,
+                query.getSearchQuery(),
+                filters,
                 query.getSorting(),
-                pageQuery,
-                catalogFilterService.getAvailableFiltersQuery(),
-                brokerServerSettings.getDataSpaceConfig()
+                pageQuery
         );
 
         var paginationMetadata = paginationMetadataUtils.buildPaginationMetadata(

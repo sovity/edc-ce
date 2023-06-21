@@ -14,12 +14,11 @@
 
 package de.sovity.edc.ext.brokerserver.dao.pages.catalog;
 
-import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.AvailableFilterValuesQuery;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogPageRs;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.PageQuery;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
-import de.sovity.edc.ext.brokerserver.services.config.DataSpaceConfig;
+import de.sovity.edc.ext.brokerserver.services.config.BrokerServerSettings;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageSortingType;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -30,33 +29,37 @@ import java.util.List;
 public class CatalogQueryService {
     private final CatalogQueryDataOfferFetcher catalogQueryDataOfferFetcher;
     private final CatalogQueryAvailableFilterFetcher catalogQueryAvailableFilterFetcher;
+    private final BrokerServerSettings brokerServerSettings;
 
     /**
      * Query all data required for the catalog page
      *
-     * @param dsl                         transaction
-     * @param filter                      filter
-     * @param sorting                     sorting
-     * @param pageQuery                   pagination
-     * @param availableFilterValueQueries available filter value queries
+     * @param dsl         transaction
+     * @param searchQuery search query
+     * @param filters     filters (queries + filter clauses)
+     * @param sorting     sorting
+     * @param pageQuery   pagination
      * @return {@link CatalogPageRs}
      */
     public CatalogPageRs queryCatalogPage(
             DSLContext dsl,
-            CatalogQueryFilter filter,
+            String searchQuery,
+            List<CatalogQueryFilter> filters,
             CatalogPageSortingType sorting,
-            PageQuery pageQuery,
-            List<AvailableFilterValuesQuery> availableFilterValueQueries,
-            DataSpaceConfig dataSpaceConfig
+            PageQuery pageQuery
     ) {
-        var fields = new CatalogQueryFields(Tables.CONNECTOR, Tables.DATA_OFFER, dataSpaceConfig);
+        var fields = new CatalogQueryFields(
+                Tables.CONNECTOR,
+                Tables.DATA_OFFER,
+                brokerServerSettings.getDataSpaceConfig()
+        );
 
         var availableFilterValues = catalogQueryAvailableFilterFetcher
-                .queryAvailableFilterValues(fields, filter, availableFilterValueQueries);
+                .queryAvailableFilterValues(fields, searchQuery, filters);
 
-        var dataOffers = catalogQueryDataOfferFetcher.queryDataOffers(fields, filter, sorting, pageQuery);
+        var dataOffers = catalogQueryDataOfferFetcher.queryDataOffers(fields, searchQuery, filters, sorting, pageQuery);
 
-        var numTotalDataOffers = catalogQueryDataOfferFetcher.queryNumDataOffers(fields, filter);
+        var numTotalDataOffers = catalogQueryDataOfferFetcher.queryNumDataOffers(fields, searchQuery, filters);
 
         return dsl.select(
                 dataOffers.as("dataOffers"),

@@ -15,11 +15,10 @@
 package de.sovity.edc.ext.brokerserver.services.api.filtering;
 
 import de.sovity.edc.ext.brokerserver.dao.AssetProperty;
-import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.AvailableFilterValuesQuery;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQuerySelectedFilterQuery;
 import de.sovity.edc.ext.brokerserver.dao.utils.JsonDeserializationUtils;
 import de.sovity.edc.ext.brokerserver.utils.CollectionUtils2;
-import de.sovity.edc.ext.brokerserver.utils.MapUtils;
 import de.sovity.edc.ext.wrapper.api.broker.model.CnfFilter;
 import de.sovity.edc.ext.wrapper.api.broker.model.CnfFilterAttribute;
 import de.sovity.edc.ext.wrapper.api.broker.model.CnfFilterItem;
@@ -27,13 +26,13 @@ import de.sovity.edc.ext.wrapper.api.broker.model.CnfFilterValue;
 import de.sovity.edc.ext.wrapper.api.broker.model.CnfFilterValueAttribute;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
-import org.jetbrains.annotations.NotNull;
-import org.jooq.impl.DSL;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toMap;
 
 @RequiredArgsConstructor
 public class CatalogFilterService {
@@ -82,8 +81,22 @@ public class CatalogFilterService {
         );
     }
 
-    public List<AvailableFilterValuesQuery> getAvailableFiltersQuery() {
-        return getAvailableFilters().stream().map(CatalogFilterAttributeDefinition::valueGetter).toList();
+    public List<CatalogQueryFilter> getCatalogQueryFilters(CnfFilterValue cnfFilterValue) {
+        var values = getCnfFilterValuesMap(cnfFilterValue);
+        return getAvailableFilters().stream()
+                .map(filter -> new CatalogQueryFilter(
+                        filter.name(),
+                        filter.valueGetter(),
+                        getQueryFilter(filter, values.get(filter.name()))
+                ))
+                .toList();
+    }
+
+    private CatalogQuerySelectedFilterQuery getQueryFilter(CatalogFilterAttributeDefinition filter, List<String> values) {
+        if (CollectionUtils2.isNotEmpty(values)) {
+            return fields -> filter.filterApplier().filterDataOffers(fields, values);
+        }
+        return null;
     }
 
     public CnfFilter buildAvailableFilters(String filterValuesJson) {
@@ -96,19 +109,6 @@ public class CatalogFilterService {
                 ))
                 .toList();
         return new CnfFilter(filterAttributes);
-    }
-
-
-    public List<CatalogQuerySelectedFilterQuery> getSelectedFiltersQuery(CnfFilterValue selectedFilters) {
-        if (selectedFilters == null || selectedFilters.getSelectedAttributeValues() == null) {
-            return List.of();
-        }
-
-        var availableFilters = MapUtils.associateBy(getAvailableFilters(), CatalogFilterAttributeDefinition::name);
-        return selectedFilters.getSelectedAttributeValues().stream()
-                .filter(selectedFilter -> CollectionUtils2.isNotEmpty(selectedFilter.getSelectedIds()))
-                .map(selectedFilter -> buildSelectedFilter(availableFilters, selectedFilter))
-                .toList();
     }
 
     private List<CnfFilterItem> buildAvailableFilterValues(AvailableFilter availableFilter) {
@@ -133,12 +133,12 @@ public class CatalogFilterService {
     private record AvailableFilter(CatalogFilterAttributeDefinition definition, List<String> availableValues) {
     }
 
-    @NotNull
-    private CatalogQuerySelectedFilterQuery buildSelectedFilter(Map<String, CatalogFilterAttributeDefinition> availableFilters, CnfFilterValueAttribute selected) {
-        var available = availableFilters.get(selected.getId());
-        if (available == null) {
-            return fields -> DSL.falseCondition();
+    private Map<String, List<String>> getCnfFilterValuesMap(CnfFilterValue cnfFilterValue) {
+        if (cnfFilterValue == null || cnfFilterValue.getSelectedAttributeValues() == null) {
+            return Map.of();
         }
-        return fields -> available.filterApplier().filterDataOffers(fields, selected.getSelectedIds());
+        return cnfFilterValue.getSelectedAttributeValues().stream()
+                .filter(it -> it.getId() != null && CollectionUtils2.isNotEmpty(it.getSelectedIds()))
+                .collect(toMap(CnfFilterValueAttribute::getId, CnfFilterValueAttribute::getSelectedIds));
     }
 }

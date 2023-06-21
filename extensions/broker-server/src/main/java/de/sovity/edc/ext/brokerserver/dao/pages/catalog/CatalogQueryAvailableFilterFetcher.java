@@ -14,14 +14,14 @@
 
 package de.sovity.edc.ext.brokerserver.dao.pages.catalog;
 
-import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.AvailableFilterValuesQuery;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
+import de.sovity.edc.ext.brokerserver.utils.CollectionUtils2;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Field;
 import org.jooq.JSON;
 import org.jooq.impl.DSL;
-import org.jooq.util.postgres.PostgresDSL;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -31,27 +31,41 @@ public class CatalogQueryAvailableFilterFetcher {
     /**
      * Query available filter values.
      *
-     * @param fields                       query fields
-     * @param filter                       general filter to narrow results down to
-     * @param availableFilterValuesQueries one entry for each filter
+     * @param fields      query fields
+     * @param searchQuery search query
+     * @param filters     filters (values + filter clauses)
      * @return {@link Field} with field[iFilter][iValue]
      */
     public Field<JSON> queryAvailableFilterValues(
             CatalogQueryFields fields,
-            CatalogQueryFilter filter,
-            List<AvailableFilterValuesQuery> availableFilterValuesQueries
+            String searchQuery,
+            List<CatalogQueryFilter> filters
     ) {
+        List<Field<JSON>> resultFields = new ArrayList<>();
+        for (int i = 0; i < filters.size(); i++) {
+            // When querying a filter's values we apply all filters except for the current filter's values
+            var currentFilter = filters.get(i);
+            var otherFilters = CollectionUtils2.allElementsExceptForIndex(filters, i);
+            var resultField = queryFilterValues(fields, currentFilter, searchQuery, otherFilters);
+            resultFields.add(resultField);
+        }
+        return DSL.select(DSL.jsonArray(resultFields)).asField();
+    }
+
+    private Field<JSON> queryFilterValues(
+            CatalogQueryFields parentQueryFields,
+            CatalogQueryFilter currentFilter,
+            String searchQuery,
+            List<CatalogQueryFilter> otherFilters
+    ) {
+        var fields = parentQueryFields.withSuffix("filter_" + currentFilter.name());
         var c = fields.getConnectorTable();
         var d = fields.getDataOfferTable();
 
-        var valuesPerFilterAttribute = availableFilterValuesQueries.stream()
-                .map(it -> it.getAttributeValueField(fields))
-                .map(PostgresDSL::arrayAggDistinct)
-                .toList();
-
-        return DSL.select(DSL.jsonArray(valuesPerFilterAttribute))
-                .from(d).leftJoin(c).on(c.ENDPOINT.eq(d.CONNECTOR_ENDPOINT))
-                .where(catalogQueryFilterService.filter(fields, filter))
+        return DSL.select(DSL.arrayAggDistinct(currentFilter.valueQuery().getAttributeValueField(fields)))
+                .from(d)
+                .leftJoin(c).on(c.ENDPOINT.eq(d.CONNECTOR_ENDPOINT))
+                .where(catalogQueryFilterService.filter(fields, searchQuery, otherFilters))
                 .asField();
     }
 }

@@ -37,15 +37,17 @@ public class CatalogQueryDataOfferFetcher {
     /**
      * Query data offers
      *
-     * @param fields    query fields
-     * @param filter    filter
-     * @param sorting   sorting
-     * @param pageQuery pagination
+     * @param fields      query fields
+     * @param searchQuery search query
+     * @param filters     filters (queries + filter clauses)
+     * @param sorting     sorting
+     * @param pageQuery   pagination
      * @return {@link Field} of {@link DataOfferRs}s
      */
     public Field<List<DataOfferRs>> queryDataOffers(
             CatalogQueryFields fields,
-            CatalogQueryFilter filter,
+            String searchQuery,
+            List<CatalogQueryFilter> filters,
             CatalogPageSortingType sorting,
             PageQuery pageQuery
     ) {
@@ -64,7 +66,7 @@ public class CatalogQueryDataOfferFetcher {
         );
 
         var query = from(select, fields)
-                .where(catalogQueryFilterService.filter(fields, filter))
+                .where(catalogQueryFilterService.filter(fields, searchQuery, filters))
                 .orderBy(catalogQuerySortingService.getOrderBy(fields, sorting))
                 .limit(pageQuery.offset(), pageQuery.limit());
 
@@ -74,13 +76,14 @@ public class CatalogQueryDataOfferFetcher {
     /**
      * Query number of data offers
      *
-     * @param fields query fields
-     * @param filter filter
+     * @param fields      query fields
+     * @param searchQuery search query
+     * @param filters     filters (queries + filter clauses)
      * @return {@link Field} with number of data offers
      */
-    public Field<Integer> queryNumDataOffers(CatalogQueryFields fields, CatalogQueryFilter filter) {
+    public Field<Integer> queryNumDataOffers(CatalogQueryFields fields, String searchQuery, List<CatalogQueryFilter> filters) {
         var query = from(DSL.select(DSL.count()), fields)
-                .where(catalogQueryFilterService.filter(fields, filter));
+                .where(catalogQueryFilterService.filter(fields, searchQuery, filters));
         return DSL.field(query);
     }
 
