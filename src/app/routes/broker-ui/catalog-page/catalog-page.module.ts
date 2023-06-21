@@ -27,11 +27,14 @@ import {MatTableModule} from '@angular/material/table';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterModule} from '@angular/router';
+import {NgxsModule} from '@ngxs/store';
 import {CatalogModule} from '../../../component-library/catalog/catalog.module';
 import {PipesAndDirectivesModule} from '../../../component-library/pipes-and-directives/pipes-and-directives.module';
 import {UiElementsModule} from '../../../component-library/ui-elements/ui-elements.module';
 import {CatalogPageComponent} from './catalog-page/catalog-page.component';
 import {DataOfferCardsComponent} from './data-offer-cards/data-offer-cards.component';
+import {FilterValueSelectComponent} from './filter-value-select/filter-value-select.component';
+import {CatalogPageState} from './state/catalog-page-state';
 
 @NgModule({
   imports: [
@@ -44,6 +47,9 @@ import {DataOfferCardsComponent} from './data-offer-cards/data-offer-cards.compo
 
     // Angular CDK
     ClipboardModule,
+
+    // NGXS
+    NgxsModule.forFeature([CatalogPageState]),
 
     // Angular Material
     MatBadgeModule,
@@ -75,7 +81,11 @@ import {DataOfferCardsComponent} from './data-offer-cards/data-offer-cards.compo
     PipesAndDirectivesModule,
     UiElementsModule,
   ],
-  declarations: [CatalogPageComponent, DataOfferCardsComponent],
+  declarations: [
+    CatalogPageComponent,
+    DataOfferCardsComponent,
+    FilterValueSelectComponent,
+  ],
   exports: [CatalogPageComponent],
 })
 export class CatalogPageModule {}

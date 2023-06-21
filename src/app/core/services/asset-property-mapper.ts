@@ -27,7 +27,10 @@ export class AssetPropertyMapper {
     private activeFeatureSet: ActiveFeatureSet,
   ) {}
 
-  buildAssetFromProperties(props: Record<string, string | null>): Asset {
+  buildAssetFromProperties(
+    props: Record<string, string | null>,
+    opts?: {connectorEndpoint?: string},
+  ): Asset {
     const language = props[AssetProperties.language]
       ? this.languageSelectItemService.findById(
           props[AssetProperties.language]!,
@@ -61,7 +64,7 @@ export class AssetPropertyMapper {
       name: props[AssetProperties.name] ?? id,
       version: props[AssetProperties.version],
       contentType: props[AssetProperties.contentType],
-      originator: props[AssetProperties.originator],
+      originator: opts?.connectorEndpoint ?? props[AssetProperties.originator],
       originatorOrganization:
         props[AssetProperties.curatorOrganizationName] ??
         props[AssetProperties._legacyCuratorOrganizationName] ??

@@ -24,7 +24,7 @@ export class DataCategorySelectItemService {
     }
     return {
       id,
-      label: `Unknown (${id})`,
+      label: id,
     };
   }
 

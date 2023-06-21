@@ -1,0 +1,20 @@
+<mat-selection-list
+  *ngIf="state.visibleItems.length"
+  style="height: 250px; overflow-y: auto"
+  [formControl]="formControl"
+  [compareWith]="'id' | compareByField">
+  <mat-list-option
+    *ngFor="let item of state.visibleItems; trackBy: 'id' | trackByField"
+    class="max-two-lines-list-item"
+    checkboxPosition="before"
+    [class.italic]="item.type === 'NO_VALUE'"
+    [value]="item"
+    [attr.title]="item.label">
+    {{ item.label }}
+  </mat-list-option>
+</mat-selection-list>
+<div
+  *ngIf="!state.visibleItems.length"
+  class="flex h-[250px] justify-center items-center">
+  <empty-state emptyMessage="No results."></empty-state>
+</div>

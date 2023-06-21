@@ -1,45 +1,83 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
-import {
-  BehaviorSubject,
-  Observable,
-  Subject,
-  distinctUntilChanged,
-  sampleTime,
-} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {PageEvent} from '@angular/material/paginator';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {map, takeUntil} from 'rxjs/operators';
+import {Store} from '@ngxs/store';
+import {CatalogPageSortingItem} from '@sovity.de/edc-client/dist/generated/models/CatalogPageSortingItem';
 import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogResult} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-result';
 import {AssetDetailDialogComponent} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.component';
-import {value$} from '../../../../core/utils/form-group-utils';
-import {emptyCatalogPageStateModel} from './catalog-page-data';
-import {CatalogPageDataService} from './catalog-page-data.service';
+import {FilterValueSelectItem} from '../filter-value-select/filter-value-select-item';
+import {FilterValueSelectVisibleState} from '../filter-value-select/filter-value-select-visible-state';
+import {CatalogActiveFilterPill} from '../state/catalog-active-filter-pill';
+import {CatalogPage} from '../state/catalog-page-actions';
+import {CatalogPageState} from '../state/catalog-page-state';
+import {CatalogPageStateModel} from '../state/catalog-page-state-model';
 import {BrokerDataOffer} from './mapping/broker-data-offer';
 
 @Component({
   selector: 'catalog-page',
   templateUrl: './catalog-page.component.html',
-  styleUrls: ['./catalog-page.component.scss'],
 })
 export class CatalogPageComponent implements OnInit, OnDestroy {
-  data = emptyCatalogPageStateModel();
-  data$ = new BehaviorSubject(this.data);
+  @HostBinding('class.flex')
+  @HostBinding('class.flex-row')
+  @HostBinding('class.p-[20px]')
+  @HostBinding('class.space-x-[20px]')
+  cls = true;
+
+  state!: CatalogPageStateModel;
   searchText = new FormControl('');
+  sortBy = new FormControl<CatalogPageSortingItem | null>(null);
   private fetch$ = new BehaviorSubject(null);
 
   constructor(
     private assetDetailDialogDataService: AssetDetailDialogDataService,
-    private catalogBrowserPageService: CatalogPageDataService,
     private matDialog: MatDialog,
+    private store: Store,
   ) {}
 
   ngOnInit(): void {
-    this.catalogBrowserPageService
-      .catalogPageData$(this.fetch$.pipe(sampleTime(200)), this.searchText$())
-      .subscribe((data) => {
-        this.data = data;
-        this.data$.next(data);
+    this.store.dispatch(CatalogPage.Reset);
+    this.startListeningToStore();
+    this.startEmittingSearchText();
+    this.startEmittingSortBy();
+  }
+
+  private startListeningToStore() {
+    this.store
+      .select<CatalogPageStateModel>(CatalogPageState)
+      .pipe(takeUntil(this.ngOnDestroy$))
+      .subscribe((state) => {
+        this.state = state;
+        if (this.searchText.value != state.searchText) {
+          this.searchText.setValue(state.searchText);
+        }
+        if (this.sortBy.value?.sorting !== state.activeSorting?.sorting) {
+          this.sortBy.setValue(state.activeSorting);
+        }
+      });
+  }
+
+  private startEmittingSearchText() {
+    this.searchText.valueChanges
+      .pipe(map((value) => value ?? ''))
+      .subscribe((searchText) => {
+        if (searchText != this.state.searchText) {
+          this.store.dispatch(new CatalogPage.UpdateSearchText(searchText));
+        }
+      });
+  }
+
+  private startEmittingSortBy() {
+    this.sortBy.valueChanges
+      .pipe(map((value) => value ?? null))
+      .subscribe((value) => {
+        if (value?.sorting !== this.state.activeSorting?.sorting) {
+          this.store.dispatch(new CatalogPage.UpdateSorting(value));
+        }
       });
   }
 
@@ -54,17 +92,39 @@ export class CatalogPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  private searchText$(): Observable<string> {
-    return (value$(this.searchText) as Observable<string>).pipe(
-      map((it) => (it ?? '').trim()),
-      distinctUntilChanged(),
-    );
-  }
-
   ngOnDestroy$ = new Subject();
 
   ngOnDestroy() {
     this.ngOnDestroy$.next(null);
     this.ngOnDestroy$.complete();
+  }
+
+  onSelectedItemsChange(
+    filter: FilterValueSelectVisibleState,
+    newSelectedItems: FilterValueSelectItem[],
+  ) {
+    this.store.dispatch(
+      new CatalogPage.UpdateFilterSelectedItems(
+        filter.model.id,
+        newSelectedItems,
+      ),
+    );
+  }
+
+  onSearchTextChange(
+    filter: FilterValueSelectVisibleState,
+    newSearchText: string,
+  ) {
+    this.store.dispatch(
+      new CatalogPage.UpdateFilterSearchText(filter.model.id, newSearchText),
+    );
+  }
+
+  onRemoveActiveFilterItem(item: CatalogActiveFilterPill) {
+    this.store.dispatch(new CatalogPage.RemoveActiveFilterItem(item));
+  }
+
+  onPageChange(event: PageEvent) {
+    this.store.dispatch(new CatalogPage.UpdatePage(event.pageIndex));
   }
 }

@@ -19,11 +19,4 @@ export class TransportModeSelectComponent {
   cls = true;
 
   items = TRANSPORT_MODE_SELECT_DATA;
-
-  compareWith(
-    a: TransportModeSelectItem | null,
-    b: TransportModeSelectItem | null,
-  ): boolean {
-    return a?.id === b?.id;
-  }
 }

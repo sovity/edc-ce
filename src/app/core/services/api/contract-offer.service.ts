@@ -47,7 +47,7 @@ export class ContractOfferService {
         map(({contractOffers}) => contractOffers),
         map((contractOffers) =>
           contractOffers.map((contractOffer) =>
-            this.buildContractOffer(contractOffer),
+            this.buildContractOffer(contractOffer, connectorEndpoint),
           ),
         ),
       );
@@ -55,11 +55,13 @@ export class ContractOfferService {
 
   private buildContractOffer(
     contractOfferDto: ContractOfferDto,
+    connectorEndpoint: string,
   ): ContractOffer {
     return {
       ...contractOfferDto,
       asset: this.assetPropertyMapper.buildAssetFromProperties(
         contractOfferDto.asset.properties,
+        {connectorEndpoint},
       ),
     };
   }

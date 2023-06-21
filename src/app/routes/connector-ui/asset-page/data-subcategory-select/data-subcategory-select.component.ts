@@ -20,11 +20,4 @@ export class DataSubcategorySelectComponent {
   @HostBinding('class.flex')
   @HostBinding('class.flex-row')
   cls = true;
-
-  compareWith(
-    a: DataSubcategorySelectItem | null,
-    b: DataSubcategorySelectItem | null,
-  ): boolean {
-    return a?.id === b?.id;
-  }
 }

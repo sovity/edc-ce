@@ -4,7 +4,6 @@ import {
   HostBinding,
   Input,
   Output,
-  TrackByFunction,
 } from '@angular/core';
 import {ContractAgreementCardMapped} from './contract-agreement-card-mapped';
 
@@ -23,9 +22,6 @@ export class ContractAgreementCardsComponent {
 
   @Output()
   contractAgreementClick = new EventEmitter<ContractAgreementCardMapped>();
-
-  trackBy: TrackByFunction<ContractAgreementCardMapped> = (_, card) =>
-    card.contractAgreementId;
 
   onContractAgreementClick(contractAgreement: ContractAgreementCardMapped) {
     this.contractAgreementClick.emit(contractAgreement);

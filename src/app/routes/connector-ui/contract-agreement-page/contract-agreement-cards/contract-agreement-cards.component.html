@@ -1,6 +1,9 @@
 <div class="flex flex-row flex-wrap gap-[16px] justify-start">
   <mat-card
-    *ngFor="let card of contractAgreements; trackBy: trackBy"
+    *ngFor="
+      let card of contractAgreements;
+      trackBy: 'contractAgreementId' | trackByField
+    "
     style="width: 400px; min-height: 120px">
     <mat-card-header>
       <mat-icon mat-card-avatar>

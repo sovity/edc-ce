@@ -59,6 +59,28 @@ export class Fetched<T> {
   }
 
   /**
+   * Run function with data if data is ready
+   * @param fn function
+   */
+  ifReady(fn: (t: T) => void): void {
+    if (this.isReady) {
+      fn(this.data);
+    }
+  }
+
+  /**
+   * Run function with data if data is ready or return default value
+   * @param fn function
+   * @param defaultValue defaultValue
+   */
+  ifReadyElse<R>(fn: (t: T) => R, defaultValue: R): R {
+    if (this.isReady) {
+      return fn(this.data);
+    }
+    return defaultValue;
+  }
+
+  /**
    * Map entire Fetched to a different type.
    *
    * @param opts functions matching the different possible states of Fetched. All need to return the return type.

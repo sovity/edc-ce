@@ -1,15 +1,50 @@
 {
-  "availableFilters": {"fields": []},
+  "availableFilters": {
+    "fields": [
+      {
+        "id": "filter1",
+        "title": "Test Filter",
+        "values": [
+          {"id": "filter1-1", "title": "Electromobility"},
+          {"id": "", "title": ""}
+        ]
+      },
+      {
+        "id": "filter2",
+        "title": "Test Filter With Long Values",
+        "values": [
+          {
+            "id": "filter2-1",
+            "title": "Some Other Filter Value That's Very Long. In fact it should be so long that it wraps around to the next multiple lines."
+          }
+        ]
+      },
+      {
+        "id": "filter3",
+        "title": "Test Filter With Many Values",
+        "values": [
+          {"id": "value1", "title": "Value 1"},
+          {"id": "value2", "title": "Value 2"},
+          {"id": "value3", "title": "Value 3"},
+          {"id": "value4", "title": "Value 4"},
+          {"id": "value5", "title": "Value 5"},
+          {"id": "value6", "title": "Value 6"},
+          {"id": "value7", "title": "Value 7"},
+          {"id": "value8", "title": "Value 8"},
+          {"id": "value9", "title": "Value 9"}
+        ]
+      }
+    ]
+  },
   "availableSortings": [
-    {"sorting": "MOST_RECENT", "title": "Most Recent"},
-    {"sorting": "TITLE", "title": "By Title"},
-    {"sorting": "ORIGINATOR", "title": "By Connector"}
+    {"sorting": "TITLE", "title": "Test Sorting"},
+    {"sorting": "ORIGINATOR", "title": "Other Sorting"}
   ],
   "paginationMetadata": {
-    "numTotal": 1,
-    "numVisible": 1,
+    "numTotal": 62,
+    "numVisible": 20,
     "pageOneBased": 1,
-    "pageSize": 1
+    "pageSize": 20
   },
   "dataOffers": [
     {

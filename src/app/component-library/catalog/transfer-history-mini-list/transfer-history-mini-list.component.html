@@ -4,7 +4,7 @@
 <div
   *ngFor="
     let transfer of contractAgreement!!.transferProcesses;
-    trackBy: trackBy
+    trackBy: 'transferProcessId' | trackByField
   "
   class="flex flex-row space-x-[10px]">
   <mat-icon class="mat-icon-[28px]" style="flex-shrink: 0; margin-top: 6px">{{

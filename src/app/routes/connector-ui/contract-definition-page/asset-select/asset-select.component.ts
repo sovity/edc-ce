@@ -24,10 +24,6 @@ export class AssetSelectComponent {
     private matDialog: MatDialog,
   ) {}
 
-  isEqualId(a: Asset | null, b: Asset | null): boolean {
-    return a?.id === b?.id;
-  }
-
   onAssetClick(asset: Asset) {
     const data = this.assetDetailDialogDataService.assetDetails(asset, false);
     this.matDialog.open(AssetDetailDialogComponent, {

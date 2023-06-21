@@ -21,7 +21,7 @@ export class TransportModeSelectItemService {
     }
     return {
       id,
-      label: `Unknown (${id})`,
+      label: id,
     };
   }
 }

@@ -1,46 +1,133 @@
-<div id="wrapper">
-  <div class="flex flex-row">
-    <!-- Search Bar -->
-    <mat-form-field class="search-form-field" color="accent">
-      <mat-label>Search Data Offers</mat-label>
-      <mat-icon matPrefix>search</mat-icon>
-      <input matInput [formControl]="searchText" />
-      <button
-        *ngIf="searchText.value"
-        mat-icon-button
-        matSuffix
-        (click)="searchText.setValue('')">
-        <mat-icon>close</mat-icon>
-      </button>
-    </mat-form-field>
+<div class="grow flex flex-col space-y-[20px]">
+  <!-- Search Bar -->
+  <mat-form-field
+    *ngIf="state.isPageReady"
+    class="mat-form-field-without-margin-bottom"
+    color="accent">
+    <mat-label>Search Data Offers</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput autofocus [formControl]="searchText" />
+    <button
+      *ngIf="searchText.value"
+      mat-icon-button
+      matSuffix
+      (click)="searchText.setValue('')">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
 
-    <!-- Spacer -->
-    <div style="flex-grow: 1"></div>
+  <!-- Selected Filters Bar -->
+  <mat-chip-list *ngIf="state.isPageReady && state.activeFilterPills.length">
+    <mat-chip
+      *ngFor="let item of state.activeFilterPills"
+      (removed)="onRemoveActiveFilterItem(item)">
+      {{ item.label }}:&nbsp;<span
+        [class.italic]="item.selectedFilterItem?.type === 'NO_VALUE'"
+        >{{ item.value }}</span
+      >
+      <button matChipRemove>
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip>
+  </mat-chip-list>
+
+  <!-- Paginator Bar -->
+  <div
+    *ngIf="state.isPageReady"
+    class="min-h-[50px] flex flex-row justify-between items-center">
+    <!-- Paginator -->
+    <mat-paginator
+      [disabled]="state.paginationDisabled"
+      [hidePageSize]="true"
+      [pageSize]="state.paginationMetadata.pageSize"
+      [pageIndex]="state.pageZeroBased"
+      [length]="state.paginationMetadata.numTotal"
+      (page)="onPageChange($event)"></mat-paginator>
+
+    <!-- Sorting Select-->
+    <mat-form-field
+      *ngIf="state.sortings.length"
+      class="mat-form-field-without-margin-bottom"
+      color="accent">
+      <mat-label>Sort By</mat-label>
+      <mat-select
+        [compareWith]="'sorting' | compareByField"
+        [formControl]="sortBy">
+        <mat-option *ngFor="let item of state.sortings" [value]="item">
+          {{ item.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
-  <div class="flex flex-row justify-center">
-    <loading-state
-      *ngIf="data.fetchedDataOffers.isLoading"
-      class="min-h-[35rem]"></loading-state>
-    <error-state
-      *ngIf="data.fetchedDataOffers.isError"
-      class="min-h-[35rem]"
-      [error]="data.fetchedDataOffers.error"></error-state>
-    <empty-state
-      *ngIf="
-        data.fetchedDataOffers.isReady &&
-        !data.fetchedDataOffers.data.dataOffers.length
-      "
-      class="min-h-[35rem]"
-      emptyMessage="No data offers found."></empty-state>
-  </div>
+
+  <!-- Cards -->
+  <loading-state
+    *ngIf="state.fetchedData.isLoading"
+    class="min-h-[35rem]"></loading-state>
+  <error-state
+    *ngIf="state.fetchedData.isError"
+    class="min-h-[35rem]"
+    [error]="state.fetchedData.error"></error-state>
+  <empty-state
+    *ngIf="
+      state.fetchedData.isReady && !state.fetchedData.data.dataOffers.length
+    "
+    class="min-h-[35rem]"
+    emptyMessage="No data offers found."></empty-state>
   <div
     *ngIf="
-      data.fetchedDataOffers.isReady &&
-      data.fetchedDataOffers.data.dataOffers.length
+      state.fetchedData.isReady && state.fetchedData.data.dataOffers.length
     "
     class="flex flex-row flex-wrap">
     <data-offer-cards
-      [dataOffers]="data.fetchedDataOffers.data.dataOffers"
+      [dataOffers]="state.fetchedData.data.dataOffers"
       (dataOfferClick)="onDataOfferClick($event)"></data-offer-cards>
   </div>
+</div>
+
+<div *ngIf="state.isPageReady" class="flex flex-col space-y-[15px]">
+  <!-- Filters Accordeon -->
+  <mat-accordion>
+    <mat-expansion-panel
+      *ngFor="
+        let filter of state?.filters!! | values;
+        let first = first;
+        trackBy: 'id' | trackByField
+      "
+      class="w-[300px] mat-expansion-panel-flex-col"
+      [expanded]="first">
+      <mat-expansion-panel-header>
+        <mat-panel-title
+          >{{ filter.model.title }}
+          {{
+            filter.numSelectedItems ? '(' + filter.numSelectedItems + ')' : ''
+          }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-form-field
+        class="mat-form-field-without-margin-bottom"
+        color="accent">
+        <mat-label>Search</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          ngDefaultControl
+          [ngModel]="filter.model.searchText"
+          (ngModelChange)="onSearchTextChange(filter, $event)" />
+        <button
+          *ngIf="filter.model.searchText"
+          mat-icon-button
+          matSuffix
+          (click)="onSearchTextChange(filter, '')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <filter-value-select
+        [state]="filter"
+        (selectedItemsChange)="
+          onSelectedItemsChange(filter, $event)
+        "></filter-value-select>
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>

@@ -150,3 +150,24 @@ body {
   overflow-wrap: break-word;
   overflow: hidden;
 }
+
+.mat-expansion-panel-flex-col .mat-expansion-panel-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-form-field-without-margin-bottom {
+  .mat-form-field-wrapper {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+.max-two-lines-list-item .mat-list-text {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden !important;
+}

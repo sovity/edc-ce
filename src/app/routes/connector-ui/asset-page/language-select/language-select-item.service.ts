@@ -37,7 +37,7 @@ export class LanguageSelectItemService {
     }
     return {
       id,
-      label: `Unknown (${id})`,
+      label: id,
     };
   }
 

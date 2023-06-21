@@ -15,6 +15,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NgxsModule} from '@ngxs/store';
 import {NgChartsModule} from 'ng2-charts';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -43,6 +44,9 @@ import {
     MatSidenavModule,
     MatSnackBarModule,
     MatToolbarModule,
+
+    // NgXs
+    NgxsModule.forRoot([]),
 
     // Third Party
     NgChartsModule.forRoot(),

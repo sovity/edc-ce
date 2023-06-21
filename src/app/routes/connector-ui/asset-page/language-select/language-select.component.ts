@@ -19,11 +19,4 @@ export class LanguageSelectComponent {
   cls = true;
 
   constructor(public items: LanguageSelectItemService) {}
-
-  compareWith(
-    a: LanguageSelectItem | null,
-    b: LanguageSelectItem | null,
-  ): boolean {
-    return a?.id === b?.id;
-  }
 }

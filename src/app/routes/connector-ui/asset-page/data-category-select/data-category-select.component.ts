@@ -19,11 +19,4 @@ export class DataCategorySelectComponent {
   cls = true;
 
   items = DATA_CATEGORY_SELECT_DATA;
-
-  compareWith(
-    a: DataCategorySelectItem | null,
-    b: DataCategorySelectItem | null,
-  ): boolean {
-    return a?.id === b?.id;
-  }
 }
