@@ -38,7 +38,7 @@ public class ThreadPool {
 
         if (enabled) {
             monitor.info("Initializing ThreadPoolExecutor with %d threads.".formatted(numThreads));
-            threadPoolExecutor = new ThreadPoolExecutor(1, numThreads, 60, TimeUnit.SECONDS, queue);
+            threadPoolExecutor = new ThreadPoolExecutor(numThreads, numThreads, 60, TimeUnit.SECONDS, queue);
             threadPoolExecutor.prestartAllCoreThreads();
         } else {
             monitor.info("Skipped ThreadPoolExecutor initialization.");
