@@ -28,6 +28,7 @@ dependencies {
 
     // Optional: Connector-To-Connector IAM
     if (project.hasProperty("oauth2")) {
+        implementation("${edcGroup}:vault-filesystem:${edcVersion}")
         implementation("${edcGroup}:oauth2-core:${edcVersion}")
     } else {
         implementation("${edcGroup}:iam-mock:${edcVersion}")
