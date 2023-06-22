@@ -40,7 +40,6 @@ dependencies {
     testImplementation("${edcGroup}:http:${edcVersion}")
     testImplementation("${edcGroup}:iam-mock:${edcVersion}")
     testImplementation("${edcGroup}:ids:${edcVersion}")
-    testImplementation("${edcGroup}:management-api:${edcVersion}")
     testImplementation("${edcGroup}:monitor-jdk-logger:${edcVersion}")
     testImplementation("${edcGroup}:configuration-filesystem:${edcVersion}")
     testImplementation("${sovityEdcGroup}:client:${sovityEdcExtensionsVersion}")

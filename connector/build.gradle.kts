@@ -13,7 +13,6 @@ val sovityEdcExtensionsVersion: String by project
 dependencies {
     // Control-Plane
     implementation("${edcGroup}:control-plane-core:${edcVersion}")
-    implementation("${edcGroup}:management-api:${edcVersion}")
     implementation("${edcGroup}:api-observability:${edcVersion}")
     implementation("${edcGroup}:configuration-filesystem:${edcVersion}")
     implementation("${edcGroup}:control-plane-aggregate-services:${edcVersion}")
