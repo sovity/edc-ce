@@ -28,7 +28,7 @@ public class PostgresFlywayExtensionTest {
 
     private static final String PROVIDER_TARGET_URL = "https://google.de";
     private static final String CONSUMER_BACKEND_URL = "https://webhook.site/e542f69e-ff0a-4771-af18-0900a399137a";
-    private static final Duration timeout = Duration.ofSeconds(60);
+    private static final Duration TIMEOUT = Duration.ofSeconds(60);
 
     @RegisterExtension
     static EdcExtension providerEdcContext = new EdcExtension();
@@ -77,20 +77,10 @@ public class PostgresFlywayExtensionTest {
         var transferProcessId = consumerConnector.initiateTransfer(contractAgreementId, assetId,
                 providerProtocolApi, destination);
 
-        await().atMost(timeout).untilAsserted(() -> {
+        await().atMost(TIMEOUT).untilAsserted(() -> {
             var state = consumerConnector.getTransferProcessState(transferProcessId);
             assertThat(state).isEqualTo(COMPLETED.name());
         });
-//
-//        await().atMost(timeout).untilAsserted(() -> {
-//            given()
-//                    .baseUri(CONSUMER.backendService().toString())
-//                    .when()
-//                    .get("/api/consumer/data")
-//                    .then()
-//                    .statusCode(anyOf(is(200), is(204)))
-//                    .body(is(notNullValue()));
-//        });
     }
 
     private void createContractOffer(String assetId) {
