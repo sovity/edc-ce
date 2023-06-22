@@ -46,7 +46,7 @@ public class ConnectorUpdateSuccessWriter {
 
         // Log Status Change and set status to online if necessary
         if (connector.getOnlineStatus() == ConnectorOnlineStatus.OFFLINE || connector.getLastRefreshAttemptAt() == null) {
-            brokerEventLogger.logConnectorUpdateStatusChange(dsl, connector.getEndpoint(), ConnectorOnlineStatus.ONLINE);
+            brokerEventLogger.logConnectorOnline(dsl, connector.getEndpoint());
             connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);
         }
 
@@ -58,7 +58,7 @@ public class ConnectorUpdateSuccessWriter {
 
         // Log Event if changes are present
         if (!changes.isEmpty()) {
-            brokerEventLogger.logConnectorUpdateSuccess(dsl, connector.getEndpoint(), changes);
+            brokerEventLogger.logConnectorUpdated(dsl, connector.getEndpoint(), changes);
         }
 
         // Update data offers

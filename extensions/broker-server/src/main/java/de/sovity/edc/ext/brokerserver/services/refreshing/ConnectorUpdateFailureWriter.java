@@ -19,7 +19,6 @@ import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventErrorMessage;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.jooq.DSLContext;
 
@@ -33,10 +32,9 @@ public class ConnectorUpdateFailureWriter {
     public void handleConnectorOffline(DSLContext dsl, ConnectorRecord connector, Throwable e) {
         // Log Status Change and set status to offline if necessary
         if (connector.getOnlineStatus() == ConnectorOnlineStatus.ONLINE || connector.getLastRefreshAttemptAt() == null) {
-            brokerEventLogger.logConnectorUpdateStatusChange(dsl, connector.getEndpoint(), ConnectorOnlineStatus.OFFLINE);
-            brokerEventLogger.logConnectorUpdateFailure(dsl, connector.getEndpoint(), getFailureMessage(e));
-            connector.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
             monitor.info("Connector is offline: " + connector.getEndpoint(), e);
+            brokerEventLogger.logConnectorOffline(dsl, connector.getEndpoint(), getFailureMessage(e));
+            connector.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
         }
 
         connector.setLastRefreshAttemptAt(OffsetDateTime.now());
@@ -44,14 +42,6 @@ public class ConnectorUpdateFailureWriter {
     }
 
     public BrokerEventErrorMessage getFailureMessage(Throwable e) {
-        if (isUnexpectedException(e)) {
-            return BrokerEventErrorMessage.ofStackTrace("Unexpected exception during connector update.", e);
-        }
-
-        return BrokerEventErrorMessage.ofMessage("Failed updating connector.");
-    }
-
-    private boolean isUnexpectedException(Throwable e) {
-        return !(e instanceof EdcException);
+        return BrokerEventErrorMessage.ofStackTrace("Unexpected exception during connector update.", e);
     }
 }

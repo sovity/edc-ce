@@ -20,15 +20,11 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.stream.Collectors.joining;
-
 /**
  * Utility for collecting the information required to build log messages about what was updated.
  */
 @Getter
 public class ConnectorChangeTracker {
-    private final List<String> selfDescriptionChanges = new ArrayList<>();
-
     @Setter
     private int numOffersAdded = 0;
 
@@ -38,13 +34,8 @@ public class ConnectorChangeTracker {
     @Setter
     private int numOffersUpdated = 0;
 
-
-    public void addSelfDescriptionChange(String name) {
-        selfDescriptionChanges.add(name);
-    }
-
     public boolean isEmpty() {
-        return selfDescriptionChanges.isEmpty() && numOffersAdded == 0 && numOffersDeleted == 0 && numOffersUpdated == 0;
+        return numOffersAdded == 0 && numOffersDeleted == 0 && numOffersUpdated == 0;
     }
 
     @Override
@@ -54,9 +45,6 @@ public class ConnectorChangeTracker {
         }
 
         var msg = "Connector Updated.";
-        if (!selfDescriptionChanges.isEmpty()) {
-            msg += " Self-description changed: %s.".formatted(selfDescriptionChanges.stream().sorted().collect(joining()));
-        }
         if (numOffersAdded > 0 || numOffersDeleted > 0 || numOffersUpdated > 0) {
             List<String> offersMsgs = new ArrayList<>();
             if (numOffersAdded > 0) {

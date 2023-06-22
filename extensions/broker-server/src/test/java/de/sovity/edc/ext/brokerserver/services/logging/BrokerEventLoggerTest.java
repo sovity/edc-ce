@@ -17,7 +17,6 @@ package de.sovity.edc.ext.brokerserver.services.logging;
 import de.sovity.edc.ext.brokerserver.db.FlywayTestUtils;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
 import de.sovity.edc.ext.brokerserver.db.TestDatabaseFactory;
-import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -37,10 +36,9 @@ class BrokerEventLoggerTest {
             var brokerEventLogger = new BrokerEventLogger();
 
             // Test that insertions insert required fields and don't cause DB errors
-            brokerEventLogger.logConnectorUpdateSuccess(dsl, "https://example.com/ids/data", new ConnectorChangeTracker());
-            brokerEventLogger.logConnectorUpdateFailure(dsl, "https://example.com/ids/data", new BrokerEventErrorMessage("Message", "Stacktrace"));
-            brokerEventLogger.logConnectorUpdateStatusChange(dsl, "https://example.com/ids/data", ConnectorOnlineStatus.ONLINE);
-            brokerEventLogger.logConnectorUpdateStatusChange(dsl, "https://example.com/ids/data", ConnectorOnlineStatus.OFFLINE);
+            brokerEventLogger.logConnectorUpdated(dsl, "https://example.com/ids/data", new ConnectorChangeTracker());
+            brokerEventLogger.logConnectorOnline(dsl, "https://example.com/ids/data");
+            brokerEventLogger.logConnectorOffline(dsl, "https://example.com/ids/data", new BrokerEventErrorMessage("Message", "Stacktrace"));
         });
     }
 }

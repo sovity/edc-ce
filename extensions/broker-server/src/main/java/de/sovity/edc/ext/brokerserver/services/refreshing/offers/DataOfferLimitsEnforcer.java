@@ -74,7 +74,7 @@ public class DataOfferLimitsEnforcer {
             brokerEventLogger.logConnectorUpdateDataOfferLimitExceeded(enforcedLimits.abbreviatedDataOffers.size(), connector.getEndpoint());
             connector.setDataOffersExceeded(ConnectorDataOffersExceeded.EXCEEDED);
         } else if (!enforcedLimits.dataOfferLimitsExceeded() && connector.getDataOffersExceeded() == ConnectorDataOffersExceeded.EXCEEDED) {
-            brokerEventLogger.logConnectorUpdateDataOfferLimitOk(enforcedLimits.abbreviatedDataOffers.size(), connector.getEndpoint());
+            brokerEventLogger.logConnectorUpdateDataOfferLimitOk(connector.getEndpoint());
             connector.setDataOffersExceeded(ConnectorDataOffersExceeded.OK);
         }
 
@@ -83,7 +83,7 @@ public class DataOfferLimitsEnforcer {
             brokerEventLogger.logConnectorUpdateContractOfferLimitExceeded(enforcedLimits.abbreviatedDataOffers.size(), connector.getEndpoint());
             connector.setContractOffersExceeded(ConnectorContractOffersExceeded.EXCEEDED);
         } else if (!enforcedLimits.contractOfferLimitsExceeded() && connector.getContractOffersExceeded() == ConnectorContractOffersExceeded.EXCEEDED) {
-            brokerEventLogger.logConnectorUpdateContractOfferLimitOk(enforcedLimits.abbreviatedDataOffers.size(), connector.getEndpoint());
+            brokerEventLogger.logConnectorUpdateContractOfferLimitOk(connector.getEndpoint());
             connector.setContractOffersExceeded(ConnectorContractOffersExceeded.OK);
         }
     }

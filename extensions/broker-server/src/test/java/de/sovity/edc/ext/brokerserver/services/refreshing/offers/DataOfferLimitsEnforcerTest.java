@@ -165,7 +165,7 @@ class DataOfferLimitsEnforcerTest {
         dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(connector, enforcedLimits);
 
         // assert
-        verify(brokerEventLogger).logConnectorUpdateDataOfferLimitOk(2, connector.getEndpoint());
+        verify(brokerEventLogger).logConnectorUpdateDataOfferLimitOk(connector.getEndpoint());
     }
 
     @Test
@@ -213,6 +213,6 @@ class DataOfferLimitsEnforcerTest {
         dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(connector, enforcedLimits);
 
         // assert
-        verify(brokerEventLogger).logConnectorUpdateContractOfferLimitOk(2, connector.getEndpoint());
+        verify(brokerEventLogger).logConnectorUpdateContractOfferLimitOk(connector.getEndpoint());
     }
 }

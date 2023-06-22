@@ -17,7 +17,6 @@ package de.sovity.edc.ext.brokerserver.services.logging;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.BrokerEventStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.BrokerEventType;
-import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.BrokerEventLogRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -30,44 +29,34 @@ import java.time.OffsetDateTime;
 @RequiredArgsConstructor
 public class BrokerEventLogger {
 
-    public void logConnectorUpdateSuccess(DSLContext dsl, String connectorEndpoint, ConnectorChangeTracker changes) {
-        var logEntry = logEntry(
-                dsl,
-                BrokerEventType.CONNECTOR_UPDATED,
-                connectorEndpoint,
-                changes.toString()
-        );
+    public void logConnectorUpdated(DSLContext dsl, String connectorEndpoint, ConnectorChangeTracker changes) {
+        var logEntry = dsl.newRecord(Tables.BROKER_EVENT_LOG);
+        logEntry.setEvent(BrokerEventType.CONNECTOR_UPDATED);
+        logEntry.setEventStatus(BrokerEventStatus.OK);
+        logEntry.setConnectorEndpoint(connectorEndpoint);
+        logEntry.setCreatedAt(OffsetDateTime.now());
+        logEntry.setUserMessage(changes.toString());
         logEntry.insert();
     }
 
-    public void logConnectorUpdateFailure(DSLContext dsl, String connectorEndpoint, BrokerEventErrorMessage errorMessage) {
-        var logEntry = logEntry(
-                dsl,
-                BrokerEventType.CONNECTOR_UPDATED,
-                connectorEndpoint,
-                errorMessage.message()
-        );
+    public void logConnectorOffline(DSLContext dsl, String connectorEndpoint, BrokerEventErrorMessage errorMessage) {
+        var logEntry = dsl.newRecord(Tables.BROKER_EVENT_LOG);
+        logEntry.setEvent(BrokerEventType.CONNECTOR_STATUS_CHANGE_OFFLINE);
         logEntry.setEventStatus(BrokerEventStatus.ERROR);
+        logEntry.setConnectorEndpoint(connectorEndpoint);
+        logEntry.setCreatedAt(OffsetDateTime.now());
+        logEntry.setUserMessage("Connector is offline.");
         logEntry.setErrorStack(errorMessage.stackTraceOrNull());
         logEntry.insert();
     }
 
-    public void logConnectorUpdateStatusChange(DSLContext dsl, String connectorEndpoint, ConnectorOnlineStatus status) {
-        var logEntry = switch (status) {
-            case ONLINE -> logEntry(
-                    dsl,
-                    BrokerEventType.CONNECTOR_STATUS_CHANGE_ONLINE,
-                    connectorEndpoint,
-                    "Connector is online: " + connectorEndpoint
-            );
-            case OFFLINE -> logEntry(
-                    dsl,
-                    BrokerEventType.CONNECTOR_STATUS_CHANGE_OFFLINE,
-                    connectorEndpoint,
-                    "Connector is offline: " + connectorEndpoint
-            );
-            default -> throw new IllegalArgumentException("Unknown status: " + status + " for connector: " + connectorEndpoint);
-        };
+    public void logConnectorOnline(DSLContext dsl, String connectorEndpoint) {
+        var logEntry = dsl.newRecord(Tables.BROKER_EVENT_LOG);
+        logEntry.setEvent(BrokerEventType.CONNECTOR_STATUS_CHANGE_ONLINE);
+        logEntry.setEventStatus(BrokerEventStatus.OK);
+        logEntry.setConnectorEndpoint(connectorEndpoint);
+        logEntry.setCreatedAt(OffsetDateTime.now());
+        logEntry.setUserMessage("Connector is online.");
         logEntry.insert();
     }
 
@@ -76,17 +65,17 @@ public class BrokerEventLogger {
         logEntry.setEvent(BrokerEventType.CONNECTOR_DATA_OFFER_LIMIT_EXCEEDED);
         logEntry.setEventStatus(BrokerEventStatus.OK);
         logEntry.setConnectorEndpoint(endpoint);
-        logEntry.setUserMessage("Connector has exceeded the maximum number of data offers: " + maxDataOffersPerConnector);
+        logEntry.setUserMessage("Connector has more than %d data offers. Exceeding data offers will be ignored.".formatted(maxDataOffersPerConnector));
         logEntry.setCreatedAt(OffsetDateTime.now());
         logEntry.insert();
     }
 
-    public void logConnectorUpdateDataOfferLimitOk(Integer maxDataOffersPerConnector, String endpoint) {
+    public void logConnectorUpdateDataOfferLimitOk(String endpoint) {
         var logEntry = new BrokerEventLogRecord();
         logEntry.setEvent(BrokerEventType.CONNECTOR_DATA_OFFER_LIMIT_OK);
         logEntry.setEventStatus(BrokerEventStatus.OK);
         logEntry.setConnectorEndpoint(endpoint);
-        logEntry.setUserMessage("Connector is not exceeding maximum number of data offers limits anymore: " + maxDataOffersPerConnector);
+        logEntry.setUserMessage("Connector is not exceeding the maximum number of data offers limit anymore.");
         logEntry.setCreatedAt(OffsetDateTime.now());
         logEntry.insert();
     }
@@ -96,28 +85,19 @@ public class BrokerEventLogger {
         logEntry.setEvent(BrokerEventType.CONNECTOR_CONTRACT_OFFER_LIMIT_EXCEEDED);
         logEntry.setEventStatus(BrokerEventStatus.OK);
         logEntry.setConnectorEndpoint(endpoint);
-        logEntry.setUserMessage("Connector has exceeded maximum number of contract offers per data offer limit: " + maxContractOffersPerConnector);
+        logEntry.setUserMessage("Some data offers have more than %d contract offers. Exceeding contract offers will be ignored.: ".formatted(maxContractOffersPerConnector));
         logEntry.setCreatedAt(OffsetDateTime.now());
         logEntry.insert();
     }
 
-    public void logConnectorUpdateContractOfferLimitOk(Integer maxContractOffersPerConnector, String endpoint) {
+    public void logConnectorUpdateContractOfferLimitOk(String endpoint) {
         var logEntry = new BrokerEventLogRecord();
         logEntry.setEvent(BrokerEventType.CONNECTOR_CONTRACT_OFFER_LIMIT_OK);
         logEntry.setEventStatus(BrokerEventStatus.OK);
         logEntry.setConnectorEndpoint(endpoint);
-        logEntry.setUserMessage("Connector is not exceeding maximum number of contract offers per data offer limits anymore: " + maxContractOffersPerConnector);
+        logEntry.setUserMessage("Connector is not exceeding the maximum number of contract offers per data offer limit anymore.");
         logEntry.setCreatedAt(OffsetDateTime.now());
         logEntry.insert();
     }
 
-    private BrokerEventLogRecord logEntry(DSLContext dsl, BrokerEventType eventType, String connectorEndpoint, String userMessage) {
-        var logEntry = dsl.newRecord(Tables.BROKER_EVENT_LOG);
-        logEntry.setEventStatus(BrokerEventStatus.OK);
-        logEntry.setEvent(eventType);
-        logEntry.setConnectorEndpoint(connectorEndpoint);
-        logEntry.setCreatedAt(OffsetDateTime.now());
-        logEntry.setUserMessage(userMessage);
-        return logEntry;
-    }
 }
