@@ -33,10 +33,10 @@ class ThreadPoolTest {
         var brokerServerSettings = mock(BrokerServerSettings.class);
         when(brokerServerSettings.getNumThreads()).thenReturn(2);
         var threadPool = new ThreadPool(brokerServerSettings, monitor);
-
         var result = new ArrayList<String>();
         threadPool.enqueueConnectorRefreshTask(0, delay(100, () -> result.add("1")), "1");
         threadPool.enqueueConnectorRefreshTask(0, delay(50, () -> result.add("2")), "2");
+        safeSleep(200);
 
         assertThat(result).containsExactly("2", "1");
     }
