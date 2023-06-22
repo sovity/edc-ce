@@ -37,7 +37,7 @@ public class ConnectorQueue {
         endpoints.removeIf(queuedConnectorEndpoints::contains);
 
         for (String endpoint : endpoints) {
-            threadPool.execute(priority, () -> connectorUpdater.updateConnector(endpoint), endpoint);
+            threadPool.enqueueConnectorRefreshTask(priority, () -> connectorUpdater.updateConnector(endpoint), endpoint);
         }
     }
 }

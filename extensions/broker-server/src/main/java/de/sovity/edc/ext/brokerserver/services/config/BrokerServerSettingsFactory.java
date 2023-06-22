@@ -32,11 +32,13 @@ public class BrokerServerSettingsFactory {
         var hideOfflineDataOffersAfter = getDurationOrNull(BrokerServerExtension.HIDE_OFFLINE_DATA_OFFERS_AFTER);
         var catalogPagePageSize = config.getInteger(BrokerServerExtension.CATALOG_PAGE_PAGE_SIZE, 20);
         var dataSpaceConfig = buildDataSpaceConfig(config);
+        var numThreads = config.getInteger(BrokerServerExtension.NUM_THREADS, 1);
 
         return BrokerServerSettings.builder()
                 .hideOfflineDataOffersAfter(hideOfflineDataOffersAfter)
                 .catalogPagePageSize(catalogPagePageSize)
                 .dataSpaceConfig(dataSpaceConfig)
+                .numThreads(numThreads)
                 .build();
     }
 

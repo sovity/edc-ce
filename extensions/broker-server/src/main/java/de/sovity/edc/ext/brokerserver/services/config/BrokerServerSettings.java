@@ -27,4 +27,6 @@ public class BrokerServerSettings {
     int catalogPagePageSize;
 
     DataSpaceConfig dataSpaceConfig;
+
+    int numThreads;
 }

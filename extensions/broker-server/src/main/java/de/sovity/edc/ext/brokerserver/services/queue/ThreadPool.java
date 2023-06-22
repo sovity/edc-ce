@@ -14,8 +14,8 @@
 
 package de.sovity.edc.ext.brokerserver.services.queue;
 
-import de.sovity.edc.ext.brokerserver.BrokerServerExtension;
-import org.eclipse.edc.spi.system.configuration.Config;
+import de.sovity.edc.ext.brokerserver.services.config.BrokerServerSettings;
+import org.eclipse.edc.spi.monitor.Monitor;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -26,19 +26,28 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class ThreadPool {
+    private final boolean enabled;
     private final PriorityBlockingQueue<Runnable> queue;
+    private final ThreadPoolExecutor threadPoolExecutor;
 
-    public ThreadPool(Config config) {
-        this.queue = new PriorityBlockingQueue<>();
-        int numThreads = config.getInteger(BrokerServerExtension.NUM_THREADS, 1);
-        if (numThreads > 0) {
-            var threadPoolExecutor = new ThreadPoolExecutor(1, numThreads, 60, TimeUnit.SECONDS, queue);
+    public ThreadPool(BrokerServerSettings brokerServerSettings, Monitor monitor) {
+        queue = new PriorityBlockingQueue<>();
+
+        int numThreads = brokerServerSettings.getNumThreads();
+        enabled = numThreads > 0;
+
+        if (enabled) {
+            monitor.info("Initializing ThreadPoolExecutor with %d threads.".formatted(numThreads));
+            threadPoolExecutor = new ThreadPoolExecutor(1, numThreads, 60, TimeUnit.SECONDS, queue);
             threadPoolExecutor.prestartAllCoreThreads();
+        } else {
+            monitor.info("Skipped ThreadPoolExecutor initialization.");
+            threadPoolExecutor = null;
         }
     }
 
-    public void execute(int priority, Runnable runnable, String endpoint) {
-        queue.add(new ThreadPoolTask(priority, runnable, endpoint));
+    public void enqueueConnectorRefreshTask(int priority, Runnable runnable, String endpoint) {
+        enqueueTask(new ThreadPoolTask(priority, runnable, endpoint));
     }
 
     public Set<String> getQueuedConnectorEndpoints() {
@@ -49,5 +58,14 @@ public class ThreadPool {
                 .map(ThreadPoolTask::getConnectorEndpoint)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
+    }
+
+    private void enqueueTask(ThreadPoolTask task) {
+        if (enabled) {
+            threadPoolExecutor.execute(task);
+        } else {
+            // Only relevant for test environment, where execution is disabled
+            queue.add(task);
+        }
     }
 }

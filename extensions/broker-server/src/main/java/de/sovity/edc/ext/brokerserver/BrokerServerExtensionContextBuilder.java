@@ -147,7 +147,7 @@ public class BrokerServerExtensionContextBuilder {
         var policyDtoBuilder = new PolicyDtoBuilder(objectMapper);
         var assetPropertyParser = new AssetPropertyParser(objectMapper);
         var paginationMetadataUtils = new PaginationMetadataUtils();
-        var threadPool = new ThreadPool(config);
+        var threadPool = new ThreadPool(brokerServerSettings, monitor);
         var connectorQueue = new ConnectorQueue(connectorUpdater, threadPool);
         var connectorQueueFiller = new ConnectorQueueFiller(connectorQueue, connectorQueries);
         var connectorCreator = new ConnectorCreator(connectorQueries);
