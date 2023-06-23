@@ -113,6 +113,9 @@ MY_EDC_JDBC_PASSWORD: edc
 # Required: List of EDCs to fetch
 EDC_BROKER_SERVER_KNOWN_CONNECTORS: "https://connector-a/ids/data,https://connector-b/ids/data"
 
+# List of Data Space Names for special Connectors (default: '')
+EDC_BROKER_SERVER_KNOWN_DATASPACE_CONNECTORS: "Mobilithek=https://some-connector/ids/data,OtherDataspace=https://some-other-connector/ids/data"
+
 # Required: DAPS credentials
 EDC_OAUTH_TOKEN_URL: 'https://daps.test.mobility-dataspace.eu/token'
 EDC_OAUTH_PROVIDER_JWKS_URL: 'https://daps.test.mobility-dataspace.eu/jwks.json'
@@ -123,6 +126,9 @@ EDC_KEYSTORE_PASSWORD: '_your keystore password_'
 # Required: Management API Key
 EDC_API_AUTH_KEY: "ApiKeyDefaultValue"
 ```
+
+All pre-configured config values for either the broker server or the underlying EDC can be found
+in [connector/.env](connector/.env).
 
 #### UI Configuration
 

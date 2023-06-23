@@ -63,7 +63,7 @@ class CatalogApiTest {
         extension.setConfiguration(createConfiguration(TEST_DATABASE, Map.of(
                 BrokerServerExtension.CATALOG_PAGE_PAGE_SIZE, "10",
                 BrokerServerExtension.DEFAULT_CONNECTOR_DATASPACE, "MDS",
-                BrokerServerExtension.KNOWN_DATASPACES_ENDPOINTS, "Example1=http://my-connector/ids/data"
+                BrokerServerExtension.KNOWN_DATASPACE_CONNECTORS, "Example1=http://my-connector2/ids/data,Example2=http://my-connector3/ids/data"
         )));
     }
 
@@ -73,20 +73,20 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today, "http://my-connector/ids/data"); // Dataspace: Example1
-            createConnector(dsl, today, "http://my-connector2/ids/data"); // Dataspace: MDS
+            createConnector(dsl, today, "http://my-connector/ids/data"); // Dataspace: MDS
+            createConnector(dsl, today, "http://my-connector2/ids/data"); // Dataspace: Example1
             createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:my-asset",
                     AssetProperty.ASSET_NAME, "my-asset"
-            ), "http://my-connector/ids/data"); // Dataspace: Example1
+            ), "http://my-connector/ids/data"); // Dataspace: MDS
             createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:my-asset",
                     AssetProperty.ASSET_NAME, "my-asset"
-            ), "http://my-connector2/ids/data"); // Dataspace: MDS
+            ), "http://my-connector2/ids/data"); // Dataspace: Example1
 
             var query = new CatalogPageQuery();
             query.setFilter(new CnfFilterValue(List.of(
-                    new CnfFilterValueAttribute("dataSpace", List.of("MDS"))
+                    new CnfFilterValueAttribute("dataSpace", List.of("Example1"))
             )));
 
             var result = edcClient().brokerServerApi().catalogPage(query);
@@ -103,30 +103,40 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today, "http://my-connector/ids/data"); // Dataspace: Example1
-            createConnector(dsl, today, "http://my-connector2/ids/data"); // Dataspace: MDS
+            createConnector(dsl, today, "http://my-connector/ids/data"); // Dataspace: MDS
+            createConnector(dsl, today, "http://my-connector2/ids/data"); // Dataspace: Example1
+            createConnector(dsl, today, "http://my-connector3/ids/data"); // Dataspace: Example2
             createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:my-asset",
                     AssetProperty.ASSET_NAME, "my-asset",
                     AssetProperty.LANGUAGE, "de"
-            ), "http://my-connector/ids/data"); // Dataspace: Example1
+            ), "http://my-connector/ids/data"); // Dataspace: MDS
             createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:my-asset",
                     AssetProperty.ASSET_NAME, "my-asset",
                     AssetProperty.LANGUAGE, "en"
-            ), "http://my-connector2/ids/data"); // Dataspace: MDS
+            ), "http://my-connector2/ids/data"); // Dataspace: Example1
             createDataOffer(dsl, today, Map.of(
                     AssetProperty.ASSET_ID, "urn:artifact:my-asset2",
                     AssetProperty.ASSET_NAME, "my-asset",
                     AssetProperty.LANGUAGE, "fr"
-            ), "http://my-connector2/ids/data"); // Dataspace: MDS
+            ), "http://my-connector2/ids/data"); // Dataspace: Example1
+            createDataOffer(dsl, today, Map.of(
+                    AssetProperty.ASSET_ID, "urn:artifact:my-asset3",
+                    AssetProperty.ASSET_NAME, "my-asset",
+                    AssetProperty.LANGUAGE, "fr"
+            ), "http://my-connector3/ids/data"); // Dataspace: Example2
 
             // get all available filter values
-            var result = edcClient().brokerServerApi().catalogPage(new CatalogPageQuery()).getAvailableFilters();
+            var result = edcClient().brokerServerApi().catalogPage(new CatalogPageQuery());
 
             // assert that the filter values are correct
-            var dataSpace = getAvailableFilter(edcClient().brokerServerApi().catalogPage(new CatalogPageQuery()), "dataSpace");
-            assertThat(dataSpace.getValues()).containsExactly(new CnfFilterItem("Example1", "Example1"), new CnfFilterItem("MDS", "MDS"));
+            var dataSpace = getAvailableFilter(result, "dataSpace");
+            assertThat(dataSpace.getValues()).containsExactly(
+                    new CnfFilterItem("Example1", "Example1"),
+                    new CnfFilterItem("Example2", "Example2"),
+                    new CnfFilterItem("MDS", "MDS")
+            );
         });
     }
 

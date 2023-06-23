@@ -20,6 +20,7 @@ services:
       MY_EDC_JDBC_USER: edc
       MY_EDC_JDBC_PASSWORD: edc
       EDC_BROKER_SERVER_KNOWN_CONNECTORS: "http://connector:11003/api/v1/ids/data"
+      EDC_BROKER_SERVER_KNOWN_DATASPACE_CONNECTORS: "Mobilithek=https://some-other-connector/ids/data"
 
       # Local Dev / Docker-Compose Config
       MY_EDC_PROTOCOL: "http://" # We don't have TLS in the docker container
@@ -28,7 +29,7 @@ services:
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
       EDC_BROKER_SERVER_CRON_CONNECTOR_REFRESH: "*/20 * * ? * *" # Update connectors every 20s in dev
-      EDC_BROKER_SERVER_NUM_THREADS: "1" # No parallelism in dev
+      EDC_BROKER_SERVER_NUM_THREADS: "16"
       EDC_BROKER_SERVER_HIDE_OFFLINE_DATA_OFFERS_AFTER: "PT1M" # Hide offline data offers after 1 minute in dev
       EDC_API_AUTH_KEY: "ApiKeyDefaultValue" # Management API Key (Access to UI should be secured by other means, as this key is sent to the UI)
     ports:

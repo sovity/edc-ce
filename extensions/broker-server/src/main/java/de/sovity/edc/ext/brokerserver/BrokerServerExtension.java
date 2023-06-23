@@ -23,36 +23,38 @@ import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.types.TypeManager;
 import org.eclipse.edc.web.spi.WebService;
 
+import static de.sovity.edc.ext.brokerserver.services.config.EdcConfigPropertyUtils.toEdcProp;
+
 public class BrokerServerExtension implements ServiceExtension {
 
     public static final String EXTENSION_NAME = "BrokerServerExtension";
 
     @Setting
-    public static final String KNOWN_CONNECTORS = "edc.broker.server.known.connectors";
+    public static final String KNOWN_CONNECTORS = toEdcProp("EDC_BROKER_SERVER_KNOWN_CONNECTORS");
 
     @Setting
-    public static final String CRON_CONNECTOR_REFRESH = "edc.broker.server.cron.connector.refresh";
+    public static final String CRON_CONNECTOR_REFRESH = toEdcProp("EDC_BROKER_SERVER_CRON_CONNECTOR_REFRESH");
 
     @Setting
-    public static final String NUM_THREADS = "edc.broker.server.num.threads";
+    public static final String NUM_THREADS = toEdcProp("EDC_BROKER_SERVER_NUM_THREADS");
 
     @Setting
-    public static final String HIDE_OFFLINE_DATA_OFFERS_AFTER = "edc.broker.server.hide.offline.data.offers.after";
+    public static final String HIDE_OFFLINE_DATA_OFFERS_AFTER = toEdcProp("EDC_BROKER_SERVER_HIDE_OFFLINE_DATA_OFFERS_AFTER");
 
     @Setting
-    public static final String MAX_DATA_OFFERS_PER_CONNECTOR = "edc.broker.server.max.data.offers.per.connector";
+    public static final String MAX_DATA_OFFERS_PER_CONNECTOR = toEdcProp("EDC_BROKER_SERVER_MAX_DATA_OFFERS_PER_CONNECTOR");
 
     @Setting
-    public static final String MAX_CONTRACT_OFFERS_PER_CONNECTOR = "edc.broker.server.max.contract.offers.per.connector";
+    public static final String MAX_CONTRACT_OFFERS_PER_DATA_OFFER = toEdcProp("EDC_BROKER_SERVER_MAX_CONTRACT_OFFERS_PER_DATA_OFFER");
 
     @Setting
-    public static final String CATALOG_PAGE_PAGE_SIZE = "edc.broker.server.catalog.page.page.size";
+    public static final String CATALOG_PAGE_PAGE_SIZE = toEdcProp("EDC_BROKER_SERVER_CATALOG_PAGE_PAGE_SIZE");
 
     @Setting
-    public static final String DEFAULT_CONNECTOR_DATASPACE = "edc.broker.server.default.dataspace";
+    public static final String DEFAULT_CONNECTOR_DATASPACE = toEdcProp("EDC_BROKER_SERVER_DEFAULT_DATASPACE");
 
     @Setting
-    public static final String KNOWN_DATASPACES_ENDPOINTS = "edc.broker.server.known.dataspaces.endpoints";
+    public static final String KNOWN_DATASPACE_CONNECTORS = toEdcProp("EDC_BROKER_SERVER_KNOWN_DATASPACE_CONNECTORS");
 
     @Inject
     private ManagementApiConfiguration managementApiConfiguration;

@@ -40,7 +40,7 @@ public class DataOfferLimitsEnforcer {
     public DataOfferLimitsEnforced enforceLimits(Collection<FetchedDataOffer> dataOffers) {
         // Get limits from config
         var maxDataOffers = config.getInteger(BrokerServerExtension.MAX_DATA_OFFERS_PER_CONNECTOR, -1);
-        var maxContractOffers = config.getInteger(BrokerServerExtension.MAX_CONTRACT_OFFERS_PER_CONNECTOR, -1);
+        var maxContractOffers = config.getInteger(BrokerServerExtension.MAX_CONTRACT_OFFERS_PER_DATA_OFFER, -1);
         var offerList = dataOffers.stream().toList();
 
         // No limits set
