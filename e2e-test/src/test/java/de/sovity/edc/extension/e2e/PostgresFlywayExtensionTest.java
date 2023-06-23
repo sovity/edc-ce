@@ -8,6 +8,7 @@ import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import jakarta.json.JsonObject;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -24,6 +25,7 @@ import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.CONTEXT;
 import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.TYPE;
 import static org.eclipse.edc.jsonld.spi.PropertyAndTypeNames.ODRL_POLICY_ATTRIBUTE;
 
+@Disabled("Just to be executed with postgres-flyway property set")
 public class PostgresFlywayExtensionTest {
 
     private static final String PROVIDER_TARGET_URL = "https://google.de";

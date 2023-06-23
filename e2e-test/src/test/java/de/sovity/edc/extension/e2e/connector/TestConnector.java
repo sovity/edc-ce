@@ -66,8 +66,7 @@ public class TestConnector implements Connector {
                         .add(ID, assetId)
                         .add("properties", createObjectBuilder()
                                 .add("description", "description")))
-                .add("dataAddress", createObjectBuilder()
-                        .add("properties", createObjectBuilder(dataAddressProperties)))
+                .add("dataAddress", createObjectBuilder(dataAddressProperties))
                 .build();
 
         given()

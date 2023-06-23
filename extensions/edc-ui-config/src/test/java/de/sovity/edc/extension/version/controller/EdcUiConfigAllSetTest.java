@@ -15,6 +15,7 @@
 package de.sovity.edc.extension.version.controller;
 
 import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
+import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.protocol.ProtocolWebhook;
@@ -46,6 +47,7 @@ class EdcUiConfigAllSetTest {
     @BeforeEach
     void setUp(EdcExtension extension) {
         extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
+        extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
         extension.registerServiceMock(
                 DataPlaneInstanceStore.class,
                 mock(DataPlaneInstanceStore.class));
