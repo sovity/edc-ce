@@ -20,12 +20,8 @@ import de.sovity.edc.ext.brokerserver.services.api.ConnectorApiService;
 import de.sovity.edc.ext.wrapper.api.broker.BrokerServerResource;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageQuery;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageResult;
-import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorDetailPageQuery;
-import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorDetailPageResult;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageQuery;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageResult;
-import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferDetailPageQuery;
-import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferDetailPageResult;
 import lombok.RequiredArgsConstructor;
 
 
@@ -46,15 +42,5 @@ public class BrokerServerResourceImpl implements BrokerServerResource {
     @Override
     public ConnectorPageResult connectorPage(ConnectorPageQuery query) {
         return dslContextFactory.transactionResult(dsl -> connectorApiService.connectorPage(dsl, query));
-    }
-
-    @Override
-    public DataOfferDetailPageResult dataOfferDetailPage(DataOfferDetailPageQuery dataOfferDetailPageQuery) {
-        throw new IllegalStateException("Not yet implemented!");
-    }
-
-    @Override
-    public ConnectorDetailPageResult connectorDetailPage(ConnectorDetailPageQuery connectorDetailPageQuery) {
-        throw new IllegalStateException("Not yet implemented!");
     }
 }
