@@ -16,17 +16,27 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
-- Added Connector Build date and Commit Information to Additional Properties
-  section in Dashboard
-- Added Open-Ended Date Option to Time-Period-Restricted Policies
-- Broker UI: Added sorting, filtering and pagination to catalog page.
-- Broker UI: Added legal notice page.
-
 #### Changed
 
 #### Removed
 
 #### Fixed
+
+## [v0.0.1-milestone-8-sovity7] 23.06.2023
+
+### Overview
+
+Build dates, open-ended date intervals, Broker UI MvP features.
+
+### Detailed Changes
+
+#### Added
+
+- Added Connector Build date and Commit Information to Additional Properties
+  section in Dashboard
+- Added Open-Ended Date Option to Time-Period-Restricted Policies
+- Broker UI: Added sorting, filtering and pagination to catalog page.
+- Broker UI: Added legal notice page.
 
 ## [v0.0.1-milestone-8-sovity6] 06.06.2023
 
