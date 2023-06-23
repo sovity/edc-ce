@@ -7,7 +7,7 @@ services:
     environment:
       - EDC_UI_ACTIVE_PROFILE=${EDC_UI_ACTIVE_PROFILE}
       - EDC_UI_CONFIG_URL=edc-ui-config
-      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/management
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/management/v2
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
       - EDC_UI_CATALOG_URLS=http://edc2:11003/api/v1/ids/data
   edc:
@@ -16,6 +16,7 @@ services:
       dockerfile: connector/Dockerfile
       args:
         JVM_ARGS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+        BUILD_ARGS: -Pfs-vault -Pdmgmt-api-key -Ppostgres-flyway -Poauth
     depends_on:
       - postgresql
     environment:
@@ -51,6 +52,10 @@ services:
       EDC_WEB_REST_CORS_ENABLED: 'true'
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
+
+      EDC_PARTICIPANT_ID: provider
+      EDC_JSONLD_HTTPS_ENABLED: true
+      EDC_DSP_CALLBACK_ADDRESS: http://edc:11003/api/v1/ids
     ports:
       - '11001:11001'
       - '11002:11002'
@@ -78,7 +83,7 @@ services:
     environment:
       - EDC_UI_ACTIVE_PROFILE=${EDC_UI_ACTIVE_PROFILE}
       - EDC_UI_CONFIG_URL=edc-ui-config
-      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:22002/api/v1/management
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:22002/api/v1/management/v2
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
       - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/ids/data
   edc2:
@@ -86,6 +91,7 @@ services:
       dockerfile: connector/Dockerfile
       args:
         JVM_ARGS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+        BUILD_ARGS: -Pfs-vault -Pdmgmt-api-key -Ppostgres-flyway -Poauth
     depends_on:
       - postgresql2
     environment:

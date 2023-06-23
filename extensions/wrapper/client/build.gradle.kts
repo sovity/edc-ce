@@ -43,6 +43,7 @@ dependencies {
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
     testImplementation("${edcGroup}:http:${edcVersion}")
+    testImplementation("${edcGroup}:json-ld-spi:${edcVersion}")
     testImplementation(project(":extensions:wrapper:wrapper"))
     testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
