@@ -22,6 +22,18 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Fixed
 
+## [v0.0.1-milestone-8-sovity8] 23.06.2023
+
+### Overview
+
+Bugfix release.
+
+### Detailed Changes
+
+#### Fixed
+
+- Broker UI: Fixed sorting not applied.
+
 ## [v0.0.1-milestone-8-sovity7] 23.06.2023
 
 ### Overview

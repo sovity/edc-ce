@@ -245,6 +245,7 @@ export class CatalogPageState implements OnDestroy {
           }))
           .filter((it) => it.selectedIds.length),
       },
+      sorting: state.activeSorting?.sorting,
       pageOneBased: state.pageZeroBased + 1,
     };
     return query;
