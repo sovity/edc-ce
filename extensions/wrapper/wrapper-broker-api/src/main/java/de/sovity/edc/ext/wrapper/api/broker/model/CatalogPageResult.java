@@ -40,6 +40,6 @@ public class CatalogPageResult {
     private PaginationMetadata paginationMetadata;
 
     @Schema(description = "Current page of data offers", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<DataOfferListEntry> dataOffers;
+    private List<CatalogDataOffer> dataOffers;
 }
 
