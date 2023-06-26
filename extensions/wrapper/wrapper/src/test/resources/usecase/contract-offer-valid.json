@@ -1,0 +1,91 @@
+{
+  "assetEntry": {
+    "asset": {
+      "id": "mock",
+      "properties": {
+        "key": "value"
+      }
+    },
+    "dataAddress": {
+      "properties": {
+        "type": "mock"
+      }
+    }
+  },
+  "policyDefinitionRequest": {
+    "id": "mock",
+    "policy": {
+      "permission": {
+        "constraints": {
+          "type": "ATOMIC_CONSTRAINT",
+          "atomicConstraint": {
+            "leftExpression": "string",
+            "operator": "EQ",
+            "rightExpression": "string"
+          },
+          "and": [
+            {
+              "type": "ATOMIC_CONSTRAINT",
+              "atomicConstraint": {
+                "leftExpression": "string",
+                "operator": "EQ",
+                "rightExpression": "string"
+              }
+            },
+            {
+              "type": "ATOMIC_CONSTRAINT",
+              "atomicConstraint": {
+                "leftExpression": "string",
+                "operator": "EQ",
+                "rightExpression": "string"
+              }
+            }
+          ],
+          "or": [
+            {
+              "type": "ATOMIC_CONSTRAINT",
+              "atomicConstraint": {
+                "leftExpression": "string",
+                "operator": "EQ",
+                "rightExpression": "string"
+              }
+            },
+            {
+              "type": "ATOMIC_CONSTRAINT",
+              "atomicConstraint": {
+                "leftExpression": "string",
+                "operator": "EQ",
+                "rightExpression": "string"
+              }
+            }
+          ],
+          "xor": [
+            {
+              "type": "ATOMIC_CONSTRAINT",
+              "atomicConstraint": {
+                "leftExpression": "string",
+                "operator": "EQ",
+                "rightExpression": "string"
+              }
+            },
+            {
+              "type": "ATOMIC_CONSTRAINT",
+              "atomicConstraint": {
+                "leftExpression": "string",
+                "operator": "EQ",
+                "rightExpression": "string"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "contractDefinitionRequest": {
+    "id": "mock",
+    "accessPolicyId": "test",
+    "contractPolicyId": "test",
+    "validity": 10,
+    "criteria": []
+  }
+}

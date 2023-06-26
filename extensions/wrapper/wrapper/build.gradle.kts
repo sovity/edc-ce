@@ -21,6 +21,7 @@ dependencies {
     implementation(project(":extensions:wrapper:wrapper-common-api"))
     implementation(project(":extensions:wrapper:wrapper-ee-api"))
     api("${edcGroup}:contract-definition-api:${edcVersion}")
+    api("${edcGroup}:asset-api:${edcVersion}")
     api("${edcGroup}:control-plane-spi:${edcVersion}")
     api("${edcGroup}:core-spi:${edcVersion}")
     api("${edcGroup}:policy-definition-api:${edcVersion}")
@@ -42,6 +43,7 @@ dependencies {
     testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation("org.assertj:assertj-core:${assertj}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
+    testImplementation("org.mockito:mockito-core:5.3.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
 }
 
@@ -58,7 +60,6 @@ tasks.withType<io.swagger.v3.plugins.gradle.tasks.ResolveTask> {
     buildClasspath = classpath
     resourcePackages = setOf("de.sovity.edc.ext.wrapper.api")
 }
-
 
 task<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiGenerateTypeScriptClient") {
     dependsOn("resolve")
