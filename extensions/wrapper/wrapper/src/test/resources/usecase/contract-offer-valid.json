@@ -1,15 +1,9 @@
 {
   "assetEntry": {
-    "asset": {
-      "id": "mock",
-      "properties": {
-        "key": "value"
-      }
-    },
-    "dataAddress": {
-      "properties": {
-        "type": "mock"
-      }
+    "assetRequestId": "mock",
+    "assetRequestProperties": {},
+    "dataAddressProperties": {
+      "type": "HttpData"
     }
   },
   "policyDefinitionRequest": {
@@ -83,9 +77,14 @@
   },
   "contractDefinitionRequest": {
     "id": "mock",
-    "accessPolicyId": "test",
-    "contractPolicyId": "test",
-    "validity": 10,
-    "criteria": []
+    "accessPolicyId": "mock",
+    "contractPolicyId": "mock",
+    "assetsSelector": [
+      {
+        "operandLeft": "string",
+        "operator": "EQ",
+        "operandRight": "string"
+      }
+    ]
   }
 }

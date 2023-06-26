@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
+import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +21,7 @@ import java.io.IOException;
 
 import static de.sovity.edc.ext.wrapper.TestUtils.createConfiguration;
 import static de.sovity.edc.ext.wrapper.TestUtils.givenManagementEndpoint;
+import static org.mockito.Mockito.mock;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
@@ -42,6 +45,8 @@ class OfferingResourceTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) throws JsonProcessingException {
+        extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
+        extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
         extension.setConfiguration(createConfiguration());
         contractOffer = (ObjectNode) MAPPER.readTree(contractOfferValid.toString());
     }
