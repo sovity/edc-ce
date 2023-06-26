@@ -52,7 +52,10 @@ public class TestConnectorFactory implements ConnectorFactory {
                 .simpleConfig(new SimpleConfig("edc.last.commit.info", "test env commit message"))
                 .simpleConfig(new SimpleConfig("edc.build.date", "2023-05-08T15:30:00Z"))
                 .simpleConfig(new SimpleConfig("edc.jsonld.https.enabled", "true"))
-                .simpleConfig(new SimpleConfig("edc.dsp.callback.address", dspCallbackAddress.toString()))
+                .simpleConfig(new SimpleConfig("edc.dsp.callback.address",
+                        dspCallbackAddress.toString()))
+                .simpleConfig(new SimpleConfig("edc.flyway.additional.migration.locations",
+                        "classpath:migration/" + participantId + ",classpath:migration/version010"))
                 .build();
         System.out.println(connector.getConfig());
         edcContext.setConfiguration(connector.getConfig());
@@ -68,7 +71,7 @@ public class TestConnectorFactory implements ConnectorFactory {
         );
     }
 
-    private static List<DatasourceConfig> getDatasourceConfigs(TestDatabase testDatabase) {
+    private List<DatasourceConfig> getDatasourceConfigs(TestDatabase testDatabase) {
         return DATASOURCE_NAMES.stream()
                 .map(name -> new DatasourceConfig(
                         name,

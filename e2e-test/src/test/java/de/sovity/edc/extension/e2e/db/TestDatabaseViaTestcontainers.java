@@ -14,19 +14,33 @@
 
 package de.sovity.edc.extension.e2e.db;
 
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 public class TestDatabaseViaTestcontainers implements TestDatabase {
 
+    private static final int POSTGRES_PORT = 5432;
     private static final String POSTGRES_USER = "postgres";
     private static final String POSTGRES_PASSWORD = "postgres";
     private static final String POSTGRES_DB = "edc";
 
-    private final PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:15-alpine")
-            .withUsername(POSTGRES_USER)
-            .withPassword(POSTGRES_PASSWORD)
-            .withDatabaseName(POSTGRES_DB);
+    private final PostgreSQLContainer<?> container;
+
+    public TestDatabaseViaTestcontainers(int hostPort) {
+        var portBinding = new PortBinding(
+                Ports.Binding.bindPort(hostPort),
+                new ExposedPort(POSTGRES_PORT));
+        container = new PostgreSQLContainer<>("postgres:15-alpine")
+                .withCreateContainerCmdModifier(cmd -> cmd.withHostConfig(new HostConfig().withPortBindings(portBinding)))
+                .withUsername(POSTGRES_USER)
+                .withPassword(POSTGRES_PASSWORD)
+                .withDatabaseName(POSTGRES_DB)
+                .withExposedPorts(POSTGRES_PORT);
+    }
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
