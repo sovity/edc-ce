@@ -31,7 +31,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Data Offer, meaning an offered asset.")
-public class DataOfferListEntry {
+public class CatalogDataOffer {
     @Schema(description = "ID of asset", requiredMode = Schema.RequiredMode.REQUIRED)
     private String assetId;
 
@@ -54,6 +54,6 @@ public class DataOfferListEntry {
     private Map<String, String> properties;
 
     @Schema(description = "Available Contract Offers", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<DataOfferListEntryContractOffer> contractOffers;
+    private List<CatalogContractOffer> contractOffers;
 }
 

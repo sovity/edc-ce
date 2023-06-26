@@ -20,8 +20,8 @@ import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorDetailPageQuery;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorDetailPageResult;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageQuery;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageResult;
-import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferDetailPageResult;
 import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferDetailPageQuery;
+import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferDetailPageResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
@@ -38,27 +38,27 @@ public interface BrokerServerResource {
     @Path("catalog-page")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Query indexed Contract Offers")
+    @Operation(description = "Query the Broker's Catalog of Data Offers")
     CatalogPageResult catalogPage(CatalogPageQuery query);
 
     @POST
     @Path("connector-page")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Query known Connectors")
+    @Operation(description = "Query the List of Known Connectors")
     ConnectorPageResult connectorPage(ConnectorPageQuery query);
 
     @POST
     @Path("data-offer-detail-page")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Query data offer details")
+    @Operation(description = "Query a Data Offer's Detail Page")
     DataOfferDetailPageResult dataOfferDetailPage(DataOfferDetailPageQuery query);
 
     @POST
     @Path("connector-detail-page")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Query known Connectors details")
+    @Operation(description = "Query a Known Connector's Detail Page")
     ConnectorDetailPageResult connectorDetailPage(ConnectorDetailPageQuery query);
 }

@@ -29,8 +29,8 @@ import java.time.OffsetDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "A contract offer a data offer is available under.")
-public class DataOfferListEntryContractOffer {
+@Schema(description = "A contract offer a data offer is available under (as required by the data offer detail page).")
+public class DataOfferDetailContractOffer {
     @Schema(description = "Contract Offer ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String contractOfferId;
 
