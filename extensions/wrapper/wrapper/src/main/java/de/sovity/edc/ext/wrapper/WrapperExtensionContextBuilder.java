@@ -25,7 +25,6 @@ import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import lombok.NoArgsConstructor;
-import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
@@ -58,8 +57,7 @@ public class WrapperExtensionContextBuilder {
             TransferProcessStore transferProcessStore,
             ContractAgreementService contractAgreementService,
             ContractNegotiationStore contractNegotiationStore,
-            TransferProcessService transferProcessService,
-            DtoTransformerRegistry dtoTransformerRegistry
+            TransferProcessService transferProcessService
     ) {
         // UI API
         var transferProcessStateService = new TransferProcessStateService();
@@ -87,7 +85,7 @@ public class WrapperExtensionContextBuilder {
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
         var policyMappingService = new PolicyMappingService();
         var offeringService = new OfferingService(assetIndex, policyDefinitionStore,
-                contractDefinitionStore, dtoTransformerRegistry, policyMappingService);
+                contractDefinitionStore, policyMappingService);
         var useCaseResource = new UseCaseResource(kpiApiService, supportedPolicyApiService,
                 offeringService);
 
