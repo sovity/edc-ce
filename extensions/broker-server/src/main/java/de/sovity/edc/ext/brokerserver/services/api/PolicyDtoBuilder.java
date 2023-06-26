@@ -14,20 +14,16 @@
 
 package de.sovity.edc.ext.brokerserver.services.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.eclipse.edc.policy.model.Policy;
 
 @RequiredArgsConstructor
 public class PolicyDtoBuilder {
-    private final ObjectMapper objectMapper;
 
     @SneakyThrows
     public PolicyDto buildPolicyFromJson(@NonNull String policyJson) {
-        var policy = objectMapper.readValue(policyJson, Policy.class);
-        return new PolicyDto(policy);
+        return new PolicyDto(policyJson, null);
     }
 }
