@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.net.URI;
 import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
@@ -31,6 +32,7 @@ public class PostgresFlywayExtensionTest {
     private static final String PROVIDER_TARGET_URL = "https://google.de";
     private static final String CONSUMER_BACKEND_URL = "https://webhook.site/e542f69e-ff0a-4771-af18-0900a399137a";
     private static final Duration TIMEOUT = Duration.ofSeconds(60);
+    private static final String MIGRATED_M8_ASSET_ID = "test-1.0";
 
     @RegisterExtension
     static EdcExtension providerEdcContext = new EdcExtension();
@@ -60,10 +62,22 @@ public class PostgresFlywayExtensionTest {
     }
 
     @Test
-    void migration() {
+    void consumeM8Offer() {
+        var assetIds = providerConnector.getAssetIds();
+        assertThat(assetIds).contains(MIGRATED_M8_ASSET_ID);
+        var providerProtocolApi = providerConnector.getUriForApi(PROTOCOL);
+        consumeOffer(providerProtocolApi, MIGRATED_M8_ASSET_ID);
+    }
+
+    @Test
+    void createAndConsumeOffer() {
         var assetId = UUID.randomUUID().toString();
         createContractOffer(assetId);
         var providerProtocolApi = providerConnector.getUriForApi(PROTOCOL);
+        consumeOffer(providerProtocolApi, assetId);
+    }
+
+    private void consumeOffer(URI providerProtocolApi, String assetId) {
         var dataset = consumerConnector.getDatasetForAsset(assetId, providerProtocolApi);
         var contractId = JsonLdConnectorUtil.getContractId(dataset);
         var policy = dataset.getJsonArray(ODRL_POLICY_ATTRIBUTE).get(0).asJsonObject();

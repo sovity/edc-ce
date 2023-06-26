@@ -4,11 +4,14 @@ import de.sovity.edc.extension.e2e.connector.config.EdcApiType;
 import jakarta.json.JsonObject;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 public interface Connector {
 
     void createAsset(String assetId, Map<String, Object> dataAddressProperties);
+
+    List<String> getAssetIds();
 
     String createPolicy(JsonObject policyJsonObject);
 

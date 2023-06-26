@@ -16,6 +16,8 @@ package de.sovity.edc.extension.e2e.db;
 
 public class TestDatabaseFactory {
 
+    private static int postgresHostPort = 5432;
+
     private TestDatabaseFactory() {
     }
 
@@ -30,6 +32,6 @@ public class TestDatabaseFactory {
             return new TestDatabaseViaEnv();
         }
 
-        return new TestDatabaseViaTestcontainers();
+        return new TestDatabaseViaTestcontainers(postgresHostPort++);
     }
 }
