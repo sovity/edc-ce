@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.brokerserver.dao.pages.catalog.models;
+package de.sovity.edc.ext.brokerserver.dao.pages.dataoffer.model;
 
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import lombok.AccessLevel;
@@ -26,7 +26,7 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DataOfferRs {
+public class DataOfferDetailRs {
     String assetId;
     String assetPropertiesJson;
     OffsetDateTime createdAt;

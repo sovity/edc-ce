@@ -12,20 +12,21 @@
  *
  */
 
-package de.sovity.edc.ext.brokerserver.dao.pages.catalog.models;
+package de.sovity.edc.ext.brokerserver.dao.pages.dataoffer.model;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
+import java.time.OffsetDateTime;
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CatalogPageRs {
-    String availableFilterValues;
-    List<DataOfferListEntryRs> dataOffers;
-    int numTotalDataOffers;
+public class ContractOfferRs {
+    String contractOfferId;
+    String policyJson;
+    OffsetDateTime createdAt;
+    OffsetDateTime updatedAt;
 }

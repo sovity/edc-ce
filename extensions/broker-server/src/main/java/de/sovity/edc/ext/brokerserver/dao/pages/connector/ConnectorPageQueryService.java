@@ -38,6 +38,16 @@ public class ConnectorPageQueryService {
                 .fetchInto(ConnectorRs.class);
     }
 
+    public ConnectorRs queryConnectorDetailPage(DSLContext dsl, String connectorEndpoint) {
+        var c = Tables.CONNECTOR;
+        var filterBySearchQuery = SearchUtils.simpleSearch(connectorEndpoint, List.of(c.ENDPOINT, c.CONNECTOR_ID));
+
+        return dsl.select(c.asterisk(), dataOfferCount(c.ENDPOINT).as("numDataOffers"))
+                .from(c)
+                .where(filterBySearchQuery)
+                .fetchOneInto(ConnectorRs.class);
+    }
+
     @NotNull
     private List<OrderField<?>> sortConnectorPage(Connector c, ConnectorPageSortingType sorting) {
         var alphabetically = c.ENDPOINT.asc();

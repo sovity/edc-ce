@@ -17,6 +17,7 @@ package de.sovity.edc.ext.brokerserver;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.services.api.CatalogApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorApiService;
+import de.sovity.edc.ext.brokerserver.services.api.DataOfferDetailApiService;
 import de.sovity.edc.ext.wrapper.api.broker.BrokerServerResource;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageQuery;
 import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageResult;
@@ -37,6 +38,7 @@ public class BrokerServerResourceImpl implements BrokerServerResource {
     private final DslContextFactory dslContextFactory;
     private final ConnectorApiService connectorApiService;
     private final CatalogApiService catalogApiService;
+    private final DataOfferDetailApiService dataOfferDetailApiService;
 
     @Override
     public CatalogPageResult catalogPage(CatalogPageQuery query) {
@@ -49,12 +51,12 @@ public class BrokerServerResourceImpl implements BrokerServerResource {
     }
 
     @Override
-    public DataOfferDetailPageResult dataOfferDetailPage(DataOfferDetailPageQuery dataOfferDetailPageQuery) {
-        throw new IllegalStateException("Not yet implemented!");
+    public DataOfferDetailPageResult dataOfferDetailPage(DataOfferDetailPageQuery query) {
+        return dslContextFactory.transactionResult(dsl -> dataOfferDetailApiService.dataOfferDetailPage(dsl, query));
     }
 
     @Override
-    public ConnectorDetailPageResult connectorDetailPage(ConnectorDetailPageQuery connectorDetailPageQuery) {
-        throw new IllegalStateException("Not yet implemented!");
+    public ConnectorDetailPageResult connectorDetailPage(ConnectorDetailPageQuery query) {
+        return dslContextFactory.transactionResult(dsl -> connectorApiService.connectorDetailPage(dsl, query));
     }
 }

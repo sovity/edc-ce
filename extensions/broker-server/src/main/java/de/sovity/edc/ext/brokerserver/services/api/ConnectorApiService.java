@@ -16,6 +16,8 @@ package de.sovity.edc.ext.brokerserver.services.api;
 
 import de.sovity.edc.ext.brokerserver.dao.pages.connector.ConnectorPageQueryService;
 import de.sovity.edc.ext.brokerserver.dao.pages.connector.model.ConnectorRs;
+import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorDetailPageQuery;
+import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorDetailPageResult;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorListEntry;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorOnlineStatus;
 import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageQuery;
@@ -25,9 +27,9 @@ import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageSortingType;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class ConnectorApiService {
@@ -43,6 +45,23 @@ public class ConnectorApiService {
         result.setAvailableSortings(buildAvailableSortings());
         result.setPaginationMetadata(paginationMetadataUtils.buildDummyPaginationMetadata(connectorDbRows.size()));
         result.setConnectors(buildConnectorListEntries(connectorDbRows));
+        return result;
+    }
+
+    public ConnectorDetailPageResult connectorDetailPage(DSLContext dsl, ConnectorDetailPageQuery query) {
+        Objects.requireNonNull(query, "query must not be null");
+
+        var connectorDbRow = connectorPageQueryService.queryConnectorDetailPage(dsl, query.getConnectorEndpoint());
+        var connector = buildConnectorListEntry(connectorDbRow);
+
+        var result = new ConnectorDetailPageResult();
+        result.setCreatedAt(connector.getCreatedAt());
+        result.setEndpoint(connector.getEndpoint());
+        result.setId(connector.getId());
+        result.setLastRefreshAttemptAt(connector.getLastRefreshAttemptAt());
+        result.setLastSuccessfulRefreshAt(connector.getLastSuccessfulRefreshAt());
+        result.setNumContractOffers(connector.getNumContractOffers());
+        result.setOnlineStatus(connector.getOnlineStatus());
         return result;
     }
 
@@ -71,6 +90,9 @@ public class ConnectorApiService {
     }
 
     private List<ConnectorPageSortingItem> buildAvailableSortings() {
-        return Arrays.stream(ConnectorPageSortingType.values()).map(it -> new ConnectorPageSortingItem(it, it.getTitle())).toList();
+        return Stream.of(
+                ConnectorPageSortingType.MOST_RECENT,
+                ConnectorPageSortingType.TITLE
+        ).map(it -> new ConnectorPageSortingItem(it, it.getTitle())).toList();
     }
 }

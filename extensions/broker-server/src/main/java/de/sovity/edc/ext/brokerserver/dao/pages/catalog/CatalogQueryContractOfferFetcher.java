@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.dao.pages.catalog;
 
-import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.ContractOfferRs;
+import de.sovity.edc.ext.brokerserver.dao.pages.dataoffer.model.ContractOfferRs;
 import de.sovity.edc.ext.brokerserver.dao.utils.MultisetUtils;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import lombok.RequiredArgsConstructor;
