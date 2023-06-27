@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Schema(description = "Catalog's sorting options")
 public enum CatalogPageSortingType {
+    VIEW_COUNT("By Popularity"),
     MOST_RECENT("Most Recent"),
     TITLE("By Title"),
     ORIGINATOR("By Connector");
