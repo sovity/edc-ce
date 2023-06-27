@@ -54,5 +54,5 @@ public class DataOfferDetailPageResult {
     private Map<String, String> properties;
 
     @Schema(description = "Available Contract Offers", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<CatalogContractOffer> contractOffers;
+    private List<DataOfferDetailContractOffer> contractOffers;
 }
