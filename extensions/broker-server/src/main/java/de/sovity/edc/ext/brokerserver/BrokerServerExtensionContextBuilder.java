@@ -30,6 +30,7 @@ import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.services.BrokerServerInitializer;
 import de.sovity.edc.ext.brokerserver.services.ConnectorCreator;
 import de.sovity.edc.ext.brokerserver.services.KnownConnectorsInitializer;
+import de.sovity.edc.ext.brokerserver.services.OfflineConnectorRemover;
 import de.sovity.edc.ext.brokerserver.services.api.AssetPropertyParser;
 import de.sovity.edc.ext.brokerserver.services.api.CatalogApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorApiService;
@@ -57,6 +58,7 @@ import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferPatchB
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferRecordUpdater;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferWriter;
 import de.sovity.edc.ext.brokerserver.services.schedules.ConnectorRefreshJob;
+import de.sovity.edc.ext.brokerserver.services.schedules.OfflineConnectorRemovalJob;
 import de.sovity.edc.ext.brokerserver.services.schedules.QuartzScheduleInitializer;
 import de.sovity.edc.ext.brokerserver.services.schedules.utils.CronJobRef;
 import lombok.NoArgsConstructor;
@@ -162,12 +164,19 @@ public class BrokerServerExtensionContextBuilder {
         var catalogFilterAttributeDefinitionService = new CatalogFilterAttributeDefinitionService();
         var catalogFilterService = new CatalogFilterService(catalogFilterAttributeDefinitionService);
 
+        var offlineConnectorRemover = new OfflineConnectorRemover(brokerServerSettings, connectorQueries, brokerEventLogger);
+
         // Schedules
         List<CronJobRef<?>> jobs = List.of(
                 new CronJobRef<>(
                         BrokerServerExtension.CRON_CONNECTOR_REFRESH,
                         ConnectorRefreshJob.class,
                         () -> new ConnectorRefreshJob(dslContextFactory, connectorQueueFiller)
+                ),
+                new CronJobRef<>(
+                        BrokerServerExtension.SCHEDULED_DELETE_OFFLINE_CONNECTORS,
+                        OfflineConnectorRemovalJob.class,
+                        () -> new OfflineConnectorRemovalJob(dslContextFactory, offlineConnectorRemover)
                 )
         );
 
@@ -205,6 +214,7 @@ public class BrokerServerExtensionContextBuilder {
                 catalogApiService,
                 dataOfferDetailApiService
         );
+
         return new BrokerServerExtensionContext(
                 brokerServerResource,
                 brokerServerInitializer,

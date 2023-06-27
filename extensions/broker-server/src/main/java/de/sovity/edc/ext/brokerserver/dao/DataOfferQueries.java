@@ -28,5 +28,4 @@ public class DataOfferQueries {
         var d = Tables.DATA_OFFER;
         return dsl.selectFrom(d).where(d.CONNECTOR_ENDPOINT.eq(connectorEndpoint)).stream().toList();
     }
-
 }

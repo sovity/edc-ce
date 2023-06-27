@@ -22,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Updates a single connector.
@@ -100,4 +102,17 @@ public class BrokerEventLogger {
         logEntry.insert();
     }
 
+    public void addDeletedDueToOfflineTooLongMessages(DSLContext dsl, List<String> deletedConnectorEndpoints) {
+        var logEntries = deletedConnectorEndpoints.stream().map(endpoint -> {
+            var logEntry = dsl.newRecord(Tables.BROKER_EVENT_LOG);
+            logEntry.setEvent(BrokerEventType.CONNECTOR_DELETED_DUE_TO_OFFLINE_FOR_TOO_LONG);
+            logEntry.setEventStatus(BrokerEventStatus.OK);
+            logEntry.setCreatedAt(OffsetDateTime.now());
+            logEntry.setUserMessage("Connector was removed for being offline too long.");
+            logEntry.setConnectorEndpoint(endpoint);
+            return logEntry;
+        }).collect(Collectors.toList());
+
+        dsl.batchInsert(logEntries).execute();
+    }
 }

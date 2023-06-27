@@ -29,4 +29,6 @@ public class BrokerServerSettings {
     DataSpaceConfig dataSpaceConfig;
 
     int numThreads;
+
+    Duration deleteOfflineConnectorsAfter;
 }
