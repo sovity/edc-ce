@@ -24,7 +24,8 @@ import lombok.RequiredArgsConstructor;
 public enum CatalogPageSortingType {
     MOST_RECENT("Most Recent"),
     TITLE("By Title"),
-    ORIGINATOR("By Connector");
+    ORIGINATOR("By Connector"),
+    VIEW_COUNT("By View Count");
 
     private final String title;
 }
