@@ -17,7 +17,6 @@ dependencies {
 
     implementation("${edcGroup}:api-core:${edcVersion}")
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
-    implementation(project(":extensions:wrapper:wrapper-broker-api"))
     implementation(project(":extensions:wrapper:wrapper-common-api"))
     implementation(project(":extensions:wrapper:wrapper-ee-api"))
     api("${edcGroup}:contract-definition-api:${edcVersion}")
