@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "91a35646-a337-4456-89d0-e3b96d21a593",
-		"name": "sovity EDC",
+		"name": "sovity EDC (0.1.2)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -247,7 +247,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"@context\": {\n        \"dct\": \"https://purl.org/dc/terms/\",\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\",\n        \"dcat\": \"https://www.w3.org/ns/dcat/\",\n        \"odrl\": \"http://www.w3.org/ns/odrl/2/\",\n        \"dspace\": \"https://w3id.org/dspace/v0.8/\"\n    },\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"edc:policy\": {\n        \"@context\": \"https://www.w3.org/ns/odrl.jsonld\",\n        \"odrl:permission\": [\n            {\n                \"odrl:action\": {\n                    \"odrl:type\": \"USE\"\n                },\n                \"odrl:constraint\": [\n                    {\n                        \"odrl:leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"odrl:operator\": {\n                            \"@id\": \"odrl:gt\"\n                        },\n                        \"odrl:rightOperand\": \"2022-05-31T22:00:00.000Z\"\n                    },\n                    {\n                        \"odrl:leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"odrl:operator\": {\n                            \"@id\": \"odrl:lt\"\n                        },\n                        \"odrl:rightOperand\": \"2030-06-30T22:00:00.000Z\"\n                    }\n                ]\n            }\n        ],\n        \"odrl:prohibitions\": [],\n        \"odrl:obligations\": [],\n        \"extensibleProperties\": {},\n        \"inheritsFrom\": null,\n        \"assigner\": null,\n        \"assignee\": null,\n        \"target\": \"{{ASSET_ID}}\",\n        \"@type\": \"set\"\n    }\n}",
+							"raw": "{\n    \"@context\": {\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\",\n        \"odrl\": \"http://www.w3.org/ns/odrl/2/\"\n    },\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"edc:policy\": {\n        \"@context\": \"https://www.w3.org/ns/odrl.jsonld\",\n        \"odrl:permission\": [\n            {\n                \"odrl:action\": {\n                    \"odrl:type\": \"USE\"\n                },\n                \"odrl:constraint\": [\n                    {\n                        \"odrl:leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"odrl:operator\": {\n                            \"@id\": \"odrl:gteq\"\n                        },\n                        \"odrl:rightOperand\": \"2022-05-31T22:00:00.000Z\"\n                    },\n                    {\n                        \"odrl:leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"odrl:operator\": {\n                            \"@id\": \"odrl:lt\"\n                        },\n                        \"odrl:rightOperand\": \"2030-06-30T22:00:00.000Z\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -292,7 +292,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"@context\": {\n        \"dct\": \"https://purl.org/dc/terms/\",\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\",\n        \"dcat\": \"https://www.w3.org/ns/dcat/\",\n        \"odrl\": \"http://www.w3.org/ns/odrl/2/\",\n        \"dspace\": \"https://w3id.org/dspace/v0.8/\"\n    },\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"edc:policy\": {\n        \"@context\": \"https://www.w3.org/ns/odrl.jsonld\",\n        \"odrl:permission\": [\n            {\n                \"odrl:action\": {\n                    \"odrl:type\": \"USE\"\n                },\n                \"odrl:constraint\": [\n                    {\n                        \"odrl:leftOperand\": \"REFERRING_CONNECTOR\",\n                        \"odrl:operator\": {\n                            \"@id\": \"odrl:eq\"\n                        },\n                        \"odrl:rightOperand\": \"{{CONSUMER_EDC_PROTOCOL_URL}}\"\n                    }\n                ]\n            }\n        ],\n        \"odrl:prohibitions\": [],\n        \"odrl:obligations\": [],\n        \"extensibleProperties\": {},\n        \"inheritsFrom\": null,\n        \"assigner\": null,\n        \"assignee\": null,\n        \"target\": \"{{ASSET_ID}}\",\n        \"@type\": \"set\"\n    }\n}",
+							"raw": "{\n    \"@context\": {\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\",\n        \"odrl\": \"http://www.w3.org/ns/odrl/2/\"\n    },\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"edc:policy\": {\n        \"odrl:permission\": [\n            {\n                \"odrl:action\": {\n                    \"odrl:type\": \"USE\"\n                },\n                \"odrl:constraint\": [\n                    {\n                        \"odrl:leftOperand\": \"REFERRING_CONNECTOR\",\n                        \"odrl:operator\": {\n                            \"@id\": \"odrl:eq\"\n                        },\n                        \"odrl:rightOperand\": \"{{CONSUMER_EDC_PROTOCOL_URL}}\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -459,13 +459,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/contractdefinitions/contract-definition-id-1",
+							"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/contractdefinitions/{{CONTRACT_DEFINITION_ID}}",
 							"host": [
 								"{{PROVIDER_EDC_MANAGEMENT_URL}}"
 							],
 							"path": [
 								"contractdefinitions",
-								"contract-definition-id-1"
+								"{{CONTRACT_DEFINITION_ID}}"
 							]
 						}
 					},
@@ -725,13 +725,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/contractagreements/{{CONTRACT_DEFINITION_ID}}:{{ASSET_ID}}:2037d0ff-e874-453d-bbb0-64ceed620015",
+							"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/contractagreements/{{CONTRACT_DEFINITION_ID}}:{{ASSET_ID}}:3de78ab9-9400-4996-b136-e6ac5201ddd8",
 							"host": [
 								"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 							],
 							"path": [
 								"contractagreements",
-								"{{CONTRACT_DEFINITION_ID}}:{{ASSET_ID}}:2037d0ff-e874-453d-bbb0-64ceed620015"
+								"{{CONTRACT_DEFINITION_ID}}:{{ASSET_ID}}:3de78ab9-9400-4996-b136-e6ac5201ddd8"
 							]
 						}
 					},
@@ -890,7 +890,7 @@
 		},
 		{
 			"key": "PROVIDER_EDC_PROTOCOL_URL",
-			"value": "http://edc:11003/api/v1/ids",
+			"value": "http://edc:11003/api/v1/protocol",
 			"type": "default"
 		},
 		{
@@ -905,7 +905,7 @@
 		},
 		{
 			"key": "CONSUMER_EDC_PROTOCOL_URL",
-			"value": "http://edc2:11003/api/v1/ids",
+			"value": "http://edc2:11003/api/v1/protocol",
 			"type": "default"
 		},
 		{
