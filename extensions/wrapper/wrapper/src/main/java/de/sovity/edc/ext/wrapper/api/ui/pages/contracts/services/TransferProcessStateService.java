@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.services;
+package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessState;

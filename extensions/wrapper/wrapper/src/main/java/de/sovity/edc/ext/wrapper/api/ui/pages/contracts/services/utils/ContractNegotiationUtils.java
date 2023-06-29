@@ -12,8 +12,9 @@
  *
  */
 
-package de.sovity.edc.extension.contractagreementtransferapi.service;
+package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils;
 
+import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.eclipse.edc.spi.EdcException;
@@ -22,15 +23,12 @@ import org.eclipse.edc.spi.query.QuerySpec;
 
 import java.util.List;
 
-public class ContractNegotiationByAgreementService {
+@RequiredArgsConstructor
+public class ContractNegotiationUtils {
 
     private final ContractNegotiationService contractNegotiationService;
 
-    public ContractNegotiationByAgreementService(ContractNegotiationService contractNegotiationService) {
-        this.contractNegotiationService = contractNegotiationService;
-    }
-
-    public ContractNegotiation getNegotiationForAgreementId(String contractAgreementId) {
+    public ContractNegotiation findByContractAgreementIdOrThrow(String contractAgreementId) {
         var querySpec = QuerySpec.Builder.newInstance()
                 .filter(List.of(new Criterion("contractAgreement.id", "=", contractAgreementId)))
                 .build();
