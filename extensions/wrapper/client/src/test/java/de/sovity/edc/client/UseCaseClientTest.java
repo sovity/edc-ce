@@ -20,6 +20,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
@@ -28,18 +30,13 @@ class UseCaseClientTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-        extension.setConfiguration(TestUtils.createConfiguration());
+        extension.setConfiguration(TestUtils.createConfiguration(Map.of()));
     }
 
     @Test
     void kpiEndpoint() {
-        var client = EdcClient.builder()
-                .managementApiUrl(TestUtils.MANAGEMENT_ENDPOINT)
-                .managementApiKey(TestUtils.MANAGEMENT_API_KEY)
-                .build();
-
+        var client = TestUtils.edcClient();
         var result = client.useCaseApi().kpiEndpoint();
-
         assertThat(result.getAssetsCount()).isZero();
     }
 }

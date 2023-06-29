@@ -1,6 +1,5 @@
 rootProject.name = "edc-extensions"
 
-include(":extensions:contract-agreement-transfer-api")
 include(":extensions:edc-ui-config")
 include(":extensions:ids-broker-client")
 include(":extensions:ids-clearinghouse-client")

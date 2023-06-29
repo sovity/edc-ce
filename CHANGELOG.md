@@ -8,8 +8,13 @@ All notable changes to this project will be documented in this file.
 
 ### Major Changes
 
+- Removed Contract Agreement Transfer API Extension in favor of new API Wrapper UI Endpoint.
+
 ### Minor Changes
-- Broker-/ClearingHouse-Client: The extensions can be dynamically enabled and disabled via properties (see getting-started Readme FAQ section).
+
+- UI API: Added support for parameterized HTTP Data Sources.
+- Broker-/ClearingHouse-Client: The extensions can be dynamically enabled and disabled via properties (see
+  getting-started Readme FAQ section).
 - Broker Server API: New API Endpoint `DataOfferDetailPage` and `ConnectorDetailPage` with model.
 
 ### Patch Changes
