@@ -126,6 +126,8 @@ EDC_OAUTH_PROVIDER_JWKS_URL: 'https://daps.test.mobility-dataspace.eu/jwks.json'
 EDC_OAUTH_CLIENT_ID: '_your SKI/AKI_'
 EDC_KEYSTORE: '_your keystore file_' # Needs to be available as file in the running container
 EDC_KEYSTORE_PASSWORD: '_your keystore password_'
+EDC_OAUTH_CERTIFICATE_ALIAS: 1
+EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
 
 # Required: Management API Key
 EDC_API_AUTH_KEY: "ApiKeyDefaultValue"
