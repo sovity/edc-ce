@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Major Changes
 
 - Removed Contract Agreement Transfer API Extension in favor of new API Wrapper UI Endpoint.
+- Removed Broker-Server APIs.
 
 ### Minor Changes
 
