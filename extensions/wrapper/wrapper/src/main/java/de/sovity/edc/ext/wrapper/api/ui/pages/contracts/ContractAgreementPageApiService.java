@@ -12,17 +12,19 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.services;
+package de.sovity.edc.ext.wrapper.api.ui.pages.contracts;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementDataFetcher;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementPageCardBuilder;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 
 @RequiredArgsConstructor
-public class ContractAgreementPageService {
+public class ContractAgreementPageApiService {
     private final ContractAgreementDataFetcher contractAgreementDataFetcher;
     private final ContractAgreementPageCardBuilder contractAgreementPageCardBuilder;
 
