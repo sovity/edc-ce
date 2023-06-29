@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.dao.pages.catalog;
 
-import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageSortingType;
+import de.sovity.edc.ext.brokerserver.api.model.CatalogPageSortingType;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.OrderField;

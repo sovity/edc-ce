@@ -44,7 +44,7 @@ allprojects {
             url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
         }
         maven {
-            name = "GitHubPackages"
+            name = "Github-EDC-Extensions"
             url = uri("https://maven.pkg.github.com/sovity/edc-extensions")
             credentials {
                 username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")

@@ -19,11 +19,11 @@ import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilte
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQuerySelectedFilterQuery;
 import de.sovity.edc.ext.brokerserver.dao.utils.JsonDeserializationUtils;
 import de.sovity.edc.ext.brokerserver.utils.CollectionUtils2;
-import de.sovity.edc.ext.wrapper.api.broker.model.CnfFilter;
-import de.sovity.edc.ext.wrapper.api.broker.model.CnfFilterAttribute;
-import de.sovity.edc.ext.wrapper.api.broker.model.CnfFilterItem;
-import de.sovity.edc.ext.wrapper.api.broker.model.CnfFilterValue;
-import de.sovity.edc.ext.wrapper.api.broker.model.CnfFilterValueAttribute;
+import de.sovity.edc.ext.brokerserver.api.model.CnfFilter;
+import de.sovity.edc.ext.brokerserver.api.model.CnfFilterAttribute;
+import de.sovity.edc.ext.brokerserver.api.model.CnfFilterItem;
+import de.sovity.edc.ext.brokerserver.api.model.CnfFilterValue;
+import de.sovity.edc.ext.brokerserver.api.model.CnfFilterValueAttribute;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
 

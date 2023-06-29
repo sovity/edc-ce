@@ -14,11 +14,11 @@
 
 package de.sovity.edc.ext.brokerserver.dao.pages.connector;
 
+import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageSortingType;
 import de.sovity.edc.ext.brokerserver.dao.pages.connector.model.ConnectorRs;
 import de.sovity.edc.ext.brokerserver.dao.utils.SearchUtils;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.Connector;
-import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageSortingType;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
 import org.jooq.Field;

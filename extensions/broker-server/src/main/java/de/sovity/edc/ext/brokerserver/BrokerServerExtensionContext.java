@@ -14,10 +14,10 @@
 
 package de.sovity.edc.ext.brokerserver;
 
+import de.sovity.edc.ext.brokerserver.api.BrokerServerResource;
 import de.sovity.edc.ext.brokerserver.services.BrokerServerInitializer;
 import de.sovity.edc.ext.brokerserver.services.ConnectorCreator;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdater;
-import de.sovity.edc.ext.wrapper.api.broker.BrokerServerResource;
 
 
 /**

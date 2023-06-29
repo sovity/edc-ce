@@ -14,11 +14,12 @@
 
 package de.sovity.edc.ext.brokerserver.services.api;
 
+import de.sovity.edc.ext.brokerserver.api.model.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.dao.pages.dataoffer.DataOfferDetailPageQueryService;
 import de.sovity.edc.ext.brokerserver.dao.pages.dataoffer.model.ContractOfferRs;
-import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferDetailContractOffer;
-import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferDetailPageQuery;
-import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferDetailPageResult;
+import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailContractOffer;
+import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageQuery;
+import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageResult;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
@@ -49,16 +50,16 @@ public class DataOfferDetailApiService {
         return result;
     }
 
-    private de.sovity.edc.ext.wrapper.api.broker.model.ConnectorOnlineStatus mapConnectorOnlineStatus(
+    private ConnectorOnlineStatus mapConnectorOnlineStatus(
             de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus connectorOnlineStatus
     ) {
         if (connectorOnlineStatus == null) {
-            return de.sovity.edc.ext.wrapper.api.broker.model.ConnectorOnlineStatus.OFFLINE;
+            return ConnectorOnlineStatus.OFFLINE;
         }
 
         return switch (connectorOnlineStatus) {
-            case ONLINE -> de.sovity.edc.ext.wrapper.api.broker.model.ConnectorOnlineStatus.ONLINE;
-            case OFFLINE -> de.sovity.edc.ext.wrapper.api.broker.model.ConnectorOnlineStatus.OFFLINE;
+            case ONLINE -> ConnectorOnlineStatus.ONLINE;
+            case OFFLINE -> ConnectorOnlineStatus.OFFLINE;
         };
     }
 

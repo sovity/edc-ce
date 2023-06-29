@@ -7,9 +7,6 @@ plugins {
 val edcVersion: String by project
 val edcGroup: String by project
 
-val sovityEdcExtensionGroup: String by project
-val sovityEdcExtensionsVersion: String by project
-
 dependencies {
     // Control-Plane
     implementation("${edcGroup}:control-plane-core:${edcVersion}")

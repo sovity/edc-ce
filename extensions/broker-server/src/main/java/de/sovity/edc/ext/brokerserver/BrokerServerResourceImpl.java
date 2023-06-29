@@ -14,19 +14,19 @@
 
 package de.sovity.edc.ext.brokerserver;
 
+import de.sovity.edc.ext.brokerserver.api.BrokerServerResource;
+import de.sovity.edc.ext.brokerserver.api.model.CatalogPageQuery;
+import de.sovity.edc.ext.brokerserver.api.model.CatalogPageResult;
+import de.sovity.edc.ext.brokerserver.api.model.ConnectorDetailPageQuery;
+import de.sovity.edc.ext.brokerserver.api.model.ConnectorDetailPageResult;
+import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageQuery;
+import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageResult;
+import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageQuery;
+import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageResult;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.services.api.CatalogApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorApiService;
 import de.sovity.edc.ext.brokerserver.services.api.DataOfferDetailApiService;
-import de.sovity.edc.ext.wrapper.api.broker.BrokerServerResource;
-import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageQuery;
-import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageResult;
-import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorDetailPageQuery;
-import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorDetailPageResult;
-import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageQuery;
-import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorPageResult;
-import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferDetailPageQuery;
-import de.sovity.edc.ext.wrapper.api.broker.model.DataOfferDetailPageResult;
 import lombok.RequiredArgsConstructor;
 
 

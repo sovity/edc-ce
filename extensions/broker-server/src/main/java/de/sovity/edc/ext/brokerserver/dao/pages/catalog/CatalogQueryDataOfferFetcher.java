@@ -14,11 +14,11 @@
 
 package de.sovity.edc.ext.brokerserver.dao.pages.catalog;
 
+import de.sovity.edc.ext.brokerserver.api.model.CatalogPageSortingType;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.DataOfferListEntryRs;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.PageQuery;
 import de.sovity.edc.ext.brokerserver.dao.utils.MultisetUtils;
-import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageSortingType;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Field;
 import org.jooq.Record;

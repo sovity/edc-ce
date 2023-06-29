@@ -19,13 +19,13 @@ import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.DataOfferListEntr
 import de.sovity.edc.ext.brokerserver.dao.pages.dataoffer.model.ContractOfferRs;
 import de.sovity.edc.ext.brokerserver.services.api.filtering.CatalogFilterService;
 import de.sovity.edc.ext.brokerserver.services.config.BrokerServerSettings;
-import de.sovity.edc.ext.wrapper.api.broker.model.CatalogContractOffer;
-import de.sovity.edc.ext.wrapper.api.broker.model.CatalogDataOffer;
-import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageQuery;
-import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageResult;
-import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageSortingItem;
-import de.sovity.edc.ext.wrapper.api.broker.model.CatalogPageSortingType;
-import de.sovity.edc.ext.wrapper.api.broker.model.ConnectorOnlineStatus;
+import de.sovity.edc.ext.brokerserver.api.model.CatalogContractOffer;
+import de.sovity.edc.ext.brokerserver.api.model.CatalogDataOffer;
+import de.sovity.edc.ext.brokerserver.api.model.CatalogPageQuery;
+import de.sovity.edc.ext.brokerserver.api.model.CatalogPageResult;
+import de.sovity.edc.ext.brokerserver.api.model.CatalogPageSortingItem;
+import de.sovity.edc.ext.brokerserver.api.model.CatalogPageSortingType;
+import de.sovity.edc.ext.brokerserver.api.model.ConnectorOnlineStatus;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 

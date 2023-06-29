@@ -1,0 +1,65 @@
+name: TypeScript API Client Library
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [ published ]
+  pull_request:
+      branches: [ main ]
+
+jobs:
+  build-and-publish-npm-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: FranzDiebold/github-env-vars-action@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+          cache-dependency-path: ./extensions/broker-server-api/client-ts/package-lock.json
+      - name: Generate openapi.yaml & Client Code
+        run: |
+            ./gradlew :extensions:broker-server-api:api:clean :extensions:broker-server-api:api:build -x test --no-daemon
+        env:
+            USERNAME: ${{ github.actor }}
+            TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: NPM Package Dist Tag & Version
+        working-directory: ./extensions/broker-server-api/client-ts
+        run: |
+          if [ "${{ startsWith(github.ref, 'refs/tags/') }}" == "true" ]; then
+            # Full Release
+            VERSION="${GITHUB_REF#refs/tags/v}"
+            DIST_TAG=latest
+          else
+            VERSION="0.$(date '+%Y%m%d.%H%M%S')-main-$CI_SHA_SHORT"
+            DIST_TAG=main
+          fi
+          npm version $VERSION
+          echo "DIST_TAG=$DIST_TAG" >> $GITHUB_ENV
+      - name: Build NPM Library
+        working-directory: ./extensions/broker-server-api/client-ts
+        run: |
+          npm ci && npm run build
+      - name: Publish NPM Library
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/tags/v*'
+        working-directory: ./extensions/broker-server-api/client-ts
+        run: |
+          npm set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
+          npm set //registry.npmjs.org/:username $NODE_USER
+          npm publish --access public --tag "${{ env.DIST_TAG }}"
+        env:
+          NODE_USER: richardtreier-sovity
+          NODE_AUTH_TOKEN: ${{ secrets.SOVITY_EDC_CLIENT_NPM_AUTH }}

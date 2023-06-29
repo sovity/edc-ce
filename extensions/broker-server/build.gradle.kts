@@ -8,10 +8,10 @@ val jupiterVersion: String by project
 val mockitoVersion: String by project
 val assertj: String by project
 val okHttpVersion: String by project
-val sovityEdcGroup: String by project
-val sovityEdcExtensionsVersion: String by project
 val restAssured: String by project
 val testcontainersVersion: String by project
+val sovityEdcGroup: String by project
+val sovityEdcExtensionsVersion: String by project
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
@@ -26,7 +26,7 @@ dependencies {
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
 
     api(project(":extensions:broker-server-postgres-flyway-jooq"))
-    api("${sovityEdcGroup}:wrapper-broker-api:${sovityEdcExtensionsVersion}") { isChanging = true }
+    api(project(":extensions:broker-server-api:api"))
 
     implementation("com.squareup.okhttp3:okhttp:${okHttpVersion}")
 
