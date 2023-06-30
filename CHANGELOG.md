@@ -7,13 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - yyyy-mm-dd
 
-### Deployment Migration Notes
+### Overview
 
-### Major
+### Detailed Changes
 
-### Minor
+#### Major
 
-### Patch
+- Broker Server API now generates into it's own Broker Server Client Typescript Library.
+
+#### Minor
+
+- Broker Server API is now part of this repository.
+- Dead Connectors are now deleted periodically.
+
+#### Patch
 
 ### Deployment Migration Notes
 

@@ -62,4 +62,4 @@ jobs:
           npm publish --access public --tag "${{ env.DIST_TAG }}"
         env:
           NODE_USER: richardtreier-sovity
-          NODE_AUTH_TOKEN: ${{ secrets.SOVITY_EDC_CLIENT_NPM_AUTH }}
+          NODE_AUTH_TOKEN: ${{ secrets.SOVITY_BROKER_SERVER_CLIENT_NPM_AUTH }}

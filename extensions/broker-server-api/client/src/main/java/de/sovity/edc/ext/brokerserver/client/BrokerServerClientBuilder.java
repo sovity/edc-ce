@@ -12,9 +12,8 @@
  *
  */
 
-package de.sovity.edc.client;
+package de.sovity.edc.ext.brokerserver.client;
 
-import de.sovity.edc.client.oauth2.OAuth2ClientCredentials;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -22,9 +21,9 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(fluent = true, chain = true)
-public class EdcClientBuilder {
+public class BrokerServerClientBuilder {
     /**
-     * Management API Base URL, e.g. https://my-connector.com/control/management
+     * Management API Base URL, e.g. https://my-broker.com/backend/management
      */
     private String managementApiUrl;
 
@@ -33,12 +32,7 @@ public class EdcClientBuilder {
      */
     private String managementApiKey = "ApiKeyDefaultValue";
 
-    /**
-     * Enables OAuth2 "Client Credentials Flow" authentication.
-     */
-    private OAuth2ClientCredentials oauth2ClientCredentials;
-
-    public EdcClient build() {
-        return EdcClientFactory.newClient(this);
+    public BrokerServerClient build() {
+        return BrokerServerClientFactory.newClient(this);
     }
 }

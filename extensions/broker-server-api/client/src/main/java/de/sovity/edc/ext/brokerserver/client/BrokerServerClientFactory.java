@@ -12,25 +12,21 @@
  *
  */
 
-package de.sovity.edc.client;
+package de.sovity.edc.ext.brokerserver.client;
 
 import de.sovity.edc.ext.brokerserver.client.gen.ApiClient;
 import de.sovity.edc.ext.brokerserver.client.gen.api.BrokerServerApi;
-import de.sovity.edc.client.oauth2.OAuth2CredentialsAuthenticator;
-import de.sovity.edc.client.oauth2.OAuth2CredentialsStore;
-import de.sovity.edc.client.oauth2.OAuth2CredentialsInterceptor;
-import de.sovity.edc.client.oauth2.OAuth2TokenFetcher;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Builds {@link EdcClient}s.
+ * Builds {@link BrokerServerClient}s.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class EdcClientFactory {
+public class BrokerServerClientFactory {
 
-    public static EdcClient newClient(EdcClientBuilder builder) {
+    public static BrokerServerClient newClient(BrokerServerClientBuilder builder) {
         var apiClient = new ApiClient()
                 .setServerIndex(null)
                 .setBasePath(builder.managementApiUrl());
@@ -39,18 +35,7 @@ public class EdcClientFactory {
             apiClient.addDefaultHeader("X-Api-Key", builder.managementApiKey());
         }
 
-        if (builder.oauth2ClientCredentials() != null) {
-            var tokenFetcher = new OAuth2TokenFetcher(builder.oauth2ClientCredentials());
-            var handler = new OAuth2CredentialsStore(tokenFetcher);
-            var httpClient = apiClient.getHttpClient()
-                    .newBuilder()
-                    .addInterceptor(new OAuth2CredentialsInterceptor(handler))
-                    .authenticator(new OAuth2CredentialsAuthenticator(handler))
-                    .build();
-            apiClient.setHttpClient(httpClient);
-        }
-
-        return new EdcClient(
+        return new BrokerServerClient(
                 new BrokerServerApi(apiClient)
         );
     }

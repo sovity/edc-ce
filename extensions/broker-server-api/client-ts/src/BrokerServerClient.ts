@@ -1,7 +1,7 @@
 import {
     BrokerServerApi,
     Configuration,
-    ConfigurationParameters
+    ConfigurationParameters,
 } from './generated';
 
 /**
@@ -15,7 +15,9 @@ export interface BrokerServerClient {
  * Configure & Build new Broker Server Client
  * @param opts opts
  */
-export function buildBrokerServerClient(opts: BrokerServerClientOptions): BrokerServerClient {
+export function buildBrokerServerClient(
+    opts: BrokerServerClientOptions,
+): BrokerServerClient {
     const config = new Configuration({
         basePath: opts.managementApiUrl,
         headers: {

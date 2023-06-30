@@ -12,21 +12,21 @@
  *
  */
 
-package de.sovity.edc.client;
+package de.sovity.edc.ext.brokerserver.client;
 
 import de.sovity.edc.ext.brokerserver.client.gen.api.BrokerServerApi;
 import lombok.Value;
 import lombok.experimental.Accessors;
 
 /**
- * API Client for our EDC API Wrapper.
+ * API Client for the Broker Server.
  */
 @Value
 @Accessors(fluent = true)
-public class EdcClient {
+public class BrokerServerClient {
     BrokerServerApi brokerServerApi;
 
-    public static EdcClientBuilder builder() {
-        return new EdcClientBuilder();
+    public static BrokerServerClientBuilder builder() {
+        return new BrokerServerClientBuilder();
     }
 }

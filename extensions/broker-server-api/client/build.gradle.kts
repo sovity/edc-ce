@@ -37,15 +37,6 @@ dependencies {
     // Lombok
     compileOnly("org.projectlombok:lombok:1.18.28")
     annotationProcessor("org.projectlombok:lombok:1.18.28")
-
-    testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
-    testImplementation("${edcGroup}:junit:${edcVersion}")
-    testImplementation("${edcGroup}:http:${edcVersion}")
-    testImplementation(project(":extensions:broker-server-api:api"))
-    testImplementation("io.rest-assured:rest-assured:${restAssured}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
-    testImplementation("org.assertj:assertj-core:${assertj}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
 }
 
 tasks.getByName<Test>("test") {
@@ -120,8 +111,8 @@ tasks.withType<Javadoc> {
     fullOptions.addStringOption("Xdoclint:none", "-quiet")
 }
 
-val sovityEdcGroup: String by project
-group = sovityEdcGroup
+val sovityBrokerServerGroup: String by project
+group = sovityBrokerServerGroup
 
 publishing {
     publications {
