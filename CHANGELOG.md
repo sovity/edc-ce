@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [x.x.x] - UNRELEASED
 
+### Major Changes
+
+- Upgrade to core-EDC version `0.1.2`
+- Now using the `Dataspace Protocol`
+- Major changes to the management API 
+  - Examples for the new requests are located in the postman collection in the `docs` folder
+  - The `OpenAPI` file has been updated to represent the EDC version `0.1.2`
+
 ### Minor Changes
 
 - Added build dates to Last Commit Info Extension
@@ -12,6 +20,17 @@ All notable changes to this project will be documented in this file.
 ### Patch Changes
 
 - Fix API Wrapper Broker Server API Spec not showing in client libraries.
+
+### Migration Notes
+
+- The `MY_EDC_IDS_BASE_URL` has been renamed to `MY_EDC_PROTOCOL_BASE_URL`
+- The default value of `WEB_HTTP_PROTOCOL_PATH` been changed from `${MY_EDC_BASE_PATH}/api/v1/ids` to `${MY_EDC_BASE_PATH}/api/v1/protocol`
+- The following new environment variables must be set
+  - `EDC_PARTICIPANT_ID`: `provider`
+  - `EDC_JSONLD_HTTPS_ENABLED`: `true`
+  - `EDC_DSP_CALLBACK_ADDRESS`: `http://edc:11003/api/v1/protocol`
+- All endpoints have a `v2` prefix now 
+  - example: `http://localhost:11002/api/v1/management/assets/request` is now available at `http://localhost:11002/api/v1/management/v2/assets/request`
 
 ## [3.2.0] - 2023-05-17
 
