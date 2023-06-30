@@ -122,8 +122,8 @@ class ConnectorUpdaterTest {
                 .build();
         var dataAddress = DataAddress.Builder.newInstance()
                 .properties(Map.of(
-                        "type", "HttpData",
-                        "baseUrl", "https://jsonplaceholder.typicode.com/todos/1"
+                "type", "HttpData",
+                "baseUrl", "https://jsonplaceholder.typicode.com/todos/1"
                 ))
                 .build();
         assetService.create(asset, dataAddress);

@@ -63,8 +63,8 @@ class DataOfferWriterTestDataHelper {
         Validate.notEmpty(dataOffer.getContractOffers());
         existingDataOffers.add(dummyDataOffer(dataOffer));
         dataOffer.getContractOffers().stream()
-                .map(contractOffer -> dummyContractOffer(dataOffer, contractOffer))
-                .forEach(existingContractOffers::add);
+            .map(contractOffer -> dummyContractOffer(dataOffer, contractOffer))
+            .forEach(existingContractOffers::add);
     }
 
     public void initialize(DSLContext dsl) {
@@ -113,14 +113,14 @@ class DataOfferWriterTestDataHelper {
 
     public String dummyAssetJson(Do dataOffer) {
         return "{\"%s\": \"%s\", \"%s\": \"%s\"}".formatted(
-                AssetProperty.ASSET_ID, dataOffer.getAssetId(),
-                AssetProperty.ASSET_NAME, dataOffer.getAssetName()
+            AssetProperty.ASSET_ID, dataOffer.getAssetId(),
+            AssetProperty.ASSET_NAME, dataOffer.getAssetName()
         );
     }
 
     public String dummyPolicyJson(String policyValue) {
         return "{\"%s\": \"%s\"}".formatted(
-                "SomePolicyField", policyValue
+            "SomePolicyField", policyValue
         );
     }
 

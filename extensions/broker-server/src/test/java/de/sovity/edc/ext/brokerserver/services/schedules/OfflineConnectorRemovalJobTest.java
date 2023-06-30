@@ -56,7 +56,7 @@ class OfflineConnectorRemovalJobTest {
     void beforeEach() {
         brokerServerSettings = mock(BrokerServerSettings.class);
         offlineConnectorRemover = new OfflineConnectorRemover(
-                brokerServerSettings,
+            brokerServerSettings,
                 new ConnectorQueries(),
                 new BrokerEventLogger()
         );

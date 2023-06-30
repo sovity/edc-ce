@@ -33,8 +33,8 @@ class DataOfferWriterTestResultHelper {
     DataOfferWriterTestResultHelper(DSLContext dsl) {
         this.dataOffers = dsl.selectFrom(Tables.DATA_OFFER).fetchMap(Tables.DATA_OFFER.ASSET_ID);
         this.contractOffers = dsl.selectFrom(Tables.DATA_OFFER_CONTRACT_OFFER).stream().collect(groupingBy(
-                DataOfferContractOfferRecord::getAssetId,
-                Collectors.toMap(DataOfferContractOfferRecord::getContractOfferId, Function.identity())
+            DataOfferContractOfferRecord::getAssetId,
+            Collectors.toMap(DataOfferContractOfferRecord::getContractOfferId, Function.identity())
         ));
     }
 

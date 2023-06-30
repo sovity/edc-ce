@@ -24,6 +24,6 @@ public class PolicyDtoBuilder {
 
     @SneakyThrows
     public PolicyDto buildPolicyFromJson(@NonNull String policyJson) {
-        return new PolicyDto(policyJson, null);
+        return new PolicyDto(policyJson);
     }
 }

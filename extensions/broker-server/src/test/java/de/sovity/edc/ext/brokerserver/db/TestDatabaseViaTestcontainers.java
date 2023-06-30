@@ -19,8 +19,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 public class TestDatabaseViaTestcontainers implements TestDatabase {
     private PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:15-alpine")
-            .withUsername("edc")
-            .withPassword("edc");
+        .withUsername("edc")
+        .withPassword("edc");
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {

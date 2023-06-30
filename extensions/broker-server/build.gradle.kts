@@ -42,7 +42,7 @@ dependencies {
     testImplementation("${edcGroup}:ids:${edcVersion}")
     testImplementation("${edcGroup}:monitor-jdk-logger:${edcVersion}")
     testImplementation("${edcGroup}:configuration-filesystem:${edcVersion}")
-    testImplementation("${sovityEdcGroup}:client:${sovityEdcExtensionsVersion}")
+    testImplementation(project(":extensions:broker-server-api:client"))
     testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation("org.testcontainers:testcontainers:${testcontainersVersion}")
     testImplementation("org.testcontainers:junit-jupiter:${testcontainersVersion}")
