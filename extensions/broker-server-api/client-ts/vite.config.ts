@@ -8,8 +8,8 @@ export default defineConfig({
     build: {
         lib: {
             entry: resolve(__dirname, 'src/index.ts'),
-            name: 'broker-server-client',
-            fileName: 'broker-server-client',
+            name: 'sovity-broker-server-client',
+            fileName: 'sovity-broker-server-client',
         },
         sourcemap: true,
     },
