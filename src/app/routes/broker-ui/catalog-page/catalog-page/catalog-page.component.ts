@@ -5,7 +5,7 @@ import {PageEvent} from '@angular/material/paginator';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {map, takeUntil} from 'rxjs/operators';
 import {Store} from '@ngxs/store';
-import {CatalogPageSortingItem} from '@sovity.de/edc-client/dist/generated/models/CatalogPageSortingItem';
+import {CatalogPageSortingItem} from '@sovity.de/broker-server-client';
 import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogResult} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-result';
 import {AssetDetailDialogComponent} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.component';

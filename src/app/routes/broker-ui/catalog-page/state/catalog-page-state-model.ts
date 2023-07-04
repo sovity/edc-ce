@@ -1,6 +1,8 @@
 import {Subscription} from 'rxjs';
-import {PaginationMetadata} from '@sovity.de/edc-client';
-import {CatalogPageSortingItem} from '@sovity.de/edc-client/dist/generated/models/CatalogPageSortingItem';
+import {
+  CatalogPageSortingItem,
+  PaginationMetadata,
+} from '@sovity.de/broker-server-client';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {BrokerCatalogPageResult} from '../catalog-page/mapping/broker-catalog-page-result';
 import {FilterValueSelectVisibleState} from '../filter-value-select/filter-value-select-visible-state';

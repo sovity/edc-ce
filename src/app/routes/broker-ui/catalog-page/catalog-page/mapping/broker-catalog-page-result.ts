@@ -1,4 +1,4 @@
-import {CatalogPageResult} from '@sovity.de/edc-client';
+import {CatalogPageResult} from '@sovity.de/broker-server-client';
 import {BrokerDataOffer} from './broker-data-offer';
 
 /**

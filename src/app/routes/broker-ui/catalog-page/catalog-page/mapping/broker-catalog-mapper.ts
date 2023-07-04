@@ -1,5 +1,8 @@
 import {Injectable} from '@angular/core';
-import {CatalogPageResult, DataOfferListEntry} from '@sovity.de/edc-client';
+import {
+  CatalogDataOffer,
+  CatalogPageResult,
+} from '@sovity.de/broker-server-client';
 import {AssetPropertyMapper} from '../../../../../core/services/asset-property-mapper';
 import {BrokerCatalogPageResult} from './broker-catalog-page-result';
 import {BrokerDataOffer} from './broker-data-offer';
@@ -15,7 +18,7 @@ export class BrokerCatalogMapper {
     };
   }
 
-  private buildUiDataOffer(offer: DataOfferListEntry): BrokerDataOffer {
+  private buildUiDataOffer(offer: CatalogDataOffer): BrokerDataOffer {
     return {
       ...offer,
       asset: this.assetPropertyMapper.buildAssetFromProperties(

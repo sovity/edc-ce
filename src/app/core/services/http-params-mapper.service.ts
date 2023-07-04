@@ -1,23 +1,44 @@
 import {Injectable} from '@angular/core';
 import {AssetDatasourceFormValue} from '../../routes/connector-ui/asset-page/asset-create-dialog/model/asset-datasource-form-model';
 import {HttpDatasourceHeaderFormValue} from '../../routes/connector-ui/asset-page/asset-create-dialog/model/http-datasource-header-form-model';
+import {HttpDatasourceQueryParamFormValue} from '../../routes/connector-ui/asset-page/asset-create-dialog/model/http-datasource-query-param-form-model';
 import {ContractAgreementTransferDialogFormValue} from '../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-form-model';
 import {removeNullValues} from '../utils/record-utils';
-import {DataAddressDto} from './api/legacy-managent-api-client';
+import {everythingAfter, everythingBefore} from '../utils/string-utils';
+import {Asset} from './models/asset';
 import {HttpRequestParams} from './models/http-request-params';
 
 @Injectable({providedIn: 'root'})
 export class HttpRequestParamsMapper {
-  buildHttpDataAddressDto(
+  buildHttpDataAddress(
     formValue:
       | AssetDatasourceFormValue
       | ContractAgreementTransferDialogFormValue
       | undefined,
-  ): DataAddressDto {
+  ): Record<string, string> {
     const params = this.buildHttpRequestParams(formValue);
-    return {
-      properties: this.encodeHttpRequestParams(params),
-    };
+    return this.encodeHttpRequestParams(params);
+  }
+
+  encodeHttpProxyTransferRequestProperties(
+    asset: Asset,
+    value: ContractAgreementTransferDialogFormValue,
+  ): Record<string, string> {
+    const method = value.httpProxiedMethod?.trim() ?? '';
+    const {baseUrl: pathSegments, queryParams} = this.getUrlAndQueryParams(
+      value.httpProxiedPath,
+      value.httpProxiedQueryParams,
+    );
+    const body = value.httpProxiedBody?.trim() ?? '';
+    const contentType = value.httpProxiedBodyContentType?.trim() ?? '';
+
+    return removeNullValues({
+      method: asset.httpProxyMethod ? method : null,
+      pathSegments: asset.httpProxyPath ? pathSegments : null,
+      queryParams: asset.httpProxyQueryParams ? queryParams : null,
+      body: asset.httpProxyBody ? body : null,
+      mediaType: asset.httpProxyBody ? contentType : null,
+    });
   }
 
   encodeHttpRequestParams(
@@ -25,11 +46,17 @@ export class HttpRequestParamsMapper {
   ): Record<string, string> {
     const props: Record<string, string | null> = {
       type: 'HttpData',
-      baseUrl: httpRequestParams.url,
+      baseUrl: httpRequestParams.baseUrl,
       method: httpRequestParams.method,
       authKey: httpRequestParams.authHeaderName,
       authCode: httpRequestParams.authHeaderValue,
       secretName: httpRequestParams.authHeaderSecretName,
+      proxyMethod: httpRequestParams.proxyMethod ? 'true' : null,
+      proxyPath: httpRequestParams.proxyPath ? 'true' : null,
+      proxyQueryParams: httpRequestParams.proxyQueryParams ? 'true' : null,
+      proxyBody: httpRequestParams.proxyBody ? 'true' : null,
+      queryParams: httpRequestParams.queryParams,
+      path: httpRequestParams.defaultPath,
       ...Object.fromEntries(
         Object.entries(httpRequestParams.headers).map(
           ([headerName, headerValue]) => [`header:${headerName}`, headerValue],
@@ -40,12 +67,48 @@ export class HttpRequestParamsMapper {
   }
 
   buildHttpRequestParams(
-    formValue:
-      | AssetDatasourceFormValue
-      | ContractAgreementTransferDialogFormValue
-      | undefined,
+    formValue: AssetDatasourceFormValue | undefined,
   ): HttpRequestParams {
-    // Common Values
+    let proxyMethod = !!formValue?.httpProxyMethod;
+    let proxyPath = !!formValue?.httpProxyPath;
+    let proxyQueryParams = !!formValue?.httpProxyQueryParams;
+    let proxyBody = !!formValue?.httpProxyBody;
+
+    let {authHeaderName, authHeaderValue, authHeaderSecretName} =
+      this.getAuthFields(formValue);
+
+    let defaultPath: string | null = null;
+    if (proxyPath) {
+      defaultPath = formValue?.httpDefaultPath?.trim() || null;
+    }
+
+    let method = formValue?.httpMethod?.trim().toUpperCase() ?? '';
+    let {baseUrl, queryParams} = this.getUrlAndQueryParams(
+      formValue?.httpUrl,
+      formValue?.httpQueryParams,
+    );
+
+    return {
+      baseUrl,
+      defaultPath,
+      method,
+      authHeaderName,
+      authHeaderValue,
+      authHeaderSecretName,
+      proxyMethod,
+      proxyPath,
+      proxyQueryParams,
+      proxyBody,
+      queryParams,
+      headers: this.buildHttpHeaders(formValue?.httpHeaders ?? []),
+    };
+  }
+
+  private getAuthFields(formValue: AssetDatasourceFormValue | undefined): {
+    authHeaderName: string | null;
+    authHeaderValue: string | null;
+    authHeaderSecretName: string | null;
+  } {
     let authHeaderName: string | null = null;
     if (formValue?.httpAuthHeaderType !== 'None') {
       authHeaderName = formValue?.httpAuthHeaderName?.trim() || null;
@@ -61,15 +124,34 @@ export class HttpRequestParamsMapper {
       authHeaderSecretName =
         formValue?.httpAuthHeaderSecretName?.trim() || null;
     }
+    return {authHeaderName, authHeaderValue, authHeaderSecretName};
+  }
 
-    return {
-      url: formValue?.httpUrl?.trim() ?? '',
-      method: formValue?.httpMethod?.trim().toUpperCase() ?? '',
-      authHeaderName,
-      authHeaderValue,
-      authHeaderSecretName,
-      headers: this.buildHttpHeaders(formValue?.httpHeaders ?? []),
-    };
+  getUrlAndQueryParams(
+    rawUrl: string | null | undefined,
+    rawQueryParams: HttpDatasourceQueryParamFormValue[] | null | undefined,
+  ): {
+    baseUrl: string;
+    queryParams: string;
+  } {
+    let url = rawUrl?.trim() ?? '';
+
+    let baseUrl = everythingBefore('?', url);
+
+    let queryParamSegments = (rawQueryParams ?? []).map((param) =>
+      this.encodeQueryParam(param),
+    );
+    let queryParams = [everythingAfter('?', url), ...queryParamSegments]
+      .filter((it) => !!it)
+      .join('&');
+
+    return {baseUrl, queryParams};
+  }
+
+  private encodeQueryParam(param: HttpDatasourceQueryParamFormValue): string {
+    let k = param.paramName?.trim() ?? '';
+    let v = param.paramValue?.trim() ?? '';
+    return `${encodeURIComponent(k)}=${encodeURIComponent(v)}`;
   }
 
   private buildHttpHeaders(

@@ -1,4 +1,4 @@
-import {ConnectorPageResult} from '@sovity.de/edc-client';
+import {ConnectorPageResult} from '@sovity.de/broker-server-client';
 import {Fetched} from '../../../../core/services/models/fetched';
 
 export interface ConnectorPageData {

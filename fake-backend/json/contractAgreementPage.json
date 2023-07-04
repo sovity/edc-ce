@@ -190,7 +190,13 @@
         "assetId": "urn:artifact:my-test-asset-2",
         "createdAt": "2023-04-24T12:32:28.492Z",
         "properties": {
-          "asset:prop:id": "urn:artifact:my-test-asset-2"
+          "asset:prop:id": "urn:artifact:my-test-asset-2",
+          "asset:prop:datasource:http:hints:proxyMethod": "true",
+          "asset:prop:datasource:http:hints:proxyPath": "true",
+          "asset:prop:datasource:http:hints:proxyQueryParams": "true",
+          "asset:prop:datasource:http:hints:proxyBody": "true",
+          "asset:prop:datasource:http:hints:defaultMethod": "GET",
+          "asset:prop:datasource:http:hints:defaultPath": "/"
         }
       },
       "contractPolicy": {

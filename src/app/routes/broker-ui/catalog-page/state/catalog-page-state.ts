@@ -1,8 +1,11 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {Subject} from 'rxjs';
 import {Action, State, StateContext} from '@ngxs/store';
-import {CatalogPageQuery, CatalogPageResult} from '@sovity.de/edc-client';
-import {EdcApiService} from '../../../../core/services/api/edc-api.service';
+import {
+  CatalogPageQuery,
+  CatalogPageResult,
+} from '@sovity.de/broker-server-client';
+import {BrokerServerApiService} from '../../../../core/services/api/broker-server-api.service';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {BrokerCatalogMapper} from '../catalog-page/mapping/broker-catalog-mapper';
 import {
@@ -28,7 +31,7 @@ type Ctx = StateContext<CatalogPageStateModel>;
 @Injectable()
 export class CatalogPageState implements OnDestroy {
   constructor(
-    private edcApiService: EdcApiService,
+    private brokerServerApiService: BrokerServerApiService,
     private brokerCatalogMapper: BrokerCatalogMapper,
     private ngxsUtils: NgxsUtils,
   ) {
@@ -49,8 +52,8 @@ export class CatalogPageState implements OnDestroy {
     ctx.getState().fetchSubscription?.unsubscribe();
     const query = this.buildCatalogPageQuery(ctx.getState());
 
-    const fetchSubscription = this.edcApiService
-      .brokerCatalog(query)
+    const fetchSubscription = this.brokerServerApiService
+      .catalogPage(query)
       .pipe(
         Fetched.wrap({failureMessage: 'Failed fetching data offers.'}),
         Fetched.map((data) =>

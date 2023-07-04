@@ -1,4 +1,4 @@
-import {CnfFilterItem} from '@sovity.de/edc-client';
+import {CnfFilterItem} from '@sovity.de/broker-server-client';
 
 export interface FilterValueSelectItem {
   type: 'ITEM' | 'NO_VALUE';

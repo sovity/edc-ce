@@ -5,6 +5,7 @@ import {map} from 'rxjs/operators';
 import {value$} from '../../../../../core/utils/form-group-utils';
 import {noWhitespaceValidator} from '../../../../../core/validators/no-whitespace-validator';
 import {requiresPrefixValidator} from '../../../../../core/validators/requires-prefix-validator';
+import {urlValidator} from '../../../../../core/validators/url-validator';
 import {LanguageSelectItem} from '../../language-select/language-select-item';
 import {LanguageSelectItemService} from '../../language-select/language-select-item.service';
 import {AssetsIdValidatorBuilder} from '../assets-id-validator-builder';
@@ -37,6 +38,9 @@ export class AssetMetadataFormBuilder {
         keywords: [new Array<string>()],
         language:
           this.languageSelectItemService.english() as LanguageSelectItem | null,
+        publisher: ['', urlValidator],
+        standardLicense: ['', urlValidator],
+        endpointDocumentation: ['', urlValidator],
       });
 
     // generate id from name and version(if available)

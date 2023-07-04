@@ -12,4 +12,7 @@ export interface AssetMetadataFormModel {
   description: FormControl<string>;
   keywords: FormControl<string[]>;
   language: FormControl<LanguageSelectItem | null>;
+  publisher: FormControl<string>;
+  standardLicense: FormControl<string>;
+  endpointDocumentation: FormControl<string>;
 }

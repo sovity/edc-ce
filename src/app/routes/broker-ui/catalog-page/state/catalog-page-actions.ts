@@ -1,4 +1,4 @@
-import {CatalogPageSortingItem} from '@sovity.de/edc-client/dist/generated/models/CatalogPageSortingItem';
+import {CatalogPageSortingItem} from '@sovity.de/broker-server-client';
 import {FilterValueSelectItem} from '../filter-value-select/filter-value-select-item';
 import {CatalogActiveFilterPill} from './catalog-active-filter-pill';
 

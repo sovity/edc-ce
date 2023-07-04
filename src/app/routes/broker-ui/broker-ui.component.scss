@@ -24,9 +24,3 @@
   cursor: pointer;
   background-color: #dedede;
 }
-
-::ng-deep .mat-drawer-inner-container {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden !important;
-}

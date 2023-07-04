@@ -10,6 +10,7 @@ import {
 } from './asset-datasource-form-model';
 import {HttpDatasourceAuthHeaderType} from './http-datasource-auth-header-type';
 import {HttpDatasourceHeaderFormModel} from './http-datasource-header-form-model';
+import {HttpDatasourceQueryParamFormModel} from './http-datasource-query-param-form-model';
 
 @Injectable()
 export class AssetDatasourceFormBuilder {
@@ -20,9 +21,6 @@ export class AssetDatasourceFormBuilder {
       this.formBuilder.nonNullable.group({
         dataAddressType: 'Http' as DataAddressType,
         dataDestination: ['', [Validators.required, jsonValidator]],
-        publisher: ['', urlValidator],
-        standardLicense: ['', urlValidator],
-        endpointDocumentation: ['', urlValidator],
 
         // Http Datasource Fields
         httpUrl: ['', [Validators.required, urlValidator]],
@@ -32,6 +30,15 @@ export class AssetDatasourceFormBuilder {
         httpAuthHeaderName: ['', Validators.required],
         httpAuthHeaderValue: ['', Validators.required],
         httpAuthHeaderSecretName: ['', Validators.required],
+        httpQueryParams: this.formBuilder.array(
+          new Array<FormGroup<HttpDatasourceQueryParamFormModel>>(),
+        ),
+
+        httpDefaultPath: [''],
+        httpProxyMethod: [false],
+        httpProxyPath: [false],
+        httpProxyQueryParams: [false],
+        httpProxyBody: [false],
 
         httpHeaders: this.formBuilder.array(
           new Array<FormGroup<HttpDatasourceHeaderFormModel>>(),
@@ -46,6 +53,7 @@ export class AssetDatasourceFormBuilder {
       const httpAuth = value.httpAuthHeaderType !== 'None';
       const httpAuthByValue = value.httpAuthHeaderType === 'Value';
       const httpAuthByVault = value.httpAuthHeaderType === 'Vault-Secret';
+      let proxyPath = !!value.httpProxyPath;
 
       return {
         dataAddressType: true,
@@ -64,6 +72,13 @@ export class AssetDatasourceFormBuilder {
         httpAuthHeaderName: http && httpAuth,
         httpAuthHeaderValue: http && httpAuthByValue,
         httpAuthHeaderSecretName: http && httpAuthByVault,
+        httpQueryParams: http,
+
+        httpDefaultPath: http && proxyPath,
+        httpProxyMethod: http,
+        httpProxyPath: http,
+        httpProxyQueryParams: http,
+        httpProxyBody: http,
 
         httpHeaders: http,
       };
@@ -76,6 +91,13 @@ export class AssetDatasourceFormBuilder {
     return this.formBuilder.nonNullable.group({
       headerName: ['', Validators.required],
       headerValue: ['', Validators.required],
+    });
+  }
+
+  buildQueryParamFormGroup(): FormGroup<HttpDatasourceQueryParamFormModel> {
+    return this.formBuilder.nonNullable.group({
+      paramName: ['', Validators.required],
+      paramValue: [''],
     });
   }
 }

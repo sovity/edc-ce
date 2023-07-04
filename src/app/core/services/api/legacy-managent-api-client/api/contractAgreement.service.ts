@@ -28,8 +28,6 @@ import {Configuration} from '../configuration';
 import {CustomHttpParameterCodec} from '../encoder';
 // @ts-ignore
 import {ContractAgreementDto} from '../model/contractAgreementDto';
-import {DataAddressDto} from '../model/dataAddressDto';
-import {TransferId} from '../model/transferId';
 // @ts-ignore
 import {
   API_KEY,
@@ -340,31 +338,5 @@ export class ContractAgreementService {
         reportProgress: reportProgress,
       },
     );
-  }
-  initiateTransfer(
-    id: string,
-    dataAddressDto: DataAddressDto,
-  ): Observable<TransferId> {
-    if (id == null) {
-      throw new Error(
-        'Required parameter id was null or undefined when calling initiateTransfer.',
-      );
-    }
-
-    if (dataAddressDto == null) {
-      throw new Error(
-        'Required parameter dataAddressDto was null or undefined when calling initiateTransfer.',
-      );
-    }
-
-    let url = `${
-      this.configuration.basePath
-    }/contract-agreements-transfer/contractagreements/${encodeURIComponent(
-      id,
-    )}/transfer`;
-    return this.httpClient.post<TransferId>(url, dataAddressDto, {
-      withCredentials: this.configuration.withCredentials,
-      headers: this.defaultHeaders,
-    });
   }
 }

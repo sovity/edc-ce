@@ -30,6 +30,14 @@ export interface Asset {
   geoReferenceMethod: string | null;
   transportMode: TransportModeSelectItem | null;
 
+  // HTTP Parameterization Metadata
+  httpProxyMethod: boolean | null;
+  httpProxyPath: boolean | null;
+  httpProxyQueryParams: boolean | null;
+  httpProxyBody: boolean | null;
+  httpDefaultPath: string | null;
+  httpDefaultMethod: string | null;
+
   // Unhandled Additional Properties
   additionalProperties: AdditionalAssetProperty[];
 }

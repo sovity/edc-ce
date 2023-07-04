@@ -16,6 +16,7 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
+- Parameterization of Http Data Sources.
 - Enteprise Edition (Basic): Added support for consuming contract agreement
   limits.
 

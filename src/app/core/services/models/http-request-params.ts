@@ -1,8 +1,14 @@
 export interface HttpRequestParams {
   /**
-   * URL the request is sent to
+   * (Base) URL of the request
    */
-  url: string;
+  baseUrl: string;
+
+  /**
+   * If proxy path is set, this
+   */
+
+  defaultPath: string | null;
 
   /**
    * Http-method
@@ -28,4 +34,13 @@ export interface HttpRequestParams {
    * Additional headers to be sent
    */
   headers: Record<string, string>;
+
+  /**
+   * Query Parameters
+   */
+  queryParams: string;
+  proxyMethod: boolean;
+  proxyPath: boolean;
+  proxyQueryParams: boolean;
+  proxyBody: boolean;
 }

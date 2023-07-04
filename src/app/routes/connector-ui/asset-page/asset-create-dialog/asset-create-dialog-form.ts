@@ -57,6 +57,22 @@ export class AssetCreateDialogForm {
     return this.all.value;
   }
 
+  get proxyMethod(): boolean {
+    return this.datasource.controls.httpProxyMethod.value;
+  }
+
+  get proxyPath(): boolean {
+    return this.datasource.controls.httpProxyPath.value;
+  }
+
+  get proxyQueryParams(): boolean {
+    return this.datasource.controls.httpProxyQueryParams.value;
+  }
+
+  get proxyBody(): boolean {
+    return this.datasource.controls.httpProxyBody.value;
+  }
+
   constructor(
     private formBuilder: FormBuilder,
     private activeFeatureSet: ActiveFeatureSet,
@@ -95,5 +111,15 @@ export class AssetCreateDialogForm {
 
   onHttpHeadersRemoveClick(index: number) {
     this.datasource.controls.httpHeaders.removeAt(index);
+  }
+
+  onHttpQueryParamsAddClick() {
+    this.datasource.controls.httpQueryParams.push(
+      this.assetDatasourceFormBuilder.buildQueryParamFormGroup(),
+    );
+  }
+
+  onHttpQueryParamsRemoveClick(index: number) {
+    this.datasource.controls.httpQueryParams.removeAt(index);
   }
 }

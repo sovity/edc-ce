@@ -62,6 +62,12 @@
             label="Keywords"
             [control]="form.metadata.controls.keywords"></keyword-select>
 
+          <!-- Language -->
+          <language-select
+            class="grow"
+            label="Language"
+            [control]="form.metadata.controls.language"></language-select>
+
           <div class="flex flex-row space-x-[10px]">
             <!-- Content Type -->
             <mat-form-field class="grow">
@@ -73,11 +79,40 @@
             </mat-form-field>
           </div>
 
-          <!-- Language -->
-          <language-select
-            class="grow"
-            label="Language"
-            [control]="form.metadata.controls.language"></language-select>
+          <!-- Endpoint Documentation -->
+          <mat-form-field
+            *ngIf="form.metadata.controls.endpointDocumentation; let ctrl"
+            class="grow">
+            <mat-label>Endpoint Documentation</mat-label>
+            <input placeholder="https://" matInput [formControl]="ctrl" />
+            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
+              {{ validationMessages.invalidUrlMessage }}
+            </mat-error>
+          </mat-form-field>
+
+          <div class="flex flex-row space-x-[10px]">
+            <!-- Publisher -->
+            <mat-form-field
+              *ngIf="form.metadata.controls.publisher; let ctrl"
+              class="grow">
+              <mat-label>Publisher</mat-label>
+              <input placeholder="https://" matInput [formControl]="ctrl" />
+              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
+                {{ validationMessages.invalidUrlMessage }}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Standard License -->
+            <mat-form-field
+              *ngIf="form.metadata.controls.standardLicense; let ctrl"
+              class="grow">
+              <mat-label>Standard License</mat-label>
+              <input placeholder="https://" matInput [formControl]="ctrl" />
+              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
+                {{ validationMessages.invalidUrlMessage }}
+              </mat-error>
+            </mat-form-field>
+          </div>
         </div>
       </form>
     </mat-step>
@@ -155,40 +190,179 @@
             <mat-label>Custom Datasource Config (JSON)</mat-label>
             <textarea
               matInput
-              [formControl]="ctrl"
-              [placeholder]="'{}'"></textarea>
+              placeholder='{"type": "HttpData", ...}'
+              [formControl]="ctrl"></textarea>
             <mat-error *ngIf="ctrl.invalid && ctrl.errors?.jsonInvalid">
               {{ validationMessages.invalidJsonMessage }}
             </mat-error>
           </mat-form-field>
 
           <ng-container *ngIf="form.dataAddressType === 'Http'">
-            <div class="flex flex-row space-x-[10px]">
-              <!-- Method (Rest-Api) -->
-              <mat-form-field
-                *ngIf="form.datasource.controls.httpMethod; let ctrl"
-                class="w-1/3">
-                <mat-label>Method</mat-label>
-                <mat-select [formControl]="ctrl">
-                  <mat-option *ngFor="let method of methods" [value]="method">{{
-                    method
-                  }}</mat-option>
-                </mat-select>
-              </mat-form-field>
+            <div class="form-section-title">
+              {{ form.proxyMethod ? 'Default' : '' }} Method
+            </div>
 
-              <!-- URL (Rest-Api) -->
+            <!-- Method (Rest-Api) -->
+            <mat-form-field
+              *ngIf="form.datasource.controls.httpMethod; let ctrl">
+              <mat-label>
+                {{ form.proxyMethod ? 'Default' : '' }} Method
+              </mat-label>
+              <mat-select [formControl]="ctrl">
+                <mat-option *ngFor="let method of methods" [value]="method">{{
+                  method
+                }}</mat-option>
+              </mat-select>
+              <mat-hint *ngIf="form.proxyMethod">
+                When no method override is set, this method will be used.
+              </mat-hint>
+            </mat-form-field>
+
+            <!-- Toggle Proxy Method Button -->
+            <div
+              *ngIf="form.datasource.controls.httpProxyMethod; let ctrl"
+              class="flex flex-row mb-[10px]">
+              <button
+                mat-button
+                [color]="ctrl.value ? 'warn' : 'primary'"
+                (click)="ctrl.setValue(!ctrl.value)">
+                {{ ctrl.value ? 'Disable' : 'Enable' }} Method Parameterization
+              </button>
+            </div>
+
+            <div class="form-section-title">URL</div>
+
+            <!-- Base Path (Rest-Api) -->
+            <mat-form-field
+              *ngIf="form.datasource.controls.httpUrl; let ctrl"
+              class="grow">
+              <mat-label *ngIf="!form.datasource.controls.httpProxyPath.value">
+                URL
+              </mat-label>
+              <mat-label *ngIf="form.datasource.controls.httpProxyPath.value">
+                Base URL
+              </mat-label>
+              <input matInput [formControl]="ctrl" [placeholder]="'https://'" />
+              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
+                {{ validationMessages.invalidUrlMessage }}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Default Path (Rest-Api) -->
+            <ng-container *ngIf="form.datasource.controls.httpProxyPath.value">
               <mat-form-field
-                *ngIf="form.datasource.controls.httpUrl; let ctrl"
+                *ngIf="form.datasource.controls.httpDefaultPath; let ctrl"
                 class="grow">
-                <mat-label>URL</mat-label>
+                <mat-label>Default Path</mat-label>
                 <input
                   matInput
                   [formControl]="ctrl"
-                  [placeholder]="'https://'" />
-                <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
-                  {{ validationMessages.invalidUrlMessage }}
-                </mat-error>
+                  [placeholder]="'sub-path/endpoint'" />
+                <mat-hint
+                  >When no path override is set, this path will be used.
+                </mat-hint>
               </mat-form-field>
+            </ng-container>
+
+            <!-- Toggle Proxy Path Button -->
+            <div
+              *ngIf="form.datasource.controls.httpProxyPath; let ctrl"
+              class="flex flex-row mb-[10px]">
+              <button
+                mat-button
+                [color]="ctrl.value ? 'warn' : 'primary'"
+                (click)="ctrl.setValue(!ctrl.value)">
+                {{ ctrl.value ? 'Disable' : 'Enable' }} Path Parameterization
+              </button>
+            </div>
+
+            <div class="form-section-title">
+              {{ form.proxyQueryParams ? 'Default' : '' }} Query Params
+            </div>
+
+            <div
+              *ngFor="
+                let header of form.datasource.controls.httpQueryParams.controls;
+                let i = index
+              "
+              class="flex flex-row space-x-[10px]">
+              <!-- Query Param Name -->
+              <mat-form-field class="w-1/3">
+                <mat-label>Query Param Name</mat-label>
+                <input
+                  matInput
+                  placeholder="key"
+                  required
+                  autocomplete="new-query-param-name"
+                  [formControl]="header.controls.paramName" />
+              </mat-form-field>
+
+              <!-- Query Param Value -->
+              <mat-form-field class="grow">
+                <mat-label>Value</mat-label>
+                <input
+                  matInput
+                  placeholder="..."
+                  autocomplete="new-query-param-value"
+                  [formControl]="header.controls.paramValue" />
+              </mat-form-field>
+
+              <!-- Query Param Delete Button -->
+              <button
+                mat-button
+                color="warn"
+                style="height: 54px; margin-top: 4px; margin-left: 8px"
+                (click)="form.onHttpQueryParamsRemoveClick(i)">
+                Remove
+              </button>
+            </div>
+
+            <div
+              *ngIf="form.proxyQueryParams"
+              class="text-sm mb-[10px] px-[3px]">
+              With query param parameterization enabled, the default query
+              params and the query params provided by the consumer will be
+              merged.
+            </div>
+
+            <div class="flex flex-row mb-[10px] space-x-[10px]">
+              <!-- Add Query Param Button -->
+              <button
+                mat-button
+                color="primary"
+                (click)="form.onHttpQueryParamsAddClick()">
+                Add {{ form.proxyQueryParams ? 'Default' : '' }} Query Param
+              </button>
+
+              <!-- Toggle Proxy QueryParams Button -->
+              <button
+                *ngIf="form.datasource.controls.httpProxyQueryParams; let ctrl"
+                mat-button
+                [color]="ctrl.value ? 'warn' : 'primary'"
+                (click)="ctrl.setValue(!ctrl.value)">
+                {{ ctrl.value ? 'Disable' : 'Enable' }} Query Param
+                Parameterization
+              </button>
+            </div>
+
+            <div class="form-section-title">Request Body</div>
+
+            <div class="text-sm mb-[10px] px-[3px]">
+              The request body can only be set from the consumer side, if
+              parameterization is enabled.
+            </div>
+
+            <!-- Toggle Proxy Body Button -->
+            <div
+              *ngIf="form.datasource.controls.httpProxyBody; let ctrl"
+              class="flex flex-row mb-[10px]">
+              <button
+                mat-button
+                [color]="ctrl.value ? 'warn' : 'primary'"
+                (click)="ctrl.setValue(!ctrl.value)">
+                {{ ctrl.value ? 'Disable' : 'Enable' }} Request Body
+                Parameterization
+              </button>
             </div>
 
             <div class="form-section-title">Authentication</div>
@@ -337,43 +511,6 @@
               </button>
             </div>
           </ng-container>
-
-          <div class="form-section-title">Metadata</div>
-
-          <!-- Endpoint Documentation -->
-          <mat-form-field
-            *ngIf="form.datasource.controls.endpointDocumentation; let ctrl"
-            class="grow">
-            <mat-label>Endpoint Documentation</mat-label>
-            <input placeholder="https://" matInput [formControl]="ctrl" />
-            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
-              {{ validationMessages.invalidUrlMessage }}
-            </mat-error>
-          </mat-form-field>
-
-          <div class="flex flex-row space-x-[10px]">
-            <!-- Publisher -->
-            <mat-form-field
-              *ngIf="form.datasource.controls.publisher; let ctrl"
-              class="grow">
-              <mat-label>Publisher</mat-label>
-              <input placeholder="https://" matInput [formControl]="ctrl" />
-              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
-                {{ validationMessages.invalidUrlMessage }}
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Standard License -->
-            <mat-form-field
-              *ngIf="form.datasource.controls.standardLicense; let ctrl"
-              class="grow">
-              <mat-label>Standard License</mat-label>
-              <input placeholder="https://" matInput [formControl]="ctrl" />
-              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
-                {{ validationMessages.invalidUrlMessage }}
-              </mat-error>
-            </mat-form-field>
-          </div>
         </div>
       </form>
     </mat-step>

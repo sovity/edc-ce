@@ -1,1 +1,4 @@
-export type DataAddressType = 'Custom-Data-Address-Json' | 'Http';
+export type DataAddressType =
+  | 'Custom-Data-Address-Json'
+  | 'Custom-Transfer-Process-Request'
+  | 'Http';

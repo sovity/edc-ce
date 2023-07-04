@@ -91,6 +91,7 @@ export class AssetDetailDialogComponent implements OnDestroy {
   onTransferClick() {
     const data: ContractAgreementTransferDialogData = {
       contractId: this.data.contractAgreement?.contractAgreementId!!,
+      asset: this.data.asset,
     };
     this.matDialog.open(ContractAgreementTransferDialogComponent, {
       data,

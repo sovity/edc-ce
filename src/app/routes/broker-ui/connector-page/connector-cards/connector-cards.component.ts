@@ -1,5 +1,5 @@
 import {Component, HostBinding, Input} from '@angular/core';
-import {ConnectorListEntry} from '@sovity.de/edc-client';
+import {ConnectorListEntry} from '@sovity.de/broker-server-client';
 
 @Component({
   selector: 'connector-cards',

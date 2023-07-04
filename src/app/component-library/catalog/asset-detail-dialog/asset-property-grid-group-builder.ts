@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {DataOfferListEntryContractOffer} from '@sovity.de/edc-client';
+import {CatalogContractOffer} from '@sovity.de/broker-server-client';
 import {ActiveFeatureSet} from '../../../core/config/active-feature-set';
 import {Policy} from '../../../core/services/api/legacy-managent-api-client';
 import {AssetProperties} from '../../../core/services/asset-properties';
@@ -174,7 +174,7 @@ export class AssetPropertyGridGroupBuilder {
 
   buildContractOfferGroup(
     asset: Asset,
-    contractOffer: DataOfferListEntryContractOffer,
+    contractOffer: CatalogContractOffer,
     i: number,
     total: number,
   ) {
