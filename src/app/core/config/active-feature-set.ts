@@ -10,6 +10,10 @@ export class ActiveFeatureSet {
     return this.has('mds-fields');
   }
 
+  hasConnectorLimits(): boolean {
+    return this.has('connector-limits');
+  }
+
   has(feature: EdcUiFeature): boolean {
     return this.config.features.has(feature);
   }

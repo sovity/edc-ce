@@ -106,6 +106,12 @@ app.get('/api/v1/data/wrapper/ui/pages/contract-agreement-page', (_, res) => {
   res.json(contractAgreementPage);
 });
 
+// Connector Limits
+const connectorLimits = json('json/connectorLimits.json');
+app.get('/api/v1/data/wrapper/ee/connector-limits', (_, res) => {
+  res.json(connectorLimits);
+});
+
 // Broker API Wrapper
 const brokerCatalogPage = json('json/brokerCatalogPage.json');
 app.post('/api/v1/data/wrapper/broker/catalog-page', (_, res) => {

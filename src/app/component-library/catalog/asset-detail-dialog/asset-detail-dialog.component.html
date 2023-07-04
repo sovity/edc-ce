@@ -101,6 +101,8 @@
         "
         mat-raised-button
         color="primary"
+        [matTooltip]="data.contractAgreement?.statusTooltipText ?? ''"
+        [disabled]="!data.contractAgreement?.canTransfer"
         (click)="onTransferClick()">
         Transfer
       </button>

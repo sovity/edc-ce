@@ -3,6 +3,7 @@ import {Observable, from} from 'rxjs';
 import {
   CatalogPageQuery,
   CatalogPageResult,
+  ConnectorLimits,
   ConnectorPageQuery,
   ConnectorPageResult,
   ContractAgreementPage,
@@ -29,6 +30,10 @@ export class EdcApiService {
 
   getKpis(): Observable<KpiResult> {
     return from(this.edcClient.useCaseApi.kpiEndpoint());
+  }
+
+  getEnterpriseEditionConnectorLimits(): Observable<ConnectorLimits> {
+    return from(this.edcClient.enterpriseEditionApi.connectorLimits());
   }
 
   brokerCatalog(

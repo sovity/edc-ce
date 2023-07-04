@@ -16,6 +16,9 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
+- Enteprise Edition (Basic): Added support for consuming contract agreement
+  limits.
+
 #### Changed
 
 #### Removed

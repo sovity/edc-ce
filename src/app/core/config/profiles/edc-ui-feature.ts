@@ -9,4 +9,7 @@ export type EdcUiFeature =
   | 'logout-button'
 
   // Enables marketing for sovity in open-source variants
-  | 'open-source-marketing';
+  | 'open-source-marketing'
+
+  // Enterprise Edition specific attribute to view limits enforced on consuming contract agreements
+  | 'connector-limits';
