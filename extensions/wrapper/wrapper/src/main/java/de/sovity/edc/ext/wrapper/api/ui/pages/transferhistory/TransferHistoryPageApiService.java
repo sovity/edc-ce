@@ -20,8 +20,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TransferHistoryPageApiService {
 
+    private final TransferHistoryPageDataFetcher transferHistoryPageDataFetcher;
+
     public TransferHistoryPage transferHistoryPage() {
-        // TODO: Implement
-        throw new IllegalStateException("Not yet implemented");
+
+        var transferHistoryPageEntries = transferHistoryPageDataFetcher.getTransferHistoryEntries();
+        return new TransferHistoryPage(transferHistoryPageEntries);
     }
 }
