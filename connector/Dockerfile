@@ -1,4 +1,4 @@
-FROM gradle:7.6.0-jdk17 AS build
+FROM gradle:8.2.0-jdk17 AS build
 
 ARG BUILD_ARGS
 
