@@ -16,15 +16,25 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
-- Parameterization of Http Data Sources.
-- Enteprise Edition (Basic): Added support for consuming contract agreement
-  limits.
-
 #### Changed
 
 #### Removed
 
 #### Fixed
+
+## [v0.0.1-milestone-8-sovity9] 04.07.2023
+
+### Overview
+
+Full support for parameterized HTTP Data Sources, some Basic EE features.
+
+### Detailed Changes
+
+#### Added
+
+- Parameterization of Http Data Sources.
+- Enteprise Edition (Basic): Added support for consuming contract agreement
+  limits.
 
 ## [v0.0.1-milestone-8-sovity8] 23.06.2023
 
