@@ -38,13 +38,12 @@ import static java.util.stream.Collectors.*;
 
 @RequiredArgsConstructor
 public class TransferHistoryPageDataFetcher {
+    private final AssetService assetService;
     private final ContractAgreementService contractAgreementService;
     private final ContractNegotiationStore contractNegotiationStore;
     private final TransferProcessService transferProcessService;
 
     private final TransferProcessStateService transferProcessStateService;
-
-    private final AssetService assetService;
 
     /**
      * Fetches all contract agreements as {@link TransferHistoryEntry}s.
@@ -70,19 +69,19 @@ public class TransferHistoryPageDataFetcher {
 
         var transferStream = getAllTransferProcesses().stream();
         var assetStream = getAllAssets().stream();
-        var transfersList = transferStream.map(process -> {
+        return transferStream.map(process -> {
 
             var agreement =
                     agreementsById.get(process.getDataRequest().getContractId());
             var negotiation = negotiationsByID.get(process.getDataRequest().getContractId());
-            var asset = assetStream.filter(assets -> assets.getId().equals(process.getDataRequest().getAssetId())).findFirst().orElse(null);
+            var asset = assetStream.filter(assets -> assets.getId().equals(process.getDataRequest().getAssetId())).findFirst().orElse
+                    (null);
             var transferHistoryEntry = new TransferHistoryEntry();
-            transferHistoryEntry.setAssetId(asset.getId());
+            transferHistoryEntry.setAssetId(process.getDataRequest().getAssetId());
             transferHistoryEntry.setAssetName(asset.getName());
             transferHistoryEntry.setContractAgreementId(agreement.getId());
-            transferHistoryEntry.setCounterPartyConnectorEndpoint(negotiation.getCounterPartyId());
+            transferHistoryEntry.setCounterPartyConnectorEndpoint(negotiation.getCounterPartyAddress());
             transferHistoryEntry.setCreatedDate(utcMillisToOffsetDateTime(negotiation.getCreatedAt()));
-            transferHistoryEntry.setDestinationType(process.getDataRequest().getDestinationType());
             transferHistoryEntry.setDirection(ContractAgreementDirection.fromType(negotiation.getType()));
             transferHistoryEntry.setErrorMessage(process.getErrorDetail());
             transferHistoryEntry.setLastUpdatedDate(utcMillisToOffsetDateTime(process.getUpdatedAt()));
@@ -90,7 +89,6 @@ public class TransferHistoryPageDataFetcher {
             transferHistoryEntry.setTransferProcessId(process.getId());
             return transferHistoryEntry;
         }).toList();
-        return transfersList;
 
     }
 

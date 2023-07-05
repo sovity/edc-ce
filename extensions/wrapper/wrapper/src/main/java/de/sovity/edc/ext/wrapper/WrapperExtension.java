@@ -14,11 +14,13 @@
 
 package de.sovity.edc.ext.wrapper;
 
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferProcessStateService;
 import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
+import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
@@ -36,6 +38,10 @@ public class WrapperExtension implements ServiceExtension {
     public static final String EXTENSION_NAME = "WrapperExtension";
     @Inject
     private AssetIndex assetIndex;
+
+    @Inject
+    private AssetService assetService;
+
     @Inject
     private ContractAgreementService contractAgreementService;
     @Inject
@@ -57,6 +63,8 @@ public class WrapperExtension implements ServiceExtension {
     @Inject
     private TransferProcessStore transferProcessStore;
     @Inject
+    private TransferProcessStateService transferProcessStateService;
+    @Inject
     private TypeManager typeManager;
     @Inject
     private WebService webService;
@@ -72,6 +80,7 @@ public class WrapperExtension implements ServiceExtension {
 
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
                 assetIndex,
+                assetService,
                 contractAgreementService,
                 contractDefinitionStore,
                 contractNegotiationService,
@@ -81,7 +90,8 @@ public class WrapperExtension implements ServiceExtension {
                 policyDefinitionStore,
                 policyEngine,
                 transferProcessService,
-                transferProcessStore
+                transferProcessStore,
+                transferProcessStateService
         );
 
         wrapperExtensionContext.jaxRsResources().forEach(resource ->
