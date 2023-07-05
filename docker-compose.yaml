@@ -9,7 +9,7 @@ services:
       - EDC_UI_CONFIG_URL=edc-ui-config
       - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/management
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
-      - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/ids/data
+      - EDC_UI_CATALOG_URLS=http://edc2:11003/api/v1/ids/data
   edc:
     image: ${RELEASE_EDC_IMAGE}
     depends_on:
@@ -22,10 +22,6 @@ services:
       MY_EDC_CURATOR_NAME: "Example GmbH"
       MY_EDC_MAINTAINER_URL: "https://sovity.de"
       MY_EDC_MAINTAINER_NAME: "sovity GmbH"
-
-      # Extension Configuration
-      BROKER_CLIENT_EXTENSION_ENABLED: true
-      CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED: true
 
       # Data Management API Key
       EDC_API_AUTH_KEY: ApiKeyDefaultValue

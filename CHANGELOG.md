@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [x.x.x] - UNRELEASED
+
+### Major Changes
+
+### Minor Changes
+
+### Patch Changes
+
 ## [4.0.0] - 2023-07-05
 
 ### Major Changes
