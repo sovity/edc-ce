@@ -1,6 +1,7 @@
 import {Inject, Injectable} from '@angular/core';
 import {Observable, from} from 'rxjs';
 import {
+  ConnectorLimits,
   ContractAgreementPage,
   ContractAgreementTransferRequest,
   EdcClient,
@@ -30,5 +31,9 @@ export class EdcApiService {
     return from(
       this.edcClient.uiApi.initiateTransfer({contractAgreementTransferRequest}),
     );
+  }
+
+  getEnterpriseEditionConnectorLimits(): Observable<ConnectorLimits> {
+    return from(this.edcClient.enterpriseEditionApi.connectorLimits());
   }
 }
