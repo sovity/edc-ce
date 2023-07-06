@@ -1,4 +1,4 @@
-package de.sovity.edc.ext.wrapper.api.usecase.model;
+package de.sovity.edc.ext.wrapper.api.common.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;

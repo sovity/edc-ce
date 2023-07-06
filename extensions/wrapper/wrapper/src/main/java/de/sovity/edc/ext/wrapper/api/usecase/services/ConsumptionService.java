@@ -1,8 +1,11 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
+import de.sovity.edc.ext.wrapper.api.common.model.ContractAgreementDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeInputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeOutputDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ContractNegotiationOutputDto;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -62,18 +65,16 @@ public class ConsumptionService {
         return id;
     }
 
-    //TODO only specific negotiations (by id)
     public void negotiationConfirmed(ContractNegotiation contractNegotiation) {
         var process = findByNegotiation(contractNegotiation);
 
         if (process != null) {
             var agreementId = contractNegotiation.getContractAgreement().getId();
 
-            //TODO transformer
             var dataRequest = DataRequest.Builder.newInstance()
                     .connectorId(process.getInput().getConnectorId())
                     .connectorAddress(process.getInput().getConnectorAddress())
-                    .protocol("ids-multipart")
+                    .protocol("dataspace-protocol-http")
                     .dataDestination(process.getInput().getDataDestination())
                     .assetId(process.getInput().getAsset().getId())
                     .contractId(agreementId)
@@ -112,4 +113,5 @@ public class ConsumptionService {
                 .map(Map.Entry::getValue)
                 .orElse(null);
     }
+
 }

@@ -1,11 +1,7 @@
 package de.sovity.edc.ext.wrapper.api.common.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * Opinionated DTO of an EDC Constraint for permissions.

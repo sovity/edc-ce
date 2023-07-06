@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 
 import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
-import de.sovity.edc.ext.wrapper.api.usecase.model.AssetEntryDto;
+import de.sovity.edc.ext.wrapper.api.common.model.AssetEntryDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractDefinitionRequestDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
