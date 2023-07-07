@@ -14,10 +14,9 @@
 
 package de.sovity.edc.client;
 
-import de.sovity.edc.client.gen.model.ContractAgreementTransferRequest;
-import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestParams;
-import de.sovity.edc.client.gen.model.TransferHistoryPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryEntry;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferProcessStateService;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -25,17 +24,15 @@ import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
-import org.eclipse.edc.connector.transfer.spi.types.*;
+import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
+import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.policy.model.Policy;
-import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -63,44 +60,24 @@ public class TransferHistoryPageApiServiceTest {
 
         // arrange
         var contractId = UUID.randomUUID().toString();
-        var negotiation = createContractNegotiation(store, COUNTER_PARTY_ADDRESS, contractId);
-
-        var request = new ContractAgreementTransferRequest(
-                ContractAgreementTransferRequest.TypeEnum.PARAMS_ONLY,
-                new ContractAgreementTransferRequestParams(
-                        contractId,
-                        Map.of(
-                                "type", "HttpData",
-                                "baseUrl", DATA_SINK
-                        ),
-                        Map.of("some", "prop")
-                ),
-                null
-        );
-
-        // act
-        var result = client.uiApi().initiateTransfer(request);
-
-        // then
-        var transferProcess = transferProcessStore.find(result.getId());
-        assertThat(transferProcess).isNotNull();
-
-
+        var agreement = createContractAgreement(contractId);
+        var negotiation = createContractNegotiation(store, COUNTER_PARTY_ADDRESS, agreement);
         var updatedTransferProcessStore = createTransferProcesses(transferProcessStore);
+        TransferProcessStateService transferProcessStateService = new TransferProcessStateService();
+        var consumerTransferHistoryEntry = createConsumerTransferHistoryEntry(negotiation, agreement, transferProcessStateService,updatedTransferProcessStore);
+        client.uiApi().transferHistoryPageEndpoint().addTransferEntriesItem(consumerTransferHistoryEntry);
+        client.uiApi().transferHistoryPageEndpoint().addTransferEntriesItem(providerTransferHistoryEntry);
 
-        var transferHistoryEntries = createTransferHistoryPageEntry()
         // act
-        var result = client.uiApi().transferHistoryPageEndpointCall(transferHistoryEntries);
+        var result = client.uiApi().transferHistoryPageEndpoint();
 
         // then
-        var transferProcess = transferProcessStore.find(result.getId());
+        var transferProcess = result.getTransferEntries();
         assertThat(transferProcess).isNotNull();
+
     }
 
-
-    private ContractNegotiation createContractNegotiation(
-            ContractNegotiationStore store,
-            String counterPartyAddress,
+    private ContractAgreement createContractAgreement(
             String agreementId
     ) {
         var agreement = ContractAgreement.Builder.newInstance()
@@ -111,13 +88,20 @@ public class TransferHistoryPageApiServiceTest {
                 .policy(Policy.Builder.newInstance().build())
                 .build();
 
+        return agreement;
+    }
+
+    private ContractNegotiation createContractNegotiation(
+            ContractNegotiationStore store,
+            String counterPartyAddress,
+            ContractAgreement agreement
+    ) {
         var negotiation = ContractNegotiation.Builder.newInstance()
                 .id(UUID.randomUUID().toString())
                 .counterPartyId(UUID.randomUUID().toString())
                 .counterPartyAddress(counterPartyAddress)
                 .protocol("protocol")
                 .contractAgreement(agreement)
-                .createdAt(2323223232L)
                 .build();
 
         store.save(negotiation);
@@ -132,33 +116,40 @@ public class TransferHistoryPageApiServiceTest {
                 .build();
         var consumerTransferProcess = TransferProcess.Builder.newInstance().id("be0cac12-bb43-420e-aa29-d66bb3d0e0ac")
                 .type(TransferProcess.Type.CONSUMER).dataRequest(dataRequestForTransfer).createdAt(2323223231L).
-                updatedAt(2323223530L).state(4).errorDetail(null).build();
+                updatedAt(2323223530L).state(1000).errorDetail(null).build();
         var providerTransferProcess = TransferProcess.Builder.newInstance().id("81cdf4cf-8427-480f-9662-8a29d66ddd3b")
                 .type(TransferProcess.Type.PROVIDER).dataRequest(dataRequestForTransfer).createdAt(2323223231L).
-                updatedAt(2323223530L).state(4).errorDetail(null).build();
+                updatedAt(2323223530L).state(1000).errorDetail(null).build();
 
         transferProcessStore.save(consumerTransferProcess);
         transferProcessStore.save(providerTransferProcess);
         return transferProcessStore;
     }
 
-    private TransferHistoryPage createTransferHistoryPageEntry(
+
+    private TransferHistoryEntry createConsumerTransferHistoryEntry(
             ContractNegotiation negotiation,
-            ContractNegotiationStore contractNegotiationStore,
-            ContractAgreementService contractAgreementService,
-            AssetService assetService,
-            TransferProcessService transferProcessService,
+            ContractAgreement agreement,
+            TransferProcessStateService transferProcessStateService,
             TransferProcessStore transferProcessStore
     ) {
+
 
         var transferHistoryEntry = TransferHistoryEntry.Builder.newInstance()
                 .transferProcessId(UUID.randomUUID().toString())
                 .createdDate(utcMillisToOffsetDateTime(negotiation.getCreatedAt()))
-                .lastUpdatedDate(utcMillisToOffsetDateTime(transferProcessStore.find("be0cac12-bb43-420e-aa29-d66bb3d0e0ac").getUpdatedAt())
-                        .state(transferProcessStore.find("be0cac12-bb43-420e-aa29-d66bb3d0e0ac").getState()).;
+                .lastUpdatedDate(utcMillisToOffsetDateTime(transferProcessStore.find("be0cac12-bb43-420e-aa29-d66bb3d0e0ac").getUpdatedAt()))
+                .state(transferProcessStateService.buildTransferProcessState(transferProcessStore.find("be0cac12-bb43-420e-aa29-d66bb3d0e0ac").getState()))
+                .assetId(transferProcessStore.find("be0cac12-bb43-420e-aa29-d66bb3d0e0ac").getDataRequest().getAssetId())
+                .assetName(null)
+                .contractAgreementId(agreement.getId())
+                .counterPartyConnectorEndpoint(negotiation.getCounterPartyAddress())
+                .direction(ContractAgreementDirection.fromType(negotiation.getType()))
+                .errorMessage(transferProcessStore.find("be0cac12-bb43-420e-aa29-d66bb3d0e0ac").getErrorDetail())
+                .build();
 
-        transferProcessStore.save(transferHistoryEntry);
         return transferHistoryEntry;
+
     }
 
 

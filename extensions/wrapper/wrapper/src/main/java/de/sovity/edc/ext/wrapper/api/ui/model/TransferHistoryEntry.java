@@ -16,12 +16,9 @@ package de.sovity.edc.ext.wrapper.api.ui.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import org.eclipse.edc.policy.model.Policy;
 
 import java.time.OffsetDateTime;
 
@@ -59,6 +56,23 @@ public class TransferHistoryEntry {
     @Schema(description = "Error Message")
     private String errorMessage;
 
+    public TransferHistoryEntry(String transferProcessId, OffsetDateTime createdDate, OffsetDateTime lastUpdatedDate, TransferProcessState state, String contractAgreementId, ContractAgreementDirection direction, String counterPartyConnectorEndpoint, String assetName, String assetId, String errorMessage) {
+        this.assetId = assetId;
+        this.assetName = assetName;
+        this.contractAgreementId = contractAgreementId;
+        this.counterPartyConnectorEndpoint = counterPartyConnectorEndpoint;
+        this.createdDate = createdDate;
+        this.direction = direction;
+        this.errorMessage = errorMessage;
+        this.lastUpdatedDate = lastUpdatedDate;
+        this.state = state;
+        this.transferProcessId = transferProcessId;
+    }
+
+    public TransferHistoryEntry() {
+
+    }
+
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class Builder {
@@ -70,13 +84,10 @@ public class TransferHistoryEntry {
         private String contractAgreementId;
         private ContractAgreementDirection direction;
         private String counterPartyConnectorEndpoint;
-        private String destinationType;
         private String assetName;
         private String assetId;
         private String errorMessage;
 
-        private Builder() {
-        }
 
         @JsonCreator
         public static TransferHistoryEntry.Builder newInstance() {
@@ -112,12 +123,9 @@ public class TransferHistoryEntry {
             this.direction = direction;
             return this;
         }
+
         public TransferHistoryEntry.Builder counterPartyConnectorEndpoint(String counterPartyConnectorEndpoint) {
             this.counterPartyConnectorEndpoint = counterPartyConnectorEndpoint;
-            return this;
-        }
-        public TransferHistoryEntry.Builder destinationType(String destinationType) {
-            this.destinationType = destinationType;
             return this;
         }
 
@@ -125,6 +133,7 @@ public class TransferHistoryEntry {
             this.assetName = assetName;
             return this;
         }
+
         public TransferHistoryEntry.Builder assetId(String assetId) {
             this.assetId = assetId;
             return this;
@@ -135,6 +144,9 @@ public class TransferHistoryEntry {
             return this;
         }
 
+        public TransferHistoryEntry build() {
+            return new TransferHistoryEntry(transferProcessId, createdDate, lastUpdatedDate, state, contractAgreementId, direction, counterPartyConnectorEndpoint, assetName, assetId, errorMessage);
+        }
     }
 
 }
