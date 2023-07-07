@@ -190,7 +190,7 @@
             <mat-label>Custom Datasource Config (JSON)</mat-label>
             <textarea
               matInput
-              placeholder='{"type": "HttpData", ...}'
+              placeholder='{"properties": {"type": "HttpData", ...}}'
               [formControl]="ctrl"></textarea>
             <mat-error *ngIf="ctrl.invalid && ctrl.errors?.jsonInvalid">
               {{ validationMessages.invalidJsonMessage }}

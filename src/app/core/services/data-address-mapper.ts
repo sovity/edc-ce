@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AssetDatasourceFormValue} from '../../routes/connector-ui/asset-page/asset-create-dialog/model/asset-datasource-form-model';
 import {ContractAgreementTransferDialogFormValue} from '../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-form-model';
+import {DataAddressDto} from './api/legacy-managent-api-client';
 import {HttpRequestParamsMapper} from './http-params-mapper.service';
 
 @Injectable({providedIn: 'root'})
@@ -12,7 +13,7 @@ export class DataAddressMapper {
       | AssetDatasourceFormValue
       | ContractAgreementTransferDialogFormValue
       | undefined,
-  ): Record<string, string> {
+  ): DataAddressDto {
     switch (formValue?.dataAddressType) {
       case 'Custom-Data-Address-Json':
         return JSON.parse(formValue.dataDestination?.trim()!!);

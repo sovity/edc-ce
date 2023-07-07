@@ -22,6 +22,18 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Fixed
 
+## [v0.0.1-milestone-8-sovity10] 07.07.2023
+
+### Overview
+
+Bugfix Release
+
+### Detailed Changes
+
+#### Fixed
+
+- Fixed a bug causing data address dtos to be built wrongly.
+
 ## [v0.0.1-milestone-8-sovity9] 04.07.2023
 
 ### Overview
