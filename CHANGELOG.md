@@ -4,25 +4,91 @@ All notable changes to this project will be documented in this file.
 
 ## [x.x.x] - UNRELEASED
 
-### Major Changes
+### Overview
 
-### Minor Changes
+### EDC UI
 
-### Patch Changes
+### EDC-Extensions
+
+#### Major Changes
+
+#### Minor Changes
+
+#### Patch Changes
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:{{ VERSION HERE }}`
+    - Sovity EDC CE: `ghcr.io/sovity/edc-ce:{{ VERSION HERE }}`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:{{ VERSION HERE }}`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity{{ VERSION HERE }}`
+
+## [4.0.1] - 2023-07-07
+
+### Overview
+
+Bugfixes regarding Parameterized Http Datasource Support and open-ended date intervals.
+
+### EDC UI
+
+- https://github.com/sovity/edc-ui/releases/tag/v0.0.1-milestone-8-sovity11
+
+### EDC-Extensions
+
+#### Patch Changes
+
+- Bumped EDC UI Version
+
+### Deployment Migration Notes
+
+No changes besides docker image versions.
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:4.0.1`
+    - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.1`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.1`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity11`
 
 ## [4.0.0] - 2023-07-05
 
-### Major Changes
+### Overview
+
+Parameterized Http Datasource Support and open-ended date intervals.
+
+### EDC UI
+
+- https://github.com/sovity/edc-ui/releases/tag/v0.0.1-milestone-8-sovity9
+
+### EDC-Extensions
+
+#### Major Changes
 
 - Removed Contract Agreement Transfer API Extension in favor of new API Wrapper UI Endpoint.
 - Removed Broker-Server APIs.
 
-### Minor Changes
+#### Minor Changes
 
 - UI API: Added support for parameterized HTTP Data Sources.
 - Broker-/ClearingHouse-Client: The extensions can be dynamically enabled and disabled via properties (see
   getting-started Readme FAQ section).
 - Broker Server API: New API Endpoint `DataOfferDetailPage` and `ConnectorDetailPage` with model.
+
+### Deployment Migration Notes
+
+No changes besides docker image versions.
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:4.0.0`
+    - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.0`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity9`
 
 ## [3.3.0] - 2023-06-06
 
