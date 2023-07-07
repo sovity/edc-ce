@@ -14,8 +14,11 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase;
 
+import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeInputDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeOutputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
+import de.sovity.edc.ext.wrapper.api.usecase.services.ConsumptionService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
@@ -25,9 +28,11 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -48,12 +53,14 @@ public class UseCaseResource {
     private final SupportedPolicyApiService supportedPolicyApiService;
     /** Service for managing offerings. */
     private final OfferingService offeringService;
+    /** Service for managing data consumption */
+    private final ConsumptionService consumptionService;
 
     /**
      * Creates a new offer consisting of asset, policy definition and contract definition.
      *
-     * @param dto contains all required information for the offer.
-     * @return a 204 response, if creating the usecase was successful.
+     * @param dto {@link CreateOfferingDto} contains all required information for the offer.
+     * @return 204: if creating the usecase was successful.
      */
     @POST
     @Path("contract-offer")
@@ -62,6 +69,36 @@ public class UseCaseResource {
     public Response createOfferEndpoint(CreateOfferingDto dto) {
         offeringService.create(dto);
         return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    /**
+     * Creates a new data consumption.
+     *
+     * @param dto {@link ConsumeInputDto} contains all required information for a data consumption.
+     * @return 201: the consumption ID as {@link String}.
+     */
+    @POST
+    @Path("consume")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    @Operation(description = "Creates a data consumption")
+    public Response consume(ConsumeInputDto dto) {
+        var consumptionId = consumptionService.startConsume(dto);
+        return Response.status(Status.CREATED).entity(consumptionId).build();
+    }
+
+    /**
+     * Receive information and progress of an ongoing or finished consumption.
+     *
+     * @param consumptionId {@link String} consumption ID
+     * @return 200: {@link ConsumeOutputDto}
+     */
+    @GET
+    @Path("consumption/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Get the progress of a consumption")
+    public ConsumeOutputDto getConsumption(@PathParam("id") String consumptionId) {
+        return consumptionService.getConsumptionProcesses(consumptionId);
     }
 
     @GET
