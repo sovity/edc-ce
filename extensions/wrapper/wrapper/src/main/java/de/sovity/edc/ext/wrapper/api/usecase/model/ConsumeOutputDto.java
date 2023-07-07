@@ -3,7 +3,6 @@ package de.sovity.edc.ext.wrapper.api.usecase.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.eclipse.edc.connector.api.management.transferprocess.model.TransferProcessDto;
 
 import java.util.List;
 
@@ -20,5 +19,5 @@ public class ConsumeOutputDto {
     ConsumeInputDto input;
     List<String> errors;
     ContractNegotiationOutputDto contractNegotiation;
-    TransferProcessDto transferProcess;
+    TransferProcessOutputDto transferProcess;
 }

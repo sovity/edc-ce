@@ -27,8 +27,10 @@ import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.transformer.ContractAgreementToContractAgreementDtoTransformer;
 import de.sovity.edc.ext.wrapper.api.usecase.transformer.ContractNegotiationToContractNegotiationOutputDtoTransformer;
+import de.sovity.edc.ext.wrapper.api.usecase.transformer.DataRequestToDataRequestDtoTransformer;
 import de.sovity.edc.ext.wrapper.api.usecase.transformer.PermissionToPermissionDtoTransformer;
 import de.sovity.edc.ext.wrapper.api.usecase.transformer.PolicyToPolicyDtoTransformer;
+import de.sovity.edc.ext.wrapper.api.usecase.transformer.TransferProcessToTransferProcessOutputDtoTransformer;
 import lombok.NoArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
@@ -102,6 +104,8 @@ public class WrapperExtensionContextBuilder {
         transformerRegistry.register(new PolicyToPolicyDtoTransformer());
         transformerRegistry.register(new ContractAgreementToContractAgreementDtoTransformer());
         transformerRegistry.register(new ContractNegotiationToContractNegotiationOutputDtoTransformer());
+        transformerRegistry.register(new DataRequestToDataRequestDtoTransformer());
+        transformerRegistry.register(new TransferProcessToTransferProcessOutputDtoTransformer());
         var consumptionService = new ConsumptionService(negotiationService, transferProcessService,
                 contractNegotiationStore, transferProcessStore, transformerRegistry);
 
