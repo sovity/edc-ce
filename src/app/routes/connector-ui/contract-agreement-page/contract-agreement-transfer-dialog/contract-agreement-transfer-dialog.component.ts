@@ -26,19 +26,44 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
   dataSourceMethods = ['GET', ...this.dataSinkMethods];
 
   get proxyMethod(): boolean {
-    return this.data.asset.httpProxyMethod == true;
+    return (
+      this.showAllHttpParameterizationFields ||
+      this.data.asset.httpProxyMethod == true
+    );
   }
 
   get proxyPath(): boolean {
-    return this.data.asset.httpProxyPath == true;
+    return (
+      this.showAllHttpParameterizationFields ||
+      this.data.asset.httpProxyPath == true
+    );
   }
 
   get proxyQueryParams(): boolean {
-    return this.data.asset.httpProxyQueryParams == true;
+    return (
+      this.showAllHttpParameterizationFields ||
+      this.data.asset.httpProxyQueryParams == true
+    );
   }
 
   get proxyBody(): boolean {
-    return this.data.asset.httpProxyBody == true;
+    return (
+      this.showAllHttpParameterizationFields ||
+      this.data.asset.httpProxyBody == true
+    );
+  }
+
+  get showHttpParameterizationToggleButton(): boolean {
+    return (
+      this.data.asset.httpProxyMethod !== true ||
+      this.data.asset.httpProxyPath !== true ||
+      this.data.asset.httpProxyQueryParams !== true ||
+      this.data.asset.httpProxyBody !== true
+    );
+  }
+
+  get showAllHttpParameterizationFields(): boolean {
+    return this.form.all.controls.showAllHttpParameterizationFields.value;
   }
 
   constructor(
@@ -50,7 +75,18 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
     private httpRequestParamsMapper: HttpRequestParamsMapper,
     private dataAddressMapper: DataAddressMapper,
     @Inject(MAT_DIALOG_DATA) public data: ContractAgreementTransferDialogData,
-  ) {}
+  ) {
+    if (data.asset.httpDefaultMethod) {
+      this.form.all.controls.httpProxiedMethod.setValue(
+        data.asset.httpDefaultMethod,
+      );
+    }
+    if (data.asset.httpDefaultPath) {
+      this.form.all.controls.httpProxiedPath.setValue(
+        data.asset.httpDefaultPath,
+      );
+    }
+  }
 
   onSave() {
     if (this.loading && !this.form.all.valid) {

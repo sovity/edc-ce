@@ -55,6 +55,8 @@ export class ContractAgreementTransferDialogForm {
           new Array<FormGroup<HttpDatasinkHeaderFormModel>>(),
         ),
 
+        showAllHttpParameterizationFields: [false],
+
         httpProxiedPath: [''],
         httpProxiedMethod: ['GET'],
         httpProxiedQueryParams: this.formBuilder.array(
@@ -95,6 +97,8 @@ export class ContractAgreementTransferDialogForm {
           httpAuthHeaderSecretName: http && httpAuthByVault,
 
           httpHeaders: http,
+
+          showAllHttpParameterizationFields: !customTransferProcessRequest,
 
           httpProxiedPath: !customTransferProcessRequest,
           httpProxiedMethod: !customTransferProcessRequest,

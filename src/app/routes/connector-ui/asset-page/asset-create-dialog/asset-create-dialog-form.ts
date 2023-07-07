@@ -69,10 +69,6 @@ export class AssetCreateDialogForm {
     return this.datasource.controls.httpProxyQueryParams.value;
   }
 
-  get proxyBody(): boolean {
-    return this.datasource.controls.httpProxyBody.value;
-  }
-
   constructor(
     private formBuilder: FormBuilder,
     private activeFeatureSet: ActiveFeatureSet,

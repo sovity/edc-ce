@@ -203,11 +203,27 @@
       </ng-container>
 
       <ng-container
-        *ngIf="
-          form.dataAddressType !== 'Custom-Transfer-Process-Request' &&
-          (proxyMethod || proxyPath || proxyQueryParams || proxyBody)
-        ">
-        <div class="form-section-title">Datasource Parameterization</div>
+        *ngIf="form.dataAddressType !== 'Custom-Transfer-Process-Request'">
+        <div class="form-section-title">HTTP Datasource Parameterization</div>
+
+        <div class="text-sm mb-[10px] px-[3px]">
+          When the data offer on the provider side is of the type
+          <b>HttpData</b> and certain data source fields are set, certain parts
+          of the request to the data source can be customized from the consumer
+          side and will be passed to the other connector when initiating the
+          transfer. This allows an asset to contain more than just one kind of
+          data, allowing additional filtering or even sharing of entire APIs
+          with multiple data sets via a single asset and a single contract.
+        </div>
+
+        <div
+          *ngIf="proxyPath || proxyMethod"
+          class="text-sm mb-[10px] px-[3px]">
+          The resulting URL will look like
+          <i>{{
+            '{baseUrl}{customSubPath}?{baseQueryParams}&{customQueryParams}'
+          }}</i>
+        </div>
 
         <div
           *ngIf="proxyMethod || proxyPath"
@@ -217,7 +233,7 @@
             <mat-form-field
               *ngIf="form.all.controls.httpProxiedMethod; let ctrl"
               [ngClass]="{'w-1/3': proxyPath}">
-              <mat-label>Method</mat-label>
+              <mat-label>Custom Method</mat-label>
               <mat-select [formControl]="ctrl">
                 <mat-option
                   *ngFor="let method of dataSourceMethods"
@@ -236,13 +252,13 @@
             <mat-form-field
               *ngIf="form.all.controls.httpProxiedPath; let ctrl"
               class="grow">
-              <mat-label>Custom Path Segment</mat-label>
+              <mat-label>Custom Subpath</mat-label>
               <input
                 matInput
                 [formControl]="ctrl"
                 [placeholder]="'sub-path/endpoint'" />
               <mat-hint>
-                Will be added to Base URL. Default:
+                Default:
                 {{ data.asset.httpDefaultPath ?? 'Unknown' }}
               </mat-hint>
             </mat-form-field>
@@ -258,7 +274,7 @@
             class="flex flex-row space-x-[10px]">
             <!-- Query Param Name -->
             <mat-form-field class="w-1/3">
-              <mat-label>Query Param Name</mat-label>
+              <mat-label>Custom Query Param Name</mat-label>
               <input
                 matInput
                 placeholder="key"
@@ -293,7 +309,7 @@
               mat-button
               color="primary"
               (click)="form.onHttpQueryParamsAddClick()">
-              Add Query Param
+              Add Custom Query Param
             </button>
           </div>
         </ng-container>
@@ -301,7 +317,7 @@
         <ng-container *ngIf="proxyBody">
           <!-- Request Body Content Type -->
           <mat-form-field class="grow">
-            <mat-label>Content Type</mat-label>
+            <mat-label>Custom Request Body Content Type</mat-label>
             <input
               matInput
               autocomplete="new-content-type"
@@ -311,7 +327,7 @@
 
           <!-- Request Body -->
           <mat-form-field *ngIf="form.all.controls.httpProxiedBody; let ctrl">
-            <mat-label>Body</mat-label>
+            <mat-label>Custom Request Body</mat-label>
             <textarea
               matInput
               placeholder='{"some": "request-body"}'
@@ -319,6 +335,23 @@
               [formControl]="ctrl"></textarea>
           </mat-form-field>
         </ng-container>
+
+        <!-- Toggle Parameterization Fields Button -->
+        <div
+          *ngIf="
+            showHttpParameterizationToggleButton &&
+              form.all.controls.showAllHttpParameterizationFields;
+            let ctrl
+          "
+          class="flex flex-row mb-[10px]">
+          <button
+            mat-button
+            [color]="ctrl.value ? 'warn' : 'primary'"
+            (click)="ctrl.setValue(!ctrl.value)">
+            {{ ctrl.value ? 'Hide' : 'Show' }} Http Datasource Parameterization
+            Fields
+          </button>
+        </div>
       </ng-container>
     </div>
   </form>

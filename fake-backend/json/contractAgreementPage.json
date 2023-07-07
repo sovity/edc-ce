@@ -119,7 +119,7 @@
         "assetId": "urn:artifact:my-test-asset",
         "createdAt": "2023-04-24T12:32:28.492Z",
         "properties": {
-          "asset:prop:id": "urn:artifact:my-test-asset"
+          "asset:prop:id": "urn:artifact:consumed-asset"
         }
       },
       "contractPolicy": {
@@ -128,7 +128,7 @@
             {
               "edctype": "dataspaceconnector:permission",
               "uid": null,
-              "target": "urn:artifact:my-test-asset",
+              "target": "urn:artifact:consumed-asset",
               "action": {
                 "type": "USE",
                 "includedIn": null,
@@ -191,6 +191,23 @@
         "createdAt": "2023-04-24T12:32:28.492Z",
         "properties": {
           "asset:prop:id": "urn:artifact:my-test-asset-2",
+          "asset:prop:name": "Consuming Contract Offer If Asset Propreties Weren't Buggy",
+          "asset:prop:version": "1.1",
+          "asset:prop:originator": "https://example-connector.rail-mgmt.bahn.de/api/v1/ids/data",
+          "asset:prop:originatorOrganization": "Deutsche Bahn AG",
+          "asset:prop:keywords": "db, bahn, rail, Rail-Designer",
+          "asset:prop:contenttype": "application/json",
+          "asset:prop:description": "Train Network Map released on 10.01.2023, valid until 31.02.2023. \nFile format is xyz as exported by Rail-Designer.",
+          "asset:prop:language": "https://w3id.org/idsa/code/EN",
+          "asset:prop:publisher": "https://my.cool-api.gg/about",
+          "asset:prop:standardLicense": "https://my.cool-api.gg/license",
+          "asset:prop:endpointDocumentation": "https://my.cool-api.gg/docs",
+          "http://w3id.org/mds#dataCategory": "Infrastructure and Logistics",
+          "http://w3id.org/mds#dataSubcategory": "General Information About Planning Of Routes",
+          "http://w3id.org/mds#dataModel": "my-data-model-001",
+          "http://w3id.org/mds#geoReferenceMethod": "my-geo-reference-method",
+          "http://w3id.org/mds#transportMode": "Rail",
+          "asset:prop:some-unsupported-property": "F10E2821BBBEA527EA02200352313BC059445190",
           "asset:prop:datasource:http:hints:proxyMethod": "true",
           "asset:prop:datasource:http:hints:proxyPath": "true",
           "asset:prop:datasource:http:hints:proxyQueryParams": "true",
@@ -243,6 +260,77 @@
         }
       },
       "transferProcesses": []
+    },
+    {
+      "contractAgreementId": "my-test-asset-cd:6ebbc301-9b1e-4cd7-9f17-97b5b786752",
+      "direction": "CONSUMING",
+      "counterPartyAddress": "http://edc2:11003/api/v1/ids/data",
+      "counterPartyId": "my-connector",
+      "contractSigningDate": "2022-03-25T11:18:59.659Z",
+      "contractStartDate": "2022-03-25T11:18:59.659Z",
+      "contractEndDate": "2022-05-01T20:04:35.658Z",
+      "asset": {
+        "assetId": "urn:artifact:my-test-asset",
+        "createdAt": "2023-04-24T12:32:28.492Z",
+        "properties": {
+          "asset:prop:id": "urn:artifact:consumed-asset-2"
+        }
+      },
+      "contractPolicy": {
+        "legacyPolicy": {
+          "permissions": [
+            {
+              "edctype": "dataspaceconnector:permission",
+              "uid": null,
+              "target": "urn:artifact:consumed-asset",
+              "action": {
+                "type": "USE",
+                "includedIn": null,
+                "constraint": null
+              },
+              "assignee": null,
+              "assigner": null,
+              "constraints": [
+                {
+                  "edctype": "AtomicConstraint",
+                  "leftExpression": {
+                    "edctype": "dataspaceconnector:literalexpression",
+                    "value": "ALWAYS_TRUE"
+                  },
+                  "rightExpression": {
+                    "edctype": "dataspaceconnector:literalexpression",
+                    "value": "true"
+                  },
+                  "operator": "EQ"
+                }
+              ],
+              "duties": []
+            }
+          ],
+          "prohibitions": [],
+          "obligations": [],
+          "extensibleProperties": {},
+          "inheritsFrom": null,
+          "assigner": null,
+          "assignee": null,
+          "target": "urn:artifact:my-test-asset",
+          "@type": {
+            "@policytype": "set"
+          }
+        }
+      },
+      "transferProcesses": [
+        {
+          "transferProcessId": "522138de-349d-4b68-9356-7e5929f053e0",
+          "lastUpdatedDate": "2023-04-24T12:32:43.027Z",
+          "state": {
+            "code": 800,
+            "name": "COMPLETED",
+            "simplifiedState": "OK"
+          },
+          "errorMessage": null
+        }
+      ]
     }
   ]
 }

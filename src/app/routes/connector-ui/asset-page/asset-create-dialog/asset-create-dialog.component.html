@@ -236,12 +236,8 @@
             <mat-form-field
               *ngIf="form.datasource.controls.httpUrl; let ctrl"
               class="grow">
-              <mat-label *ngIf="!form.datasource.controls.httpProxyPath.value">
-                URL
-              </mat-label>
-              <mat-label *ngIf="form.datasource.controls.httpProxyPath.value">
-                Base URL
-              </mat-label>
+              <mat-label *ngIf="!form.proxyPath"> URL </mat-label>
+              <mat-label *ngIf="form.proxyPath"> Base URL </mat-label>
               <input matInput [formControl]="ctrl" [placeholder]="'https://'" />
               <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
                 {{ validationMessages.invalidUrlMessage }}
@@ -249,7 +245,7 @@
             </mat-form-field>
 
             <!-- Default Path (Rest-Api) -->
-            <ng-container *ngIf="form.datasource.controls.httpProxyPath.value">
+            <ng-container *ngIf="form.proxyPath">
               <mat-form-field
                 *ngIf="form.datasource.controls.httpDefaultPath; let ctrl"
                 class="grow">

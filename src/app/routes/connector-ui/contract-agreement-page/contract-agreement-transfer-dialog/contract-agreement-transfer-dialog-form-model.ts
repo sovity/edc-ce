@@ -31,6 +31,8 @@ export interface ContractAgreementTransferDialogFormModel {
   httpUrl: FormControl<string>;
   httpMethod: FormControl<string>;
 
+  showAllHttpParameterizationFields: FormControl<boolean>;
+
   httpAuthHeaderType: FormControl<HttpDatasinkAuthHeaderType>;
   httpAuthHeaderName: FormControl<string>;
   httpAuthHeaderValue: FormControl<string>;

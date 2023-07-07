@@ -22,6 +22,19 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Fixed
 
+## [v0.0.1-milestone-8-sovity11] 07.07.2023
+
+### Overview
+
+Bugfix Release
+
+### Detailed Changes
+
+#### Fixed
+
+- Fixed a bug causing http parameterization not being accessible due to asset
+  properties not being persisted on the consumer side.
+
 ## [v0.0.1-milestone-8-sovity10] 07.07.2023
 
 ### Overview

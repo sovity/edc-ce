@@ -33,12 +33,21 @@ export class HttpRequestParamsMapper {
     const body = value.httpProxiedBody?.trim() ?? '';
     const contentType = value.httpProxiedBodyContentType?.trim() ?? '';
 
+    let proxyMethod =
+      value.showAllHttpParameterizationFields || asset.httpProxyMethod;
+    let proxyPath =
+      value.showAllHttpParameterizationFields || asset.httpProxyPath;
+    let proxyQueryParams =
+      value.showAllHttpParameterizationFields || asset.httpProxyQueryParams;
+    let proxyBody =
+      value.showAllHttpParameterizationFields || asset.httpProxyBody;
+
     return removeNullValues({
-      method: asset.httpProxyMethod ? method : null,
-      pathSegments: asset.httpProxyPath ? pathSegments : null,
-      queryParams: asset.httpProxyQueryParams ? queryParams : null,
-      body: asset.httpProxyBody ? body : null,
-      mediaType: asset.httpProxyBody ? contentType : null,
+      method: proxyMethod ? method : null,
+      pathSegments: proxyPath ? pathSegments : null,
+      queryParams: proxyQueryParams ? queryParams : null,
+      body: proxyBody ? body : null,
+      mediaType: proxyBody ? contentType : null,
     });
   }
 

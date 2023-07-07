@@ -295,7 +295,7 @@ export class AssetPropertyGridGroupBuilder {
         tooltip: contractAgreement.statusTooltipText,
         textIconAfter: contractAgreement.statusTooltipText ? 'help' : null,
         text: contractAgreement.statusText,
-        additionalClasses: 'text-warn',
+        additionalClasses: contractAgreement.canTransfer ? '' : 'text-warn',
       });
     }
 
