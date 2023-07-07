@@ -88,8 +88,6 @@ export class AssetPropertyMapper {
         props[AssetProperties.httpProxyQueryParams],
       ),
       httpProxyBody: this._parseBoolean(props[AssetProperties.httpProxyBody]),
-      httpDefaultPath: props[AssetProperties.httpDefaultPath],
-      httpDefaultMethod: props[AssetProperties.httpDefaultMethod],
       additionalProperties,
     };
   }
@@ -158,12 +156,6 @@ export class AssetPropertyMapper {
       props[AssetProperties.httpProxyBody] = this._encodeBoolean(
         datasource?.httpProxyBody,
       );
-      props[AssetProperties.httpDefaultMethod] = datasource?.httpProxyMethod
-        ? datasource?.httpMethod ?? null
-        : null;
-      props[AssetProperties.httpDefaultPath] = datasource?.httpProxyPath
-        ? datasource?.httpDefaultPath ?? null
-        : null;
     }
 
     return removeNullValues(props);

@@ -58,20 +58,6 @@ export const AssetProperties = {
   httpProxyBody: 'asset:prop:datasource:http:hints:proxyBody',
 
   /**
-   * If this asset supports HTTP Method parameterization, this is the default method
-   *
-   * Example values: "GET", "POST", "PUT", "DELETE"
-   */
-  httpDefaultMethod: 'asset:prop:datasource:http:hints:defaultMethod',
-
-  /**
-   * If this asset supports HTTP Path parameterization, this is the default path (appended after base path)
-   *
-   * Example values: /my-endpoint
-   */
-  httpDefaultPath: 'asset:prop:datasource:http:hints:defaultPath',
-
-  /**
    * @deprecated use {@link AssetProperties.curatorOrganizationName} instead
    */
   _legacyCuratorOrganizationName: 'asset:prop:originatorOrganization',

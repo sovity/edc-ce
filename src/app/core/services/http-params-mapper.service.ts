@@ -26,12 +26,12 @@ export class HttpRequestParamsMapper {
     value: ContractAgreementTransferDialogFormValue,
   ): Record<string, string> {
     const method = value.httpProxiedMethod?.trim() ?? '';
-    const {baseUrl: pathSegments, queryParams} = this.getUrlAndQueryParams(
+    const {url: pathSegments, queryParams} = this.getUrlAndQueryParams(
       value.httpProxiedPath,
       value.httpProxiedQueryParams,
     );
-    const body = value.httpProxiedBody?.trim() ?? '';
-    const contentType = value.httpProxiedBodyContentType?.trim() ?? '';
+    const body = value.httpProxiedBody?.trim() || null;
+    const contentType = value.httpProxiedBodyContentType?.trim() || null;
 
     let proxyMethod =
       value.showAllHttpParameterizationFields || asset.httpProxyMethod;
@@ -66,7 +66,6 @@ export class HttpRequestParamsMapper {
       proxyQueryParams: httpRequestParams.proxyQueryParams ? 'true' : null,
       proxyBody: httpRequestParams.proxyBody ? 'true' : null,
       queryParams: httpRequestParams.queryParams,
-      path: httpRequestParams.defaultPath,
       ...Object.fromEntries(
         Object.entries(httpRequestParams.headers).map(
           ([headerName, headerValue]) => [`header:${headerName}`, headerValue],
@@ -87,20 +86,18 @@ export class HttpRequestParamsMapper {
     let {authHeaderName, authHeaderValue, authHeaderSecretName} =
       this.getAuthFields(formValue);
 
-    let defaultPath: string | null = null;
-    if (proxyPath) {
-      defaultPath = formValue?.httpDefaultPath?.trim() || null;
+    let method = formValue?.httpMethod?.trim().toUpperCase() || null;
+    if (proxyMethod) {
+      method = null;
     }
 
-    let method = formValue?.httpMethod?.trim().toUpperCase() ?? '';
-    let {baseUrl, queryParams} = this.getUrlAndQueryParams(
+    let {url: baseUrl, queryParams} = this.getUrlAndQueryParams(
       formValue?.httpUrl,
       formValue?.httpQueryParams,
     );
 
     return {
-      baseUrl,
-      defaultPath,
+      baseUrl: baseUrl!!,
       method,
       authHeaderName,
       authHeaderValue,
@@ -141,21 +138,24 @@ export class HttpRequestParamsMapper {
     rawUrl: string | null | undefined,
     rawQueryParams: HttpDatasourceQueryParamFormValue[] | null | undefined,
   ): {
-    baseUrl: string;
-    queryParams: string;
+    url: string | null;
+    queryParams: string | null;
   } {
-    let url = rawUrl?.trim() ?? '';
+    let rawUrlTrimmed = rawUrl?.trim() ?? '';
 
-    let baseUrl = everythingBefore('?', url);
+    let url = everythingBefore('?', rawUrlTrimmed);
 
     let queryParamSegments = (rawQueryParams ?? []).map((param) =>
       this.encodeQueryParam(param),
     );
-    let queryParams = [everythingAfter('?', url), ...queryParamSegments]
+    let queryParams = [
+      everythingAfter('?', rawUrlTrimmed),
+      ...queryParamSegments,
+    ]
       .filter((it) => !!it)
       .join('&');
 
-    return {baseUrl, queryParams};
+    return {url: url || null, queryParams: queryParams || null};
   }
 
   private encodeQueryParam(param: HttpDatasourceQueryParamFormValue): string {

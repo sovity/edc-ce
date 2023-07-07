@@ -211,9 +211,7 @@
           "asset:prop:datasource:http:hints:proxyMethod": "true",
           "asset:prop:datasource:http:hints:proxyPath": "true",
           "asset:prop:datasource:http:hints:proxyQueryParams": "true",
-          "asset:prop:datasource:http:hints:proxyBody": "true",
-          "asset:prop:datasource:http:hints:defaultMethod": "GET",
-          "asset:prop:datasource:http:hints:defaultPath": "/"
+          "asset:prop:datasource:http:hints:proxyBody": "true"
         }
       },
       "contractPolicy": {

@@ -35,8 +35,6 @@ export interface Asset {
   httpProxyPath: boolean | null;
   httpProxyQueryParams: boolean | null;
   httpProxyBody: boolean | null;
-  httpDefaultPath: string | null;
-  httpDefaultMethod: string | null;
 
   // Unhandled Additional Properties
   additionalProperties: AdditionalAssetProperty[];

@@ -75,18 +75,7 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
     private httpRequestParamsMapper: HttpRequestParamsMapper,
     private dataAddressMapper: DataAddressMapper,
     @Inject(MAT_DIALOG_DATA) public data: ContractAgreementTransferDialogData,
-  ) {
-    if (data.asset.httpDefaultMethod) {
-      this.form.all.controls.httpProxiedMethod.setValue(
-        data.asset.httpDefaultMethod,
-      );
-    }
-    if (data.asset.httpDefaultPath) {
-      this.form.all.controls.httpProxiedPath.setValue(
-        data.asset.httpDefaultPath,
-      );
-    }
-  }
+  ) {}
 
   onSave() {
     if (this.loading && !this.form.all.valid) {

@@ -241,9 +241,7 @@
                   >{{ method }}</mat-option
                 >
               </mat-select>
-              <mat-hint>
-                Default: {{ data.asset.httpDefaultMethod ?? 'Unknown' }}
-              </mat-hint>
+              <mat-hint> Requires "proxyMethod" to be "true". </mat-hint>
             </mat-form-field>
           </ng-container>
 
@@ -257,10 +255,7 @@
                 matInput
                 [formControl]="ctrl"
                 [placeholder]="'sub-path/endpoint'" />
-              <mat-hint>
-                Default:
-                {{ data.asset.httpDefaultPath ?? 'Unknown' }}
-              </mat-hint>
+              <mat-hint> Requires "proxyPath" to be "true". </mat-hint>
             </mat-form-field>
           </ng-container>
         </div>
@@ -281,6 +276,7 @@
                 required
                 autocomplete="new-query-param-name"
                 [formControl]="header.controls.paramName" />
+              <mat-hint> Requires "proxyQueryParams" to be "true". </mat-hint>
             </mat-form-field>
 
             <!-- Query Param Value -->
@@ -323,6 +319,7 @@
               autocomplete="new-content-type"
               [formControl]="form.all.controls.httpProxiedBodyContentType"
               [placeholder]="'application/json'" />
+            <mat-hint> Requires "proxyBody" to be "true". </mat-hint>
           </mat-form-field>
 
           <!-- Request Body -->
@@ -333,6 +330,7 @@
               placeholder='{"some": "request-body"}'
               autocomplete="new-request-body"
               [formControl]="ctrl"></textarea>
+            <mat-hint> Requires "proxyBody" to be "true". </mat-hint>
           </mat-form-field>
         </ng-container>
 

@@ -5,15 +5,9 @@ export interface HttpRequestParams {
   baseUrl: string;
 
   /**
-   * If proxy path is set, this
-   */
-
-  defaultPath: string | null;
-
-  /**
    * Http-method
    */
-  method: string;
+  method: string | null;
 
   /**
    * Header-Name ("Authorization"), where the secrets are passed into
@@ -38,7 +32,7 @@ export interface HttpRequestParams {
   /**
    * Query Parameters
    */
-  queryParams: string;
+  queryParams: string | null;
   proxyMethod: boolean;
   proxyPath: boolean;
   proxyQueryParams: boolean;

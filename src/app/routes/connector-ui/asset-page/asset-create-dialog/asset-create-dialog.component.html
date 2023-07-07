@@ -198,25 +198,27 @@
           </mat-form-field>
 
           <ng-container *ngIf="form.dataAddressType === 'Http'">
-            <div class="form-section-title">
-              {{ form.proxyMethod ? 'Default' : '' }} Method
+            <div class="form-section-title">Method</div>
+
+            <div *ngIf="form.proxyMethod" class="mb-[10px] px-[3px] text-sm">
+              The consuming side <b>must</b> provide a Custom HTTP Method with
+              method parameterization enabled.
             </div>
 
             <!-- Method (Rest-Api) -->
-            <mat-form-field
-              *ngIf="form.datasource.controls.httpMethod; let ctrl">
-              <mat-label>
-                {{ form.proxyMethod ? 'Default' : '' }} Method
-              </mat-label>
-              <mat-select [formControl]="ctrl">
-                <mat-option *ngFor="let method of methods" [value]="method">{{
-                  method
-                }}</mat-option>
-              </mat-select>
-              <mat-hint *ngIf="form.proxyMethod">
-                When no method override is set, this method will be used.
-              </mat-hint>
-            </mat-form-field>
+            <ng-container *ngIf="!form.proxyMethod">
+              <mat-form-field
+                *ngIf="form.datasource.controls.httpMethod; let ctrl">
+                <mat-label>
+                  {{ form.proxyMethod ? 'Default' : '' }} Method
+                </mat-label>
+                <mat-select [formControl]="ctrl">
+                  <mat-option *ngFor="let method of methods" [value]="method">{{
+                    method
+                  }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-container>
 
             <!-- Toggle Proxy Method Button -->
             <div
@@ -232,33 +234,23 @@
 
             <div class="form-section-title">URL</div>
 
+            <div *ngIf="form.proxyPath" class="mb-[10px] px-[3px] text-sm">
+              The consuming side <b>must</b> provide a Custom HTTP Subpath with
+              method parameterization is enabled. The Custom HTTP Subpath will
+              be appended to the base path.
+            </div>
+
             <!-- Base Path (Rest-Api) -->
             <mat-form-field
               *ngIf="form.datasource.controls.httpUrl; let ctrl"
               class="grow">
-              <mat-label *ngIf="!form.proxyPath"> URL </mat-label>
-              <mat-label *ngIf="form.proxyPath"> Base URL </mat-label>
+              <mat-label *ngIf="!form.proxyPath">URL</mat-label>
+              <mat-label *ngIf="form.proxyPath">Base URL</mat-label>
               <input matInput [formControl]="ctrl" [placeholder]="'https://'" />
               <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
                 {{ validationMessages.invalidUrlMessage }}
               </mat-error>
             </mat-form-field>
-
-            <!-- Default Path (Rest-Api) -->
-            <ng-container *ngIf="form.proxyPath">
-              <mat-form-field
-                *ngIf="form.datasource.controls.httpDefaultPath; let ctrl"
-                class="grow">
-                <mat-label>Default Path</mat-label>
-                <input
-                  matInput
-                  [formControl]="ctrl"
-                  [placeholder]="'sub-path/endpoint'" />
-                <mat-hint
-                  >When no path override is set, this path will be used.
-                </mat-hint>
-              </mat-form-field>
-            </ng-container>
 
             <!-- Toggle Proxy Path Button -->
             <div
