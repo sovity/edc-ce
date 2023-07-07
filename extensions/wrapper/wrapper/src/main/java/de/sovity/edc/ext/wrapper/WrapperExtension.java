@@ -19,6 +19,7 @@ import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiat
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
+import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
@@ -26,6 +27,7 @@ import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.WebService;
 
 public class WrapperExtension implements ServiceExtension {
@@ -50,7 +52,11 @@ public class WrapperExtension implements ServiceExtension {
     @Inject
     private ContractNegotiationStore contractNegotiationStore;
     @Inject
+    private ContractNegotiationService negotiationService;
+    @Inject
     private TransferProcessService transferProcessService;
+    @Inject
+    private TypeTransformerRegistry transformerRegistry;
 
     @Override
     public String name() {
@@ -67,7 +73,9 @@ public class WrapperExtension implements ServiceExtension {
                 transferProcessStore,
                 contractAgreementService,
                 contractNegotiationStore,
-                transferProcessService
+                negotiationService,
+                transferProcessService,
+                transformerRegistry
         );
 
         wrapperExtensionContext.jaxRsResources().forEach(resource ->

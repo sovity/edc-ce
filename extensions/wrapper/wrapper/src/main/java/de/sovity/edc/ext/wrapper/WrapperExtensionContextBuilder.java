@@ -20,20 +20,27 @@ import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementPageCardBuilde
 import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementPageService;
 import de.sovity.edc.ext.wrapper.api.ui.services.TransferProcessStateService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
+import de.sovity.edc.ext.wrapper.api.usecase.services.ConsumptionService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
+import de.sovity.edc.ext.wrapper.api.usecase.transformer.ContractAgreementToContractAgreementDtoTransformer;
+import de.sovity.edc.ext.wrapper.api.usecase.transformer.ContractNegotiationToContractNegotiationOutputDtoTransformer;
+import de.sovity.edc.ext.wrapper.api.usecase.transformer.PermissionToPermissionDtoTransformer;
+import de.sovity.edc.ext.wrapper.api.usecase.transformer.PolicyToPolicyDtoTransformer;
 import lombok.NoArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
+import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
 import java.util.List;
 
@@ -57,7 +64,9 @@ public class WrapperExtensionContextBuilder {
             TransferProcessStore transferProcessStore,
             ContractAgreementService contractAgreementService,
             ContractNegotiationStore contractNegotiationStore,
-            TransferProcessService transferProcessService
+            ContractNegotiationService negotiationService,
+            TransferProcessService transferProcessService,
+            TypeTransformerRegistry transformerRegistry
     ) {
         // UI API
         var transferProcessStateService = new TransferProcessStateService();
@@ -88,6 +97,13 @@ public class WrapperExtensionContextBuilder {
                 contractDefinitionStore, policyMappingService);
         var useCaseResource = new UseCaseResource(kpiApiService, supportedPolicyApiService,
                 offeringService);
+
+        transformerRegistry.register(new PermissionToPermissionDtoTransformer());
+        transformerRegistry.register(new PolicyToPolicyDtoTransformer());
+        transformerRegistry.register(new ContractAgreementToContractAgreementDtoTransformer());
+        transformerRegistry.register(new ContractNegotiationToContractNegotiationOutputDtoTransformer());
+        var consumptionService = new ConsumptionService(negotiationService, transferProcessService,
+                contractNegotiationStore, transferProcessStore, transformerRegistry);
 
         // Collect all JAX-RS resources
         return new WrapperExtensionContext(List.of(

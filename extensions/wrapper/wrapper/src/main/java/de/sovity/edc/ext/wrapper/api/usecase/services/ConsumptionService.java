@@ -1,7 +1,5 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import de.sovity.edc.ext.wrapper.api.common.model.ContractAgreementDto;
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeInputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeOutputDto;
@@ -17,6 +15,8 @@ import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
 import org.eclipse.edc.connector.transfer.spi.types.TransferRequest;
+import org.eclipse.edc.spi.EdcException;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,21 +24,20 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ConsumptionService {
 
-    private final Map<String, ConsumeDto> consume = new HashMap<>(); //TODO persist?
+    private final Map<String, ConsumeDto> consumptionProcesses = new HashMap<>(); //TODO persist?
 
     private final ContractNegotiationService contractNegotiationService;
     private final TransferProcessService transferProcessService;
     private final ContractNegotiationStore contractNegotiationStore;
     private final TransferProcessStore transferProcessStore;
-
-    private final String connectorId;
+    private final TypeTransformerRegistry transformerRegistry;
 
     public String startConsume(ConsumeInputDto consumeInputDto) {
         //TODO generate ID
         var id = "id";
 
         var consumeDto = new ConsumeDto(consumeInputDto);
-        consume.put(id, consumeDto);
+        consumptionProcesses.put(id, consumeDto);
 
         //TODO transformer
         var contractOffer = ContractOffer.Builder.newInstance()
@@ -91,23 +90,28 @@ public class ConsumptionService {
         }
     }
 
-    public ConsumeOutputDto getConsume(String id) {
-        var process = consume.get(id);
+    public ConsumeOutputDto getConsumptionProcesses(String id) {
+        var process = consumptionProcesses.get(id);
         if (process == null) {
             return null;
         }
 
         var negotiation = contractNegotiationStore.findById(process.getContractNegotiationId());
+        var negotiationResult = transformerRegistry.transform(negotiation, ContractNegotiationOutputDto.class);
+        if (negotiationResult.failed()) {
+            throw new EdcException(negotiationResult.getFailureDetail());
+        }
+
+        //TODO transform TP to dto
         var transferProcess = transferProcessStore.findById(process.getTransferProcessId());
 
-        //TODO transform CN & TP to dto
-
-        return new ConsumeOutputDto(id, process.getInput(), process.getErrors(), negotiation, transferProcess);
+        //TODO error detail
+        return new ConsumeOutputDto(id, process.getInput(), process.getErrors(), negotiationResult.getContent(), transferProcess);
     }
 
     private ConsumeDto findByNegotiation(ContractNegotiation contractNegotiation) {
         var id = contractNegotiation.getId();
-        return consume.entrySet().stream()
+        return consumptionProcesses.entrySet().stream()
                 .filter(entry -> entry.getValue().getContractNegotiationId().equals(id))
                 .findFirst()
                 .map(Map.Entry::getValue)
