@@ -45,6 +45,7 @@ import de.sovity.edc.ext.brokerserver.services.logging.BrokerExecutionTimeLogger
 import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueue;
 import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueueFiller;
 import de.sovity.edc.ext.brokerserver.services.queue.ThreadPool;
+import de.sovity.edc.ext.brokerserver.services.queue.ThreadPoolTaskQueue;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdateFailureWriter;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdateSuccessWriter;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdater;
@@ -152,7 +153,8 @@ public class BrokerServerExtensionContextBuilder {
         var policyDtoBuilder = new PolicyDtoBuilder();
         var assetPropertyParser = new AssetPropertyParser(objectMapper);
         var paginationMetadataUtils = new PaginationMetadataUtils();
-        var threadPool = new ThreadPool(brokerServerSettings, monitor);
+        var threadPoolTaskQueue = new ThreadPoolTaskQueue();
+        var threadPool = new ThreadPool(threadPoolTaskQueue, brokerServerSettings, monitor);
         var connectorQueue = new ConnectorQueue(connectorUpdater, threadPool);
         var connectorQueueFiller = new ConnectorQueueFiller(connectorQueue, connectorQueries);
         var connectorCreator = new ConnectorCreator(connectorQueries);

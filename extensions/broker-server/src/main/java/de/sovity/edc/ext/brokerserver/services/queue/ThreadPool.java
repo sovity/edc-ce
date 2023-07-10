@@ -17,28 +17,30 @@ package de.sovity.edc.ext.brokerserver.services.queue;
 import de.sovity.edc.ext.brokerserver.services.config.BrokerServerSettings;
 import org.eclipse.edc.spi.monitor.Monitor;
 
-import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class ThreadPool {
+    private final ThreadPoolTaskQueue queue;
+
     private final boolean enabled;
-    private final PriorityBlockingQueue<Runnable> queue;
     private final ThreadPoolExecutor threadPoolExecutor;
 
-    public ThreadPool(BrokerServerSettings brokerServerSettings, Monitor monitor) {
-        queue = new PriorityBlockingQueue<>();
-
+    public ThreadPool(ThreadPoolTaskQueue queue, BrokerServerSettings brokerServerSettings, Monitor monitor) {
+        this.queue = queue;
         int numThreads = brokerServerSettings.getNumThreads();
         enabled = numThreads > 0;
 
         if (enabled) {
             monitor.info("Initializing ThreadPoolExecutor with %d threads.".formatted(numThreads));
-            threadPoolExecutor = new ThreadPoolExecutor(numThreads, numThreads, 60, TimeUnit.SECONDS, queue);
+            threadPoolExecutor = new ThreadPoolExecutor(
+                    numThreads,
+                    numThreads,
+                    60,
+                    TimeUnit.SECONDS,
+                    queue.getAsRunnableQueue()
+            );
             threadPoolExecutor.prestartAllCoreThreads();
         } else {
             monitor.info("Skipped ThreadPoolExecutor initialization.");
@@ -51,13 +53,7 @@ public class ThreadPool {
     }
 
     public Set<String> getQueuedConnectorEndpoints() {
-        var queuedRunnables = new ArrayList<>(queue);
-
-        return queuedRunnables.stream().filter(ThreadPoolTask.class::isInstance)
-                .map(ThreadPoolTask.class::cast)
-                .map(ThreadPoolTask::getConnectorEndpoint)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+        return queue.getConnectorEndpoints();
     }
 
     private void enqueueTask(ThreadPoolTask task) {

@@ -14,24 +14,28 @@
 
 package de.sovity.edc.ext.brokerserver.services.queue;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
+
+import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 @Getter
 @RequiredArgsConstructor
-@EqualsAndHashCode(of = {"priority", "connectorEndpoint"})
-public class ThreadPoolTask implements Comparable<ThreadPoolTask>, Runnable {
+public class ThreadPoolTask implements Runnable {
+
+    public static final Comparator<ThreadPoolTask> COMPARATOR = Comparator.comparing(ThreadPoolTask::getPriority)
+            .thenComparing(ThreadPoolTask::getSequence);
+
+    /**
+     * {@link java.util.concurrent.PriorityBlockingQueue} does not guarantee sequential execution, so we need to add this.
+     */
+    private static final AtomicLong SEQ = new AtomicLong(0);
+    private final long sequence = SEQ.incrementAndGet();
     private final int priority;
     private final Runnable task;
     private final String connectorEndpoint;
-
-    @Override
-    public int compareTo(@NotNull ThreadPoolTask threadPoolTask) {
-        return priority - threadPoolTask.priority;
-    }
 
     @Override
     public void run() {
