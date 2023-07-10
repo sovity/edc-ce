@@ -300,6 +300,7 @@ public class TestConnector implements Connector {
                 .add("contractId", contractAgreementId)
                 .add("connectorAddress", providerProtocolApi.toString())
                 .add("privateProperties", Json.createObjectBuilder().build())
+                .add("connectorId", participantId)
                 .build();
 
         return given()

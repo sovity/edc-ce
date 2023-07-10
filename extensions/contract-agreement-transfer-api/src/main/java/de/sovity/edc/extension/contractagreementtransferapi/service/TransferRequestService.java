@@ -48,7 +48,6 @@ public class TransferRequestService {
                 .destinationType(dataAddress.getType())
                 .connectorAddress(contractNegotiation.getCounterPartyAddress())
                 .contractId(contractAgreementId)
-                .properties(new HashMap<>())
                 .managedResources(false)
                 .protocol("ids-multipart")
                 .build();
