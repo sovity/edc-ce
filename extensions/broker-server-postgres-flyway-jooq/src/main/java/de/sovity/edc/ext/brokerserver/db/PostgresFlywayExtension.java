@@ -34,6 +34,10 @@ public class PostgresFlywayExtension implements ServiceExtension {
     public static final String FLYWAY_CLEAN_ENABLE = "edc.flyway.clean.enable";
     @Setting
     public static final String FLYWAY_CLEAN = "edc.flyway.clean";
+    @Setting
+    public static final String DB_CONNECTION_POOL_SIZE = "edc.broker.server.db.connection.pool.size";
+    @Setting
+    public static final String DB_CONNECTION_TIMEOUT_IN_MS = "edc.broker.server.db.connection.timeout.in.ms";
 
     @Provider
     public DataPlaneInstanceStatements dataPlaneInstanceStatements() {
@@ -58,5 +62,4 @@ public class PostgresFlywayExtension implements ServiceExtension {
         var flywayMigrator = new FlywayMigrator(flyway, config, monitor);
         flywayMigrator.migrateAndRepair();
     }
-
 }

@@ -46,7 +46,7 @@ public interface TestDatabase extends BeforeAllCallback, AfterAllCallback {
      */
     default DataSource getDataSource() {
         var jdbcCredentials = new JdbcCredentials(getJdbcUrl(), getJdbcUser(), getJdbcPassword());
-        return DataSourceFactory.fromJdbcCredentials(jdbcCredentials);
+        return DataSourceFactory.newDataSource(jdbcCredentials, 20, 30_000);
     }
 
     /**

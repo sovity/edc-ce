@@ -14,23 +14,18 @@
 
 package de.sovity.edc.ext.brokerserver.db;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import de.sovity.edc.ext.brokerserver.db.utils.JdbcCredentials;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.spi.persistence.EdcPersistenceException;
 import org.eclipse.edc.spi.system.configuration.Config;
-import org.eclipse.edc.sql.datasource.ConnectionFactoryDataSource;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import javax.sql.DataSource;
 
-/**
- * Create {@link DataSource}s from EDC Config.
- */
 @RequiredArgsConstructor
 public class DataSourceFactory {
     private final Config config;
+
 
     /**
      * Create a new {@link DataSource} from EDC Config.
@@ -39,30 +34,37 @@ public class DataSourceFactory {
      */
     public DataSource newDataSource() {
         var jdbcCredentials = JdbcCredentials.fromConfig(config);
-        return fromJdbcCredentials(jdbcCredentials);
+        int maxPoolSize = config.getInteger(PostgresFlywayExtension.DB_CONNECTION_POOL_SIZE);
+        int connectionTimeoutInMs = config.getInteger(PostgresFlywayExtension.DB_CONNECTION_TIMEOUT_IN_MS);
+        return newDataSource(jdbcCredentials, maxPoolSize, connectionTimeoutInMs);
     }
 
     /**
-     * Create a new {@link DataSource} from JDBC Credentials.
+     * Create a new {@link DataSource}.
      * <br>
-     * This method was extracted into a static method, so we can call it from our Test Code.
+     * This method is static, so we can use from test code.
      *
-     * @param jdbcCredentials jdbc credentials
-     * @return {@link DataSource}
+     * @param jdbcCredentials       jdbc credentials
+     * @param maxPoolSize           max pool size
+     * @param connectionTimeoutInMs connection timeout in ms
+     * @return {@link DataSource}.
      */
-    public static DataSource fromJdbcCredentials(JdbcCredentials jdbcCredentials) {
-        return new ConnectionFactoryDataSource(() -> newConnection(jdbcCredentials));
-    }
+    public static DataSource newDataSource(
+            JdbcCredentials jdbcCredentials,
+            int maxPoolSize,
+            int connectionTimeoutInMs
+    ) {
+        var hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(jdbcCredentials.jdbcUrl());
+        hikariConfig.setUsername(jdbcCredentials.jdbcUser());
+        hikariConfig.setPassword(jdbcCredentials.jdbcPassword());
+        hikariConfig.setMinimumIdle(1);
+        hikariConfig.setMaximumPoolSize(maxPoolSize);
+        hikariConfig.setIdleTimeout(30000);
+        hikariConfig.setPoolName("edc-broker-server");
+        hikariConfig.setMaxLifetime(50000);
+        hikariConfig.setConnectionTimeout(connectionTimeoutInMs);
 
-    private static Connection newConnection(JdbcCredentials jdbcCredentials) {
-        try {
-            return DriverManager.getConnection(
-                    jdbcCredentials.jdbcUrl(),
-                    jdbcCredentials.jdbcUser(),
-                    jdbcCredentials.jdbcPassword()
-            );
-        } catch (SQLException e) {
-            throw new EdcPersistenceException(e);
-        }
+        return new HikariDataSource(hikariConfig);
     }
 }

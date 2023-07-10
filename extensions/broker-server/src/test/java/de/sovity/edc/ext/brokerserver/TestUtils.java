@@ -58,6 +58,8 @@ public class TestUtils {
         config.put(PostgresFlywayExtension.JDBC_URL, testDatabase.getJdbcUrl());
         config.put(PostgresFlywayExtension.JDBC_USER, testDatabase.getJdbcUser());
         config.put(PostgresFlywayExtension.JDBC_PASSWORD, testDatabase.getJdbcPassword());
+        config.put(PostgresFlywayExtension.DB_CONNECTION_POOL_SIZE, "20");
+        config.put(PostgresFlywayExtension.DB_CONNECTION_TIMEOUT_IN_MS, "3000");
         config.put(PostgresFlywayExtension.FLYWAY_CLEAN_ENABLE, "true");
         config.put(PostgresFlywayExtension.FLYWAY_CLEAN, "true");
         config.put(BrokerServerExtension.NUM_THREADS, "0");

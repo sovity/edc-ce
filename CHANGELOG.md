@@ -82,6 +82,12 @@ Broker MvP using Core EDC MS8.
    
     # Pagination Configuration: Catalog Page Size (default: 20)
     EDC_BROKER_SERVER_CATALOG_PAGE_PAGE_SIZE: 20
+
+    # Database Connection Pool Size
+    EDC_BROKER_SERVER_DB_CONNECTION_POOL_SIZE: 30
+    
+    # Database Connection Timeout (in ms)
+    EDC_BROKER_SERVER_DB_CONNECTION_TIMEOUT_IN_MS: 30000
     ```
 3. An issue prevented the keystore file from being read, preventing a successful data space log in.
 4. Added a reference to [connector/.env](connector/.env) as source for other possible broker server configuration
