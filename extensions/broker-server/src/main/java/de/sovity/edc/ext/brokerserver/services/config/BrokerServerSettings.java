@@ -30,5 +30,5 @@ public class BrokerServerSettings {
 
     int numThreads;
 
-    Duration deleteOfflineConnectorsAfter;
+    Duration killOfflineConnectorsAfter;
 }

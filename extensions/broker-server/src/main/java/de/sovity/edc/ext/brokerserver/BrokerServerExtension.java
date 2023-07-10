@@ -33,7 +33,13 @@ public class BrokerServerExtension implements ServiceExtension {
     public static final String KNOWN_CONNECTORS = toEdcProp("EDC_BROKER_SERVER_KNOWN_CONNECTORS");
 
     @Setting
-    public static final String CRON_CONNECTOR_REFRESH = toEdcProp("EDC_BROKER_SERVER_CRON_CONNECTOR_REFRESH");
+    public static final String CRON_ONLINE_CONNECTOR_REFRESH = toEdcProp("EDC_BROKER_SERVER_CRON_ONLINE_CONNECTOR_REFRESH");
+
+    @Setting
+    public static final String CRON_OFFLINE_CONNECTOR_REFRESH = toEdcProp("EDC_BROKER_SERVER_CRON_OFFLINE_CONNECTOR_REFRESH");
+
+    @Setting
+    public static final String CRON_DEAD_CONNECTOR_REFRESH = toEdcProp("EDC_BROKER_SERVER_CRON_DEAD_CONNECTOR_REFRESH");
 
     @Setting
     public static final String NUM_THREADS = toEdcProp("EDC_BROKER_SERVER_NUM_THREADS");
@@ -57,10 +63,10 @@ public class BrokerServerExtension implements ServiceExtension {
     public static final String KNOWN_DATASPACE_CONNECTORS = toEdcProp("EDC_BROKER_SERVER_KNOWN_DATASPACE_CONNECTORS");
 
     @Setting
-    public static final String DELETE_OFFLINE_CONNECTORS_AFTER = toEdcProp("EDC_BROKER_SERVER_DELETE_OFFLINE_CONNECTORS_AFTER");
+    public static final String KILL_OFFLINE_CONNECTORS_AFTER = toEdcProp("EDC_BROKER_SERVER_KILL_OFFLINE_CONNECTORS_AFTER");
 
     @Setting
-    public static final String SCHEDULED_DELETE_OFFLINE_CONNECTORS = toEdcProp("EDC_BROKER_SERVER_SCHEDULED_DELETE_OFFLINE_CONNECTORS");
+    public static final String SCHEDULED_KILL_OFFLINE_CONNECTORS = toEdcProp("EDC_BROKER_SERVER_SCHEDULED_KILL_OFFLINE_CONNECTORS");
 
     @Inject
     private ManagementApiConfiguration managementApiConfiguration;

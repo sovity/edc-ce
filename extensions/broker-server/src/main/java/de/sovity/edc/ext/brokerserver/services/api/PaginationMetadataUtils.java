@@ -14,8 +14,8 @@
 
 package de.sovity.edc.ext.brokerserver.services.api;
 
-import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.PageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.PaginationMetadata;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.PageQuery;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 

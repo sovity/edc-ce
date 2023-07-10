@@ -15,18 +15,21 @@
 package de.sovity.edc.ext.brokerserver.services.schedules;
 
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
-import de.sovity.edc.ext.brokerserver.services.OfflineConnectorRemover;
+import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
+import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueueFiller;
+import de.sovity.edc.ext.brokerserver.services.queue.ConnectorRefreshPriority;
 import lombok.RequiredArgsConstructor;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
 @RequiredArgsConstructor
-public class OfflineConnectorRemovalJob implements Job {
+public class OfflineConnectorRefreshJob implements Job {
     private final DslContextFactory dslContextFactory;
-    private final OfflineConnectorRemover offlineConnectorRemover;
+    private final ConnectorQueueFiller connectorQueueFiller;
 
     @Override
     public void execute(JobExecutionContext context) {
-        dslContextFactory.transaction(offlineConnectorRemover::removeIfOfflineTooLong);
+        dslContextFactory.transaction(dsl -> connectorQueueFiller.enqueueConnectors(dsl,
+                ConnectorOnlineStatus.OFFLINE, ConnectorRefreshPriority.SCHEDULED_OFFLINE_REFRESH));
     }
 }

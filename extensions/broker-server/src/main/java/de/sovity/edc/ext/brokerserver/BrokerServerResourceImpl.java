@@ -29,6 +29,8 @@ import de.sovity.edc.ext.brokerserver.services.api.ConnectorApiService;
 import de.sovity.edc.ext.brokerserver.services.api.DataOfferDetailApiService;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 
 /**
  * Implementation of {@link BrokerServerResource}
@@ -59,4 +61,10 @@ public class BrokerServerResourceImpl implements BrokerServerResource {
     public ConnectorDetailPageResult connectorDetailPage(ConnectorDetailPageQuery query) {
         return dslContextFactory.transactionResult(dsl -> connectorApiService.connectorDetailPage(dsl, query));
     }
+
+    @Override
+    public void addConnectors(List<String> endpoints) {
+        dslContextFactory.transaction(dsl -> connectorApiService.addConnectors(dsl, endpoints));
+    }
+
 }

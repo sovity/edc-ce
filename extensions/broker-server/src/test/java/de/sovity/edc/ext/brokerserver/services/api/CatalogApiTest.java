@@ -46,7 +46,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import static de.sovity.edc.ext.brokerserver.AssertionUtils.assertEqualJson;
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
 import static de.sovity.edc.ext.brokerserver.TestUtils.edcClient;
 import static org.assertj.core.api.Assertions.assertThat;

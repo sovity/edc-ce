@@ -24,11 +24,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deployment Migration Notes
 
-1. There are new **optional** configuration properties:
+1. Removed **optional** configuration properties:
     ```yaml
-    # Deletion of Connectors after they have been offline for a certain amount of time
-    EDC_BROKER_SERVER_DELETE_OFFLINE_CONNECTORS_AFTER=P5D
-    EDC_BROKER_SERVER_SCHEDULED_DELETE_OFFLINE_CONNECTORS=0 0 12 ? * *
+    # (Removed) CRON interval for crawling connectors
+    EDC_BROKER_SERVER_CRON_CONNECTOR_REFRESH: "0 */5 * ? * *"
+    ```
+
+2. There are new **optional** configuration properties:
+    ```yaml
+    # CRON interval for crawling ONLINE connectors
+    EDC_BROKER_SERVER_CRON_ONLINE_CONNECTOR_REFRESH: "*/20 * * ? * *"
+    
+    # CRON interval for crawling OFFLINE connectors
+    EDC_BROKER_SERVER_CRON_OFFLINE_CONNECTOR_REFRESH: "0 */5 * ? * *"
+    
+    # CRON interval for crawling DEAD connectors
+    EDC_BROKER_SERVER_CRON_DEAD_CONNECTOR_REFRESH: "0 */60 */4 ? * *"
+    
+    # CRON interval for marking connectors as DEAD
+    EDC_BROKER_SERVER_SCHEDULED_KILL_OFFLINE_CONNECTORS: "0 0 12 ? * *"
+    
+    # Delete data offers / mark as dead after connector has been offline for:
+    EDC_BROKER_SERVER_KILL_OFFLINE_CONNECTORS_AFTER: "P5D"
+    
+    # Hide data offers after connector has been offline for:
+    EDC_BROKER_SERVER_HIDE_OFFLINE_DATA_OFFERS_AFTER: "P1D"
+    ```
 
 ## [v0.1.0] Broker MvP Release - 2023-06-23
 

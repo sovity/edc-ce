@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.brokerserver.services.queue;
 
 import de.sovity.edc.ext.brokerserver.dao.ConnectorQueries;
+import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 
@@ -23,8 +24,8 @@ public class ConnectorQueueFiller {
     private final ConnectorQueue connectorQueue;
     private final ConnectorQueries connectorQueries;
 
-    public void enqueueAllConnectors(DSLContext dsl) {
-        var endpoints = connectorQueries.findConnectorsForScheduledRefresh(dsl);
-        connectorQueue.addAll(endpoints, ConnectorRefreshPriority.SCHEDULED_REFRESH);
+    public void enqueueConnectors(DSLContext dsl, ConnectorOnlineStatus status, int priority) {
+        var endpoints = connectorQueries.findConnectorsForScheduledRefresh(dsl, status);
+        connectorQueue.addAll(endpoints, priority);
     }
 }

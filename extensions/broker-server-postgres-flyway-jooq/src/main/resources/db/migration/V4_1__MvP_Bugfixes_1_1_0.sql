@@ -5,4 +5,5 @@ create table data_offer_view_count (
     date               timestamp with time zone not null
 );
 
-create index data_offer_view_count_index on data_offer_view_count (connector_endpoint, asset_id);
+create index data_offer_view_count_speedup on data_offer_view_count (connector_endpoint, asset_id);
+

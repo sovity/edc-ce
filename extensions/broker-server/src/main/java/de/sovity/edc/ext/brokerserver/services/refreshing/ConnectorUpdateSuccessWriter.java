@@ -45,7 +45,7 @@ public class ConnectorUpdateSuccessWriter {
         dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(connector, limitedDataOffers);
 
         // Log Status Change and set status to online if necessary
-        if (connector.getOnlineStatus() == ConnectorOnlineStatus.OFFLINE || connector.getLastRefreshAttemptAt() == null) {
+        if (connector.getOnlineStatus() != ConnectorOnlineStatus.ONLINE || connector.getLastRefreshAttemptAt() == null) {
             brokerEventLogger.logConnectorOnline(dsl, connector.getEndpoint());
             connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);
         }

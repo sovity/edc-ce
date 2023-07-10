@@ -64,6 +64,7 @@ public class DataOfferDetailApiService {
         return switch (connectorOnlineStatus) {
             case ONLINE -> ConnectorOnlineStatus.ONLINE;
             case OFFLINE -> ConnectorOnlineStatus.OFFLINE;
+            case DEAD -> ConnectorOnlineStatus.DEAD;
         };
     }
 

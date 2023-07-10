@@ -16,6 +16,7 @@ package de.sovity.edc.ext.brokerserver.dao;
 
 import de.sovity.edc.ext.brokerserver.dao.utils.PostgresqlUtils;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
+import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
 import org.jooq.DSLContext;
 
@@ -32,9 +33,9 @@ public class ConnectorQueries {
         return dsl.selectFrom(c).where(c.ENDPOINT.eq(endpoint)).fetchOne();
     }
 
-    public Set<String> findConnectorsForScheduledRefresh(DSLContext dsl) {
+    public Set<String> findConnectorsForScheduledRefresh(DSLContext dsl, ConnectorOnlineStatus onlineStatus) {
         var c = Tables.CONNECTOR;
-        return dsl.select(c.ENDPOINT).from(c).fetchSet(c.ENDPOINT);
+        return dsl.select(c.ENDPOINT).from(c).where(c.ONLINE_STATUS.eq(onlineStatus)).fetchSet(c.ENDPOINT);
     }
 
     public Set<String> findExistingConnectors(DSLContext dsl, Collection<String> connectorEndpoints) {
@@ -44,7 +45,7 @@ public class ConnectorQueries {
                 .fetchSet(c.ENDPOINT);
     }
 
-    public List<String> findAllConnectorsForDeletion(DSLContext dsl, Duration deleteOfflineConnectorsAfter) {
+    public List<String> findAllConnectorsForKilling(DSLContext dsl, Duration deleteOfflineConnectorsAfter) {
         var c = Tables.CONNECTOR;
         return dsl.select(c.ENDPOINT).from(c)
                 .where(c.LAST_SUCCESSFUL_REFRESH_AT.lt(OffsetDateTime.now().minus(deleteOfflineConnectorsAfter)))

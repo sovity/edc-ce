@@ -15,18 +15,21 @@
 package de.sovity.edc.ext.brokerserver.services.schedules;
 
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
+import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueueFiller;
+import de.sovity.edc.ext.brokerserver.services.queue.ConnectorRefreshPriority;
 import lombok.RequiredArgsConstructor;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
 @RequiredArgsConstructor
-public class ConnectorRefreshJob implements Job {
+public class DeadConnectorRefreshJob implements Job {
     private final DslContextFactory dslContextFactory;
     private final ConnectorQueueFiller connectorQueueFiller;
 
     @Override
     public void execute(JobExecutionContext context) {
-        dslContextFactory.transaction(connectorQueueFiller::enqueueAllConnectors);
+        dslContextFactory.transaction(dsl -> connectorQueueFiller.enqueueConnectors(dsl,
+                ConnectorOnlineStatus.DEAD, ConnectorRefreshPriority.SCHEDULED_DEAD_REFRESH));
     }
 }

@@ -35,14 +35,14 @@ public class BrokerServerSettingsFactory {
         var catalogPagePageSize = config.getInteger(BrokerServerExtension.CATALOG_PAGE_PAGE_SIZE, 20);
         var dataSpaceConfig = buildDataSpaceConfig(config);
         var numThreads = config.getInteger(BrokerServerExtension.NUM_THREADS, 1);
-        var deleteOfflineConnectorsAfter = getDuration(BrokerServerExtension.DELETE_OFFLINE_CONNECTORS_AFTER, Duration.ofDays(5));
+        var killOfflineConnectorsAfter = getDuration(BrokerServerExtension.KILL_OFFLINE_CONNECTORS_AFTER, Duration.ofDays(5));
 
         return BrokerServerSettings.builder()
                 .hideOfflineDataOffersAfter(hideOfflineDataOffersAfter)
                 .catalogPagePageSize(catalogPagePageSize)
                 .dataSpaceConfig(dataSpaceConfig)
                 .numThreads(numThreads)
-                .deleteOfflineConnectorsAfter(deleteOfflineConnectorsAfter)
+                .killOfflineConnectorsAfter(killOfflineConnectorsAfter)
                 .build();
     }
 

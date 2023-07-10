@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
 
 import java.time.OffsetDateTime;
+import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -36,7 +37,7 @@ public class ConnectorCreator {
         addConnectors(dsl, List.of(connectorEndpoint));
     }
 
-    public void addConnectors(DSLContext dsl, List<String> connectorEndpoints) {
+    public void addConnectors(DSLContext dsl, Collection<String> connectorEndpoints) {
         // Don't create connectors that already exist
         var existingConnectors = connectorQueries.findExistingConnectors(dsl, connectorEndpoints);
         var newConnectors = CollectionUtils2.difference(connectorEndpoints, existingConnectors);

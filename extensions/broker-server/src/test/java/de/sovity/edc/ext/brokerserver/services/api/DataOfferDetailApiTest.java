@@ -38,7 +38,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.time.OffsetDateTime;
 import java.util.Map;
 
-import static de.sovity.edc.ext.brokerserver.AssertionUtils.assertEqualJson;
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
 import static de.sovity.edc.ext.brokerserver.TestUtils.edcClient;
 import static groovy.json.JsonOutput.toJson;

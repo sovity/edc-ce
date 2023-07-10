@@ -14,9 +14,6 @@
 
 package de.sovity.edc.ext.brokerserver.services.api;
 
-import de.sovity.edc.ext.brokerserver.dao.pages.connector.ConnectorPageQueryService;
-import de.sovity.edc.ext.brokerserver.dao.pages.connector.model.ConnectorDetailsRs;
-import de.sovity.edc.ext.brokerserver.dao.pages.connector.model.ConnectorListEntryRs;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorDetailPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorDetailPageResult;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorListEntry;
@@ -25,6 +22,10 @@ import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageResult;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageSortingItem;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageSortingType;
+import de.sovity.edc.ext.brokerserver.dao.pages.connector.ConnectorPageQueryService;
+import de.sovity.edc.ext.brokerserver.dao.pages.connector.model.ConnectorDetailsRs;
+import de.sovity.edc.ext.brokerserver.dao.pages.connector.model.ConnectorListEntryRs;
+import de.sovity.edc.ext.brokerserver.utils.UrlUtils;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 
@@ -32,9 +33,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import static de.sovity.edc.ext.brokerserver.services.queue.ConnectorRefreshPriority.ADDED_ON_API_CALL;
+import static java.util.stream.Collectors.toSet;
+
 @RequiredArgsConstructor
 public class ConnectorApiService {
     private final ConnectorPageQueryService connectorPageQueryService;
+    private final ConnectorService connectorService;
     private final PaginationMetadataUtils paginationMetadataUtils;
 
     public ConnectorPageResult connectorPage(DSLContext dsl, ConnectorPageQuery query) {
@@ -100,6 +105,7 @@ public class ConnectorApiService {
         return switch (connector.getOnlineStatus()) {
             case ONLINE -> ConnectorOnlineStatus.ONLINE;
             case OFFLINE -> ConnectorOnlineStatus.OFFLINE;
+            case DEAD -> ConnectorOnlineStatus.DEAD;
             default -> throw new IllegalStateException("Unknown ConnectorOnlineStatus from DAO for API: " + connector.getOnlineStatus());
         };
     }
@@ -117,5 +123,16 @@ public class ConnectorApiService {
                 ConnectorPageSortingType.MOST_RECENT,
                 ConnectorPageSortingType.TITLE
         ).map(it -> new ConnectorPageSortingItem(it, it.getTitle())).toList();
+    }
+
+    public void addConnectors(DSLContext dsl, List<String> connectorEndpoints) {
+        var existingEndpoints = connectorService.getConnectorEndpoints(dsl);
+        var endpoints = connectorEndpoints.stream()
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(UrlUtils::isValidUrl)
+                .filter(endpoint -> !existingEndpoints.contains(endpoint))
+                .collect(toSet());
+        connectorService.addConnectors(dsl, endpoints, ADDED_ON_API_CALL);
     }
 }

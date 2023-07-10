@@ -22,7 +22,9 @@ import de.sovity.edc.ext.brokerserver.db.TestDatabaseFactory;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorContractOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorDataOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
-import de.sovity.edc.ext.brokerserver.services.OfflineConnectorRemover;
+import de.sovity.edc.ext.brokerserver.services.ConnectorCleaner;
+import de.sovity.edc.ext.brokerserver.services.ConnectorKiller;
+import de.sovity.edc.ext.brokerserver.services.OfflineConnectorKiller;
 import de.sovity.edc.ext.brokerserver.services.config.BrokerServerSettings;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
 import org.jooq.DSLContext;
@@ -45,7 +47,7 @@ class OfflineConnectorRemovalJobTest {
     private static final TestDatabase TEST_DATABASE = TestDatabaseFactory.getTestDatabase();
 
     BrokerServerSettings brokerServerSettings;
-    OfflineConnectorRemover offlineConnectorRemover;
+    OfflineConnectorKiller offlineConnectorKiller;
 
     @BeforeAll
     static void beforeAll() {
@@ -55,40 +57,48 @@ class OfflineConnectorRemovalJobTest {
     @BeforeEach
     void beforeEach() {
         brokerServerSettings = mock(BrokerServerSettings.class);
-        offlineConnectorRemover = new OfflineConnectorRemover(
-            brokerServerSettings,
+        offlineConnectorKiller = new OfflineConnectorKiller(
+                brokerServerSettings,
                 new ConnectorQueries(),
-                new BrokerEventLogger()
+                new BrokerEventLogger(),
+                new ConnectorKiller(),
+                new ConnectorCleaner()
         );
     }
 
     @Test
-    void test_offlineConnectorRemoval_should_remove() {
+    void test_offlineConnectorKiller_should_be_dead() {
         TEST_DATABASE.testTransaction(dsl -> {
             // arrange
-            when(brokerServerSettings.getDeleteOfflineConnectorsAfter()).thenReturn(Duration.ofDays(5));
+            when(brokerServerSettings.getKillOfflineConnectorsAfter()).thenReturn(Duration.ofDays(5));
             createConnector(dsl, 6);
 
             // act
-            offlineConnectorRemover.removeIfOfflineTooLong(dsl);
+            offlineConnectorKiller.killIfOfflineTooLong(dsl);
 
             // assert
-            assertThat(dsl.selectCount().from(CONNECTOR).fetchOne(0, Integer.class)).isZero();
+            dsl.select().from(CONNECTOR).fetch().forEach(record -> {
+                assertThat(record.get(CONNECTOR.CONNECTOR_ID)).isEqualTo("http://example.org");
+                assertThat(record.get(CONNECTOR.ONLINE_STATUS)).isEqualTo(ConnectorOnlineStatus.DEAD);
+            });
         });
     }
 
     @Test
-    void test_offlineConnectorRemoval_should_not_remove() {
+    void test_offlineConnectorKiller_should_not_be_dead() {
         TEST_DATABASE.testTransaction(dsl -> {
             // arrange
-            when(brokerServerSettings.getDeleteOfflineConnectorsAfter()).thenReturn(Duration.ofDays(5));
+            when(brokerServerSettings.getKillOfflineConnectorsAfter()).thenReturn(Duration.ofDays(5));
             createConnector(dsl, 2);
 
             // act
-            offlineConnectorRemover.removeIfOfflineTooLong(dsl);
+            offlineConnectorKiller.killIfOfflineTooLong(dsl);
 
             // assert
-            assertThat(dsl.selectCount().from(CONNECTOR).fetchOne(0, Integer.class)).isNotZero();
+            dsl.select().from(CONNECTOR).fetch().forEach(record -> {
+                assertThat(record.get(CONNECTOR.CONNECTOR_ID)).isEqualTo("http://example.org");
+                assertThat(record.get(CONNECTOR.ONLINE_STATUS)).isNotEqualTo(ConnectorOnlineStatus.DEAD);
+            });
         });
     }
 

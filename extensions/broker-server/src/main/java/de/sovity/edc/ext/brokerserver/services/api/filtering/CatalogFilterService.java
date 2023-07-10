@@ -14,16 +14,16 @@
 
 package de.sovity.edc.ext.brokerserver.services.api.filtering;
 
-import de.sovity.edc.ext.brokerserver.dao.AssetProperty;
-import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
-import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQuerySelectedFilterQuery;
-import de.sovity.edc.ext.brokerserver.dao.utils.JsonDeserializationUtils;
-import de.sovity.edc.ext.brokerserver.utils.CollectionUtils2;
 import de.sovity.edc.ext.brokerserver.api.model.CnfFilter;
 import de.sovity.edc.ext.brokerserver.api.model.CnfFilterAttribute;
 import de.sovity.edc.ext.brokerserver.api.model.CnfFilterItem;
 import de.sovity.edc.ext.brokerserver.api.model.CnfFilterValue;
 import de.sovity.edc.ext.brokerserver.api.model.CnfFilterValueAttribute;
+import de.sovity.edc.ext.brokerserver.dao.AssetProperty;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQuerySelectedFilterQuery;
+import de.sovity.edc.ext.brokerserver.dao.utils.JsonDeserializationUtils;
+import de.sovity.edc.ext.brokerserver.utils.CollectionUtils2;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
 
