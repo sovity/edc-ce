@@ -1,4 +1,4 @@
-package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;/*
+/*
  *  Copyright (c) 2022 sovity GmbH
  *
  *  This program and the accompanying materials are made available under the
@@ -11,6 +11,8 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;/*
  *       sovity GmbH - initial API and implementation
  *
  */
+
+package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryEntry;
@@ -27,12 +29,12 @@ import org.eclipse.edc.spi.entity.Entity;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcMillisToOffsetDateTime;
 import static java.util.stream.Collectors.*;
 
@@ -68,17 +70,20 @@ public class TransferHistoryPageDataFetcher {
         ));
 
         var transferStream = getAllTransferProcesses().stream();
-        var assetStream = getAllAssets().stream();
+        Supplier<Stream<Asset>> assetStream = () -> getAllAssets().stream();
         return transferStream.map(process -> {
 
             var agreement =
                     agreementsById.get(process.getDataRequest().getContractId());
             var negotiation = negotiationsByID.get(process.getDataRequest().getContractId());
-            var asset = assetStream.filter(assets -> assets.getId().equals(process.getDataRequest().getAssetId())).findFirst().orElse
-                    (null);
+            var asset = assetStream.get()
+                    .filter(assets -> assets != null && assets.getId().equals(process.getDataRequest().getAssetId()))
+                    .findFirst()
+                    .map(Asset::getName)
+                    .orElse(process.getDataRequest().getAssetId());
             var transferHistoryEntry = new TransferHistoryEntry();
             transferHistoryEntry.setAssetId(process.getDataRequest().getAssetId());
-            transferHistoryEntry.setAssetName(asset.getName());
+            transferHistoryEntry.setAssetName(asset);
             transferHistoryEntry.setContractAgreementId(agreement.getId());
             transferHistoryEntry.setCounterPartyConnectorEndpoint(negotiation.getCounterPartyAddress());
             transferHistoryEntry.setCreatedDate(utcMillisToOffsetDateTime(negotiation.getCreatedAt()));

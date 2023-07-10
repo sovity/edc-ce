@@ -72,10 +72,10 @@ public class WrapperExtensionContextBuilder {
             PolicyDefinitionStore policyDefinitionStore,
             PolicyEngine policyEngine,
             TransferProcessService transferProcessService,
-            TransferProcessStore transferProcessStore,
-            TransferProcessStateService transferProcessStateService
+            TransferProcessStore transferProcessStore
     ) {
         // UI API
+        var transferProcessStateService = new TransferProcessStateService();
         var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
                 transferProcessStateService);
         var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
@@ -87,8 +87,8 @@ public class WrapperExtensionContextBuilder {
                 contractAgreementDataFetcher,
                 contractAgreementPageCardBuilder
         );
-        var transferHistoryPageEntriesFetcher = new TransferHistoryPageDataFetcher(assetService,contractAgreementService,contractNegotiationStore,
-                transferProcessService,transferProcessStateService);
+        var transferHistoryPageEntriesFetcher = new TransferHistoryPageDataFetcher(assetService, contractAgreementService, contractNegotiationStore,
+                transferProcessService, transferProcessStateService);
         var transferHistoryPageApiService = new TransferHistoryPageApiService(transferHistoryPageEntriesFetcher);
         var transformerRegistryUtils = new TransformerRegistryUtils(dtoTransformerRegistry);
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
