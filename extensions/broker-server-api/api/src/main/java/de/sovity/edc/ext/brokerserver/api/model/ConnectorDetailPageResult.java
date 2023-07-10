@@ -50,4 +50,7 @@ public class ConnectorDetailPageResult {
 
     @Schema(description = "Number of known data offerings")
     private Integer numContractOffers;
+
+    @Schema(description = "Average time to crawl the connector")
+    private Long connectorCrawlingTimeAvg;
 }

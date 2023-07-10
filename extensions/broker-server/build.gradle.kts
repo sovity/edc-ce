@@ -26,7 +26,7 @@ dependencies {
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
 
     api(project(":extensions:broker-server-postgres-flyway-jooq"))
-    api(project(":extensions:broker-server-api:api"))
+    implementation(project(":extensions:broker-server-api:api"))
 
     implementation("com.squareup.okhttp3:okhttp:${okHttpVersion}")
 

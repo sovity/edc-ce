@@ -24,6 +24,9 @@ import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorContractOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorDataOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
+import de.sovity.edc.ext.brokerserver.db.jooq.enums.MeasurementErrorStatus;
+import de.sovity.edc.ext.brokerserver.db.jooq.enums.MeasurementType;
+import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
 import lombok.SneakyThrows;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -72,7 +75,7 @@ class ConnectorApiTest {
             assertThat(result.getConnectors()).hasSize(1);
 
             var connector = result.getConnectors().get(0);
-            assertThat(connector.getId()).isEqualTo("http://my-connector");
+            assertThat(connector.getId()).isEqualTo("http://my-connector/ids/data");
             assertThat(connector.getEndpoint()).isEqualTo("http://my-connector/ids/data");
             assertThat(connector.getCreatedAt()).isEqualTo(today.minusDays(1));
             assertThat(connector.getLastRefreshAttemptAt()).isEqualTo(today);
@@ -86,6 +89,7 @@ class ConnectorApiTest {
             var today = OffsetDateTime.now().withNano(0);
 
             createConnector(dsl, today, "http://my-connector/ids/data");
+            createConnector(dsl, today, "http://my-connector2/ids/data");
             createDataOffer(dsl, today, Map.of(
                 AssetProperty.ASSET_ID, "urn:artifact:my-asset-1",
                 AssetProperty.DATA_CATEGORY, "my-category",
@@ -93,17 +97,18 @@ class ConnectorApiTest {
             ), "http://my-connector/ids/data");
 
             var connector = edcClient().brokerServerApi().connectorDetailPage(new ConnectorDetailPageQuery("http://my-connector/ids/data"));
-            assertThat(connector.getId()).isEqualTo("http://my-connector");
+            assertThat(connector.getId()).isEqualTo("http://my-connector/ids/data");
             assertThat(connector.getEndpoint()).isEqualTo("http://my-connector/ids/data");
             assertThat(connector.getCreatedAt()).isEqualTo(today.minusDays(1));
             assertThat(connector.getLastRefreshAttemptAt()).isEqualTo(today);
             assertThat(connector.getLastSuccessfulRefreshAt()).isEqualTo(today);
+            assertThat(connector.getConnectorCrawlingTimeAvg()).isEqualTo(150L);
         });
     }
 
     private void createConnector(DSLContext dsl, OffsetDateTime today, String connectorEndpoint) {
         var connector = dsl.newRecord(Tables.CONNECTOR);
-        connector.setConnectorId("http://my-connector");
+        connector.setConnectorId(connectorEndpoint);
         connector.setEndpoint(connectorEndpoint);
         connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);
         connector.setCreatedAt(today.minusDays(1));
@@ -112,6 +117,19 @@ class ConnectorApiTest {
         connector.setDataOffersExceeded(ConnectorDataOffersExceeded.OK);
         connector.setContractOffersExceeded(ConnectorContractOffersExceeded.OK);
         connector.insert();
+
+        addCrawlingTime(dsl, today, connector, 100L);
+        addCrawlingTime(dsl, today.plusHours(5), connector, 200L);
+    }
+
+    private static void addCrawlingTime(DSLContext dsl, OffsetDateTime today, ConnectorRecord connector, Long duration) {
+        var crawlingTime = dsl.newRecord(Tables.BROKER_EXECUTION_TIME_MEASUREMENT);
+        crawlingTime.setConnectorEndpoint(connector.getEndpoint());
+        crawlingTime.setDurationInMs(duration);
+        crawlingTime.setCreatedAt(today);
+        crawlingTime.setType(MeasurementType.CONNECTOR_REFRESH);
+        crawlingTime.setErrorStatus(MeasurementErrorStatus.OK);
+        crawlingTime.insert();
     }
 
     private void createDataOffer(DSLContext dsl, OffsetDateTime today, Map<String, String> assetProperties, String connectorEndpoint) {

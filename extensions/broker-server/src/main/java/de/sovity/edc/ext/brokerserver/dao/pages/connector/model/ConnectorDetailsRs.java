@@ -25,12 +25,13 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ConnectorRs {
+public class ConnectorDetailsRs {
     String endpoint;
     String connectorId;
-    private OffsetDateTime createdAt;
-    private OffsetDateTime lastSuccessfulRefreshAt;
-    private OffsetDateTime lastRefreshAttemptAt;
+    OffsetDateTime createdAt;
+    OffsetDateTime lastSuccessfulRefreshAt;
+    OffsetDateTime lastRefreshAttemptAt;
     ConnectorOnlineStatus onlineStatus;
     Integer numDataOffers;
+    Long connectorCrawlingTimeAvg;
 }
