@@ -4,7 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [x.x.x] - UNRELEASED
 
-### Deployment Migration Notes
+### Major Changes
+
+### Minor Changes
+
+### Patch Changes
+
+## [4.0.0] - 2023-07-05
 
 ### Major Changes
 
@@ -17,8 +23,6 @@ All notable changes to this project will be documented in this file.
 - Broker-/ClearingHouse-Client: The extensions can be dynamically enabled and disabled via properties (see
   getting-started Readme FAQ section).
 - Broker Server API: New API Endpoint `DataOfferDetailPage` and `ConnectorDetailPage` with model.
-
-### Patch Changes
 
 ## [3.3.0] - 2023-06-06
 
