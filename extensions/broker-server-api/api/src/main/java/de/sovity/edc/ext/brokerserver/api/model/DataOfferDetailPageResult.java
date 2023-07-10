@@ -55,4 +55,7 @@ public class DataOfferDetailPageResult {
 
     @Schema(description = "Available Contract Offers", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<DataOfferDetailContractOffer> contractOffers;
+
+    @Schema(description = "View Count", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Integer viewCount;
 }

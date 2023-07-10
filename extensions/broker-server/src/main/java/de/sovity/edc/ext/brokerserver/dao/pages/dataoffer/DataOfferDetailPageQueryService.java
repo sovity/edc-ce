@@ -32,6 +32,7 @@ public class DataOfferDetailPageQueryService {
         var fields = new CatalogQueryFields(
                 Tables.CONNECTOR,
                 Tables.DATA_OFFER,
+                Tables.DATA_OFFER_VIEW_COUNT,
                 brokerServerSettings.getDataSpaceConfig()
         );
 
@@ -46,7 +47,8 @@ public class DataOfferDetailPageQueryService {
                         catalogQueryContractOfferFetcher.getContractOffers(fields).as("contractOffers"),
                         fields.getOfflineSinceOrLastUpdatedAt().as("connectorOfflineSinceOrLastUpdatedAt"),
                         c.ENDPOINT.as("connectorEndpoint"),
-                        c.ONLINE_STATUS.as("connectorOnlineStatus"))
+                        c.ONLINE_STATUS.as("connectorOnlineStatus"),
+                        fields.getViewCount().as("viewCount"))
                 .from(d).leftJoin(c).on(c.ENDPOINT.eq(d.CONNECTOR_ENDPOINT))
                 .where(d.ASSET_ID.eq(assetId).or(d.CONNECTOR_ENDPOINT.eq(endpoint)))
                 .fetchOneInto(DataOfferDetailRs.class);

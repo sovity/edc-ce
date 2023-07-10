@@ -51,6 +51,7 @@ public class CatalogQueryService {
         var fields = new CatalogQueryFields(
                 Tables.CONNECTOR,
                 Tables.DATA_OFFER,
+                Tables.DATA_OFFER_VIEW_COUNT,
                 brokerServerSettings.getDataSpaceConfig()
         );
 

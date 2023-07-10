@@ -25,6 +25,7 @@ import de.sovity.edc.ext.brokerserver.dao.pages.catalog.CatalogQueryService;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.CatalogQuerySortingService;
 import de.sovity.edc.ext.brokerserver.dao.pages.connector.ConnectorPageQueryService;
 import de.sovity.edc.ext.brokerserver.dao.pages.dataoffer.DataOfferDetailPageQueryService;
+import de.sovity.edc.ext.brokerserver.dao.pages.dataoffer.ViewCountLogger;
 import de.sovity.edc.ext.brokerserver.db.DataSourceFactory;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.services.BrokerServerInitializer;
@@ -165,8 +166,8 @@ public class BrokerServerExtensionContextBuilder {
         );
         var catalogFilterAttributeDefinitionService = new CatalogFilterAttributeDefinitionService();
         var catalogFilterService = new CatalogFilterService(catalogFilterAttributeDefinitionService);
-
         var offlineConnectorRemover = new OfflineConnectorRemover(brokerServerSettings, connectorQueries, brokerEventLogger);
+        var viewCountLogger = new ViewCountLogger();
 
         // Schedules
         List<CronJobRef<?>> jobs = List.of(
@@ -206,6 +207,7 @@ public class BrokerServerExtensionContextBuilder {
 
         var dataOfferDetailApiService = new DataOfferDetailApiService(
                 dataOfferDetailPageQueryService,
+                viewCountLogger,
                 policyDtoBuilder,
                 assetPropertyParser
         );

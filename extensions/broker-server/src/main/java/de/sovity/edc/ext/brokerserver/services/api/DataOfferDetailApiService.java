@@ -15,11 +15,12 @@
 package de.sovity.edc.ext.brokerserver.services.api;
 
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorOnlineStatus;
-import de.sovity.edc.ext.brokerserver.dao.pages.dataoffer.DataOfferDetailPageQueryService;
-import de.sovity.edc.ext.brokerserver.dao.pages.dataoffer.model.ContractOfferRs;
 import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailContractOffer;
 import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageResult;
+import de.sovity.edc.ext.brokerserver.dao.pages.dataoffer.DataOfferDetailPageQueryService;
+import de.sovity.edc.ext.brokerserver.dao.pages.dataoffer.ViewCountLogger;
+import de.sovity.edc.ext.brokerserver.dao.pages.dataoffer.model.ContractOfferRs;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
@@ -30,6 +31,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class DataOfferDetailApiService {
     private final DataOfferDetailPageQueryService dataOfferDetailPageQueryService;
+    private final ViewCountLogger viewCountLogger;
     private final PolicyDtoBuilder policyDtoBuilder;
     private final AssetPropertyParser assetPropertyParser;
 
@@ -37,6 +39,7 @@ public class DataOfferDetailApiService {
         Objects.requireNonNull(query, "query must not be null");
 
         var dataOffer = dataOfferDetailPageQueryService.queryDataOfferDetailsPage(dsl, query.getAssetId(), query.getConnectorEndpoint());
+        viewCountLogger.increaseDataOfferViewCount(dsl, query.getAssetId(), query.getConnectorEndpoint());
 
         var result = new DataOfferDetailPageResult();
         result.setAssetId(dataOffer.getAssetId());
@@ -47,6 +50,7 @@ public class DataOfferDetailApiService {
         result.setCreatedAt(dataOffer.getCreatedAt());
         result.setUpdatedAt(dataOffer.getUpdatedAt());
         result.setContractOffers(buildDataOfferDetailContractOffers(dataOffer.getContractOffers()));
+        result.setViewCount(dataOffer.getViewCount());
         return result;
     }
 

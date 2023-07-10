@@ -35,4 +35,5 @@ public class DataOfferDetailRs {
     String connectorEndpoint;
     ConnectorOnlineStatus connectorOnlineStatus;
     OffsetDateTime connectorOfflineSinceOrLastUpdatedAt;
+    Integer viewCount;
 }

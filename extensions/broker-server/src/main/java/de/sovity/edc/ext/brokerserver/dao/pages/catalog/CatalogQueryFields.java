@@ -18,6 +18,7 @@ import com.github.t9t.jooq.json.JsonbDSL;
 import de.sovity.edc.ext.brokerserver.dao.AssetProperty;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.Connector;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.DataOffer;
+import de.sovity.edc.ext.brokerserver.db.jooq.tables.DataOfferViewCount;
 import de.sovity.edc.ext.brokerserver.services.config.DataSpaceConfig;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -37,6 +38,7 @@ import java.time.OffsetDateTime;
 public class CatalogQueryFields {
     Connector connectorTable;
     DataOffer dataOfferTable;
+    DataOfferViewCount dataOfferViewCountTable;
 
     // Asset Properties from JSON to be used in sorting / filtering
     Field<String> assetId;
@@ -51,9 +53,10 @@ public class CatalogQueryFields {
 
     DataSpaceConfig dataSpaceConfig;
 
-    public CatalogQueryFields(Connector connectorTable, DataOffer dataOfferTable, DataSpaceConfig dataSpaceConfig) {
+    public CatalogQueryFields(Connector connectorTable, DataOffer dataOfferTable, DataOfferViewCount dataOfferViewCountTable, DataSpaceConfig dataSpaceConfig) {
         this.connectorTable = connectorTable;
         this.dataOfferTable = dataOfferTable;
+        this.dataOfferViewCountTable = dataOfferViewCountTable;
         this.dataSpaceConfig = dataSpaceConfig;
         assetId = dataOfferTable.ASSET_ID;
         assetName = dataOfferTable.ASSET_NAME;
@@ -93,7 +96,17 @@ public class CatalogQueryFields {
         return new CatalogQueryFields(
                 connectorTable.as(connectorTable.getName() + "_" + additionalSuffix),
                 dataOfferTable.as(dataOfferTable.getName() + "_" + additionalSuffix),
+                dataOfferViewCountTable.as(dataOfferViewCountTable.getName() + "_" + additionalSuffix),
                 dataSpaceConfig
         );
+    }
+
+    public Field<Integer> getViewCount() {
+        var subquery = DSL.select(DSL.count())
+                .from(dataOfferViewCountTable)
+                .where(dataOfferViewCountTable.ASSET_ID.eq(dataOfferTable.ASSET_ID)
+                    .and(dataOfferViewCountTable.CONNECTOR_ENDPOINT.eq(connectorTable.ENDPOINT)));
+
+        return subquery.asField();
     }
 }
