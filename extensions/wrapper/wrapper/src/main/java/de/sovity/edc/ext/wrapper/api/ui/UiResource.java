@@ -22,15 +22,11 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransfe
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.api.model.IdResponseDto;
+import org.eclipse.edc.spi.types.domain.asset.Asset;
 
 @Path("wrapper/ui")
 @Tag(name = "UI", description = "EDC UI API Endpoints")
@@ -66,5 +62,12 @@ public class UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     public TransferHistoryPage transferHistoryPageEndpoint() {
         return transferHistoryPageApiService.transferHistoryPage();
+    }
+
+    @GET
+    @Path("pages/transfer-history-page/{transferProcessId}/asset")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Asset getTransferProcessAsset(@PathParam("transferProcessId") String transferProcessId) {
+        return transferHistoryPageApiService.fetchAssetForTransferProcess(transferProcessId);
     }
 }

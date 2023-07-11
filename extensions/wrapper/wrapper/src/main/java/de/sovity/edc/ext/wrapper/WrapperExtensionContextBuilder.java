@@ -27,6 +27,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractN
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.TransformerRegistryUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageDataFetcher;
+import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessAssetFetcher;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
@@ -89,7 +90,8 @@ public class WrapperExtensionContextBuilder {
         );
         var transferHistoryPageEntriesFetcher = new TransferHistoryPageDataFetcher(assetService, contractAgreementService, contractNegotiationStore,
                 transferProcessService, transferProcessStateService);
-        var transferHistoryPageApiService = new TransferHistoryPageApiService(transferHistoryPageEntriesFetcher);
+        var transferProcessAssetFetcher = new TransferProcessAssetFetcher(assetService, transferProcessService);
+        var transferHistoryPageApiService = new TransferHistoryPageApiService(transferHistoryPageEntriesFetcher, transferProcessAssetFetcher);
         var transformerRegistryUtils = new TransformerRegistryUtils(dtoTransformerRegistry);
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);

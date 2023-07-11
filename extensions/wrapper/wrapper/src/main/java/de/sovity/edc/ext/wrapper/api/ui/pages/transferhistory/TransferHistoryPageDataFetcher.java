@@ -31,10 +31,9 @@ import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcMillisToOffsetDateTime;
 import static java.util.stream.Collectors.*;
 
@@ -55,7 +54,6 @@ public class TransferHistoryPageDataFetcher {
     @NotNull
     public List<TransferHistoryEntry> getTransferHistoryEntries() {
 
-        var agreements = getAllContractAgreements();
 
         var negotiationsByID = getAllContractNegotiations().stream()
                 .filter(it -> it.getContractAgreement() != null)
@@ -65,37 +63,55 @@ public class TransferHistoryPageDataFetcher {
                 ));
 
 
-        var agreementsById = agreements.stream().collect(toMap(
+        var agreementsById = getAllContractAgreements().stream().collect(toMap(
                 ContractAgreement::getId, Function.identity()
         ));
 
+        var assetsById = getAllAssets().stream()
+                .collect(toMap(Asset::getId, Function.identity()));
+
         var transferStream = getAllTransferProcesses().stream();
-        Supplier<Stream<Asset>> assetStream = () -> getAllAssets().stream();
+
         return transferStream.map(process -> {
 
             var agreement =
                     agreementsById.get(process.getDataRequest().getContractId());
             var negotiation = negotiationsByID.get(process.getDataRequest().getContractId());
-            var asset = assetStream.get()
-                    .filter(assets -> assets != null && assets.getId().equals(process.getDataRequest().getAssetId()))
-                    .findFirst()
-                    .map(Asset::getName)
-                    .orElse(process.getDataRequest().getAssetId());
+            var asset = assetLookup(assetsById, process);
+            ContractAgreementDirection direction = ContractAgreementDirection.fromType(negotiation.getType());
+
             var transferHistoryEntry = new TransferHistoryEntry();
-            transferHistoryEntry.setAssetId(process.getDataRequest().getAssetId());
-            transferHistoryEntry.setAssetName(asset);
+
+            transferHistoryEntry.setAssetId(asset.getId());
+
+            if (direction == ContractAgreementDirection.CONSUMING) {
+                transferHistoryEntry.setAssetName(asset.getId());
+            } else {
+                transferHistoryEntry.setAssetName(asset.getName() == null ? asset.getId() : asset.getName());
+            }
             transferHistoryEntry.setContractAgreementId(agreement.getId());
             transferHistoryEntry.setCounterPartyConnectorEndpoint(negotiation.getCounterPartyAddress());
             transferHistoryEntry.setCreatedDate(utcMillisToOffsetDateTime(negotiation.getCreatedAt()));
-            transferHistoryEntry.setDirection(ContractAgreementDirection.fromType(negotiation.getType()));
+            transferHistoryEntry.setDirection(direction);
             transferHistoryEntry.setErrorMessage(process.getErrorDetail());
             transferHistoryEntry.setLastUpdatedDate(utcMillisToOffsetDateTime(process.getUpdatedAt()));
             transferHistoryEntry.setState(transferProcessStateService.buildTransferProcessState(process.getState()));
             transferHistoryEntry.setTransferProcessId(process.getId());
             return transferHistoryEntry;
-        }).toList();
+        }).sorted(Comparator.comparing(TransferHistoryEntry::getLastUpdatedDate).reversed()).toList();
 
     }
+
+
+    private Asset assetLookup(Map<String, Asset> assetsById, TransferProcess process) {
+        String assetId = process.getDataRequest().getAssetId();
+        var asset = assetsById.get(assetId);
+        if (asset == null) {
+            return Asset.Builder.newInstance().id(assetId).build();
+        }
+        return asset;
+    }
+
 
     @NotNull
     private List<ContractNegotiation> getAllContractNegotiations() {
