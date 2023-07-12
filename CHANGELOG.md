@@ -71,6 +71,15 @@ Bugfix / Feature Release for the Broker MvP with MS8: Connectors can now be adde
     # (Removed) CRON interval for crawling connectors
     EDC_BROKER_SERVER_CRON_CONNECTOR_REFRESH: "0 */5 * ? * *"
     ```
+4. Connectors can now be dynamically added at runtime by using the following endpoint:
+    ```shell script
+    # Response should be 204 No Content
+    curl --request PUT \
+        --url 'http://localhost:11002/backend/api/v1/management/wrapper/broker/connectors?adminApiKey=DefaultBrokerServerAdminApiKey' \
+        --header 'Content-Type: application/json' \
+        --header 'X-Api-Key: ApiKeyDefaultValue' \
+        --data '["https://some-new-connector/api/v1/ids/data", "https://some-other-new-connector/api/v1/ids/data"]'
+    ```
    
 #### Compatible Versions
 

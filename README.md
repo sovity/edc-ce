@@ -131,6 +131,9 @@ EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
 
 # Required: Management API Key
 EDC_API_AUTH_KEY: "ApiKeyDefaultValue"
+
+# Required: Admin Api Key
+EDC_BROKER_SERVER_ADMIN_API_KEY: DefaultBrokerServerAdminApiKey
 ```
 
 All pre-configured config values for either the broker server or the underlying EDC can be found
@@ -147,6 +150,19 @@ EDC_UI_DATA_MANAGEMENT_API_URL: https://my-broker.com/backend/api/v1/management
 
 # Required: Management API Key
 EDC_API_AUTH_KEY: "ApiKeyDefaultValue"
+```
+
+#### Adding Connectors at runtime
+
+Connectors can be dynamically added at runtime by using the following endpoint:
+
+```shell script
+# Response should be 204 No Content
+curl --request PUT \
+  --url 'http://localhost:11002/backend/api/v1/management/wrapper/broker/connectors?adminApiKey=DefaultBrokerServerAdminApiKey' \
+  --header 'Content-Type: application/json' \
+  --header 'X-Api-Key: ApiKeyDefaultValue' \
+  --data '["https://some-new-connector/api/v1/ids/data", "https://some-other-new-connector/api/v1/ids/data"]'
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
