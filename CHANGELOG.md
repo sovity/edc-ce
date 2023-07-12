@@ -22,6 +22,22 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Fixed
 
+## [v0.0.1-milestone-8-sovity12] 12.07.2023
+
+### Overview
+
+Broker Server Feature + Bugfix Release
+
+### Detailed Changes
+
+#### Added
+
+- Broker Server: Connector Online Status is now visualized.
+
+#### Fixed
+
+- Fixed Policies not being displayed properly.
+
 ## [v0.0.1-milestone-8-sovity11] 07.07.2023
 
 ### Overview
