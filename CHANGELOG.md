@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deployment Migration Notes
 
-## [v1.0.0] - 2023-07-12
+## [v1.0.0] Broker MvP Bugfix / Feature Release - 2023-07-12
 
 ### Overview
 
