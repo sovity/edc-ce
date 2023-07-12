@@ -128,7 +128,7 @@ public abstract class AbstractReferringConnectorValidation {
         if (operator == Operator.IN) {
             var referringConnectorList = (List<?>) referringConnector;
             return referringConnectorList.contains(referringConnectorClaim);
-        } else if (operator == Operator.EQ){
+        } else if (operator == Operator.EQ) {
             //support comma separated lists here as well
             if (referringConnector instanceof String string) {
                 var referringConnectorList = string.split(",");
