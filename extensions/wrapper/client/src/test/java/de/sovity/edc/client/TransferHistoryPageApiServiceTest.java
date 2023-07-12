@@ -49,10 +49,8 @@ class TransferHistoryPageApiServiceTest {
         var client = TestUtils.edcClient();
 
         // arrange
-        TransferProcessTestUtils.createTransferProcesses(negotiationStore,
-                transferProcessStore,
-                assetStore
-        );
+        createProvidingTransferProcesses(negotiationStore, transferProcessStore, assetStore);
+        createConsumingTransferProcesses(negotiationStore, transferProcessStore);
 
         // act
         var result = client.uiApi().transferHistoryPageEndpoint();
@@ -71,7 +69,7 @@ class TransferHistoryPageApiServiceTest {
         assertThat(transferProcess.get(0).getDirection()).isEqualTo(CONSUMING);
         assertThat(transferProcess.get(0).getState().getCode()).isEqualTo(800);
         assertThat(transferProcess.get(0).getAssetName()).isEqualTo(UNKNOWN_ASSET_ID);
-        assertThat(transferProcess.get(0).getErrorMessage()).isEmpty();
+        assertThat(transferProcess.get(0).getErrorMessage()).isEqualTo("");
 
         // assert for providing request entry
         assertThat(transferProcess.get(1).getTransferProcessId()).isEqualTo(TransferProcessTestUtils.PROVIDING_TRANSFER_PROCESS_ID);
@@ -81,6 +79,6 @@ class TransferHistoryPageApiServiceTest {
         assertThat(transferProcess.get(1).getDirection()).isEqualTo(PROVIDING);
         assertThat(transferProcess.get(1).getState().getCode()).isEqualTo(800);
         assertThat(transferProcess.get(1).getAssetName()).isEqualTo(ASSET_NAME);
-        assertThat(transferProcess.get(1).getErrorMessage()).isNotEmpty();
+        assertThat(transferProcess.get(1).getErrorMessage()).isEqualTo("TransferProcessManager: attempt #8 failed to send transfer");
     }
 }

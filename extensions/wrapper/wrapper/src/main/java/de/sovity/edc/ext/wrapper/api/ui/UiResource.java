@@ -21,7 +21,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
-import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessGetAssetApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.*;
@@ -33,10 +33,11 @@ import org.eclipse.edc.api.model.IdResponseDto;
 @Tag(name = "UI", description = "EDC UI API Endpoints")
 @RequiredArgsConstructor
 public class UiResource {
+
     private final ContractAgreementPageApiService contractAgreementApiService;
-    private final TransferHistoryPageApiService transferHistoryPageApiService;
-    private final TransferProcessGetAssetApiService transferProcessGetAssetApiService;
     private final ContractAgreementTransferApiService contractAgreementTransferApiService;
+    private final TransferHistoryPageApiService transferHistoryPageApiService;
+    private final TransferHistoryPageAssetFetcherService transferHistoryPageAssetFetcherService;
 
     @GET
     @Path("pages/contract-agreement-page")
@@ -63,13 +64,13 @@ public class UiResource {
     @Path("pages/transfer-history-page")
     @Produces(MediaType.APPLICATION_JSON)
     public TransferHistoryPage transferHistoryPageEndpoint() {
-        return transferHistoryPageApiService.transferHistoryPage();
+        return new TransferHistoryPage(transferHistoryPageApiService.getTransferHistoryEntries());
     }
 
     @GET
-    @Path("pages/transfer-history-page/{transferProcessId}/asset")
+    @Path("pages/transfer-history-page/transfer-processes/{transferProcessId}/asset")
     @Produces(MediaType.APPLICATION_JSON)
     public AssetDto getTransferProcessAsset(@PathParam("transferProcessId") String transferProcessId) {
-        return transferProcessGetAssetApiService.fetchAssetForTransferProcess(transferProcessId);
+        return transferHistoryPageAssetFetcherService.getAssetForTransferHistoryPage(transferProcessId);
     }
 }

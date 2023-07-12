@@ -14,7 +14,7 @@ import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcMillisToOffsetDate
 import static de.sovity.edc.ext.wrapper.utils.MapUtils.mapValues;
 
 @RequiredArgsConstructor
-public class TransferProcessAssetFetcher {
+public class TransferHistoryPageAssetFetcherService {
     private final AssetService assetService;
 
     private final TransferProcessService transferProcessService;

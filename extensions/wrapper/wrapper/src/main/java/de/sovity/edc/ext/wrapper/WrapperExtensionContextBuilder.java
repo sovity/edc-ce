@@ -26,9 +26,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractA
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.TransformerRegistryUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
-import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageDataFetcher;
-import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessAssetFetcher;
-import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessGetAssetApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
@@ -47,7 +45,6 @@ import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
-
 import java.util.List;
 
 
@@ -89,11 +86,9 @@ public class WrapperExtensionContextBuilder {
                 contractAgreementDataFetcher,
                 contractAgreementPageCardBuilder
         );
-        var transferHistoryPageEntriesFetcher = new TransferHistoryPageDataFetcher(assetService, contractAgreementService, contractNegotiationStore,
+        var transferHistoryPageApiService = new TransferHistoryPageApiService(assetService, contractAgreementService, contractNegotiationStore,
                 transferProcessService, transferProcessStateService);
-        var transferHistoryPageApiService = new TransferHistoryPageApiService(transferHistoryPageEntriesFetcher);
-        var transferProcessAssetFetcher = new TransferProcessAssetFetcher(assetService, transferProcessService);
-        var transferProcessGetAssetApiService = new TransferProcessGetAssetApiService(transferProcessAssetFetcher);
+        var transferHistoryPageAssetFetcherService = new TransferHistoryPageAssetFetcherService(assetService, transferProcessService);
         var transformerRegistryUtils = new TransformerRegistryUtils(dtoTransformerRegistry);
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
@@ -110,9 +105,9 @@ public class WrapperExtensionContextBuilder {
         );
         var uiResource = new UiResource(
                 contractAgreementApiService,
+                contractAgreementTransferApiService,
                 transferHistoryPageApiService,
-                transferProcessGetAssetApiService,
-                contractAgreementTransferApiService
+                transferHistoryPageAssetFetcherService
         );
 
         // Use Case API

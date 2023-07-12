@@ -28,7 +28,7 @@ public class TransferProcessTestUtils {
     public static final String CONSUMING_TRANSFER_PROCESS_ID = "be0cac12-bb43-420e-aa29-d66bb3d0e0ac";
 
     @NotNull
-    public static void createTransferProcesses(ContractNegotiationStore store, TransferProcessStore transferProcessStore, AssetService assetStore) throws ParseException {
+    public static void createProvidingTransferProcesses(ContractNegotiationStore store, TransferProcessStore transferProcessStore, AssetService assetStore) throws ParseException {
         DataAddress dataAddress = getDataAddress();
         createAsset(assetStore, dataAddress, VALID_ASSET_ID, ASSET_NAME);
 
@@ -45,6 +45,12 @@ public class TransferProcessTestUtils {
                 lastUpdateDateForProvidingTransferProcess,
                 errorMessageForProvidingTransferProcess,
                 transferProcessStore);
+
+    }
+
+    @NotNull
+    public static void createConsumingTransferProcesses(ContractNegotiationStore store, TransferProcessStore transferProcessStore) throws ParseException {
+        DataAddress dataAddress = getDataAddress();
 
         // preparing consuming transfer process
         var consumerAgreement = createContractAgreement(CONSUMING_CONTRACT_ID, UNKNOWN_ASSET_ID);

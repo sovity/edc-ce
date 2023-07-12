@@ -43,32 +43,34 @@ class GetTransferProcessAssetApiServiceTest {
                                      TransferProcessStore transferProcessStore,
                                      AssetService assetStore) throws ParseException {
 
-        EdcClient client = getEdcClient(negotiationStore, transferProcessStore, assetStore);
+        var client = TestUtils.edcClient();
 
+        //arrange data
+        createProvidingTransferProcesses(negotiationStore, transferProcessStore, assetStore);
+
+        //act
         var providerAssetResult = client.uiApi().getTransferProcessAsset(PROVIDING_TRANSFER_PROCESS_ID);
 
+        //assert
         assertThat(providerAssetResult.getAssetId()).isEqualTo(VALID_ASSET_ID);
         assertThat(providerAssetResult.getProperties().get("asset:prop:name")).isEqualTo(ASSET_NAME);
-
     }
 
     @Test
     void testConsumerTransferProcess(ContractNegotiationStore negotiationStore,
-                                     TransferProcessStore transferProcessStore,
-                                     AssetService assetStore) throws ParseException {
+                                     TransferProcessStore transferProcessStore) throws ParseException {
 
-        EdcClient client = getEdcClient(negotiationStore, transferProcessStore, assetStore);
+        var client = TestUtils.edcClient();
 
+        //arrange data
+        createConsumingTransferProcesses(negotiationStore, transferProcessStore);
+
+        //act
         var consumerAssetResult = client.uiApi().getTransferProcessAsset(CONSUMING_TRANSFER_PROCESS_ID);
 
+        //assert
         assertThat(consumerAssetResult.getAssetId()).isEqualTo(UNKNOWN_ASSET_ID);
         assertThat(consumerAssetResult.getProperties().get("asset:prop:name")).isNull();
     }
 
-    private EdcClient getEdcClient(ContractNegotiationStore negotiationStore, TransferProcessStore transferProcessStore, AssetService assetStore) throws ParseException {
-        var client = TestUtils.edcClient();
-
-        createTransferProcesses(negotiationStore, transferProcessStore, assetStore);
-        return client;
-    }
 }
