@@ -29,11 +29,13 @@ import org.eclipse.edc.spi.entity.Entity;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+
 import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcMillisToOffsetDateTime;
 import static java.util.stream.Collectors.*;
 
@@ -78,17 +80,12 @@ public class TransferHistoryPageDataFetcher {
                     agreementsById.get(process.getDataRequest().getContractId());
             var negotiation = negotiationsByID.get(process.getDataRequest().getContractId());
             var asset = assetLookup(assetsById, process);
-            ContractAgreementDirection direction = ContractAgreementDirection.fromType(negotiation.getType());
+            var direction = ContractAgreementDirection.fromType(negotiation.getType());
 
             var transferHistoryEntry = new TransferHistoryEntry();
 
             transferHistoryEntry.setAssetId(asset.getId());
-
-            if (direction == ContractAgreementDirection.CONSUMING) {
-                transferHistoryEntry.setAssetName(asset.getId());
-            } else {
-                transferHistoryEntry.setAssetName(asset.getName() == null ? asset.getId() : asset.getName());
-            }
+            transferHistoryEntry.setAssetName(asset.getName() == null ? asset.getId() : asset.getName());
             transferHistoryEntry.setContractAgreementId(agreement.getId());
             transferHistoryEntry.setCounterPartyConnectorEndpoint(negotiation.getCounterPartyAddress());
             transferHistoryEntry.setCreatedDate(utcMillisToOffsetDateTime(negotiation.getCreatedAt()));

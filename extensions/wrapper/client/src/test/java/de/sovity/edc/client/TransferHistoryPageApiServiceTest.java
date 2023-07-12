@@ -22,8 +22,10 @@ import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import java.text.ParseException;
 import java.util.Map;
+
 import static de.sovity.edc.client.TransferProcessTestUtils.*;
 import static de.sovity.edc.client.gen.model.TransferHistoryEntry.DirectionEnum.CONSUMING;
 import static de.sovity.edc.client.gen.model.TransferHistoryEntry.DirectionEnum.PROVIDING;
@@ -47,9 +49,9 @@ class TransferHistoryPageApiServiceTest {
         var client = TestUtils.edcClient();
 
         // arrange
-        TransferProcessTestUtils.createTransferProcesses(negotiationStore
-                , transferProcessStore
-                , assetStore
+        TransferProcessTestUtils.createTransferProcesses(negotiationStore,
+                transferProcessStore,
+                assetStore
         );
 
         // act
@@ -63,13 +65,13 @@ class TransferHistoryPageApiServiceTest {
 
         // assert for consuming request entry
         assertThat(transferProcess.get(0).getTransferProcessId()).isEqualTo(TransferProcessTestUtils.CONSUMING_TRANSFER_PROCESS_ID);
-        assertThat(transferProcess.get(0).getAssetId()).isEqualTo(RANDOM_DELETED_ASSET_ID);
+        assertThat(transferProcess.get(0).getAssetId()).isEqualTo(UNKNOWN_ASSET_ID);
         assertThat(transferProcess.get(0).getCounterPartyConnectorEndpoint()).isEqualTo(COUNTER_PARTY_ADDRESS);
         assertThat(transferProcess.get(0).getContractAgreementId()).isEqualTo(CONSUMING_CONTRACT_ID);
         assertThat(transferProcess.get(0).getDirection()).isEqualTo(CONSUMING);
         assertThat(transferProcess.get(0).getState().getCode()).isEqualTo(800);
-        assertThat(transferProcess.get(0).getAssetName()).isEqualTo(RANDOM_DELETED_ASSET_ID);
-        assertThat(transferProcess.get(0).getErrorMessage()).isNull();
+        assertThat(transferProcess.get(0).getAssetName()).isEqualTo(UNKNOWN_ASSET_ID);
+        assertThat(transferProcess.get(0).getErrorMessage()).isEmpty();
 
         // assert for providing request entry
         assertThat(transferProcess.get(1).getTransferProcessId()).isEqualTo(TransferProcessTestUtils.PROVIDING_TRANSFER_PROCESS_ID);
@@ -79,6 +81,6 @@ class TransferHistoryPageApiServiceTest {
         assertThat(transferProcess.get(1).getDirection()).isEqualTo(PROVIDING);
         assertThat(transferProcess.get(1).getState().getCode()).isEqualTo(800);
         assertThat(transferProcess.get(1).getAssetName()).isEqualTo(ASSET_NAME);
-        assertThat(transferProcess.get(1).getErrorMessage()).isNull();
+        assertThat(transferProcess.get(1).getErrorMessage()).isNotEmpty();
     }
 }

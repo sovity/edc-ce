@@ -14,17 +14,16 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;
 
-import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
+import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class TransferHistoryPageApiService {
+public class TransferProcessGetAssetApiService {
 
-    private final TransferHistoryPageDataFetcher transferHistoryPageDataFetcher;
+    private final TransferProcessAssetFetcher transferProcessAssetFetcher;
 
-    public TransferHistoryPage transferHistoryPage() {
+    public AssetDto fetchAssetForTransferProcess(String transferProcessId) {
 
-        var transferHistoryPageEntries = transferHistoryPageDataFetcher.getTransferHistoryEntries();
-        return new TransferHistoryPage(transferHistoryPageEntries);
+        return transferProcessAssetFetcher.getAssetForTransferHistoryPage(transferProcessId);
     }
 }

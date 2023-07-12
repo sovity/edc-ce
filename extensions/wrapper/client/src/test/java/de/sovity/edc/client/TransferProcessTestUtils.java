@@ -19,11 +19,11 @@ import java.util.UUID;
 public class TransferProcessTestUtils {
     public static final String DATA_SINK = "http://my-data-sink/api/stuff";
     public static final String COUNTER_PARTY_ADDRESS = "http://some-other-connector/api/v1/ids/data";
-    public static final String PROVIDING_CONTRACT_ID = "db-rail-network-2023-jan-cd:eb934d1f-6582-4bab-85e6-af19a76f7e2b";
-    public static final String CONSUMING_CONTRACT_ID = "db-rail-network-2023-jan-cd:f52a5d30-6356-4a55-a75a-3c45d7a88c3e";
-    public static final String VALID_ASSET_ID = "urn:artifact:db-rail-network-2023-jan";
-    public static final String RANDOM_DELETED_ASSET_ID = "urn:junk";
-    public static final String ASSET_NAME = "Rail Network DB 2023 January";
+    public static final String PROVIDING_CONTRACT_ID = "provider-contract:eb934d1f-6582-4bab-85e6-af19a76f7e2b";
+    public static final String CONSUMING_CONTRACT_ID = "consumer-contract:f52a5d30-6356-4a55-a75a-3c45d7a88c3e";
+    public static final String VALID_ASSET_ID = "urn:artifact:asset";
+    public static final String UNKNOWN_ASSET_ID = "urn:junk";
+    public static final String ASSET_NAME = "Test asset";
     public static final String PROVIDING_TRANSFER_PROCESS_ID = "81cdf4cf-8427-480f-9662-8a29d66ddd3b";
     public static final String CONSUMING_TRANSFER_PROCESS_ID = "be0cac12-bb43-420e-aa29-d66bb3d0e0ac";
 
@@ -35,14 +35,30 @@ public class TransferProcessTestUtils {
         // preparing providing transfer process
         var providerAgreement = createContractAgreement(PROVIDING_CONTRACT_ID, VALID_ASSET_ID);
         createContractNegotiation(store, COUNTER_PARTY_ADDRESS, providerAgreement, ContractNegotiation.Type.PROVIDER);
-        var lastUpdateDateForProvidingTransferProcess = "8-Jul-2023";
-        createTransferProcess(VALID_ASSET_ID, PROVIDING_CONTRACT_ID, dataAddress, TransferProcess.Type.PROVIDER, PROVIDING_TRANSFER_PROCESS_ID, lastUpdateDateForProvidingTransferProcess, transferProcessStore);
+        var lastUpdateDateForProvidingTransferProcess = "2023-07-08";
+        var errorMessageForProvidingTransferProcess = "TransferProcessManager: attempt #8 failed to send transfer";
+        createTransferProcess(VALID_ASSET_ID,
+                PROVIDING_CONTRACT_ID,
+                dataAddress,
+                TransferProcess.Type.PROVIDER,
+                PROVIDING_TRANSFER_PROCESS_ID,
+                lastUpdateDateForProvidingTransferProcess,
+                errorMessageForProvidingTransferProcess,
+                transferProcessStore);
 
         // preparing consuming transfer process
-        var consumerAgreement = createContractAgreement(CONSUMING_CONTRACT_ID, RANDOM_DELETED_ASSET_ID);
+        var consumerAgreement = createContractAgreement(CONSUMING_CONTRACT_ID, UNKNOWN_ASSET_ID);
         createContractNegotiation(store, COUNTER_PARTY_ADDRESS, consumerAgreement, ContractNegotiation.Type.CONSUMER);
-        var lastUpdateDateForConsumingTransferProcess = "10-Jul-2023";
-        createTransferProcess(RANDOM_DELETED_ASSET_ID, CONSUMING_CONTRACT_ID, dataAddress, TransferProcess.Type.CONSUMER, CONSUMING_TRANSFER_PROCESS_ID, lastUpdateDateForConsumingTransferProcess, transferProcessStore);
+        var lastUpdateDateForConsumingTransferProcess = "2023-07-10";
+        var errorMessageForConsumingTransferProcess = "";
+        createTransferProcess(UNKNOWN_ASSET_ID,
+                CONSUMING_CONTRACT_ID,
+                dataAddress,
+                TransferProcess.Type.CONSUMER,
+                CONSUMING_TRANSFER_PROCESS_ID,
+                lastUpdateDateForConsumingTransferProcess,
+                errorMessageForConsumingTransferProcess,
+                transferProcessStore);
     }
 
     private static DataAddress getDataAddress() {
@@ -57,7 +73,7 @@ public class TransferProcessTestUtils {
         var asset = Asset.Builder.newInstance()
                 .id(assetId)
                 .property("asset:prop:name", assetName)
-                .createdAt(dateFormatterToLong("1-Jul-2023"))
+                .createdAt(dateFormatterToLong("2023-06-01"))
                 .build();
         assetStore.create(asset, dataAddress);
 
@@ -97,7 +113,7 @@ public class TransferProcessTestUtils {
         store.save(negotiation);
     }
 
-    private static void createTransferProcess(String assetId, String contractId, DataAddress dataAddress, TransferProcess.Type type, String transferProcessId, String lastUpdateDateForTransferProcess, TransferProcessStore transferProcessStore) throws ParseException {
+    private static void createTransferProcess(String assetId, String contractId, DataAddress dataAddress, TransferProcess.Type type, String transferProcessId, String lastUpdateDateForTransferProcess, String errorMessage, TransferProcessStore transferProcessStore) throws ParseException {
 
 
         var dataRequestForTransfer = DataRequest.Builder.newInstance()
@@ -110,17 +126,17 @@ public class TransferProcessTestUtils {
                 .id(transferProcessId)
                 .type(type)
                 .dataRequest(dataRequestForTransfer)
-                .createdAt(dateFormatterToLong("8-Jul-2023"))
+                .createdAt(dateFormatterToLong("2023-07-08"))
                 .updatedAt(dateFormatterToLong(lastUpdateDateForTransferProcess))
                 .state(800)
-                .errorDetail(null)
+                .errorDetail(errorMessage)
                 .build();
 
         transferProcessStore.save(transferProcess);
     }
 
     private static long dateFormatterToLong(String date) throws ParseException {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return formatter.parse(date).getTime();
     }
 }
