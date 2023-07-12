@@ -33,16 +33,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 2. There are new **optional** configuration properties:
     ```yaml
     # CRON interval for crawling ONLINE connectors
-    EDC_BROKER_SERVER_CRON_ONLINE_CONNECTOR_REFRESH: "*/20 * * ? * *"
+    EDC_BROKER_SERVER_CRON_ONLINE_CONNECTOR_REFRESH: "*/20 * * ? * *" # every 20s
     
     # CRON interval for crawling OFFLINE connectors
-    EDC_BROKER_SERVER_CRON_OFFLINE_CONNECTOR_REFRESH: "0 */5 * ? * *"
+    EDC_BROKER_SERVER_CRON_OFFLINE_CONNECTOR_REFRESH: "0 */5 * ? * *" # every 5 minutes
     
     # CRON interval for crawling DEAD connectors
-    EDC_BROKER_SERVER_CRON_DEAD_CONNECTOR_REFRESH: "0 */60 */4 ? * *"
+    EDC_BROKER_SERVER_CRON_DEAD_CONNECTOR_REFRESH: "0 0 * ? * *" # every hour
     
     # CRON interval for marking connectors as DEAD
-    EDC_BROKER_SERVER_SCHEDULED_KILL_OFFLINE_CONNECTORS: "0 0 12 ? * *"
+    EDC_BROKER_SERVER_SCHEDULED_KILL_OFFLINE_CONNECTORS: "0 0 2 ? * *" # every day at 2am
     
     # Delete data offers / mark as dead after connector has been offline for:
     EDC_BROKER_SERVER_KILL_OFFLINE_CONNECTORS_AFTER: "P5D"
