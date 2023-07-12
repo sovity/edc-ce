@@ -27,7 +27,7 @@ export function getOnlineStatusColor(status: ConnectorOnlineStatus): string {
 export function getOnlineStatusIcon(status: ConnectorOnlineStatus): string {
   switch (status) {
     case 'ONLINE':
-      return 'check_circle';
+      return 'cloud_done';
     case 'OFFLINE':
       return 'pause_circle';
     case 'DEAD':
