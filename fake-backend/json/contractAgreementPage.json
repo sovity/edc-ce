@@ -22,47 +22,7 @@
         }
       },
       "contractPolicy": {
-        "legacyPolicy": {
-          "permissions": [
-            {
-              "edctype": "dataspaceconnector:permission",
-              "uid": null,
-              "target": "urn:artifact:my-own-asset",
-              "action": {
-                "type": "USE",
-                "includedIn": null,
-                "constraint": null
-              },
-              "assignee": null,
-              "assigner": null,
-              "constraints": [
-                {
-                  "edctype": "AtomicConstraint",
-                  "leftExpression": {
-                    "edctype": "dataspaceconnector:literalexpression",
-                    "value": "ALWAYS_TRUE"
-                  },
-                  "rightExpression": {
-                    "edctype": "dataspaceconnector:literalexpression",
-                    "value": "true"
-                  },
-                  "operator": "EQ"
-                }
-              ],
-              "duties": []
-            }
-          ],
-          "prohibitions": [],
-          "obligations": [],
-          "extensibleProperties": {},
-          "inheritsFrom": null,
-          "assigner": null,
-          "assignee": null,
-          "target": "urn:artifact:my-own-asset",
-          "@type": {
-            "@policytype": "set"
-          }
-        }
+        "legacyPolicy": "{\n          \"permissions\": [\n            {\n              \"edctype\": \"dataspaceconnector:permission\",\n              \"uid\": null,\n              \"target\": \"urn:artifact:my-own-asset\",\n              \"action\": {\n                \"type\": \"USE\",\n                \"includedIn\": null,\n                \"constraint\": null\n              },\n              \"assignee\": null,\n              \"assigner\": null,\n              \"constraints\": [\n                {\n                  \"edctype\": \"AtomicConstraint\",\n                  \"leftExpression\": {\n                    \"edctype\": \"dataspaceconnector:literalexpression\",\n                    \"value\": \"ALWAYS_TRUE\"\n                  },\n                  \"rightExpression\": {\n                    \"edctype\": \"dataspaceconnector:literalexpression\",\n                    \"value\": \"true\"\n                  },\n                  \"operator\": \"EQ\"\n                }\n              ],\n              \"duties\": []\n            }\n          ],\n          \"prohibitions\": [],\n          \"obligations\": [],\n          \"extensibleProperties\": {},\n          \"inheritsFrom\": null,\n          \"assigner\": null,\n          \"assignee\": null,\n          \"target\": \"urn:artifact:my-own-asset\",\n          \"@type\": {\n            \"@policytype\": \"set\"\n          }\n        }"
       },
       "transferProcesses": [
         {
@@ -123,47 +83,7 @@
         }
       },
       "contractPolicy": {
-        "legacyPolicy": {
-          "permissions": [
-            {
-              "edctype": "dataspaceconnector:permission",
-              "uid": null,
-              "target": "urn:artifact:consumed-asset",
-              "action": {
-                "type": "USE",
-                "includedIn": null,
-                "constraint": null
-              },
-              "assignee": null,
-              "assigner": null,
-              "constraints": [
-                {
-                  "edctype": "AtomicConstraint",
-                  "leftExpression": {
-                    "edctype": "dataspaceconnector:literalexpression",
-                    "value": "ALWAYS_TRUE"
-                  },
-                  "rightExpression": {
-                    "edctype": "dataspaceconnector:literalexpression",
-                    "value": "true"
-                  },
-                  "operator": "EQ"
-                }
-              ],
-              "duties": []
-            }
-          ],
-          "prohibitions": [],
-          "obligations": [],
-          "extensibleProperties": {},
-          "inheritsFrom": null,
-          "assigner": null,
-          "assignee": null,
-          "target": "urn:artifact:my-test-asset",
-          "@type": {
-            "@policytype": "set"
-          }
-        }
+        "legacyPolicy": "{\n          \"permissions\": [\n            {\n              \"edctype\": \"dataspaceconnector:permission\",\n              \"uid\": null,\n              \"target\": \"urn:artifact:consumed-asset\",\n              \"action\": {\n                \"type\": \"USE\",\n                \"includedIn\": null,\n                \"constraint\": null\n              },\n              \"assignee\": null,\n              \"assigner\": null,\n              \"constraints\": [\n                {\n                  \"edctype\": \"AtomicConstraint\",\n                  \"leftExpression\": {\n                    \"edctype\": \"dataspaceconnector:literalexpression\",\n                    \"value\": \"ALWAYS_TRUE\"\n                  },\n                  \"rightExpression\": {\n                    \"edctype\": \"dataspaceconnector:literalexpression\",\n                    \"value\": \"true\"\n                  },\n                  \"operator\": \"EQ\"\n                }\n              ],\n              \"duties\": []\n            }\n          ],\n          \"prohibitions\": [],\n          \"obligations\": [],\n          \"extensibleProperties\": {},\n          \"inheritsFrom\": null,\n          \"assigner\": null,\n          \"assignee\": null,\n          \"target\": \"urn:artifact:my-test-asset\",\n          \"@type\": {\n            \"@policytype\": \"set\"\n          }\n        }"
       },
       "transferProcesses": [
         {
@@ -215,47 +135,7 @@
         }
       },
       "contractPolicy": {
-        "legacyPolicy": {
-          "permissions": [
-            {
-              "edctype": "dataspaceconnector:permission",
-              "uid": null,
-              "target": "urn:artifact:my-test-asset-2",
-              "action": {
-                "type": "USE",
-                "includedIn": null,
-                "constraint": null
-              },
-              "assignee": null,
-              "assigner": null,
-              "constraints": [
-                {
-                  "edctype": "AtomicConstraint",
-                  "leftExpression": {
-                    "edctype": "dataspaceconnector:literalexpression",
-                    "value": "ALWAYS_TRUE"
-                  },
-                  "rightExpression": {
-                    "edctype": "dataspaceconnector:literalexpression",
-                    "value": "true"
-                  },
-                  "operator": "EQ"
-                }
-              ],
-              "duties": []
-            }
-          ],
-          "prohibitions": [],
-          "obligations": [],
-          "extensibleProperties": {},
-          "inheritsFrom": null,
-          "assigner": null,
-          "assignee": null,
-          "target": "urn:artifact:my-test-asset-2",
-          "@type": {
-            "@policytype": "set"
-          }
-        }
+        "legacyPolicy": "{\n          \"permissions\": [\n            {\n              \"edctype\": \"dataspaceconnector:permission\",\n              \"uid\": null,\n              \"target\": \"urn:artifact:my-test-asset-2\",\n              \"action\": {\n                \"type\": \"USE\",\n                \"includedIn\": null,\n                \"constraint\": null\n              },\n              \"assignee\": null,\n              \"assigner\": null,\n              \"constraints\": [\n                {\n                  \"edctype\": \"AtomicConstraint\",\n                  \"leftExpression\": {\n                    \"edctype\": \"dataspaceconnector:literalexpression\",\n                    \"value\": \"ALWAYS_TRUE\"\n                  },\n                  \"rightExpression\": {\n                    \"edctype\": \"dataspaceconnector:literalexpression\",\n                    \"value\": \"true\"\n                  },\n                  \"operator\": \"EQ\"\n                }\n              ],\n              \"duties\": []\n            }\n          ],\n          \"prohibitions\": [],\n          \"obligations\": [],\n          \"extensibleProperties\": {},\n          \"inheritsFrom\": null,\n          \"assigner\": null,\n          \"assignee\": null,\n          \"target\": \"urn:artifact:my-test-asset-2\",\n          \"@type\": {\n            \"@policytype\": \"set\"\n          }\n        }"
       },
       "transferProcesses": []
     },
@@ -275,47 +155,7 @@
         }
       },
       "contractPolicy": {
-        "legacyPolicy": {
-          "permissions": [
-            {
-              "edctype": "dataspaceconnector:permission",
-              "uid": null,
-              "target": "urn:artifact:consumed-asset",
-              "action": {
-                "type": "USE",
-                "includedIn": null,
-                "constraint": null
-              },
-              "assignee": null,
-              "assigner": null,
-              "constraints": [
-                {
-                  "edctype": "AtomicConstraint",
-                  "leftExpression": {
-                    "edctype": "dataspaceconnector:literalexpression",
-                    "value": "ALWAYS_TRUE"
-                  },
-                  "rightExpression": {
-                    "edctype": "dataspaceconnector:literalexpression",
-                    "value": "true"
-                  },
-                  "operator": "EQ"
-                }
-              ],
-              "duties": []
-            }
-          ],
-          "prohibitions": [],
-          "obligations": [],
-          "extensibleProperties": {},
-          "inheritsFrom": null,
-          "assigner": null,
-          "assignee": null,
-          "target": "urn:artifact:my-test-asset",
-          "@type": {
-            "@policytype": "set"
-          }
-        }
+        "legacyPolicy": "{\n          \"permissions\": [\n            {\n              \"edctype\": \"dataspaceconnector:permission\",\n              \"uid\": null,\n              \"target\": \"urn:artifact:consumed-asset\",\n              \"action\": {\n                \"type\": \"USE\",\n                \"includedIn\": null,\n                \"constraint\": null\n              },\n              \"assignee\": null,\n              \"assigner\": null,\n              \"constraints\": [\n                {\n                  \"edctype\": \"AtomicConstraint\",\n                  \"leftExpression\": {\n                    \"edctype\": \"dataspaceconnector:literalexpression\",\n                    \"value\": \"ALWAYS_TRUE\"\n                  },\n                  \"rightExpression\": {\n                    \"edctype\": \"dataspaceconnector:literalexpression\",\n                    \"value\": \"true\"\n                  },\n                  \"operator\": \"EQ\"\n                }\n              ],\n              \"duties\": []\n            }\n          ],\n          \"prohibitions\": [],\n          \"obligations\": [],\n          \"extensibleProperties\": {},\n          \"inheritsFrom\": null,\n          \"assigner\": null,\n          \"assignee\": null,\n          \"target\": \"urn:artifact:my-test-asset\",\n          \"@type\": {\n            \"@policytype\": \"set\"\n          }\n        }"
       },
       "transferProcesses": [
         {

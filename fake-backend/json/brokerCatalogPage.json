@@ -79,33 +79,7 @@
           "createdAt": "2023-05-26T12:02:41+02:00",
           "updatedAt": "2023-05-31T12:02:41+02:00",
           "contractPolicy": {
-            "legacyPolicy": {
-              "permissions": [
-                {
-                  "edctype": "dataspaceconnector:permission",
-                  "action": {
-                    "type": "USE"
-                  },
-                  "constraints": [
-                    {
-                      "edctype": "AtomicConstraint",
-                      "leftExpression": {
-                        "edctype": "dataspaceconnector:literalexpression",
-                        "value": "ALWAYS_TRUE"
-                      },
-                      "rightExpression": {
-                        "edctype": "dataspaceconnector:literalexpression",
-                        "value": "true"
-                      },
-                      "operator": "EQ"
-                    }
-                  ]
-                }
-              ],
-              "@type": {
-                "@policytype": "set"
-              }
-            }
+            "legacyPolicy": "{\n              \"permissions\": [\n                {\n                  \"edctype\": \"dataspaceconnector:permission\",\n                  \"action\": {\n                    \"type\": \"USE\"\n                  },\n                  \"constraints\": [\n                    {\n                      \"edctype\": \"AtomicConstraint\",\n                      \"leftExpression\": {\n                        \"edctype\": \"dataspaceconnector:literalexpression\",\n                        \"value\": \"ALWAYS_TRUE\"\n                      },\n                      \"rightExpression\": {\n                        \"edctype\": \"dataspaceconnector:literalexpression\",\n                        \"value\": \"true\"\n                      },\n                      \"operator\": \"EQ\"\n                    }\n                  ]\n                }\n              ],\n              \"@type\": {\n                \"@policytype\": \"set\"\n              }\n            }"
           }
         }
       ]
@@ -142,33 +116,7 @@
           "createdAt": "2023-05-26T12:02:41+02:00",
           "updatedAt": "2023-05-31T12:02:41+02:00",
           "contractPolicy": {
-            "legacyPolicy": {
-              "permissions": [
-                {
-                  "edctype": "dataspaceconnector:permission",
-                  "action": {
-                    "type": "USE"
-                  },
-                  "constraints": [
-                    {
-                      "edctype": "AtomicConstraint",
-                      "leftExpression": {
-                        "edctype": "dataspaceconnector:literalexpression",
-                        "value": "ALWAYS_TRUE"
-                      },
-                      "rightExpression": {
-                        "edctype": "dataspaceconnector:literalexpression",
-                        "value": "true"
-                      },
-                      "operator": "EQ"
-                    }
-                  ]
-                }
-              ],
-              "@type": {
-                "@policytype": "set"
-              }
-            }
+            "legacyPolicy": "{\n              \"permissions\": [\n                {\n                  \"edctype\": \"dataspaceconnector:permission\",\n                  \"action\": {\n                    \"type\": \"USE\"\n                  },\n                  \"constraints\": [\n                    {\n                      \"edctype\": \"AtomicConstraint\",\n                      \"leftExpression\": {\n                        \"edctype\": \"dataspaceconnector:literalexpression\",\n                        \"value\": \"ALWAYS_TRUE\"\n                      },\n                      \"rightExpression\": {\n                        \"edctype\": \"dataspaceconnector:literalexpression\",\n                        \"value\": \"true\"\n                      },\n                      \"operator\": \"EQ\"\n                    }\n                  ]\n                }\n              ],\n              \"@type\": {\n                \"@policytype\": \"set\"\n              }\n            }"
           }
         }
       ]
@@ -205,33 +153,7 @@
           "createdAt": "2023-05-26T12:02:41+02:00",
           "updatedAt": "2023-05-31T12:02:41+02:00",
           "contractPolicy": {
-            "legacyPolicy": {
-              "permissions": [
-                {
-                  "edctype": "dataspaceconnector:permission",
-                  "action": {
-                    "type": "USE"
-                  },
-                  "constraints": [
-                    {
-                      "edctype": "AtomicConstraint",
-                      "leftExpression": {
-                        "edctype": "dataspaceconnector:literalexpression",
-                        "value": "ALWAYS_TRUE"
-                      },
-                      "rightExpression": {
-                        "edctype": "dataspaceconnector:literalexpression",
-                        "value": "true"
-                      },
-                      "operator": "EQ"
-                    }
-                  ]
-                }
-              ],
-              "@type": {
-                "@policytype": "set"
-              }
-            }
+            "legacyPolicy": "{\n              \"permissions\": [\n                {\n                  \"edctype\": \"dataspaceconnector:permission\",\n                  \"action\": {\n                    \"type\": \"USE\"\n                  },\n                  \"constraints\": [\n                    {\n                      \"edctype\": \"AtomicConstraint\",\n                      \"leftExpression\": {\n                        \"edctype\": \"dataspaceconnector:literalexpression\",\n                        \"value\": \"ALWAYS_TRUE\"\n                      },\n                      \"rightExpression\": {\n                        \"edctype\": \"dataspaceconnector:literalexpression\",\n                        \"value\": \"true\"\n                      },\n                      \"operator\": \"EQ\"\n                    }\n                  ]\n                }\n              ],\n              \"@type\": {\n                \"@policytype\": \"set\"\n              }\n            }"
           }
         }
       ]

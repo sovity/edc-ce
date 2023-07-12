@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {Policy} from '../../../core/services/api/legacy-managent-api-client';
 import {Asset} from '../../../core/services/models/asset';
 import {ContractOffer} from '../../../core/services/models/contract-offer';
 import {BrokerDataOffer} from '../../../routes/broker-ui/catalog-page/catalog-page/mapping/broker-data-offer';
 import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
 import {AssetDetailDialogData} from './asset-detail-dialog-data';
 import {AssetPropertyGridGroupBuilder} from './asset-property-grid-group-builder';
+import {getLegacyPolicy} from './policy-utils';
 
 @Injectable()
 export class AssetDetailDialogDataService {
@@ -52,8 +52,7 @@ export class AssetDetailDialogDataService {
     contractAgreement: ContractAgreementCardMapped,
   ): AssetDetailDialogData {
     let asset = contractAgreement.asset;
-    let contractPolicy = contractAgreement.contractPolicy
-      .legacyPolicy as Policy;
+    let contractPolicy = getLegacyPolicy(contractAgreement.contractPolicy);
 
     const propertyGridGroups = [
       this.assetPropertyGridGroupBuilder.buildContractAgreementGroup(

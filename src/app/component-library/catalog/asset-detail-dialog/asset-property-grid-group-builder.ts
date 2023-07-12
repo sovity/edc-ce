@@ -17,6 +17,7 @@ import {
   getOnlineStatusColor,
   getOnlineStatusIcon,
 } from '../icon-with-online-status/online-status-utils';
+import {getLegacyPolicy} from './policy-utils';
 
 @Injectable()
 export class AssetPropertyGridGroupBuilder {
@@ -192,7 +193,7 @@ export class AssetPropertyGridGroupBuilder {
           this.onShowPolicyDetailsClick(
             `${groupLabel} Contract Policy)`,
             asset.name,
-            contractOffer.contractPolicy.legacyPolicy as Policy,
+            getLegacyPolicy(contractOffer.contractPolicy),
           ),
       },
       {
