@@ -71,6 +71,12 @@ Bugfix / Feature Release for the Broker MvP with MS8: Connectors can now be adde
     # (Removed) CRON interval for crawling connectors
     EDC_BROKER_SERVER_CRON_CONNECTOR_REFRESH: "0 */5 * ? * *"
     ```
+   
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:1.0.0`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity12`
+- Sovity EDC CE: [`4.0.1`](https://github.com/sovity/edc-extensions/tree/v4.0.1/connector)
 
 
 ## [v0.1.0] Broker MvP Release - 2023-06-23
