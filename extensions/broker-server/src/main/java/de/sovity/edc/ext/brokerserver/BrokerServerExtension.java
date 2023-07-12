@@ -30,6 +30,9 @@ public class BrokerServerExtension implements ServiceExtension {
     public static final String EXTENSION_NAME = "BrokerServerExtension";
 
     @Setting
+    public static final String ADMIN_API_KEY = toEdcProp("EDC_BROKER_SERVER_ADMIN_API_KEY");
+
+    @Setting
     public static final String KNOWN_CONNECTORS = toEdcProp("EDC_BROKER_SERVER_KNOWN_CONNECTORS");
 
     @Setting

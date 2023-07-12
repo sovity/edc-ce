@@ -124,7 +124,8 @@ public class CatalogApiService {
         return Stream.of(
                 CatalogPageSortingType.MOST_RECENT,
                 CatalogPageSortingType.TITLE,
-                CatalogPageSortingType.ORIGINATOR
+                CatalogPageSortingType.ORIGINATOR,
+                CatalogPageSortingType.VIEW_COUNT
         ).map(it -> new CatalogPageSortingItem(it, it.getTitle())).toList();
     }
 }

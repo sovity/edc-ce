@@ -42,7 +42,7 @@ import java.time.OffsetDateTime;
 import java.util.Map;
 
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
-import static de.sovity.edc.ext.brokerserver.TestUtils.edcClient;
+import static de.sovity.edc.ext.brokerserver.TestUtils.brokerServerClient;
 import static groovy.json.JsonOutput.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -71,7 +71,7 @@ class ConnectorApiTest {
                 AssetProperty.ASSET_NAME, "My Asset 1"
             ), "http://my-connector/ids/data");
 
-            var result = edcClient().brokerServerApi().connectorPage(new ConnectorPageQuery());
+            var result = brokerServerClient().brokerServerApi().connectorPage(new ConnectorPageQuery());
             assertThat(result.getConnectors()).hasSize(1);
 
             var connector = result.getConnectors().get(0);
@@ -96,7 +96,7 @@ class ConnectorApiTest {
                 AssetProperty.ASSET_NAME, "My Asset 1"
             ), "http://my-connector/ids/data");
 
-            var connector = edcClient().brokerServerApi().connectorDetailPage(new ConnectorDetailPageQuery("http://my-connector/ids/data"));
+            var connector = brokerServerClient().brokerServerApi().connectorDetailPage(new ConnectorDetailPageQuery("http://my-connector/ids/data"));
             assertThat(connector.getId()).isEqualTo("http://my-connector/ids/data");
             assertThat(connector.getEndpoint()).isEqualTo("http://my-connector/ids/data");
             assertThat(connector.getCreatedAt()).isEqualTo(today.minusDays(1));

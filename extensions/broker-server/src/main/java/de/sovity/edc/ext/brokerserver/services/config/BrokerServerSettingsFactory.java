@@ -18,6 +18,7 @@ import de.sovity.edc.ext.brokerserver.BrokerServerExtension;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.configuration.Config;
 
@@ -31,6 +32,8 @@ public class BrokerServerSettingsFactory {
     private final Monitor monitor;
 
     public BrokerServerSettings buildBrokerServerSettings() {
+        var adminApiKey = Validate.notBlank(config.getString(BrokerServerExtension.ADMIN_API_KEY),
+                "Need to configure %s.".formatted(BrokerServerExtension.ADMIN_API_KEY));
         var hideOfflineDataOffersAfter = getDuration(BrokerServerExtension.HIDE_OFFLINE_DATA_OFFERS_AFTER, null);
         var catalogPagePageSize = config.getInteger(BrokerServerExtension.CATALOG_PAGE_PAGE_SIZE, 20);
         var dataSpaceConfig = buildDataSpaceConfig(config);
@@ -38,6 +41,7 @@ public class BrokerServerSettingsFactory {
         var killOfflineConnectorsAfter = getDuration(BrokerServerExtension.KILL_OFFLINE_CONNECTORS_AFTER, Duration.ofDays(5));
 
         return BrokerServerSettings.builder()
+                .adminApiKey(adminApiKey)
                 .hideOfflineDataOffersAfter(hideOfflineDataOffersAfter)
                 .catalogPagePageSize(catalogPagePageSize)
                 .dataSpaceConfig(dataSpaceConfig)

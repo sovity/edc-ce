@@ -39,7 +39,7 @@ import java.time.OffsetDateTime;
 import java.util.Map;
 
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
-import static de.sovity.edc.ext.brokerserver.TestUtils.edcClient;
+import static de.sovity.edc.ext.brokerserver.TestUtils.brokerServerClient;
 import static groovy.json.JsonOutput.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -87,7 +87,7 @@ class DataOfferDetailApiTest {
                 AssetProperty.ASSET_NAME, "My Asset 1"
             ), "http://my-connector/ids/data");
 
-            var actual = edcClient().brokerServerApi().dataOfferDetailPage(new DataOfferDetailPageQuery("http://my-connector/ids/data", "urn:artifact:my-asset-1"));
+            var actual = brokerServerClient().brokerServerApi().dataOfferDetailPage(new DataOfferDetailPageQuery("http://my-connector/ids/data", "urn:artifact:my-asset-1"));
             assertThat(actual.getAssetId()).isEqualTo("urn:artifact:my-asset-1");
             assertThat(actual.getConnectorEndpoint()).isEqualTo("http://my-connector/ids/data");
             assertThat(actual.getConnectorOfflineSinceOrLastUpdatedAt()).isEqualTo(today);

@@ -47,7 +47,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
-import static de.sovity.edc.ext.brokerserver.TestUtils.edcClient;
+import static de.sovity.edc.ext.brokerserver.TestUtils.brokerServerClient;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
@@ -88,7 +88,7 @@ class CatalogApiTest {
                 new CnfFilterValueAttribute("dataSpace", List.of("Example1"))
             )));
 
-            var result = edcClient().brokerServerApi().catalogPage(query);
+            var result = brokerServerClient().brokerServerApi().catalogPage(query);
             assertThat(result.getDataOffers()).hasSize(1);
 
             var dataOfferResult = result.getDataOffers().get(0);
@@ -127,7 +127,7 @@ class CatalogApiTest {
             ), "http://my-connector3/ids/data"); // Dataspace: Example2
 
             // get all available filter values
-            var result = edcClient().brokerServerApi().catalogPage(new CatalogPageQuery());
+            var result = brokerServerClient().brokerServerApi().catalogPage(new CatalogPageQuery());
 
             // assert that the filter values are correct
             var dataSpace = getAvailableFilter(result, "dataSpace");
@@ -152,7 +152,7 @@ class CatalogApiTest {
             ), "http://my-connector/ids/data");
 
 
-            var result = edcClient().brokerServerApi().catalogPage(new CatalogPageQuery());
+            var result = brokerServerClient().brokerServerApi().catalogPage(new CatalogPageQuery());
             assertThat(result.getDataOffers()).hasSize(1);
 
             var dataOfferResult = result.getDataOffers().get(0);
@@ -184,7 +184,7 @@ class CatalogApiTest {
             createConnector(dsl, today, "http://my-connector/ids/data");
 
             // act
-            var result = edcClient().brokerServerApi().catalogPage(new CatalogPageQuery());
+            var result = brokerServerClient().brokerServerApi().catalogPage(new CatalogPageQuery());
 
             // assert
             assertThat(result.getDataOffers()).isEmpty();
@@ -227,7 +227,7 @@ class CatalogApiTest {
             ), "http://my-connector/ids/data");
 
 
-            var result = edcClient().brokerServerApi().catalogPage(new CatalogPageQuery());
+            var result = brokerServerClient().brokerServerApi().catalogPage(new CatalogPageQuery());
 
             assertThat(result.getAvailableFilters().getFields())
                 .extracting(CnfFilterAttribute::getId)
@@ -297,7 +297,7 @@ class CatalogApiTest {
                 new CnfFilterValueAttribute(AssetProperty.DATA_CATEGORY, List.of(""))
             )));
 
-            var result = edcClient().brokerServerApi().catalogPage(query);
+            var result = brokerServerClient().brokerServerApi().catalogPage(query);
 
             var dataCategory = getAvailableFilter(result, AssetProperty.DATA_CATEGORY);
             assertThat(dataCategory.getId()).isEqualTo(AssetProperty.DATA_CATEGORY);
@@ -332,7 +332,7 @@ class CatalogApiTest {
             query.setSearchQuery("my-asset");
             query.setSorting(CatalogPageQuery.SortingEnum.TITLE);
 
-            var result = edcClient().brokerServerApi().catalogPage(query);
+            var result = brokerServerClient().brokerServerApi().catalogPage(query);
             assertThat(result.getDataOffers()).extracting(CatalogDataOffer::getAssetId)
                 .isEqualTo(IntStream.range(0, 10).mapToObj("urn:artifact:my-asset-%d"::formatted).toList());
 
@@ -364,7 +364,7 @@ class CatalogApiTest {
             query.setPageOneBased(2);
             query.setSorting(CatalogPageQuery.SortingEnum.TITLE);
 
-            var result = edcClient().brokerServerApi().catalogPage(query);
+            var result = brokerServerClient().brokerServerApi().catalogPage(query);
 
             assertThat(result.getDataOffers()).extracting(CatalogDataOffer::getAssetId)
                 .isEqualTo(IntStream.range(10, 15).mapToObj("urn:artifact:my-asset-%d"::formatted).toList());
