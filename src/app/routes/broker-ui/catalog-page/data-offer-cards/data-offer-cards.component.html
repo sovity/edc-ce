@@ -1,7 +1,11 @@
 <mat-card *ngFor="let dataOffer of dataOffers" class="asset-card">
   <ng-container *ngIf="dataOffer.asset; let asset">
     <mat-card-header>
-      <mat-icon class="mat-icon-[40px]" mat-card-avatar>sim_card</mat-icon>
+      <icon-with-online-status
+        mat-card-avatar
+        mainIcon="sim_card"
+        [onlineStatus]="dataOffer.connectorOnlineStatus">
+      </icon-with-online-status>
       <mat-card-title>
         <a
           class="link"

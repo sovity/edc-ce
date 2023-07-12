@@ -25,6 +25,13 @@
       "lastRefreshAttemptAt": "2023-05-31T14:06:21.536182+02:00",
       "onlineStatus": "ONLINE",
       "numContractOffers": 2
+    },
+    {
+      "id": "https://example2.com",
+      "endpoint": "https://example2.com/ids/data",
+      "createdAt": "2022-05-31T14:06:21.536182+02:00",
+      "onlineStatus": "DEAD",
+      "numContractOffers": 0
     }
   ]
 }

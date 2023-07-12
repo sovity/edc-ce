@@ -11,8 +11,9 @@
     style="flex-shrink: 0; margin-top: 6px"
     [matTooltip]="prop.tooltip!"
     [attr.title]="prop.labelTitle"
-    >{{ prop.icon }}</mat-icon
-  >
+    [ngClass]="prop.additionalIconClasses">
+    {{ prop.icon }}
+  </mat-icon>
   <div class="flex flex-col">
     <!-- Property Label -->
     <div

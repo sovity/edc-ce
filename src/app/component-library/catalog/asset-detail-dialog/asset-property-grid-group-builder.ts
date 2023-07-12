@@ -13,6 +13,10 @@ import {PropertyGridGroup} from '../../property-grid/property-grid-group/propert
 import {PropertyGridField} from '../../property-grid/property-grid/property-grid-field';
 import {PropertyGridFieldService} from '../../property-grid/property-grid/property-grid-field.service';
 import {formatDateAgo} from '../../ui-elements/ago/formatDateAgo';
+import {
+  getOnlineStatusColor,
+  getOnlineStatusIcon,
+} from '../icon-with-online-status/online-status-utils';
 
 @Injectable()
 export class AssetPropertyGridGroupBuilder {
@@ -324,15 +328,19 @@ export class AssetPropertyGridGroupBuilder {
           copyButton: true,
         },
         {
-          icon: 'link',
+          icon: getOnlineStatusIcon(dataOffer.connectorOnlineStatus),
           label: 'Status',
           labelTitle: `Last updated ${lastUpdate}`,
           text:
             dataOffer.connectorOnlineStatus == 'ONLINE'
               ? `Online`
               : `Offline since ${lastUpdate}`,
-          additionalClasses:
-            dataOffer.connectorOnlineStatus == 'ONLINE' ? '' : 'text-warn',
+          additionalClasses: getOnlineStatusColor(
+            dataOffer.connectorOnlineStatus,
+          ),
+          additionalIconClasses: getOnlineStatusColor(
+            dataOffer.connectorOnlineStatus,
+          ),
         },
       ],
     };

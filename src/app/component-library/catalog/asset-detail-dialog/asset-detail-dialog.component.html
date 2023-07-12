@@ -2,9 +2,11 @@
   <mat-icon *ngIf="data.type === 'asset-details'" class="mat-icon-[40px]">
     upload
   </mat-icon>
-  <mat-icon *ngIf="data.type === 'broker-data-offer'" class="mat-icon-[40px]">
-    sim_card
-  </mat-icon>
+  <icon-with-online-status
+    *ngIf="data.type === 'broker-data-offer'"
+    mainIcon="sim_card"
+    [onlineStatus]="data.brokerDataOffer!!.connectorOnlineStatus">
+  </icon-with-online-status>
   <mat-icon *ngIf="data.type === 'contract-agreement'" class="mat-icon-[40px]">
     {{
       data.contractAgreement!!.direction === 'PROVIDING' ? 'upload' : 'download'
