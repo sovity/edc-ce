@@ -54,7 +54,7 @@ public class TransferHistoryPageApiService {
     @NotNull
     public List<TransferHistoryEntry> getTransferHistoryEntries() {
 
-        var negotiationsByID = getAllContractNegotiations().stream()
+        var negotiationsById = getAllContractNegotiations().stream()
                 .filter(it -> it.getContractAgreement() != null)
                 .collect(groupingBy(
                         it -> it.getContractAgreement().getId(),
@@ -72,7 +72,7 @@ public class TransferHistoryPageApiService {
 
         return transferStream.map(process -> {
             var agreement = agreementsById.get(process.getDataRequest().getContractId());
-            var negotiation = negotiationsByID.get(process.getDataRequest().getContractId());
+            var negotiation = negotiationsById.get(process.getDataRequest().getContractId());
             var asset = assetLookup(assetsById, process);
             var direction = ContractAgreementDirection.fromType(negotiation.getType());
             var transferHistoryEntry = new TransferHistoryEntry();
