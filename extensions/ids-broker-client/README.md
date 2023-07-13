@@ -74,7 +74,7 @@ EDC_BROKER_BASE_URL=https://broker.test.mobility-dataspace.eu
 
 To disable the extension (per default enabled) you can use following ENV var:
 
-```
+```dotenv
 BROKER_CLIENT_EXTENSION_ENABLED=false
 ```
 
