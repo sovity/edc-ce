@@ -37,7 +37,7 @@ COPY --from=build /home/gradle/project/connector/build/libs/app.jar /app
 COPY ./connector/src/main/resources/logging.properties /app
 
 # health status is determined by the availability of the /health endpoint
-HEALTHCHECK --interval=5s --timeout=5s --retries=10 CMD curl -H "X-Api-Key: $EDC_API_AUTH_KEY" --fail http://localhost:11002/api/v1/management/check/health
+HEALTHCHECK --interval=5s --timeout=5s --retries=10 CMD curl -H "X-Api-Key: $EDC_API_AUTH_KEY" --fail http://localhost:11002/backend/api/v1/management/check/health
 
 # Use "exec" for graceful termination (SIGINT) to reach JVM.
 # ARG can not be used in ENTRYPOINT so storing values in ENV variables
