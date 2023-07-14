@@ -72,6 +72,12 @@ The Broker URL can be configured with the ENV var:
 EDC_BROKER_BASE_URL=https://broker.test.mobility-dataspace.eu
 ```
 
+To disable the extension (per default enabled) you can use following ENV var:
+
+```dotenv
+BROKER_CLIENT_EXTENSION_ENABLED=false
+```
+
 ## License
 
 Apache License 2.0 - see [LICENSE](../../LICENSE)

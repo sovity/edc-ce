@@ -32,10 +32,16 @@ be used in the Mobility Data Space (MDS).
 
 ## Configuration
 
-The Clearing House URL can be configured with the ENV Var:
+The Clearing House URL can be configured with the ENV var:
 
 ```dotenv
 EDC_CLEARINGHOUSE_LOG_URL=https://clearing.test.mobility-dataspace.eu/messages/log
+```
+
+To disable the extension (per default enabled) you can use following ENV var:
+
+```dotenv
+CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED=false
 ```
 
 ## License
