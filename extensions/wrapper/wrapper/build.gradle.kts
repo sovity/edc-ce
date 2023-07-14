@@ -47,11 +47,24 @@ dependencies {
     testImplementation("org.assertj:assertj-core:${assertj}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
+
+    //TODO remove when integration test refactored
+    testImplementation("${edcGroup}:iam-mock:${edcVersion}")
+    testImplementation("${edcGroup}:dsp:${edcVersion}")
+    testImplementation("${edcGroup}:management-api:${edcVersion}")
+    testImplementation("org.awaitility:awaitility:4.2.0")
 }
 
 val openapiFileDir = "${project.buildDir}/swagger"
 val openapiFileFilename = "edc-api-wrapper.yaml"
 val openapiFile = "$openapiFileDir/$openapiFileFilename"
+
+//TODO remove when integration test refactored
+tasks.register("printClasspath") {
+    doLast {
+        println(sourceSets["main"].runtimeClasspath.asPath)
+    }
+}
 
 tasks.withType<io.swagger.v3.plugins.gradle.tasks.ResolveTask> {
     outputDir = file(openapiFileDir)
