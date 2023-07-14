@@ -3,6 +3,7 @@ package de.sovity.edc.ext.wrapper.api.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class ContractAgreementDto {
 
     private String id;

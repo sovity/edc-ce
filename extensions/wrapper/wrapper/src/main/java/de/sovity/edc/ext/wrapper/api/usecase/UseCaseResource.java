@@ -33,8 +33,10 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -80,11 +82,12 @@ public class UseCaseResource {
     @POST
     @Path("consume")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Creates a data consumption")
     public Response consume(ConsumeInputDto dto) {
         var consumptionId = consumptionService.startConsume(dto);
-        return Response.status(Status.CREATED).entity(consumptionId).build();
+        var response = Map.of("id", consumptionId);
+        return Response.status(Status.CREATED).entity(response).build();
     }
 
     /**
@@ -97,8 +100,13 @@ public class UseCaseResource {
     @Path("consumption/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Get the progress of a consumption")
-    public ConsumeOutputDto getConsumption(@PathParam("id") String consumptionId) {
-        return consumptionService.getConsumptionProcesses(consumptionId);
+    public Response getConsumption(@PathParam("id") String consumptionId) {
+        var consumptionDto = consumptionService.getConsumptionProcesses(consumptionId);
+        if (consumptionDto == null) {
+            return Response.status(Status.NOT_FOUND).build();
+        }
+
+        return Response.status(Status.OK).entity(consumptionDto).build();
     }
 
     @GET

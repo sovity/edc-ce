@@ -15,9 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class ConsumeOutputDto {
-    String id;
-    ConsumeInputDto input;
-    List<String> errors;
-    ContractNegotiationOutputDto contractNegotiation;
-    TransferProcessOutputDto transferProcess;
+    private String id;
+    private ConsumeInputDto input;
+    private List<String> errors;
+    private ContractNegotiationOutputDto contractNegotiation;
+    private TransferProcessOutputDto transferProcess;
 }

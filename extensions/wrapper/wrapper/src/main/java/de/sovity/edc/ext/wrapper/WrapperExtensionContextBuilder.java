@@ -21,6 +21,7 @@ import de.sovity.edc.ext.wrapper.api.ui.services.ContractAgreementPageService;
 import de.sovity.edc.ext.wrapper.api.ui.services.TransferProcessStateService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
 import de.sovity.edc.ext.wrapper.api.usecase.services.ConsumptionService;
+import de.sovity.edc.ext.wrapper.api.usecase.services.ContractNegotiationConsumptionListener;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
@@ -32,6 +33,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.transformer.PermissionToPermissionD
 import de.sovity.edc.ext.wrapper.api.usecase.transformer.PolicyToPolicyDtoTransformer;
 import de.sovity.edc.ext.wrapper.api.usecase.transformer.TransferProcessToTransferProcessOutputDtoTransformer;
 import lombok.NoArgsConstructor;
+import org.eclipse.edc.connector.contract.spi.negotiation.observe.ContractNegotiationObservable;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
@@ -68,7 +70,8 @@ public class WrapperExtensionContextBuilder {
             ContractNegotiationStore contractNegotiationStore,
             ContractNegotiationService negotiationService,
             TransferProcessService transferProcessService,
-            TypeTransformerRegistry transformerRegistry
+            TypeTransformerRegistry transformerRegistry,
+            ContractNegotiationObservable negotiationObservable
     ) {
         // UI API
         var transferProcessStateService = new TransferProcessStateService();
@@ -97,8 +100,6 @@ public class WrapperExtensionContextBuilder {
         var policyMappingService = new PolicyMappingService();
         var offeringService = new OfferingService(assetIndex, policyDefinitionStore,
                 contractDefinitionStore, policyMappingService);
-        var useCaseResource = new UseCaseResource(kpiApiService, supportedPolicyApiService,
-                offeringService);
 
         transformerRegistry.register(new PermissionToPermissionDtoTransformer());
         transformerRegistry.register(new PolicyToPolicyDtoTransformer());
@@ -108,6 +109,11 @@ public class WrapperExtensionContextBuilder {
         transformerRegistry.register(new TransferProcessToTransferProcessOutputDtoTransformer());
         var consumptionService = new ConsumptionService(negotiationService, transferProcessService,
                 contractNegotiationStore, transferProcessStore, transformerRegistry);
+
+        negotiationObservable.registerListener(new ContractNegotiationConsumptionListener(consumptionService));
+
+        var useCaseResource = new UseCaseResource(kpiApiService, supportedPolicyApiService,
+                offeringService, consumptionService);
 
         // Collect all JAX-RS resources
         return new WrapperExtensionContext(List.of(

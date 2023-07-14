@@ -3,6 +3,7 @@ package de.sovity.edc.ext.wrapper.api.usecase.transformer;
 import de.sovity.edc.ext.wrapper.api.common.model.ContractAgreementDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractNegotiationOutputDto;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates;
 import org.eclipse.edc.transform.spi.TransformerContext;
 import org.eclipse.edc.transform.spi.TypeTransformer;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +23,8 @@ public class ContractNegotiationToContractNegotiationOutputDtoTransformer implem
     @Override
     public @Nullable ContractNegotiationOutputDto transform(@NotNull ContractNegotiation contractNegotiation, @NotNull TransformerContext context) {
         var builder = ContractNegotiationOutputDto.builder()
+                .id(contractNegotiation.getId())
+                .state(ContractNegotiationStates.from(contractNegotiation.getState()).name())
                 .correlationId(contractNegotiation.getCorrelationId())
                 .counterPartyId(contractNegotiation.getCounterPartyId())
                 .counterPartyAddress(contractNegotiation.getCounterPartyAddress())
