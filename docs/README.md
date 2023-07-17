@@ -129,6 +129,7 @@ CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED: true
 ````
 
 ## Further Documentation
-- [Manging a sovity EDC Connector via the API Wrapper Java Client Library](../getting-started/documentation/api_wrapper.md)
-- [How to share parameterized HTTP data sources to expose entire APIs](../getting-started/documentation/parameterized_assets.md)
-- [How Can a Pull-Data-Transfer Be Performed?](../getting-started/documentation/pull-data-transfer.md)
+- [Manging a sovity EDC Connector via the API Wrapper Java Client Library](./api_wrapper.md)
+- [How to share parameterized HTTP data sources to expose entire APIs](./parameterized_assets.md)
+- [How Can a Pull-Data-Transfer Be Performed?](./pull-data-transfer.md)
+- [Parameterized Assets](./parameterization-documentation.md)

@@ -94,7 +94,7 @@ supported, once the base EDC has a reliable version.
 
 ## Getting Started
 
-The fastest way to get started is our [Getting Started Guide](./docs/getting-started/README.md)
+The fastest way to get started is our [Getting Started Guide](docs/README.md)
 which takes you through the steps of configuring and starting via
 [docker-compose.yaml](docker-compose.yaml).
 
