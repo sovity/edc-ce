@@ -14,8 +14,8 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase;
 
-import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeInputDto;
-import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeOutputDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionInputDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionOutputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import de.sovity.edc.ext.wrapper.api.usecase.services.ConsumptionService;
@@ -65,7 +65,7 @@ public class UseCaseResource {
      * @return 204: if creating the usecase was successful.
      */
     @POST
-    @Path("contract-offer")
+    @Path("create-offer")
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Creates an offer")
     public Response createOfferEndpoint(CreateOfferingDto dto) {
@@ -76,7 +76,7 @@ public class UseCaseResource {
     /**
      * Creates a new data consumption.
      *
-     * @param dto {@link ConsumeInputDto} contains all required information for a data consumption.
+     * @param dto {@link ConsumptionInputDto} contains all required information for a data consumption.
      * @return 201: the consumption ID as {@link String}.
      */
     @POST
@@ -84,7 +84,7 @@ public class UseCaseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Creates a data consumption")
-    public Response consume(ConsumeInputDto dto) {
+    public Response consume(ConsumptionInputDto dto) {
         var consumptionId = consumptionService.startConsumptionProcess(dto);
         var response = Map.of("id", consumptionId);
         return Response.status(Status.CREATED).entity(response).build();
@@ -94,7 +94,7 @@ public class UseCaseResource {
      * Receive information and progress of an ongoing or finished consumption.
      *
      * @param consumptionId {@link String} consumption ID
-     * @return 200: {@link ConsumeOutputDto}
+     * @return 200: {@link ConsumptionOutputDto}
      */
     @GET
     @Path("consumption/{id}")

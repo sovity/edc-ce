@@ -1,8 +1,8 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
 import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionDto;
-import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeInputDto;
-import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeOutputDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionInputDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionOutputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractNegotiationOutputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.TransferProcessOutputDto;
 import lombok.RequiredArgsConstructor;
@@ -38,29 +38,29 @@ public class ConsumptionService {
     private final TransferProcessStore transferProcessStore;
     private final TypeTransformerRegistry transformerRegistry;
 
-    public String startConsumptionProcess(ConsumeInputDto consumeInputDto) {
+    public String startConsumptionProcess(ConsumptionInputDto consumptionInputDto) {
         //TODO generate ID
         var id = "id";
 
-        var consumeDto = new ConsumptionDto(consumeInputDto);
+        var consumeDto = new ConsumptionDto(consumptionInputDto);
         consumptionProcesses.put(id, consumeDto);
 
-        validateInput(consumeInputDto);
+        validateInput(consumptionInputDto);
 
         //TODO transformer
         var contractOffer = ContractOffer.Builder.newInstance()
-                .id(consumeInputDto.getOfferId())
-                .assetId(consumeInputDto.getAssetId())
-                .policy(consumeInputDto.getPolicy())
-                .providerId("urn:connector:" + consumeInputDto.getConnectorId())
+                .id(consumptionInputDto.getOfferId())
+                .assetId(consumptionInputDto.getAssetId())
+                .policy(consumptionInputDto.getPolicy())
+                .providerId("urn:connector:" + consumptionInputDto.getConnectorId())
                 .build();
 
         var requestData = ContractRequestData.Builder.newInstance()
                 .contractOffer(contractOffer)
-                .dataSet(consumeInputDto.getAssetId())
+                .dataSet(consumptionInputDto.getAssetId())
                 .protocol("dataspace-protocol-http")
-                .counterPartyAddress(consumeInputDto.getConnectorAddress())
-                .connectorId(consumeInputDto.getConnectorId())
+                .counterPartyAddress(consumptionInputDto.getConnectorAddress())
+                .connectorId(consumptionInputDto.getConnectorId())
                 .build();
 
         var contractRequest = ContractRequest.Builder.newInstance()
@@ -103,7 +103,7 @@ public class ConsumptionService {
         }
     }
 
-    public ConsumeOutputDto getConsumptionProcess(String id) {
+    public ConsumptionOutputDto getConsumptionProcess(String id) {
         var process = consumptionProcesses.get(id);
         if (process == null) {
             return null;
@@ -125,11 +125,11 @@ public class ConsumptionService {
                 .orElse(null);
 
         //TODO error detail
-        return new ConsumeOutputDto(id, process.getInput(), process.getErrors(),
+        return new ConsumptionOutputDto(id, process.getInput(), process.getErrors(),
                 negotiationDto, transferProcessDto);
     }
 
-    private void validateInput(ConsumeInputDto input) {
+    private void validateInput(ConsumptionInputDto input) {
         var message = "%s must not be null";
 
         if (input.getConnectorId() == null)

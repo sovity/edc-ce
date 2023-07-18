@@ -16,8 +16,8 @@ import lombok.Setter;
 @Builder(toBuilder = true)
 public class AssetEntryDto {
     @Schema(requiredMode = RequiredMode.REQUIRED)
-    private String assetRequestId;
-    private Map<String, Object> assetRequestProperties;
+    private String id;
+    private Map<String, Object> assetProperties;
     @Schema(description = "At least a property 'type' must be set", requiredMode = RequiredMode.REQUIRED)
     private Map<String, String> dataAddressProperties;
 }

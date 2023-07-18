@@ -188,8 +188,8 @@ class OfferingServiceTest {
 
     private AssetEntryDto assetDto() {
         return AssetEntryDto.builder()
-                .assetRequestId("asset-id")
-                .assetRequestProperties(Map.of())
+                .id("asset-id")
+                .assetProperties(Map.of())
                 .dataAddressProperties(Map.of("type", "type"))
                 .build();
     }

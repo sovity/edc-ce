@@ -56,7 +56,7 @@ class OfferingResourceTest {
                 .when()
                 .contentType(ContentType.JSON)
                 .body(body)
-                .post("/wrapper/use-case-api/contract-offer")
+                .post("/wrapper/use-case-api/create-offer")
                 .then()
                 .log()
                 .all();

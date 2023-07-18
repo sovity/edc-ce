@@ -3,8 +3,9 @@ package de.sovity.edc.ext.wrapper.api.usecase.model;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -17,7 +18,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
+@Builder(toBuilder = true)
 @Schema(description = "Data for creating a policy definition request")
 public class PolicyDefinitionRequestDto {
     @Schema(description = "ID chosen by the user", requiredMode = Schema.RequiredMode.REQUIRED)

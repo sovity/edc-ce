@@ -28,7 +28,7 @@ public class PolicyMappingService {
     /**
      * Currently only type "USE" supported, therefore this is hardcoded.
      */
-    private static final String ACTION_TYPE = "USE";
+    public static final String ACTION_TYPE = "USE";
 
     /**
      * Converts a {@link PolicyDto} to an EDC {@link Policy}.

@@ -17,6 +17,8 @@ import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 
+import java.util.HashMap;
+
 /**
  * Service for all the features of the wrapper regarding offers.
  *
@@ -69,8 +71,9 @@ public class OfferingService {
 
     private Asset transformAsset(AssetEntryDto dto) {
         return Asset.Builder.newInstance()
-                .id(dto.getAssetRequestId())
-                .properties(dto.getAssetRequestProperties())
+                .id(dto.getId())
+                .properties(dto.getAssetProperties() != null ?
+                        dto.getAssetProperties() : new HashMap<>())
                 .build();
     }
 

@@ -1,6 +1,6 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeInputDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionInputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractNegotiationOutputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.TransferProcessOutputDto;
@@ -74,7 +74,7 @@ class ConsumptionServiceTest {
         when(negotiationService.initiateNegotiation(captor.capture()))
                 .thenReturn(negotiation());
 
-        var input = ConsumeInputDto.builder()
+        var input = ConsumptionInputDto.builder()
                 .connectorId(counterPartyId)
                 .connectorAddress(counterPartyAddress)
                 .assetId(assetId)
@@ -106,7 +106,7 @@ class ConsumptionServiceTest {
                                                                        Policy policy,
                                                                        DataAddress destination) {
         // ARRANGE
-        var input = ConsumeInputDto.builder()
+        var input = ConsumptionInputDto.builder()
                 .connectorId(connectorId)
                 .connectorAddress(connectorAddress)
                 .assetId(requestedAssetId)
@@ -382,7 +382,7 @@ class ConsumptionServiceTest {
 
     private static ConsumptionDto consumptionDto(String negotiationId, String transferProcessId) {
         var destination = dataAddress();
-        var input = ConsumeInputDto.builder()
+        var input = ConsumptionInputDto.builder()
                 .connectorId(counterPartyId)
                 .connectorAddress(counterPartyAddress)
                 .assetId(assetId)

@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ConsumptionDto {
-    final ConsumeInputDto input;
+    final ConsumptionInputDto input;
     String contractNegotiationId;
     String transferProcessId;
     List<String> errors = new ArrayList<>(); //TODO aggregate errors from CN & TP (if not duplicated with dto)

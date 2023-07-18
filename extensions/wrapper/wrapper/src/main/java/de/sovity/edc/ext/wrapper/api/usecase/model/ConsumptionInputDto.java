@@ -11,7 +11,7 @@ import org.eclipse.edc.spi.types.domain.DataAddress;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 @Getter
-public class ConsumeInputDto {
+public class ConsumptionInputDto {
     String connectorId;
     String connectorAddress;
     String offerId;

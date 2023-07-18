@@ -1,7 +1,7 @@
 {
   "assetEntry": {
-    "assetRequestId": "mock",
-    "assetRequestProperties": {},
+    "id": "mock",
+    "assetProperties": {},
     "dataAddressProperties": {
       "type": "HttpData"
     }
