@@ -65,8 +65,7 @@ class UseCaseResourceIntegrationTest {
                     "web.http.protocol.path", protocolApiPath,
                     "edc.dsp.callback.address", providerProtocolUrl.toString(),
                     "edc.connector.name", providerId,
-                    "edc.participant.id", providerId,
-                    "edc.jsonld.http.enabled", "true"
+                    "edc.participant.id", providerId
             )
     );
 
