@@ -1,7 +1,14 @@
 package de.sovity.edc.ext.wrapper.api.usecase;
 
-import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeInputDto;
-import jakarta.json.Json;
+import de.sovity.edc.ext.wrapper.api.common.model.AssetEntryDto;
+import de.sovity.edc.ext.wrapper.api.common.model.CriterionDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionInputDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ContractDefinitionRequestDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
+import jakarta.json.JsonArray;
 import org.eclipse.edc.junit.extensions.EdcRuntimeExtension;
 import org.eclipse.edc.policy.model.Action;
 import org.eclipse.edc.policy.model.Permission;
@@ -11,25 +18,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService.ACTION_TYPE;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
-import static jakarta.json.Json.createArrayBuilder;
-import static jakarta.json.Json.createObjectBuilder;
 import static java.util.UUID.randomUUID;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.CONTEXT;
-import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.ID;
-import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.TYPE;
-import static org.eclipse.edc.policy.model.OdrlNamespace.ODRL_SCHEMA;
-import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 import static org.eclipse.edc.spi.CoreConstants.EDC_PREFIX;
+import static org.eclipse.edc.spi.types.domain.asset.Asset.PROPERTY_ID;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-class ConsumeOfferingIntegrationTest {
+class UseCaseResourceIntegrationTest {
 
     private static final String defaultApiPath = "/api";
     private static final String managementApiPath = "/api/management";
@@ -45,7 +49,6 @@ class ConsumeOfferingIntegrationTest {
     private static final String assetId = "assetId";
     private static final String policyId = "policyId";
     private static final String contractDefinitionId = "contractDefinitionId";
-    private static final String policyActionType = "use";
     private static final String providerId = "provider";
     private static final String consumerId = "consumer";
 
@@ -86,11 +89,85 @@ class ConsumeOfferingIntegrationTest {
 
     @Test
     void consumeOffering() {
-        createAsset();
-        createPolicyDefinition();
-        createContractDefinition();
+        // create new offer on provider
+        var offerInput = createOfferingDto();
+        given()
+                .baseUri(providerManagementUrl.toString())
+                .contentType(JSON)
+                .body(offerInput)
+                .when()
+                .post("/wrapper/use-case-api/create-offer")
+                .then()
+                .statusCode(204);
 
-        var input = ConsumeInputDto.builder()
+        // start consumption process on consumer
+        var consumptionInput = consumptionInputDto();
+        var consumptionId = given()
+                .baseUri(consumerManagementUrl.toString())
+                .contentType(JSON)
+                .body(consumptionInput)
+                .when()
+                .post("/wrapper/use-case-api/consume")
+                .then()
+                .statusCode(201)
+                .contentType(JSON)
+                .extract()
+                .path("id");
+
+        // wait until transfer has been terminated (due to unsupported data address type)
+        await().atMost(45, TimeUnit.SECONDS).untilAsserted(() -> given()
+                .baseUri(consumerManagementUrl.toString())
+                .contentType(JSON)
+                .when()
+                .get("/wrapper/use-case-api/consumption/" + consumptionId)
+                .then()
+                .statusCode(200)
+                .body("contractNegotiation", notNullValue())
+                .body("transferProcess", notNullValue())
+                .body("transferProcess.state", equalTo("TERMINATED")));
+
+        // query transfer processes on provider side
+        var transferProcesses = given()
+                .baseUri(providerManagementUrl.toString())
+                .contentType(JSON)
+                .when()
+                .post("/v2/transferprocesses/request")
+                .then()
+                .statusCode(200)
+                .extract()
+                .as(JsonArray.class);
+
+        // ensure that transfer terminated due to unsupported type and not due to invalid input
+        assertThat(transferProcesses).hasSize(1);
+        var errorDetail = transferProcesses.getJsonObject(0)
+                .getJsonString(EDC_PREFIX + ":errorDetail").getString();
+        assertThat(errorDetail).contains("No data flow controller found");
+    }
+
+    private CreateOfferingDto createOfferingDto() {
+        return CreateOfferingDto.builder()
+                .assetEntry(AssetEntryDto.builder()
+                        .id(assetId)
+                        .assetProperties(Map.of("name", "example asset"))
+                        .dataAddressProperties(Map.of("type", "test"))
+                        .build())
+                .policyDefinitionRequest(PolicyDefinitionRequestDto.builder()
+                        .id(policyId)
+                        .policy(PolicyDto.builder()
+                                .permission(PermissionDto.builder().build())
+                                .build())
+                        .build())
+                .contractDefinitionRequest(ContractDefinitionRequestDto.builder()
+                        .id(contractDefinitionId)
+                        .accessPolicyId(policyId)
+                        .contractPolicyId(policyId)
+                        .assetsSelector(List.of(new CriterionDto(PROPERTY_ID, "=", assetId)))
+                        .build())
+                .build();
+    }
+
+    private ConsumptionInputDto consumptionInputDto() {
+        return ConsumptionInputDto.builder()
                 .connectorId(providerId)
                 .connectorAddress(providerProtocolUrl.toString())
                 .offerId(contractDefinitionId + ":" + assetId + ":" + randomUUID())
@@ -98,7 +175,7 @@ class ConsumeOfferingIntegrationTest {
                 .policy(Policy.Builder.newInstance()
                         .permission(Permission.Builder.newInstance()
                                 .action(Action.Builder.newInstance()
-                                        .type(ODRL_SCHEMA + policyActionType)
+                                        .type(ACTION_TYPE)
                                         .build())
                                 .target(assetId)
                                 .build())
@@ -108,103 +185,5 @@ class ConsumeOfferingIntegrationTest {
                         .type("test")
                         .build())
                 .build();
-
-        var consumptionId = given()
-                .baseUri(consumerManagementUrl.toString())
-                .contentType(JSON)
-                .body(input)
-                .when()
-                .post("/wrapper/use-case-api/consume")
-                .then()
-                .statusCode(201)
-                .contentType(JSON)
-                .extract()
-                .path("id");
-
-        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> given()
-                .baseUri(consumerManagementUrl.toString())
-                .contentType(JSON)
-                .when()
-                .get("/wrapper/use-case-api/consumption/" + consumptionId)
-                .then()
-                .statusCode(200)
-                .body("contractNegotiation", notNullValue())
-                .body("transferProcess", notNullValue())
-                .body("transferProcess.state", equalTo("TERMINATED"))); // terminated by provider as unsupported data address type
-    }
-
-    private void createAsset() {
-        var requestBody = createObjectBuilder()
-                .add(CONTEXT, createObjectBuilder()
-                        .add(EDC_PREFIX, EDC_NAMESPACE))
-                .add("asset", createObjectBuilder()
-                        .add(ID, assetId)
-                        .add("properties", createObjectBuilder()
-                                .add("description", "test asset")))
-                .add("dataAddress", createObjectBuilder(Map.of("type", "test")))
-                .build();
-
-        given()
-                .baseUri(providerManagementUrl.toString())
-                .contentType(JSON)
-                .body(requestBody)
-                .when()
-                .post("/v2/assets")
-                .then()
-                .statusCode(200)
-                .contentType(JSON);
-    }
-
-    private void createPolicyDefinition() {
-        var requestBody = createObjectBuilder()
-                .add(CONTEXT, createObjectBuilder()
-                        .add(EDC_PREFIX, EDC_NAMESPACE))
-                .add(TYPE, "PolicyDefinitionDto")
-                .add(ID, policyId)
-                .add("policy", createObjectBuilder()
-                        .add(CONTEXT, "http://www.w3.org/ns/odrl.jsonld")
-                        .add("permission", createArrayBuilder()
-                                .add(createObjectBuilder()
-                                        .add("action", policyActionType))))
-                .build();
-
-        given()
-                .baseUri(providerManagementUrl.toString())
-                .contentType(JSON)
-                .body(requestBody)
-                .when()
-                .post("/v2/policydefinitions")
-                .then()
-                .statusCode(200)
-                .contentType(JSON)
-                .extract().jsonPath().getString(ID);
-    }
-
-    private void createContractDefinition() {
-        var requestBody = createObjectBuilder()
-                .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
-                .add(ID, contractDefinitionId)
-                .add(TYPE, EDC_NAMESPACE + "ContractDefinition")
-                .add(EDC_NAMESPACE + "accessPolicyId", policyId)
-                .add(EDC_NAMESPACE + "contractPolicyId", policyId)
-                .add(EDC_NAMESPACE + "assetsSelector", Json.createArrayBuilder()
-                        .add(createObjectBuilder()
-                                .add(TYPE, "CriterionDto")
-                                .add(EDC_NAMESPACE + "operandLeft", EDC_NAMESPACE + "id")
-                                .add(EDC_NAMESPACE + "operator", "=")
-                                .add(EDC_NAMESPACE + "operandRight", assetId)
-                                .build())
-                        .build())
-                .build();
-
-        given()
-                .baseUri(providerManagementUrl.toString())
-                .contentType(JSON)
-                .body(requestBody)
-                .when()
-                .post("/v2/contractdefinitions")
-                .then()
-                .statusCode(200)
-                .contentType(JSON);
     }
 }
