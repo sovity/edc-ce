@@ -22,6 +22,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Fixed
 
+- Renamed button from cancel to close in json-dialogs
+
 ## [v0.0.1-milestone-8-sovity12] 12.07.2023
 
 ### Overview
