@@ -85,7 +85,7 @@ public class UseCaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Creates a data consumption")
     public Response consume(ConsumeInputDto dto) {
-        var consumptionId = consumptionService.startConsume(dto);
+        var consumptionId = consumptionService.startConsumptionProcess(dto);
         var response = Map.of("id", consumptionId);
         return Response.status(Status.CREATED).entity(response).build();
     }
@@ -101,7 +101,7 @@ public class UseCaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Get the progress of a consumption")
     public Response getConsumption(@PathParam("id") String consumptionId) {
-        var consumptionDto = consumptionService.getConsumptionProcesses(consumptionId);
+        var consumptionDto = consumptionService.getConsumptionProcess(consumptionId);
         if (consumptionDto == null) {
             return Response.status(Status.NOT_FOUND).build();
         }

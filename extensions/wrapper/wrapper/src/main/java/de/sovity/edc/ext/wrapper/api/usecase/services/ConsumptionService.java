@@ -1,6 +1,6 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeInputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumeOutputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractNegotiationOutputDto;
@@ -18,17 +18,19 @@ import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
 import org.eclipse.edc.connector.transfer.spi.types.TransferRequest;
 import org.eclipse.edc.spi.result.Result;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
+import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static java.util.UUID.randomUUID;
 
 @RequiredArgsConstructor
 public class ConsumptionService {
 
-    private final Map<String, ConsumeDto> consumptionProcesses = new HashMap<>(); //TODO persist?
+    private final Map<String, ConsumptionDto> consumptionProcesses = new HashMap<>(); //TODO persist?
 
     private final ContractNegotiationService contractNegotiationService;
     private final TransferProcessService transferProcessService;
@@ -36,12 +38,14 @@ public class ConsumptionService {
     private final TransferProcessStore transferProcessStore;
     private final TypeTransformerRegistry transformerRegistry;
 
-    public String startConsume(ConsumeInputDto consumeInputDto) {
+    public String startConsumptionProcess(ConsumeInputDto consumeInputDto) {
         //TODO generate ID
         var id = "id";
 
-        var consumeDto = new ConsumeDto(consumeInputDto);
+        var consumeDto = new ConsumptionDto(consumeInputDto);
         consumptionProcesses.put(id, consumeDto);
+
+        validateInput(consumeInputDto);
 
         //TODO transformer
         var contractOffer = ContractOffer.Builder.newInstance()
@@ -51,7 +55,7 @@ public class ConsumptionService {
                 .providerId("urn:connector:" + consumeInputDto.getConnectorId())
                 .build();
 
-        var contractRequestData = ContractRequestData.Builder.newInstance()
+        var requestData = ContractRequestData.Builder.newInstance()
                 .contractOffer(contractOffer)
                 .dataSet(consumeInputDto.getAssetId())
                 .protocol("dataspace-protocol-http")
@@ -59,12 +63,12 @@ public class ConsumptionService {
                 .connectorId(consumeInputDto.getConnectorId())
                 .build();
 
-        var contractOfferRequest = ContractRequest.Builder.newInstance()
-                .requestData(contractRequestData)
+        var contractRequest = ContractRequest.Builder.newInstance()
+                .requestData(requestData)
                 .build();
 
         var contractNegotiation = contractNegotiationService.initiateNegotiation(
-                contractOfferRequest);
+                contractRequest);
         consumeDto.setContractNegotiationId(contractNegotiation.getId());
 
         return id;
@@ -99,7 +103,7 @@ public class ConsumptionService {
         }
     }
 
-    public ConsumeOutputDto getConsumptionProcesses(String id) {
+    public ConsumeOutputDto getConsumptionProcess(String id) {
         var process = consumptionProcesses.get(id);
         if (process == null) {
             return null;
@@ -125,7 +129,29 @@ public class ConsumptionService {
                 negotiationDto, transferProcessDto);
     }
 
-    private ConsumeDto findByNegotiation(ContractNegotiation contractNegotiation) {
+    private void validateInput(ConsumeInputDto input) {
+        var message = "%s must not be null";
+
+        if (input.getConnectorId() == null)
+            throw new InvalidRequestException(format(message, "connectorId"));
+
+        if (input.getConnectorAddress() == null)
+            throw new InvalidRequestException(format(message, "connectorAddress"));
+
+        if (input.getAssetId() == null)
+            throw new InvalidRequestException(format(message, "assetId"));
+
+        if (input.getOfferId() == null)
+            throw new InvalidRequestException(format(message, "offerId"));
+
+        if (input.getPolicy() == null)
+            throw new InvalidRequestException(format(message, "policy"));
+
+        if (input.getDataDestination() == null)
+            throw new InvalidRequestException(format(message, "dataDestination"));
+    }
+
+    private ConsumptionDto findByNegotiation(ContractNegotiation contractNegotiation) {
         var id = contractNegotiation.getId();
         return consumptionProcesses.entrySet().stream()
                 .filter(entry -> entry.getValue().getContractNegotiationId().equals(id))
