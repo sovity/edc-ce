@@ -6,6 +6,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionOutputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractNegotiationOutputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.TransferProcessOutputDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractRequest;
@@ -28,6 +29,7 @@ import static java.lang.String.format;
 import static java.util.UUID.randomUUID;
 
 @RequiredArgsConstructor
+@Slf4j
 public class ConsumptionService {
 
     private final Map<String, ConsumptionDto> consumptionProcesses = new HashMap<>(); //TODO persist?
@@ -109,10 +111,10 @@ public class ConsumptionService {
             return null;
         }
 
-        //TODO transformation error should be logged
         var negotiationDto = Optional.ofNullable(process.getContractNegotiationId())
                 .map(contractNegotiationStore::findById)
                 .map(cn -> transformerRegistry.transform(cn, ContractNegotiationOutputDto.class))
+                .map(this::logIfFailedResult)
                 .filter(Result::succeeded)
                 .map(Result::getContent)
                 .orElse(null);
@@ -120,6 +122,7 @@ public class ConsumptionService {
         var transferProcessDto = Optional.ofNullable(process.getTransferProcessId())
                 .map(transferProcessStore::findById)
                 .map(tp -> transformerRegistry.transform(tp, TransferProcessOutputDto.class))
+                .map(this::logIfFailedResult)
                 .filter(Result::succeeded)
                 .map(Result::getContent)
                 .orElse(null);
@@ -160,4 +163,11 @@ public class ConsumptionService {
                 .orElse(null);
     }
 
+    private <T> Result<T> logIfFailedResult(Result<T> result) {
+        if (result.failed()) {
+            log.error(format("Failed to transform contract negotiation: %s",
+                    result.getFailureDetail()));
+        }
+        return result;
+    }
 }
