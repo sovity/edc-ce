@@ -28,6 +28,7 @@ import org.eclipse.edc.policy.engine.spi.PolicyContext;
 import org.eclipse.edc.policy.model.Operator;
 import org.eclipse.edc.spi.monitor.Monitor;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -130,14 +131,8 @@ public abstract class AbstractReferringConnectorValidation {
             return referringConnectorList.contains(referringConnectorClaim);
         } else if (operator == Operator.EQ) {
             //support comma separated lists here as well
-            if (referringConnector instanceof String string) {
-                var referringConnectorList = string.split(",");
-                for (var connector : referringConnectorList) {
-                    if (referringConnectorClaim.equals(connector)) {
-                        return true;
-                    }
-                }
-                return false;
+            if (referringConnector instanceof String referringConnectorString) {
+                return Arrays.asList(referringConnectorString.split(",")).contains(referringConnectorClaim);
             }
         }
         return false;
