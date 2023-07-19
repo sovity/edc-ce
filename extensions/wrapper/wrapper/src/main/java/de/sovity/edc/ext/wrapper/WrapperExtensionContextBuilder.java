@@ -25,6 +25,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequest
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractAgreementUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.TransformerRegistryUtils;
+import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
@@ -84,6 +85,7 @@ public class WrapperExtensionContextBuilder {
                 contractAgreementDataFetcher,
                 contractAgreementPageCardBuilder
         );
+        var policyPageApiService = new PolicyPageApiService();
         var transferHistoryPageApiService = new TransferHistoryPageApiService();
         var transformerRegistryUtils = new TransformerRegistryUtils(dtoTransformerRegistry);
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
@@ -102,7 +104,8 @@ public class WrapperExtensionContextBuilder {
         var uiResource = new UiResource(
                 contractAgreementApiService,
                 transferHistoryPageApiService,
-                contractAgreementTransferApiService
+                contractAgreementTransferApiService,
+                policyPageApiService
         );
 
         // Use Case API

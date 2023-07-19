@@ -16,9 +16,11 @@ package de.sovity.edc.ext.wrapper.api.ui;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.PolicyPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,6 +40,7 @@ public class UiResource {
     private final ContractAgreementPageApiService contractAgreementApiService;
     private final TransferHistoryPageApiService transferHistoryPageApiService;
     private final ContractAgreementTransferApiService contractAgreementTransferApiService;
+    private final PolicyPageApiService policyPageApiService;
 
     @GET
     @Path("pages/contract-agreement-page")
@@ -66,4 +69,14 @@ public class UiResource {
     public TransferHistoryPage transferHistoryPageEndpoint() {
         return transferHistoryPageApiService.transferHistoryPage();
     }
+    @GET
+    @Path("pages/policy-page")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Collect all data for Policy Page")
+    public PolicyPage policyPageEndpoint() {
+        return policyPageApiService.policyPage();
+    }
+
+
+
 }
