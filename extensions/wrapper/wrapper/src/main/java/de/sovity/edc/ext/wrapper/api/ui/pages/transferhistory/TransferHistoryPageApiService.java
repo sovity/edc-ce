@@ -47,7 +47,7 @@ public class TransferHistoryPageApiService {
     private final TransferProcessStateService transferProcessStateService;
 
     /**
-     * Fetches all contract agreements as {@link TransferHistoryEntry}s.
+     * Fetches all Transfer History entries as {@link TransferHistoryEntry}s.
      *
      * @return {@link TransferHistoryEntry}s
      */
