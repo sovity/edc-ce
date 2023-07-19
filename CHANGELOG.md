@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 #### Major Changes
 
 #### Minor Changes
+- ReferringConnectorValidationExtension: Added support for comma separated lists of connectors using the EQ operator as well as pure Lists using the IN operator.
 
 #### Patch Changes
 
