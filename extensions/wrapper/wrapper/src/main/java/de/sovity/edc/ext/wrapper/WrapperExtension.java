@@ -37,10 +37,8 @@ public class WrapperExtension implements ServiceExtension {
     public static final String EXTENSION_NAME = "WrapperExtension";
     @Inject
     private AssetIndex assetIndex;
-
     @Inject
     private AssetService assetService;
-
     @Inject
     private ContractAgreementService contractAgreementService;
     @Inject
