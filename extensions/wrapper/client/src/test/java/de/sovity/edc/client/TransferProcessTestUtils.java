@@ -11,9 +11,9 @@ import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.UUID;
 
 public class TransferProcessTestUtils {
@@ -35,17 +35,14 @@ public class TransferProcessTestUtils {
         // preparing providing transfer process
         var providerAgreement = createContractAgreement(PROVIDING_CONTRACT_ID, VALID_ASSET_ID);
         createContractNegotiation(store, COUNTER_PARTY_ADDRESS, providerAgreement, ContractNegotiation.Type.PROVIDER);
-        var lastUpdateDateForProvidingTransferProcess = "2023-07-08";
-        var errorMessageForProvidingTransferProcess = "TransferProcessManager: attempt #8 failed to send transfer";
         createTransferProcess(VALID_ASSET_ID,
                 PROVIDING_CONTRACT_ID,
                 dataAddress,
                 TransferProcess.Type.PROVIDER,
                 PROVIDING_TRANSFER_PROCESS_ID,
-                lastUpdateDateForProvidingTransferProcess,
-                errorMessageForProvidingTransferProcess,
+                "2023-07-08",
+                "TransferProcessManager: attempt #8 failed to send transfer",
                 transferProcessStore);
-
     }
 
     @NotNull
@@ -55,15 +52,13 @@ public class TransferProcessTestUtils {
         // preparing consuming transfer process
         var consumerAgreement = createContractAgreement(CONSUMING_CONTRACT_ID, UNKNOWN_ASSET_ID);
         createContractNegotiation(store, COUNTER_PARTY_ADDRESS, consumerAgreement, ContractNegotiation.Type.CONSUMER);
-        var lastUpdateDateForConsumingTransferProcess = "2023-07-10";
-        var errorMessageForConsumingTransferProcess = "";
         createTransferProcess(UNKNOWN_ASSET_ID,
                 CONSUMING_CONTRACT_ID,
                 dataAddress,
                 TransferProcess.Type.CONSUMER,
                 CONSUMING_TRANSFER_PROCESS_ID,
-                lastUpdateDateForConsumingTransferProcess,
-                errorMessageForConsumingTransferProcess,
+                "2023-07-10",
+                "",
                 transferProcessStore);
     }
 
@@ -81,8 +76,8 @@ public class TransferProcessTestUtils {
                 .property("asset:prop:name", assetName)
                 .createdAt(dateFormatterToLong("2023-06-01"))
                 .build();
-        assetStore.create(asset, dataAddress);
 
+        assetStore.create(asset, dataAddress);
     }
 
     private static ContractAgreement createContractAgreement(
@@ -120,7 +115,6 @@ public class TransferProcessTestUtils {
     }
 
     private static void createTransferProcess(String assetId, String contractId, DataAddress dataAddress, TransferProcess.Type type, String transferProcessId, String lastUpdateDateForTransferProcess, String errorMessage, TransferProcessStore transferProcessStore) throws ParseException {
-
 
         var dataRequestForTransfer = DataRequest.Builder.newInstance()
                 .assetId(assetId)

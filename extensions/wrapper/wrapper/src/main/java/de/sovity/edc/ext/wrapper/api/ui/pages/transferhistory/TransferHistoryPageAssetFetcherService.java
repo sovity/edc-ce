@@ -16,7 +16,6 @@ import static de.sovity.edc.ext.wrapper.utils.MapUtils.mapValues;
 @RequiredArgsConstructor
 public class TransferHistoryPageAssetFetcherService {
     private final AssetService assetService;
-
     private final TransferProcessService transferProcessService;
 
     public AssetDto getAssetForTransferHistoryPage(String transferProcessId) {
