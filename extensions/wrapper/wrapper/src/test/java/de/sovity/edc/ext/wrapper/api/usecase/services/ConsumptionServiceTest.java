@@ -1,7 +1,8 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionInputDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionInputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractNegotiationOutputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.TransferProcessOutputDto;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -58,13 +59,14 @@ class ConsumptionServiceTest {
     private final ContractNegotiationStore negotiationStore = mock(ContractNegotiationStore.class);
     private final TransferProcessStore transferProcessStore = mock(TransferProcessStore.class);
     private final TypeTransformerRegistry transformerRegistry = mock(TypeTransformerRegistry.class);
+    private final PolicyMappingService policyMappingService = mock(PolicyMappingService.class);
 
     private ConsumptionService consumptionService;
 
     @BeforeEach
     void setUp() {
         consumptionService = new ConsumptionService(negotiationService, transferProcessService,
-                negotiationStore, transferProcessStore, transformerRegistry);
+                negotiationStore, transferProcessStore, transformerRegistry, policyMappingService);
     }
 
     @Test
@@ -74,12 +76,15 @@ class ConsumptionServiceTest {
         when(negotiationService.initiateNegotiation(captor.capture()))
                 .thenReturn(negotiation());
 
+        var policy = policy();
+        when(policyMappingService.policyDtoToPolicy(any())).thenReturn(policy);
+
         var input = ConsumptionInputDto.builder()
                 .connectorId(counterPartyId)
                 .connectorAddress(counterPartyAddress)
                 .assetId(assetId)
                 .offerId(offerId)
-                .policy(policy())
+                .policy(policyDto())
                 .dataDestination(dataAddress())
                 .build();
 
@@ -92,9 +97,14 @@ class ConsumptionServiceTest {
         var requestData = captor.getValue().getRequestData();
         assertThat(requestData.getCounterPartyAddress()).isEqualTo(counterPartyAddress);
         assertThat(requestData.getDataSet()).isEqualTo(assetId);
-        assertThat(requestData.getContractOffer().getPolicy()).isEqualTo(input.getPolicy());
         assertThat(requestData.getContractOffer().getAssetId()).isEqualTo(assetId);
         assertThat(requestData.getContractOffer().getProviderId()).contains(counterPartyId);
+
+        var requestPolicy = requestData.getContractOffer().getPolicy();
+        assertThat(requestPolicy.getPermissions()).hasSameSizeAs(policy.getPermissions());
+        assertThat(requestPolicy.getProhibitions()).hasSameSizeAs(policy.getProhibitions());
+        assertThat(requestPolicy.getObligations()).hasSameSizeAs(policy.getObligations());
+        assertThat(requestPolicy.getTarget()).isEqualTo(assetId);
     }
 
     @ParameterizedTest
@@ -103,7 +113,7 @@ class ConsumptionServiceTest {
                                                                        String connectorAddress,
                                                                        String requestedAssetId,
                                                                        String contractOfferId,
-                                                                       Policy policy,
+                                                                       PolicyDto policy,
                                                                        DataAddress destination) {
         // ARRANGE
         var input = ConsumptionInputDto.builder()
@@ -348,6 +358,10 @@ class ConsumptionServiceTest {
                 .build();
     }
 
+    private static PolicyDto policyDto() {
+        return PolicyDto.builder().build();
+    }
+
     private static Policy policy() {
         return Policy.Builder.newInstance()
                 .permission(Permission.Builder.newInstance()
@@ -387,7 +401,7 @@ class ConsumptionServiceTest {
                 .connectorAddress(counterPartyAddress)
                 .assetId(assetId)
                 .offerId(offerId)
-                .policy(policy())
+                .policy(policyDto())
                 .dataDestination(destination)
                 .build();
         var consumptionDto = new ConsumptionDto(input);
@@ -408,17 +422,17 @@ class ConsumptionServiceTest {
         @Override
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
-                    Arguments.of(null, counterPartyAddress, assetId, offerId, policy(),
+                    Arguments.of(null, counterPartyAddress, assetId, offerId, policyDto(),
                             dataAddress()),
-                    Arguments.of(counterPartyId, null, assetId, offerId, policy(),
+                    Arguments.of(counterPartyId, null, assetId, offerId, policyDto(),
                             dataAddress()),
-                    Arguments.of(counterPartyId, counterPartyAddress, null, offerId, policy(),
+                    Arguments.of(counterPartyId, counterPartyAddress, null, offerId, policyDto(),
                             dataAddress()),
-                    Arguments.of(counterPartyId, counterPartyAddress, assetId, null, policy(),
+                    Arguments.of(counterPartyId, counterPartyAddress, assetId, null, policyDto(),
                             dataAddress()),
                     Arguments.of(counterPartyId, counterPartyAddress, assetId, offerId, null,
                             dataAddress()),
-                    Arguments.of(counterPartyId, counterPartyAddress, assetId, offerId, policy(),
+                    Arguments.of(counterPartyId, counterPartyAddress, assetId, offerId, policyDto(),
                             null)
             );
         }

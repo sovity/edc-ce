@@ -1,10 +1,10 @@
 package de.sovity.edc.ext.wrapper.api.usecase.model;
 
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 
 @AllArgsConstructor
@@ -12,10 +12,10 @@ import org.eclipse.edc.spi.types.domain.DataAddress;
 @Builder(toBuilder = true)
 @Getter
 public class ConsumptionInputDto {
-    String connectorId;
-    String connectorAddress;
-    String offerId;
-    String assetId;
-    Policy policy; //TODO is still using EDC model: policy as input for negotiation requires target attribute (= asset id)
-    DataAddress dataDestination;
+    private String connectorId;
+    private String connectorAddress;
+    private String offerId;
+    private String assetId;
+    private PolicyDto policy;
+    private DataAddress dataDestination;
 }

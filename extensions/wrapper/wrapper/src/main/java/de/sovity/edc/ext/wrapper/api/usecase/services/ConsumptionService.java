@@ -39,6 +39,7 @@ public class ConsumptionService {
     private final ContractNegotiationStore contractNegotiationStore;
     private final TransferProcessStore transferProcessStore;
     private final TypeTransformerRegistry transformerRegistry;
+    private final PolicyMappingService policyMappingService;
 
     public String startConsumptionProcess(ConsumptionInputDto consumptionInputDto) {
         //TODO generate ID
@@ -49,11 +50,13 @@ public class ConsumptionService {
 
         validateInput(consumptionInputDto);
 
-        //TODO transformer
+        var policy = policyMappingService.policyDtoToPolicy(consumptionInputDto.getPolicy())
+                .withTarget(consumptionInputDto.getAssetId());
+
         var contractOffer = ContractOffer.Builder.newInstance()
                 .id(consumptionInputDto.getOfferId())
                 .assetId(consumptionInputDto.getAssetId())
-                .policy(consumptionInputDto.getPolicy())
+                .policy(policy)
                 .providerId("urn:connector:" + consumptionInputDto.getConnectorId())
                 .build();
 

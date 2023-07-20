@@ -108,7 +108,7 @@ public class WrapperExtensionContextBuilder {
         transformerRegistry.register(new DataRequestToDataRequestDtoTransformer());
         transformerRegistry.register(new TransferProcessToTransferProcessOutputDtoTransformer());
         var consumptionService = new ConsumptionService(negotiationService, transferProcessService,
-                contractNegotiationStore, transferProcessStore, transformerRegistry);
+                contractNegotiationStore, transferProcessStore, transformerRegistry, policyMappingService);
 
         negotiationObservable.registerListener(new ContractNegotiationConsumptionListener(consumptionService));
 
