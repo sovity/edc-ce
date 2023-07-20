@@ -33,7 +33,6 @@ class GetAssetApiServiceTest {
         var client = TestUtils.edcClient();
 
         //arrange data
-
         DataAddress dataAddress = getDataAddress();
         createAsset(assetStore, dataAddress, "urn:artifact:test-asset-1", "test-asset-1", "2023-07-18");
         createAsset(assetStore, dataAddress, "urn:artifact:test-asset-2", "test-asset-2", "2023-07-20");
@@ -64,6 +63,4 @@ class GetAssetApiServiceTest {
                 .build();
         assetStore.create(asset, dataAddress);
     }
-
-
 }
