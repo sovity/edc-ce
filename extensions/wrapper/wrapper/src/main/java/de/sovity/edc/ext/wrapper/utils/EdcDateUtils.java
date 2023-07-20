@@ -16,6 +16,8 @@ package de.sovity.edc.ext.wrapper.utils;
 
 import lombok.NoArgsConstructor;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
@@ -53,5 +55,10 @@ public class EdcDateUtils {
             return null;
         }
         return OffsetDateTime.ofInstant(java.time.Instant.ofEpochSecond(utcSeconds), java.time.ZoneOffset.UTC);
+    }
+
+    public static long dateFormatterToLong(String date) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.parse(date).getTime();
     }
 }

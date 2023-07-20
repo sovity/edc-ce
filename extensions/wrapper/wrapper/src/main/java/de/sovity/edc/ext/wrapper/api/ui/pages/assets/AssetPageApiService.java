@@ -32,6 +32,5 @@ public class AssetPageApiService {
     @NotNull
     private List<Asset> getAssets() {
         return assetService.query(QuerySpec.max()).getContent().toList();
-
     }
 }
