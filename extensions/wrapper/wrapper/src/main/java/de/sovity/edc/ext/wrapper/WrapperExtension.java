@@ -19,6 +19,7 @@ import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfi
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
+import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
@@ -36,6 +37,8 @@ public class WrapperExtension implements ServiceExtension {
     public static final String EXTENSION_NAME = "WrapperExtension";
     @Inject
     private AssetIndex assetIndex;
+    @Inject
+    private AssetService assetService;
     @Inject
     private ContractAgreementService contractAgreementService;
     @Inject
@@ -72,6 +75,7 @@ public class WrapperExtension implements ServiceExtension {
 
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
                 assetIndex,
+                assetService,
                 contractAgreementService,
                 contractDefinitionStore,
                 contractNegotiationService,

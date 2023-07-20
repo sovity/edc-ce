@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
+import de.sovity.edc.ext.wrapper.api.ui.pages.assets.AssetPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementDataFetcher;
@@ -36,6 +37,7 @@ import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
+import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
@@ -60,6 +62,7 @@ public class WrapperExtensionContextBuilder {
 
     public static WrapperExtensionContext buildContext(
             AssetIndex assetIndex,
+            AssetService assetService,
             ContractAgreementService contractAgreementService,
             ContractDefinitionStore contractDefinitionStore,
             ContractNegotiationService contractNegotiationService,
@@ -72,6 +75,7 @@ public class WrapperExtensionContextBuilder {
             TransferProcessStore transferProcessStore
     ) {
         // UI API
+        var assetPageApiService = new AssetPageApiService(assetService);
         var transferProcessStateService = new TransferProcessStateService();
         var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
                 transferProcessStateService);
@@ -100,6 +104,7 @@ public class WrapperExtensionContextBuilder {
                 transformerRegistryUtils
         );
         var uiResource = new UiResource(
+                assetPageApiService,
                 contractAgreementApiService,
                 transferHistoryPageApiService,
                 contractAgreementTransferApiService
