@@ -35,6 +35,11 @@ import static java.lang.String.format;
 import static java.util.UUID.randomUUID;
 import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 
+/**
+ * Service for managing consumption processes (= contract negotiation and subsequent data transfer).
+ *
+ * @author Ronja Quensel
+ */
 @RequiredArgsConstructor
 @Slf4j
 public class ConsumptionService {
@@ -48,6 +53,14 @@ public class ConsumptionService {
     private final TypeTransformerRegistry transformerRegistry;
     private final PolicyMappingService policyMappingService;
 
+    /**
+     * Starts a consumption process for the asset specified in the input. Validates the input and
+     * then triggers a contract negotiation with the specified provider. After the negotiation
+     * is finalized, the corresponding transfer will be started after a call-back.
+     *
+     * @param consumptionInputDto the input for the process.
+     * @return the process id.
+     */
     public String startConsumptionProcess(ConsumptionInputDto consumptionInputDto) {
         //TODO generate ID
         var id = "id";
@@ -86,6 +99,12 @@ public class ConsumptionService {
         return id;
     }
 
+    /**
+     * Method used for callback after the contract negotiation has been finalized. Will be called
+     * by a corresponding listener. Starts the transfer as defined in the original process input.
+     *
+     * @param contractNegotiation the finalized contract negotiation.
+     */
     public void negotiationConfirmed(ContractNegotiation contractNegotiation) {
         var process = findByNegotiation(contractNegotiation);
 
@@ -116,6 +135,15 @@ public class ConsumptionService {
         }
     }
 
+    /**
+     * Returns information about a consumption process. Retrieves the corresponding contract
+     * negotiation and transfer process, transforms them to an output format and returns them
+     * together with other persisted information about the consumption process like the original
+     * input.
+     *
+     * @param id the process id.
+     * @return information about the process.
+     */
     public ConsumptionOutputDto getConsumptionProcess(String id) {
         var process = consumptionProcesses.get(id);
         if (process == null) {
