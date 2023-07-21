@@ -1,0 +1,50 @@
+name: Image Security Scan
+
+on:
+  workflow_run:
+      workflows: ["EDC Docker Images"]
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME_BASE: ${{ github.repository_owner }}
+  IMAGE_NAME: edc
+
+jobs:
+  scan-image:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        imageVariants: [
+          {
+            "imageName": "edc-dev",
+            "title": "sovity Dev EDC Connector",
+            "description": "Extended EDC Connector built by sovity. This dev version contains no persistence or auth and can be used to quickly start a locally running EDC + EDC UI.",
+            "buildArgs": "-Pdmgmt-api-key"
+          },
+          {
+            "imageName": "edc-ce",
+            "title": "sovity Community Edition EDC Connector",
+            "description": "EDC Connector built by sovity. Contains sovity's Community Edition EDC extensions and requires dataspace credentials to join an existing dataspace.",
+            "buildArgs": "-Pfs-vault -Pdmgmt-api-key -Ppostgres-flyway -Poauth2"
+          },
+          {
+            "imageName": "edc-ce-mds",
+            "title": "MDS Community Edition EDC Connector",
+            "description": "EDC Connector built by sovity and configured for compatibility with the Mobility Data Space (MDS). This EDC requires dataspace credentials, an IDS broker and an IDS Clearing House.",
+            "buildArgs": "-Pfs-vault -Pdmgmt-api-key -Ppostgres-flyway -Poauth2 -Pmds"
+          }
+        ]
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BASE }}/${{ matrix.imageVariants.imageName }}
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
