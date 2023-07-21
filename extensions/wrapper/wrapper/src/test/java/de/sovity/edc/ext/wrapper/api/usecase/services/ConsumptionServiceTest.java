@@ -19,7 +19,6 @@ import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.service.spi.result.ServiceResult;
 import org.eclipse.edc.spi.result.Result;
-import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,6 +52,7 @@ class ConsumptionServiceTest {
     private static final String negotiationId = "negotiationId";
     private static final String transferProcessId = "transferProcessId";
     private static final String agreementId = "agreementId";
+    private static final String dataAddressTypeProperty = "type";
 
     private final ContractNegotiationService negotiationService = mock(ContractNegotiationService.class);
     private final TransferProcessService transferProcessService = mock(TransferProcessService.class);
@@ -85,7 +85,7 @@ class ConsumptionServiceTest {
                 .assetId(assetId)
                 .offerId(offerId)
                 .policy(policyDto())
-                .dataDestination(dataAddress())
+                .dataDestination(dataAddressProperties())
                 .build();
 
         // ACT
@@ -114,7 +114,7 @@ class ConsumptionServiceTest {
                                                                        String requestedAssetId,
                                                                        String contractOfferId,
                                                                        PolicyDto policy,
-                                                                       DataAddress destination) {
+                                                                       Map<String, String> destination) {
         // ARRANGE
         var input = ConsumptionInputDto.builder()
                 .connectorId(connectorId)
@@ -151,8 +151,8 @@ class ConsumptionServiceTest {
         assertThat(dataRequest.getContractId()).isEqualTo(agreementId);
         assertThat(dataRequest.getConnectorId()).isEqualTo(counterPartyId);
         assertThat(dataRequest.getConnectorAddress()).isEqualTo(counterPartyAddress);
-        assertThat(dataRequest.getDataDestination())
-                .isEqualTo(process.getInput().getDataDestination());
+        assertThat(dataRequest.getDataDestination().getType())
+                .isEqualTo(process.getInput().getDataDestination().get(dataAddressTypeProperty));
 
         assertThat(process.getTransferProcessId())
                 .isNotNull()
@@ -374,10 +374,8 @@ class ConsumptionServiceTest {
                 .build();
     }
 
-    private static DataAddress dataAddress() {
-        return DataAddress.Builder.newInstance()
-                .type("test")
-                .build();
+    private static Map<String, String> dataAddressProperties() {
+        return Map.of(dataAddressTypeProperty, "test");
     }
 
     private static TransferProcess transferProcess() {
@@ -395,7 +393,7 @@ class ConsumptionServiceTest {
     }
 
     private static ConsumptionDto consumptionDto(String negotiationId, String transferProcessId) {
-        var destination = dataAddress();
+        var destination = dataAddressProperties();
         var input = ConsumptionInputDto.builder()
                 .connectorId(counterPartyId)
                 .connectorAddress(counterPartyAddress)
@@ -423,15 +421,15 @@ class ConsumptionServiceTest {
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
                     Arguments.of(null, counterPartyAddress, assetId, offerId, policyDto(),
-                            dataAddress()),
+                            dataAddressProperties()),
                     Arguments.of(counterPartyId, null, assetId, offerId, policyDto(),
-                            dataAddress()),
+                            dataAddressProperties()),
                     Arguments.of(counterPartyId, counterPartyAddress, null, offerId, policyDto(),
-                            dataAddress()),
+                            dataAddressProperties()),
                     Arguments.of(counterPartyId, counterPartyAddress, assetId, null, policyDto(),
-                            dataAddress()),
+                            dataAddressProperties()),
                     Arguments.of(counterPartyId, counterPartyAddress, assetId, offerId, null,
-                            dataAddress()),
+                            dataAddressProperties()),
                     Arguments.of(counterPartyId, counterPartyAddress, assetId, offerId, policyDto(),
                             null)
             );

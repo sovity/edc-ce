@@ -10,7 +10,6 @@ import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
 import jakarta.json.JsonArray;
 import org.eclipse.edc.junit.extensions.EdcRuntimeExtension;
-import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -109,7 +108,7 @@ class UseCaseResourceIntegrationTest {
                 .extract()
                 .path("id");
 
-        // wait until transfer has been terminated (due to unsupported data address type)
+        // wait until transfer has been terminated (will be due to unsupported data address type)
         await().atMost(45, TimeUnit.SECONDS).untilAsserted(() -> given()
                 .baseUri(consumerManagementUrl.toString())
                 .contentType(JSON)
@@ -170,9 +169,7 @@ class UseCaseResourceIntegrationTest {
                 .policy(PolicyDto.builder()
                         .permission(PermissionDto.builder().build())
                         .build())
-                .dataDestination(DataAddress.Builder.newInstance()
-                        .type("test")
-                        .build())
+                .dataDestination(Map.of("type", "test"))
                 .build();
     }
 }

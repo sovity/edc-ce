@@ -18,15 +18,21 @@ import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
 import org.eclipse.edc.connector.transfer.spi.types.TransferRequest;
 import org.eclipse.edc.spi.result.Result;
+import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.UUID.randomUUID;
+import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -85,12 +91,13 @@ public class ConsumptionService {
         if (process != null) {
             var agreementId = contractNegotiation.getContractAgreement().getId();
 
+            var destination = createDataAddress(process.getInput().getDataDestination());
             var dataRequest = DataRequest.Builder.newInstance()
                     .id(randomUUID().toString())
                     .connectorId(process.getInput().getConnectorId())
                     .connectorAddress(process.getInput().getConnectorAddress())
                     .protocol("dataspace-protocol-http")
-                    .dataDestination(process.getInput().getDataDestination())
+                    .dataDestination(destination)
                     .assetId(process.getInput().getAssetId())
                     .contractId(agreementId)
                     .build();
@@ -125,7 +132,7 @@ public class ConsumptionService {
         var transferProcessDto = Optional.ofNullable(process.getTransferProcessId())
                 .map(transferProcessStore::findById)
                 .map(tp -> transformerRegistry.transform(tp, TransferProcessOutputDto.class))
-                .map(this::logIfFailedResult)
+                .map(this::logIfFailedResult) //TODO throw exception on error
                 .filter(Result::succeeded)
                 .map(Result::getContent)
                 .orElse(null);
@@ -153,8 +160,12 @@ public class ConsumptionService {
         if (input.getPolicy() == null)
             throw new InvalidRequestException(format(message, "policy"));
 
-        if (input.getDataDestination() == null)
+        var destination = input.getDataDestination();
+        if (destination == null)
             throw new InvalidRequestException(format(message, "dataDestination"));
+
+        if (!destination.containsKey("type") && !destination.containsKey(EDC_NAMESPACE + "type"))
+            throw new InvalidRequestException("dataDestination must have type property.");
     }
 
     private ConsumptionDto findByNegotiation(ContractNegotiation contractNegotiation) {
@@ -164,6 +175,30 @@ public class ConsumptionService {
                 .findFirst()
                 .map(Map.Entry::getValue)
                 .orElse(null);
+    }
+
+    private DataAddress createDataAddress(Map<String, String> properties) {
+        var nameSpacedProperties = properties.entrySet().stream()
+                .map(entry -> {
+                    if (isValidUri(entry.getKey())) {
+                        return new AbstractMap.SimpleEntry<>(entry.getKey(), entry.getValue());
+                    }
+                    var key = EDC_NAMESPACE + entry.getKey();
+                    return new AbstractMap.SimpleEntry<>(key, entry.getValue());
+                })
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        return DataAddress.Builder.newInstance()
+                .properties(nameSpacedProperties)
+                .build();
+    }
+
+    private boolean isValidUri(String string) {
+        try {
+            new URI(string);
+            return true;
+        } catch (URISyntaxException e) {
+            return false;
+        }
     }
 
     private <T> Result<T> logIfFailedResult(Result<T> result) {

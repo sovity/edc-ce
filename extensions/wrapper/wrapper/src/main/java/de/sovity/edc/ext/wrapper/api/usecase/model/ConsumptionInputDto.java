@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.eclipse.edc.spi.types.domain.DataAddress;
+
+import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,5 +18,5 @@ public class ConsumptionInputDto {
     private String offerId;
     private String assetId;
     private PolicyDto policy;
-    private DataAddress dataDestination;
+    private Map<String, String> dataDestination;
 }
