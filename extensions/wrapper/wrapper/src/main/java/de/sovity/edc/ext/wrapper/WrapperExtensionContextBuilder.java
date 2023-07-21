@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.wrapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sovity.edc.ext.wrapper.api.ee.EnterpriseEditionResourceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
@@ -123,7 +124,8 @@ public class WrapperExtensionContextBuilder {
         // Collect all JAX-RS resources
         return new WrapperExtensionContext(List.of(
                 uiResource,
-                useCaseResource
+                useCaseResource,
+                new EnterpriseEditionResourceImpl()
         ));
     }
 }
