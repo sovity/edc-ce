@@ -17,6 +17,7 @@ import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
 import org.eclipse.edc.connector.transfer.spi.types.TransferRequest;
+import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.result.Result;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
@@ -124,7 +125,7 @@ public class ConsumptionService {
         var negotiationDto = Optional.ofNullable(process.getContractNegotiationId())
                 .map(contractNegotiationStore::findById)
                 .map(cn -> transformerRegistry.transform(cn, ContractNegotiationOutputDto.class))
-                .map(this::logIfFailedResult)
+                .map(this::throwIfFailedResult)
                 .filter(Result::succeeded)
                 .map(Result::getContent)
                 .orElse(null);
@@ -132,7 +133,7 @@ public class ConsumptionService {
         var transferProcessDto = Optional.ofNullable(process.getTransferProcessId())
                 .map(transferProcessStore::findById)
                 .map(tp -> transformerRegistry.transform(tp, TransferProcessOutputDto.class))
-                .map(this::logIfFailedResult) //TODO throw exception on error
+                .map(this::throwIfFailedResult)
                 .filter(Result::succeeded)
                 .map(Result::getContent)
                 .orElse(null);
@@ -201,10 +202,10 @@ public class ConsumptionService {
         }
     }
 
-    private <T> Result<T> logIfFailedResult(Result<T> result) {
+    private <T> Result<T> throwIfFailedResult(Result<T> result) {
         if (result.failed()) {
-            log.error(format("Failed to transform contract negotiation: %s",
-                    result.getFailureDetail()));
+            var message = "Failed to transform contract negotiation or transfer process: %s";
+            throw new EdcException(format(message, result.getFailureDetail()));
         }
         return result;
     }

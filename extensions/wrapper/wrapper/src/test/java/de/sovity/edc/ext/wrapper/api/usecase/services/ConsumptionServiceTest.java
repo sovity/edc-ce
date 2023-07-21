@@ -18,6 +18,7 @@ import org.eclipse.edc.policy.model.Action;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.service.spi.result.ServiceResult;
+import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.result.Result;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
@@ -282,7 +283,7 @@ class ConsumptionServiceTest {
     }
 
     @Test
-    void getConsumptionProcess_shouldReturnProcess_whenNegotiationTransformationFails()
+    void getConsumptionProcess_shouldThrowException_whenNegotiationTransformationFails()
             throws Exception {
         // ARRANGE
         var id = "id";
@@ -300,19 +301,14 @@ class ConsumptionServiceTest {
                 eq(TransferProcessOutputDto.class)))
                 .thenReturn(Result.success(transferProcessOutput));
 
-        // ACT
-        var output = consumptionService.getConsumptionProcess(id);
-
-        // ASSERT
-        assertThat(output).isNotNull();
-        assertThat(output.getContractNegotiation()).isNull();
-        assertThat(output.getTransferProcess())
-                .isNotNull()
-                .isEqualTo(transferProcessOutput);
+        // ACT & ASSERT
+        assertThatThrownBy(() -> consumptionService.getConsumptionProcess(id))
+                .isInstanceOf(EdcException.class)
+                .hasMessageContaining("Failed to transform");
     }
 
     @Test
-    void getConsumptionProcess_shouldReturnProcess_whenTransferTransformationFails()
+    void getConsumptionProcess_shouldThrowException_whenTransferTransformationFails()
             throws Exception {
         // ARRANGE
         var id = "id";
@@ -330,15 +326,10 @@ class ConsumptionServiceTest {
         when(transformerRegistry.transform(any(TransferProcess.class),
                 eq(TransferProcessOutputDto.class))).thenReturn(Result.failure("error"));
 
-        // ACT
-        var output = consumptionService.getConsumptionProcess(id);
-
-        // ASSERT
-        assertThat(output).isNotNull();
-        assertThat(output.getContractNegotiation())
-                .isNotNull()
-                .isEqualTo(negotiationOutput);
-        assertThat(output.getTransferProcess()).isNull();
+        // ACT & ASSERT
+        assertThatThrownBy(() -> consumptionService.getConsumptionProcess(id))
+                .isInstanceOf(EdcException.class)
+                .hasMessageContaining("Failed to transform");
     }
 
     private ContractNegotiation negotiation() {
