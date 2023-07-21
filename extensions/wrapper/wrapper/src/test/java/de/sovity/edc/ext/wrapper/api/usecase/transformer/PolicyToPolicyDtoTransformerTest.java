@@ -1,5 +1,7 @@
 package de.sovity.edc.ext.wrapper.api.usecase.transformer;
 
+import de.sovity.edc.ext.wrapper.api.common.model.ExpressionDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import org.eclipse.edc.policy.model.*;
 import org.eclipse.edc.transform.spi.TransformerContext;
@@ -8,8 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class PolicyToPolicyDtoTransformerTest {
 
@@ -40,6 +41,11 @@ public class PolicyToPolicyDtoTransformerTest {
                 .extensibleProperties(new HashMap<>())
                 .build();
 
+
+        var pmDto = new PermissionDto(new ExpressionDto());
+        when(context.transform(any(Permission.class), eq(PermissionDto.class))).thenReturn(pmDto);
+        // or when(context.transform(permission, PermissionDto.class)).thenReturn(new PermissionDto());
+
         var result = transformer.transform(policy,context);
         //var permissionDto  = result.getPermission();
 
@@ -49,7 +55,9 @@ public class PolicyToPolicyDtoTransformerTest {
         assertThat(result).isNotNull();
         assertThat(result.getPermission()).isNotNull();
         assertThat(result.getPermission().getConstraints()).isNotNull();
+        assertThat(result.getPermission()).isEqualTo(pmDto);
 
+        verify(context).transform(permission, PermissionDto.class);
 
 
 
