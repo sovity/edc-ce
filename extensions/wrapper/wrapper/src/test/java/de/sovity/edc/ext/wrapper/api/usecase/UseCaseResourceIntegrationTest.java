@@ -10,10 +10,6 @@ import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
 import jakarta.json.JsonArray;
 import org.eclipse.edc.junit.extensions.EdcRuntimeExtension;
-import org.eclipse.edc.policy.model.Action;
-import org.eclipse.edc.policy.model.Permission;
-import org.eclipse.edc.policy.model.Policy;
-import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -22,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService.ACTION_TYPE;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static java.util.UUID.randomUUID;
@@ -113,7 +108,7 @@ class UseCaseResourceIntegrationTest {
                 .extract()
                 .path("id");
 
-        // wait until transfer has been terminated (due to unsupported data address type)
+        // wait until transfer has been terminated (will be due to unsupported data address type)
         await().atMost(45, TimeUnit.SECONDS).untilAsserted(() -> given()
                 .baseUri(consumerManagementUrl.toString())
                 .contentType(JSON)
@@ -171,18 +166,10 @@ class UseCaseResourceIntegrationTest {
                 .connectorAddress(providerProtocolUrl.toString())
                 .offerId(contractDefinitionId + ":" + assetId + ":" + randomUUID())
                 .assetId(assetId)
-                .policy(Policy.Builder.newInstance()
-                        .permission(Permission.Builder.newInstance()
-                                .action(Action.Builder.newInstance()
-                                        .type(ACTION_TYPE)
-                                        .build())
-                                .target(assetId)
-                                .build())
-                        .target(assetId)
+                .policy(PolicyDto.builder()
+                        .permission(PermissionDto.builder().build())
                         .build())
-                .dataDestination(DataAddress.Builder.newInstance()
-                        .type("test")
-                        .build())
+                .dataDestination(Map.of("type", "test"))
                 .build();
     }
 }

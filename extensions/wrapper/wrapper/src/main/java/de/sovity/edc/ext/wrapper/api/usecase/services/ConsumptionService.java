@@ -17,17 +17,29 @@ import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
 import org.eclipse.edc.connector.transfer.spi.types.TransferRequest;
+import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.result.Result;
+import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.UUID.randomUUID;
+import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 
+/**
+ * Service for managing consumption processes (= contract negotiation and subsequent data transfer).
+ *
+ * @author Ronja Quensel
+ */
 @RequiredArgsConstructor
 @Slf4j
 public class ConsumptionService {
@@ -39,7 +51,16 @@ public class ConsumptionService {
     private final ContractNegotiationStore contractNegotiationStore;
     private final TransferProcessStore transferProcessStore;
     private final TypeTransformerRegistry transformerRegistry;
+    private final PolicyMappingService policyMappingService;
 
+    /**
+     * Starts a consumption process for the asset specified in the input. Validates the input and
+     * then triggers a contract negotiation with the specified provider. After the negotiation
+     * is finalized, the corresponding transfer will be started after a call-back.
+     *
+     * @param consumptionInputDto the input for the process.
+     * @return the process id.
+     */
     public String startConsumptionProcess(ConsumptionInputDto consumptionInputDto) {
         //TODO generate ID
         var id = "id";
@@ -49,11 +70,13 @@ public class ConsumptionService {
 
         validateInput(consumptionInputDto);
 
-        //TODO transformer
+        var policy = policyMappingService.policyDtoToPolicy(consumptionInputDto.getPolicy())
+                .withTarget(consumptionInputDto.getAssetId());
+
         var contractOffer = ContractOffer.Builder.newInstance()
                 .id(consumptionInputDto.getOfferId())
                 .assetId(consumptionInputDto.getAssetId())
-                .policy(consumptionInputDto.getPolicy())
+                .policy(policy)
                 .providerId("urn:connector:" + consumptionInputDto.getConnectorId())
                 .build();
 
@@ -76,18 +99,25 @@ public class ConsumptionService {
         return id;
     }
 
+    /**
+     * Method used for callback after the contract negotiation has been finalized. Will be called
+     * by a corresponding listener. Starts the transfer as defined in the original process input.
+     *
+     * @param contractNegotiation the finalized contract negotiation.
+     */
     public void negotiationConfirmed(ContractNegotiation contractNegotiation) {
         var process = findByNegotiation(contractNegotiation);
 
         if (process != null) {
             var agreementId = contractNegotiation.getContractAgreement().getId();
 
+            var destination = createDataAddress(process.getInput().getDataDestination());
             var dataRequest = DataRequest.Builder.newInstance()
                     .id(randomUUID().toString())
                     .connectorId(process.getInput().getConnectorId())
                     .connectorAddress(process.getInput().getConnectorAddress())
                     .protocol("dataspace-protocol-http")
-                    .dataDestination(process.getInput().getDataDestination())
+                    .dataDestination(destination)
                     .assetId(process.getInput().getAssetId())
                     .contractId(agreementId)
                     .build();
@@ -105,6 +135,15 @@ public class ConsumptionService {
         }
     }
 
+    /**
+     * Returns information about a consumption process. Retrieves the corresponding contract
+     * negotiation and transfer process, transforms them to an output format and returns them
+     * together with other persisted information about the consumption process like the original
+     * input.
+     *
+     * @param id the process id.
+     * @return information about the process.
+     */
     public ConsumptionOutputDto getConsumptionProcess(String id) {
         var process = consumptionProcesses.get(id);
         if (process == null) {
@@ -114,7 +153,7 @@ public class ConsumptionService {
         var negotiationDto = Optional.ofNullable(process.getContractNegotiationId())
                 .map(contractNegotiationStore::findById)
                 .map(cn -> transformerRegistry.transform(cn, ContractNegotiationOutputDto.class))
-                .map(this::logIfFailedResult)
+                .map(this::throwIfFailedResult)
                 .filter(Result::succeeded)
                 .map(Result::getContent)
                 .orElse(null);
@@ -122,7 +161,7 @@ public class ConsumptionService {
         var transferProcessDto = Optional.ofNullable(process.getTransferProcessId())
                 .map(transferProcessStore::findById)
                 .map(tp -> transformerRegistry.transform(tp, TransferProcessOutputDto.class))
-                .map(this::logIfFailedResult)
+                .map(this::throwIfFailedResult)
                 .filter(Result::succeeded)
                 .map(Result::getContent)
                 .orElse(null);
@@ -150,8 +189,12 @@ public class ConsumptionService {
         if (input.getPolicy() == null)
             throw new InvalidRequestException(format(message, "policy"));
 
-        if (input.getDataDestination() == null)
+        var destination = input.getDataDestination();
+        if (destination == null)
             throw new InvalidRequestException(format(message, "dataDestination"));
+
+        if (!destination.containsKey("type") && !destination.containsKey(EDC_NAMESPACE + "type"))
+            throw new InvalidRequestException("dataDestination must have type property.");
     }
 
     private ConsumptionDto findByNegotiation(ContractNegotiation contractNegotiation) {
@@ -163,10 +206,34 @@ public class ConsumptionService {
                 .orElse(null);
     }
 
-    private <T> Result<T> logIfFailedResult(Result<T> result) {
+    private DataAddress createDataAddress(Map<String, String> properties) {
+        var nameSpacedProperties = properties.entrySet().stream()
+                .map(entry -> {
+                    if (isValidUri(entry.getKey())) {
+                        return new AbstractMap.SimpleEntry<>(entry.getKey(), entry.getValue());
+                    }
+                    var key = EDC_NAMESPACE + entry.getKey();
+                    return new AbstractMap.SimpleEntry<>(key, entry.getValue());
+                })
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        return DataAddress.Builder.newInstance()
+                .properties(nameSpacedProperties)
+                .build();
+    }
+
+    private boolean isValidUri(String string) {
+        try {
+            new URI(string);
+            return true;
+        } catch (URISyntaxException e) {
+            return false;
+        }
+    }
+
+    private <T> Result<T> throwIfFailedResult(Result<T> result) {
         if (result.failed()) {
-            log.error(format("Failed to transform contract negotiation: %s",
-                    result.getFailureDetail()));
+            var message = "Failed to transform contract negotiation or transfer process: %s";
+            throw new EdcException(format(message, result.getFailureDetail()));
         }
         return result;
     }

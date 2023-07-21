@@ -1,7 +1,8 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionInputDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionInputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractNegotiationOutputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.TransferProcessOutputDto;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -17,8 +18,8 @@ import org.eclipse.edc.policy.model.Action;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.service.spi.result.ServiceResult;
+import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.result.Result;
-import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,19 +53,21 @@ class ConsumptionServiceTest {
     private static final String negotiationId = "negotiationId";
     private static final String transferProcessId = "transferProcessId";
     private static final String agreementId = "agreementId";
+    private static final String dataAddressTypeProperty = "type";
 
     private final ContractNegotiationService negotiationService = mock(ContractNegotiationService.class);
     private final TransferProcessService transferProcessService = mock(TransferProcessService.class);
     private final ContractNegotiationStore negotiationStore = mock(ContractNegotiationStore.class);
     private final TransferProcessStore transferProcessStore = mock(TransferProcessStore.class);
     private final TypeTransformerRegistry transformerRegistry = mock(TypeTransformerRegistry.class);
+    private final PolicyMappingService policyMappingService = mock(PolicyMappingService.class);
 
     private ConsumptionService consumptionService;
 
     @BeforeEach
     void setUp() {
         consumptionService = new ConsumptionService(negotiationService, transferProcessService,
-                negotiationStore, transferProcessStore, transformerRegistry);
+                negotiationStore, transferProcessStore, transformerRegistry, policyMappingService);
     }
 
     @Test
@@ -74,13 +77,16 @@ class ConsumptionServiceTest {
         when(negotiationService.initiateNegotiation(captor.capture()))
                 .thenReturn(negotiation());
 
+        var policy = policy();
+        when(policyMappingService.policyDtoToPolicy(any())).thenReturn(policy);
+
         var input = ConsumptionInputDto.builder()
                 .connectorId(counterPartyId)
                 .connectorAddress(counterPartyAddress)
                 .assetId(assetId)
                 .offerId(offerId)
-                .policy(policy())
-                .dataDestination(dataAddress())
+                .policy(policyDto())
+                .dataDestination(dataAddressProperties())
                 .build();
 
         // ACT
@@ -92,9 +98,14 @@ class ConsumptionServiceTest {
         var requestData = captor.getValue().getRequestData();
         assertThat(requestData.getCounterPartyAddress()).isEqualTo(counterPartyAddress);
         assertThat(requestData.getDataSet()).isEqualTo(assetId);
-        assertThat(requestData.getContractOffer().getPolicy()).isEqualTo(input.getPolicy());
         assertThat(requestData.getContractOffer().getAssetId()).isEqualTo(assetId);
         assertThat(requestData.getContractOffer().getProviderId()).contains(counterPartyId);
+
+        var requestPolicy = requestData.getContractOffer().getPolicy();
+        assertThat(requestPolicy.getPermissions()).hasSameSizeAs(policy.getPermissions());
+        assertThat(requestPolicy.getProhibitions()).hasSameSizeAs(policy.getProhibitions());
+        assertThat(requestPolicy.getObligations()).hasSameSizeAs(policy.getObligations());
+        assertThat(requestPolicy.getTarget()).isEqualTo(assetId);
     }
 
     @ParameterizedTest
@@ -103,8 +114,8 @@ class ConsumptionServiceTest {
                                                                        String connectorAddress,
                                                                        String requestedAssetId,
                                                                        String contractOfferId,
-                                                                       Policy policy,
-                                                                       DataAddress destination) {
+                                                                       PolicyDto policy,
+                                                                       Map<String, String> destination) {
         // ARRANGE
         var input = ConsumptionInputDto.builder()
                 .connectorId(connectorId)
@@ -141,8 +152,8 @@ class ConsumptionServiceTest {
         assertThat(dataRequest.getContractId()).isEqualTo(agreementId);
         assertThat(dataRequest.getConnectorId()).isEqualTo(counterPartyId);
         assertThat(dataRequest.getConnectorAddress()).isEqualTo(counterPartyAddress);
-        assertThat(dataRequest.getDataDestination())
-                .isEqualTo(process.getInput().getDataDestination());
+        assertThat(dataRequest.getDataDestination().getType())
+                .isEqualTo(process.getInput().getDataDestination().get(dataAddressTypeProperty));
 
         assertThat(process.getTransferProcessId())
                 .isNotNull()
@@ -272,7 +283,7 @@ class ConsumptionServiceTest {
     }
 
     @Test
-    void getConsumptionProcess_shouldReturnProcess_whenNegotiationTransformationFails()
+    void getConsumptionProcess_shouldThrowException_whenNegotiationTransformationFails()
             throws Exception {
         // ARRANGE
         var id = "id";
@@ -290,19 +301,14 @@ class ConsumptionServiceTest {
                 eq(TransferProcessOutputDto.class)))
                 .thenReturn(Result.success(transferProcessOutput));
 
-        // ACT
-        var output = consumptionService.getConsumptionProcess(id);
-
-        // ASSERT
-        assertThat(output).isNotNull();
-        assertThat(output.getContractNegotiation()).isNull();
-        assertThat(output.getTransferProcess())
-                .isNotNull()
-                .isEqualTo(transferProcessOutput);
+        // ACT & ASSERT
+        assertThatThrownBy(() -> consumptionService.getConsumptionProcess(id))
+                .isInstanceOf(EdcException.class)
+                .hasMessageContaining("Failed to transform");
     }
 
     @Test
-    void getConsumptionProcess_shouldReturnProcess_whenTransferTransformationFails()
+    void getConsumptionProcess_shouldThrowException_whenTransferTransformationFails()
             throws Exception {
         // ARRANGE
         var id = "id";
@@ -320,15 +326,10 @@ class ConsumptionServiceTest {
         when(transformerRegistry.transform(any(TransferProcess.class),
                 eq(TransferProcessOutputDto.class))).thenReturn(Result.failure("error"));
 
-        // ACT
-        var output = consumptionService.getConsumptionProcess(id);
-
-        // ASSERT
-        assertThat(output).isNotNull();
-        assertThat(output.getContractNegotiation())
-                .isNotNull()
-                .isEqualTo(negotiationOutput);
-        assertThat(output.getTransferProcess()).isNull();
+        // ACT & ASSERT
+        assertThatThrownBy(() -> consumptionService.getConsumptionProcess(id))
+                .isInstanceOf(EdcException.class)
+                .hasMessageContaining("Failed to transform");
     }
 
     private ContractNegotiation negotiation() {
@@ -348,6 +349,10 @@ class ConsumptionServiceTest {
                 .build();
     }
 
+    private static PolicyDto policyDto() {
+        return PolicyDto.builder().build();
+    }
+
     private static Policy policy() {
         return Policy.Builder.newInstance()
                 .permission(Permission.Builder.newInstance()
@@ -360,10 +365,8 @@ class ConsumptionServiceTest {
                 .build();
     }
 
-    private static DataAddress dataAddress() {
-        return DataAddress.Builder.newInstance()
-                .type("test")
-                .build();
+    private static Map<String, String> dataAddressProperties() {
+        return Map.of(dataAddressTypeProperty, "test");
     }
 
     private static TransferProcess transferProcess() {
@@ -381,13 +384,13 @@ class ConsumptionServiceTest {
     }
 
     private static ConsumptionDto consumptionDto(String negotiationId, String transferProcessId) {
-        var destination = dataAddress();
+        var destination = dataAddressProperties();
         var input = ConsumptionInputDto.builder()
                 .connectorId(counterPartyId)
                 .connectorAddress(counterPartyAddress)
                 .assetId(assetId)
                 .offerId(offerId)
-                .policy(policy())
+                .policy(policyDto())
                 .dataDestination(destination)
                 .build();
         var consumptionDto = new ConsumptionDto(input);
@@ -408,17 +411,17 @@ class ConsumptionServiceTest {
         @Override
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
-                    Arguments.of(null, counterPartyAddress, assetId, offerId, policy(),
-                            dataAddress()),
-                    Arguments.of(counterPartyId, null, assetId, offerId, policy(),
-                            dataAddress()),
-                    Arguments.of(counterPartyId, counterPartyAddress, null, offerId, policy(),
-                            dataAddress()),
-                    Arguments.of(counterPartyId, counterPartyAddress, assetId, null, policy(),
-                            dataAddress()),
+                    Arguments.of(null, counterPartyAddress, assetId, offerId, policyDto(),
+                            dataAddressProperties()),
+                    Arguments.of(counterPartyId, null, assetId, offerId, policyDto(),
+                            dataAddressProperties()),
+                    Arguments.of(counterPartyId, counterPartyAddress, null, offerId, policyDto(),
+                            dataAddressProperties()),
+                    Arguments.of(counterPartyId, counterPartyAddress, assetId, null, policyDto(),
+                            dataAddressProperties()),
                     Arguments.of(counterPartyId, counterPartyAddress, assetId, offerId, null,
-                            dataAddress()),
-                    Arguments.of(counterPartyId, counterPartyAddress, assetId, offerId, policy(),
+                            dataAddressProperties()),
+                    Arguments.of(counterPartyId, counterPartyAddress, assetId, offerId, policyDto(),
                             null)
             );
         }

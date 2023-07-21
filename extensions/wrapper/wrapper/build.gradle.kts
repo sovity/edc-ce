@@ -50,7 +50,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
     testImplementation("org.awaitility:awaitility:4.2.0")
 
-    //TODO move to own module?
     testImplementation("${edcGroup}:iam-mock:${edcVersion}")
     testImplementation("${edcGroup}:dsp:${edcVersion}")
     testImplementation("${edcGroup}:management-api:${edcVersion}")
@@ -60,7 +59,6 @@ val openapiFileDir = "${project.buildDir}/swagger"
 val openapiFileFilename = "edc-api-wrapper.yaml"
 val openapiFile = "$openapiFileDir/$openapiFileFilename"
 
-//TODO move to own module?
 tasks.register("printClasspath") {
     doLast {
         println(sourceSets["main"].runtimeClasspath.asPath)
