@@ -1,4 +1,4 @@
-FROM gradle:7.6.0-jdk17 AS build
+FROM gradle:7-jdk17 AS build
 
 ARG BUILD_ARGS
 
@@ -6,8 +6,7 @@ COPY --chown=gradle:gradle . /home/gradle/project/
 WORKDIR /home/gradle/project/
 RUN --mount=type=cache,target=/home/gradle/.gradle/caches gradle build --no-daemon $BUILD_ARGS
 
-# -buster is required to have apt available
-FROM openjdk:17-slim-buster
+FROM eclipse-temurin:17-alpine
 
 ARG EDC_LAST_COMMIT_INFO_ARG="The docker container was built outside of github actions and you didn't provide the build arg EDC_LAST_COMMIT_INFO_ARG, so there's no last commit info."
 ENV EDC_LAST_COMMIT_INFO=$EDC_LAST_COMMIT_INFO_ARG
@@ -19,8 +18,8 @@ ENV EDC_BUILD_DATE=$EDC_BUILD_DATE_ARG
 ARG JVM_ARGS=""
 
 # Install curl, then delete apt indexes to save image space
-RUN apt update \
-    && apt install -y curl \
+RUN apk update \
+    && apk add curl \
     && rm -rf /var/cache/apt/archives /var/lib/apt/lists \
     && touch /emtpy-properties-file.properties
 
