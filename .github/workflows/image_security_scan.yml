@@ -3,7 +3,7 @@ name: Trivy Image Security Scan
 on:
   workflow_run:
       workflows: 
-        - EDC Docker Images
+        - "EDC Docker Images"
       types: 
         - completed
 env:
