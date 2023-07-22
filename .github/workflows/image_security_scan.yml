@@ -1,4 +1,4 @@
-name: Image Security Scan
+name: Trivy Image Security Scan
 
 on:
   workflow_run:
@@ -34,18 +34,20 @@ jobs:
             "buildArgs": "-Pfs-vault -Pdmgmt-api-key -Ppostgres-flyway -Poauth2 -Pmds"
           }
         ]
-    timeout-minutes: 30
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BASE }}/${{ matrix.imageVariants.imageName }}
-          format: 'table'
           exit-code: '1'
           ignore-unfixed: true
+          format: "sarif"
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        continue-on-error: true
+        with:
+          sarif_file: "trivy-results.sarif"
+          category: "code"
