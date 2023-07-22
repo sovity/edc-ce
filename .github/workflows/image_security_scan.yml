@@ -2,8 +2,10 @@ name: Trivy Image Security Scan
 
 on:
   workflow_run:
-      workflows: ["EDC Docker Images"]
-      types: ["completed"]
+      workflows: 
+        - EDC Docker Images
+      types: 
+        - completed
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME_BASE: ${{ github.repository_owner }}
