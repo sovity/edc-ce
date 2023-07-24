@@ -17,8 +17,9 @@ ENV EDC_BUILD_DATE=$EDC_BUILD_DATE_ARG
 # Optional JVM arguments, such as memory settings
 ARG JVM_ARGS=""
 
-# Install curl for healthcheck
-RUN apk add --no-cache curl
+# Install curl for healthcheck, bash for entrypoint
+RUN apk add --no-cache curl bash
+SHELL ["/bin/bash", "-c"]
 
 # Create empty properties file to avoid errors when loading properties
 RUN touch /emtpy-properties-file.properties
@@ -40,4 +41,4 @@ COPY ./connector/.env /app/.env
 
 # Replaces ENV Var statements so they don't overwrite existing ENV Vars
 RUN sed -ri 's/^\s*(\S+)=(.*)$/\1=${\1:-"\2"}/' .env
-ENTRYPOINT bash -c 'set -a && source /app/.env && set +a && exec java -Djava.util.logging.config.file=/app/logging.properties $JVM_ARGS -jar app.jar'
+ENTRYPOINT set -a && source /app/.env && set +a && exec java -Djava.util.logging.config.file=/app/logging.properties $JVM_ARGS -jar app.jar
