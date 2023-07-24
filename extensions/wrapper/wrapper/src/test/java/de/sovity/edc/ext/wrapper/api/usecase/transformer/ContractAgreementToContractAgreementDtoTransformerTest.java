@@ -10,7 +10,10 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ContractAgreementToContractAgreementDtoTransformerTest {
     private final ContractAgreementToContractAgreementDtoTransformer transformer = new ContractAgreementToContractAgreementDtoTransformer();
@@ -25,6 +28,20 @@ public class ContractAgreementToContractAgreementDtoTransformerTest {
     @Test
     void transform(){
 
+        var contractAgreement = ContractAgreement.Builder.newInstance()
+                .id("id")
+                .providerId("provId")
+                .consumerId("consumerId")
+                .assetId("assetId")
+                .policy(Policy.Builder.newInstance().assignee("A").assigner("B").build())
+                .build();
+
+        var pDto = new PolicyDto();
+        when(context.transform(any(Policy.class),eq(PolicyDto.class))).thenReturn(pDto);
+        var result = transformer.transform(contractAgreement,context);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getPolicy()).isNotNull();
 
 
 
