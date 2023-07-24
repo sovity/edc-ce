@@ -6,6 +6,8 @@ plugins {
 
 val edcVersion: String by project
 val edcGroup: String by project
+val jettyVersion: String by project
+val jettyGroup: String by project
 
 dependencies {
     // Control-Plane
@@ -25,12 +27,12 @@ dependencies {
     implementation("${edcGroup}:ids:${edcVersion}")
 
     // Updated jetty versions for e.g. CVE-2023-26048
-    implementation("org.eclipse.jetty:jetty-client:11.0.15")
-    implementation("org.eclipse.jetty:jetty-http:11.0.15")
-    implementation("org.eclipse.jetty:jetty-io:11.0.15")
-    implementation("org.eclipse.jetty:jetty-server:11.0.15")
-    implementation("org.eclipse.jetty:jetty-util:11.0.15")
-    implementation("org.eclipse.jetty:jetty-webapp:11.0.15")
+    implementation("${jettyGroup}:jetty-client:${jettyVersion}")
+    implementation("${jettyGroup}:jetty-http:${jettyVersion}")
+    implementation("${jettyGroup}:jetty-io:${jettyVersion}")
+    implementation("${jettyGroup}:jetty-server:${jettyVersion}")
+    implementation("${jettyGroup}:jetty-util:${jettyVersion}")
+    implementation("${jettyGroup}:jetty-webapp:${jettyVersion}")
 
     // Control-plane to Data-plane
     implementation("${edcGroup}:transfer-data-plane:${edcVersion}")

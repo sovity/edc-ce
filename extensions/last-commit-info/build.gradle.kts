@@ -1,6 +1,8 @@
 val edcVersion: String by project
 val edcGroup: String by project
 val restAssured: String by project
+val jettyVersion: String by project
+val jettyGroup: String by project
 
 plugins {
     `java-library`
@@ -34,12 +36,12 @@ dependencies {
     }
 
     // Updated jetty versions for e.g. CVE-2023-26048
-    testImplementation("org.eclipse.jetty:jetty-client:11.0.15")
-    testImplementation("org.eclipse.jetty:jetty-http:11.0.15")
-    testImplementation("org.eclipse.jetty:jetty-io:11.0.15")
-    testImplementation("org.eclipse.jetty:jetty-server:11.0.15")
-    testImplementation("org.eclipse.jetty:jetty-util:11.0.15")
-    testImplementation("org.eclipse.jetty:jetty-webapp:11.0.15")
+    testImplementation("${jettyGroup}:jetty-client:${jettyVersion}")
+    testImplementation("${jettyGroup}:jetty-http:${jettyVersion}")
+    testImplementation("${jettyGroup}:jetty-io:${jettyVersion}")
+    testImplementation("${jettyGroup}:jetty-server:${jettyVersion}")
+    testImplementation("${jettyGroup}:jetty-util:${jettyVersion}")
+    testImplementation("${jettyGroup}:jetty-webapp:${jettyVersion}")
 
     testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
