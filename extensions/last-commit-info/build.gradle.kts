@@ -26,8 +26,8 @@ dependencies {
     testImplementation("${edcGroup}:junit:${edcVersion}")
     testImplementation("${edcGroup}:http:${edcVersion}")
     testImplementation("io.rest-assured:rest-assured:${restAssured}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
 val sovityEdcExtensionGroup: String by project

@@ -1,4 +1,4 @@
-FROM gradle:7.6.0-jdk17 AS build
+FROM gradle:7-jdk17-alpine AS build
 
 ARG BUILD_ARGS
 
@@ -6,8 +6,17 @@ COPY --chown=gradle:gradle . /home/gradle/project/
 WORKDIR /home/gradle/project/
 RUN --mount=type=cache,target=/home/gradle/.gradle/caches gradle build --no-daemon $BUILD_ARGS
 
-# -buster is required to have apt available
-FROM openjdk:17-slim-buster
+FROM eclipse-temurin:17-jre-alpine
+
+# Install curl for healthcheck, bash for entrypoint
+RUN apk add --no-cache curl bash
+SHELL ["/bin/bash", "-c"]
+
+# Create empty properties file to avoid errors when loading properties
+RUN touch /emtpy-properties-file.properties
+
+RUN adduser -D -H -s /sbin/nologin edc
+USER edc:edc
 
 ARG EDC_LAST_COMMIT_INFO_ARG="The docker container was built outside of github actions and you didn't provide the build arg EDC_LAST_COMMIT_INFO_ARG, so there's no last commit info."
 ENV EDC_LAST_COMMIT_INFO=$EDC_LAST_COMMIT_INFO_ARG
@@ -17,12 +26,6 @@ ENV EDC_BUILD_DATE=$EDC_BUILD_DATE_ARG
 
 # Optional JVM arguments, such as memory settings
 ARG JVM_ARGS=""
-
-# Install curl, then delete apt indexes to save image space
-RUN apt update \
-    && apt install -y curl \
-    && rm -rf /var/cache/apt/archives /var/lib/apt/lists \
-    && touch /emtpy-properties-file.properties
 
 WORKDIR /app
 
@@ -41,4 +44,4 @@ COPY ./connector/.env /app/.env
 
 # Replaces ENV Var statements so they don't overwrite existing ENV Vars
 RUN sed -ri 's/^\s*(\S+)=(.*)$/\1=${\1:-"\2"}/' .env
-ENTRYPOINT bash -c 'set -a && source /app/.env && set +a && exec java -Djava.util.logging.config.file=/app/logging.properties $JVM_ARGS -jar app.jar'
+ENTRYPOINT set -a && source /app/.env && set +a && exec java -Djava.util.logging.config.file=/app/logging.properties $JVM_ARGS -jar app.jar
