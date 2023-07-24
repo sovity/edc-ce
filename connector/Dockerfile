@@ -1,4 +1,4 @@
-FROM gradle:7-jdk17-alpine AS build
+FROM gradle:8-jdk17-alpine AS build
 
 ARG BUILD_ARGS
 
