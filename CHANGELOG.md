@@ -13,7 +13,6 @@ All notable changes to this project will be documented in this file.
 #### Major Changes
 
 #### Minor Changes
-- ReferringConnectorValidationExtension: Added support for comma separated lists of connectors using the EQ operator as well as pure Lists using the IN operator.
 
 #### Patch Changes
 
@@ -22,10 +21,41 @@ All notable changes to this project will be documented in this file.
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:{{ VERSION HERE }}`
-    - Sovity EDC CE: `ghcr.io/sovity/edc-ce:{{ VERSION HERE }}`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:{{ VERSION HERE }}`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:{{ VERSION HERE }}`
+  - Sovity EDC CE: `ghcr.io/sovity/edc-ce:{{ VERSION HERE }}`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:{{ VERSION HERE }}`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity{{ VERSION HERE }}`
+
+
+## [4.1.0] - 2023-07-24
+
+### Overview
+
+Security improvements of container image and enhancements for the `ReferringConnectorValidationExtension`.
+
+### EDC UI
+
+- https://github.com/sovity/edc-ui/releases/tag/v0.0.1-milestone-8-sovity12
+
+### EDC-Extensions
+
+#### Minor Changes
+- ReferringConnectorValidationExtension: Added support for comma separated lists of connectors using the EQ operator as well as pure Lists using the IN operator.
+
+#### Patch Changes
+- Automatically delete old transfer-processes if there are more than 3000 entries in the transfer-process-table
+- Change base-image to `eclipse-temurin:17-jre-alpine`
+- Run java process with a non-root user
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:4.1.0`
+    - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.1.0`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.1.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity12`
 
 ## [4.0.1] - 2023-07-07
 
