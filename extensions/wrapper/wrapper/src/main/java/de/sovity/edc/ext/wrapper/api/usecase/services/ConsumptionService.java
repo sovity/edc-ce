@@ -62,10 +62,7 @@ public class ConsumptionService {
      * @return the process id.
      */
     public String startConsumptionProcess(ConsumptionInputDto consumptionInputDto) {
-        //TODO generate ID
-
         var id = java.util.UUID.randomUUID().toString();
-
         var consumeDto = new ConsumptionDto(consumptionInputDto);
         consumptionProcesses.put(id, consumeDto);
 
