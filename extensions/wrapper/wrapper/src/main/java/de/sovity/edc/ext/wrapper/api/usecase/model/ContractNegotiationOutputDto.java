@@ -23,4 +23,5 @@ public class ContractNegotiationOutputDto {
     private String counterPartyAddress;
     private String protocol;
     private ContractAgreementDto contractAgreement;
+    private String errorDetail;
 }

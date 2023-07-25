@@ -23,4 +23,5 @@ public class TransferProcessOutputDto {
     private DataRequestDto dataRequest;
     private Map<String, String> contentDataAddress;
     private Map<String, String> privateProperties = new HashMap<>();
+    private String errorDetail;
 }
