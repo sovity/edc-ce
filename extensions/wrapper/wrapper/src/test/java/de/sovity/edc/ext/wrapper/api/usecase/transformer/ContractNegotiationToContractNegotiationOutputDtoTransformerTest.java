@@ -41,9 +41,8 @@ public class ContractNegotiationToContractNegotiationOutputDtoTransformerTest {
                 .build();
 
         var contractNegotiation = ContractNegotiation.Builder.newInstance()
-                .contractAgreement(contractAgreement)
                 .contractOffer(ContractOffer.Builder.newInstance().id("id").assetId("assetId").providerId("provId").policy(Policy.Builder.newInstance().assignee("A").assigner("B").build()).build())
-                .contractAgreement(ContractAgreement.Builder.newInstance().id("id").providerId("provId").consumerId("consumerId").assetId("assetId").policy(Policy.Builder.newInstance().assignee("A").assigner("B").build()).build())
+                .contractAgreement(contractAgreement)
                 .type(ContractNegotiation.Type.CONSUMER)
                 .id("id")
                 .protocol("dsp")
@@ -79,9 +78,7 @@ public class ContractNegotiationToContractNegotiationOutputDtoTransformerTest {
         assertThat(result.getContractAgreement().getContractSigningDate()).isEqualTo(9999);
         assertThat(result.getContractAgreement().getAssetId()).isEqualTo("assetId");
 
-
-        //FIXME: verify fails due to wrong invocation?
-        //verify(context).transform(contractAgreement, ContractAgreementDto.class);
+        verify(context).transform(contractAgreement, ContractAgreementDto.class);
 
     }
 }
