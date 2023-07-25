@@ -26,7 +26,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.text.ParseException;
 import java.util.Map;
 
-import static de.sovity.edc.client.TransferProcessTestUtils.*;
+import static de.sovity.edc.client.TransferProcessTestUtils.createConsumingTransferProcesses;
+import static de.sovity.edc.client.TransferProcessTestUtils.createProvidingTransferProcesses;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
@@ -49,11 +50,11 @@ class GetTransferProcessAssetApiServiceTest {
         createProvidingTransferProcesses(negotiationStore, transferProcessStore, assetStore);
 
         //act
-        var providerAssetResult = client.uiApi().getTransferProcessAsset(PROVIDING_TRANSFER_PROCESS_ID);
+        var providerAssetResult = client.uiApi().getTransferProcessAsset(null);
 
         //assert
-        assertThat(providerAssetResult.getAssetId()).isEqualTo(VALID_ASSET_ID);
-        assertThat(providerAssetResult.getProperties().get("asset:prop:name")).isEqualTo(ASSET_NAME);
+        assertThat(providerAssetResult.getAssetId()).isEqualTo(TransferProcessTestUtils.VALID_ASSET_ID);
+        assertThat(providerAssetResult.getProperties().get("asset:prop:name")).isEqualTo(TransferProcessTestUtils.ASSET_NAME);
     }
 
     @Test
@@ -66,10 +67,10 @@ class GetTransferProcessAssetApiServiceTest {
         createConsumingTransferProcesses(negotiationStore, transferProcessStore);
 
         //act
-        var consumerAssetResult = client.uiApi().getTransferProcessAsset(CONSUMING_TRANSFER_PROCESS_ID);
+        var consumerAssetResult = client.uiApi().getTransferProcessAsset(TransferProcessTestUtils.CONSUMING_TRANSFER_PROCESS_ID);
 
         //assert
-        assertThat(consumerAssetResult.getAssetId()).isEqualTo(UNKNOWN_ASSET_ID);
+        assertThat(consumerAssetResult.getAssetId()).isEqualTo(TransferProcessTestUtils.UNKNOWN_ASSET_ID);
         assertThat(consumerAssetResult.getProperties().get("asset:prop:name")).isNull();
     }
 

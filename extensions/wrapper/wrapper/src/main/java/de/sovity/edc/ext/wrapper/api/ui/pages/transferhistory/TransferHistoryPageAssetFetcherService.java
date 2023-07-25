@@ -29,7 +29,7 @@ public class TransferHistoryPageAssetFetcherService {
 
     @NotNull
     private AssetDto getAssetFromTransferProcess(TransferProcess process) {
-        String assetId = process.getDataRequest().getAssetId();
+        var assetId = process.getDataRequest().getAssetId();
         var asset = assetService.findById(process.getDataRequest().getAssetId());
         if (asset == null) {
             asset = Asset.Builder.newInstance().id(assetId).build();

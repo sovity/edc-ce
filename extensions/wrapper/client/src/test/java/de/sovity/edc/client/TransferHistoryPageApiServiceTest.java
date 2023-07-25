@@ -26,7 +26,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.text.ParseException;
 import java.util.Map;
 
-import static de.sovity.edc.client.TransferProcessTestUtils.*;
+import static de.sovity.edc.client.TransferProcessTestUtils.createConsumingTransferProcesses;
+import static de.sovity.edc.client.TransferProcessTestUtils.createProvidingTransferProcesses;
 import static de.sovity.edc.client.gen.model.TransferHistoryEntry.DirectionEnum.CONSUMING;
 import static de.sovity.edc.client.gen.model.TransferHistoryEntry.DirectionEnum.PROVIDING;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,23 +63,25 @@ class TransferHistoryPageApiServiceTest {
         assertThat(transferProcess.get(1).getTransferProcessId()).isEqualTo(TransferProcessTestUtils.PROVIDING_TRANSFER_PROCESS_ID);
 
         // assert for consuming request entry
-        assertThat(transferProcess.get(0).getTransferProcessId()).isEqualTo(TransferProcessTestUtils.CONSUMING_TRANSFER_PROCESS_ID);
-        assertThat(transferProcess.get(0).getAssetId()).isEqualTo(UNKNOWN_ASSET_ID);
-        assertThat(transferProcess.get(0).getCounterPartyConnectorEndpoint()).isEqualTo(COUNTER_PARTY_ADDRESS);
-        assertThat(transferProcess.get(0).getContractAgreementId()).isEqualTo(CONSUMING_CONTRACT_ID);
-        assertThat(transferProcess.get(0).getDirection()).isEqualTo(CONSUMING);
-        assertThat(transferProcess.get(0).getState().getCode()).isEqualTo(800);
-        assertThat(transferProcess.get(0).getAssetName()).isEqualTo(UNKNOWN_ASSET_ID);
-        assertThat(transferProcess.get(0).getErrorMessage()).isEqualTo("");
+        var consumingProcess = transferProcess.get(0);
+        assertThat(consumingProcess.getTransferProcessId()).isEqualTo(TransferProcessTestUtils.CONSUMING_TRANSFER_PROCESS_ID);
+        assertThat(consumingProcess.getAssetId()).isEqualTo(TransferProcessTestUtils.UNKNOWN_ASSET_ID);
+        assertThat(consumingProcess.getCounterPartyConnectorEndpoint()).isEqualTo(TransferProcessTestUtils.COUNTER_PARTY_ADDRESS);
+        assertThat(consumingProcess.getContractAgreementId()).isEqualTo(TransferProcessTestUtils.CONSUMING_CONTRACT_ID);
+        assertThat(consumingProcess.getDirection()).isEqualTo(CONSUMING);
+        assertThat(consumingProcess.getState().getCode()).isEqualTo(800);
+        assertThat(consumingProcess.getAssetName()).isEqualTo(TransferProcessTestUtils.UNKNOWN_ASSET_ID);
+        assertThat(consumingProcess.getErrorMessage()).isEqualTo("");
 
         // assert for providing request entry
-        assertThat(transferProcess.get(1).getTransferProcessId()).isEqualTo(TransferProcessTestUtils.PROVIDING_TRANSFER_PROCESS_ID);
-        assertThat(transferProcess.get(1).getAssetId()).isEqualTo(VALID_ASSET_ID);
-        assertThat(transferProcess.get(1).getCounterPartyConnectorEndpoint()).isEqualTo(COUNTER_PARTY_ADDRESS);
-        assertThat(transferProcess.get(1).getContractAgreementId()).isEqualTo(PROVIDING_CONTRACT_ID);
-        assertThat(transferProcess.get(1).getDirection()).isEqualTo(PROVIDING);
-        assertThat(transferProcess.get(1).getState().getCode()).isEqualTo(800);
-        assertThat(transferProcess.get(1).getAssetName()).isEqualTo(ASSET_NAME);
-        assertThat(transferProcess.get(1).getErrorMessage()).isEqualTo("TransferProcessManager: attempt #8 failed to send transfer");
+        var providingProcess = transferProcess.get(1);
+        assertThat(providingProcess.getTransferProcessId()).isEqualTo(TransferProcessTestUtils.PROVIDING_TRANSFER_PROCESS_ID);
+        assertThat(providingProcess.getAssetId()).isEqualTo(TransferProcessTestUtils.VALID_ASSET_ID);
+        assertThat(providingProcess.getCounterPartyConnectorEndpoint()).isEqualTo(TransferProcessTestUtils.COUNTER_PARTY_ADDRESS);
+        assertThat(providingProcess.getContractAgreementId()).isEqualTo(TransferProcessTestUtils.PROVIDING_CONTRACT_ID);
+        assertThat(providingProcess.getDirection()).isEqualTo(PROVIDING);
+        assertThat(providingProcess.getState().getCode()).isEqualTo(800);
+        assertThat(providingProcess.getAssetName()).isEqualTo(TransferProcessTestUtils.ASSET_NAME);
+        assertThat(providingProcess.getErrorMessage()).isEqualTo("TransferProcessManager: attempt #8 failed to send transfer");
     }
 }

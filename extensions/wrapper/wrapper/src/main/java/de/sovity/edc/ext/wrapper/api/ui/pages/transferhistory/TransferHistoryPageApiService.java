@@ -55,7 +55,7 @@ public class TransferHistoryPageApiService {
     public List<TransferHistoryEntry> getTransferHistoryEntries() {
 
         var negotiationsById = getAllContractNegotiations().stream()
-                .filter(it -> it.getContractAgreement() != null)
+                .filter(negotiation -> negotiation.getContractAgreement() != null)
                 .collect(groupingBy(
                         it -> it.getContractAgreement().getId(),
                         collectingAndThen(maxBy(Comparator.comparing(Entity::getCreatedAt)), Optional::get)
@@ -95,7 +95,7 @@ public class TransferHistoryPageApiService {
     }
 
     private Asset assetLookup(Map<String, Asset> assetsById, TransferProcess process) {
-        String assetId = process.getDataRequest().getAssetId();
+        var assetId = process.getDataRequest().getAssetId();
         var asset = assetsById.get(assetId);
         if (asset == null) {
             return Asset.Builder.newInstance().id(assetId).build();
