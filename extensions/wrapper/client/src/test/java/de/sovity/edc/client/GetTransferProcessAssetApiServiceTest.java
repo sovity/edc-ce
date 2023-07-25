@@ -50,7 +50,7 @@ class GetTransferProcessAssetApiServiceTest {
         createProvidingTransferProcesses(negotiationStore, transferProcessStore, assetStore);
 
         //act
-        var providerAssetResult = client.uiApi().getTransferProcessAsset(null);
+        var providerAssetResult = client.uiApi().getTransferProcessAsset(TransferProcessTestUtils.PROVIDING_TRANSFER_PROCESS_ID);
 
         //assert
         assertThat(providerAssetResult.getAssetId()).isEqualTo(TransferProcessTestUtils.VALID_ASSET_ID);
