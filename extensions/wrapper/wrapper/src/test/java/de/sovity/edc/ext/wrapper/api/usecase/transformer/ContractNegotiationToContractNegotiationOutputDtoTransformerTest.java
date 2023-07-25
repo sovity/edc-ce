@@ -1,6 +1,9 @@
 package de.sovity.edc.ext.wrapper.api.usecase.transformer;
 
 import de.sovity.edc.ext.wrapper.api.common.model.ContractAgreementDto;
+import de.sovity.edc.ext.wrapper.api.common.model.ExpressionDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractNegotiationOutputDto;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -27,34 +30,58 @@ public class ContractNegotiationToContractNegotiationOutputDtoTransformerTest {
 
     @Test
     void transform(){
+        var contractAgreement = ContractAgreement.Builder.newInstance()
+                .id("contId")
+                .assetId("assetId")
+                .policy(Policy.Builder.newInstance().type(PolicyType.CONTRACT).assignee("A").assigner("B").target("target").build())
+                .providerId("provId")
+                .consumerId("consId")
+                .policy(Policy.Builder.newInstance().assignee("A").assigner("B").build())
+                .contractSigningDate(9999)
+                .build();
 
         var contractNegotiation = ContractNegotiation.Builder.newInstance()
-                .contractAgreement(ContractAgreement.Builder.newInstance()
-                        .id("id")
-                        .assetId("assetId")
-                        .policy(Policy.Builder.newInstance().type(PolicyType.CONTRACT).assignee("A").assigner("B").target("target").build())
-                        .providerId("provId")
-                        .consumerId("consId")
-                        .policy(Policy.Builder.newInstance().assignee("A").assigner("B").build())
-                        .build())
+                .contractAgreement(contractAgreement)
                 .contractOffer(ContractOffer.Builder.newInstance().id("id").assetId("assetId").providerId("provId").policy(Policy.Builder.newInstance().assignee("A").assigner("B").build()).build())
                 .contractAgreement(ContractAgreement.Builder.newInstance().id("id").providerId("provId").consumerId("consumerId").assetId("assetId").policy(Policy.Builder.newInstance().assignee("A").assigner("B").build()).build())
                 .type(ContractNegotiation.Type.CONSUMER)
                 .id("id")
-                .protocol("DSP")
-                .correlationId("co")
-                .counterPartyAddress("add")
+                .protocol("dsp")
+                .correlationId("corrId")
+                .counterPartyAddress("counterAddress")
                 .counterPartyId("counterId")
+                .state(0)
                 .build();
 
-        var caDto = new ContractAgreementDto();
+        var caDto = ContractAgreementDto.builder().id("contId").providerId("provId")
+                .consumerId("consId").contractSigningDate(9999).assetId("assetId")
+                .policy(PolicyDto.builder()
+                        .legacyPolicy("legacyPol")
+                        .permission(PermissionDto.builder().constraints(new ExpressionDto()).build())
+                        .build())
+                .build();
+
         when(context.transform(any(ContractAgreement.class),eq(ContractAgreementDto.class))).thenReturn(caDto);
         var result = transformer.transform(contractNegotiation,context);
 
         assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo("id");
+        assertThat(result.getProtocol()).isEqualTo("dsp");
+        assertThat(result.getState()).isEqualTo("INITIAL");
+        assertThat(result.getCorrelationId()).isEqualTo("corrId");
+        assertThat(result.getCounterPartyId()).isEqualTo("counterId");
+        assertThat(result.getCounterPartyAddress()).isEqualTo("counterAddress");
+
         assertThat(result.getContractAgreement()).isNotNull();
+        assertThat(result.getContractAgreement().getId()).isEqualTo("contId");
+        assertThat(result.getContractAgreement().getProviderId()).isEqualTo("provId");
+        assertThat(result.getContractAgreement().getConsumerId()).isEqualTo("consId");
+        assertThat(result.getContractAgreement().getContractSigningDate()).isEqualTo(9999);
+        assertThat(result.getContractAgreement().getAssetId()).isEqualTo("assetId");
 
 
+        //FIXME: verify fails due to wrong invocation?
+        //verify(context).transform(contractAgreement, ContractAgreementDto.class);
 
     }
 }

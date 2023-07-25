@@ -25,8 +25,6 @@ public class PolicyToPolicyDtoTransformerTest {
 
     @Test
     void transform(){
-
-        var target = "target-id";
         var permission = Permission.Builder.newInstance().action(Action.Builder.newInstance().type("USE").build()).build();
         var prohibition = Prohibition.Builder.newInstance().action(Action.Builder.newInstance().type("MODIFY").build()).build();
         var duty = Duty.Builder.newInstance().action(Action.Builder.newInstance().type("DELETE").build()).build();
@@ -58,8 +56,5 @@ public class PolicyToPolicyDtoTransformerTest {
         assertThat(result.getPermission()).isEqualTo(pmDto);
 
         verify(context).transform(permission, PermissionDto.class);
-
-
-
     }
 }

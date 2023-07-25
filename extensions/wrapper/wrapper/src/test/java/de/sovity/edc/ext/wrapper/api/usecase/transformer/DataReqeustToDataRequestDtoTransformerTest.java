@@ -44,15 +44,13 @@ public class DataReqeustToDataRequestDtoTransformerTest {
         assertThat(result.getId()).isEqualTo("id");
         assertThat(result.getProcessId()).isEqualTo("procId");
         assertThat(result.getProtocol()).isEqualTo("dsp");
-        assertThat(result.getDataDestination()).isNotNull();
         assertThat(result.getContractId()).isEqualTo("contractId");
         assertThat(result.getConnectorId()).isEqualTo("connectorId");
         assertThat(result.getAssetId()).isEqualTo("assetId");
         assertThat(result.getConnectorAddress()).isEqualTo("localhost");
 
-
-
-
+        assertThat(result.getDataDestination()).isNotNull();
+        assertThat(result.getDataDestination().get("https://w3id.org/edc/v0.0.1/ns/type")).isEqualTo("DEST");
 
     }
 }

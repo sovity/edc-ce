@@ -13,8 +13,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class TransferProcessToTransferProcessOutputDtoTransformerTest {
 
@@ -29,28 +28,58 @@ public class TransferProcessToTransferProcessOutputDtoTransformerTest {
 
     @Test
     void transform(){
-        TransferProcess transferProcess = TransferProcess.Builder.newInstance()
+        var dataDest = DataAddress.Builder.newInstance().type("DEST").build();
+
+        var dataReq = DataRequest.Builder.newInstance()
+                .id("id")
+                .processId("procId")
+                .protocol("dsp")
+                .dataDestination(dataDest)
+                .contractId("contractId")
+                .connectorId("connectorId")
+                .assetId("assetId")
+                .connectorAddress("localhost")
+                .build();
+
+        var transferProcess = TransferProcess.Builder.newInstance()
                 .contentDataAddress(DataAddress.Builder.newInstance().type("content").build())
-                .dataRequest(DataRequest.Builder.newInstance()
-                        .id("id")
-                        .processId("ReqId")
-                        .protocol("dsp")
-                        .dataDestination(DataAddress.Builder.newInstance().type("DEST").build())
-                        .contractId("contractId")
-                        .connectorId("connectorId")
-                        .assetId("assetId")
-                        .connectorAddress("localhost")
-                        .build())
-                .type(TransferProcess.Type.CONSUMER).id("procId").build();
+                .dataRequest(dataReq)
+                .type(TransferProcess.Type.CONSUMER)
+                .id("procId").build();
 
 
-        var drDto = new DataRequestDto();
+        var drDto = DataRequestDto.builder()
+                .id("id")
+                .processId("procId")
+                .protocol("dsp")
+                .contractId("contractId")
+                .connectorId("connectorId")
+                .assetId("assetId")
+                .connectorAddress("localhost")
+                .dataDestination(dataDest.getProperties())
+                .build();
         when(context.transform(any(DataRequest.class), eq(DataRequestDto.class))).thenReturn(drDto);
 
         var result = transformer.transform(transferProcess,context);
 
         assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo("procId");
+        assertThat(result.getState()).isEqualTo("INITIAL");
+        assertThat(result.getContentDataAddress().get("https://w3id.org/edc/v0.0.1/ns/type")).isEqualTo("content");
+
+        assertThat(result.getDataRequest().getId()).isEqualTo("id");
+        assertThat(result.getDataRequest().getProcessId()).isEqualTo("procId");
+        assertThat(result.getDataRequest().getConnectorAddress()).isEqualTo("localhost");
+        assertThat(result.getDataRequest().getProtocol()).isEqualTo("dsp");
+        assertThat(result.getDataRequest().getConnectorId()).isEqualTo("connectorId");
+        assertThat(result.getDataRequest().getAssetId()).isEqualTo("assetId");
+        assertThat(result.getDataRequest().getContractId()).isEqualTo("contractId");
+        assertThat(result.getDataRequest().getDataDestination().get("https://w3id.org/edc/v0.0.1/ns/type")).isEqualTo("DEST");
+
+
         assertThat(result.getDataRequest()).isNotNull();
+
+        verify(context).transform(dataReq, DataRequestDto.class);
 
     }
 

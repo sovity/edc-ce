@@ -32,7 +32,9 @@ public class PermissionToPermissionDtoTransformerTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getConstraints()).isNotNull();
-
-
+        assertThat(result.getConstraints().getType().name()).isEqualTo("ATOMIC_CONSTRAINT");
+        assertThat(result.getConstraints().getAtomicConstraint().getLeftExpression()).isEqualTo("absoluteSpatialPosition");
+        assertThat(result.getConstraints().getAtomicConstraint().getRightExpression()).isEqualTo("eu");
+        assertThat(result.getConstraints().getAtomicConstraint().getOperator().name()).isEqualTo("EQ");
     }
 }

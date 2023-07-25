@@ -1,6 +1,7 @@
 package de.sovity.edc.ext.wrapper.api.usecase.transformer;
 
 import de.sovity.edc.ext.wrapper.api.common.model.ContractAgreementDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.policy.model.*;
@@ -12,8 +13,7 @@ import java.util.HashMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ContractAgreementToContractAgreementDtoTransformerTest {
     private final ContractAgreementToContractAgreementDtoTransformer transformer = new ContractAgreementToContractAgreementDtoTransformer();
@@ -27,13 +27,14 @@ public class ContractAgreementToContractAgreementDtoTransformerTest {
 
     @Test
     void transform(){
+        var policy = Policy.Builder.newInstance().assignee("A").assigner("B").build();
 
         var contractAgreement = ContractAgreement.Builder.newInstance()
                 .id("id")
                 .providerId("provId")
                 .consumerId("consumerId")
                 .assetId("assetId")
-                .policy(Policy.Builder.newInstance().assignee("A").assigner("B").build())
+                .policy(policy)
                 .build();
 
         var pDto = new PolicyDto();
@@ -42,10 +43,11 @@ public class ContractAgreementToContractAgreementDtoTransformerTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getPolicy()).isNotNull();
+        assertThat(result.getId()).isEqualTo("id");
+        assertThat(result.getProviderId()).isEqualTo("provId");
+        assertThat(result.getConsumerId()).isEqualTo("consumerId");
+        assertThat(result.getAssetId()).isEqualTo("assetId");
 
-
-
-
-
+        verify(context).transform(policy, PolicyDto.class);
     }
 }
