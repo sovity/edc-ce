@@ -34,7 +34,7 @@ public class ContractDefinitionEntry {
     private List<Criterion> criteria;
 
     @Schema(description = "Contract Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String id;
+    private String contractDefinitionId;
 
 
 }

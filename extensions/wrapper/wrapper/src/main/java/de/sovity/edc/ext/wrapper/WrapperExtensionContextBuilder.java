@@ -19,6 +19,7 @@ import de.sovity.edc.ext.wrapper.api.ee.EnterpriseEditionResourceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementPageCardBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferProcessStateService;
@@ -86,6 +87,7 @@ public class WrapperExtensionContextBuilder {
                 contractAgreementPageCardBuilder
         );
         var transferHistoryPageApiService = new TransferHistoryPageApiService();
+        var contractDefinitionApiService = new ContractDefinitionApiService();
         var transformerRegistryUtils = new TransformerRegistryUtils(dtoTransformerRegistry);
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
@@ -103,7 +105,8 @@ public class WrapperExtensionContextBuilder {
         var uiResource = new UiResource(
                 contractAgreementApiService,
                 transferHistoryPageApiService,
-                contractAgreementTransferApiService
+                contractAgreementTransferApiService,
+                contractDefinitionApiService
         );
 
         // Use Case API
