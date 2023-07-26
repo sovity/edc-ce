@@ -89,7 +89,7 @@ public class WrapperExtension implements ServiceExtension {
                 policyEngine,
                 transferProcessService,
                 transferProcessStore,
-                (org.eclipse.edc.connector.contract.spi.offer.ContractDefinitionService) contractDefinitionService
+                contractDefinitionService
         );
 
         wrapperExtensionContext.jaxRsResources().forEach(resource ->

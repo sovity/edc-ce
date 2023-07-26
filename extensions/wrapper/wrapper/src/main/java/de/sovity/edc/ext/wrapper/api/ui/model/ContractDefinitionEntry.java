@@ -16,7 +16,6 @@ package de.sovity.edc.ext.wrapper.api.ui.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.eclipse.edc.spi.query.Criterion;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class ContractDefinitionEntry {
     private String contractPolicyId;
 
     @Schema(description = "Criteria for the contract", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<Criterion> criteria;
+    private List<CriterionDto> criteria;
 
     @Schema(description = "Contract Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String contractDefinitionId;

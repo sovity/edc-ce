@@ -26,11 +26,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPag
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.api.model.IdResponseDto;
@@ -84,7 +80,7 @@ public class UiResource {
     @GET
     @Path("pages/contract-definition-page")
     @Produces(MediaType.APPLICATION_JSON)
-    public ContractDefinitionPage contractDefinitionPageEndpoint() {
+    public ContractDefinitionPage contractDefinitionPage() {
         return new ContractDefinitionPage(contractDefinitionApiService.getContractDefinitions());
     }
 }
