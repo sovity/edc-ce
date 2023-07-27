@@ -27,7 +27,7 @@ buildscript {
 }
 
 plugins {
-    id("org.flywaydb.flyway") version "9.21.0"
+    id("org.flywaydb.flyway") version "9.21.1"
     id("nu.studer.jooq") version "7.1.1"
     `java-library`
     `maven-publish`
