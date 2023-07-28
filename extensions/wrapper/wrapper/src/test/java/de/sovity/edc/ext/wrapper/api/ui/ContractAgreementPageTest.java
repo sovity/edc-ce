@@ -21,7 +21,6 @@ import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiat
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractOffer;
-import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
@@ -37,10 +36,8 @@ import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.protocol.ProtocolWebhook;
-import org.eclipse.edc.spi.result.StoreResult;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
-import org.eclipse.edc.spi.types.domain.asset.AssetEntry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -96,7 +93,7 @@ class ContractAgreementPageTest {
             TransferProcessStore transferProcessStore,
             AssetIndex assetIndex
     ) {
-        assetIndex.create(asset(ASSET_ID), dataAddress()).orElseThrow(storeFailure -> new RuntimeException("Failed to create asset"));
+        assetIndex.create(asset(ASSET_ID)).orElseThrow(storeFailure -> new RuntimeException("Failed to create asset"));
         contractNegotiationStore.save(contractDefinition(CONTRACT_DEFINITION_ID));
 
         transferProcessStore.updateOrCreate(transferProcess(1, 1, TransferProcessStates.COMPLETED.code()));
@@ -169,14 +166,12 @@ class ContractAgreementPageTest {
                 .id("my-contract-offer-" + contract + "-irrelevant")
                 .assetId(asset(contract + "-irrelevant").getId())
                 .policy(alwaysTrue())
-                .providerId(URI.create("http://other-connector").toString())
                 .build();
 
         var offer = ContractOffer.Builder.newInstance()
                 .id("my-contract-offer-" + contract)
                 .assetId(ASSET_ID)
                 .policy(alwaysTrue())
-                .providerId(URI.create("http://other-connector").toString())
                 .build();
 
         return ContractNegotiation.Builder.newInstance()
@@ -196,6 +191,7 @@ class ContractAgreementPageTest {
                 .id(assetId)
                 .property("some-property", "X")
                 .createdAt(todayEpochMillis)
+                .dataAddress(dataAddress())
                 .build();
     }
 
