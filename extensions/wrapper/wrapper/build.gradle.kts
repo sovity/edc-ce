@@ -33,7 +33,7 @@ dependencies {
     implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
-    implementation("org.apache.commons:commons-lang3:3.12.0")
+    implementation("org.apache.commons:commons-lang3:3.13.0")
 
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
