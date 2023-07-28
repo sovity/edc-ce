@@ -20,7 +20,7 @@ configurations.all {
 dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.28")
     compileOnly("org.projectlombok:lombok:1.18.28")
-    implementation("org.apache.commons:commons-lang3:3.12.0")
+    implementation("org.apache.commons:commons-lang3:3.13.0")
 
     implementation("${edcGroup}:control-plane-spi:${edcVersion}")
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
