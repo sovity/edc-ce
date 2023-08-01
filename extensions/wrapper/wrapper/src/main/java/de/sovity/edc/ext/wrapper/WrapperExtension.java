@@ -60,12 +60,6 @@ public class WrapperExtension implements ServiceExtension {
     private TypeManager typeManager;
     @Inject
     private WebService webService;
-    @Inject
-    private ContractAgreementService contractAgreementService;
-    @Inject
-    private ContractNegotiationStore contractNegotiationStore;
-    @Inject
-    private TransferProcessService transferProcessService;
 
     @Override
     public String name() {
@@ -88,8 +82,6 @@ public class WrapperExtension implements ServiceExtension {
                 policyDefinitionStore,
                 policyEngine,
                 transferProcessStore,
-                contractAgreementService,
-                contractNegotiationStore,
                 transferProcessService
         );
 

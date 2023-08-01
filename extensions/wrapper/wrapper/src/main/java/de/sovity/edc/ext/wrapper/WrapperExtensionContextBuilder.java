@@ -72,8 +72,6 @@ public class WrapperExtensionContextBuilder {
             PolicyDefinitionStore policyDefinitionStore,
             PolicyEngine policyEngine,
             TransferProcessStore transferProcessStore,
-            ContractAgreementService contractAgreementService,
-            ContractNegotiationStore contractNegotiationStore,
             TransferProcessService transferProcessService
     ) {
         // UI API

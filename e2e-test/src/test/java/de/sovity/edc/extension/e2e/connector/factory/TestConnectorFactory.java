@@ -54,8 +54,9 @@ public class TestConnectorFactory implements ConnectorFactory {
                 .simpleConfig(new SimpleConfig("edc.jsonld.https.enabled", "true"))
                 .simpleConfig(new SimpleConfig("edc.dsp.callback.address",
                         dspCallbackAddress.toString()))
-                .simpleConfig(new SimpleConfig("edc.flyway.additional.migration.locations",
-                        "classpath:migration/" + participantId + ",classpath:migration/version010"))
+                .simpleConfig(new SimpleConfig(
+                        "edc.flyway.additional.migration.locations",
+                        "classpath:migration/" + participantId))
                 .build();
         System.out.println(connector.getConfig());
         edcContext.setConfiguration(connector.getConfig());

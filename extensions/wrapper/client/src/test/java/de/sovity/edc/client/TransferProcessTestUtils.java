@@ -3,11 +3,13 @@ package de.sovity.edc.client;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.policy.model.Policy;
+import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
@@ -73,7 +75,7 @@ public class TransferProcessTestUtils {
     private static void createAsset(AssetService assetStore, DataAddress dataAddress, String assetId, String assetName) throws ParseException {
         var asset = Asset.Builder.newInstance()
                 .id(assetId)
-                .property("asset:prop:name", assetName)
+                .property(Asset.PROPERTY_NAME, assetName)
                 .createdAt(dateFormatterToLong("2023-06-01"))
                 .build();
 
@@ -84,15 +86,13 @@ public class TransferProcessTestUtils {
             String agreementId,
             String assetId
     ) {
-        var agreement = ContractAgreement.Builder.newInstance()
+        return ContractAgreement.Builder.newInstance()
                 .id(agreementId)
-                .providerAgentId(UUID.randomUUID().toString())
-                .consumerAgentId(UUID.randomUUID().toString())
+                .providerId(UUID.randomUUID().toString())
+                .consumerId(UUID.randomUUID().toString())
                 .assetId(assetId)
                 .policy(Policy.Builder.newInstance().build())
                 .build();
-
-        return agreement;
     }
 
     private static void createContractNegotiation(
@@ -105,10 +105,11 @@ public class TransferProcessTestUtils {
                 .id(UUID.randomUUID().toString())
                 .counterPartyId(UUID.randomUUID().toString())
                 .counterPartyAddress(counterPartyAddress)
-                .protocol("protocol")
+                .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
                 .contractAgreement(agreement)
                 .type(type)
                 .correlationId(UUID.randomUUID().toString())
+                .state(ContractNegotiationStates.FINALIZED.code())
                 .build();
 
         store.save(negotiation);
