@@ -33,6 +33,7 @@ alter table edc_contract_negotiation add column callback_addresses json;
 
 -- Contract Definitions
 alter table edc_contract_definitions rename column selector_expression to assets_selector;
+alter table edc_contract_definitions drop column validity;
 
 -- remove criteria parent
 UPDATE edc_contract_definitions
@@ -89,5 +90,9 @@ drop function if exists migrate_json(criteria_json_array_element jsonb);
 
 -- Transfer Processes
 alter table edc_transfer_process rename column transferprocess_properties to private_properties;
-alter table edc_transfer_process drop column if exists transfer_type;
 alter table edc_transfer_process add column callback_addresses json;
+
+-- Data Request
+alter table edc_data_request drop column if exists managed_resources;
+alter table edc_data_request drop column if exists properties;
+alter table edc_data_request drop column if exists transfer_type;
