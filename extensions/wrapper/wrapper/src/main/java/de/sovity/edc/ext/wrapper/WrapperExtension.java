@@ -77,6 +77,7 @@ public class WrapperExtension implements ServiceExtension {
         var objectMapper = typeManager.getMapper();
 
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
+                context,
                 assetIndex,
                 assetService,
                 contractAgreementService,

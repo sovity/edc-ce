@@ -25,7 +25,6 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferProcess
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequestBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractAgreementUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.TransformerRegistryUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
@@ -37,6 +36,7 @@ import lombok.NoArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
+import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
@@ -44,6 +44,7 @@ import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
+import org.eclipse.edc.spi.system.ServiceExtensionContext;
 
 import java.util.List;
 
@@ -60,6 +61,7 @@ import java.util.List;
 public class WrapperExtensionContextBuilder {
 
     public static WrapperExtensionContext buildContext(
+            ServiceExtensionContext serviceExtensionContext,
             AssetIndex assetIndex,
             AssetService assetService,
             ContractAgreementService contractAgreementService,
@@ -78,7 +80,7 @@ public class WrapperExtensionContextBuilder {
         var transferProcessStateService = new TransferProcessStateService();
         var contractAgreementPageCardBuilder =
                 new ContractAgreementPageCardBuilder(
-                transferProcessStateService);
+                        transferProcessStateService);
         var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
                 contractAgreementService,
                 contractNegotiationStore,
@@ -89,22 +91,26 @@ public class WrapperExtensionContextBuilder {
                 contractAgreementDataFetcher,
                 contractAgreementPageCardBuilder
         );
-        var transferHistoryPageApiService = new TransferHistoryPageApiService(assetService, contractAgreementService, contractNegotiationStore,
-                transferProcessService, transferProcessStateService);
-        var transferHistoryPageAssetFetcherService = new TransferHistoryPageAssetFetcherService(assetService, transferProcessService);
-        var transformerRegistryUtils = new TransformerRegistryUtils(dtoTransformerRegistry);
+        var transferHistoryPageApiService = new TransferHistoryPageApiService(
+                assetService,
+                contractAgreementService,
+                contractNegotiationStore,
+                transferProcessService,
+                transferProcessStateService);
+        var transferHistoryPageAssetFetcherService = new TransferHistoryPageAssetFetcherService(
+                assetService,
+                transferProcessService);
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
         var transferRequestBuilder = new TransferRequestBuilder(
                 objectMapper,
                 contractAgreementUtils,
                 contractNegotiationUtils,
-                transformerRegistryUtils
+                serviceExtensionContext.getConnectorId()
         );
         var contractAgreementTransferApiService = new ContractAgreementTransferApiService(
                 transferRequestBuilder,
-                transferProcessService,
-                transformerRegistryUtils
+                transferProcessService
         );
         var uiResource = new UiResource(
                 contractAgreementApiService,

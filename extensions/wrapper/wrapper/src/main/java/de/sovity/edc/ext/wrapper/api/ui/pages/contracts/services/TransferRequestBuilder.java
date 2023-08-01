@@ -17,18 +17,15 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequestParams;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequestType;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractAgreementUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.TransformerRegistryUtils;
-import jakarta.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.eclipse.edc.connector.api.management.asset.model.DataAddressDto;
-import org.eclipse.edc.connector.api.management.transferprocess.model.TransferRequestDto;
-import org.eclipse.edc.connector.transfer.spi.types.TransferType;
+import org.eclipse.edc.connector.transfer.spi.types.TransferRequest;
+import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -39,23 +36,19 @@ public class TransferRequestBuilder {
     private final ObjectMapper objectMapper;
     private final ContractAgreementUtils contractAgreementUtils;
     private final ContractNegotiationUtils contractNegotiationUtils;
-    private final TransformerRegistryUtils transformerRegistryUtils;
+    private final String connectorId;
 
-    public TransferRequestDto buildTransferRequestDto(
+    public TransferRequest buildTransferRequest(
             ContractAgreementTransferRequest request
     ) {
         Objects.requireNonNull(request.getType(), "type");
         return switch (request.getType()) {
-            case PARAMS_ONLY -> buildTransferRequestDto(request.getParams());
-            case CUSTOM_JSON -> parseTransferRequestDtoJson(request);
-            default -> throw new IllegalArgumentException("Unhandled %s: %s".formatted(
-                    ContractAgreementTransferRequestType.class.getSimpleName(),
-                    request.getType()
-            ));
+            case PARAMS_ONLY -> buildTransferRequest(request.getParams());
+            case CUSTOM_JSON -> parseTransferRequestJson(request);
         };
     }
 
-    private TransferRequestDto buildTransferRequestDto(
+    private TransferRequest buildTransferRequest(
             ContractAgreementTransferRequestParams params
     ) {
         var contractId = params.getContractAgreementId();
@@ -63,33 +56,27 @@ public class TransferRequestBuilder {
         var negotiation = contractNegotiationUtils.findByContractAgreementIdOrThrow(contractId);
         var address = buildDataAddress(params.getDataSinkProperties());
 
-        var transferType = TransferType.Builder.transferType()
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .isFinite(true)
-                .build();
-
-        return TransferRequestDto.Builder.newInstance()
-                .connectorAddress(negotiation.getCounterPartyAddress())
+        return TransferRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString())
+                .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
+                .connectorAddress(negotiation.getCounterPartyAddress())
+                .connectorId(connectorId)
                 .contractId(contractId)
-                .dataDestination(address)
-                .managedResources(false)
-                .properties(params.getProperties())
-                .transferType(transferType)
-                .protocol("ids-multipart")
-                .connectorId("consumer")
                 .assetId(agreement.getAssetId())
+                .dataDestination(address)
+                .properties(params.getProperties())
+                .privateProperties(params.getPrivateProperties())
+                .callbackAddresses(List.of())
                 .build();
     }
 
     @SneakyThrows
-    private TransferRequestDto parseTransferRequestDtoJson(ContractAgreementTransferRequest request) {
-        return objectMapper.readValue(request.getCustomJson(), TransferRequestDto.class);
+    private TransferRequest parseTransferRequestJson(ContractAgreementTransferRequest request) {
+        return objectMapper.readValue(request.getCustomJson(), TransferRequest.class);
     }
 
     @SneakyThrows
     private DataAddress buildDataAddress(Map<String, String> dataAddressProperties) {
-        var dto = DataAddressDto.Builder.newInstance().properties(dataAddressProperties).build();
-        return transformerRegistryUtils.transformOrThrow(dto, DataAddress.class);
+        return DataAddress.Builder.newInstance().properties(dataAddressProperties).build();
     }
 }
