@@ -16,9 +16,11 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contracts;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionEntry;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractDefinitionBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractDefinitionUtils;
 import lombok.RequiredArgsConstructor;
+import nonapi.io.github.classgraph.json.Id;
 import org.eclipse.edc.api.model.IdResponse;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
@@ -64,6 +66,14 @@ public class ContractDefinitionApiService {
                 .id(contractDefinition.getId())
                 .createdAt(contractDefinition.getCreatedAt())
                 .build();
+    }
+
+    @NotNull
+    public IdResponseDto deleteContractDefinition(
+            String contractDefinitionId
+    ) {
+        var response = contractDefinitionService.delete(contractDefinitionId);
+        return new IdResponseDto(response.getContent().getId());
     }
 
 

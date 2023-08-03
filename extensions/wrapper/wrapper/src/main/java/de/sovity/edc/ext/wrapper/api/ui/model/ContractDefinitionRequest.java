@@ -46,7 +46,4 @@ public class ContractDefinitionRequest {
     private CriterionDto assetsSelectorCriterion;
 
 
-
-
-
 }
