@@ -15,21 +15,15 @@
 package de.sovity.edc.ext.wrapper.api.ui;
 
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
-import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.*;
+import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.api.model.IdResponse;
@@ -43,6 +37,7 @@ public class UiResource {
     private final ContractAgreementTransferApiService contractAgreementTransferApiService;
     private final TransferHistoryPageApiService transferHistoryPageApiService;
     private final TransferHistoryPageAssetFetcherService transferHistoryPageAssetFetcherService;
+    private final AssetApiService assetApiService;
 
     @GET
     @Path("pages/contract-agreement-page")
@@ -57,12 +52,8 @@ public class UiResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Initiate a Transfer Process")
-    public IdResponse initiateTransfer(
-            ContractAgreementTransferRequest contractAgreementTransferRequest
-    ) {
-        return contractAgreementTransferApiService.initiateTransfer(
-                contractAgreementTransferRequest
-        );
+    public IdResponse initiateTransfer(ContractAgreementTransferRequest contractAgreementTransferRequest) {
+        return contractAgreementTransferApiService.initiateTransfer(contractAgreementTransferRequest);
     }
 
     @GET
@@ -78,4 +69,19 @@ public class UiResource {
     public AssetDto getTransferProcessAsset(@PathParam("transferProcessId") String transferProcessId) {
         return transferHistoryPageAssetFetcherService.getAssetForTransferHistoryPage(transferProcessId);
     }
+
+    @POST
+    @Path("pages/asset")
+    @Produces(MediaType.APPLICATION_JSON)
+    public IdResponse createAsset(AssetRequest assetRequest) {
+        return assetApiService.createAsset(assetRequest);
+    }
+
+    @DELETE
+    @Path("pages/asset")
+    @Produces(MediaType.APPLICATION_JSON)
+    public IdResponseDto deleteAsset(String assetId) {
+        return assetApiService.deleteAsset(assetId);
+    }
+
 }
