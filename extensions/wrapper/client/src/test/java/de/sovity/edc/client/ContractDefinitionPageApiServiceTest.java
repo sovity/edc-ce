@@ -30,6 +30,8 @@ import java.text.ParseException;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
 @ApiTest
@@ -50,19 +52,21 @@ class ContractDefinitionPageApiServiceTest {
         // arrange
         createContractDefinition(contractDefinitionService);
 
-
         // act
         var result = client.uiApi().contractDefinitionPage();
 
         // Get the contract definition
         var contractDefinitions = result.getContractDefinitions();
 
+        // Assert that the list is not null
+        assertNotNull(contractDefinitions, "Contract Definitions list should not be null");
+
         // assert
         var contractDefinition = contractDefinitions.get(0);
+        assertNotNull(contractDefinition, "First Contract Definition should not be null");
+
         assertThat(contractDefinition.getContractDefinitionId()).isEqualTo(ContractDefinitionTestUtils.CONTRACT_DEFINITION_ID);
         assertThat(contractDefinition.getContractPolicyId()).isEqualTo(ContractDefinitionTestUtils.CONTRACT_POLICY_ID);
         assertThat(contractDefinition.getAccessPolicyId()).isEqualTo(ContractDefinitionTestUtils.ACCESS_POLICY_ID);
     }
-
-
 }

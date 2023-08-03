@@ -34,13 +34,8 @@ public class CriterionDto {
         return new CriterionDto(operandLeft, operator, operatorRight);
     }
 
-
     public static CriterionDto forJson(String operandLeft, String operator, String operatorRight) {
         return new CriterionDto(operandLeft, operator, operatorRight);
     }
 
-}
-
-enum CriterionType {
-    STRING, STRING_ARRAY, JSON
 }

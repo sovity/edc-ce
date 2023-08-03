@@ -41,8 +41,7 @@ public class ContractDefinitionApiService {
 
     public List<ContractDefinitionEntry> getContractDefinitions() {
         var definitions = getAllContractDefinitions();
-        return definitions.stream().sorted(Comparator.comparing(ContractDefinition::getCreatedAt).reversed())
-                .map(definition -> {
+        return definitions.stream().sorted(Comparator.comparing(ContractDefinition::getCreatedAt).reversed()).map(definition -> {
             var entry = new ContractDefinitionEntry();
             entry.setContractDefinitionId(definition.getId());
             entry.setAccessPolicyId(definition.getAccessPolicyId());
@@ -57,25 +56,17 @@ public class ContractDefinitionApiService {
     }
 
     @NotNull
-    public IdResponse createContractDefinition(
-            ContractDefinitionRequest request
-    ) {
+    public IdResponse createContractDefinition(ContractDefinitionRequest request) {
         var contractDefinition = contractDefinitionBuilder.buildContractDefinition(request);
         contractDefinition = contractDefinitionService.create(contractDefinition).getContent();
-        return IdResponse.Builder.newInstance()
-                .id(contractDefinition.getId())
-                .createdAt(contractDefinition.getCreatedAt())
-                .build();
+        return IdResponse.Builder.newInstance().id(contractDefinition.getId()).createdAt(contractDefinition.getCreatedAt()).build();
     }
 
     @NotNull
-    public IdResponseDto deleteContractDefinition(
-            String contractDefinitionId
-    ) {
+    public IdResponseDto deleteContractDefinition(String contractDefinitionId) {
         var response = contractDefinitionService.delete(contractDefinitionId);
         return new IdResponseDto(response.getContent().getId());
     }
-
 
 
 }

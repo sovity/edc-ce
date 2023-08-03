@@ -22,7 +22,6 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 @RequiredArgsConstructor
 @Schema(description = "Marks the operation as successful")
 public class IdResponseDto {
