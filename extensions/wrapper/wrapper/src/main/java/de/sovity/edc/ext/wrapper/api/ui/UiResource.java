@@ -17,9 +17,11 @@ package de.sovity.edc.ext.wrapper.api.ui;
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,6 +45,7 @@ public class UiResource {
     private final ContractAgreementTransferApiService contractAgreementTransferApiService;
     private final TransferHistoryPageApiService transferHistoryPageApiService;
     private final TransferHistoryPageAssetFetcherService transferHistoryPageAssetFetcherService;
+    private final ContractDefinitionApiService contractDefinitionApiService;
 
     @GET
     @Path("pages/contract-agreement-page")
@@ -77,5 +80,12 @@ public class UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     public AssetDto getTransferProcessAsset(@PathParam("transferProcessId") String transferProcessId) {
         return transferHistoryPageAssetFetcherService.getAssetForTransferHistoryPage(transferProcessId);
+    }
+
+    @GET
+    @Path("pages/contract-definition-page")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ContractDefinitionPage contractDefinitionPage() {
+        return new ContractDefinitionPage(contractDefinitionApiService.getContractDefinitions());
     }
 }
