@@ -70,6 +70,13 @@ public class UiResource {
         return transferHistoryPageAssetFetcherService.getAssetForTransferHistoryPage(transferProcessId);
     }
 
+    @GET
+    @Path("pages/asset")
+    @Produces(MediaType.APPLICATION_JSON)
+    public AssetPage assetPage() {
+        return new AssetPage(assetApiService.getAssets());
+    }
+
     @POST
     @Path("pages/asset")
     @Produces(MediaType.APPLICATION_JSON)

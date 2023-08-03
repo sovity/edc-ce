@@ -16,7 +16,6 @@ package de.sovity.edc.ext.wrapper.api.ui.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.eclipse.edc.spi.types.domain.DataAddress;
 
 import java.util.Map;
 
@@ -31,7 +30,7 @@ public class AssetEntry {
     private Map<String, Object> privateProperties;
 
     @Schema(description = "Asset Data Address", requiredMode = Schema.RequiredMode.REQUIRED)
-    private DataAddress dataAddress;
+    private DataAddressDto dataAddress;
 
 
 }
