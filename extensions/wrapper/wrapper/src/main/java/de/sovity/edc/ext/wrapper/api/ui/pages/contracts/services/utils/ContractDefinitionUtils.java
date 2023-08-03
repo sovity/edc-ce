@@ -33,10 +33,7 @@ public class ContractDefinitionUtils {
         CriterionDto dto = new CriterionDto();
         dto.setOperandLeft(String.valueOf(criterion.getOperandLeft()));
         dto.setOperator(criterion.getOperator());
-        dto.setOperatorRight(String.valueOf(criterion.getOperandRight()));
-
-        // Since the operatorRightArray and type fields don't exist in the Criterion object
-        // they can't be mapped in this function
+        dto.setOperandRight(String.valueOf(criterion.getOperandRight()));
 
         return dto;
     }
@@ -48,6 +45,26 @@ public class ContractDefinitionUtils {
 
         return criteria.stream().map(this::mapToCriterionDto).collect(Collectors.toList());
     }
+
+    public Criterion mapToCriterion(CriterionDto criterionDto) {
+        if (criterionDto == null) {
+            return null;
+        }
+
+        Criterion criterion = new Criterion(criterionDto.getOperandLeft(), criterionDto.getOperator(), criterionDto.getOperandRight());
+
+        return criterion;
+    }
+    public List<Criterion> mapToCriteria(List<CriterionDto> criterionDtos) {
+        if (criterionDtos == null) {
+            return null;
+        }
+
+        return criterionDtos.stream().map(this::mapToCriterion).collect(Collectors.toList());
+    }
+
+
+
 
 
 }

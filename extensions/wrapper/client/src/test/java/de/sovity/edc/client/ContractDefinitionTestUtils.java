@@ -16,11 +16,13 @@ package de.sovity.edc.client;
 
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
-import org.eclipse.edc.spi.asset.AssetSelectorExpression;
 import org.eclipse.edc.spi.query.Criterion;
 import org.jetbrains.annotations.NotNull;
+
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ContractDefinitionTestUtils {
 
@@ -33,21 +35,12 @@ public class ContractDefinitionTestUtils {
     @NotNull
     public static void createContractDefinition(ContractDefinitionService contractDefinitionService) throws ParseException {
 
-        // Create an AssetSelectorExpression
-        AssetSelectorExpression selectorExpression = AssetSelectorExpression.Builder.newInstance()
-                .criteria(Arrays.asList(
-                        new Criterion("criteria1", "=", "value1"),
-                        new Criterion("criteria2", "=", "value2")
-                ))
-                .build();
+        List<Criterion> myCriteria = new ArrayList<>();
+        // Add some criteria to the list
+        myCriteria.add(new Criterion("exampleLeft1", "operator1", "exampleRight1"));
+        myCriteria.add(new Criterion("exampleLeft2", "operator2", "exampleRight2"));
 
-        var definition = ContractDefinition.Builder.newInstance()
-                .id(CONTRACT_DEFINITION_ID)
-                .contractPolicyId(CONTRACT_POLICY_ID)
-                .accessPolicyId(ACCESS_POLICY_ID)
-                .validity(10000L)
-                .selectorExpression(selectorExpression)
-                .build();
+        var definition = ContractDefinition.Builder.newInstance().id(CONTRACT_DEFINITION_ID).contractPolicyId(CONTRACT_POLICY_ID).accessPolicyId(ACCESS_POLICY_ID).assetsSelector(myCriteria).build();
 
         contractDefinitionService.create(definition);
 

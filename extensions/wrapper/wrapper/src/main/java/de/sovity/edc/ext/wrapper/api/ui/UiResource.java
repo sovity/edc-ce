@@ -15,10 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui;
 
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
-import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.*;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractDefinitionApiService;
@@ -88,4 +85,17 @@ public class UiResource {
     public ContractDefinitionPage contractDefinitionPage() {
         return new ContractDefinitionPage(contractDefinitionApiService.getContractDefinitions());
     }
+
+    @POST
+    @Path("pages/contract-definition-page")
+    @Produces(MediaType.APPLICATION_JSON)
+    public IdResponse createContractDefinition(
+            ContractDefinitionRequest contractDefinitionRequest
+    ) {
+        return contractDefinitionApiService.createContractDefinition(
+                contractDefinitionRequest
+        );
+    }
+
+
 }

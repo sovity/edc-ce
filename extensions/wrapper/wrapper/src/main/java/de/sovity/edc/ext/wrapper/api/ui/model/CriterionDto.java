@@ -28,20 +28,15 @@ import lombok.AllArgsConstructor;
 public class CriterionDto {
     private String operandLeft;
     private String operator;
-    private String operatorRight;
-    private String[] operatorRightArray;
-    private CriterionType type;
+    private String operandRight;
 
     public static CriterionDto forString(String operandLeft, String operator, String operatorRight) {
-        return new CriterionDto(operandLeft, operator, operatorRight, null, CriterionType.STRING);
+        return new CriterionDto(operandLeft, operator, operatorRight);
     }
 
-    public static CriterionDto forStringArray(String operandLeft, String operator, String[] operatorRightArray) {
-        return new CriterionDto(operandLeft, operator, null, operatorRightArray, CriterionType.STRING_ARRAY);
-    }
 
     public static CriterionDto forJson(String operandLeft, String operator, String operatorRight) {
-        return new CriterionDto(operandLeft, operator, operatorRight, null, CriterionType.JSON);
+        return new CriterionDto(operandLeft, operator, operatorRight);
     }
 
 }
