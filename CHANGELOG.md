@@ -12,20 +12,14 @@ All notable changes to this project will be documented in this file.
   - Examples for the new requests are located in the postman collection in the `docs` folder
   - The `OpenAPI` file has been updated to represent the EDC version `0.1.2`
 
-### Patch Changes
-
-- Fix API Wrapper Broker Server API Spec not showing in client libraries.
-
 ### Migration Notes
 
-- The `MY_EDC_IDS_BASE_URL` has been renamed to `MY_EDC_PROTOCOL_BASE_URL`
-- The default value of `WEB_HTTP_PROTOCOL_PATH` been changed from `${MY_EDC_BASE_PATH}/api/v1/ids` to `${MY_EDC_BASE_PATH}/api/v1/protocol`
-- The following new environment variables must be set
-  - `EDC_PARTICIPANT_ID`: `provider`
-  - `EDC_JSONLD_HTTPS_ENABLED`: `true`
-  - `EDC_DSP_CALLBACK_ADDRESS`: `http://edc:11003/api/v1/protocol`
-- All endpoints have a `v2` prefix now
-  - example: `http://localhost:11002/api/v1/management/assets/request` is now available at `http://localhost:11002/api/v1/management/v2/assets/request`
+1. The `MY_EDC_IDS_BASE_URL` has been renamed to `MY_EDC_PROTOCOL_BASE_URL`
+1. The default value of `WEB_HTTP_PROTOCOL_PATH` been changed from `${MY_EDC_BASE_PATH}/api/v1/ids` to `${MY_EDC_BASE_PATH}/api/v1/protocol`
+1. New environment variable: `EDC_PARTICIPANT_ID`: `provider`
+1. New environment variable: `EDC_JSONLD_HTTPS_ENABLED`: `true`
+1. New environment variable: `EDC_DSP_CALLBACK_ADDRESS`: `http://edc:11003/api/v1/protocol`
+1. `v1` Management API has been deprecated in favor of the `JSON-LD` `v2` Management API. All endpoints have a `v2` prefix now (example: `http://localhost:11002/api/v1/management/assets/request` is now available at `http://localhost:11002/api/v1/management/v2/assets/request`)
 
 ## [4.1.0] - 2023-07-24
 
@@ -48,6 +42,11 @@ Security improvements of container image and enhancements for the `ReferringConn
 - Run java process with a non-root user
 
 ### Deployment Migration Notes
+- `default` datasource has to be added
+  - `EDC_DATASOURCE_DEFAULT_NAME`=default
+  - `EDC_DATASOURCE_DEFAULT_URL`=jdbc:postgresql://connector:5432/edc
+  - `EDC_DATASOURCE_DEFAULT_USER`=user
+  - `EDC_DATASOURCE_DEFAULT_PASSWORD`=password
 
 #### Compatible Versions
 
