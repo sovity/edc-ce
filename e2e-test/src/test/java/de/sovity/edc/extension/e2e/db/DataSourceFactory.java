@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2023 sovity GmbH
+ * Copyright (c) 2023 sovity GmbH
  *
  *  This program and the accompanying materials are made available under the
  *  terms of the Apache License, Version 2.0 which is available at
@@ -8,8 +8,7 @@
  *  SPDX-License-Identifier: Apache-2.0
  *
  *  Contributors:
- *       sovity GmbH - initial implementation
- *
+ *      sovity GmbH - init
  */
 
 package de.sovity.edc.extension.e2e.db;
@@ -31,6 +30,8 @@ public class DataSourceFactory {
      * Create a new {@link DataSource} from JDBC Credentials.
      * <br>
      * This method was extracted into a static method, so we can call it from our Test Code.
+     * <br>
+     * warning: Just use this method in Test Code, as it will not reuse connections.
      *
      * @param jdbcCredentials jdbc credentials
      * @return {@link DataSource}
