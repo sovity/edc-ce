@@ -1,4 +1,6 @@
 val lombokVersion: String by project
+val edcGroup: String by project
+val edcVersion: String by project
 
 plugins {
     `java-library`
@@ -8,6 +10,9 @@ plugins {
 dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
+
+    // This dependency is only in here so we can use the enum Operator from the AtomicConstraint API
+    api("${edcGroup}:policy-model:${edcVersion}")
 
     api("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
     api("jakarta.validation:jakarta.validation-api:3.0.2")
