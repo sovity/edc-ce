@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
@@ -21,6 +22,7 @@ import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
+import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
@@ -57,6 +59,10 @@ public class WrapperExtension implements ServiceExtension {
     @Inject
     private TransferProcessStore transferProcessStore;
     @Inject
+    private PolicyDefinitionService policyDefinitionService;
+    @Inject
+    private ObjectMapper jsonLdObjectMapper;
+    @Inject
     private TypeManager typeManager;
     @Inject
     private WebService webService;
@@ -82,7 +88,9 @@ public class WrapperExtension implements ServiceExtension {
                 policyDefinitionStore,
                 policyEngine,
                 transferProcessStore,
-                transferProcessService
+                transferProcessService,
+                policyDefinitionService,
+                jsonLdObjectMapper
         );
 
         wrapperExtensionContext.jaxRsResources().forEach(resource ->

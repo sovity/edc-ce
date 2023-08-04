@@ -17,9 +17,11 @@ package de.sovity.edc.ext.wrapper.api.ui;
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.PolicyPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,6 +45,7 @@ public class UiResource {
     private final ContractAgreementTransferApiService contractAgreementTransferApiService;
     private final TransferHistoryPageApiService transferHistoryPageApiService;
     private final TransferHistoryPageAssetFetcherService transferHistoryPageAssetFetcherService;
+    private final PolicyApiService policyApiService;
 
     @GET
     @Path("pages/contract-agreement-page")
@@ -78,4 +81,12 @@ public class UiResource {
     public AssetDto getTransferProcessAsset(@PathParam("transferProcessId") String transferProcessId) {
         return transferHistoryPageAssetFetcherService.getAssetForTransferHistoryPage(transferProcessId);
     }
+
+    @GET
+    @Path("pages/policy-page")
+    @Produces(MediaType.APPLICATION_JSON)
+    public PolicyPage policyPage() {
+        return new PolicyPage(policyApiService.getPolicies());
+    }
+
 }
