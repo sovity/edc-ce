@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Patch
 
+- Fixed an issue where connector crawling failed when data offer limits were exceeded.
+
 ### Deployment Migration Notes
 
 ## [v1.0.1] Broker MvP Bugfix / Feature Release - 2023-07-12
