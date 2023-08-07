@@ -7,15 +7,15 @@ services:
     environment:
       - EDC_UI_ACTIVE_PROFILE=${EDC_UI_ACTIVE_PROFILE}
       - EDC_UI_CONFIG_URL=edc-ui-config
-      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/management
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/management/v2
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
-      - EDC_UI_CATALOG_URLS=http://edc2:11003/api/v1/ids/data
+      - EDC_UI_CATALOG_URLS=http://edc2:11003/api/v1/dsp
   edc:
     image: ${DEV_EDC_IMAGE}
     depends_on:
       - postgresql
     environment:
-      MY_EDC_NAME_KEBAB_CASE: "example-connector"
+      MY_EDC_NAME_KEBAB_CASE: "provider"
       MY_EDC_TITLE: "EDC Connector"
       MY_EDC_DESCRIPTION: "sovity Community Edition EDC Connector"
       MY_EDC_CURATOR_URL: "https://example.com"
@@ -43,7 +43,6 @@ services:
 
       MY_EDC_PROTOCOL: "http://"
       MY_EDC_FQDN: "edc"
-      MY_EDC_IDS_BASE_URL: "http://edc:11003"
 
       MY_EDC_JDBC_URL: jdbc:postgresql://postgresql:5432/edc
       MY_EDC_JDBC_USER: edc
@@ -51,6 +50,8 @@ services:
       EDC_WEB_REST_CORS_ENABLED: 'true'
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
+
+      EDC_DSP_CALLBACK_ADDRESS: http://edc:11003/api/v1/dsp
     ports:
       - '11001:11001'
       - '11002:11002'
@@ -78,15 +79,15 @@ services:
     environment:
       - EDC_UI_ACTIVE_PROFILE=${EDC_UI_ACTIVE_PROFILE}
       - EDC_UI_CONFIG_URL=edc-ui-config
-      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:22002/api/v1/management
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:22002/api/management/v2
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
-      - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/ids/data
+      - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/dsp
   edc2:
     image: ${DEV_EDC_IMAGE}
     depends_on:
       - postgresql2
     environment:
-      MY_EDC_NAME_KEBAB_CASE: "example-connector"
+      MY_EDC_NAME_KEBAB_CASE: "consumer"
       MY_EDC_TITLE: "EDC Connector"
       MY_EDC_DESCRIPTION: "sovity Community Edition EDC Connector"
       MY_EDC_CURATOR_URL: "https://example.com"
@@ -114,7 +115,6 @@ services:
 
       MY_EDC_PROTOCOL: "http://"
       MY_EDC_FQDN: "edc2"
-      MY_EDC_IDS_BASE_URL: "http://edc2:11003"
 
       MY_EDC_JDBC_URL: jdbc:postgresql://postgresql2:5432/edc
       MY_EDC_JDBC_USER: edc
@@ -122,6 +122,8 @@ services:
       EDC_WEB_REST_CORS_ENABLED: 'true'
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
+
+      EDC_DSP_CALLBACK_ADDRESS: http://edc2:11003/api/v1/dsp
     ports:
       - '22001:11001'
       - '22002:11002'

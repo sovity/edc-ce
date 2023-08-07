@@ -16,8 +16,11 @@ package de.sovity.edc.ext.wrapper.api.usecase;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
+import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
+import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +28,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static de.sovity.edc.ext.wrapper.TestUtils.createConfiguration;
 import static de.sovity.edc.ext.wrapper.TestUtils.givenManagementEndpoint;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.mock;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
@@ -32,6 +36,8 @@ class SupportedPolicyApiTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
+        extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
+        extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
         extension.setConfiguration(createConfiguration());
     }
 
@@ -48,6 +54,6 @@ class SupportedPolicyApiTest {
     void supportedPolicies() {
         whenSupportedPolicyFunctions()
                 .assertThat()
-                .body(equalTo("[\"ALWAYS_TRUE\"]"));
+                .body(equalTo("[\"ALWAYS_TRUE\",\"https://w3id.org/edc/v0.0.1/ns/inForceDate\"]"));
     }
 }

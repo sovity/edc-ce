@@ -1,8 +1,6 @@
 rootProject.name = "edc-extensions"
 
 include(":extensions:edc-ui-config")
-include(":extensions:ids-broker-client")
-include(":extensions:ids-clearinghouse-client")
 include(":extensions:last-commit-info")
 include(":extensions:policy-always-true")
 include(":extensions:policy-referring-connector")
@@ -15,3 +13,4 @@ include(":extensions:wrapper:wrapper")
 include(":extensions:wrapper:wrapper-common-api")
 include(":extensions:wrapper:wrapper-ee-api")
 include(":connector")
+include(":e2e-test")

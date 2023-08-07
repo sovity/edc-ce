@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.wrapper;
 
-import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
@@ -48,8 +47,6 @@ public class WrapperExtension implements ServiceExtension {
     @Inject
     private ContractNegotiationStore contractNegotiationStore;
     @Inject
-    private DtoTransformerRegistry dtoTransformerRegistry;
-    @Inject
     private ManagementApiConfiguration dataManagementApiConfiguration;
     @Inject
     private PolicyDefinitionStore policyDefinitionStore;
@@ -74,18 +71,18 @@ public class WrapperExtension implements ServiceExtension {
         var objectMapper = typeManager.getMapper();
 
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
+                context,
                 assetIndex,
                 assetService,
                 contractAgreementService,
                 contractDefinitionStore,
                 contractNegotiationService,
                 contractNegotiationStore,
-                dtoTransformerRegistry,
                 objectMapper,
                 policyDefinitionStore,
                 policyEngine,
-                transferProcessService,
-                transferProcessStore
+                transferProcessStore,
+                transferProcessService
         );
 
         wrapperExtensionContext.jaxRsResources().forEach(resource ->

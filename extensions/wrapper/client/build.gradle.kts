@@ -2,6 +2,8 @@ val edcVersion: String by project
 val edcGroup: String by project
 val restAssured: String by project
 val assertj: String by project
+val mockitoVersion: String by project
+val lombokVersion: String by project
 
 
 plugins {
@@ -35,15 +37,19 @@ dependencies {
     implementation("jakarta.annotation:jakarta.annotation-api:1.3.5")
 
     // Lombok
-    compileOnly("org.projectlombok:lombok:1.18.28")
-    annotationProcessor("org.projectlombok:lombok:1.18.28")
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
 
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
     testImplementation("${edcGroup}:http:${edcVersion}")
+    testImplementation("${edcGroup}:json-ld-spi:${edcVersion}")
+    testImplementation("${edcGroup}:dsp-http-spi:${edcVersion}")
     testImplementation(project(":extensions:wrapper:wrapper"))
     testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
+    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.assertj:assertj-core:${assertj}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }

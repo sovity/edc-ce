@@ -25,7 +25,6 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferProcess
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequestBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractAgreementUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.TransformerRegistryUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
@@ -34,7 +33,6 @@ import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import lombok.NoArgsConstructor;
-import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
@@ -46,6 +44,7 @@ import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
+import org.eclipse.edc.spi.system.ServiceExtensionContext;
 
 import java.util.List;
 
@@ -62,48 +61,54 @@ import java.util.List;
 public class WrapperExtensionContextBuilder {
 
     public static WrapperExtensionContext buildContext(
+            ServiceExtensionContext serviceExtensionContext,
             AssetIndex assetIndex,
             AssetService assetService,
             ContractAgreementService contractAgreementService,
             ContractDefinitionStore contractDefinitionStore,
             ContractNegotiationService contractNegotiationService,
             ContractNegotiationStore contractNegotiationStore,
-            DtoTransformerRegistry dtoTransformerRegistry,
             ObjectMapper objectMapper,
             PolicyDefinitionStore policyDefinitionStore,
             PolicyEngine policyEngine,
-            TransferProcessService transferProcessService,
-            TransferProcessStore transferProcessStore
+            TransferProcessStore transferProcessStore,
+            TransferProcessService transferProcessService
     ) {
         // UI API
         var transferProcessStateService = new TransferProcessStateService();
-        var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
-                transferProcessStateService);
+        var contractAgreementPageCardBuilder =
+                new ContractAgreementPageCardBuilder(
+                        transferProcessStateService);
         var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
                 contractAgreementService,
                 contractNegotiationStore,
-                transferProcessService
+                transferProcessService,
+                assetIndex
         );
         var contractAgreementApiService = new ContractAgreementPageApiService(
                 contractAgreementDataFetcher,
                 contractAgreementPageCardBuilder
         );
-        var transferHistoryPageApiService = new TransferHistoryPageApiService(assetService, contractAgreementService, contractNegotiationStore,
-                transferProcessService, transferProcessStateService);
-        var transferHistoryPageAssetFetcherService = new TransferHistoryPageAssetFetcherService(assetService, transferProcessService);
-        var transformerRegistryUtils = new TransformerRegistryUtils(dtoTransformerRegistry);
+        var transferHistoryPageApiService = new TransferHistoryPageApiService(
+                assetService,
+                contractAgreementService,
+                contractNegotiationStore,
+                transferProcessService,
+                transferProcessStateService);
+        var transferHistoryPageAssetFetcherService = new TransferHistoryPageAssetFetcherService(
+                assetService,
+                transferProcessService);
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
         var transferRequestBuilder = new TransferRequestBuilder(
                 objectMapper,
                 contractAgreementUtils,
                 contractNegotiationUtils,
-                transformerRegistryUtils
+                serviceExtensionContext.getConnectorId()
         );
         var contractAgreementTransferApiService = new ContractAgreementTransferApiService(
                 transferRequestBuilder,
-                transferProcessService,
-                transformerRegistryUtils
+                transferProcessService
         );
         var uiResource = new UiResource(
                 contractAgreementApiService,
@@ -123,7 +128,7 @@ public class WrapperExtensionContextBuilder {
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
         var policyMappingService = new PolicyMappingService();
         var offeringService = new OfferingService(assetIndex, policyDefinitionStore,
-                contractDefinitionStore, dtoTransformerRegistry, policyMappingService);
+                contractDefinitionStore, policyMappingService);
         var useCaseResource = new UseCaseResource(kpiApiService, supportedPolicyApiService,
                 offeringService);
 

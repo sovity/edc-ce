@@ -59,7 +59,7 @@ public class TransferProcessStateService {
      * @return if running
      */
     public boolean isError(int code) {
-        return code < 0;
+        return TransferProcessStates.TERMINATING.code() == code || TransferProcessStates.TERMINATED.code() == code;
     }
 
     @NotNull

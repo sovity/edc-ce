@@ -16,15 +16,11 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contracts;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequestBuilder;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.TransformerRegistryUtils;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.api.model.IdResponseDto;
+import org.eclipse.edc.api.model.IdResponse;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
-import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.jetbrains.annotations.NotNull;
-
-import java.time.Clock;
 
 import static org.eclipse.edc.web.spi.exception.ServiceResultHandler.exceptionMapper;
 
@@ -32,19 +28,17 @@ import static org.eclipse.edc.web.spi.exception.ServiceResultHandler.exceptionMa
 public class ContractAgreementTransferApiService {
     private final TransferRequestBuilder transferRequestBuilder;
     private final TransferProcessService transferProcessService;
-    private final TransformerRegistryUtils transformerRegistryUtils;
 
     @NotNull
-    public IdResponseDto initiateTransfer(
+    public IdResponse initiateTransfer(
             ContractAgreementTransferRequest request
     ) {
-        var transferRequestDto = transferRequestBuilder.buildTransferRequestDto(request);
-        var dataRequest = transformerRegistryUtils.transformOrThrow(transferRequestDto, DataRequest.class);
-        var transferProcessId = transferProcessService.initiateTransfer(dataRequest)
-                .orElseThrow(exceptionMapper(TransferProcess.class, transferRequestDto.getId()));
-        return IdResponseDto.Builder.newInstance()
-                .id(transferProcessId)
-                .createdAt(Clock.systemUTC().millis())
+        var transferRequest = transferRequestBuilder.buildTransferRequest(request);
+        var transferProcess = transferProcessService.initiateTransfer(transferRequest)
+                .orElseThrow(exceptionMapper(TransferProcess.class, transferRequest.getId()));
+        return IdResponse.Builder.newInstance()
+                .id(transferProcess.getId())
+                .createdAt(transferProcess.getCreatedAt())
                 .build();
     }
 }

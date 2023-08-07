@@ -33,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
@@ -57,8 +58,6 @@ public class ContractAgreementPageCardBuilder {
         card.setCounterPartyAddress(negotiation.getCounterPartyAddress());
         card.setCounterPartyId(negotiation.getCounterPartyId());
         card.setContractSigningDate(utcSecondsToOffsetDateTime(agreement.getContractSigningDate()));
-        card.setContractStartDate(utcSecondsToOffsetDateTime(agreement.getContractStartDate()));
-        card.setContractEndDate(utcSecondsToOffsetDateTime(agreement.getContractEndDate()));
         card.setAsset(buildAssetDto(asset));
         card.setContractPolicy(buildPolicyDto(agreement.getPolicy()));
         card.setTransferProcesses(buildTransferProcesses(transferProcesses));
