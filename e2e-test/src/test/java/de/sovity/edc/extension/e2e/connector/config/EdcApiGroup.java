@@ -13,19 +13,19 @@
 
 package de.sovity.edc.extension.e2e.connector.config;
 
-public enum EdcApiType {
-    DEFAULT("default"),
+public enum EdcApiGroup {
+    DEFAULT(""),
     PROTOCOL("protocol"),
     MANAGEMENT("management"),
     CONTROL("control");
 
-    private final String name;
+    private final String dataSourcePropertyName;
 
-    EdcApiType(String name) {
-        this.name = name;
+    EdcApiGroup(String dataSourcePropertyName) {
+        this.dataSourcePropertyName = dataSourcePropertyName;
     }
 
-    public String getName() {
-        return name;
+    public String getDataSourcePropertyName() {
+        return dataSourcePropertyName;
     }
 }

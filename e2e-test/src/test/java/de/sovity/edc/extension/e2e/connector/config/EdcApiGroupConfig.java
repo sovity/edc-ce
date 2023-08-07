@@ -16,7 +16,11 @@ package de.sovity.edc.extension.e2e.connector.config;
 import java.net.URI;
 import java.util.Map;
 
-public record ApiConfig(String baseUrl, String name, String path, int port) implements EdcConfig {
+public record EdcApiGroupConfig(
+        EdcApiGroup edcApiGroup,
+        String baseUrl,
+        int port,
+        String path) implements EdcConfig {
 
     private static final String SETTING_WEB_HTTP_PATH = "web.http.%s.path";
     private static final String SETTING_WEB_HTTP_PORT = "web.http.%s.port";
@@ -29,16 +33,21 @@ public record ApiConfig(String baseUrl, String name, String path, int port) impl
 
     @Override
     public Map<String, String> toMap() {
-        if ("".equals(name)) {
+        if ("".equals(edcApiGroup.getDataSourcePropertyName())) {
             return Map.of(
                     SETTING_WEB_HTTP_DEFAULT_PATH, path,
                     SETTING_WEB_HTTP_DEFAULT_PORT, String.valueOf(port)
             );
         } else {
+            var webHttpPathProperty = String.format(
+                    SETTING_WEB_HTTP_PATH,
+                    edcApiGroup.getDataSourcePropertyName());
+            var webHttpPortProperty = String.format(
+                    SETTING_WEB_HTTP_PORT,
+                    edcApiGroup.getDataSourcePropertyName());
             return Map.of(
-                    String.format(SETTING_WEB_HTTP_PATH, name), path,
-                    String.format(SETTING_WEB_HTTP_PORT, name), String.valueOf(port)
-            );
+                    webHttpPathProperty, path,
+                    webHttpPortProperty, String.valueOf(port));
         }
     }
 }

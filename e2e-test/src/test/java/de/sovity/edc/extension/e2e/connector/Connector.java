@@ -13,7 +13,7 @@
 
 package de.sovity.edc.extension.e2e.connector;
 
-import de.sovity.edc.extension.e2e.connector.config.EdcApiType;
+import de.sovity.edc.extension.e2e.connector.config.EdcApiGroup;
 import jakarta.json.JsonObject;
 
 import java.net.URI;
@@ -45,7 +45,7 @@ public interface Connector {
 
     Map<String, String> getConfig();
 
-    URI getUriForApi(EdcApiType apiType);
+    URI getUriForApi(EdcApiGroup edcApiGroup);
 
     String getParticipantId();
 
