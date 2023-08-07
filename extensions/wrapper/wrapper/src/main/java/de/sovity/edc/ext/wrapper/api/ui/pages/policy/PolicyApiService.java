@@ -17,7 +17,9 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.edc.api.model.IdResponse;
 import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
 import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.policy.model.Policy;
@@ -45,6 +47,16 @@ public class PolicyApiService {
     private List<Policy> getAllPolicies() {
         var policyDefinitions = policyDefinitionService.query(QuerySpec.max()).getContent().toList();
         return policyDefinitions.stream().map(PolicyDefinition::getPolicy).toList();
+    }
+
+    @NotNull
+    public IdResponse createPolicy(UiPolicyDto request) {
+        var policy = policyMapper.buildPolicy(request);
+        PolicyDefinition policyDefinition = PolicyDefinition.Builder.newInstance()
+                .policy(policy)
+                .build();
+        policyDefinition = policyDefinitionService.create(policyDefinition).getContent();
+        return IdResponse.Builder.newInstance().id(policyDefinition.getId()).createdAt(policyDefinition.getCreatedAt()).build();
     }
 
 

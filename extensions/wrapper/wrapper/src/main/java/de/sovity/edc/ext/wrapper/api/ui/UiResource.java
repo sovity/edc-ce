@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui;
 
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyPage;
@@ -60,12 +61,8 @@ public class UiResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Initiate a Transfer Process")
-    public IdResponse initiateTransfer(
-            ContractAgreementTransferRequest contractAgreementTransferRequest
-    ) {
-        return contractAgreementTransferApiService.initiateTransfer(
-                contractAgreementTransferRequest
-        );
+    public IdResponse initiateTransfer(ContractAgreementTransferRequest contractAgreementTransferRequest) {
+        return contractAgreementTransferApiService.initiateTransfer(contractAgreementTransferRequest);
     }
 
     @GET
@@ -87,6 +84,13 @@ public class UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     public PolicyPage policyPage() {
         return new PolicyPage(policyApiService.getPolicies());
+    }
+
+    @POST
+    @Path("pages/policy-page")
+    @Produces(MediaType.APPLICATION_JSON)
+    public IdResponse createPolicy(UiPolicyDto policyDto) {
+        return policyApiService.createPolicy(policyDto);
     }
 
 }

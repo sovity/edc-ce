@@ -9,14 +9,9 @@ services:
       - EDC_UI_CONFIG_URL=edc-ui-config
       - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/management/v2
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
-      - EDC_UI_CATALOG_URLS=http://edc2:11003/api/v1/protocol
+      - EDC_UI_CATALOG_URLS=http://edc2:11003/api/v1/dsp
   edc:
-#    image: ${DEV_EDC_IMAGE}
-    build:
-      dockerfile: connector/Dockerfile
-      args:
-        JVM_ARGS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-        BUILD_ARGS: -Pfs-vault -Pdmgmt-api-key -Ppostgres-flyway -Poauth
+    image: ${DEV_EDC_IMAGE}
     depends_on:
       - postgresql
     environment:
@@ -57,9 +52,8 @@ services:
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
 
-      EDC_PARTICIPANT_ID: provider
-      EDC_JSONLD_HTTPS_ENABLED: true
-      EDC_DSP_CALLBACK_ADDRESS: http://edc:11003/api/v1/protocol
+      MY_EDC_PARTICIPANT_ID: provider
+      EDC_DSP_CALLBACK_ADDRESS: http://edc:11003/api/v1/dsp
     ports:
       - '11001:11001'
       - '11002:11002'
@@ -89,13 +83,9 @@ services:
       - EDC_UI_CONFIG_URL=edc-ui-config
       - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:22002/api/v1/management/v2
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
-      - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/protocol
+      - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/dsp
   edc2:
-    build:
-      dockerfile: connector/Dockerfile
-      args:
-        JVM_ARGS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-        BUILD_ARGS: -Pfs-vault -Pdmgmt-api-key -Ppostgres-flyway -Poauth
+    image: ${DEV_EDC_IMAGE}
     depends_on:
       - postgresql2
     environment:
@@ -136,9 +126,8 @@ services:
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
 
-      EDC_PARTICIPANT_ID: consumer
-      EDC_JSONLD_HTTPS_ENABLED: true
-      EDC_DSP_CALLBACK_ADDRESS: http://edc2:11003/api/v1/protocol
+      MY_EDC_PARTICIPANT_ID: consumer
+      EDC_DSP_CALLBACK_ADDRESS: http://edc2:11003/api/v1/dsp
     ports:
       - '22001:11001'
       - '22002:11002'
