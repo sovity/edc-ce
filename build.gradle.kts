@@ -53,6 +53,10 @@ allprojects {
         testLogging {
             events("passed", "skipped", "failed")
         }
+
+        if (project.hasProperty("postgres-flyway")) {
+            environment("POSTGRES_FLYWAY_EXTENSION_ENABLED", "true")
+        }
     }
 
     checkstyle {

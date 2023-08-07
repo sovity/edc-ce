@@ -21,8 +21,8 @@ import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import jakarta.json.JsonObject;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.net.URI;
@@ -39,7 +39,9 @@ import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.CONTEXT;
 import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.TYPE;
 import static org.eclipse.edc.jsonld.spi.PropertyAndTypeNames.ODRL_POLICY_ATTRIBUTE;
 
-@Disabled("Just to be executed with postgres-flyway property set")
+@EnabledIfEnvironmentVariable(
+        named = "POSTGRES_FLYWAY_EXTENSION_ENABLED",
+        matches = "true")
 public class PostgresFlywayExtensionTest {
 
     private static final String PROVIDER_TARGET_URL = "https://google.de";
@@ -105,6 +107,8 @@ public class PostgresFlywayExtensionTest {
         var destination = JsonLdConnectorUtil.httpDataAddress(CONSUMER_BACKEND_URL);
         var transferProcessId = consumerConnector.initiateTransfer(contractAgreementId, assetId,
                 providerProtocolApi, destination);
+
+        assertThat(transferProcessId).isNotNull();
 
         await().atMost(TIMEOUT).untilAsserted(() -> {
             var state = consumerConnector.getTransferProcessState(transferProcessId);
