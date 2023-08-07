@@ -17,7 +17,7 @@ dependencies {
     testImplementation(project(":connector"))
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
-    testImplementation("org.apache.commons:commons-lang3:3.12.0")
+    testImplementation("org.apache.commons:commons-lang3:3.13.0")
     testImplementation("${edcGroup}:junit:${edcVersion}")
     testImplementation("${edcGroup}:sql-core:${edcVersion}")
     testImplementation("${edcGroup}:json-ld-spi:${edcVersion}")
