@@ -22,6 +22,15 @@ public class TestDatabaseViaEnv implements TestDatabase {
     public static final String TEST_POSTGRES_JDBC_URL = "TEST_POSTGRES_JDBC_URL";
     public static final String TEST_POSTGRES_JDBC_USER = "TEST_POSTGRES_JDBC_USER";
     public static final String TEST_POSTGRES_JDBC_PASSWORD = "TEST_POSTGRES_JDBC_PASSWORD";
+    private final int counter;
+
+    private TestDatabaseViaEnv() {
+        this(0);
+    }
+
+    public TestDatabaseViaEnv(int counter) {
+        this.counter = counter;
+    }
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
@@ -39,15 +48,19 @@ public class TestDatabaseViaEnv implements TestDatabase {
     }
 
     public String getJdbcUrl() {
-        return getRequiredEnv(TEST_POSTGRES_JDBC_URL);
+        return getRequiredEnv(getVariableNameWithCount(TEST_POSTGRES_JDBC_URL));
     }
 
     public String getJdbcUser() {
-        return getRequiredEnv(TEST_POSTGRES_JDBC_USER);
+        return getRequiredEnv(getVariableNameWithCount(TEST_POSTGRES_JDBC_USER));
     }
 
     public String getJdbcPassword() {
-        return getRequiredEnv(TEST_POSTGRES_JDBC_PASSWORD);
+        return getRequiredEnv(getVariableNameWithCount(TEST_POSTGRES_JDBC_PASSWORD));
+    }
+
+    private String getVariableNameWithCount(String variableName) {
+        return variableName + (counter == 0 ? "" : "_" + counter);
     }
 
     private static String getRequiredEnv(String name) {
