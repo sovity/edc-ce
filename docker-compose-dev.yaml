@@ -7,7 +7,7 @@ services:
     environment:
       - EDC_UI_ACTIVE_PROFILE=${EDC_UI_ACTIVE_PROFILE}
       - EDC_UI_CONFIG_URL=edc-ui-config
-      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/v1/management/v2
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/management/v2
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
       - EDC_UI_CATALOG_URLS=http://edc2:11003/api/v1/dsp
   edc:
@@ -79,7 +79,7 @@ services:
     environment:
       - EDC_UI_ACTIVE_PROFILE=${EDC_UI_ACTIVE_PROFILE}
       - EDC_UI_CONFIG_URL=edc-ui-config
-      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:22002/api/v1/management/v2
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:22002/api/management/v2
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
       - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/dsp
   edc2:

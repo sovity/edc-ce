@@ -19,7 +19,7 @@ All notable changes to this project will be documented in this file.
 3. New environment variable: `EDC_PARTICIPANT_ID`: `provider`
 4. New environment variable: `EDC_JSONLD_HTTPS_ENABLED`: `true`
 5. New environment variable: `EDC_DSP_CALLBACK_ADDRESS`: `http://edc:11003/api/v1/dsp`
-6. `v1` Management API has been deprecated in favor of the `JSON-LD` `v2` Management API. All endpoints have a `v2` prefix now (example: `http://localhost:11002/api/v1/management/assets/request` is now available at `http://localhost:11002/api/v1/management/v2/assets/request`)
+6. `v1` Management API has been deprecated in favor of the `JSON-LD` `v2` Management API. All endpoints have a `v2` prefix now (example: `http://localhost:11002/api/v1/management/assets/request` is now available at `http://localhost:11002/api/management/v2/assets/request`)
 
 ## [4.1.0] - 2023-07-24
 
