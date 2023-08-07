@@ -36,9 +36,14 @@ class BrokerEventLoggerTest {
             var brokerEventLogger = new BrokerEventLogger();
 
             // Test that insertions insert required fields and don't cause DB errors
-            brokerEventLogger.logConnectorUpdated(dsl, "https://example.com/ids/data", new ConnectorChangeTracker());
-            brokerEventLogger.logConnectorOnline(dsl, "https://example.com/ids/data");
-            brokerEventLogger.logConnectorOffline(dsl, "https://example.com/ids/data", new BrokerEventErrorMessage("Message", "Stacktrace"));
+            String endpoint = "https://example.com/ids/data";
+            brokerEventLogger.logConnectorUpdated(dsl, endpoint, new ConnectorChangeTracker());
+            brokerEventLogger.logConnectorOnline(dsl, endpoint);
+            brokerEventLogger.logConnectorOffline(dsl, endpoint, new BrokerEventErrorMessage("Message", "Stacktrace"));
+            brokerEventLogger.logConnectorUpdateContractOfferLimitExceeded(dsl, 10, endpoint);
+            brokerEventLogger.logConnectorUpdateContractOfferLimitOk(dsl, endpoint);
+            brokerEventLogger.logConnectorUpdateDataOfferLimitExceeded(dsl, 10, endpoint);
+            brokerEventLogger.logConnectorUpdateDataOfferLimitOk(dsl, endpoint);
         });
     }
 }

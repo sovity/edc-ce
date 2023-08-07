@@ -32,4 +32,7 @@ public class BrokerServerSettings {
     int numThreads;
 
     Duration killOfflineConnectorsAfter;
+
+    int maxDataOffersPerConnector;
+    int maxContractOffersPerDataOffer;
 }

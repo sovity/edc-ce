@@ -14,14 +14,14 @@
 
 package de.sovity.edc.ext.brokerserver.services.refreshing.offers;
 
-import de.sovity.edc.ext.brokerserver.BrokerServerExtension;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorContractOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorDataOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
+import de.sovity.edc.ext.brokerserver.services.config.BrokerServerSettings;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOffer;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOfferContractOffer;
-import org.eclipse.edc.spi.system.configuration.Config;
+import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,22 +31,22 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class DataOfferLimitsEnforcerTest {
     DataOfferLimitsEnforcer dataOfferLimitsEnforcer;
-    Config config;
+    BrokerServerSettings settings;
     BrokerEventLogger brokerEventLogger;
+    DSLContext dsl;
 
     @BeforeEach
     void setup() {
-        config = mock(Config.class);
+        settings = mock(BrokerServerSettings.class);
         brokerEventLogger = mock(BrokerEventLogger.class);
-        dataOfferLimitsEnforcer = new DataOfferLimitsEnforcer(config, brokerEventLogger);
+        dataOfferLimitsEnforcer = new DataOfferLimitsEnforcer(settings, brokerEventLogger);
+        dsl = mock(DSLContext.class);
     }
 
     @Test
@@ -54,8 +54,8 @@ class DataOfferLimitsEnforcerTest {
         // arrange
         int maxDataOffers = -1;
         int maxContractOffers = -1;
-        when(config.getInteger(eq(BrokerServerExtension.MAX_DATA_OFFERS_PER_CONNECTOR), any())).thenReturn(maxDataOffers);
-        when(config.getInteger(eq(BrokerServerExtension.MAX_CONTRACT_OFFERS_PER_DATA_OFFER), any())).thenReturn(maxContractOffers);
+        when(settings.getMaxDataOffersPerConnector()).thenReturn(maxDataOffers);
+        when(settings.getMaxContractOffersPerDataOffer()).thenReturn(maxContractOffers);
 
         var myDataOffer = new FetchedDataOffer();
         myDataOffer.setContractOffers(List.of(new FetchedDataOfferContractOffer(), new FetchedDataOfferContractOffer()));
@@ -78,14 +78,14 @@ class DataOfferLimitsEnforcerTest {
         // arrange
         int maxDataOffers = 0;
         int maxContractOffers = 0;
-        when(config.getInteger(eq(BrokerServerExtension.MAX_DATA_OFFERS_PER_CONNECTOR), any())).thenReturn(maxDataOffers);
-        when(config.getInteger(eq(BrokerServerExtension.MAX_CONTRACT_OFFERS_PER_DATA_OFFER), any())).thenReturn(maxContractOffers);
+        when(settings.getMaxDataOffersPerConnector()).thenReturn(maxDataOffers);
+        when(settings.getMaxContractOffersPerDataOffer()).thenReturn(maxContractOffers);
 
         var dataOffers = List.of(new FetchedDataOffer());
 
         // act
         var enforcedLimits = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
-        var actual = new ArrayList(enforcedLimits.abbreviatedDataOffers());
+        var actual = new ArrayList<>(enforcedLimits.abbreviatedDataOffers());
         var contractOffersLimitExceeded = enforcedLimits.contractOfferLimitsExceeded();
         var dataOffersLimitExceeded = enforcedLimits.dataOfferLimitsExceeded();
 
@@ -100,8 +100,8 @@ class DataOfferLimitsEnforcerTest {
         // arrange
         int maxDataOffers = 1;
         int maxContractOffers = 1;
-        when(config.getInteger(eq(BrokerServerExtension.MAX_DATA_OFFERS_PER_CONNECTOR), any())).thenReturn(maxDataOffers);
-        when(config.getInteger(eq(BrokerServerExtension.MAX_CONTRACT_OFFERS_PER_DATA_OFFER), any())).thenReturn(maxContractOffers);
+        when(settings.getMaxDataOffersPerConnector()).thenReturn(maxDataOffers);
+        when(settings.getMaxContractOffersPerDataOffer()).thenReturn(maxContractOffers);
 
         var myDataOffer = new FetchedDataOffer();
         myDataOffer.setContractOffers(List.of(new FetchedDataOfferContractOffer(), new FetchedDataOfferContractOffer()));
@@ -109,13 +109,13 @@ class DataOfferLimitsEnforcerTest {
 
         // act
         var enforcedLimits = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
-        var actual = new ArrayList(enforcedLimits.abbreviatedDataOffers());
+        var actual = new ArrayList<>(enforcedLimits.abbreviatedDataOffers());
         var contractOffersLimitExceeded = enforcedLimits.contractOfferLimitsExceeded();
         var dataOffersLimitExceeded = enforcedLimits.dataOfferLimitsExceeded();
 
         // assert
         assertThat(actual).hasSize(1);
-        assertThat(((FetchedDataOffer) actual.get(0)).getContractOffers()).hasSize(1);
+        assertThat(actual.get(0).getContractOffers()).hasSize(1);
         assertTrue(contractOffersLimitExceeded);
         assertTrue(dataOffersLimitExceeded);
     }
@@ -129,8 +129,8 @@ class DataOfferLimitsEnforcerTest {
 
         int maxDataOffers = 1;
         int maxContractOffers = 1;
-        when(config.getInteger(eq(BrokerServerExtension.MAX_DATA_OFFERS_PER_CONNECTOR), any())).thenReturn(maxDataOffers);
-        when(config.getInteger(eq(BrokerServerExtension.MAX_CONTRACT_OFFERS_PER_DATA_OFFER), any())).thenReturn(maxContractOffers);
+        when(settings.getMaxDataOffersPerConnector()).thenReturn(maxDataOffers);
+        when(settings.getMaxContractOffersPerDataOffer()).thenReturn(maxContractOffers);
 
         var myDataOffer = new FetchedDataOffer();
         myDataOffer.setContractOffers(List.of(new FetchedDataOfferContractOffer(), new FetchedDataOfferContractOffer()));
@@ -138,10 +138,10 @@ class DataOfferLimitsEnforcerTest {
 
         // act
         var enforcedLimits = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
-        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(connector, enforcedLimits);
+        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl, connector, enforcedLimits);
 
         // assert
-        verify(brokerEventLogger).logConnectorUpdateDataOfferLimitExceeded(1, connector.getEndpoint());
+        verify(brokerEventLogger).logConnectorUpdateDataOfferLimitExceeded(dsl, 1, connector.getEndpoint());
     }
 
     @Test
@@ -153,8 +153,8 @@ class DataOfferLimitsEnforcerTest {
 
         int maxDataOffers = -1;
         int maxContractOffers = -1;
-        when(config.getInteger(eq(BrokerServerExtension.MAX_DATA_OFFERS_PER_CONNECTOR), any())).thenReturn(maxDataOffers);
-        when(config.getInteger(eq(BrokerServerExtension.MAX_CONTRACT_OFFERS_PER_DATA_OFFER), any())).thenReturn(maxContractOffers);
+        when(settings.getMaxDataOffersPerConnector()).thenReturn(maxDataOffers);
+        when(settings.getMaxContractOffersPerDataOffer()).thenReturn(maxContractOffers);
 
         var myDataOffer = new FetchedDataOffer();
         myDataOffer.setContractOffers(List.of(new FetchedDataOfferContractOffer(), new FetchedDataOfferContractOffer()));
@@ -162,10 +162,10 @@ class DataOfferLimitsEnforcerTest {
 
         // act
         var enforcedLimits = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
-        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(connector, enforcedLimits);
+        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl, connector, enforcedLimits);
 
         // assert
-        verify(brokerEventLogger).logConnectorUpdateDataOfferLimitOk(connector.getEndpoint());
+        verify(brokerEventLogger).logConnectorUpdateDataOfferLimitOk(dsl, connector.getEndpoint());
     }
 
     @Test
@@ -177,8 +177,8 @@ class DataOfferLimitsEnforcerTest {
 
         int maxDataOffers = 1;
         int maxContractOffers = 1;
-        when(config.getInteger(eq(BrokerServerExtension.MAX_DATA_OFFERS_PER_CONNECTOR), any())).thenReturn(maxDataOffers);
-        when(config.getInteger(eq(BrokerServerExtension.MAX_CONTRACT_OFFERS_PER_DATA_OFFER), any())).thenReturn(maxContractOffers);
+        when(settings.getMaxDataOffersPerConnector()).thenReturn(maxDataOffers);
+        when(settings.getMaxContractOffersPerDataOffer()).thenReturn(maxContractOffers);
 
         var myDataOffer = new FetchedDataOffer();
         myDataOffer.setContractOffers(List.of(new FetchedDataOfferContractOffer(), new FetchedDataOfferContractOffer()));
@@ -186,10 +186,10 @@ class DataOfferLimitsEnforcerTest {
 
         // act
         var enforcedLimits = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
-        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(connector, enforcedLimits);
+        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl, connector, enforcedLimits);
 
         // assert
-        verify(brokerEventLogger).logConnectorUpdateContractOfferLimitExceeded(1, connector.getEndpoint());
+        verify(brokerEventLogger).logConnectorUpdateContractOfferLimitExceeded(dsl, 1, connector.getEndpoint());
     }
 
     @Test
@@ -201,8 +201,8 @@ class DataOfferLimitsEnforcerTest {
 
         int maxDataOffers = -1;
         int maxContractOffers = -1;
-        when(config.getInteger(eq(BrokerServerExtension.MAX_DATA_OFFERS_PER_CONNECTOR), any())).thenReturn(maxDataOffers);
-        when(config.getInteger(eq(BrokerServerExtension.MAX_CONTRACT_OFFERS_PER_DATA_OFFER), any())).thenReturn(maxContractOffers);
+        when(settings.getMaxDataOffersPerConnector()).thenReturn(maxDataOffers);
+        when(settings.getMaxContractOffersPerDataOffer()).thenReturn(maxContractOffers);
 
         var myDataOffer = new FetchedDataOffer();
         myDataOffer.setContractOffers(List.of(new FetchedDataOfferContractOffer(), new FetchedDataOfferContractOffer()));
@@ -210,9 +210,9 @@ class DataOfferLimitsEnforcerTest {
 
         // act
         var enforcedLimits = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
-        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(connector, enforcedLimits);
+        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl, connector, enforcedLimits);
 
         // assert
-        verify(brokerEventLogger).logConnectorUpdateContractOfferLimitOk(connector.getEndpoint());
+        verify(brokerEventLogger).logConnectorUpdateContractOfferLimitOk(dsl, connector.getEndpoint());
     }
 }

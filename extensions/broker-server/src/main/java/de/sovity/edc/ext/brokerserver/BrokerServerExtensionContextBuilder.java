@@ -122,7 +122,8 @@ public class BrokerServerExtensionContextBuilder {
                 brokerServerSettings
         );
         var connectorPageQueryService = new ConnectorPageQueryService();
-        var dataOfferDetailPageQueryService = new DataOfferDetailPageQueryService(catalogQueryContractOfferFetcher, brokerServerSettings);
+        var dataOfferDetailPageQueryService = new DataOfferDetailPageQueryService(
+                catalogQueryContractOfferFetcher, brokerServerSettings);
 
 
         // Services
@@ -132,7 +133,7 @@ public class BrokerServerExtensionContextBuilder {
         var contractOfferRecordUpdater = new ContractOfferRecordUpdater();
         var dataOfferRecordUpdater = new DataOfferRecordUpdater();
         var dataOfferContractOfferQueries = new DataOfferContractOfferQueries();
-        var dataOfferLimitsEnforcer = new DataOfferLimitsEnforcer(config, brokerEventLogger);
+        var dataOfferLimitsEnforcer = new DataOfferLimitsEnforcer(brokerServerSettings, brokerEventLogger);
         var dataOfferPatchBuilder = new DataOfferPatchBuilder(
                 dataOfferContractOfferQueries,
                 dataOfferQueries,

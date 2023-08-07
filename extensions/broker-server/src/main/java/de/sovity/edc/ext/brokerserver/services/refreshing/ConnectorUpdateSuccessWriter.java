@@ -42,7 +42,7 @@ public class ConnectorUpdateSuccessWriter {
 
         // Limit data offers and log limitation if necessary
         var limitedDataOffers = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
-        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(connector, limitedDataOffers);
+        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl, connector, limitedDataOffers);
 
         // Log Status Change and set status to online if necessary
         if (connector.getOnlineStatus() != ConnectorOnlineStatus.ONLINE || connector.getLastRefreshAttemptAt() == null) {

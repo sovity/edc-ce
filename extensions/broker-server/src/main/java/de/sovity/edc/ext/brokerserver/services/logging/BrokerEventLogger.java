@@ -17,7 +17,6 @@ package de.sovity.edc.ext.brokerserver.services.logging;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.BrokerEventStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.BrokerEventType;
-import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.BrokerEventLogRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 
@@ -62,8 +61,8 @@ public class BrokerEventLogger {
         logEntry.insert();
     }
 
-    public void logConnectorUpdateDataOfferLimitExceeded(Integer maxDataOffersPerConnector, String endpoint) {
-        var logEntry = new BrokerEventLogRecord();
+    public void logConnectorUpdateDataOfferLimitExceeded(DSLContext dsl, Integer maxDataOffersPerConnector, String endpoint) {
+        var logEntry = dsl.newRecord(Tables.BROKER_EVENT_LOG);
         logEntry.setEvent(BrokerEventType.CONNECTOR_DATA_OFFER_LIMIT_EXCEEDED);
         logEntry.setEventStatus(BrokerEventStatus.OK);
         logEntry.setConnectorEndpoint(endpoint);
@@ -72,8 +71,8 @@ public class BrokerEventLogger {
         logEntry.insert();
     }
 
-    public void logConnectorUpdateDataOfferLimitOk(String endpoint) {
-        var logEntry = new BrokerEventLogRecord();
+    public void logConnectorUpdateDataOfferLimitOk(DSLContext dsl, String endpoint) {
+        var logEntry = dsl.newRecord(Tables.BROKER_EVENT_LOG);
         logEntry.setEvent(BrokerEventType.CONNECTOR_DATA_OFFER_LIMIT_OK);
         logEntry.setEventStatus(BrokerEventStatus.OK);
         logEntry.setConnectorEndpoint(endpoint);
@@ -82,8 +81,8 @@ public class BrokerEventLogger {
         logEntry.insert();
     }
 
-    public void logConnectorUpdateContractOfferLimitExceeded(Integer maxContractOffersPerConnector, String endpoint) {
-        var logEntry = new BrokerEventLogRecord();
+    public void logConnectorUpdateContractOfferLimitExceeded(DSLContext dsl, Integer maxContractOffersPerConnector, String endpoint) {
+        var logEntry = dsl.newRecord(Tables.BROKER_EVENT_LOG);
         logEntry.setEvent(BrokerEventType.CONNECTOR_CONTRACT_OFFER_LIMIT_EXCEEDED);
         logEntry.setEventStatus(BrokerEventStatus.OK);
         logEntry.setConnectorEndpoint(endpoint);
@@ -92,8 +91,8 @@ public class BrokerEventLogger {
         logEntry.insert();
     }
 
-    public void logConnectorUpdateContractOfferLimitOk(String endpoint) {
-        var logEntry = new BrokerEventLogRecord();
+    public void logConnectorUpdateContractOfferLimitOk(DSLContext dsl, String endpoint) {
+        var logEntry = dsl.newRecord(Tables.BROKER_EVENT_LOG);
         logEntry.setEvent(BrokerEventType.CONNECTOR_CONTRACT_OFFER_LIMIT_OK);
         logEntry.setEventStatus(BrokerEventStatus.OK);
         logEntry.setConnectorEndpoint(endpoint);

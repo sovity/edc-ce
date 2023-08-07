@@ -39,6 +39,8 @@ public class BrokerServerSettingsFactory {
         var dataSpaceConfig = buildDataSpaceConfig(config);
         var numThreads = config.getInteger(BrokerServerExtension.NUM_THREADS, 1);
         var killOfflineConnectorsAfter = getDuration(BrokerServerExtension.KILL_OFFLINE_CONNECTORS_AFTER, Duration.ofDays(5));
+        var maxDataOffers = config.getInteger(BrokerServerExtension.MAX_DATA_OFFERS_PER_CONNECTOR, -1);
+        var maxContractOffers = config.getInteger(BrokerServerExtension.MAX_CONTRACT_OFFERS_PER_DATA_OFFER, -1);
 
         return BrokerServerSettings.builder()
                 .adminApiKey(adminApiKey)
@@ -47,6 +49,8 @@ public class BrokerServerSettingsFactory {
                 .dataSpaceConfig(dataSpaceConfig)
                 .numThreads(numThreads)
                 .killOfflineConnectorsAfter(killOfflineConnectorsAfter)
+                .maxDataOffersPerConnector(maxDataOffers)
+                .maxContractOffersPerDataOffer(maxContractOffers)
                 .build();
     }
 

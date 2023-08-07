@@ -14,20 +14,22 @@
 
 package de.sovity.edc.ext.brokerserver.services.refreshing.offers;
 
-import de.sovity.edc.ext.brokerserver.BrokerServerExtension;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorContractOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorDataOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
+import de.sovity.edc.ext.brokerserver.services.config.BrokerServerSettings;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOffer;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.spi.system.configuration.Config;
+import org.jooq.DSLContext;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class DataOfferLimitsEnforcer {
-    private final Config config;
+    private final BrokerServerSettings brokerServerSettings;
     private final BrokerEventLogger brokerEventLogger;
 
     public record DataOfferLimitsEnforced(
@@ -39,9 +41,9 @@ public class DataOfferLimitsEnforcer {
 
     public DataOfferLimitsEnforced enforceLimits(Collection<FetchedDataOffer> dataOffers) {
         // Get limits from config
-        var maxDataOffers = config.getInteger(BrokerServerExtension.MAX_DATA_OFFERS_PER_CONNECTOR, -1);
-        var maxContractOffers = config.getInteger(BrokerServerExtension.MAX_CONTRACT_OFFERS_PER_DATA_OFFER, -1);
-        var offerList = dataOffers.stream().toList();
+        var maxDataOffers = brokerServerSettings.getMaxDataOffersPerConnector();
+        var maxContractOffers = brokerServerSettings.getMaxContractOffersPerDataOffer();
+        List<FetchedDataOffer> offerList = new ArrayList<>(dataOffers);
 
         // No limits set
         if (maxDataOffers == -1 && maxContractOffers == -1) {
@@ -68,22 +70,26 @@ public class DataOfferLimitsEnforcer {
         return new DataOfferLimitsEnforced(offerList, dataOfferLimitsExceeded, contractOfferLimitsExceeded);
     }
 
-    public void logEnforcedLimitsIfChanged(ConnectorRecord connector, DataOfferLimitsEnforced enforcedLimits) {
+    public void logEnforcedLimitsIfChanged(DSLContext dsl, ConnectorRecord connector, DataOfferLimitsEnforced enforcedLimits) {
+        String endpoint = connector.getEndpoint();
+
         // DataOffer
         if (enforcedLimits.dataOfferLimitsExceeded() && connector.getDataOffersExceeded() == ConnectorDataOffersExceeded.OK) {
-            brokerEventLogger.logConnectorUpdateDataOfferLimitExceeded(enforcedLimits.abbreviatedDataOffers.size(), connector.getEndpoint());
+            var maxDataOffers = brokerServerSettings.getMaxDataOffersPerConnector();
+            brokerEventLogger.logConnectorUpdateDataOfferLimitExceeded(dsl, maxDataOffers, endpoint);
             connector.setDataOffersExceeded(ConnectorDataOffersExceeded.EXCEEDED);
         } else if (!enforcedLimits.dataOfferLimitsExceeded() && connector.getDataOffersExceeded() == ConnectorDataOffersExceeded.EXCEEDED) {
-            brokerEventLogger.logConnectorUpdateDataOfferLimitOk(connector.getEndpoint());
+            brokerEventLogger.logConnectorUpdateDataOfferLimitOk(dsl, endpoint);
             connector.setDataOffersExceeded(ConnectorDataOffersExceeded.OK);
         }
 
         // ContractOffer
         if (enforcedLimits.contractOfferLimitsExceeded() && connector.getContractOffersExceeded() == ConnectorContractOffersExceeded.OK) {
-            brokerEventLogger.logConnectorUpdateContractOfferLimitExceeded(enforcedLimits.abbreviatedDataOffers.size(), connector.getEndpoint());
+            var maxContractOffers = brokerServerSettings.getMaxContractOffersPerDataOffer();
+            brokerEventLogger.logConnectorUpdateContractOfferLimitExceeded(dsl, maxContractOffers, endpoint);
             connector.setContractOffersExceeded(ConnectorContractOffersExceeded.EXCEEDED);
         } else if (!enforcedLimits.contractOfferLimitsExceeded() && connector.getContractOffersExceeded() == ConnectorContractOffersExceeded.EXCEEDED) {
-            brokerEventLogger.logConnectorUpdateContractOfferLimitOk(connector.getEndpoint());
+            brokerEventLogger.logConnectorUpdateContractOfferLimitOk(dsl, endpoint);
             connector.setContractOffersExceeded(ConnectorContractOffersExceeded.OK);
         }
     }
