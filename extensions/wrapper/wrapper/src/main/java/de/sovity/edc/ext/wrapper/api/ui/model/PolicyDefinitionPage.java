@@ -14,8 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionDto;
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
-import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +22,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class PolicyPage {
+public class PolicyDefinitionPage {
     @Schema(description = "Policy Entries", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<PolicyDefinitionDto> policies;
 }

@@ -30,7 +30,7 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
 
-import static de.sovity.edc.extension.e2e.connector.config.EdcApiType.PROTOCOL;
+import static de.sovity.edc.extension.e2e.connector.config.EdcApiGroup.PROTOCOL;
 import static jakarta.json.Json.createObjectBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;

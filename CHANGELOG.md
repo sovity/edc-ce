@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Major Changes
 
-- Upgrade to core-EDC version `0.1.2`
+- Upgrade to core-EDC version `0.2.0`
 - Now using the `Dataspace Protocol`
 - Major changes to the management API
   - Examples for the new requests are located in the postman collection in the `docs` folder
@@ -15,11 +15,11 @@ All notable changes to this project will be documented in this file.
 ### Migration Notes
 
 1. The `MY_EDC_IDS_BASE_URL` has been renamed to `MY_EDC_PROTOCOL_BASE_URL`
-1. The default value of `WEB_HTTP_PROTOCOL_PATH` been changed from `${MY_EDC_BASE_PATH}/api/v1/ids` to `${MY_EDC_BASE_PATH}/api/v1/protocol`
-1. New environment variable: `EDC_PARTICIPANT_ID`: `provider`
-1. New environment variable: `EDC_JSONLD_HTTPS_ENABLED`: `true`
-1. New environment variable: `EDC_DSP_CALLBACK_ADDRESS`: `http://edc:11003/api/v1/protocol`
-1. `v1` Management API has been deprecated in favor of the `JSON-LD` `v2` Management API. All endpoints have a `v2` prefix now (example: `http://localhost:11002/api/v1/management/assets/request` is now available at `http://localhost:11002/api/v1/management/v2/assets/request`)
+2. The default value of `WEB_HTTP_PROTOCOL_PATH` been changed from `${MY_EDC_BASE_PATH}/api/v1/ids` to `${MY_EDC_BASE_PATH}/api/v1/dsp`
+3. New environment variable: `EDC_PARTICIPANT_ID`: `provider`
+4. New environment variable: `EDC_JSONLD_HTTPS_ENABLED`: `true`
+5. New environment variable: `EDC_DSP_CALLBACK_ADDRESS`: `http://edc:11003/api/v1/dsp`
+6. `v1` Management API has been deprecated in favor of the `JSON-LD` `v2` Management API. All endpoints have a `v2` prefix now (example: `http://localhost:11002/api/v1/management/assets/request` is now available at `http://localhost:11002/api/management/v2/assets/request`)
 
 ## [4.1.0] - 2023-07-24
 

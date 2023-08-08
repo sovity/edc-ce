@@ -14,9 +14,9 @@
 package de.sovity.edc.extension.e2e.connector;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.extension.e2e.connector.config.ApiConfig;
 import de.sovity.edc.extension.e2e.connector.config.DatasourceConfig;
-import de.sovity.edc.extension.e2e.connector.config.EdcApiType;
+import de.sovity.edc.extension.e2e.connector.config.EdcApiGroup;
+import de.sovity.edc.extension.e2e.connector.config.EdcApiGroupConfig;
 import de.sovity.edc.extension.e2e.connector.config.EdcConfig;
 import de.sovity.edc.extension.e2e.connector.config.SimpleConfig;
 import jakarta.json.Json;
@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
-import static de.sovity.edc.extension.e2e.connector.config.EdcApiType.MANAGEMENT;
+import static de.sovity.edc.extension.e2e.connector.config.EdcApiGroup.MANAGEMENT;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static jakarta.json.Json.createObjectBuilder;
@@ -69,7 +69,7 @@ public class TestConnector implements Connector {
     private final List<SimpleConfig> simpleConfigs;
 
     private final String baseUrl;
-    private final Map<EdcApiType, ApiConfig> apiConfigMap;
+    private final Map<EdcApiGroup, EdcApiGroupConfig> apiGroupConfigMap;
 
     @Override
     public void createAsset(String assetId, Map<String, Object> dataAddressProperties) {
@@ -288,8 +288,8 @@ public class TestConnector implements Connector {
 
 
     @Override
-    public URI getUriForApi(EdcApiType edcApiType) {
-        return apiConfigMap.get(edcApiType).getUri();
+    public URI getUriForApi(EdcApiGroup edcApiGroup) {
+        return apiGroupConfigMap.get(edcApiGroup).getUri();
     }
 
     @Override
@@ -341,15 +341,24 @@ public class TestConnector implements Connector {
 
     @Override
     public Map<String, String> getConfig() {
+        var configStream = Stream.of(
+                apiGroupConfigMap.values().stream().toList(),
+                datasourceConfigs,
+                simpleConfigs);
         return new HashMap<>() {
             {
-                Stream.of(apiConfigMap.values().stream().toList(), datasourceConfigs,
-                                simpleConfigs)
-                        .flatMap(List::stream)
+                configStream.flatMap(List::stream)
                         .map(EdcConfig::toMap)
                         .forEach(this::putAll);
             }
         };
+    }
+
+    public static class TestConnectorBuilder {
+        public TestConnectorBuilder configProperty(String key, String value) {
+            this.simpleConfig(new SimpleConfig(key, value));
+            return this;
+        }
     }
 
 }

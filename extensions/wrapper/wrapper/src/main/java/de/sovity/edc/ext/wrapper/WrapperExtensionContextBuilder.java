@@ -26,7 +26,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferProcess
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequestBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractAgreementUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
-import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
@@ -63,33 +63,92 @@ import java.util.List;
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class WrapperExtensionContextBuilder {
 
-    public static WrapperExtensionContext buildContext(ServiceExtensionContext serviceExtensionContext, AssetIndex assetIndex, AssetService assetService, ContractAgreementService contractAgreementService, ContractDefinitionStore contractDefinitionStore, ContractNegotiationService contractNegotiationService, ContractNegotiationStore contractNegotiationStore, ObjectMapper objectMapper, PolicyDefinitionStore policyDefinitionStore, PolicyEngine policyEngine, TransferProcessStore transferProcessStore, TransferProcessService transferProcessService, PolicyDefinitionService policyDefinitionService, ObjectMapper jsonLdObjectMapper) {
+    public static WrapperExtensionContext buildContext(
+            ServiceExtensionContext serviceExtensionContext,
+            AssetIndex assetIndex,
+            AssetService assetService,
+            ContractAgreementService contractAgreementService,
+            ContractDefinitionStore contractDefinitionStore,
+            ContractNegotiationService contractNegotiationService,
+            ContractNegotiationStore contractNegotiationStore,
+            ObjectMapper objectMapper,
+            PolicyDefinitionStore policyDefinitionStore,
+            PolicyEngine policyEngine,
+            TransferProcessStore transferProcessStore,
+            TransferProcessService transferProcessService,
+            PolicyDefinitionService policyDefinitionService,
+            PolicyMapper policyMapper
+    ) {
         // UI API
         var transferProcessStateService = new TransferProcessStateService();
-        var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(transferProcessStateService);
-        var contractAgreementDataFetcher = new ContractAgreementDataFetcher(contractAgreementService, contractNegotiationStore, transferProcessService, assetIndex);
-        var contractAgreementApiService = new ContractAgreementPageApiService(contractAgreementDataFetcher, contractAgreementPageCardBuilder);
-        var transferHistoryPageApiService = new TransferHistoryPageApiService(assetService, contractAgreementService, contractNegotiationStore, transferProcessService, transferProcessStateService);
-        var transferHistoryPageAssetFetcherService = new TransferHistoryPageAssetFetcherService(assetService, transferProcessService);
+        var contractAgreementPageCardBuilder =
+                new ContractAgreementPageCardBuilder(
+                        transferProcessStateService);
+        var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
+                contractAgreementService,
+                contractNegotiationStore,
+                transferProcessService,
+                assetIndex
+        );
+        var contractAgreementApiService = new ContractAgreementPageApiService(
+                contractAgreementDataFetcher,
+                contractAgreementPageCardBuilder
+        );
+        var transferHistoryPageApiService = new TransferHistoryPageApiService(
+                assetService,
+                contractAgreementService,
+                contractNegotiationStore,
+                transferProcessService,
+                transferProcessStateService);
+        var transferHistoryPageAssetFetcherService = new TransferHistoryPageAssetFetcherService(
+                assetService,
+                transferProcessService);
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
-        var policyMapper = new PolicyMapper(jsonLdObjectMapper);
-        var policyApiService = new PolicyApiService(policyDefinitionService, policyMapper);
-        var transferRequestBuilder = new TransferRequestBuilder(objectMapper, contractAgreementUtils, contractNegotiationUtils, serviceExtensionContext.getConnectorId());
-        var contractAgreementTransferApiService = new ContractAgreementTransferApiService(transferRequestBuilder, transferProcessService);
-        var uiResource = new UiResource(contractAgreementApiService, contractAgreementTransferApiService, transferHistoryPageApiService, transferHistoryPageAssetFetcherService, policyApiService
+        var transferRequestBuilder = new TransferRequestBuilder(
+                objectMapper,
+                contractAgreementUtils,
+                contractNegotiationUtils,
+                serviceExtensionContext.getConnectorId()
+        );
+        var contractAgreementTransferApiService = new ContractAgreementTransferApiService(
+                transferRequestBuilder,
+                transferProcessService
+        );
+        var policyDefinitionApiService = new PolicyDefinitionApiService(
+                policyDefinitionService,
+                policyMapper
 
+        );
+        var uiResource = new UiResource(
+                contractAgreementApiService,
+                contractAgreementTransferApiService,
+                transferHistoryPageApiService,
+                transferHistoryPageAssetFetcherService,
+                policyDefinitionApiService
 
         );
 
         // Use Case API
-        var kpiApiService = new KpiApiService(assetIndex, policyDefinitionStore, contractDefinitionStore, transferProcessStore, contractAgreementService);
+        var kpiApiService = new KpiApiService(
+                assetIndex,
+                policyDefinitionStore,
+                contractDefinitionStore,
+                transferProcessStore,
+                contractAgreementService
+        );
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
         var policyMappingService = new PolicyMappingService();
-        var offeringService = new OfferingService(assetIndex, policyDefinitionStore, contractDefinitionStore, policyMappingService);
-        var useCaseResource = new UseCaseResource(kpiApiService, supportedPolicyApiService, offeringService);
+        var offeringService = new OfferingService(assetIndex, policyDefinitionStore,
+                contractDefinitionStore, policyMappingService);
+        var useCaseResource = new UseCaseResource(kpiApiService, supportedPolicyApiService,
+                offeringService);
 
         // Collect all JAX-RS resources
-        return new WrapperExtensionContext(List.of(uiResource, useCaseResource, new EnterpriseEditionResourceImpl()));
+        return new WrapperExtensionContext(List.of(
+                uiResource,
+                useCaseResource,
+                new EnterpriseEditionResourceImpl()
+        ));
     }
 }
