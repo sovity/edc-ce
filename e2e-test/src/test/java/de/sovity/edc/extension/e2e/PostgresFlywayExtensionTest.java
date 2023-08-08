@@ -19,6 +19,7 @@ import de.sovity.edc.extension.e2e.connector.factory.TestConnectorFactory;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import jakarta.json.JsonObject;
+import org.assertj.core.api.Assertions;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,10 +32,10 @@ import java.util.Map;
 import java.util.UUID;
 
 import static de.sovity.edc.extension.e2e.connector.config.EdcApiGroup.PROTOCOL;
+import static io.restassured.RestAssured.when;
 import static jakarta.json.Json.createObjectBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates.COMPLETED;
 import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.CONTEXT;
 import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.TYPE;
 import static org.eclipse.edc.jsonld.spi.PropertyAndTypeNames.ODRL_POLICY_ATTRIBUTE;
@@ -44,8 +45,18 @@ import static org.eclipse.edc.jsonld.spi.PropertyAndTypeNames.ODRL_POLICY_ATTRIB
         matches = "true")
 public class PostgresFlywayExtensionTest {
 
-    private static final String PROVIDER_TARGET_URL = "https://google.de";
-    private static final String CONSUMER_BACKEND_URL = "https://webhook.site/e542f69e-ff0a-4771-af18-0900a399137a";
+    private static final String TEST_BACKEND_TEST_DATA = UUID.randomUUID().toString();
+    private static final String TEST_BACKEND_BASE_URL = "http://localhost:33001/api/test-backend";
+    private static final String PROVIDER_TARGET_URL = String.format(
+            "%s/provide/%s",
+            TEST_BACKEND_BASE_URL,
+            TEST_BACKEND_TEST_DATA);
+    private static final String CONSUMER_BACKEND_URL = String.format(
+            "%s/consume",
+            TEST_BACKEND_BASE_URL);
+    private static final String TEST_BACKEND_CHECK_URL = String.format(
+            "%s/getConsumedData",
+            TEST_BACKEND_BASE_URL);
     private static final Duration TIMEOUT = Duration.ofSeconds(60);
     private static final String MIGRATED_M8_ASSET_ID = "test-1.0";
 
@@ -111,9 +122,15 @@ public class PostgresFlywayExtensionTest {
         assertThat(transferProcessId).isNotNull();
 
         await().atMost(TIMEOUT).untilAsserted(() -> {
-            var state = consumerConnector.getTransferProcessState(transferProcessId);
-            assertThat(state).isEqualTo(COMPLETED.name());
+            Assertions.assertThat(
+                            when()
+                                    .get(TEST_BACKEND_CHECK_URL)
+                                    .then()
+                                    .statusCode(200)
+                                    .extract().body().asString())
+                    .isEqualTo(TEST_BACKEND_TEST_DATA);
         });
+
     }
 
     private void createContractOffer(String assetId) {
