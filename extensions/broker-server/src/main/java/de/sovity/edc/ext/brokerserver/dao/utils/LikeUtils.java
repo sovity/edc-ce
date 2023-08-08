@@ -30,16 +30,16 @@ public class LikeUtils {
     /**
      * Create LIKE condition value for "field contains word".
      *
-     * @param field field
-     * @param word  word
+     * @param field         field
+     * @param lowercaseWord word
      * @return "%escapedWord%"
      */
-    public static Condition contains(Field<String> field, String word) {
-        if (StringUtils.isBlank(word)) {
+    public static Condition contains(Field<String> field, String lowercaseWord) {
+        if (StringUtils.isBlank(lowercaseWord)) {
             return DSL.trueCondition();
         }
 
-        return field.like("%" + escape(word) + "%");
+        return field.likeIgnoreCase("%" + escape(lowercaseWord) + "%");
     }
 
 

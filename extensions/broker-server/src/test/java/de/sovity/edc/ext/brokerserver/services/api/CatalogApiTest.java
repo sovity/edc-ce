@@ -46,8 +46,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
 import static de.sovity.edc.ext.brokerserver.TestUtils.brokerServerClient;
+import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
@@ -165,11 +165,6 @@ class CatalogApiTest {
                 AssetProperty.ASSET_NAME, "my-asset"
             ));
             assertThat(dataOfferResult.getCreatedAt()).isEqualTo(today.minusDays(5));
-
-            // Key order of Json-String might differ, so we compare the JSON-Objects for similarity
-//            var actual = dataOfferResult.getContractOffers().get(0).getContractPolicy().getLegacyPolicy();
-//            var expected = toJson(dummyPolicy());
-//            assertEqualJson(expected, toJson(actual));
         });
     }
 
@@ -265,6 +260,35 @@ class CatalogApiTest {
             assertThat(dataSubcategory.getTitle()).isEqualTo("Data Subcategory");
             assertThat(dataSubcategory.getValues()).extracting(CnfFilterItem::getId).containsExactly("my-subcategory-1", "MY-SUBCATEGORY-2", "");
             assertThat(dataSubcategory.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("my-subcategory-1", "MY-SUBCATEGORY-2", "");
+        });
+    }
+
+
+    /**
+     * Regression Test against bug where asset names with capital letters were not hit by search.
+     * <br>
+     * It was caused by search terms getting lower cased while the LIKE operation being case-sensitive.
+     */
+    @Test
+    void testSearchCaseInsensitive() {
+        TEST_DATABASE.testTransaction(dsl -> {
+            // arrange
+            var today = OffsetDateTime.now().withNano(0);
+
+            createConnector(dsl, today, "http://my-connector/ids/data");
+            createDataOffer(dsl, today, Map.of(
+                AssetProperty.ASSET_ID, "123",
+                AssetProperty.ASSET_NAME, "Hello"
+            ), "http://my-connector/ids/data");
+
+
+            // act
+            var query = new CatalogPageQuery();
+            query.setSearchQuery("Hello");
+            var result = brokerServerClient().brokerServerApi().catalogPage(query);
+
+            // assert
+            assertThat(result.getDataOffers()).extracting(CatalogDataOffer::getAssetId).containsExactly("123");
         });
     }
 
