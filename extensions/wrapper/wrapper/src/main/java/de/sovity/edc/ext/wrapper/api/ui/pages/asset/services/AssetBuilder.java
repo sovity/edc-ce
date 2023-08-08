@@ -16,22 +16,25 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.asset.services;
 
 
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetRequest;
-import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.utils.AssetUtils;
+import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.utils.AssetPropertyMapper;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
-
-import java.util.UUID;
 
 @RequiredArgsConstructor
 public class AssetBuilder {
 
-    private final AssetUtils assetUtils;
+    private final AssetPropertyMapper assetPropertyMapper;
 
     public Asset buildAsset(AssetRequest request) {
-        var properties = request.getProperties();
-        var privateProperties = request.getPrivateProperties();
-        var dataAddress = request.getDataAddressDto();
+        var properties = assetPropertyMapper.toMapOfObject(request.getProperties());
+        var privateProperties = assetPropertyMapper.toMapOfObject(request.getPrivateProperties());
+        var dataAddress = DataAddress.Builder.newInstance().properties(request.getDataAddressProperties()).build();
 
-        return Asset.Builder.newInstance().id(UUID.randomUUID().toString()).properties(properties).privateProperties(privateProperties).dataAddress(assetUtils.mapToDataAddress(dataAddress)).build();
+        return Asset.Builder.newInstance()
+                .id(request.getProperties().get(Asset.PROPERTY_ID))
+                .properties(properties)
+                .privateProperties(privateProperties)
+                .dataAddress(dataAddress).build();
     }
 }

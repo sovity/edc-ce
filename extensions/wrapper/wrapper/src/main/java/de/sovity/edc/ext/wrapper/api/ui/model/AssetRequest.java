@@ -26,15 +26,15 @@ import java.util.Map;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Asset Request for Asset Page")
+@Schema(description = "Asset Request Post Body")
 public class AssetRequest {
 
     @Schema(description = "Data Address", requiredMode = Schema.RequiredMode.REQUIRED)
-    private DataAddressDto dataAddressDto;
+    private Map<String, String> dataAddressProperties;
 
     @Schema(description = "Properties of the Data Address", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Map<String, Object> properties;
+    private Map<String, String> properties;
 
-    @Schema(description = "Private Properties of the Data Address", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Map<String, Object> privateProperties;
+    @Schema(description = "Private Asset Properties", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Map<String, String> privateProperties;
 }

@@ -24,13 +24,18 @@ import java.util.Map;
 public class AssetEntry {
 
     @Schema(description = "Asset Properties", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Map<String, Object> properties;
+    private Map<String, String> properties;
 
     @Schema(description = "Asset Private Properties", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Map<String, Object> privateProperties;
+    private Map<String, String> privateProperties;
 
-    @Schema(description = "Asset Data Address", requiredMode = Schema.RequiredMode.REQUIRED)
-    private DataAddressDto dataAddress;
+    @Schema(description = "Asset Creation Date", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Long creationDate;
+
+
+
+
+
 
 
 }

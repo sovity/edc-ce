@@ -1,6 +1,19 @@
+/*
+ * Copyright (c) 2023 sovity GmbH
+ *
+ *  This program and the accompanying materials are made available under the
+ *  terms of the Apache License, Version 2.0 which is available at
+ *  https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
+ *  Contributors:
+ *      sovity GmbH - init
+ */
+
 package de.sovity.edc.extension.e2e.connector;
 
-import de.sovity.edc.extension.e2e.connector.config.EdcApiType;
+import de.sovity.edc.extension.e2e.connector.config.EdcApiGroup;
 import jakarta.json.JsonObject;
 
 import java.net.URI;
@@ -32,7 +45,7 @@ public interface Connector {
 
     Map<String, String> getConfig();
 
-    URI getUriForApi(EdcApiType apiType);
+    URI getUriForApi(EdcApiGroup edcApiGroup);
 
     String getParticipantId();
 

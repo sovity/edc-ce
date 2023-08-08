@@ -15,7 +15,12 @@
 package de.sovity.edc.ext.wrapper.api.ui;
 
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
-import de.sovity.edc.ext.wrapper.api.ui.model.*;
+import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.AssetRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
@@ -71,23 +76,24 @@ public class UiResource {
     }
 
     @GET
-    @Path("pages/asset")
+    @Path("pages/asset-page")
     @Produces(MediaType.APPLICATION_JSON)
     public AssetPage assetPage() {
         return new AssetPage(assetApiService.getAssets());
     }
 
     @POST
-    @Path("pages/asset")
+    @Path("pages/asset-page/assets")
     @Produces(MediaType.APPLICATION_JSON)
-    public IdResponse createAsset(AssetRequest assetRequest) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public IdResponseDto createAsset(AssetRequest assetRequest) {
         return assetApiService.createAsset(assetRequest);
     }
 
     @DELETE
-    @Path("pages/asset")
+    @Path("pages/asset-page/assets/{assetId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public IdResponseDto deleteAsset(String assetId) {
+    public IdResponseDto deleteAsset(@PathParam("assetId") String assetId) {
         return assetApiService.deleteAsset(assetId);
     }
 

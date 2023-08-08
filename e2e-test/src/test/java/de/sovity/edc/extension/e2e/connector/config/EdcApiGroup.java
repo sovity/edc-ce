@@ -13,12 +13,19 @@
 
 package de.sovity.edc.extension.e2e.connector.config;
 
-import java.util.Map;
+public enum EdcApiGroup {
+    DEFAULT(""),
+    PROTOCOL("protocol"),
+    MANAGEMENT("management"),
+    CONTROL("control");
 
-public record SimpleConfig(String name, String value) implements EdcConfig {
+    private final String dataSourcePropertyName;
 
-    @Override
-    public Map<String, String> toMap() {
-        return Map.of(name, value);
+    EdcApiGroup(String dataSourcePropertyName) {
+        this.dataSourcePropertyName = dataSourcePropertyName;
+    }
+
+    public String getDataSourcePropertyName() {
+        return dataSourcePropertyName;
     }
 }

@@ -18,9 +18,8 @@ import de.sovity.edc.ext.wrapper.api.ui.model.AssetEntry;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.AssetBuilder;
-import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.utils.AssetUtils;
+import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.utils.AssetPropertyMapper;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.api.model.IdResponse;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
@@ -34,15 +33,14 @@ public class AssetApiService {
 
     private final AssetBuilder assetBuilder;
     private final AssetService assetService;
-    private final AssetUtils assetUtils;
+    private final AssetPropertyMapper assetPropertyMapper;
 
     public List<AssetEntry> getAssets() {
         var assets = getAllAssets();
-        return assets.stream().sorted(Comparator.comparing(Asset::getCreatedAt).reversed()).map(definition -> {
+        return assets.stream().sorted(Comparator.comparing(Asset::getCreatedAt).reversed()).map(asset -> {
             var entry = new AssetEntry();
-            entry.setProperties(definition.getProperties());
-            entry.setPrivateProperties(definition.getPrivateProperties());
-            entry.setDataAddress(assetUtils.mapToDataAddressDto(definition.getDataAddress()));
+            entry.setProperties(assetPropertyMapper.truncateToMapOfString(asset.getProperties()));
+            entry.setPrivateProperties(assetPropertyMapper.truncateToMapOfString(asset.getPrivateProperties()));
             return entry;
         }).toList();
     }
@@ -53,11 +51,10 @@ public class AssetApiService {
 
 
     @NotNull
-    public IdResponse createAsset(AssetRequest request) {
+    public IdResponseDto createAsset(AssetRequest request) {
         var asset = assetBuilder.buildAsset(request);
-
         asset = assetService.create(asset).getContent();
-        return IdResponse.Builder.newInstance().id(asset.getId()).createdAt(asset.getCreatedAt()).build();
+        return new IdResponseDto(asset.getId());
     }
 
     @NotNull
