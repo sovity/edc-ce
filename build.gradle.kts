@@ -54,8 +54,8 @@ allprojects {
             events("passed", "skipped", "failed")
         }
 
-        if (project.hasProperty("postgres-flyway")) {
-            environment("POSTGRES_FLYWAY_EXTENSION_ENABLED", "true")
+        if (project.hasProperty("e2e-test")) {
+            environment("E2E_TEST_ENABLED", "true")
         }
     }
 

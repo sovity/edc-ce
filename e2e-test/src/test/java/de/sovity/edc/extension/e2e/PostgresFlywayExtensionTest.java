@@ -40,7 +40,7 @@ import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.TYPE;
 import static org.eclipse.edc.jsonld.spi.PropertyAndTypeNames.ODRL_POLICY_ATTRIBUTE;
 
 @EnabledIfEnvironmentVariable(
-        named = "POSTGRES_FLYWAY_EXTENSION_ENABLED",
+        named = "E2E_TEST_ENABLED",
         matches = "true")
 public class PostgresFlywayExtensionTest {
 

@@ -29,8 +29,8 @@ ARG JVM_ARGS=""
 
 WORKDIR /app
 
-COPY --from=build /home/gradle/project/connector/build/libs/app.jar /app
-COPY ./connector/src/main/resources/logging.properties /app
+COPY --from=build /home/gradle/project/launcher/test-backend/build/libs/app.jar /app
+COPY ./launcher/test-backend/src/main/resources/logging.properties /app
 
 # health status is determined by the availability of the /health endpoint
 HEALTHCHECK --interval=5s --timeout=5s --retries=10 CMD curl --fail http://localhost:11001/api/check/health
@@ -40,7 +40,7 @@ HEALTHCHECK --interval=5s --timeout=5s --retries=10 CMD curl --fail http://local
 ENV JVM_ARGS=$JVM_ARGS
 
 # Read ENV Vars from .env with substitution
-COPY ./connector/.env /app/.env
+COPY ./launcher/test-backend/.env /app/.env
 
 # Replaces ENV Var statements so they don't overwrite existing ENV Vars
 RUN sed -ri 's/^\s*(\S+)=(.*)$/\1=${\1:-"\2"}/' .env

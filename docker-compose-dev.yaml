@@ -10,8 +10,21 @@ services:
       - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/management/v2
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
       - EDC_UI_CATALOG_URLS=http://edc2:11003/api/v1/dsp
+
+  test-backend:
+    build:
+      dockerfile: launcher/test-backend/Dockerfile
+      args:
+        JVM_ARGS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    ports:
+      - '33001:11001'
+
   edc:
-    image: ${DEV_EDC_IMAGE}
+    build:
+      dockerfile: launcher/connector/Dockerfile
+      args:
+        JVM_ARGS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+        BUILD_ARGS: -Pfs-vault -Pdmgmt-api-key -Ppostgres-flyway -Poauth
     depends_on:
       - postgresql
     environment:
@@ -83,7 +96,11 @@ services:
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
       - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/dsp
   edc2:
-    image: ${DEV_EDC_IMAGE}
+    build:
+      dockerfile: launcher/connector/Dockerfile
+      args:
+        JVM_ARGS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+        BUILD_ARGS: -Pfs-vault -Pdmgmt-api-key -Ppostgres-flyway -Poauth
     depends_on:
       - postgresql2
     environment:
