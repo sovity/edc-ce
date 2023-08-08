@@ -13,6 +13,7 @@
  */
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,5 +26,5 @@ import java.util.List;
 @AllArgsConstructor
 public class PolicyPage {
     @Schema(description = "Policy Entries", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<UiPolicyDto> policies;
+    private List<PolicyDefinitionDto> policies;
 }

@@ -16,13 +16,13 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
 
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.api.model.IdResponse;
 import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
 import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
-import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.spi.query.QuerySpec;
 
 import java.util.List;
@@ -31,30 +31,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PolicyApiService {
 
-
     private final PolicyDefinitionService policyDefinitionService;
     private final PolicyMapper policyMapper;
 
-    public List<UiPolicyDto> getPolicies() {
-        var policies = getAllPolicies();
-
-        return policies.stream().map(policy -> {
-            var entry = policyMapper.buildPolicyDto(policy);
+    public List<PolicyDefinitionDto> getPolicies() {
+        var policyDefinitions = getAllPolicies();
+        return policyDefinitions.stream().map(policyDefinition -> {
+            var entry = policyMapper.buildPolicyDefinitionDto(policyDefinition);
             return entry;
         }).toList();
     }
 
-    private List<Policy> getAllPolicies() {
+    private List<PolicyDefinition> getAllPolicies() {
         var policyDefinitions = policyDefinitionService.query(QuerySpec.max()).getContent().toList();
-        return policyDefinitions.stream().map(PolicyDefinition::getPolicy).toList();
+        return policyDefinitions;
     }
 
     @NotNull
-    public IdResponse createPolicy(UiPolicyDto request) {
-        var policy = policyMapper.buildPolicy(request);
-        PolicyDefinition policyDefinition = PolicyDefinition.Builder.newInstance()
-                .policy(policy)
-                .build();
+    public IdResponse createPolicy(PolicyDefinitionDto request) {
+        var policyDefinition = policyMapper.buildPolicyDefinition(request);
         policyDefinition = policyDefinitionService.create(policyDefinition).getContent();
         return IdResponse.Builder.newInstance().id(policyDefinition.getId()).createdAt(policyDefinition.getCreatedAt()).build();
     }
