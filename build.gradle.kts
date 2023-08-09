@@ -57,6 +57,10 @@ allprojects {
         if (project.hasProperty("e2e-test")) {
             environment("E2E_TEST_ENABLED", "true")
         }
+
+        if (project.hasProperty("e2e-test-external-connector")) {
+            environment("E2E_TEST_EXTERNAL_CONNECTOR_ENABLED", "true")
+        }
     }
 
     checkstyle {

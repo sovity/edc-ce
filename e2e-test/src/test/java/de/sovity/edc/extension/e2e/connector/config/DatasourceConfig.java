@@ -27,7 +27,7 @@ public record DatasourceConfig(
     private static final String SETTING_DATASOURCE_PASSWORD = "edc.datasource.%s.password";
 
     @Override
-    public Map<String, String> toMap() {
+    public Map<String, String> toEdcSettingMap() {
         return Map.of(
                 String.format(SETTING_DATASOURCE_NAME, name), name,
                 String.format(SETTING_DATASOURCE_URL, name), jdbcUrl,

@@ -18,7 +18,7 @@ import java.util.Map;
 public record SimpleConfig(String name, String value) implements EdcConfig {
 
     @Override
-    public Map<String, String> toMap() {
+    public Map<String, String> toEdcSettingMap() {
         return Map.of(name, value);
     }
 }

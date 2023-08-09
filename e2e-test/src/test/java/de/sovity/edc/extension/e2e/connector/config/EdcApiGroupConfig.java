@@ -27,12 +27,28 @@ public record EdcApiGroupConfig(
     private static final String SETTING_WEB_HTTP_DEFAULT_PATH = "web.http.path";
     private static final String SETTING_WEB_HTTP_DEFAULT_PORT = "web.http.port";
 
+    public static EdcApiGroupConfig mgntFromUri(URI uri) {
+        return fromUri(EdcApiGroup.MANAGEMENT, uri);
+    }
+
+    public static EdcApiGroupConfig protocolFromUri(URI uri) {
+        return fromUri(EdcApiGroup.PROTOCOL, uri);
+    }
+
+    public static EdcApiGroupConfig fromUri(EdcApiGroup edcApiGroup, URI uri) {
+        return new EdcApiGroupConfig(
+                edcApiGroup,
+                String.format("%s://%s", uri.getScheme(), uri.getHost()),
+                uri.getPort(),
+                uri.getPath());
+    }
+
     public URI getUri() {
         return URI.create(String.format("%s:%s%s", baseUrl, port, path));
     }
 
     @Override
-    public Map<String, String> toMap() {
+    public Map<String, String> toEdcSettingMap() {
         if ("".equals(edcApiGroup.getDataSourcePropertyName())) {
             return Map.of(
                     SETTING_WEB_HTTP_DEFAULT_PATH, path,

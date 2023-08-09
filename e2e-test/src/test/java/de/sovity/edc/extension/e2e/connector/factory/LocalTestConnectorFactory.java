@@ -18,6 +18,7 @@ import de.sovity.edc.extension.e2e.connector.TestConnector;
 import de.sovity.edc.extension.e2e.connector.config.DatasourceConfig;
 import de.sovity.edc.extension.e2e.connector.config.EdcApiGroup;
 import de.sovity.edc.extension.e2e.connector.config.EdcApiGroupConfig;
+import de.sovity.edc.extension.e2e.connector.config.EdcConfigGeneratorImpl;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -33,7 +34,7 @@ import static de.sovity.edc.extension.e2e.connector.config.EdcApiGroup.PROTOCOL;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 
 @RequiredArgsConstructor
-public class TestConnectorFactory implements ConnectorFactory {
+public class LocalTestConnectorFactory implements ConnectorFactory {
 
     private static final String BASE_URL = "http://localhost";
     private static final List<String> DATASOURCE_NAMES = List.of(
@@ -60,8 +61,7 @@ public class TestConnectorFactory implements ConnectorFactory {
         var dspCallbackAddress = apiGroupConfigMap.get(PROTOCOL).getUri();
         var datasourceConfigs = getDatasourceConfigs(testDatabase);
         var migrationLocation = "classpath:migration/" + participantId;
-        var connector = TestConnector.builder()
-                .participantId(participantId)
+        var configGenerator = EdcConfigGeneratorImpl.builder()
                 .apiGroupConfigMap(apiGroupConfigMap)
                 .datasourceConfigs(datasourceConfigs)
                 .configProperty("edc.participant.id", participantId)
@@ -72,8 +72,12 @@ public class TestConnectorFactory implements ConnectorFactory {
                 .configProperty("edc.dsp.callback.address", dspCallbackAddress.toString())
                 .configProperty("edc.flyway.additional.migration.locations", migrationLocation)
                 .build();
-        System.out.println(connector.getConfig());
-        edcContext.setConfiguration(connector.getConfig());
+        var connector = TestConnector.builder()
+                .participantId(participantId)
+                .managementApiGroupConfig(apiGroupConfigMap.get(MANAGEMENT))
+                .protocolApiGroupConfig(apiGroupConfigMap.get(PROTOCOL))
+                .build();
+        edcContext.setConfiguration(configGenerator.getConfig());
         return connector;
     }
 
@@ -98,4 +102,5 @@ public class TestConnectorFactory implements ConnectorFactory {
                         testDatabase.getJdbcPassword()))
                 .toList();
     }
+
 }

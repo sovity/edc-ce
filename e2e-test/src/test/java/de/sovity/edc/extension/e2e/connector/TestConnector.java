@@ -14,17 +14,13 @@
 package de.sovity.edc.extension.e2e.connector;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.extension.e2e.connector.config.DatasourceConfig;
-import de.sovity.edc.extension.e2e.connector.config.EdcApiGroup;
 import de.sovity.edc.extension.e2e.connector.config.EdcApiGroupConfig;
-import de.sovity.edc.extension.e2e.connector.config.EdcConfig;
-import de.sovity.edc.extension.e2e.connector.config.SimpleConfig;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 import lombok.Builder;
-import lombok.Singular;
+import lombok.NonNull;
 import org.eclipse.edc.jsonld.TitaniumJsonLd;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.jsonld.util.JacksonJsonLd;
@@ -33,13 +29,10 @@ import org.eclipse.edc.spi.monitor.ConsoleMonitor;
 
 import java.net.URI;
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Stream;
 
-import static de.sovity.edc.extension.e2e.connector.config.EdcApiGroup.MANAGEMENT;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static jakarta.json.Json.createObjectBuilder;
@@ -51,6 +44,7 @@ import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.CONTEXT;
 import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.ID;
 import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.TYPE;
 import static org.eclipse.edc.jsonld.spi.PropertyAndTypeNames.DCAT_DATASET_ATTRIBUTE;
+import static org.eclipse.edc.jsonld.spi.PropertyAndTypeNames.ODRL_POLICY_ATTRIBUTE;
 import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 import static org.eclipse.edc.spi.CoreConstants.EDC_PREFIX;
 
@@ -60,16 +54,12 @@ public class TestConnector implements Connector {
     private final ObjectMapper objectMapper = JacksonJsonLd.createObjectMapper();
     private final Duration timeout = Duration.ofSeconds(60);
     private final JsonLd jsonLd = new TitaniumJsonLd(new ConsoleMonitor());
+    @NonNull
     private final String participantId;
-
-    @Singular
-    private final List<DatasourceConfig> datasourceConfigs;
-
-    @Singular
-    private final List<SimpleConfig> simpleConfigs;
-
-    private final String baseUrl;
-    private final Map<EdcApiGroup, EdcApiGroupConfig> apiGroupConfigMap;
+    @NonNull
+    private final EdcApiGroupConfig managementApiGroupConfig;
+    @NonNull
+    private final EdcApiGroupConfig protocolApiGroupConfig;
 
     @Override
     public void createAsset(String assetId, Map<String, Object> dataAddressProperties) {
@@ -83,7 +73,7 @@ public class TestConnector implements Connector {
                 .build();
 
         given()
-                .baseUri(getUriForApi(MANAGEMENT).toString())
+                .baseUri(managementApiGroupConfig.getUri().toString())
                 .contentType(JSON)
                 .body(requestBody)
                 .when()
@@ -100,7 +90,7 @@ public class TestConnector implements Connector {
                 .add(TYPE, "QuerySpecDto")
                 .build();
         return given()
-                .baseUri(getUriForApi(MANAGEMENT).toString())
+                .baseUri(managementApiGroupConfig.getUri().toString())
                 .contentType(JSON)
                 .body(requestBody)
                 .when()
@@ -120,7 +110,7 @@ public class TestConnector implements Connector {
                 .build();
 
         return given()
-                .baseUri(getUriForApi(MANAGEMENT).toString())
+                .baseUri(managementApiGroupConfig.getUri().toString())
                 .contentType(JSON)
                 .body(requestBody)
                 .when()
@@ -153,7 +143,7 @@ public class TestConnector implements Connector {
                 .build();
 
         given()
-                .baseUri(getUriForApi(MANAGEMENT).toString())
+                .baseUri(managementApiGroupConfig.getUri().toString())
                 .contentType(JSON)
                 .body(requestBody)
                 .when()
@@ -174,7 +164,7 @@ public class TestConnector implements Connector {
 
         await().atMost(timeout).untilAsserted(() -> {
             var response = given()
-                    .baseUri(getUriForApi(MANAGEMENT).toString())
+                    .baseUri(managementApiGroupConfig.getUri().toString())
                     .contentType(JSON)
                     .when()
                     .body(requestBody)
@@ -231,7 +221,7 @@ public class TestConnector implements Connector {
                 .build();
 
         var negotiationId = given()
-                .baseUri(getUriForApi(MANAGEMENT).toString())
+                .baseUri(managementApiGroupConfig.getUri().toString())
                 .contentType(JSON)
                 .body(requestBody)
                 .when()
@@ -252,7 +242,7 @@ public class TestConnector implements Connector {
         var contractAgreementId = new AtomicReference<String>();
 
         await().atMost(timeout).untilAsserted(() -> {
-            var agreementId = getContractNegotiationField(negotiationId, "contractAgreementId");
+            var agreementId = getContractNegotiationField(negotiationId);
             assertThat(agreementId).isNotNull().isInstanceOf(String.class);
 
             contractAgreementId.set(agreementId);
@@ -263,33 +253,27 @@ public class TestConnector implements Connector {
         return id;
     }
 
-    private String getContractNegotiationField(String negotiationId, String fieldName) {
+    private String getContractNegotiationField(String negotiationId) {
         return given()
-                .baseUri(getUriForApi(MANAGEMENT).toString())
+                .baseUri(managementApiGroupConfig.getUri().toString())
                 .contentType(JSON)
                 .when()
                 .get("/v2/contractnegotiations/{id}", negotiationId)
                 .then()
                 .statusCode(200)
                 .extract().body().jsonPath()
-                .getString(format("'edc:%s'", fieldName));
+                .getString("'edc:contractAgreementId'");
     }
 
     public String getContractNegotiationState(String id) {
         return given()
-                .baseUri(getUriForApi(MANAGEMENT).toString())
+                .baseUri(managementApiGroupConfig.getUri().toString())
                 .contentType(JSON)
                 .when()
                 .get("/v2/contractnegotiations/{id}/state", id)
                 .then()
                 .statusCode(200)
                 .extract().body().jsonPath().getString("'edc:state'");
-    }
-
-
-    @Override
-    public URI getUriForApi(EdcApiGroup edcApiGroup) {
-        return apiGroupConfigMap.get(edcApiGroup).getUri();
     }
 
     @Override
@@ -317,7 +301,7 @@ public class TestConnector implements Connector {
                 .build();
 
         return given()
-                .baseUri(getUriForApi(MANAGEMENT).toString())
+                .baseUri(managementApiGroupConfig.getUri().toString())
                 .contentType(JSON)
                 .body(requestBody)
                 .when()
@@ -328,9 +312,35 @@ public class TestConnector implements Connector {
     }
 
     @Override
+    public String consumeOffer(
+            URI providerProtocolApi,
+            String assetId,
+            JsonObject destination) {
+        var dataset = getDatasetForAsset(assetId, providerProtocolApi);
+        var contractId = JsonLdConnectorUtil.getContractId(dataset);
+        var policy = dataset.getJsonArray(ODRL_POLICY_ATTRIBUTE).get(0).asJsonObject();
+
+        var contractAgreementId = negotiateContract(
+                getParticipantId(),
+                providerProtocolApi,
+                contractId.toString(),
+                contractId.assetIdPart(),
+                policy);
+
+        var transferProcessId = initiateTransfer(
+                contractAgreementId,
+                assetId,
+                providerProtocolApi,
+                destination);
+
+        assertThat(transferProcessId).isNotNull();
+        return transferProcessId;
+    }
+
+    @Override
     public String getTransferProcessState(String id) {
         return given()
-                .baseUri(getUriForApi(MANAGEMENT).toString())
+                .baseUri(managementApiGroupConfig.getUri().toString())
                 .contentType(JSON)
                 .when()
                 .get("/v2/transferprocesses/{id}/state", id)
@@ -340,25 +350,13 @@ public class TestConnector implements Connector {
     }
 
     @Override
-    public Map<String, String> getConfig() {
-        var configStream = Stream.of(
-                apiGroupConfigMap.values().stream().toList(),
-                datasourceConfigs,
-                simpleConfigs);
-        return new HashMap<>() {
-            {
-                configStream.flatMap(List::stream)
-                        .map(EdcConfig::toMap)
-                        .forEach(this::putAll);
-            }
-        };
+    public URI getManagementApiUri() {
+        return managementApiGroupConfig.getUri();
     }
 
-    public static class TestConnectorBuilder {
-        public TestConnectorBuilder configProperty(String key, String value) {
-            this.simpleConfig(new SimpleConfig(key, value));
-            return this;
-        }
+    @Override
+    public URI getProtocolApiUri() {
+        return protocolApiGroupConfig.getUri();
     }
 
 }

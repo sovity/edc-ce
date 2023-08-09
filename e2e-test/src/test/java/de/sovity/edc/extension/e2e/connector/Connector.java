@@ -13,7 +13,6 @@
 
 package de.sovity.edc.extension.e2e.connector;
 
-import de.sovity.edc.extension.e2e.connector.config.EdcApiGroup;
 import jakarta.json.JsonObject;
 
 import java.net.URI;
@@ -43,10 +42,6 @@ public interface Connector {
             String assetId,
             JsonObject policy);
 
-    Map<String, String> getConfig();
-
-    URI getUriForApi(EdcApiGroup edcApiGroup);
-
     String getParticipantId();
 
     String initiateTransfer(
@@ -55,5 +50,14 @@ public interface Connector {
             URI providerProtocolApi,
             JsonObject destination);
 
+    String consumeOffer(
+            URI providerProtocolApi,
+            String assetId,
+            JsonObject destination);
+
     String getTransferProcessState(String id);
+
+    URI getManagementApiUri();
+
+    URI getProtocolApiUri();
 }
