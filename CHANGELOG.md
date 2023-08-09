@@ -12,6 +12,13 @@ All notable changes to this project will be documented in this file.
   - Examples for the new requests are located in the postman collection in the `docs` folder
   - The `OpenAPI` file has been updated to represent the EDC version `0.1.2`
 
+### Minor Changes
+
+- UI API Wrapper Endpoints:
+  - Asset Page
+  - Create Asset
+  - Delete Asset
+
 ### Migration Notes
 
 1. The `MY_EDC_IDS_BASE_URL` has been renamed to `MY_EDC_PROTOCOL_BASE_URL`
