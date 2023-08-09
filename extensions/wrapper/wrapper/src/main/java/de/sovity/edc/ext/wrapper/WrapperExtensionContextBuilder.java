@@ -17,6 +17,9 @@ package de.sovity.edc.ext.wrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.ee.EnterpriseEditionResourceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
+import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.AssetBuilder;
+import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.utils.AssetPropertyMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementDataFetcher;
@@ -100,6 +103,9 @@ public class WrapperExtensionContextBuilder {
                 transferProcessService);
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
+        var assetUtils = new AssetPropertyMapper();
+        var assetBuilder = new AssetBuilder(assetUtils);
+        var assetApiService = new AssetApiService(assetBuilder, assetService, assetUtils);
         var transferRequestBuilder = new TransferRequestBuilder(
                 objectMapper,
                 contractAgreementUtils,
@@ -114,7 +120,8 @@ public class WrapperExtensionContextBuilder {
                 contractAgreementApiService,
                 contractAgreementTransferApiService,
                 transferHistoryPageApiService,
-                transferHistoryPageAssetFetcherService
+                transferHistoryPageAssetFetcherService,
+                assetApiService
         );
 
         // Use Case API

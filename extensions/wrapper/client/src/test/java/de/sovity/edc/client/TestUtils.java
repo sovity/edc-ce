@@ -14,12 +14,16 @@
 
 package de.sovity.edc.client;
 
+import org.eclipse.edc.jsonld.spi.JsonLd;
+import org.eclipse.edc.junit.extensions.EdcExtension;
+import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
+import static org.mockito.Mockito.mock;
 
 public class TestUtils {
     private static final int DATA_PORT = getFreePort();
@@ -49,6 +53,12 @@ public class TestUtils {
         config.put("edc.oauth.provider.audience", "idsc:IDS_CONNECTORS_ALL");
         config.putAll(additionalConfigProperties);
         return config;
+    }
+
+    public static void setupExtension(EdcExtension extension) {
+        extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
+        extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
+        extension.setConfiguration(createConfiguration(Map.of()));
     }
 
     public static EdcClient edcClient() {
