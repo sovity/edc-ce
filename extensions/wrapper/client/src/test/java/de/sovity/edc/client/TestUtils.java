@@ -38,7 +38,9 @@ public class TestUtils {
     public static final String PROTOCOL_ENDPOINT = PROTOCOL_HOST + PROTOCOL_PATH + "/data";
 
     @NotNull
-    public static Map<String, String> createConfiguration(Map<String, String> additionalConfigProperties) {
+    public static Map<String, String> createConfiguration(
+            Map<String, String> additionalConfigProperties
+    ) {
         Map<String, String> config = new HashMap<>();
         config.put("web.http.port", String.valueOf(getFreePort()));
         config.put("web.http.path", "/api");
@@ -60,6 +62,9 @@ public class TestUtils {
     }
 
     public static EdcClient edcClient() {
-        return EdcClient.builder().managementApiUrl(TestUtils.MANAGEMENT_ENDPOINT).managementApiKey(TestUtils.MANAGEMENT_API_KEY).build();
+        return EdcClient.builder()
+                .managementApiUrl(TestUtils.MANAGEMENT_ENDPOINT)
+                .managementApiKey(TestUtils.MANAGEMENT_API_KEY)
+                .build();
     }
 }

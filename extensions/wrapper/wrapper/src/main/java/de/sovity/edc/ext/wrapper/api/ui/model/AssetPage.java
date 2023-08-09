@@ -21,7 +21,8 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
+@Schema(description = "All data for the Asset Page")
 public class AssetPage {
-    @Schema(description = "Asset Entries", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Visible Assets", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<AssetEntry> assets;
 }

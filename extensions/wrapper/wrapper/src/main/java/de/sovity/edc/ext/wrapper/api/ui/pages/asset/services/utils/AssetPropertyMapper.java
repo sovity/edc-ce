@@ -23,7 +23,7 @@ import java.util.Map;
 public class AssetPropertyMapper {
 
     /**
-     * Converts Map<String, Object> to Map<String, String>.
+     * Converts a {@code Map<String, Object>} to {@code Map<String, String>}.
      * <p>
      * Our API forsakes asset properties that are complex objects / JSON and only keeps string properties.
      *

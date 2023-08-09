@@ -26,9 +26,8 @@ import java.util.Map;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Asset Request Post Body")
-public class AssetRequest {
-
+@Schema(description = "Data for creating an Asset")
+public class AssetCreateRequest {
     @Schema(description = "Data Address", requiredMode = Schema.RequiredMode.REQUIRED)
     private Map<String, String> dataAddressProperties;
 

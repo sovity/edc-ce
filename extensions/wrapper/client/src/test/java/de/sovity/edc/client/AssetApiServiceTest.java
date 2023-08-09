@@ -134,7 +134,7 @@ public class AssetApiServiceTest {
     }
 
     private void createAsset(
-            AssetService assetStore,
+            AssetService assetService,
             String date,
             Map<String, String> properties,
             Map<String, String> privateProperties
@@ -152,7 +152,7 @@ public class AssetApiServiceTest {
                 .privateProperties(assetPropertyMapper.toMapOfObject(privateProperties))
                 .createdAt(dateFormatterToLong(date))
                 .build();
-        assetStore.create(asset);
+        assetService.create(asset);
     }
 
     @SneakyThrows

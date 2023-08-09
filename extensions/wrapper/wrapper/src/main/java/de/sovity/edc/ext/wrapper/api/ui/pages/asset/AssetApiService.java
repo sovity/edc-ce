@@ -15,7 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetEntry;
-import de.sovity.edc.ext.wrapper.api.ui.model.AssetRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.AssetBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.utils.AssetPropertyMapper;
@@ -30,7 +30,6 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class AssetApiService {
-
     private final AssetBuilder assetBuilder;
     private final AssetService assetService;
     private final AssetPropertyMapper assetPropertyMapper;
@@ -45,13 +44,8 @@ public class AssetApiService {
         }).toList();
     }
 
-    private List<Asset> getAllAssets() {
-        return assetService.query(QuerySpec.max()).getContent().toList();
-    }
-
-
     @NotNull
-    public IdResponseDto createAsset(AssetRequest request) {
+    public IdResponseDto createAsset(AssetCreateRequest request) {
         var asset = assetBuilder.buildAsset(request);
         asset = assetService.create(asset).getContent();
         return new IdResponseDto(asset.getId());
@@ -63,5 +57,7 @@ public class AssetApiService {
         return new IdResponseDto(response.getContent().getId());
     }
 
-
+    private List<Asset> getAllAssets() {
+        return assetService.query(QuerySpec.max()).getContent().toList();
+    }
 }

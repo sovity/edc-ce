@@ -22,20 +22,9 @@ import java.util.Map;
 @Data
 @Schema(description = "Asset Entry for Asset Page")
 public class AssetEntry {
-
     @Schema(description = "Asset Properties", requiredMode = Schema.RequiredMode.REQUIRED)
     private Map<String, String> properties;
 
     @Schema(description = "Asset Private Properties", requiredMode = Schema.RequiredMode.REQUIRED)
     private Map<String, String> privateProperties;
-
-    @Schema(description = "Asset Creation Date", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Long creationDate;
-
-
-
-
-
-
-
 }
