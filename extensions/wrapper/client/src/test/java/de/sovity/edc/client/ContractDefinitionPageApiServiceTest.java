@@ -14,7 +14,6 @@
 
 package de.sovity.edc.client;
 
-import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
 import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -29,9 +28,9 @@ import static de.sovity.edc.client.ContractDefinitionTestUtils.createContractDef
 import java.text.ParseException;
 import java.util.Map;
 
+import static de.sovity.edc.client.ContractDefinitionTestUtils.deleteContractDefinition;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 @ApiTest
@@ -46,7 +45,7 @@ class ContractDefinitionPageApiServiceTest {
     }
 
     @Test
-    void startContractDefinition(ContractDefinitionService contractDefinitionService) throws ParseException {
+    void testCreateAndGetContractDefinition(ContractDefinitionService contractDefinitionService) throws ParseException {
         var client = TestUtils.edcClient();
 
         // arrange
@@ -68,5 +67,40 @@ class ContractDefinitionPageApiServiceTest {
         assertThat(contractDefinition.getContractDefinitionId()).isEqualTo(ContractDefinitionTestUtils.CONTRACT_DEFINITION_ID);
         assertThat(contractDefinition.getContractPolicyId()).isEqualTo(ContractDefinitionTestUtils.CONTRACT_POLICY_ID);
         assertThat(contractDefinition.getAccessPolicyId()).isEqualTo(ContractDefinitionTestUtils.ACCESS_POLICY_ID);
+    }
+
+    @Test
+    void testDeleteContractDefinition(ContractDefinitionService contractDefinitionService) throws ParseException {
+        var client = TestUtils.edcClient();
+
+        // arrange
+        createContractDefinition(contractDefinitionService);
+
+        // act
+        var resultBeforeDelete = client.uiApi().contractDefinitionPage();
+        var contractDefinitionsBeforeDelete = resultBeforeDelete.getContractDefinitions();
+
+        // assert that the contract definition exists before deletion
+        assertFalse(contractDefinitionsBeforeDelete.isEmpty(), "Contract Definitions list should not be empty before deletion");
+
+        var contractDefinitionToDelete = contractDefinitionsBeforeDelete.get(0);
+        assertThat(contractDefinitionToDelete.getContractDefinitionId()).isEqualTo(ContractDefinitionTestUtils.CONTRACT_DEFINITION_ID);
+
+        int sizeBeforeDeletion = contractDefinitionsBeforeDelete.size();
+
+        // act: delete the contract definition
+        deleteContractDefinition(contractDefinitionService);  // You might need to implement this or something similar.
+
+        // act: retrieve the contract definitions after deletion
+        var resultAfterDelete = client.uiApi().contractDefinitionPage();
+        var contractDefinitionsAfterDelete = resultAfterDelete.getContractDefinitions();
+
+        // assert the list size is decremented by one
+        assertEquals(sizeBeforeDeletion - 1, contractDefinitionsAfterDelete.size(), "Contract Definitions list size should decrease by 1 after deletion");
+
+        // assert that the specific contract definition is no longer present
+        assertFalse(contractDefinitionsAfterDelete.contains(contractDefinitionToDelete), "Deleted contract definition should not be present in the list");
+
+
     }
 }

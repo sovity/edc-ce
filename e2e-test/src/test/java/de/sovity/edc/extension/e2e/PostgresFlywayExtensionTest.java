@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2023 sovity GmbH
+ *
+ *  This program and the accompanying materials are made available under the
+ *  terms of the Apache License, Version 2.0 which is available at
+ *  https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
+ *  Contributors:
+ *      sovity GmbH - init
+ */
+
 package de.sovity.edc.extension.e2e;
 
 import de.sovity.edc.extension.e2e.connector.Connector;
@@ -17,7 +30,7 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
 
-import static de.sovity.edc.extension.e2e.connector.config.EdcApiType.PROTOCOL;
+import static de.sovity.edc.extension.e2e.connector.config.EdcApiGroup.PROTOCOL;
 import static jakarta.json.Json.createObjectBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;

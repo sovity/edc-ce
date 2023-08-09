@@ -60,87 +60,31 @@ import java.util.List;
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class WrapperExtensionContextBuilder {
 
-    public static WrapperExtensionContext buildContext(
-            ServiceExtensionContext serviceExtensionContext,
-            AssetIndex assetIndex,
-            AssetService assetService,
-            ContractAgreementService contractAgreementService,
-            ContractDefinitionStore contractDefinitionStore,
-            ContractNegotiationService contractNegotiationService,
-            ContractNegotiationStore contractNegotiationStore,
-            ObjectMapper objectMapper,
-            PolicyDefinitionStore policyDefinitionStore,
-            PolicyEngine policyEngine,
-            TransferProcessService transferProcessService,
-            TransferProcessStore transferProcessStore,
-            ContractDefinitionService contractDefinitionService) {
+    public static WrapperExtensionContext buildContext(ServiceExtensionContext serviceExtensionContext, AssetIndex assetIndex, AssetService assetService, ContractAgreementService contractAgreementService, ContractDefinitionStore contractDefinitionStore, ContractNegotiationService contractNegotiationService, ContractNegotiationStore contractNegotiationStore, ObjectMapper objectMapper, PolicyDefinitionStore policyDefinitionStore, PolicyEngine policyEngine, TransferProcessStore transferProcessStore, TransferProcessService transferProcessService, ContractDefinitionService contractDefinitionService) {
         // UI API
         var transferProcessStateService = new TransferProcessStateService();
-        var contractAgreementPageCardBuilder =
-                new ContractAgreementPageCardBuilder(
-                        transferProcessStateService);
-        var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
-                contractAgreementService,
-                contractNegotiationStore,
-                transferProcessService,
-                assetIndex
-        );
-        var contractAgreementApiService = new ContractAgreementPageApiService(
-                contractAgreementDataFetcher,
-                contractAgreementPageCardBuilder
-        );
-        var transferHistoryPageApiService = new TransferHistoryPageApiService(
-                assetService,
-                contractAgreementService,
-                contractNegotiationStore,
-                transferProcessService,
-                transferProcessStateService);
-        var transferHistoryPageAssetFetcherService = new TransferHistoryPageAssetFetcherService(
-                assetService,
-                transferProcessService);
+        var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(transferProcessStateService);
+        var contractAgreementDataFetcher = new ContractAgreementDataFetcher(contractAgreementService, contractNegotiationStore, transferProcessService, assetIndex);
+        var contractAgreementApiService = new ContractAgreementPageApiService(contractAgreementDataFetcher, contractAgreementPageCardBuilder);
+        var transferHistoryPageApiService = new TransferHistoryPageApiService(assetService, contractAgreementService, contractNegotiationStore, transferProcessService, transferProcessStateService);
+        var transferHistoryPageAssetFetcherService = new TransferHistoryPageAssetFetcherService(assetService, transferProcessService);
         var contractDefinitionUtils = new ContractDefinitionUtils();
         var contactDefinitionBuilder = new ContractDefinitionBuilder(contractDefinitionUtils);
-        var contractDefinitionApiService = new ContractDefinitionApiService(contractDefinitionService,contractDefinitionUtils,contactDefinitionBuilder);
+        var contractDefinitionApiService = new ContractDefinitionApiService(contractDefinitionService, contractDefinitionUtils, contactDefinitionBuilder);
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
-        var transferRequestBuilder = new TransferRequestBuilder(
-                objectMapper,
-                contractAgreementUtils,
-                contractNegotiationUtils,
-                serviceExtensionContext.getConnectorId()
-        );
-        var contractAgreementTransferApiService = new ContractAgreementTransferApiService(
-                transferRequestBuilder,
-                transferProcessService
-        );
-        var uiResource = new UiResource(
-                contractAgreementApiService,
-                contractAgreementTransferApiService,
-                transferHistoryPageApiService,
-                transferHistoryPageAssetFetcherService,
-                contractDefinitionApiService
-        );
+        var transferRequestBuilder = new TransferRequestBuilder(objectMapper, contractAgreementUtils, contractNegotiationUtils, serviceExtensionContext.getConnectorId());
+        var contractAgreementTransferApiService = new ContractAgreementTransferApiService(transferRequestBuilder, transferProcessService);
+        var uiResource = new UiResource(contractAgreementApiService, contractAgreementTransferApiService, transferHistoryPageApiService, transferHistoryPageAssetFetcherService, contractDefinitionApiService);
 
         // Use Case API
-        var kpiApiService = new KpiApiService(
-                assetIndex,
-                policyDefinitionStore,
-                contractDefinitionStore,
-                transferProcessStore,
-                contractAgreementService
-        );
+        var kpiApiService = new KpiApiService(assetIndex, policyDefinitionStore, contractDefinitionStore, transferProcessStore, contractAgreementService);
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
         var policyMappingService = new PolicyMappingService();
-        var offeringService = new OfferingService(assetIndex, policyDefinitionStore,
-                contractDefinitionStore, policyMappingService);
-        var useCaseResource = new UseCaseResource(kpiApiService, supportedPolicyApiService,
-                offeringService);
+        var offeringService = new OfferingService(assetIndex, policyDefinitionStore, contractDefinitionStore, policyMappingService);
+        var useCaseResource = new UseCaseResource(kpiApiService, supportedPolicyApiService, offeringService);
 
         // Collect all JAX-RS resources
-        return new WrapperExtensionContext(List.of(
-                uiResource,
-                useCaseResource,
-                new EnterpriseEditionResourceImpl()
-        ));
+        return new WrapperExtensionContext(List.of(uiResource, useCaseResource, new EnterpriseEditionResourceImpl()));
     }
 }

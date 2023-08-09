@@ -41,12 +41,6 @@ dependencies {
         implementation(project(":extensions:postgres-flyway"))
     }
 
-    // Optional: MDS Extensions
-    if (project.hasProperty("mds")) {
-        implementation(project(":extensions:ids-clearinghouse-client"))
-        implementation(project(":extensions:ids-broker-client"))
-    }
-
     // Optional: Connector-To-Connector IAM
     if (project.hasProperty("oauth2")) {
         implementation("${edcGroup}:oauth2-core:${edcVersion}")

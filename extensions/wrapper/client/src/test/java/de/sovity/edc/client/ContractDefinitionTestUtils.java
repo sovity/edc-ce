@@ -39,9 +39,10 @@ public class ContractDefinitionTestUtils {
         myCriteria.add(new Criterion("exampleLeft2", "operator2", "exampleRight2"));
         var definition = ContractDefinition.Builder.newInstance().id(CONTRACT_DEFINITION_ID).contractPolicyId(CONTRACT_POLICY_ID).accessPolicyId(ACCESS_POLICY_ID).assetsSelector(myCriteria).build();
         contractDefinitionService.create(definition);
-
-
     }
-
+    @NotNull
+    public static void deleteContractDefinition(ContractDefinitionService contractDefinitionService) {
+        contractDefinitionService.delete(CONTRACT_DEFINITION_ID);
+    }
 
 }

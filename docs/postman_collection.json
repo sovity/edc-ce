@@ -885,7 +885,7 @@
 	"variable": [
 		{
 			"key": "PROVIDER_EDC_MANAGEMENT_URL",
-			"value": "http://localhost:11002/api/v1/management/v2",
+			"value": "http://localhost:11002/api/management/v2",
 			"type": "default"
 		},
 		{
@@ -900,7 +900,7 @@
 		},
 		{
 			"key": "CONSUMER_EDC_MANAGEMENT_URL",
-			"value": "http://localhost:22002/api/v1/management/v2",
+			"value": "http://localhost:22002/api/management/v2",
 			"type": "default"
 		},
 		{

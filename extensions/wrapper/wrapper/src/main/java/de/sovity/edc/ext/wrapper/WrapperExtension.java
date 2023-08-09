@@ -73,23 +73,8 @@ public class WrapperExtension implements ServiceExtension {
     public void initialize(ServiceExtensionContext context) {
         var objectMapper = typeManager.getMapper();
 
-        var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
-                context,
-                assetIndex,
-                assetService,
-                contractAgreementService,
-                contractDefinitionStore,
-                contractNegotiationService,
-                contractNegotiationStore,
-                objectMapper,
-                policyDefinitionStore,
-                policyEngine,
-                transferProcessService,
-                transferProcessStore,
-                contractDefinitionService
-        );
+        var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(context, assetIndex, assetService, contractAgreementService, contractDefinitionStore, contractNegotiationService, contractNegotiationStore, objectMapper, policyDefinitionStore, policyEngine, transferProcessStore, transferProcessService, contractDefinitionService);
 
-        wrapperExtensionContext.jaxRsResources().forEach(resource ->
-                webService.registerResource(dataManagementApiConfiguration.getContextAlias(), resource));
+        wrapperExtensionContext.jaxRsResources().forEach(resource -> webService.registerResource(dataManagementApiConfiguration.getContextAlias(), resource));
     }
 }
