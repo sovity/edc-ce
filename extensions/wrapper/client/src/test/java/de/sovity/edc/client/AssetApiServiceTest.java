@@ -14,7 +14,7 @@
 package de.sovity.edc.client;
 
 
-import de.sovity.edc.client.gen.model.AssetRequest;
+import de.sovity.edc.client.gen.model.AssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.utils.AssetPropertyMapper;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.spi.asset.AssetService;
@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.eclipse.edc.spi.types.domain.DataAddress.EDC_DATA_ADDRESS_TYPE_PROPERTY;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
@@ -96,10 +97,10 @@ public class AssetApiServiceTest {
         );
         var privateProperties = Map.of("random-private-prop", "456");
         var dataAddressProperties = Map.of(
-                "type", DATA_ADDRESS_TYPE,
+                EDC_DATA_ADDRESS_TYPE_PROPERTY, DATA_ADDRESS_TYPE,
                 "baseUrl", DATA_SINK
         );
-        var assetRequest = AssetRequest.builder()
+        var assetRequest = AssetCreateRequest.builder()
                 .properties(properties)
                 .privateProperties(privateProperties)
                 .dataAddressProperties(dataAddressProperties)
