@@ -14,10 +14,12 @@
 package de.sovity.edc.extension.e2e;
 
 import de.sovity.edc.extension.e2e.connector.Connector;
-import de.sovity.edc.extension.e2e.connector.ConnectorTestUtils;
+import de.sovity.edc.extension.e2e.connector.DataTransferTestUtils;
 import de.sovity.edc.extension.e2e.connector.JsonLdConnectorUtil;
 import de.sovity.edc.extension.e2e.connector.TestConnector;
-import de.sovity.edc.extension.e2e.connector.config.EdcApiGroupConfig;
+import de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroupConfig;
+import de.sovity.edc.extension.e2e.connector.config.api.auth.ApiKeyAuthProvider;
+import de.sovity.edc.extension.e2e.connector.config.api.auth.NoneAuthProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -27,37 +29,50 @@ import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.UUID;
 
-import static de.sovity.edc.extension.e2e.connector.ConnectorTestUtils.CONSUMER_BACKEND_URL;
-import static de.sovity.edc.extension.e2e.connector.ConnectorTestUtils.PROVIDER_TARGET_URL;
-import static de.sovity.edc.extension.e2e.connector.ConnectorTestUtils.TEST_BACKEND_CHECK_URL;
-import static de.sovity.edc.extension.e2e.connector.ConnectorTestUtils.TEST_BACKEND_TEST_DATA;
+import static de.sovity.edc.extension.e2e.TransferTestVariables.CONSUMER_EDC_MANAGEMENT_AUTH_HEADER;
+import static de.sovity.edc.extension.e2e.TransferTestVariables.CONSUMER_EDC_MANAGEMENT_AUTH_VALUE;
+import static de.sovity.edc.extension.e2e.TransferTestVariables.CONSUMER_EDC_MANAGEMENT_URL;
+import static de.sovity.edc.extension.e2e.TransferTestVariables.CONSUMER_EDC_PROTOCOL_URL;
+import static de.sovity.edc.extension.e2e.TransferTestVariables.CONSUMER_PARTICIPANT_ID;
+import static de.sovity.edc.extension.e2e.TransferTestVariables.CONSUMER_TARGET_URL;
+import static de.sovity.edc.extension.e2e.TransferTestVariables.PROVIDER_EDC_MANAGEMENT_AUTH_HEADER;
+import static de.sovity.edc.extension.e2e.TransferTestVariables.PROVIDER_EDC_MANAGEMENT_AUTH_VALUE;
+import static de.sovity.edc.extension.e2e.TransferTestVariables.PROVIDER_EDC_MANAGEMENT_URL;
+import static de.sovity.edc.extension.e2e.TransferTestVariables.PROVIDER_EDC_PROTOCOL_URL;
+import static de.sovity.edc.extension.e2e.TransferTestVariables.PROVIDER_PARTICIPANT_ID;
+import static de.sovity.edc.extension.e2e.TransferTestVariables.PROVIDER_TARGET_URL;
+import static de.sovity.edc.extension.e2e.TransferTestVariables.TEST_BACKEND_CHECK_URL;
+import static de.sovity.edc.extension.e2e.TransferTestVariables.TEST_BACKEND_TEST_DATA;
 
 @EnabledIfEnvironmentVariable(
         named = "E2E_TEST_EXTERNAL_CONNECTOR_ENABLED",
         matches = "true")
 public class ExternalConnectorTransferTest {
-
-    private static final String PROVIDER_EDC_MANAGEMENT_URL = "PROVIDER_EDC_MANAGEMENT_URL";
-    private static final String PROVIDER_EDC_PROTOCOL_URL = "PROVIDER_EDC_PROTOCOL_URL";
-    private static final String CONSUMER_EDC_MANAGEMENT_URL = "CONSUMER_EDC_MANAGEMENT_URL";
-    private static final String CONSUMER_EDC_PROTOCOL_URL = "CONSUMER_EDC_PROTOCOL_URL";
-    private static final String PROVIDER_PARTICIPANT_ID = "PROVIDER_PARTICIPANT_ID";
-    private static final String CONSUMER_PARTICIPANT_ID = "CONSUMER_PARTICIPANT_ID";
     private Connector providerConnector;
     private Connector consumerConnector;
+    private String providerTargetUrl;
+    private String consumerTargetUrl;
+    private String testBackendCheckUrl;
+    private String testBackendTestData;
 
     @BeforeEach
     void setUp() throws URISyntaxException {
         providerConnector = TestConnector.builder()
                 .participantId(loadRequiredVariable(PROVIDER_PARTICIPANT_ID))
-                .managementApiGroupConfig(getManagementApiGroupConfig(PROVIDER_EDC_MANAGEMENT_URL))
+                .managementApiGroupConfig(getProviderManagementApiGroupConfig())
                 .protocolApiGroupConfig(getProtocolApiGroupConfig(PROVIDER_EDC_PROTOCOL_URL))
                 .build();
         consumerConnector = TestConnector.builder()
                 .participantId(loadRequiredVariable(CONSUMER_PARTICIPANT_ID))
-                .managementApiGroupConfig(getManagementApiGroupConfig(CONSUMER_EDC_MANAGEMENT_URL))
+                .managementApiGroupConfig(getConsumerManagementApiGroupConfig())
                 .protocolApiGroupConfig(getProtocolApiGroupConfig(CONSUMER_EDC_PROTOCOL_URL))
                 .build();
+        providerTargetUrl = loadRequiredVariable(PROVIDER_TARGET_URL);
+        consumerTargetUrl = loadRequiredVariable(CONSUMER_TARGET_URL);
+        testBackendCheckUrl = System.getenv(TEST_BACKEND_CHECK_URL);
+        if (testBackendCheckUrl != null) {
+            testBackendTestData = loadRequiredVariable(TEST_BACKEND_TEST_DATA);
+        }
     }
 
     private String loadRequiredVariable(String variableName) {
@@ -71,11 +86,25 @@ public class ExternalConnectorTransferTest {
     }
 
     private EdcApiGroupConfig getProtocolApiGroupConfig(String variableName) throws URISyntaxException {
-        return EdcApiGroupConfig.protocolFromUri(getUriFromEnv(variableName));
+        return EdcApiGroupConfig.protocolFromUri(
+                getUriFromEnv(variableName),
+                new NoneAuthProvider());
     }
 
-    private EdcApiGroupConfig getManagementApiGroupConfig(String variableName) throws URISyntaxException {
-        return EdcApiGroupConfig.mgntFromUri(getUriFromEnv(variableName));
+    private EdcApiGroupConfig getProviderManagementApiGroupConfig() throws URISyntaxException {
+        return EdcApiGroupConfig.mgntFromUri(
+                getUriFromEnv(PROVIDER_EDC_MANAGEMENT_URL),
+                new ApiKeyAuthProvider(
+                        loadRequiredVariable(PROVIDER_EDC_MANAGEMENT_AUTH_HEADER),
+                        loadRequiredVariable(PROVIDER_EDC_MANAGEMENT_AUTH_VALUE)));
+    }
+
+    private EdcApiGroupConfig getConsumerManagementApiGroupConfig() throws URISyntaxException {
+        return EdcApiGroupConfig.mgntFromUri(
+                getUriFromEnv(CONSUMER_EDC_MANAGEMENT_URL),
+                new ApiKeyAuthProvider(
+                        loadRequiredVariable(CONSUMER_EDC_MANAGEMENT_AUTH_HEADER),
+                        loadRequiredVariable(CONSUMER_EDC_MANAGEMENT_AUTH_VALUE)));
     }
 
     private URI getUriFromEnv(String variableName) throws URISyntaxException {
@@ -85,15 +114,21 @@ public class ExternalConnectorTransferTest {
     @Test
     void createAndConsumeOffer() {
         var assetId = UUID.randomUUID().toString();
-        ConnectorTestUtils.createTestOffer(
+        DataTransferTestUtils.createTestOffer(
                 providerConnector,
                 assetId,
-                PROVIDER_TARGET_URL);
+                providerTargetUrl);
         consumerConnector.consumeOffer(
+                loadRequiredVariable(PROVIDER_PARTICIPANT_ID),
                 providerConnector.getProtocolApiUri(),
                 assetId,
-                JsonLdConnectorUtil.httpDataAddress(CONSUMER_BACKEND_URL));
-        ConnectorTestUtils.validateDataTransferred(TEST_BACKEND_CHECK_URL, TEST_BACKEND_TEST_DATA);
+                JsonLdConnectorUtil.httpDataAddress(consumerTargetUrl));
+
+        if (testBackendCheckUrl != null) {
+            DataTransferTestUtils.validateDataTransferred(
+                    testBackendCheckUrl,
+                    testBackendTestData);
+        }
     }
 
 }

@@ -13,6 +13,8 @@
 
 package de.sovity.edc.extension.e2e.connector.config;
 
+import de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup;
+import de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroupConfig;
 import lombok.Builder;
 import lombok.Singular;
 

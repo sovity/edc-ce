@@ -11,7 +11,10 @@
  *      sovity GmbH - init
  */
 
-package de.sovity.edc.extension.e2e.connector.config;
+package de.sovity.edc.extension.e2e.connector.config.api;
+
+import de.sovity.edc.extension.e2e.connector.config.EdcConfig;
+import de.sovity.edc.extension.e2e.connector.config.api.auth.AuthProvider;
 
 import java.net.URI;
 import java.util.Map;
@@ -20,27 +23,36 @@ public record EdcApiGroupConfig(
         EdcApiGroup edcApiGroup,
         String baseUrl,
         int port,
-        String path) implements EdcConfig {
+        String path,
+        AuthProvider authProvider) implements EdcConfig {
 
     private static final String SETTING_WEB_HTTP_PATH = "web.http.%s.path";
     private static final String SETTING_WEB_HTTP_PORT = "web.http.%s.port";
     private static final String SETTING_WEB_HTTP_DEFAULT_PATH = "web.http.path";
     private static final String SETTING_WEB_HTTP_DEFAULT_PORT = "web.http.port";
 
-    public static EdcApiGroupConfig mgntFromUri(URI uri) {
-        return fromUri(EdcApiGroup.MANAGEMENT, uri);
+    public static EdcApiGroupConfig mgntFromUri(
+            URI uri,
+            AuthProvider authProvider) {
+        return fromUri(EdcApiGroup.MANAGEMENT, uri, authProvider);
     }
 
-    public static EdcApiGroupConfig protocolFromUri(URI uri) {
-        return fromUri(EdcApiGroup.PROTOCOL, uri);
+    public static EdcApiGroupConfig protocolFromUri(
+            URI uri,
+            AuthProvider authProvider) {
+        return fromUri(EdcApiGroup.PROTOCOL, uri, authProvider);
     }
 
-    public static EdcApiGroupConfig fromUri(EdcApiGroup edcApiGroup, URI uri) {
+    public static EdcApiGroupConfig fromUri(
+            EdcApiGroup edcApiGroup,
+            URI uri,
+            AuthProvider authProvider) {
         return new EdcApiGroupConfig(
                 edcApiGroup,
                 String.format("%s://%s", uri.getScheme(), uri.getHost()),
                 uri.getPort(),
-                uri.getPath());
+                uri.getPath(),
+                authProvider);
     }
 
     public URI getUri() {

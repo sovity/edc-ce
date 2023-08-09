@@ -51,6 +51,7 @@ public interface Connector {
             JsonObject destination);
 
     String consumeOffer(
+            String providerId,
             URI providerProtocolApi,
             String assetId,
             JsonObject destination);

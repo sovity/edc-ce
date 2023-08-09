@@ -16,9 +16,10 @@ package de.sovity.edc.extension.e2e.connector.factory;
 import de.sovity.edc.extension.e2e.connector.Connector;
 import de.sovity.edc.extension.e2e.connector.TestConnector;
 import de.sovity.edc.extension.e2e.connector.config.DatasourceConfig;
-import de.sovity.edc.extension.e2e.connector.config.EdcApiGroup;
-import de.sovity.edc.extension.e2e.connector.config.EdcApiGroupConfig;
 import de.sovity.edc.extension.e2e.connector.config.EdcConfigGeneratorImpl;
+import de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup;
+import de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroupConfig;
+import de.sovity.edc.extension.e2e.connector.config.api.auth.NoneAuthProvider;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -27,10 +28,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static de.sovity.edc.extension.e2e.connector.config.EdcApiGroup.CONTROL;
-import static de.sovity.edc.extension.e2e.connector.config.EdcApiGroup.DEFAULT;
-import static de.sovity.edc.extension.e2e.connector.config.EdcApiGroup.MANAGEMENT;
-import static de.sovity.edc.extension.e2e.connector.config.EdcApiGroup.PROTOCOL;
+import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup.CONTROL;
+import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup.DEFAULT;
+import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup.MANAGEMENT;
+import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup.PROTOCOL;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 
 @RequiredArgsConstructor
@@ -90,7 +91,12 @@ public class LocalTestConnectorFactory implements ConnectorFactory {
     }
 
     private EdcApiGroupConfig createApiGroupConfig(EdcApiGroup edcApiGroup, String path) {
-        return new EdcApiGroupConfig(edcApiGroup, BASE_URL, getFreePort(), path);
+        return new EdcApiGroupConfig(
+                edcApiGroup,
+                BASE_URL,
+                getFreePort(),
+                path,
+                new NoneAuthProvider());
     }
 
     private List<DatasourceConfig> getDatasourceConfigs(TestDatabase testDatabase) {

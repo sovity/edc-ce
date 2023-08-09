@@ -14,7 +14,7 @@
 package de.sovity.edc.extension.e2e;
 
 import de.sovity.edc.extension.e2e.connector.Connector;
-import de.sovity.edc.extension.e2e.connector.ConnectorTestUtils;
+import de.sovity.edc.extension.e2e.connector.DataTransferTestUtils;
 import de.sovity.edc.extension.e2e.connector.JsonLdConnectorUtil;
 import de.sovity.edc.extension.e2e.connector.factory.LocalTestConnectorFactory;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
@@ -27,17 +27,28 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.UUID;
 
-import static de.sovity.edc.extension.e2e.connector.ConnectorTestUtils.CONSUMER_BACKEND_URL;
-import static de.sovity.edc.extension.e2e.connector.ConnectorTestUtils.MIGRATED_M8_ASSET_ID;
-import static de.sovity.edc.extension.e2e.connector.ConnectorTestUtils.PROVIDER_TARGET_URL;
-import static de.sovity.edc.extension.e2e.connector.ConnectorTestUtils.TEST_BACKEND_CHECK_URL;
-import static de.sovity.edc.extension.e2e.connector.ConnectorTestUtils.TEST_BACKEND_TEST_DATA;
+import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtils.MIGRATED_M8_ASSET_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @EnabledIfEnvironmentVariable(
         named = "E2E_TEST_ENABLED",
         matches = "true")
 public class LocalConnectorTransferTest {
+
+    private static final String PROVIDER_PARTICIPANT_ID = "provider";
+    private static final String CONSUMER_PARTICIPANT_ID = "consumer";
+    public static final String TEST_BACKEND_BASE_URL = "http://localhost:33001/api/test-backend";
+    public static final String TEST_BACKEND_CHECK_URL = String.format(
+            "%s/getConsumedData",
+            TEST_BACKEND_BASE_URL);
+    private static final String TEST_BACKEND_TEST_DATA = UUID.randomUUID().toString();
+    public static final String PROVIDER_TARGET_URL = String.format(
+            "%s/provide/%s",
+            TEST_BACKEND_BASE_URL,
+            TEST_BACKEND_TEST_DATA);
+    public static final String CONSUMER_BACKEND_URL = String.format(
+            "%s/consume",
+            TEST_BACKEND_BASE_URL);
 
     @RegisterExtension
     static EdcExtension providerEdcContext = new EdcExtension();
@@ -55,12 +66,12 @@ public class LocalConnectorTransferTest {
     @BeforeEach
     void setUp() {
         providerConnector = new LocalTestConnectorFactory(
-                "provider",
+                PROVIDER_PARTICIPANT_ID,
                 providerEdcContext,
                 PROVIDER_DATABASE)
                 .createConnector();
         consumerConnector = new LocalTestConnectorFactory(
-                "consumer",
+                CONSUMER_PARTICIPANT_ID,
                 consumerEdcContext,
                 CONSUMER_DATABASE)
                 .createConnector();
@@ -71,24 +82,29 @@ public class LocalConnectorTransferTest {
         var assetIds = providerConnector.getAssetIds();
         assertThat(assetIds).contains(MIGRATED_M8_ASSET_ID);
         consumerConnector.consumeOffer(
+                PROVIDER_PARTICIPANT_ID,
                 providerConnector.getProtocolApiUri(),
                 MIGRATED_M8_ASSET_ID,
                 JsonLdConnectorUtil.httpDataAddress(CONSUMER_BACKEND_URL));
-        ConnectorTestUtils.validateDataTransferred(TEST_BACKEND_CHECK_URL, TEST_BACKEND_TEST_DATA);
+        DataTransferTestUtils.validateDataTransferred(TEST_BACKEND_CHECK_URL,
+                TEST_BACKEND_TEST_DATA);
     }
 
     @Test
     void createAndConsumeOffer() {
         var assetId = UUID.randomUUID().toString();
-        ConnectorTestUtils.createTestOffer(
+        DataTransferTestUtils.createTestOffer(
                 providerConnector,
                 assetId,
                 PROVIDER_TARGET_URL);
         consumerConnector.consumeOffer(
+                PROVIDER_PARTICIPANT_ID,
                 providerConnector.getProtocolApiUri(),
                 assetId,
                 JsonLdConnectorUtil.httpDataAddress(CONSUMER_BACKEND_URL));
-        ConnectorTestUtils.validateDataTransferred(TEST_BACKEND_CHECK_URL, TEST_BACKEND_TEST_DATA);
+        DataTransferTestUtils.validateDataTransferred(
+                TEST_BACKEND_CHECK_URL,
+                TEST_BACKEND_TEST_DATA);
     }
 
 }

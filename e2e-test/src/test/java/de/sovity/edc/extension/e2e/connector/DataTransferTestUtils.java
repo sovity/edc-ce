@@ -26,25 +26,12 @@ import static org.awaitility.Awaitility.await;
 import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.CONTEXT;
 import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.TYPE;
 
-public class ConnectorTestUtils {
+public class DataTransferTestUtils {
 
-
-    public static final String TEST_BACKEND_TEST_DATA = UUID.randomUUID().toString();
-    public static final String TEST_BACKEND_BASE_URL = "http://localhost:33001/api/test-backend";
-    public static final String TEST_BACKEND_CHECK_URL = String.format(
-            "%s/getConsumedData",
-            TEST_BACKEND_BASE_URL);
-    public static final String PROVIDER_TARGET_URL = String.format(
-            "%s/provide/%s",
-            TEST_BACKEND_BASE_URL,
-            TEST_BACKEND_TEST_DATA);
-    public static final String CONSUMER_BACKEND_URL = String.format(
-            "%s/consume",
-            TEST_BACKEND_BASE_URL);
     public static final String MIGRATED_M8_ASSET_ID = "test-1.0";
     public static final Duration TIMEOUT = Duration.ofSeconds(60);
 
-    private ConnectorTestUtils() {
+    private DataTransferTestUtils() {
     }
 
     public static void createTestOffer(

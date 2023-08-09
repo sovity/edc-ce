@@ -11,7 +11,7 @@
  *      sovity GmbH - init
  */
 
-package de.sovity.edc.extension.e2e.connector.config;
+package de.sovity.edc.extension.e2e.connector.config.api;
 
 public enum EdcApiGroup {
     DEFAULT(""),
