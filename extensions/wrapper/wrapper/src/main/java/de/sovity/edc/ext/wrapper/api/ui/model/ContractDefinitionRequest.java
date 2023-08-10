@@ -30,20 +30,15 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "Contract Definition Entry for Contract Definition Page")
+@Schema(description = "Contract Definition Request for Contract Definition Creation")
 public class ContractDefinitionRequest {
-
-    @Schema(description = "Access Policy ID", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String accessPolicyId;
 
     @Schema(description = "Contract Policy ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String contractPolicyId;
 
+    @Schema(description = "Access Policy ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String accessPolicyId;
+
     @Schema(description = "List of Criteria for the contract", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<CriterionDto> assetsSelector;
-
-    @Schema(description = "Criteria for the contract", requiredMode = Schema.RequiredMode.REQUIRED)
-    private CriterionDto assetsSelectorCriterion;
-
-
 }

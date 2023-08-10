@@ -22,7 +22,6 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractD
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 
-import java.util.UUID;
 
 @RequiredArgsConstructor
 public class ContractDefinitionBuilder {
@@ -32,7 +31,12 @@ public class ContractDefinitionBuilder {
         var contractPolicyId = request.getContractPolicyId();
         var accessPolicyId = request.getAccessPolicyId();
         var assetsSelector = request.getAssetsSelector();
-        var assetsSelectorCriterion = request.getAssetsSelectorCriterion();
-        return ContractDefinition.Builder.newInstance().id(UUID.randomUUID().toString()).contractPolicyId(contractPolicyId).accessPolicyId(accessPolicyId).assetsSelector(contractDefinitionUtils.mapToCriteria(assetsSelector)).assetsSelectorCriterion(contractDefinitionUtils.mapToCriterion(assetsSelectorCriterion)).build();
+
+        return ContractDefinition.Builder.newInstance()
+                .id(request.getContractPolicyId())
+                .contractPolicyId(contractPolicyId)
+                .accessPolicyId(accessPolicyId)
+                .assetsSelector(contractDefinitionUtils.mapToCriteria(assetsSelector))
+                .build();
     }
 }

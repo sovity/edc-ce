@@ -19,6 +19,8 @@ import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
@@ -36,7 +38,6 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.api.model.IdResponse;
@@ -122,16 +123,19 @@ public class UiResource {
     }
 
     @POST
-    @Path("pages/contract-definition-page")
+    @Path("pages/contract-definition-page/contractDefinitions")
     @Produces(MediaType.APPLICATION_JSON)
-    public IdResponse createContractDefinition(ContractDefinitionRequest contractDefinitionRequest) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Create a new Contract Definition")
+    public IdResponseDto createContractDefinition(ContractDefinitionRequest contractDefinitionRequest) {
         return contractDefinitionApiService.createContractDefinition(contractDefinitionRequest);
     }
 
     @DELETE
-    @Path("pages/contract-definition-page")
+    @Path("pages/contract-definition-page/contractDefinitions/{contractDefinitionId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public IdResponseDto deleteContractDefinition(String contractDefinitionId) {
+    @Operation(description = "Delete a Contract Definition")
+    public IdResponseDto deleteContractDefinition(@PathParam("contractDefinitionId")String contractDefinitionId) {
         return contractDefinitionApiService.deleteContractDefinition(contractDefinitionId);
     }
 

@@ -75,7 +75,8 @@ public class WrapperExtensionContextBuilder {
             PolicyDefinitionStore policyDefinitionStore,
             PolicyEngine policyEngine,
             TransferProcessStore transferProcessStore,
-            TransferProcessService transferProcessService
+            TransferProcessService transferProcessService,
+            ContractDefinitionService contractDefinitionService
     ) {
         // UI API
         var transferProcessStateService = new TransferProcessStateService();
@@ -125,7 +126,8 @@ public class WrapperExtensionContextBuilder {
                 contractAgreementTransferApiService,
                 transferHistoryPageApiService,
                 transferHistoryPageAssetFetcherService,
-                assetApiService
+                assetApiService,
+                contractDefinitionApiService
         );
 
         // Use Case API

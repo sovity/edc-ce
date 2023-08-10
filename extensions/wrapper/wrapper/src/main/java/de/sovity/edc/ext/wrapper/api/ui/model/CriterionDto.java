@@ -37,5 +37,4 @@ public class CriterionDto {
     public static CriterionDto forJson(String operandLeft, String operator, String operatorRight) {
         return new CriterionDto(operandLeft, operator, operatorRight);
     }
-
 }

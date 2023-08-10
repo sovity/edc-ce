@@ -14,24 +14,23 @@
 
 package de.sovity.edc.client;
 
+import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
+import de.sovity.edc.client.gen.model.CriterionDto;
+import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
-import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.eclipse.edc.spi.protocol.ProtocolWebhook;
+import org.eclipse.edc.spi.query.Criterion;
+import org.eclipse.edc.spi.query.QuerySpec;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static de.sovity.edc.client.ContractDefinitionTestUtils.createContractDefinition;
 
-import java.text.ParseException;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
-import static de.sovity.edc.client.ContractDefinitionTestUtils.deleteContractDefinition;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
@@ -39,68 +38,119 @@ class ContractDefinitionPageApiServiceTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-        extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
-        extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
-        extension.setConfiguration(TestUtils.createConfiguration(Map.of()));
+        TestUtils.setupExtension(extension);
     }
 
     @Test
-    void testCreateAndGetContractDefinition(ContractDefinitionService contractDefinitionService) throws ParseException {
+    void contractDefinitionPage(ContractDefinitionService contractDefinitionService) {
+        //arrange
         var client = TestUtils.edcClient();
-
-        // arrange
-        createContractDefinition(contractDefinitionService);
+        var criteria = Arrays.asList(
+                new Criterion(
+                        "exampleLeft1",
+                        "operator1",
+                        "exampleRight1")
+        );
+        createContractDefinition(contractDefinitionService, "contractPolicy-id-1", "accessPolicy-id-1", criteria);
 
         // act
         var result = client.uiApi().contractDefinitionPage();
 
-        // Get the contract definition
+        //assert
         var contractDefinitions = result.getContractDefinitions();
-
-        // Assert that the list is not null
-        assertNotNull(contractDefinitions, "Contract Definitions list should not be null");
-
-        // assert
+        assertThat(contractDefinitions).hasSize(1);
         var contractDefinition = contractDefinitions.get(0);
-        assertNotNull(contractDefinition, "First Contract Definition should not be null");
-
-        assertThat(contractDefinition.getContractDefinitionId()).isEqualTo(ContractDefinitionTestUtils.CONTRACT_DEFINITION_ID);
-        assertThat(contractDefinition.getContractPolicyId()).isEqualTo(ContractDefinitionTestUtils.CONTRACT_POLICY_ID);
-        assertThat(contractDefinition.getAccessPolicyId()).isEqualTo(ContractDefinitionTestUtils.ACCESS_POLICY_ID);
+        assertThat(contractDefinition.getContractPolicyId()).isEqualTo("contractPolicy-id-1");
+        assertThat(contractDefinition.getAccessPolicyId()).isEqualTo("accessPolicy-id-1");
+        assertThat(contractDefinition.getCriteria().get(0).getOperandLeft()).isEqualTo(criteria.get(0).getOperandLeft());
+        assertThat(contractDefinition.getCriteria().get(0).getOperator()).isEqualTo(criteria.get(0).getOperator());
+        assertThat(contractDefinition.getCriteria().get(0).getOperandRight()).isEqualTo(criteria.get(0).getOperandRight());
     }
 
     @Test
-    void testDeleteContractDefinition(ContractDefinitionService contractDefinitionService) throws ParseException {
+    void contractDefinitionPageSorting(ContractDefinitionService contractDefinitionService) {
+        //arrange
         var client = TestUtils.edcClient();
-
-        // arrange
-        createContractDefinition(contractDefinitionService);
+        createContractDefinition(contractDefinitionService, "contractPolicy-id-1", "accessPolicy-id-1", Arrays.asList());
+        TestUtils.wait(1);
+        createContractDefinition(contractDefinitionService, "contractPolicy-id-2", "accessPolicy-id-2", Arrays.asList());
+        TestUtils.wait(1);
+        createContractDefinition(contractDefinitionService, "contractPolicy-id-3", "accessPolicy-id-3", Arrays.asList());
 
         // act
-        var resultBeforeDelete = client.uiApi().contractDefinitionPage();
-        var contractDefinitionsBeforeDelete = resultBeforeDelete.getContractDefinitions();
+        var result = client.uiApi().contractDefinitionPage();
 
-        // assert that the contract definition exists before deletion
-        assertFalse(contractDefinitionsBeforeDelete.isEmpty(), "Contract Definitions list should not be empty before deletion");
+        //assert
+        assertThat(result.getContractDefinitions())
+                .extracting(contractDefinition -> contractDefinition.getContractPolicyId())
+                .containsExactly("contractPolicy-id-3", "contractPolicy-id-2", "contractPolicy-id-1");
 
-        var contractDefinitionToDelete = contractDefinitionsBeforeDelete.get(0);
-        assertThat(contractDefinitionToDelete.getContractDefinitionId()).isEqualTo(ContractDefinitionTestUtils.CONTRACT_DEFINITION_ID);
+    }
 
-        int sizeBeforeDeletion = contractDefinitionsBeforeDelete.size();
+    @Test
+    void testContractDefinitionCreation(ContractDefinitionService contractDefinitionService) {
+        // arrange
+        var client = TestUtils.edcClient();
+        var criteria = Arrays.asList(
+                new CriterionDto(
+                        "exampleLeft1",
+                        "operator1",
+                        "exampleRight1")
+        );
+        var contractDefinition = ContractDefinitionRequest.builder()
+                .contractPolicyId("contractPolicy-id-1")
+                .accessPolicyId("accessPolicy-id-1")
+                .assetsSelector(criteria)
+                .build();
 
-        // act: delete the contract definition
-        deleteContractDefinition(contractDefinitionService);  // You might need to implement this or something similar.
+        // act
+        var response = client.uiApi().createContractDefinition(contractDefinition);
 
-        // act: retrieve the contract definitions after deletion
-        var resultAfterDelete = client.uiApi().contractDefinitionPage();
-        var contractDefinitionsAfterDelete = resultAfterDelete.getContractDefinitions();
+        //assert
+        assertThat(response).isNotNull();
+        var contractDefinitions = contractDefinitionService.query(QuerySpec.max()).getContent().toList();
+        assertThat(contractDefinitions).hasSize(1);
+        var contractDefinitionEntry = contractDefinitions.get(0);
+        assertThat(contractDefinitionEntry.getContractPolicyId()).isEqualTo("contractPolicy-id-1");
+        assertThat(contractDefinitionEntry.getAccessPolicyId()).isEqualTo("accessPolicy-id-1");
+        assertThat(contractDefinitionEntry.getAssetsSelector().get(0).getOperandLeft()).isEqualTo(criteria.get(0).getOperandLeft());
+        assertThat(contractDefinitionEntry.getAssetsSelector().get(0).getOperator()).isEqualTo(criteria.get(0).getOperator());
+        assertThat(contractDefinitionEntry.getAssetsSelector().get(0).getOperandRight()).isEqualTo(criteria.get(0).getOperandRight());
+    }
 
-        // assert the list size is decremented by one
-        assertEquals(sizeBeforeDeletion - 1, contractDefinitionsAfterDelete.size(), "Contract Definitions list size should decrease by 1 after deletion");
+    @Test
+    void testDeleteContractDefinition(ContractDefinitionService contractDefinitionService) {
+        // arrange
+        var client = TestUtils.edcClient();
+        var criteria = Arrays.asList(
+                new Criterion(
+                        "exampleLeft1",
+                        "operator1",
+                        "exampleRight1")
+        );
+        createContractDefinition(contractDefinitionService, "contractPolicy-id-1", "accessPolicy-id-1", criteria);
+        assertThat(contractDefinitionService.query(QuerySpec.max()).getContent().toList()).hasSize(1);
+        var contractDefinition = contractDefinitionService.query(QuerySpec.max()).getContent().toList().get(0);
 
-        // assert that the specific contract definition is no longer present
-        assertFalse(contractDefinitionsAfterDelete.contains(contractDefinitionToDelete), "Deleted contract definition should not be present in the list");
+        // act
+        var response = client.uiApi().deleteContractDefinition(contractDefinition.getId());
 
+        // assert
+        assertThat(response.getId()).isEqualTo(contractDefinition.getId());
+        assertThat(contractDefinitionService.query(QuerySpec.max()).getContent()).isEmpty();
+    }
 
+    private void createContractDefinition(
+            ContractDefinitionService contractDefinitionService,
+            String contractPolicyId,
+            String accessPolicyId,
+            List<Criterion> criteria
+    ) {
+        var contractDefinition = ContractDefinition.Builder.newInstance()
+                .contractPolicyId(contractPolicyId)
+                .accessPolicyId(accessPolicyId)
+                .assetsSelector(criteria)
+                .build();
+        contractDefinitionService.create(contractDefinition);
     }
 }
