@@ -17,10 +17,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Patch
 
+### Deployment Migration Notes
+
+## [v1.0.2] - 2023-08-10
+
+### Overview
+
+Bugfix Release for the Broker MvP with MS8.
+
+### Detailed Changes
+
+#### Patch
+
 - Fixed an issue where connector crawling failed when data offer limits were exceeded.
 - Fixed searching data offers with capital letters didn't work.
 
 ### Deployment Migration Notes
+
+No configuration changes are required.
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:1.0.2`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity12`
+- Sovity EDC CE: [`4.1.0`](https://github.com/sovity/edc-extensions/tree/v4.1.0/connector)
 
 ## [v1.0.1] Broker MvP Bugfix / Feature Release - 2023-07-12
 
