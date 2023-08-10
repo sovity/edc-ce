@@ -64,7 +64,7 @@ public class TransferRequestBuilder {
                 .contractId(contractId)
                 .assetId(agreement.getAssetId())
                 .dataDestination(address)
-                .privateProperties(params.getPrivateProperties())
+                .privateProperties(params.getTransferProcessProperties())
                 .callbackAddresses(List.of())
                 .build();
     }
