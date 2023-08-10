@@ -13,6 +13,3 @@ public enum OperatorEnumDto {
     LEQ,
     IN
 }
-
-
-
