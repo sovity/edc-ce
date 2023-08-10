@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.wrapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.ee.EnterpriseEditionResourceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
@@ -28,6 +29,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferProcess
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequestBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractAgreementUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
+import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
@@ -42,6 +44,7 @@ import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
+import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
@@ -75,7 +78,8 @@ public class WrapperExtensionContextBuilder {
             PolicyDefinitionStore policyDefinitionStore,
             PolicyEngine policyEngine,
             TransferProcessStore transferProcessStore,
-            TransferProcessService transferProcessService
+            TransferProcessService transferProcessService,
+            PolicyDefinitionService policyDefinitionService
     ) {
         // UI API
         var transferProcessStateService = new TransferProcessStateService();
@@ -116,12 +120,16 @@ public class WrapperExtensionContextBuilder {
                 transferRequestBuilder,
                 transferProcessService
         );
+        var jsonLdObjectMapper = new ObjectMapper();
+        var policyMapper = new PolicyMapper(jsonLdObjectMapper);
+        var policyDefintionApiService = new PolicyDefinitionApiService(policyDefinitionService, policyMapper);
         var uiResource = new UiResource(
                 contractAgreementApiService,
                 contractAgreementTransferApiService,
                 transferHistoryPageApiService,
                 transferHistoryPageAssetFetcherService,
-                assetApiService
+                assetApiService,
+                policyDefintionApiService
         );
 
         // Use Case API

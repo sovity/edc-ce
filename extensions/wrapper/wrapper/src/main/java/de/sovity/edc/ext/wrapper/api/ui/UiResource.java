@@ -15,15 +15,18 @@
 package de.sovity.edc.ext.wrapper.api.ui;
 
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,6 +52,7 @@ public class UiResource {
     private final TransferHistoryPageApiService transferHistoryPageApiService;
     private final TransferHistoryPageAssetFetcherService transferHistoryPageAssetFetcherService;
     private final AssetApiService assetApiService;
+    private final PolicyDefinitionApiService policyDefinitionApiService;
 
     @GET
     @Path("pages/contract-agreement-page")
@@ -108,6 +112,24 @@ public class UiResource {
     @Operation(description = "Delete an Asset")
     public IdResponseDto deleteAsset(@PathParam("assetId") String assetId) {
         return assetApiService.deleteAsset(assetId);
+    }
+
+
+    @GET
+    @Path("pages/policy/page/policies")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Collect all data for Policy Page")
+    public PolicyDefinitionPage policyPage() {
+        return new PolicyDefinitionPage(policyDefinitionApiService.getPolicies());
+    }
+
+    @POST
+    @Path("pages/policy/page/policies")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Create a new Policy")
+    public IdResponse createPolicyDefinition(PolicyDefinitionDto policyDefinitionDtoDto) {
+        return policyDefinitionApiService.createPolicy(policyDefinitionDtoDto);
     }
 
 }

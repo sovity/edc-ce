@@ -48,6 +48,7 @@ dependencies {
     testImplementation("${edcGroup}:json-ld-spi:${edcVersion}")
     testImplementation("${edcGroup}:dsp-http-spi:${edcVersion}")
     testImplementation(project(":extensions:wrapper:wrapper"))
+    testImplementation(project(":extensions:wrapper:wrapper-common-mappers"))
     testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
     testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
