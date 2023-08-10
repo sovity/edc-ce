@@ -1,4 +1,4 @@
-FROM gradle:7.6.0-jdk17 AS build
+FROM gradle:7-jdk17-alpine AS build
 
 ARG USERNAME
 ARG TOKEN
@@ -19,17 +19,13 @@ COPY --chown=gradle:gradle . /home/gradle/project/
 WORKDIR /home/gradle/project/
 RUN --mount=type=cache,target=/home/gradle/.gradle/caches gradle build --no-daemon $BUILD_ARGS
 
-# -buster is required to have apt available
-FROM openjdk:17-slim-buster
+FROM eclipse-temurin:17-jre-alpine
 
 # Optional JVM arguments, such as memory settings
 ARG JVM_ARGS=""
 
-# Install curl, then delete apt indexes to save image space
-RUN apt update \
-    && apt install -y curl \
-    && rm -rf /var/cache/apt/archives /var/lib/apt/lists \
-    && touch /emtpy-properties-file.properties
+# Install curl for healthcheck and create an empty properties file as migitation for a core EDC issue
+RUN apk add --no-cache curl && touch /emtpy-properties-file.properties
 
 WORKDIR /app
 
