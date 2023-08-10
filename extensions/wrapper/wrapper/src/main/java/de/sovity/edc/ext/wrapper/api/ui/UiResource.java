@@ -114,7 +114,6 @@ public class UiResource {
         return assetApiService.deleteAsset(assetId);
     }
 
-
     @GET
     @Path("pages/contract-definition-page")
     @Produces(MediaType.APPLICATION_JSON)
@@ -135,9 +134,7 @@ public class UiResource {
     @Path("pages/contract-definition-page/contractDefinitions/{contractDefinitionId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Delete a Contract Definition")
-    public IdResponseDto deleteContractDefinition(@PathParam("contractDefinitionId")String contractDefinitionId) {
+    public IdResponseDto deleteContractDefinition(@PathParam("contractDefinitionId") String contractDefinitionId) {
         return contractDefinitionApiService.deleteContractDefinition(contractDefinitionId);
     }
-
-
 }

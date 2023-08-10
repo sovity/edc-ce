@@ -30,9 +30,8 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "Contract Definition Request for Contract Definition Creation")
+@Schema(description = "Data for creating a Contract Definition")
 public class ContractDefinitionRequest {
-
     @Schema(description = "Contract Policy ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String contractPolicyId;
 

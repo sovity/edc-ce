@@ -25,8 +25,8 @@ import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 
 @RequiredArgsConstructor
 public class ContractDefinitionBuilder {
-
     private final ContractDefinitionUtils contractDefinitionUtils;
+
     public ContractDefinition buildContractDefinition(ContractDefinitionRequest request) {
         var contractPolicyId = request.getContractPolicyId();
         var accessPolicyId = request.getAccessPolicyId();

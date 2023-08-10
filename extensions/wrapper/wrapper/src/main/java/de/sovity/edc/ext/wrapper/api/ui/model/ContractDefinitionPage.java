@@ -21,7 +21,9 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
+@Schema(description = "All data for the Contract Definition Page")
 public class ContractDefinitionPage {
+    
     @Schema(description = "Contract Definition Entries", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<ContractDefinitionEntry> contractDefinitions;
 }

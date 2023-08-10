@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.query.Criterion;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class ContractDefinitionUtils {
@@ -29,7 +28,6 @@ public class ContractDefinitionUtils {
         if (criterion == null) {
             return null;
         }
-
         CriterionDto dto = new CriterionDto();
         dto.setOperandLeft(String.valueOf(criterion.getOperandLeft()));
         dto.setOperator(criterion.getOperator());
@@ -43,28 +41,20 @@ public class ContractDefinitionUtils {
             return null;
         }
 
-        return criteria.stream().map(this::mapToCriterionDto).collect(Collectors.toList());
+        return criteria.stream().map(this::mapToCriterionDto).toList();
     }
 
     public Criterion mapToCriterion(CriterionDto criterionDto) {
         if (criterionDto == null) {
             return null;
         }
-
-        Criterion criterion = new Criterion(criterionDto.getOperandLeft(), criterionDto.getOperator(), criterionDto.getOperandRight());
-
-        return criterion;
+        return new Criterion(criterionDto.getOperandLeft(), criterionDto.getOperator(), criterionDto.getOperandRight());
     }
+
     public List<Criterion> mapToCriteria(List<CriterionDto> criterionDtos) {
         if (criterionDtos == null) {
             return null;
         }
-
-        return criterionDtos.stream().map(this::mapToCriterion).collect(Collectors.toList());
+        return criterionDtos.stream().map(this::mapToCriterion).toList();
     }
-
-
-
-
-
 }

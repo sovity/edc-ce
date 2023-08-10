@@ -30,10 +30,18 @@ public class TestUtils {
 
     @NotNull
     public static Map<String, String> createConfiguration() {
-        return Map.of("web.http.port", String.valueOf(getFreePort()), "web.http.path", "/api", "web.http.management.port", String.valueOf(DATA_PORT), "web.http.management.path", "/api/v1/data", "edc.api.auth.key", AUTH_KEY, "edc.ids.endpoint", IDS_ENDPOINT);
+        return Map.of(
+                "web.http.port", String.valueOf(getFreePort()),
+                "web.http.path", "/api",
+                "web.http.management.port", String.valueOf(DATA_PORT),
+                "web.http.management.path", "/api/v1/data",
+                "edc.api.auth.key", AUTH_KEY, "edc.ids.endpoint", IDS_ENDPOINT);
     }
 
     public static RequestSpecification givenManagementEndpoint() {
-        return given().baseUri("http://localhost:" + DATA_PORT).basePath("/api/v1/data").header("x-api-key", AUTH_KEY);
+        return given()
+                .baseUri("http://localhost:" + DATA_PORT)
+                .basePath("/api/v1/data")
+                .header("x-api-key", AUTH_KEY);
     }
 }

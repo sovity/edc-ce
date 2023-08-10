@@ -31,7 +31,6 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class ContractDefinitionApiService {
-
     private final ContractDefinitionService contractDefinitionService;
     private final ContractDefinitionUtils contractDefinitionUtils;
     private final ContractDefinitionBuilder contractDefinitionBuilder;
@@ -42,7 +41,6 @@ public class ContractDefinitionApiService {
                 .sorted(Comparator.comparing(ContractDefinition::getCreatedAt).reversed())
                 .map(definition -> {
             var entry = new ContractDefinitionEntry();
-            entry.setContractDefinitionId(definition.getId());
             entry.setAccessPolicyId(definition.getAccessPolicyId());
             entry.setContractPolicyId(definition.getContractPolicyId());
             entry.setCriteria(contractDefinitionUtils.mapToCriterionDtos(definition.getAssetsSelector()));
@@ -66,6 +64,4 @@ public class ContractDefinitionApiService {
     private List<ContractDefinition> getAllContractDefinitions() {
         return contractDefinitionService.query(QuerySpec.max()).getContent().toList();
     }
-
-
 }
