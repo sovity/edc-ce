@@ -35,7 +35,8 @@ public class TestUtils {
                 "web.http.path", "/api",
                 "web.http.management.port", String.valueOf(DATA_PORT),
                 "web.http.management.path", "/api/v1/data",
-                "edc.api.auth.key", AUTH_KEY, "edc.ids.endpoint", IDS_ENDPOINT);
+                "edc.api.auth.key", AUTH_KEY,
+                "edc.ids.endpoint", IDS_ENDPOINT);
     }
 
     public static RequestSpecification givenManagementEndpoint() {

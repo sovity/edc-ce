@@ -19,8 +19,8 @@ import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
@@ -122,16 +122,16 @@ public class UiResource {
     }
 
     @POST
-    @Path("pages/contract-definition-page/contractDefinitions")
+    @Path("pages/contract-definition-page/contract-definitions")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Create a new Contract Definition")
-    public IdResponseDto createContractDefinition(ContractDefinitionRequest contractDefinitionRequest) {
-        return contractDefinitionApiService.createContractDefinition(contractDefinitionRequest);
+    public IdResponseDto createContractDefinition(ContractDefinitionCreateRequest contractDefinitionCreateRequest) {
+        return contractDefinitionApiService.createContractDefinition(contractDefinitionCreateRequest);
     }
 
     @DELETE
-    @Path("pages/contract-definition-page/contractDefinitions/{contractDefinitionId}")
+    @Path("pages/contract-definition-page/contract-definitions/{contractDefinitionId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Delete a Contract Definition")
     public IdResponseDto deleteContractDefinition(@PathParam("contractDefinitionId") String contractDefinitionId) {

@@ -27,14 +27,14 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class CriterionDto {
     private String operandLeft;
-    private String operator;
-    private String operandRight;
+    private OperatorDto operator;
+    private CriterionLiteralDto operandRight;
 
-    public static CriterionDto forString(String operandLeft, String operator, String operatorRight) {
-        return new CriterionDto(operandLeft, operator, operatorRight);
+    public static CriterionDto forString(String operandLeft, OperatorDto operator, CriterionLiteralDto criterionLiteral) {
+        return new CriterionDto(operandLeft, operator, criterionLiteral);
     }
 
-    public static CriterionDto forJson(String operandLeft, String operator, String operatorRight) {
+    public static CriterionDto forJson(String operandLeft, OperatorDto operator, CriterionLiteralDto operatorRight) {
         return new CriterionDto(operandLeft, operator, operatorRight);
     }
 }

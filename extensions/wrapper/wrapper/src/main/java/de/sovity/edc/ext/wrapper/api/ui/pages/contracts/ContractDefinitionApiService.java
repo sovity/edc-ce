@@ -14,11 +14,11 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.contracts;
 
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionEntry;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractDefinitionBuilder;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractDefinitionUtils;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.CriterionMapper;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
@@ -32,7 +32,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContractDefinitionApiService {
     private final ContractDefinitionService contractDefinitionService;
-    private final ContractDefinitionUtils contractDefinitionUtils;
+    private final CriterionMapper criterionMapper;
     private final ContractDefinitionBuilder contractDefinitionBuilder;
 
     public List<ContractDefinitionEntry> getContractDefinitions() {
@@ -43,13 +43,13 @@ public class ContractDefinitionApiService {
             var entry = new ContractDefinitionEntry();
             entry.setAccessPolicyId(definition.getAccessPolicyId());
             entry.setContractPolicyId(definition.getContractPolicyId());
-            entry.setCriteria(contractDefinitionUtils.mapToCriterionDtos(definition.getAssetsSelector()));
+            entry.setCriteria(criterionMapper.mapToCriterionDtos(definition.getAssetsSelector()));
             return entry;
         }).toList();
     }
 
     @NotNull
-    public IdResponseDto createContractDefinition(ContractDefinitionRequest request) {
+    public IdResponseDto createContractDefinition(ContractDefinitionCreateRequest request) {
         var contractDefinition = contractDefinitionBuilder.buildContractDefinition(request);
         contractDefinition = contractDefinitionService.create(contractDefinition).getContent();
         return new IdResponseDto(contractDefinition.getId());

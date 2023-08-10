@@ -29,8 +29,9 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractDefinit
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferProcessStateService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequestBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractAgreementUtils;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractDefinitionUtils;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.CriterionMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
@@ -97,9 +98,10 @@ public class WrapperExtensionContextBuilder {
                 contractAgreementDataFetcher,
                 contractAgreementPageCardBuilder
         );
-        var contractDefinitionUtils = new ContractDefinitionUtils();
-        var contactDefinitionBuilder = new ContractDefinitionBuilder(contractDefinitionUtils);
-        var contractDefinitionApiService = new ContractDefinitionApiService(contractDefinitionService, contractDefinitionUtils, contactDefinitionBuilder);
+        var operatorMapper = new OperatorMapper();
+        var criterionMapper = new CriterionMapper(operatorMapper);
+        var contactDefinitionBuilder = new ContractDefinitionBuilder(criterionMapper);
+        var contractDefinitionApiService = new ContractDefinitionApiService(contractDefinitionService, criterionMapper, contactDefinitionBuilder);
         var transferHistoryPageApiService = new TransferHistoryPageApiService(
                 assetService,
                 contractAgreementService,

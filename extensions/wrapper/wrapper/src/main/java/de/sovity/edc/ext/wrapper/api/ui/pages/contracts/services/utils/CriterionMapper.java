@@ -16,23 +16,27 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils;
 
 
 import de.sovity.edc.ext.wrapper.api.ui.model.CriterionDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.CriterionLiteralDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.OperatorDto;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.query.Criterion;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-public class ContractDefinitionUtils {
+public class CriterionMapper {
+    private final OperatorMapper operatorMapper;
 
     public CriterionDto mapToCriterionDto(Criterion criterion) {
         if (criterion == null) {
             return null;
         }
         CriterionDto dto = new CriterionDto();
+        CriterionLiteralDto literalDto = new CriterionLiteralDto();
+        literalDto.setValue((String) criterion.getOperandRight());
         dto.setOperandLeft(String.valueOf(criterion.getOperandLeft()));
-        dto.setOperator(criterion.getOperator());
-        dto.setOperandRight(String.valueOf(criterion.getOperandRight()));
-
+        dto.setOperator(OperatorDto.fromString(criterion.getOperator()));
+        dto.setOperandRight(literalDto);
         return dto;
     }
 
@@ -48,7 +52,7 @@ public class ContractDefinitionUtils {
         if (criterionDto == null) {
             return null;
         }
-        return new Criterion(criterionDto.getOperandLeft(), criterionDto.getOperator(), criterionDto.getOperandRight());
+        return new Criterion(criterionDto.getOperandLeft(), operatorMapper.toOperator(criterionDto.getOperator()).getOdrlRepresentation(), criterionDto.getOperandRight());
     }
 
     public List<Criterion> mapToCriteria(List<CriterionDto> criterionDtos) {

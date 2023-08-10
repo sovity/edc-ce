@@ -14,7 +14,7 @@
 
 package de.sovity.edc.client;
 
-import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
+import de.sovity.edc.client.gen.model.ContractDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.CriterionDto;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
@@ -48,7 +48,7 @@ class ContractDefinitionPageApiServiceTest {
         var criteria = Arrays.asList(
                 new Criterion(
                         "exampleLeft1",
-                        "operator1",
+                        "EQ",
                         "exampleRight1")
         );
         createContractDefinition(contractDefinitionService, "contractPolicy-id-1", "accessPolicy-id-1", criteria);
@@ -94,13 +94,13 @@ class ContractDefinitionPageApiServiceTest {
         var criteria = Arrays.asList(
                 new CriterionDto(
                         "exampleLeft1",
-                        "operator1",
+                        "GEQ",
                         "exampleRight1")
         );
-        var contractDefinition = ContractDefinitionRequest.builder()
+        var contractDefinition = ContractDefinitionCreateRequest.builder()
                 .contractPolicyId("contractPolicy-id-1")
                 .accessPolicyId("accessPolicy-id-1")
-                .assetsSelector(criteria)
+                .criteria(criteria)
                 .build();
 
         // act
@@ -125,7 +125,7 @@ class ContractDefinitionPageApiServiceTest {
         var criteria = Arrays.asList(
                 new Criterion(
                         "exampleLeft1",
-                        "operator1",
+                        "EQ",
                         "exampleRight1")
         );
         createContractDefinition(contractDefinitionService, "contractPolicy-id-1", "accessPolicy-id-1", criteria);

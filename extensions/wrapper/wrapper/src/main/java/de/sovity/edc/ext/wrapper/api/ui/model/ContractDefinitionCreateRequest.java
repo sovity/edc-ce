@@ -31,7 +31,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Schema(description = "Data for creating a Contract Definition")
-public class ContractDefinitionRequest {
+public class ContractDefinitionCreateRequest {
     @Schema(description = "Contract Policy ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String contractPolicyId;
 
@@ -39,5 +39,5 @@ public class ContractDefinitionRequest {
     private String accessPolicyId;
 
     @Schema(description = "List of Criteria for the contract", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<CriterionDto> assetsSelector;
+    private List<CriterionDto> criteria;
 }

@@ -17,26 +17,26 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services;
 
 
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractDefinitionUtils;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionCreateRequest;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.CriterionMapper;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 
 
 @RequiredArgsConstructor
 public class ContractDefinitionBuilder {
-    private final ContractDefinitionUtils contractDefinitionUtils;
+    private final CriterionMapper criterionMapper;
 
-    public ContractDefinition buildContractDefinition(ContractDefinitionRequest request) {
+    public ContractDefinition buildContractDefinition(ContractDefinitionCreateRequest request) {
         var contractPolicyId = request.getContractPolicyId();
         var accessPolicyId = request.getAccessPolicyId();
-        var assetsSelector = request.getAssetsSelector();
+        var assetsSelector = request.getCriteria();
 
         return ContractDefinition.Builder.newInstance()
                 .id(request.getContractPolicyId())
                 .contractPolicyId(contractPolicyId)
                 .accessPolicyId(accessPolicyId)
-                .assetsSelector(contractDefinitionUtils.mapToCriteria(assetsSelector))
+                .assetsSelector(criterionMapper.mapToCriteria(assetsSelector))
                 .build();
     }
 }

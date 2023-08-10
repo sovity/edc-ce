@@ -31,4 +31,7 @@ public class ContractDefinitionEntry {
 
     @Schema(description = "Criteria for the contract", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<CriterionDto> criteria;
+
+    @Schema(description = "Criterion Literal Dto", requiredMode = Schema.RequiredMode.REQUIRED)
+    private CriterionLiteralDto criterionLiteralDto;
 }
