@@ -11,15 +11,15 @@
  *      sovity GmbH - init
  */
 
-package de.sovity.edc.extension.e2e.connector.config;
+package de.sovity.edc.extension.e2e.connector.config.part;
 
 import java.util.Map;
 
-public record DatasourceConfig(
+public record DatasourceConfigPart(
         String name,
         String jdbcUrl,
         String jdbcUser,
-        String jdbcPassword) implements EdcConfig {
+        String jdbcPassword) implements EdcConfigPart {
 
     private static final String SETTING_DATASOURCE_NAME = "edc.datasource.%s.name";
     private static final String SETTING_DATASOURCE_URL = "edc.datasource.%s.url";

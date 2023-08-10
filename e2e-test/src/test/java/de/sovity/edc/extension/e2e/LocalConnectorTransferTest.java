@@ -14,9 +14,10 @@
 package de.sovity.edc.extension.e2e;
 
 import de.sovity.edc.extension.e2e.connector.Connector;
-import de.sovity.edc.extension.e2e.connector.DataTransferTestUtils;
+import de.sovity.edc.extension.e2e.connector.DataTransferTestUtil;
 import de.sovity.edc.extension.e2e.connector.JsonLdConnectorUtil;
-import de.sovity.edc.extension.e2e.connector.factory.LocalTestConnectorFactory;
+import de.sovity.edc.extension.e2e.connector.config.TestConnectorConfigFactoryImpl;
+import de.sovity.edc.extension.e2e.connector.factory.TestConnectorFactoryImpl;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -27,7 +28,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.UUID;
 
-import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtils.MIGRATED_M8_ASSET_ID;
+import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.MIGRATED_M8_ASSET_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @EnabledIfEnvironmentVariable(
@@ -49,6 +50,7 @@ public class LocalConnectorTransferTest {
     public static final String CONSUMER_BACKEND_URL = String.format(
             "%s/consume",
             TEST_BACKEND_BASE_URL);
+    private static final String TEST_BACKEND_TEST_DATA_M8 = "b130536e-0a51-4d2d-aa8c-7591d6ad5bc8";
 
     @RegisterExtension
     static EdcExtension providerEdcContext = new EdcExtension();
@@ -65,16 +67,15 @@ public class LocalConnectorTransferTest {
 
     @BeforeEach
     void setUp() {
-        providerConnector = new LocalTestConnectorFactory(
+        var connectorFactory = new TestConnectorFactoryImpl(new TestConnectorConfigFactoryImpl());
+        providerConnector = connectorFactory.createConnector(
                 PROVIDER_PARTICIPANT_ID,
                 providerEdcContext,
-                PROVIDER_DATABASE)
-                .createConnector();
-        consumerConnector = new LocalTestConnectorFactory(
+                PROVIDER_DATABASE);
+        consumerConnector = connectorFactory.createConnector(
                 CONSUMER_PARTICIPANT_ID,
                 consumerEdcContext,
-                CONSUMER_DATABASE)
-                .createConnector();
+                CONSUMER_DATABASE);
     }
 
     @Test
@@ -86,14 +87,15 @@ public class LocalConnectorTransferTest {
                 providerConnector.getProtocolApiUri(),
                 MIGRATED_M8_ASSET_ID,
                 JsonLdConnectorUtil.httpDataAddress(CONSUMER_BACKEND_URL));
-        DataTransferTestUtils.validateDataTransferred(TEST_BACKEND_CHECK_URL,
-                TEST_BACKEND_TEST_DATA);
+        DataTransferTestUtil.validateDataTransferred(
+                TEST_BACKEND_CHECK_URL,
+                TEST_BACKEND_TEST_DATA_M8);
     }
 
     @Test
     void createAndConsumeOffer() {
         var assetId = UUID.randomUUID().toString();
-        DataTransferTestUtils.createTestOffer(
+        DataTransferTestUtil.createTestOffer(
                 providerConnector,
                 assetId,
                 PROVIDER_TARGET_URL);
@@ -102,7 +104,7 @@ public class LocalConnectorTransferTest {
                 providerConnector.getProtocolApiUri(),
                 assetId,
                 JsonLdConnectorUtil.httpDataAddress(CONSUMER_BACKEND_URL));
-        DataTransferTestUtils.validateDataTransferred(
+        DataTransferTestUtil.validateDataTransferred(
                 TEST_BACKEND_CHECK_URL,
                 TEST_BACKEND_TEST_DATA);
     }

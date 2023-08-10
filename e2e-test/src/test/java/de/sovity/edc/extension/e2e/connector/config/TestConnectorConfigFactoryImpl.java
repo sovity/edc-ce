@@ -11,18 +11,13 @@
  *      sovity GmbH - init
  */
 
-package de.sovity.edc.extension.e2e.connector.factory;
+package de.sovity.edc.extension.e2e.connector.config;
 
-import de.sovity.edc.extension.e2e.connector.Connector;
-import de.sovity.edc.extension.e2e.connector.TestConnector;
-import de.sovity.edc.extension.e2e.connector.config.DatasourceConfig;
-import de.sovity.edc.extension.e2e.connector.config.EdcConfigGeneratorImpl;
 import de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup;
-import de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroupConfig;
 import de.sovity.edc.extension.e2e.connector.config.api.auth.NoneAuthProvider;
+import de.sovity.edc.extension.e2e.connector.config.part.DatasourceConfigPart;
+import de.sovity.edc.extension.e2e.connector.config.part.EdcApiGroupConfigPart;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
-import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.junit.extensions.EdcExtension;
 
 import java.util.List;
 import java.util.Map;
@@ -34,8 +29,7 @@ import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup.MANAG
 import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup.PROTOCOL;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 
-@RequiredArgsConstructor
-public class LocalTestConnectorFactory implements ConnectorFactory {
+public class TestConnectorConfigFactoryImpl implements TestConnectorConfigFactory {
 
     private static final String BASE_URL = "http://localhost";
     private static final List<String> DATASOURCE_NAMES = List.of(
@@ -52,19 +46,15 @@ public class LocalTestConnectorFactory implements ConnectorFactory {
     private static final String MANAGEMENT_API_GROUP_PATH = "/api/management";
     private static final String CONTROL_API_GROUP_PATH = "/control";
 
-    private final String participantId;
-    private final EdcExtension edcContext;
-    private final TestDatabase testDatabase;
-
     @Override
-    public Connector createConnector() {
+    public EdcConfig getConfig(String participantId, TestDatabase testDatabase) {
         var apiGroupConfigMap = createApiGroupConfigMap();
         var dspCallbackAddress = apiGroupConfigMap.get(PROTOCOL).getUri();
         var datasourceConfigs = getDatasourceConfigs(testDatabase);
         var migrationLocation = "classpath:migration/" + participantId;
-        var configGenerator = EdcConfigGeneratorImpl.builder()
+        return EdcConfig.builder()
                 .apiGroupConfigMap(apiGroupConfigMap)
-                .datasourceConfigs(datasourceConfigs)
+                .datasourceConfigParts(datasourceConfigs)
                 .configProperty("edc.participant.id", participantId)
                 .configProperty("edc.api.auth.key", UUID.randomUUID().toString())
                 .configProperty("edc.last.commit.info", "test env commit message")
@@ -73,16 +63,9 @@ public class LocalTestConnectorFactory implements ConnectorFactory {
                 .configProperty("edc.dsp.callback.address", dspCallbackAddress.toString())
                 .configProperty("edc.flyway.additional.migration.locations", migrationLocation)
                 .build();
-        var connector = TestConnector.builder()
-                .participantId(participantId)
-                .managementApiGroupConfig(apiGroupConfigMap.get(MANAGEMENT))
-                .protocolApiGroupConfig(apiGroupConfigMap.get(PROTOCOL))
-                .build();
-        edcContext.setConfiguration(configGenerator.getConfig());
-        return connector;
     }
 
-    private Map<EdcApiGroup, EdcApiGroupConfig> createApiGroupConfigMap() {
+    private Map<EdcApiGroup, EdcApiGroupConfigPart> createApiGroupConfigMap() {
         return Map.of(
                 DEFAULT, createApiGroupConfig(DEFAULT, DEFAULT_API_GROUP_PATH),
                 PROTOCOL, createApiGroupConfig(PROTOCOL, PROTOCOL_API_GROUP_PATH),
@@ -90,8 +73,8 @@ public class LocalTestConnectorFactory implements ConnectorFactory {
                 CONTROL, createApiGroupConfig(CONTROL, CONTROL_API_GROUP_PATH));
     }
 
-    private EdcApiGroupConfig createApiGroupConfig(EdcApiGroup edcApiGroup, String path) {
-        return new EdcApiGroupConfig(
+    private EdcApiGroupConfigPart createApiGroupConfig(EdcApiGroup edcApiGroup, String path) {
+        return new EdcApiGroupConfigPart(
                 edcApiGroup,
                 BASE_URL,
                 getFreePort(),
@@ -99,14 +82,13 @@ public class LocalTestConnectorFactory implements ConnectorFactory {
                 new NoneAuthProvider());
     }
 
-    private List<DatasourceConfig> getDatasourceConfigs(TestDatabase testDatabase) {
+    private List<DatasourceConfigPart> getDatasourceConfigs(TestDatabase testDatabase) {
         return DATASOURCE_NAMES.stream()
-                .map(name -> new DatasourceConfig(
+                .map(name -> new DatasourceConfigPart(
                         name,
                         testDatabase.getJdbcUrl(),
                         testDatabase.getJdbcUser(),
                         testDatabase.getJdbcPassword()))
                 .toList();
     }
-
 }

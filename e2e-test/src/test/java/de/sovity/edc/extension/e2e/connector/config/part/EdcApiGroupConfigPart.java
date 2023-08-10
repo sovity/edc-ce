@@ -11,43 +11,43 @@
  *      sovity GmbH - init
  */
 
-package de.sovity.edc.extension.e2e.connector.config.api;
+package de.sovity.edc.extension.e2e.connector.config.part;
 
-import de.sovity.edc.extension.e2e.connector.config.EdcConfig;
+import de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup;
 import de.sovity.edc.extension.e2e.connector.config.api.auth.AuthProvider;
 
 import java.net.URI;
 import java.util.Map;
 
-public record EdcApiGroupConfig(
+public record EdcApiGroupConfigPart(
         EdcApiGroup edcApiGroup,
         String baseUrl,
         int port,
         String path,
-        AuthProvider authProvider) implements EdcConfig {
+        AuthProvider authProvider) implements EdcConfigPart {
 
     private static final String SETTING_WEB_HTTP_PATH = "web.http.%s.path";
     private static final String SETTING_WEB_HTTP_PORT = "web.http.%s.port";
     private static final String SETTING_WEB_HTTP_DEFAULT_PATH = "web.http.path";
     private static final String SETTING_WEB_HTTP_DEFAULT_PORT = "web.http.port";
 
-    public static EdcApiGroupConfig mgntFromUri(
+    public static EdcApiGroupConfigPart mgntFromUri(
             URI uri,
             AuthProvider authProvider) {
         return fromUri(EdcApiGroup.MANAGEMENT, uri, authProvider);
     }
 
-    public static EdcApiGroupConfig protocolFromUri(
+    public static EdcApiGroupConfigPart protocolFromUri(
             URI uri,
             AuthProvider authProvider) {
         return fromUri(EdcApiGroup.PROTOCOL, uri, authProvider);
     }
 
-    public static EdcApiGroupConfig fromUri(
+    public static EdcApiGroupConfigPart fromUri(
             EdcApiGroup edcApiGroup,
             URI uri,
             AuthProvider authProvider) {
-        return new EdcApiGroupConfig(
+        return new EdcApiGroupConfigPart(
                 edcApiGroup,
                 String.format("%s://%s", uri.getScheme(), uri.getHost()),
                 uri.getPort(),

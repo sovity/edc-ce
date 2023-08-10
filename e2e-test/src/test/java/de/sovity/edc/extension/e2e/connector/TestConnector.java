@@ -14,8 +14,10 @@
 package de.sovity.edc.extension.e2e.connector;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroupConfig;
+import de.sovity.edc.extension.e2e.connector.config.api.auth.NoneAuthProvider;
+import de.sovity.edc.extension.e2e.connector.config.part.EdcApiGroupConfigPart;
 import io.restassured.http.Header;
+import io.restassured.specification.RequestSpecification;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
@@ -58,9 +60,9 @@ public class TestConnector implements Connector {
     @NonNull
     private final String participantId;
     @NonNull
-    private final EdcApiGroupConfig managementApiGroupConfig;
+    private final EdcApiGroupConfigPart managementApiGroupConfig;
     @NonNull
-    private final EdcApiGroupConfig protocolApiGroupConfig;
+    private final EdcApiGroupConfigPart protocolApiGroupConfig;
 
     @Override
     public void createAsset(String assetId, Map<String, Object> dataAddressProperties) {
@@ -73,10 +75,8 @@ public class TestConnector implements Connector {
                 .add("dataAddress", createObjectBuilder(dataAddressProperties))
                 .build();
 
-        given()
-                .baseUri(managementApiGroupConfig.getUri().toString())
+        prepareManagementApiCall()
                 .contentType(JSON)
-                .header(getAuthHeader())
                 .body(requestBody)
                 .when()
                 .post("/v2/assets")
@@ -85,23 +85,14 @@ public class TestConnector implements Connector {
                 .contentType(JSON);
     }
 
-    private Header getAuthHeader() {
-        var authProvider = managementApiGroupConfig.authProvider();
-        return new Header(
-                authProvider.getAuthorizationHeader(),
-                authProvider.getAuthorizationHeaderValue());
-    }
-
     @Override
     public List<String> getAssetIds() {
         var requestBody = createObjectBuilder()
                 .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
                 .add(TYPE, "QuerySpecDto")
                 .build();
-        return given()
-                .baseUri(managementApiGroupConfig.getUri().toString())
+        return prepareManagementApiCall()
                 .contentType(JSON)
-                .header(getAuthHeader())
                 .body(requestBody)
                 .when()
                 .post("/v2/assets/request")
@@ -119,10 +110,8 @@ public class TestConnector implements Connector {
                 .add("policy", policyJsonObject)
                 .build();
 
-        return given()
-                .baseUri(managementApiGroupConfig.getUri().toString())
+        return prepareManagementApiCall()
                 .contentType(JSON)
-                .header(getAuthHeader())
                 .body(requestBody)
                 .when()
                 .post("/v2/policydefinitions")
@@ -153,10 +142,8 @@ public class TestConnector implements Connector {
                         .build())
                 .build();
 
-        given()
-                .baseUri(managementApiGroupConfig.getUri().toString())
+        prepareManagementApiCall()
                 .contentType(JSON)
-                .header(getAuthHeader())
                 .body(requestBody)
                 .when()
                 .post("/v2/contractdefinitions")
@@ -175,10 +162,8 @@ public class TestConnector implements Connector {
                 .build();
 
         await().atMost(timeout).untilAsserted(() -> {
-            var response = given()
-                    .baseUri(managementApiGroupConfig.getUri().toString())
+            var response = prepareManagementApiCall()
                     .contentType(JSON)
-                    .header(getAuthHeader())
                     .when()
                     .body(requestBody)
                     .post("/v2/catalog/request")
@@ -233,10 +218,8 @@ public class TestConnector implements Connector {
                 )
                 .build();
 
-        var negotiationId = given()
-                .baseUri(managementApiGroupConfig.getUri().toString())
+        var negotiationId = prepareManagementApiCall()
                 .contentType(JSON)
-                .header(getAuthHeader())
                 .body(requestBody)
                 .when()
                 .post("/v2/contractnegotiations")
@@ -268,10 +251,8 @@ public class TestConnector implements Connector {
     }
 
     private String getContractNegotiationField(String negotiationId) {
-        return given()
-                .baseUri(managementApiGroupConfig.getUri().toString())
+        return prepareManagementApiCall()
                 .contentType(JSON)
-                .header(getAuthHeader())
                 .when()
                 .get("/v2/contractnegotiations/{id}", negotiationId)
                 .then()
@@ -281,10 +262,8 @@ public class TestConnector implements Connector {
     }
 
     public String getContractNegotiationState(String id) {
-        return given()
-                .baseUri(managementApiGroupConfig.getUri().toString())
+        return prepareManagementApiCall()
                 .contentType(JSON)
-                .header(getAuthHeader())
                 .when()
                 .get("/v2/contractnegotiations/{id}/state", id)
                 .then()
@@ -316,11 +295,9 @@ public class TestConnector implements Connector {
                 .add("connectorId", participantId)
                 .build();
 
-        return given()
-                .baseUri(managementApiGroupConfig.getUri().toString())
+        return prepareManagementApiCall()
                 .contentType(JSON)
                 .body(requestBody)
-                .header(getAuthHeader())
                 .when()
                 .post("/v2/transferprocesses")
                 .then()
@@ -357,8 +334,7 @@ public class TestConnector implements Connector {
 
     @Override
     public String getTransferProcessState(String id) {
-        return given()
-                .baseUri(managementApiGroupConfig.getUri().toString())
+        return prepareManagementApiCall()
                 .contentType(JSON)
                 .when()
                 .get("/v2/transferprocesses/{id}/state", id)
@@ -375,6 +351,26 @@ public class TestConnector implements Connector {
     @Override
     public URI getProtocolApiUri() {
         return protocolApiGroupConfig.getUri();
+    }
+
+
+    private RequestSpecification prepareManagementApiCall() {
+        if (managementApiGroupConfig.authProvider() instanceof NoneAuthProvider) {
+            return given().baseUri(managementApiGroupConfig.getUri().toString());
+        }
+        return given()
+                .baseUri(managementApiGroupConfig.getUri().toString())
+                .header(getAuthHeader());
+    }
+
+    private Header getAuthHeader() {
+        var authProvider = managementApiGroupConfig.authProvider();
+        if ("".equals(authProvider.getAuthorizationHeader())) {
+            return null;
+        }
+        return new Header(
+                authProvider.getAuthorizationHeader(),
+                authProvider.getAuthorizationHeaderValue());
     }
 
 }

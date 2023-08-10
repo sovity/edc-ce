@@ -11,11 +11,11 @@
  *      sovity GmbH - init
  */
 
-package de.sovity.edc.extension.e2e.connector.factory;
+package de.sovity.edc.extension.e2e.connector.config;
 
-import de.sovity.edc.extension.e2e.connector.Connector;
+import de.sovity.edc.extension.e2e.db.TestDatabase;
 
-public interface ConnectorFactory {
+public interface TestConnectorConfigFactory {
 
-    Connector createConnector();
+    EdcConfig getConfig(String participantId, TestDatabase testDatabase);
 }

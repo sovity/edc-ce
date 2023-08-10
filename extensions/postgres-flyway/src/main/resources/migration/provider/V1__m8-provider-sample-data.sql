@@ -27,7 +27,7 @@ INSERT INTO public.edc_asset (asset_id, created_at) VALUES ('urn:artifact:test:1
 -- Data for Name: edc_asset_dataaddress; Type: TABLE DATA; Schema: public; Owner: edc
 --
 
-INSERT INTO public.edc_asset_dataaddress (asset_id_fk, properties) VALUES ('urn:artifact:test:1.0', '{"baseUrl":"https://google.de","method":"GET","type":"HttpData"}');
+INSERT INTO public.edc_asset_dataaddress (asset_id_fk, properties) VALUES ('urn:artifact:test:1.0', '{"baseUrl":"http://localhost:33001/api/test-backend/provide/b130536e-0a51-4d2d-aa8c-7591d6ad5bc8","method":"GET","type":"HttpData"}');
 
 
 --

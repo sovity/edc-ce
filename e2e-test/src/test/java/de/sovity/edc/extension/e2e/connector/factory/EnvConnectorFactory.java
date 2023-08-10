@@ -11,11 +11,10 @@
  *      sovity GmbH - init
  */
 
-package de.sovity.edc.extension.e2e.connector.config;
+package de.sovity.edc.extension.e2e.connector.factory;
 
-import java.util.Map;
+import de.sovity.edc.extension.e2e.connector.Connector;
 
-public interface EdcConfigGenerator {
-
-    Map<String, String> getConfig();
+public interface EnvConnectorFactory {
+    Connector createConnector(String participantId);
 }

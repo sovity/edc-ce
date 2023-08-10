@@ -11,11 +11,11 @@
  *      sovity GmbH - init
  */
 
-package de.sovity.edc.extension.e2e.connector.config;
+package de.sovity.edc.extension.e2e.connector.config.part;
 
 import java.util.Map;
 
-public record SimpleConfig(String name, String value) implements EdcConfig {
+public record SimpleConfigPart(String name, String value) implements EdcConfigPart {
 
     @Override
     public Map<String, String> toEdcSettingMap() {

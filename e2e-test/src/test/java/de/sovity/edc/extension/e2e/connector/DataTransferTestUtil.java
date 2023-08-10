@@ -26,12 +26,12 @@ import static org.awaitility.Awaitility.await;
 import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.CONTEXT;
 import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.TYPE;
 
-public class DataTransferTestUtils {
+public class DataTransferTestUtil {
 
     public static final String MIGRATED_M8_ASSET_ID = "test-1.0";
     public static final Duration TIMEOUT = Duration.ofSeconds(60);
 
-    private DataTransferTestUtils() {
+    private DataTransferTestUtil() {
     }
 
     public static void createTestOffer(
