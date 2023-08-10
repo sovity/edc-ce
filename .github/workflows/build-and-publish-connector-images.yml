@@ -133,8 +133,10 @@ jobs:
     needs: build-and-push-image
     timeout-minutes: 10
     services:
-#      test-backend:
-#        image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BASE }}/${{ env.TEST_BACKEND_IMAGE_NAME }}:${{ github.sha }}
+      test-backend:
+        image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BASE }}/${{ env.TEST_BACKEND_IMAGE_NAME }}:${{ github.sha }}
+        ports:
+          - '33001:11001'
       postgres-edc-1:
         image: postgres:13.3
         env:
