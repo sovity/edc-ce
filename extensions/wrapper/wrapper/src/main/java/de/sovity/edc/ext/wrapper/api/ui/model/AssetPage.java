@@ -13,21 +13,16 @@
  */
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import java.time.OffsetDateTime;
+import java.util.List;
 
-@Getter
-@Setter
-@ToString
+@Data
 @AllArgsConstructor
-@RequiredArgsConstructor
-@Schema(description = "Marks the operation as successful")
-public class IdResponseDto {
-    @Schema(description = "ID", requiredMode = Schema.RequiredMode.REQUIRED)
-    private final String id;
-    @Schema(description = "Change Date", requiredMode = Schema.RequiredMode.REQUIRED)
-    private OffsetDateTime lastUpdatedDate = OffsetDateTime.now();
+@Schema(description = "All data for the Asset Page")
+public class AssetPage {
+    @Schema(description = "Visible Assets", requiredMode = Schema.RequiredMode.REQUIRED)
+    private List<AssetEntry> assets;
 }

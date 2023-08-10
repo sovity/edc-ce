@@ -42,6 +42,7 @@ public class TransferProcessTestUtils {
     public static final String PROVIDING_TRANSFER_PROCESS_ID = "81cdf4cf-8427-480f-9662-8a29d66ddd3b";
     public static final String CONSUMING_TRANSFER_PROCESS_ID = "be0cac12-bb43-420e-aa29-d66bb3d0e0ac";
 
+
     @NotNull
     public static void createProvidingTransferProcesses(ContractNegotiationStore store, TransferProcessStore transferProcessStore, AssetService assetStore) throws ParseException {
         DataAddress dataAddress = getDataAddress();
