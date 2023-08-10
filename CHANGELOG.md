@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Patch
 
 - Fixed an issue where connector crawling failed when data offer limits were exceeded.
+- Fixed searching data offers with capital letters didn't work.
 
 ### Deployment Migration Notes
 
