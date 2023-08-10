@@ -24,9 +24,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Opinionated subset of the EDC policy.
- *
- * @author tim.dahlmanns@isst.fraunhofer.de
+ * Opinionated subset of the EDC policy for our EDC UI.
+ * <br>
+ * Will be merged with PolicyDto in the near future.
  */
 @Getter
 @Setter
@@ -34,15 +34,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
-@Schema(description = "Type-Safe OpenAPI generator friendly Policy DTO that supports an opinionated"
-        + " subset of the original EDC Policy Entity.")
-public class PolicyDto {
+@Schema(description = "EDC Policy Constraint as supported by our UI")
+public class UiPolicyConstraint {
+    @Schema(description = "Left side of the expression.", requiredMode = RequiredMode.REQUIRED)
+    private String left;
 
-    @Schema(description = "Legacy JSON as built by the Management API. Will be replaced "
-            + "in the future by a type-safe variant without polymorphisms that can be used "
-            + "for our generated clients.", requiredMode = RequiredMode.REQUIRED)
-    private String legacyPolicy;
+    @Schema(description = "Operator, e.g. EQ", requiredMode = RequiredMode.REQUIRED)
+    private String operator;
 
-    @Schema(description = "Permission for this policy", requiredMode = RequiredMode.REQUIRED)
-    private PermissionDto permission;
+    @Schema(description = "Right side of the expression", requiredMode = RequiredMode.REQUIRED)
+    private UiPolicyLiteral right;
 }

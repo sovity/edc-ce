@@ -23,10 +23,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
- * Opinionated subset of the EDC policy.
- *
- * @author tim.dahlmanns@isst.fraunhofer.de
+ * Opinionated subset of the EDC policy for our EDC UI.
  */
 @Getter
 @Setter
@@ -36,13 +36,16 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @Schema(description = "Type-Safe OpenAPI generator friendly Policy DTO that supports an opinionated"
         + " subset of the original EDC Policy Entity.")
-public class PolicyDto {
+public class UiPolicyDto {
+    @Schema(description = "EDC Policy JSON-LD. This is required because the EDC requires the " +
+            "full policy when initiating contract negotiations.", requiredMode = RequiredMode.REQUIRED)
+    private String policyJsonLd;
 
-    @Schema(description = "Legacy JSON as built by the Management API. Will be replaced "
-            + "in the future by a type-safe variant without polymorphisms that can be used "
-            + "for our generated clients.", requiredMode = RequiredMode.REQUIRED)
-    private String legacyPolicy;
+    @Schema(description = "Conjunction of required expressions for the policy to evaluate to TRUE.")
+    private List<UiPolicyConstraint> constraints;
 
-    @Schema(description = "Permission for this policy", requiredMode = RequiredMode.REQUIRED)
-    private PermissionDto permission;
+    @Schema(description = "When trying to reduce the policy JSON-LD to our opinionated subset of functionalities, " +
+            "many fields and functionalities are unsupported. Should any discrepancies occur during " +
+            "the mapping process, we'll collect them here.", requiredMode = RequiredMode.REQUIRED)
+    private List<String> errors;
 }

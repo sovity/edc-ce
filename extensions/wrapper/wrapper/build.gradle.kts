@@ -21,6 +21,7 @@ dependencies {
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
     implementation("${edcGroup}:dsp-http-spi:${edcVersion}")
     implementation(project(":extensions:wrapper:wrapper-common-api"))
+    implementation(project(":extensions:wrapper:wrapper-common-mappers"))
     implementation(project(":extensions:wrapper:wrapper-ee-api"))
     api("${edcGroup}:contract-definition-api:${edcVersion}")
     api("${edcGroup}:control-plane-spi:${edcVersion}")
