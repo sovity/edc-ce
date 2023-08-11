@@ -19,6 +19,7 @@ import {NgxsModule} from '@ngxs/store';
 import {NgChartsModule} from 'ng2-charts';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
+import {PageNotFoundComponent} from './component-library/error-404-component/page-not-found.component';
 import {provideAppConfig} from './core/config/app-config-initializer';
 import {provideAppConfigProperty} from './core/config/app-config-injection-utils';
 import {ApiKeyInterceptor} from './core/services/api/api-key.interceptor';
@@ -54,7 +55,7 @@ import {
     // Routing
     AppRoutingModule,
   ],
-  declarations: [AppComponent],
+  declarations: [AppComponent, PageNotFoundComponent],
   providers: [
     provideAppConfig(),
 

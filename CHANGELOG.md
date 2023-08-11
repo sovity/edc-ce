@@ -16,6 +16,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Added
 
+- Added custom 404 pages to connector and broker ui
+
 #### Changed
 
 #### Removed
