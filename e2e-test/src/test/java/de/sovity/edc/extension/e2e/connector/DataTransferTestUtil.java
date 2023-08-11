@@ -35,7 +35,7 @@ public class DataTransferTestUtil {
     }
 
     public static void createTestOffer(
-            Connector connector,
+            ConnectorRemote connector,
             String assetId,
             String targetUrl) {
         var contractDefinitionId = UUID.randomUUID().toString();

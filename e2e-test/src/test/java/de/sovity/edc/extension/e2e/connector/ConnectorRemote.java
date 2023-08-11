@@ -14,16 +14,15 @@
 package de.sovity.edc.extension.e2e.connector;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig;
 import de.sovity.edc.extension.e2e.connector.config.api.auth.NoneAuthProvider;
-import de.sovity.edc.extension.e2e.connector.config.part.EdcApiGroupConfigPart;
 import io.restassured.http.Header;
 import io.restassured.specification.RequestSpecification;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
-import lombok.Builder;
-import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.jsonld.TitaniumJsonLd;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.jsonld.util.JacksonJsonLd;
@@ -51,20 +50,15 @@ import static org.eclipse.edc.jsonld.spi.PropertyAndTypeNames.ODRL_POLICY_ATTRIB
 import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 import static org.eclipse.edc.spi.CoreConstants.EDC_PREFIX;
 
-@Builder
-public class TestConnector implements Connector {
+@RequiredArgsConstructor
+public class ConnectorRemote {
 
     private final ObjectMapper objectMapper = JacksonJsonLd.createObjectMapper();
     private final Duration timeout = Duration.ofSeconds(60);
     private final JsonLd jsonLd = new TitaniumJsonLd(new ConsoleMonitor());
-    @NonNull
-    private final String participantId;
-    @NonNull
-    private final EdcApiGroupConfigPart managementApiGroupConfig;
-    @NonNull
-    private final EdcApiGroupConfigPart protocolApiGroupConfig;
 
-    @Override
+    private final ConnectorRemoteConfig config;
+
     public void createAsset(String assetId, Map<String, Object> dataAddressProperties) {
         var requestBody = createObjectBuilder()
                 .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
@@ -85,7 +79,6 @@ public class TestConnector implements Connector {
                 .contentType(JSON);
     }
 
-    @Override
     public List<String> getAssetIds() {
         var requestBody = createObjectBuilder()
                 .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
@@ -102,7 +95,6 @@ public class TestConnector implements Connector {
                 .extract().jsonPath().getList("@id");
     }
 
-    @Override
     public String createPolicy(JsonObject policyJsonObject) {
         var requestBody = createObjectBuilder()
                 .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
@@ -121,7 +113,6 @@ public class TestConnector implements Connector {
                 .extract().jsonPath().getString(ID);
     }
 
-    @Override
     public void createContractDefinition(
             String assetId,
             String contractDefinitionId,
@@ -185,7 +176,6 @@ public class TestConnector implements Connector {
         return datasetReference.get();
     }
 
-    @Override
     public JsonObject getDatasetForAsset(String assetId, URI providerProtocolEndpoint) {
         var datasets = getCatalogDatasets(providerProtocolEndpoint);
         return datasets.stream()
@@ -196,7 +186,6 @@ public class TestConnector implements Connector {
                         "catalog", assetId)));
     }
 
-    @Override
     public String negotiateContract(
             String providerParticipantId,
             URI providerProtocolEndpoint,
@@ -207,7 +196,7 @@ public class TestConnector implements Connector {
                 .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
                 .add(TYPE, "NegotiationInitiateRequestDto")
                 .add("connectorId", providerParticipantId)
-                .add("consumerId", participantId)
+                .add("consumerId", config.participantId())
                 .add("providerId", providerParticipantId)
                 .add("connectorAddress", providerProtocolEndpoint.toString())
                 .add("protocol", "dataspace-protocol-http")
@@ -271,12 +260,10 @@ public class TestConnector implements Connector {
                 .extract().body().jsonPath().getString("'edc:state'");
     }
 
-    @Override
     public String getParticipantId() {
-        return participantId;
+        return config.participantId();
     }
 
-    @Override
     public String initiateTransfer(
             String contractAgreementId,
             String assetId,
@@ -292,7 +279,7 @@ public class TestConnector implements Connector {
                 .add("contractId", contractAgreementId)
                 .add("connectorAddress", providerProtocolApi.toString())
                 .add("privateProperties", Json.createObjectBuilder().build())
-                .add("connectorId", participantId)
+                .add("connectorId", config.participantId())
                 .build();
 
         return prepareManagementApiCall()
@@ -305,7 +292,6 @@ public class TestConnector implements Connector {
                 .extract().body().jsonPath().getString(ID);
     }
 
-    @Override
     public String consumeOffer(
             String providerId,
             URI providerProtocolApi,
@@ -332,7 +318,6 @@ public class TestConnector implements Connector {
         return transferProcessId;
     }
 
-    @Override
     public String getTransferProcessState(String id) {
         return prepareManagementApiCall()
                 .contentType(JSON)
@@ -343,28 +328,23 @@ public class TestConnector implements Connector {
                 .extract().body().jsonPath().getString("'edc:state'");
     }
 
-    @Override
-    public URI getManagementApiUri() {
-        return managementApiGroupConfig.getUri();
+    public ConnectorRemoteConfig getConfig() {
+        return config;
     }
-
-    @Override
-    public URI getProtocolApiUri() {
-        return protocolApiGroupConfig.getUri();
-    }
-
 
     private RequestSpecification prepareManagementApiCall() {
-        if (managementApiGroupConfig.authProvider() instanceof NoneAuthProvider) {
-            return given().baseUri(managementApiGroupConfig.getUri().toString());
+        var managementConfig = config.managementApiGroupConfig();
+        var managementBaseUri = managementConfig.getUri().toString();
+        if (managementConfig.authProvider() instanceof NoneAuthProvider) {
+            return given().baseUri(managementBaseUri);
         }
         return given()
-                .baseUri(managementApiGroupConfig.getUri().toString())
+                .baseUri(managementBaseUri)
                 .header(getAuthHeader());
     }
 
     private Header getAuthHeader() {
-        var authProvider = managementApiGroupConfig.authProvider();
+        var authProvider = config.managementApiGroupConfig().authProvider();
         if ("".equals(authProvider.getAuthorizationHeader())) {
             return null;
         }

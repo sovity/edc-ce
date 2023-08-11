@@ -34,6 +34,8 @@ public record EdcConfig(
         Map<EdcApiGroup, EdcApiGroupConfigPart> apiGroupConfigMap
 ) {
 
+    public static final String PROPERTY_PARTICIPANT = "edc.participant.id";
+
     public Map<String, String> getConfigAsMap() {
         var configStream = Stream.of(
                 apiGroupConfigMap.values().stream().toList(),
@@ -48,8 +50,18 @@ public record EdcConfig(
         };
     }
 
+    public ConnectorRemoteConfig toConnectorRemoteConfig() {
+        return new ConnectorRemoteConfig(
+                getParticipantId(),
+                apiGroupConfigMap);
+    }
+
     public EdcApiGroupConfigPart getApiGroupConfig(EdcApiGroup apiGroup) {
         return apiGroupConfigMap.get(apiGroup);
+    }
+
+    public String getParticipantId() {
+        return getConfigAsMap().get(PROPERTY_PARTICIPANT);
     }
 
     public static class EdcConfigBuilder {

@@ -13,10 +13,9 @@
 
 package de.sovity.edc.extension.e2e;
 
-import de.sovity.edc.extension.e2e.connector.Connector;
+import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.DataTransferTestUtil;
 import de.sovity.edc.extension.e2e.connector.JsonLdConnectorUtil;
-import de.sovity.edc.extension.e2e.connector.factory.EnvConnectorFactoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -27,6 +26,7 @@ import static de.sovity.edc.extension.e2e.TransferTestVariables.CONSUMER_TARGET_
 import static de.sovity.edc.extension.e2e.TransferTestVariables.PROVIDER_TARGET_URL;
 import static de.sovity.edc.extension.e2e.TransferTestVariables.TEST_BACKEND_CHECK_URL;
 import static de.sovity.edc.extension.e2e.TransferTestVariables.TEST_BACKEND_TEST_DATA;
+import static de.sovity.edc.extension.e2e.connector.config.EnvRemoteConnectorFactory.connectorRemoteConfig;
 import static de.sovity.edc.extension.e2e.env.EnvUtil.loadRequiredVariable;
 
 @EnabledIfEnvironmentVariable(
@@ -36,8 +36,8 @@ public class ExternalConnectorTransferTest {
 
     private static final String VAR_PROVIDER_PARTICIPANT_ID = "PROVIDER_PARTICIPANT_ID";
     private static final String VAR_CONSUMER_PARTICIPANT_ID = "CONSUMER_PARTICIPANT_ID";
-    private Connector providerConnector;
-    private Connector consumerConnector;
+    private ConnectorRemote providerConnector;
+    private ConnectorRemote consumerConnector;
     private String providerTargetUrl;
     private String consumerTargetUrl;
     private String testBackendCheckUrl;
@@ -55,11 +55,12 @@ public class ExternalConnectorTransferTest {
     }
 
     private void initConnectors() {
-        var envConnectorFactory = new EnvConnectorFactoryImpl();
         var providerParticipantId = loadRequiredVariable(VAR_PROVIDER_PARTICIPANT_ID);
-        providerConnector = envConnectorFactory.createConnector(providerParticipantId);
+        var providerConfig = connectorRemoteConfig(providerParticipantId);
+        providerConnector = new ConnectorRemote(providerConfig);
         var consumerParticipantId = loadRequiredVariable(VAR_CONSUMER_PARTICIPANT_ID);
-        consumerConnector = envConnectorFactory.createConnector(consumerParticipantId);
+        var consumerConfig = connectorRemoteConfig(consumerParticipantId);
+        consumerConnector = new ConnectorRemote(consumerConfig);
     }
 
     @Test
@@ -71,7 +72,7 @@ public class ExternalConnectorTransferTest {
                 providerTargetUrl);
         consumerConnector.consumeOffer(
                 providerConnector.getParticipantId(),
-                providerConnector.getProtocolApiUri(),
+                providerConnector.getConfig().protocolApiGroupConfig().getUri(),
                 assetId,
                 JsonLdConnectorUtil.httpDataAddress(consumerTargetUrl));
 

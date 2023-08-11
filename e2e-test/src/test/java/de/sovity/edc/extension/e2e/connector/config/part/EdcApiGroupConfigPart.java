@@ -34,13 +34,13 @@ public record EdcApiGroupConfigPart(
     public static EdcApiGroupConfigPart mgntFromUri(
             URI uri,
             AuthProvider authProvider) {
-        return fromUri(EdcApiGroup.MANAGEMENT, uri, authProvider);
+        return fromUri(EdcApiGroup.Management, uri, authProvider);
     }
 
     public static EdcApiGroupConfigPart protocolFromUri(
             URI uri,
             AuthProvider authProvider) {
-        return fromUri(EdcApiGroup.PROTOCOL, uri, authProvider);
+        return fromUri(EdcApiGroup.Protocol, uri, authProvider);
     }
 
     public static EdcApiGroupConfigPart fromUri(

@@ -14,10 +14,10 @@
 package de.sovity.edc.extension.e2e.connector.config.api;
 
 public enum EdcApiGroup {
-    DEFAULT(""),
-    PROTOCOL("protocol"),
-    MANAGEMENT("management"),
-    CONTROL("control");
+    Default(""),
+    Protocol("protocol"),
+    Management("management"),
+    Control("control");
 
     private final String dataSourcePropertyName;
 

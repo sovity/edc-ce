@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup.CONTROL;
-import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup.DEFAULT;
-import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup.MANAGEMENT;
-import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup.PROTOCOL;
-import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
+import static de.sovity.edc.extension.e2e.connector.config.EdcConfig.PROPERTY_PARTICIPANT;
+import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup.Control;
+import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup.Default;
+import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup.Management;
+import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup.Protocol;
 
-public class TestConnectorConfigFactoryImpl implements TestConnectorConfigFactory {
+public class ConnectorConfigFactory {
 
     private static final String BASE_URL = "http://localhost";
     private static final List<String> DATASOURCE_NAMES = List.of(
@@ -45,17 +45,24 @@ public class TestConnectorConfigFactoryImpl implements TestConnectorConfigFactor
     private static final String PROTOCOL_API_GROUP_PATH = "/dsp";
     private static final String MANAGEMENT_API_GROUP_PATH = "/api/management";
     private static final String CONTROL_API_GROUP_PATH = "/control";
+    private static final int DEFAULT_API_START_PORT = 11000;
+    private static final int PROTOCOL_API_START_PORT = 12000;
+    private static final int MANAGEMENT_API_START_PORT = 13000;
+    private static final int CONTROL_API_START_PORT = 14000;
+    private static int buildCounter;
 
-    @Override
-    public EdcConfig getConfig(String participantId, TestDatabase testDatabase) {
+    private ConnectorConfigFactory() {
+    }
+
+    public static EdcConfig forTestDatabase(String participantId, TestDatabase testDatabase) {
         var apiGroupConfigMap = createApiGroupConfigMap();
-        var dspCallbackAddress = apiGroupConfigMap.get(PROTOCOL).getUri();
+        var dspCallbackAddress = apiGroupConfigMap.get(Protocol).getUri();
         var datasourceConfigs = getDatasourceConfigs(testDatabase);
         var migrationLocation = "classpath:migration/" + participantId;
-        return EdcConfig.builder()
+        var edcConfig = EdcConfig.builder()
                 .apiGroupConfigMap(apiGroupConfigMap)
                 .datasourceConfigParts(datasourceConfigs)
-                .configProperty("edc.participant.id", participantId)
+                .configProperty(PROPERTY_PARTICIPANT, participantId)
                 .configProperty("edc.api.auth.key", UUID.randomUUID().toString())
                 .configProperty("edc.last.commit.info", "test env commit message")
                 .configProperty("edc.build.date", "2023-05-08T15:30:00Z")
@@ -63,26 +70,39 @@ public class TestConnectorConfigFactoryImpl implements TestConnectorConfigFactor
                 .configProperty("edc.dsp.callback.address", dspCallbackAddress.toString())
                 .configProperty("edc.flyway.additional.migration.locations", migrationLocation)
                 .build();
+        buildCounter++;
+        return edcConfig;
     }
 
-    private Map<EdcApiGroup, EdcApiGroupConfigPart> createApiGroupConfigMap() {
+    private static Map<EdcApiGroup, EdcApiGroupConfigPart> createApiGroupConfigMap() {
         return Map.of(
-                DEFAULT, createApiGroupConfig(DEFAULT, DEFAULT_API_GROUP_PATH),
-                PROTOCOL, createApiGroupConfig(PROTOCOL, PROTOCOL_API_GROUP_PATH),
-                MANAGEMENT, createApiGroupConfig(MANAGEMENT, MANAGEMENT_API_GROUP_PATH),
-                CONTROL, createApiGroupConfig(CONTROL, CONTROL_API_GROUP_PATH));
+                Default, createApiGroupConfig(Default, DEFAULT_API_GROUP_PATH),
+                Protocol, createApiGroupConfig(Protocol, PROTOCOL_API_GROUP_PATH),
+                Management, createApiGroupConfig(Management, MANAGEMENT_API_GROUP_PATH),
+                Control, createApiGroupConfig(Control, CONTROL_API_GROUP_PATH));
     }
 
-    private EdcApiGroupConfigPart createApiGroupConfig(EdcApiGroup edcApiGroup, String path) {
+    private static EdcApiGroupConfigPart createApiGroupConfig(
+            EdcApiGroup edcApiGroup,
+            String path) {
         return new EdcApiGroupConfigPart(
                 edcApiGroup,
                 BASE_URL,
-                getFreePort(),
+                getPortForApiGroup(edcApiGroup),
                 path,
                 new NoneAuthProvider());
     }
 
-    private List<DatasourceConfigPart> getDatasourceConfigs(TestDatabase testDatabase) {
+    private static int getPortForApiGroup(EdcApiGroup edcApiGroup) {
+        return switch (edcApiGroup) {
+            case Default -> DEFAULT_API_START_PORT + buildCounter;
+            case Protocol -> PROTOCOL_API_START_PORT + buildCounter;
+            case Management -> MANAGEMENT_API_START_PORT + buildCounter;
+            case Control -> CONTROL_API_START_PORT + buildCounter;
+        };
+    }
+
+    private static List<DatasourceConfigPart> getDatasourceConfigs(TestDatabase testDatabase) {
         return DATASOURCE_NAMES.stream()
                 .map(name -> new DatasourceConfigPart(
                         name,
