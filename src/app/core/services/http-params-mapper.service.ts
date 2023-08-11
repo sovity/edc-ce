@@ -5,7 +5,6 @@ import {HttpDatasourceQueryParamFormValue} from '../../routes/connector-ui/asset
 import {ContractAgreementTransferDialogFormValue} from '../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-form-model';
 import {removeNullValues} from '../utils/record-utils';
 import {everythingAfter, everythingBefore} from '../utils/string-utils';
-import {DataAddressDto} from './api/legacy-managent-api-client';
 import {Asset} from './models/asset';
 import {HttpRequestParams} from './models/http-request-params';
 
@@ -16,9 +15,9 @@ export class HttpRequestParamsMapper {
       | AssetDatasourceFormValue
       | ContractAgreementTransferDialogFormValue
       | undefined,
-  ): DataAddressDto {
+  ): Record<string, string> {
     const params = this.buildHttpRequestParams(formValue);
-    return {properties: this.encodeHttpRequestParams(params)};
+    return this.encodeHttpRequestParams(params);
   }
 
   encodeHttpProxyTransferRequestProperties(

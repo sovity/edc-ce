@@ -133,20 +133,19 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
       };
     }
 
-    let transferRequestProperties =
+    let transferProcessProperties =
       this.httpRequestParamsMapper.encodeHttpProxyTransferRequestProperties(
         this.data.asset,
         value,
       );
 
-    let dataSinkProperties =
-      this.dataAddressMapper.buildDataAddressProperties(value).properties ?? {};
+    let dataSinkProperties = this.dataAddressMapper.buildDataAddressProperties(value) ?? {};
 
     return {
       type: 'PARAMS_ONLY',
       params: {
         contractAgreementId: this.data.contractId,
-        properties: transferRequestProperties,
+        transferProcessProperties,
         dataSinkProperties,
       },
     };

@@ -7,7 +7,6 @@ import {
 import {Observable, Subject, isObservable} from 'rxjs';
 import {filter, finalize, takeUntil} from 'rxjs/operators';
 import {ContractNegotiationService} from '../../../core/services/api/contract-negotiation.service';
-import {AssetService} from '../../../core/services/api/legacy-managent-api-client';
 import {Asset} from '../../../core/services/models/asset';
 import {NotificationService} from '../../../core/services/notification.service';
 import {ContractAgreementTransferDialogData} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-data';
@@ -19,6 +18,7 @@ import {
 import {PropertyGridGroup} from '../../property-grid/property-grid-group/property-grid-group';
 import {AssetDetailDialogData} from './asset-detail-dialog-data';
 import {AssetDetailDialogResult} from './asset-detail-dialog-result';
+import {EdcApiService} from "../../../core/services/api/edc-api.service";
 
 /**
  * Asset Detail Dialog
@@ -50,8 +50,8 @@ export class AssetDetailDialogComponent implements OnDestroy {
   }
 
   constructor(
+    private edcApiService: EdcApiService,
     private notificationService: NotificationService,
-    private assetService: AssetService,
     private matDialog: MatDialog,
     private matDialogRef: MatDialogRef<AssetDetailDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
@@ -79,7 +79,7 @@ export class AssetDetailDialogComponent implements OnDestroy {
         successMessage: `Deleted asset ${this.asset.id}.`,
         failureMessage: `Failed deleting asset ${this.asset.id}.`,
         onsuccess: () => this.close({refreshList: true}),
-        req: () => this.assetService.removeAsset(this.asset.id),
+        req: () => this.edcApiService.deleteAsset(this.asset.id),
       });
     });
   }

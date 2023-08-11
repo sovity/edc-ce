@@ -2,7 +2,7 @@ import {Component, OnDestroy} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {finalize, takeUntil} from 'rxjs/operators';
-import {AssetService} from '../../../../core/services/api/legacy-managent-api-client';
+import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {AssetEntryBuilder} from '../../../../core/services/asset-entry-builder';
 import {NotificationService} from '../../../../core/services/notification.service';
 import {ValidationMessages} from '../../../../core/validators/validation-messages';
@@ -29,22 +29,23 @@ export class AssetCreateDialogComponent implements OnDestroy {
   methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'];
 
   constructor(
+    private edcApiService: EdcApiService,
     public form: AssetCreateDialogForm,
     public validationMessages: ValidationMessages,
     private assetEntryBuilder: AssetEntryBuilder,
     private notificationService: NotificationService,
-    private assetService: AssetService,
     private dialogRef: MatDialogRef<AssetCreateDialogComponent>,
   ) {}
 
   onSave() {
     const formValue = this.form.value;
-    const assetEntryDto = this.assetEntryBuilder.buildAssetEntry(formValue);
+    const assetEntry =
+      this.assetEntryBuilder.buildAssetCreateRequest(formValue);
 
     this.form.all.disable();
     this.loading = true;
-    this.assetService
-      .createAsset(assetEntryDto)
+    this.edcApiService
+      .createAsset(assetEntry)
       .pipe(
         takeUntil(this.ngOnDestroy$),
         finalize(() => {

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {AssetService} from './api/legacy-managent-api-client';
+import {EdcApiService} from './api/edc-api.service';
 import {AssetPropertyMapper} from './asset-property-mapper';
 import {Asset} from './models/asset';
 
@@ -14,15 +14,15 @@ import {Asset} from './models/asset';
 export class AssetServiceMapped {
   constructor(
     private assetPropertyMapper: AssetPropertyMapper,
-    private assetService: AssetService,
+    private edcApiService: EdcApiService,
   ) {}
 
   fetchAssets(): Observable<Asset[]> {
-    return this.assetService
-      .getAllAssets(0, 10_000_000)
+    return this.edcApiService
+      .getAssetPage()
       .pipe(
-        map((assets) =>
-          assets.map((asset) =>
+        map((assetPage) =>
+          assetPage.assets.map((asset) =>
             this.assetPropertyMapper.buildAssetFromProperties(asset.properties),
           ),
         ),

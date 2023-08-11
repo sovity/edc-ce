@@ -2,14 +2,14 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable, OnDestroy} from '@angular/core';
 import {EMPTY, Observable, Subject, interval} from 'rxjs';
 import {catchError, switchMap, takeUntil} from 'rxjs/operators';
-import {AssetService} from './api/legacy-managent-api-client';
+import {EdcApiService} from './api/edc-api.service';
 
 @Injectable({providedIn: 'root'})
 export class LoginPollingService implements OnDestroy {
   private pollInterval = 1000 * 30;
   private ngOnDestroy$ = new Subject();
 
-  constructor(private assetService: AssetService) {}
+  constructor(private edcApiService: EdcApiService) {}
 
   startPolling(): void {
     interval(this.pollInterval)
@@ -21,7 +21,7 @@ export class LoginPollingService implements OnDestroy {
   }
 
   private pollLogin(): Observable<unknown> {
-    return this.assetService.getAllAssets(0, 1).pipe(
+    return this.edcApiService.getAssetPage().pipe(
       catchError((err) => {
         if (!(err instanceof HttpErrorResponse) || err.status !== 401) {
           console.warn('Error while polling for session', err);

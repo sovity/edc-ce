@@ -5,7 +5,7 @@ import {map, switchMap} from 'rxjs/operators';
 import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogResult} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-result';
 import {AssetDetailDialogComponent} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.component';
-import {AssetService} from '../../../../core/services/api/legacy-managent-api-client';
+import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {AssetPropertyMapper} from '../../../../core/services/asset-property-mapper';
 import {Asset} from '../../../../core/services/models/asset';
 import {Fetched} from '../../../../core/services/models/fetched';
@@ -28,8 +28,8 @@ export class AssetPageComponent implements OnInit {
   private fetch$ = new BehaviorSubject(null);
 
   constructor(
+    private edcApiService: EdcApiService,
     private assetDetailDialogDataService: AssetDetailDialogDataService,
-    private assetService: AssetService,
     private dialog: MatDialog,
     private assetPropertyMapper: AssetPropertyMapper,
   ) {}
@@ -38,17 +38,17 @@ export class AssetPageComponent implements OnInit {
     this.fetch$
       .pipe(
         switchMap(() => {
-          return this.assetService.getAllAssets(0, 10_000_000).pipe(
+          return this.edcApiService.getAssetPage().pipe(
             map(
-              (assets): AssetList => ({
-                filteredAssets: assets
+              (assetPage): AssetList => ({
+                filteredAssets: assetPage.assets
                   .map((asset) =>
                     this.assetPropertyMapper.buildAssetFromProperties(
                       asset.properties,
                     ),
                   )
                   .filter((asset) => asset.name?.includes(this.searchText)),
-                numTotalAssets: assets.length,
+                numTotalAssets: assetPage.assets.length,
               }),
             ),
             Fetched.wrap({

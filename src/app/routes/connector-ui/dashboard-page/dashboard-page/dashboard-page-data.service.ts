@@ -3,15 +3,17 @@ import {Observable, combineLatest, merge, of, scan} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {CatalogApiUrlService} from '../../../../core/services/api/catalog-api-url.service';
 import {ContractOfferService} from '../../../../core/services/api/contract-offer.service';
+import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {
-  AssetService,
   ContractAgreementService,
   ContractDefinitionService,
   PolicyService,
   TransferProcessDto,
   TransferProcessService,
 } from '../../../../core/services/api/legacy-managent-api-client';
-import {ConnectorInfoPropertyGridGroupBuilder} from '../../../../core/services/connector-info-property-grid-group-builder';
+import {
+  ConnectorInfoPropertyGridGroupBuilder
+} from '../../../../core/services/connector-info-property-grid-group-builder';
 import {LastCommitInfoService} from '../../../../core/services/last-commit-info.service';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {TransferProcessStates} from '../../../../core/services/models/transfer-process-states';
@@ -22,13 +24,13 @@ import {DashboardPageData, defaultDashboardData} from './dashboard-page-data';
 @Injectable({providedIn: 'root'})
 export class DashboardPageDataService {
   constructor(
+    private edcApiService: EdcApiService,
     private catalogBrowserService: ContractOfferService,
     private contractDefinitionService: ContractDefinitionService,
     private contractAgreementService: ContractAgreementService,
     private policyService: PolicyService,
     private catalogApiUrlService: CatalogApiUrlService,
     private transferProcessService: TransferProcessService,
-    private assetService: AssetService,
     private transferProcessUtils: TransferProcessUtils,
     private lastCommitInfoService: LastCommitInfoService,
     private connectorInfoPropertyGridGroupBuilder: ConnectorInfoPropertyGridGroupBuilder,
@@ -100,8 +102,8 @@ export class DashboardPageDataService {
   }
 
   private assetKpis(): Observable<Partial<DashboardPageData>> {
-    return this.assetService.getAllAssets(0, 10_000_000).pipe(
-      map((assets) => assets.length),
+    return this.edcApiService.getAssetPage().pipe(
+      map((assetPage) => assetPage.assets.length),
       Fetched.wrap({
         failureMessage: 'Failed fetching assets.',
       }),

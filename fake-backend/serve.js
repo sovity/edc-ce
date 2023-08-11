@@ -43,11 +43,6 @@ app.use((req, res, next) => setTimeout(next, 1000));
 
 // Management API
 
-const assets = json('json/assets.json');
-app.get('/api/v1/data/assets', (req, res) => {
-  res.json(assets);
-});
-
 const policyDefinitions = json('json/policyDefinitions.json');
 app.get('/api/v1/data/policydefinitions', (req, res) => {
   res.json(policyDefinitions);
@@ -101,6 +96,11 @@ app.post(
 );
 
 // UI API Wrapper
+const assetPage = json('json/assets.json');
+app.get('/api/v1/data/wrapper/ui/pages/asset-page', (req, res) => {
+  res.json(assetPage);
+});
+
 const contractAgreementPage = json('json/contractAgreementPage.json');
 app.get('/api/v1/data/wrapper/ui/pages/contract-agreement-page', (_, res) => {
   res.json(contractAgreementPage);

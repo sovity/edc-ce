@@ -1,35 +1,39 @@
-[
-  {
-    "properties": {
-      "asset:prop:id": "urn:artifact:db-rail-network-2023-jan",
-      "asset:prop:name": "Rail Network DB 2023 January",
-      "asset:prop:version": "1.1",
-      "asset:prop:originator": "https://example-connector.rail-mgmt.bahn.de/api/v1/ids/data",
-      "asset:prop:originatorOrganization": "Deutsche Bahn AG",
-      "asset:prop:keywords": "db, bahn, rail, Rail-Designer",
-      "asset:prop:contenttype": "application/json",
-      "asset:prop:description": "Train Network Map released on 10.01.2023, valid until 31.02.2023. \nFile format is xyz as exported by Rail-Designer.",
-      "asset:prop:language": "https://w3id.org/idsa/code/EN",
-      "asset:prop:publisher": "https://my.cool-api.gg/about",
-      "asset:prop:standardLicense": "https://my.cool-api.gg/license",
-      "asset:prop:endpointDocumentation": "https://my.cool-api.gg/docs",
-      "http://w3id.org/mds#dataCategory": "Infrastructure and Logistics",
-      "http://w3id.org/mds#dataSubcategory": "General Information About Planning Of Routes",
-      "http://w3id.org/mds#dataModel": "my-data-model-001",
-      "http://w3id.org/mds#geoReferenceMethod": "my-geo-reference-method",
-      "http://w3id.org/mds#transportMode": "Rail",
-      "asset:prop:some-unsupported-property": "F10E2821BBBEA527EA02200352313BC059445190"
+{
+  "assets": [
+    {
+      "properties": {
+        "asset:prop:id": "urn:artifact:db-rail-network-2023-jan",
+        "asset:prop:name": "Rail Network DB 2023 January",
+        "asset:prop:version": "1.1",
+        "asset:prop:originator": "https://example-connector.rail-mgmt.bahn.de/api/v1/ids/data",
+        "asset:prop:originatorOrganization": "Deutsche Bahn AG",
+        "asset:prop:keywords": "db, bahn, rail, Rail-Designer",
+        "asset:prop:contenttype": "application/json",
+        "asset:prop:description": "Train Network Map released on 10.01.2023, valid until 31.02.2023. \nFile format is xyz as exported by Rail-Designer.",
+        "asset:prop:language": "https://w3id.org/idsa/code/EN",
+        "asset:prop:publisher": "https://my.cool-api.gg/about",
+        "asset:prop:standardLicense": "https://my.cool-api.gg/license",
+        "asset:prop:endpointDocumentation": "https://my.cool-api.gg/docs",
+        "http://w3id.org/mds#dataCategory": "Infrastructure and Logistics",
+        "http://w3id.org/mds#dataSubcategory": "General Information About Planning Of Routes",
+        "http://w3id.org/mds#dataModel": "my-data-model-001",
+        "http://w3id.org/mds#geoReferenceMethod": "my-geo-reference-method",
+        "http://w3id.org/mds#transportMode": "Rail",
+        "asset:prop:some-unsupported-property": "test"
+      },
+      "privateProperties": {}
+    },
+    {
+      "properties": {
+        "asset:prop:id": "urn:artifact:bitcoin-data",
+        "asset:prop:name": "Bitcoin Data",
+        "asset:prop:contenttype": "application/json",
+        "asset:prop:description": "description",
+        "asset:prop:version": "1.0",
+        "asset:prop:type": "HttpData",
+        "asset:prop:originator": "https://sovity-001.stage-sovity.azure.sovity.io/control/api/v1/ids/data"
+      },
+      "privateProperties": {}
     }
-  },
-  {
-    "properties": {
-      "asset:prop:id": "urn:artifact:bitcoin-data",
-      "asset:prop:name": "Bitcoin Data",
-      "asset:prop:contenttype": "application/json",
-      "asset:prop:description": "description",
-      "asset:prop:version": "1.0",
-      "asset:prop:type": "HttpData",
-      "asset:prop:originator": "https://sovity-001.stage-sovity.azure.sovity.io/control/api/v1/ids/data"
-    }
-  }
-]
+  ]
+}

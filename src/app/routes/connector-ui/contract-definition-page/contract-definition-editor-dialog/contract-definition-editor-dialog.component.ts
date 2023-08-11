@@ -2,8 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {finalize, takeUntil} from 'rxjs/operators';
+import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {
-  AssetService,
   ContractDefinitionService,
   PolicyDefinition,
   PolicyService,
@@ -28,10 +28,10 @@ export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
   loading = false;
 
   constructor(
+    private edcApiService: EdcApiService,
     public form: ContractDefinitionEditorDialogForm,
     private notificationService: NotificationService,
     private policyService: PolicyService,
-    private assetService: AssetService,
     private assetPropertyMapper: AssetPropertyMapper,
     private contractDefinitionService: ContractDefinitionService,
     private contractDefinitionBuilder: ContractDefinitionBuilder,
@@ -46,11 +46,11 @@ export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
       .subscribe((polices) => {
         this.policies = polices;
       });
-    this.assetService
-      .getAllAssets(0, 10_000_000)
+    this.edcApiService
+      .getAssetPage()
       .pipe(takeUntil(this.ngOnDestroy$))
-      .subscribe((assets) => {
-        this.assets = assets.map((it) =>
+      .subscribe((assetPage) => {
+        this.assets = assetPage.assets.map((it) =>
           this.assetPropertyMapper.buildAssetFromProperties(it.properties),
         );
       });
