@@ -20,7 +20,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@Schema(description = "Contract Definition Entry for Contract Definition Page")
+@Schema(description = "Contract Definition List Entry for Contract Definition Page")
 public class ContractDefinitionEntry {
 
     @Schema(description = "Access Policy ID", requiredMode = Schema.RequiredMode.REQUIRED)

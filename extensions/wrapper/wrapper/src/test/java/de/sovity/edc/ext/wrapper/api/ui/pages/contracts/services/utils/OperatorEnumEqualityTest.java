@@ -20,7 +20,15 @@ public class OperatorEnumEqualityTest {
     void testEnumMappingFromOperatorToDto() {
         Arrays.stream(Operator.values()).forEach(operator -> {
             OperatorDto dto = operatorMapper.toOperatorDto(operator);
-            assertThat(dto.getOperatorEnumDto().name()).isEqualTo(operator.name());
+            assertThat(dto.name()).isEqualTo(operator.name());
+        });
+    }
+
+    @Test
+    void testEnumMappingFromDtoToOperator() {
+        Arrays.stream(OperatorDto.values()).forEach(dto -> {
+            Operator operator = operatorMapper.toOperator(dto);
+            assertThat(operator.name()).isEqualTo(dto.name());
         });
     }
 }

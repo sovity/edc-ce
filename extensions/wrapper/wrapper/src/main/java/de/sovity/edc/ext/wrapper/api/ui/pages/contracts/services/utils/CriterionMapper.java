@@ -32,10 +32,10 @@ public class CriterionMapper {
             return null;
         }
         CriterionDto dto = new CriterionDto();
-        CriterionLiteralDto literalDto = new CriterionLiteralDto();
+        CriterionLiteralDto literalDto = new CriterionLiteralDto();;
         literalDto.setValue((String) criterion.getOperandRight());
         dto.setOperandLeft(String.valueOf(criterion.getOperandLeft()));
-        dto.setOperator(OperatorDto.fromString(criterion.getOperator()));
+        dto.setOperator(operatorMapper.fromString(criterion.getOperator()));
         dto.setOperandRight(literalDto);
         return dto;
     }
@@ -52,7 +52,10 @@ public class CriterionMapper {
         if (criterionDto == null) {
             return null;
         }
-        return new Criterion(criterionDto.getOperandLeft(), operatorMapper.toOperator(criterionDto.getOperator()).getOdrlRepresentation(), criterionDto.getOperandRight());
+        return new Criterion(
+                criterionDto.getOperandLeft(),
+                operatorMapper.toOperator(criterionDto.getOperator()).getOdrlRepresentation(),
+                criterionDto.getOperandRight());
     }
 
     public List<Criterion> mapToCriteria(List<CriterionDto> criterionDtos) {

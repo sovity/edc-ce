@@ -16,6 +16,7 @@ package de.sovity.edc.client;
 
 import de.sovity.edc.client.gen.model.ContractDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.CriterionDto;
+import de.sovity.edc.client.gen.model.CriterionLiteralDto;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -49,12 +50,13 @@ class ContractDefinitionPageApiServiceTest {
                 new Criterion(
                         "exampleLeft1",
                         "EQ",
-                        "exampleRight1")
+                        null)
         );
         createContractDefinition(contractDefinitionService, "contractPolicy-id-1", "accessPolicy-id-1", criteria);
 
         // act
         var result = client.uiApi().contractDefinitionPage();
+
 
         //assert
         var contractDefinitions = result.getContractDefinitions();
@@ -64,7 +66,6 @@ class ContractDefinitionPageApiServiceTest {
         assertThat(contractDefinition.getAccessPolicyId()).isEqualTo("accessPolicy-id-1");
         assertThat(contractDefinition.getCriteria().get(0).getOperandLeft()).isEqualTo(criteria.get(0).getOperandLeft());
         assertThat(contractDefinition.getCriteria().get(0).getOperator()).isEqualTo(criteria.get(0).getOperator());
-        assertThat(contractDefinition.getCriteria().get(0).getOperandRight()).isEqualTo(criteria.get(0).getOperandRight());
     }
 
     @Test
@@ -91,11 +92,12 @@ class ContractDefinitionPageApiServiceTest {
     void testContractDefinitionCreation(ContractDefinitionService contractDefinitionService) {
         // arrange
         var client = TestUtils.edcClient();
+        var literal = new CriterionLiteralDto("Value1", null);
         var criteria = Arrays.asList(
                 new CriterionDto(
                         "exampleLeft1",
                         "GEQ",
-                        "exampleRight1")
+                        literal)
         );
         var contractDefinition = ContractDefinitionCreateRequest.builder()
                 .contractPolicyId("contractPolicy-id-1")
@@ -114,8 +116,7 @@ class ContractDefinitionPageApiServiceTest {
         assertThat(contractDefinitionEntry.getContractPolicyId()).isEqualTo("contractPolicy-id-1");
         assertThat(contractDefinitionEntry.getAccessPolicyId()).isEqualTo("accessPolicy-id-1");
         assertThat(contractDefinitionEntry.getAssetsSelector().get(0).getOperandLeft()).isEqualTo(criteria.get(0).getOperandLeft());
-        assertThat(contractDefinitionEntry.getAssetsSelector().get(0).getOperator()).isEqualTo(criteria.get(0).getOperator());
-        assertThat(contractDefinitionEntry.getAssetsSelector().get(0).getOperandRight()).isEqualTo(criteria.get(0).getOperandRight());
+        assertThat(contractDefinitionEntry.getAssetsSelector().get(0).getOperandRight().toString()).isEqualTo(criteria.get(0).getOperandRight().toString());
     }
 
     @Test

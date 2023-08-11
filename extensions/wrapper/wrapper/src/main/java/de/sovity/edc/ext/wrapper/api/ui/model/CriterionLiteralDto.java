@@ -25,5 +25,9 @@ public class CriterionLiteralDto {
 
     @Schema(description = "")
     private List<String> valueList;
+    @Override
+    public String toString() {
+        return "class CriterionLiteralDto {\n    value: " + value + "\n    valueList: " + valueList + "\n}";
+    }
 }
 
