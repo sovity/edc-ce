@@ -11,14 +11,16 @@
  *      sovity GmbH - init
  */
 
-package de.sovity.edc.extension.e2e;
+package de.sovity.edc.launcher.connectorbase;
 
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.DataTransferTestUtil;
 import de.sovity.edc.extension.e2e.connector.JsonLdConnectorUtil;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory;
 import de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
+import org.assertj.core.api.Assertions;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,10 +28,6 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.UUID;
-
-import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.MIGRATED_M8_ASSET_ID;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @EnabledIfEnvironmentVariable(
         named = "E2E_TEST_ENABLED",
@@ -56,11 +54,11 @@ public class LocalConnectorTransferTest {
 
     @BeforeEach
     void setUp() {
-        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, PROVIDER_DATABASE);
+        var providerConfig = ConnectorConfigFactory.forTestDatabase(PROVIDER_PARTICIPANT_ID, PROVIDER_DATABASE);
         providerEdcContext.setConfiguration(providerConfig.getConfigAsMap());
         providerConnector = new ConnectorRemote(providerConfig.toConnectorRemoteConfig());
 
-        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, CONSUMER_DATABASE);
+        var consumerConfig = ConnectorConfigFactory.forTestDatabase(CONSUMER_PARTICIPANT_ID, CONSUMER_DATABASE);
         consumerEdcContext.setConfiguration(consumerConfig.getConfigAsMap());
         consumerConnector = new ConnectorRemote(consumerConfig.toConnectorRemoteConfig());
     }
@@ -68,11 +66,11 @@ public class LocalConnectorTransferTest {
     @Test
     void consumeM8Offer() {
         var assetIds = providerConnector.getAssetIds();
-        assertThat(assetIds).contains(MIGRATED_M8_ASSET_ID);
+        Assertions.assertThat(assetIds).contains(DataTransferTestUtil.MIGRATED_M8_ASSET_ID);
         consumerConnector.consumeOffer(
                 providerConnector.getParticipantId(),
                 providerConnector.getConfig().getApiGroupConfigPart(EdcApiGroup.Protocol).getUri(),
-                MIGRATED_M8_ASSET_ID,
+                DataTransferTestUtil.MIGRATED_M8_ASSET_ID,
                 JsonLdConnectorUtil.httpDataAddress(getTestBackendUrl("consume")));
         DataTransferTestUtil.validateDataTransferred(
                 getTestBackendUrl("getConsumedData"),

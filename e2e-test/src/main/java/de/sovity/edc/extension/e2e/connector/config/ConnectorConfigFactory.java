@@ -14,6 +14,7 @@
 package de.sovity.edc.extension.e2e.connector.config;
 
 import de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroup;
+import de.sovity.edc.extension.e2e.connector.config.api.auth.ApiKeyAuthProvider;
 import de.sovity.edc.extension.e2e.connector.config.api.auth.NoneAuthProvider;
 import de.sovity.edc.extension.e2e.connector.config.part.DatasourceConfigPart;
 import de.sovity.edc.extension.e2e.connector.config.part.EdcApiGroupConfigPart;
@@ -55,7 +56,8 @@ public class ConnectorConfigFactory {
     }
 
     public static EdcConfig forTestDatabase(String participantId, TestDatabase testDatabase) {
-        var apiGroupConfigMap = createApiGroupConfigMap();
+        var apiKey = UUID.randomUUID().toString();
+        var apiGroupConfigMap = createApiGroupConfigMap(apiKey);
         var dspCallbackAddress = apiGroupConfigMap.get(Protocol).getUri();
         var datasourceConfigs = getDatasourceConfigs(testDatabase);
         var migrationLocation = "classpath:migration/" + participantId;
@@ -63,7 +65,7 @@ public class ConnectorConfigFactory {
                 .apiGroupConfigMap(apiGroupConfigMap)
                 .datasourceConfigParts(datasourceConfigs)
                 .configProperty(PROPERTY_PARTICIPANT, participantId)
-                .configProperty("edc.api.auth.key", UUID.randomUUID().toString())
+                .configProperty("edc.api.auth.key", apiKey)
                 .configProperty("edc.last.commit.info", "test env commit message")
                 .configProperty("edc.build.date", "2023-05-08T15:30:00Z")
                 .configProperty("edc.jsonld.https.enabled", "true")
@@ -74,15 +76,24 @@ public class ConnectorConfigFactory {
         return edcConfig;
     }
 
-    private static Map<EdcApiGroup, EdcApiGroupConfigPart> createApiGroupConfigMap() {
+    private static Map<EdcApiGroup, EdcApiGroupConfigPart> createApiGroupConfigMap(String managementApiKey) {
         return Map.of(
-                Default, createApiGroupConfig(Default, DEFAULT_API_GROUP_PATH),
-                Protocol, createApiGroupConfig(Protocol, PROTOCOL_API_GROUP_PATH),
-                Management, createApiGroupConfig(Management, MANAGEMENT_API_GROUP_PATH),
-                Control, createApiGroupConfig(Control, CONTROL_API_GROUP_PATH));
+                Default, createUnprotectedApiGroupConfig(Default, DEFAULT_API_GROUP_PATH),
+                Protocol, createUnprotectedApiGroupConfig(Protocol, PROTOCOL_API_GROUP_PATH),
+                Management, createManagementApiGroupConfig(managementApiKey),
+                Control, createUnprotectedApiGroupConfig(Control, CONTROL_API_GROUP_PATH));
     }
 
-    private static EdcApiGroupConfigPart createApiGroupConfig(
+    private static EdcApiGroupConfigPart createManagementApiGroupConfig(String apiKey) {
+        return new EdcApiGroupConfigPart(
+                EdcApiGroup.Management,
+                BASE_URL,
+                getPortForApiGroup(EdcApiGroup.Management),
+                ConnectorConfigFactory.MANAGEMENT_API_GROUP_PATH,
+                new ApiKeyAuthProvider("x-api-key", apiKey));
+    }
+
+    private static EdcApiGroupConfigPart createUnprotectedApiGroupConfig(
             EdcApiGroup edcApiGroup,
             String path) {
         return new EdcApiGroupConfigPart(

@@ -8,33 +8,8 @@ val edcVersion: String by project
 val edcGroup: String by project
 
 dependencies {
-    // Control-Plane
-    implementation("${edcGroup}:control-plane-core:${edcVersion}")
-    implementation("${edcGroup}:management-api:${edcVersion}")
-    implementation("${edcGroup}:api-observability:${edcVersion}")
-    implementation("${edcGroup}:configuration-filesystem:${edcVersion}")
-    implementation("${edcGroup}:control-plane-aggregate-services:${edcVersion}")
-    implementation("${edcGroup}:http:${edcVersion}")
-    implementation("${edcGroup}:dsp:${edcVersion}")
-    implementation("${edcGroup}:json-ld:${edcVersion}")
-    implementation("${edcGroup}:monitor-jdk-logger:${edcVersion}")
 
-    // Control-plane to Data-plane
-    implementation("${edcGroup}:transfer-data-plane:${edcVersion}")
-    implementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
-    implementation("${edcGroup}:data-plane-selector-client:${edcVersion}")
-
-    // Data-plane
-    implementation("${edcGroup}:data-plane-http:${edcVersion}")
-    implementation("${edcGroup}:data-plane-framework:${edcVersion}")
-    implementation("${edcGroup}:data-plane-core:${edcVersion}")
-    implementation("${edcGroup}:data-plane-util:${edcVersion}")
-
-    // JDK Logger
-    implementation("${edcGroup}:monitor-jdk-logger:${edcVersion}")
-
-    // sovity Extensions Package
-    implementation(project(":extensions:sovity-edc-extensions-package"))
+    implementation(project(":launcher:connector-base"))
 
     // Optional: PostgreSQL + Flyway
     if (project.hasProperty("postgres-flyway")) {
