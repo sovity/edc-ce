@@ -36,7 +36,7 @@ Configure your EDC Client and use endpoints of our API Wrapper Extension:
 
 ```typescript
 const edcClient: EdcClient = buildEdcClient({
-    managementApiUrl: 'http://localhost:11002/api/v1/management',
+    managementApiUrl: 'http://localhost:11002/api/management/v2',
     managementApiKey: 'ApiKeyDefaultValue',
 });
 

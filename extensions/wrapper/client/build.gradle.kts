@@ -2,6 +2,8 @@ val edcVersion: String by project
 val edcGroup: String by project
 val restAssured: String by project
 val assertj: String by project
+val mockitoVersion: String by project
+val lombokVersion: String by project
 
 
 plugins {
@@ -31,21 +33,27 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("io.gsonfire:gson-fire:1.8.5")
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
-    implementation("org.apache.commons:commons-lang3:3.12.0")
+    implementation("org.apache.commons:commons-lang3:3.13.0")
     implementation("jakarta.annotation:jakarta.annotation-api:1.3.5")
 
     // Lombok
-    compileOnly("org.projectlombok:lombok:1.18.28")
-    annotationProcessor("org.projectlombok:lombok:1.18.28")
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
 
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
     testImplementation("${edcGroup}:http:${edcVersion}")
+    testImplementation("${edcGroup}:json-ld-spi:${edcVersion}")
+    testImplementation("${edcGroup}:dsp-http-spi:${edcVersion}")
     testImplementation(project(":extensions:wrapper:wrapper"))
     testImplementation("io.rest-assured:rest-assured:${restAssured}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
+    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.assertj:assertj-core:${assertj}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
 tasks.getByName<Test>("test") {

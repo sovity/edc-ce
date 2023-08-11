@@ -1,5 +1,4 @@
 import {
-    BrokerServerApi,
     Configuration,
     ConfigurationParameters,
     EnterpriseEditionApi,
@@ -14,7 +13,6 @@ export interface EdcClient {
     uiApi: UIApi;
     useCaseApi: UseCaseApi;
     enterpriseEditionApi: EnterpriseEditionApi;
-    brokerServerApi: BrokerServerApi;
 }
 
 /**
@@ -35,7 +33,6 @@ export function buildEdcClient(opts: EdcClientOptions): EdcClient {
         uiApi: new UIApi(config),
         useCaseApi: new UseCaseApi(config),
         enterpriseEditionApi: new EnterpriseEditionApi(config),
-        brokerServerApi: new BrokerServerApi(config),
     };
 }
 

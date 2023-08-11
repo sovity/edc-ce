@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.services;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferProcessStateService;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,10 +33,10 @@ class TransferProcessStateServiceTest {
 
     @Test
     void testError() {
-        int code = TransferProcessStates.ERROR.code();
+        int code = TransferProcessStates.TERMINATED.code();
         var result = transferProcessStateService.buildTransferProcessState(code);
         assertThat(result.getCode()).isEqualTo(code);
-        assertThat(result.getName()).isEqualTo("ERROR");
+        assertThat(result.getName()).isEqualTo("TERMINATED");
         assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.ERROR);
     }
 
@@ -65,15 +66,6 @@ class TransferProcessStateServiceTest {
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("DEPROVISIONING");
         assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
-    }
-
-    @Test
-    void testCustomError() {
-        int code = -100;
-        var result = transferProcessStateService.buildTransferProcessState(code);
-        assertThat(result.getCode()).isEqualTo(code);
-        assertThat(result.getName()).isEqualTo("CUSTOM");
-        assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.ERROR);
     }
 
     @Test

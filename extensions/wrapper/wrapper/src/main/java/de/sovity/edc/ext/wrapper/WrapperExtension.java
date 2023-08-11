@@ -15,10 +15,10 @@
 package de.sovity.edc.ext.wrapper;
 
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
-import org.eclipse.edc.connector.contract.spi.negotiation.observe.ContractNegotiationObservable;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
+import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
@@ -28,7 +28,7 @@ import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
-import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
+import org.eclipse.edc.spi.types.TypeManager;
 import org.eclipse.edc.web.spi.WebService;
 
 public class WrapperExtension implements ServiceExtension {
@@ -37,7 +37,15 @@ public class WrapperExtension implements ServiceExtension {
     @Inject
     private AssetIndex assetIndex;
     @Inject
+    private AssetService assetService;
+    @Inject
+    private ContractAgreementService contractAgreementService;
+    @Inject
     private ContractDefinitionStore contractDefinitionStore;
+    @Inject
+    private ContractNegotiationService contractNegotiationService;
+    @Inject
+    private ContractNegotiationStore contractNegotiationStore;
     @Inject
     private ManagementApiConfiguration dataManagementApiConfiguration;
     @Inject
@@ -45,21 +53,13 @@ public class WrapperExtension implements ServiceExtension {
     @Inject
     private PolicyEngine policyEngine;
     @Inject
-    private TransferProcessStore transferProcessStore;
-    @Inject
-    private WebService webService;
-    @Inject
-    private ContractAgreementService contractAgreementService;
-    @Inject
-    private ContractNegotiationStore contractNegotiationStore;
-    @Inject
-    private ContractNegotiationService negotiationService;
-    @Inject
     private TransferProcessService transferProcessService;
     @Inject
-    private TypeTransformerRegistry transformerRegistry;
+    private TransferProcessStore transferProcessStore;
     @Inject
-    private ContractNegotiationObservable negotiationObservable;
+    private TypeManager typeManager;
+    @Inject
+    private WebService webService;
 
     @Override
     public String name() {
@@ -68,18 +68,21 @@ public class WrapperExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
+        var objectMapper = typeManager.getMapper();
+
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
+                context,
                 assetIndex,
+                assetService,
+                contractAgreementService,
                 contractDefinitionStore,
+                contractNegotiationService,
+                contractNegotiationStore,
+                objectMapper,
                 policyDefinitionStore,
                 policyEngine,
                 transferProcessStore,
-                contractAgreementService,
-                contractNegotiationStore,
-                negotiationService,
-                transferProcessService,
-                transformerRegistry,
-                negotiationObservable
+                transferProcessService
         );
 
         wrapperExtensionContext.jaxRsResources().forEach(resource ->

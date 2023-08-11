@@ -47,14 +47,14 @@ jobs:
         echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
 
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+      uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
       with:
         arguments: build ${{ env.GRADLE_ARGS }}
 
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
     # the publishing section of your build.gradle
     - name: Publish to GitHub Packages
-      uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+      uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
       with:
         arguments: publish ${{ env.GRADLE_ARGS }}
       env:

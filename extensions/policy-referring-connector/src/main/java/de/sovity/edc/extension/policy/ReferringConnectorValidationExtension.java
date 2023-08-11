@@ -43,6 +43,8 @@ public class ReferringConnectorValidationExtension implements ServiceExtension {
     /**
      * The key for referring connector constraints.
      * Must be used as left operand when declaring constraints.
+     * rightOperand can be a string-URL or a comma separated list of string-URLs.
+     * Also supports the IN Operator with a list of string-URLs as right operand.
      *
      * <p>Example:
      *
@@ -51,7 +53,7 @@ public class ReferringConnectorValidationExtension implements ServiceExtension {
      *     "constraint": {
      *         "leftOperand": "REFERRING_CONNECTOR",
      *         "operator": "EQ",
-     *         "rightOperand": "http://example.org"
+     *         "rightOperand": "http://example.org,http://example.org"
      *     }
      * }
      * </pre>

@@ -19,9 +19,13 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
     - [ ] Add a clean `Unreleased` version.
     - [ ] Add the version to the old section.
     - [ ] Add the current date to the old version.
-    - [ ] Write or review the `Deployment Migration Notes` section.
+    - [ ] Check the commit history for commits that might be product-relevant and thus should be added to the changelog. Maybe they were forgotten.
+    - [ ] Write or review the `Deployment Migration Notes` section, check the commit history for changed / added configuration properties.
     - [ ] Write or review a release summary.
+    - [ ] Write or review the compatible versions section.
+    - [ ] Add a link to the EDC UI Release to the "EDC UI" section.
     - [ ] Remove empty sections from the patch notes.
+  - [ ] Update the `gradle.properties` file, set `sovityEdcExtensionsVersion` from `SNAPSHOT` to the new version
   - [ ] Replace the existing `docker-compose.yaml` file from `docker-compose-dev.yaml`.
   - [ ] Remove the second connector from the `docker-compose.yaml` file.
   - [ ] Rename the `${DEV_*}` variables with their `${RELEASE_*}` counterparts.
@@ -35,5 +39,7 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
 - [ ] Test the postman collection against that running docker-compose.
 - [ ] Create a release and re-use the changelog section as release description, and the version as title.
 - [ ] Check if the pipeline built the release versions in the Actions-Section (or you won't see it).
+- [ ] Create a new PR to set the `sovityEdcExtensionsVersion` in the `gradle.properties` to `SNAPSHOT` again.
 - [ ] Revisit the changed list of tasks and compare it with [.github/ISSUE_TEMPLATE/release.md](https://github.com/sovity/edc-extensions/blob/main/.github/ISSUE_TEMPLATE/release.md). Propose changes where it
   makes sense.
+- [ ] Close this issue.

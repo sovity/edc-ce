@@ -44,7 +44,7 @@ import de.sovity.edc.client.gen.model.KpiResult;
  */
 public class WrapperClientExample {
 
-    public static final String CONNECTOR_ENDPOINT = "http://localhost:11002/api/v1/management";
+    public static final String CONNECTOR_ENDPOINT = "http://localhost:11002/api/management/v2";
     public static final String CONNECTOR_API_KEY = "...";
 
     public static void main(String[] args) {

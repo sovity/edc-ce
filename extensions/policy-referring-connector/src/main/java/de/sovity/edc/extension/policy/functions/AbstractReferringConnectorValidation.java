@@ -28,6 +28,8 @@ import org.eclipse.edc.policy.engine.spi.PolicyContext;
 import org.eclipse.edc.policy.model.Operator;
 import org.eclipse.edc.spi.monitor.Monitor;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -38,7 +40,7 @@ public abstract class AbstractReferringConnectorValidation {
     private static final String FAIL_EVALUATION_BECAUSE_RIGHT_VALUE_NOT_STRING =
             "Failing evaluation because of invalid referring connector constraint. For operator 'EQ' right value must be of type 'String'. Unsupported type: '%s'";
     private static final String FAIL_EVALUATION_BECAUSE_UNSUPPORTED_OPERATOR =
-            "Failing evaluation because of invalid referring connector constraint. As operator only 'EQ' is supported. Unsupported operator: '%s'";
+            "Failing evaluation because of invalid referring connector constraint. Unsupported operator: '%s'";
 
     private final Monitor monitor;
 
@@ -84,8 +86,8 @@ public abstract class AbstractReferringConnectorValidation {
             return false;
         }
 
-        if (operator == Operator.EQ) {
-            return isReferringConnector(referringConnectorClaim, rightValue, policyContext);
+        if (operator == Operator.EQ || operator == Operator.IN) {
+            return isReferringConnector(referringConnectorClaim, rightValue, policyContext, operator);
         } else {
             final var message = String.format(FAIL_EVALUATION_BECAUSE_UNSUPPORTED_OPERATOR, operator);
             monitor.warning(message);
@@ -102,7 +104,7 @@ public abstract class AbstractReferringConnectorValidation {
      * @return true if object is string and successfully evaluated against the claim
      */
     private boolean isReferringConnector(
-            String referringConnectorClaim, Object referringConnector, PolicyContext policyContext) {
+            String referringConnectorClaim, Object referringConnector, PolicyContext policyContext, Operator operator) {
         //no right value set in policy
         if (referringConnector == null) {
             final var message = String.format(FAIL_EVALUATION_BECAUSE_RIGHT_VALUE_NOT_STRING, "null");
@@ -111,19 +113,8 @@ public abstract class AbstractReferringConnectorValidation {
             return false;
         }
 
-        //right value set but not interpretable
-        if (!(referringConnector instanceof String)) {
-            final var message =
-                    String.format(
-                            FAIL_EVALUATION_BECAUSE_RIGHT_VALUE_NOT_STRING,
-                            referringConnector.getClass().getName());
-            monitor.warning(message);
-            policyContext.reportProblem(message);
-            return false;
-        }
-
         //evaluate
-        return isAllowedReferringConnector(referringConnectorClaim, (String) referringConnector);
+        return isAllowedReferringConnector(referringConnectorClaim, referringConnector, operator);
     }
 
     /**
@@ -134,7 +125,16 @@ public abstract class AbstractReferringConnectorValidation {
      * @return true if claim equals the referringConnector
      */
     private static boolean isAllowedReferringConnector(
-            String referringConnectorClaim, String referringConnector) {
-        return referringConnectorClaim.equals(referringConnector);
+            String referringConnectorClaim, Object referringConnector, Operator operator) {
+        if (operator == Operator.IN) {
+            var referringConnectorList = (List<?>) referringConnector;
+            return referringConnectorList.contains(referringConnectorClaim);
+        } else if (operator == Operator.EQ) {
+            //support comma separated lists here as well
+            if (referringConnector instanceof String referringConnectorString) {
+                return Arrays.asList(referringConnectorString.split(",")).contains(referringConnectorClaim);
+            }
+        }
+        return false;
     }
 }

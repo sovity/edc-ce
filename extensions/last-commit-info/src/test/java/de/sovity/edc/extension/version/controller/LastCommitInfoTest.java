@@ -15,8 +15,11 @@
 package de.sovity.edc.extension.version.controller;
 
 import io.restassured.http.ContentType;
+import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
+import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
+import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +29,7 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.mock;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
@@ -33,6 +37,11 @@ class LastCommitInfoTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
+        extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
+        extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
+        extension.registerServiceMock(
+                DataPlaneInstanceStore.class,
+                mock(DataPlaneInstanceStore.class));
         extension.setConfiguration(Map.of(
                 "web.http.port", String.valueOf(getFreePort()),
                 "web.http.path", "/api",

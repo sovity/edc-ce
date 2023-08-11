@@ -15,7 +15,9 @@ dependencies {
     implementation("${edcGroup}:configuration-filesystem:${edcVersion}")
     implementation("${edcGroup}:control-plane-aggregate-services:${edcVersion}")
     implementation("${edcGroup}:http:${edcVersion}")
-    implementation("${edcGroup}:ids:${edcVersion}")
+    implementation("${edcGroup}:dsp:${edcVersion}")
+    implementation("${edcGroup}:json-ld:${edcVersion}")
+    implementation("${edcGroup}:monitor-jdk-logger:${edcVersion}")
 
     // Control-plane to Data-plane
     implementation("${edcGroup}:transfer-data-plane:${edcVersion}")
@@ -37,12 +39,6 @@ dependencies {
     // Optional: PostgreSQL + Flyway
     if (project.hasProperty("postgres-flyway")) {
         implementation(project(":extensions:postgres-flyway"))
-    }
-
-    // Optional: MDS Extensions
-    if (project.hasProperty("mds")) {
-        implementation(project(":extensions:ids-clearinghouse-client"))
-        implementation(project(":extensions:ids-broker-client"))
     }
 
     // Optional: Connector-To-Connector IAM

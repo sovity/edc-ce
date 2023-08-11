@@ -1,23 +1,11 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-
 import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
-import de.sovity.edc.ext.wrapper.api.common.model.AssetEntryDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.AssetEntryDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractDefinitionRequestDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
-import java.util.ArrayList;
-import java.util.Map;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
@@ -31,6 +19,19 @@ import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 class OfferingServiceTest {
 
@@ -188,8 +189,8 @@ class OfferingServiceTest {
 
     private AssetEntryDto assetDto() {
         return AssetEntryDto.builder()
-                .id("asset-id")
-                .assetProperties(Map.of())
+                .assetRequestId("asset-id")
+                .assetRequestProperties(Map.of())
                 .dataAddressProperties(Map.of("type", "type"))
                 .build();
     }

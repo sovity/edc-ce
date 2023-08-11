@@ -25,6 +25,7 @@ import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
+import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.policy.model.Action;
@@ -33,6 +34,8 @@ import org.eclipse.edc.policy.model.LiteralExpression;
 import org.eclipse.edc.policy.model.Operator;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
+import org.eclipse.edc.spi.asset.AssetIndex;
+import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +47,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static de.sovity.edc.ext.wrapper.TestUtils.createConfiguration;
 import static de.sovity.edc.ext.wrapper.TestUtils.givenManagementEndpoint;
@@ -52,10 +57,15 @@ import static de.sovity.edc.extension.policy.AlwaysTruePolicyConstants.EXPRESSIO
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.mockito.Mockito.mock;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
 class ContractAgreementPageTest {
+
+    private static final int CONTRACT_DEFINITION_ID = 1;
+    private static final String ASSET_ID = UUID.randomUUID().toString();
+
     LocalDate today = LocalDate.parse("2019-04-01");
     ZonedDateTime todayAsZonedDateTime = today.atStartOfDay(ZoneId.systemDefault());
     long todayEpochMillis = todayAsZonedDateTime.toInstant().toEpochMilli();
@@ -63,6 +73,8 @@ class ContractAgreementPageTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
+        extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
+        extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
         extension.setConfiguration(createConfiguration());
     }
 
@@ -78,12 +90,16 @@ class ContractAgreementPageTest {
     @Test
     void testContractAgreementPage(
             ContractNegotiationStore contractNegotiationStore,
-            TransferProcessStore transferProcessStore
+            TransferProcessStore transferProcessStore,
+            AssetIndex assetIndex
     ) {
-        contractNegotiationStore.save(contractDefinition(1));
+        assetIndex.create(asset(ASSET_ID)).orElseThrow(storeFailure -> new RuntimeException("Failed to create asset"));
+        contractNegotiationStore.save(contractDefinition(CONTRACT_DEFINITION_ID));
 
-        transferProcessStore.save(transferProcess(1, 1, TransferProcessStates.COMPLETED.code()));
+        transferProcessStore.updateOrCreate(transferProcess(1, 1, TransferProcessStates.COMPLETED.code()));
 
+        whenContractAgreementEndpoint()
+                .assertThat().extract().response().body().prettyPrint();
         whenContractAgreementEndpoint()
                 .assertThat()
                 .body("contractAgreements", hasSize(1))
@@ -93,11 +109,9 @@ class ContractAgreementPageTest {
                 .body("contractAgreements[0].counterPartyAddress", equalTo("http://other-connector"))
                 .body("contractAgreements[0].counterPartyId", equalTo("urn:connector:other-connector"))
                 .body("contractAgreements[0].contractSigningDate", equalTo(todayPlusDays(0)))
-                .body("contractAgreements[0].contractStartDate", equalTo(todayPlusDays(0)))
-                .body("contractAgreements[0].contractEndDate", equalTo(todayPlusDays(2)))
-                .body("contractAgreements[0].asset.assetId", equalTo("my-asset-1"))
+                .body("contractAgreements[0].asset.assetId", equalTo(ASSET_ID))
                 .body("contractAgreements[0].asset.createdAt", equalTo(todayPlusDays(0)))
-                .body("contractAgreements[0].asset.properties.\"asset:prop:id\"", equalTo("my-asset-1"))
+                .body("contractAgreements[0].asset.properties['https://w3id.org/edc/v0.0.1/ns/id']", equalTo(ASSET_ID))
                 .body("contractAgreements[0].asset.properties.some-property", equalTo("X"))
                 .body("contractAgreements[0].transferProcesses", hasSize(1))
                 .body("contractAgreements[0].transferProcesses[0].transferProcessId", equalTo("my-transfer-1-1"))
@@ -106,6 +120,13 @@ class ContractAgreementPageTest {
                 .body("contractAgreements[0].transferProcesses[0].state.code", equalTo(800))
                 .body("contractAgreements[0].transferProcesses[0].state.simplifiedState", equalTo("OK"))
                 .body("contractAgreements[0].transferProcesses[0].errorMessage", equalTo("my-error-message-1"));
+    }
+
+    private DataAddress dataAddress() {
+        return DataAddress.Builder.newInstance()
+                .type("HttpData")
+                .properties(Map.of("baseUrl", "http://some-url"))
+                .build();
     }
 
     private TransferProcess transferProcess(int contract, int transfer, int code) {
@@ -132,36 +153,24 @@ class ContractAgreementPageTest {
     private ContractNegotiation contractDefinition(int contract) {
         var agreement = ContractAgreement.Builder.newInstance()
                 .id("my-contract-agreement-" + contract)
-                .assetId("my-asset-" + contract)
+                .assetId(ASSET_ID)
                 .contractSigningDate(todayEpochSeconds)
-                .contractStartDate(todayAsZonedDateTime.toInstant().getEpochSecond())
-                .contractEndDate(todayAsZonedDateTime.plusDays(2L * contract).toInstant().getEpochSecond())
-                .providerAgentId("idk")
-                .consumerAgentId("idk")
                 .policy(alwaysTrue())
+                .providerId(URI.create("http://other-connector").toString())
+                .consumerId(URI.create("http://my-connector").toString())
                 .build();
 
         // Contract Negotiations can contain multiple Contract Offers (?)
         // Test this
         var irrelevantOffer = ContractOffer.Builder.newInstance()
                 .id("my-contract-offer-" + contract + "-irrelevant")
-                .asset(asset(contract + "-irrelevant"))
-                .contractStart(todayAsZonedDateTime.minusDays(contract))
-                .contractEnd(todayAsZonedDateTime.plusDays(contract))
-                .consumer(URI.create("http://other-connector"))
-                .offerStart(todayAsZonedDateTime.minusDays(2L * contract))
-                .offerEnd(todayAsZonedDateTime.plusDays(2L * contract))
+                .assetId(asset(contract + "-irrelevant").getId())
                 .policy(alwaysTrue())
                 .build();
 
         var offer = ContractOffer.Builder.newInstance()
                 .id("my-contract-offer-" + contract)
-                .asset(asset(String.valueOf(contract)))
-                .contractStart(todayAsZonedDateTime)
-                .contractEnd(todayAsZonedDateTime.plusDays(2L * contract))
-                .consumer(URI.create("http://other-connector"))
-                .offerStart(todayAsZonedDateTime.minusDays(2L * contract))
-                .offerEnd(todayAsZonedDateTime.plusDays(2L * contract))
+                .assetId(ASSET_ID)
                 .policy(alwaysTrue())
                 .build();
 
@@ -177,11 +186,12 @@ class ContractAgreementPageTest {
                 .build();
     }
 
-    private Asset asset(String suffix) {
+    private Asset asset(String assetId) {
         return Asset.Builder.newInstance()
-                .id("my-asset-" + suffix)
+                .id(assetId)
                 .property("some-property", "X")
                 .createdAt(todayEpochMillis)
+                .dataAddress(dataAddress())
                 .build();
     }
 

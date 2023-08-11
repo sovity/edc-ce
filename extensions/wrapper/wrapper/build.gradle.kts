@@ -19,7 +19,7 @@ dependencies {
 
     implementation("${edcGroup}:api-core:${edcVersion}")
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
-    implementation(project(":extensions:wrapper:wrapper-broker-api"))
+    implementation("${edcGroup}:dsp-http-spi:${edcVersion}")
     implementation(project(":extensions:wrapper:wrapper-common-api"))
     implementation(project(":extensions:wrapper:wrapper-ee-api"))
     api("${edcGroup}:contract-definition-api:${edcVersion}")
@@ -30,12 +30,12 @@ dependencies {
 
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
-    implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.14")
-    implementation("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.14")
+    implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.15")
+    implementation("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.15")
     implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
-    implementation("org.apache.commons:commons-lang3:3.12.0")
+    implementation("org.apache.commons:commons-lang3:3.13.0")
 
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
@@ -45,25 +45,13 @@ dependencies {
     testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.assertj:assertj-core:${assertj}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
-    testImplementation("org.awaitility:awaitility:4.2.0")
-
-    testImplementation("${edcGroup}:iam-mock:${edcVersion}")
-    testImplementation("${edcGroup}:dsp:${edcVersion}")
-    testImplementation("${edcGroup}:management-api:${edcVersion}")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
 val openapiFileDir = "${project.buildDir}/swagger"
 val openapiFileFilename = "edc-api-wrapper.yaml"
 val openapiFile = "$openapiFileDir/$openapiFileFilename"
-
-tasks.register("printClasspath") {
-    doLast {
-        println(sourceSets["main"].runtimeClasspath.asPath)
-    }
-}
 
 tasks.withType<io.swagger.v3.plugins.gradle.tasks.ResolveTask> {
     outputDir = file(openapiFileDir)

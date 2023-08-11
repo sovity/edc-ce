@@ -1,6 +1,7 @@
 val edcVersion: String by project
 val edcGroup: String by project
 val restAssured: String by project
+val mockitoVersion: String by project
 
 plugins {
     `java-library`
@@ -20,8 +21,10 @@ dependencies {
     testImplementation("${edcGroup}:junit:${edcVersion}")
     testImplementation("${edcGroup}:http:${edcVersion}")
     testImplementation("io.rest-assured:rest-assured:${restAssured}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
+    testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
+    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
 val sovityEdcExtensionGroup: String by project
