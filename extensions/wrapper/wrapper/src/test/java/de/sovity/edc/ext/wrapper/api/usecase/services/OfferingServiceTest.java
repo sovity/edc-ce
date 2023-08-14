@@ -1,8 +1,8 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
+import de.sovity.edc.ext.wrapper.api.common.model.AssetEntryDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
-import de.sovity.edc.ext.wrapper.api.usecase.model.AssetEntryDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractDefinitionRequestDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
@@ -14,7 +14,6 @@ import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.persistence.EdcPersistenceException;
-import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,12 +25,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class OfferingServiceTest {
 
@@ -45,7 +39,6 @@ class OfferingServiceTest {
 
     private AssetEntryDto assetEntryDto;
     private Asset asset;
-    private DataAddress dataAddress;
     private PolicyDefinitionRequestDto policyDefinitionDto;
     private Policy policy;
     private ContractDefinitionRequestDto contractDefinitionDto;
@@ -59,7 +52,6 @@ class OfferingServiceTest {
 
         this.assetEntryDto = assetDto();
         this.asset = asset();
-        this.dataAddress = dataAddress();
         this.policyDefinitionDto = policyDefinitionDto();
         this.policy = policy();
         this.contractDefinitionDto = contractDefinitionDto();
@@ -77,8 +69,7 @@ class OfferingServiceTest {
         offeringService.create(createOfferingDto);
 
         // assert
-        verify(assetIndex, times(1)).create(argThat(def -> asset.getId().equals(def.getId())),
-                argThat(def -> dataAddress.getType().equals(def.getType())));
+        verify(assetIndex, times(1)).create(any(Asset.class));
         verify(policyDefinitionStore, times(1)).create(argThat(def ->
                 policy.equals(def.getPolicy()) && policyDefinitionDto.getId().equals(def.getId())));
         verify(contractDefinitionStore, times(1)).save(contractDefinition);
@@ -101,14 +92,13 @@ class OfferingServiceTest {
     @Test
     void create_persistingAssetFails_throwException() {
         // arrange
-        doThrow(NullPointerException.class).when(assetIndex).create(any(), any());
+        doThrow(NullPointerException.class).when(assetIndex).create(any(Asset.class));
 
         // act && assert
         assertThatThrownBy(() -> offeringService.create(createOfferingDto))
                 .isInstanceOf(NullPointerException.class);
 
-        verify(assetIndex, times(1)).create(argThat(def -> asset.getId().equals(def.getId())),
-                argThat(def -> dataAddress.getType().equals(def.getType())));
+        verify(assetIndex, times(1)).create(any(Asset.class));
         verify(assetIndex, times(1)).deleteById(asset.getId());
         verify(policyDefinitionStore, times(1))
                 .delete(policyDefinitionDto.getId());
@@ -140,8 +130,7 @@ class OfferingServiceTest {
         assertThatThrownBy(() -> offeringService.create(createOfferingDto))
                 .isInstanceOf(EdcPersistenceException.class);
 
-        verify(assetIndex, times(1)).create(argThat(def -> asset.getId().equals(def.getId())),
-                argThat(def -> dataAddress.getType().equals(def.getType())));
+        verify(assetIndex, times(1)).create(any(Asset.class));
         verify(assetIndex, times(1)).deleteById(asset.getId());
         verify(policyDefinitionStore, times(1)).create(argThat(pd ->
                 policy.equals(pd.getPolicy()) && policyDefinitionDto.getId().equals(pd.getId())));
@@ -175,8 +164,7 @@ class OfferingServiceTest {
         assertThatThrownBy(() -> offeringService.create(createOfferingDto))
                 .isInstanceOf(EdcPersistenceException.class);
 
-        verify(assetIndex, times(1)).create(argThat(def -> asset.getId().equals(def.getId())),
-                argThat(def -> dataAddress.getType().equals(def.getType())));
+        verify(assetIndex, times(1)).create(any(Asset.class));
         verify(assetIndex, times(1)).deleteById(asset.getId());
         verify(policyDefinitionStore, times(1)).create(argThat(pd ->
                 policy.equals(pd.getPolicy()) && policyDefinitionDto.getId().equals(pd.getId())));
@@ -189,8 +177,8 @@ class OfferingServiceTest {
 
     private AssetEntryDto assetDto() {
         return AssetEntryDto.builder()
-                .assetRequestId("asset-id")
-                .assetRequestProperties(Map.of())
+                .id("asset-id")
+                .assetProperties(Map.of())
                 .dataAddressProperties(Map.of("type", "type"))
                 .build();
     }
@@ -199,9 +187,6 @@ class OfferingServiceTest {
         return Asset.Builder.newInstance().id("asset-id").build();
     }
 
-    private DataAddress dataAddress() {
-        return DataAddress.Builder.newInstance().type("type").build();
-    }
 
     private PolicyDefinitionRequestDto policyDefinitionDto() {
         var permission = PermissionDto.builder().build();

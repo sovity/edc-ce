@@ -1,21 +1,15 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionDto;
-import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionInputDto;
-import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionOutputDto;
-import de.sovity.edc.ext.wrapper.api.usecase.model.ContractNegotiationOutputDto;
-import de.sovity.edc.ext.wrapper.api.usecase.model.TransferProcessOutputDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractRequest;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractRequestData;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractOffer;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
-import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
 import org.eclipse.edc.connector.transfer.spi.types.TransferRequest;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.result.Result;
@@ -62,7 +56,7 @@ public class ConsumptionService {
      * @return the process id.
      */
     public String startConsumptionProcess(ConsumptionInputDto consumptionInputDto) {
-        var id = java.util.UUID.randomUUID().toString();
+        var id = randomUUID().toString();
         var consumeDto = new ConsumptionDto(consumptionInputDto);
         consumptionProcesses.put(id, consumeDto);
 
@@ -75,19 +69,13 @@ public class ConsumptionService {
                 .id(consumptionInputDto.getOfferId())
                 .assetId(consumptionInputDto.getAssetId())
                 .policy(policy)
-                .providerId("urn:connector:" + consumptionInputDto.getConnectorId())
-                .build();
-
-        var requestData = ContractRequestData.Builder.newInstance()
-                .contractOffer(contractOffer)
-                .dataSet(consumptionInputDto.getAssetId())
-                .protocol("dataspace-protocol-http")
-                .counterPartyAddress(consumptionInputDto.getConnectorAddress())
-                .connectorId(consumptionInputDto.getConnectorId())
                 .build();
 
         var contractRequest = ContractRequest.Builder.newInstance()
-                .requestData(requestData)
+                .contractOffer(contractOffer)
+                .protocol("dataspace-protocol-http")
+                .providerId("urn:connector:" + consumptionInputDto.getConnectorId())
+                .counterPartyAddress(consumptionInputDto.getConnectorAddress())
                 .build();
 
         var contractNegotiation = contractNegotiationService.initiateNegotiation(
@@ -110,7 +98,8 @@ public class ConsumptionService {
             var agreementId = contractNegotiation.getContractAgreement().getId();
 
             var destination = createDataAddress(process.getInput().getDataDestination());
-            var dataRequest = DataRequest.Builder.newInstance()
+
+            var transferRequest = TransferRequest.Builder.newInstance()
                     .id(randomUUID().toString())
                     .connectorId(process.getInput().getConnectorId())
                     .connectorAddress(process.getInput().getConnectorAddress())
@@ -118,10 +107,6 @@ public class ConsumptionService {
                     .dataDestination(destination)
                     .assetId(process.getInput().getAssetId())
                     .contractId(agreementId)
-                    .build();
-
-            var transferRequest = TransferRequest.Builder.newInstance()
-                    .dataRequest(dataRequest)
                     .build();
 
             var result = transferProcessService.initiateTransfer(transferRequest);

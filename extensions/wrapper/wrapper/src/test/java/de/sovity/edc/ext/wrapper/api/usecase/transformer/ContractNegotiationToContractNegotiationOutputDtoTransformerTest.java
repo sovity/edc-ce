@@ -41,7 +41,7 @@ public class ContractNegotiationToContractNegotiationOutputDtoTransformerTest {
                 .build();
 
         var contractNegotiation = ContractNegotiation.Builder.newInstance()
-                .contractOffer(ContractOffer.Builder.newInstance().id("id").assetId("assetId").providerId("provId").policy(Policy.Builder.newInstance().assignee("A").assigner("B").build()).build())
+                .contractOffer(ContractOffer.Builder.newInstance().id("id").assetId("assetId").policy(Policy.Builder.newInstance().assignee("A").assigner("B").build()).build())
                 .contractAgreement(contractAgreement)
                 .type(ContractNegotiation.Type.CONSUMER)
                 .id("id")

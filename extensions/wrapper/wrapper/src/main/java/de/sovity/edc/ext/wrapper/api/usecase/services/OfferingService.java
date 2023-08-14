@@ -1,6 +1,6 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import de.sovity.edc.ext.wrapper.api.usecase.model.AssetEntryDto;
+import de.sovity.edc.ext.wrapper.api.common.model.AssetEntryDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractDefinitionRequestDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
@@ -42,11 +42,10 @@ public class OfferingService {
 
         try {
             var asset = transformAsset(dto.getAssetEntry());
-            var dataAddress = transformDataAddress(dto.getAssetEntry());
             var policy = transformPolicy(dto.getPolicyDefinitionRequest());
             var contractDefinition = transformContractDefinition(dto
                     .getContractDefinitionRequest());
-            persist(asset, dataAddress, policy, contractDefinition);
+            persist(asset, policy, contractDefinition);
         } catch (EdcPersistenceException e) {
             throw e;
         } catch (Exception e) {
@@ -69,8 +68,9 @@ public class OfferingService {
 
     private Asset transformAsset(AssetEntryDto dto) {
         return Asset.Builder.newInstance()
-                .id(dto.getAssetRequestId())
-                .properties(dto.getAssetRequestProperties())
+                .id(dto.getId())
+                .dataAddress(DataAddress.Builder.newInstance().properties(dto.getDataAddressProperties()).build())
+                .properties(dto.getAssetProperties())
                 .build();
     }
 
@@ -107,10 +107,10 @@ public class OfferingService {
                 .build();
     }
 
-    private void persist(Asset asset, DataAddress dataAddress, PolicyDefinition policyDefinition,
-            ContractDefinition contractDefinition) {
+    private void persist(Asset asset, PolicyDefinition policyDefinition,
+                         ContractDefinition contractDefinition) {
         try {
-            assetIndex.create(asset, dataAddress);
+            assetIndex.create(asset);
             policyDefinitionStore.create(policyDefinition);
             contractDefinitionStore.save(contractDefinition);
         } catch (Exception e) {

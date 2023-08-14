@@ -95,13 +95,12 @@ class ConsumptionServiceTest {
         // ASSERT
         assertThat(processId).isNotNull();
 
-        var requestData = captor.getValue().getRequestData();
-        assertThat(requestData.getCounterPartyAddress()).isEqualTo(counterPartyAddress);
-        assertThat(requestData.getDataSet()).isEqualTo(assetId);
-        assertThat(requestData.getContractOffer().getAssetId()).isEqualTo(assetId);
-        assertThat(requestData.getContractOffer().getProviderId()).contains(counterPartyId);
+        var data = captor.getValue();
+        assertThat(data.getCounterPartyAddress()).isEqualTo(counterPartyAddress);
+        assertThat(data.getContractOffer().getAssetId()).isEqualTo(assetId);
+        assertThat(data.getProviderId()).contains(counterPartyId);
 
-        var requestPolicy = requestData.getContractOffer().getPolicy();
+        var requestPolicy = data.getContractOffer().getPolicy();
         assertThat(requestPolicy.getPermissions()).hasSameSizeAs(policy.getPermissions());
         assertThat(requestPolicy.getProhibitions()).hasSameSizeAs(policy.getProhibitions());
         assertThat(requestPolicy.getObligations()).hasSameSizeAs(policy.getObligations());
@@ -147,12 +146,12 @@ class ConsumptionServiceTest {
         // ASSERT
         verify(transferProcessService, times(1)).initiateTransfer(any());
 
-        var dataRequest = captor.getValue().getDataRequest();
-        assertThat(dataRequest.getAssetId()).isEqualTo(assetId);
-        assertThat(dataRequest.getContractId()).isEqualTo(agreementId);
-        assertThat(dataRequest.getConnectorId()).isEqualTo(counterPartyId);
-        assertThat(dataRequest.getConnectorAddress()).isEqualTo(counterPartyAddress);
-        assertThat(dataRequest.getDataDestination().getType())
+        var transferRequest = captor.getValue();
+        assertThat(transferRequest.getAssetId()).isEqualTo(assetId);
+        assertThat(transferRequest.getContractId()).isEqualTo(agreementId);
+        assertThat(transferRequest.getConnectorId()).isEqualTo(counterPartyId);
+        assertThat(transferRequest.getConnectorAddress()).isEqualTo(counterPartyAddress);
+        assertThat(transferRequest.getDataDestination().getType())
                 .isEqualTo(process.getInput().getDataDestination().get(dataAddressTypeProperty));
 
         assertThat(process.getTransferProcessId())
