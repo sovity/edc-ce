@@ -46,6 +46,8 @@ dependencies {
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.assertj:assertj-core:${assertj}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
+    testImplementation("org.awaitility:awaitility:4.2.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 

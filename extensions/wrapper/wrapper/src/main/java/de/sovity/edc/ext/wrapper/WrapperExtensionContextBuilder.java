@@ -31,11 +31,10 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractN
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
-import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
-import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
-import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
-import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
+import de.sovity.edc.ext.wrapper.api.usecase.services.*;
+import de.sovity.edc.ext.wrapper.api.usecase.transformer.*;
 import lombok.NoArgsConstructor;
+import org.eclipse.edc.connector.contract.spi.negotiation.observe.ContractNegotiationObservable;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
@@ -48,6 +47,7 @@ import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
 import java.util.List;
 
@@ -75,7 +75,9 @@ public class WrapperExtensionContextBuilder {
             PolicyDefinitionStore policyDefinitionStore,
             PolicyEngine policyEngine,
             TransferProcessStore transferProcessStore,
-            TransferProcessService transferProcessService
+            TransferProcessService transferProcessService,
+            TypeTransformerRegistry transformerRegistry,
+            ContractNegotiationObservable negotiationObservable
     ) {
         // UI API
         var transferProcessStateService = new TransferProcessStateService();
@@ -136,8 +138,20 @@ public class WrapperExtensionContextBuilder {
         var policyMappingService = new PolicyMappingService();
         var offeringService = new OfferingService(assetIndex, policyDefinitionStore,
                 contractDefinitionStore, policyMappingService);
+
+        transformerRegistry.register(new PermissionToPermissionDtoTransformer());
+        transformerRegistry.register(new PolicyToPolicyDtoTransformer());
+        transformerRegistry.register(new ContractAgreementToContractAgreementDtoTransformer());
+        transformerRegistry.register(new DataRequestToDataRequestDtoTransformer());
+        transformerRegistry.register(new ContractNegotiationToContractNegotiationOutputDtoTransformer());
+        transformerRegistry.register(new TransferProcessToTransferProcessOutputDtoTransformer());
+        var consumptionService = new ConsumptionService(contractNegotiationService, transferProcessService,
+                contractNegotiationStore, transferProcessStore, transformerRegistry, policyMappingService);
+
+        negotiationObservable.registerListener(new ContractNegotiationConsumptionListener(consumptionService));
+
         var useCaseResource = new UseCaseResource(kpiApiService, supportedPolicyApiService,
-                offeringService);
+                offeringService, consumptionService);
 
         // Collect all JAX-RS resources
         return new WrapperExtensionContext(List.of(
