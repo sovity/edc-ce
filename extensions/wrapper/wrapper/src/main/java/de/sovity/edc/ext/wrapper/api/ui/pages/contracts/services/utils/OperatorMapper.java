@@ -43,6 +43,21 @@ public class OperatorMapper {
             case "IN":
                 operatorDto = OperatorDto.IN;
                 break;
+            case "IS_NONE_OF":
+                operatorDto = OperatorDto.IS_NONE_OF;
+                break;
+            case "IS_A":
+                operatorDto = OperatorDto.IS_A;
+                break;
+            case "IS_ALL_OF":
+                operatorDto = OperatorDto.IS_ALL_OF;
+                break;
+            case "IS_ANY_OF":
+                operatorDto = OperatorDto.IS_ANY_OF;
+                break;
+            case "HAS_PART":
+                operatorDto = OperatorDto.HAS_PART;
+                break;
             default:
                 throw new IllegalArgumentException("Unknown operator: " + operator);
         }
@@ -50,7 +65,7 @@ public class OperatorMapper {
 
     }
     public OperatorDto toOperatorDto(Operator operator) {
-        return fromString(operator.getOdrlRepresentation());
+        return fromString(operator.name());
     }
 
     public Operator toOperator(OperatorDto operatorDto) {

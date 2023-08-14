@@ -43,7 +43,7 @@ public class ContractDefinitionApiService {
             var entry = new ContractDefinitionEntry();
             entry.setAccessPolicyId(definition.getAccessPolicyId());
             entry.setContractPolicyId(definition.getContractPolicyId());
-            entry.setCriteria(criterionMapper.mapToCriterionDtos(definition.getAssetsSelector()));
+            entry.setAssetSelector(criterionMapper.mapToCriterionDtos(definition.getAssetsSelector()));
             return entry;
         }).toList();
     }

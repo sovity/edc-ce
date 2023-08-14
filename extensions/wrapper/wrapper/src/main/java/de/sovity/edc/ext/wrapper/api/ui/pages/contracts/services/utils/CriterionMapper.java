@@ -32,8 +32,7 @@ public class CriterionMapper {
             return null;
         }
         CriterionDto dto = new CriterionDto();
-        CriterionLiteralDto literalDto = new CriterionLiteralDto();;
-        literalDto.setValue((String) criterion.getOperandRight());
+        CriterionLiteralDto literalDto = CriterionLiteralDto.ofValue((String) criterion.getOperandRight());
         dto.setOperandLeft(String.valueOf(criterion.getOperandLeft()));
         dto.setOperator(operatorMapper.fromString(criterion.getOperator()));
         dto.setOperandRight(literalDto);

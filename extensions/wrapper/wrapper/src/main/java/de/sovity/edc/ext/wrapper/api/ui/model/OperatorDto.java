@@ -15,7 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Available operators for criteria in the Core EDC")
+@Schema(description = "Available operators for assetSelector in the Core EDC")
 public enum OperatorDto {
     EQ,
     NEQ,
@@ -23,5 +23,10 @@ public enum OperatorDto {
     GEQ,
     LT,
     LEQ,
-    IN
+    IN,
+    HAS_PART,
+    IS_A,
+    IS_ALL_OF,
+    IS_ANY_OF,
+    IS_NONE_OF
 }

@@ -29,12 +29,4 @@ public class CriterionDto {
     private String operandLeft;
     private OperatorDto operator;
     private CriterionLiteralDto operandRight;
-
-    public static CriterionDto forString(String operandLeft, OperatorDto operator, CriterionLiteralDto criterionLiteral) {
-        return new CriterionDto(operandLeft, operator, criterionLiteral);
-    }
-
-    public static CriterionDto forJson(String operandLeft, OperatorDto operator, CriterionLiteralDto operatorRight) {
-        return new CriterionDto(operandLeft, operator, operatorRight);
-    }
 }

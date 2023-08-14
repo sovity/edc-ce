@@ -117,6 +117,7 @@ public class UiResource {
     @GET
     @Path("pages/contract-definition-page")
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Collect all data for Contract Definition Page")
     public ContractDefinitionPage contractDefinitionPage() {
         return new ContractDefinitionPage(contractDefinitionApiService.getContractDefinitions());
     }

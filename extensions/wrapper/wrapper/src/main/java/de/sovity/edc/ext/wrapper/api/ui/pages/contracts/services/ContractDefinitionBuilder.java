@@ -30,7 +30,7 @@ public class ContractDefinitionBuilder {
     public ContractDefinition buildContractDefinition(ContractDefinitionCreateRequest request) {
         var contractPolicyId = request.getContractPolicyId();
         var accessPolicyId = request.getAccessPolicyId();
-        var assetsSelector = request.getCriteria();
+        var assetsSelector = request.getAssetSelector();
 
         return ContractDefinition.Builder.newInstance()
                 .id(request.getContractPolicyId())
