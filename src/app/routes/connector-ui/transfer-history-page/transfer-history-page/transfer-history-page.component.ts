@@ -1,93 +1,118 @@
-import {Component, OnInit} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {map} from 'rxjs/operators';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {
-  ConfirmDialogModel,
-  ConfirmationDialogComponent,
-} from '../../../../component-library/confirmation-dialog/confirmation-dialog/confirmation-dialog.component';
-import {JsonDialogComponent} from '../../../../component-library/json-dialog/json-dialog/json-dialog.component';
-import {JsonDialogData} from '../../../../component-library/json-dialog/json-dialog/json-dialog.data';
-import {
-  TransferProcessDto,
-  TransferProcessService,
-} from '../../../../core/services/api/legacy-managent-api-client';
+  EMPTY,
+  Observable,
+  Subject,
+  concat,
+  interval,
+  skip,
+  switchMap,
+} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
+import {TransferHistoryEntry, TransferHistoryPage} from '@sovity.de/edc-client';
+import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
+import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
+import {JsonDialogService} from '../../../../component-library/json-dialog/json-dialog/json-dialog.service';
+import {EdcApiService} from '../../../../core/services/api/edc-api.service';
+import {AssetPropertyMapper} from '../../../../core/services/asset-property-mapper';
+import {Asset} from '../../../../core/services/models/asset';
 import {Fetched} from '../../../../core/services/models/fetched';
+import {NotificationService} from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'transfer-history-page',
   templateUrl: './transfer-history-page.component.html',
   styleUrls: ['./transfer-history-page.component.scss'],
 })
-export class TransferHistoryPageComponent implements OnInit {
+export class TransferHistoryPageComponent implements OnInit, OnDestroy {
   columns: string[] = [
-    'id',
-    'creationDate',
-    'state',
+    'direction',
     'lastUpdated',
-    'connectorId',
-    'assetId',
-    'contractId',
+    'assetName',
+    'state',
+    'counterPartyConnectorEndpoint',
     'details',
   ];
   transferProcessesList: Fetched<{
-    transferProcesses: Array<TransferProcessDto>;
+    transferProcesses: Array<TransferHistoryEntry>;
   }> = Fetched.empty();
 
   constructor(
-    private transferProcessService: TransferProcessService,
-    private dialog: MatDialog,
+    private edcApiService: EdcApiService,
+    private assetDetailDialogDataService: AssetDetailDialogDataService,
+    private assetDetailDialogService: AssetDetailDialogService,
+    private assetPropertyMapper: AssetPropertyMapper,
+    private notificationService: NotificationService,
+    private jsonDialogService: JsonDialogService,
   ) {}
 
-  onTransferHistoryDetailsClick(item: TransferProcessDto) {
-    const data: JsonDialogData = {
-      title: item.id,
-      subtitle: 'Transfer History Details',
-      icon: 'assignment',
-      objectForJson: item,
-    };
-    this.dialog.open(JsonDialogComponent, {data});
+  onTransferHistoryDetailsClick(item: TransferHistoryEntry) {
+    this.jsonDialogService.showJsonDetailDialog(
+      {
+        title: item.assetName ?? item.assetId,
+        subtitle: 'Transfer History Details',
+        icon: 'assignment',
+        objectForJson: item,
+      },
+      this.ngOnDestroy$,
+    );
+  }
+
+  loadAssetDetails(transferProcessId: string): Observable<Asset> {
+    return this.edcApiService
+      .getTransferProcessAsset(transferProcessId)
+      .pipe(
+        map((asset) =>
+          this.assetPropertyMapper.buildAssetFromProperties(asset.properties),
+        ),
+      );
+  }
+
+  onAssetDetailsClick(transferProcessId: string) {
+    this.loadAssetDetails(transferProcessId).subscribe({
+      next: (asset) => {
+        const data = this.assetDetailDialogDataService.assetDetails(
+          asset,
+          false,
+        );
+        this.assetDetailDialogService.open(data, this.ngOnDestroy$);
+      },
+      error: (error) => {
+        console.error('Failed to fetch asset details!', error);
+        this.notificationService.showError('Failed to fetch asset details!');
+      },
+    });
   }
 
   ngOnInit(): void {
     this.loadTransferProcesses();
   }
 
-  onDeprovision(transferProcess: TransferProcessDto): void {
-    const dialogData = new ConfirmDialogModel(
-      'Confirm deprovision',
-      `Deprovisioning resources for transfer [${transferProcess.id}] will take some time and once started, it cannot be stopped.`,
-    );
-    dialogData.confirmColor = 'warn';
-    dialogData.confirmText = 'Confirm';
-    dialogData.cancelText = 'Abort';
-    const ref = this.dialog.open(ConfirmationDialogComponent, {
-      maxWidth: '20%',
-      data: dialogData,
-    });
-
-    ref.afterClosed().subscribe((res) => {
-      if (res) {
-        this.transferProcessService
-          .deprovisionTransferProcess(transferProcess.id)
-          .subscribe(() => this.loadTransferProcesses());
-      }
-    });
-  }
-
   loadTransferProcesses() {
-    this.transferProcessService
-      .getAllTransferProcesses(0, 10_000_000)
-      .pipe(
-        map((transferProcesses) => ({
-          transferProcesses: transferProcesses.sort(function (a, b) {
-            return (
-              b.createdTimestamp?.valueOf()! - a.createdTimestamp?.valueOf()!
-            );
-          }),
-        })),
+    const initialRequest: Observable<Fetched<TransferHistoryPage>> =
+      this.edcApiService.getTransferHistoryPage().pipe(
         Fetched.wrap({
           failureMessage: 'Failed fetching transfer history.',
         }),
+      );
+
+    const polling: Observable<Fetched<TransferHistoryPage>> = interval(
+      5_000,
+    ).pipe(
+      skip(1),
+      switchMap(() =>
+        this.edcApiService
+          .getTransferHistoryPage()
+          .pipe(catchError(() => EMPTY)),
+      ),
+      map((data) => Fetched.ready(data)),
+    );
+
+    return concat(initialRequest, polling)
+      .pipe(
+        Fetched.map((transferHistoryPage) => ({
+          transferProcesses: transferHistoryPage.transferEntries,
+        })),
       )
       .subscribe(
         (transferProcessesList) =>
@@ -95,7 +120,10 @@ export class TransferHistoryPageComponent implements OnInit {
       );
   }
 
-  asDate(epochMillis?: number) {
-    return epochMillis ? new Date(epochMillis).toLocaleDateString() : '';
+  ngOnDestroy$ = new Subject();
+
+  ngOnDestroy() {
+    this.ngOnDestroy$.next(null);
+    this.ngOnDestroy$.complete();
   }
 }

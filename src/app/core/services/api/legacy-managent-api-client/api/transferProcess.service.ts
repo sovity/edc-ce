@@ -24,12 +24,12 @@ import {
 } from '@angular/common/http';
 import {Inject, Injectable, Optional} from '@angular/core';
 import {Observable} from 'rxjs';
+// @ts-ignore
+import {TransferProcessDto} from '../../../../core/services/models/transfer-history-entry';
 import {Configuration} from '../configuration';
 import {CustomHttpParameterCodec} from '../encoder';
 // @ts-ignore
 import {TransferId} from '../model/transferId';
-// @ts-ignore
-import {TransferProcessDto} from '../model/transferProcessDto';
 // @ts-ignore
 import {TransferRequestDto} from '../model/transferRequestDto';
 // @ts-ignore

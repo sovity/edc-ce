@@ -20,6 +20,7 @@ $custom-typography: mat.define-typography-config(
     sovityColors.$link-color
   );
 }
+
 .theme-mds {
   @include mat.all-component-themes(mdsColors.$theme);
   @include themeGeneratedVars.theme-vars(

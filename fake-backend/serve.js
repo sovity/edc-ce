@@ -53,11 +53,6 @@ app.get('/api/v1/data/contractdefinitions', (req, res) => {
   res.json(contractDefinitions);
 });
 
-const transferProcess = json('json/transferProcess.json');
-app.get('/api/v1/data/transferprocess', (req, res) => {
-  res.json(transferProcess);
-});
-
 const contractAgreements = json('json/contractAgreements.json');
 app.get('/api/v1/data/contractagreements', (req, res) => {
   res.json(contractAgreements);
@@ -105,6 +100,21 @@ const contractAgreementPage = json('json/contractAgreementPage.json');
 app.get('/api/v1/data/wrapper/ui/pages/contract-agreement-page', (_, res) => {
   res.json(contractAgreementPage);
 });
+
+const transferProcess = json('json/transferHistoryPage.json');
+app.get('/api/v1/data/wrapper/ui/pages/transfer-history-page', (req, res) => {
+  res.json(transferProcess);
+});
+
+const transferHistoryAssetDetails = json(
+  'json/transferHistoryAssetDetails.json',
+);
+app.get(
+  '/api/v1/data/wrapper/ui/pages/transfer-history-page/transfer-processes/47240a35-d8fc-41d9-b020-07b87f3cc7b6/asset',
+  (req, res) => {
+    res.json(transferHistoryAssetDetails);
+  },
+);
 
 // Connector Limits
 const connectorLimits = json('json/connectorLimits.json');

@@ -1,14 +1,12 @@
 import {Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {MatDialog} from '@angular/material/dialog';
 import {PageEvent} from '@angular/material/paginator';
 import {BehaviorSubject, Subject} from 'rxjs';
-import {map, takeUntil} from 'rxjs/operators';
+import {filter, map, takeUntil} from 'rxjs/operators';
 import {Store} from '@ngxs/store';
 import {CatalogPageSortingItem} from '@sovity.de/broker-server-client';
 import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
-import {AssetDetailDialogResult} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-result';
-import {AssetDetailDialogComponent} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.component';
+import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
 import {FilterValueSelectItem} from '../filter-value-select/filter-value-select-item';
 import {FilterValueSelectVisibleState} from '../filter-value-select/filter-value-select-visible-state';
 import {CatalogActiveFilterPill} from '../state/catalog-active-filter-pill';
@@ -35,7 +33,7 @@ export class CatalogPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private assetDetailDialogDataService: AssetDetailDialogDataService,
-    private matDialog: MatDialog,
+    private assetDetailDialogService: AssetDetailDialogService,
     private store: Store,
   ) {}
 
@@ -84,12 +82,11 @@ export class CatalogPageComponent implements OnInit, OnDestroy {
   onDataOfferClick(dataOffer: BrokerDataOffer) {
     const data =
       this.assetDetailDialogDataService.brokerDataOfferDetails(dataOffer);
-    const ref = this.matDialog.open(AssetDetailDialogComponent, {data});
-    ref.afterClosed().subscribe((result: AssetDetailDialogResult) => {
-      if (result?.refreshList) {
-        this.fetch$.next(null);
-      }
-    });
+
+    this.assetDetailDialogService
+      .open(data, this.ngOnDestroy$)
+      .pipe(filter((it) => !!it?.refreshList))
+      .subscribe(() => this.fetch$.next(null));
   }
 
   ngOnDestroy$ = new Subject();

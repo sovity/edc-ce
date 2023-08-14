@@ -103,6 +103,8 @@ body {
 .link {
   color: var(--link-color);
   text-decoration: none;
+  display: flex;
+  align-items: center;
 
   &:hover,
   &:focus {
@@ -145,6 +147,7 @@ body {
 }
 
 .mat-icon-\[14px\] {
+  margin-right: 5px;
   font-size: 14px !important;
   width: 14px !important;
   height: 14px !important;
@@ -165,7 +168,16 @@ body {
   line-height: 12px !important;
 }
 
+.mat-icon-\[18px\] {
+  margin-top: 5px;
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  line-height: 18px !important;
+}
+
 .mat-icon-\[28px\] {
+  margin-top: 8px;
   font-size: 28px !important;
   width: 28px !important;
   height: 28px !important;
@@ -189,6 +201,7 @@ body {
     padding-bottom: 0 !important;
   }
 }
+
 .max-two-lines-list-item .mat-list-text {
   display: -webkit-box !important;
   -webkit-line-clamp: 2;

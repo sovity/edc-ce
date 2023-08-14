@@ -3,14 +3,14 @@ import {
   EventEmitter,
   HostBinding,
   Input,
+  OnDestroy,
   Output,
 } from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {EMPTY} from 'rxjs';
-import {catchError, filter, map, tap} from 'rxjs/operators';
+import {EMPTY, Subject} from 'rxjs';
+import {catchError, filter, tap} from 'rxjs/operators';
 import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
-import {AssetDetailDialogResult} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-result';
-import {AssetDetailDialogComponent} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.component';
+import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
 import {ConfirmDialogModel} from '../../../../component-library/confirmation-dialog/confirmation-dialog/confirmation-dialog.component';
 import {JsonDialogComponent} from '../../../../component-library/json-dialog/json-dialog/json-dialog.component';
 import {JsonDialogData} from '../../../../component-library/json-dialog/json-dialog/json-dialog.data';
@@ -27,7 +27,7 @@ import {ContractDefinitionCard} from './contract-definition-card';
   selector: 'contract-definition-cards',
   templateUrl: './contract-definition-cards.component.html',
 })
-export class ContractDefinitionCardsComponent {
+export class ContractDefinitionCardsComponent implements OnDestroy {
   @HostBinding('class.flex')
   @HostBinding('class.flex-wrap')
   @HostBinding('class.gap-[10px]')
@@ -44,6 +44,7 @@ export class ContractDefinitionCardsComponent {
 
   constructor(
     private assetDetailDialogDataService: AssetDetailDialogDataService,
+    private assetDetailDialogService: AssetDetailDialogService,
     private matDialog: MatDialog,
     private contractDefinitionService: ContractDefinitionService,
     private notificationService: NotificationService,
@@ -61,16 +62,9 @@ export class ContractDefinitionCardsComponent {
 
   onAssetClick(asset: Asset) {
     const data = this.assetDetailDialogDataService.assetDetails(asset, false);
-    const ref = this.matDialog.open(AssetDetailDialogComponent, {
-      data,
-      maxHeight: '90vh',
-    });
-    ref
-      .afterClosed()
-      .pipe(
-        map((it) => it as AssetDetailDialogResult | null),
-        filter((it) => !!it?.refreshList),
-      )
+    this.assetDetailDialogService
+      .open(data, this.ngOnDestroy$)
+      .pipe(filter((it) => !!it?.refreshList))
       .subscribe(() => this.deleteDone.emit());
   }
 
@@ -106,5 +100,12 @@ export class ContractDefinitionCardsComponent {
     };
 
     dialogRef = this.matDialog.open(JsonDialogComponent, {data});
+  }
+
+  ngOnDestroy$ = new Subject();
+
+  ngOnDestroy() {
+    this.ngOnDestroy$.next(null);
+    this.ngOnDestroy$.complete();
   }
 }

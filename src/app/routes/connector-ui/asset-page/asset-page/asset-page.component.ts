@@ -1,10 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {BehaviorSubject} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {filter, map, switchMap} from 'rxjs/operators';
 import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
-import {AssetDetailDialogResult} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-result';
-import {AssetDetailDialogComponent} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.component';
+import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {AssetPropertyMapper} from '../../../../core/services/asset-property-mapper';
 import {Asset} from '../../../../core/services/models/asset';
@@ -22,7 +21,7 @@ export interface AssetList {
   templateUrl: './asset-page.component.html',
   styleUrls: ['./asset-page.component.scss'],
 })
-export class AssetPageComponent implements OnInit {
+export class AssetPageComponent implements OnInit, OnDestroy {
   assetList: Fetched<AssetList> = Fetched.empty();
   searchText = '';
   private fetch$ = new BehaviorSubject(null);
@@ -30,6 +29,7 @@ export class AssetPageComponent implements OnInit {
   constructor(
     private edcApiService: EdcApiService,
     private assetDetailDialogDataService: AssetDetailDialogDataService,
+    private assetDetailDialogService: AssetDetailDialogService,
     private dialog: MatDialog,
     private assetPropertyMapper: AssetPropertyMapper,
   ) {}
@@ -75,18 +75,20 @@ export class AssetPageComponent implements OnInit {
 
   onAssetClick(asset: Asset) {
     const data = this.assetDetailDialogDataService.assetDetails(asset, true);
-    const ref = this.dialog.open(AssetDetailDialogComponent, {
-      data,
-      maxHeight: '90vh',
-    });
-    ref.afterClosed().subscribe((result: AssetDetailDialogResult) => {
-      if (result?.refreshList) {
-        this.refresh();
-      }
-    });
+    this.assetDetailDialogService
+      .open(data, this.ngOnDestroy$)
+      .pipe(filter((it) => !!it?.refreshList))
+      .subscribe(() => this.refresh());
   }
 
   private refresh() {
     this.fetch$.next(null);
+  }
+
+  ngOnDestroy$ = new Subject();
+
+  ngOnDestroy() {
+    this.ngOnDestroy$.next(null);
+    this.ngOnDestroy$.complete();
   }
 }

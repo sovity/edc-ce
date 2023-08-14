@@ -13,6 +13,7 @@ import {PropertyGridModule} from '../property-grid/property-grid.module';
 import {UiElementsModule} from '../ui-elements/ui-elements.module';
 import {AssetDetailDialogDataService} from './asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogComponent} from './asset-detail-dialog/asset-detail-dialog.component';
+import {AssetDetailDialogService} from './asset-detail-dialog/asset-detail-dialog.service';
 import {AssetPropertyGridGroupBuilder} from './asset-detail-dialog/asset-property-grid-group-builder';
 import {ContractOfferCardsComponent} from './contract-offer-cards/contract-offer-cards.component';
 import {ContractOfferIconComponent} from './contract-offer-icon/contract-offer-icon.component';
@@ -53,6 +54,10 @@ import {TransferHistoryMiniListComponent} from './transfer-history-mini-list/tra
     TransferHistoryMiniListComponent,
     IconWithOnlineStatusComponent,
   ],
-  providers: [AssetPropertyGridGroupBuilder, AssetDetailDialogDataService],
+  providers: [
+    AssetPropertyGridGroupBuilder,
+    AssetDetailDialogDataService,
+    AssetDetailDialogService,
+  ],
 })
 export class CatalogModule {}

@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {MatDialog} from '@angular/material/dialog';
 import {
   BehaviorSubject,
   Observable,
@@ -12,8 +11,7 @@ import {
 } from 'rxjs';
 import {filter, map, takeUntil} from 'rxjs/operators';
 import {AssetDetailDialogDataService} from 'src/app/component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
-import {AssetDetailDialogData} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data';
-import {AssetDetailDialogComponent} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.component';
+import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {value$} from '../../../../core/utils/form-group-utils';
 import {filterNotNull} from '../../../../core/utils/rxjs-utils';
@@ -36,7 +34,7 @@ export class ContractAgreementPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private assetDetailDialogDataService: AssetDetailDialogDataService,
-    private matDialog: MatDialog,
+    private assetDetailDialogService: AssetDetailDialogService,
     private contractAgreementPageService: ContractAgreementPageService,
   ) {}
 
@@ -50,17 +48,13 @@ export class ContractAgreementPageComponent implements OnInit, OnDestroy {
   }
 
   onContractAgreementClick(card: ContractAgreementCardMapped) {
-    const data$: Observable<AssetDetailDialogData> = this.card$(
-      card.contractAgreementId,
-    ).pipe(
-      map((it) =>
-        this.assetDetailDialogDataService.contractAgreementDetails(it),
+    const data$ = this.card$(card.contractAgreementId).pipe(
+      map((card) =>
+        this.assetDetailDialogDataService.contractAgreementDetails(card),
       ),
     );
-    this.matDialog.open(AssetDetailDialogComponent, {
-      data: data$,
-      maxHeight: '90vh',
-    });
+
+    return this.assetDetailDialogService.open(data$, this.ngOnDestroy$);
   }
 
   refresh() {

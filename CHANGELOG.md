@@ -22,6 +22,8 @@ the detailed section referring to by linking pull requests or issues.
 
 - Removed 404-causing login polling from broker UI
 
+- Migrated transfer history page to api wrapper
+
 #### Removed
 
 #### Fixed

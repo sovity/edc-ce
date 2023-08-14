@@ -1,1 +1,12 @@
 <router-outlet></router-outlet>
+
+<!--
+    Our dialog headers use the mat-card-header style classes
+
+    For some reason, if MatCard component is not used somewhere in the DOM, 
+    the styles are omitted, making some of our dialogs look broken until a 
+    page is loaded that does.
+ -->
+<div style="display: none">
+  <mat-card><mat-card-header></mat-card-header></mat-card>
+</div>

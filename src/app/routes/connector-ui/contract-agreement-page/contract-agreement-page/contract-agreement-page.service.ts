@@ -13,7 +13,6 @@ import {ContractAgreementCardMapped} from '../contract-agreement-cards/contract-
 import {ContractAgreementCardMappedService} from '../contract-agreement-cards/contract-agreement-card-mapped.service';
 import {ContractAgreementPageData} from './contract-agreement-page.data';
 
-
 @Injectable({providedIn: 'root'})
 export class ContractAgreementPageService {
   constructor(

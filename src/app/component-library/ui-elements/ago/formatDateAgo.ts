@@ -1,13 +1,16 @@
 import {formatDistanceToNow} from 'date-fns';
+import {DateInput} from './date-input';
 
 /**
  * Formats date as "{n} {timeUnit} ago" or "in {n} {timeUnit}s".
  * @param date date
  */
-export function formatDateAgo(date?: Date | null): string {
+export function formatDateAgo(date?: DateInput | null): string {
   if (!date) {
-    return '';
+    return 'never';
   }
-
+  if (typeof date === 'string') {
+    date = new Date(date);
+  }
   return formatDistanceToNow(date, {addSuffix: true});
 }

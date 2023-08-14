@@ -37,7 +37,7 @@ $theme-colors-primary: (
   ),
 );
 
-$link-color: darken (map.get($theme-colors-primary, 500), 5%);
+$link-color: darken (map.get($theme-colors-primary, 500), 15%);
 
 $theme-colors-accent: (
   50: #ffffff,
