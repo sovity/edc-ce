@@ -64,6 +64,9 @@ public class OperatorMapper {
         return operatorDto;
 
     }
+    public String getOdlrRepreseantation(String operator) {
+        return toOperator(fromString(operator)).getOdrlRepresentation();
+    }
     public OperatorDto toOperatorDto(Operator operator) {
         return fromString(operator.name());
     }

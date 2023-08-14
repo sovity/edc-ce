@@ -14,9 +14,10 @@
 
 package de.sovity.edc.client;
 
-import de.sovity.edc.client.gen.model.ContractDefinitionCreateRequest;
+import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.CriterionDto;
 import de.sovity.edc.client.gen.model.CriterionLiteralDto;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.OperatorMapper;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -37,10 +38,11 @@ import static org.assertj.core.api.InstanceOfAssertFactories.type;
 @ApiTest
 @ExtendWith(EdcExtension.class)
 class ContractDefinitionPageApiServiceTest {
-
+    OperatorMapper operatorMapper;
     @BeforeEach
     void setUp(EdcExtension extension) {
         TestUtils.setupExtension(extension);
+        operatorMapper = new OperatorMapper();
     }
 
     @Test
@@ -99,7 +101,7 @@ class ContractDefinitionPageApiServiceTest {
                         "GEQ",
                         null)
         );
-        var contractDefinition = ContractDefinitionCreateRequest.builder()
+        var contractDefinition = ContractDefinitionRequest.builder()
                 .contractPolicyId("contractPolicy-id-1")
                 .accessPolicyId("accessPolicy-id-1")
                 .assetSelector(criteria)
@@ -116,6 +118,7 @@ class ContractDefinitionPageApiServiceTest {
         assertThat(contractDefinitionEntry.getContractPolicyId()).isEqualTo("contractPolicy-id-1");
         assertThat(contractDefinitionEntry.getAccessPolicyId()).isEqualTo("accessPolicy-id-1");
         assertThat(contractDefinitionEntry.getAssetsSelector().get(0).getOperandLeft()).isEqualTo(criteria.get(0).getOperandLeft());
+        assertThat(contractDefinitionEntry.getAssetsSelector().get(0).getOperator()).isEqualTo(operatorMapper.getOdlrRepreseantation(criteria.get(0).getOperator()));
         //assertThat(contractDefinitionEntry.getAssetsSelector().get(0).getOperandRight().toString()).isEqualTo(criteria.get(0).getOperandRight().toString());
     }
 

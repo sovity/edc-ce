@@ -19,7 +19,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionCreateRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
@@ -127,8 +127,8 @@ public class UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Create a new Contract Definition")
-    public IdResponseDto createContractDefinition(ContractDefinitionCreateRequest contractDefinitionCreateRequest) {
-        return contractDefinitionApiService.createContractDefinition(contractDefinitionCreateRequest);
+    public IdResponseDto createContractDefinition(ContractDefinitionRequest contractDefinitionRequest) {
+        return contractDefinitionApiService.createContractDefinition(contractDefinitionRequest);
     }
 
     @DELETE

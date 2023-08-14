@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.contracts;
 
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionCreateRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionEntry;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractDefinitionBuilder;
@@ -49,7 +49,7 @@ public class ContractDefinitionApiService {
     }
 
     @NotNull
-    public IdResponseDto createContractDefinition(ContractDefinitionCreateRequest request) {
+    public IdResponseDto createContractDefinition(ContractDefinitionRequest request) {
         var contractDefinition = contractDefinitionBuilder.buildContractDefinition(request);
         contractDefinition = contractDefinitionService.create(contractDefinition).getContent();
         return new IdResponseDto(contractDefinition.getId());

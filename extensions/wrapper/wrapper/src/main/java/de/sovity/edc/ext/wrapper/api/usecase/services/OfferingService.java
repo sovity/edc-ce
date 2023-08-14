@@ -63,7 +63,7 @@ public class OfferingService {
         } else if (dto.getPolicyDefinitionRequest() == null) {
             throw new InvalidRequestException("No PolicyDefinitionRequest provided");
         } else if (dto.getContractDefinitionRequest() == null) {
-            throw new InvalidRequestException("No ContractDefinitionCreateRequest provided");
+            throw new InvalidRequestException("No ContractDefinitionRequest provided");
         }
     }
 
