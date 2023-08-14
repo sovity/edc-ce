@@ -1,6 +1,5 @@
 package de.sovity.edc.ext.wrapper.api.usecase.model;
 
-import de.sovity.edc.ext.wrapper.api.common.model.AssetEntryDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

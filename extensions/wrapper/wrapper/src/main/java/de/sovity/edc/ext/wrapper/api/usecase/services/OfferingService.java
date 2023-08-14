@@ -1,6 +1,6 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import de.sovity.edc.ext.wrapper.api.common.model.AssetEntryDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.AssetEntryDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractDefinitionRequestDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
