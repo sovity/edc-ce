@@ -30,7 +30,7 @@ public class ContractDefinitionRequestDto {
     @NotNull(message = "contractPolicyId cannot be null")
     private String contractPolicyId;
     @Valid
-    @NotNull(message = "criteria cannot be null")
+    @NotNull(message = "assetSelector cannot be null")
     private List<CriterionDto> assetsSelector;
 
 }

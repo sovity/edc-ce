@@ -19,11 +19,14 @@ import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,6 +52,7 @@ public class UiResource {
     private final TransferHistoryPageApiService transferHistoryPageApiService;
     private final TransferHistoryPageAssetFetcherService transferHistoryPageAssetFetcherService;
     private final AssetApiService assetApiService;
+    private final ContractDefinitionApiService contractDefinitionApiService;
 
     @GET
     @Path("pages/contract-agreement-page")
@@ -110,4 +114,28 @@ public class UiResource {
         return assetApiService.deleteAsset(assetId);
     }
 
+    @GET
+    @Path("pages/contract-definition-page")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Collect all data for Contract Definition Page")
+    public ContractDefinitionPage contractDefinitionPage() {
+        return new ContractDefinitionPage(contractDefinitionApiService.getContractDefinitions());
+    }
+
+    @POST
+    @Path("pages/contract-definition-page/contract-definitions")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Create a new Contract Definition")
+    public IdResponseDto createContractDefinition(ContractDefinitionRequest contractDefinitionRequest) {
+        return contractDefinitionApiService.createContractDefinition(contractDefinitionRequest);
+    }
+
+    @DELETE
+    @Path("pages/contract-definition-page/contract-definitions/{contractDefinitionId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Delete a Contract Definition")
+    public IdResponseDto deleteContractDefinition(@PathParam("contractDefinitionId") String contractDefinitionId) {
+        return contractDefinitionApiService.deleteContractDefinition(contractDefinitionId);
+    }
 }
