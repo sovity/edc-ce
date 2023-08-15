@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
-public class OperatorEnumEqualityTest {
+public class OperatorMapperTest {
     OperatorMapper operatorMapper;
 
     @BeforeEach
