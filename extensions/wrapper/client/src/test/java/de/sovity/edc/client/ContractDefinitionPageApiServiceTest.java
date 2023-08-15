@@ -35,7 +35,7 @@ class ContractDefinitionPageApiServiceTest {
 
     @Test
     void contractDefinitionPage(ContractDefinitionService contractDefinitionService) {
-        //arrange
+        // arrange
         var client = TestUtils.edcClient();
         var criterion = new Criterion("exampleLeft1", "EQ", "abc");
         createContractDefinition(contractDefinitionService, "contractPolicy-id-1", "accessPolicy-id-1", criterion);
@@ -43,8 +43,7 @@ class ContractDefinitionPageApiServiceTest {
         // act
         var result = client.uiApi().contractDefinitionPage();
 
-
-        //assert
+        // assert
         var contractDefinitions = result.getContractDefinitions();
         assertThat(contractDefinitions).hasSize(1);
         var contractDefinition = contractDefinitions.get(0);
@@ -68,6 +67,7 @@ class ContractDefinitionPageApiServiceTest {
                 "contractPolicy-id-1",
                 "accessPolicy-id-1",
                 new Criterion("exampleLeft1", "EQ", "abc"));
+        TestUtils.wait(1);
         createContractDefinition(
                 contractDefinitionService,
                 "contractPolicy-id-2",
@@ -106,7 +106,7 @@ class ContractDefinitionPageApiServiceTest {
         // act
         var response = client.uiApi().createContractDefinition(contractDefinition);
 
-        //assert
+        // assert
         assertThat(response).isNotNull();
         var contractDefinitions = contractDefinitionService.query(QuerySpec.max()).getContent().toList();
         assertThat(contractDefinitions).hasSize(1);
