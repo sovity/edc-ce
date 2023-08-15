@@ -61,7 +61,7 @@ INSERT INTO public.edc_contract_agreement (agr_id, provider_agent_id, consumer_a
 -- Data for Name: edc_contract_definitions; Type: TABLE DATA; Schema: public; Owner: edc
 --
 
-INSERT INTO public.edc_contract_definitions (contract_definition_id, access_policy_id, contract_policy_id, selector_expression, created_at, validity) VALUES ('test-contract-definition', 'test-policy', 'test-policy', '{"assetSelector":[{"operandLeft":"asset:prop:id","operator":"in","operandRight":["urn:artifact:test:1.0"]}]}', 1687179311116, 31536000);
+INSERT INTO public.edc_contract_definitions (contract_definition_id, access_policy_id, contract_policy_id, selector_expression, created_at, validity) VALUES ('test-contract-definition', 'test-policy', 'test-policy', '{"criteria":[{"operandLeft":"asset:prop:id","operator":"in","operandRight":["urn:artifact:test:1.0"]}]}', 1687179311116, 31536000);
 
 
 --

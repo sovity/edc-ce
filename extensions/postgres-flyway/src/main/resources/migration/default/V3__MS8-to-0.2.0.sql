@@ -35,10 +35,10 @@ alter table edc_contract_negotiation add column callback_addresses json;
 alter table edc_contract_definitions rename column selector_expression to assets_selector;
 alter table edc_contract_definitions drop column validity;
 
--- remove assetSelector parent
+-- remove criteria parent
 UPDATE edc_contract_definitions
-SET assets_selector = assets_selector->'assetSelector'
-WHERE assets_selector::jsonb ? 'assetSelector';
+SET assets_selector = assets_selector->'criteria'
+WHERE assets_selector::jsonb ? 'criteria';
 
 -- fix asset_id_operands
 create or replace function migrate_json(criteria_json_array_element jsonb) returns jsonb as
