@@ -32,7 +32,7 @@ public class CriterionMapper {
         return criteria.stream().map(this::mapToCriterionDto).toList();
     }
 
-    public UiCriterionDto mapToCriterionDto(Criterion criterion) {
+     UiCriterionDto mapToCriterionDto(Criterion criterion) {
         if (criterion == null) {
             return null;
         }

@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
-public class OperatorMapperTest {
+
+class OperatorMapperTest {
     OperatorMapper operatorMapper;
 
     @BeforeEach
@@ -17,10 +18,18 @@ public class OperatorMapperTest {
     }
 
     @Test
-    void MappingFromDtoToOperator() {
+    void testMappingFromDtoToOperator() {
         Arrays.stream(OperatorDto.values()).forEach(dto -> {
             Operator operator = operatorMapper.toOperator(dto);
             assertThat(operator.name()).isEqualTo(dto.name());
+        });
+    }
+
+    @Test
+    void testMappingFromString() {
+        Arrays.stream(Operator.values()).forEach(op -> {
+            var dto = operatorMapper.fromString(op.name());
+            assertThat(op.name()).isEqualTo(dto.name());
         });
     }
 
