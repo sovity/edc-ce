@@ -19,8 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
@@ -62,10 +60,6 @@ class ContractDefinitionPageApiServiceTest {
 
     @Test
     void contractDefinitionPageSorting(ContractDefinitionService contractDefinitionService) {
-
-        TimeWrapper timeWrapper = mock(TimeWrapper.class);
-        when(timeWrapper.getCurrentTimeMillis())
-                .thenReturn(1628956800000L, 1628956801000L, 1628956802000L);
         // arrange
         var client = TestUtils.edcClient();
         createContractDefinition(
@@ -73,19 +67,19 @@ class ContractDefinitionPageApiServiceTest {
                 "contractPolicy-id-1",
                 "accessPolicy-id-1",
                 new Criterion("exampleLeft1", "EQ", "abc"),
-                timeWrapper);
+                1628956800000L);
         createContractDefinition(
                 contractDefinitionService,
                 "contractPolicy-id-2",
                 "accessPolicy-id-2",
                 new Criterion("exampleLeft1", "EQ", "abc"),
-                timeWrapper);
+                1628956801000L);
         createContractDefinition(
                 contractDefinitionService,
                 "contractPolicy-id-3",
                 "accessPolicy-id-3",
                 new Criterion("exampleLeft1", "EQ", "abc"),
-                timeWrapper);
+                1628956802000L);
 
         // act
         var result = client.uiApi().contractDefinitionPage();
@@ -152,15 +146,14 @@ class ContractDefinitionPageApiServiceTest {
             String contractPolicyId,
             String accessPolicyId,
             Criterion criteria,
-            TimeWrapper timeWrapper
+            long createdAt
     ) {
 
-        long currentTime = timeWrapper.getCurrentTimeMillis();
         var contractDefinition = ContractDefinition.Builder.newInstance()
                 .contractPolicyId(contractPolicyId)
                 .accessPolicyId(accessPolicyId)
                 .assetsSelector(List.of(criteria))
-                .createdAt(currentTime)
+                .createdAt(createdAt)
                 .build();
         contractDefinitionService.create(contractDefinition);
     }
