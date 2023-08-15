@@ -19,7 +19,7 @@ import org.eclipse.edc.policy.model.Operator;
 
 @RequiredArgsConstructor
 public class OperatorMapper {
-    public static OperatorDto fromString(String operator) {
+    public OperatorDto fromString(String operator) {
         return OperatorDto.valueOf(operator.toUpperCase());
 
     }
