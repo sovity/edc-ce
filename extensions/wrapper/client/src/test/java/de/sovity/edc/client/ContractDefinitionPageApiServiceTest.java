@@ -19,6 +19,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
@@ -60,24 +62,30 @@ class ContractDefinitionPageApiServiceTest {
 
     @Test
     void contractDefinitionPageSorting(ContractDefinitionService contractDefinitionService) {
+
+        TimeWrapper timeWrapper = mock(TimeWrapper.class);
+        when(timeWrapper.getCurrentTimeMillis())
+                .thenReturn(1628956800000L, 1628956801000L, 1628956802000L);
         // arrange
         var client = TestUtils.edcClient();
         createContractDefinition(
                 contractDefinitionService,
                 "contractPolicy-id-1",
                 "accessPolicy-id-1",
-                new Criterion("exampleLeft1", "EQ", "abc"));
+                new Criterion("exampleLeft1", "EQ", "abc"),
+                timeWrapper);
         createContractDefinition(
                 contractDefinitionService,
                 "contractPolicy-id-2",
                 "accessPolicy-id-2",
-                new Criterion("exampleLeft1", "EQ", "abc"));
-        TestUtils.wait(1);
+                new Criterion("exampleLeft1", "EQ", "abc"),
+                timeWrapper);
         createContractDefinition(
                 contractDefinitionService,
                 "contractPolicy-id-3",
                 "accessPolicy-id-3",
-                new Criterion("exampleLeft1", "EQ", "abc"));
+                new Criterion("exampleLeft1", "EQ", "abc"),
+                timeWrapper);
 
         // act
         var result = client.uiApi().contractDefinitionPage();
@@ -86,6 +94,7 @@ class ContractDefinitionPageApiServiceTest {
         assertThat(result.getContractDefinitions())
                 .extracting(ContractDefinitionEntry::getContractPolicyId)
                 .containsExactly("contractPolicy-id-3", "contractPolicy-id-2", "contractPolicy-id-1");
+
     }
 
     @Test
@@ -136,6 +145,24 @@ class ContractDefinitionPageApiServiceTest {
         // assert
         assertThat(response.getId()).isEqualTo(contractDefinition.getId());
         assertThat(contractDefinitionService.query(QuerySpec.max()).getContent()).isEmpty();
+    }
+
+    private void createContractDefinition(
+            ContractDefinitionService contractDefinitionService,
+            String contractPolicyId,
+            String accessPolicyId,
+            Criterion criteria,
+            TimeWrapper timeWrapper
+    ) {
+
+        long currentTime = timeWrapper.getCurrentTimeMillis();
+        var contractDefinition = ContractDefinition.Builder.newInstance()
+                .contractPolicyId(contractPolicyId)
+                .accessPolicyId(accessPolicyId)
+                .assetsSelector(List.of(criteria))
+                .createdAt(currentTime)
+                .build();
+        contractDefinitionService.create(contractDefinition);
     }
 
     private void createContractDefinition(
