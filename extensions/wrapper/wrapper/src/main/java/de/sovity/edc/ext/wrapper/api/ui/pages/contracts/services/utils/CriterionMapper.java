@@ -28,6 +28,10 @@ import java.util.List;
 public class CriterionMapper {
     private final OperatorMapper operatorMapper;
 
+    public List<UiCriterionDto> mapToCriterionDtos(@NonNull List<Criterion> criteria) {
+        return criteria.stream().map(this::mapToCriterionDto).toList();
+    }
+
     public UiCriterionDto mapToCriterionDto(Criterion criterion) {
         if (criterion == null) {
             return null;
@@ -38,10 +42,6 @@ public class CriterionMapper {
         dto.setOperator(operatorMapper.fromString(criterion.getOperator()));
         dto.setOperandRight(literalDto);
         return dto;
-    }
-
-    public List<UiCriterionDto> mapToCriterionDtos(@NonNull List<Criterion> criteria) {
-        return criteria.stream().map(this::mapToCriterionDto).toList();
     }
 
     public Criterion mapToCriterion(@NonNull UiCriterionDto criterionDto) {

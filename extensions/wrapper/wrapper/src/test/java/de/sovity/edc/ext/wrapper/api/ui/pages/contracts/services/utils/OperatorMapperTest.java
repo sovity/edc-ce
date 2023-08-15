@@ -17,14 +17,6 @@ public class OperatorMapperTest {
     }
 
     @Test
-    void MappingFromOperatorToDto() {
-        Arrays.stream(Operator.values()).forEach(operator -> {
-            OperatorDto dto = operatorMapper.toOperatorDto(operator);
-            assertThat(dto.name()).isEqualTo(operator.name());
-        });
-    }
-
-    @Test
     void MappingFromDtoToOperator() {
         Arrays.stream(OperatorDto.values()).forEach(dto -> {
             Operator operator = operatorMapper.toOperator(dto);

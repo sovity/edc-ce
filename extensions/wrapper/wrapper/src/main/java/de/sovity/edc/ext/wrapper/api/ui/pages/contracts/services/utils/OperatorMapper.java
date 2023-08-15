@@ -23,12 +23,6 @@ public class OperatorMapper {
         return OperatorDto.valueOf(operator.toUpperCase());
 
     }
-    public String getOdlrRepreseantation(String operator) {
-        return toOperator(fromString(operator)).getOdrlRepresentation();
-    }
-    public OperatorDto toOperatorDto(Operator operator) {
-        return fromString(operator.name());
-    }
 
     public Operator toOperator(OperatorDto operatorDto) {
         return Operator.valueOf(operatorDto.name());

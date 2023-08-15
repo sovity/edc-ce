@@ -3,6 +3,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionLiteralDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.OperatorDto;
+import org.eclipse.edc.policy.model.Operator;
 import org.eclipse.edc.spi.query.Criterion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ public class CriterionMapperTest {
         Criterion criterion = criterionMapper.mapToCriterion(dto);
 
         assertThat(criterion.getOperandLeft()).isEqualTo(dto.getOperandLeft());
-        assertThat(criterion.getOperator()).isEqualTo(operatorMapper.getOdlrRepreseantation(dto.getOperator().name()));
+        assertThat(criterion.getOperator()).isEqualTo(Operator.EQ.getOdrlRepresentation());
         assertThat(criterion.getOperandRight()).isEqualTo(dto.getOperandRight());
     }
 
