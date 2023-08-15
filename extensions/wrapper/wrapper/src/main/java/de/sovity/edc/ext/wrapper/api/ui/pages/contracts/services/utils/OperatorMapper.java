@@ -20,48 +20,7 @@ import org.eclipse.edc.policy.model.Operator;
 @RequiredArgsConstructor
 public class OperatorMapper {
     public static OperatorDto fromString(String operator) {
-        OperatorDto operatorDto;
-        switch (operator.toUpperCase()) {
-            case "EQ":
-                operatorDto = OperatorDto.EQ;
-                break;
-            case "NEQ":
-                operatorDto = OperatorDto.NEQ;
-                break;
-            case "GT":
-                operatorDto = OperatorDto.GT;
-                break;
-            case "GEQ":
-                operatorDto = OperatorDto.GEQ;
-                break;
-            case "LT":
-                operatorDto = OperatorDto.LT;
-                break;
-            case "LEQ":
-                operatorDto = OperatorDto.LEQ;
-                break;
-            case "IN":
-                operatorDto = OperatorDto.IN;
-                break;
-            case "IS_NONE_OF":
-                operatorDto = OperatorDto.IS_NONE_OF;
-                break;
-            case "IS_A":
-                operatorDto = OperatorDto.IS_A;
-                break;
-            case "IS_ALL_OF":
-                operatorDto = OperatorDto.IS_ALL_OF;
-                break;
-            case "IS_ANY_OF":
-                operatorDto = OperatorDto.IS_ANY_OF;
-                break;
-            case "HAS_PART":
-                operatorDto = OperatorDto.HAS_PART;
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown operator: " + operator);
-        }
-        return operatorDto;
+        return OperatorDto.valueOf(operator.toUpperCase());
 
     }
     public String getOdlrRepreseantation(String operator) {

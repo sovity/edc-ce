@@ -17,7 +17,7 @@ public class OperatorEnumEqualityTest {
     }
 
     @Test
-    void testEnumMappingFromOperatorToDto() {
+    void MappingFromOperatorToDto() {
         Arrays.stream(Operator.values()).forEach(operator -> {
             OperatorDto dto = operatorMapper.toOperatorDto(operator);
             assertThat(dto.name()).isEqualTo(operator.name());
@@ -25,11 +25,18 @@ public class OperatorEnumEqualityTest {
     }
 
     @Test
-    void testEnumMappingFromDtoToOperator() {
+    void MappingFromDtoToOperator() {
         Arrays.stream(OperatorDto.values()).forEach(dto -> {
             Operator operator = operatorMapper.toOperator(dto);
             assertThat(operator.name()).isEqualTo(dto.name());
         });
+    }
+
+    @Test
+    void testCaseInsensitivityFromString() {
+        String operatorString = "Eq";
+        OperatorDto operatorDto = operatorMapper.fromString(operatorString);
+        assertThat(operatorDto).isEqualTo(OperatorDto.EQ);
     }
 }
 
