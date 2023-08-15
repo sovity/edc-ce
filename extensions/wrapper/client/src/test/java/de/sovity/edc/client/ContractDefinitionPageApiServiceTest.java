@@ -68,13 +68,11 @@ class ContractDefinitionPageApiServiceTest {
                 "contractPolicy-id-1",
                 "accessPolicy-id-1",
                 new Criterion("exampleLeft1", "EQ", "abc"));
-        TestUtils.wait(1);
         createContractDefinition(
                 contractDefinitionService,
                 "contractPolicy-id-2",
                 "accessPolicy-id-2",
                 new Criterion("exampleLeft1", "EQ", "abc"));
-        TestUtils.wait(1);
         createContractDefinition(
                 contractDefinitionService,
                 "contractPolicy-id-3",
