@@ -29,8 +29,8 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractDefinit
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferProcessStateService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequestBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractAgreementUtils;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.CriterionMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.CriterionMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;

@@ -25,8 +25,8 @@ import lombok.AllArgsConstructor;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CriterionDto {
+public class UiCriterionDto {
     private String operandLeft;
     private OperatorDto operator;
-    private CriterionLiteralDto operandRight;
+    private UiCriterionLiteralDto operandRight;
 }

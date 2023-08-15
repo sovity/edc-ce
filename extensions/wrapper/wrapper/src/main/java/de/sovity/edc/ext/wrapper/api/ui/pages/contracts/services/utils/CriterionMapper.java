@@ -15,52 +15,60 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils;
 
 
-import de.sovity.edc.ext.wrapper.api.ui.model.CriterionDto;
-import de.sovity.edc.ext.wrapper.api.ui.model.CriterionLiteralDto;
-import de.sovity.edc.ext.wrapper.api.ui.model.OperatorDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionLiteralDto;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.query.Criterion;
 
+import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
 public class CriterionMapper {
     private final OperatorMapper operatorMapper;
 
-    public CriterionDto mapToCriterionDto(Criterion criterion) {
+    public UiCriterionDto mapToCriterionDto(Criterion criterion) {
         if (criterion == null) {
             return null;
         }
-        CriterionDto dto = new CriterionDto();
-        CriterionLiteralDto literalDto = CriterionLiteralDto.ofValue((String) criterion.getOperandRight());
+        UiCriterionDto dto = new UiCriterionDto();
+        UiCriterionLiteralDto literalDto = buildCriterionLiteral(criterion.getOperandRight());
         dto.setOperandLeft(String.valueOf(criterion.getOperandLeft()));
         dto.setOperator(operatorMapper.fromString(criterion.getOperator()));
         dto.setOperandRight(literalDto);
         return dto;
     }
 
-    public List<CriterionDto> mapToCriterionDtos(List<Criterion> criteria) {
-        if (criteria == null) {
-            return null;
-        }
-
+    public List<UiCriterionDto> mapToCriterionDtos(@NonNull List<Criterion> criteria) {
         return criteria.stream().map(this::mapToCriterionDto).toList();
     }
 
-    public Criterion mapToCriterion(CriterionDto criterionDto) {
-        if (criterionDto == null) {
-            return null;
-        }
+    public Criterion mapToCriterion(@NonNull UiCriterionDto criterionDto) {
         return new Criterion(
                 criterionDto.getOperandLeft(),
                 operatorMapper.toOperator(criterionDto.getOperator()).getOdrlRepresentation(),
                 criterionDto.getOperandRight());
     }
 
-    public List<Criterion> mapToCriteria(List<CriterionDto> criterionDtos) {
-        if (criterionDtos == null) {
-            return null;
-        }
+    public List<Criterion> mapToCriteria(@NonNull List<UiCriterionDto> criterionDtos) {
         return criterionDtos.stream().map(this::mapToCriterion).toList();
+    }
+
+
+    UiCriterionLiteralDto buildCriterionLiteral(Object value) {
+        if (value instanceof Collection) {
+            var list = ((Collection<Object>) value).stream().map(it -> it == null ? null : it.toString()).toList();
+            return UiCriterionLiteralDto.ofValueList(list);
+        }
+
+        return UiCriterionLiteralDto.ofValue(value.toString());
+    }
+
+    Object readCriterionLiteral(UiCriterionLiteralDto dto) {
+        if (dto.getType() == UiCriterionLiteralDto.CriterionLiteralTypeDto.VALUE_LIST) {
+            return dto.getValueList();
+        }
+        return dto.getValue();
     }
 }
