@@ -18,6 +18,9 @@ All notable changes to this project will be documented in this file.
   - Asset Page
   - Create Asset
   - Delete Asset
+  - Contract Definition Page
+  - Create Contract Definition
+  - Delete Contract Definition
 
 ### Migration Notes
 
