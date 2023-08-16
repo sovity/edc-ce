@@ -14,7 +14,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
-    api("${edcGroup}:policy-spi:${edcVersion}")
+    api("${edcGroup}:policy-model:${edcVersion}")
     api(project(":extensions:wrapper:wrapper-common-api"))
 
     implementation("org.apache.commons:commons-lang3:3.13.0")

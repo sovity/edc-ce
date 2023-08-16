@@ -64,6 +64,7 @@ class ConstraintExtractorTest {
         var policy = Policy.Builder.newInstance()
                 .permission(null)
                 .permission(permission)
+                .permission(Permission.Builder.newInstance().build())
                 .build();
         var errors = MappingErrors.root();
 

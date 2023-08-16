@@ -26,7 +26,7 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class PolicyMapperTest {
+class PolicyMapperTest {
     @InjectMocks
     PolicyMapper policyMapper;
 
