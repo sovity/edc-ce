@@ -1,6 +1,4 @@
 val lombokVersion: String by project
-val edcGroup: String by project
-val edcVersion: String by project
 
 plugins {
     `java-library`
