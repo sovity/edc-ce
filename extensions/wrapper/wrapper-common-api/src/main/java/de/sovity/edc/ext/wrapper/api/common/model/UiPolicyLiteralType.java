@@ -12,21 +12,13 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.model;
+package de.sovity.edc.ext.wrapper.api.common.model;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Available operators for assetSelector in the Core EDC")
-public enum OperatorDto {
-    EQ,
-    NEQ,
-    GT,
-    GEQ,
-    LT,
-    LEQ,
-    IN,
-    HAS_PART,
-    IS_A,
-    IS_ALL_OF,
-    IS_ANY_OF,
-    IS_NONE_OF
+@Schema(description = "Supported Types of values for the right hand side of an expression")
+public enum UiPolicyLiteralType {
+    STRING,
+    STRING_LIST,
+    JSON
 }

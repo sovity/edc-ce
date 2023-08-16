@@ -15,10 +15,11 @@
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
+import de.sovity.edc.ext.wrapper.api.common.model.OperatorDto;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Getter
