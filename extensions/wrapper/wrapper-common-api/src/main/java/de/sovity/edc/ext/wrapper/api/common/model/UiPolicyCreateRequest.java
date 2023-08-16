@@ -24,9 +24,6 @@ import lombok.ToString;
 
 import java.util.List;
 
-/**
- * Opinionated subset of the EDC policy for our EDC UI.
- */
 @Getter
 @Setter
 @ToString
