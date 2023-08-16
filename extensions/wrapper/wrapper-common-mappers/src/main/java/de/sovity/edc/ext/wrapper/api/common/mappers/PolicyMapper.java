@@ -1,7 +1,7 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateDto;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -27,7 +27,7 @@ public class PolicyMapper {
                 .build();
     }
 
-    public Policy buildPolicy(UiPolicyCreateDto policyCreateDto) {
+    public Policy buildPolicy(UiPolicyCreateRequest policyCreateDto) {
         // TODO fully implement
         return Policy.Builder.newInstance().type(PolicyType.SET).build();
     }

@@ -15,7 +15,14 @@
 package de.sovity.edc.ext.wrapper.api.common.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.List;
 
 /**
  * Opinionated subset of the EDC policy for our EDC UI.
@@ -26,12 +33,9 @@ import lombok.*;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
-@Schema(description = "Policy Definition as required for the Policy Definition Page")
-public class PolicyDefinitionDto {
-    @Schema(description = "Policy Definition Id", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String policyDefinitionId;
-
-    @Schema(description = "UIPolicy Dto", requiredMode = Schema.RequiredMode.REQUIRED)
-    private UiPolicyDto uiPolicyDto;
+@Schema(description = "Type-Safe OpenAPI generator friendly Policy Create DTO that supports an opinionated"
+        + " subset of the original EDC Policy Entity.")
+public class UiPolicyCreateRequest {
+    @Schema(description = "Conjunction of required expressions for the policy to evaluate to TRUE.")
+    private List<UiPolicyConstraint> constraints;
 }
-
