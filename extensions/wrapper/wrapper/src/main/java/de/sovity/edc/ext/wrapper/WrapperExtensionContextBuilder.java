@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.wrapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.ee.EnterpriseEditionResourceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
@@ -31,7 +32,6 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequest
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractAgreementUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.CriterionMapper;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;

@@ -47,7 +47,6 @@ public class PolicyMapper {
                 .build();
     }
 
-
     /**
      * Builds an ODRL Policy from our simplified UI Policy Model.
      * <p>
@@ -72,5 +71,4 @@ public class PolicyMapper {
                 .permission(permission)
                 .build();
     }
-
 }

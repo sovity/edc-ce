@@ -1,6 +1,8 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
+import de.sovity.edc.ext.wrapper.api.common.model.OperatorDto;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraint;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyLiteral;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyLiteralType;
@@ -24,13 +26,25 @@ import static org.mockito.Mockito.when;
 class AtomicConstraintMapperTest {
 
     @Test
-    void testBuildAtomicConstraint() {
+    void test_buildAtomicConstraint_null() {
+        // arrange
+        var atomicConstraintMapper = newAtomicConstraintMapper();
+
+        // act
+        var actual = atomicConstraintMapper.buildAtomicConstraints(null);
+
+        // assert
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    void test_buildAtomicConstraint() {
         // arrange
         var literalMapper = mock(LiteralMapper.class);
-        var atomicConstraintMapper = new AtomicConstraintMapper(literalMapper);
+        var atomicConstraintMapper = newAtomicConstraintMapper(literalMapper);
 
         var right = mock(UiPolicyLiteral.class);
-        var constraint = new UiPolicyConstraint("left", Operator.EQ, right);
+        var constraint = new UiPolicyConstraint("left", OperatorDto.EQ, right);
 
         when(literalMapper.getUiLiteralValue(right)).thenReturn("right");
 
@@ -48,9 +62,9 @@ class AtomicConstraintMapperTest {
     }
 
     @Test
-    void testToUiConstraint_string() {
+    void test_buildUiConstraint_string() {
         // arrange
-        var atomicConstraintMapper = new AtomicConstraintMapper(new LiteralMapper(new ObjectMapper()));
+        var atomicConstraintMapper = newAtomicConstraintMapper();
         var errors = MappingErrors.root();
         var atomicConstraint = AtomicConstraint.Builder.newInstance()
                 .leftExpression(new LiteralExpression("left"))
@@ -65,15 +79,15 @@ class AtomicConstraintMapperTest {
         assertThat(errors.getErrors()).isEmpty();
         assertThat(actual).isPresent();
         assertThat(actual.get().getLeft()).isEqualTo("left");
-        assertThat(actual.get().getOperator()).isEqualTo(Operator.EQ);
+        assertThat(actual.get().getOperator()).isEqualTo(OperatorDto.EQ);
         assertThat(actual.get().getRight().getType()).isEqualTo(UiPolicyLiteralType.STRING);
         assertThat(actual.get().getRight().getValue()).isEqualTo("right");
     }
 
     @Test
-    void testToUiConstraint_stringList() {
+    void test_buildUiConstraint_stringList() {
         // arrange
-        var atomicConstraintMapper = new AtomicConstraintMapper(new LiteralMapper(new ObjectMapper()));
+        var atomicConstraintMapper = newAtomicConstraintMapper();
         var errors = MappingErrors.root();
         var atomicConstraint = AtomicConstraint.Builder.newInstance()
                 .leftExpression(new LiteralExpression("left"))
@@ -88,15 +102,15 @@ class AtomicConstraintMapperTest {
         assertThat(errors.getErrors()).isEmpty();
         assertThat(actual).isPresent();
         assertThat(actual.get().getLeft()).isEqualTo("left");
-        assertThat(actual.get().getOperator()).isEqualTo(Operator.EQ);
+        assertThat(actual.get().getOperator()).isEqualTo(OperatorDto.EQ);
         assertThat(actual.get().getRight().getType()).isEqualTo(UiPolicyLiteralType.STRING_LIST);
         assertThat(actual.get().getRight().getValueList()).isEqualTo(List.of("right"));
     }
 
     @Test
-    void testToUiConstraint_json() {
+    void test_buildUiConstraint_json() {
         // arrange
-        var atomicConstraintMapper = new AtomicConstraintMapper(new LiteralMapper(new ObjectMapper()));
+        var atomicConstraintMapper = newAtomicConstraintMapper();
         var errors = MappingErrors.root();
         var atomicConstraint = AtomicConstraint.Builder.newInstance()
                 .leftExpression(new LiteralExpression("left"))
@@ -111,15 +125,15 @@ class AtomicConstraintMapperTest {
         assertThat(errors.getErrors()).isEmpty();
         assertThat(actual).isPresent();
         assertThat(actual.get().getLeft()).isEqualTo("left");
-        assertThat(actual.get().getOperator()).isEqualTo(Operator.EQ);
+        assertThat(actual.get().getOperator()).isEqualTo(OperatorDto.EQ);
         assertThat(actual.get().getRight().getType()).isEqualTo(UiPolicyLiteralType.JSON);
         assertThat(actual.get().getRight().getValue()).isEqualTo("{\"a\":\"b\"}");
     }
 
     @Test
-    void testToUiConstraint_string2() {
+    void test_buildUiConstraint_string2() {
         // arrange
-        var atomicConstraintMapper = new AtomicConstraintMapper(new LiteralMapper(new ObjectMapper()));
+        var atomicConstraintMapper = newAtomicConstraintMapper();
         var errors = MappingErrors.root();
         var atomicConstraint = AtomicConstraint.Builder.newInstance()
                 .leftExpression(new LiteralExpression("left"))
@@ -134,16 +148,16 @@ class AtomicConstraintMapperTest {
         assertThat(errors.getErrors()).isEmpty();
         assertThat(actual).isPresent();
         assertThat(actual.get().getLeft()).isEqualTo("left");
-        assertThat(actual.get().getOperator()).isEqualTo(Operator.EQ);
+        assertThat(actual.get().getOperator()).isEqualTo(OperatorDto.EQ);
         assertThat(actual.get().getRight().getType()).isEqualTo(UiPolicyLiteralType.STRING);
         assertThat(actual.get().getRight().getValue()).isEqualTo("right");
     }
 
     @Test
-    void testToUiConstraint_leftBad() {
+    void test_buildUiConstraint_leftBad() {
         // arrange
         var literalMapper = mock(LiteralMapper.class);
-        var atomicConstraintMapper = new AtomicConstraintMapper(literalMapper);
+        var atomicConstraintMapper = newAtomicConstraintMapper(literalMapper);
         var errors = MappingErrors.root();
 
         var leftExpression = mock(Expression.class);
@@ -169,10 +183,10 @@ class AtomicConstraintMapperTest {
     }
 
     @Test
-    void testToUiConstraint_rightBad() {
+    void test_buildUiConstraint_rightBad() {
         // arrange
         var literalMapper = mock(LiteralMapper.class);
-        var atomicConstraintMapper = new AtomicConstraintMapper(literalMapper);
+        var atomicConstraintMapper = newAtomicConstraintMapper(literalMapper);
         var errors = MappingErrors.root();
 
         var leftExpression = mock(Expression.class);
@@ -198,9 +212,9 @@ class AtomicConstraintMapperTest {
     }
 
     @Test
-    void testToUiConstraint_operatorBad() {
+    void test_buildUiConstraint_operatorBad() {
         // arrange
-        var atomicConstraintMapper = new AtomicConstraintMapper(new LiteralMapper(new ObjectMapper()));
+        var atomicConstraintMapper = newAtomicConstraintMapper();
         var errors = MappingErrors.root();
         var atomicConstraint = AtomicConstraint.Builder.newInstance()
                 .leftExpression(new LiteralExpression("left"))
@@ -214,5 +228,13 @@ class AtomicConstraintMapperTest {
         // assert
         assertThat(actual).isEmpty();
         assertThat(errors.getErrors()).containsExactly("$.operator: Operator is null.");
+    }
+
+    private AtomicConstraintMapper newAtomicConstraintMapper() {
+        return newAtomicConstraintMapper(new LiteralMapper(new ObjectMapper()));
+    }
+
+    private AtomicConstraintMapper newAtomicConstraintMapper(LiteralMapper literalMapper) {
+        return new AtomicConstraintMapper(literalMapper, new OperatorMapper());
     }
 }

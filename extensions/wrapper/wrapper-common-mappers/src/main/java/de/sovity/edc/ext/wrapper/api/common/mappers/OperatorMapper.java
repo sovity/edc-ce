@@ -12,19 +12,23 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils;
-import de.sovity.edc.ext.wrapper.api.ui.model.OperatorDto;
+package de.sovity.edc.ext.wrapper.api.common.mappers;
+
+import de.sovity.edc.ext.wrapper.api.common.model.OperatorDto;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.policy.model.Operator;
 
 @RequiredArgsConstructor
 public class OperatorMapper {
-    public OperatorDto fromString(String operator) {
+    public OperatorDto getOperatorDto(String operator) {
         return OperatorDto.valueOf(operator.toUpperCase());
-
     }
 
-    public Operator toOperator(OperatorDto operatorDto) {
+    public OperatorDto getOperatorDto(Operator operator) {
+        return OperatorDto.valueOf(operator.name());
+    }
+
+    public Operator getOperator(OperatorDto operatorDto) {
         return Operator.valueOf(operatorDto.name());
     }
 }

@@ -11,9 +11,6 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
-    // This dependency is only in here so we can use the enum Operator from the AtomicConstraint API
-    api("${edcGroup}:policy-model:${edcVersion}")
-
     api("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
     api("jakarta.validation:jakarta.validation-api:3.0.2")
     api("io.swagger.core.v3:swagger-annotations-jakarta:2.2.15")

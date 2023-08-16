@@ -34,7 +34,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
-@Schema(description = "Polymorphic value. Could be a string, could be a string array, could be JSON elsewise.")
+@Schema(description = "Sum type: A String, a list of Strings or a generic JSON value.")
 public class UiPolicyLiteral {
     @Schema(description = "Value Type", requiredMode = RequiredMode.REQUIRED)
     private UiPolicyLiteralType type;
@@ -52,17 +52,17 @@ public class UiPolicyLiteral {
                 .build();
     }
 
-    public static UiPolicyLiteral ofStringList(Collection<String> strings) {
-        return UiPolicyLiteral.builder()
-                .type(UiPolicyLiteralType.STRING_LIST)
-                .valueList(new ArrayList<>(strings))
-                .build();
-    }
-
     public static UiPolicyLiteral ofJson(String jsonString) {
         return UiPolicyLiteral.builder()
                 .type(UiPolicyLiteralType.JSON)
                 .value(jsonString)
+                .build();
+    }
+
+    public static UiPolicyLiteral ofStringList(Collection<String> strings) {
+        return UiPolicyLiteral.builder()
+                .type(UiPolicyLiteralType.STRING_LIST)
+                .valueList(new ArrayList<>(strings))
                 .build();
     }
 }
