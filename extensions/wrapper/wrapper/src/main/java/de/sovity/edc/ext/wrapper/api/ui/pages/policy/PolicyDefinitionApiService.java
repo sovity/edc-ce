@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
 
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,7 @@ public class PolicyDefinitionApiService {
     }
 
     @NotNull
-    public IdResponse createPolicy(PolicyDefinitionDto request) {
+    public IdResponse createPolicy(PolicyDefinitionCreateRequest request) {
         var policyDefinition = policyMapper.buildPolicyDefinition(request);
         policyDefinition = policyDefinitionService.create(policyDefinition).getContent();
         return IdResponse.Builder.newInstance().id(policyDefinition.getId()).createdAt(policyDefinition.getCreatedAt()).build();

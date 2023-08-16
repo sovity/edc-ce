@@ -33,6 +33,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractA
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.CriterionMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.OperatorMapper;
+import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
@@ -83,7 +84,7 @@ public class WrapperExtensionContextBuilder {
             PolicyEngine policyEngine,
             TransferProcessStore transferProcessStore,
             TransferProcessService transferProcessService,
-            ContractDefinitionService contractDefinitionService
+            ContractDefinitionService contractDefinitionService,
             PolicyDefinitionService policyDefinitionService
     ) {
         // UI API

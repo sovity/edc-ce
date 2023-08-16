@@ -1,10 +1,13 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
 
@@ -25,6 +28,18 @@ public class PolicyMapper {
                 .constraints(List.of())
                 .errors(new ArrayList<>())
                 .build();
+    }
+    public PolicyDefinitionDto buildPolicyDefinitionDto(PolicyDefinition policyDefinition) {
+        return PolicyDefinitionDto.builder().uiPolicyDto(buildPolicyDto(policyDefinition.getPolicy())).build();
+    }
+
+    public PolicyDefinition buildPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDto) {
+        return PolicyDefinition.Builder.newInstance().policy(buildPolicy(policyDefinitionDto.getUiPolicyDto())).build();
+    }
+
+    @SneakyThrows
+    public Policy deserializePolicy(String edcPolicyJsonLd) {
+        return jsonLdObjectMapper.readValue(edcPolicyJsonLd, Policy.class);
     }
 
     public Policy buildPolicy(UiPolicyCreateRequest policyCreateDto) {

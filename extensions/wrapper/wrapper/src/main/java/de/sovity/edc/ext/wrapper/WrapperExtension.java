@@ -89,8 +89,8 @@ public class WrapperExtension implements ServiceExtension {
                 policyEngine,
                 transferProcessStore,
                 transferProcessService,
-                policyDefinitionService,
-                contractDefinitionService
+                contractDefinitionService,
+                policyDefinitionService
         );
 
         wrapperExtensionContext.jaxRsResources().forEach(resource ->
