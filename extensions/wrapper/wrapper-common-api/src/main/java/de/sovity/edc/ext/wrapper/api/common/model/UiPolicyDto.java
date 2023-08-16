@@ -25,17 +25,13 @@ import lombok.ToString;
 
 import java.util.List;
 
-/**
- * Opinionated subset of the EDC policy for our EDC UI.
- */
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
-@Schema(description = "Type-Safe OpenAPI generator friendly Policy DTO that supports an opinionated"
-        + " subset of the original EDC Policy Entity.")
+@Schema(description = "Type-Safe OpenAPI generator friendly Policy DTO as needed by our UI")
 public class UiPolicyDto {
     @Schema(description = "EDC Policy JSON-LD. This is required because the EDC requires the " +
             "full policy when initiating contract negotiations.", requiredMode = RequiredMode.REQUIRED)

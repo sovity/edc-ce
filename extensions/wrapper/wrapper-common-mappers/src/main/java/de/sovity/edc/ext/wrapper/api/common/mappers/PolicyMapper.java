@@ -1,18 +1,21 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionDto;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MappingErrors;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
+import org.eclipse.edc.policy.model.Action;
+import org.eclipse.edc.policy.model.Constraint;
+import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @RequiredArgsConstructor
 public class PolicyMapper {
@@ -20,35 +23,52 @@ public class PolicyMapper {
      * This Object Mapper must be able to handle JSON-LD serialization / deserialization.
      */
     private final ObjectMapper jsonLdObjectMapper;
+    private final ConstraintExtractor constraintExtractor;
+    private final AtomicConstraintMapper atomicConstraintMapper;
 
+    /**
+     * Builds a simplified UI Policy Model from an ODRL Policy.
+     * <p>
+     * This operation is lossy.
+     *
+     * @param policy ODRL policy
+     * @return ui policy
+     */
+    @SneakyThrows
     public UiPolicyDto buildPolicyDto(Policy policy) {
+        MappingErrors errors = MappingErrors.root();
+
+        var constraints = constraintExtractor.getPermissionConstraints(policy, errors);
+
         return UiPolicyDto.builder()
-                .policyJsonLd(serializePolicy(policy))
-                // TODO fully implement
-                .constraints(List.of())
-                .errors(new ArrayList<>())
+                .policyJsonLd(jsonLdObjectMapper.writeValueAsString(policy))
+                .constraints(constraints)
+                .errors(errors.getErrors())
                 .build();
     }
-    public PolicyDefinitionDto buildPolicyDefinitionDto(PolicyDefinition policyDefinition) {
-        return PolicyDefinitionDto.builder().uiPolicyDto(buildPolicyDto(policyDefinition.getPolicy())).build();
-    }
 
-    public PolicyDefinition buildPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDto) {
-        return PolicyDefinition.Builder.newInstance().policy(buildPolicy(policyDefinitionDto.getUiPolicyDto())).build();
-    }
-
-    @SneakyThrows
-    public Policy deserializePolicy(String edcPolicyJsonLd) {
-        return jsonLdObjectMapper.readValue(edcPolicyJsonLd, Policy.class);
-    }
-
+    /**
+     * Builds an ODRL Policy from our simplified UI Policy Model.
+     * <p>
+     * This operation is lossless.
+     *
+     * @param policyCreateDto ui policy
+     * @return ODRL policy
+     */
     public Policy buildPolicy(UiPolicyCreateRequest policyCreateDto) {
-        // TODO fully implement
-        return Policy.Builder.newInstance().type(PolicyType.SET).build();
-    }
+        var constraints = new ArrayList<Constraint>(atomicConstraintMapper.buildAtomicConstraints(
+                policyCreateDto.getConstraints()));
 
-    @SneakyThrows
-    public String serializePolicy(Policy policy) {
-        return jsonLdObjectMapper.writeValueAsString(policy);
+        var action = Action.Builder.newInstance().type(PolicyValidator.ALLOWED_ACTION).build();
+
+        var permission = Permission.Builder.newInstance()
+                .action(action)
+                .constraints(constraints)
+                .build();
+
+        return Policy.Builder.newInstance()
+                .type(PolicyType.SET)
+                .permission(permission)
+                .build();
     }
 }

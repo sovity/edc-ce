@@ -1,18 +1,20 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils;
 
+import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
+import de.sovity.edc.ext.wrapper.api.common.model.OperatorDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionLiteralDto;
-import de.sovity.edc.ext.wrapper.api.ui.model.OperatorDto;
 import org.eclipse.edc.policy.model.Operator;
 import org.eclipse.edc.spi.query.Criterion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class CriterionMapperTest {
+import static org.assertj.core.api.Assertions.assertThat;
+
+class CriterionMapperTest {
     private CriterionMapper criterionMapper;
     private OperatorMapper operatorMapper;
 
@@ -28,7 +30,7 @@ public class CriterionMapperTest {
         UiCriterionDto dto = criterionMapper.mapToCriterionDto(criterion);
 
         assertThat(dto.getOperandLeft()).isEqualTo(criterion.getOperandLeft());
-        assertThat(dto.getOperator()).isEqualTo(operatorMapper.fromString(criterion.getOperator()));
+        assertThat(dto.getOperator()).isEqualTo(operatorMapper.getOperatorDto(criterion.getOperator()));
         assertThat(dto.getOperandRight().getValue()).isEqualTo(criterion.getOperandRight());
     }
 

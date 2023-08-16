@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils;
 
 
+import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionLiteralDto;
 import lombok.NonNull;
@@ -39,7 +40,7 @@ public class CriterionMapper {
         UiCriterionDto dto = new UiCriterionDto();
         UiCriterionLiteralDto literalDto = buildCriterionLiteral(criterion.getOperandRight());
         dto.setOperandLeft(String.valueOf(criterion.getOperandLeft()));
-        dto.setOperator(operatorMapper.fromString(criterion.getOperator()));
+        dto.setOperator(operatorMapper.getOperatorDto(criterion.getOperator()));
         dto.setOperandRight(literalDto);
         return dto;
     }
@@ -47,7 +48,7 @@ public class CriterionMapper {
     public Criterion mapToCriterion(@NonNull UiCriterionDto criterionDto) {
         return new Criterion(
                 criterionDto.getOperandLeft(),
-                operatorMapper.toOperator(criterionDto.getOperator()).getOdrlRepresentation(),
+                operatorMapper.getOperator(criterionDto.getOperator()).getOdrlRepresentation(),
                 criterionDto.getOperandRight());
     }
 

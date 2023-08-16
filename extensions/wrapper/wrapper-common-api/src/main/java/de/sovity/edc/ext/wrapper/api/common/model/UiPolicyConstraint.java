@@ -23,24 +23,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * Opinionated subset of the EDC policy for our EDC UI.
- * <br>
- * Will be merged with PolicyDto in the near future.
- */
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
-@Schema(description = "EDC Policy Constraint as supported by our UI")
+@Schema(description = "ODRL AtomicConstraint as supported by our UI")
 public class UiPolicyConstraint {
     @Schema(description = "Left side of the expression.", requiredMode = RequiredMode.REQUIRED)
     private String left;
 
     @Schema(description = "Operator, e.g. EQ", requiredMode = RequiredMode.REQUIRED)
-    private String operator;
+    private OperatorDto operator;
 
     @Schema(description = "Right side of the expression", requiredMode = RequiredMode.REQUIRED)
     private UiPolicyLiteral right;
