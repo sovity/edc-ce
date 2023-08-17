@@ -139,15 +139,15 @@ public class WrapperExtensionContextBuilder {
         var atomicConstraintMapper = new AtomicConstraintMapper(literalMapper, operatorMapper);
         var policyValidator = new PolicyValidator();
         var constraintExtractor = new ConstraintExtractor(policyValidator, atomicConstraintMapper);
-        var policyMapper = new PolicyMapper(jsonLdObjectMapper,constraintExtractor, atomicConstraintMapper);
-        var policyDefintionApiService = new PolicyDefinitionApiService(policyDefinitionService, policyMapper);
+        var policyMapper = new PolicyMapper(jsonLdObjectMapper, constraintExtractor, atomicConstraintMapper);
+        var policyDefinitionApiService = new PolicyDefinitionApiService(policyDefinitionService, policyMapper);
         var uiResource = new UiResource(
                 contractAgreementApiService,
                 contractAgreementTransferApiService,
                 transferHistoryPageApiService,
                 transferHistoryPageAssetFetcherService,
                 assetApiService,
-                policyDefintionApiService,
+                policyDefinitionApiService,
                 contractDefinitionApiService
         );
 
