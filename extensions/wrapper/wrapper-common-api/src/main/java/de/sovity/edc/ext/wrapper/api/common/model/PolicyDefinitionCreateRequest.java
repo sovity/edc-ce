@@ -33,8 +33,6 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @Schema(description = "Data for creating a Policy Definition")
 public class PolicyDefinitionCreateRequest {
-    @Schema(description = "Policy Definition Id", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String policyDefinitionId;
 
     @Schema(description = "UIPolicy Create Dto", requiredMode = Schema.RequiredMode.REQUIRED)
     private UiPolicyCreateRequest uiPolicyDto;

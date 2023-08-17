@@ -16,7 +16,6 @@ package de.sovity.edc.ext.wrapper.api.ui;
 
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
@@ -157,8 +156,14 @@ public class UiResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Create a new Policy")
-    public IdResponse createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto) {
+    public IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto) {
         return policyDefinitionApiService.createPolicy(policyDefinitionDtoDto);
     }
-
+    @DELETE
+    @Path("pages/policy/page/policies/{policyId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Delete a Policy")
+    public IdResponseDto deletePolicyDefinition(@PathParam("policyId") String policyId) {
+        return policyDefinitionApiService.deletePolicy(policyId);
+    }
 }

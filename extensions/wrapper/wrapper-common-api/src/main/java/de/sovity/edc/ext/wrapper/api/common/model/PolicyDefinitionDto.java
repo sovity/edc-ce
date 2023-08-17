@@ -28,8 +28,6 @@ import lombok.*;
 @RequiredArgsConstructor
 @Schema(description = "Policy Definition as required for the Policy Definition Page")
 public class PolicyDefinitionDto {
-    @Schema(description = "Policy Definition Id", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String policyDefinitionId;
 
     @Schema(description = "UIPolicy Dto", requiredMode = Schema.RequiredMode.REQUIRED)
     private UiPolicyDto uiPolicyDto;

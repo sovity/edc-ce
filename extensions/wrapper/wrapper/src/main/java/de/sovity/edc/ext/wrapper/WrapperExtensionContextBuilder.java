@@ -17,6 +17,10 @@ package de.sovity.edc.ext.wrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.LiteralMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.ee.EnterpriseEditionResourceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
@@ -33,7 +37,6 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequest
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractAgreementUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.CriterionMapper;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
@@ -132,7 +135,11 @@ public class WrapperExtensionContextBuilder {
                 transferProcessService
         );
         var jsonLdObjectMapper = new ObjectMapper();
-        var policyMapper = new PolicyMapper(jsonLdObjectMapper);
+        var literalMapper = new LiteralMapper(objectMapper);
+        var atomicConstraintMapper = new AtomicConstraintMapper(literalMapper, operatorMapper);
+        var policyValidator = new PolicyValidator();
+        var constraintExtractor = new ConstraintExtractor(policyValidator, atomicConstraintMapper);
+        var policyMapper = new PolicyMapper(jsonLdObjectMapper,constraintExtractor, atomicConstraintMapper);
         var policyDefintionApiService = new PolicyDefinitionApiService(policyDefinitionService, policyMapper);
         var uiResource = new UiResource(
                 contractAgreementApiService,
