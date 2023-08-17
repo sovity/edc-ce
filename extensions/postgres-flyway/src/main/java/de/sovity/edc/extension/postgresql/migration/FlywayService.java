@@ -26,6 +26,7 @@ import org.flywaydb.core.api.output.MigrateResult;
 import org.flywaydb.core.api.output.RepairResult;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.sql.DataSource;
 
@@ -47,6 +48,9 @@ public class FlywayService {
             List<String> additionalMigrationLocations
     ) {
         var flyway = setupFlyway(datasourceName, jdbcConnectionProperties, additionalMigrationLocations);
+        flyway.info().getInfoResult().migrations.stream()
+                .map(migration -> "Found migration: %s".formatted(migration.filepath))
+                .forEach(monitor::info);
         try {
             var migrateResult = flyway.migrate();
             handleFlywayMigrationResult(datasourceName, migrateResult);
@@ -54,7 +58,9 @@ public class FlywayService {
             if (tryRepairOnFailedMigration) {
                 repairAndRetryMigration(datasourceName, flyway);
             } else {
-                throw new EdcPersistenceException("Flyway migration failed", e);
+                throw new EdcPersistenceException(
+                        "Flyway migration failed for '%s'".formatted(datasourceName),
+                        e);
             }
         }
     }
@@ -66,25 +72,19 @@ public class FlywayService {
             var migrateResult = flyway.migrate();
             handleFlywayMigrationResult(datasourceName, migrateResult);
         } catch (FlywayException e) {
-            throw new EdcPersistenceException("Flyway migration failed", e);
+            throw new EdcPersistenceException("Flyway migration failed for '%s'".formatted(datasourceName), e);
         }
     }
 
     private void handleFlywayRepairResult(String datasourceName, RepairResult repairResult) {
         if (!repairResult.repairActions.isEmpty()) {
             var repairActions = String.join(", ", repairResult.repairActions);
-            monitor.info(String.format(
-                    "Repair actions for datasource %s: %s",
-                    datasourceName,
-                    repairActions));
+            monitor.info("Repair actions for datasource %s: %s".formatted(datasourceName, repairActions));
         }
 
         if (!repairResult.warnings.isEmpty()) {
             var warnings = String.join(", ", repairResult.warnings);
-            throw new EdcPersistenceException(String.format(
-                    "Repairing datasource %s failed: %s",
-                    datasourceName,
-                    warnings));
+            throw new EdcPersistenceException("Repairing datasource %s failed: %s".formatted(datasourceName,warnings));
         }
     }
 
@@ -98,9 +98,7 @@ public class FlywayService {
         var migrationLocations = new ArrayList<String>();
         migrationLocations.add(String.join("/", MIGRATION_LOCATION_BASE, datasourceName));
         migrationLocations.addAll(additionalMigrationLocations);
-        migrationLocations.forEach(migrationLocation -> monitor.info(
-                "Using migration location for %s: %s".formatted(datasourceName, migrationLocation)
-        ));
+        monitor.info("Flyway migration locations for '%s': %s".formatted(datasourceName, migrationLocations));
         return Flyway.configure()
                 .baselineVersion(MigrationVersion.fromVersion("0.0.0"))
                 .baselineOnMigrate(true)

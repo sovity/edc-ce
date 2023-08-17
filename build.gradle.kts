@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     id("java")
     id("checkstyle")
@@ -51,15 +54,8 @@ allprojects {
     tasks.getByName<Test>("test") {
         useJUnitPlatform()
         testLogging {
-            events("passed", "skipped", "failed")
-        }
-
-        if (project.hasProperty("e2e-test")) {
-            environment("E2E_TEST_ENABLED", "true")
-        }
-
-        if (project.hasProperty("e2e-test-external-connector")) {
-            environment("E2E_TEST_EXTERNAL_CONNECTOR_ENABLED", "true")
+            events = setOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
+            exceptionFormat = TestExceptionFormat.FULL
         }
     }
 
