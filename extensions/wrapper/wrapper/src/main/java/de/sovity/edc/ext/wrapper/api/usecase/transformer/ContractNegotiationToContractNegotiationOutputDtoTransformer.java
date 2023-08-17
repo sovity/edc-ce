@@ -28,6 +28,7 @@ public class ContractNegotiationToContractNegotiationOutputDtoTransformer implem
                 .correlationId(contractNegotiation.getCorrelationId())
                 .counterPartyId(contractNegotiation.getCounterPartyId())
                 .counterPartyAddress(contractNegotiation.getCounterPartyAddress())
+                .errorDetail(contractNegotiation.getErrorDetail())
                 .protocol(contractNegotiation.getProtocol());
 
         if (contractNegotiation.getContractAgreement() != null) {

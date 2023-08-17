@@ -49,6 +49,10 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
     testImplementation("org.awaitility:awaitility:4.2.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+
+    testImplementation("${edcGroup}:iam-mock:${edcVersion}")
+    testImplementation("${edcGroup}:dsp:${edcVersion}")
+    testImplementation("${edcGroup}:management-api:${edcVersion}")
 }
 
 val openapiFileDir = "${project.buildDir}/swagger"
@@ -92,6 +96,12 @@ tasks.withType<org.gradle.jvm.tasks.Jar> {
     dependsOn("openApiGenerateTypeScriptClient")
     from(openapiFileDir) {
         include(openapiFileFilename)
+    }
+}
+
+tasks.register("printClasspath") {
+    doLast {
+        println(sourceSets["main"].runtimeClasspath.asPath)
     }
 }
 

@@ -36,6 +36,7 @@ public class TransferProcessToTransferProcessOutputDtoTransformer implements
                         context.transform(transferProcess.getDataRequest(), DataRequestDto.class))
                 .contentDataAddress(dataAddressProperties)
                 .privateProperties(transferProcess.getPrivateProperties())
+                .errorDetail(transferProcess.getErrorDetail())
                 .build();
     }
 }

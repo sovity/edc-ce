@@ -1,9 +1,13 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
+import de.sovity.edc.ext.wrapper.api.common.model.CriterionDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.AssetEntryDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractDefinitionRequestDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
+import java.util.List;
+import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
@@ -70,13 +74,8 @@ public class OfferingService {
         return Asset.Builder.newInstance()
                 .id(dto.getId())
                 .dataAddress(DataAddress.Builder.newInstance().properties(dto.getDataAddressProperties()).build())
-                .properties(dto.getAssetProperties())
-                .build();
-    }
-
-    private DataAddress transformDataAddress(AssetEntryDto dto) {
-        return DataAddress.Builder.newInstance()
-                .properties(dto.getDataAddressProperties())
+                .properties(dto.getAssetProperties() != null ? dto.getAssetProperties() : Map.of())
+                .privateProperties(dto.getPrivateAssetProperties() != null ? dto.getPrivateAssetProperties() : Map.of())
                 .build();
     }
 
@@ -98,13 +97,15 @@ public class OfferingService {
                 .id(dto.getId())
                 .contractPolicyId(dto.getContractPolicyId())
                 .accessPolicyId(dto.getAccessPolicyId())
-                .assetsSelector(dto.getAssetsSelector().stream()
-                        .map(criterionDto -> new Criterion(
-                                criterionDto.getOperandLeft(),
-                                criterionDto.getOperator(),
-                                criterionDto.getOperandRight())).toList()
-                )
+                .assetsSelector(criterionDtosToCriteria(dto.getAssetsSelector()))
                 .build();
+    }
+
+    private List<Criterion> criterionDtosToCriteria(List<CriterionDto> dtos) {
+        return dtos.stream().map(criterionDto -> new Criterion(
+                criterionDto.getOperandLeft(),
+                criterionDto.getOperator(),
+                criterionDto.getOperandRight())).toList();
     }
 
     private void persist(Asset asset, PolicyDefinition policyDefinition,

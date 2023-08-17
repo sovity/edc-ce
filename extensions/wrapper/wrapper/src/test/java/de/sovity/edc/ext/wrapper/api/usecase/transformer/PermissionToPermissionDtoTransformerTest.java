@@ -8,12 +8,12 @@ import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiat
 import org.eclipse.edc.policy.model.*;
 import org.eclipse.edc.transform.spi.ProblemBuilder;
 import org.eclipse.edc.transform.spi.TransformerContext;
+import org.eclipse.edc.transform.spi.UnexpectedTypeBuilder;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Slf4j
 public class PermissionToPermissionDtoTransformerTest {
@@ -45,18 +45,24 @@ public class PermissionToPermissionDtoTransformerTest {
 
     @Test
     void transformIllegal(){
+//        when(context.problem()).thenCallRealMethod();
 
         Constraint illegalConstraint = new IllegalConstraint();
         var permission = Permission.Builder.newInstance().action(Action.Builder.newInstance().type("USE").build()).constraint(illegalConstraint).build();
 
-        when(context.problem()).thenReturn(new ProblemBuilder(context));
+        var problemBuilder = mock(ProblemBuilder.class);
+        var unexpectedTypeBuilder = mock(UnexpectedTypeBuilder.class);
+        when(context.problem()).thenReturn(problemBuilder);
+        when(problemBuilder.unexpectedType()).thenReturn(unexpectedTypeBuilder);
+        when(unexpectedTypeBuilder.actual(any(Class.class))).thenReturn(unexpectedTypeBuilder);
+        when(unexpectedTypeBuilder.expected(any(Class.class))).thenReturn(unexpectedTypeBuilder);
         var result = transformer.transform(permission,context);
 
-        assertThat(result).isNotNull();
-        assertThat(result.getConstraints()).isNotNull();
-        assertThat(result.getConstraints().getType().name()).isEqualTo("ATOMIC_CONSTRAINT");
+        assertThat(result).isNull();
 
-
+        verify(unexpectedTypeBuilder, times(1)).actual(IllegalConstraint.class);
+        verify(unexpectedTypeBuilder, times(4)).expected(any(Class.class));
+        verify(unexpectedTypeBuilder, times(1)).report();
     }
 
 

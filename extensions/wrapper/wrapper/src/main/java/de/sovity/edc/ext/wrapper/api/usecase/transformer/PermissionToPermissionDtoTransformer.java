@@ -47,8 +47,6 @@ public class PermissionToPermissionDtoTransformer implements
             var constraint = permission.getConstraints().get(0);
             var expressionDto = transformConstraint(constraint);
             if (expressionDto == null) {
-                expressionDto = new ExpressionDto(ExpressionDto.Type.ATOMIC_CONSTRAINT, new AtomicConstraintDto("", OperatorDto.EQ,""), null, null, null);
-
                 context.problem()
                         .unexpectedType()
                         .actual(constraint.getClass())
@@ -57,7 +55,7 @@ public class PermissionToPermissionDtoTransformer implements
                         .expected(AndConstraint.class)
                         .expected(XoneConstraint.class)
                         .report();
-                //return null;
+                return null;
             }
             builder.constraints(expressionDto);
         }
@@ -93,9 +91,7 @@ public class PermissionToPermissionDtoTransformer implements
                     .toList();
             return new ExpressionDto(Type.XOR, null, null, null, expressions);
         } else {
-            //TODO:
-            log.error("Illegal expression type for permission constraint when transforming Permission to PermissionDto. Provided illegal type: " + constraint.getClass());
-            return null; // FIXME: Set what happens in case of unknown constraint
+            return null;
         }
     }
 }

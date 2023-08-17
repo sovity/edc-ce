@@ -74,7 +74,7 @@ public class ConsumptionService {
         var contractRequest = ContractRequest.Builder.newInstance()
                 .contractOffer(contractOffer)
                 .protocol("dataspace-protocol-http")
-                .providerId("urn:connector:" + consumptionInputDto.getConnectorId())
+                .providerId(consumptionInputDto.getConnectorId())
                 .counterPartyAddress(consumptionInputDto.getConnectorAddress())
                 .build();
 
@@ -149,7 +149,6 @@ public class ConsumptionService {
                 .map(Result::getContent)
                 .orElse(null);
 
-        //TODO error detail
         return new ConsumptionOutputDto(id, process.getInput(), process.getErrors(),
                 negotiationDto, transferProcessDto);
     }
