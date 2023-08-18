@@ -7,6 +7,8 @@ import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.spi.types.domain.DataAddress;
+import org.eclipse.edc.transform.spi.NullPropertyBuilder;
+import org.eclipse.edc.transform.spi.ProblemBuilder;
 import org.eclipse.edc.transform.spi.TransformerContext;
 import org.junit.jupiter.api.Test;
 
@@ -78,6 +80,46 @@ public class TransferProcessToTransferProcessOutputDtoTransformerTest {
 
 
         assertThat(result.getDataRequest()).isNotNull();
+
+        verify(context).transform(dataReq, DataRequestDto.class);
+
+    }
+
+    @Test
+    void fainlingTransform(){
+        var dataDest = DataAddress.Builder.newInstance().type("DEST").build();
+
+        var dataReq = DataRequest.Builder.newInstance()
+                .id("id")
+                .processId("procId")
+                .protocol("dsp")
+                .dataDestination(dataDest)
+                .contractId("contractId")
+                .connectorId("connectorId")
+                .assetId("assetId")
+                .connectorAddress("localhost")
+                .build();
+
+        var transferProcess = TransferProcess.Builder.newInstance()
+                .contentDataAddress(DataAddress.Builder.newInstance().type("content").build())
+                .dataRequest(dataReq)
+                .type(TransferProcess.Type.CONSUMER)
+                .id("procId").build();
+
+
+        var problemBuilder = mock(ProblemBuilder.class);
+        var nullPropBuilder = mock(NullPropertyBuilder.class);
+        when(context.problem()).thenReturn(problemBuilder);
+        when(problemBuilder.nullProperty()).thenReturn(nullPropBuilder);
+        when(nullPropBuilder.type(any(Class.class))).thenReturn(nullPropBuilder);
+        when(nullPropBuilder.property(anyString())).thenReturn(nullPropBuilder);
+
+        when(context.transform(any(DataRequest.class), eq(DataRequestDto.class))).thenReturn(null);
+
+        var result = transformer.transform(transferProcess,context);
+
+        assertThat(result).isNull();
+
 
         verify(context).transform(dataReq, DataRequestDto.class);
 

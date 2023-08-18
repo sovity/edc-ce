@@ -5,7 +5,10 @@ import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.policy.model.*;
+import org.eclipse.edc.transform.spi.NullPropertyBuilder;
+import org.eclipse.edc.transform.spi.ProblemBuilder;
 import org.eclipse.edc.transform.spi.TransformerContext;
+import org.eclipse.edc.transform.spi.UnexpectedTypeBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -47,6 +50,34 @@ public class ContractAgreementToContractAgreementDtoTransformerTest {
         assertThat(result.getProviderId()).isEqualTo("provId");
         assertThat(result.getConsumerId()).isEqualTo("consumerId");
         assertThat(result.getAssetId()).isEqualTo("assetId");
+
+        verify(context).transform(policy, PolicyDto.class);
+    }
+
+    @Test
+    void failingTransform(){
+        var policy = Policy.Builder.newInstance().assignee("A").assigner("B").build();
+
+        var contractAgreement = ContractAgreement.Builder.newInstance()
+                .id("id")
+                .providerId("provId")
+                .consumerId("consumerId")
+                .assetId("assetId")
+                .policy(policy)
+                .build();
+
+        var problemBuilder = mock(ProblemBuilder.class);
+        var nullPropBuilder = mock(NullPropertyBuilder.class);
+        when(context.problem()).thenReturn(problemBuilder);
+        when(problemBuilder.nullProperty()).thenReturn(nullPropBuilder);
+        when(nullPropBuilder.type(any(Class.class))).thenReturn(nullPropBuilder);
+        when(nullPropBuilder.property(anyString())).thenReturn(nullPropBuilder);
+        when(context.transform(any(Policy.class),eq(PolicyDto.class))).thenReturn(null);
+
+        var result = transformer.transform(contractAgreement,context);
+
+        assertThat(result).isNull();
+
 
         verify(context).transform(policy, PolicyDto.class);
     }

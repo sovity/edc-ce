@@ -10,6 +10,8 @@ import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiat
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractOffer;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
+import org.eclipse.edc.transform.spi.NullPropertyBuilder;
+import org.eclipse.edc.transform.spi.ProblemBuilder;
 import org.eclipse.edc.transform.spi.TransformerContext;
 import org.junit.jupiter.api.Test;
 
@@ -77,6 +79,48 @@ public class ContractNegotiationToContractNegotiationOutputDtoTransformerTest {
         assertThat(result.getContractAgreement().getConsumerId()).isEqualTo("consId");
         assertThat(result.getContractAgreement().getContractSigningDate()).isEqualTo(9999);
         assertThat(result.getContractAgreement().getAssetId()).isEqualTo("assetId");
+
+        verify(context).transform(contractAgreement, ContractAgreementDto.class);
+
+    }
+
+    @Test
+    void failingTransform(){
+        var contractAgreement = ContractAgreement.Builder.newInstance()
+                .id("contId")
+                .assetId("assetId")
+                .policy(Policy.Builder.newInstance().type(PolicyType.CONTRACT).assignee("A").assigner("B").target("target").build())
+                .providerId("provId")
+                .consumerId("consId")
+                .policy(Policy.Builder.newInstance().assignee("A").assigner("B").build())
+                .contractSigningDate(9999)
+                .build();
+
+        var contractNegotiation = ContractNegotiation.Builder.newInstance()
+                .contractOffer(ContractOffer.Builder.newInstance().id("id").assetId("assetId").policy(Policy.Builder.newInstance().assignee("A").assigner("B").build()).build())
+                .contractAgreement(contractAgreement)
+                .type(ContractNegotiation.Type.CONSUMER)
+                .id("id")
+                .protocol("dsp")
+                .correlationId("corrId")
+                .counterPartyAddress("counterAddress")
+                .counterPartyId("counterId")
+                .state(0)
+                .build();
+
+
+        var problemBuilder = mock(ProblemBuilder.class);
+        var nullPropBuilder = mock(NullPropertyBuilder.class);
+        when(context.problem()).thenReturn(problemBuilder);
+        when(problemBuilder.nullProperty()).thenReturn(nullPropBuilder);
+        when(nullPropBuilder.type(any(Class.class))).thenReturn(nullPropBuilder);
+        when(nullPropBuilder.property(anyString())).thenReturn(nullPropBuilder);
+
+        when(context.transform(any(ContractAgreement.class),eq(ContractAgreementDto.class))).thenReturn(null);
+
+        var result = transformer.transform(contractNegotiation,context);
+
+        assertThat(result).isNull();
 
         verify(context).transform(contractAgreement, ContractAgreementDto.class);
 

@@ -22,13 +22,20 @@ public class ContractAgreementToContractAgreementDtoTransformer implements TypeT
 
     @Override
     public @Nullable ContractAgreementDto transform(@NotNull ContractAgreement contractAgreement, @NotNull TransformerContext context) {
+        var policy = context.transform(contractAgreement.getPolicy(), PolicyDto.class);
+
+        if (policy == null) {
+            context.problem().nullProperty().type(ContractAgreement.class).property("Policy").report();
+            return null;
+        }
+
         return ContractAgreementDto.builder()
                 .id(contractAgreement.getId())
                 .providerId(contractAgreement.getProviderId())
                 .consumerId(contractAgreement.getConsumerId())
                 .assetId(contractAgreement.getAssetId())
                 .contractSigningDate(contractAgreement.getContractSigningDate())
-                .policy(context.transform(contractAgreement.getPolicy(), PolicyDto.class))
+                .policy(policy)
                 .build();
     }
 }

@@ -29,11 +29,17 @@ public class TransferProcessToTransferProcessOutputDtoTransformer implements
         var dataAddressProperties = transferProcess.getContentDataAddress() == null ?
                 null : transferProcess.getContentDataAddress().getProperties();
 
+        var dataRequest = context.transform(transferProcess.getDataRequest(), DataRequestDto.class);
+        if (dataRequest == null){
+            context.problem().nullProperty().type(TransferProcess.class).property("DataRequest").report();
+            return null;
+        }
+
+
         return TransferProcessOutputDto.builder()
                 .id(transferProcess.getId())
                 .state(TransferProcessStates.from(transferProcess.getState()).name())
-                .dataRequest(
-                        context.transform(transferProcess.getDataRequest(), DataRequestDto.class))
+                .dataRequest(dataRequest)
                 .contentDataAddress(dataAddressProperties)
                 .privateProperties(transferProcess.getPrivateProperties())
                 .errorDetail(transferProcess.getErrorDetail())
