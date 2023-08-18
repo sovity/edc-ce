@@ -17,9 +17,6 @@ package de.sovity.edc.ext.wrapper.api.common.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-/**
- * Opinionated subset of the EDC policy for our EDC UI.
- */
 @Getter
 @Setter
 @ToString
@@ -28,10 +25,10 @@ import lombok.*;
 @RequiredArgsConstructor
 @Schema(description = "Policy Definition as required for the Policy Definition Page")
 public class PolicyDefinitionDto {
-    @Schema(description = "ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Policy Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String policyDefinitionId;
 
-    @Schema(description = "UIPolicy Dto", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Policy Contents", requiredMode = Schema.RequiredMode.REQUIRED)
     private UiPolicyDto uiPolicyDto;
 }
 

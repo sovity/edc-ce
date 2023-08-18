@@ -22,9 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * Opinionated subset of the EDC policy for our EDC UI.
- */
 @Getter
 @Setter
 @ToString
@@ -33,10 +30,10 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @Schema(description = "Data for creating a Policy Definition")
 public class PolicyDefinitionCreateRequest {
-    @Schema(description = "ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Policy Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String policyDefinitionId;
 
-    @Schema(description = "UIPolicy Create Dto", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Policy Contents", requiredMode = Schema.RequiredMode.REQUIRED)
     private UiPolicyCreateRequest uiPolicyDto;
 }
 

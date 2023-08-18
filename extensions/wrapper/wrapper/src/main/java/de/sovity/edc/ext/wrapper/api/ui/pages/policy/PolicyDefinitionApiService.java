@@ -35,8 +35,8 @@ public class PolicyDefinitionApiService {
     private final PolicyDefinitionService policyDefinitionService;
     private final PolicyMapper policyMapper;
 
-    public List<PolicyDefinitionDto> getPolicies() {
-        var policyDefinitions = getAllPolicies();
+    public List<PolicyDefinitionDto> getPolicyDefinitions() {
+        var policyDefinitions = getAllPolicyDefinitions();
         return policyDefinitions.stream()
                 .sorted(Comparator.comparing(PolicyDefinition::getCreatedAt).reversed())
                 .map(this::buildPolicyDefinitionDto)
@@ -44,19 +44,19 @@ public class PolicyDefinitionApiService {
     }
 
     @NotNull
-    public IdResponseDto createPolicy(PolicyDefinitionCreateRequest request) {
+    public IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest request) {
         var policyDefinition = buildPolicyDefinition(request);
         policyDefinition = policyDefinitionService.create(policyDefinition).getContent();
         return new IdResponseDto(policyDefinition.getId());
     }
 
     @NotNull
-    public IdResponseDto deletePolicy(String policyDefinitionId) {
+    public IdResponseDto deletePolicyDefinition(String policyDefinitionId) {
         var response = policyDefinitionService.deleteById(policyDefinitionId);
         return new IdResponseDto(response.getContent().getId());
     }
 
-    private List<PolicyDefinition> getAllPolicies() {
+    private List<PolicyDefinition> getAllPolicyDefinitions() {
         return policyDefinitionService.query(QuerySpec.max()).getContent().toList();
     }
     public PolicyDefinitionDto buildPolicyDefinitionDto(PolicyDefinition policyDefinition) {
