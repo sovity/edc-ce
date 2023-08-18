@@ -86,7 +86,7 @@ public class TransferProcessToTransferProcessOutputDtoTransformerTest {
     }
 
     @Test
-    void fainlingTransform(){
+    void failingTransform(){
         var dataDest = DataAddress.Builder.newInstance().type("DEST").build();
 
         var dataReq = DataRequest.Builder.newInstance()

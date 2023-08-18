@@ -21,6 +21,7 @@ public class PolicyToPolicyDtoTransformer implements TypeTransformer<Policy, Pol
 
     @Override
     public @Nullable PolicyDto transform(@NotNull Policy policy, @NotNull TransformerContext context) {
+        if (policy.getPermissions() != null && !policy.getPermissions().isEmpty()){
             var permission = policy.getPermissions().get(0);
             var permissionDto = context.transform(permission, PermissionDto.class);
 
@@ -33,6 +34,10 @@ public class PolicyToPolicyDtoTransformer implements TypeTransformer<Policy, Pol
                     .builder()
                     .permission(permissionDto)
                     .build();
+        }
+
+        context.problem().nullProperty().type(Policy.class).property("Permissions").report();
+        return null;
 
     }
 }

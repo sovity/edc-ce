@@ -44,25 +44,5 @@ public class ContractNegotiationToContractNegotiationOutputDtoTransformer implem
                 .protocol(contractNegotiation.getProtocol())
                 .contractAgreement(contractAgreementDto)
                 .build();
-
-        /*
-        var builder = ContractNegotiationOutputDto.builder()
-                .id(contractNegotiation.getId())
-                .state(ContractNegotiationStates.from(contractNegotiation.getState()).name())
-                .correlationId(contractNegotiation.getCorrelationId())
-                .counterPartyId(contractNegotiation.getCounterPartyId())
-                .counterPartyAddress(contractNegotiation.getCounterPartyAddress())
-                .errorDetail(contractNegotiation.getErrorDetail())
-                .protocol(contractNegotiation.getProtocol());
-
-        if (contractNegotiation.getContractAgreement() != null) {
-            var agreementDto = context.transform(contractNegotiation.getContractAgreement(),
-                    ContractAgreementDto.class);
-
-            builder.contractAgreement(agreementDto);
-        }
-
-        return builder.build();
-         */
     }
 }
