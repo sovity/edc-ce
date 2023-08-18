@@ -23,6 +23,9 @@ All notable changes to this project will be documented in this file.
   - Contract Definition Page
   - Create Contract Definition
   - Delete Contract Definition
+  - Policy Definition Page
+  - Create Policy Definition
+  - Delete Policy Definition
 
 ### Migration Notes
 
