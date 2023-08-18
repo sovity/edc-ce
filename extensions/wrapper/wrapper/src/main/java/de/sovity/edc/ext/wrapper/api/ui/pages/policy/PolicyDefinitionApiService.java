@@ -39,10 +39,8 @@ public class PolicyDefinitionApiService {
         var policyDefinitions = getAllPolicies();
         return policyDefinitions.stream()
                 .sorted(Comparator.comparing(PolicyDefinition::getCreatedAt).reversed())
-                .map(policyDefinition -> {
-            var entry = buildPolicyDefinitionDto(policyDefinition);
-            return entry;
-        }).toList();
+                .map(this::buildPolicyDefinitionDto)
+                .toList();
     }
 
     @NotNull
@@ -59,14 +57,21 @@ public class PolicyDefinitionApiService {
     }
 
     private List<PolicyDefinition> getAllPolicies() {
-        var policyDefinitions = policyDefinitionService.query(QuerySpec.max()).getContent().toList();
-        return policyDefinitions;
+        return policyDefinitionService.query(QuerySpec.max()).getContent().toList();
     }
     public PolicyDefinitionDto buildPolicyDefinitionDto(PolicyDefinition policyDefinition) {
-        return PolicyDefinitionDto.builder().uiPolicyDto(policyMapper.buildPolicyDto(policyDefinition.getPolicy())).build();
+        var policy = policyMapper.buildPolicyDto(policyDefinition.getPolicy());
+        return PolicyDefinitionDto.builder()
+                .policyDefinitionId(policyDefinition.getId())
+                .uiPolicyDto(policy)
+                .build();
     }
 
     public PolicyDefinition buildPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDto) {
-        return PolicyDefinition.Builder.newInstance().policy(policyMapper.buildPolicy(policyDefinitionDto.getUiPolicyDto())).build();
+        var policy = policyMapper.buildPolicy(policyDefinitionDto.getUiPolicyDto());
+        return PolicyDefinition.Builder.newInstance()
+                .id(policyDefinitionDto.getPolicyDefinitionId())
+                .policy(policy)
+                .build();
     }
 }
