@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [ published ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME_BASE: ${{ github.repository_owner }}
+
+jobs:
+  build-gradle-project:
+    name: Build Gradle Project
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    services:
+      postgres1:
+        image: postgres:15
+        env:
+          POSTGRES_USER: edc
+          POSTGRES_PASSWORD: edc
+          POSTGRES_DB: edc
+        ports:
+          - 54321:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      postgres2:
+        image: postgres:15
+        env:
+          POSTGRES_USER: edc
+          POSTGRES_PASSWORD: edc
+          POSTGRES_DB: edc
+        ports:
+          - 54322:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      SKIP_TESTCONTAINERS: true
+      TEST_POSTGRES_1_JDBC_URL: jdbc:postgresql://localhost:54321/edc
+      TEST_POSTGRES_1_JDBC_USER: edc
+      TEST_POSTGRES_1_JDBC_PASSWORD: edc
+      TEST_POSTGRES_2_JDBC_URL: jdbc:postgresql://localhost:54322/edc
+      TEST_POSTGRES_2_JDBC_USER: edc
+      TEST_POSTGRES_2_JDBC_PASSWORD: edc
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Set up JDK 17"
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: "Gradle: Validate Gradle Wrapper"
+        uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
+      - name: "Gradle: Build"
+        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+        with:
+          arguments: build
+      - name: "Upload artifact 'gradle-build-output'"
+        uses: actions/upload-artifact@v3
+        with:
+          name: gradle-build-output
+          path: .
+
+  release-maven-artifacts:
+    name: Release Maven Artifacty
+    needs: build-gradle-project
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Set up JDK 17"
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: "Gradle: Validate Gradle Wrapper"
+        uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
+      - name: "Read artifact 'gradle-build-output"
+        uses: actions/download-artifact@v3
+        with:
+          name: gradle-build-output
+      - name: "Gradle: Build"
+        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+        with:
+          arguments: build
+
