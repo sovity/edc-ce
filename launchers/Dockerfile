@@ -8,9 +8,6 @@ SHELL ["/bin/bash", "-c"]
 RUN adduser -D -H -s /sbin/nologin edc
 USER edc:edc
 
-# Create empty properties file to avoid errors when loading properties
-RUN touch /emtpy-properties-file.properties
-
 # Which app.jar to include
 ARG CONNECTOR_NAME="sovity-ce"
 
@@ -20,12 +17,11 @@ ARG EDC_BUILD_DATE_ARG="The docker container was built outside of github actions
 
 WORKDIR /app
 COPY ./launchers/connectors/$CONNECTOR_NAME/build/libs/app.jar /app
-
-# Copy logging.properties
 COPY ./launchers/logging.properties /app
-
-# Copy .env file. Replaces var statements so they don't overwrite existing env vars
 COPY ./launchers/.env /app/.env
+RUN touch /app/emtpy-properties-file.properties
+
+# Replaces var statements so when they are sourced as bash they don't overwrite existing env vars
 RUN sed -ri 's/^\s*(\S+)=(.*)$/\1=${\1:-"\2"}/' .env
 
 ENV EDC_LAST_COMMIT_INFO=$EDC_LAST_COMMIT_INFO_ARG
