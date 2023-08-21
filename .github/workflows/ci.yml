@@ -132,7 +132,6 @@ jobs:
       - name: "Download artifact 'connector-jars'"
         uses: alehechka/download-tartifact@v2
         with:
-          path: launchers/connectors
           name: connector-jars
       - name: "Docker: Store last commit info and build date"
         id: last-commit-information
