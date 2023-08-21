@@ -132,6 +132,7 @@ jobs:
       - name: "Download artifact 'connector-jars'"
         uses: actions/download-artifact@v3
         with:
+          path: launchers/connectors
           name: connector-jars
       - name: "Docker: Store last commit info and build date"
         id: last-commit-information
