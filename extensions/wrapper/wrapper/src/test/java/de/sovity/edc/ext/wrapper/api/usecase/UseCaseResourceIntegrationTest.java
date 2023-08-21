@@ -1,9 +1,9 @@
 package de.sovity.edc.ext.wrapper.api.usecase;
 
-import de.sovity.edc.ext.wrapper.api.usecase.model.AssetEntryDto;
 import de.sovity.edc.ext.wrapper.api.common.model.CriterionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.AssetEntryDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ConsumptionInputDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractDefinitionRequestDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
@@ -23,7 +23,6 @@ import static io.restassured.http.ContentType.JSON;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.eclipse.edc.spi.CoreConstants.EDC_PREFIX;
 import static org.eclipse.edc.spi.types.domain.asset.Asset.PROPERTY_ID;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -108,7 +107,7 @@ class UseCaseResourceIntegrationTest {
                 .extract()
                 .path("id");
 
-        // wait until transfer has been terminated (will be due to unsupported data address type)
+        // wait until transfer has been requested
         await().atMost(45, TimeUnit.SECONDS).untilAsserted(() -> given()
                 .baseUri(consumerManagementUrl.toString())
                 .contentType(JSON)
@@ -118,9 +117,19 @@ class UseCaseResourceIntegrationTest {
                 .statusCode(200)
                 .body("contractNegotiation", notNullValue())
                 .body("transferProcess", notNullValue())
-                .body("transferProcess.state", equalTo("TERMINATED")));
+                .body("transferProcess.state", equalTo("REQUESTED")));
 
-        // query transfer processes on provider side
+        // get the data request ID (= correlation ID)
+        var consumerCorrelationId = given()
+                .baseUri(consumerManagementUrl.toString())
+                .contentType(JSON)
+                .when()
+                .get("/wrapper/use-case-api/consumption/" + consumptionId)
+                .then()
+                .statusCode(200)
+                .extract().path("transferProcess.dataRequest.id");
+
+        // query transfer processes on provider side to verify process creation
         var transferProcesses = given()
                 .baseUri(providerManagementUrl.toString())
                 .contentType(JSON)
@@ -131,11 +140,12 @@ class UseCaseResourceIntegrationTest {
                 .extract()
                 .as(JsonArray.class);
 
-        // ensure that transfer terminated due to unsupported type and not due to invalid input
         assertThat(transferProcesses).hasSize(1);
-        var errorDetail = transferProcesses.getJsonObject(0)
-                .getJsonString(EDC_PREFIX + ":errorDetail").getString();
-        assertThat(errorDetail).contains("No data flow controller found");
+        var transferProcess = transferProcesses.getJsonObject(0);
+
+        // verify that processes on both sides have the same correlation ID
+        var correlationId = transferProcess.getJsonString("edc:correlationId").getString();
+        assertThat(correlationId).isEqualTo(consumerCorrelationId);
     }
 
     private CreateOfferingDto createOfferingDto() {
