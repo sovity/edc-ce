@@ -177,8 +177,6 @@ jobs:
             CONNECTOR_NAME=${{ matrix.imageVariants.connectorName }}
             EDC_LAST_COMMIT_INFO_ARG="${{ env.LAST_COMMIT_INFO }}"
             EDC_BUILD_DATE_ARG="${{ env.BUILD_DATE }}"
-
-
   ts-api-client-library:
     name: TS API Client Library
     runs-on: ubuntu-latest
