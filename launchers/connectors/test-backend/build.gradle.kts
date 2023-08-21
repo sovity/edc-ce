@@ -8,10 +8,11 @@ plugins {
 }
 
 dependencies {
-    implementation("${edcGroup}:connector-core:${edcVersion}")
-    implementation("${edcGroup}:boot:${edcVersion}")
-    implementation("${edcGroup}:http:${edcVersion}")
-    implementation(project(":extensions:mock-data-address"))
+    api("${edcGroup}:connector-core:${edcVersion}")
+    api("${edcGroup}:boot:${edcVersion}")
+    api("${edcGroup}:http:${edcVersion}")
+    api("${edcGroup}:api-observability:${edcVersion}")
+    api(project(":extensions:mock-data-address"))
 }
 
 application {
