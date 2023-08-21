@@ -64,11 +64,11 @@ jobs:
           distribution: 'temurin'
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
-      - name: Store last commit info and build date
+      - name: "Gradle: Include last commit info and build date for JARs"
         run: |
           git log -1 > extensions/last-commit-info/src/main/resources/jar-last-commit-info.txt
           echo $(date --utc +%FT%TZ) > extensions/last-commit-info/src/main/resources/jar-build-date.txt
-      - name: "Overwrite Version (Release Only)"
+      - name: "Gradle: Overwrite Artifact Version (Release Only)"
         run: |
           if [ "${{ startsWith(github.ref, 'refs/tags/') }}" == "true" ]; then
             GRADLE_ARGS="-PsovityEdcExtensionsVersion=${GITHUB_REF#refs/tags/v}"
@@ -78,7 +78,7 @@ jobs:
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         with:
           arguments: build ${{ env.GRADLE_ARGS }}
-      - name: "Publish to GitHub Packages"
+      - name: "Gradle: Publish"
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/releases/') }}
         with:
@@ -86,11 +86,11 @@ jobs:
         env:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Upload artifact 'gradle-build-output'"
+      - name: "Upload artifact 'connector-jars'"
         uses: actions/upload-artifact@v3
         with:
-          name: gradle-build-output
-          path: .
+          name: connector-jars
+          path: launchers/connectors/**/build/libs/app.jar
   docker-image:
     name: Docker Image
     needs: build-gradle-project
@@ -104,36 +104,36 @@ jobs:
         imageVariants: [
           {
             "imageName": "edc-dev",
-            "connectorSubdir": "sovity-dev",
+            "connectorName": "sovity-dev",
             "title": "sovity Dev EDC Connector",
             "description": "Extended EDC Connector built by sovity. This dev version contains no persistence or auth and can be used to quickly start a locally running EDC + EDC UI."
           },
           {
             "imageName": "edc-ce",
-            "connectorSubdir": "sovity-ce",
+            "connectorName": "sovity-ce",
             "title": "sovity Community Edition EDC Connector",
             "description": "EDC Connector built by sovity. Contains sovity's Community Edition EDC extensions and requires dataspace credentials to join an existing dataspace."
           },
           {
             "imageName": "edc-ce-mds",
-            "connectorSubdir": "mds-ce",
+            "connectorName": "mds-ce",
             "title": "MDS Community Edition EDC Connector",
             "description": "EDC Connector built by sovity and configured for compatibility with the Mobility Data Space (MDS). This EDC requires dataspace credentials, an IDS broker and an IDS Clearing House.",
           },
           {
             "imageName": "test-backend",
-            "connectorSubdir": "test-backend",
+            "connectorName": "test-backend",
             "title": "Test Data Source / Data Sink",
             "description": "Provides a minimal data source / data sink for E2E tests.",
           }
         ]
     steps:
       - uses: actions/checkout@v3
-      - name: "Download artifact 'gradle-build-output'"
+      - name: "Download artifact 'connector-jars'"
         uses: actions/download-artifact@v3
         with:
-          name: gradle-build-output
-      - name: "Store last commit info and build date"
+          name: connector-jars
+      - name: "Docker: Store last commit info and build date"
         id: last-commit-information
         run: |
           echo "LAST_COMMIT_INFO<<EOF" >> $GITHUB_ENV
@@ -174,27 +174,34 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            CONNECTOR_NAME=${{ matrix.imageVariants.connectorSubdir }}
+            CONNECTOR_NAME=${{ matrix.imageVariants.connectorName }}
             EDC_LAST_COMMIT_INFO_ARG="${{ env.LAST_COMMIT_INFO }}"
             EDC_BUILD_DATE_ARG="${{ env.BUILD_DATE }}"
 
 
   ts-api-client-library:
     name: TS API Client Library
-    needs: build-gradle-project
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      - uses: actions/checkout@v3
+      - name: "Set up JDK 17"
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
       - name: "Set up Node 16"
         uses: actions/setup-node@v3
         with:
           node-version: '16'
           cache: 'npm'
           cache-dependency-path: extensions/wrapper/client-ts/package.json
-      - name: "Download artifact 'gradle-build-output'"
-        uses: actions/download-artifact@v3
+      - name: "Gradle: Validate Gradle Wrapper"
+        uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
+      - name: "Gradle: Generate TS Code"
+        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         with:
-          name: gradle-build-output
+          arguments: :extensions:wrapper:wrapper:build -x test
       - name: "NPM: Dist Tag & Version"
         working-directory: ./extensions/wrapper/client-ts
         run: |

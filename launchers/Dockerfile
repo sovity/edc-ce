@@ -11,7 +11,7 @@ USER edc:edc
 # Create empty properties file to avoid errors when loading properties
 RUN touch /emtpy-properties-file.properties
 
-# Which app.jar to include from build
+# Which app.jar to include
 ARG CONNECTOR_NAME="sovity-ce"
 
 # For last-commit-info extension
