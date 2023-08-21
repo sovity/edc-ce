@@ -22,6 +22,7 @@ import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
+import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
@@ -39,6 +40,8 @@ public class WrapperExtension implements ServiceExtension {
     private AssetIndex assetIndex;
     @Inject
     private AssetService assetService;
+    @Inject
+    private PolicyDefinitionService policyDefinitionService;
     @Inject
     private ContractAgreementService contractAgreementService;
     @Inject
@@ -86,7 +89,8 @@ public class WrapperExtension implements ServiceExtension {
                 policyEngine,
                 transferProcessStore,
                 transferProcessService,
-                contractDefinitionService
+                contractDefinitionService,
+                policyDefinitionService
         );
 
         wrapperExtensionContext.jaxRsResources().forEach(resource ->

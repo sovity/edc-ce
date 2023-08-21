@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui;
 
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
@@ -22,10 +23,12 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
@@ -52,6 +55,7 @@ public class UiResource {
     private final TransferHistoryPageApiService transferHistoryPageApiService;
     private final TransferHistoryPageAssetFetcherService transferHistoryPageAssetFetcherService;
     private final AssetApiService assetApiService;
+    private final PolicyDefinitionApiService policyDefinitionApiService;
     private final ContractDefinitionApiService contractDefinitionApiService;
 
     @GET
@@ -137,5 +141,29 @@ public class UiResource {
     @Operation(description = "Delete a Contract Definition")
     public IdResponseDto deleteContractDefinition(@PathParam("contractDefinitionId") String contractDefinitionId) {
         return contractDefinitionApiService.deleteContractDefinition(contractDefinitionId);
+    }
+
+    @GET
+    @Path("pages/policy-page")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Collect all data for Policy Page")
+    public PolicyDefinitionPage policyDefinitionPage() {
+        return new PolicyDefinitionPage(policyDefinitionApiService.getPolicyDefinitions());
+    }
+
+    @POST
+    @Path("pages/policy-page/policies")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Create a new Policy")
+    public IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto) {
+        return policyDefinitionApiService.createPolicyDefinition(policyDefinitionDtoDto);
+    }
+    @DELETE
+    @Path("pages/policy-page/policies/{policyId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Delete a Policy")
+    public IdResponseDto deletePolicyDefinition(@PathParam("policyId") String policyId) {
+        return policyDefinitionApiService.deletePolicyDefinition(policyId);
     }
 }
