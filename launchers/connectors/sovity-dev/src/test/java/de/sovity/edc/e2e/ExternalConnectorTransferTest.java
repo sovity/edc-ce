@@ -25,11 +25,11 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import java.util.UUID;
 
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.TEST_BACKEND_DEFAULT_ENDPOINT;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.getFromEnv;
 import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiConfigFactory.fromUri;
 import static de.sovity.edc.extension.e2e.env.EnvUtil.getEnvVar;
 import static de.sovity.edc.extension.e2e.env.EnvUtil.getEnvVarUri;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.TEST_BACKEND_DEFAULT_ENDPOINT;
 
 @EnabledIfEnvironmentVariable(named = "E2E_HAS_EXTERNAL_CONNECTORS", matches = "true")
 class ExternalConnectorTransferTest {

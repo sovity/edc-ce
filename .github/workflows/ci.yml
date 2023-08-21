@@ -64,39 +64,161 @@ jobs:
           distribution: 'temurin'
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
+      - name: Store last commit info and build date
+        run: |
+          git log -1 > extensions/last-commit-info/src/main/resources/jar-last-commit-info.txt
+          echo $(date --utc +%FT%TZ) > extensions/last-commit-info/src/main/resources/jar-build-date.txt
+      - name: "Overwrite Version (Release Only)"
+        run: |
+          if [ "${{ startsWith(github.ref, 'refs/tags/') }}" == "true" ]; then
+            GRADLE_ARGS="-PsovityEdcExtensionsVersion=${GITHUB_REF#refs/tags/v}"
+          fi
+          echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
       - name: "Gradle: Build"
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         with:
-          arguments: build
+          arguments: build ${{ env.GRADLE_ARGS }}
+      - name: "Publish to GitHub Packages"
+        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/releases/') }}
+        with:
+          arguments: publish ${{ env.GRADLE_ARGS }}
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "Upload artifact 'gradle-build-output'"
         uses: actions/upload-artifact@v3
         with:
           name: gradle-build-output
           path: .
-
-  release-maven-artifacts:
-    name: Release Maven Artifacty
+  docker-image:
+    name: Docker Image
     needs: build-gradle-project
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
       contents: read
       packages: write
+    strategy:
+      matrix:
+        imageVariants: [
+          {
+            "imageName": "edc-dev",
+            "connectorSubdir": "sovity-dev",
+            "title": "sovity Dev EDC Connector",
+            "description": "Extended EDC Connector built by sovity. This dev version contains no persistence or auth and can be used to quickly start a locally running EDC + EDC UI."
+          },
+          {
+            "imageName": "edc-ce",
+            "connectorSubdir": "sovity-ce",
+            "title": "sovity Community Edition EDC Connector",
+            "description": "EDC Connector built by sovity. Contains sovity's Community Edition EDC extensions and requires dataspace credentials to join an existing dataspace."
+          },
+          {
+            "imageName": "edc-ce-mds",
+            "connectorSubdir": "mds-ce",
+            "title": "MDS Community Edition EDC Connector",
+            "description": "EDC Connector built by sovity and configured for compatibility with the Mobility Data Space (MDS). This EDC requires dataspace credentials, an IDS broker and an IDS Clearing House.",
+          },
+          {
+            "imageName": "test-backend",
+            "connectorSubdir": "test-backend",
+            "title": "Test Data Source / Data Sink",
+            "description": "Provides a minimal data source / data sink for E2E tests.",
+          }
+        ]
     steps:
       - uses: actions/checkout@v3
-      - name: "Set up JDK 17"
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-      - name: "Gradle: Validate Gradle Wrapper"
-        uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
-      - name: "Read artifact 'gradle-build-output"
+      - name: "Download artifact 'gradle-build-output'"
         uses: actions/download-artifact@v3
         with:
           name: gradle-build-output
-      - name: "Gradle: Build"
-        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+      - name: "Store last commit info and build date"
+        id: last-commit-information
+        run: |
+          echo "LAST_COMMIT_INFO<<EOF" >> $GITHUB_ENV
+          export LAST_COMMIT_INFO=$(git log -1)
+          echo "$LAST_COMMIT_INFO" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "BUILD_DATE=$(date --utc +%FT%TZ)" >> $GITHUB_ENV
+      - name: "Docker: Log in to the Container registry"
+        uses: docker/login-action@v2
         with:
-          arguments: build
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Docker: Extract metadata (tags, labels)"
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BASE }}/${{ matrix.imageVariants.imageName }}
+          labels: |
+            org.opencontainers.image.title=${{ matrix.imageVariants.title }}
+            org.opencontainers.image.description=${{ matrix.imageVariants.description }}
+          tags: |
+            type=schedule
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=release,enable=${{ startsWith(github.ref, 'refs/tags/') }}
+      - name: "Docker: Build and Push"
+        uses: docker/build-push-action@v4
+        with:
+          file: launchers/Dockerfile
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            CONNECTOR_NAME=${{ matrix.imageVariants.connectorSubdir }}
+            EDC_LAST_COMMIT_INFO_ARG="${{ env.LAST_COMMIT_INFO }}"
+            EDC_BUILD_DATE_ARG="${{ env.BUILD_DATE }}"
+
+
+  ts-api-client-library:
+    name: TS API Client Library
+    needs: build-gradle-project
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: "Set up Node 16"
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+          cache-dependency-path: extensions/wrapper/client-ts/package.json
+      - name: "Download artifact 'gradle-build-output'"
+        uses: actions/download-artifact@v3
+        with:
+          name: gradle-build-output
+      - name: "NPM: Dist Tag & Version"
+        working-directory: ./extensions/wrapper/client-ts
+        run: |
+          if [ "${{ startsWith(github.ref, 'refs/tags/') }}" == "true" ]; then
+            # Full Release
+            VERSION="${GITHUB_REF#refs/tags/v}"
+            DIST_TAG=latest
+          else
+            VERSION="0.$(date '+%Y%m%d.%H%M%S')-main-$CI_SHA_SHORT"
+            DIST_TAG=main
+          fi
+          npm version $VERSION
+          echo "DIST_TAG=$DIST_TAG" >> $GITHUB_ENV
+      - name: "NPM: Build"
+        working-directory: extensions/wrapper/client-ts
+        run: npm ci && npm run build
+      - name: "NPM: Publish"
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/releases/') }}
+        working-directory: extensions/wrapper/client-ts
+        run: |
+          npm set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
+          npm set //registry.npmjs.org/:username $NODE_USER
+          npm publish --access public --tag "${{ env.DIST_TAG }}"
+        env:
+          NODE_USER: richardtreier-sovity
+          NODE_AUTH_TOKEN: ${{ secrets.SOVITY_EDC_CLIENT_NPM_AUTH }}
 
