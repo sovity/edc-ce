@@ -32,4 +32,8 @@ public class ConnectorConfig {
     public void setProperty(String key, String value) {
         properties.put(key, value);
     }
+
+    public void setProperties(Map<String, String> properties) {
+        this.properties.putAll(properties);
+    }
 }

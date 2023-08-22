@@ -27,6 +27,12 @@ import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiConfigFacto
 public class ConnectorConfigFactory {
 
     public static ConnectorConfig forTestDatabase(String participantId, int firstPort, TestDatabase testDatabase) {
+        var config = basicEdcConfig(participantId, firstPort);
+        config.setProperties(configureDatasources(testDatabase.getJdbcCredentials()));
+        return config;
+    }
+
+    public static ConnectorConfig basicEdcConfig(String participantId, int firstPort) {
         var apiKey = UUID.randomUUID().toString();
         var apiConfig = configureApi(firstPort, apiKey);
 
@@ -35,7 +41,6 @@ public class ConnectorConfigFactory {
         properties.put("edc.api.auth.key", apiKey);
         properties.put("edc.dsp.callback.address", apiConfig.getProtocolApiGroup().getUri().toString());
         properties.putAll(apiConfig.getProperties());
-        properties.putAll(configureDatasources(testDatabase.getJdbcCredentials()));
 
         properties.put("edc.jsonld.https.enabled", "true");
         properties.put("edc.last.commit.info", "test env commit message");
