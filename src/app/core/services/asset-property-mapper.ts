@@ -67,7 +67,6 @@ export class AssetPropertyMapper {
       originator: opts?.connectorEndpoint ?? props[AssetProperties.originator],
       originatorOrganization:
         props[AssetProperties.curatorOrganizationName] ??
-        props[AssetProperties._legacyCuratorOrganizationName] ??
         'Unknown Organization',
       keywords,
       description: props[AssetProperties.description],
