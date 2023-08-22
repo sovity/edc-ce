@@ -1,6 +1,9 @@
 name: Trivy Image Security Scan
 
 on:
+  schedule:
+    # triggers the workflow every day at 5:30am UTC
+    - cron:  '30 5 * * *'
   workflow_run:
       workflows: 
         - "EDC Docker Images"
