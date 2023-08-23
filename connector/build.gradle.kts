@@ -6,6 +6,8 @@ plugins {
 
 val edcVersion: String by project
 val edcGroup: String by project
+val jettyVersion: String by project
+val jettyGroup: String by project
 
 dependencies {
     // Control-Plane
@@ -14,8 +16,23 @@ dependencies {
     implementation("${edcGroup}:api-observability:${edcVersion}")
     implementation("${edcGroup}:configuration-filesystem:${edcVersion}")
     implementation("${edcGroup}:control-plane-aggregate-services:${edcVersion}")
-    implementation("${edcGroup}:http:${edcVersion}")
+    implementation("${edcGroup}:http:${edcVersion}") {
+        exclude(group = "org.eclipse.jetty", module = "jetty-client")
+        exclude(group = "org.eclipse.jetty", module = "jetty-http")
+        exclude(group = "org.eclipse.jetty", module = "jetty-io")
+        exclude(group = "org.eclipse.jetty", module = "jetty-server")
+        exclude(group = "org.eclipse.jetty", module = "jetty-util")
+        exclude(group = "org.eclipse.jetty", module = "jetty-webapp")
+    }
     implementation("${edcGroup}:ids:${edcVersion}")
+
+    // Updated jetty versions for e.g. CVE-2023-26048
+    implementation("${jettyGroup}:jetty-client:${jettyVersion}")
+    implementation("${jettyGroup}:jetty-http:${jettyVersion}")
+    implementation("${jettyGroup}:jetty-io:${jettyVersion}")
+    implementation("${jettyGroup}:jetty-server:${jettyVersion}")
+    implementation("${jettyGroup}:jetty-util:${jettyVersion}")
+    implementation("${jettyGroup}:jetty-webapp:${jettyVersion}")
 
     // Control-plane to Data-plane
     implementation("${edcGroup}:transfer-data-plane:${edcVersion}")

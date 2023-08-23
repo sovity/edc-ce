@@ -2,6 +2,8 @@ val edcVersion: String by project
 val edcGroup: String by project
 val restAssured: String by project
 val assertj: String by project
+val jettyVersion: String by project
+val jettyGroup: String by project
 
 
 plugins {
@@ -40,7 +42,23 @@ dependencies {
 
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
-    testImplementation("${edcGroup}:http:${edcVersion}")
+    testImplementation("${edcGroup}:http:${edcVersion}") {
+        exclude(group = "org.eclipse.jetty", module = "jetty-client")
+        exclude(group = "org.eclipse.jetty", module = "jetty-http")
+        exclude(group = "org.eclipse.jetty", module = "jetty-io")
+        exclude(group = "org.eclipse.jetty", module = "jetty-server")
+        exclude(group = "org.eclipse.jetty", module = "jetty-util")
+        exclude(group = "org.eclipse.jetty", module = "jetty-webapp")
+    }
+
+    // Updated jetty versions for e.g. CVE-2023-26048
+    testImplementation("${jettyGroup}:jetty-client:${jettyVersion}")
+    testImplementation("${jettyGroup}:jetty-http:${jettyVersion}")
+    testImplementation("${jettyGroup}:jetty-io:${jettyVersion}")
+    testImplementation("${jettyGroup}:jetty-server:${jettyVersion}")
+    testImplementation("${jettyGroup}:jetty-util:${jettyVersion}")
+    testImplementation("${jettyGroup}:jetty-webapp:${jettyVersion}")
+
     testImplementation(project(":extensions:wrapper:wrapper"))
     testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
