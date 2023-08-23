@@ -21,7 +21,9 @@ import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStor
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
+import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
+import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
@@ -40,6 +42,8 @@ public class WrapperExtension implements ServiceExtension {
     private AssetIndex assetIndex;
     @Inject
     private AssetService assetService;
+    @Inject
+    private PolicyDefinitionService policyDefinitionService;
     @Inject
     private ContractAgreementService contractAgreementService;
     @Inject
@@ -66,6 +70,8 @@ public class WrapperExtension implements ServiceExtension {
     private TypeTransformerRegistry transformerRegistry;
     @Inject
     private ContractNegotiationObservable negotiationObservable;
+    @Inject
+    private ContractDefinitionService contractDefinitionService;
 
     @Override
     public String name() {
@@ -88,6 +94,8 @@ public class WrapperExtension implements ServiceExtension {
                 policyDefinitionStore,
                 policyEngine,
                 transferProcessStore,
+                contractDefinitionService,
+                policyDefinitionService,
                 transferProcessService,
                 transformerRegistry,
                 negotiationObservable
