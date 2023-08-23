@@ -116,6 +116,11 @@ export const AppConfigProperties = {
   maintainerOrganizationName: 'EDC_UI_MAINTAINER_ORGANIZATION_NAME',
 
   /**
+   * Whether to use the fake backend (local development).
+   */
+  useFakeBackend: 'EDC_UI_USE_FAKE_BACKEND',
+
+  /**
    * Same as {@link connectorEndpoint}.
    *
    * @deprecated Use {@link connectorEndpoint} instead.

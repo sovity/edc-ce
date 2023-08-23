@@ -14,6 +14,7 @@ import {
 } from '@sovity.de/edc-client';
 import {AssetCreateRequest} from '@sovity.de/edc-client/dist/generated/models/AssetCreateRequest';
 import {APP_CONFIG, AppConfig} from '../../config/app-config';
+import {EDC_FAKE_BACKEND} from './fake-backend/edc-api.fake-backend';
 
 @Injectable({providedIn: 'root'})
 export class EdcApiService {
@@ -23,6 +24,9 @@ export class EdcApiService {
     this.edcClient = buildEdcClient({
       managementApiUrl: this.config.managementApiUrl,
       managementApiKey: this.config.managementApiKey,
+      configOverrides: {
+        fetchApi: config.useFakeBackend ? EDC_FAKE_BACKEND : undefined,
+      },
     });
   }
 

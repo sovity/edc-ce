@@ -72,6 +72,7 @@ export class AppConfigBuilder {
       maintainerOrganizationName:
         vars[AppConfigProperties.maintainerOrganizationName] ??
         'No Maintainer Organization Name Configured',
+      useFakeBackend: vars[AppConfigProperties.useFakeBackend] === 'true',
     };
   }
 

@@ -1,6 +1,0 @@
-{
-  "envLastCommitInfo": "Env Last Commit Info:\ncommit eabb87eb8c76a82e022ff0400b4b529348d902f4 (HEAD -> main, origin/main)\nMerge: 15ece734e 225b18251\nAuthor: First Last <mail>\nDate: Mon Mar 13 08:09:15 2023 +0100\n\nMerge pull request #221 from sovity/feat/ms8\n\nchore: update to milestone-8",
-  "envBuildDate": null,
-  "jarLastCommitInfo": "Jar Last Commit Info:\n                      commit 2fe06beaf6027fb4cc06db2adb7d5b4c8ae61b05 (HEAD -> 2023-03-16-edc-extensions-cleanup, origin/2023-03-16-edc-extensions-cleanup)\n                      Author: First Last <mail>\n                      Date: Thu Mar 9 14:50:20 2023 +0100\n\n                      feat new image variants, rework documentation, better configuration via MY_EDC vars\n",
-  "jarBuildDate": "2023-05-05T14:30:00Z"
-}

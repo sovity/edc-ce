@@ -47,4 +47,5 @@ export interface AppConfig {
   dapsOauthJwksUrl: string;
   maintainerUrl: string;
   maintainerOrganizationName: string;
+  useFakeBackend: boolean;
 }
