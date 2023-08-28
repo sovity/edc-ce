@@ -21,9 +21,10 @@ export class BrokerCatalogMapper {
   private buildUiDataOffer(offer: CatalogDataOffer): BrokerDataOffer {
     return {
       ...offer,
-      asset: this.assetPropertyMapper.buildAssetFromProperties(
-        offer.properties,
-      ),
+      asset: this.assetPropertyMapper.buildAsset({
+        connectorEndpoint: offer.connectorEndpoint,
+        properties: offer.properties,
+      }),
     };
   }
 }

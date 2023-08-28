@@ -4,8 +4,7 @@ import {BehaviorSubject, Subject} from 'rxjs';
 import {filter, map, switchMap} from 'rxjs/operators';
 import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
-import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {AssetPropertyMapper} from '../../../../core/services/asset-property-mapper';
+import {AssetServiceMapped} from '../../../../core/services/asset-service-mapped';
 import {Asset} from '../../../../core/services/models/asset';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {AssetCreateDialogResult} from '../asset-create-dialog/asset-create-dialog-result';
@@ -27,28 +26,23 @@ export class AssetPageComponent implements OnInit, OnDestroy {
   private fetch$ = new BehaviorSubject(null);
 
   constructor(
-    private edcApiService: EdcApiService,
+    private assetServiceMapped: AssetServiceMapped,
     private assetDetailDialogDataService: AssetDetailDialogDataService,
     private assetDetailDialogService: AssetDetailDialogService,
     private dialog: MatDialog,
-    private assetPropertyMapper: AssetPropertyMapper,
   ) {}
 
   ngOnInit(): void {
     this.fetch$
       .pipe(
         switchMap(() => {
-          return this.edcApiService.getAssetPage().pipe(
+          return this.assetServiceMapped.fetchAssets().pipe(
             map(
-              (assetPage): AssetList => ({
-                filteredAssets: assetPage.assets
-                  .map((asset) =>
-                    this.assetPropertyMapper.buildAssetFromProperties(
-                      asset.properties,
-                    ),
-                  )
-                  .filter((asset) => asset.name?.includes(this.searchText)),
-                numTotalAssets: assetPage.assets.length,
+              (assets): AssetList => ({
+                filteredAssets: assets.filter((asset) =>
+                  asset.name?.includes(this.searchText),
+                ),
+                numTotalAssets: assets.length,
               }),
             ),
             Fetched.wrap({

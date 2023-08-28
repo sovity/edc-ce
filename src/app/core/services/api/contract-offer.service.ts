@@ -59,10 +59,10 @@ export class ContractOfferService {
   ): ContractOffer {
     return {
       ...contractOfferDto,
-      asset: this.assetPropertyMapper.buildAssetFromProperties(
-        contractOfferDto.asset.properties,
-        {connectorEndpoint},
-      ),
+      asset: this.assetPropertyMapper.buildAsset({
+        connectorEndpoint,
+        properties: contractOfferDto.asset.properties,
+      }),
     };
   }
 }

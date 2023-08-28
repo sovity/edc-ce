@@ -13,7 +13,6 @@ export const AssetProperties = {
   id: `${edc}id`,
   name: `${sovity}name`,
   contentType: `${sovity}contenttype`,
-  originator: `${sovity}originator`,
   originatorOrganization: `${sovity}originatorOrganization`,
   description: `${sovity}description`,
   version: `${sovity}version`,

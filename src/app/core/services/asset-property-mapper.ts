@@ -27,30 +27,26 @@ export class AssetPropertyMapper {
     private activeFeatureSet: ActiveFeatureSet,
   ) {}
 
-  buildAssetFromProperties(
-    props: Record<string, string | null>,
-    opts?: {connectorEndpoint?: string},
-  ): Asset {
-    const language = props[AssetProperties.language]
-      ? this.languageSelectItemService.findById(
-          props[AssetProperties.language]!,
-        )
-      : null;
-    const dataCategory = props[AssetProperties.dataCategory]
-      ? this.dataCategorySelectItemService.findById(
-          props[AssetProperties.dataCategory]!,
-        )
-      : null;
-    const dataSubcategory = props[AssetProperties.dataSubcategory]
-      ? this.dataSubcategorySelectItemService.findById(
-          props[AssetProperties.dataSubcategory]!,
-        )
-      : null;
-    const transportMode = props[AssetProperties.transportMode]
-      ? this.transportModeSelectItemService.findById(
-          props[AssetProperties.transportMode]!,
-        )
-      : null;
+  buildAsset(opts: {
+    connectorEndpoint: string;
+    properties: Record<string, string | null>;
+  }): Asset {
+    const props = opts.properties;
+    const lookup = <T>(key: string, fn: (id: string) => T) =>
+      props[key] ? fn(props[key]!) : null;
+
+    const language = lookup(AssetProperties.language, (id) =>
+      this.languageSelectItemService.findById(id),
+    );
+    const dataCategory = lookup(AssetProperties.dataCategory, (id) =>
+      this.dataCategorySelectItemService.findById(id),
+    );
+    const dataSubcategory = lookup(AssetProperties.dataSubcategory, (id) =>
+      this.dataSubcategorySelectItemService.findById(id),
+    );
+    const transportMode = lookup(AssetProperties.transportMode, (id) =>
+      this.transportModeSelectItemService.findById(id),
+    );
     const keywords = (props[AssetProperties.keywords] ?? '')
       .split(',')
       .map((it) => it.trim())
@@ -64,7 +60,7 @@ export class AssetPropertyMapper {
       name: props[AssetProperties.name] ?? id,
       version: props[AssetProperties.version],
       contentType: props[AssetProperties.contentType],
-      originator: opts?.connectorEndpoint ?? props[AssetProperties.originator],
+      originator: opts.connectorEndpoint,
       originatorOrganization:
         props[AssetProperties.curatorOrganizationName] ??
         'Unknown Organization',
@@ -109,9 +105,6 @@ export class AssetPropertyMapper {
     props[AssetProperties.id] = trimmedOrNull(metadata?.id);
     props[AssetProperties.name] = trimmedOrNull(metadata?.name);
     props[AssetProperties.version] = trimmedOrNull(metadata?.version);
-    props[AssetProperties.originator] = trimmedOrNull(
-      this.config.connectorEndpoint,
-    );
     props[AssetProperties.curatorOrganizationName] = trimmedOrNull(
       this.config.curatorOrganizationName,
     );

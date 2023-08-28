@@ -58,18 +58,21 @@ export class TransferHistoryPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  loadAssetDetails(transferProcessId: string): Observable<Asset> {
+  loadAssetDetails(item: TransferHistoryEntry): Observable<Asset> {
     return this.edcApiService
-      .getTransferProcessAsset(transferProcessId)
+      .getTransferProcessAsset(item.transferProcessId)
       .pipe(
         map((asset) =>
-          this.assetPropertyMapper.buildAssetFromProperties(asset.properties),
+          this.assetPropertyMapper.buildAsset({
+            connectorEndpoint: item.counterPartyConnectorEndpoint,
+            properties: asset.properties,
+          }),
         ),
       );
   }
 
-  onAssetDetailsClick(transferProcessId: string) {
-    this.loadAssetDetails(transferProcessId).subscribe({
+  onAssetDetailsClick(item: TransferHistoryEntry) {
+    this.loadAssetDetails(item).subscribe({
       next: (asset) => {
         const data = this.assetDetailDialogDataService.assetDetails(
           asset,

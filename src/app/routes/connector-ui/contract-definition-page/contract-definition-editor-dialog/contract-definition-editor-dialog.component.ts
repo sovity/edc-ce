@@ -2,14 +2,13 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {finalize, takeUntil} from 'rxjs/operators';
-import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {
   ContractDefinitionService,
   PolicyDefinition,
   PolicyService,
 } from '../../../../core/services/api/legacy-managent-api-client';
 import {AssetEntryBuilder} from '../../../../core/services/asset-entry-builder';
-import {AssetPropertyMapper} from '../../../../core/services/asset-property-mapper';
+import {AssetServiceMapped} from '../../../../core/services/asset-service-mapped';
 import {ContractDefinitionBuilder} from '../../../../core/services/contract-definition-builder';
 import {Asset} from '../../../../core/services/models/asset';
 import {NotificationService} from '../../../../core/services/notification.service';
@@ -28,11 +27,10 @@ export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
   loading = false;
 
   constructor(
-    private edcApiService: EdcApiService,
+    private assetServiceMapped: AssetServiceMapped,
     public form: ContractDefinitionEditorDialogForm,
     private notificationService: NotificationService,
     private policyService: PolicyService,
-    private assetPropertyMapper: AssetPropertyMapper,
     private contractDefinitionService: ContractDefinitionService,
     private contractDefinitionBuilder: ContractDefinitionBuilder,
     private dialogRef: MatDialogRef<ContractDefinitionEditorDialog>,
@@ -46,13 +44,11 @@ export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
       .subscribe((polices) => {
         this.policies = polices;
       });
-    this.edcApiService
-      .getAssetPage()
+    this.assetServiceMapped
+      .fetchAssets()
       .pipe(takeUntil(this.ngOnDestroy$))
-      .subscribe((assetPage) => {
-        this.assets = assetPage.assets.map((it) =>
-          this.assetPropertyMapper.buildAssetFromProperties(it.properties),
-        );
+      .subscribe((assets) => {
+        this.assets = assets;
       });
   }
 

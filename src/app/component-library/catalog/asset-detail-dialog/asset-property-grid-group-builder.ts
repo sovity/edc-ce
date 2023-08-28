@@ -350,7 +350,6 @@ export class AssetPropertyGridGroupBuilder {
     return {
       icon: 'link',
       label: 'Connector Endpoint',
-      labelTitle: AssetProperties.originator,
       ...this.propertyGridUtils.guessValue(endpoint),
     };
   }
