@@ -27,7 +27,7 @@ INSERT INTO public.edc_asset (asset_id, created_at) VALUES ('urn:artifact:ms8-as
 -- Data for Name: edc_asset_dataaddress; Type: TABLE DATA; Schema: public; Owner: edc
 --
 
-INSERT INTO public.edc_asset_dataaddress (asset_id_fk, properties) VALUES ('urn:artifact:ms8-asset:1.0', '{"baseUrl":"http://localhost:23001/api/mock-data-address/data-source?data=b130536e-0a51-4d2d-aa8c-7591d6ad5bc8","method":"GET","type":"HttpData"}');
+INSERT INTO public.edc_asset_dataaddress (asset_id_fk, properties) VALUES ('urn:artifact:ms8-asset:1.0', '{"baseUrl":"http://localhost:23001/api/test-backend/data-source?data=b130536e-0a51-4d2d-aa8c-7591d6ad5bc8","method":"GET","type":"HttpData"}');
 
 
 --

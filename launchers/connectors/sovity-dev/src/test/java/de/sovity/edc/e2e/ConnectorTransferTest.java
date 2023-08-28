@@ -66,7 +66,7 @@ class ConnectorTransferTest {
         consumerEdcContext.setConfiguration(consumerConfig.getProperties());
         consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
 
-        // We use the provider EDC as data sink / data source (it has the mock-data-address extension)
+        // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
 

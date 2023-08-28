@@ -36,7 +36,7 @@ public class MockDataAddressRemote {
     }
 
     public String getMockBackendUrl(String path) {
-        return "%s/mock-data-address/%s".formatted(defaultEndpoint.getUri().toString(), path);
+        return "%s/test-backend/%s".formatted(defaultEndpoint.getUri().toString(), path);
     }
 
     public JsonObject getDataSinkJsonLd() {

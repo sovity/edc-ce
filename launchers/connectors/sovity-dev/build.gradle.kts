@@ -13,7 +13,7 @@ dependencies {
     api(project(":launchers:common:base"))
     api(project(":launchers:common:base-dev"))
 
-    testImplementation(project(":extensions:mock-data-address"))
+    testImplementation(project(":extensions:test-backend-controller"))
     testImplementation(project(":utils:test-connector-remote"))
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.assertj:assertj-core:${assertj}")

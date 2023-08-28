@@ -18,7 +18,7 @@ import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.web.spi.WebService;
 
-public class MockDataAddressExtension implements ServiceExtension {
+public class TestBackendExtension implements ServiceExtension {
     @Inject
     private WebService webService;
 
@@ -29,6 +29,6 @@ public class MockDataAddressExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        webService.registerResource(new MockDataAddressController());
+        webService.registerResource(new TestBackendController());
     }
 }

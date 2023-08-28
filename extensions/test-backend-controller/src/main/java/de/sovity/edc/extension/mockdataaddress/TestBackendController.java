@@ -22,8 +22,8 @@ import jakarta.ws.rs.core.MediaType;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-@Path("/mock-data-address")
-public class MockDataAddressController {
+@Path("/test-backend")
+public class TestBackendController {
     private final AtomicReference<String> stringValue = new AtomicReference<>("");
 
     @GET

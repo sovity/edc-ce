@@ -2,12 +2,12 @@ rootProject.name = "edc-extensions"
 
 include(":extensions:edc-ui-config")
 include(":extensions:last-commit-info")
-include(":extensions:mock-data-address")
 include(":extensions:policy-always-true")
 include(":extensions:policy-referring-connector")
 include(":extensions:policy-time-interval")
 include(":extensions:postgres-flyway")
 include(":extensions:sovity-edc-extensions-package")
+include(":extensions:test-backend-controller")
 include(":extensions:wrapper:client")
 include(":extensions:wrapper:client-example")
 include(":extensions:wrapper:wrapper")
