@@ -86,97 +86,50 @@ jobs:
         env:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Upload artifact 'connector-jars'"
-        uses: alehechka/upload-tartifact@v2
+      - name: "Docker Image: edc-dev"
+        uses: ./.github/actions/build-connector-image
         with:
-          name: connector-jars
-          path: launchers/connectors/**/build/libs/app.jar
-  docker-image:
-    name: Docker Image
-    needs: build-gradle-project
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      contents: read
-      packages: write
-    strategy:
-      matrix:
-        imageVariants: [
-          {
-            "imageName": "edc-dev",
-            "connectorName": "sovity-dev",
-            "title": "sovity Dev EDC Connector",
-            "description": "Extended EDC Connector built by sovity. This dev version contains no persistence or auth and can be used to quickly start a locally running EDC + EDC UI."
-          },
-          {
-            "imageName": "edc-ce",
-            "connectorName": "sovity-ce",
-            "title": "sovity Community Edition EDC Connector",
-            "description": "EDC Connector built by sovity. Contains sovity's Community Edition EDC extensions and requires dataspace credentials to join an existing dataspace."
-          },
-          {
-            "imageName": "edc-ce-mds",
-            "connectorName": "mds-ce",
-            "title": "MDS Community Edition EDC Connector",
-            "description": "EDC Connector built by sovity and configured for compatibility with the Mobility Data Space (MDS). This EDC requires dataspace credentials, an IDS broker and an IDS Clearing House.",
-          },
-          {
-            "imageName": "test-backend",
-            "connectorName": "test-backend",
-            "title": "Test Data Source / Data Sink",
-            "description": "Provides a minimal data source / data sink for E2E tests.",
-          }
-        ]
-    steps:
-      - uses: actions/checkout@v3
-      - name: "Download artifact 'connector-jars'"
-        uses: alehechka/download-tartifact@v2
+          docker-registry: ${{ env.REGISTRY }}
+          docker-user: ${{ github.actor }}
+          docker-password: ${{ secrets.GITHUB_TOKEN }}
+          image-base-name: ${{ env.IMAGE_NAME_BASE }}
+          image-name: "edc-dev"
+          connector-name: "sovity-dev"
+          title: "sovity Dev EDC Connector"
+          description: "Extended EDC Connector built by sovity. This dev version contains no dataspace auth and can be used to quickly start a locally running EDC + EDC UI."
+      - name: "Docker Image: edc-ce"
+        uses: ./.github/actions/build-connector-image
         with:
-          name: connector-jars
-      - name: "Docker: Store last commit info and build date"
-        id: last-commit-information
-        run: |
-          echo "LAST_COMMIT_INFO<<EOF" >> $GITHUB_ENV
-          export LAST_COMMIT_INFO=$(git log -1)
-          echo "$LAST_COMMIT_INFO" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-          echo "BUILD_DATE=$(date --utc +%FT%TZ)" >> $GITHUB_ENV
-      - name: "Docker: Log in to the Container registry"
-        uses: docker/login-action@v2
+          docker-registry: ${{ env.REGISTRY }}
+          docker-user: ${{ github.actor }}
+          docker-password: ${{ secrets.GITHUB_TOKEN }}
+          image-base-name: ${{ env.IMAGE_NAME_BASE }}
+          image-name: "edc-ce"
+          connector-name: "sovity-ce"
+          title: "sovity Community Edition EDC Connector"
+          description: "EDC Connector built by sovity. Contains sovity's Community Edition EDC extensions and requires dataspace credentials to join an existing dataspace."
+      - name: "Docker Image: edc-ce-mds"
+        uses: ./.github/actions/build-connector-image
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Docker: Extract metadata (tags, labels)"
-        id: meta
-        uses: docker/metadata-action@v4
+          docker-registry: ${{ env.REGISTRY }}
+          docker-user: ${{ github.actor }}
+          docker-password: ${{ secrets.GITHUB_TOKEN }}
+          image-base-name: ${{ env.IMAGE_NAME_BASE }}
+          image-name: "edc-ce-mds"
+          connector-name: "mds-ce"
+          title: "MDS Community Edition EDC Connector"
+          description: "EDC Connector built by sovity and configured for compatibility with the Mobility Data Space (MDS). This EDC requires dataspace credentials, and additional MDS Services such as a Clearing House."
+      - name: "Docker Image: test-backend"
+        uses: ./.github/actions/build-connector-image
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BASE }}/${{ matrix.imageVariants.imageName }}
-          labels: |
-            org.opencontainers.image.title=${{ matrix.imageVariants.title }}
-            org.opencontainers.image.description=${{ matrix.imageVariants.description }}
-          tags: |
-            type=schedule
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=ref,event=branch
-            type=ref,event=pr
-            type=sha
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=raw,value=release,enable=${{ startsWith(github.ref, 'refs/tags/') }}
-      - name: "Docker: Build and Push"
-        uses: docker/build-push-action@v4
-        with:
-          file: launchers/Dockerfile
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            CONNECTOR_NAME=${{ matrix.imageVariants.connectorName }}
-            EDC_LAST_COMMIT_INFO_ARG="${{ env.LAST_COMMIT_INFO }}"
-            EDC_BUILD_DATE_ARG="${{ env.BUILD_DATE }}"
+          docker-registry: ${{ env.REGISTRY }}
+          docker-user: ${{ github.actor }}
+          docker-password: ${{ secrets.GITHUB_TOKEN }}
+          image-base-name: ${{ env.IMAGE_NAME_BASE }}
+          image-name: "test-backend"
+          connector-name: "test-backend"
+          title: "Test Data Source / Data Sink"
+          description: "Provides a minimal data source / data sink for E2E tests."
   ts-api-client-library:
     name: TS API Client Library
     runs-on: ubuntu-latest
