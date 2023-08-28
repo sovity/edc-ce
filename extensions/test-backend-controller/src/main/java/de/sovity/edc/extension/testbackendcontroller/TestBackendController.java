@@ -11,7 +11,7 @@
  *      sovity GmbH - init
  */
 
-package de.sovity.edc.extension.mockdataaddress;
+package de.sovity.edc.extension.testbackendcontroller;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PUT;

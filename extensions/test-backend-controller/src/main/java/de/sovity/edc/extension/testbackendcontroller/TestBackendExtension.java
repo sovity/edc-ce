@@ -11,7 +11,7 @@
  *      sovity GmbH - init
  */
 
-package de.sovity.edc.extension.mockdataaddress;
+package de.sovity.edc.extension.testbackendcontroller;
 
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.system.ServiceExtension;
