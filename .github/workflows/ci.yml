@@ -1,0 +1,183 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [ published ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  REGISTRY_URL: ghcr.io
+  REGISTRY_USER: ${{ github.actor }}
+  IMAGE_BASE_NAME: ${{ github.repository_owner }}
+
+jobs:
+  build-gradle-project:
+    name: Build Gradle Project
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    services:
+      postgres1:
+        image: postgres:15
+        env:
+          POSTGRES_USER: edc
+          POSTGRES_PASSWORD: edc
+          POSTGRES_DB: edc
+        ports:
+          - 54321:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      postgres2:
+        image: postgres:15
+        env:
+          POSTGRES_USER: edc
+          POSTGRES_PASSWORD: edc
+          POSTGRES_DB: edc
+        ports:
+          - 54322:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      SKIP_TESTCONTAINERS: true
+      TEST_POSTGRES_1_JDBC_URL: jdbc:postgresql://localhost:54321/edc
+      TEST_POSTGRES_1_JDBC_USER: edc
+      TEST_POSTGRES_1_JDBC_PASSWORD: edc
+      TEST_POSTGRES_2_JDBC_URL: jdbc:postgresql://localhost:54322/edc
+      TEST_POSTGRES_2_JDBC_USER: edc
+      TEST_POSTGRES_2_JDBC_PASSWORD: edc
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Set up JDK 17"
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: "Gradle: Validate Gradle Wrapper"
+        uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
+      - name: "Gradle: Include last commit info and build date for JARs"
+        run: |
+          git log -1 > extensions/last-commit-info/src/main/resources/jar-last-commit-info.txt
+          echo $(date --utc +%FT%TZ) > extensions/last-commit-info/src/main/resources/jar-build-date.txt
+      - name: "Gradle: Overwrite Artifact Version (Release Only)"
+        run: |
+          if [ "${{ startsWith(github.ref, 'refs/tags/') }}" == "true" ]; then
+            GRADLE_ARGS="-PsovityEdcExtensionsVersion=${GITHUB_REF#refs/tags/v}"
+          fi
+          echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
+      - name: "Gradle: Build"
+        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
+        with:
+          arguments: build ${{ env.GRADLE_ARGS }}
+      - name: "Gradle: Publish (Main & Release Only)"
+        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/releases/') }}
+        with:
+          arguments: publish ${{ env.GRADLE_ARGS }}
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Docker Image: edc-dev"
+        uses: ./.github/actions/build-connector-image
+        with:
+          registry-url: ${{ env.REGISTRY_URL }}
+          registry-user: ${{ env.REGISTRY_USER }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}
+          image-base-name: ${{ env.IMAGE_BASE_NAME }}
+          image-name: "edc-dev"
+          connector-name: "sovity-dev"
+          title: "sovity Dev EDC Connector"
+          description: "Extended EDC Connector built by sovity. This dev version contains no dataspace auth and can be used to quickly start a locally running EDC + EDC UI."
+      - name: "Docker Image: edc-ce"
+        uses: ./.github/actions/build-connector-image
+        with:
+          registry-url: ${{ env.REGISTRY_URL }}
+          registry-user: ${{ env.REGISTRY_USER }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}
+          image-base-name: ${{ env.IMAGE_BASE_NAME }}
+          image-name: "edc-ce"
+          connector-name: "sovity-ce"
+          title: "sovity Community Edition EDC Connector"
+          description: "EDC Connector built by sovity. Contains sovity's Community Edition EDC extensions and requires dataspace credentials to join an existing dataspace."
+      - name: "Docker Image: edc-ce-mds"
+        uses: ./.github/actions/build-connector-image
+        with:
+          registry-url: ${{ env.REGISTRY_URL }}
+          registry-user: ${{ env.REGISTRY_USER }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}
+          image-base-name: ${{ env.IMAGE_BASE_NAME }}
+          image-name: "edc-ce-mds"
+          connector-name: "mds-ce"
+          title: "MDS Community Edition EDC Connector"
+          description: "EDC Connector built by sovity and configured for compatibility with the Mobility Data Space (MDS). This EDC requires dataspace credentials, and additional MDS Services such as a Clearing House."
+      - name: "Docker Image: test-backend"
+        uses: ./.github/actions/build-connector-image
+        with:
+          registry-url: ${{ env.REGISTRY_URL }}
+          registry-user: ${{ env.REGISTRY_USER }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}
+          image-base-name: ${{ env.IMAGE_BASE_NAME }}
+          image-name: "test-backend"
+          connector-name: "test-backend"
+          title: "Test Data Source / Data Sink"
+          description: "Provides a minimal data source / data sink for E2E tests."
+  ts-api-client-library:
+    name: TS API Client Library
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Set up JDK 17"
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: "Set up Node 16"
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+          cache-dependency-path: extensions/wrapper/client-ts/package.json
+      - name: "Gradle: Validate Gradle Wrapper"
+        uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
+      - name: "Gradle: Generate TS Code"
+        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
+        with:
+          arguments: :extensions:wrapper:wrapper:build -x test
+      - name: "NPM: Dist Tag & Version"
+        working-directory: ./extensions/wrapper/client-ts
+        run: |
+          if [ "${{ startsWith(github.ref, 'refs/tags/') }}" == "true" ]; then
+            # Full Release
+            VERSION="${GITHUB_REF#refs/tags/v}"
+            DIST_TAG=latest
+          else
+            VERSION="0.$(date '+%Y%m%d.%H%M%S')-main-$CI_SHA_SHORT"
+            DIST_TAG=main
+          fi
+          npm version $VERSION
+          echo "DIST_TAG=$DIST_TAG" >> $GITHUB_ENV
+      - name: "NPM: Build"
+        working-directory: extensions/wrapper/client-ts
+        run: npm ci && npm run build
+      - name: "NPM: Publish (Main & Releases Only)"
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/releases/') }}
+        working-directory: extensions/wrapper/client-ts
+        run: |
+          npm set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
+          npm set //registry.npmjs.org/:username $NODE_USER
+          npm publish --access public --tag "${{ env.DIST_TAG }}"
+        env:
+          NODE_USER: richardtreier-sovity
+          NODE_AUTH_TOKEN: ${{ secrets.SOVITY_EDC_CLIENT_NPM_AUTH }}
+

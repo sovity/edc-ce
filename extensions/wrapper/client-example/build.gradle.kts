@@ -33,3 +33,8 @@ tasks.withType<Test> {
 tasks.withType<JavaCompile> {
     options.compilerArgs.add("-parameters")
 }
+
+checkstyle {
+    // Gradle is unhappy with checkstyle accessing quarkus sources causing lots of warnings
+    this.sourceSets = emptyList()
+}

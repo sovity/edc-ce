@@ -10,6 +10,12 @@ services:
       - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/management/v2
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
       - EDC_UI_CATALOG_URLS=http://edc2:11003/api/v1/dsp
+
+  test-backend:
+    image: ${TEST_BACKEND_IMAGE}
+    ports:
+      - '33001:11001'
+
   edc:
     image: ${DEV_EDC_IMAGE}
     depends_on:

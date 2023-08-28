@@ -66,7 +66,7 @@ Check out our [Getting Started Section](#getting-started) on how to run a local 
 Our sovity Community Edition EDC takes available Open Source EDC Extensions and combines them with our own
 open source EDC Extensions from this repository to build ready-to-use EDC Docker Images.
 
-See [here](./connector/README.md) for a list of our sovity Community Edition EDC Docker Images.
+See [here](launchers/README.md) for a list of our sovity Community Edition EDC Docker Images.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
