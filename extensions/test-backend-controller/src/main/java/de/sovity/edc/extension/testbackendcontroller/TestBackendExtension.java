@@ -24,7 +24,7 @@ public class TestBackendExtension implements ServiceExtension {
 
     @Override
     public String name() {
-        return "Mock Data Address Endpoints for Testing";
+        return "Test Backend Controller";
     }
 
     @Override
