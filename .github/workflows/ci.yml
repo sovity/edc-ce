@@ -9,8 +9,9 @@ on:
     branches: [ main ]
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME_BASE: ${{ github.repository_owner }}
+  REGISTRY_URL: ghcr.io
+  REGISTRY_USER: ${{ github.actor }}
+  IMAGE_BASE_NAME: ${{ github.repository_owner }}
 
 jobs:
   build-gradle-project:
@@ -78,7 +79,7 @@ jobs:
         uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
         with:
           arguments: build ${{ env.GRADLE_ARGS }}
-      - name: "Gradle: Publish"
+      - name: "Gradle: Publish (Main & Release Only)"
         uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/releases/') }}
         with:
@@ -89,10 +90,10 @@ jobs:
       - name: "Docker Image: edc-dev"
         uses: ./.github/actions/build-connector-image
         with:
-          docker-registry: ${{ env.REGISTRY }}
-          docker-user: ${{ github.actor }}
-          docker-password: ${{ secrets.GITHUB_TOKEN }}
-          image-base-name: ${{ env.IMAGE_NAME_BASE }}
+          registry-url: ${{ env.REGISTRY_URL }}
+          registry-user: ${{ env.REGISTRY_USER }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}
+          image-base-name: ${{ env.IMAGE_BASE_NAME }}
           image-name: "edc-dev"
           connector-name: "sovity-dev"
           title: "sovity Dev EDC Connector"
@@ -100,10 +101,10 @@ jobs:
       - name: "Docker Image: edc-ce"
         uses: ./.github/actions/build-connector-image
         with:
-          docker-registry: ${{ env.REGISTRY }}
-          docker-user: ${{ github.actor }}
-          docker-password: ${{ secrets.GITHUB_TOKEN }}
-          image-base-name: ${{ env.IMAGE_NAME_BASE }}
+          registry-url: ${{ env.REGISTRY_URL }}
+          registry-user: ${{ env.REGISTRY_USER }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}
+          image-base-name: ${{ env.IMAGE_BASE_NAME }}
           image-name: "edc-ce"
           connector-name: "sovity-ce"
           title: "sovity Community Edition EDC Connector"
@@ -111,10 +112,10 @@ jobs:
       - name: "Docker Image: edc-ce-mds"
         uses: ./.github/actions/build-connector-image
         with:
-          docker-registry: ${{ env.REGISTRY }}
-          docker-user: ${{ github.actor }}
-          docker-password: ${{ secrets.GITHUB_TOKEN }}
-          image-base-name: ${{ env.IMAGE_NAME_BASE }}
+          registry-url: ${{ env.REGISTRY_URL }}
+          registry-user: ${{ env.REGISTRY_USER }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}
+          image-base-name: ${{ env.IMAGE_BASE_NAME }}
           image-name: "edc-ce-mds"
           connector-name: "mds-ce"
           title: "MDS Community Edition EDC Connector"
@@ -122,10 +123,10 @@ jobs:
       - name: "Docker Image: test-backend"
         uses: ./.github/actions/build-connector-image
         with:
-          docker-registry: ${{ env.REGISTRY }}
-          docker-user: ${{ github.actor }}
-          docker-password: ${{ secrets.GITHUB_TOKEN }}
-          image-base-name: ${{ env.IMAGE_NAME_BASE }}
+          registry-url: ${{ env.REGISTRY_URL }}
+          registry-user: ${{ env.REGISTRY_USER }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}
+          image-base-name: ${{ env.IMAGE_BASE_NAME }}
           image-name: "test-backend"
           connector-name: "test-backend"
           title: "Test Data Source / Data Sink"
@@ -169,7 +170,7 @@ jobs:
       - name: "NPM: Build"
         working-directory: extensions/wrapper/client-ts
         run: npm ci && npm run build
-      - name: "NPM: Publish"
+      - name: "NPM: Publish (Main & Releases Only)"
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/releases/') }}
         working-directory: extensions/wrapper/client-ts
         run: |
