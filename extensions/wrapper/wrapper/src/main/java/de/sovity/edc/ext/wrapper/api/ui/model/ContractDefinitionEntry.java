@@ -23,6 +23,9 @@ import java.util.List;
 @Schema(description = "Contract Definition List Entry for Contract Definition Page")
 public class ContractDefinitionEntry {
 
+    @Schema(description = "Contract Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String contractDefinitionId;
+
     @Schema(description = "Access Policy ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String accessPolicyId;
 

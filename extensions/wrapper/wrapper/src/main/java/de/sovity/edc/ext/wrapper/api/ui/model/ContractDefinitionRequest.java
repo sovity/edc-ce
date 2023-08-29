@@ -32,6 +32,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Schema(description = "Data for creating a Contract Definition")
 public class ContractDefinitionRequest {
+
+    @Schema(description = "Contract Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String contractDefinitionId;
+
     @Schema(description = "Contract Policy ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String contractPolicyId;
 

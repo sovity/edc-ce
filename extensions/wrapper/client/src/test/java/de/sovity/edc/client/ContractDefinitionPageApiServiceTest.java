@@ -38,7 +38,7 @@ class ContractDefinitionPageApiServiceTest {
         // arrange
         var client = TestUtils.edcClient();
         var criterion = new Criterion("exampleLeft1", "EQ", "abc");
-        createContractDefinition(contractDefinitionService, "contractPolicy-id-1", "accessPolicy-id-1", criterion);
+        createContractDefinition(contractDefinitionService, "contractDefinition-id-1", "contractPolicy-id-1", "accessPolicy-id-1", criterion);
 
         // act
         var result = client.uiApi().contractDefinitionPage();
@@ -47,6 +47,7 @@ class ContractDefinitionPageApiServiceTest {
         var contractDefinitions = result.getContractDefinitions();
         assertThat(contractDefinitions).hasSize(1);
         var contractDefinition = contractDefinitions.get(0);
+        assertThat(contractDefinition.getContractDefinitionId()).isEqualTo("contractDefinition-id-1");
         assertThat(contractDefinition.getContractPolicyId()).isEqualTo("contractPolicy-id-1");
         assertThat(contractDefinition.getAccessPolicyId()).isEqualTo("accessPolicy-id-1");
         assertThat(contractDefinition.getAssetSelector()).hasSize(1);
@@ -64,18 +65,21 @@ class ContractDefinitionPageApiServiceTest {
         var client = TestUtils.edcClient();
         createContractDefinition(
                 contractDefinitionService,
+                "contractDefinition-id-1",
                 "contractPolicy-id-1",
                 "accessPolicy-id-1",
                 new Criterion("exampleLeft1", "EQ", "abc"),
                 1628956800000L);
         createContractDefinition(
                 contractDefinitionService,
+                "contractDefinition-id-2",
                 "contractPolicy-id-2",
                 "accessPolicy-id-2",
                 new Criterion("exampleLeft1", "EQ", "abc"),
                 1628956801000L);
         createContractDefinition(
                 contractDefinitionService,
+                "contractDefinition-id-3",
                 "contractPolicy-id-3",
                 "accessPolicy-id-3",
                 new Criterion("exampleLeft1", "EQ", "abc"),
@@ -101,6 +105,7 @@ class ContractDefinitionPageApiServiceTest {
                 new UiCriterionLiteralDto(UiCriterionLiteralDto.TypeEnum.VALUE, "test", null));
 
         var contractDefinition = ContractDefinitionRequest.builder()
+                .contractDefinitionId("contractDefinition-id-1")
                 .contractPolicyId("contractPolicy-id-1")
                 .accessPolicyId("accessPolicy-id-1")
                 .assetSelector(List.of(criterion))
@@ -114,6 +119,7 @@ class ContractDefinitionPageApiServiceTest {
         var contractDefinitions = contractDefinitionService.query(QuerySpec.max()).getContent().toList();
         assertThat(contractDefinitions).hasSize(1);
         var contractDefinitionEntry = contractDefinitions.get(0);
+        assertThat(contractDefinitionEntry.getId()).isEqualTo("contractDefinition-id-1");
         assertThat(contractDefinitionEntry.getContractPolicyId()).isEqualTo("contractPolicy-id-1");
         assertThat(contractDefinitionEntry.getAccessPolicyId()).isEqualTo("accessPolicy-id-1");
 
@@ -129,7 +135,7 @@ class ContractDefinitionPageApiServiceTest {
         // arrange
         var client = TestUtils.edcClient();
         var criterion = new Criterion("exampleLeft1", "EQ", "exampleRight1");
-        createContractDefinition(contractDefinitionService, "contractPolicy-id-1", "accessPolicy-id-1", criterion);
+        createContractDefinition(contractDefinitionService, "contractDefinition-id-1", "contractPolicy-id-1", "accessPolicy-id-1", criterion);
         assertThat(contractDefinitionService.query(QuerySpec.max()).getContent().toList()).hasSize(1);
         var contractDefinition = contractDefinitionService.query(QuerySpec.max()).getContent().toList().get(0);
 
@@ -143,6 +149,7 @@ class ContractDefinitionPageApiServiceTest {
 
     private void createContractDefinition(
             ContractDefinitionService contractDefinitionService,
+            String contractDefinitionId,
             String contractPolicyId,
             String accessPolicyId,
             Criterion criteria,
@@ -150,6 +157,7 @@ class ContractDefinitionPageApiServiceTest {
     ) {
 
         var contractDefinition = ContractDefinition.Builder.newInstance()
+                .id(contractDefinitionId)
                 .contractPolicyId(contractPolicyId)
                 .accessPolicyId(accessPolicyId)
                 .assetsSelector(List.of(criteria))
@@ -160,11 +168,13 @@ class ContractDefinitionPageApiServiceTest {
 
     private void createContractDefinition(
             ContractDefinitionService contractDefinitionService,
+            String contractDefinitionId,
             String contractPolicyId,
             String accessPolicyId,
             Criterion criteria
     ) {
         var contractDefinition = ContractDefinition.Builder.newInstance()
+                .id(contractDefinitionId)
                 .contractPolicyId(contractPolicyId)
                 .accessPolicyId(accessPolicyId)
                 .assetsSelector(List.of(criteria))
