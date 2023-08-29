@@ -14,8 +14,8 @@ import {AssetDetailDialogService} from '../../../../component-library/catalog/as
 import {ConfirmDialogModel} from '../../../../component-library/confirmation-dialog/confirmation-dialog/confirmation-dialog.component';
 import {JsonDialogComponent} from '../../../../component-library/json-dialog/json-dialog/json-dialog.component';
 import {JsonDialogData} from '../../../../component-library/json-dialog/json-dialog/json-dialog.data';
+import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {
-  ContractDefinitionService,
   PolicyDefinition,
   policyDefinitionId,
 } from '../../../../core/services/api/legacy-managent-api-client';
@@ -43,10 +43,10 @@ export class ContractDefinitionCardsComponent implements OnDestroy {
   deleteDone = new EventEmitter();
 
   constructor(
+    private edcApiService: EdcApiService,
     private assetDetailDialogDataService: AssetDetailDialogDataService,
     private assetDetailDialogService: AssetDetailDialogService,
     private matDialog: MatDialog,
-    private contractDefinitionService: ContractDefinitionService,
     private notificationService: NotificationService,
   ) {}
 
@@ -83,7 +83,7 @@ export class ContractDefinitionCardsComponent implements OnDestroy {
           card.id,
         ),
         action: () =>
-          this.contractDefinitionService.deleteContractDefinition(card.id).pipe(
+          this.edcApiService.deleteContractDefinition(card.id).pipe(
             tap(() => {
               this.notificationService.showInfo('Contract Definition deleted!');
               this.deleteDone.emit();

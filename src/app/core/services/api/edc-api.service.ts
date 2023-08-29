@@ -6,6 +6,7 @@ import {
   ConnectorLimits,
   ContractAgreementPage,
   ContractAgreementTransferRequest,
+  ContractDefinitionPage,
   EdcClient,
   IdResponse,
   IdResponseDto,
@@ -13,8 +14,9 @@ import {
   buildEdcClient,
 } from '@sovity.de/edc-client';
 import {AssetCreateRequest} from '@sovity.de/edc-client/dist/generated/models/AssetCreateRequest';
+import {ContractDefinitionRequest} from '@sovity.de/edc-client/dist/generated/models/ContractDefinitionRequest';
 import {APP_CONFIG, AppConfig} from '../../config/app-config';
-import {EDC_FAKE_BACKEND} from './fake-backend/edc-api.fake-backend';
+import {EDC_FAKE_BACKEND} from './fake-backend/edc-fake-backend';
 
 @Injectable({providedIn: 'root'})
 export class EdcApiService {
@@ -42,6 +44,28 @@ export class EdcApiService {
 
   deleteAsset(assetId: string): Observable<IdResponseDto> {
     return from(this.edcClient.uiApi.deleteAsset({assetId}));
+  }
+
+  createContractDefinition(
+    contractDefinitionRequest: ContractDefinitionRequest,
+  ): Observable<IdResponseDto> {
+    return from(
+      this.edcClient.uiApi.createContractDefinition({
+        contractDefinitionRequest,
+      }),
+    );
+  }
+
+  getContractDefinitionPage(): Observable<ContractDefinitionPage> {
+    return from(this.edcClient.uiApi.contractDefinitionPage());
+  }
+
+  deleteContractDefinition(
+    contractDefinitionId: string,
+  ): Observable<IdResponseDto> {
+    return from(
+      this.edcClient.uiApi.deleteContractDefinition({contractDefinitionId}),
+    );
   }
 
   getContractAgreementPage(): Observable<ContractAgreementPage> {

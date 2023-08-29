@@ -1,4 +1,6 @@
 import {Injectable} from '@angular/core';
+import {UiCriterionLiteralDtoTypeEnum} from '@sovity.de/edc-client';
+import {ContractDefinitionRequest} from '@sovity.de/edc-client/dist/generated/models/ContractDefinitionRequest';
 import {ContractDefinitionEditorDialogFormValue} from '../../routes/connector-ui/contract-definition-page/contract-definition-editor-dialog/contract-definition-editor-dialog-form-model';
 import {
   ContractDefinitionDto,
@@ -18,16 +20,19 @@ export class ContractDefinitionBuilder {
    */
   buildContractDefinition(
     formValue: ContractDefinitionEditorDialogFormValue,
-  ): ContractDefinitionDto {
+  ): ContractDefinitionRequest {
     return {
-      id: formValue.id!.trim(),
+      contractDefinitionId: formValue.id ?? '',
       accessPolicyId: policyDefinitionId(formValue.accessPolicy!),
       contractPolicyId: policyDefinitionId(formValue.contractPolicy!),
-      criteria: [
+      assetSelector: [
         {
           operandLeft: AssetProperties.id,
-          operator: 'in',
-          operandRight: formValue.assets!.map((it) => it.id),
+          operator: 'IN',
+          operandRight: {
+            type: UiCriterionLiteralDtoTypeEnum.ValueList,
+            valueList: formValue.assets!.map((it) => it.id),
+          },
         },
       ],
     };

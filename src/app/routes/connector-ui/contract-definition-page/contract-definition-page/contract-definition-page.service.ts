@@ -1,10 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable, combineLatest, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {
-  ContractDefinitionService,
-  PolicyService,
-} from '../../../../core/services/api/legacy-managent-api-client';
+import {EdcApiService} from '../../../../core/services/api/edc-api.service';
+import {PolicyService} from '../../../../core/services/api/legacy-managent-api-client';
 import {AssetServiceMapped} from '../../../../core/services/asset-service-mapped';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {search} from '../../../../core/utils/search-utils';
@@ -19,7 +17,7 @@ export interface ContractDefinitionList {
 @Injectable({providedIn: 'root'})
 export class ContractDefinitionPageService {
   constructor(
-    private contractDefinitionService: ContractDefinitionService,
+    private edcApiService: EdcApiService,
     private assetServiceMapped: AssetServiceMapped,
     private policyService: PolicyService,
     private contractDefinitionCardBuilder: ContractDefinitionCardBuilder,
@@ -56,10 +54,10 @@ export class ContractDefinitionPageService {
         .flatMap((it) => it.searchTargets),
     ]);
   }
-
+  //ed
   fetchCards(): Observable<Fetched<ContractDefinitionCard[]>> {
     return combineLatest([
-      this.contractDefinitionService.getAllContractDefinitions(0, 10_000_000),
+      this.edcApiService.getContractDefinitionPage(),
       this.assetServiceMapped.fetchAssets().pipe(
         catchError((err) => {
           console.warn('Failed fetching assets.', err);

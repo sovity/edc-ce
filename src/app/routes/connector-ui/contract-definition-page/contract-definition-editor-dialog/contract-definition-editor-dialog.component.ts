@@ -2,8 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {finalize, takeUntil} from 'rxjs/operators';
+import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {
-  ContractDefinitionService,
   PolicyDefinition,
   PolicyService,
 } from '../../../../core/services/api/legacy-managent-api-client';
@@ -31,7 +31,7 @@ export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
     public form: ContractDefinitionEditorDialogForm,
     private notificationService: NotificationService,
     private policyService: PolicyService,
-    private contractDefinitionService: ContractDefinitionService,
+    private edcApiService: EdcApiService,
     private contractDefinitionBuilder: ContractDefinitionBuilder,
     private dialogRef: MatDialogRef<ContractDefinitionEditorDialog>,
     public validationMessages: ValidationMessages,
@@ -56,9 +56,8 @@ export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
     const formValue = this.form.value;
     const contractDefinition =
       this.contractDefinitionBuilder.buildContractDefinition(formValue);
-    this.form.group.disable();
     this.loading = true;
-    this.contractDefinitionService
+    this.edcApiService
       .createContractDefinition(contractDefinition)
       .pipe(
         takeUntil(this.ngOnDestroy$),

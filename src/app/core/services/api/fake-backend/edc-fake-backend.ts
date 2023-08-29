@@ -1,6 +1,12 @@
 import {FetchAPI} from '@sovity.de/edc-client';
 import {AssetCreateRequest} from '@sovity.de/edc-client/dist/generated/models/AssetCreateRequest';
+import {ContractDefinitionRequest} from '@sovity.de/edc-client/dist/generated/models/ContractDefinitionRequest';
 import {assetPage, createAsset, deleteAsset} from './asset-fake-service';
+import {
+  contractDefinitionPage,
+  createContractDefinition,
+  deleteContractDefinition,
+} from './contract-definition-fake-service';
 import {getBody, getMethod, getUrl} from './utils/request-utils';
 import {ok} from './utils/response-utils';
 import {UrlInterceptor} from './utils/url-interceptor';
@@ -25,6 +31,19 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
 
     .url('pages/asset-page/assets/*')
     .on('DELETE', (assetId) => ok(deleteAsset(assetId)))
+
+    .url('pages/contract-definition-page')
+    .on('GET', () => ok(contractDefinitionPage()))
+
+    .url('pages/contract-definition-page/contract-definitions')
+    .on('POST', () =>
+      ok(createContractDefinition(body as ContractDefinitionRequest)),
+    )
+
+    .url('pages/contract-definition-page/contract-definitions/*')
+    .on('DELETE', (contractDefinitionId) =>
+      ok(deleteContractDefinition(contractDefinitionId)),
+    )
 
     .tryMatch();
 };

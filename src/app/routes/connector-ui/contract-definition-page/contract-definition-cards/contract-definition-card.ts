@@ -1,7 +1,5 @@
-import {
-  ContractDefinitionDto,
-  PolicyDefinition,
-} from '../../../../core/services/api/legacy-managent-api-client';
+import {ContractDefinitionEntry} from '@sovity.de/edc-client';
+import {PolicyDefinition} from '../../../../core/services/api/legacy-managent-api-client';
 import {Asset} from '../../../../core/services/models/asset';
 
 export interface ContractDefinitionCard {
@@ -10,7 +8,7 @@ export interface ContractDefinitionCard {
   contractPolicy: ContractDefinitionCardPolicy;
   accessPolicy: ContractDefinitionCardPolicy;
 
-  detailJsonObj: ContractDefinitionDto;
+  detailJsonObj: ContractDefinitionEntry;
 }
 
 export interface ContractDefinitionCardPolicy {
