@@ -41,6 +41,7 @@ public class ContractDefinitionApiService {
                 .sorted(Comparator.comparing(ContractDefinition::getCreatedAt).reversed())
                 .map(definition -> {
             var entry = new ContractDefinitionEntry();
+            entry.setContractDefinitionId(definition.getId());
             entry.setAccessPolicyId(definition.getAccessPolicyId());
             entry.setContractPolicyId(definition.getContractPolicyId());
             entry.setAssetSelector(criterionMapper.mapToCriterionDtos(definition.getAssetsSelector()));

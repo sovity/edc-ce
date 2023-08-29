@@ -28,12 +28,13 @@ public class ContractDefinitionBuilder {
     private final CriterionMapper criterionMapper;
 
     public ContractDefinition buildContractDefinition(ContractDefinitionRequest request) {
+        var contractDefinitionId = request.getContractDefinitionId();
         var contractPolicyId = request.getContractPolicyId();
         var accessPolicyId = request.getAccessPolicyId();
         var assetsSelector = request.getAssetSelector();
 
         return ContractDefinition.Builder.newInstance()
-                .id(request.getContractPolicyId())
+                .id(contractDefinitionId)
                 .contractPolicyId(contractPolicyId)
                 .accessPolicyId(accessPolicyId)
                 .assetsSelector(criterionMapper.mapToCriteria(assetsSelector))
