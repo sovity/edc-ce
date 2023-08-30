@@ -67,9 +67,9 @@ class PolicyDefinitionApiServiceTest {
         assertThat(policyDefinitions).hasSize(1);
         var policyDefinition = policyDefinitions.get(0);
         assertThat(policyDefinition.getPolicyDefinitionId()).isEqualTo("my-policy-def-1");
-        assertThat(policyDefinition.getUiPolicyDto().getConstraints()).hasSize(1);
+        assertThat(policyDefinition.getPolicy().getConstraints()).hasSize(1);
 
-        var constraintEntry = policyDefinition.getUiPolicyDto().getConstraints().get(0);
+        var constraintEntry = policyDefinition.getPolicy().getConstraints().get(0);
         assertThat(constraintEntry).usingRecursiveComparison().isEqualTo(constraint);
     }
 

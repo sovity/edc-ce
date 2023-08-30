@@ -34,6 +34,6 @@ public class PolicyDefinitionCreateRequest {
     private String policyDefinitionId;
 
     @Schema(description = "Policy Contents", requiredMode = Schema.RequiredMode.REQUIRED)
-    private UiPolicyCreateRequest uiPolicyDto;
+    private UiPolicyCreateRequest policy;
 }
 

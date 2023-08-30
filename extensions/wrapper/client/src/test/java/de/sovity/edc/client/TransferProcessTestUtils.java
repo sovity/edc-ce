@@ -79,11 +79,10 @@ public class TransferProcessTestUtils {
     }
 
     private static DataAddress getDataAddress() {
-        var dataAddress = DataAddress.Builder.newInstance()
+        return DataAddress.Builder.newInstance()
                 .type("HttpData")
                 .property("baseUrl", DATA_SINK)
                 .build();
-        return dataAddress;
     }
 
     private static void createAsset(AssetService assetStore, DataAddress dataAddress, String assetId, String assetName) throws ParseException {

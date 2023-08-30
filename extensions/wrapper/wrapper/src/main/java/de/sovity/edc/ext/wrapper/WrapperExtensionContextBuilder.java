@@ -95,10 +95,18 @@ public class WrapperExtensionContextBuilder {
             PolicyDefinitionService policyDefinitionService
     ) {
         // UI API
+        var operatorMapper = new OperatorMapper();
+        var criterionMapper = new CriterionMapper(operatorMapper);
+        var literalMapper = new LiteralMapper(objectMapper);
+        var atomicConstraintMapper = new AtomicConstraintMapper(literalMapper, operatorMapper);
+        var policyValidator = new PolicyValidator();
+        var constraintExtractor = new ConstraintExtractor(policyValidator, atomicConstraintMapper);
+        var policyMapper = new PolicyMapper(objectMapper, constraintExtractor, atomicConstraintMapper);
         var transferProcessStateService = new TransferProcessStateService();
-        var contractAgreementPageCardBuilder =
-                new ContractAgreementPageCardBuilder(
-                        transferProcessStateService);
+        var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
+                policyMapper,
+                transferProcessStateService
+        );
         var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
                 contractAgreementService,
                 contractNegotiationStore,
@@ -109,8 +117,6 @@ public class WrapperExtensionContextBuilder {
                 contractAgreementDataFetcher,
                 contractAgreementPageCardBuilder
         );
-        var operatorMapper = new OperatorMapper();
-        var criterionMapper = new CriterionMapper(operatorMapper);
         var contactDefinitionBuilder = new ContractDefinitionBuilder(criterionMapper);
         var contractDefinitionApiService = new ContractDefinitionApiService(contractDefinitionService, criterionMapper, contactDefinitionBuilder);
         var transferHistoryPageApiService = new TransferHistoryPageApiService(
@@ -137,12 +143,6 @@ public class WrapperExtensionContextBuilder {
                 transferRequestBuilder,
                 transferProcessService
         );
-        var jsonLdObjectMapper = new ObjectMapper();
-        var literalMapper = new LiteralMapper(objectMapper);
-        var atomicConstraintMapper = new AtomicConstraintMapper(literalMapper, operatorMapper);
-        var policyValidator = new PolicyValidator();
-        var constraintExtractor = new ConstraintExtractor(policyValidator, atomicConstraintMapper);
-        var policyMapper = new PolicyMapper(jsonLdObjectMapper, constraintExtractor, atomicConstraintMapper);
         var policyDefinitionApiService = new PolicyDefinitionApiService(policyDefinitionService, policyMapper);
         var contractOfferMapper = new ContractOfferMapper(objectMapper);
         var contractNegotiationBuilder = new ContractNegotiationBuilder(contractOfferMapper);

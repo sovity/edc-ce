@@ -52,7 +52,7 @@ public class PolicyMapper {
      * <p>
      * This operation is lossless.
      *
-     * @param policyCreateDto ui policy
+     * @param policyCreateDto policy
      * @return ODRL policy
      */
     public Policy buildPolicy(UiPolicyCreateRequest policyCreateDto) {
