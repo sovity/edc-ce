@@ -152,7 +152,7 @@ public class UiResource {
     }
 
     @POST
-    @Path("pages/policy-page/policies")
+    @Path("pages/policy-page/policy-definitions")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Create a new Policy")
@@ -160,7 +160,7 @@ public class UiResource {
         return policyDefinitionApiService.createPolicyDefinition(policyDefinitionDtoDto);
     }
     @DELETE
-    @Path("pages/policy-page/policies/{policyId}")
+    @Path("pages/policy-page/policy-definitions/{policyId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Delete a Policy")
     public IdResponseDto deletePolicyDefinition(@PathParam("policyId") String policyId) {
