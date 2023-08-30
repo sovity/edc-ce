@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
@@ -22,12 +23,14 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractNegotiationApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
@@ -57,6 +60,7 @@ public class UiResource {
     private final AssetApiService assetApiService;
     private final PolicyDefinitionApiService policyDefinitionApiService;
     private final ContractDefinitionApiService contractDefinitionApiService;
+    private final ContractNegotiationApiService contractNegotiationApiService;
 
     @GET
     @Path("pages/contract-agreement-page")
@@ -165,5 +169,13 @@ public class UiResource {
     @Operation(description = "Delete a Policy")
     public IdResponseDto deletePolicyDefinition(@PathParam("policyId") String policyId) {
         return policyDefinitionApiService.deletePolicyDefinition(policyId);
+    }
+    @POST
+    @Path("pages/contract-negotiation-page/contract-negotiations")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Initiate a new Contract Negotiation")
+    public IdResponseDto initiateContractNegotiation(ContractNegotiationRequest contractNegotiationRequest) throws JsonProcessingException {
+        return contractNegotiationApiService.initiateContractNegotiation(contractNegotiationRequest);
     }
 }

@@ -23,26 +23,24 @@ import lombok.Setter;
 import lombok.ToString;
 
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "Data for creating a Contract Definition")
-public class ContractDefinitionRequest {
+@Schema(description = "Data for creating a Contract Negotiation")
+public class ContractNegotiationRequest {
 
-    @Schema(description = "Contract Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String contractDefinitionId;
+    @Schema(description = "Protocol", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String protocol;
 
-    @Schema(description = "Contract Policy ID", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String contractPolicyId;
+    @Schema(description = "Counter Party Address", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String counterPartyAddress;
 
-    @Schema(description = "Access Policy ID", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String accessPolicyId;
-
-    @Schema(description = "List of Criteria for the contract", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<UiCriterionDto> assetSelector;
-
+    @Schema(description = "Contract Offer Dto ", requiredMode = Schema.RequiredMode.REQUIRED)
+    private ContractOfferDto contractOffer;
 }
