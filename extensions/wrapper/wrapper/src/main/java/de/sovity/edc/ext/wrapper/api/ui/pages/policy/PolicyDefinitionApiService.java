@@ -63,7 +63,7 @@ public class PolicyDefinitionApiService {
         var policy = policyMapper.buildPolicyDto(policyDefinition.getPolicy());
         return PolicyDefinitionDto.builder()
                 .policyDefinitionId(policyDefinition.getId())
-                .uiPolicyDto(policy)
+                .policy(policy)
                 .build();
     }
 
