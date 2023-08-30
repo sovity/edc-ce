@@ -146,7 +146,7 @@ public class UiResource {
     @GET
     @Path("pages/policy-page")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Collect all data for Policy Page")
+    @Operation(description = "Collect all data for Policy Definition Page")
     public PolicyDefinitionPage policyDefinitionPage() {
         return new PolicyDefinitionPage(policyDefinitionApiService.getPolicyDefinitions());
     }
@@ -155,14 +155,14 @@ public class UiResource {
     @Path("pages/policy-page/policy-definitions")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Create a new Policy")
+    @Operation(description = "Create a new Policy Definition")
     public IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto) {
         return policyDefinitionApiService.createPolicyDefinition(policyDefinitionDtoDto);
     }
     @DELETE
     @Path("pages/policy-page/policy-definitions/{policyId}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Delete a Policy")
+    @Operation(description = "Delete a Policy Definition")
     public IdResponseDto deletePolicyDefinition(@PathParam("policyId") String policyId) {
         return policyDefinitionApiService.deletePolicyDefinition(policyId);
     }
