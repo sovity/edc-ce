@@ -9,16 +9,13 @@ import {
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {EMPTY, Subject} from 'rxjs';
 import {catchError, filter, tap} from 'rxjs/operators';
+import {PolicyDefinitionDto} from '@sovity.de/edc-client';
 import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
 import {ConfirmDialogModel} from '../../../../component-library/confirmation-dialog/confirmation-dialog/confirmation-dialog.component';
 import {JsonDialogComponent} from '../../../../component-library/json-dialog/json-dialog/json-dialog.component';
 import {JsonDialogData} from '../../../../component-library/json-dialog/json-dialog/json-dialog.data';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {
-  PolicyDefinition,
-  policyDefinitionId,
-} from '../../../../core/services/api/legacy-managent-api-client';
 import {Asset} from '../../../../core/services/models/asset';
 import {NotificationService} from '../../../../core/services/notification.service';
 import {ContractDefinitionCard} from './contract-definition-card';
@@ -50,12 +47,12 @@ export class ContractDefinitionCardsComponent implements OnDestroy {
     private notificationService: NotificationService,
   ) {}
 
-  onPolicyClick(policyDefinition: PolicyDefinition) {
+  onPolicyClick(policyDefinition: PolicyDefinitionDto) {
     const data: JsonDialogData = {
-      title: policyDefinitionId(policyDefinition),
+      title: policyDefinition.policyDefinitionId,
       subtitle: 'Policy',
       icon: 'policy',
-      objectForJson: policyDefinition,
+      objectForJson: JSON.parse(policyDefinition.policy.policyJsonLd),
     };
     this.matDialog.open(JsonDialogComponent, {data});
   }

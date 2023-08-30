@@ -23,6 +23,9 @@ the detailed section referring to by linking pull requests or issues.
 - Removed 404-causing login polling from broker UI
 
 - Migrated transfer history page to api wrapper
+- Migrated contract definition page to api wrapper
+- Migrated policy definition page to api wrapper
+- Migrated asset page to api wrapper
 
 #### Removed
 

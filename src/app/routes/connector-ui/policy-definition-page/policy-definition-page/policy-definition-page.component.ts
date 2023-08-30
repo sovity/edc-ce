@@ -2,11 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject} from 'rxjs';
 import {first, map, switchMap} from 'rxjs/operators';
-import {
-  PolicyDefinition,
-  PolicyService,
-} from '../../../../core/services/api/legacy-managent-api-client';
+import {PolicyDefinitionDto, PolicyDefinitionPage} from '@sovity.de/edc-client';
+import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {Fetched} from '../../../../core/services/models/fetched';
+import {search} from '../../../../core/utils/search-utils';
 import {NewPolicyDialogResult} from '../new-policy-dialog/new-policy-dialog-result';
 import {NewPolicyDialogComponent} from '../new-policy-dialog/new-policy-dialog.component';
 import {PolicyCard} from '../policy-cards/policy-card';
@@ -29,7 +28,7 @@ export class PolicyDefinitionPageComponent implements OnInit {
   private fetch$ = new BehaviorSubject(null);
 
   constructor(
-    private policyService: PolicyService,
+    private edcApiService: EdcApiService,
     private policyCardBuilder: PolicyCardBuilder,
     private readonly dialog: MatDialog,
   ) {}
@@ -38,13 +37,13 @@ export class PolicyDefinitionPageComponent implements OnInit {
     this.fetch$
       .pipe(
         switchMap(() => {
-          return this.policyService.getAllPolicies(0, 10_000_000).pipe(
+          return this.edcApiService.getPolicyDefinitionPage().pipe(
             map(
-              (policyDefinitions): PolicyList => ({
+              (policyDefinitionPage): PolicyList => ({
                 policyCards: this.policyCardBuilder.buildPolicyCards(
-                  this.filterPolicies(policyDefinitions),
+                  this.filterPolicies(policyDefinitionPage),
                 ),
-                numTotalPolicies: policyDefinitions.length,
+                numTotalPolicies: policyDefinitionPage.policies.length,
               }),
             ),
             Fetched.wrap({
@@ -77,18 +76,22 @@ export class PolicyDefinitionPageComponent implements OnInit {
   }
 
   private filterPolicies(
-    policyDefinitions: PolicyDefinition[],
-  ): PolicyDefinition[] {
-    return policyDefinitions.filter((policy) =>
-      this.isFiltered(policy, this.searchText),
-    );
-  }
-
-  /**
-   * simple full-text search - serialize to JSON and see if "searchText"
-   * is contained
-   */
-  private isFiltered(policy: PolicyDefinition, searchText: string) {
-    return JSON.stringify(policy).includes(searchText);
+    policyDefinitionPage: PolicyDefinitionPage,
+  ): PolicyDefinitionPage {
+    return {
+      ...policyDefinitionPage,
+      policies: search(
+        policyDefinitionPage.policies,
+        this.searchText,
+        (policyDefinition: PolicyDefinitionDto) => {
+          return [
+            policyDefinition.policyDefinitionId,
+            ...policyDefinition.policy.errors,
+            ...(policyDefinition.policy.constraints?.map((it) => it.left) ??
+              []),
+          ].filter((it) => !!it);
+        },
+      ),
+    };
   }
 }

@@ -1,12 +1,20 @@
-import {FetchAPI} from '@sovity.de/edc-client';
-import {AssetCreateRequest} from '@sovity.de/edc-client/dist/generated/models/AssetCreateRequest';
-import {ContractDefinitionRequest} from '@sovity.de/edc-client/dist/generated/models/ContractDefinitionRequest';
+import {
+  AssetCreateRequest,
+  ContractDefinitionRequest,
+  FetchAPI,
+  PolicyDefinitionCreateRequest,
+} from '@sovity.de/edc-client';
 import {assetPage, createAsset, deleteAsset} from './asset-fake-service';
 import {
   contractDefinitionPage,
   createContractDefinition,
   deleteContractDefinition,
 } from './contract-definition-fake-service';
+import {
+  createPolicyDefinition,
+  deletePolicyDefinition,
+  policyDefinitionPage,
+} from './policy-definition-fake-service';
 import {getBody, getMethod, getUrl} from './utils/request-utils';
 import {ok} from './utils/response-utils';
 import {UrlInterceptor} from './utils/url-interceptor';
@@ -43,6 +51,19 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
     .url('pages/contract-definition-page/contract-definitions/*')
     .on('DELETE', (contractDefinitionId) =>
       ok(deleteContractDefinition(contractDefinitionId)),
+    )
+
+    .url('pages/policy-page')
+    .on('GET', () => ok(policyDefinitionPage()))
+
+    .url('pages/policy-page/policy-definitions')
+    .on('POST', () =>
+      ok(createPolicyDefinition(body as PolicyDefinitionCreateRequest)),
+    )
+
+    .url('pages/policy-page/policy-definitions/*')
+    .on('DELETE', (policyDefinitionId) =>
+      ok(deletePolicyDefinition(policyDefinitionId)),
     )
 
     .tryMatch();

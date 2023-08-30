@@ -1,9 +1,6 @@
 import {Component, HostBinding, Input} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {
-  PolicyDefinition,
-  policyDefinitionId,
-} from 'src/app/core/services/api/legacy-managent-api-client';
+import {PolicyDefinitionDto} from '@sovity.de/edc-client';
 
 @Component({
   selector: 'policy-select',
@@ -14,20 +11,23 @@ export class PolicySelectComponent {
   label!: string;
 
   @Input()
-  control!: FormControl<PolicyDefinition | null>;
+  control!: FormControl<PolicyDefinitionDto | null>;
 
   @Input()
-  policies: PolicyDefinition[] = [];
+  policies: PolicyDefinitionDto[] = [];
 
   @HostBinding('class.flex')
   @HostBinding('class.flex-row')
   cls = true;
 
-  compareWith(a: PolicyDefinition | null, b: PolicyDefinition | null): boolean {
+  compareWith(
+    a: PolicyDefinitionDto | null,
+    b: PolicyDefinitionDto | null,
+  ): boolean {
     return this.policyId(a) === this.policyId(b);
   }
 
-  policyId(a: PolicyDefinition | null): string | null {
-    return a ? policyDefinitionId(a) : null;
+  policyId(a: PolicyDefinitionDto | null): string | null {
+    return a?.policyDefinitionId ?? null;
   }
 }

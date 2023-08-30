@@ -1,91 +1,85 @@
 import {Injectable} from '@angular/core';
+import {
+  PolicyDefinitionCreateRequest,
+  UiPolicyConstraint,
+} from '@sovity.de/edc-client';
 import {addDays} from 'date-fns';
 import {NewPolicyDialogFormValue} from '../../routes/connector-ui/policy-definition-page/new-policy-dialog/new-policy-dialog-form-model';
-import {Permission, PolicyDefinition} from './api/legacy-managent-api-client';
-import {
-  AtomicConstraint,
-  ExpressionLeftSideConstants,
-  Operator,
-} from './api/policy-type-ext';
-import {PolicyDefinitionUtils} from './policy-definition-utils';
+import {OperatorDto, PolicyLeftExpressions} from './api/policy-type-ext';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PolicyDefinitionBuilder {
-  constructor(private policyDefinitionUtils: PolicyDefinitionUtils) {}
-
   /**
-   * Build {@link PolicyDefinition} from {@link NewPolicyDialogFormValue}
+   * Build {@link PolicyDefinitionCreateRequest} from {@link NewPolicyDialogFormValue}
    *
    * @param formValue {@link NewPolicyDialogFormValue}
    */
-  buildPolicyDefinition(formValue: NewPolicyDialogFormValue): PolicyDefinition {
+  buildPolicyDefinition(
+    formValue: NewPolicyDialogFormValue,
+  ): PolicyDefinitionCreateRequest {
     return {
-      id: formValue.id?.trim()!,
+      policyDefinitionId: formValue.id?.trim()!,
       policy: {
-        permissions: this.buildPolicyPermissions(formValue),
+        constraints: this.buildPolicyConstraints(formValue),
       },
     };
   }
 
-  private buildPolicyPermissions(
+  private buildPolicyConstraints(
     formValue: NewPolicyDialogFormValue,
-  ): Permission[] {
+  ): UiPolicyConstraint[] {
     let policyType = formValue.policyType;
     switch (policyType) {
       case 'Time-Period-Restricted':
         return this.buildTimePeriodRestrictionPermissions(formValue);
       case 'Connector-Restricted-Usage':
-        return this.buildConnectorRestrictedUsagePermissions(formValue);
+        return [this.buildConnectorRestrictedConstraint(formValue)];
       default:
         throw new Error(`Unknown policyType: ${policyType}`);
     }
   }
 
-  private buildConnectorRestrictedUsagePermissions(
+  private buildConnectorRestrictedConstraint(
     formValue: NewPolicyDialogFormValue,
-  ): Permission[] {
-    return [
-      this.policyDefinitionUtils.buildPermission({
-        constraints: [
-          this.policyDefinitionUtils.buildAtomicConstraint(
-            'REFERRING_CONNECTOR',
-            'EQ',
-            formValue.connectorId!,
-          ),
-        ],
-      }),
-    ];
+  ): UiPolicyConstraint {
+    return {
+      left: PolicyLeftExpressions.ReferringConnector,
+      operator: 'EQ',
+      right: {
+        type: 'STRING',
+        value: formValue.connectorId!,
+      },
+    };
   }
 
   private buildTimePeriodRestrictionPermissions(
     formValue: NewPolicyDialogFormValue,
-  ): Permission[] {
+  ): UiPolicyConstraint[] {
     const start = formValue.range!!.start!!;
-    const constraints: AtomicConstraint[] = [this.evaluationTime('GEQ', start)];
+    const constraints: UiPolicyConstraint[] = [
+      this.evaluationTime('GEQ', start),
+    ];
+
     const end = formValue.range!!.end;
     if (end) {
       constraints.push(this.evaluationTime('LT', addDays(end, 1)));
-      return [
-        this.policyDefinitionUtils.buildPermission({
-          constraints,
-        }),
-      ];
-    } else {
-      return [
-        this.policyDefinitionUtils.buildPermission({
-          constraints: [this.evaluationTime('GEQ', start)],
-        }),
-      ];
     }
+    return constraints;
   }
 
-  private evaluationTime(operator: Operator, date: Date): AtomicConstraint {
-    return this.policyDefinitionUtils.buildAtomicConstraint(
-      ExpressionLeftSideConstants.PolicyEvaluationTime,
+  private evaluationTime(
+    operator: OperatorDto,
+    date: Date,
+  ): UiPolicyConstraint {
+    return {
+      left: PolicyLeftExpressions.PolicyEvaluationTime,
       operator,
-      date.toISOString()!,
-    );
+      right: {
+        type: 'STRING',
+        value: date.toISOString()!,
+      },
+    };
   }
 }

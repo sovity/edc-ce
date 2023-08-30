@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Observable, combineLatest, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {PolicyService} from '../../../../core/services/api/legacy-managent-api-client';
 import {AssetServiceMapped} from '../../../../core/services/asset-service-mapped';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {search} from '../../../../core/utils/search-utils';
@@ -19,7 +18,6 @@ export class ContractDefinitionPageService {
   constructor(
     private edcApiService: EdcApiService,
     private assetServiceMapped: AssetServiceMapped,
-    private policyService: PolicyService,
     private contractDefinitionCardBuilder: ContractDefinitionCardBuilder,
   ) {}
 
@@ -64,7 +62,8 @@ export class ContractDefinitionPageService {
           return of([]);
         }),
       ),
-      this.policyService.getAllPolicies(0, 10_000_000).pipe(
+      this.edcApiService.getPolicyDefinitionPage().pipe(
+        map((policyDefinitionPage) => policyDefinitionPage.policies),
         catchError((err) => {
           console.warn('Failed fetching policy definitions.', err);
           return of([]);

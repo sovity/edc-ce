@@ -1,59 +1,58 @@
 import {Injectable} from '@angular/core';
 import {
-  PolicyDefinition,
-  policyDefinitionId,
-} from '../../../../core/services/api/legacy-managent-api-client';
-import {
-  AtomicConstraint,
-  LiteralExpression,
-  OperatorSymbols,
-} from '../../../../core/services/api/policy-type-ext';
-import {PolicyDefinitionUtils} from '../../../../core/services/policy-definition-utils';
+  PolicyDefinitionDto,
+  PolicyDefinitionPage,
+  UiPolicyLiteral,
+} from '@sovity.de/edc-client';
+import {OPERATOR_SYMBOLS} from '../../../../core/services/api/policy-type-ext';
 import {PolicyCard, PolicyCardConstraint} from './policy-card';
 
 @Injectable({providedIn: 'root'})
 export class PolicyCardBuilder {
-  constructor(private policyDefinitionUtils: PolicyDefinitionUtils) {}
-
-  buildPolicyCards(policyDefinitions: PolicyDefinition[]): PolicyCard[] {
-    return policyDefinitions.map((policyDefinition) =>
+  buildPolicyCards(policyDefinitionPage: PolicyDefinitionPage): PolicyCard[] {
+    return policyDefinitionPage.policies.map((policyDefinition) =>
       this.buildPolicyCard(policyDefinition),
     );
   }
 
-  buildPolicyCard(policyDefinition: PolicyDefinition): PolicyCard {
-    const irregularities =
-      this.policyDefinitionUtils.getPolicyIrregularities(policyDefinition);
+  buildPolicyCard(policyDefinition: PolicyDefinitionDto): PolicyCard {
+    const irregularities = policyDefinition.policy?.errors ?? [];
     return {
-      id: policyDefinitionId(policyDefinition),
+      id: policyDefinition.policyDefinitionId,
       isRegular: !irregularities.length,
       irregularities,
       constraints: this.buildPolicyCardConstraints(policyDefinition),
-      objectForJson: policyDefinition,
+      objectForJson: JSON.parse(policyDefinition.policy.policyJsonLd),
     };
   }
 
   private buildPolicyCardConstraints(
-    policyDefinition: PolicyDefinition,
+    policyDefinition: PolicyDefinitionDto,
   ): PolicyCardConstraint[] {
-    const constraints: AtomicConstraint[] =
-      policyDefinition.policy.permissions
-        ?.map((it) => (it?.constraints ?? []) as AtomicConstraint[])
-        ?.flat()
-        ?.filter((constraint) =>
-          this.policyDefinitionUtils.isAtomicConstraint(constraint),
-        ) ?? [];
+    const constraints = policyDefinition.policy?.constraints ?? [];
     return constraints.map((constraint) => {
-      let rightStringValue = (constraint.rightExpression as LiteralExpression)
-        .value;
-      let leftStringValue = (constraint.leftExpression as LiteralExpression)
-        .value;
+      let left = constraint.left;
+      let operator = OPERATOR_SYMBOLS[constraint.operator];
+      let right = this.policyLiteralToString(constraint.right);
 
       return {
-        left: leftStringValue,
-        operator: OperatorSymbols[constraint.operator] ?? constraint.operator,
-        right: rightStringValue,
+        left,
+        operator,
+        right,
       };
     });
+  }
+
+  private policyLiteralToString(literal: UiPolicyLiteral): string {
+    switch (literal.type) {
+      case 'STRING':
+        return literal.value ?? '';
+      case 'STRING_LIST':
+        return literal.valueList?.join(', ') ?? '';
+      case 'JSON':
+        return literal.value ?? '';
+      default:
+        throw new Error(`Unknown literal type: ${literal.type}`);
+    }
   }
 }

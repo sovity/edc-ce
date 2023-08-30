@@ -1,5 +1,7 @@
-import {ContractDefinitionEntry} from '@sovity.de/edc-client';
-import {PolicyDefinition} from '../../../../core/services/api/legacy-managent-api-client';
+import {
+  ContractDefinitionEntry,
+  PolicyDefinitionDto,
+} from '@sovity.de/edc-client';
 import {Asset} from '../../../../core/services/models/asset';
 
 export interface ContractDefinitionCard {
@@ -13,7 +15,7 @@ export interface ContractDefinitionCard {
 
 export interface ContractDefinitionCardPolicy {
   policyDefinitionId: string;
-  policyDefinition: PolicyDefinition | null;
+  policyDefinition: PolicyDefinitionDto | null;
 }
 
 export interface ContractDefinitionCardCriterion {

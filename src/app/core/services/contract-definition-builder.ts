@@ -1,11 +1,9 @@
 import {Injectable} from '@angular/core';
-import {UiCriterionLiteralDtoTypeEnum} from '@sovity.de/edc-client';
-import {ContractDefinitionRequest} from '@sovity.de/edc-client/dist/generated/models/ContractDefinitionRequest';
-import {ContractDefinitionEditorDialogFormValue} from '../../routes/connector-ui/contract-definition-page/contract-definition-editor-dialog/contract-definition-editor-dialog-form-model';
 import {
-  ContractDefinitionDto,
-  policyDefinitionId,
-} from './api/legacy-managent-api-client';
+  ContractDefinitionRequest,
+  UiCriterionLiteralDtoTypeEnum,
+} from '@sovity.de/edc-client';
+import {ContractDefinitionEditorDialogFormValue} from '../../routes/connector-ui/contract-definition-page/contract-definition-editor-dialog/contract-definition-editor-dialog-form-model';
 import {AssetProperties} from './asset-properties';
 
 @Injectable({
@@ -23,8 +21,8 @@ export class ContractDefinitionBuilder {
   ): ContractDefinitionRequest {
     return {
       contractDefinitionId: formValue.id ?? '',
-      accessPolicyId: policyDefinitionId(formValue.accessPolicy!),
-      contractPolicyId: policyDefinitionId(formValue.contractPolicy!),
+      accessPolicyId: formValue.accessPolicy!.policyDefinitionId,
+      contractPolicyId: formValue.contractPolicy!.policyDefinitionId,
       assetSelector: [
         {
           operandLeft: AssetProperties.id,

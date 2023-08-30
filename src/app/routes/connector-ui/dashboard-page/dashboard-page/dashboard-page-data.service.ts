@@ -8,16 +8,12 @@ import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {
   ContractAgreementService,
   ContractDefinitionService,
-  PolicyService,
 } from '../../../../core/services/api/legacy-managent-api-client';
-import {
-  ConnectorInfoPropertyGridGroupBuilder
-} from '../../../../core/services/connector-info-property-grid-group-builder';
+import {ConnectorInfoPropertyGridGroupBuilder} from '../../../../core/services/connector-info-property-grid-group-builder';
 import {LastCommitInfoService} from '../../../../core/services/last-commit-info.service';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {DonutChartData} from '../dashboard-donut-chart/donut-chart-data';
 import {DashboardPageData, defaultDashboardData} from './dashboard-page-data';
-
 
 @Injectable({providedIn: 'root'})
 export class DashboardPageDataService {
@@ -26,12 +22,10 @@ export class DashboardPageDataService {
     private catalogBrowserService: ContractOfferService,
     private contractDefinitionService: ContractDefinitionService,
     private contractAgreementService: ContractAgreementService,
-    private policyService: PolicyService,
     private catalogApiUrlService: CatalogApiUrlService,
     private lastCommitInfoService: LastCommitInfoService,
     private connectorInfoPropertyGridGroupBuilder: ConnectorInfoPropertyGridGroupBuilder,
-  ) {
-  }
+  ) {}
 
   /**
    * Fetch {@link DashboardPageData}.
@@ -59,8 +53,8 @@ export class DashboardPageDataService {
   }
 
   private policyKpis(): Observable<Partial<DashboardPageData>> {
-    return this.policyService.getAllPolicies(0, 10_000_000).pipe(
-      map((policies) => policies.length),
+    return this.edcApiService.getPolicyDefinitionPage().pipe(
+      map((policyDefinitionPage) => policyDefinitionPage.policies.length),
       Fetched.wrap({failureMessage: 'Failed fetching number of policies.'}),
       map((numPolicies) => ({numPolicies})),
     );
@@ -117,20 +111,19 @@ export class DashboardPageDataService {
   }
 
   private transferProcessKpis(): Observable<Partial<DashboardPageData>> {
-    return this.edcApiService.getTransferHistoryPage()
-      .pipe(
-        Fetched.wrap({
-          failureMessage: 'Failed fetching transfer processes.',
-        }),
-        map((transferData) => ({
-          incomingTransfersChart: transferData.map((it) =>
-            this.buildTransferChart(it.transferEntries, 'CONSUMING'),
-          ),
-          outgoingTransfersChart: transferData.map((it) =>
-            this.buildTransferChart(it.transferEntries, 'PROVIDING'),
-          ),
-        })),
-      );
+    return this.edcApiService.getTransferHistoryPage().pipe(
+      Fetched.wrap({
+        failureMessage: 'Failed fetching transfer processes.',
+      }),
+      map((transferData) => ({
+        incomingTransfersChart: transferData.map((it) =>
+          this.buildTransferChart(it.transferEntries, 'CONSUMING'),
+        ),
+        outgoingTransfersChart: transferData.map((it) =>
+          this.buildTransferChart(it.transferEntries, 'PROVIDING'),
+        ),
+      })),
+    );
   }
 
   private buildTransferChart(
@@ -142,7 +135,13 @@ export class DashboardPageDataService {
         ? transfers.filter((it) => it.direction === 'CONSUMING')
         : transfers.filter((it) => it.direction === 'PROVIDING');
 
-    const states = [...new Set(filteredTransfers.sort((a, b) => a.state.code - b.state.code).map((it) => it.state.name))]
+    const states = [
+      ...new Set(
+        filteredTransfers
+          .sort((a, b) => a.state.code - b.state.code)
+          .map((it) => it.state.name),
+      ),
+    ];
 
     const colorsByState = new Map<string, string>();
     colorsByState.set('IN_PROGRESS', '#7eb0d5');
@@ -151,7 +150,8 @@ export class DashboardPageDataService {
     const defaultColor = '#bd7ebe';
 
     const amountsByState = states.map(
-      (state) => filteredTransfers.filter((it) => it.state.name === state).length,
+      (state) =>
+        filteredTransfers.filter((it) => it.state.name === state).length,
     );
 
     return {

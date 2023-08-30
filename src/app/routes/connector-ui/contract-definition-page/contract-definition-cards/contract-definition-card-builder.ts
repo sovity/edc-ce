@@ -2,16 +2,10 @@ import {Injectable} from '@angular/core';
 import {
   ContractDefinitionEntry,
   ContractDefinitionPage,
+  PolicyDefinitionDto,
   UiCriterionDto,
 } from '@sovity.de/edc-client';
-import {
-  PolicyDefinition,
-  policyDefinitionId,
-} from '../../../../core/services/api/legacy-managent-api-client';
-import {
-  Operator,
-  OperatorSymbols,
-} from '../../../../core/services/api/policy-type-ext';
+import {OPERATOR_SYMBOLS} from '../../../../core/services/api/policy-type-ext';
 import {AssetProperties} from '../../../../core/services/asset-properties';
 import {Asset} from '../../../../core/services/models/asset';
 import {associateBy} from '../../../../core/utils/map-utils';
@@ -27,12 +21,12 @@ export class ContractDefinitionCardBuilder {
   buildContractDefinitionCards(
     contractDefinitionPage: ContractDefinitionPage,
     assets: Asset[],
-    policyDefinitions: PolicyDefinition[],
+    policyDefinitions: PolicyDefinitionDto[],
   ): ContractDefinitionCard[] {
     const assetById = associateBy(assets, (asset) => asset.id);
     const policyDefinitionById = associateBy(
       policyDefinitions,
-      policyDefinitionId,
+      (policyDefinition) => policyDefinition.policyDefinitionId,
     );
 
     return contractDefinitionPage.contractDefinitions.map(
@@ -48,7 +42,7 @@ export class ContractDefinitionCardBuilder {
   buildContractDefinitionCard(
     contractDefinition: ContractDefinitionEntry,
     assetById: Map<string, Asset>,
-    policyDefinitionById: Map<string, PolicyDefinition>,
+    policyDefinitionById: Map<string, PolicyDefinitionDto>,
   ): ContractDefinitionCard {
     return {
       id: contractDefinition.contractDefinitionId,
@@ -71,7 +65,7 @@ export class ContractDefinitionCardBuilder {
 
   private extractPolicy(
     policyDefinitionId: string,
-    policyDefinitionsById: Map<string, PolicyDefinition>,
+    policyDefinitionsById: Map<string, PolicyDefinitionDto>,
   ): ContractDefinitionCardPolicy {
     return {
       policyDefinitionId: policyDefinitionId,
@@ -88,7 +82,7 @@ export class ContractDefinitionCardBuilder {
       return 'Assets';
     }
 
-    let operatorStr = OperatorSymbols[operator as Operator] ?? operator;
+    let operatorStr = OPERATOR_SYMBOLS[operator] ?? operator;
     return `${operandLeft} ${operatorStr}`;
   }
 

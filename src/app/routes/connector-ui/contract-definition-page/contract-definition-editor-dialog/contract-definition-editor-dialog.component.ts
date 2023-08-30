@@ -2,11 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {finalize, takeUntil} from 'rxjs/operators';
+import {PolicyDefinitionDto} from '@sovity.de/edc-client';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {
-  PolicyDefinition,
-  PolicyService,
-} from '../../../../core/services/api/legacy-managent-api-client';
 import {AssetEntryBuilder} from '../../../../core/services/asset-entry-builder';
 import {AssetServiceMapped} from '../../../../core/services/asset-service-mapped';
 import {ContractDefinitionBuilder} from '../../../../core/services/contract-definition-builder';
@@ -22,7 +19,7 @@ import {ContractDefinitionEditorDialogResult} from './contract-definition-editor
   providers: [ContractDefinitionEditorDialogForm, AssetEntryBuilder],
 })
 export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
-  policies: PolicyDefinition[] = [];
+  policies: PolicyDefinitionDto[] = [];
   assets: Asset[] = [];
   loading = false;
 
@@ -30,7 +27,6 @@ export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
     private assetServiceMapped: AssetServiceMapped,
     public form: ContractDefinitionEditorDialogForm,
     private notificationService: NotificationService,
-    private policyService: PolicyService,
     private edcApiService: EdcApiService,
     private contractDefinitionBuilder: ContractDefinitionBuilder,
     private dialogRef: MatDialogRef<ContractDefinitionEditorDialog>,
@@ -38,11 +34,11 @@ export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.policyService
-      .getAllPolicies(0, 10_000_000)
+    this.edcApiService
+      .getPolicyDefinitionPage()
       .pipe(takeUntil(this.ngOnDestroy$))
-      .subscribe((polices) => {
-        this.policies = polices;
+      .subscribe((policyDefinitionPage) => {
+        this.policies = policyDefinitionPage.policies;
       });
     this.assetServiceMapped
       .fetchAssets()

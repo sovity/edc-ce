@@ -1,9 +1,9 @@
 import {
   ContractDefinitionEntry,
   ContractDefinitionPage,
+  ContractDefinitionRequest,
   IdResponseDto,
 } from '@sovity.de/edc-client';
-import {ContractDefinitionRequest} from '@sovity.de/edc-client/dist/generated/models/ContractDefinitionRequest';
 import {AssetProperties} from '../../asset-properties';
 
 export let contractDefinitions: ContractDefinitionEntry[] = [

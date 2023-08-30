@@ -11,7 +11,7 @@ import {catchError, tap} from 'rxjs/operators';
 import {ConfirmDialogModel} from '../../../../component-library/confirmation-dialog/confirmation-dialog/confirmation-dialog.component';
 import {JsonDialogComponent} from '../../../../component-library/json-dialog/json-dialog/json-dialog.component';
 import {JsonDialogData} from '../../../../component-library/json-dialog/json-dialog/json-dialog.data';
-import {PolicyService} from '../../../../core/services/api/legacy-managent-api-client';
+import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {NotificationService} from '../../../../core/services/notification.service';
 import {PolicyCard} from './policy-card';
 
@@ -35,9 +35,9 @@ export class PolicyCardsComponent {
   deleteDone = new EventEmitter();
 
   constructor(
+    private edcApiService: EdcApiService,
     private matDialog: MatDialog,
     private notificationService: NotificationService,
-    private policyService: PolicyService,
   ) {}
 
   onPolicyDetailClick(policyCard: PolicyCard) {
@@ -52,7 +52,7 @@ export class PolicyCardsComponent {
         color: 'warn',
         confirmation: ConfirmDialogModel.forDelete('policy', policyCard.id),
         action: () =>
-          this.policyService.deletePolicy(policyCard.id).pipe(
+          this.edcApiService.deletePolicyDefinition(policyCard.id).pipe(
             tap(() => {
               this.notificationService.showInfo('Policy deleted!');
               this.deleteDone.emit();

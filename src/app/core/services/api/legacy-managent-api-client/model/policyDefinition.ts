@@ -18,16 +18,3 @@ export interface PolicyDefinition {
   uid?: string;
   id: string;
 }
-
-/**
- * Temporary workaround around EDC Milestone 6/7 API incompatibilities.
- * @param policyDefinition polcicy definition
- * @return policy definition ID
- */
-export function policyDefinitionId(policyDefinition: PolicyDefinition): string {
-  return (
-    policyDefinition.id ||
-    (policyDefinition as any).uid ||
-    'no-known-id-field-on-policy-definition'
-  );
-}

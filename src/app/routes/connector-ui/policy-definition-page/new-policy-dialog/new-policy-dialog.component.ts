@@ -2,7 +2,7 @@ import {Component, OnDestroy} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {finalize, takeUntil} from 'rxjs/operators';
-import {PolicyService} from '../../../../core/services/api/legacy-managent-api-client';
+import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {AssetEntryBuilder} from '../../../../core/services/asset-entry-builder';
 import {NotificationService} from '../../../../core/services/notification.service';
 import {PolicyDefinitionBuilder} from '../../../../core/services/policy-definition-builder';
@@ -19,9 +19,9 @@ export class NewPolicyDialogComponent implements OnDestroy {
   loading = false;
 
   constructor(
+    private edcApiService: EdcApiService,
     public form: NewPolicyDialogForm,
     private notificationService: NotificationService,
-    private policyService: PolicyService,
     private dialogRef: MatDialogRef<NewPolicyDialogComponent>,
     public validationMessages: ValidationMessages,
     private policyDefinitionBuilder: PolicyDefinitionBuilder,
@@ -33,8 +33,8 @@ export class NewPolicyDialogComponent implements OnDestroy {
       this.policyDefinitionBuilder.buildPolicyDefinition(formValue);
     this.form.group.disable();
     this.loading = true;
-    this.policyService
-      .createPolicy(policyDefinition)
+    this.edcApiService
+      .createPolicyDefinition(policyDefinition)
       .pipe(
         takeUntil(this.ngOnDestroy$),
         finalize(() => {
