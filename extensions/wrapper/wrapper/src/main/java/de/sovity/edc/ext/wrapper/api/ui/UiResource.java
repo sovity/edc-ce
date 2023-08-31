@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.api.ui;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
@@ -23,6 +22,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionPage;
@@ -171,11 +171,20 @@ public class UiResource {
         return policyDefinitionApiService.deletePolicyDefinition(policyId);
     }
     @POST
-    @Path("pages/contract-negotiation-page/contract-negotiations")
+    @Path("pages/catalog-page/contract-negotiations")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Initiate a new Contract Negotiation")
-    public IdResponseDto initiateContractNegotiation(ContractNegotiationRequest contractNegotiationRequest) throws JsonProcessingException {
+    public ContractNegotiationDto initiateContractNegotiation(ContractNegotiationRequest contractNegotiationRequest){
         return contractNegotiationApiService.initiateContractNegotiation(contractNegotiationRequest);
+    }
+
+    @POST
+    @Path("pages/catalog-page/contract-negotiations/{contractNegotiationId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Get Contract Negotiation Information")
+    public ContractNegotiationDto getContractNegotiation(@PathParam("contractNegotiationId") String contractNegotiationId){
+        return contractNegotiationApiService.getContractNegotiation(contractNegotiationId);
     }
 }

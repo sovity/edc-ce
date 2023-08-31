@@ -71,4 +71,17 @@ public class PolicyMapper {
                 .permission(permission)
                 .build();
     }
+
+    /**
+     * Builds an ODRL Policy from JSON-LD.
+     * <p>
+     * This operation is lossless.
+     *
+     * @param policyJsonLd policy
+     * @return ODRL policy
+     */
+    @SneakyThrows
+    public Policy buildPolicy(String policyJsonLd) {
+        return jsonLdObjectMapper.readValue(policyJsonLd, Policy.class);
+    }
 }

@@ -15,11 +15,8 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
-
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -29,14 +26,20 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-@Builder(toBuilder = true)
 @RequiredArgsConstructor
-@Schema(description = "Type-Safe OpenAPI generator friendly Contract Offer DTO as needed by our UI")
-public class ContractOfferDto {
+@Schema(description = "Contract Negotiation Information")
+public class ContractNegotiationDto {
 
-    @Schema(description = "Policy JsonLd", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String policyJsonLd;
+    @Schema(description = "Contract Negotiation Id", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String contractNegotiationId;
 
-    @Schema(description = "Asset ID", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String assetId;
+    @Schema(description = "Contract Negotiation Creation Time", requiredMode = Schema.RequiredMode.REQUIRED)
+    private long contractNegotiationCreationTime;
+
+    @Schema(description = "Contract Agreement Id", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String contractAgreementId;
+
+    @Schema(description = "Status of the Contract Negotiation ", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String status;
+
 }

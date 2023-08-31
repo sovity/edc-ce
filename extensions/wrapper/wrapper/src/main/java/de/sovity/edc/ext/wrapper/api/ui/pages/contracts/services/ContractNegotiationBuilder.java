@@ -34,15 +34,14 @@ public class ContractNegotiationBuilder {
 
     private final ContractOfferMapper contractOfferMapper;
 
-    public ContractRequest buildContractNegotiation(ContractNegotiationRequest request) throws JsonProcessingException {
+    public ContractRequest buildContractNegotiation(ContractNegotiationRequest request) {
         var protocol = request.getProtocol();
         var counterPartyAddress = request.getCounterPartyAddress();
-        var contractOffer = request.getContractOffer();
 
         return ContractRequest.Builder.newInstance()
                 .counterPartyAddress(counterPartyAddress)
                 .protocol(protocol)
-                .contractOffer(contractOfferMapper.buildContractOffer(contractOffer))
+                .contractOffer(contractOfferMapper.buildContractOffer(request))
                 .build();
     }
 }

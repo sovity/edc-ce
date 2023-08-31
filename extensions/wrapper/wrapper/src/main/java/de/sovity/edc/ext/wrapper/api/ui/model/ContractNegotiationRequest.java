@@ -22,11 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 @Getter
 @Setter
 @ToString
@@ -35,9 +30,6 @@ import java.util.Set;
 @Schema(description = "Data for initiating a Contract Negotiation")
 public class ContractNegotiationRequest {
 
-    @Schema(description = "Contract Negotiation Id", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String contractNegotiationId;
-
     @Schema(description = "Protocol", requiredMode = Schema.RequiredMode.REQUIRED)
     private String protocol;
 
@@ -45,5 +37,11 @@ public class ContractNegotiationRequest {
     private String counterPartyAddress;
 
     @Schema(description = "Contract Offer Dto ", requiredMode = Schema.RequiredMode.REQUIRED)
-    private ContractOfferDto contractOffer;
+    private String contractOfferId;
+
+    @Schema(description = "Policy JsonLd", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String policyJsonLd;
+
+    @Schema(description = "Asset ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String assetId;
 }

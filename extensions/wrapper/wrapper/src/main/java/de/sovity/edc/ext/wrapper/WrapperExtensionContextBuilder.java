@@ -144,7 +144,7 @@ public class WrapperExtensionContextBuilder {
                 transferProcessService
         );
         var policyDefinitionApiService = new PolicyDefinitionApiService(policyDefinitionService, policyMapper);
-        var contractOfferMapper = new ContractOfferMapper(objectMapper);
+        var contractOfferMapper = new ContractOfferMapper(policyMapper);
         var contractNegotiationBuilder = new ContractNegotiationBuilder(contractOfferMapper);
         var contractNegotiationApiService = new ContractNegotiationApiService(contractNegotiationService, contractNegotiationBuilder);
         var uiResource = new UiResource(

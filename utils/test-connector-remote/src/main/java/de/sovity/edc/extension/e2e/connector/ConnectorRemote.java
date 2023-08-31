@@ -250,7 +250,7 @@ public class ConnectorRemote {
                 .then()
                 .statusCode(200)
                 .extract().body().jsonPath()
-                .getString("'edc:contractAgreementId'");
+                .getString("'edc:contractOfferId'");
     }
 
     public String getContractNegotiationState(String id) {
@@ -357,7 +357,7 @@ public class ConnectorRemote {
                 noConstraintPolicyId);
     }
 
-    private RequestSpecification prepareManagementApiCall() {
+    public RequestSpecification prepareManagementApiCall() {
         var managementConfig = config.getManagementEndpoint();
         var managementBaseUri = managementConfig.getUri().toString();
         if (managementConfig.authProvider() instanceof NoneAuthProvider) {
@@ -379,7 +379,7 @@ public class ConnectorRemote {
     }
 
 
-    private ContractId getDatasetContractId(JsonObject dataset) {
+    public ContractId getDatasetContractId(JsonObject dataset) {
         var id = dataset.getJsonArray(ODRL_POLICY_ATTRIBUTE).get(0).asJsonObject().getString(ID);
         return ContractId.parseId(id).getContent();
     }

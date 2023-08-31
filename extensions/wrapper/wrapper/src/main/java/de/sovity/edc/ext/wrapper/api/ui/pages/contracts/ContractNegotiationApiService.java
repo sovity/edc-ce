@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contracts;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractNegotiationBuilder;
@@ -29,9 +30,17 @@ public class ContractNegotiationApiService {
     private final ContractNegotiationBuilder contractNegotiationBuilder;
 
     @NotNull
-    public IdResponseDto initiateContractNegotiation(ContractNegotiationRequest request) throws JsonProcessingException {
+    public ContractNegotiationDto initiateContractNegotiation(ContractNegotiationRequest request) {
         var contractRequest = contractNegotiationBuilder.buildContractNegotiation(request);
         var contractNegotiation = contractNegotiationService.initiateNegotiation(contractRequest);
-        return new IdResponseDto(contractNegotiation.getId());
+        var contractNegotiationStatus = contractNegotiationService.getState(contractNegotiation.getId());
+        return new ContractNegotiationDto(contractNegotiation.getId(), contractNegotiation.getCreatedAt(), contractNegotiation.getContractAgreement().getId(), contractNegotiationStatus);
+    }
+
+    @NotNull
+    public ContractNegotiationDto getContractNegotiation(String contractNegotiationId) {
+        var contractNegotiation = contractNegotiationService.findbyId(contractNegotiationId);
+        var contractNegotiationStatus = contractNegotiationService.getState(contractNegotiation.getId());
+        return new ContractNegotiationDto(contractNegotiation.getId(), contractNegotiation.getCreatedAt(), contractNegotiation.getContractAgreement().getId(), contractNegotiationStatus);
     }
 }
