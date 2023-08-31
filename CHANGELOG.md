@@ -16,6 +16,8 @@ All notable changes to this project will be documented in this file.
 
 #### Patch Changes
 
+- Fixed issues with Broker Client Extension causing exceptions, because the MDS no longer uses the legacy broker.
+
 ### Deployment Migration Notes
 
 #### Compatible Versions
