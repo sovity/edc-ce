@@ -5,19 +5,9 @@ import {
   IdResponseDto,
 } from '@sovity.de/edc-client';
 import {AssetProperties} from '../../asset-properties';
+import {TestAssets} from './data/test-assets';
 
-export let assets: AssetEntry[] = [
-  {
-    properties: {
-      [AssetProperties.id]: 'test-asset-1',
-      [AssetProperties.name]: 'Test Asset 1',
-      [AssetProperties.description]: 'This is a test asset.',
-    },
-    privateProperties: {
-      'some-private-property': 'abc',
-    },
-  },
-];
+export let assets: AssetEntry[] = [TestAssets.full, TestAssets.boring];
 
 export const assetPage = (): AssetPage => {
   return {

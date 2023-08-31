@@ -5,7 +5,6 @@ import {BrokerDataOffer} from '../../../routes/broker-ui/catalog-page/catalog-pa
 import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
 import {AssetDetailDialogData} from './asset-detail-dialog-data';
 import {AssetPropertyGridGroupBuilder} from './asset-property-grid-group-builder';
-import {getLegacyPolicy} from './policy-utils';
 
 @Injectable()
 export class AssetDetailDialogDataService {
@@ -52,7 +51,9 @@ export class AssetDetailDialogDataService {
     contractAgreement: ContractAgreementCardMapped,
   ): AssetDetailDialogData {
     let asset = contractAgreement.asset;
-    let contractPolicy = getLegacyPolicy(contractAgreement.contractPolicy);
+    let contractPolicy = JSON.parse(
+      contractAgreement.contractPolicy.policyJsonLd,
+    );
 
     const propertyGridGroups = [
       this.assetPropertyGridGroupBuilder.buildContractAgreementGroup(

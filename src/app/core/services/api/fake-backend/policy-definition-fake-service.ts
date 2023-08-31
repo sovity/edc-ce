@@ -4,43 +4,20 @@ import {
   PolicyDefinitionDto,
   PolicyDefinitionPage,
 } from '@sovity.de/edc-client';
+import {TestPolicies} from './data/test-policies';
 
 export let policyDefinitions: PolicyDefinitionDto[] = [
   {
     policyDefinitionId: 'test-policy-definition-1',
-    policy: {
-      policyJsonLd: '{"example-policy-jsonld": true}',
-      constraints: [
-        {
-          left: 'REFERRING_CONNECTOR',
-          operator: 'EQ',
-          right: {type: 'STRING', value: 'https://my-other-connector'},
-        },
-      ],
-      errors: [],
-    },
+    policy: TestPolicies.connectorRestricted,
   },
   {
-    policyDefinitionId: 'test-policy-definition-1-with-errors',
-    policy: {
-      policyJsonLd: '{"example-policy-jsonld": true}',
-      constraints: [
-        {
-          left: 'REFERRING_CONNECTOR',
-          operator: 'EQ',
-          right: {type: 'STRING', value: 'https://my-other-connector'},
-        },
-      ],
-      errors: ['test-error-1'],
-    },
+    policyDefinitionId: 'test-policy-definition-2',
+    policy: TestPolicies.warnings,
   },
   {
     policyDefinitionId: 'test-policy-definition-3',
-    policy: {
-      policyJsonLd: '{"example-policy-jsonld": true}',
-      constraints: [],
-      errors: ['No constraints found!'],
-    },
+    policy: TestPolicies.failedMapping,
   },
 ];
 export const policyDefinitionPage = (): PolicyDefinitionPage => {
