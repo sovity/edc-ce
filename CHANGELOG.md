@@ -21,11 +21,12 @@ the detailed section referring to by linking pull requests or issues.
 #### Fixed
 
 - Removed 404-causing login polling from broker UI
-
 - Migrated transfer history page to api wrapper
 - Migrated contract definition page to api wrapper
 - Migrated policy definition page to api wrapper
 - Migrated asset page to api wrapper
+- Broker: Fixed popularity not logged when clicking on a data offer.
+- Broker: Fixed missing name in legal notice
 
 #### Removed
 
