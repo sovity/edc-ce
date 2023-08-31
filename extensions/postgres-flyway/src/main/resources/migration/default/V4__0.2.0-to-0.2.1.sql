@@ -8,7 +8,7 @@
 --  SPDX-License-Identifier: Apache-2.0
 --
 --  Contributors:
---       sovity GmbH - Update Tables From MS8 to 0.1.0 EDC
+--       sovity GmbH - Update Tables From 0.2.0 to 0.2.1 EDC
 --
 --
 
