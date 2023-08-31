@@ -32,8 +32,11 @@ import java.util.Set;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "Data for creating a Contract Negotiation")
+@Schema(description = "Data for initiating a Contract Negotiation")
 public class ContractNegotiationRequest {
+
+    @Schema(description = "Contract Negotiation Id", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String contractNegotiationId;
 
     @Schema(description = "Protocol", requiredMode = Schema.RequiredMode.REQUIRED)
     private String protocol;

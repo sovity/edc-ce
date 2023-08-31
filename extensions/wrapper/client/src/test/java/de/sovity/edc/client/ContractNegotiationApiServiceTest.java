@@ -14,61 +14,67 @@
 
 package de.sovity.edc.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.client.gen.model.ContractDefinitionEntry;
-import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
-import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
-import de.sovity.edc.client.gen.model.UiCriterionDto;
-import de.sovity.edc.client.gen.model.UiCriterionLiteralDto;
-import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractOfferMapper;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.CriterionMapper;
-import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
-import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
-import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
+import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.eclipse.edc.spi.query.Criterion;
-import org.eclipse.edc.spi.query.QuerySpec;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
-import java.util.List;
+import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.basicEdcConfig;
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
-public class ContractNegotiationApiServiceTest {
+class ContractNegotiationApiServiceTest {
 
-    ObjectMapper objectMapper;
-    ContractOfferMapper contractOfferMapper;
+
+    private static final String PROVIDER_PARTICIPANT_ID = "provider";
+    private static final String CONSUMER_PARTICIPANT_ID = "consumer";
+    private static final String TEST_BACKEND_TEST_DATA = UUID.randomUUID().toString();
+
+    @RegisterExtension
+    static EdcExtension providerEdcContext = new EdcExtension();
+    @RegisterExtension
+    static EdcExtension consumerEdcContext = new EdcExtension();
+
+    private ConnectorRemote providerConnector;
+    private ConnectorRemote consumerConnector;
+    private MockDataAddressRemote dataAddress;
 
     @BeforeEach
-    void setUp(EdcExtension extension) {
-        TestUtils.setupExtension(extension);
-        objectMapper = new ObjectMapper();
-        contractOfferMapper = new ContractOfferMapper(objectMapper);
+    void setup() {
+        var providerConfig = basicEdcConfig(PROVIDER_PARTICIPANT_ID, 24000);
+        providerEdcContext.setConfiguration(providerConfig.getProperties());
+        providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
+
+        var consumerConfig = basicEdcConfig(CONSUMER_PARTICIPANT_ID, 25000);
+        consumerEdcContext.setConfiguration(consumerConfig.getProperties());
+        consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
+
+        // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
+        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
 
     @Test
-    void testContractNegotiationInitialization(ContractNegotiationService negotiationService) {
-
+    void testContractNegotiation() {
         // arrange
-        var client = TestUtils.edcClient();
-
-        var contractNegotiationRequest = ContractNegotiationRequest.builder()
-                .protocol("http")
-                .counterPartyAddress("http://localhost:8080")
-                .contractOffer(contractOfferMapper.buildContractOffer())
-                .build();
+        var assetId = UUID.randomUUID().toString();
+        providerConnector.createDataOffer(assetId, dataAddress.getDataSourceUrl(TEST_BACKEND_TEST_DATA));
 
         // act
-        var response = client.uiApi().initiateContractNegotiation(contractNegotiationRequest);
+        consumerConnector.consumeOffer(
+                providerConnector.getParticipantId(),
+                providerConnector.getConfig().getProtocolEndpoint().getUri(),
+                assetId,
+                dataAddress.getDataSinkJsonLd());
 
         // assert
-        assertThat(response).isNotNull();
-
+        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), TEST_BACKEND_TEST_DATA);
     }
 }
