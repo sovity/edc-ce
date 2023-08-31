@@ -23,25 +23,25 @@
 * [Security Guide](./SECURITY.md)
 
 
-## Extensions Documentation
+## Extensions: Wrapper
 
-### Wrapper
+* [Overview](/extensions/wrapper/README.md)
+* [API Commons Endpoint](/extensions/wrapper/wrapper-common-api/README.md)
+* [API EE Endpoint](/extensions/wrapper/wrapper-ee-api/README.md)
+* [Java Implementation](/extensions/wrapper/client/README.md)
+* [Java Example](/extensions/wrapper/client-example/README.md)
+* [TypeScript Implementation](/extensions/wrapper/client-ts/README.md)
+* [TypeScript Example](/extensions/wrapper/client-ts-example/README.md)
 
-* [Wrapper](/extensions/wrapper/README.md)
-* [Wrapper: API Commons Endpoints](/extensions/wrapper/wrapper-common-api/README.md)
-* [Wrapper: API EE Endpoints](/extensions/wrapper/wrapper-ee-api/README.md)
-* [Wrapper: Java Implementation](/extensions/wrapper/client/README.md)
-* [Wrapper: Java Example](/extensions/wrapper/client-example/README.md)
-* [Wrapper: TypeScript Implementation](/extensions/wrapper/client-ts/README.md)
-* [Wrapper: TypeScript Example](/extensions/wrapper/client-ts-example/README.md)
 
-### Policies
+## Extensions: Policies
 
-* [Policy: Always True](/extensions/policy-always-true/README.md)
-* [Policy: Referring Connector](/extensions/policy-referring-connector/README.md)
-* [Policy: Time Interval](/extensions/policy-time-interval/README.md)
+* [Always True](/extensions/policy-always-true/README.md)
+* [Referring Connector](/extensions/policy-referring-connector/README.md)
+* [Time Interval](/extensions/policy-time-interval/README.md)
 
-### Others
+
+## Extensions: Other
 
 * [Database Migration](/extensions/postgres-flyway/README.md)
 * [EDC UI Config](/extensions/edc-ui-config/README.md)
