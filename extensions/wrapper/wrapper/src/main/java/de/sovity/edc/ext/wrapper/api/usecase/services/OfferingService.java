@@ -4,6 +4,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.model.AssetEntryDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractDefinitionRequestDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
+import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
@@ -16,8 +17,6 @@ import org.eclipse.edc.spi.query.Criterion;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
-
-import static de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils.addressForProperties;
 
 /**
  * Service for all the features of the wrapper regarding offers.
@@ -32,6 +31,7 @@ public class OfferingService {
     private final PolicyDefinitionStore policyDefinitionStore;
     private final ContractDefinitionStore contractDefinitionStore;
     private final PolicyMappingService policyMappingService;
+    private final EdcPropertyUtils edcPropertyUtils;
 
     /**
      * Creates the asset, policy and contract definition in the connector. First, transforms the
@@ -45,7 +45,7 @@ public class OfferingService {
         try {
             var assetEntry = dto.getAssetEntry();
             var asset = transformAsset(assetEntry);
-            var dataAddress = addressForProperties(assetEntry.getDataAddressProperties());
+            var dataAddress = edcPropertyUtils.buildDataAddress(assetEntry.getDataAddressProperties());
             var policy = transformPolicy(dto.getPolicyDefinitionRequest());
             var contractDefinition = transformContractDefinition(dto
                     .getContractDefinitionRequest());

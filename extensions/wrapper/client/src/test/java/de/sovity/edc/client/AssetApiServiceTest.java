@@ -15,7 +15,7 @@ package de.sovity.edc.client;
 
 
 import de.sovity.edc.client.gen.model.AssetCreateRequest;
-import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.utils.AssetPropertyMapper;
+import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -39,12 +39,12 @@ public class AssetApiServiceTest {
 
     public static final String DATA_SINK = "http://my-data-sink/api/stuff";
     public static final String DATA_ADDRESS_TYPE = "HttpData";
-    AssetPropertyMapper assetPropertyMapper;
+    EdcPropertyUtils edcPropertyUtils;
 
     @BeforeEach
     void setUp(EdcExtension extension) {
         TestUtils.setupExtension(extension);
-        assetPropertyMapper = new AssetPropertyMapper();
+        edcPropertyUtils = new EdcPropertyUtils();
     }
 
     @Test
@@ -148,9 +148,9 @@ public class AssetApiServiceTest {
 
         var asset = Asset.Builder.newInstance()
                 .id(properties.get(Asset.PROPERTY_ID))
-                .properties(assetPropertyMapper.toMapOfObject(properties))
+                .properties(edcPropertyUtils.toMapOfObject(properties))
                 .dataAddress(dataAddress)
-                .privateProperties(assetPropertyMapper.toMapOfObject(privateProperties))
+                .privateProperties(edcPropertyUtils.toMapOfObject(privateProperties))
                 .createdAt(dateFormatterToLong(date))
                 .build();
         assetService.create(asset);

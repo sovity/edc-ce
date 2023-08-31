@@ -14,11 +14,11 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
 
-import de.sovity.edc.ext.wrapper.api.ui.model.AssetEntry;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.AssetEntry;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.AssetBuilder;
-import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.utils.AssetPropertyMapper;
+import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.spi.query.QuerySpec;
@@ -32,14 +32,14 @@ import java.util.List;
 public class AssetApiService {
     private final AssetBuilder assetBuilder;
     private final AssetService assetService;
-    private final AssetPropertyMapper assetPropertyMapper;
+    private final EdcPropertyUtils edcPropertyUtils;
 
     public List<AssetEntry> getAssets() {
         var assets = getAllAssets();
         return assets.stream().sorted(Comparator.comparing(Asset::getCreatedAt).reversed()).map(asset -> {
             var entry = new AssetEntry();
-            entry.setProperties(assetPropertyMapper.truncateToMapOfString(asset.getProperties()));
-            entry.setPrivateProperties(assetPropertyMapper.truncateToMapOfString(asset.getPrivateProperties()));
+            entry.setProperties(edcPropertyUtils.truncateToMapOfString(asset.getProperties()));
+            entry.setPrivateProperties(edcPropertyUtils.truncateToMapOfString(asset.getPrivateProperties()));
             return entry;
         }).toList();
     }

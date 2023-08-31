@@ -6,6 +6,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.model.AssetEntryDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractDefinitionRequestDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
+import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
@@ -54,8 +55,12 @@ class OfferingServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.offeringService = new OfferingService(assetIndex, policyDefinitionStore,
-                contractDefinitionStore, policyMappingService);
+        this.offeringService = new OfferingService(
+                assetIndex,
+                policyDefinitionStore,
+                contractDefinitionStore,
+                policyMappingService,
+                new EdcPropertyUtils());
 
         this.assetEntryDto = assetDto();
         this.asset = asset();

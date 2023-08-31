@@ -19,6 +19,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequestParams;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractAgreementUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
+import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.transfer.spi.types.TransferRequest;
@@ -28,15 +29,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils.addressForProperties;
-import static de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils.mapPrivateProperties;
-
 @RequiredArgsConstructor
 public class TransferRequestBuilder {
 
     private final ObjectMapper objectMapper;
     private final ContractAgreementUtils contractAgreementUtils;
     private final ContractNegotiationUtils contractNegotiationUtils;
+    private final EdcPropertyUtils edcPropertyUtils;
     private final String connectorId;
 
     public TransferRequest buildTransferRequest(
@@ -55,7 +54,7 @@ public class TransferRequestBuilder {
         var contractId = params.getContractAgreementId();
         var agreement = contractAgreementUtils.findByIdOrThrow(contractId);
         var negotiation = contractNegotiationUtils.findByContractAgreementIdOrThrow(contractId);
-        var address = addressForProperties(params.getDataSinkProperties());
+        var address = edcPropertyUtils.buildDataAddress(params.getDataSinkProperties());
 
         return TransferRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString())
@@ -65,7 +64,7 @@ public class TransferRequestBuilder {
                 .contractId(contractId)
                 .assetId(agreement.getAssetId())
                 .dataDestination(address)
-                .privateProperties(mapPrivateProperties(params.getTransferProcessProperties()))
+                .privateProperties(edcPropertyUtils.toMapOfObject(params.getTransferProcessProperties()))
                 .callbackAddresses(List.of())
                 .build();
     }

@@ -13,22 +13,56 @@
 
 package de.sovity.edc.ext.wrapper.utils;
 
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import static de.sovity.edc.ext.wrapper.utils.MapUtils.mapValues;
-
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class EdcPropertyUtils {
 
-    public static Map<String, Object> mapPrivateProperties(Map<String, String> properties) {
-        return mapValues(properties, s -> s);
+    /**
+     * Converts a {@code Map<String, Object>} to {@code Map<String, String>}.
+     * <p>
+     * Our API forsakes asset properties that are complex objects / JSON and only keeps string
+     * properties.
+     *
+     * @param map all properties
+     * @return string properties
+     */
+    public Map<String, String> truncateToMapOfString(Map<String, Object> map) {
+        Map<String, String> result = new HashMap<>();
+
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            Object value = entry.getValue();
+
+            String valueString;
+            if (value == null) {
+                valueString = null;
+            } else if (value instanceof String str) {
+                valueString = str;
+            } else if (value instanceof Double) {
+                valueString = String.valueOf(value);
+            } else if (value instanceof Integer) {
+                valueString = String.valueOf(value);
+            } else {
+                continue;
+            }
+
+            result.put(entry.getKey(), valueString);
+        }
+        return result;
     }
 
-    public static DataAddress addressForProperties(Map<String, String> properties) {
-        var addressProperties = mapValues(properties, s -> (Object) s);
-        return DataAddress.Builder.newInstance().properties(addressProperties).build();
+    @SuppressWarnings({"unchecked", "rawtypes", "java:S1905"})
+    public Map<String, Object> toMapOfObject(Map<String, String> map) {
+        return new HashMap<>((Map<String, Object>) (Map) map);
+    }
+
+    public DataAddress buildDataAddress(Map<String, String> properties) {
+        return DataAddress.Builder.newInstance()
+                .properties(toMapOfObject(properties))
+                .build();
     }
 }
