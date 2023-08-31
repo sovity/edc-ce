@@ -1,5 +1,6 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
@@ -34,14 +35,13 @@ public class PolicyMapper {
      * @param policy ODRL policy
      * @return ui policy
      */
-    @SneakyThrows
     public UiPolicyDto buildPolicyDto(Policy policy) {
         MappingErrors errors = MappingErrors.root();
 
         var constraints = constraintExtractor.getPermissionConstraints(policy, errors);
 
         return UiPolicyDto.builder()
-                .policyJsonLd(jsonLdObjectMapper.writeValueAsString(policy))
+                .policyJsonLd(getPolicyJsonLd(policy))
                 .constraints(constraints)
                 .errors(errors.getErrors())
                 .build();
@@ -83,5 +83,18 @@ public class PolicyMapper {
     @SneakyThrows
     public Policy buildPolicy(String policyJsonLd) {
         return jsonLdObjectMapper.readValue(policyJsonLd, Policy.class);
+    }
+
+    /**
+     * Get an ODRL Policy as JSON-LD
+     * <p>
+     * This operation is lossless.
+     *
+     * @param policy ODRL policy
+     * @return JSON-LD
+     */
+    @SneakyThrows
+    private String getPolicyJsonLd(Policy policy) {
+        return jsonLdObjectMapper.writeValueAsString(policy);
     }
 }

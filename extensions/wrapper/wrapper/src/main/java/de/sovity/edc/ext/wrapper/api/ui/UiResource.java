@@ -163,6 +163,7 @@ public class UiResource {
     public IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto) {
         return policyDefinitionApiService.createPolicyDefinition(policyDefinitionDtoDto);
     }
+
     @DELETE
     @Path("pages/policy-page/policy-definitions/{policyId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -170,6 +171,7 @@ public class UiResource {
     public IdResponseDto deletePolicyDefinition(@PathParam("policyId") String policyId) {
         return policyDefinitionApiService.deletePolicyDefinition(policyId);
     }
+
     @POST
     @Path("pages/catalog-page/contract-negotiations")
     @Consumes(MediaType.APPLICATION_JSON)

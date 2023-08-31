@@ -17,6 +17,7 @@ package de.sovity.edc.client;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
+import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.jsonld.TitaniumJsonLd;
@@ -97,8 +98,12 @@ class ContractNegotiationApiServiceTest {
         JsonObject destination = dataAddress.getDataSinkJsonLd();
         var dataset = consumerConnector.getDatasetForAsset(assetId, providerProtocolApi);
         var contractId = consumerConnector.getDatasetContractId(dataset);
-        var policy = dataset.getJsonArray(ODRL_POLICY_ATTRIBUTE).get(0).asJsonObject();
 
+        var policyJsonLd = createObjectBuilder()
+                .add(CONTEXT, "https://www.w3.org/ns/odrl.jsonld")
+                .add(TYPE, "use")
+                .build()
+                .toString();
         // act
         var negotiationId = consumerConnector.prepareManagementApiCall()
                 .contentType(JSON)
@@ -113,7 +118,7 @@ class ContractNegotiationApiServiceTest {
                         .add("offer", createObjectBuilder()
                                 .add("offerId", contractId.toString())
                                 .add("assetId", contractId.assetIdPart())
-                                .add("policy", jsonLd.compact(policy).getContent())
+                                .add("policy", policyJsonLd.toString())
                         )
                         .build())
                 .when()
@@ -156,7 +161,13 @@ class ContractNegotiationApiServiceTest {
         JsonObject destination = dataAddress.getDataSinkJsonLd();
         var dataset = consumerConnector.getDatasetForAsset(assetId, providerProtocolApi);
         var contractId = consumerConnector.getDatasetContractId(dataset);
-        var policy = dataset.getJsonArray(ODRL_POLICY_ATTRIBUTE).get(0).asJsonObject();
+        var policyJsonLd = createObjectBuilder()
+                .add(CONTEXT, "https://www.w3.org/ns/odrl.jsonld")
+                .add(TYPE, Json.createObjectBuilder()
+                        .add("@policytype", "set")
+                        .build())
+                .build()
+                .toString();;
 
         // act
         var contractNegotiationDto = consumerClient.uiApi().initiateContractNegotiation(
@@ -165,7 +176,7 @@ class ContractNegotiationApiServiceTest {
                         .counterPartyAddress(providerProtocolApi.toString())
                         .contractOfferId(contractId.toString())
                         .assetId(contractId.assetIdPart())
-                        .policyJsonLd(String.valueOf(policy))
+                        .policyJsonLd(policyJsonLd)
                         .build()
         );
         Awaitility.await().atMost(Duration.ofSeconds(60)).untilAsserted(() -> {

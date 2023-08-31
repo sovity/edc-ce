@@ -149,7 +149,7 @@ public class TransferProcessTestUtils {
         transferProcessStore.save(transferProcess);
     }
 
-    public static long dateFormatterToLong(String date) throws ParseException {
+    private static long dateFormatterToLong(String date) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return formatter.parse(date).getTime();
     }
