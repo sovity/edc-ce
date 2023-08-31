@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.utils;
 
+import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,16 +24,16 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AssetPropertyMapperTest {
-    AssetPropertyMapper assetPropertyMapper;
+    EdcPropertyUtils edcPropertyUtils;
 
     @BeforeEach
     void setup() {
-        assetPropertyMapper = new AssetPropertyMapper();
+        edcPropertyUtils = new EdcPropertyUtils();
     }
 
     @Test
     void testToObjectMap() {
-        assertThat(assetPropertyMapper.toMapOfObject(Map.of(
+        assertThat(edcPropertyUtils.toMapOfObject(Map.of(
                 "a", "b"
         ))).isEqualTo(Map.of(
                 "a", "b"
@@ -50,7 +51,7 @@ class AssetPropertyMapperTest {
         map.put("f", new HashMap<>());
 
         // act
-        var actual = assetPropertyMapper.truncateToMapOfString(map);
+        var actual = edcPropertyUtils.truncateToMapOfString(map);
 
         // assert
         Map<String, String> expected = new HashMap<>();

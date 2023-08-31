@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Major Changes
 
-- Upgrade to core-EDC version `0.2.0`
+- Upgrade to core-EDC version `0.2.1`
 - Now using the `Dataspace Protocol`
 - Major changes to the management API
   - Examples for the new requests are located in the postman collection in the `docs` folder

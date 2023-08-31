@@ -19,14 +19,13 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequestParams;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractAgreementUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
+import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.transfer.spi.types.TransferRequest;
 import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
-import org.eclipse.edc.spi.types.domain.DataAddress;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -36,6 +35,7 @@ public class TransferRequestBuilder {
     private final ObjectMapper objectMapper;
     private final ContractAgreementUtils contractAgreementUtils;
     private final ContractNegotiationUtils contractNegotiationUtils;
+    private final EdcPropertyUtils edcPropertyUtils;
     private final String connectorId;
 
     public TransferRequest buildTransferRequest(
@@ -54,7 +54,7 @@ public class TransferRequestBuilder {
         var contractId = params.getContractAgreementId();
         var agreement = contractAgreementUtils.findByIdOrThrow(contractId);
         var negotiation = contractNegotiationUtils.findByContractAgreementIdOrThrow(contractId);
-        var address = buildDataAddress(params.getDataSinkProperties());
+        var address = edcPropertyUtils.buildDataAddress(params.getDataSinkProperties());
 
         return TransferRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString())
@@ -64,7 +64,7 @@ public class TransferRequestBuilder {
                 .contractId(contractId)
                 .assetId(agreement.getAssetId())
                 .dataDestination(address)
-                .privateProperties(params.getTransferProcessProperties())
+                .privateProperties(edcPropertyUtils.toMapOfObject(params.getTransferProcessProperties()))
                 .callbackAddresses(List.of())
                 .build();
     }
@@ -74,8 +74,4 @@ public class TransferRequestBuilder {
         return objectMapper.readValue(request.getCustomJson(), TransferRequest.class);
     }
 
-    @SneakyThrows
-    private DataAddress buildDataAddress(Map<String, String> dataAddressProperties) {
-        return DataAddress.Builder.newInstance().properties(dataAddressProperties).build();
-    }
 }

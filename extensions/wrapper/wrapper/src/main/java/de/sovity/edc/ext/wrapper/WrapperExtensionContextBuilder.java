@@ -25,7 +25,6 @@ import de.sovity.edc.ext.wrapper.api.ee.EnterpriseEditionResourceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.AssetBuilder;
-import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.utils.AssetPropertyMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractDefinitionApiService;
@@ -45,6 +44,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
+import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import lombok.NoArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
@@ -98,7 +98,10 @@ public class WrapperExtensionContextBuilder {
         var atomicConstraintMapper = new AtomicConstraintMapper(literalMapper, operatorMapper);
         var policyValidator = new PolicyValidator();
         var constraintExtractor = new ConstraintExtractor(policyValidator, atomicConstraintMapper);
-        var policyMapper = new PolicyMapper(objectMapper, constraintExtractor, atomicConstraintMapper);
+        var policyMapper = new PolicyMapper(
+                objectMapper,
+                constraintExtractor,
+                atomicConstraintMapper);
         var transferProcessStateService = new TransferProcessStateService();
         var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
                 policyMapper,
@@ -115,7 +118,10 @@ public class WrapperExtensionContextBuilder {
                 contractAgreementPageCardBuilder
         );
         var contactDefinitionBuilder = new ContractDefinitionBuilder(criterionMapper);
-        var contractDefinitionApiService = new ContractDefinitionApiService(contractDefinitionService, criterionMapper, contactDefinitionBuilder);
+        var contractDefinitionApiService = new ContractDefinitionApiService(
+                contractDefinitionService,
+                criterionMapper,
+                contactDefinitionBuilder);
         var transferHistoryPageApiService = new TransferHistoryPageApiService(
                 assetService,
                 contractAgreementService,
@@ -127,20 +133,23 @@ public class WrapperExtensionContextBuilder {
                 transferProcessService);
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
-        var assetUtils = new AssetPropertyMapper();
-        var assetBuilder = new AssetBuilder(assetUtils);
-        var assetApiService = new AssetApiService(assetBuilder, assetService, assetUtils);
+        var edcPropertyUtils = new EdcPropertyUtils();
+        var assetBuilder = new AssetBuilder(edcPropertyUtils);
+        var assetApiService = new AssetApiService(assetBuilder, assetService, edcPropertyUtils);
         var transferRequestBuilder = new TransferRequestBuilder(
                 objectMapper,
                 contractAgreementUtils,
                 contractNegotiationUtils,
+                edcPropertyUtils,
                 serviceExtensionContext.getConnectorId()
         );
         var contractAgreementTransferApiService = new ContractAgreementTransferApiService(
                 transferRequestBuilder,
                 transferProcessService
         );
-        var policyDefinitionApiService = new PolicyDefinitionApiService(policyDefinitionService, policyMapper);
+        var policyDefinitionApiService = new PolicyDefinitionApiService(
+                policyDefinitionService,
+                policyMapper);
         var uiResource = new UiResource(
                 contractAgreementApiService,
                 contractAgreementTransferApiService,
@@ -161,9 +170,15 @@ public class WrapperExtensionContextBuilder {
         );
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
         var policyMappingService = new PolicyMappingService();
-        var offeringService = new OfferingService(assetIndex, policyDefinitionStore,
-                contractDefinitionStore, policyMappingService);
-        var useCaseResource = new UseCaseResource(kpiApiService, supportedPolicyApiService,
+        var offeringService = new OfferingService(
+                assetIndex,
+                policyDefinitionStore,
+                contractDefinitionStore,
+                policyMappingService,
+                edcPropertyUtils);
+        var useCaseResource = new UseCaseResource(
+                kpiApiService,
+                supportedPolicyApiService,
                 offeringService);
 
         // Collect all JAX-RS resources
