@@ -18,23 +18,23 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.asset.services;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.utils.AssetPropertyMapper;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
+
+import static de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils.addressForProperties;
 
 @RequiredArgsConstructor
 public class AssetBuilder {
     private final AssetPropertyMapper assetPropertyMapper;
 
     public Asset buildAsset(AssetCreateRequest request) {
-        var properties = assetPropertyMapper.toMapOfObject(request.getProperties());
+        var assetProperties = assetPropertyMapper.toMapOfObject(request.getProperties());
         var privateProperties = assetPropertyMapper.toMapOfObject(request.getPrivateProperties());
-        var dataAddress = DataAddress.Builder.newInstance().properties(request.getDataAddressProperties()).build();
 
         return Asset.Builder.newInstance()
                 .id(request.getProperties().get(Asset.PROPERTY_ID))
-                .properties(properties)
+                .properties(assetProperties)
                 .privateProperties(privateProperties)
-                .dataAddress(dataAddress)
+                .dataAddress(addressForProperties(request.getDataAddressProperties()))
                 .build();
     }
 }

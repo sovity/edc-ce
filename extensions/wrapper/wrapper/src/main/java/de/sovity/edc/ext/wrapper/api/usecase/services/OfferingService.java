@@ -17,6 +17,8 @@ import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 
+import static de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils.addressForProperties;
+
 /**
  * Service for all the features of the wrapper regarding offers.
  *
@@ -41,8 +43,9 @@ public class OfferingService {
         validateInput(dto);
 
         try {
-            var asset = transformAsset(dto.getAssetEntry());
-            var dataAddress = transformDataAddress(dto.getAssetEntry());
+            var assetEntry = dto.getAssetEntry();
+            var asset = transformAsset(assetEntry);
+            var dataAddress = addressForProperties(assetEntry.getDataAddressProperties());
             var policy = transformPolicy(dto.getPolicyDefinitionRequest());
             var contractDefinition = transformContractDefinition(dto
                     .getContractDefinitionRequest());
@@ -71,12 +74,6 @@ public class OfferingService {
         return Asset.Builder.newInstance()
                 .id(dto.getAssetRequestId())
                 .properties(dto.getAssetRequestProperties())
-                .build();
-    }
-
-    private DataAddress transformDataAddress(AssetEntryDto dto) {
-        return DataAddress.Builder.newInstance()
-                .properties(dto.getDataAddressProperties())
                 .build();
     }
 
