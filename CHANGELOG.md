@@ -19,6 +19,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deployment Migration Notes
 
+## [v1.0.3] - 2023-09-01
+
+### Overview
+
+Bugfix Release for the Broker MvP with MS8.
+
+### Detailed Changes
+
+#### Patch
+
+- Fixed sorting the catalog by popularity.
+
+### Deployment Migration Notes
+
+No configuration changes are required.
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:1.0.3`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity13`
+- Sovity EDC CE: [`4.2.0`](https://github.com/sovity/edc-extensions/tree/v4.2.0/connector)
+
 ## [v1.0.2] - 2023-08-10
 
 ### Overview
