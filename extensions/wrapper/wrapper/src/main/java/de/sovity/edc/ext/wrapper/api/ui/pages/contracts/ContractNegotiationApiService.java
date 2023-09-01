@@ -14,14 +14,14 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.contracts;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
-import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractNegotiationBuilder;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.jetbrains.annotations.NotNull;
+
+import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcMillisToOffsetDateTime;
 
 
 @RequiredArgsConstructor
@@ -34,13 +34,13 @@ public class ContractNegotiationApiService {
         var contractRequest = contractNegotiationBuilder.buildContractNegotiation(request);
         var contractNegotiation = contractNegotiationService.initiateNegotiation(contractRequest);
         var contractNegotiationStatus = contractNegotiationService.getState(contractNegotiation.getId());
-        return new ContractNegotiationDto(contractNegotiation.getId(), contractNegotiation.getCreatedAt(), contractNegotiation.getContractAgreement().getId(), contractNegotiationStatus);
+        return new ContractNegotiationDto(contractNegotiation.getId(), utcMillisToOffsetDateTime(contractNegotiation.getCreatedAt()) , contractNegotiation.getContractAgreement().getId(), contractNegotiationStatus);
     }
 
     @NotNull
     public ContractNegotiationDto getContractNegotiation(String contractNegotiationId) {
         var contractNegotiation = contractNegotiationService.findbyId(contractNegotiationId);
         var contractNegotiationStatus = contractNegotiationService.getState(contractNegotiation.getId());
-        return new ContractNegotiationDto(contractNegotiation.getId(), contractNegotiation.getCreatedAt(), contractNegotiation.getContractAgreement().getId(), contractNegotiationStatus);
+        return new ContractNegotiationDto(contractNegotiation.getId(), utcMillisToOffsetDateTime(contractNegotiation.getCreatedAt()) , contractNegotiation.getContractAgreement().getId(), contractNegotiationStatus);
     }
 }

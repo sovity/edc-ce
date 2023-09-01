@@ -22,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 @ToString
@@ -34,7 +36,7 @@ public class ContractNegotiationDto {
     private String contractNegotiationId;
 
     @Schema(description = "Contract Negotiation Creation Time", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long contractNegotiationCreationTime;
+    private OffsetDateTime createdAt;
 
     @Schema(description = "Contract Agreement Id", requiredMode = Schema.RequiredMode.REQUIRED)
     private String contractAgreementId;

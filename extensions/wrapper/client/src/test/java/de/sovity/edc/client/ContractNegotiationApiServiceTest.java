@@ -104,6 +104,7 @@ class ContractNegotiationApiServiceTest {
                 .add(TYPE, "use")
                 .build()
                 .toString();
+
         // act
         var negotiationId = consumerConnector.prepareManagementApiCall()
                 .contentType(JSON)
@@ -167,18 +168,20 @@ class ContractNegotiationApiServiceTest {
                         .add("@policytype", "set")
                         .build())
                 .build()
-                .toString();;
+                .toString();
+
+        var contractNegotiationRequest = ContractNegotiationRequest.builder()
+                .protocol("dataspace-protocol-http")
+                .counterPartyAddress(providerProtocolApi.toString())
+                .contractOfferId(contractId.toString())
+                .assetId(contractId.assetIdPart())
+                .policyJsonLd(policyJsonLd)
+                .build();
 
         // act
-        var contractNegotiationDto = consumerClient.uiApi().initiateContractNegotiation(
-                ContractNegotiationRequest.builder()
-                        .protocol("dataspace-protocol-http")
-                        .counterPartyAddress(providerProtocolApi.toString())
-                        .contractOfferId(contractId.toString())
-                        .assetId(contractId.assetIdPart())
-                        .policyJsonLd(policyJsonLd)
-                        .build()
-        );
+
+        var contractNegotiationDto = consumerClient.uiApi().initiateContractNegotiation(contractNegotiationRequest);
+
         Awaitility.await().atMost(Duration.ofSeconds(60)).untilAsserted(() -> {
             var state = consumerConnector.prepareManagementApiCall()
                     .contentType(JSON)
