@@ -33,7 +33,6 @@ public class CatalogQueryContractOfferFetcher {
      * @return {@link Field} of {@link ContractOfferRs}s
      */
     public Field<List<ContractOfferRs>> getContractOffers(CatalogQueryFields fields) {
-        var c = fields.getConnectorTable();
         var d = fields.getDataOfferTable();
         var co = Tables.DATA_OFFER_CONTRACT_OFFER;
 
@@ -43,7 +42,7 @@ public class CatalogQueryContractOfferFetcher {
                 co.CREATED_AT,
                 co.UPDATED_AT
         ).from(co).where(
-                co.CONNECTOR_ENDPOINT.eq(c.ENDPOINT),
+                co.CONNECTOR_ENDPOINT.eq(d.CONNECTOR_ENDPOINT),
                 co.ASSET_ID.eq(d.ASSET_ID)).orderBy(co.CREATED_AT.desc()
         );
 

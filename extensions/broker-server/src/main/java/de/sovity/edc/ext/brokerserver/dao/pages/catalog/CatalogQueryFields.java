@@ -24,6 +24,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import org.jooq.Field;
+import org.jooq.Table;
 import org.jooq.impl.DSL;
 
 import java.time.OffsetDateTime;
@@ -53,7 +54,12 @@ public class CatalogQueryFields {
 
     DataSpaceConfig dataSpaceConfig;
 
-    public CatalogQueryFields(Connector connectorTable, DataOffer dataOfferTable, DataOfferViewCount dataOfferViewCountTable, DataSpaceConfig dataSpaceConfig) {
+    public CatalogQueryFields(
+            Connector connectorTable,
+            DataOffer dataOfferTable,
+            DataOfferViewCount dataOfferViewCountTable,
+            DataSpaceConfig dataSpaceConfig
+    ) {
         this.connectorTable = connectorTable;
         this.dataOfferTable = dataOfferTable;
         this.dataOfferViewCountTable = dataOfferViewCountTable;
@@ -94,18 +100,22 @@ public class CatalogQueryFields {
 
     public CatalogQueryFields withSuffix(String additionalSuffix) {
         return new CatalogQueryFields(
-                connectorTable.as(connectorTable.getName() + "_" + additionalSuffix),
-                dataOfferTable.as(dataOfferTable.getName() + "_" + additionalSuffix),
-                dataOfferViewCountTable.as(dataOfferViewCountTable.getName() + "_" + additionalSuffix),
+                connectorTable.as(withSuffix(connectorTable, additionalSuffix)),
+                dataOfferTable.as(withSuffix(dataOfferTable, additionalSuffix)),
+                dataOfferViewCountTable.as(withSuffix(dataOfferViewCountTable, additionalSuffix)),
                 dataSpaceConfig
         );
+    }
+
+    private String withSuffix(Table<?> table, String additionalSuffix) {
+        return "%s_%s".formatted(table.getName(), additionalSuffix);
     }
 
     public Field<Integer> getViewCount() {
         var subquery = DSL.select(DSL.count())
                 .from(dataOfferViewCountTable)
                 .where(dataOfferViewCountTable.ASSET_ID.eq(dataOfferTable.ASSET_ID)
-                    .and(dataOfferViewCountTable.CONNECTOR_ENDPOINT.eq(connectorTable.ENDPOINT)));
+                        .and(dataOfferViewCountTable.CONNECTOR_ENDPOINT.eq(connectorTable.ENDPOINT)));
 
         return subquery.asField();
     }

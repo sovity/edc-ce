@@ -49,8 +49,9 @@ public class DataOfferDetailPageQueryService {
                         c.ENDPOINT.as("connectorEndpoint"),
                         c.ONLINE_STATUS.as("connectorOnlineStatus"),
                         fields.getViewCount().as("viewCount"))
-                .from(d).leftJoin(c).on(c.ENDPOINT.eq(d.CONNECTOR_ENDPOINT))
-                .where(d.ASSET_ID.eq(assetId).or(d.CONNECTOR_ENDPOINT.eq(endpoint)))
+                .from(d)
+                .leftJoin(c).on(c.ENDPOINT.eq(d.CONNECTOR_ENDPOINT))
+                .where(d.ASSET_ID.eq(assetId).and(d.CONNECTOR_ENDPOINT.eq(endpoint)))
                 .fetchOneInto(DataOfferDetailRs.class);
     }
 }
