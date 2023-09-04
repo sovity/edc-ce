@@ -7,7 +7,7 @@ This guide will help you understand how to set up and use HTTP Data assets in ou
 These are HTTP Data assets where you can change certain settings, or "parameters".
 
 ## Settings You Can Change
-![data-transfer-methods.png](./getting-started/documentation/images/asset-settings.png)
+![data-transfer-methods.png](screenshots/asset-settings.png)
 
 when you're choosing a HTTP Data asset in the user interface (UI), there are options you can turn on or off to let you
 change certain parts of the HTTP request. These are called "overridable" fields because you can change, or "override,"
