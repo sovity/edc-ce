@@ -36,6 +36,6 @@ public class ContractAgreementTransferRequestParams {
     @Schema(description = "Data Sink / Data Address", requiredMode = Schema.RequiredMode.REQUIRED)
     private Map<String, String> dataSinkProperties;
 
-    @Schema(description = "Additional properties to add to the transfer process, e.g. for parameterized HTTP Data Sources.", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Map<String, String> properties;
+    @Schema(description = "Additional transfer process properties. These are not passed to the consumer EDC", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Map<String, String> transferProcessProperties;
 }

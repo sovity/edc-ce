@@ -20,6 +20,7 @@ import org.eclipse.edc.spi.system.configuration.Config;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DatabaseMigrationManager {
     @Setting
@@ -45,9 +46,14 @@ public class DatabaseMigrationManager {
 
     private List<String> getDataSourceNames(Config config) {
         var edcDatasourceConfig = config.getConfig(EDC_DATASOURCE_PREFIX);
-        return edcDatasourceConfig.partition().toList().stream()
+        var dataSourceNames = edcDatasourceConfig.partition().toList().stream()
                 .map(Config::currentNode)
-                .toList();
+                .collect(Collectors.toList());
+        // The default data source is always migrated last
+        if (dataSourceNames.remove(DEFAULT_DATASOURCE)) {
+            dataSourceNames.add(DEFAULT_DATASOURCE);
+        }
+        return dataSourceNames;
     }
 
     public List<String> getAdditionalFlywayMigrationLocations(String datasourceName) {

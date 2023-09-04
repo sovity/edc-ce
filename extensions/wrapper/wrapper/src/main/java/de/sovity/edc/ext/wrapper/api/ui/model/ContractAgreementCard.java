@@ -15,7 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -61,7 +61,7 @@ public class ContractAgreementCard {
     private AssetDto asset;
 
     @Schema(description = "Contract Policy", requiredMode = Schema.RequiredMode.REQUIRED)
-    private PolicyDto contractPolicy;
+    private UiPolicyDto contractPolicy;
 
     @Schema(description = "Contract Agreement's Transfer Processes", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<ContractAgreementTransferProcess> transferProcesses;

@@ -19,10 +19,13 @@ import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestParams;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates;
+import org.eclipse.edc.connector.contract.spi.types.offer.ContractOffer;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.policy.model.Policy;
+import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,11 +40,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ContractAgreementTransferApiServiceTest {
 
     private static final String DATA_SINK = "http://my-data-sink/api/stuff";
-    private static final String COUNTER_PARTY_ADDRESS = "http://some-other-connector/api/v1/ids/data";
+    private static final String COUNTER_PARTY_ADDRESS =
+            "http://some-other-connector/api/v1/ids/data";
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-        extension.setConfiguration(TestUtils.createConfiguration(Map.of()));
+        TestUtils.setupExtension(extension);
     }
 
     @Test
@@ -63,7 +67,7 @@ class ContractAgreementTransferApiServiceTest {
                                 "type", "HttpData",
                                 "baseUrl", DATA_SINK
                         ),
-                        Map.of("some", "prop")
+                        Map.of("privateProperty", "privateValue")
                 ),
                 null
         );
@@ -72,17 +76,17 @@ class ContractAgreementTransferApiServiceTest {
         var result = client.uiApi().initiateTransfer(request);
 
         // then
-        var transferProcess = transferProcessStore.find(result.getId());
+        var transferProcess = transferProcessStore.findById(result.getId());
         assertThat(transferProcess).isNotNull();
-        assertThat(transferProcess.getProperties()).containsAllEntriesOf(Map.of(
-                "some", "prop"
+        assertThat(transferProcess.getPrivateProperties()).containsAllEntriesOf(Map.of(
+                "privateProperty", "privateValue"
         ));
 
         var dataRequest = transferProcess.getDataRequest();
         assertThat(dataRequest.getContractId()).isEqualTo(contractId);
         assertThat(dataRequest.getConnectorAddress()).isEqualTo(COUNTER_PARTY_ADDRESS);
         assertThat(dataRequest.getDataDestination().getProperties()).containsAllEntriesOf(Map.of(
-                "type", "HttpData",
+                "https://w3id.org/edc/v0.0.1/ns/type", "HttpData",
                 "baseUrl", DATA_SINK
         ));
     }
@@ -92,23 +96,38 @@ class ContractAgreementTransferApiServiceTest {
             String counterPartyAddress,
             String agreementId
     ) {
+        var assetId = UUID.randomUUID().toString();
         var agreement = ContractAgreement.Builder.newInstance()
                 .id(agreementId)
-                .providerAgentId(UUID.randomUUID().toString())
-                .consumerAgentId(UUID.randomUUID().toString())
-                .assetId(UUID.randomUUID().toString())
-                .policy(Policy.Builder.newInstance().build())
+                .providerId(UUID.randomUUID().toString())
+                .consumerId(UUID.randomUUID().toString())
+                .assetId(assetId)
+                .policy(getPolicy())
                 .build();
 
         var negotiation = ContractNegotiation.Builder.newInstance()
                 .id(UUID.randomUUID().toString())
                 .counterPartyId(UUID.randomUUID().toString())
                 .counterPartyAddress(counterPartyAddress)
-                .protocol("protocol")
+                .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
                 .contractAgreement(agreement)
+                .contractOffer(createContractOffer(assetId))
+                .state(ContractNegotiationStates.FINALIZED.code())
                 .build();
 
         store.save(negotiation);
         return negotiation;
+    }
+
+    private Policy getPolicy() {
+        return Policy.Builder.newInstance().build();
+    }
+
+    private ContractOffer createContractOffer(String assetId) {
+        return ContractOffer.Builder.newInstance()
+                .id(UUID.randomUUID().toString())
+                .assetId(assetId)
+                .policy(getPolicy())
+                .build();
     }
 }

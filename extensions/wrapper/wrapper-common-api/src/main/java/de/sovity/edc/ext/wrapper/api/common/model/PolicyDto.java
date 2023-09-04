@@ -40,9 +40,9 @@ public class PolicyDto {
 
     @Schema(description = "Legacy JSON as built by the Management API. Will be replaced "
             + "in the future by a type-safe variant without polymorphisms that can be used "
-            + "for our generated clients.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+            + "for our generated clients.", requiredMode = Schema.RequiredMode.REQUIRED)
     private String legacyPolicy;
 
-    @Schema(description = "Permission for this policy", requiredMode = RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Permission for this policy", requiredMode = RequiredMode.REQUIRED)
     private PermissionDto permission;
 }

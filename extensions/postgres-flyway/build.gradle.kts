@@ -2,6 +2,7 @@ val edcVersion: String by project
 val edcGroup: String by project
 val flywayVersion: String by project
 val postgresVersion: String by project
+val lombokVersion: String by project
 
 plugins {
     `java-library`
@@ -9,6 +10,9 @@ plugins {
 }
 
 dependencies {
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+
     implementation("${edcGroup}:core-spi:${edcVersion}")
     implementation("${edcGroup}:sql-core:${edcVersion}")
 
@@ -17,6 +21,7 @@ dependencies {
     implementation("${edcGroup}:data-plane-instance-store-sql:${edcVersion}")
     implementation("${edcGroup}:sql-pool-apache-commons:${edcVersion}")
     implementation("${edcGroup}:transaction-local:${edcVersion}")
+
     implementation("org.postgresql:postgresql:${postgresVersion}")
 
     implementation("org.flywaydb:flyway-core:${flywayVersion}")

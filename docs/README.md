@@ -18,7 +18,7 @@
 
 The following example shows you how to fully configure an MDS EDC.
 
-1. Ensure the [EDC Image](../../connector) you are using in the [docker-compose.yaml](../../docker-compose.yaml) file
+1. Ensure the [EDC Image](../../launchers) you are using in the [docker-compose.yaml](../../docker-compose.yaml) file
    is `edc-ce-mds`.
 2. Adjust the Connector Metadata:
    ```yaml

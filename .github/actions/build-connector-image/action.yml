@@ -1,0 +1,75 @@
+name: "Build EDC Connector Image"
+description: "Builds and deploys the React frontend to AWS S3"
+inputs:
+  registry-url:
+    required: true
+    description: "Docker Registry"
+  registry-user:
+    required: true
+    description: "Docker Registry Login Username"
+  registry-password:
+    required: true
+    description: "Docker Registry Login Password"
+  image-base-name:
+    required: true
+    description: "Docker Image Base Name (Company)"
+  image-name:
+    required: true
+    description: "Docker Image Name (Artifact Name)"
+  connector-name:
+    required: true
+    description: "EDC Connector Name in launchers/connectors/{connector-name}"
+  title:
+    required: true
+    description: "Docker Image Title"
+  description:
+    required: true
+    description: "Docker Image Description"
+runs:
+  using: "composite"
+  steps:
+    - name: "Docker: Log in to the Container registry"
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ inputs.registry-url }}
+        username: ${{ inputs.registry-user }}
+        password: ${{ inputs.registry-password }}
+    - name: "Docker: Store last commit info and build date"
+      id: last-commit-information
+      shell: bash
+      run: |
+        echo "LAST_COMMIT_INFO<<EOF" >> $GITHUB_ENV
+        export LAST_COMMIT_INFO=$(git log -1)
+        echo "$LAST_COMMIT_INFO" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+        echo "BUILD_DATE=$(date --utc +%FT%TZ)" >> $GITHUB_ENV
+    - name: "Docker: Extract metadata (tags, labels)"
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ inputs.registry-url }}/${{ inputs.image-base-name }}/${{ inputs.image-name }}
+        labels: |
+          org.opencontainers.image.title=${{ inputs.title }}
+          org.opencontainers.image.description=${{ inputs.description }}
+        tags: |
+          type=schedule
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha
+          type=raw,value=latest,enable={{is_default_branch}}
+          type=raw,value=release,enable=${{ startsWith(github.ref, 'refs/tags/') }}
+    - name: "Docker: Build and Push"
+      uses: docker/build-push-action@v4
+      with:
+        file: launchers/Dockerfile
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        build-args: |
+          CONNECTOR_NAME=${{ inputs.connector-name }}
+          "EDC_LAST_COMMIT_INFO_ARG=${{ env.LAST_COMMIT_INFO }}"
+          EDC_BUILD_DATE_ARG=${{ env.BUILD_DATE }}

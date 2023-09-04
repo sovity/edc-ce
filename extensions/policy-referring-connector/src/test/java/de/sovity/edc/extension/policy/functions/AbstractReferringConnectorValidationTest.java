@@ -62,7 +62,7 @@ class AbstractReferringConnectorValidationTest {
     @EnumSource(Operator.class)
     void testFailsOnUnsupportedOperations(Operator operator) {
 
-        if (operator == Operator.EQ) { // only allowed operator
+        if (operator == Operator.EQ || operator == Operator.IN) {
             return;
         }
 
@@ -118,6 +118,25 @@ class AbstractReferringConnectorValidationTest {
     }
 
     @Test
+    void testValidationWhenClaimContainsValueAsCommaList() {
+
+        // prepare
+        prepareContextProblems(null);
+
+        // prepare equals
+        prepareReferringConnectorClaim("http://example.org");
+        final boolean isEqualsTrue = validation.evaluate(Operator.EQ, "http://example2.org,http://example.org", policyContext);
+
+        // prepare contains
+        prepareReferringConnectorClaim("http://example.com/http://example.org");
+        final boolean isContainedTrue = validation.evaluate(Operator.EQ, "http://example.org", policyContext);
+
+        // assert
+        Assertions.assertTrue(isEqualsTrue);
+        Assertions.assertFalse(isContainedTrue);
+    }
+
+    @Test
     void testValidationWhenParticipantHasProblems() {
 
         // prepare
@@ -145,21 +164,16 @@ class AbstractReferringConnectorValidationTest {
         Assertions.assertTrue(isContainedTrue);
     }
 
-    // In the past it was possible to use the 'IN' constraint
-    // with multiple referringConnector as
-    // a list. This is no longer supported.
-    // The EDC must now always decline this kind of referringConnector format.
     @Test
     void testValidationForMultipleParticipants() {
-
         // prepare
         prepareContextProblems(null);
         prepareReferringConnectorClaim("http://example.org");
 
         // invoke & verify
-        Assertions.assertFalse(validation.evaluate(Operator.IN, List.of("http://example.org", "http://example.com"), policyContext));
-        Assertions.assertFalse(validation.evaluate(Operator.IN, List.of(1, "http://example.org"), policyContext));
-        Assertions.assertFalse(validation.evaluate(Operator.IN, List.of("http://example.org", "http://example.org"), policyContext));
+        Assertions.assertTrue(validation.evaluate(Operator.IN, List.of("http://example.org", "http://example.com"), policyContext));
+        Assertions.assertTrue(validation.evaluate(Operator.IN, List.of(1, "http://example.org"), policyContext));
+        Assertions.assertTrue(validation.evaluate(Operator.IN, List.of("http://example.org", "http://example.org"), policyContext));
     }
 
     private void prepareContextProblems(List<String> problems) {

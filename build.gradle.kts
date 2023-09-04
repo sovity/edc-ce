@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     id("java")
     id("checkstyle")
@@ -5,8 +8,8 @@ plugins {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
 val downloadArtifact: Configuration by configurations.creating {
@@ -51,7 +54,8 @@ allprojects {
     tasks.getByName<Test>("test") {
         useJUnitPlatform()
         testLogging {
-            events("passed", "skipped", "failed")
+            events = setOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
+            exceptionFormat = TestExceptionFormat.FULL
         }
     }
 

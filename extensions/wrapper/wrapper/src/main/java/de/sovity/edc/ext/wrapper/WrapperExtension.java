@@ -14,13 +14,15 @@
 
 package de.sovity.edc.ext.wrapper;
 
-import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
+import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
+import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
+import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
@@ -37,6 +39,10 @@ public class WrapperExtension implements ServiceExtension {
     @Inject
     private AssetIndex assetIndex;
     @Inject
+    private AssetService assetService;
+    @Inject
+    private PolicyDefinitionService policyDefinitionService;
+    @Inject
     private ContractAgreementService contractAgreementService;
     @Inject
     private ContractDefinitionStore contractDefinitionStore;
@@ -44,8 +50,6 @@ public class WrapperExtension implements ServiceExtension {
     private ContractNegotiationService contractNegotiationService;
     @Inject
     private ContractNegotiationStore contractNegotiationStore;
-    @Inject
-    private DtoTransformerRegistry dtoTransformerRegistry;
     @Inject
     private ManagementApiConfiguration dataManagementApiConfiguration;
     @Inject
@@ -60,6 +64,8 @@ public class WrapperExtension implements ServiceExtension {
     private TypeManager typeManager;
     @Inject
     private WebService webService;
+    @Inject
+    private ContractDefinitionService contractDefinitionService;
 
     @Override
     public String name() {
@@ -71,17 +77,20 @@ public class WrapperExtension implements ServiceExtension {
         var objectMapper = typeManager.getMapper();
 
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
+                context,
                 assetIndex,
+                assetService,
                 contractAgreementService,
                 contractDefinitionStore,
                 contractNegotiationService,
                 contractNegotiationStore,
-                dtoTransformerRegistry,
                 objectMapper,
                 policyDefinitionStore,
                 policyEngine,
+                transferProcessStore,
                 transferProcessService,
-                transferProcessStore
+                contractDefinitionService,
+                policyDefinitionService
         );
 
         wrapperExtensionContext.jaxRsResources().forEach(resource ->

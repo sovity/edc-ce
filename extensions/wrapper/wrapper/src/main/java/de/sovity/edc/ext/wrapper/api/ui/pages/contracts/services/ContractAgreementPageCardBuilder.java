@@ -20,6 +20,7 @@ import static de.sovity.edc.ext.wrapper.utils.MapUtils.mapValues;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
@@ -33,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
@@ -41,6 +43,7 @@ import org.jetbrains.annotations.NotNull;
 @Slf4j
 @RequiredArgsConstructor
 public class ContractAgreementPageCardBuilder {
+    private final PolicyMapper policyMapper;
     private final TransferProcessStateService transferProcessStateService;
 
     @NotNull
@@ -57,10 +60,8 @@ public class ContractAgreementPageCardBuilder {
         card.setCounterPartyAddress(negotiation.getCounterPartyAddress());
         card.setCounterPartyId(negotiation.getCounterPartyId());
         card.setContractSigningDate(utcSecondsToOffsetDateTime(agreement.getContractSigningDate()));
-        card.setContractStartDate(utcSecondsToOffsetDateTime(agreement.getContractStartDate()));
-        card.setContractEndDate(utcSecondsToOffsetDateTime(agreement.getContractEndDate()));
         card.setAsset(buildAssetDto(asset));
-        card.setContractPolicy(buildPolicyDto(agreement.getPolicy()));
+        card.setContractPolicy(policyMapper.buildPolicyDto(agreement.getPolicy()));
         card.setTransferProcesses(buildTransferProcesses(transferProcesses));
         return card;
     }
@@ -87,17 +88,6 @@ public class ContractAgreementPageCardBuilder {
                 transferProcessEntity.getState()));
         transferProcess.setErrorMessage(transferProcessEntity.getErrorDetail());
         return transferProcess;
-    }
-
-    @NotNull
-    private PolicyDto buildPolicyDto(@NonNull Policy policy) {
-        var mapper = new ObjectMapper();
-        try {
-            return PolicyDto.builder().legacyPolicy(mapper.writeValueAsString(policy)).build();
-        } catch (JsonProcessingException ex) {
-            log.error("Could not serialize policy: {}", ex.getMessage(), ex);
-            return PolicyDto.builder().build();
-        }
     }
 
     @NotNull

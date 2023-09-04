@@ -1,16 +1,19 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
+import de.sovity.edc.ext.wrapper.api.usecase.model.AssetEntryDto;
+import de.sovity.edc.ext.wrapper.api.usecase.model.ContractDefinitionRequestDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
+import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.api.transformer.DtoTransformerRegistry;
-import org.eclipse.edc.connector.api.management.asset.model.AssetEntryDto;
-import org.eclipse.edc.connector.api.management.contractdefinition.model.ContractDefinitionRequestDto;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.spi.asset.AssetIndex;
+import org.eclipse.edc.spi.persistence.EdcPersistenceException;
+import org.eclipse.edc.spi.query.Criterion;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.web.spi.exception.InvalidRequestException;
@@ -21,13 +24,14 @@ import org.eclipse.edc.web.spi.exception.InvalidRequestException;
  * @author tim.dahlmanns@isst.fraunhofer.de
  */
 @RequiredArgsConstructor
+@Slf4j
 public class OfferingService {
 
     private final AssetIndex assetIndex;
     private final PolicyDefinitionStore policyDefinitionStore;
     private final ContractDefinitionStore contractDefinitionStore;
-    private final DtoTransformerRegistry dtoTransformerRegistry;
     private final PolicyMappingService policyMappingService;
+    private final EdcPropertyUtils edcPropertyUtils;
 
     /**
      * Creates the asset, policy and contract definition in the connector. First, transforms the
@@ -38,13 +42,20 @@ public class OfferingService {
     public void create(CreateOfferingDto dto) {
         validateInput(dto);
 
-        var asset = transformAsset(dto.getAssetEntry());
-        var dataAddress = transformDataAddress(dto.getAssetEntry());
-        var policy = transformPolicy(dto.getPolicyDefinitionRequest());
-        var contractDefinition = transformContractDefinition(dto
-                .getContractDefinitionRequest());
-
-        persist(asset, dataAddress, policy, contractDefinition);
+        try {
+            var assetEntry = dto.getAssetEntry();
+            var asset = transformAsset(assetEntry);
+            var dataAddress = edcPropertyUtils.buildDataAddress(assetEntry.getDataAddressProperties());
+            var policy = transformPolicy(dto.getPolicyDefinitionRequest());
+            var contractDefinition = transformContractDefinition(dto
+                    .getContractDefinitionRequest());
+            persist(asset, dataAddress, policy, contractDefinition);
+        } catch (EdcPersistenceException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Error transforming DTOs: " + e.getMessage(), e);
+            throw new InvalidRequestException(e.getMessage());
+        }
     }
 
     private void validateInput(CreateOfferingDto dto) {
@@ -60,13 +71,10 @@ public class OfferingService {
     }
 
     private Asset transformAsset(AssetEntryDto dto) {
-        return dtoTransformerRegistry.transform(dto.getAsset(), Asset.class)
-                .orElseThrow(failure -> new InvalidRequestException(failure.getFailureDetail()));
-    }
-
-    private DataAddress transformDataAddress(AssetEntryDto dto) {
-        return dtoTransformerRegistry.transform(dto.getDataAddress(), DataAddress.class)
-                .orElseThrow(failure -> new InvalidRequestException(failure.getFailureDetail()));
+        return Asset.Builder.newInstance()
+                .id(dto.getAssetRequestId())
+                .properties(dto.getAssetRequestProperties())
+                .build();
     }
 
     private PolicyDefinition transformPolicy(PolicyDefinitionRequestDto dto) {
@@ -83,20 +91,29 @@ public class OfferingService {
     }
 
     private ContractDefinition transformContractDefinition(ContractDefinitionRequestDto dto) {
-        return dtoTransformerRegistry.transform(dto, ContractDefinition.class)
-                .orElseThrow(failure -> new InvalidRequestException(failure.getFailureDetail()));
+        return ContractDefinition.Builder.newInstance()
+                .id(dto.getId())
+                .contractPolicyId(dto.getContractPolicyId())
+                .accessPolicyId(dto.getAccessPolicyId())
+                .assetsSelector(dto.getAssetsSelector().stream()
+                        .map(criterionDto -> new Criterion(
+                                criterionDto.getOperandLeft(),
+                                criterionDto.getOperator(),
+                                criterionDto.getOperandRight())).toList()
+                )
+                .build();
     }
 
     private void persist(Asset asset, DataAddress dataAddress, PolicyDefinition policyDefinition,
-                         ContractDefinition contractDefinition) {
+            ContractDefinition contractDefinition) {
         try {
-            assetIndex.accept(asset, dataAddress);
-            policyDefinitionStore.save(policyDefinition);
+            assetIndex.create(asset, dataAddress);
+            policyDefinitionStore.create(policyDefinition);
             contractDefinitionStore.save(contractDefinition);
         } catch (Exception e) {
             // Persist all or none (deleteById methods do not fail if ID not found)
             assetIndex.deleteById(asset.getId());
-            policyDefinitionStore.deleteById(policyDefinition.getId());
+            policyDefinitionStore.delete(policyDefinition.getId());
             contractDefinitionStore.deleteById(contractDefinition.getId());
             throw e;
         }

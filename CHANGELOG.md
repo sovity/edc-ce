@@ -4,27 +4,72 @@ All notable changes to this project will be documented in this file.
 
 ## [x.x.x] - UNRELEASED
 
+### Major Changes
+
+- Upgrade to core-EDC version `0.2.1`
+- Now using the `Dataspace Protocol`
+- Major changes to the management API
+  - Examples for the new requests are located in the postman collection in the `docs` folder
+  - The `OpenAPI` file has been updated to represent the EDC version `0.1.2`
+
+### Minor Changes
+
+- UI API Wrapper Model:
+  - Opinionated Policy Model and Mappers for EDC UI and Broker Server Extension
+- UI API Wrapper Endpoints:
+  - Asset Page
+  - Create Asset
+  - Delete Asset
+  - Contract Definition Page
+  - Create Contract Definition
+  - Delete Contract Definition
+  - Policy Definition Page
+  - Create Policy Definition
+  - Delete Policy Definition
+
+### Migration Notes
+
+1. The `MY_EDC_IDS_BASE_URL` has been renamed to `MY_EDC_PROTOCOL_BASE_URL`
+2. The default value of `WEB_HTTP_PROTOCOL_PATH` been changed from `${MY_EDC_BASE_PATH}/api/v1/ids` to `${MY_EDC_BASE_PATH}/api/v1/dsp`
+3. New environment variable: `EDC_PARTICIPANT_ID`: `provider`
+4. New environment variable: `EDC_JSONLD_HTTPS_ENABLED`: `true`
+5. New environment variable: `EDC_DSP_CALLBACK_ADDRESS`: `http://edc:11003/api/v1/dsp`
+6. `v1` Management API has been deprecated in favor of the `JSON-LD` `v2` Management API. All endpoints have a `v2` prefix now (example: `http://localhost:11002/api/v1/management/assets/request` is now available at `http://localhost:11002/api/management/v2/assets/request`)
+
+## [4.1.0] - 2023-07-24
+
 ### Overview
+
+Security improvements of container image and enhancements for the `ReferringConnectorValidationExtension`.
 
 ### EDC UI
 
+- https://github.com/sovity/edc-ui/releases/tag/v0.0.1-milestone-8-sovity12
+
 ### EDC-Extensions
 
-#### Major Changes
-
 #### Minor Changes
+- ReferringConnectorValidationExtension: Added support for comma separated lists of connectors using the EQ operator as well as pure Lists using the IN operator.
 
 #### Patch Changes
+- Automatically delete old transfer-processes if there are more than 3000 entries in the transfer-process-table
+- Change base-image to `eclipse-temurin:17-jre-alpine`
+- Run java process with a non-root user
 
 ### Deployment Migration Notes
+- `default` datasource has to be added
+  - `EDC_DATASOURCE_DEFAULT_NAME`=default
+  - `EDC_DATASOURCE_DEFAULT_URL`=jdbc:postgresql://connector:5432/edc
+  - `EDC_DATASOURCE_DEFAULT_USER`=user
+  - `EDC_DATASOURCE_DEFAULT_PASSWORD`=password
 
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:{{ VERSION HERE }}`
-    - Sovity EDC CE: `ghcr.io/sovity/edc-ce:{{ VERSION HERE }}`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:{{ VERSION HERE }}`
-- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity{{ VERSION HERE }}`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:4.1.0`
+  - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.1.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.1.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity12`
 
 ## [4.0.1] - 2023-07-07
 
@@ -49,9 +94,9 @@ No changes besides docker image versions.
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:4.0.1`
-    - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.1`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.1`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:4.0.1`
+  - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.1`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.1`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity11`
 
 ## [4.0.0] - 2023-07-05
@@ -85,9 +130,9 @@ No changes besides docker image versions.
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:4.0.0`
-    - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.0`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.0`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:4.0.0`
+  - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity9`
 
 ## [3.3.0] - 2023-06-06
@@ -101,6 +146,7 @@ No changes besides docker image versions.
 ### Patch Changes
 
 - Minor EE API adjustments.
+
 
 ## [3.2.0] - 2023-05-17
 
