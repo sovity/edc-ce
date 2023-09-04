@@ -9,7 +9,7 @@ These are HTTP Data assets where you can change certain settings, or "parameters
 ## Settings You Can Change
 ![data-transfer-methods.png](screenshots/asset-settings.png)
 
-when you're choosing a HTTP Data asset in the user interface (UI), there are options you can turn on or off to let you
+When you're choosing a HTTP Data asset in the user interface (UI), there are options you can turn on or off to let you
 change certain parts of the HTTP request. These are called "overridable" fields because you can change, or "override,"
 the default settings. Here's what each option does:
 
@@ -38,17 +38,15 @@ When "Request Body Overridability" is enabled, you can alter the data you're sen
 
 When you're using our HTTP Data asset with parameterization enabled, it's important to understand how parameter validation works and some of the limitations you might encounter.
 
-## Known Issues with Invalid Parameters:
+## Invalid Parameters
 
-Our HTTP Data asset validates your parameters when making a request. However, if your parameters are invalid, you may encounter issues. A notable example is the system reporting a complete data transfer even when no data has been exchanged. This happens because the validation checks parameters at the data plane stage, not at the control plane stage.
+The HTTP Data asset validates parameters when making a request. If parameters are invalid, a notable issue is that the system reports a complete data transfer even when no data has been exchanged. This happens because the validation checks parameters at the data plane stage, not at the control plane stage.
 
-## Missing Method Issues
+## Missing Method
 
-This can also happen if you don't provide a method for your request, even though you've turned on method overridability. Without a method, your request can't be completed correctly, but the system might not catch this issue because of the validation limitations mentioned above.
+If you don't provide a method for your request, even though you've turned on method overridability, your request can't be completed correctly. The system might not catch this issue because of the validation limitations mentioned above.
 
-## About Asset Properties
+## Asset Properties
 
-Our parameterization process creates special "asset properties" that let you know what kind of parameterization is enabled for your HTTP Data asset. However, these properties aren't currently shown in the user interface.
-
-This means that to know which parameterization is enabled for your asset, you'll need to note it down manually.
+The parameterization process creates special "asset properties" that let you know what kind of parameterization is enabled for the HTTP Data asset. However, these properties aren't shown in the user interface yet. Thus, this information needs to be noted down manually.
 
