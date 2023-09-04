@@ -29,9 +29,9 @@ services:
       MY_EDC_MAINTAINER_URL: "https://sovity.de"
       MY_EDC_MAINTAINER_NAME: "sovity GmbH"
 
-      # Extension Configuration
-      BROKER_CLIENT_EXTENSION_ENABLED: true
-      CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED: true
+      # Overrides for MDS Images
+      # BROKER_CLIENT_EXTENSION_ENABLED: false
+      # CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED: true
 
       # Data Management API Key
       EDC_API_AUTH_KEY: ApiKeyDefaultValue
@@ -101,9 +101,9 @@ services:
       MY_EDC_MAINTAINER_URL: "https://sovity.de"
       MY_EDC_MAINTAINER_NAME: "sovity GmbH"
 
-      # Extension Configuration
-      BROKER_CLIENT_EXTENSION_ENABLED: true
-      CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED: true
+      # Overrides for MDS Images
+      # BROKER_CLIENT_EXTENSION_ENABLED: false
+      # CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED: true
 
       # Data Management API Key
       EDC_API_AUTH_KEY: ApiKeyDefaultValue
