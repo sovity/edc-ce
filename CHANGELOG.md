@@ -42,8 +42,6 @@ All notable changes to this project will be documented in this file.
 
 MDS 1.2 release using MS8 EDC.
 
-Note that the version is 4.2.0 due to previous communications about this version.
-
 ### EDC UI
 
 - https://github.com/sovity/edc-ui/releases/tag/v0.0.1-milestone-8-sovity13
