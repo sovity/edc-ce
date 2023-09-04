@@ -36,6 +36,34 @@ All notable changes to this project will be documented in this file.
 5. New environment variable: `EDC_DSP_CALLBACK_ADDRESS`: `http://edc:11003/api/v1/dsp`
 6. `v1` Management API has been deprecated in favor of the `JSON-LD` `v2` Management API. All endpoints have a `v2` prefix now (example: `http://localhost:11002/api/v1/management/assets/request` is now available at `http://localhost:11002/api/management/v2/assets/request`)
 
+## [4.2.0] - 2023-09-01
+
+### Overview
+
+MDS 1.2 release using MS8 EDC.
+
+Note that the version is 4.2.0 due to previous communications about this version.
+
+### EDC UI
+
+- https://github.com/sovity/edc-ui/releases/tag/v0.0.1-milestone-8-sovity13
+
+### EDC-Extensions
+
+#### Patch Changes
+
+- Fixed issues with Broker Client Extension causing exceptions, because the MDS no longer uses the legacy broker.
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:4.2.0`
+    - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.2.0`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.2.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity13`
+
 ## [4.1.0] - 2023-07-24
 
 ### Overview
