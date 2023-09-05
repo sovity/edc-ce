@@ -15,6 +15,8 @@ dependencies {
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
     api("${edcGroup}:policy-model:${edcVersion}")
+    api("${edcGroup}:core-spi:${edcVersion}")
+    api(project(":extensions:wrapper:wrapper"))
     api(project(":extensions:wrapper:wrapper-common-api"))
 
     implementation("org.apache.commons:commons-lang3:3.13.0")

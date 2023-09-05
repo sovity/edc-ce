@@ -14,10 +14,10 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
 
-import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;
+import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
+import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetEntry;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
-import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.AssetBuilder;
 import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.spi.asset.AssetService;
@@ -30,7 +30,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class AssetApiService {
-    private final AssetBuilder assetBuilder;
+    private final AssetMapper assetMapper;
     private final AssetService assetService;
     private final EdcPropertyUtils edcPropertyUtils;
 
@@ -45,8 +45,8 @@ public class AssetApiService {
     }
 
     @NotNull
-    public IdResponseDto createAsset(AssetCreateRequest request) {
-        var asset = assetBuilder.buildAsset(request);
+    public IdResponseDto createAsset(UiAssetCreateRequest request) {
+        var asset = assetMapper.buildAsset(request);
         asset = assetService.create(asset).getContent();
         return new IdResponseDto(asset.getId());
     }

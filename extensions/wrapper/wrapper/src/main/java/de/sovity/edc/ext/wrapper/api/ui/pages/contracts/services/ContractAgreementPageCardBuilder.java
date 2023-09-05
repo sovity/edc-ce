@@ -20,6 +20,7 @@ import static de.sovity.edc.ext.wrapper.utils.MapUtils.mapValues;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
@@ -44,6 +45,7 @@ import org.jetbrains.annotations.NotNull;
 @RequiredArgsConstructor
 public class ContractAgreementPageCardBuilder {
     private final PolicyMapper policyMapper;
+    private final AssetMapper assetMapper;
     private final TransferProcessStateService transferProcessStateService;
 
     @NotNull
@@ -60,7 +62,7 @@ public class ContractAgreementPageCardBuilder {
         card.setCounterPartyAddress(negotiation.getCounterPartyAddress());
         card.setCounterPartyId(negotiation.getCounterPartyId());
         card.setContractSigningDate(utcSecondsToOffsetDateTime(agreement.getContractSigningDate()));
-        card.setAsset(buildAssetDto(asset));
+        card.setAsset(assetMapper.buildAssetDto(asset));
         card.setContractPolicy(policyMapper.buildPolicyDto(agreement.getPolicy()));
         card.setTransferProcesses(buildTransferProcesses(transferProcesses));
         return card;
@@ -88,12 +90,5 @@ public class ContractAgreementPageCardBuilder {
                 transferProcessEntity.getState()));
         transferProcess.setErrorMessage(transferProcessEntity.getErrorDetail());
         return transferProcess;
-    }
-
-    @NotNull
-    private AssetDto buildAssetDto(@NonNull Asset asset) {
-        var createdAt = utcMillisToOffsetDateTime(asset.getCreatedAt());
-        var properties = mapValues(asset.getProperties(), Object::toString);
-        return new AssetDto(asset.getId(), createdAt, properties);
     }
 }

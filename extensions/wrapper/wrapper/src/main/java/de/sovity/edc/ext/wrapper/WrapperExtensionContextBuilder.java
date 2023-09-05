@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.wrapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
@@ -134,7 +135,7 @@ public class WrapperExtensionContextBuilder {
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
         var edcPropertyUtils = new EdcPropertyUtils();
-        var assetBuilder = new AssetBuilder(edcPropertyUtils);
+        var assetBuilder = new AssetMapper(edcPropertyUtils, objectMapper);
         var assetApiService = new AssetApiService(assetBuilder, assetService, edcPropertyUtils);
         var transferRequestBuilder = new TransferRequestBuilder(
                 objectMapper,
