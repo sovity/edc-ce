@@ -23,26 +23,19 @@
 * [Security Guide](./SECURITY.md)
 
 
-## Extensions: Wrapper
+## Extensions
 
-* [Overview](/extensions/wrapper/README.md)
-* [API Commons Endpoint](/extensions/wrapper/wrapper-common-api/README.md)
-* [API EE Endpoint](/extensions/wrapper/wrapper-ee-api/README.md)
-* [Java Implementation](/extensions/wrapper/client/README.md)
-* [Java Example](/extensions/wrapper/client-example/README.md)
-* [TypeScript Implementation](/extensions/wrapper/client-ts/README.md)
-* [TypeScript Example](/extensions/wrapper/client-ts-example/README.md)
-
-
-## Extensions: Policies
-
-* [Always True](/extensions/policy-always-true/README.md)
-* [Referring Connector](/extensions/policy-referring-connector/README.md)
-* [Time Interval](/extensions/policy-time-interval/README.md)
-
-
-## Extensions: Other
-
+* [API Wrapper](/extensions/wrapper/README.md)
+    * [API Commons Endpoint](/extensions/wrapper/wrapper-common-api/README.md)
+    * [API EE Endpoint](/extensions/wrapper/wrapper-ee-api/README.md)
+    * [Java Implementation](/extensions/wrapper/client/README.md)
+    * [Java Example](/extensions/wrapper/client-example/README.md)
+    * [TypeScript Implementation](/extensions/wrapper/client-ts/README.md)
+    * [TypeScript Example](/extensions/wrapper/client-ts-example/README.md)
+* [Policies]()
+    * [Always True](/extensions/policy-always-true/README.md)
+    * [Referring Connector](/extensions/policy-referring-connector/README.md)
+    * [Time Interval](/extensions/policy-time-interval/README.md)
 * [Database Migration](/extensions/postgres-flyway/README.md)
 * [EDC UI Config](/extensions/edc-ui-config/README.md)
 * [Last Commit Info](/extensions/last-commit-info/README.md)
