@@ -28,3 +28,14 @@ dependencies {
     implementation("io.rest-assured:rest-assured:${restAssured}")
     implementation("org.awaitility:awaitility:${awaitilityVersion}")
 }
+
+val sovityEdcExtensionGroup: String by project
+group = sovityEdcExtensionGroup
+
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            from(components["java"])
+        }
+    }
+}
