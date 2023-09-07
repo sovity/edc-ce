@@ -182,4 +182,16 @@ jobs:
         env:
           NODE_USER: richardtreier-sovity
           NODE_AUTH_TOKEN: ${{ secrets.SOVITY_EDC_CLIENT_NPM_AUTH }}
-
+  markdown-link-checks:
+    name: Markdown Link Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: FranzDiebold/github-env-vars-action@v2
+      - name: "Markdown Link Checker: Generate Config"
+        run: .github/markdown-link-checker-config.jq > .github/markdown-link-checks-config.json
+      - name: "Markdown Link Checker: Validate Links"
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          config-file: '.github/markdown-link-checks-config.json'

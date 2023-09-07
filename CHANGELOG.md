@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file.
 - Major changes to the management API
   - Examples for the new requests are located in the postman collection in the `docs` folder
   - The `OpenAPI` file has been updated to represent the EDC version `0.1.2`
+- Reworked Deployment Guide & Docker-Compose:
+  - The Getting Started Docker Compose file now launches connectors for local demo purposes.
+  - For productive deployments, a detailed deployment guide has been added.
+  - The Dev-Images now also require a PostgreSQL Database.
 
 ### Minor Changes
 
