@@ -55,13 +55,13 @@ class ConnectorTransferTest {
     @BeforeEach
     void setup() {
         var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 22000, PROVIDER_DATABASE);
-        providerConfig.withProperty("edc.flyway.additional.migration.locations",
+        providerConfig.setProperty("edc.flyway.additional.migration.locations",
                 "filesystem:%s".formatted(getAbsoluteTestResourcePath("db/additional-test-data/provider")));
         providerEdcContext.setConfiguration(providerConfig.getProperties());
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
         var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 23000, CONSUMER_DATABASE);
-        consumerConfig.withProperty("edc.flyway.additional.migration.locations",
+        consumerConfig.setProperty("edc.flyway.additional.migration.locations",
                 "filesystem:%s".formatted(getAbsoluteTestResourcePath("db/additional-test-data/consumer")));
         consumerEdcContext.setConfiguration(consumerConfig.getProperties());
         consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
