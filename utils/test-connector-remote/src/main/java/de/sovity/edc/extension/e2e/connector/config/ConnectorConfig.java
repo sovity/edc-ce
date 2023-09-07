@@ -29,7 +29,7 @@ public class ConnectorConfig {
     private EdcApiGroupConfig protocolEndpoint;
     private Map<String, String> properties;
 
-    public void withProperty(String key, String value) {
+    public void setProperty(String key, String value) {
         properties.put(key, value);
     }
 
