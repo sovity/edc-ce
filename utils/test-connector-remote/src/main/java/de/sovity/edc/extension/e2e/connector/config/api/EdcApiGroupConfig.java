@@ -14,6 +14,7 @@
 package de.sovity.edc.extension.e2e.connector.config.api;
 
 import de.sovity.edc.extension.e2e.connector.config.api.auth.AuthProvider;
+import lombok.With;
 
 import java.net.URI;
 import java.util.Map;
@@ -23,6 +24,7 @@ public record EdcApiGroupConfig(
         String baseUrl,
         int port,
         String path,
+        @With
         AuthProvider authProvider
 ) {
 
