@@ -16,6 +16,7 @@ package de.sovity.edc.extension.e2e.connector;
 import jakarta.json.JsonObject;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.eclipse.edc.policy.model.Policy;
 
 import java.time.Duration;
 
@@ -42,6 +43,7 @@ public class DataTransferTestUtil {
                         .build())
                 .build();
     }
+
 
     public static void validateDataTransferred(String checkUrl, String expectedData) {
         await().atMost(TIMEOUT).untilAsserted(() -> {

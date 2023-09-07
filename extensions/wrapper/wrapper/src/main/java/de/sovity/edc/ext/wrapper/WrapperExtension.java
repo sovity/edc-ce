@@ -34,6 +34,7 @@ import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.types.TypeManager;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.WebService;
 
 import java.time.OffsetDateTime;
@@ -67,6 +68,9 @@ public class WrapperExtension implements ServiceExtension {
     private TransferProcessService transferProcessService;
     @Inject
     private TransferProcessStore transferProcessStore;
+
+    @Inject
+    private TypeTransformerRegistry transformerRegistry;
     @Inject
     private TypeManager typeManager;
     @Inject
@@ -101,7 +105,8 @@ public class WrapperExtension implements ServiceExtension {
                 transferProcessStore,
                 transferProcessService,
                 contractDefinitionService,
-                policyDefinitionService
+                policyDefinitionService,
+                transformerRegistry
         );
 
         wrapperExtensionContext.jaxRsResources().forEach(resource ->

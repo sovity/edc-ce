@@ -1,6 +1,5 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
@@ -8,6 +7,7 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto;
+import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.eclipse.edc.policy.model.Action;
@@ -15,6 +15,8 @@ import org.eclipse.edc.policy.model.Constraint;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
+import org.eclipse.edc.spi.result.Result;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
 import java.util.ArrayList;
 
@@ -26,7 +28,7 @@ public class PolicyMapper {
     private final ObjectMapper jsonLdObjectMapper;
     private final ConstraintExtractor constraintExtractor;
     private final AtomicConstraintMapper atomicConstraintMapper;
-
+    private final TypeTransformerRegistry transformerRegistry;
     /**
      * Builds a simplified UI Policy Model from an ODRL Policy.
      * <p>
@@ -41,7 +43,7 @@ public class PolicyMapper {
         var constraints = constraintExtractor.getPermissionConstraints(policy, errors);
 
         return UiPolicyDto.builder()
-                .policyJsonLd(getPolicyJsonLd(policy))
+                .policyJsonLd(getPolicyJsonLd(policy).toString())
                 .constraints(constraints)
                 .errors(errors.getErrors())
                 .build();
@@ -94,7 +96,7 @@ public class PolicyMapper {
      * @return JSON-LD
      */
     @SneakyThrows
-    private String getPolicyJsonLd(Policy policy) {
-        return jsonLdObjectMapper.writeValueAsString(policy);
+    public Result<JsonObject> getPolicyJsonLd(Policy policy) {
+        return transformerRegistry.transform(policy,JsonObject.class);
     }
 }

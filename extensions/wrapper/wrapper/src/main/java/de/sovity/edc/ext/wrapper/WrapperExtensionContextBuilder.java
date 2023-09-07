@@ -63,6 +63,7 @@ import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
 import java.util.List;
 
@@ -92,8 +93,8 @@ public class WrapperExtensionContextBuilder {
             TransferProcessStore transferProcessStore,
             TransferProcessService transferProcessService,
             ContractDefinitionService contractDefinitionService,
-            PolicyDefinitionService policyDefinitionService
-    ) {
+            PolicyDefinitionService policyDefinitionService,
+            TypeTransformerRegistry transformerRegistry) {
         // UI API
         var operatorMapper = new OperatorMapper();
         var criterionMapper = new CriterionMapper(operatorMapper);
@@ -101,7 +102,7 @@ public class WrapperExtensionContextBuilder {
         var atomicConstraintMapper = new AtomicConstraintMapper(literalMapper, operatorMapper);
         var policyValidator = new PolicyValidator();
         var constraintExtractor = new ConstraintExtractor(policyValidator, atomicConstraintMapper);
-        var policyMapper = new PolicyMapper(objectMapper, constraintExtractor, atomicConstraintMapper);
+        var policyMapper = new PolicyMapper(objectMapper, constraintExtractor, atomicConstraintMapper, transformerRegistry);
         var transferProcessStateService = new TransferProcessStateService();
         var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
                 policyMapper,

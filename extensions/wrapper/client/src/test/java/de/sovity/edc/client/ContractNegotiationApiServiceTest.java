@@ -15,16 +15,18 @@
 package de.sovity.edc.client;
 
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
+import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyJsonMapper;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
-import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import org.awaitility.Awaitility;
-import org.eclipse.edc.jsonld.TitaniumJsonLd;
-import org.eclipse.edc.jsonld.spi.JsonLd;
+import org.eclipse.edc.connector.api.management.configuration.transform.ManagementApiTypeTransformerRegistry;
+import org.eclipse.edc.core.transform.TypeTransformerRegistryImpl;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.eclipse.edc.spi.monitor.ConsoleMonitor;
+import org.eclipse.edc.policy.model.Policy;
+import org.eclipse.edc.policy.model.PolicyType;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,11 +42,11 @@ import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig
 import static io.restassured.http.ContentType.JSON;
 import static jakarta.json.Json.createObjectBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.type;
 import static org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates.FINALIZED;
 import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.CONTEXT;
 import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.ID;
 import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.TYPE;
-import static org.eclipse.edc.jsonld.spi.PropertyAndTypeNames.ODRL_POLICY_ATTRIBUTE;
 import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 import static org.eclipse.edc.spi.CoreConstants.EDC_PREFIX;
 
@@ -67,7 +69,6 @@ class ContractNegotiationApiServiceTest {
     private MockDataAddressRemote dataAddress;
 
     private EdcClient consumerClient;
-    private final JsonLd jsonLd = new TitaniumJsonLd(new ConsoleMonitor());
 
     @BeforeEach
     void setup() {
@@ -155,6 +156,16 @@ class ContractNegotiationApiServiceTest {
     @Test
     void testContractNegotiation() {
         // arrange
+        TypeTransformerRegistry typeTransformerRegistry = providerEdcContext.getContext().getService(ManagementApiTypeTransformerRegistry.class, false);
+        Policy policy = Policy.Builder.newInstance()
+                .assigner("sampleAssigner")
+                .assignee("sampleAssignee")
+                .target("sampleTarget")
+                .inheritsFrom("sampleInheritsFrom")
+                .type(PolicyType.OFFER)
+                .extensibleProperty("sampleKey", "sampleValue")
+                .build();
+        var policyJson = typeTransformerRegistry.transform(policy, JsonObject.class).getContent();
         var assetId = UUID.randomUUID().toString();
         providerConnector.createDataOffer(assetId, dataAddress.getDataSourceUrl(TEST_BACKEND_TEST_DATA));
         String providerId = providerConnector.getParticipantId();
@@ -162,20 +173,13 @@ class ContractNegotiationApiServiceTest {
         JsonObject destination = dataAddress.getDataSinkJsonLd();
         var dataset = consumerConnector.getDatasetForAsset(assetId, providerProtocolApi);
         var contractId = consumerConnector.getDatasetContractId(dataset);
-        var policyJsonLd = createObjectBuilder()
-                .add(CONTEXT, "https://www.w3.org/ns/odrl.jsonld")
-                .add(TYPE, Json.createObjectBuilder()
-                        .add("@policytype", "set")
-                        .build())
-                .build()
-                .toString();
 
         var contractNegotiationRequest = ContractNegotiationRequest.builder()
                 .protocol("dataspace-protocol-http")
                 .counterPartyAddress(providerProtocolApi.toString())
                 .contractOfferId(contractId.toString())
                 .assetId(contractId.assetIdPart())
-                .policyJsonLd(policyJsonLd)
+                .policyJsonLd(String.valueOf(policyJson))
                 .build();
 
         // act

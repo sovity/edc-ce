@@ -38,6 +38,7 @@ public class ContractNegotiationBuilder {
         var protocol = request.getProtocol();
         var counterPartyAddress = request.getCounterPartyAddress();
 
+
         return ContractRequest.Builder.newInstance()
                 .counterPartyAddress(counterPartyAddress)
                 .protocol(protocol)
