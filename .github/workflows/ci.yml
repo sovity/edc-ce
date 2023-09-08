@@ -77,11 +77,11 @@ jobs:
           fi
           echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
       - name: "Gradle: Build"
-        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
+        uses: gradle/gradle-build-action@ef76a971e2fa3f867b617efd72f2fbd72cf6f8bc
         with:
           arguments: build ${{ env.GRADLE_ARGS }}
       - name: "Gradle: Publish (Main & Release Only)"
-        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
+        uses: gradle/gradle-build-action@ef76a971e2fa3f867b617efd72f2fbd72cf6f8bc
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/releases/') }}
         with:
           arguments: publish ${{ env.GRADLE_ARGS }}
@@ -153,7 +153,7 @@ jobs:
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
       - name: "Gradle: Generate TS Code"
-        uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
+        uses: gradle/gradle-build-action@ef76a971e2fa3f867b617efd72f2fbd72cf6f8bc
         with:
           arguments: :extensions:wrapper:wrapper:build -x test
       - name: "NPM: Dist Tag & Version"
