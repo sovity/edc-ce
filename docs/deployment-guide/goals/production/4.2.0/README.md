@@ -17,13 +17,13 @@ to technical reasons, reachability via the internet and well-defined URLs across
 
 To deploy an EDC multiple deployment units must be deployed and configured.
 
-| Deployment Unit                                                | Version / Details                                                      |
-|----------------------------------------------------------------|------------------------------------------------------------------------|
-| An Auth Proxy / Auth solution of your choice.                  | (deployment specific, required to secure UI and management API)        |
-| Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                  |
-| Postgresql                                                     | 13 or compatible version                                               |
-| EDC Backend                                                    | edc-ce-mds, see [CHANGELOG.md](/CHANGELOG.md) for compatible versions. |
-| EDC UI                                                         | edc-ui, see  [CHANGELOG.md](/CHANGELOG.md) for compatible versions.    |
+| Deployment Unit                                                | Version / Details                                                                |
+|----------------------------------------------------------------|----------------------------------------------------------------------------------|
+| An Auth Proxy / Auth solution of your choice.                  | (deployment specific, required to secure UI and management API)                  |
+| Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                            |
+| Postgresql                                                     | 13 or compatible version                                                         |
+| EDC Backend                                                    | edc-ce or edc-ce-mds, see [CHANGELOG.md](/CHANGELOG.md) for compatible versions. |
+| EDC UI                                                         | edc-ui, see  [CHANGELOG.md](/CHANGELOG.md) for compatible versions.              |
 
 ## Configuration
 
