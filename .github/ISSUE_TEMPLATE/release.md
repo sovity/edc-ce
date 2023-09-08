@@ -16,9 +16,9 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
 - [ ] Decide a release version depending on major/minor/patch changes in the CHANGELOG.md.
 - [ ] Update this issue's title to the new version
 - [ ] `release-prep` PR:
-    - [ ] Write or review the current [Productive Deployment Guide](/docs/deployment-guide/goals/production)
-    - [ ] Write or review the current [Development Deployment Guide](/docs/deployment-guide/goals/development)
-    - [ ] Write or review the current [Local Demo Deployment Guide](/docs/deployment-guide/goals/local-demo)
+    - [ ] Write or review the current [Productive Deployment Guide](https://github.com/sovity/edc-extensions/blob/main/docs/deployment-guide/goals/production)
+    - [ ] Write or review the current [Development Deployment Guide](https://github.com/sovity/edc-extensions/blob/main/docs/deployment-guide/goals/development)
+    - [ ] Write or review the current [Local Demo Deployment Guide](https://github.com/sovity/edc-extensions/blob/main/docs/deployment-guide/goals/local-demo)
     - [ ] Update the CHANGELOG.md.
         - [ ] Add a clean `Unreleased` version.
         - [ ] Add the version to the old section.
