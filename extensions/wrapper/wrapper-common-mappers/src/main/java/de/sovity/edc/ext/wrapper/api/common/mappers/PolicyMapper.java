@@ -35,7 +35,7 @@ public class PolicyMapper {
      * @return ui policy
      */
     @SneakyThrows
-    public UiPolicyDto buildPolicyDto(Policy policy) {
+    public UiPolicyDto buildUiPolicy(Policy policy) {
         MappingErrors errors = MappingErrors.root();
 
         var constraints = constraintExtractor.getPermissionConstraints(policy, errors);
@@ -70,5 +70,17 @@ public class PolicyMapper {
                 .type(PolicyType.SET)
                 .permission(permission)
                 .build();
+    }
+
+    /**
+     * Maps an ODRL Policy from JSON-LD to the Core EDC Type.
+     * <p>
+     * This operation is lossless.
+     *
+     * @param policyJsonLd policy JSON-LD
+     * @return {@link Policy}
+     */
+    public Policy buildPolicy(String policyJsonLd) {
+        throw new IllegalStateException("Not implemented yet");
     }
 }

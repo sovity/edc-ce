@@ -19,12 +19,14 @@ import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiat
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.connector.spi.asset.AssetService;
+import org.eclipse.edc.connector.spi.catalog.CatalogService;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
+import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
@@ -66,6 +68,10 @@ public class WrapperExtension implements ServiceExtension {
     private WebService webService;
     @Inject
     private ContractDefinitionService contractDefinitionService;
+    @Inject
+    private CatalogService catalogService;
+    @Inject
+    private JsonLd jsonLd;
 
     @Override
     public String name() {
@@ -77,20 +83,22 @@ public class WrapperExtension implements ServiceExtension {
         var objectMapper = typeManager.getMapper();
 
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
-                context,
                 assetIndex,
                 assetService,
+                catalogService,
                 contractAgreementService,
+                contractDefinitionService,
                 contractDefinitionStore,
                 contractNegotiationService,
                 contractNegotiationStore,
+                jsonLd,
                 objectMapper,
+                policyDefinitionService,
                 policyDefinitionStore,
                 policyEngine,
-                transferProcessStore,
+                context,
                 transferProcessService,
-                contractDefinitionService,
-                policyDefinitionService
+                transferProcessStore
         );
 
         wrapperExtensionContext.jaxRsResources().forEach(resource ->

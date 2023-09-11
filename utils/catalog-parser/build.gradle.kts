@@ -14,13 +14,14 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
-    api("org.glassfish:jarkarta-json:1.1.6")
-    api("${edcGroup}:policy-model:${edcVersion}")
+    api("org.glassfish:jakarta.json:1.1.6")
     api("${edcGroup}:core-spi:${edcVersion}")
-    api(project(":extensions:wrapper:wrapper-common-api"))
+    api("${edcGroup}:control-plane-spi:${edcVersion}")
+    api("${edcGroup}:json-ld:${edcVersion}")
 
     implementation("org.apache.commons:commons-lang3:3.13.0")
     implementation("org.apache.commons:commons-collections4:4.4")
+    implementation("commons-io:commons-io:2.13.0")
 
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")

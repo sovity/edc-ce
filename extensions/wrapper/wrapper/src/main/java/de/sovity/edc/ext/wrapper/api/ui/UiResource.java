@@ -16,20 +16,22 @@ package de.sovity.edc.ext.wrapper.api.ui;
 
 import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
-import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
-import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractDefinitionApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,9 +43,12 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.api.model.IdResponse;
+
+import java.util.List;
 
 @Path("wrapper/ui")
 @Tag(name = "UI", description = "EDC UI API Endpoints")
@@ -56,6 +61,8 @@ public class UiResource {
     private final TransferHistoryPageAssetFetcherService transferHistoryPageAssetFetcherService;
     private final AssetApiService assetApiService;
     private final PolicyDefinitionApiService policyDefinitionApiService;
+
+    private final CatalogApiService catalogApiService;
     private final ContractDefinitionApiService contractDefinitionApiService;
 
     @GET
@@ -119,6 +126,14 @@ public class UiResource {
     }
 
     @GET
+    @Path("pages/catalog-page/data-offers")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Fetch a connector's data offers")
+    public List<UiDataOffer> catalogPageDataOffers(@QueryParam("connectorEndpoint") String connectorEndpoint) {
+        return catalogApiService.fetchDataOffers(connectorEndpoint);
+    }
+
+    @GET
     @Path("pages/contract-definition-page")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Collect all data for Contract Definition Page")
@@ -159,6 +174,7 @@ public class UiResource {
     public IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto) {
         return policyDefinitionApiService.createPolicyDefinition(policyDefinitionDtoDto);
     }
+
     @DELETE
     @Path("pages/policy-page/policy-definitions/{policyId}")
     @Produces(MediaType.APPLICATION_JSON)

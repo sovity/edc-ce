@@ -56,7 +56,7 @@ class PolicyMapperTest {
             when(jsonLdObjectMapper.writeValueAsString(policy)).thenReturn("abc");
 
             // act
-            var actual = policyMapper.buildPolicyDto(policy);
+            var actual = policyMapper.buildUiPolicy(policy);
 
             // assert
             assertThat(actual.getPolicyJsonLd()).isEqualTo("abc");

@@ -15,16 +15,17 @@
 package de.sovity.edc.ext.wrapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.LiteralMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
-import de.sovity.edc.ext.wrapper.api.ee.EnterpriseEditionResourceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.AssetBuilder;
+import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractDefinitionApiService;
@@ -45,17 +46,21 @@ import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
+import de.sovity.edc.utils.catalog.DataOfferBuilder;
+import de.sovity.edc.utils.catalog.DspCatalogService;
 import lombok.NoArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.connector.spi.asset.AssetService;
+import org.eclipse.edc.connector.spi.catalog.CatalogService;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
+import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
@@ -76,20 +81,22 @@ import java.util.List;
 public class WrapperExtensionContextBuilder {
 
     public static WrapperExtensionContext buildContext(
-            ServiceExtensionContext serviceExtensionContext,
             AssetIndex assetIndex,
             AssetService assetService,
+            CatalogService catalogService,
             ContractAgreementService contractAgreementService,
+            ContractDefinitionService contractDefinitionService,
             ContractDefinitionStore contractDefinitionStore,
             ContractNegotiationService contractNegotiationService,
             ContractNegotiationStore contractNegotiationStore,
+            JsonLd jsonLd,
             ObjectMapper objectMapper,
+            PolicyDefinitionService policyDefinitionService,
             PolicyDefinitionStore policyDefinitionStore,
             PolicyEngine policyEngine,
-            TransferProcessStore transferProcessStore,
+            ServiceExtensionContext serviceExtensionContext,
             TransferProcessService transferProcessService,
-            ContractDefinitionService contractDefinitionService,
-            PolicyDefinitionService policyDefinitionService
+            TransferProcessStore transferProcessStore
     ) {
         // UI API
         var operatorMapper = new OperatorMapper();
@@ -150,6 +157,10 @@ public class WrapperExtensionContextBuilder {
         var policyDefinitionApiService = new PolicyDefinitionApiService(
                 policyDefinitionService,
                 policyMapper);
+        var dataOfferBuilder = new DataOfferBuilder(jsonLd);
+        var dspCatalogService = new DspCatalogService(catalogService, dataOfferBuilder);
+        var assetMapper = new AssetMapper();
+        var catalogApiService = new CatalogApiService(assetMapper, policyMapper, dspCatalogService);
         var uiResource = new UiResource(
                 contractAgreementApiService,
                 contractAgreementTransferApiService,
@@ -157,6 +168,7 @@ public class WrapperExtensionContextBuilder {
                 transferHistoryPageAssetFetcherService,
                 assetApiService,
                 policyDefinitionApiService,
+                catalogApiService,
                 contractDefinitionApiService
         );
 
@@ -184,8 +196,7 @@ public class WrapperExtensionContextBuilder {
         // Collect all JAX-RS resources
         return new WrapperExtensionContext(List.of(
                 uiResource,
-                useCaseResource,
-                new EnterpriseEditionResourceImpl()
+                useCaseResource
         ));
     }
 }
