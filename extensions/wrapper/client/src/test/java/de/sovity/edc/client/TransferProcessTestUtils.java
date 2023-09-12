@@ -35,12 +35,15 @@ public class TransferProcessTestUtils {
     public static final String DATA_SINK = "http://my-data-sink/api/stuff";
     public static final String COUNTER_PARTY_ADDRESS = "http://some-other-connector/api/v1/ids/data";
     public static final String PROVIDING_CONTRACT_ID = "provider-contract:eb934d1f-6582-4bab-85e6-af19a76f7e2b";
-    public static final String CONSUMING_CONTRACT_ID = "consumer-contract:f52a5d30-6356-4a55-a75a-3c45d7a88c3e";
+    public static final String CONSUMING_CONTRACT_ID_1 = "consumer-contract-1:f52a5d30-6356-4a55-a75a-3c45d7a88c3e";
+    public static final String CONSUMING_CONTRACT_ID_2 = "consumer-contract-2:55aa6630-aq56-55yy-yy1a-ttg5d7a88c3e";
     public static final String VALID_ASSET_ID = "urn:artifact:asset";
     public static final String UNKNOWN_ASSET_ID = "urn:junk";
     public static final String ASSET_NAME = "Test asset";
     public static final String PROVIDING_TRANSFER_PROCESS_ID = "81cdf4cf-8427-480f-9662-8a29d66ddd3b";
-    public static final String CONSUMING_TRANSFER_PROCESS_ID = "be0cac12-bb43-420e-aa29-d66bb3d0e0ac";
+    public static final String CONSUMING_TRANSFER_PROCESS_ID_1 = "be0cac12-bb43-420e-aa29-d66bb3d0e0ac";
+
+    public static final String CONSUMING_TRANSFER_PROCESS_ID_2 = "re5qqq12-aaa3-4222-nnaa-taa2b3d000aa";
 
 
     @NotNull
@@ -62,18 +65,33 @@ public class TransferProcessTestUtils {
     }
 
     @NotNull
-    public static void createConsumingTransferProcesses(ContractNegotiationStore store, TransferProcessStore transferProcessStore) throws ParseException {
+    public static void createConsumingTransferProcess1(ContractNegotiationStore store, TransferProcessStore transferProcessStore) throws ParseException {
         DataAddress dataAddress = getDataAddress();
 
-        // preparing consuming transfer process
-        var consumerAgreement = createContractAgreement(CONSUMING_CONTRACT_ID, UNKNOWN_ASSET_ID);
+        // preparing consuming transfer process 1
+        var consumerAgreement = createContractAgreement(CONSUMING_CONTRACT_ID_1, UNKNOWN_ASSET_ID);
         createContractNegotiation(store, COUNTER_PARTY_ADDRESS, consumerAgreement, ContractNegotiation.Type.CONSUMER);
         createTransferProcess(UNKNOWN_ASSET_ID,
-                CONSUMING_CONTRACT_ID,
+                CONSUMING_CONTRACT_ID_1,
                 dataAddress,
                 TransferProcess.Type.CONSUMER,
-                CONSUMING_TRANSFER_PROCESS_ID,
+                CONSUMING_TRANSFER_PROCESS_ID_1,
                 "2023-07-10",
+                "",
+                transferProcessStore);
+    }
+    public static void createConsumingTransferProcess2(ContractNegotiationStore store, TransferProcessStore transferProcessStore) throws ParseException {
+        DataAddress dataAddress = getDataAddress();
+
+        // preparing consuming transfer process 2
+        var consumerAgreement = createContractAgreement(CONSUMING_CONTRACT_ID_2, UNKNOWN_ASSET_ID);
+        createContractNegotiation(store, COUNTER_PARTY_ADDRESS, consumerAgreement, ContractNegotiation.Type.CONSUMER);
+        createTransferProcess(UNKNOWN_ASSET_ID,
+                CONSUMING_CONTRACT_ID_2,
+                dataAddress,
+                TransferProcess.Type.CONSUMER,
+                CONSUMING_TRANSFER_PROCESS_ID_2,
+                "2023-07-07",
                 "",
                 transferProcessStore);
     }

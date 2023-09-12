@@ -29,11 +29,13 @@ import org.eclipse.edc.spi.entity.Entity;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+
 import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcMillisToOffsetDateTime;
 import static java.util.stream.Collectors.*;
 
@@ -91,7 +93,7 @@ public class TransferHistoryPageApiService {
             transferHistoryEntry.setState(transferProcessStateService.buildTransferProcessState(process.getState()));
             transferHistoryEntry.setTransferProcessId(process.getId());
             return transferHistoryEntry;
-        }).sorted(Comparator.comparing(TransferHistoryEntry::getLastUpdatedDate).reversed()).toList();
+        }).sorted(Comparator.comparing(TransferHistoryEntry::getLastUpdatedDate)).toList();
     }
 
     private Asset assetLookup(Map<String, Asset> assetsById, TransferProcess process) {

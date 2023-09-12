@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.text.ParseException;
 
-import static de.sovity.edc.client.TransferProcessTestUtils.createConsumingTransferProcesses;
+import static de.sovity.edc.client.TransferProcessTestUtils.createConsumingTransferProcess1;
 import static de.sovity.edc.client.TransferProcessTestUtils.createProvidingTransferProcesses;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,10 +64,10 @@ class GetTransferProcessAssetApiServiceTest {
         var client = TestUtils.edcClient();
 
         //arrange data
-        createConsumingTransferProcesses(negotiationStore, transferProcessStore);
+        createConsumingTransferProcess1(negotiationStore, transferProcessStore);
 
         //act
-        var consumerAssetResult = client.uiApi().getTransferProcessAsset(TransferProcessTestUtils.CONSUMING_TRANSFER_PROCESS_ID);
+        var consumerAssetResult = client.uiApi().getTransferProcessAsset(TransferProcessTestUtils.CONSUMING_TRANSFER_PROCESS_ID_1);
 
         //assert
         assertThat(consumerAssetResult.getAssetId()).isEqualTo(TransferProcessTestUtils.UNKNOWN_ASSET_ID);

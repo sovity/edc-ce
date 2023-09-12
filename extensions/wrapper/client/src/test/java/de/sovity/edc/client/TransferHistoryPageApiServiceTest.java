@@ -25,8 +25,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.text.ParseException;
 
-import static de.sovity.edc.client.TransferProcessTestUtils.createConsumingTransferProcesses;
-import static de.sovity.edc.client.TransferProcessTestUtils.createProvidingTransferProcesses;
+import static de.sovity.edc.client.TransferProcessTestUtils.*;
 import static de.sovity.edc.client.gen.model.TransferHistoryEntry.DirectionEnum.CONSUMING;
 import static de.sovity.edc.client.gen.model.TransferHistoryEntry.DirectionEnum.PROVIDING;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,7 +49,8 @@ class TransferHistoryPageApiServiceTest {
 
         // arrange
         createProvidingTransferProcesses(negotiationStore, transferProcessStore, assetStore);
-        createConsumingTransferProcesses(negotiationStore, transferProcessStore);
+        createConsumingTransferProcess1(negotiationStore, transferProcessStore);
+        createConsumingTransferProcess2(negotiationStore, transferProcessStore);
 
         // act
         var result = client.uiApi().transferHistoryPageEndpoint();
@@ -59,14 +59,14 @@ class TransferHistoryPageApiServiceTest {
         var transferProcess = result.getTransferEntries();
 
         // assert for the order of entries
-        assertThat(transferProcess.get(1).getTransferProcessId()).isEqualTo(TransferProcessTestUtils.PROVIDING_TRANSFER_PROCESS_ID);
+        assertThat(transferProcess.get(0).getTransferProcessId()).isEqualTo(TransferProcessTestUtils.CONSUMING_TRANSFER_PROCESS_ID_2);
 
         // assert for consuming request entry
         var consumingProcess = transferProcess.get(0);
-        assertThat(consumingProcess.getTransferProcessId()).isEqualTo(TransferProcessTestUtils.CONSUMING_TRANSFER_PROCESS_ID);
+        assertThat(consumingProcess.getTransferProcessId()).isEqualTo(TransferProcessTestUtils.CONSUMING_TRANSFER_PROCESS_ID_2);
         assertThat(consumingProcess.getAssetId()).isEqualTo(TransferProcessTestUtils.UNKNOWN_ASSET_ID);
         assertThat(consumingProcess.getCounterPartyConnectorEndpoint()).isEqualTo(TransferProcessTestUtils.COUNTER_PARTY_ADDRESS);
-        assertThat(consumingProcess.getContractAgreementId()).isEqualTo(TransferProcessTestUtils.CONSUMING_CONTRACT_ID);
+        assertThat(consumingProcess.getContractAgreementId()).isEqualTo(TransferProcessTestUtils.CONSUMING_CONTRACT_ID_2);
         assertThat(consumingProcess.getDirection()).isEqualTo(CONSUMING);
         assertThat(consumingProcess.getState().getCode()).isEqualTo(800);
         assertThat(consumingProcess.getAssetName()).isEqualTo(TransferProcessTestUtils.UNKNOWN_ASSET_ID);
