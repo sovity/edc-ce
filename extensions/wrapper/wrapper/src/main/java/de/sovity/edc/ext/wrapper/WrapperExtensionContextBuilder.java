@@ -135,7 +135,7 @@ public class WrapperExtensionContextBuilder {
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
         var edcPropertyUtils = new EdcPropertyUtils();
-        var assetBuilder = new AssetMapper(edcPropertyUtils, objectMapper);
+        var assetBuilder = new AssetBuilder(edcPropertyUtils);
         var assetApiService = new AssetApiService(assetBuilder, assetService, edcPropertyUtils);
         var transferRequestBuilder = new TransferRequestBuilder(
                 objectMapper,

@@ -13,6 +13,7 @@
  */
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
+import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,5 +25,5 @@ import java.util.List;
 @Schema(description = "All data for the Asset Page")
 public class AssetPage {
     @Schema(description = "Visible Assets", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<AssetEntry> assets;
+    private List<UiAsset> assets;
 }

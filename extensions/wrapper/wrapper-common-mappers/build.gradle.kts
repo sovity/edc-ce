@@ -16,11 +16,15 @@ dependencies {
 
     api("${edcGroup}:policy-model:${edcVersion}")
     api("${edcGroup}:core-spi:${edcVersion}")
-    api(project(":extensions:wrapper:wrapper"))
+    api("${edcGroup}:transform-core:${edcVersion}")
+
+
     api(project(":extensions:wrapper:wrapper-common-api"))
 
     implementation("org.apache.commons:commons-lang3:3.13.0")
     implementation("org.apache.commons:commons-collections4:4.4")
+    implementation("cz.cvut.kbss.jsonld:jb4jsonld-jackson:0.13.2")
+
 
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")

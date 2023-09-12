@@ -1,0 +1,47 @@
+{
+  "https://w3id.org/edc/v0.0.1/ns/": "urn:artifact:my-asset",
+
+  "http://purl.org/dc/terms/identifier": "urn:artifact:my-asset",
+  "http://purl.org/dc/terms/title": [
+    {
+      "@value": "Asset Name",
+      "@language": "en"
+    },
+    {
+      "@value": "Asset Name in French cuz why not",
+      "@language": "fr"
+    }
+  ],
+  "http://purl.org/dc/terms/language": "https://w3id.org/idsa/code/EN",
+  "http://purl.org/dc/terms/description": "Lorem Ipsum ...",
+  "http://purl.org/dc/terms/creator": {
+    "@type": "http://xmlns.com/foaf/0.1/Organization",
+    "http://xmlns.com/foaf/0.1/name": "My Organization Name"
+  },
+  "http://purl.org/dc/terms/publisher": {
+    "@type": "http://xmlns.com/foaf/0.1/Organization",
+    "http://xmlns.com/foaf/0.1/homepage": "https://data-source.my-org/about"
+  },
+  "http://purl.org/dc/terms/license": "https://data-source.my-org/license",
+
+  "http://www.w3.org/ns/dcat#version": "1.1",
+  "http://www.w3.org/ns/dcat#keyword": ["some", "keywords"],
+  "http://www.w3.org/ns/dcat#distribution": {
+    "@type": "http://www.w3.org/ns/dcat#Distribution",
+    "http://www.w3.org/ns/dcat#mediaType": "application/json"
+  },
+  "http://www.w3.org/ns/dcat#landingPage": "https://data-source.my-org/docs",
+
+  "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod": "true",
+  "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath": "true",
+  "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams": "true",
+  "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody": "true",
+
+  "http://w3id.org/mds#dataCategory": "Infrastructure and Logistics",
+  "http://w3id.org/mds#dataSubcategory": "General Information About Planning Of Routes",
+  "http://w3id.org/mds#dataModel": "my-data-model-001",
+  "http://w3id.org/mds#geoReferenceMethod": "my-geo-reference-method",
+  "http://w3id.org/mds#transportMode": "my-geo-reference-method",
+
+  "http://unknown/some-custom-property": "test"
+}

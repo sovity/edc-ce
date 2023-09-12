@@ -65,7 +65,7 @@ public class AssetApiServiceTest {
         var assets = result.getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        assertThat(asset.getProperties()).isEqualTo(properties);
+        assertThat(asset.getAdditionalProperties()).isEqualTo(properties);
         assertThat(asset.getPrivateProperties()).isEqualTo(privateProperties);
     }
 
@@ -83,7 +83,7 @@ public class AssetApiServiceTest {
 
         // assert
         assertThat(result.getAssets())
-                .extracting(asset -> asset.getProperties().get(Asset.PROPERTY_ID))
+                .extracting(asset -> asset.getAdditionalProperties().get(Asset.PROPERTY_ID))
                 .containsExactly("asset-3", "asset-2", "asset-1");
     }
 

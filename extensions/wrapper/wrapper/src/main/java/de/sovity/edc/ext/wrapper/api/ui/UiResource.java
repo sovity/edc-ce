@@ -107,7 +107,7 @@ public class UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Create a new Asset")
-    public IdResponseDto createAsset(UiAssetCreateRequest assetCreateRequest) {
+    public IdResponseDto createAsset(AssetCreateRequest assetCreateRequest) {
         return assetApiService.createAsset(assetCreateRequest);
     }
 

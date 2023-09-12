@@ -26,7 +26,6 @@ public class CustomDeserializer extends JsonDeserializer<Object> implements Cont
 
     @Override
     public JsonDeserializer<?> createContextual(DeserializationContext deserializationContext, BeanProperty beanProperty) throws JsonMappingException {
-        //beanProperty is null when the type to deserialize is the top-level type or a generic type, not a type of a bean property
         JavaType type = deserializationContext.getContextualType() != null
                 ? deserializationContext.getContextualType()
                 : beanProperty.getMember().getType();
@@ -94,6 +93,7 @@ public class CustomDeserializer extends JsonDeserializer<Object> implements Cont
 
         if (valueObject instanceof List) {
             return getFirstValueFromList((List<?>) valueObject);
+
         } else if (valueObject instanceof LinkedHashMap) {
             return extractValueFromMap((LinkedHashMap<?, ?>) valueObject);
         }
