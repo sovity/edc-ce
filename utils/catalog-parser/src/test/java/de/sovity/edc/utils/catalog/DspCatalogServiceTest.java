@@ -14,8 +14,9 @@
 
 package de.sovity.edc.utils.catalog;
 
-import de.sovity.edc.utils.catalog.utils.JsonLdUtils;
-import de.sovity.edc.utils.catalog.utils.JsonUtils;
+import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
+import de.sovity.edc.utils.jsonld.JsonLdUtils;
+import de.sovity.edc.utils.JsonUtils;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.edc.connector.spi.catalog.CatalogService;
@@ -43,7 +44,7 @@ class DspCatalogServiceTest {
 
         var result = CompletableFuture.completedFuture(StatusResult.success(catalogJson.getBytes(StandardCharsets.UTF_8)));
         when(catalogService.requestCatalog(eq(endpoint), eq("dataspace-protocol-http"), eq(QuerySpec.max()))).thenReturn(result);
-        var dataOfferBuilder = new DataOfferBuilder(new TitaniumJsonLd(mock(Monitor.class)));
+        var dataOfferBuilder = new DspDataOfferBuilder(new TitaniumJsonLd(mock(Monitor.class)));
 
         return new DspCatalogService(catalogService, dataOfferBuilder);
     }

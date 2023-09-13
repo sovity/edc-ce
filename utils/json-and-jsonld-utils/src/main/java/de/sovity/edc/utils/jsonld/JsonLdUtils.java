@@ -1,4 +1,4 @@
-package de.sovity.edc.utils.catalog.utils;
+package de.sovity.edc.utils.jsonld;
 
 import jakarta.json.JsonNumber;
 import jakarta.json.JsonObject;

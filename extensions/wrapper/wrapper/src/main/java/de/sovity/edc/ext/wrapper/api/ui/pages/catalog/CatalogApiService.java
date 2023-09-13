@@ -21,8 +21,8 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiContractOffer;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import de.sovity.edc.utils.catalog.DspCatalogService;
-import de.sovity.edc.utils.catalog.model.ContractOffer;
-import de.sovity.edc.utils.catalog.model.DataOffer;
+import de.sovity.edc.utils.catalog.model.DspContractOffer;
+import de.sovity.edc.utils.catalog.model.DspDataOffer;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class CatalogApiService {
                 .toList();
     }
 
-    private UiDataOffer buildDataOffer(DataOffer dataOffer) {
+    private UiDataOffer buildDataOffer(DspDataOffer dataOffer) {
         var uiDataOffer = new UiDataOffer();
         uiDataOffer.setEndpoint(dataOffer.getEndpoint());
         uiDataOffer.setParticipantId(dataOffer.getParticipantId());
@@ -49,23 +49,23 @@ public class CatalogApiService {
         return uiDataOffer;
     }
 
-    private List<UiContractOffer> buildContractOffers(List<ContractOffer> contractOffers) {
+    private List<UiContractOffer> buildContractOffers(List<DspContractOffer> contractOffers) {
         return contractOffers.stream().map(this::buildContractOffer).toList();
     }
 
-    private UiContractOffer buildContractOffer(ContractOffer contractOffer) {
+    private UiContractOffer buildContractOffer(DspContractOffer contractOffer) {
         var uiContractOffer = new UiContractOffer();
         uiContractOffer.setContractOfferId(contractOffer.getContractOfferId());
         uiContractOffer.setPolicy(buildUiPolicy(contractOffer));
         return uiContractOffer;
     }
 
-    private UiAsset buildUiAsset(DataOffer dataOffer) {
+    private UiAsset buildUiAsset(DspDataOffer dataOffer) {
         var asset = assetMapper.buildAssetFromAssetPropertiesJsonLd(dataOffer.getAssetPropertiesJsonLd());
         return assetMapper.buildUiAsset(asset);
     }
 
-    private UiPolicyDto buildUiPolicy(ContractOffer contractOffer) {
+    private UiPolicyDto buildUiPolicy(DspContractOffer contractOffer) {
         var policy = policyMapper.buildPolicy(contractOffer.getPolicyJsonLd());
         return policyMapper.buildUiPolicy(policy);
     }

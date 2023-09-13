@@ -46,7 +46,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
-import de.sovity.edc.utils.catalog.DataOfferBuilder;
+import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import lombok.NoArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -65,6 +65,7 @@ import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
 import java.util.List;
 
@@ -96,7 +97,8 @@ public class WrapperExtensionContextBuilder {
             PolicyEngine policyEngine,
             ServiceExtensionContext serviceExtensionContext,
             TransferProcessService transferProcessService,
-            TransferProcessStore transferProcessStore
+            TransferProcessStore transferProcessStore,
+            TypeTransformerRegistry typeTransformerRegistry
     ) {
         // UI API
         var operatorMapper = new OperatorMapper();
@@ -108,7 +110,9 @@ public class WrapperExtensionContextBuilder {
         var policyMapper = new PolicyMapper(
                 objectMapper,
                 constraintExtractor,
-                atomicConstraintMapper);
+                atomicConstraintMapper,
+                typeTransformerRegistry
+        );
         var transferProcessStateService = new TransferProcessStateService();
         var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
                 policyMapper,
@@ -157,7 +161,7 @@ public class WrapperExtensionContextBuilder {
         var policyDefinitionApiService = new PolicyDefinitionApiService(
                 policyDefinitionService,
                 policyMapper);
-        var dataOfferBuilder = new DataOfferBuilder(jsonLd);
+        var dataOfferBuilder = new DspDataOfferBuilder(jsonLd);
         var dspCatalogService = new DspCatalogService(catalogService, dataOfferBuilder);
         var assetMapper = new AssetMapper();
         var catalogApiService = new CatalogApiService(assetMapper, policyMapper, dspCatalogService);

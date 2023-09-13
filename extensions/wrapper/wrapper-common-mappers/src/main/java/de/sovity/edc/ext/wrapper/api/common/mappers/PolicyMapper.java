@@ -7,6 +7,7 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto;
+import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.eclipse.edc.policy.model.Action;
@@ -14,6 +15,7 @@ import org.eclipse.edc.policy.model.Constraint;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
 import java.util.ArrayList;
 
@@ -25,6 +27,7 @@ public class PolicyMapper {
     private final ObjectMapper jsonLdObjectMapper;
     private final ConstraintExtractor constraintExtractor;
     private final AtomicConstraintMapper atomicConstraintMapper;
+    private final TypeTransformerRegistry typeTransformerRegistry;
 
     /**
      * Builds a simplified UI Policy Model from an ODRL Policy.
@@ -80,7 +83,7 @@ public class PolicyMapper {
      * @param policyJsonLd policy JSON-LD
      * @return {@link Policy}
      */
-    public Policy buildPolicy(String policyJsonLd) {
-        throw new IllegalStateException("Not implemented yet");
+    public Policy buildPolicy(JsonObject policyJsonLd) {
+        return typeTransformerRegistry.transform(policyJsonLd, Policy.class).getContent();
     }
 }

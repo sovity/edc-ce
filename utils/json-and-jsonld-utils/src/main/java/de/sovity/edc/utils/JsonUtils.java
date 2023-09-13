@@ -1,4 +1,4 @@
-package de.sovity.edc.utils.catalog.utils;
+package de.sovity.edc.utils;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;

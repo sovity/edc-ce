@@ -1,9 +1,10 @@
 package de.sovity.edc.utils.catalog.model;
 
+import jakarta.json.JsonObject;
 import lombok.Data;
 
 @Data
-public class ContractOffer {
+public class DspContractOffer {
     private final String contractOfferId;
-    private final String policyJsonLd;
+    private final JsonObject policyJsonLd;
 }

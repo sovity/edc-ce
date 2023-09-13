@@ -1,7 +1,8 @@
 package de.sovity.edc.utils.catalog;
 
-import de.sovity.edc.utils.catalog.model.DataOffer;
-import de.sovity.edc.utils.catalog.utils.JsonUtils;
+import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
+import de.sovity.edc.utils.catalog.model.DspDataOffer;
+import de.sovity.edc.utils.JsonUtils;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -14,11 +15,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DspCatalogService {
     private final CatalogService catalogService;
-    private final DataOfferBuilder dataOfferBuilder;
+    private final DspDataOfferBuilder dspDataOfferBuilder;
 
-    public List<DataOffer> fetchDataOffers(String endpoint) {
+    public List<DspDataOffer> fetchDataOffers(String endpoint) {
         var catalogJson = fetchDcatResponse(endpoint);
-        return dataOfferBuilder.buildDataOffers(endpoint, catalogJson);
+        return dspDataOfferBuilder.buildDataOffers(endpoint, catalogJson);
     }
 
     private JsonObject fetchDcatResponse(String connectorEndpoint) {

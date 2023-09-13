@@ -4,6 +4,7 @@ val edcGroup: String by project
 val edcVersion: String by project
 val assertj: String by project
 val mockitoVersion: String by project
+val jakartaJsonVersion: String by project
 
 plugins {
     `java-library`
@@ -14,15 +15,11 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
-    api("${edcGroup}:policy-model:${edcVersion}")
-    api("${edcGroup}:core-spi:${edcVersion}")
-    api("${edcGroup}:transform-spi:${edcVersion}")
-    api(project(":extensions:wrapper:wrapper-common-api"))
-
-    implementation(project(":utils:json-and-jsonld-utils"))
+    api("org.glassfish:jakarta.json:${jakartaJsonVersion}")
 
     implementation("org.apache.commons:commons-lang3:3.13.0")
     implementation("org.apache.commons:commons-collections4:4.4")
+    implementation("commons-io:commons-io:2.13.0")
 
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
