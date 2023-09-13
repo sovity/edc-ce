@@ -13,5 +13,5 @@ export default defineConfig({
         },
         sourcemap: true,
     },
-    plugins: [dts()],
+    plugins: [dts({rollupTypes: true})],
 });

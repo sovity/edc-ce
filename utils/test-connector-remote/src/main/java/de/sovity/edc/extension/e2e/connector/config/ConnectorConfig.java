@@ -14,20 +14,20 @@
 package de.sovity.edc.extension.e2e.connector.config;
 
 import de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroupConfig;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.util.Map;
 
 
-@Getter
-@RequiredArgsConstructor
+@Data
+@AllArgsConstructor
 public class ConnectorConfig {
-    private final String participantId;
-    private final EdcApiGroupConfig defaultEndpoint;
-    private final EdcApiGroupConfig managementEndpoint;
-    private final EdcApiGroupConfig protocolEndpoint;
-    private final Map<String, String> properties;
+    private String participantId;
+    private EdcApiGroupConfig defaultEndpoint;
+    private EdcApiGroupConfig managementEndpoint;
+    private EdcApiGroupConfig protocolEndpoint;
+    private Map<String, String> properties;
 
     public void setProperty(String key, String value) {
         properties.put(key, value);
