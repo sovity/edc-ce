@@ -19,15 +19,15 @@ public class DspDataOfferBuilder {
 
     public List<DspDataOffer> buildDataOffers(String endpoint, JsonObject json) {
         json = jsonLd.expand(json).getContent();
-        String participantId = JsonLdUtils.string(json.get(Prop.Edc.PARTICIPANT_ID));
+        String participantId = JsonLdUtils.string(json, Prop.Edc.PARTICIPANT_ID);
 
-        return JsonLdUtils.arrayOfObjects(json.get(Prop.Dcat.DATASET)).stream()
+        return JsonLdUtils.listOfObjects(json, Prop.Dcat.DATASET).stream()
                 .map(dataset -> buildDataOffer(endpoint, participantId, dataset))
                 .toList();
     }
 
     private DspDataOffer buildDataOffer(String endpoint, String participantId, JsonObject dataset) {
-        var contractOffers = JsonLdUtils.arrayOfObjects(dataset.get(Prop.Odrl.HAS_POLICY)).stream()
+        var contractOffers = JsonLdUtils.listOfObjects(dataset, Prop.Odrl.HAS_POLICY).stream()
                 .map(this::buildContractOffer)
                 .toList();
 

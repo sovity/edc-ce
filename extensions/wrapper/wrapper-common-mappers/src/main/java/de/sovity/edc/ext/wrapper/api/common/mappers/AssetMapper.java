@@ -23,7 +23,7 @@ public class AssetMapper {
     }
 
     private JsonObject buildAssetJsonLd(JsonObject properties) {
-        var id = JsonLdUtils.string(properties.get(Prop.Edc.ID));
+        var id = JsonLdUtils.string(properties, Prop.Edc.ID);
 
         return Json.createObjectBuilder()
                 .add(Prop.ID, id)

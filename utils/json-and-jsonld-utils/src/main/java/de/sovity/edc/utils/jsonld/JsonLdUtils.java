@@ -12,6 +12,12 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonLdUtils {
 
+    /**
+     * Get the ID value of an object
+     *
+     * @param json json-ld
+     * @return id or null
+     */
     public static String id(JsonObject json) {
         if (json.containsKey("@id") && json.get("@id").getValueType() == JsonValue.ValueType.STRING) {
             return json.getString("@id");
@@ -19,6 +25,12 @@ public class JsonLdUtils {
         return null;
     }
 
+    /**
+     * Get a string property
+     *
+     * @param json json-ld
+     * @return string value or null
+     */
     public static String string(JsonValue json) {
         var value = value(json);
         if (value == null) {
@@ -36,14 +48,40 @@ public class JsonLdUtils {
         };
     }
 
-    public static List<JsonObject> arrayOfObjects(JsonValue json) {
-        return array(json).stream()
+    /**
+     * Get a list property.
+     *
+     * @param json json-ld
+     * @return list of values
+     */
+    public static List<JsonValue> list(JsonValue json) {
+        return switch (json.getValueType()) {
+            case ARRAY -> json.asJsonArray();
+            case FALSE, TRUE, NUMBER, STRING, OBJECT -> List.of(json);
+            case NULL -> List.of();
+        };
+    }
+
+    /**
+     * Get a list property while unwrapping values and only keeping objects.
+     *
+     * @param json json-ld
+     * @return list of values
+     */
+    public static List<JsonObject> listOfObjects(JsonValue json) {
+        return list(json).stream()
                 .map(JsonLdUtils::value) // unwrap @value
                 .filter(JsonObject.class::isInstance)
                 .map(JsonObject.class::cast)
                 .toList();
     }
 
+    /**
+     * Get the innermost @value of an object. Also removes wrappings in lists.
+     *
+     * @param json json-ld
+     * @return innermost @value
+     */
     public static JsonValue value(JsonValue json) {
         return switch (json.getValueType()) {
             case ARRAY -> {
@@ -65,11 +103,25 @@ public class JsonLdUtils {
         };
     }
 
-    public static List<JsonValue> array(JsonValue json) {
-        return switch (json.getValueType()) {
-            case ARRAY -> json.asJsonArray();
-            case FALSE, TRUE, NUMBER, STRING, OBJECT -> List.of(json);
-            case NULL -> List.of();
-        };
+    /**
+     * Get a string property
+     *
+     * @param object json-ld
+     * @param key key
+     * @return string or null
+     */
+    public static String string(JsonObject object, String key) {
+        return string(object.get(key));
+    }
+
+    /**
+     * Get a list property while unwrapping values and only keeping objects.
+     *
+     * @param object json-ld
+     * @param key key
+     * @return list of values
+     */
+    public static List<JsonObject> listOfObjects(JsonObject object, String key) {
+        return listOfObjects(object.get(key));
     }
 }
