@@ -29,7 +29,7 @@ class AssetMapperTest {
         String jsonContent = new String(Files.readAllBytes(Paths.get(getClass().getResource("/sample.json").toURI())));
 
         // Act
-        var uiAsset = assetMapper.buildUiAsset(assetMapper.buildHelperDto(jsonContent));
+        var uiAsset = assetMapper.buildUiAssetFromAssetHelper(assetMapper.buildHelperDto(jsonContent));
 
         // Assert
         assertThat(uiAsset).isNotNull();

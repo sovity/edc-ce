@@ -103,10 +103,13 @@ public class WrapperExtensionContextBuilder {
                 objectMapper,
                 constraintExtractor,
                 atomicConstraintMapper);
+        var edcPropertyMapperUtils = new EdcPropertyMapperUtils();
+        var assetMapper = new AssetMapper(objectMapper, edcPropertyMapperUtils);
         var transferProcessStateService = new TransferProcessStateService();
         var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
                 policyMapper,
-                transferProcessStateService
+                transferProcessStateService,
+                assetMapper
         );
         var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
                 contractAgreementService,
@@ -135,8 +138,6 @@ public class WrapperExtensionContextBuilder {
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
         var edcPropertyUtils = new EdcPropertyUtils();
-        var edcPropertyMapperUtils = new EdcPropertyMapperUtils();
-        var assetMapper = new AssetMapper(objectMapper, edcPropertyMapperUtils);
         var assetApiService = new AssetApiService(assetService, assetMapper);
         var transferRequestBuilder = new TransferRequestBuilder(
                 objectMapper,

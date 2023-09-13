@@ -10,6 +10,7 @@ import lombok.SneakyThrows;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -23,10 +24,10 @@ public class AssetMapper {
 
     @SneakyThrows
     public UiAsset buildUiAssetFromAssetJsonLd(String assetJsonLd) {
-        return buildUiAsset(buildHelperDto(assetJsonLd));
+        return buildUiAssetFromAssetHelper(buildHelperDto(assetJsonLd));
     }
 
-    public UiAsset buildUiAsset(AssetHelperDto assetHelperDto) {
+    public UiAsset buildUiAssetFromAssetHelper(AssetHelperDto assetHelperDto) {
 
         return UiAsset.builder()
                 .name(assetHelperDto.getNs())
@@ -59,10 +60,15 @@ public class AssetMapper {
     }
 
     @SneakyThrows
-    private UiAsset buildUiAsset(Asset asset) {
-        var assetJsonLd = jsonLdObjectMapper.writeValueAsString(asset);
-        var uiAssetHelperDto = buildHelperDto(assetJsonLd);
-        return buildUiAsset(uiAssetHelperDto);
+    public UiAsset buildUiAssetFromAsset(Asset asset) {
+        var uiAsset = buildUiAssetFromAssetHelper(buildHelperDto(jsonLdObjectMapper.writeValueAsString(asset.getProperties())));
+
+        uiAsset.setId(asset.getId());
+        uiAsset.setPrivateProperties(asset.getPrivateProperties());
+        uiAsset.setDataAddressProperties(edcPropertyMapperUtils.truncateToMapOfString(asset.getDataAddress().getProperties()));
+        uiAsset.setKeywords(uiAsset.getKeywords() == null ? List.of() : uiAsset.getKeywords());
+
+        return uiAsset;
     }
 
     @SneakyThrows

@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
-import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -59,7 +58,7 @@ public class ContractAgreementCard {
     private OffsetDateTime contractEndDate;
 
     @Schema(description = "Asset details", requiredMode = Schema.RequiredMode.REQUIRED)
-    private AssetDto asset;
+    private UiAsset asset;
 
     @Schema(description = "Contract Policy", requiredMode = Schema.RequiredMode.REQUIRED)
     private UiPolicyDto contractPolicy;

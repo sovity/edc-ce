@@ -27,6 +27,7 @@ import java.util.Map;
 
 @Getter
 @Setter
+
 @ToString
 @AllArgsConstructor
 @Builder(toBuilder = true)
@@ -105,6 +106,9 @@ public class UiAsset {
 
     @Schema(description = "Asset Json Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> additionalJsonProperties;
+
+    @Schema(description = "Asset DataAddress Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Map<String, String> dataAddressProperties;
 
     @Schema(description = "Contains the entire asset in its original expanded JSON-LD format", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String assetJsonLd;
