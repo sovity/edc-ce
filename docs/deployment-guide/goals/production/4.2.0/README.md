@@ -3,7 +3,7 @@ Deployment Goal: Production (EDC CE 4.2.0)
 
 ## About this Guide
 
-This is a productive deployment guide for self-hosting a function sovity CE EDC Connector or MDS CE EDC Connector.
+This is a productive deployment guide for self-hosting a functional sovity CE EDC Connector or MDS CE EDC Connector.
 
 ## Requirements
 
