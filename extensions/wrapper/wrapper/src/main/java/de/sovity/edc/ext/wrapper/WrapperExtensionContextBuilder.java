@@ -163,7 +163,7 @@ public class WrapperExtensionContextBuilder {
                 policyMapper);
         var dataOfferBuilder = new DspDataOfferBuilder(jsonLd);
         var dspCatalogService = new DspCatalogService(catalogService, dataOfferBuilder);
-        var assetMapper = new AssetMapper();
+        var assetMapper = new AssetMapper(typeTransformerRegistry);
         var catalogApiService = new CatalogApiService(assetMapper, policyMapper, dspCatalogService);
         var uiResource = new UiResource(
                 contractAgreementApiService,

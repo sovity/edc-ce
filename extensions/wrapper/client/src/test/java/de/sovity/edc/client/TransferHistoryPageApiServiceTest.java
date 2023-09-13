@@ -70,7 +70,7 @@ class TransferHistoryPageApiServiceTest {
         assertThat(consumingProcess.getDirection()).isEqualTo(CONSUMING);
         assertThat(consumingProcess.getState().getCode()).isEqualTo(800);
         assertThat(consumingProcess.getAssetName()).isEqualTo(TransferProcessTestUtils.UNKNOWN_ASSET_ID);
-        assertThat(consumingProcess.getErrorMessage()).isEqualTo("");
+        assertThat(consumingProcess.getErrorMessage()).isEmpty();
 
         // assert for providing request entry
         var providingProcess = transferProcess.get(1);

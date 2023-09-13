@@ -14,7 +14,11 @@ public class AssetMapper {
     private final TypeTransformerRegistry typeTransformerRegistry;
 
     public UiAsset buildUiAsset(Asset asset) {
-        throw new IllegalStateException("Not yet implemented!");
+        // TODO add more fields
+        return new UiAsset(
+                asset.getId(),
+                asset.getName()
+        );
     }
 
     public Asset buildAssetFromAssetPropertiesJsonLd(JsonObject json) {

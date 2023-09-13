@@ -30,5 +30,9 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @Schema(description = "Type-Safe Asset Metadata as needed by our UI")
 public class UiAsset {
+    @Schema(description = "Asset ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String assetId;
 
+    @Schema(description = "Asset name")
+    private String name;
 }
