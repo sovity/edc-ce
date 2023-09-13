@@ -20,10 +20,8 @@ import lombok.ToString;
 public class UiAssetDistribution {
 
     @JsonProperty("@type")
-    @Schema(description = "Type", requiredMode = Schema.RequiredMode.REQUIRED)
     private String type;
 
     @JsonProperty("http://www.w3.org/ns/dcat#mediaType")
-    @Schema(description = "Media Type", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 }

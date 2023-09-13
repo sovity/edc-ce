@@ -14,6 +14,8 @@
 
 package de.sovity.edc.ext.wrapper;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
@@ -32,6 +34,8 @@ import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.types.TypeManager;
 import org.eclipse.edc.web.spi.WebService;
+
+import static org.eclipse.edc.spi.CoreConstants.JSON_LD;
 
 public class WrapperExtension implements ServiceExtension {
 
@@ -74,7 +78,9 @@ public class WrapperExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        var objectMapper = typeManager.getMapper();
+        var objectMapper = typeManager.getMapper(JSON_LD);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.registerModule(new JavaTimeModule());
 
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
                 context,

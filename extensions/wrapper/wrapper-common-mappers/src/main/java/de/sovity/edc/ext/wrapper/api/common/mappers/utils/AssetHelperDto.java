@@ -21,12 +21,14 @@ import java.util.List;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UiAssetHelperDto {
+public class AssetHelperDto {
 
     @JsonProperty("https://w3id.org/edc/v0.0.1/ns/")
+    @JsonDeserialize(using = CustomDeserializer.class)
     private String ns;
 
     @JsonProperty("http://purl.org/dc/terms/identifier")
+    @JsonDeserialize(using = CustomDeserializer.class)
     private String identifier;
 
     @JsonProperty("http://purl.org/dc/terms/title")
@@ -34,9 +36,11 @@ public class UiAssetHelperDto {
     private String title;
 
     @JsonProperty("http://purl.org/dc/terms/language")
+    @JsonDeserialize(using = CustomDeserializer.class)
     private String language;
 
     @JsonProperty("http://purl.org/dc/terms/description")
+    @JsonDeserialize(using = CustomDeserializer.class)
     private String description;
 
     @JsonProperty("http://purl.org/dc/terms/creator")
@@ -46,9 +50,11 @@ public class UiAssetHelperDto {
     private UiAssetPublisher publisher;
 
     @JsonProperty("http://purl.org/dc/terms/license")
+    @JsonDeserialize(using = CustomDeserializer.class)
     private String license;
 
     @JsonProperty("http://www.w3.org/ns/dcat#version")
+    @JsonDeserialize(using = CustomDeserializer.class)
     private String version;
 
     @JsonProperty("http://www.w3.org/ns/dcat#keyword")
@@ -59,6 +65,7 @@ public class UiAssetHelperDto {
     private UiAssetDistribution distribution;
 
     @JsonProperty("http://www.w3.org/ns/dcat#landingPage")
+    @JsonDeserialize(using = CustomDeserializer.class)
     private String landingPage;
 
     @JsonProperty("https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod")
@@ -78,18 +85,23 @@ public class UiAssetHelperDto {
     private Boolean httpDatasourceHintsProxyBody;
 
     @JsonProperty("http://w3id.org/mds#dataCategory")
+    @JsonDeserialize(using = CustomDeserializer.class)
     private String dataCategory;
 
     @JsonProperty("http://w3id.org/mds#dataSubcategory")
+    @JsonDeserialize(using = CustomDeserializer.class)
     private String dataSubcategory;
 
     @JsonProperty("http://w3id.org/mds#dataModel")
+    @JsonDeserialize(using = CustomDeserializer.class)
     private String dataModel;
 
     @JsonProperty("http://w3id.org/mds#geoReferenceMethod")
+    @JsonDeserialize(using = CustomDeserializer.class)
     private String geoReferenceMethod;
 
     @JsonProperty("http://w3id.org/mds#transportMode")
+    @JsonDeserialize(using = CustomDeserializer.class)
     private String transportMode;
 }
 

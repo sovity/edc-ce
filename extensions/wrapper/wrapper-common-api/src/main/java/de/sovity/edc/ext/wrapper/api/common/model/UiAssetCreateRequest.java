@@ -26,8 +26,7 @@ import java.util.Map;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Type-Safe OpenAPI generator friendly Asset Create DTO that supports an opinionated\"\n" +
-        "        + \" subset of the original EDC Asset Entity.")
+@Schema(description = "Type-Safe OpenAPI generator friendly Asset Create DTO that supports an opinionated subset of the original EDC Asset Entity.")
 public class UiAssetCreateRequest {
     @Schema(description = "Data Address", requiredMode = Schema.RequiredMode.REQUIRED)
     private Map<String, String> dataAddressProperties;

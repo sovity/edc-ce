@@ -34,75 +34,78 @@ import java.util.Map;
 @Schema(description = "Asset Details")
 public class UiAsset {
 
-    @Schema(description = "Asset Name", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Asset Id", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String id;
+
+    @Schema(description = "Asset Name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String name;
 
-    @Schema(description = "Asset Title", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Asset Title", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String title;
 
-    @Schema(description = "Asset Language", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Asset Language", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String language;
 
-    @Schema(description = "Asset Description", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Asset Description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String description;
 
-    @Schema(description = "Asset Creator", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Asset Organization Name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String creator;
 
-    @Schema(description = "Asset Publisher", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Asset Homepage", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String publisher;
 
-    @Schema(description = "License URL", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String license;
+    @Schema(description = "License URL", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String licenseUrl;
 
-    @Schema(description = "Version", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Version", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String version;
 
-    @Schema(description = "Asset Keywords", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Asset Keywords", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private List<String> keywords;
 
-    @Schema(description = "Distribution", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Asset MediaType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String distribution;
 
-    @Schema(description = "Landing Page URL", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String landingPage;
+    @Schema(description = "Landing Page URL", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String landingPageUrl;
 
-    @Schema(description = "HTTP Datasource Hints Proxy Method", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "HTTP Datasource Hints Proxy Method", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Boolean httpDatasourceHintsProxyMethod;
 
-    @Schema(description = "HTTP Datasource Hints Proxy Path", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "HTTP Datasource Hints Proxy Path", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Boolean httpDatasourceHintsProxyPath;
 
-    @Schema(description = "HTTP Datasource Hints Proxy Query Params", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "HTTP Datasource Hints Proxy Query Params", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Boolean httpDatasourceHintsProxyQueryParams;
 
-    @Schema(description = "HTTP Datasource Hints Proxy Body", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "HTTP Datasource Hints Proxy Body", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Boolean httpDatasourceHintsProxyBody;
 
-    @Schema(description = "Data Category", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Data Category", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String dataCategory;
 
-    @Schema(description = "Data Subcategory", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Data Subcategory", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String dataSubcategory;
 
-    @Schema(description = "Data Model", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Data Model", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String dataModel;
 
-    @Schema(description = "Geo-Reference Method", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Geo-Reference Method", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String geoReferenceMethod;
 
-    @Schema(description = "Transport Mode", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Transport Mode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String transportMode;
 
-    @Schema(description = "Asset JsonLd", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String assetJsonLd;
-
-    @Schema(description = "Asset additional Properties", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Asset additional Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> additionalProperties;
 
-    @Schema(description = "Asset Private Properties", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Map<String, String> privateProperties;
+    @Schema(description = "Asset Private Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Map<String, Object> privateProperties;
 
-    @Schema(description = "Asset Json Properties", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Asset Json Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> additionalJsonProperties;
+
+    @Schema(description = "Contains the entire asset in its original expanded JSON-LD format", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String assetJsonLd;
 }

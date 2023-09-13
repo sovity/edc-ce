@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class AssetApiService {
@@ -41,11 +42,17 @@ public class AssetApiService {
         var assets = getAllAssets();
         return assets.stream().sorted(Comparator.comparing(Asset::getCreatedAt).reversed()).map(asset -> {
             var entry = new UiAsset();
-            entry.setAdditionalProperties(edcPropertyUtils.truncateToMapOfString(asset.getProperties()));
-            entry.setPrivateProperties(edcPropertyUtils.truncateToMapOfString(asset.getPrivateProperties()));
+            entry.setId(asset.getId());
             entry.setDescription(asset.getDescription());
             entry.setName(asset.getName());
             entry.setVersion(asset.getVersion());
+            entry.setLandingPageUrl((asset.getProperties().get("landingPage") != null) ?
+                    asset.getProperties().get("landingPage").toString() :
+                    null);
+            entry.setKeywords(List.of((asset.getProperties().get("keywords") != null) ?
+                    asset.getProperties().get("keywords").toString() :
+                    ""));
+            entry.setPrivateProperties(asset.getPrivateProperties());
             return entry;
         }).toList();
     }

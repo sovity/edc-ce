@@ -15,6 +15,7 @@ package de.sovity.edc.client;
 
 
 import de.sovity.edc.client.gen.model.AssetCreateRequest;
+import de.sovity.edc.client.utils.AssetUtils;
 import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.spi.asset.AssetService;
@@ -40,11 +41,14 @@ public class AssetApiServiceTest {
     public static final String DATA_SINK = "http://my-data-sink/api/stuff";
     public static final String DATA_ADDRESS_TYPE = "HttpData";
     EdcPropertyUtils edcPropertyUtils;
+    AssetUtils assetUtils;
 
     @BeforeEach
     void setUp(EdcExtension extension) {
         TestUtils.setupExtension(extension);
         edcPropertyUtils = new EdcPropertyUtils();
+        assetUtils = new AssetUtils();
+
     }
 
     @Test
@@ -54,7 +58,7 @@ public class AssetApiServiceTest {
         var privateProperties = Map.of("random-private-prop", "456");
         var properties = Map.of(
                 Asset.PROPERTY_ID, "asset-1",
-                "random-prop", "123"
+                "landingPage", "https://data-source.my-org/docs"
         );
         createAsset(assetStore, "2023-06-01", properties, privateProperties);
 
@@ -65,7 +69,8 @@ public class AssetApiServiceTest {
         var assets = result.getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        assertThat(asset.getAdditionalProperties()).isEqualTo(properties);
+        assertThat(asset.getId()).isEqualTo(properties.get(Asset.PROPERTY_ID));
+        assertThat(asset.getLandingPageUrl()).isEqualTo(properties.get("landingPage"));
         assertThat(asset.getPrivateProperties()).isEqualTo(privateProperties);
     }
 
@@ -83,7 +88,7 @@ public class AssetApiServiceTest {
 
         // assert
         assertThat(result.getAssets())
-                .extracting(asset -> asset.getAdditionalProperties().get(Asset.PROPERTY_ID))
+                .extracting(asset -> asset.getId())
                 .containsExactly("asset-3", "asset-2", "asset-1");
     }
 

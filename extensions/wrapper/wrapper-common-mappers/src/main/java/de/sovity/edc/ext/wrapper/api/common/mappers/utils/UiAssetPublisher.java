@@ -20,10 +20,8 @@ import lombok.ToString;
 public class UiAssetPublisher {
 
     @JsonProperty("@type")
-    @Schema(description = "Type", requiredMode = Schema.RequiredMode.REQUIRED)
     private String type;
 
     @JsonProperty("http://xmlns.com/foaf/0.1/homepage")
-    @Schema(description = "Homepage URL", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 }
