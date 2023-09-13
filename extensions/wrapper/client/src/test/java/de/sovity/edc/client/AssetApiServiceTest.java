@@ -14,7 +14,7 @@
 package de.sovity.edc.client;
 
 
-import de.sovity.edc.client.gen.model.AssetCreateRequest;
+import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.spi.asset.AssetService;
@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -92,31 +93,27 @@ public class AssetApiServiceTest {
     void testAssetCreation(AssetService assetService) {
         // arrange
         var client = TestUtils.edcClient();
-        var properties = Map.of(
-                Asset.PROPERTY_ID, "asset-1",
-                "random-prop", "123"
-        );
-        var privateProperties = Map.of("random-private-prop", "456");
         var dataAddressProperties = Map.of(
                 EDC_DATA_ADDRESS_TYPE_PROPERTY, DATA_ADDRESS_TYPE,
                 "baseUrl", DATA_SINK
         );
-        var assetRequest = AssetCreateRequest.builder()
-                .properties(properties)
-                .privateProperties(privateProperties)
+        var uiAssetRequest = UiAssetCreateRequest.builder()
+                .id("asset-1")
+                .name("AssetName")
+                .keywords(List.of("keyword1", "keyword2"))
                 .dataAddressProperties(dataAddressProperties)
                 .build();
 
         // act
-        var response = client.uiApi().createAsset(assetRequest);
+        var response = client.uiApi().createAsset(uiAssetRequest);
 
         // assert
-        assertThat(response.getId()).isEqualTo(properties.get(Asset.PROPERTY_ID));
+        assertThat(response.getId()).isEqualTo("asset-1");
         var assets = assetService.query(QuerySpec.max()).getContent().toList();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        assertThat(asset.getProperties()).isEqualTo(properties);
-        assertThat(asset.getPrivateProperties()).isEqualTo(privateProperties);
+        assertThat(asset.getName()).isEqualTo("AssetName");
+        assertThat(asset.getProperties().get("keywords")).isEqualTo(List.of("keyword1", "keyword2"));
         assertThat(asset.getDataAddress().getProperties()).isEqualTo(dataAddressProperties);
     }
 
@@ -162,6 +159,5 @@ public class AssetApiServiceTest {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return formatter.parse(date).getTime();
     }
-
 }
 

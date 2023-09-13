@@ -15,16 +15,17 @@
 package de.sovity.edc.ext.wrapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.LiteralMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.ee.EnterpriseEditionResourceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
-import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.AssetBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractDefinitionApiService;
@@ -134,8 +135,9 @@ public class WrapperExtensionContextBuilder {
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
         var edcPropertyUtils = new EdcPropertyUtils();
-        var assetBuilder = new AssetBuilder(edcPropertyUtils);
-        var assetApiService = new AssetApiService(assetBuilder, assetService, edcPropertyUtils);
+        var edcPropertyMapperUtils = new EdcPropertyMapperUtils();
+        var assetMapper = new AssetMapper(objectMapper, edcPropertyMapperUtils);
+        var assetApiService = new AssetApiService(assetService, assetMapper);
         var transferRequestBuilder = new TransferRequestBuilder(
                 objectMapper,
                 contractAgreementUtils,

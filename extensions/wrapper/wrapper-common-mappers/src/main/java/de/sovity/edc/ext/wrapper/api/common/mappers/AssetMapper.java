@@ -2,7 +2,9 @@ package de.sovity.edc.ext.wrapper.api.common.mappers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AssetHelperDto;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
+import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
@@ -17,6 +19,7 @@ public class AssetMapper {
      * This Object Mapper must be able to handle JSON-LD serialization / deserialization.
      */
     private final ObjectMapper jsonLdObjectMapper;
+    private final EdcPropertyMapperUtils edcPropertyMapperUtils;
 
     @SneakyThrows
     public UiAsset buildUiAssetFromAssetJsonLd(String assetJsonLd) {
@@ -55,6 +58,7 @@ public class AssetMapper {
         return mapper.readValue(assetJsonLd, AssetHelperDto.class);
     }
 
+
     @SneakyThrows
     private UiAsset buildUiAsset(Asset asset) {
         var assetJsonLd = jsonLdObjectMapper.writeValueAsString(asset);
@@ -63,46 +67,42 @@ public class AssetMapper {
     }
 
     @SneakyThrows
-    private Asset buildAssetFromAssetJsonLd(String assetPropertiesJsonLd) {
-
-        UiAsset uiAsset = buildUiAssetFromAssetJsonLd(assetPropertiesJsonLd);
+    public Asset buildAssetFromUiAssetCreateRequest(UiAssetCreateRequest uiAssetCreateRequest) {
 
         Asset.Builder assetBuilder = Asset.Builder
                 .newInstance()
-                .id(uiAsset.getId())
-                .name(uiAsset.getName())
-                .description(uiAsset.getDescription())
-                .version(uiAsset.getVersion());
+                .id(uiAssetCreateRequest.getId())
+                .name(uiAssetCreateRequest.getName())
+                .description(uiAssetCreateRequest.getDescription())
+                .version(uiAssetCreateRequest.getVersion())
+                .dataAddress(edcPropertyMapperUtils.buildDataAddress(uiAssetCreateRequest.getDataAddressProperties()));
+
 
         Map<String, Object> additionalProps = new HashMap<>();
-        additionalProps.put("title", uiAsset.getTitle());
-        additionalProps.put("language", uiAsset.getLanguage());
-        additionalProps.put("creator", uiAsset.getCreator());
-        additionalProps.put("publisher", uiAsset.getPublisher());
-        additionalProps.put("licenseUrl", uiAsset.getLicenseUrl());
-        additionalProps.put("keywords", uiAsset.getKeywords());
-        additionalProps.put("distribution", uiAsset.getDistribution());
-        additionalProps.put("landingPageUrl", uiAsset.getLandingPageUrl());
-        additionalProps.put("httpDatasourceHintsProxyMethod", uiAsset.getHttpDatasourceHintsProxyMethod());
-        additionalProps.put("httpDatasourceHintsProxyPath", uiAsset.getHttpDatasourceHintsProxyPath());
-        additionalProps.put("httpDatasourceHintsProxyQueryParams", uiAsset.getHttpDatasourceHintsProxyQueryParams());
-        additionalProps.put("httpDatasourceHintsProxyBody", uiAsset.getHttpDatasourceHintsProxyBody());
-        additionalProps.put("dataCategory", uiAsset.getDataCategory());
-        additionalProps.put("dataSubcategory", uiAsset.getDataSubcategory());
-        additionalProps.put("dataModel", uiAsset.getDataModel());
-        additionalProps.put("geoReferenceMethod", uiAsset.getGeoReferenceMethod());
-        additionalProps.put("transportMode", uiAsset.getTransportMode());
+        additionalProps.put("title", uiAssetCreateRequest.getTitle());
+        additionalProps.put("language", uiAssetCreateRequest.getLanguage());
+        additionalProps.put("creator", uiAssetCreateRequest.getCreator());
+        additionalProps.put("publisher", uiAssetCreateRequest.getPublisher());
+        additionalProps.put("licenseUrl", uiAssetCreateRequest.getLicenseUrl());
+        additionalProps.put("keywords", uiAssetCreateRequest.getKeywords());
+        additionalProps.put("distribution", uiAssetCreateRequest.getDistribution());
+        additionalProps.put("landingPageUrl", uiAssetCreateRequest.getLandingPageUrl());
+        additionalProps.put("dataCategory", uiAssetCreateRequest.getDataCategory());
+        additionalProps.put("dataSubcategory", uiAssetCreateRequest.getDataSubcategory());
+        additionalProps.put("dataModel", uiAssetCreateRequest.getDataModel());
+        additionalProps.put("geoReferenceMethod", uiAssetCreateRequest.getGeoReferenceMethod());
+        additionalProps.put("transportMode", uiAssetCreateRequest.getTransportMode());
 
-        if(uiAsset.getAdditionalProperties() != null) {
-            additionalProps.putAll(uiAsset.getAdditionalProperties());
+        if(uiAssetCreateRequest.getAdditionalProperties() != null) {
+            additionalProps.putAll(uiAssetCreateRequest.getAdditionalProperties());
         }
 
-        if(uiAsset.getPrivateProperties() != null) {
-            assetBuilder.privateProperties(new HashMap<>(uiAsset.getPrivateProperties()));
+        if(uiAssetCreateRequest.getPrivateProperties() != null) {
+            assetBuilder.privateProperties(new HashMap<>(uiAssetCreateRequest.getPrivateProperties()));
         }
 
-        if(uiAsset.getAdditionalJsonProperties() != null) {
-            additionalProps.putAll(uiAsset.getAdditionalJsonProperties());
+        if(uiAssetCreateRequest.getAdditionalJsonProperties() != null) {
+            additionalProps.putAll(uiAssetCreateRequest.getAdditionalJsonProperties());
         }
 
         assetBuilder.properties(additionalProps);

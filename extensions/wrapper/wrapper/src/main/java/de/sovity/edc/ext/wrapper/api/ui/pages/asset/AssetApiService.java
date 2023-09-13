@@ -17,11 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
-import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;
-import de.sovity.edc.ext.wrapper.api.ui.model.AssetEntry;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
-import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.AssetBuilder;
-import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.spi.query.QuerySpec;
@@ -30,13 +26,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 public class AssetApiService {
-    private final AssetBuilder assetBuilder;
     private final AssetService assetService;
-    private final EdcPropertyUtils edcPropertyUtils;
+    private final AssetMapper assetMapper;
 
     public List<UiAsset> getAssets() {
         var assets = getAllAssets();
@@ -58,8 +52,8 @@ public class AssetApiService {
     }
 
     @NotNull
-    public IdResponseDto createAsset(AssetCreateRequest request) {
-        var asset = assetBuilder.buildAsset(request);
+    public IdResponseDto createAsset(UiAssetCreateRequest request) {
+        var asset = assetMapper.buildAssetFromUiAssetCreateRequest(request);
         asset = assetService.create(asset).getContent();
         return new IdResponseDto(asset.getId());
     }

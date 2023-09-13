@@ -18,7 +18,6 @@ import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
-import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
@@ -107,8 +106,8 @@ public class UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Create a new Asset")
-    public IdResponseDto createAsset(AssetCreateRequest assetCreateRequest) {
-        return assetApiService.createAsset(assetCreateRequest);
+    public IdResponseDto createAsset(UiAssetCreateRequest uiAssetCreateRequest) {
+        return assetApiService.createAsset(uiAssetCreateRequest);
     }
 
     @DELETE
