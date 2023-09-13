@@ -114,4 +114,3 @@ class AssetMapperTest {
         assertThat(uiAsset.getHttpDatasourceHintsProxyMethod()).isEqualTo(null);
     }
 }
-

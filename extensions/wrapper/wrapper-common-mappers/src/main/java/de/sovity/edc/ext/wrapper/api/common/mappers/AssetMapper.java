@@ -58,7 +58,6 @@ public class AssetMapper {
         return mapper.readValue(assetJsonLd, AssetHelperDto.class);
     }
 
-
     @SneakyThrows
     private UiAsset buildUiAsset(Asset asset) {
         var assetJsonLd = jsonLdObjectMapper.writeValueAsString(asset);
@@ -76,7 +75,6 @@ public class AssetMapper {
                 .description(uiAssetCreateRequest.getDescription())
                 .version(uiAssetCreateRequest.getVersion())
                 .dataAddress(edcPropertyMapperUtils.buildDataAddress(uiAssetCreateRequest.getDataAddressProperties()));
-
 
         Map<String, Object> additionalProps = new HashMap<>();
         additionalProps.put("title", uiAssetCreateRequest.getTitle());
@@ -96,11 +94,9 @@ public class AssetMapper {
         if(uiAssetCreateRequest.getAdditionalProperties() != null) {
             additionalProps.putAll(uiAssetCreateRequest.getAdditionalProperties());
         }
-
         if(uiAssetCreateRequest.getPrivateProperties() != null) {
             assetBuilder.privateProperties(new HashMap<>(uiAssetCreateRequest.getPrivateProperties()));
         }
-
         if(uiAssetCreateRequest.getAdditionalJsonProperties() != null) {
             additionalProps.putAll(uiAssetCreateRequest.getAdditionalJsonProperties());
         }

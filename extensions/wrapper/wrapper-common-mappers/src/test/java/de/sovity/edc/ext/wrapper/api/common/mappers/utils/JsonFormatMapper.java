@@ -54,4 +54,3 @@ public class JsonFormatMapper {
         return OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(newJson);
     }
 }
-
