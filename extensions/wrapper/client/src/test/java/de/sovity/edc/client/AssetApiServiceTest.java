@@ -15,7 +15,6 @@ package de.sovity.edc.client;
 
 
 import de.sovity.edc.client.gen.model.AssetCreateRequest;
-import de.sovity.edc.client.utils.AssetUtils;
 import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.spi.asset.AssetService;
@@ -41,14 +40,11 @@ public class AssetApiServiceTest {
     public static final String DATA_SINK = "http://my-data-sink/api/stuff";
     public static final String DATA_ADDRESS_TYPE = "HttpData";
     EdcPropertyUtils edcPropertyUtils;
-    AssetUtils assetUtils;
 
     @BeforeEach
     void setUp(EdcExtension extension) {
         TestUtils.setupExtension(extension);
         edcPropertyUtils = new EdcPropertyUtils();
-        assetUtils = new AssetUtils();
-
     }
 
     @Test
