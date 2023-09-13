@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.pages.asset.services;
+package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
 
 
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;

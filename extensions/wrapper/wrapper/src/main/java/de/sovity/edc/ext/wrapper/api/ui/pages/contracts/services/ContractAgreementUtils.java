@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils;
+package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services;
 
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;

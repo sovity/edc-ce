@@ -32,7 +32,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 @Schema(description = "Type-Safe OpenAPI generator friendly Policy DTO as needed by our UI")
-public class UiPolicyDto {
+public class UiPolicy {
     @Schema(description = "EDC Policy JSON-LD. This is required because the EDC requires the " +
             "full policy when initiating contract negotiations.", requiredMode = RequiredMode.REQUIRED)
     private String policyJsonLd;

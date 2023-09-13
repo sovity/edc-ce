@@ -15,15 +15,12 @@
 package de.sovity.edc.client;
 
 
-import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionDto;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
-import jakarta.json.Json;
 import lombok.SneakyThrows;
-import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -35,10 +32,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 
-import static jakarta.json.Json.createObjectBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.CONTEXT;
-import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.TYPE;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)

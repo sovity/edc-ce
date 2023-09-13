@@ -26,6 +26,7 @@ dependencies {
     api(project(":extensions:wrapper:wrapper-common-mappers"))
     api(project(":extensions:wrapper:wrapper-ee-api"))
     api(project(":utils:catalog-parser"))
+    api(project(":utils:json-and-jsonld-utils"))
     api("${edcGroup}:contract-definition-api:${edcVersion}")
     api("${edcGroup}:control-plane-spi:${edcVersion}")
     api("${edcGroup}:core-spi:${edcVersion}")

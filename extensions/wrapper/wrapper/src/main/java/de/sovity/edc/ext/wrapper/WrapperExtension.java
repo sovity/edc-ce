@@ -41,10 +41,6 @@ import org.eclipse.edc.spi.types.TypeManager;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.WebService;
 
-import java.time.OffsetDateTime;
-
-import static org.eclipse.edc.spi.CoreConstants.JSON_LD;
-
 public class WrapperExtension implements ServiceExtension {
 
     public static final String EXTENSION_NAME = "WrapperExtension";
@@ -94,7 +90,6 @@ public class WrapperExtension implements ServiceExtension {
     }
 
     @Override
-    @SneakyThrows
     public void initialize(ServiceExtensionContext context) {
         var objectMapper = typeManager.getMapper(CoreConstants.JSON_LD);
         fixObjectMapperDateSerialization(objectMapper);

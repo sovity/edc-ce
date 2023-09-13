@@ -65,6 +65,7 @@ dependencies {
 
     testImplementation("${edcGroup}:json-ld-spi:${edcVersion}")
     testImplementation("${edcGroup}:dsp-http-spi:${edcVersion}")
+    testImplementation("${edcGroup}:dsp-api-configuration:${edcVersion}")
     testImplementation(project(":extensions:wrapper:wrapper"))
     testImplementation(project(":extensions:wrapper:wrapper-common-mappers"))
     testImplementation("io.rest-assured:rest-assured:${restAssured}")

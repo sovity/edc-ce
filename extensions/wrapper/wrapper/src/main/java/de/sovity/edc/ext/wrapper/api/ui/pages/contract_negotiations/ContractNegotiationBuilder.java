@@ -14,19 +14,13 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services;
+package de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.CriterionMapper;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractRequest;
-import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
-
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractOfferMapper;
+import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 
 
 @RequiredArgsConstructor
@@ -35,13 +29,12 @@ public class ContractNegotiationBuilder {
     private final ContractOfferMapper contractOfferMapper;
 
     public ContractRequest buildContractNegotiation(ContractNegotiationRequest request) {
-        var protocol = request.getProtocol();
         var counterPartyAddress = request.getCounterPartyAddress();
-
 
         return ContractRequest.Builder.newInstance()
                 .counterPartyAddress(counterPartyAddress)
-                .protocol(protocol)
+                .providerId(request.getCounterPartyParticipantId())
+                .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
                 .contractOffer(contractOfferMapper.buildContractOffer(request))
                 .build();
     }

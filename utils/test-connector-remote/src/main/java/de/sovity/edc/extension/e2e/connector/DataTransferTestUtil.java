@@ -16,9 +16,9 @@ package de.sovity.edc.extension.e2e.connector;
 import jakarta.json.JsonObject;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.eclipse.edc.policy.model.Policy;
 
 import java.time.Duration;
+import java.util.Map;
 
 import static io.restassured.RestAssured.when;
 import static jakarta.json.Json.createObjectBuilder;
@@ -42,6 +42,14 @@ public class DataTransferTestUtil {
                         .add(EDC_NAMESPACE + "method", method)
                         .build())
                 .build();
+    }
+
+    public static Map<String, String> buildDataAddressProperties(String baseUrl, String method) {
+        return Map.of(
+                EDC_NAMESPACE + "type", "HttpData",
+                EDC_NAMESPACE + "baseUrl", baseUrl,
+                EDC_NAMESPACE + "method", method
+        );
     }
 
 

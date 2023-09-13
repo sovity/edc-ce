@@ -22,7 +22,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.UiContractNegotiation;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionPage;
@@ -32,8 +32,8 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractDefinitionApiService;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractNegotiationApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractNegotiationApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
@@ -64,7 +64,6 @@ public class UiResource {
     private final TransferHistoryPageAssetFetcherService transferHistoryPageAssetFetcherService;
     private final AssetApiService assetApiService;
     private final PolicyDefinitionApiService policyDefinitionApiService;
-
     private final CatalogApiService catalogApiService;
     private final ContractDefinitionApiService contractDefinitionApiService;
     private final ContractNegotiationApiService contractNegotiationApiService;
@@ -192,7 +191,7 @@ public class UiResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Initiate a new Contract Negotiation")
-    public ContractNegotiationDto initiateContractNegotiation(ContractNegotiationRequest contractNegotiationRequest){
+    public UiContractNegotiation initiateContractNegotiation(ContractNegotiationRequest contractNegotiationRequest){
         return contractNegotiationApiService.initiateContractNegotiation(contractNegotiationRequest);
     }
 
@@ -201,7 +200,7 @@ public class UiResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Get Contract Negotiation Information")
-    public ContractNegotiationDto getContractNegotiation(@PathParam("contractNegotiationId") String contractNegotiationId){
+    public UiContractNegotiation getContractNegotiation(@PathParam("contractNegotiationId") String contractNegotiationId){
         return contractNegotiationApiService.getContractNegotiation(contractNegotiationId);
     }
 }

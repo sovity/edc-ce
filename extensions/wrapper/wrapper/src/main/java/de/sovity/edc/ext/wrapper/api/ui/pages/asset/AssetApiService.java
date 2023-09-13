@@ -17,7 +17,6 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetEntry;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
-import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.AssetBuilder;
 import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.spi.asset.AssetService;

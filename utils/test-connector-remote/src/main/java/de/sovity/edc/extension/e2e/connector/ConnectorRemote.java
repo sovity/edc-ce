@@ -60,7 +60,7 @@ public class ConnectorRemote {
     private final ConnectorRemoteConfig config;
 
     private final ObjectMapper objectMapper = JacksonJsonLd.createObjectMapper();
-    private final Duration timeout = Duration.ofSeconds(60);
+    public final Duration timeout = Duration.ofSeconds(60);
     private final JsonLd jsonLd = new TitaniumJsonLd(new ConsoleMonitor());
 
     public void createAsset(String assetId, Map<String, Object> dataAddressProperties) {

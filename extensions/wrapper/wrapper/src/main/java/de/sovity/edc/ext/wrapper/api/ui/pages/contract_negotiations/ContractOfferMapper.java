@@ -1,4 +1,4 @@
-package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils;
+package de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations;
 
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
@@ -11,10 +11,6 @@ import org.eclipse.edc.connector.contract.spi.types.offer.ContractOffer;
 
 @RequiredArgsConstructor
 public class ContractOfferMapper {
-
-    /**
-     * This Object Mapper must be able to handle JSON-LD serialization / deserialization.
-     */
     private final PolicyMapper policyMapper;
 
     public ContractOffer buildContractOffer(ContractNegotiationRequest contractRequest) {

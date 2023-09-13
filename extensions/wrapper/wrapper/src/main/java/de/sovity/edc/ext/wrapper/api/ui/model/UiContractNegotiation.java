@@ -30,7 +30,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Schema(description = "Contract Negotiation Information")
-public class ContractNegotiationDto {
+public class UiContractNegotiation {
 
     @Schema(description = "Contract Negotiation Id", requiredMode = Schema.RequiredMode.REQUIRED)
     private String contractNegotiationId;
@@ -38,7 +38,7 @@ public class ContractNegotiationDto {
     @Schema(description = "Contract Negotiation Creation Time", requiredMode = Schema.RequiredMode.REQUIRED)
     private OffsetDateTime createdAt;
 
-    @Schema(description = "Contract Agreement Id", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Contract Agreement Id")
     private String contractAgreementId;
 
     @Schema(description = "Status of the Contract Negotiation ", requiredMode = Schema.RequiredMode.REQUIRED)

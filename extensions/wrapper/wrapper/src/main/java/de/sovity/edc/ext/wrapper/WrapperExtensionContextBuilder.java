@@ -24,22 +24,22 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.LiteralMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
-import de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.AssetBuilder;
+import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractDefinitionApiService;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractNegotiationApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractNegotiationApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementPageCardBuilder;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractDefinitionBuilder;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractNegotiationBuilder;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionBuilder;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractNegotiationBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferProcessStateService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequestBuilder;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractAgreementUtils;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractOfferMapper;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.CriterionMapper;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementUtils;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractNegotiationUtils;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractOfferMapper;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.CriterionMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
@@ -111,7 +111,6 @@ public class WrapperExtensionContextBuilder {
         var policyValidator = new PolicyValidator();
         var constraintExtractor = new ConstraintExtractor(policyValidator, atomicConstraintMapper);
         var policyMapper = new PolicyMapper(
-                objectMapper,
                 constraintExtractor,
                 atomicConstraintMapper,
                 typeTransformerRegistry
@@ -178,8 +177,8 @@ public class WrapperExtensionContextBuilder {
                 transferHistoryPageAssetFetcherService,
                 assetApiService,
                 policyDefinitionApiService,
-                contractDefinitionApiService,
                 catalogApiService,
+                contractDefinitionApiService,
                 contractNegotiationApiService
         );
 

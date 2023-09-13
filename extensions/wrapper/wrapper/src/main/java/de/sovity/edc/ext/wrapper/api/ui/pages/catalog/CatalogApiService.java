@@ -17,7 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.catalog;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
-import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiContractOffer;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import de.sovity.edc.utils.catalog.DspCatalogService;
@@ -65,7 +65,7 @@ public class CatalogApiService {
         return assetMapper.buildUiAsset(asset);
     }
 
-    private UiPolicyDto buildUiPolicy(DspContractOffer contractOffer) {
+    private UiPolicy buildUiPolicy(DspContractOffer contractOffer) {
         var policy = policyMapper.buildPolicy(contractOffer.getPolicyJsonLd());
         return policyMapper.buildUiPolicy(policy);
     }

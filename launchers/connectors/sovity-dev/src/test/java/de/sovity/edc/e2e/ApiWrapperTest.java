@@ -14,40 +14,35 @@
 package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.client.gen.model.ContractAgreementTransferRequest;
+import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestParams;
+import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
+import de.sovity.edc.client.gen.model.UiContractNegotiation;
+import de.sovity.edc.client.gen.model.UiContractOffer;
+import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
+import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
-import static io.restassured.http.ContentType.JSON;
-import static jakarta.json.Json.createObjectBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
-import static org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates.FINALIZED;
-import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.CONTEXT;
-import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.ID;
-import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.TYPE;
-import static org.eclipse.edc.jsonld.spi.PropertyAndTypeNames.ODRL_POLICY_ATTRIBUTE;
-import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
-import static org.eclipse.edc.spi.CoreConstants.EDC_PREFIX;
 
 class ApiWrapperTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = "provider";
     private static final String CONSUMER_PARTICIPANT_ID = "consumer";
-    private static final String TEST_BACKEND_TEST_DATA = UUID.randomUUID().toString();
 
     @RegisterExtension
     static EdcExtension providerEdcContext = new EdcExtension();
@@ -76,87 +71,69 @@ class ApiWrapperTest {
         consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
 
         consumerClient = EdcClient.builder()
-                .managementApiUrl(consumerConfig.getManagementEndpoint().toString())
+                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
                 .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
                 .build();
 
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
+
+
+    // TODO test policy conversion
+    // TODO test asset creation, make this test a full circle in data offering and consumption via the UI API
     @Test
     void testDataTransfer_freshDataOffer__negotiationViaUiApi() {
         // arrange
-        var providerEndpoint = providerConnector.getConfig().getManagementEndpoint().toString();
+        var providerEndpoint = providerConnector.getConfig().getProtocolEndpoint().getUri().toString();
         var data = "expected data 123";
         var assetId = UUID.randomUUID().toString();
         providerConnector.createDataOffer(assetId, dataAddress.getDataSourceUrl(data));
 
+        var dataOffers = consumerClient.uiApi().catalogPageDataOffers(providerEndpoint);
+        assertThat(dataOffers).hasSize(1);
+        var dataOffer = dataOffers.get(0);
+        assertThat(dataOffer.getContractOffers()).hasSize(1);
+        var contractOffer = dataOffer.getContractOffers().get(0);
+
         // act
-        var catalog = consumerClient.uiApi().catalogPageDataOffers(providerEndpoint);
-        var negotiation = consumerClient.uiApi().initiate^
-        String providerId = providerConnector.getParticipantId();
-        URI providerProtocolApi = providerConnector.getConfig().getProtocolEndpoint().getUri();
-        JsonObject destination = dataAddress.getDataSinkJsonLd();
-        var dataset = consumerConnector.getDatasetForAsset(assetId, providerProtocolApi);
-        var contractId = consumerConnector.getDatasetContractId(dataset);
-        var policy = dataset.getJsonArray(ODRL_POLICY_ATTRIBUTE).get(0).asJsonObject();
-
-        var requestBody = createObjectBuilder()
-                .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
-                .add(TYPE, "NegotiationInitiateRequestDto")
-                .add("connectorId", providerId)
-                .add("consumerId", consumerConnector.config.getParticipantId())
-                .add("providerId", providerId)
-                .add("connectorAddress", providerProtocolApi.toString())
-                .add("protocol", "dataspace-protocol-http")
-                .add("offer", createObjectBuilder()
-                        .add("offerId", contractId.toString())
-                        .add("assetId", contractId.assetIdPart())
-                        .add("policy", consumerConnector.jsonLd.compact(policy).getContent())
-                )
-                .build();
-
-        var negotiationId = consumerConnector.prepareManagementApiCall()
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .post("/v2/contractnegotiations")
-                .then()
-                .statusCode(200)
-                .extract().body().jsonPath().getString(ID);
-
-        Awaitility.await().atMost(consumerConnector.timeout).untilAsserted(() -> {
-            var state = consumerConnector.getContractNegotiationState(negotiationId);
-            assertThat(state).isEqualTo(FINALIZED.name());
-        });
-
-        var contractAgreementId = consumerConnector.getContractAgreementId(negotiationId);
-
-        var requestBody1 = createObjectBuilder()
-                .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
-                .add(TYPE, "TransferRequestDto")
-                .add("dataDestination", destination)
-                .add("protocol", "dataspace-protocol-http")
-                .add("managedResources", false)
-                .add("assetId", assetId)
-                .add("contractId", contractAgreementId)
-                .add("connectorAddress", providerProtocolApi.toString())
-                .add("privateProperties", Json.createObjectBuilder().build())
-                .add("connectorId", consumerConnector.config.getParticipantId())
-                .build();
-
-        var transferProcessId = consumerConnector.prepareManagementApiCall()
-                .contentType(ContentType.JSON)
-                .body(requestBody1)
-                .when()
-                .post("/v2/transferprocesses")
-                .then()
-                .statusCode(200)
-                .extract().body().jsonPath().getString(ID);
-
-        assertThat(transferProcessId).isNotNull();
+        var negotiation = negotiate(dataOffer, contractOffer);
+        initiateTransfer(negotiation);
 
         // assert
+        assertThat(dataOffer.getEndpoint()).isEqualTo(providerEndpoint);
+        assertThat(dataOffer.getParticipantId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
+        assertThat(dataOffer.getAsset().getAssetId()).isEqualTo(assetId);
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
+    }
+
+    private UiContractNegotiation negotiate(UiDataOffer dataOffer, UiContractOffer contractOffer) {
+        var negotiationRequest = ContractNegotiationRequest.builder()
+                .counterPartyAddress(dataOffer.getEndpoint())
+                .counterPartyParticipantId(dataOffer.getParticipantId())
+                .assetId(dataOffer.getAsset().getAssetId())
+                .contractOfferId(contractOffer.getContractOfferId())
+                .policyJsonLd(contractOffer.getPolicy().getPolicyJsonLd())
+                .build();
+
+        var negotiationId = consumerClient.uiApi().initiateContractNegotiation(negotiationRequest)
+                .getContractNegotiationId();
+
+        return Awaitility.await().atMost(consumerConnector.timeout).until(
+                () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
+                it -> it.getContractAgreementId() != null
+        );
+    }
+
+    private void initiateTransfer(UiContractNegotiation negotiation) {
+        var contractAgreementId = negotiation.getContractAgreementId();
+        var transferRequest = ContractAgreementTransferRequest.builder()
+                .type(ContractAgreementTransferRequest.TypeEnum.PARAMS_ONLY)
+                .params(ContractAgreementTransferRequestParams.builder()
+                        .contractAgreementId(contractAgreementId)
+                        .dataSinkProperties(dataAddress.getDataSinkProperties())
+                        .build())
+                .build();
+        consumerClient.uiApi().initiateTransfer(transferRequest);
     }
 }

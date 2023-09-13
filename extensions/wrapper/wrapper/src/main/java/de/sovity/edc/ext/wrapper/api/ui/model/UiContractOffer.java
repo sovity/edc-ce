@@ -15,7 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
 
-import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -26,5 +26,5 @@ public class UiContractOffer {
     private String contractOfferId;
 
     @Schema(description = "Policy", requiredMode = Schema.RequiredMode.REQUIRED)
-    private UiPolicyDto policy;
+    private UiPolicy policy;
 }

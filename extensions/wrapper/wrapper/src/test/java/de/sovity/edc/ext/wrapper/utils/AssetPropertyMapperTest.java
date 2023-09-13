@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.pages.asset.services.utils;
+package de.sovity.edc.ext.wrapper.utils;
 
 import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import org.junit.jupiter.api.BeforeEach;

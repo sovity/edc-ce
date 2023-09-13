@@ -16,7 +16,6 @@ package de.sovity.edc.utils.catalog;
 
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import de.sovity.edc.utils.jsonld.JsonLdUtils;
-import de.sovity.edc.utils.JsonUtils;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.edc.connector.spi.catalog.CatalogService;
@@ -30,6 +29,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
+import static de.sovity.edc.utils.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -62,13 +62,13 @@ class DspCatalogServiceTest {
         var offer = actual.get(0);
         assertThat(offer.getEndpoint()).isEqualTo(endpoint);
         assertThat(offer.getParticipantId()).isEqualTo("provider");
-        assertThat(JsonLdUtils.id(JsonUtils.parseJson(offer.getAssetPropertiesJsonLd())))
+        assertThat(JsonLdUtils.id(offer.getAssetPropertiesJsonLd()))
                 .isEqualTo("test-1.0");
 
         assertThat(offer.getContractOffers()).hasSize(1);
         var co = offer.getContractOffers().get(0);
         assertThat(co.getContractOfferId()).isEqualTo("policy-1");
-        assertThat(co.getPolicyJsonLd()).contains("ALWAYS_TRUE");
+        assertThat(toJson(co.getPolicyJsonLd())).contains("ALWAYS_TRUE");
     }
 
 

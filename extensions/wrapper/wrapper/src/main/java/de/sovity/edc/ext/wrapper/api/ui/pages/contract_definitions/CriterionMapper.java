@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils;
+package de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions;
 
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
