@@ -16,7 +16,6 @@ package de.sovity.edc.extension.e2e.connector;
 import jakarta.json.JsonObject;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.eclipse.edc.policy.model.Policy;
 
 import java.time.Duration;
 
@@ -29,11 +28,11 @@ import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 
 @SuppressWarnings("java:S5960")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DataTransferTestUtil {
+public class ContractNegotiationTestUtil {
 
     public static final Duration TIMEOUT = Duration.ofSeconds(20);
 
-    public static JsonObject buildDataAddressJsonLd(String baseUrl, String method) {
+    /*public static JsonObject buildDataAddressJsonLd(String baseUrl, String method) {
         return createObjectBuilder()
                 .add(TYPE, EDC_NAMESPACE + "DataAddress")
                 .add(EDC_NAMESPACE + "type", "HttpData")
@@ -42,9 +41,11 @@ public class DataTransferTestUtil {
                         .add(EDC_NAMESPACE + "method", method)
                         .build())
                 .build();
+    }*/
+
+    public static void validateContractNegotiation() {
+
     }
-
-
     public static void validateDataTransferred(String checkUrl, String expectedData) {
         await().atMost(TIMEOUT).untilAsserted(() -> {
             var actual = when()

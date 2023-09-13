@@ -250,7 +250,7 @@ public class ConnectorRemote {
                 .then()
                 .statusCode(200)
                 .extract().body().jsonPath()
-                .getString("'edc:contractAgreementId'");
+                .getString("'edc:contractOfferId'");
     }
 
     public String getContractNegotiationState(String id) {

@@ -37,14 +37,13 @@ public class PolicyMapper {
      * @param policy ODRL policy
      * @return ui policy
      */
-    @SneakyThrows
     public UiPolicyDto buildUiPolicy(Policy policy) {
         MappingErrors errors = MappingErrors.root();
 
         var constraints = constraintExtractor.getPermissionConstraints(policy, errors);
 
         return UiPolicyDto.builder()
-                .policyJsonLd(jsonLdObjectMapper.writeValueAsString(policy))
+                .policyJsonLd(getPolicyJsonLd(policy).toString())
                 .constraints(constraints)
                 .errors(errors.getErrors())
                 .build();

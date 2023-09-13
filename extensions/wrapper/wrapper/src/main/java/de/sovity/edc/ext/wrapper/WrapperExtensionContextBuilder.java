@@ -29,13 +29,16 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractDefinitionApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractNegotiationApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementPageCardBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractDefinitionBuilder;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractNegotiationBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferProcessStateService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequestBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractAgreementUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractNegotiationUtils;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.ContractOfferMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.utils.CriterionMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
@@ -165,6 +168,9 @@ public class WrapperExtensionContextBuilder {
         var dspCatalogService = new DspCatalogService(catalogService, dataOfferBuilder);
         var assetMapper = new AssetMapper(typeTransformerRegistry);
         var catalogApiService = new CatalogApiService(assetMapper, policyMapper, dspCatalogService);
+        var contractOfferMapper = new ContractOfferMapper(policyMapper);
+        var contractNegotiationBuilder = new ContractNegotiationBuilder(contractOfferMapper);
+        var contractNegotiationApiService = new ContractNegotiationApiService(contractNegotiationService, contractNegotiationBuilder);
         var uiResource = new UiResource(
                 contractAgreementApiService,
                 contractAgreementTransferApiService,
@@ -172,8 +178,9 @@ public class WrapperExtensionContextBuilder {
                 transferHistoryPageAssetFetcherService,
                 assetApiService,
                 policyDefinitionApiService,
+                contractDefinitionApiService,
                 catalogApiService,
-                contractDefinitionApiService
+                contractNegotiationApiService
         );
 
         // Use Case API

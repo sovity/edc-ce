@@ -38,7 +38,12 @@ import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.types.TypeManager;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.WebService;
+
+import java.time.OffsetDateTime;
+
+import static org.eclipse.edc.spi.CoreConstants.JSON_LD;
 
 public class WrapperExtension implements ServiceExtension {
 
@@ -67,6 +72,9 @@ public class WrapperExtension implements ServiceExtension {
     private TransferProcessService transferProcessService;
     @Inject
     private TransferProcessStore transferProcessStore;
+
+    @Inject
+    private TypeTransformerRegistry transformerRegistry;
     @Inject
     private TypeManager typeManager;
     @Inject
@@ -86,9 +94,11 @@ public class WrapperExtension implements ServiceExtension {
     }
 
     @Override
+    @SneakyThrows
     public void initialize(ServiceExtensionContext context) {
         var objectMapper = typeManager.getMapper(CoreConstants.JSON_LD);
         fixObjectMapperDateSerialization(objectMapper);
+
 
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
                 assetIndex,

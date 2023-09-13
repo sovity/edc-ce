@@ -19,7 +19,6 @@ dependencies {
 
     api("${edcGroup}:junit:${edcVersion}")
     api("org.awaitility:awaitility:${awaitilityVersion}")
-
     implementation("${edcGroup}:sql-core:${edcVersion}")
     implementation("${edcGroup}:json-ld-spi:${edcVersion}")
     implementation("${edcGroup}:json-ld:${edcVersion}")

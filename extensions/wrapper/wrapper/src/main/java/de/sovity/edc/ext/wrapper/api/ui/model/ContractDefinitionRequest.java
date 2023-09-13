@@ -44,4 +44,5 @@ public class ContractDefinitionRequest {
 
     @Schema(description = "List of Criteria for the contract", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<UiCriterionDto> assetSelector;
+
 }
