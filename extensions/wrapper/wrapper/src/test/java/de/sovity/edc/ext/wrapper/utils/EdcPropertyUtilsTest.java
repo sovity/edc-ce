@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.utils;
 
-import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +22,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class AssetPropertyMapperTest {
+class EdcPropertyUtilsTest {
     EdcPropertyUtils edcPropertyUtils;
 
     @BeforeEach

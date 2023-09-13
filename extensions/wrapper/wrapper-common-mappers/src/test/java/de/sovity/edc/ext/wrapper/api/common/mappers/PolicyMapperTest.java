@@ -1,15 +1,17 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraint;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
+import jakarta.json.JsonObject;
 import lombok.SneakyThrows;
 import org.eclipse.edc.policy.model.AtomicConstraint;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
+import org.eclipse.edc.spi.result.Result;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+import static de.sovity.edc.utils.JsonUtils.parseJsonObj;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -31,7 +34,7 @@ class PolicyMapperTest {
     PolicyMapper policyMapper;
 
     @Mock
-    ObjectMapper jsonLdObjectMapper;
+    TypeTransformerRegistry transformerRegistry;
 
     @Mock
     ConstraintExtractor constraintExtractor;
@@ -53,13 +56,13 @@ class PolicyMapperTest {
 
             mappingErrors.when(MappingErrors::root).thenReturn(errors);
             when(constraintExtractor.getPermissionConstraints(policy, errors)).thenReturn(constraints);
-            when(jsonLdObjectMapper.writeValueAsString(policy)).thenReturn("abc");
+            when(transformerRegistry.transform(policy, JsonObject.class)).thenReturn(Result.success(parseJsonObj("{}")));
 
             // act
             var actual = policyMapper.buildUiPolicy(policy);
 
             // assert
-            assertThat(actual.getPolicyJsonLd()).isEqualTo("abc");
+            assertThat(actual.getPolicyJsonLd()).isEqualTo("{}");
             assertThat(actual.getConstraints()).isEqualTo(constraints);
             assertThat(actual.getErrors()).isEqualTo(List.of("error1"));
         }

@@ -1,8 +1,21 @@
+/*
+ * Copyright (c) 2023 sovity GmbH
+ *
+ *  This program and the accompanying materials are made available under the
+ *  terms of the Apache License, Version 2.0 which is available at
+ *  https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
+ *  Contributors:
+ *      sovity GmbH - init
+ */
+
 package de.sovity.edc.utils.catalog;
 
+import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import de.sovity.edc.utils.catalog.model.DspDataOffer;
-import de.sovity.edc.utils.JsonUtils;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -25,7 +38,7 @@ public class DspCatalogService {
     private JsonObject fetchDcatResponse(String connectorEndpoint) {
         var raw = fetchDcatRaw(connectorEndpoint);
         var string = new String(raw, StandardCharsets.UTF_8);
-        return JsonUtils.parseJson(string);
+        return JsonUtils.parseJsonObj(string);
     }
 
     @SneakyThrows

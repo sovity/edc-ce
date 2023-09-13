@@ -60,7 +60,7 @@ public class ConnectorRemote {
     private final ConnectorRemoteConfig config;
 
     private final ObjectMapper objectMapper = JacksonJsonLd.createObjectMapper();
-    public final Duration timeout = Duration.ofSeconds(60);
+    public final Duration timeout = Duration.ofSeconds(8);
     private final JsonLd jsonLd = new TitaniumJsonLd(new ConsoleMonitor());
 
     public void createAsset(String assetId, Map<String, Object> dataAddressProperties) {
@@ -250,7 +250,7 @@ public class ConnectorRemote {
                 .then()
                 .statusCode(200)
                 .extract().body().jsonPath()
-                .getString("'edc:contractOfferId'");
+                .getString("'edc:contractAgreementId'");
     }
 
     public String getContractNegotiationState(String id) {

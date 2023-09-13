@@ -92,7 +92,7 @@ public class PolicyMapper {
      * @return {@link Policy}
      */
     public Policy buildPolicy(String policyJsonLd) {
-        return buildPolicy(JsonUtils.parseJson(policyJsonLd));
+        return buildPolicy(JsonUtils.parseJsonObj(policyJsonLd));
     }
 
     /**

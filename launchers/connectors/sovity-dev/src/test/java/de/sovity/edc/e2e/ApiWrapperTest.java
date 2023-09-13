@@ -26,12 +26,10 @@ import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import java.util.List;
 import java.util.UUID;
 
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
@@ -83,7 +81,7 @@ class ApiWrapperTest {
     // TODO test policy conversion
     // TODO test asset creation, make this test a full circle in data offering and consumption via the UI API
     @Test
-    void testDataTransfer_freshDataOffer__negotiationViaUiApi() {
+    void testNegotiationViaUiApi() {
         // arrange
         var providerEndpoint = providerConnector.getConfig().getProtocolEndpoint().getUri().toString();
         var data = "expected data 123";
