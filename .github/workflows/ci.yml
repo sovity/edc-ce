@@ -79,7 +79,7 @@ jobs:
       - name: "Gradle: Build"
         uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
         with:
-          arguments: build ${{ env.GRADLE_ARGS }} --stacktrace --scan
+          arguments: build ${{ env.GRADLE_ARGS }} --stacktrace --scan --debug
       - name: "Gradle: Publish (Main & Release Only)"
         uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/releases/') }}
