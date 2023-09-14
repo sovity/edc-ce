@@ -16,10 +16,10 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiContractNegotiation;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractNegotiationStateService;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,6 +32,7 @@ import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcMillisToOffsetDate
 public class ContractNegotiationApiService {
     private final ContractNegotiationService contractNegotiationService;
     private final ContractNegotiationBuilder contractNegotiationBuilder;
+    private final ContractNegotiationStateService contractNegotiationStateService;
 
     @NotNull
     public UiContractNegotiation initiateContractNegotiation(ContractNegotiationRequest request) {
@@ -48,7 +49,7 @@ public class ContractNegotiationApiService {
 
     @NotNull
     private UiContractNegotiation buildContractNegotiation(ContractNegotiation contractNegotiation) {
-        var status = ContractNegotiationStates.from(contractNegotiation.getState()).name();
+        var status = contractNegotiationStateService.buildContractNegotiationState(contractNegotiation.getState());
         String agreementId = Optional.of(contractNegotiation)
                 .map(ContractNegotiation::getContractAgreement)
                 .map(ContractAgreement::getId)

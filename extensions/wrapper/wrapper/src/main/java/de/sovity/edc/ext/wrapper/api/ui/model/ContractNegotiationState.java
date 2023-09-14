@@ -1,4 +1,3 @@
-
 /*
  *  Copyright (c) 2022 sovity GmbH
  *
@@ -22,25 +21,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.OffsetDateTime;
-
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "Contract Negotiation Information")
-public class UiContractNegotiation {
-
-    @Schema(description = "Contract Negotiation Id", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String contractNegotiationId;
-
-    @Schema(description = "Contract Negotiation Creation Time", requiredMode = Schema.RequiredMode.REQUIRED)
-    private OffsetDateTime createdAt;
-
-    @Schema(description = "Contract Agreement Id")
-    private String contractAgreementId;
-
-    @Schema(description = "Status of the Contract Negotiation ", requiredMode = Schema.RequiredMode.REQUIRED)
-    private ContractNegotiationState status;
+@Schema(description = "Contract Negotiation State interpreted")
+public class ContractNegotiationState {
+    @Schema(description = "State name or 'CUSTOM'. State names only exist for original EDC Contract Negotiation States.", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String name;
+    @Schema(description = "State code", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Integer code;
+    @Schema(description = "Whether we are running, in an error state or done.", requiredMode = Schema.RequiredMode.REQUIRED)
+    private ContractNegotiationSimplifiedState simplifiedState;
 }
