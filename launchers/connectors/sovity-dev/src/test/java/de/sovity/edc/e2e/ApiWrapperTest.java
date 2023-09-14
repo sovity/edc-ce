@@ -29,8 +29,6 @@ import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.junit.jupiter.api.parallel.ResourceAccessMode;
-import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.util.UUID;
 
@@ -83,7 +81,6 @@ class ApiWrapperTest {
     // TODO test policy conversion
     // TODO test asset creation, make this test a full circle in data offering and consumption via the UI API
     @Test
-    @ResourceLock(value = "db", mode = ResourceAccessMode.READ_WRITE)
     void testNegotiationViaUiApi() {
         // arrange
         var providerEndpoint = providerConnector.getConfig().getProtocolEndpoint().getUri().toString();
