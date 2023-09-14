@@ -61,7 +61,7 @@ public class AssetMapper {
 
     @SneakyThrows
     public UiAsset buildUiAssetFromAsset(Asset asset) {
-        var uiAsset = buildUiAssetFromAssetHelper(buildHelperDto(jsonLdObjectMapper.writeValueAsString(asset.getProperties())));
+        var uiAsset = buildUiAssetFromAssetHelper(buildHelperDto(jsonLdObjectMapper.writeValueAsString(asset)));
 
         uiAsset.setId(asset.getId());
         uiAsset.setPrivateProperties(asset.getPrivateProperties());
