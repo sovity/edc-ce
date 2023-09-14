@@ -28,7 +28,7 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @Schema(description = "Contract Negotiation State interpreted")
 public class ContractNegotiationState {
-    @Schema(description = "State name or 'CUSTOM'. State names only exist for original EDC Transfer Process States.", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "State name or 'CUSTOM'. State names only exist for original EDC Contract Negotiation States.", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
     @Schema(description = "State code", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer code;

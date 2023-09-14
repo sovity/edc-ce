@@ -17,25 +17,13 @@ package de.sovity.edc.ext.wrapper.api.ui.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * This class exists because we want to highlight either running or failed transfer processes in our UI.
+ * This class exists because we want to highlight either running or failed contract negotiations in our UI.
  * <p>
  * That distinction has to be made somewhere. Let's rather do that distinction in the backend.
  */
-@Schema(description = "Simplified Transfer Process State to be used in UI")
+@Schema(description = "Simplified Contract Negotiation State to be used in UI")
 public enum ContractNegotiationSimplifiedState {
-    INITIAL,
-    REQUESTING,
-    REQUESTED,
-    OFFERING,
-    OFFERED,
-    ACCEPTING,
-    ACCEPTED,
-    AGREEING,
-    AGREED,
-    VERIFYING,
-    VERIFIED,
-    FINALIZING,
-    FINALIZED,
-    TERMINATING,
-    TERMINATED
+    RUNNING,
+    OK,
+    ERROR
 }

@@ -37,6 +37,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransfe
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementPageCardBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementUtils;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractNegotiationStateService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractNegotiationUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferProcessStateService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequestBuilder;
@@ -169,7 +170,8 @@ public class WrapperExtensionContextBuilder {
         var catalogApiService = new CatalogApiService(assetMapper, policyMapper, dspCatalogService);
         var contractOfferMapper = new ContractOfferMapper(policyMapper);
         var contractNegotiationBuilder = new ContractNegotiationBuilder(contractOfferMapper);
-        var contractNegotiationApiService = new ContractNegotiationApiService(contractNegotiationService, contractNegotiationBuilder);
+        var contractNegotiationStateService = new ContractNegotiationStateService();
+        var contractNegotiationApiService = new ContractNegotiationApiService(contractNegotiationService, contractNegotiationBuilder, contractNegotiationStateService);
         var uiResource = new UiResource(
                 contractAgreementApiService,
                 contractAgreementTransferApiService,
