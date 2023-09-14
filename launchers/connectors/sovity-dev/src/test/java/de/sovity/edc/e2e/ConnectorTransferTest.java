@@ -21,8 +21,6 @@ import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.junit.jupiter.api.parallel.ResourceAccessMode;
-import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -73,7 +71,6 @@ class ConnectorTransferTest {
     }
 
     @Test
-    @ResourceLock(value = "db", mode = ResourceAccessMode.READ_WRITE)
     void testDataTransfer_freshDataOffer() {
         // arrange
         var assetId = UUID.randomUUID().toString();
@@ -91,7 +88,6 @@ class ConnectorTransferTest {
     }
 
     @Test
-    @ResourceLock(value = "db", mode = ResourceAccessMode.READ_WRITE)
     void testDataTransfer_migratedMs8DataOffer() {
         // arrange
         var assetIds = providerConnector.getAssetIds();

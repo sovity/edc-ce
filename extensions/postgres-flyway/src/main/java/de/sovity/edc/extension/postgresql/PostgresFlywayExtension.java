@@ -25,6 +25,10 @@ public class PostgresFlywayExtension implements ServiceExtension {
 
     @Setting
     public static final String EDC_DATASOURCE_REPAIR_SETTING = "edc.flyway.repair";
+    @Setting
+    public static final String FLYWAY_CLEAN_ENABLED = "edc.flyway.clean.enable";
+    @Setting
+    public static final String FLYWAY_CLEAN = "edc.flyway.clean";
 
     @Override
     public String name() {
@@ -33,8 +37,12 @@ public class PostgresFlywayExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        var tryRepairOnFailedMigration = context.getSetting(EDC_DATASOURCE_REPAIR_SETTING, false);
-        var flywayService = new FlywayService(context.getMonitor(), tryRepairOnFailedMigration);
+        var flywayService = new FlywayService(
+                context.getMonitor(),
+                context.getSetting(EDC_DATASOURCE_REPAIR_SETTING, false),
+                context.getSetting(FLYWAY_CLEAN_ENABLED, false),
+                context.getSetting(FLYWAY_CLEAN, false)
+        );
         var migrationManager = new DatabaseMigrationManager(context.getConfig(), flywayService);
         migrationManager.migrateAllDataSources();
     }
