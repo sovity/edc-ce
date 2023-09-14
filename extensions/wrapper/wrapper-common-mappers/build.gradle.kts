@@ -19,7 +19,7 @@ dependencies {
     api("${edcGroup}:transform-core:${edcVersion}")
 
     api(project(":extensions:wrapper:wrapper-common-api"))
-
+    api(project(":utils:json-and-jsonld-utils"))
     implementation("org.apache.commons:commons-lang3:3.13.0")
     implementation("org.apache.commons:commons-collections4:4.4")
 

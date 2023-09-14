@@ -5,9 +5,12 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AssetHelperDto;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
+import de.sovity.edc.utils.JsonUtils;
+import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +24,27 @@ public class AssetMapper {
      */
     private final ObjectMapper jsonLdObjectMapper;
     private final EdcPropertyMapperUtils edcPropertyMapperUtils;
+    private final TypeTransformerRegistry typeTransformerRegistry;
+
+    @SneakyThrows
+    public UiAsset buildUiAssetFromAsset(Asset asset) {
+        var uiAsset = buildUiAssetFromAssetHelper(buildHelperDto(jsonLdObjectMapper.writeValueAsString(asset)));
+
+        uiAsset.setId(asset.getId());
+        uiAsset.setPrivateProperties(asset.getPrivateProperties());
+        uiAsset.setDataAddressProperties(edcPropertyMapperUtils.truncateToMapOfString(asset.getDataAddress().getProperties()));
+        uiAsset.setKeywords(uiAsset.getKeywords() == null ? List.of() : uiAsset.getKeywords());
+
+        return uiAsset;
+    }
+
+    public Asset buildAssetFromAssetPropertiesJsonLd(JsonObject json) {
+        return typeTransformerRegistry.transform(json, Asset.class).getContent();
+    }
+
+    private String buildJsonLd(Asset asset) {
+        return JsonUtils.toJson(typeTransformerRegistry.transform(asset, JsonObject.class).getContent());
+    }
 
     @SneakyThrows
     public UiAsset buildUiAssetFromAssetJsonLd(String assetJsonLd) {
@@ -57,18 +81,6 @@ public class AssetMapper {
     public AssetHelperDto buildHelperDto(String assetJsonLd) {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(assetJsonLd, AssetHelperDto.class);
-    }
-
-    @SneakyThrows
-    public UiAsset buildUiAssetFromAsset(Asset asset) {
-        var uiAsset = buildUiAssetFromAssetHelper(buildHelperDto(jsonLdObjectMapper.writeValueAsString(asset)));
-
-        uiAsset.setId(asset.getId());
-        uiAsset.setPrivateProperties(asset.getPrivateProperties());
-        uiAsset.setDataAddressProperties(edcPropertyMapperUtils.truncateToMapOfString(asset.getDataAddress().getProperties()));
-        uiAsset.setKeywords(uiAsset.getKeywords() == null ? List.of() : uiAsset.getKeywords());
-
-        return uiAsset;
     }
 
     @SneakyThrows
