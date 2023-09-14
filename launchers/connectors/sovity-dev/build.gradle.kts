@@ -26,11 +26,6 @@ application {
     mainClass.set("org.eclipse.edc.boot.system.runtime.BaseRuntime")
 }
 
-tasks.withType<Test>().configureEach {
-    // These E2E Test should run in sequence to avoid conflicts
-    maxParallelForks = 1
-}
-
 tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     mergeServiceFiles()
     archiveFileName.set("app.jar")
