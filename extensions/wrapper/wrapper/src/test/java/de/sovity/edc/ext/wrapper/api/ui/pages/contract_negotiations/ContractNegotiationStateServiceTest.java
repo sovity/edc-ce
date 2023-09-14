@@ -12,10 +12,9 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.services;
+package de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations;
 
-import de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractNegotiationStateService;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationSimplifiedState;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +36,7 @@ class ContractNegotiationStateServiceTest {
         var result = contractNegotiationStateService.buildContractNegotiationState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("TERMINATED");
-        assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.ERROR);
+        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.ERROR);
     }
 
     @Test
@@ -46,7 +45,7 @@ class ContractNegotiationStateServiceTest {
         var result = contractNegotiationStateService.buildContractNegotiationState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("INITIAL");
-        assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.RUNNING);
+        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.RUNNING);
     }
 
     @Test
@@ -55,7 +54,7 @@ class ContractNegotiationStateServiceTest {
         var result = contractNegotiationStateService.buildContractNegotiationState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("COMPLETED");
-        assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
+        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.OK);
     }
 
     @Test
@@ -65,7 +64,7 @@ class ContractNegotiationStateServiceTest {
         var result = contractNegotiationStateService.buildContractNegotiationState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("TERMINATED");
-        assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
+        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.OK);
     }
 
     @Test
@@ -74,7 +73,7 @@ class ContractNegotiationStateServiceTest {
         var result = contractNegotiationStateService.buildContractNegotiationState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("CUSTOM");
-        assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.RUNNING);
+        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.RUNNING);
     }
 
     @Test
@@ -83,6 +82,6 @@ class ContractNegotiationStateServiceTest {
         var result = contractNegotiationStateService.buildContractNegotiationState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("CUSTOM");
-        assertThat(result.getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
+        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.OK);
     }
 }

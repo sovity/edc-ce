@@ -12,10 +12,9 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.services;
+package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferProcessStateService;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

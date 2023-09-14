@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services;
+package de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationSimplifiedState;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationState;

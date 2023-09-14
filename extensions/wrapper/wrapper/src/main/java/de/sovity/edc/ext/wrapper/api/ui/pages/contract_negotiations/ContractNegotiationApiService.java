@@ -16,7 +16,6 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiContractNegotiation;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractNegotiationStateService;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
