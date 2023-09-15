@@ -117,21 +117,29 @@ public class JsonLdUtils {
      * Get a string property
      *
      * @param object json-ld
-     * @param key key
+     * @param key    key
      * @return string or null
      */
     public static String string(JsonObject object, String key) {
-        return string(object.get(key));
+        JsonValue field = object.get(key);
+        if (field == null) {
+            return null;
+        }
+        return string(field);
     }
 
     /**
      * Get a list property while unwrapping values and only keeping objects.
      *
      * @param object json-ld
-     * @param key key
+     * @param key    key
      * @return list of values
      */
     public static List<JsonObject> listOfObjects(JsonObject object, String key) {
-        return listOfObjects(object.get(key));
+        JsonValue field = object.get(key);
+        if (field == null) {
+            return List.of();
+        }
+        return listOfObjects(field);
     }
 }

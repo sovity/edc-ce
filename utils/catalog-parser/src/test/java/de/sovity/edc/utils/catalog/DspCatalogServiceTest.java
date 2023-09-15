@@ -16,6 +16,7 @@ package de.sovity.edc.utils.catalog;
 
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import de.sovity.edc.utils.jsonld.JsonLdUtils;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.edc.connector.spi.catalog.CatalogService;
@@ -50,7 +51,7 @@ class DspCatalogServiceTest {
     }
 
     @Test
-    void testContractOfferFetcher() {
+    void testCatalogMapping() {
         // arrange
         var dspCatalogService = newDspCatalogService("catalogResponse.json");
 
@@ -64,11 +65,16 @@ class DspCatalogServiceTest {
         assertThat(offer.getParticipantId()).isEqualTo("provider");
         assertThat(JsonLdUtils.id(offer.getAssetPropertiesJsonLd()))
                 .isEqualTo("test-1.0");
+        assertThat(offer.getAssetPropertiesJsonLd().get(Prop.TYPE)).isNull();
+        assertThat(JsonLdUtils.string(offer.getAssetPropertiesJsonLd(), Prop.Dcat.VERSION)).isEqualTo("1.0");
 
         assertThat(offer.getContractOffers()).hasSize(1);
         var co = offer.getContractOffers().get(0);
         assertThat(co.getContractOfferId()).isEqualTo("policy-1");
         assertThat(toJson(co.getPolicyJsonLd())).contains("ALWAYS_TRUE");
+
+        assertThat(offer.getDistributions()).hasSize(1);
+        assertThat(JsonLdUtils.id(offer.getDistributions().get(0))).isEqualTo("dummy-distribution");
     }
 
 

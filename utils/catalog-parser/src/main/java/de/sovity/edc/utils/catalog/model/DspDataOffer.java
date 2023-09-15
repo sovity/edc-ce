@@ -24,4 +24,5 @@ public class DspDataOffer {
     private final String participantId;
     private final JsonObject assetPropertiesJsonLd;
     private final List<DspContractOffer> contractOffers;
+    private final List<JsonObject> distributions;
 }

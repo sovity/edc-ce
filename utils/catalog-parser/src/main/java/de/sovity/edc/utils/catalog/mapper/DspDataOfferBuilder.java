@@ -44,13 +44,21 @@ public class DspDataOfferBuilder {
                 .map(this::buildContractOffer)
                 .toList();
 
-        var assetProperties = Json.createObjectBuilder(dataset).remove(Prop.Odrl.HAS_POLICY).build();
+        var distributions = JsonLdUtils.listOfObjects(dataset, Prop.Dcat.DISTRIBUTION);
+
+        var assetProperties = Json.createObjectBuilder(dataset)
+                .remove(Prop.TYPE)
+                .remove(Prop.Odrl.HAS_POLICY)
+                .remove(Prop.Dcat.DISTRIBUTION)
+                .build();
+
 
         return new DspDataOffer(
                 endpoint,
                 participantId,
                 assetProperties,
-                contractOffers
+                contractOffers,
+                distributions
         );
     }
 

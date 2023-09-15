@@ -26,7 +26,7 @@
       "odrl:obligation": [],
       "odrl:target": "test-1.0"
     },
-    "dcat:distribution": [],
+    "dcat:distribution": [{"@id": "dummy-distribution"}],
     "http://www.w3.org/ns/dcat#version": "1.0",
     "http://purl.org/dc/terms/title": "test"
   },
