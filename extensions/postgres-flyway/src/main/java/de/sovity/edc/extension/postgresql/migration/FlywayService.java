@@ -16,6 +16,7 @@ package de.sovity.edc.extension.postgresql.migration;
 
 import de.sovity.edc.extension.postgresql.connection.DriverManagerConnectionFactory;
 import de.sovity.edc.extension.postgresql.connection.JdbcConnectionProperties;
+import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.persistence.EdcPersistenceException;
 import org.eclipse.edc.sql.datasource.ConnectionFactoryDataSource;
@@ -29,16 +30,22 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
 
+@RequiredArgsConstructor
 public class FlywayService {
 
     private static final String MIGRATION_LOCATION_BASE = "classpath:migration";
 
     private final Monitor monitor;
     private final boolean tryRepairOnFailedMigration;
+    private final boolean cleanEnabled;
+    private final boolean clean;
 
-    public FlywayService(Monitor monitor, boolean tryRepairOnFailedMigration) {
-        this.monitor = monitor;
-        this.tryRepairOnFailedMigration = tryRepairOnFailedMigration;
+    public void cleanDatabase(String datasourceName, JdbcConnectionProperties jdbcConnectionProperties) {
+        if (clean) {
+            monitor.info("Running flyway clean.");
+            var flyway = setupFlyway(datasourceName, jdbcConnectionProperties, List.of());
+            flyway.clean();
+        }
     }
 
     public void migrateDatabase(
@@ -50,6 +57,7 @@ public class FlywayService {
         flyway.info().getInfoResult().migrations.stream()
                 .map(migration -> "Found migration: %s".formatted(migration.filepath))
                 .forEach(monitor::info);
+
         try {
             var migrateResult = flyway.migrate();
             handleFlywayMigrationResult(datasourceName, migrateResult);
@@ -107,6 +115,7 @@ public class FlywayService {
                 .dataSource(dataSource)
                 .table(migrationTableName)
                 .locations(migrationLocations.toArray(new String[0]))
+                .cleanDisabled(!cleanEnabled)
                 .load();
     }
 
