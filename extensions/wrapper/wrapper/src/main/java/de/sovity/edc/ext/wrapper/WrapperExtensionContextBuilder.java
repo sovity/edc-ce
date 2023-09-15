@@ -25,7 +25,6 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.LiteralMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
-import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionBuilder;
@@ -114,12 +113,10 @@ public class WrapperExtensionContextBuilder {
         var constraintExtractor = new ConstraintExtractor(policyValidator, atomicConstraintMapper);
         var policyMapper = new PolicyMapper(
                 constraintExtractor,
-                atomicConstraintMapper);
-        var edcPropertyMapperUtils = new EdcPropertyMapperUtils();
-        var assetMapper = new AssetMapper(objectMapper, edcPropertyMapperUtils);
                 atomicConstraintMapper,
-                typeTransformerRegistry
-        );
+                typeTransformerRegistry);
+        var edcPropertyMapperUtils = new EdcPropertyMapperUtils();
+        var assetMapper = new AssetMapper(objectMapper, edcPropertyMapperUtils, typeTransformerRegistry);
         var transferProcessStateService = new TransferProcessStateService();
         var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
                 policyMapper,
@@ -170,7 +167,6 @@ public class WrapperExtensionContextBuilder {
                 policyMapper);
         var dataOfferBuilder = new DspDataOfferBuilder(jsonLd);
         var dspCatalogService = new DspCatalogService(catalogService, dataOfferBuilder);
-        var assetMapper = new AssetMapper(typeTransformerRegistry);
         var catalogApiService = new CatalogApiService(assetMapper, policyMapper, dspCatalogService);
         var contractOfferMapper = new ContractOfferMapper(policyMapper);
         var contractNegotiationBuilder = new ContractNegotiationBuilder(contractOfferMapper);

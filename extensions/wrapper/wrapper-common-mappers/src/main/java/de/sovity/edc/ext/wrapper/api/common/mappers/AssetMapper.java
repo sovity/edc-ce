@@ -6,6 +6,9 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.utils.JsonUtils;
+import de.sovity.edc.utils.jsonld.JsonLdUtils;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
+import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -15,6 +18,7 @@ import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor

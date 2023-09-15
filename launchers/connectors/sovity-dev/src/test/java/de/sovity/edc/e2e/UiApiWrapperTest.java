@@ -31,12 +31,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class UiApiWrapperTest {
 
@@ -102,15 +104,37 @@ class UiApiWrapperTest {
         // assert
         assertThat(dataOffer.getEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
         assertThat(dataOffer.getParticipantId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
-        assertThat(dataOffer.getAsset().getAssetId()).isEqualTo(assetId);
+        assertThat(dataOffer.getAsset().getId()).isEqualTo(assetId);
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
+    }
+
+    @Test
+    void testAssetCreation() {
+        // arrange
+        var assetId = UUID.randomUUID().toString();
+
+
+        Map<String, Object> dataSource = Map.of(
+                "name", "transfer-test",
+                "baseUrl",  dataAddress.getDataSourceUrl("dummy test data"),
+                "type", "HttpData",
+                "proxyQueryParams", "true"
+        );
+        providerConnector.createAsset(assetId, dataSource);
+
+        var assets = consumerClient.uiApi().assetPage();
+
+        assertThat(assets.getAssets()).hasSize(1);
+        var asset = assets.getAssets().get(0);
+        assertThat(asset.getName()).isEqualTo("AssetName");
+        assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
     }
 
     private UiContractNegotiation negotiate(UiDataOffer dataOffer, UiContractOffer contractOffer) {
         var negotiationRequest = ContractNegotiationRequest.builder()
                 .counterPartyAddress(dataOffer.getEndpoint())
                 .counterPartyParticipantId(dataOffer.getParticipantId())
-                .assetId(dataOffer.getAsset().getAssetId())
+                .assetId(dataOffer.getAsset().getId())
                 .contractOfferId(contractOffer.getContractOfferId())
                 .policyJsonLd(contractOffer.getPolicy().getPolicyJsonLd())
                 .build();

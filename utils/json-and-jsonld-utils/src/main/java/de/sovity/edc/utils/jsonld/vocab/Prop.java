@@ -19,6 +19,8 @@ import lombok.experimental.UtilityClass;
 public class Prop {
     public final String ID = "@id";
     public final String TYPE = "@type";
+    public final String VALUE = "@value";
+    public final String LANGUAGE = "@language";
 
     @UtilityClass
     public class Edc {
@@ -47,6 +49,7 @@ public class Prop {
         public final String DATASET = CTX_WRONG_BUT_USED_BY_CORE_EDC + "dataset";
         public final String DISTRIBUTION = CTX_WRONG_BUT_USED_BY_CORE_EDC + "distribution";
         public final String VERSION = CTX + "version";
+        public final String KEYWORDS = CTX + "keyword";
     }
 
     /**
@@ -56,5 +59,25 @@ public class Prop {
     public class Odrl {
         public final String CTX = "http://www.w3.org/ns/odrl/2/";
         public final String HAS_POLICY = CTX + "hasPolicy";
+    }
+
+    /**
+     * DCMI Metadata Terms Vocabulary, see <a href="https://www.w3.org/TR/vocab-dcat-3/">DCAT 3 Specification</a>
+     */
+    @UtilityClass
+    public class DCMI {
+        public final String CTX = "http://purl.org/dc/terms/";
+        public final String title = CTX + "title";
+    }
+
+    /**
+     * DCMI Metadata Terms Vocabulary, see <a href="https://www.w3.org/TR/vocab-dcat-3/">DCAT 3 Specification</a>
+     */
+    @UtilityClass
+    public class SOVITYSEMANTIC {
+        public final String CTX = "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxy";
+        public final String METHOD = CTX + "method/";
+        public final String PATH = CTX + "path/";
+
     }
 }

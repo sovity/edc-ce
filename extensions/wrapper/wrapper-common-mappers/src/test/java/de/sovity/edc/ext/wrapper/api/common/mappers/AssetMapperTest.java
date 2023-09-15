@@ -1,17 +1,18 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonFormatMapper;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static jakarta.json.Json.createArrayBuilder;
+import static jakarta.json.Json.createObjectBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
@@ -19,8 +20,6 @@ class AssetMapperTest {
 
     @InjectMocks
     AssetMapper assetMapper;
-    @InjectMocks
-    JsonFormatMapper jsonFormatMapper;
 
     @Test
     @SneakyThrows
@@ -51,8 +50,13 @@ class AssetMapperTest {
     @SneakyThrows
     void test_KeywordsAsSingleString() {
 
+        // Arrange
+        var requestBody = createObjectBuilder()
+                .add(Prop.Dcat.KEYWORDS, createArrayBuilder(List.of("SingleElement")))
+                .build();
+
         // Act
-        var uiAsset = assetMapper.buildUiAssetFromAssetJsonLd(jsonFormatMapper.mapKeywords("{\"keywords\":\"SingleElement\"}"));
+        var uiAsset = assetMapper.buildUiAssetFromAssetJsonLd(requestBody.toString());
 
         // Assert
         assertThat(uiAsset).isNotNull();
@@ -63,11 +67,15 @@ class AssetMapperTest {
     @SneakyThrows
     void test_StringsAsList() {
 
+        // Arrange
+        var requestBody = createObjectBuilder()
+                .add(Prop.DCMI.title, createObjectBuilder()
+                        .add(Prop.VALUE, "AssetName")
+                        .add(Prop.LANGUAGE, "en"))
+                .build();
+
         // Act
-        var uiAsset = assetMapper.buildUiAssetFromAssetJsonLd(jsonFormatMapper.mapTitleList(
-                "{\"title\":" +
-                        "[{\"value\":\"AssetName\",\"language\":\"en\"}," +
-                        "{\"value\":\"AssetNameinFrench\",\"language\":\"fr\"}]}"));
+        var uiAsset = assetMapper.buildUiAssetFromAssetJsonLd(requestBody.toString());
 
         // Assert
         assertThat(uiAsset).isNotNull();
@@ -78,11 +86,18 @@ class AssetMapperTest {
     @SneakyThrows
     void test_StringsAsMap() {
 
+        // Arrange
+        var requestBody = createObjectBuilder()
+                .add(Prop.DCMI.title, createArrayBuilder()
+                        .add(createObjectBuilder()
+                                .add(Prop.TYPE, "SomeType")
+                                .add(Prop.VALUE, "AssetName")
+                        )
+                )
+                .build();
+
         // Act
-        var uiAsset = assetMapper.buildUiAssetFromAssetJsonLd(jsonFormatMapper.mapTitle(
-                "{\"title\":" +
-                        "{\"@type\":\"SomeType\"," +
-                        "\"@value\":\"AssetName\"}}"));
+        var uiAsset = assetMapper.buildUiAssetFromAssetJsonLd(requestBody.toString());
 
         // Assert
         assertThat(uiAsset).isNotNull();
@@ -93,9 +108,13 @@ class AssetMapperTest {
     @SneakyThrows
     void test_badBooleanValue() {
 
+        //Arrange
+        var requestBody = createObjectBuilder()
+                .add(Prop.SOVITYSEMANTIC.METHOD, "wrongBooleanValue")
+                .build();
+
         // Act
-        var uiAsset = assetMapper.buildUiAssetFromAssetJsonLd(jsonFormatMapper.mapBooleanHintProxyMethod(
-                "{\"httpDatasourceHintsProxyMethod\":\"wrongBooleanValue\"}"));
+        var uiAsset = assetMapper.buildUiAssetFromAssetJsonLd(requestBody.toString());
 
         // Assert
         assertThat(uiAsset).isNotNull();
@@ -106,8 +125,13 @@ class AssetMapperTest {
     @SneakyThrows
     void test_noBooleanValue() {
 
+        //Arrange
+        var requestBody = createObjectBuilder()
+                .add(Prop.SOVITYSEMANTIC.METHOD, "")
+                .build();
+
         // Act
-        var uiAsset = assetMapper.buildUiAssetFromAssetJsonLd(jsonFormatMapper.mapBooleanHintProxyMethod("{}"));
+        var uiAsset = assetMapper.buildUiAssetFromAssetJsonLd(requestBody.toString());
 
         // Assert
         assertThat(uiAsset).isNotNull();

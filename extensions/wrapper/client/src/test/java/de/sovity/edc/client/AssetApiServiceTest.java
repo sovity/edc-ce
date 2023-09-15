@@ -71,7 +71,6 @@ public class AssetApiServiceTest {
         assertThat(asset.getPrivateProperties()).isEqualTo(privateProperties);
     }
 
-
     @Test
     void assetPageSorting(AssetService assetService) {
         // arrange
