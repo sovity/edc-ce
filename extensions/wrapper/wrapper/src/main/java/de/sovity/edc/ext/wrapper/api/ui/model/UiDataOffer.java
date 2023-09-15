@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
-
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

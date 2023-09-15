@@ -37,7 +37,7 @@ class ContractNegotiationStateServiceTest {
         var result = contractNegotiationStateService.buildContractNegotiationState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("TERMINATING");
-        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.ERROR);
+        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.TERMINATED);
     }
 
     @Test
@@ -46,7 +46,7 @@ class ContractNegotiationStateServiceTest {
         var result = contractNegotiationStateService.buildContractNegotiationState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("TERMINATED");
-        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.ERROR);
+        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.TERMINATED);
     }
 
     @Test
@@ -55,7 +55,7 @@ class ContractNegotiationStateServiceTest {
         var result = contractNegotiationStateService.buildContractNegotiationState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("INITIAL");
-        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.RUNNING);
+        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.IN_PROGRESS);
     }
 
     @Test
@@ -64,7 +64,7 @@ class ContractNegotiationStateServiceTest {
         var result = contractNegotiationStateService.buildContractNegotiationState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("FINALIZED");
-        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.OK);
+        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.AGREED);
     }
 
     @Test
@@ -73,7 +73,7 @@ class ContractNegotiationStateServiceTest {
         var result = contractNegotiationStateService.buildContractNegotiationState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("CUSTOM");
-        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.RUNNING);
+        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.IN_PROGRESS);
     }
 
     @Test
@@ -82,6 +82,6 @@ class ContractNegotiationStateServiceTest {
         var result = contractNegotiationStateService.buildContractNegotiationState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("CUSTOM");
-        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.OK);
+        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.AGREED);
     }
 }

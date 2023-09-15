@@ -75,11 +75,11 @@ public class ContractNegotiationStateService {
     @NotNull
     private ContractNegotiationSimplifiedState getSimplifiedState(int code) {
         if (isError(code)) {
-            return ContractNegotiationSimplifiedState.ERROR;
+            return ContractNegotiationSimplifiedState.TERMINATED;
         }
         if (isRunning(code)) {
-            return ContractNegotiationSimplifiedState.RUNNING;
+            return ContractNegotiationSimplifiedState.IN_PROGRESS;
         }
-        return ContractNegotiationSimplifiedState.OK;
+        return ContractNegotiationSimplifiedState.AGREED;
     }
 }

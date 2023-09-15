@@ -17,6 +17,7 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractAgreementTransferRequest;
 import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestParams;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
+import de.sovity.edc.client.gen.model.ContractNegotiationState.SimplifiedStateEnum;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiContractOffer;
 import de.sovity.edc.client.gen.model.UiDataOffer;
@@ -37,7 +38,7 @@ import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactor
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ApiWrapperTest {
+class UiApiWrapperTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = "provider";
     private static final String CONSUMER_PARTICIPANT_ID = "consumer";
@@ -78,17 +79,17 @@ class ApiWrapperTest {
     }
 
 
-    // TODO test policy conversion
-    // TODO test asset creation, make this test a full circle in data offering and consumption via the UI API
     @Test
-    void testNegotiationViaUiApi() {
+    void provide_consume_assetMapping_policyMapping() {
         // arrange
-        var providerEndpoint = providerConnector.getConfig().getProtocolEndpoint().getUri().toString();
+        // TODO use UI API for creation of the data offer
+        // TODO use a policy with a constraint
+        // TODO test all asset properties including additionalProperties
         var data = "expected data 123";
         var assetId = UUID.randomUUID().toString();
         providerConnector.createDataOffer(assetId, dataAddress.getDataSourceUrl(data));
 
-        var dataOffers = consumerClient.uiApi().catalogPageDataOffers(providerEndpoint);
+        var dataOffers = consumerClient.uiApi().catalogPageDataOffers(getProtocolEndpoint(providerConnector));
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
         assertThat(dataOffer.getContractOffers()).hasSize(1);
@@ -99,7 +100,7 @@ class ApiWrapperTest {
         initiateTransfer(negotiation);
 
         // assert
-        assertThat(dataOffer.getEndpoint()).isEqualTo(providerEndpoint);
+        assertThat(dataOffer.getEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
         assertThat(dataOffer.getParticipantId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
         assertThat(dataOffer.getAsset().getAssetId()).isEqualTo(assetId);
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
@@ -117,10 +118,13 @@ class ApiWrapperTest {
         var negotiationId = consumerClient.uiApi().initiateContractNegotiation(negotiationRequest)
                 .getContractNegotiationId();
 
-        return Awaitility.await().atMost(consumerConnector.timeout).until(
+        var negotiation = Awaitility.await().atMost(consumerConnector.timeout).until(
                 () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
-                it -> it.getContractAgreementId() != null
+                it -> it.getState().getSimplifiedState() != SimplifiedStateEnum.IN_PROGRESS
         );
+
+        assertThat(negotiation.getState().getSimplifiedState()).isEqualTo(SimplifiedStateEnum.AGREED);
+        return negotiation;
     }
 
     private void initiateTransfer(UiContractNegotiation negotiation) {
@@ -133,5 +137,9 @@ class ApiWrapperTest {
                         .build())
                 .build();
         consumerClient.uiApi().initiateTransfer(transferRequest);
+    }
+
+    private String getProtocolEndpoint(ConnectorRemote connector) {
+        return connector.getConfig().getProtocolEndpoint().getUri().toString();
     }
 }

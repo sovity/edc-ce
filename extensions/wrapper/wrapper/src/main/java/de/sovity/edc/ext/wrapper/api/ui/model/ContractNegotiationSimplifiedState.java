@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  */
 @Schema(description = "Simplified Contract Negotiation State to be used in UI")
 public enum ContractNegotiationSimplifiedState {
-    RUNNING,
-    OK,
-    ERROR
+    IN_PROGRESS,
+    AGREED,
+    TERMINATED
 }

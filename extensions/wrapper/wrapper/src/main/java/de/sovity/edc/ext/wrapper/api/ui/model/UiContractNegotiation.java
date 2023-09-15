@@ -41,6 +41,6 @@ public class UiContractNegotiation {
     @Schema(description = "Contract Agreement Id")
     private String contractAgreementId;
 
-    @Schema(description = "Status of the Contract Negotiation ", requiredMode = Schema.RequiredMode.REQUIRED)
-    private ContractNegotiationState status;
+    @Schema(description = "State of the Contract Negotiation state machine", requiredMode = Schema.RequiredMode.REQUIRED)
+    private ContractNegotiationState state;
 }
