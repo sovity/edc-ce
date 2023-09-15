@@ -17,6 +17,7 @@ package de.sovity.edc.client;
 import de.sovity.edc.client.gen.model.ContractAgreementCard;
 import de.sovity.edc.client.gen.model.TransferProcessState;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -178,7 +179,7 @@ class ContractAgreementPageTest {
     private Asset asset(String assetId) {
         return Asset.Builder.newInstance()
                 .id(assetId)
-                .property("http://www.w3.org/ns/dcat#landingPage", "X")
+                .property(Prop.Dcat.LANDING_PAGE, "X")
                 .createdAt(todayEpochMillis)
                 .dataAddress(dataAddress())
                 .build();

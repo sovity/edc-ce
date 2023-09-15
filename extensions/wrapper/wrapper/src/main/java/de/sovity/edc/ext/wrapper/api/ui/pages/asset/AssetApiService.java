@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetBuilder;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
@@ -31,29 +32,19 @@ import java.util.List;
 public class AssetApiService {
     private final AssetService assetService;
     private final AssetMapper assetMapper;
+    private final UiAssetBuilder assetBuilder;
 
     public List<UiAsset> getAssets() {
         var assets = getAllAssets();
         return assets.stream().sorted(Comparator.comparing(Asset::getCreatedAt).reversed()).map(asset -> {
-            var entry = new UiAsset();
-            entry.setId(asset.getId());
-            entry.setDescription(asset.getDescription());
-            entry.setName(asset.getName());
-            entry.setVersion(asset.getVersion());
-            entry.setLandingPageUrl((asset.getProperties().get("landingPage") != null) ?
-                    asset.getProperties().get("landingPage").toString() :
-                    null);
-            entry.setKeywords(List.of((asset.getProperties().get("keywords") != null) ?
-                    asset.getProperties().get("keywords").toString() :
-                    ""));
-            entry.setPrivateProperties(asset.getPrivateProperties());
+            var entry = assetMapper.buildUiAssetFromAsset(asset);
             return entry;
         }).toList();
     }
 
     @NotNull
     public IdResponseDto createAsset(UiAssetCreateRequest request) {
-        var asset = assetMapper.buildAssetFromUiAssetCreateRequest(request);
+        var asset = assetBuilder.buildAssetFromUiAssetCreateRequest(request);
         asset = assetService.create(asset).getContent();
         return new IdResponseDto(asset.getId());
     }

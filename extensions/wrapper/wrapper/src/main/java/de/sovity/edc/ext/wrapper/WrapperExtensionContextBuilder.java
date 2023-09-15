@@ -49,7 +49,6 @@ import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
-import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import lombok.NoArgsConstructor;
@@ -149,13 +148,12 @@ public class WrapperExtensionContextBuilder {
                 transferProcessService);
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
-        var edcPropertyUtils = new EdcPropertyUtils();
         var assetApiService = new AssetApiService(assetService, assetMapper);
         var transferRequestBuilder = new TransferRequestBuilder(
                 objectMapper,
                 contractAgreementUtils,
                 contractNegotiationUtils,
-                edcPropertyUtils,
+                edcPropertyMapperUtils,
                 serviceExtensionContext.getConnectorId()
         );
         var contractAgreementTransferApiService = new ContractAgreementTransferApiService(
@@ -199,7 +197,7 @@ public class WrapperExtensionContextBuilder {
                 policyDefinitionStore,
                 contractDefinitionStore,
                 policyMappingService,
-                edcPropertyUtils);
+                edcPropertyMapperUtils);
         var useCaseResource = new UseCaseResource(
                 kpiApiService,
                 supportedPolicyApiService,

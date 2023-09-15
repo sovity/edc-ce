@@ -15,7 +15,7 @@ package de.sovity.edc.client;
 
 
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
-import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -40,12 +40,12 @@ public class AssetApiServiceTest {
 
     public static final String DATA_SINK = "http://my-data-sink/api/stuff";
     public static final String DATA_ADDRESS_TYPE = "HttpData";
-    EdcPropertyUtils edcPropertyUtils;
+    EdcPropertyMapperUtils edcPropertyUtils;
 
     @BeforeEach
     void setUp(EdcExtension extension) {
         TestUtils.setupExtension(extension);
-        edcPropertyUtils = new EdcPropertyUtils();
+        edcPropertyUtils = new EdcPropertyMapperUtils();
     }
 
     @Test

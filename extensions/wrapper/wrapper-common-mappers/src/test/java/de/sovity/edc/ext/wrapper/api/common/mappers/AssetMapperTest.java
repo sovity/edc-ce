@@ -1,5 +1,6 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetBuilder;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,8 @@ class AssetMapperTest {
 
     @InjectMocks
     AssetMapper assetMapper;
+    @InjectMocks
+    UiAssetBuilder assetBuilder;
 
     @Test
     @SneakyThrows
@@ -28,15 +31,14 @@ class AssetMapperTest {
         String jsonContent = new String(Files.readAllBytes(Paths.get(getClass().getResource("/sample.json").toURI())));
 
         // Act
-        var uiAsset = assetMapper.buildUiAssetFromAssetHelper(assetMapper.buildHelperDto(jsonContent));
+        var uiAsset = assetBuilder.buildUiAssetFromAssetHelper(assetBuilder.buildHelperDto(jsonContent));
 
         // Assert
         assertThat(uiAsset).isNotNull();
-        assertThat(uiAsset.getName()).isEqualTo("urn:artifact:my-asset");
         assertThat(uiAsset.getTitle()).isEqualTo("My Asset");
         assertThat(uiAsset.getDescription()).isEqualTo("Lorem Ipsum ...");
-        assertThat(uiAsset.getPublisher()).isEqualTo("https://data-source.my-org/about");
-        assertThat(uiAsset.getCreator()).isEqualTo("My Organization Name");
+        assertThat(uiAsset.getPublisherHomepage()).isEqualTo("https://data-source.my-org/about");
+        assertThat(uiAsset.getCreatorOrganizationName()).isEqualTo("My Organization Name");
         assertThat(uiAsset.getLicenseUrl()).isEqualTo("https://data-source.my-org/license");
         assertThat(uiAsset.getVersion()).isEqualTo("1.1");
         assertThat(uiAsset.getLanguage()).isEqualTo("https://w3id.org/idsa/code/EN");
@@ -56,7 +58,7 @@ class AssetMapperTest {
                 .build();
 
         // Act
-        var uiAsset = assetMapper.buildUiAssetFromAssetJsonLd(requestBody.toString());
+        var uiAsset = assetBuilder.buildUiAssetFromAssetJsonLd(requestBody.toString());
 
         // Assert
         assertThat(uiAsset).isNotNull();
@@ -69,13 +71,13 @@ class AssetMapperTest {
 
         // Arrange
         var requestBody = createObjectBuilder()
-                .add(Prop.DCMI.title, createObjectBuilder()
+                .add(Prop.Dcterms.TITLE, createObjectBuilder()
                         .add(Prop.VALUE, "AssetName")
                         .add(Prop.LANGUAGE, "en"))
                 .build();
 
         // Act
-        var uiAsset = assetMapper.buildUiAssetFromAssetJsonLd(requestBody.toString());
+        var uiAsset = assetBuilder.buildUiAssetFromAssetJsonLd(requestBody.toString());
 
         // Assert
         assertThat(uiAsset).isNotNull();
@@ -88,7 +90,7 @@ class AssetMapperTest {
 
         // Arrange
         var requestBody = createObjectBuilder()
-                .add(Prop.DCMI.title, createArrayBuilder()
+                .add(Prop.Dcterms.TITLE, createArrayBuilder()
                         .add(createObjectBuilder()
                                 .add(Prop.TYPE, "SomeType")
                                 .add(Prop.VALUE, "AssetName")
@@ -97,7 +99,7 @@ class AssetMapperTest {
                 .build();
 
         // Act
-        var uiAsset = assetMapper.buildUiAssetFromAssetJsonLd(requestBody.toString());
+        var uiAsset = assetBuilder.buildUiAssetFromAssetJsonLd(requestBody.toString());
 
         // Assert
         assertThat(uiAsset).isNotNull();
@@ -110,11 +112,11 @@ class AssetMapperTest {
 
         //Arrange
         var requestBody = createObjectBuilder()
-                .add(Prop.SOVITYSEMANTIC.METHOD, "wrongBooleanValue")
+                .add(Prop.SovityDcatExt.METHOD, "wrongBooleanValue")
                 .build();
 
         // Act
-        var uiAsset = assetMapper.buildUiAssetFromAssetJsonLd(requestBody.toString());
+        var uiAsset = assetBuilder.buildUiAssetFromAssetJsonLd(requestBody.toString());
 
         // Assert
         assertThat(uiAsset).isNotNull();
@@ -127,11 +129,11 @@ class AssetMapperTest {
 
         //Arrange
         var requestBody = createObjectBuilder()
-                .add(Prop.SOVITYSEMANTIC.METHOD, "")
+                .add(Prop.SovityDcatExt.METHOD, "")
                 .build();
 
         // Act
-        var uiAsset = assetMapper.buildUiAssetFromAssetJsonLd(requestBody.toString());
+        var uiAsset = assetBuilder.buildUiAssetFromAssetJsonLd(requestBody.toString());
 
         // Assert
         assertThat(uiAsset).isNotNull();

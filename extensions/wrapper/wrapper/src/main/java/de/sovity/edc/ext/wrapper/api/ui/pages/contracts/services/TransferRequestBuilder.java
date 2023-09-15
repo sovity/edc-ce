@@ -15,9 +15,9 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequestParams;
-import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.transfer.spi.types.TransferRequest;
@@ -33,7 +33,7 @@ public class TransferRequestBuilder {
     private final ObjectMapper objectMapper;
     private final ContractAgreementUtils contractAgreementUtils;
     private final ContractNegotiationUtils contractNegotiationUtils;
-    private final EdcPropertyUtils edcPropertyUtils;
+    private final EdcPropertyMapperUtils edcPropertyUtils;
     private final String connectorId;
 
     public TransferRequest buildTransferRequest(

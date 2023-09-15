@@ -50,6 +50,7 @@ public class Prop {
         public final String DISTRIBUTION = CTX_WRONG_BUT_USED_BY_CORE_EDC + "distribution";
         public final String VERSION = CTX + "version";
         public final String KEYWORDS = CTX + "keyword";
+        public final String LANDING_PAGE = CTX + "landingPage";
     }
 
     /**
@@ -62,20 +63,20 @@ public class Prop {
     }
 
     /**
-     * DCMI Metadata Terms Vocabulary, see <a href="https://www.w3.org/TR/vocab-dcat-3/">DCAT 3 Specification</a>
+     * Dcterms Metadata Terms Vocabulary, see <a href="http://purl.org/dc/terms">DCMI Metadata Terms</a>
      */
     @UtilityClass
-    public class DCMI {
+    public class Dcterms {
         public final String CTX = "http://purl.org/dc/terms/";
-        public final String title = CTX + "title";
-        public final String description = CTX + "description";
+        public final String TITLE = CTX + "TITLE";
+        public final String DESCRIPTION = CTX + "DESCRIPTION";
     }
 
     /**
-     * DCMI Metadata Terms Vocabulary, see <a href="https://www.w3.org/TR/vocab-dcat-3/">DCAT 3 Specification</a>
+     * Dcterms Metadata Terms Vocabulary, see <a href="https://semantic.sovity.io/dcat-ext/">DCAT 3 Specification</a>
      */
     @UtilityClass
-    public class SOVITYSEMANTIC {
+    public class SovityDcatExt {
         public final String CTX = "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxy";
         public final String METHOD = CTX + "method/";
         public final String PATH = CTX + "path/";

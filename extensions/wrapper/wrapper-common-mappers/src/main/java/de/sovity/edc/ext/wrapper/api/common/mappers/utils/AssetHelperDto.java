@@ -23,10 +23,6 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AssetHelperDto {
 
-    @JsonProperty("https://w3id.org/edc/v0.0.1/ns/")
-    @JsonDeserialize(using = CustomDeserializer.class)
-    private String ns;
-
     @JsonProperty("http://purl.org/dc/terms/identifier")
     @JsonDeserialize(using = CustomDeserializer.class)
     private String identifier;
@@ -44,10 +40,10 @@ public class AssetHelperDto {
     private String description;
 
     @JsonProperty("http://purl.org/dc/terms/creator")
-    private UiAssetCreator creator;
+    private AssetCreatorOrganizationNameJsonLd creator;
 
     @JsonProperty("http://purl.org/dc/terms/publisher")
-    private UiAssetPublisher publisher;
+    private AssetPublisherJsonLd publisher;
 
     @JsonProperty("http://purl.org/dc/terms/license")
     @JsonDeserialize(using = CustomDeserializer.class)
@@ -62,7 +58,7 @@ public class AssetHelperDto {
     private List<String> keywords;
 
     @JsonProperty("http://www.w3.org/ns/dcat#distribution")
-    private UiAssetDistribution distribution;
+    private AssetDistributionJsonLd distribution;
 
     @JsonProperty("http://www.w3.org/ns/dcat#landingPage")
     @JsonDeserialize(using = CustomDeserializer.class)

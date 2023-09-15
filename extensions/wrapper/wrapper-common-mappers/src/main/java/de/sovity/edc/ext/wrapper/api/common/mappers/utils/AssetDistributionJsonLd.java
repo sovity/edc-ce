@@ -1,7 +1,6 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers.utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,12 +15,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
-@Schema(description = "Asset Publisher Details")
-public class UiAssetPublisher {
+public class AssetDistributionJsonLd {
 
-    @JsonProperty("@type")
-    private String type;
-
-    @JsonProperty("http://xmlns.com/foaf/0.1/homepage")
+    @JsonProperty("http://www.w3.org/ns/dcat#mediaType")
     private String name;
 }
