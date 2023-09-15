@@ -31,7 +31,17 @@ class ContractNegotiationStateServiceTest {
     }
 
     @Test
-    void testError() {
+    void testTerminating() {
+        // Edge case, terminating is not considered "RUNNING" anymore.
+        int code = ContractNegotiationStates.TERMINATING.code();
+        var result = contractNegotiationStateService.buildContractNegotiationState(code);
+        assertThat(result.getCode()).isEqualTo(code);
+        assertThat(result.getName()).isEqualTo("TERMINATING");
+        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.ERROR);
+    }
+
+    @Test
+    void testTerminated() {
         int code = ContractNegotiationStates.TERMINATED.code();
         var result = contractNegotiationStateService.buildContractNegotiationState(code);
         assertThat(result.getCode()).isEqualTo(code);
@@ -41,7 +51,7 @@ class ContractNegotiationStateServiceTest {
 
     @Test
     void testRunning() {
-        int code = ContractNegotiationStates.OFFERING.code();
+        int code = ContractNegotiationStates.INITIAL.code();
         var result = contractNegotiationStateService.buildContractNegotiationState(code);
         assertThat(result.getCode()).isEqualTo(code);
         assertThat(result.getName()).isEqualTo("INITIAL");
@@ -49,21 +59,11 @@ class ContractNegotiationStateServiceTest {
     }
 
     @Test
-    void testOk() {
+    void testFinalized() {
         int code = ContractNegotiationStates.FINALIZED.code();
         var result = contractNegotiationStateService.buildContractNegotiationState(code);
         assertThat(result.getCode()).isEqualTo(code);
-        assertThat(result.getName()).isEqualTo("COMPLETED");
-        assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.OK);
-    }
-
-    @Test
-    void testDeprovisioning() {
-        // Edge case, de-provisioning is not considered "RUNNING" anymore.
-        int code = ContractNegotiationStates.TERMINATED.code();
-        var result = contractNegotiationStateService.buildContractNegotiationState(code);
-        assertThat(result.getCode()).isEqualTo(code);
-        assertThat(result.getName()).isEqualTo("TERMINATED");
+        assertThat(result.getName()).isEqualTo("FINALIZED");
         assertThat(result.getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.OK);
     }
 

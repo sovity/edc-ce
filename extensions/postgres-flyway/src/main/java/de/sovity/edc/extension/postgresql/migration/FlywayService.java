@@ -40,17 +40,20 @@ public class FlywayService {
     private final boolean cleanEnabled;
     private final boolean clean;
 
+    public void cleanDatabase(String datasourceName, JdbcConnectionProperties jdbcConnectionProperties) {
+        if (clean) {
+            monitor.info("Running flyway clean.");
+            var flyway = setupFlyway(datasourceName, jdbcConnectionProperties, List.of());
+            flyway.clean();
+        }
+    }
+
     public void migrateDatabase(
             String datasourceName,
             JdbcConnectionProperties jdbcConnectionProperties,
             List<String> additionalMigrationLocations
     ) {
         var flyway = setupFlyway(datasourceName, jdbcConnectionProperties, additionalMigrationLocations);
-        if (clean) {
-            monitor.info("Cleaning database before migrations.");
-            flyway.clean();
-        }
-
         flyway.info().getInfoResult().migrations.stream()
                 .map(migration -> "Found migration: %s".formatted(migration.filepath))
                 .forEach(monitor::info);

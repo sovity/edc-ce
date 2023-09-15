@@ -55,7 +55,7 @@ public class ContractNegotiationStateService {
     /**
      * Which Transfer Process do we want to show as 'error' in our UI?
      *
-     * @param code {@link ContractNegotiation#getState()}, see {@link ContractNegotiationState#code()}
+     * @param code {@link ContractNegotiation#getState()}, see {@link ContractNegotiationStates#code()}
      * @return if running
      */
     public boolean isError(int code) {
