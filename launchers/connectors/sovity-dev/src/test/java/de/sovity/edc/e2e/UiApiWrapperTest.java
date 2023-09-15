@@ -113,7 +113,6 @@ class UiApiWrapperTest {
         // arrange
         var assetId = UUID.randomUUID().toString();
 
-
         Map<String, Object> dataSource = Map.of(
                 "name", "transfer-test",
                 "baseUrl",  dataAddress.getDataSourceUrl("dummy test data"),

@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static jakarta.json.Json.createObjectBuilder;
@@ -69,34 +70,12 @@ public class ConnectorRemote {
 
     public void createAsset(String assetId,
                             Map<String, Object> dataAddressProperties) {
-        /*var requestBody = createObjectBuilder()
-                .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
-                .add("asset", createObjectBuilder()
-                        .add(ID, assetId)
-                        .add("properties", createObjectBuilder()
-                                .add(PROPERTY_ID, EDC_NAMESPACE + assetId)
-                                .add(PROPERTY_DESCRIPTION, EDC_NAMESPACE + description)
-                                .add(PROPERTY_NAME, EDC_NAMESPACE + name)
-                                .add(PROPERTY_VERSION, EDC_NAMESPACE + version)
-                        )
-                        .add("dataAddress", createObjectBuilder(dataAddressProperties)))
-                .build();
-
-        prepareManagementApiCall()
-                .contentType(JSON)
-                .body(requestBody)
-                .when()
-                .post("/v2/assets")
-                .then()
-                .statusCode(200)
-                .contentType(JSON);*/
-
         var requestBody = createObjectBuilder()
                 .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
                 .add("asset", createObjectBuilder()
                         .add(ID, assetId)
                         .add("properties", createObjectBuilder()
-                                .add("description", "description")))
+                                .add(Prop.DCMI.description, "description")))
                 .add("dataAddress", createObjectBuilder(dataAddressProperties))
                 .build();
 
@@ -375,7 +354,7 @@ public class ConnectorRemote {
                 .build();
 
         var contractDefinitionId = UUID.randomUUID().toString();
-        //createAsset(assetId, dataSource);
+        createAsset(assetId, dataSource);
         var noConstraintPolicyId = createPolicy(policy);
         createContractDefinition(
                 assetId,

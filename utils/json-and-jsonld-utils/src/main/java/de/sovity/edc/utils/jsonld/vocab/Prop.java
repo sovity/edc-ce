@@ -68,6 +68,7 @@ public class Prop {
     public class DCMI {
         public final String CTX = "http://purl.org/dc/terms/";
         public final String title = CTX + "title";
+        public final String description = CTX + "description";
     }
 
     /**
