@@ -64,7 +64,7 @@ public class ConnectorRemote {
     private final ConnectorRemoteConfig config;
 
     private final ObjectMapper objectMapper = JacksonJsonLd.createObjectMapper();
-    private final Duration timeout = Duration.ofSeconds(60);
+    public final Duration timeout = Duration.ofSeconds(8);
     private final JsonLd jsonLd = new TitaniumJsonLd(new ConsoleMonitor());
 
     public void createAsset(String assetId,
@@ -384,7 +384,7 @@ public class ConnectorRemote {
                 noConstraintPolicyId);
     }
 
-    private RequestSpecification prepareManagementApiCall() {
+    public RequestSpecification prepareManagementApiCall() {
         var managementConfig = config.getManagementEndpoint();
         var managementBaseUri = managementConfig.getUri().toString();
         if (managementConfig.authProvider() instanceof NoneAuthProvider) {
@@ -406,7 +406,7 @@ public class ConnectorRemote {
     }
 
 
-    private ContractId getDatasetContractId(JsonObject dataset) {
+    public ContractId getDatasetContractId(JsonObject dataset) {
         var id = dataset.getJsonArray(ODRL_POLICY_ATTRIBUTE).get(0).asJsonObject().getString(ID);
         return ContractId.parseId(id).getContent();
     }

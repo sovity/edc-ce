@@ -123,4 +123,15 @@ public class AssetMapper {
 
         return assetBuilder.build();
     }
+    private JsonObject buildJsonLdFromProperties(JsonObject json) {
+        // Try to use the EDC Prop ID, but if it's not available, fall back to the "@id" property
+        var assetId = Optional.ofNullable(JsonLdUtils.string(json, Prop.Edc.ID))
+                .orElseGet(() -> JsonLdUtils.string(json, Prop.ID));
+
+        return Json.createObjectBuilder()
+                .add(Prop.ID, assetId)
+                .add(Prop.TYPE, Prop.Edc.TYPE_ASSET)
+                .add(Prop.Edc.PROPERTIES, json)
+                .build();
+    }
 }

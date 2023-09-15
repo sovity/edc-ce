@@ -54,9 +54,12 @@ allprojects {
     tasks.getByName<Test>("test") {
         useJUnitPlatform()
         testLogging {
-            events = setOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
+            events = setOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.STANDARD_ERROR)
             exceptionFormat = TestExceptionFormat.FULL
+            showExceptions = true
+            showCauses = true
         }
+        failFast = true
     }
 
     checkstyle {

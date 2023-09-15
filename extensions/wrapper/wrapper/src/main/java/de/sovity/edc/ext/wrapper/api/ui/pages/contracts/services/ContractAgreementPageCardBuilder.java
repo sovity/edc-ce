@@ -16,9 +16,11 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
+import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferProcess;
+import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,13 @@ import java.util.List;
 
 import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcMillisToOffsetDateTime;
 import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcSecondsToOffsetDateTime;
+
+import java.util.Comparator;
+import java.util.List;
+
+import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcMillisToOffsetDateTime;
+import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcSecondsToOffsetDateTime;
+import static de.sovity.edc.ext.wrapper.utils.MapUtils.mapValues;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -56,7 +65,7 @@ public class ContractAgreementPageCardBuilder {
         card.setCounterPartyId(negotiation.getCounterPartyId());
         card.setContractSigningDate(utcSecondsToOffsetDateTime(agreement.getContractSigningDate()));
         card.setAsset(assetMapper.buildUiAssetFromAsset(asset));
-        card.setContractPolicy(policyMapper.buildPolicyDto(agreement.getPolicy()));
+        card.setContractPolicy(policyMapper.buildUiPolicy(agreement.getPolicy()));
         card.setTransferProcesses(buildTransferProcesses(transferProcesses));
         return card;
     }

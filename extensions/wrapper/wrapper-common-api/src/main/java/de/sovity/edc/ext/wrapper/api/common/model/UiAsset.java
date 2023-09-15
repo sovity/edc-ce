@@ -32,7 +32,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
-@Schema(description = "Asset Details")
+@Schema(description = "Type-Safe Asset Metadata as needed by our UI")
 public class UiAsset {
 
     @Schema(description = "Asset Id", requiredMode = Schema.RequiredMode.REQUIRED)

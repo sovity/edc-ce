@@ -29,6 +29,6 @@ public class PolicyDefinitionDto {
     private String policyDefinitionId;
 
     @Schema(description = "Policy Contents", requiredMode = Schema.RequiredMode.REQUIRED)
-    private UiPolicyDto policy;
+    private UiPolicy policy;
 }
 

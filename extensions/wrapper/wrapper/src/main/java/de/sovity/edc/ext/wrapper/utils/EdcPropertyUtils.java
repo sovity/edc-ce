@@ -57,6 +57,9 @@ public class EdcPropertyUtils {
 
     @SuppressWarnings({"unchecked", "rawtypes", "java:S1905"})
     public Map<String, Object> toMapOfObject(Map<String, String> map) {
+        if (map == null) {
+            return new HashMap<>();
+        }
         return new HashMap<>((Map<String, Object>) (Map) map);
     }
 

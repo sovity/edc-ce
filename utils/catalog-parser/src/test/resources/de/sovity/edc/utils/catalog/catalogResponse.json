@@ -1,0 +1,47 @@
+{
+  "@id": "478a07bb-4df0-471e-aabe-c6d47558b329",
+  "@type": "dcat:Catalog",
+  "dcat:dataset": {
+    "@id": "test-1.0",
+    "@type": "dcat:Dataset",
+    "odrl:hasPolicy": {
+      "@id": "policy-1",
+      "@type": "odrl:Set",
+      "odrl:permission": {
+        "odrl:target": "test-1.0",
+        "odrl:action": {
+          "odrl:type": "USE"
+        },
+        "odrl:constraint": [
+          {
+            "odrl:leftOperand": "ALWAYS_TRUE",
+            "odrl:operator": {
+              "@id": "odrl:eq"
+            },
+            "odrl:rightOperand": "true"
+          }
+        ]
+      },
+      "odrl:prohibition": [],
+      "odrl:obligation": [],
+      "odrl:target": "test-1.0"
+    },
+    "dcat:distribution": [{"@id": "dummy-distribution"}],
+    "http://www.w3.org/ns/dcat#version": "1.0",
+    "http://purl.org/dc/terms/title": "test"
+  },
+  "dcat:service": {
+    "@id": "eea310e7-9725-4e77-b080-fe64ac5b6435",
+    "@type": "dcat:DataService",
+    "dct:terms": "connector",
+    "dct:endpointUrl": "http://localhost:12000/dsp"
+  },
+  "edc:participantId": "provider",
+  "@context": {
+    "dct": "https://purl.org/dc/terms/",
+    "edc": "https://w3id.org/edc/v0.0.1/ns/",
+    "dcat": "https://www.w3.org/ns/dcat/",
+    "odrl": "http://www.w3.org/ns/odrl/2/",
+    "dspace": "https://w3id.org/dspace/v0.8/"
+  }
+}

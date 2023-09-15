@@ -17,7 +17,7 @@ dependencies {
     api("${edcGroup}:policy-model:${edcVersion}")
     api("${edcGroup}:core-spi:${edcVersion}")
     api("${edcGroup}:transform-core:${edcVersion}")
-
+    api("${edcGroup}:transform-spi:${edcVersion}")
     api(project(":extensions:wrapper:wrapper-common-api"))
     api(project(":utils:json-and-jsonld-utils"))
     implementation("org.apache.commons:commons-lang3:3.13.0")

@@ -60,7 +60,7 @@ public class PolicyDefinitionApiService {
         return policyDefinitionService.query(QuerySpec.max()).getContent().toList();
     }
     public PolicyDefinitionDto buildPolicyDefinitionDto(PolicyDefinition policyDefinition) {
-        var policy = policyMapper.buildPolicyDto(policyDefinition.getPolicy());
+        var policy = policyMapper.buildUiPolicy(policyDefinition.getPolicy());
         return PolicyDefinitionDto.builder()
                 .policyDefinitionId(policyDefinition.getId())
                 .policy(policy)
