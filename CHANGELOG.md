@@ -24,12 +24,16 @@ All notable changes to this project will be documented in this file.
   - Asset Page
   - Create Asset
   - Delete Asset
+  - Catalog / Data Offers
   - Contract Definition Page
+  - Contract Negotiation Create / By ID
   - Create Contract Definition
   - Delete Contract Definition
   - Policy Definition Page
   - Create Policy Definition
   - Delete Policy Definition
+- DCAT Catalog Service: Parse DCAT Catalog responses for use in the UI API Wrapper and the Broker Server.
+- JSON and JSON-LD Utilities: Centralized Vocab collection for dealing with EDC / DCAT JSON-LD
 
 ### Migration Notes
 
