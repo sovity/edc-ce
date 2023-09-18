@@ -8,6 +8,7 @@ import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
@@ -57,9 +58,16 @@ public class AssetMapper {
     private Asset buildAsset(JsonObject assetJsonLd) {
 
         //test
+        var dataAddress = DataAddress.Builder.newInstance()
+                .type("address-type")
+                .property("test", "test")
+
+                .build();
         var testAsset = Asset.Builder.newInstance()
                         .id("asset-1")
                         .properties(Map.of())
+                        .privateProperties(Map.of())
+                        .dataAddress(dataAddress)
                         .build();
         var assetstring = typeTransformerRegistry.transform(testAsset, JsonObject.class).getContent().toString();
 
