@@ -18,6 +18,7 @@ import de.sovity.edc.client.gen.model.ContractAgreementTransferRequest;
 import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestParams;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationState.SimplifiedStateEnum;
+import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiContractOffer;
 import de.sovity.edc.client.gen.model.UiDataOffer;
@@ -89,7 +90,13 @@ class UiApiWrapperTest {
         // TODO test all asset properties including additionalProperties
         var data = "expected data 123";
         var assetId = UUID.randomUUID().toString();
-        providerConnector.createDataOffer(assetId, dataAddress.getDataSourceUrl(data));
+        //providerConnector.createDataOffer(assetId, dataAddress.getDataSourceUrl(data));
+
+        var providerClient = consumerClient; //TODO use providerClient
+
+        var assetCreateRequest = UiAssetCreateRequest.builder()
+                .build();
+        providerClient.uiApi().createAsset(assetCreateRequest);
 
         var dataOffers = consumerClient.uiApi().catalogPageDataOffers(getProtocolEndpoint(providerConnector));
         assertThat(dataOffers).hasSize(1);

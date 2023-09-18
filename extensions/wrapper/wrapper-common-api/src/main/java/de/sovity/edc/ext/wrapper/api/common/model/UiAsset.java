@@ -36,7 +36,7 @@ import java.util.Map;
 public class UiAsset {
 
     @Schema(description = "Asset Id", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String id;
+    private String assetId;
 
     @Schema(description = "Asset Title", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String title;
@@ -63,7 +63,7 @@ public class UiAsset {
     private List<String> keywords;
 
     @Schema(description = "Asset MediaType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String distribution;
+    private String mediaType;
 
     @Schema(description = "Homepage URL associated with the Asset", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String landingPageUrl;

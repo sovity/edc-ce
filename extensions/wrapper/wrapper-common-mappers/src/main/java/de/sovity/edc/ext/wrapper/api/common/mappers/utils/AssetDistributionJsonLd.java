@@ -18,5 +18,5 @@ import lombok.ToString;
 public class AssetDistributionJsonLd {
 
     @JsonProperty("http://www.w3.org/ns/dcat#mediaType")
-    private String name;
+    private String mediaType;
 }

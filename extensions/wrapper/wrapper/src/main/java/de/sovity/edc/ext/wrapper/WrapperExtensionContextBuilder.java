@@ -116,8 +116,8 @@ public class WrapperExtensionContextBuilder {
                 atomicConstraintMapper,
                 typeTransformerRegistry);
         var edcPropertyMapperUtils = new EdcPropertyMapperUtils();
-        var assetBuilder = new UiAssetBuilder(edcPropertyMapperUtils);
-        var assetMapper = new AssetMapper(objectMapper, typeTransformerRegistry, assetBuilder);
+        var assetBuilder = new UiAssetBuilder();
+        var assetMapper = new AssetMapper(typeTransformerRegistry, assetBuilder);
         var transferProcessStateService = new TransferProcessStateService();
         var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
                 policyMapper,
@@ -150,7 +150,7 @@ public class WrapperExtensionContextBuilder {
                 transferProcessService);
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
-        var assetApiService = new AssetApiService(assetService, assetMapper, assetBuilder);
+        var assetApiService = new AssetApiService(assetService, assetMapper);
         var transferRequestBuilder = new TransferRequestBuilder(
                 objectMapper,
                 contractAgreementUtils,

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import de.sovity.edc.ext.wrapper.api.common.model.utils.CustomDeserializer;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,82 +22,83 @@ import java.util.List;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AssetHelperDto {
+public class AssetPropertyJsonLd {
 
-    @JsonProperty("http://purl.org/dc/terms/identifier")
+    @JsonProperty(Prop.Edc.ID)
     @JsonDeserialize(using = CustomDeserializer.class)
-    private String identifier;
+    private String assetId;
 
-    @JsonProperty("http://purl.org/dc/terms/title")
+    @JsonProperty(Prop.Dcterms.TITLE)
     @JsonDeserialize(using = CustomDeserializer.class)
     private String title;
 
-    @JsonProperty("http://purl.org/dc/terms/language")
+    @JsonProperty(Prop.Dcterms.LANGUAGE)
     @JsonDeserialize(using = CustomDeserializer.class)
     private String language;
 
-    @JsonProperty("http://purl.org/dc/terms/description")
+    @JsonProperty(Prop.Dcterms.DESCRIPTION)
     @JsonDeserialize(using = CustomDeserializer.class)
     private String description;
 
-    @JsonProperty("http://purl.org/dc/terms/creator")
+    @JsonProperty(Prop.Dcterms.CREATOR)
     private AssetCreatorOrganizationNameJsonLd creator;
 
-    @JsonProperty("http://purl.org/dc/terms/publisher")
+    @JsonProperty(Prop.Dcterms.PUBLISHER)
     private AssetPublisherJsonLd publisher;
 
-    @JsonProperty("http://purl.org/dc/terms/license")
+    @JsonProperty(Prop.Dcterms.LICENSE)
     @JsonDeserialize(using = CustomDeserializer.class)
     private String license;
 
-    @JsonProperty("http://www.w3.org/ns/dcat#version")
+    @JsonProperty(Prop.Dcat.VERSION)
     @JsonDeserialize(using = CustomDeserializer.class)
     private String version;
 
-    @JsonProperty("http://www.w3.org/ns/dcat#keyword")
+    @JsonProperty(Prop.Dcat.KEYWORDS)
     @JsonDeserialize(using = CustomDeserializer.class)
     private List<String> keywords;
 
-    @JsonProperty("http://www.w3.org/ns/dcat#distribution")
-    private AssetDistributionJsonLd distribution;
+    @JsonProperty(Prop.Dcat.MEDIATYPE)
+    @JsonDeserialize(using = CustomDeserializer.class)
+    private String mediaType;
 
-    @JsonProperty("http://www.w3.org/ns/dcat#landingPage")
+    @JsonProperty(Prop.Dcat.LANDING_PAGE)
     @JsonDeserialize(using = CustomDeserializer.class)
     private String landingPage;
 
-    @JsonProperty("https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod")
+    @JsonProperty(Prop.SovityDcatExt.METHOD)
     @JsonDeserialize(using = CustomDeserializer.class)
     private Boolean httpDatasourceHintsProxyMethod;
 
-    @JsonProperty("https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath")
+    @JsonProperty(Prop.SovityDcatExt.PATH)
     @JsonDeserialize(using = CustomDeserializer.class)
     private Boolean httpDatasourceHintsProxyPath;
 
-    @JsonProperty("https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams")
+    @JsonProperty(Prop.SovityDcatExt.QUERY_PARAMS)
     @JsonDeserialize(using = CustomDeserializer.class)
     private Boolean httpDatasourceHintsProxyQueryParams;
 
-    @JsonProperty("https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody")
+    @JsonProperty(Prop.SovityDcatExt.BODY)
     @JsonDeserialize(using = CustomDeserializer.class)
     private Boolean httpDatasourceHintsProxyBody;
 
-    @JsonProperty("http://w3id.org/mds#dataCategory")
+    @JsonProperty(Prop.Mds.DATA_CATEGORY)
     @JsonDeserialize(using = CustomDeserializer.class)
     private String dataCategory;
 
-    @JsonProperty("http://w3id.org/mds#dataSubcategory")
+    @JsonProperty(Prop.Mds.DATA_SUBCATEGORY)
     @JsonDeserialize(using = CustomDeserializer.class)
     private String dataSubcategory;
 
-    @JsonProperty("http://w3id.org/mds#dataModel")
+    @JsonProperty(Prop.Mds.DATA_MODEL)
     @JsonDeserialize(using = CustomDeserializer.class)
     private String dataModel;
 
-    @JsonProperty("http://w3id.org/mds#geoReferenceMethod")
+    @JsonProperty(Prop.Mds.GEO_REFERENCE_METHOD)
     @JsonDeserialize(using = CustomDeserializer.class)
     private String geoReferenceMethod;
 
-    @JsonProperty("http://w3id.org/mds#transportMode")
+    @JsonProperty(Prop.Mds.TRANSPORT_MODE)
     @JsonDeserialize(using = CustomDeserializer.class)
     private String transportMode;
 }

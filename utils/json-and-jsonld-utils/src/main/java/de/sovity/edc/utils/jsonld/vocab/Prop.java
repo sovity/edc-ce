@@ -21,6 +21,7 @@ public class Prop {
     public final String TYPE = "@type";
     public final String VALUE = "@value";
     public final String LANGUAGE = "@language";
+    public final String PROPERTIES = "properties";
 
     @UtilityClass
     public class Edc {
@@ -29,6 +30,8 @@ public class Prop {
         public final String ID = CTX + "id";
         public final String PARTICIPANT_ID = CTX + "participantId";
         public final String PROPERTIES = CTX + "properties";
+        public final String TYPE = CTX + "type";
+        public final String BASE_URL = CTX + "baseUrl";
     }
 
     /**
@@ -51,6 +54,7 @@ public class Prop {
         public final String VERSION = CTX + "version";
         public final String KEYWORDS = CTX + "keyword";
         public final String LANDING_PAGE = CTX + "landingPage";
+        public final String MEDIATYPE = CTX + "mediaType";
     }
 
     /**
@@ -68,8 +72,13 @@ public class Prop {
     @UtilityClass
     public class Dcterms {
         public final String CTX = "http://purl.org/dc/terms/";
-        public final String TITLE = CTX + "TITLE";
-        public final String DESCRIPTION = CTX + "DESCRIPTION";
+        public final String IDENTIFIER = CTX + "identifier";
+        public final String TITLE = CTX + "title";
+        public final String DESCRIPTION = CTX + "description";
+        public final String LANGUAGE = CTX + "language";
+        public final String CREATOR = CTX + "creator";
+        public final String PUBLISHER = CTX + "publisher";
+        public final String LICENSE = CTX + "license";
     }
 
     /**
@@ -77,9 +86,34 @@ public class Prop {
      */
     @UtilityClass
     public class SovityDcatExt {
-        public final String CTX = "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxy";
-        public final String METHOD = CTX + "method/";
-        public final String PATH = CTX + "path/";
+        public final String CTX = "https://semantic.sovity.io/dcat-ext#";
+        public final String METHOD = CTX + "httpDatasourceHintsProxyMethod";
+        public final String PATH = CTX + "httpDatasourceHintsProxyPath";
+        public final String QUERY_PARAMS = CTX + "httpDatasourceHintsProxyQueryParams";
+        public final String BODY = CTX + "httpDatasourceHintsProxyBody";
+    }
 
+    /**
+     * FOAF Vocabulary
+     */
+    @UtilityClass
+    public class Foaf {
+        public final String CTX = "http://xmlns.com/foaf/0.1/";
+        public final String ORGANIZATION = CTX + "Organization";
+        public final String NAME = CTX + "name";
+        public final String HOMEPAGE = CTX + "homepage";
+    }
+
+    /**
+     * MDS Vocabulary
+     */
+    @UtilityClass
+    public class Mds {
+        public final String CTX = "http://w3id.org/mds#";
+        public final String DATA_CATEGORY = CTX + "dataCategory";
+        public final String DATA_SUBCATEGORY = CTX + "dataSubcategory";
+        public final String DATA_MODEL = CTX + "dataModel";
+        public final String GEO_REFERENCE_METHOD = CTX + "geoReferenceMethod";
+        public final String TRANSPORT_MODE = CTX + "transportMode";
     }
 }

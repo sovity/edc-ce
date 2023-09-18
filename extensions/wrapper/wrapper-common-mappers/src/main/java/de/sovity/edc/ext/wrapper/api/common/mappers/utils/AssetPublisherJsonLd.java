@@ -16,6 +16,8 @@ import lombok.ToString;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 public class AssetPublisherJsonLd {
+    @JsonProperty("@type")
+    private String type;
 
     @JsonProperty("http://xmlns.com/foaf/0.1/homepage")
     private String name;
