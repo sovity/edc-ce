@@ -28,7 +28,7 @@ public class AssetPropertyJsonLd {
     @JsonDeserialize(using = CustomDeserializer.class)
     private String assetId;
 
-    @JsonProperty(Prop.Dcterms.TITLE)
+    @JsonProperty(Prop.Dcterms.NAME)
     @JsonDeserialize(using = CustomDeserializer.class)
     private String name;
 

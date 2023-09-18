@@ -84,7 +84,7 @@ public class UiAssetBuilder {
 
         addNonNull(properties, Prop.Edc.ID, uiAssetCreateRequest.getId());
         addNonNull(properties, Prop.Dcterms.LICENSE, uiAssetCreateRequest.getLicenseUrl());
-        addNonNull(properties, Prop.Dcterms.TITLE, uiAssetCreateRequest.getTitle());
+        addNonNull(properties, Prop.Dcterms.NAME, uiAssetCreateRequest.getName());
         addNonNull(properties, Prop.Dcterms.DESCRIPTION, uiAssetCreateRequest.getDescription());
         addNonNull(properties, Prop.Dcterms.LANGUAGE, uiAssetCreateRequest.getLanguage());
         addNonNull(properties, Prop.Dcat.VERSION, uiAssetCreateRequest.getVersion());
