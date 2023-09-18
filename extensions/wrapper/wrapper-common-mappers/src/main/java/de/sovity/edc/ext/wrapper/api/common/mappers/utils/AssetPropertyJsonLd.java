@@ -30,7 +30,7 @@ public class AssetPropertyJsonLd {
 
     @JsonProperty(Prop.Dcterms.TITLE)
     @JsonDeserialize(using = CustomDeserializer.class)
-    private String title;
+    private String name;
 
     @JsonProperty(Prop.Dcterms.LANGUAGE)
     @JsonDeserialize(using = CustomDeserializer.class)

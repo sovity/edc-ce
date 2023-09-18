@@ -40,7 +40,7 @@ class AssetMapperTest {
 
         // Assert
         assertThat(uiAsset.getAssetId()).isEqualTo("urn:artifact:my-asset");
-        assertThat(uiAsset.getTitle()).isEqualTo("My Asset");
+        assertThat(uiAsset.getName()).isEqualTo("My Asset");
         assertThat(uiAsset.getLanguage()).isEqualTo("https://w3id.org/idsa/code/EN");
         assertThat(uiAsset.getDescription()).isEqualTo("Lorem Ipsum ...");
         assertThat(uiAsset.getCreatorOrganizationName()).isEqualTo("My Organization Name");
@@ -68,7 +68,7 @@ class AssetMapperTest {
         // Arrange
         var assetJsonLd = createObjectBuilder()
                 .add(Prop.ID, "my-asset-1")
-                .add(PROPERTIES, createObjectBuilder()
+                .add(Prop.Edc.PROPERTIES, createObjectBuilder()
                         .add(Prop.Dcat.KEYWORDS, "SingleElement")
                         .build())
                 .build();
@@ -87,7 +87,7 @@ class AssetMapperTest {
         // Arrange
         var assetJsonLd = createObjectBuilder()
                 .add(Prop.ID, "my-asset-1")
-                .add(PROPERTIES, createObjectBuilder()
+                .add(Prop.Edc.PROPERTIES, createObjectBuilder()
                         .add(Prop.Dcterms.TITLE, createObjectBuilder()
                                 .add(Prop.VALUE, "AssetName")
                                 .add(Prop.Dcterms.LANGUAGE, "en")))
@@ -98,7 +98,7 @@ class AssetMapperTest {
 
         // Assert
         assertThat(uiAsset).isNotNull();
-        assertThat(uiAsset.getTitle()).isEqualTo("AssetName");
+        assertThat(uiAsset.getName()).isEqualTo("AssetName");
     }
 
     @Test
@@ -116,7 +116,7 @@ class AssetMapperTest {
                 .build();
         var assetJsonLd = createObjectBuilder()
                 .add(Prop.ID, "my-asset-1")
-                .add(PROPERTIES, properties)
+                .add(Prop.Edc.PROPERTIES, properties)
                 .build();
 
         // Act
@@ -124,7 +124,7 @@ class AssetMapperTest {
 
         // Assert
         assertThat(uiAsset).isNotNull();
-        assertThat(uiAsset.getTitle()).isEqualTo("AssetName");
+        assertThat(uiAsset.getName()).isEqualTo("AssetName");
     }
 
     @Test
@@ -133,7 +133,7 @@ class AssetMapperTest {
         // Arrange
         var assetJsonLd = createObjectBuilder()
                 .add(Prop.ID, "my-asset-1")
-                .add(PROPERTIES, createObjectBuilder()
+                .add(Prop.Edc.PROPERTIES, createObjectBuilder()
                         .add(Prop.SovityDcatExt.METHOD, "wrongBooleanValue")
                         .build())
                 .build();
@@ -143,7 +143,7 @@ class AssetMapperTest {
 
         // Assert
         assertThat(uiAsset).isNotNull();
-        assertThat(uiAsset.getHttpDatasourceHintsProxyMethod()).isEqualTo(null);
+        assertThat(uiAsset.getHttpDatasourceHintsProxyMethod()).isNull();
     }
 
     @Test
@@ -152,7 +152,7 @@ class AssetMapperTest {
         // Arrange
         var assetJsonLd = createObjectBuilder()
                 .add(Prop.ID, "my-asset-1")
-                .add(PROPERTIES, createObjectBuilder()
+                .add(Prop.Edc.PROPERTIES, createObjectBuilder()
                         .add(Prop.SovityDcatExt.METHOD, "")
                         .build())
                 .build();
@@ -162,6 +162,6 @@ class AssetMapperTest {
 
         // Assert
         assertThat(uiAsset).isNotNull();
-        assertThat(uiAsset.getHttpDatasourceHintsProxyMethod()).isEqualTo(null);
+        assertThat(uiAsset.getHttpDatasourceHintsProxyMethod()).isNull();
     }
 }

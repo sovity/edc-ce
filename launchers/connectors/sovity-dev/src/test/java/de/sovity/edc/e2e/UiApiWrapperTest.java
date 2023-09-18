@@ -26,6 +26,7 @@ import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +46,7 @@ class UiApiWrapperTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = "provider";
     private static final String CONSUMER_PARTICIPANT_ID = "consumer";
+    public static final String DATA_SINK = "http://my-data-sink/api/stuff";
 
     @RegisterExtension
     static EdcExtension providerEdcContext = new EdcExtension();
@@ -94,12 +96,17 @@ class UiApiWrapperTest {
 
         var providerClient = consumerClient; //TODO use providerClient
 
-        var assetCreateRequest = UiAssetCreateRequest.builder()
+        var dataAddressProperties = Map.of(
+                Prop.Edc.TYPE, "HttpData",
+                Prop.Edc.BASE_URL, DATA_SINK
+        );
+        var uiAssetRequest = UiAssetCreateRequest.builder()
                 .id("asset-1")
                 .title("AssetName")
                 .keywords(List.of("keyword1", "keyword2"))
+                .dataAddressProperties(dataAddressProperties)
                 .build();
-        providerClient.uiApi().createAsset(assetCreateRequest);
+        providerClient.uiApi().createAsset(uiAssetRequest);
 
         var dataOffers = consumerClient.uiApi().catalogPageDataOffers(getProtocolEndpoint(providerConnector));
         assertThat(dataOffers).hasSize(1);
@@ -114,7 +121,7 @@ class UiApiWrapperTest {
         // assert
         assertThat(dataOffer.getEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
         assertThat(dataOffer.getParticipantId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
-        assertThat(dataOffer.getAsset().getAssetId()).isEqualTo(assetId);
+        assertThat(dataOffer.getAsset().getAssetId()).isEqualTo("asset-1");
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
     }
 

@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNull;
 import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNullArray;
 
@@ -30,14 +32,14 @@ public class UiAssetBuilder {
 
         return UiAsset.builder()
                 .assetId(assetPropertyJsonLd.getAssetId())
-                .keywords(assetPropertyJsonLd.getKeywords())
+                .keywords(assetPropertyJsonLd.getKeywords() == null ? List.of() : assetPropertyJsonLd.getKeywords())
                 .version(assetPropertyJsonLd.getVersion())
                 .licenseUrl(assetPropertyJsonLd.getLicense())
                 .creatorOrganizationName(assetPropertyJsonLd.getCreator() != null ? assetPropertyJsonLd.getCreator().getName() : null)
                 .publisherHomepage(assetPropertyJsonLd.getPublisher() != null ? assetPropertyJsonLd.getPublisher().getName() : null)
                 .description(assetPropertyJsonLd.getDescription())
                 .language(assetPropertyJsonLd.getLanguage())
-                .title(assetPropertyJsonLd.getTitle())
+                .name(assetPropertyJsonLd.getName())
                 .httpDatasourceHintsProxyMethod(assetPropertyJsonLd.getHttpDatasourceHintsProxyMethod())
                 .httpDatasourceHintsProxyPath(assetPropertyJsonLd.getHttpDatasourceHintsProxyPath())
                 .httpDatasourceHintsProxyQueryParams(assetPropertyJsonLd.getHttpDatasourceHintsProxyQueryParams())
@@ -54,11 +56,11 @@ public class UiAssetBuilder {
 
     @SneakyThrows
     private AssetJsonLd parseAssetJsonLd(String assetJsonLd) {
-        var assetPropertiesJsonLd = mapper.readTree(assetJsonLd).get("properties");
+        var assetPropertiesJsonLd = mapper.readTree(assetJsonLd).get(Prop.Edc.PROPERTIES);
         var assetProperties = mapper.readValue(assetPropertiesJsonLd.toString(), AssetPropertyJsonLd.class);
-
+        
         return AssetJsonLd.builder()
-                .assetId(String.valueOf(mapper.readTree(assetJsonLd).get("id")))
+                .assetId(String.valueOf(mapper.readTree(assetJsonLd).get(Prop.ID)))
                 .properties(assetProperties)
                 .build();
     }

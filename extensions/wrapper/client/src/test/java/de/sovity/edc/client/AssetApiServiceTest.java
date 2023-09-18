@@ -52,12 +52,11 @@ public class AssetApiServiceTest {
     void assetPage(AssetService assetStore) {
         // arrange
         var client = TestUtils.edcClient();
-        var privateProperties = Map.of("random-private-prop", "456");
         var properties = Map.of(
                 Asset.PROPERTY_ID, "asset-1",
-                "landingPage", "https://data-source.my-org/docs"
+                Prop.Dcat.LANDING_PAGE, "https://data-source.my-org/docs"
         );
-        createAsset(assetStore, "2023-06-01", properties, privateProperties);
+        createAsset(assetStore, "2023-06-01", properties);
 
         // act
         var result = client.uiApi().assetPage();
@@ -67,17 +66,16 @@ public class AssetApiServiceTest {
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
         assertThat(asset.getAssetId()).isEqualTo(properties.get(Asset.PROPERTY_ID));
-        assertThat(asset.getLandingPageUrl()).isEqualTo(properties.get("landingPage"));
-        assertThat(asset.getPrivateProperties()).isEqualTo(privateProperties);
+        assertThat(asset.getLandingPageUrl()).isEqualTo(properties.get(Prop.Dcat.LANDING_PAGE));
     }
 
     @Test
     void assetPageSorting(AssetService assetService) {
         // arrange
         var client = TestUtils.edcClient();
-        createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-1"), Map.of());
-        createAsset(assetService, "2023-06-03", Map.of(Asset.PROPERTY_ID, "asset-3"), Map.of());
-        createAsset(assetService, "2023-06-02", Map.of(Asset.PROPERTY_ID, "asset-2"), Map.of());
+        createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-1"));
+        createAsset(assetService, "2023-06-03", Map.of(Asset.PROPERTY_ID, "asset-3"));
+        createAsset(assetService, "2023-06-02", Map.of(Asset.PROPERTY_ID, "asset-2"));
 
         // act
         var result = client.uiApi().assetPage();
@@ -108,19 +106,20 @@ public class AssetApiServiceTest {
 
         // assert
         assertThat(response.getId()).isEqualTo("asset-1");
-        var assets = assetService.query(QuerySpec.max()).getContent().toList();
+        var assets = client.uiApi().assetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        assertThat(asset.getProperties()).containsEntry(Prop.Dcterms.TITLE, "AssetName");
-        assertThat(asset.getProperties()).containsEntry(Prop.Dcat.KEYWORDS, List.of("keyword1", "keyword2"));
-        assertThat(asset.getDataAddress().getProperties()).isEqualTo(dataAddressProperties);
+        assertThat(asset.getName()).isEqualTo("AssetName");
+        assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
+        var assetWithDataAddress = assetService.query(QuerySpec.max()).getContent().toList().get(0);
+        assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddressProperties);
     }
 
     @Test
     void testDeleteAsset(AssetService assetService) {
         // arrange
         var client = TestUtils.edcClient();
-        createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-1"), Map.of());
+        createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-1"));
         assertThat(assetService.query(QuerySpec.max()).getContent()).isNotEmpty();
 
         // act
@@ -134,8 +133,7 @@ public class AssetApiServiceTest {
     private void createAsset(
             AssetService assetService,
             String date,
-            Map<String, String> properties,
-            Map<String, String> privateProperties
+            Map<String, String> properties
     ) {
 
         DataAddress dataAddress = DataAddress.Builder.newInstance()
@@ -147,7 +145,6 @@ public class AssetApiServiceTest {
                 .id(properties.get(Asset.PROPERTY_ID))
                 .properties(edcPropertyUtils.toMapOfObject(properties))
                 .dataAddress(dataAddress)
-                .privateProperties(edcPropertyUtils.toMapOfObject(privateProperties))
                 .createdAt(dateFormatterToLong(date))
                 .build();
         assetService.create(asset);

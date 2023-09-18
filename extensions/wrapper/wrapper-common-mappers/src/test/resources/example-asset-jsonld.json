@@ -1,6 +1,6 @@
 {
   "@id": "urn:artifact:my-asset",
-  "properties": {
+  "https://w3id.org/edc/v0.0.1/ns/properties": {
     "https://w3id.org/edc/v0.0.1/ns/id": "urn:artifact:my-asset",
     "http://purl.org/dc/terms/identifier": "urn:artifact:my-asset",
     "http://purl.org/dc/terms/title": "My Asset",
@@ -36,7 +36,7 @@
   "privateProperties": {
     "idk": "abc"
   },
-  "dataAddress": {
+  "https://w3id.org/edc/v0.0.1/ns/dataAddress": {
     "https://w3id.org/edc/v0.0.1/ns/type": "HttpData",
     "https://w3id.org/edc/v0.0.1/ns/baseUrl": "https://data-source.my-org"
   }
