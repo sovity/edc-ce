@@ -35,6 +35,8 @@ public class DatasourceConfigUtils {
 
     public static Map<String, String> configureDatasources(JdbcCredentials credentials) {
         var properties = new HashMap<String, String>();
+        properties.put("edc.flyway.clean.enable", "true");
+        properties.put("edc.flyway.clean", "true");
         DATASOURCE_NAMES.forEach(name -> {
             properties.put("edc.datasource.%s.name".formatted(name), name);
             properties.put("edc.datasource.%s.url".formatted(name), credentials.jdbcUrl());

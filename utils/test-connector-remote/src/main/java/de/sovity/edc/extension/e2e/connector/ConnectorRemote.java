@@ -16,6 +16,7 @@ package de.sovity.edc.extension.e2e.connector;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig;
 import de.sovity.edc.extension.e2e.connector.config.api.auth.NoneAuthProvider;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import io.restassured.http.Header;
 import io.restassured.specification.RequestSpecification;
 import jakarta.json.Json;
@@ -51,10 +52,6 @@ import static org.eclipse.edc.jsonld.spi.PropertyAndTypeNames.DCAT_DATASET_ATTRI
 import static org.eclipse.edc.jsonld.spi.PropertyAndTypeNames.ODRL_POLICY_ATTRIBUTE;
 import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 import static org.eclipse.edc.spi.CoreConstants.EDC_PREFIX;
-import static org.eclipse.edc.spi.types.domain.asset.Asset.PROPERTY_DESCRIPTION;
-import static org.eclipse.edc.spi.types.domain.asset.Asset.PROPERTY_ID;
-import static org.eclipse.edc.spi.types.domain.asset.Asset.PROPERTY_NAME;
-import static org.eclipse.edc.spi.types.domain.asset.Asset.PROPERTY_VERSION;
 
 @SuppressWarnings("java:S5960")
 @RequiredArgsConstructor
@@ -64,39 +61,17 @@ public class ConnectorRemote {
     private final ConnectorRemoteConfig config;
 
     private final ObjectMapper objectMapper = JacksonJsonLd.createObjectMapper();
-    private final Duration timeout = Duration.ofSeconds(60);
+    public final Duration timeout = Duration.ofSeconds(8);
     private final JsonLd jsonLd = new TitaniumJsonLd(new ConsoleMonitor());
 
     public void createAsset(String assetId,
                             Map<String, Object> dataAddressProperties) {
-        /*var requestBody = createObjectBuilder()
-                .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
-                .add("asset", createObjectBuilder()
-                        .add(ID, assetId)
-                        .add("properties", createObjectBuilder()
-                                .add(PROPERTY_ID, EDC_NAMESPACE + assetId)
-                                .add(PROPERTY_DESCRIPTION, EDC_NAMESPACE + description)
-                                .add(PROPERTY_NAME, EDC_NAMESPACE + name)
-                                .add(PROPERTY_VERSION, EDC_NAMESPACE + version)
-                        )
-                        .add("dataAddress", createObjectBuilder(dataAddressProperties)))
-                .build();
-
-        prepareManagementApiCall()
-                .contentType(JSON)
-                .body(requestBody)
-                .when()
-                .post("/v2/assets")
-                .then()
-                .statusCode(200)
-                .contentType(JSON);*/
-
         var requestBody = createObjectBuilder()
                 .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
                 .add("asset", createObjectBuilder()
                         .add(ID, assetId)
                         .add("properties", createObjectBuilder()
-                                .add("description", "description")))
+                                .add(Prop.Dcterms.DESCRIPTION, "description")))
                 .add("dataAddress", createObjectBuilder(dataAddressProperties))
                 .build();
 
@@ -232,7 +207,7 @@ public class ConnectorRemote {
                 .add("protocol", "dataspace-protocol-http")
                 .add("offer", createObjectBuilder()
                         .add("offerId", offerId)
-                        .add("assetId", assetId)
+                        .add("id", assetId)
                         .add("policy", jsonLd.compact(policy).getContent())
                 )
                 .build();
@@ -305,7 +280,7 @@ public class ConnectorRemote {
                 .add("dataDestination", destination)
                 .add("protocol", "dataspace-protocol-http")
                 .add("managedResources", false)
-                .add("assetId", assetId)
+                .add("id", assetId)
                 .add("contractId", contractAgreementId)
                 .add("connectorAddress", providerProtocolApi.toString())
                 .add("privateProperties", Json.createObjectBuilder().build())
@@ -375,7 +350,7 @@ public class ConnectorRemote {
                 .build();
 
         var contractDefinitionId = UUID.randomUUID().toString();
-        //createAsset(assetId, dataSource);
+        createAsset(assetId, dataSource);
         var noConstraintPolicyId = createPolicy(policy);
         createContractDefinition(
                 assetId,
@@ -384,7 +359,7 @@ public class ConnectorRemote {
                 noConstraintPolicyId);
     }
 
-    private RequestSpecification prepareManagementApiCall() {
+    public RequestSpecification prepareManagementApiCall() {
         var managementConfig = config.getManagementEndpoint();
         var managementBaseUri = managementConfig.getUri().toString();
         if (managementConfig.authProvider() instanceof NoneAuthProvider) {
@@ -406,7 +381,7 @@ public class ConnectorRemote {
     }
 
 
-    private ContractId getDatasetContractId(JsonObject dataset) {
+    public ContractId getDatasetContractId(JsonObject dataset) {
         var id = dataset.getJsonArray(ODRL_POLICY_ATTRIBUTE).get(0).asJsonObject().getString(ID);
         return ContractId.parseId(id).getContent();
     }

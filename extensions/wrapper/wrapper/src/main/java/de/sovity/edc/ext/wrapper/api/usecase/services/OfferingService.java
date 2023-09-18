@@ -1,10 +1,10 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
 import de.sovity.edc.ext.wrapper.api.usecase.model.AssetEntryDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractDefinitionRequestDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyDefinitionRequestDto;
-import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
@@ -31,7 +31,7 @@ public class OfferingService {
     private final PolicyDefinitionStore policyDefinitionStore;
     private final ContractDefinitionStore contractDefinitionStore;
     private final PolicyMappingService policyMappingService;
-    private final EdcPropertyUtils edcPropertyUtils;
+    private final EdcPropertyMapperUtils edcPropertyUtils;
 
     /**
      * Creates the asset, policy and contract definition in the connector. First, transforms the

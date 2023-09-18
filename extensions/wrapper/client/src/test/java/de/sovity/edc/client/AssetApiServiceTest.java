@@ -15,7 +15,8 @@ package de.sovity.edc.client;
 
 
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
-import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -40,12 +41,12 @@ public class AssetApiServiceTest {
 
     public static final String DATA_SINK = "http://my-data-sink/api/stuff";
     public static final String DATA_ADDRESS_TYPE = "HttpData";
-    EdcPropertyUtils edcPropertyUtils;
+    EdcPropertyMapperUtils edcPropertyUtils;
 
     @BeforeEach
     void setUp(EdcExtension extension) {
         TestUtils.setupExtension(extension);
-        edcPropertyUtils = new EdcPropertyUtils();
+        edcPropertyUtils = new EdcPropertyMapperUtils();
     }
 
     @Test
@@ -66,11 +67,10 @@ public class AssetApiServiceTest {
         var assets = result.getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        assertThat(asset.getId()).isEqualTo(properties.get(Asset.PROPERTY_ID));
+        assertThat(asset.getAssetId()).isEqualTo(properties.get(Asset.PROPERTY_ID));
         assertThat(asset.getLandingPageUrl()).isEqualTo(properties.get("landingPage"));
         assertThat(asset.getPrivateProperties()).isEqualTo(privateProperties);
     }
-
 
     @Test
     void assetPageSorting(AssetService assetService) {
@@ -85,7 +85,7 @@ public class AssetApiServiceTest {
 
         // assert
         assertThat(result.getAssets())
-                .extracting(asset -> asset.getId())
+                .extracting(asset -> asset.getAssetId())
                 .containsExactly("asset-3", "asset-2", "asset-1");
     }
 
@@ -94,13 +94,11 @@ public class AssetApiServiceTest {
         // arrange
         var client = TestUtils.edcClient();
         var dataAddressProperties = Map.of(
-                EDC_DATA_ADDRESS_TYPE_PROPERTY, DATA_ADDRESS_TYPE,
-                "baseUrl", DATA_SINK
+                Prop.Edc.TYPE, DATA_ADDRESS_TYPE,
+                Prop.Edc.BASE_URL, DATA_SINK
         );
         var uiAssetRequest = UiAssetCreateRequest.builder()
                 .id("asset-1")
-                .name("AssetName")
-                .keywords(List.of("keyword1", "keyword2"))
                 .dataAddressProperties(dataAddressProperties)
                 .build();
 

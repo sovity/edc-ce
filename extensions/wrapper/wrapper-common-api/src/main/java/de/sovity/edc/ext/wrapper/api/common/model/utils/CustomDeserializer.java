@@ -7,22 +7,19 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class CustomDeserializer extends JsonDeserializer<Object> implements ContextualDeserializer {
 
     private JavaType type;
-
-    public CustomDeserializer() {
-    }
-
-    public CustomDeserializer(JavaType type) {
-        this.type = type;
-    }
 
     @Override
     public JsonDeserializer<?> createContextual(DeserializationContext deserializationContext, BeanProperty beanProperty) throws JsonMappingException {

@@ -32,14 +32,11 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
-@Schema(description = "Asset Details")
+@Schema(description = "Type-Safe Asset Metadata as needed by our UI")
 public class UiAsset {
 
     @Schema(description = "Asset Id", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String id;
-
-    @Schema(description = "Asset Name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String name;
+    private String assetId;
 
     @Schema(description = "Asset Title", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String title;
@@ -51,10 +48,10 @@ public class UiAsset {
     private String description;
 
     @Schema(description = "Asset Organization Name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String creator;
+    private String creatorOrganizationName;
 
     @Schema(description = "Asset Homepage", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String publisher;
+    private String publisherHomepage;
 
     @Schema(description = "License URL", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String licenseUrl;
@@ -66,9 +63,9 @@ public class UiAsset {
     private List<String> keywords;
 
     @Schema(description = "Asset MediaType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String distribution;
+    private String mediaType;
 
-    @Schema(description = "Landing Page URL", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Homepage URL associated with the Asset", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String landingPageUrl;
 
     @Schema(description = "HTTP Datasource Hints Proxy Method", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
@@ -106,9 +103,6 @@ public class UiAsset {
 
     @Schema(description = "Asset Json Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> additionalJsonProperties;
-
-    @Schema(description = "Asset DataAddress Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Map<String, String> dataAddressProperties;
 
     @Schema(description = "Contains the entire asset in its original expanded JSON-LD format", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String assetJsonLd;

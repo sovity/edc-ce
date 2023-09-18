@@ -19,6 +19,7 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferProcess;
+import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,8 +56,8 @@ public class ContractAgreementPageCardBuilder {
         card.setCounterPartyAddress(negotiation.getCounterPartyAddress());
         card.setCounterPartyId(negotiation.getCounterPartyId());
         card.setContractSigningDate(utcSecondsToOffsetDateTime(agreement.getContractSigningDate()));
-        card.setAsset(assetMapper.buildUiAssetFromAsset(asset));
-        card.setContractPolicy(policyMapper.buildPolicyDto(agreement.getPolicy()));
+        card.setAsset(assetMapper.buildUiAsset(asset));
+        card.setContractPolicy(policyMapper.buildUiPolicy(agreement.getPolicy()));
         card.setTransferProcesses(buildTransferProcesses(transferProcesses));
         return card;
     }
