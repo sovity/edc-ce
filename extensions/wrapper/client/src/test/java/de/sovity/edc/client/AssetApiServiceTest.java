@@ -97,6 +97,19 @@ public class AssetApiServiceTest {
         var uiAssetRequest = UiAssetCreateRequest.builder()
                 .id("asset-1")
                 .name("AssetName")
+                .description("AssetDescription")
+                .version("1.0.0")
+                .language("en")
+                .creatorOrganizationName("My Organization Name")
+                .publisherHomepage("https://data-source.my-org/about")
+                .licenseUrl("https://data-source.my-org/license")
+                .landingPageUrl("https://data-source.my-org/docs")
+                .dataCategory("Infrastructure and Logistics")
+                .dataSubcategory("General Information About Planning Of Routes")
+                .dataModel("my-data-model-001")
+                .geoReferenceMethod("my-geo-reference-method")
+                .transportMode("my-geo-reference-method")
+                .mediaType("application/json")
                 .keywords(List.of("keyword1", "keyword2"))
                 .dataAddressProperties(dataAddressProperties)
                 .build();
@@ -111,6 +124,7 @@ public class AssetApiServiceTest {
         var asset = assets.get(0);
         assertThat(asset.getName()).isEqualTo("AssetName");
         assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
+
         var assetWithDataAddress = assetService.query(QuerySpec.max()).getContent().toList().get(0);
         assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddressProperties);
     }
