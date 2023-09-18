@@ -58,7 +58,7 @@ public class UiAssetBuilder {
     private AssetJsonLd parseAssetJsonLd(String assetJsonLd) {
         var assetPropertiesJsonLd = mapper.readTree(assetJsonLd).get(Prop.Edc.PROPERTIES);
         var assetProperties = mapper.readValue(assetPropertiesJsonLd.toString(), AssetPropertyJsonLd.class);
-        
+
         return AssetJsonLd.builder()
                 .assetId(String.valueOf(mapper.readTree(assetJsonLd).get(Prop.ID)))
                 .properties(assetProperties)
