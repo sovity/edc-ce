@@ -96,7 +96,7 @@ public class AssetApiServiceTest {
         );
         var uiAssetRequest = UiAssetCreateRequest.builder()
                 .id("asset-1")
-                .title("AssetName")
+                .name("AssetName")
                 .keywords(List.of("keyword1", "keyword2"))
                 .dataAddressProperties(dataAddressProperties)
                 .build();
