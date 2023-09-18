@@ -22,6 +22,7 @@ dependencies {
     api(project(":utils:json-and-jsonld-utils"))
     implementation("org.apache.commons:commons-lang3:3.13.0")
     implementation("org.apache.commons:commons-collections4:4.4")
+    implementation("com.google.code.gson:gson:2.7")
 
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")

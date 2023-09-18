@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -30,7 +31,8 @@ public class AssetMapper {
 
     public Asset buildAsset(UiAssetCreateRequest createRequest) {
         var assetJsonLd = uiAssetBuilder.buildAssetJsonLd(createRequest);
-        return buildAsset(assetJsonLd);
+        var asset = buildAsset(assetJsonLd);
+        return asset.toBuilder().build();
     }
 
     public Asset buildAssetFromDatasetProperties(JsonObject json) {
@@ -44,7 +46,6 @@ public class AssetMapper {
 
         return Json.createObjectBuilder()
                 .add(Prop.ID, assetId)
-                .add(Prop.TYPE, Prop.Edc.TYPE_ASSET)
                 .add(Prop.Edc.PROPERTIES, json)
                 .build();
     }
@@ -54,6 +55,14 @@ public class AssetMapper {
     }
 
     private Asset buildAsset(JsonObject assetJsonLd) {
+
+        //test
+        var testAsset = Asset.Builder.newInstance()
+                        .id("asset-1")
+                        .properties(Map.of())
+                        .build();
+        var assetstring = typeTransformerRegistry.transform(testAsset, JsonObject.class).getContent().toString();
+
         return typeTransformerRegistry.transform(assetJsonLd, Asset.class).getContent();
     }
 }

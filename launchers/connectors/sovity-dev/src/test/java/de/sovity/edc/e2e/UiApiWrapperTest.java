@@ -95,6 +95,9 @@ class UiApiWrapperTest {
         var providerClient = consumerClient; //TODO use providerClient
 
         var assetCreateRequest = UiAssetCreateRequest.builder()
+                .id("asset-1")
+                .title("AssetName")
+                .keywords(List.of("keyword1", "keyword2"))
                 .build();
         providerClient.uiApi().createAsset(assetCreateRequest);
 
@@ -111,36 +114,15 @@ class UiApiWrapperTest {
         // assert
         assertThat(dataOffer.getEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
         assertThat(dataOffer.getParticipantId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
-        assertThat(dataOffer.getAsset().getId()).isEqualTo(assetId);
+        assertThat(dataOffer.getAsset().getAssetId()).isEqualTo(assetId);
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
-    }
-
-    @Test
-    void testAssetCreation() {
-        // arrange
-        var assetId = UUID.randomUUID().toString();
-
-        Map<String, Object> dataSource = Map.of(
-                "name", "transfer-test",
-                "baseUrl",  dataAddress.getDataSourceUrl("dummy test data"),
-                "type", "HttpData",
-                "proxyQueryParams", "true"
-        );
-        providerConnector.createAsset(assetId, dataSource);
-
-        var assets = consumerClient.uiApi().assetPage();
-
-        assertThat(assets.getAssets()).hasSize(1);
-        var asset = assets.getAssets().get(0);
-        assertThat(asset.getName()).isEqualTo("AssetName");
-        assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
     }
 
     private UiContractNegotiation negotiate(UiDataOffer dataOffer, UiContractOffer contractOffer) {
         var negotiationRequest = ContractNegotiationRequest.builder()
                 .counterPartyAddress(dataOffer.getEndpoint())
                 .counterPartyParticipantId(dataOffer.getParticipantId())
-                .assetId(dataOffer.getAsset().getId())
+                .assetId(dataOffer.getAsset().getAssetId())
                 .contractOfferId(contractOffer.getContractOfferId())
                 .policyJsonLd(contractOffer.getPolicy().getPolicyJsonLd())
                 .build();

@@ -1,14 +1,19 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers.utils;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.Nullable;
 
 @RequiredArgsConstructor
 public class UiAssetBuilder {
@@ -58,39 +63,47 @@ public class UiAssetBuilder {
     }
 
     @SneakyThrows
+    @Nullable
     public JsonObject buildAssetJsonLd(UiAssetCreateRequest uiAssetCreateRequest) {
 
-        var properties = Json.createObjectBuilder()
-                .add(Prop.Dcat.KEYWORDS, Json.createArrayBuilder(uiAssetCreateRequest.getKeywords()))
-                .add(Prop.Dcterms.PUBLISHER, Json.createObjectBuilder()
-                        .add(Prop.TYPE, Prop.Foaf.ORGANIZATION)
-                        .add(Prop.Foaf.HOMEPAGE, uiAssetCreateRequest.getPublisherHomepage()))
-                .add(Prop.Dcterms.CREATOR, Json.createObjectBuilder()
-                        .add(Prop.TYPE, Prop.Foaf.ORGANIZATION)
-                        .add(Prop.Foaf.NAME, uiAssetCreateRequest.getCreatorOrganizationName()))
-                .add(Prop.Dcterms.LICENSE, uiAssetCreateRequest.getLicenseUrl())
-                .add(Prop.Dcterms.TITLE, uiAssetCreateRequest.getTitle())
-                .add(Prop.Dcterms.DESCRIPTION, uiAssetCreateRequest.getDescription())
-                .add(Prop.Dcterms.LANGUAGE, uiAssetCreateRequest.getLanguage())
-                .add(Prop.Dcat.VERSION, uiAssetCreateRequest.getVersion())
-                .add(Prop.Dcat.MEDIATYPE, uiAssetCreateRequest.getDistribution())
-                .add(Prop.Dcat.LANDING_PAGE, uiAssetCreateRequest.getLandingPageUrl())
-                .add(Prop.Mds.DATA_CATEGORY, uiAssetCreateRequest.getDataCategory())
-                .add(Prop.Mds.DATA_SUBCATEGORY, uiAssetCreateRequest.getDataSubcategory())
-                .add(Prop.Mds.DATA_MODEL, uiAssetCreateRequest.getDataModel())
-                .add(Prop.Mds.GEO_REFERENCE_METHOD, uiAssetCreateRequest.getGeoReferenceMethod())
-                .add(Prop.Mds.TRANSPORT_MODE, uiAssetCreateRequest.getTransportMode())
-                .build();
+        var propertiesBuilder = Json.createObjectBuilder();
 
-        var dataAddressProperties = Json.createObjectBuilder()
-                .add(Prop.Edc.TYPE, uiAssetCreateRequest.getDataAddressProperties().get(Prop.Edc.TYPE))
-                .add(Prop.Edc.BASE_URL, uiAssetCreateRequest.getDataAddressProperties().get(Prop.Edc.BASE_URL))
-                .build();
+        JsonBuilderUtils.addNonNull(propertiesBuilder, Prop.Edc.ID, uiAssetCreateRequest.getId());
+        JsonBuilderUtils.addNonNull(propertiesBuilder, Prop.Dcterms.LICENSE, uiAssetCreateRequest.getLicenseUrl());
+        JsonBuilderUtils.addNonNull(propertiesBuilder, Prop.Dcterms.TITLE, uiAssetCreateRequest.getTitle());
+        JsonBuilderUtils.addNonNull(propertiesBuilder, Prop.Dcterms.DESCRIPTION, uiAssetCreateRequest.getDescription());
+        JsonBuilderUtils.addNonNull(propertiesBuilder, Prop.Dcterms.LANGUAGE, uiAssetCreateRequest.getLanguage());
+        JsonBuilderUtils.addNonNull(propertiesBuilder, Prop.Dcat.VERSION, uiAssetCreateRequest.getVersion());
+        JsonBuilderUtils.addNonNull(propertiesBuilder, Prop.Dcat.MEDIATYPE, uiAssetCreateRequest.getDistribution());
+        JsonBuilderUtils.addNonNull(propertiesBuilder, Prop.Dcat.LANDING_PAGE, uiAssetCreateRequest.getLandingPageUrl());
+        JsonBuilderUtils.addNonNull(propertiesBuilder, Prop.Mds.DATA_CATEGORY, uiAssetCreateRequest.getDataCategory());
+        JsonBuilderUtils.addNonNull(propertiesBuilder, Prop.Mds.DATA_SUBCATEGORY, uiAssetCreateRequest.getDataSubcategory());
+        JsonBuilderUtils.addNonNull(propertiesBuilder, Prop.Mds.DATA_MODEL, uiAssetCreateRequest.getDataModel());
+        JsonBuilderUtils.addNonNull(propertiesBuilder, Prop.Mds.GEO_REFERENCE_METHOD, uiAssetCreateRequest.getGeoReferenceMethod());
+        JsonBuilderUtils.addNonNull(propertiesBuilder, Prop.Mds.TRANSPORT_MODE, uiAssetCreateRequest.getTransportMode());
+        JsonBuilderUtils.addNonNullArray(propertiesBuilder, Prop.Dcat.KEYWORDS, uiAssetCreateRequest.getKeywords());
 
-        return Json.createObjectBuilder()
+        if (uiAssetCreateRequest.getPublisherHomepage() != null) {
+            propertiesBuilder.add(Prop.Dcterms.PUBLISHER, Json.createObjectBuilder()
+                    .add(Prop.TYPE, Prop.Foaf.ORGANIZATION)
+                    .add(Prop.Foaf.HOMEPAGE, uiAssetCreateRequest.getPublisherHomepage()));
+        }
+        if (uiAssetCreateRequest.getCreatorOrganizationName() != null) {
+            propertiesBuilder.add(Prop.Dcterms.CREATOR, Json.createObjectBuilder()
+                    .add(Prop.TYPE, Prop.Foaf.ORGANIZATION)
+                    .add(Prop.Foaf.NAME, uiAssetCreateRequest.getCreatorOrganizationName()));
+
+        }
+
+        var assetJsonLd = Json.createObjectBuilder()
                 .add(Prop.ID, uiAssetCreateRequest.getId())
-                .add("properties", properties)
-                .add("dataAddress", dataAddressProperties)
+                .add(Prop.TYPE, Prop.Edc.TYPE_ASSET)
+                .add(Prop.Edc.PROPERTIES, propertiesBuilder.build())
                 .build();
+
+        var assetJsonLdString = assetJsonLd.toString();
+
+
+        return assetJsonLd;
     }
 }

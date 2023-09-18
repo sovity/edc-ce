@@ -94,7 +94,7 @@ class ContractAgreementPageTest {
         assertThat(agreement.getCounterPartyAddress()).isEqualTo("http://other-connector");
         assertThat(agreement.getCounterPartyId()).isEqualTo("urn:connector:other-connector");
         assertThat(agreement.getContractSigningDate()).isEqualTo(todayPlusDays(0));
-        assertThat(agreement.getAsset().getId()).isEqualTo(ASSET_ID);
+        assertThat(agreement.getAsset().getAssetId()).isEqualTo(ASSET_ID);
         assertThat(agreement.getAsset().getLandingPageUrl()).isEqualTo("X");
         assertThat(agreement.getTransferProcesses()).hasSize(1);
 
