@@ -1,5 +1,6 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetBuilder;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -24,7 +25,7 @@ class AssetMapperTest {
     @BeforeEach
     void setup() {
         var typeTransformerRegistry = mock(TypeTransformerRegistry.class);
-        var uiAssetBuilder = new UiAssetBuilder();
+        var uiAssetBuilder = new UiAssetBuilder(new EdcPropertyMapperUtils());
         assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetBuilder);
     }
 
