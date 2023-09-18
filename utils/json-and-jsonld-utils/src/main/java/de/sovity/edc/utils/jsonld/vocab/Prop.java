@@ -27,9 +27,11 @@ public class Prop {
     public class Edc {
         public final String CTX = "https://w3id.org/edc/v0.0.1/ns/";
         public final String TYPE_ASSET = CTX + "Asset";
+        public final String TYPE_DATA_ADDRESS = CTX + "DataAddress";
         public final String ID = CTX + "id";
         public final String PARTICIPANT_ID = CTX + "participantId";
         public final String PROPERTIES = CTX + "properties";
+        public final String DATA_ADDRESS = CTX + "dataAddress";
         public final String TYPE = CTX + "type";
         public final String BASE_URL = CTX + "baseUrl";
     }

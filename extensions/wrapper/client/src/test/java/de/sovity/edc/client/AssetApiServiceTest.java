@@ -14,6 +14,7 @@
 package de.sovity.edc.client;
 
 
+import de.sovity.edc.client.gen.model.UiAsset;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -33,14 +34,12 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.eclipse.edc.spi.types.domain.DataAddress.EDC_DATA_ADDRESS_TYPE_PROPERTY;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
 public class AssetApiServiceTest {
 
     public static final String DATA_SINK = "http://my-data-sink/api/stuff";
-    public static final String DATA_ADDRESS_TYPE = "HttpData";
     EdcPropertyMapperUtils edcPropertyUtils;
 
     @BeforeEach
@@ -85,7 +84,7 @@ public class AssetApiServiceTest {
 
         // assert
         assertThat(result.getAssets())
-                .extracting(asset -> asset.getAssetId())
+                .extracting(UiAsset::getAssetId)
                 .containsExactly("asset-3", "asset-2", "asset-1");
     }
 
@@ -94,11 +93,13 @@ public class AssetApiServiceTest {
         // arrange
         var client = TestUtils.edcClient();
         var dataAddressProperties = Map.of(
-                Prop.Edc.TYPE, DATA_ADDRESS_TYPE,
+                Prop.Edc.TYPE, "HttpData",
                 Prop.Edc.BASE_URL, DATA_SINK
         );
         var uiAssetRequest = UiAssetCreateRequest.builder()
                 .id("asset-1")
+                .title("AssetName")
+                .keywords(List.of("keyword1", "keyword2"))
                 .dataAddressProperties(dataAddressProperties)
                 .build();
 
@@ -110,8 +111,8 @@ public class AssetApiServiceTest {
         var assets = assetService.query(QuerySpec.max()).getContent().toList();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        assertThat(asset.getName()).isEqualTo("AssetName");
-        assertThat(asset.getProperties().get("keywords")).isEqualTo(List.of("keyword1", "keyword2"));
+        assertThat(asset.getProperties()).containsEntry(Prop.Dcterms.TITLE, "AssetName");
+        assertThat(asset.getProperties()).containsEntry(Prop.Dcat.KEYWORDS, List.of("keyword1", "keyword2"));
         assertThat(asset.getDataAddress().getProperties()).isEqualTo(dataAddressProperties);
     }
 
@@ -138,7 +139,7 @@ public class AssetApiServiceTest {
     ) {
 
         DataAddress dataAddress = DataAddress.Builder.newInstance()
-                .type(DATA_ADDRESS_TYPE)
+                .type("HttpData")
                 .property("baseUrl", DATA_SINK)
                 .build();
 

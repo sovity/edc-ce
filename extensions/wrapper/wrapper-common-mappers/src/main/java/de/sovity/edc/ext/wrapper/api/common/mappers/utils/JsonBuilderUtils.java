@@ -5,6 +5,7 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonValue;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class JsonBuilderUtils {
     }
 
     protected static JsonObjectBuilder addNonNullArray(JsonObjectBuilder builder, String key, List<String> values) {
-        if (values != null && !values.isEmpty()) {
+        if (CollectionUtils.isNotEmpty(values)) {
             builder.add(key, Json.createArrayBuilder(values));
         }
         return builder;

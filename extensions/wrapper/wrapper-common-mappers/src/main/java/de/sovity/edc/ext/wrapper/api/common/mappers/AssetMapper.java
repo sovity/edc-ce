@@ -32,8 +32,7 @@ public class AssetMapper {
 
     public Asset buildAsset(UiAssetCreateRequest createRequest) {
         var assetJsonLd = uiAssetBuilder.buildAssetJsonLd(createRequest);
-        var asset = buildAsset(assetJsonLd);
-        return asset.toBuilder().build();
+        return buildAsset(assetJsonLd);
     }
 
     public Asset buildAssetFromDatasetProperties(JsonObject json) {
