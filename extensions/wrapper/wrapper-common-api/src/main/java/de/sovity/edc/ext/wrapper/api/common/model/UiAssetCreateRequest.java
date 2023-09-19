@@ -57,7 +57,7 @@ public class UiAssetCreateRequest {
     private List<String> keywords;
 
     @Schema(description = "Asset MediaType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String distribution;
+    private String mediaType;
 
     @Schema(description = "Landing Page URL", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String landingPageUrl;
@@ -84,11 +84,8 @@ public class UiAssetCreateRequest {
     private Map<String, String> additionalProperties;
 
     @Schema(description = "Asset Private Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Map<String, Object> privateProperties;
+    private Map<String, String> privateProperties;
 
     @Schema(description = "Asset Json Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> additionalJsonProperties;
-
-    @Schema(description = "Contains the entire asset in its original expanded JSON-LD format", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String assetJsonLd;
 }

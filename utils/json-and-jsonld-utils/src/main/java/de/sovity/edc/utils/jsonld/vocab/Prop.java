@@ -75,7 +75,7 @@ public class Prop {
     public class Dcterms {
         public final String CTX = "http://purl.org/dc/terms/";
         public final String IDENTIFIER = CTX + "identifier";
-        public final String NAME = CTX + "name";
+        public final String NAME = CTX + "title";
         public final String DESCRIPTION = CTX + "description";
         public final String LANGUAGE = CTX + "language";
         public final String CREATOR = CTX + "creator";

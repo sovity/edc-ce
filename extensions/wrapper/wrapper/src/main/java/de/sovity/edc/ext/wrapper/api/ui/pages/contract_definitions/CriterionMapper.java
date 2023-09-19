@@ -56,6 +56,7 @@ public class CriterionMapper {
     }
 
 
+    @SuppressWarnings("unchecked")
     UiCriterionLiteral buildCriterionLiteral(Object value) {
         if (value instanceof Collection) {
             var list = ((Collection<Object>) value).stream().map(it -> it == null ? null : it.toString()).toList();

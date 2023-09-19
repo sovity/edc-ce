@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -30,7 +31,7 @@ public class AssetMapper {
 
     public Asset buildAsset(UiAssetCreateRequest createRequest) {
         var assetJsonLd = uiAssetBuilder.buildAssetJsonLd(createRequest);
-        return buildAsset(assetJsonLd);
+        return buildAsset(assetJsonLd, createRequest.getCreatorOrganizationName(), createRequest.getPublisherHomepage());
     }
 
     public Asset buildAssetFromDatasetProperties(JsonObject json) {
@@ -52,7 +53,24 @@ public class AssetMapper {
         return typeTransformerRegistry.transform(asset, JsonObject.class).getContent();
     }
 
-    private Asset buildAsset(JsonObject assetJsonLd) {
-        return typeTransformerRegistry.transform(assetJsonLd, Asset.class).getContent();
+    /**
+     * Builds an Asset from the provided assetJsonLd with additional properties for creator and publisher.
+     *
+     * @param assetJsonLd   the base JsonObject to build the Asset from
+     * @param creator       the creator to add as a property to the Asset (can be null)
+     * @param publisher     the publisher to add as a property to the Asset (can be null)
+     * @return              the built Asset with the added properties
+     */
+    private Asset buildAsset(JsonObject assetJsonLd, String creator, String publisher) {
+        var asset = typeTransformerRegistry.transform(assetJsonLd, Asset.class).getContent();
+        var assetBuilder = asset.toBuilder();
+
+        if (creator != null) {
+            assetBuilder.property(Prop.Dcterms.CREATOR, Map.of(Prop.TYPE, Prop.Foaf.ORGANIZATION, Prop.Foaf.NAME, creator));
+        }
+        if (publisher != null) {
+            assetBuilder.property(Prop.Dcterms.PUBLISHER, Map.of(Prop.TYPE, Prop.Foaf.ORGANIZATION, Prop.Foaf.HOMEPAGE, publisher));
+        }
+        return assetBuilder.build();
     }
 }
