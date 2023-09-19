@@ -92,21 +92,19 @@ class UiApiWrapperTest {
         // TODO test all asset properties including additionalProperties
         var data = "expected data 123";
         var assetId = UUID.randomUUID().toString();
-        //providerConnector.createDataOffer(assetId, dataAddress.getDataSourceUrl(data));
-
-        var providerClient = consumerClient; //TODO use providerClient
+        providerConnector.createDataOffer(assetId, dataAddress.getDataSourceUrl(data));
 
         var dataAddressProperties = Map.of(
                 Prop.Edc.TYPE, "HttpData",
                 Prop.Edc.BASE_URL, DATA_SINK
         );
         var uiAssetRequest = UiAssetCreateRequest.builder()
-                .id("asset-1")
+                .id(assetId)
                 .name("AssetName")
                 .keywords(List.of("keyword1", "keyword2"))
                 .dataAddressProperties(dataAddressProperties)
                 .build();
-        providerClient.uiApi().createAsset(uiAssetRequest);
+        consumerClient.uiApi().createAsset(uiAssetRequest);
 
         var dataOffers = consumerClient.uiApi().catalogPageDataOffers(getProtocolEndpoint(providerConnector));
         assertThat(dataOffers).hasSize(1);
@@ -121,7 +119,7 @@ class UiApiWrapperTest {
         // assert
         assertThat(dataOffer.getEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
         assertThat(dataOffer.getParticipantId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
-        assertThat(dataOffer.getAsset().getAssetId()).isEqualTo("asset-1");
+        assertThat(dataOffer.getAsset().getAssetId()).isEqualTo(assetId);
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
     }
 

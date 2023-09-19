@@ -64,14 +64,13 @@ public class ConnectorRemote {
     public final Duration timeout = Duration.ofSeconds(8);
     private final JsonLd jsonLd = new TitaniumJsonLd(new ConsoleMonitor());
 
-    public void createAsset(String assetId,
-                            Map<String, Object> dataAddressProperties) {
+    public void createAsset(String assetId, Map<String, Object> dataAddressProperties) {
         var requestBody = createObjectBuilder()
                 .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
                 .add("asset", createObjectBuilder()
                         .add(ID, assetId)
                         .add("properties", createObjectBuilder()
-                                .add(Prop.Dcterms.DESCRIPTION, "description")))
+                                .add("description", "description")))
                 .add("dataAddress", createObjectBuilder(dataAddressProperties))
                 .build();
 
@@ -207,7 +206,7 @@ public class ConnectorRemote {
                 .add("protocol", "dataspace-protocol-http")
                 .add("offer", createObjectBuilder()
                         .add("offerId", offerId)
-                        .add("id", assetId)
+                        .add("assetId", assetId)
                         .add("policy", jsonLd.compact(policy).getContent())
                 )
                 .build();
@@ -280,7 +279,7 @@ public class ConnectorRemote {
                 .add("dataDestination", destination)
                 .add("protocol", "dataspace-protocol-http")
                 .add("managedResources", false)
-                .add("id", assetId)
+                .add("assetId", assetId)
                 .add("contractId", contractAgreementId)
                 .add("connectorAddress", providerProtocolApi.toString())
                 .add("privateProperties", Json.createObjectBuilder().build())

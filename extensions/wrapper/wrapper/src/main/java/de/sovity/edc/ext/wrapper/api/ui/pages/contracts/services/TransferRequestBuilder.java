@@ -24,6 +24,7 @@ import org.eclipse.edc.connector.transfer.spi.types.TransferRequest;
 import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -62,7 +63,7 @@ public class TransferRequestBuilder {
                 .contractId(contractId)
                 .assetId(agreement.getAssetId())
                 .dataDestination(address)
-                .privateProperties(edcPropertyUtils.toMapOfObject(params.getTransferProcessProperties()))
+                .privateProperties(edcPropertyUtils.toMapOfObject(params.getTransferProcessProperties() == null ? Map.of() : params.getTransferProcessProperties()))
                 .callbackAddresses(List.of())
                 .build();
     }
