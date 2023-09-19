@@ -11,7 +11,7 @@
  *      sovity GmbH - init
  */
 
-package de.sovity.edc.ext.wrapper.utils;
+package de.sovity.edc.ext.wrapper.api.common.mappers.utils;
 
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.types.domain.DataAddress;
@@ -33,6 +33,10 @@ public class EdcPropertyUtils {
      */
     public Map<String, String> truncateToMapOfString(Map<String, Object> map) {
         Map<String, String> result = new HashMap<>();
+
+        if (map == null) {
+            return result;
+        }
 
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             Object value = entry.getValue();
@@ -58,7 +62,7 @@ public class EdcPropertyUtils {
     @SuppressWarnings({"unchecked", "rawtypes", "java:S1905"})
     public Map<String, Object> toMapOfObject(Map<String, String> map) {
         if (map == null) {
-            return new HashMap<>();
+            return Map.of();
         }
         return new HashMap<>((Map<String, Object>) (Map) map);
     }

@@ -61,7 +61,7 @@ public class CatalogApiService {
     }
 
     private UiAsset buildUiAsset(DspDataOffer dataOffer) {
-        var asset = assetMapper.buildAssetFromAssetPropertiesJsonLd(dataOffer.getAssetPropertiesJsonLd());
+        var asset = assetMapper.buildAssetFromDatasetProperties(dataOffer.getAssetPropertiesJsonLd());
         return assetMapper.buildUiAsset(asset);
     }
 

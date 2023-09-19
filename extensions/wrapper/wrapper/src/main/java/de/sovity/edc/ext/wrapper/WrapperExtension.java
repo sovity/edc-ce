@@ -94,7 +94,6 @@ public class WrapperExtension implements ServiceExtension {
         var objectMapper = typeManager.getMapper(CoreConstants.JSON_LD);
         fixObjectMapperDateSerialization(objectMapper);
 
-
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
                 assetIndex,
                 assetService,

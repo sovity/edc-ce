@@ -2,6 +2,7 @@ package de.sovity.edc.ext.wrapper.api.common.mappers;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.FailedMappingException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
@@ -80,7 +81,8 @@ public class PolicyMapper {
      * @return {@link Policy}
      */
     public Policy buildPolicy(JsonObject policyJsonLd) {
-        return typeTransformerRegistry.transform(policyJsonLd, Policy.class).getContent();
+        return typeTransformerRegistry.transform(policyJsonLd, Policy.class)
+                .orElseThrow(FailedMappingException::ofFailure);
     }
 
     /**
@@ -104,6 +106,7 @@ public class PolicyMapper {
      * @return policy JSON-LD
      */
     public JsonObject buildPolicyJsonLd(Policy policy) {
-        return typeTransformerRegistry.transform(policy, JsonObject.class).getContent();
+        return typeTransformerRegistry.transform(policy, JsonObject.class)
+                .orElseThrow(FailedMappingException::ofFailure);
     }
 }

@@ -12,11 +12,11 @@ import java.util.List;
 
 @Getter
 @ToString
-@Schema(description = "Criterion Literal DTO")
+@Schema(description = "Criterion Literal")
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UiCriterionLiteralDto {
+public class UiCriterionLiteral {
 
     public enum CriterionLiteralTypeDto {
         VALUE, VALUE_LIST
@@ -30,11 +30,11 @@ public class UiCriterionLiteralDto {
     @Schema(description = "Only for type VALUE_LIST. List of values, e.g. for the IN-Operator.")
     private List<String> valueList;
 
-    public static UiCriterionLiteralDto ofValue(@NonNull String value) {
-        return new UiCriterionLiteralDto(CriterionLiteralTypeDto.VALUE, value, null);
+    public static UiCriterionLiteral ofValue(@NonNull String value) {
+        return new UiCriterionLiteral(CriterionLiteralTypeDto.VALUE, value, null);
     }
 
-    public static UiCriterionLiteralDto ofValueList(@NonNull List<String> valueList) {
-        return new UiCriterionLiteralDto(CriterionLiteralTypeDto.VALUE_LIST, null, valueList);
+    public static UiCriterionLiteral ofValueList(@NonNull List<String> valueList) {
+        return new UiCriterionLiteral(CriterionLiteralTypeDto.VALUE_LIST, null, valueList);
     }
 }

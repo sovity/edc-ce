@@ -57,7 +57,6 @@ public class TestUtils {
 
     public static void setupExtension(EdcExtension extension) {
         extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
-        extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
         extension.setConfiguration(createConfiguration(Map.of()));
     }
 

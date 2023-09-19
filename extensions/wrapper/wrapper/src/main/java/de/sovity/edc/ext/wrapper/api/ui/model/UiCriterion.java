@@ -15,20 +15,22 @@
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
 
-import de.sovity.edc.ext.wrapper.api.common.model.OperatorDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "Contract Definition Criterion as supported by the UI")
-public class UiCriterionDto {
-
+public class UiCriterion {
     @Schema(description = "Left Operand", requiredMode = Schema.RequiredMode.REQUIRED)
     private String operandLeft;
 
     @Schema(description = "Operator", requiredMode = Schema.RequiredMode.REQUIRED)
-    private OperatorDto operator;
+    private UiCriterionOperator operator;
 
     @Schema(description = "Right Operand", requiredMode = Schema.RequiredMode.REQUIRED)
-    private UiCriterionLiteralDto operandRight;
+    private UiCriterionLiteral operandRight;
 }

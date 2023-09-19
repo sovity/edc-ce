@@ -13,6 +13,7 @@
 
 package de.sovity.edc.utils.jsonld;
 
+import de.sovity.edc.utils.JsonUtils;
 import jakarta.json.JsonNumber;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonString;
@@ -48,13 +49,37 @@ public class JsonLdUtils {
         }
 
         return switch (value.getValueType()) {
-            case ARRAY -> throw new IllegalStateException("unexpected array" + value);
-            case OBJECT -> throw new IllegalStateException("unexpected object" + value);
             case STRING -> ((JsonString) value).getString();
             case NUMBER -> ((JsonNumber) value).bigDecimalValue().toString();
             case FALSE -> "false";
             case TRUE -> "true";
             case NULL -> null;
+            // We do this over throwing errors because we want to be able to handle invalid json-ld
+            case ARRAY, OBJECT -> JsonUtils.toJson(value);
+        };
+    }
+
+    /**
+     * Get a boolean property
+     *
+     * @param json json-ld
+     * @return boolean value or null
+     */
+    public static Boolean bool(JsonValue json) {
+        var value = value(json);
+        if (value == null) {
+            return null;
+        }
+
+        return switch (value.getValueType()) {
+            case STRING -> switch (((JsonString) value).getString().toLowerCase()) {
+                case "true" -> Boolean.TRUE;
+                case "false" -> Boolean.FALSE;
+                default -> null;
+            };
+            case FALSE -> Boolean.FALSE;
+            case TRUE -> Boolean.TRUE;
+            case NUMBER, NULL, ARRAY, OBJECT -> null;
         };
     }
 
@@ -129,6 +154,27 @@ public class JsonLdUtils {
     }
 
     /**
+     * Get an object property. Defaults to an empty object for ease of use if not found.
+     *
+     * @param object json-ld
+     * @param key    key
+     * @return string or null
+     */
+    public static JsonObject object(JsonObject object, String key) {
+        JsonValue field = object.get(key);
+        if (field == null) {
+            return JsonValue.EMPTY_JSON_OBJECT;
+        }
+
+        var unwrapped = value(field);
+        if (unwrapped == null || unwrapped.getValueType() != JsonValue.ValueType.OBJECT) {
+            return JsonValue.EMPTY_JSON_OBJECT;
+        }
+
+        return (JsonObject) unwrapped;
+    }
+
+    /**
      * Get a list property while unwrapping values and only keeping objects.
      *
      * @param object json-ld
@@ -141,5 +187,37 @@ public class JsonLdUtils {
             return List.of();
         }
         return listOfObjects(field);
+    }
+
+    /**
+     * Get a list of strings. defaults to empty list
+     *
+     * @param object json-ld
+     * @param key    key
+     * @return string list or empty list
+     */
+    public static List<String> stringList(JsonObject object, String key) {
+        JsonValue field = object.get(key);
+        if (field == null) {
+            return List.of();
+        }
+        return list(field).stream()
+                .map(JsonLdUtils::string)
+                .toList();
+    }
+
+    /**
+     * Get a boolean property. defaults to null
+     *
+     * @param object json-ld
+     * @param key    key
+     * @return boolean or null
+     */
+    public static Boolean bool(JsonObject object, String key) {
+        JsonValue field = object.get(key);
+        if (field == null) {
+            return null;
+        }
+        return bool(field);
     }
 }

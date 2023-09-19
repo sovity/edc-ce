@@ -1,81 +1,44 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
-import de.sovity.edc.ext.wrapper.api.common.model.OperatorDto;
-import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionDto;
-import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionLiteralDto;
-import org.eclipse.edc.policy.model.Operator;
+import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterion;
+import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionLiteral;
+import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionOperator;
 import org.eclipse.edc.spi.query.Criterion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CriterionMapperTest {
     private CriterionMapper criterionMapper;
-    private OperatorMapper operatorMapper;
 
     @BeforeEach
     void setup() {
-        operatorMapper = new OperatorMapper();
-        criterionMapper = new CriterionMapper(operatorMapper);
+        criterionMapper = new CriterionMapper(new CriterionOperatorMapper(), new CriterionLiteralMapper());
     }
 
     @Test
     void testMappingFromCriterionToDto() {
-        Criterion criterion = new Criterion("operandLeft", "EQ", "operandRight");
-        UiCriterionDto dto = criterionMapper.mapToCriterionDto(criterion);
+        Criterion criterion = new Criterion("left", "=", "right");
+        UiCriterion dto = criterionMapper.buildUiCriterion(criterion);
 
-        assertThat(dto.getOperandLeft()).isEqualTo(criterion.getOperandLeft());
-        assertThat(dto.getOperator()).isEqualTo(operatorMapper.getOperatorDto(criterion.getOperator()));
-        assertThat(dto.getOperandRight().getValue()).isEqualTo(criterion.getOperandRight());
+        assertThat(dto.getOperandLeft()).isEqualTo("left");
+        assertThat(dto.getOperator()).isEqualTo(UiCriterionOperator.EQ);
+        assertThat(dto.getOperandRight().getValue()).isEqualTo("right");
     }
 
     @Test
     void testMappingFromDtoToCriterion() {
-        UiCriterionDto dto = new UiCriterionDto();
-        dto.setOperandLeft("operandLeft");
-        dto.setOperator(OperatorDto.EQ);
-        dto.setOperandRight(UiCriterionLiteralDto.ofValue("operandRight"));
+        UiCriterion dto = new UiCriterion();
+        dto.setOperandLeft("left");
+        dto.setOperator(UiCriterionOperator.EQ);
+        dto.setOperandRight(UiCriterionLiteral.ofValue("right"));
 
-        Criterion criterion = criterionMapper.mapToCriterion(dto);
+        Criterion criterion = criterionMapper.buildCriterion(dto);
 
-        assertThat(criterion.getOperandLeft()).isEqualTo(dto.getOperandLeft());
-        assertThat(criterion.getOperator()).isEqualTo(Operator.EQ.getOdrlRepresentation());
-        assertThat(criterion.getOperandRight()).isEqualTo(dto.getOperandRight());
-    }
-
-    @Test
-    void testBuildCriterionLiteral() {
-        String value = "testValue";
-        UiCriterionLiteralDto dtowithValue = criterionMapper.buildCriterionLiteral(value);
-
-        List<Object> valueList = Arrays.asList("value1", "value2", null);
-        UiCriterionLiteralDto dtowithList = criterionMapper.buildCriterionLiteral(valueList);
-
-        assertThat(dtowithValue.getType()).isEqualTo(UiCriterionLiteralDto.CriterionLiteralTypeDto.VALUE);
-        assertThat(dtowithValue.getValue()).isEqualTo(value);
-        assertThat(dtowithValue.getValueList()).isNull();
-
-        assertThat(dtowithList.getType()).isEqualTo(UiCriterionLiteralDto.CriterionLiteralTypeDto.VALUE_LIST);
-        assertThat(dtowithList.getValueList()).containsExactly("value1", "value2", null);
-        assertThat(dtowithList.getValue()).isNull();
-    }
-
-    @Test
-    void testReadCriterionLiteral() {
-        String value = "testValue";
-        UiCriterionLiteralDto dtowithValue = UiCriterionLiteralDto.ofValue(value);
-
-        List<String> valueList = Arrays.asList("value1", "value2");
-        UiCriterionLiteralDto dtowithList = UiCriterionLiteralDto.ofValueList(valueList);
-
-        assertThat(criterionMapper.readCriterionLiteral(dtowithValue)).isEqualTo(value);
-        assertThat(criterionMapper.readCriterionLiteral(dtowithList)).isEqualTo(valueList);
-
+        assertThat(criterion.getOperandLeft()).isEqualTo("left");
+        assertThat(criterion.getOperator()).isEqualTo("=");
+        assertThat(criterion.getOperandRight()).isEqualTo("right");
     }
 }
 

@@ -43,5 +43,5 @@ public class ContractDefinitionRequest {
     private String accessPolicyId;
 
     @Schema(description = "List of Criteria for the contract", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<UiCriterionDto> assetSelector;
+    private List<UiCriterion> assetSelector;
 }

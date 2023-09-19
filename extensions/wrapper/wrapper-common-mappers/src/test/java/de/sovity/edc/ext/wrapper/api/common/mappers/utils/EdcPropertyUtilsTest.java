@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.utils;
+package de.sovity.edc.ext.wrapper.api.common.mappers.utils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

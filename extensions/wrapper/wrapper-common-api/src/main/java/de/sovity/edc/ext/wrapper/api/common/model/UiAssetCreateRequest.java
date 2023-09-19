@@ -16,27 +16,21 @@ package de.sovity.edc.ext.wrapper.api.common.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 import java.util.Map;
 
 @Getter
 @Setter
-
-@ToString
+@NoArgsConstructor
 @AllArgsConstructor
-@Builder(toBuilder = true)
-@RequiredArgsConstructor
-@Schema(description = "Type-Safe Asset Metadata as needed by our UI")
-public class UiAsset {
-
+@Schema(description = "Type-Safe OpenAPI generator friendly Asset Create DTO that supports an opinionated subset of the original EDC Asset Entity.")
+public class UiAssetCreateRequest {
     @Schema(description = "Asset Id", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String assetId;
+    private String id;
 
     @Schema(description = "Asset Name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String name;
@@ -65,20 +59,8 @@ public class UiAsset {
     @Schema(description = "Asset MediaType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String mediaType;
 
-    @Schema(description = "Homepage URL associated with the Asset", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Landing Page URL", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String landingPageUrl;
-
-    @Schema(description = "HTTP Datasource Hints Proxy Method", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Boolean httpDatasourceHintsProxyMethod;
-
-    @Schema(description = "HTTP Datasource Hints Proxy Path", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Boolean httpDatasourceHintsProxyPath;
-
-    @Schema(description = "HTTP Datasource Hints Proxy Query Params", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Boolean httpDatasourceHintsProxyQueryParams;
-
-    @Schema(description = "HTTP Datasource Hints Proxy Body", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Boolean httpDatasourceHintsProxyBody;
 
     @Schema(description = "Data Category", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String dataCategory;
@@ -95,18 +77,15 @@ public class UiAsset {
     @Schema(description = "Transport Mode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String transportMode;
 
-    @Schema(description = "Unhandled Asset Properties (that were strings)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Data Address", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Map<String, String> dataAddressProperties;
+
+    @Schema(description = "Asset additional Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> additionalProperties;
 
-    @Schema(description = "Unhandled Asset Properties (that were not strings but other JSON values)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Map<String, String> additionalJsonProperties;
-
-    @Schema(description = "Private Asset Properties (that were strings)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Asset Private Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> privateProperties;
 
-    @Schema(description = "Private Asset Properties (that were not strings but other JSON values)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Map<String, String> privateJsonProperties;
-
-    @Schema(description = "Contains the entire asset in the JSON-LD format", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String assetJsonLd;
+    @Schema(description = "Asset Json Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Map<String, String> additionalJsonProperties;
 }

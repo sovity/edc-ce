@@ -20,15 +20,18 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.LiteralMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
-import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionBuilder;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.CriterionLiteralMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.CriterionMapper;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.CriterionOperatorMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractNegotiationApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractNegotiationBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractNegotiationStateService;
@@ -49,7 +52,6 @@ import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
-import de.sovity.edc.ext.wrapper.utils.EdcPropertyUtils;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import lombok.NoArgsConstructor;
@@ -106,7 +108,9 @@ public class WrapperExtensionContextBuilder {
     ) {
         // UI API
         var operatorMapper = new OperatorMapper();
-        var criterionMapper = new CriterionMapper(operatorMapper);
+        var criterionOperatorMapper = new CriterionOperatorMapper();
+        var criterionLiteralMapper = new CriterionLiteralMapper();
+        var criterionMapper = new CriterionMapper(criterionOperatorMapper, criterionLiteralMapper);
         var literalMapper = new LiteralMapper(objectMapper);
         var atomicConstraintMapper = new AtomicConstraintMapper(literalMapper, operatorMapper);
         var policyValidator = new PolicyValidator();
@@ -114,12 +118,15 @@ public class WrapperExtensionContextBuilder {
         var policyMapper = new PolicyMapper(
                 constraintExtractor,
                 atomicConstraintMapper,
-                typeTransformerRegistry
-        );
+                typeTransformerRegistry);
+        var edcPropertyUtils = new EdcPropertyUtils();
+        var assetBuilder = new UiAssetMapper(edcPropertyUtils, jsonLd);
+        var assetMapper = new AssetMapper(typeTransformerRegistry, assetBuilder, jsonLd);
         var transferProcessStateService = new TransferProcessStateService();
         var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
                 policyMapper,
-                transferProcessStateService
+                transferProcessStateService,
+                assetMapper
         );
         var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
                 contractAgreementService,
@@ -147,9 +154,7 @@ public class WrapperExtensionContextBuilder {
                 transferProcessService);
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
-        var edcPropertyUtils = new EdcPropertyUtils();
-        var assetBuilder = new AssetBuilder(edcPropertyUtils);
-        var assetApiService = new AssetApiService(assetBuilder, assetService, edcPropertyUtils);
+        var assetApiService = new AssetApiService(assetService, assetMapper);
         var transferRequestBuilder = new TransferRequestBuilder(
                 objectMapper,
                 contractAgreementUtils,
@@ -166,7 +171,6 @@ public class WrapperExtensionContextBuilder {
                 policyMapper);
         var dataOfferBuilder = new DspDataOfferBuilder(jsonLd);
         var dspCatalogService = new DspCatalogService(catalogService, dataOfferBuilder);
-        var assetMapper = new AssetMapper(typeTransformerRegistry);
         var catalogApiService = new CatalogApiService(assetMapper, policyMapper, dspCatalogService);
         var contractOfferMapper = new ContractOfferMapper(policyMapper);
         var contractNegotiationBuilder = new ContractNegotiationBuilder(contractOfferMapper);

@@ -14,8 +14,8 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services;
 
+import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
-import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferProcess;
@@ -34,13 +34,13 @@ import java.util.List;
 
 import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcMillisToOffsetDateTime;
 import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcSecondsToOffsetDateTime;
-import static de.sovity.edc.ext.wrapper.utils.MapUtils.mapValues;
 
 @Slf4j
 @RequiredArgsConstructor
 public class ContractAgreementPageCardBuilder {
     private final PolicyMapper policyMapper;
     private final TransferProcessStateService transferProcessStateService;
+    private final AssetMapper assetMapper;
 
     @NotNull
     public ContractAgreementCard buildContractAgreementCard(
@@ -56,7 +56,7 @@ public class ContractAgreementPageCardBuilder {
         card.setCounterPartyAddress(negotiation.getCounterPartyAddress());
         card.setCounterPartyId(negotiation.getCounterPartyId());
         card.setContractSigningDate(utcSecondsToOffsetDateTime(agreement.getContractSigningDate()));
-        card.setAsset(buildAssetDto(asset));
+        card.setAsset(assetMapper.buildUiAsset(asset));
         card.setContractPolicy(policyMapper.buildUiPolicy(agreement.getPolicy()));
         card.setTransferProcesses(buildTransferProcesses(transferProcesses));
         return card;
@@ -84,12 +84,5 @@ public class ContractAgreementPageCardBuilder {
                 transferProcessEntity.getState()));
         transferProcess.setErrorMessage(transferProcessEntity.getErrorDetail());
         return transferProcess;
-    }
-
-    @NotNull
-    private AssetDto buildAssetDto(@NonNull Asset asset) {
-        var createdAt = utcMillisToOffsetDateTime(asset.getCreatedAt());
-        var properties = mapValues(asset.getProperties(), Object::toString);
-        return new AssetDto(asset.getId(), createdAt, properties);
     }
 }
