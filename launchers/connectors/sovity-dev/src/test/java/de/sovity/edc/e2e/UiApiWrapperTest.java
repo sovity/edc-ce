@@ -104,7 +104,7 @@ class UiApiWrapperTest {
                 .keywords(List.of("keyword1", "keyword2"))
                 .dataAddressProperties(dataAddressProperties)
                 .build();
-       // consumerClient.uiApi().createAsset(uiAssetRequest);
+        //var response = consumerClient.uiApi().createAsset(uiAssetRequest);
 
         var dataOffers = consumerClient.uiApi().catalogPageDataOffers(getProtocolEndpoint(providerConnector));
         assertThat(dataOffers).hasSize(1);

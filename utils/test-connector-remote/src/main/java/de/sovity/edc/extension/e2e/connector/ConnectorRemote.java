@@ -16,7 +16,6 @@ package de.sovity.edc.extension.e2e.connector;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig;
 import de.sovity.edc.extension.e2e.connector.config.api.auth.NoneAuthProvider;
-import de.sovity.edc.utils.jsonld.vocab.Prop;
 import io.restassured.http.Header;
 import io.restassured.specification.RequestSpecification;
 import jakarta.json.Json;
