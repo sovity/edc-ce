@@ -20,7 +20,7 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.LiteralMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
@@ -119,8 +119,8 @@ public class WrapperExtensionContextBuilder {
                 constraintExtractor,
                 atomicConstraintMapper,
                 typeTransformerRegistry);
-        var edcPropertyMapperUtils = new EdcPropertyMapperUtils();
-        var assetBuilder = new UiAssetMapper(edcPropertyMapperUtils, jsonLd);
+        var edcPropertyUtils = new EdcPropertyUtils();
+        var assetBuilder = new UiAssetMapper(edcPropertyUtils, jsonLd);
         var assetMapper = new AssetMapper(typeTransformerRegistry, assetBuilder, jsonLd);
         var transferProcessStateService = new TransferProcessStateService();
         var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
@@ -159,7 +159,7 @@ public class WrapperExtensionContextBuilder {
                 objectMapper,
                 contractAgreementUtils,
                 contractNegotiationUtils,
-                edcPropertyMapperUtils,
+                edcPropertyUtils,
                 serviceExtensionContext.getConnectorId()
         );
         var contractAgreementTransferApiService = new ContractAgreementTransferApiService(
@@ -203,7 +203,7 @@ public class WrapperExtensionContextBuilder {
                 policyDefinitionStore,
                 contractDefinitionStore,
                 policyMappingService,
-                edcPropertyMapperUtils);
+                edcPropertyUtils);
         var useCaseResource = new UseCaseResource(
                 kpiApiService,
                 supportedPolicyApiService,

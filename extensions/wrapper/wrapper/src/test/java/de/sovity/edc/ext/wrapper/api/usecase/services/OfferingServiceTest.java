@@ -1,6 +1,6 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.AssetEntryDto;
@@ -60,7 +60,7 @@ class OfferingServiceTest {
                 policyDefinitionStore,
                 contractDefinitionStore,
                 policyMappingService,
-                new EdcPropertyMapperUtils());
+                new EdcPropertyUtils());
 
         this.assetEntryDto = assetDto();
         this.asset = asset();

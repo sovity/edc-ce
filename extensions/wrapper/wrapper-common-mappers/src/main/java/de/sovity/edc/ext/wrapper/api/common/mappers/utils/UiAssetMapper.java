@@ -21,7 +21,7 @@ import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtil
 
 @RequiredArgsConstructor
 public class UiAssetMapper {
-    private final EdcPropertyMapperUtils edcPropertyMapperUtils;
+    private final EdcPropertyUtils edcPropertyUtils;
     private final JsonLd jsonLd;
 
     public UiAsset buildUiAsset(JsonObject assetJsonLd) {
@@ -122,7 +122,7 @@ public class UiAssetMapper {
     }
 
     private JsonObjectBuilder getDataAddress(UiAssetCreateRequest uiAssetCreateRequest) {
-        var props = edcPropertyMapperUtils.toMapOfObject(uiAssetCreateRequest.getDataAddressProperties());
+        var props = edcPropertyUtils.toMapOfObject(uiAssetCreateRequest.getDataAddressProperties());
         return Json.createObjectBuilder()
                 .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
                 .add(Prop.Edc.PROPERTIES, Json.createObjectBuilder(props));

@@ -1,6 +1,6 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.usecase.model.AssetEntryDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.ContractDefinitionRequestDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
@@ -31,7 +31,7 @@ public class OfferingService {
     private final PolicyDefinitionStore policyDefinitionStore;
     private final ContractDefinitionStore contractDefinitionStore;
     private final PolicyMappingService policyMappingService;
-    private final EdcPropertyMapperUtils edcPropertyUtils;
+    private final EdcPropertyUtils edcPropertyUtils;
 
     /**
      * Creates the asset, policy and contract definition in the connector. First, transforms the

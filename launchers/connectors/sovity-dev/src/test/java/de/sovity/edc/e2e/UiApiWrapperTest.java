@@ -108,12 +108,26 @@ class UiApiWrapperTest {
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
                 .id("asset-1")
                 .name("AssetName")
+                .description("AssetDescription")
+                .licenseUrl("https://license-url")
+                .version("1.0.0")
+                .language("en")
+                .mediaType("application/json")
+                .dataCategory("dataCategory")
+                .dataSubcategory("dataSubcategory")
+                .dataModel("dataModel")
+                .geoReferenceMethod("geoReferenceMethod")
+                .transportMode("transportMode")
                 .keywords(List.of("keyword1", "keyword2"))
+                .creatorOrganizationName("creatorOrganizationName")
+                .publisherHomepage("publisherHomepage")
                 .dataAddressProperties(Map.of(
                         Prop.Edc.TYPE, "HttpData",
+                        Prop.Edc.METHOD, "GET",
                         Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
                 ))
                 .build()).getId();
+        assertThat(assetId).isEqualTo("asset-1");
 
         providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
                 .contractDefinitionId("cd-1")
@@ -145,6 +159,23 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getAsset().getAssetId()).isEqualTo(assetId);
         assertThat(dataOffer.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
         assertThat(dataOffer.getAsset().getName()).isEqualTo("AssetName");
+        assertThat(dataOffer.getAsset().getDescription()).isEqualTo("AssetDescription");
+        assertThat(dataOffer.getAsset().getVersion()).isEqualTo("1.0.0");
+        assertThat(dataOffer.getAsset().getLanguage()).isEqualTo("en");
+        assertThat(dataOffer.getAsset().getMediaType()).isEqualTo("application/json");
+        assertThat(dataOffer.getAsset().getDataCategory()).isEqualTo("dataCategory");
+        assertThat(dataOffer.getAsset().getDataSubcategory()).isEqualTo("dataSubcategory");
+        assertThat(dataOffer.getAsset().getDataModel()).isEqualTo("dataModel");
+        assertThat(dataOffer.getAsset().getGeoReferenceMethod()).isEqualTo("geoReferenceMethod");
+        assertThat(dataOffer.getAsset().getTransportMode()).isEqualTo("transportMode");
+        assertThat(dataOffer.getAsset().getLicenseUrl()).isEqualTo("https://license-url");
+        assertThat(dataOffer.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
+        assertThat(dataOffer.getAsset().getCreatorOrganizationName()).isEqualTo("creatorOrganizationName");
+        assertThat(dataOffer.getAsset().getPublisherHomepage()).isEqualTo("publisherHomepage");
+        assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyMethod()).isFalse();
+        assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyPath()).isFalse();
+        assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyQueryParams()).isFalse();
+        assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyBody()).isFalse();
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
     }
 

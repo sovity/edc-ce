@@ -15,7 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequestParams;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,6 @@ import org.eclipse.edc.connector.transfer.spi.types.TransferRequest;
 import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -34,7 +33,7 @@ public class TransferRequestBuilder {
     private final ObjectMapper objectMapper;
     private final ContractAgreementUtils contractAgreementUtils;
     private final ContractNegotiationUtils contractNegotiationUtils;
-    private final EdcPropertyMapperUtils edcPropertyUtils;
+    private final EdcPropertyUtils edcPropertyUtils;
     private final String connectorId;
 
     public TransferRequest buildTransferRequest(
@@ -63,7 +62,7 @@ public class TransferRequestBuilder {
                 .contractId(contractId)
                 .assetId(agreement.getAssetId())
                 .dataDestination(address)
-                .privateProperties(edcPropertyUtils.toMapOfObject(params.getTransferProcessProperties() == null ? Map.of() : params.getTransferProcessProperties()))
+                .privateProperties(edcPropertyUtils.toMapOfObject(params.getTransferProcessProperties()))
                 .callbackAddresses(List.of())
                 .build();
     }

@@ -16,7 +16,7 @@ package de.sovity.edc.client;
 
 import de.sovity.edc.client.gen.model.UiAsset;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.FailedMappingException;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
@@ -41,12 +41,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AssetApiServiceTest {
 
     public static final String DATA_SINK = "http://my-data-sink/api/stuff";
-    EdcPropertyMapperUtils edcPropertyUtils;
+    EdcPropertyUtils edcPropertyUtils;
 
     @BeforeEach
     void setUp(EdcExtension extension) {
         TestUtils.setupExtension(extension);
-        edcPropertyUtils = new EdcPropertyMapperUtils();
+        edcPropertyUtils = new EdcPropertyUtils();
     }
 
     @Test

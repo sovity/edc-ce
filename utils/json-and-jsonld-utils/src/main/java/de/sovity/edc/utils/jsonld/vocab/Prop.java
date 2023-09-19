@@ -35,6 +35,7 @@ public class Prop {
         public final String DATA_ADDRESS = CTX + "dataAddress";
         public final String TYPE = CTX + "type";
         public final String BASE_URL = CTX + "baseUrl";
+        public final String METHOD = CTX + "method";
         public final String PROXY_METHOD = CTX + "proxyMethod";
         public final String PROXY_PATH = CTX + "proxyPath";
         public final String PROXY_QUERY_PARAMS = CTX + "proxyQueryParams";

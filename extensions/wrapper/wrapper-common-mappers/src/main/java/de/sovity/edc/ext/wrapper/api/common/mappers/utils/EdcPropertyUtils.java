@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class EdcPropertyMapperUtils {
+public class EdcPropertyUtils {
 
     /**
      * Converts a {@code Map<String, Object>} to {@code Map<String, String>}.
@@ -33,6 +33,10 @@ public class EdcPropertyMapperUtils {
      */
     public Map<String, String> truncateToMapOfString(Map<String, Object> map) {
         Map<String, String> result = new HashMap<>();
+
+        if (map == null) {
+            return result;
+        }
 
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             Object value = entry.getValue();
@@ -57,6 +61,9 @@ public class EdcPropertyMapperUtils {
 
     @SuppressWarnings({"unchecked", "rawtypes", "java:S1905"})
     public Map<String, Object> toMapOfObject(Map<String, String> map) {
+        if (map == null) {
+            return Map.of();
+        }
         return new HashMap<>((Map<String, Object>) (Map) map);
     }
 
