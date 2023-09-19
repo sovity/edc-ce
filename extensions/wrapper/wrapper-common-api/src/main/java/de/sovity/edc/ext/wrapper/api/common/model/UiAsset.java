@@ -107,6 +107,6 @@ public class UiAsset {
     @Schema(description = "Private Asset Properties (that were not strings but other JSON values)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> privateJsonProperties;
 
-    @Schema(description = "Contains the entire asset in its original expanded JSON-LD format", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Contains the entire asset in the JSON-LD format", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String assetJsonLd;
 }
