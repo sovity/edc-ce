@@ -37,14 +37,18 @@ public class ContractDefinitionApiService {
         var definitions = getAllContractDefinitions();
         return definitions.stream()
                 .sorted(Comparator.comparing(ContractDefinition::getCreatedAt).reversed())
-                .map(definition -> {
-            var entry = new ContractDefinitionEntry();
-            entry.setContractDefinitionId(definition.getId());
-            entry.setAccessPolicyId(definition.getAccessPolicyId());
-            entry.setContractPolicyId(definition.getContractPolicyId());
-            entry.setAssetSelector(criterionMapper.mapToCriterionDtos(definition.getAssetsSelector()));
-            return entry;
-        }).toList();
+                .map(this::buildContractDefinitionEntry)
+                .toList();
+    }
+
+    @NotNull
+    private ContractDefinitionEntry buildContractDefinitionEntry(ContractDefinition definition) {
+        var entry = new ContractDefinitionEntry();
+        entry.setContractDefinitionId(definition.getId());
+        entry.setAccessPolicyId(definition.getAccessPolicyId());
+        entry.setContractPolicyId(definition.getContractPolicyId());
+        entry.setAssetSelector(criterionMapper.buildUiCriteria(definition.getAssetsSelector()));
+        return entry;
     }
 
     @NotNull

@@ -34,7 +34,7 @@ public class ContractDefinitionBuilder {
                 .id(contractDefinitionId)
                 .contractPolicyId(contractPolicyId)
                 .accessPolicyId(accessPolicyId)
-                .assetsSelector(criterionMapper.mapToCriteria(assetsSelector))
+                .assetsSelector(criterionMapper.buildCriteria(assetsSelector))
                 .build();
     }
 }

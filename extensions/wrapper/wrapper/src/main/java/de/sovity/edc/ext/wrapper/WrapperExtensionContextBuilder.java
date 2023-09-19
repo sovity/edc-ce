@@ -29,6 +29,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionBuilder;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.CriterionLiteralMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.CriterionMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.CriterionOperatorMapper;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractNegotiationApiService;
@@ -108,7 +109,8 @@ public class WrapperExtensionContextBuilder {
         // UI API
         var operatorMapper = new OperatorMapper();
         var criterionOperatorMapper = new CriterionOperatorMapper();
-        var criterionMapper = new CriterionMapper(criterionOperatorMapper);
+        var criterionLiteralMapper = new CriterionLiteralMapper();
+        var criterionMapper = new CriterionMapper(criterionOperatorMapper, criterionLiteralMapper);
         var literalMapper = new LiteralMapper(objectMapper);
         var atomicConstraintMapper = new AtomicConstraintMapper(literalMapper, operatorMapper);
         var policyValidator = new PolicyValidator();

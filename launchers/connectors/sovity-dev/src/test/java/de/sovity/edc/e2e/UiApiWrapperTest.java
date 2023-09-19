@@ -23,8 +23,8 @@ import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiContractOffer;
-import de.sovity.edc.client.gen.model.UiCriterionDto;
-import de.sovity.edc.client.gen.model.UiCriterionLiteralDto;
+import de.sovity.edc.client.gen.model.UiCriterion;
+import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
@@ -50,7 +50,6 @@ class UiApiWrapperTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = "provider";
     private static final String CONSUMER_PARTICIPANT_ID = "consumer";
-    public static final String DATA_SINK = "http://my-data-sink/api/stuff";
 
     @RegisterExtension
     static EdcExtension providerEdcContext = new EdcExtension();
@@ -106,7 +105,6 @@ class UiApiWrapperTest {
                         .build())
                 .build()).getId();
 
-        // TODO test all asset properties including additionalProperties
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
                 .id("asset-1")
                 .name("AssetName")
@@ -121,11 +119,11 @@ class UiApiWrapperTest {
                 .contractDefinitionId("cd-1")
                 .accessPolicyId(policyId)
                 .contractPolicyId(policyId)
-                .assetSelector(List.of(UiCriterionDto.builder()
+                .assetSelector(List.of(UiCriterion.builder()
                         .operandLeft(Prop.Edc.ID)
-                        .operator(UiCriterionDto.OperatorEnum.EQ)
-                        .operandRight(UiCriterionLiteralDto.builder()
-                                .type(UiCriterionLiteralDto.TypeEnum.VALUE)
+                        .operator(UiCriterion.OperatorEnum.EQ)
+                        .operandRight(UiCriterionLiteral.builder()
+                                .type(UiCriterionLiteral.TypeEnum.VALUE)
                                 .value(assetId)
                                 .build())
                         .build()))

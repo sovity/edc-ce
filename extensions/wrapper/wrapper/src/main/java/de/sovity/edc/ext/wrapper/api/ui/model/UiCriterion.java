@@ -16,9 +16,13 @@ package de.sovity.edc.ext.wrapper.api.ui.model;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "Contract Definition Criterion as supported by the UI")
 public class UiCriterion {
     @Schema(description = "Left Operand", requiredMode = Schema.RequiredMode.REQUIRED)
