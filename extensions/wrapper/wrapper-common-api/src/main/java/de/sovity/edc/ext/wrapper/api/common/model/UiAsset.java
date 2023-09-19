@@ -95,14 +95,17 @@ public class UiAsset {
     @Schema(description = "Transport Mode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String transportMode;
 
-    @Schema(description = "Asset additional Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Unhandled Asset Properties (that were strings)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> additionalProperties;
 
-    @Schema(description = "Asset Private Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Map<String, Object> privateProperties;
-
-    @Schema(description = "Asset Json Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Unhandled Asset Properties (that were not strings but other JSON values)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> additionalJsonProperties;
+
+    @Schema(description = "Private Asset Properties (that were strings)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Map<String, String> privateProperties;
+
+    @Schema(description = "Private Asset Properties (that were not strings but other JSON values)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Map<String, String> privateJsonProperties;
 
     @Schema(description = "Contains the entire asset in its original expanded JSON-LD format", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String assetJsonLd;

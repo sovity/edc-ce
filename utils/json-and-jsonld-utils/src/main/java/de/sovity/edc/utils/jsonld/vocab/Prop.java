@@ -20,6 +20,7 @@ public class Prop {
     public final String ID = "@id";
     public final String TYPE = "@type";
     public final String VALUE = "@value";
+    public final String CONTEXT = "@context";
     public final String LANGUAGE = "@language";
     public final String PROPERTIES = "properties";
 
@@ -34,6 +35,10 @@ public class Prop {
         public final String DATA_ADDRESS = CTX + "dataAddress";
         public final String TYPE = CTX + "type";
         public final String BASE_URL = CTX + "baseUrl";
+        public final String PROXY_METHOD = CTX + "proxyMethod";
+        public final String PROXY_PATH = CTX + "proxyPath";
+        public final String PROXY_QUERY_PARAMS = CTX + "proxyQueryParams";
+        public final String PROXY_BODY = CTX + "proxyBody";
     }
 
     /**
@@ -89,10 +94,14 @@ public class Prop {
     @UtilityClass
     public class SovityDcatExt {
         public final String CTX = "https://semantic.sovity.io/dcat-ext#";
-        public final String METHOD = CTX + "httpDatasourceHintsProxyMethod";
-        public final String PATH = CTX + "httpDatasourceHintsProxyPath";
-        public final String QUERY_PARAMS = CTX + "httpDatasourceHintsProxyQueryParams";
-        public final String BODY = CTX + "httpDatasourceHintsProxyBody";
+
+        @UtilityClass
+        public class HttpDatasourceHints {
+            public final String METHOD = CTX + "httpDatasourceHintsProxyMethod";
+            public final String PATH = CTX + "httpDatasourceHintsProxyPath";
+            public final String QUERY_PARAMS = CTX + "httpDatasourceHintsProxyQueryParams";
+            public final String BODY = CTX + "httpDatasourceHintsProxyBody";
+        }
     }
 
     /**

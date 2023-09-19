@@ -17,6 +17,7 @@ package de.sovity.edc.client;
 import de.sovity.edc.client.gen.model.UiAsset;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.FailedMappingException;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.spi.asset.AssetService;
@@ -92,7 +93,11 @@ public class AssetApiServiceTest {
         var client = TestUtils.edcClient();
         var dataAddressProperties = Map.of(
                 Prop.Edc.TYPE, "HttpData",
-                Prop.Edc.BASE_URL, DATA_SINK
+                Prop.Edc.BASE_URL, DATA_SINK,
+                Prop.Edc.PROXY_METHOD, "true",
+                Prop.Edc.PROXY_PATH, "true",
+                Prop.Edc.PROXY_QUERY_PARAMS, "true",
+                Prop.Edc.PROXY_BODY, "true"
         );
         var uiAssetRequest = UiAssetCreateRequest.builder()
                 .id("asset-1")
@@ -118,9 +123,11 @@ public class AssetApiServiceTest {
 
         // assert
         assertThat(response.getId()).isEqualTo("asset-1");
+
         var assets = client.uiApi().assetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
+        assertThat(asset.getAssetId()).isEqualTo("asset-1");
         assertThat(asset.getName()).isEqualTo("AssetName");
         assertThat(asset.getDescription()).isEqualTo("AssetDescription");
         assertThat(asset.getVersion()).isEqualTo("1.0.0");
@@ -135,9 +142,66 @@ public class AssetApiServiceTest {
         assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
         assertThat(asset.getCreatorOrganizationName()).isEqualTo("creatorOrganizationName");
         assertThat(asset.getPublisherHomepage()).isEqualTo("publisherHomepage");
+        assertThat(asset.getHttpDatasourceHintsProxyMethod()).isTrue();
+        assertThat(asset.getHttpDatasourceHintsProxyPath()).isTrue();
+        assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isTrue();
+        assertThat(asset.getHttpDatasourceHintsProxyBody()).isTrue();
 
-        var assetWithDataAddress = assetService.query(QuerySpec.max()).getContent().toList().get(0);
+        var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
         assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddressProperties);
+    }
+
+    @Test
+    void testAssetCreation_noProxying() {
+        // arrange
+        var client = TestUtils.edcClient();
+        var dataAddressProperties = Map.of(
+                Prop.Edc.TYPE, "HttpData",
+                Prop.Edc.BASE_URL, DATA_SINK
+        );
+        var uiAssetRequest = UiAssetCreateRequest.builder()
+                .id("asset-1")
+                .dataAddressProperties(dataAddressProperties)
+                .build();
+
+        // act
+        var response = client.uiApi().createAsset(uiAssetRequest);
+
+        // assert
+        assertThat(response.getId()).isEqualTo("asset-1");
+        var assets = client.uiApi().assetPage().getAssets();
+        assertThat(assets).hasSize(1);
+        var asset = assets.get(0);
+        assertThat(asset.getHttpDatasourceHintsProxyMethod()).isFalse();
+        assertThat(asset.getHttpDatasourceHintsProxyPath()).isFalse();
+        assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isFalse();
+        assertThat(asset.getHttpDatasourceHintsProxyBody()).isFalse();
+    }
+
+    @Test
+    void testAssetCreation_differentDataAddressType() {
+        // arrange
+        var client = TestUtils.edcClient();
+        var dataAddressProperties = Map.of(
+                Prop.Edc.TYPE, "Unknown"
+        );
+        var uiAssetRequest = UiAssetCreateRequest.builder()
+                .id("asset-1")
+                .dataAddressProperties(dataAddressProperties)
+                .build();
+
+        // act
+        var response = client.uiApi().createAsset(uiAssetRequest);
+
+        // assert
+        assertThat(response.getId()).isEqualTo("asset-1");
+        var assets = client.uiApi().assetPage().getAssets();
+        assertThat(assets).hasSize(1);
+        var asset = assets.get(0);
+        assertThat(asset.getHttpDatasourceHintsProxyMethod()).isNull();
+        assertThat(asset.getHttpDatasourceHintsProxyPath()).isNull();
+        assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isNull();
+        assertThat(asset.getHttpDatasourceHintsProxyBody()).isNull();
     }
 
     @Test
@@ -160,10 +224,9 @@ public class AssetApiServiceTest {
             String date,
             Map<String, String> properties
     ) {
-
         DataAddress dataAddress = DataAddress.Builder.newInstance()
                 .type("HttpData")
-                .property("baseUrl", DATA_SINK)
+                .property(Prop.Edc.BASE_URL, DATA_SINK)
                 .build();
 
         var asset = Asset.Builder.newInstance()

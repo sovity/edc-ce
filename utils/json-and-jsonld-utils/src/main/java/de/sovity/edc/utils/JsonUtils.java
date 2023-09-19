@@ -32,6 +32,10 @@ public class JsonUtils {
     }
 
     public static String toJson(JsonValue json) {
+        if (json == null) {
+            return "null";
+        }
+
         var sw = new StringWriter();
         try (var writer = Json.createWriter(sw)) {
             writer.write(json);

@@ -23,7 +23,7 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.LiteralMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetBuilder;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
 import de.sovity.edc.ext.wrapper.api.ui.UiResource;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
@@ -120,8 +120,8 @@ public class WrapperExtensionContextBuilder {
                 atomicConstraintMapper,
                 typeTransformerRegistry);
         var edcPropertyMapperUtils = new EdcPropertyMapperUtils();
-        var assetBuilder = new UiAssetBuilder(edcPropertyMapperUtils);
-        var assetMapper = new AssetMapper(typeTransformerRegistry, assetBuilder);
+        var assetBuilder = new UiAssetMapper(edcPropertyMapperUtils, jsonLd);
+        var assetMapper = new AssetMapper(typeTransformerRegistry, assetBuilder, jsonLd);
         var transferProcessStateService = new TransferProcessStateService();
         var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
                 policyMapper,

@@ -63,7 +63,7 @@ dependencies {
     testImplementation("${jettyGroup}:jetty-util:${jettyVersion}")
     testImplementation("${jettyGroup}:jetty-webapp:${jettyVersion}")
 
-    testImplementation("${edcGroup}:json-ld-spi:${edcVersion}")
+    testImplementation("${edcGroup}:json-ld:${edcVersion}")
     testImplementation("${edcGroup}:dsp-http-spi:${edcVersion}")
     testImplementation("${edcGroup}:dsp-api-configuration:${edcVersion}")
     testImplementation(project(":extensions:wrapper:wrapper"))

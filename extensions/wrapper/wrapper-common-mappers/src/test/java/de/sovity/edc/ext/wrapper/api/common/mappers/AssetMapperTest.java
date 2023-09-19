@@ -1,10 +1,12 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyMapperUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetBuilder;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
+import org.eclipse.edc.jsonld.TitaniumJsonLd;
+import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,9 +25,10 @@ class AssetMapperTest {
 
     @BeforeEach
     void setup() {
+        var jsonLd = new TitaniumJsonLd(mock(Monitor.class));
         var typeTransformerRegistry = mock(TypeTransformerRegistry.class);
-        var uiAssetBuilder = new UiAssetBuilder(new EdcPropertyMapperUtils());
-        assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetBuilder);
+        var uiAssetBuilder = new UiAssetMapper(new EdcPropertyMapperUtils(), jsonLd);
+        assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetBuilder, jsonLd);
     }
 
     @Test
@@ -58,6 +61,7 @@ class AssetMapperTest {
         assertThat(uiAsset.getDataModel()).isEqualTo("my-data-model-001");
         assertThat(uiAsset.getGeoReferenceMethod()).isEqualTo("my-geo-reference-method");
         assertThat(uiAsset.getTransportMode()).isEqualTo("my-geo-reference-method");
+        assertThat(uiAsset.getAssetJsonLd()).contains("\"%s\"".formatted(Prop.Edc.ID));
     }
 
     @Test
@@ -89,7 +93,7 @@ class AssetMapperTest {
                 .add(Prop.Edc.PROPERTIES, createObjectBuilder()
                         .add(Prop.Dcterms.NAME, createObjectBuilder()
                                 .add(Prop.VALUE, "AssetName")
-                                .add(Prop.Dcterms.LANGUAGE, "en")))
+                                .add(Prop.LANGUAGE, "en")))
                 .build();
 
         // Act
@@ -133,7 +137,7 @@ class AssetMapperTest {
         var assetJsonLd = createObjectBuilder()
                 .add(Prop.ID, "my-asset-1")
                 .add(Prop.Edc.PROPERTIES, createObjectBuilder()
-                        .add(Prop.SovityDcatExt.METHOD, "wrongBooleanValue")
+                        .add(Prop.SovityDcatExt.HttpDatasourceHints.METHOD, "wrongBooleanValue")
                         .build())
                 .build();
 
@@ -152,7 +156,7 @@ class AssetMapperTest {
         var assetJsonLd = createObjectBuilder()
                 .add(Prop.ID, "my-asset-1")
                 .add(Prop.Edc.PROPERTIES, createObjectBuilder()
-                        .add(Prop.SovityDcatExt.METHOD, "")
+                        .add(Prop.SovityDcatExt.HttpDatasourceHints.METHOD, "")
                         .build())
                 .build();
 
