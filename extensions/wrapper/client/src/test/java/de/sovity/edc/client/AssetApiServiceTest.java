@@ -98,19 +98,18 @@ public class AssetApiServiceTest {
                 .id("asset-1")
                 .name("AssetName")
                 .description("AssetDescription")
+                .licenseUrl("https://license-url")
                 .version("1.0.0")
                 .language("en")
-                .creatorOrganizationName("My Organization Name")
-                .publisherHomepage("https://data-source.my-org/about")
-                .licenseUrl("https://data-source.my-org/license")
-                .landingPageUrl("https://data-source.my-org/docs")
-                .dataCategory("Infrastructure and Logistics")
-                .dataSubcategory("General Information About Planning Of Routes")
-                .dataModel("my-data-model-001")
-                .geoReferenceMethod("my-geo-reference-method")
-                .transportMode("my-geo-reference-method")
                 .mediaType("application/json")
+                .dataCategory("dataCategory")
+                .dataSubcategory("dataSubcategory")
+                .dataModel("dataModel")
+                .geoReferenceMethod("geoReferenceMethod")
+                .transportMode("transportMode")
                 .keywords(List.of("keyword1", "keyword2"))
+                .creatorOrganizationName("creatorOrganizationName")
+                .publisherHomepage("publisherHomepage")
                 .dataAddressProperties(dataAddressProperties)
                 .build();
 
@@ -123,7 +122,19 @@ public class AssetApiServiceTest {
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
         assertThat(asset.getName()).isEqualTo("AssetName");
+        assertThat(asset.getDescription()).isEqualTo("AssetDescription");
+        assertThat(asset.getVersion()).isEqualTo("1.0.0");
+        assertThat(asset.getLanguage()).isEqualTo("en");
+        assertThat(asset.getMediaType()).isEqualTo("application/json");
+        assertThat(asset.getDataCategory()).isEqualTo("dataCategory");
+        assertThat(asset.getDataSubcategory()).isEqualTo("dataSubcategory");
+        assertThat(asset.getDataModel()).isEqualTo("dataModel");
+        assertThat(asset.getGeoReferenceMethod()).isEqualTo("geoReferenceMethod");
+        assertThat(asset.getTransportMode()).isEqualTo("transportMode");
+        assertThat(asset.getLicenseUrl()).isEqualTo("https://license-url");
         assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
+        assertThat(asset.getCreatorOrganizationName()).isEqualTo("creatorOrganizationName");
+        assertThat(asset.getPublisherHomepage()).isEqualTo("publisherHomepage");
 
         var assetWithDataAddress = assetService.query(QuerySpec.max()).getContent().toList().get(0);
         assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddressProperties);

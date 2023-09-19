@@ -88,7 +88,7 @@ public class UiAssetBuilder {
         addNonNull(properties, Prop.Dcterms.DESCRIPTION, uiAssetCreateRequest.getDescription());
         addNonNull(properties, Prop.Dcterms.LANGUAGE, uiAssetCreateRequest.getLanguage());
         addNonNull(properties, Prop.Dcat.VERSION, uiAssetCreateRequest.getVersion());
-        addNonNull(properties, Prop.Dcat.MEDIATYPE, uiAssetCreateRequest.getDistribution());
+        addNonNull(properties, Prop.Dcat.MEDIATYPE, uiAssetCreateRequest.getMediaType());
         addNonNull(properties, Prop.Dcat.LANDING_PAGE, uiAssetCreateRequest.getLandingPageUrl());
         addNonNull(properties, Prop.Mds.DATA_CATEGORY, uiAssetCreateRequest.getDataCategory());
         addNonNull(properties, Prop.Mds.DATA_SUBCATEGORY, uiAssetCreateRequest.getDataSubcategory());
@@ -96,18 +96,6 @@ public class UiAssetBuilder {
         addNonNull(properties, Prop.Mds.GEO_REFERENCE_METHOD, uiAssetCreateRequest.getGeoReferenceMethod());
         addNonNull(properties, Prop.Mds.TRANSPORT_MODE, uiAssetCreateRequest.getTransportMode());
         addNonNullArray(properties, Prop.Dcat.KEYWORDS, uiAssetCreateRequest.getKeywords());
-
-        if (uiAssetCreateRequest.getPublisherHomepage() != null) {
-            properties.add(Prop.Dcterms.PUBLISHER, Json.createObjectBuilder()
-                    .add(Prop.TYPE, Prop.Foaf.ORGANIZATION)
-                    .add(Prop.Foaf.HOMEPAGE, uiAssetCreateRequest.getPublisherHomepage()));
-        }
-
-        if (uiAssetCreateRequest.getCreatorOrganizationName() != null) {
-            properties.add(Prop.Dcterms.CREATOR, Json.createObjectBuilder()
-                    .add(Prop.TYPE, Prop.Foaf.ORGANIZATION)
-                    .add(Prop.Foaf.NAME, uiAssetCreateRequest.getCreatorOrganizationName()));
-        }
 
         return properties;
     }
