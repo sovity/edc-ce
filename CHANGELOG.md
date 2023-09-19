@@ -19,7 +19,8 @@ All notable changes to this project will be documented in this file.
 ### Minor Changes
 
 - UI API Wrapper Model:
-  - Opinionated Policy Model and Mappers for EDC UI and Broker Server Extension
+  - UiPolicy + PolicyMapper for EDC UI and Broker Server
+  - UiAsset + AssetMapper for EDC UI and Broker Server
 - UI API Wrapper Endpoints:
   - Asset Page
   - Create Asset
