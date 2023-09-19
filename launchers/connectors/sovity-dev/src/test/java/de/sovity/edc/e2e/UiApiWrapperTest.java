@@ -16,12 +16,17 @@ package de.sovity.edc.e2e;
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractAgreementTransferRequest;
 import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestParams;
+import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationState.SimplifiedStateEnum;
+import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiContractOffer;
+import de.sovity.edc.client.gen.model.UiCriterionDto;
+import de.sovity.edc.client.gen.model.UiCriterionLiteralDto;
 import de.sovity.edc.client.gen.model.UiDataOffer;
+import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
@@ -35,12 +40,11 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class UiApiWrapperTest {
 
@@ -61,6 +65,7 @@ class UiApiWrapperTest {
     private ConnectorRemote providerConnector;
     private ConnectorRemote consumerConnector;
 
+    private EdcClient providerClient;
     private EdcClient consumerClient;
     private MockDataAddressRemote dataAddress;
 
@@ -69,6 +74,11 @@ class UiApiWrapperTest {
         var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 22000, PROVIDER_DATABASE);
         providerEdcContext.setConfiguration(providerConfig.getProperties());
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
+
+        providerClient = EdcClient.builder()
+                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
+                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
+                .build();
 
         var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 23000, CONSUMER_DATABASE);
         consumerEdcContext.setConfiguration(consumerConfig.getProperties());
@@ -87,26 +97,39 @@ class UiApiWrapperTest {
     @Test
     void provide_consume_assetMapping_policyMapping() {
         // arrange
-        // TODO use UI API for creation of the data offer
-        // TODO use a policy with a constraint
-        // TODO test all asset properties including additionalProperties
         var data = "expected data 123";
-        var assetId = UUID.randomUUID().toString();
-        //providerConnector.createDataOffer(assetId, dataAddress.getDataSourceUrl(data));
 
-        var providerClient = consumerClient; //TODO use providerClient
+        var policyId = providerClient.uiApi().createPolicyDefinition(PolicyDefinitionCreateRequest.builder()
+                .policyDefinitionId("policy-1")
+                .policy(UiPolicyCreateRequest.builder()
+                        .constraints(List.of())
+                        .build())
+                .build()).getId();
 
-        var dataAddressProperties = Map.of(
-                Prop.Edc.TYPE, "HttpData",
-                Prop.Edc.BASE_URL, DATA_SINK
-        );
-        var uiAssetRequest = UiAssetCreateRequest.builder()
+        // TODO test all asset properties including additionalProperties
+        var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
                 .id("asset-1")
                 .name("AssetName")
                 .keywords(List.of("keyword1", "keyword2"))
-                .dataAddressProperties(dataAddressProperties)
-                .build();
-        providerClient.uiApi().createAsset(uiAssetRequest);
+                .dataAddressProperties(Map.of(
+                        Prop.Edc.TYPE, "HttpData",
+                        Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
+                ))
+                .build()).getId();
+
+        providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
+                .contractDefinitionId("cd-1")
+                .accessPolicyId(policyId)
+                .contractPolicyId(policyId)
+                .assetSelector(List.of(UiCriterionDto.builder()
+                        .operandLeft(Prop.Edc.ID)
+                        .operator(UiCriterionDto.OperatorEnum.EQ)
+                        .operandRight(UiCriterionLiteralDto.builder()
+                                .type(UiCriterionLiteralDto.TypeEnum.VALUE)
+                                .value(assetId)
+                                .build())
+                        .build()))
+                .build());
 
         var dataOffers = consumerClient.uiApi().catalogPageDataOffers(getProtocolEndpoint(providerConnector));
         assertThat(dataOffers).hasSize(1);
@@ -121,7 +144,9 @@ class UiApiWrapperTest {
         // assert
         assertThat(dataOffer.getEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
         assertThat(dataOffer.getParticipantId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
-        assertThat(dataOffer.getAsset().getAssetId()).isEqualTo("asset-1");
+        assertThat(dataOffer.getAsset().getAssetId()).isEqualTo(assetId);
+        assertThat(dataOffer.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
+        assertThat(dataOffer.getAsset().getName()).isEqualTo("AssetName");
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
     }
 

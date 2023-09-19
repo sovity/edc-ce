@@ -36,4 +36,8 @@ public class MapUtils {
             throw new IllegalStateException("Duplicate key %s.".formatted(keyExtractor.apply(a)));
         }));
     }
+
+    public static <K, T> Map<T, K> reverse(@NonNull Map<K, T> map) {
+        return map.entrySet().stream().collect(toMap(Map.Entry::getValue, Map.Entry::getKey));
+    }
 }
