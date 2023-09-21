@@ -91,7 +91,7 @@ class AssetMapperTest {
         var assetJsonLd = createObjectBuilder()
                 .add(Prop.ID, "my-asset-1")
                 .add(Prop.Edc.PROPERTIES, createObjectBuilder()
-                        .add(Prop.Dcterms.NAME, createObjectBuilder()
+                        .add(Prop.Dcterms.TITLE, createObjectBuilder()
                                 .add(Prop.VALUE, "AssetName")
                                 .add(Prop.LANGUAGE, "en")))
                 .build();
@@ -110,7 +110,7 @@ class AssetMapperTest {
 
         // Arrange
         var properties = createObjectBuilder()
-                .add(Prop.Dcterms.NAME, createArrayBuilder()
+                .add(Prop.Dcterms.TITLE, createArrayBuilder()
                         .add(createObjectBuilder()
                                 .add(Prop.TYPE, "SomeType")
                                 .add(Prop.VALUE, "AssetName")

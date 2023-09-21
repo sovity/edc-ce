@@ -14,8 +14,8 @@
 
 package de.sovity.edc.ext.wrapper.api.ui;
 
-import de.sovity.edc.ext.wrapper.api.common.model.AssetDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
@@ -99,7 +99,7 @@ public class UiResource {
     @GET
     @Path("pages/transfer-history-page/transfer-processes/{transferProcessId}/asset")
     @Produces(MediaType.APPLICATION_JSON)
-    public AssetDto getTransferProcessAsset(@PathParam("transferProcessId") String transferProcessId) {
+    public UiAsset getTransferProcessAsset(@PathParam("transferProcessId") String transferProcessId) {
         return transferHistoryPageAssetFetcherService.getAssetForTransferHistoryPage(transferProcessId);
     }
 

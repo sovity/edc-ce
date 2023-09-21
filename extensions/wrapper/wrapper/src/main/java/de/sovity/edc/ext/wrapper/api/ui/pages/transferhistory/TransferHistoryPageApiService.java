@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryEntry;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
@@ -84,7 +85,7 @@ public class TransferHistoryPageApiService {
             if (direction == ContractAgreementDirection.CONSUMING) {
                 transferHistoryEntry.setAssetName(asset.getId());
             } else {
-                transferHistoryEntry.setAssetName(asset.getName() == null ? asset.getId() : asset.getName());
+                transferHistoryEntry.setAssetName(asset.getProperties().get(Prop.Dcterms.TITLE) == null ? asset.getId() : asset.getProperties().get(Prop.Dcterms.TITLE).toString());
             }
             transferHistoryEntry.setContractAgreementId(agreement.getId());
             transferHistoryEntry.setCounterPartyConnectorEndpoint(negotiation.getCounterPartyAddress());

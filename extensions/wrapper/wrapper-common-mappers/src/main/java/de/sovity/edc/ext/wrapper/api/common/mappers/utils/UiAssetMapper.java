@@ -32,7 +32,7 @@ public class UiAssetMapper {
 
         uiAsset.setAssetId(JsonLdUtils.string(assetJsonLd, Prop.ID));
         uiAsset.setLicenseUrl(JsonLdUtils.string(properties, Prop.Dcterms.LICENSE));
-        uiAsset.setName(JsonLdUtils.string(properties, Prop.Dcterms.NAME));
+        uiAsset.setName(JsonLdUtils.string(properties, Prop.Dcterms.TITLE));
         uiAsset.setDescription(JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION));
         uiAsset.setLanguage(JsonLdUtils.string(properties, Prop.Dcterms.LANGUAGE));
         uiAsset.setVersion(JsonLdUtils.string(properties, Prop.Dcat.VERSION));
@@ -83,7 +83,7 @@ public class UiAssetMapper {
 
         addNonNull(properties, Prop.Edc.ID, uiAssetCreateRequest.getId());
         addNonNull(properties, Prop.Dcterms.LICENSE, uiAssetCreateRequest.getLicenseUrl());
-        addNonNull(properties, Prop.Dcterms.NAME, uiAssetCreateRequest.getName());
+        addNonNull(properties, Prop.Dcterms.TITLE, uiAssetCreateRequest.getName());
         addNonNull(properties, Prop.Dcterms.DESCRIPTION, uiAssetCreateRequest.getDescription());
         addNonNull(properties, Prop.Dcterms.LANGUAGE, uiAssetCreateRequest.getLanguage());
         addNonNull(properties, Prop.Dcat.VERSION, uiAssetCreateRequest.getVersion());
