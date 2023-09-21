@@ -151,7 +151,8 @@ public class WrapperExtensionContextBuilder {
                 transferProcessStateService);
         var transferHistoryPageAssetFetcherService = new TransferHistoryPageAssetFetcherService(
                 assetService,
-                transferProcessService);
+                transferProcessService,
+                assetMapper);
         var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
         var assetApiService = new AssetApiService(assetService, assetMapper);

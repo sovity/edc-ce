@@ -54,7 +54,7 @@ class GetTransferProcessAssetApiServiceTest {
 
         //assert
         assertThat(providerAssetResult.getAssetId()).isEqualTo(TransferProcessTestUtils.VALID_ASSET_ID);
-        assertThat(providerAssetResult.getProperties().get(Asset.PROPERTY_NAME)).isEqualTo(TransferProcessTestUtils.ASSET_NAME);
+        assertThat(providerAssetResult.getName()).isEqualTo(TransferProcessTestUtils.ASSET_NAME);
     }
 
     @Test
@@ -71,7 +71,7 @@ class GetTransferProcessAssetApiServiceTest {
 
         //assert
         assertThat(consumerAssetResult.getAssetId()).isEqualTo(TransferProcessTestUtils.UNKNOWN_ASSET_ID);
-        assertThat(consumerAssetResult.getProperties().get("asset:prop:name")).isNull();
+        assertThat(consumerAssetResult.getName()).isEqualTo(TransferProcessTestUtils.UNKNOWN_ASSET_ID);
     }
 
 }
