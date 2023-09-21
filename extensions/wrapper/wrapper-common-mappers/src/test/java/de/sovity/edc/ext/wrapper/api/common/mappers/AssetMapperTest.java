@@ -65,7 +65,22 @@ class AssetMapperTest {
     }
 
     @Test
-    @SneakyThrows
+    void test_empty() {
+
+        // Arrange
+        var assetJsonLd = createObjectBuilder()
+                .add(Prop.ID, "my-asset-1")
+                .build();
+        // Act
+        var uiAsset = assetMapper.buildUiAsset(assetJsonLd);
+
+        // Assert
+        assertThat(uiAsset).isNotNull();
+        assertThat(uiAsset.getAssetId()).isEqualTo("my-asset-1");
+        assertThat(uiAsset.getName()).isEqualTo("my-asset-1");
+    }
+
+    @Test
     void test_KeywordsAsSingleString() {
 
         // Arrange
@@ -84,7 +99,6 @@ class AssetMapperTest {
     }
 
     @Test
-    @SneakyThrows
     void test_StringValueWrappedInAtValue() {
 
         // Arrange
@@ -105,7 +119,6 @@ class AssetMapperTest {
     }
 
     @Test
-    @SneakyThrows
     void test_StringsAsMap() {
 
         // Arrange
@@ -131,7 +144,6 @@ class AssetMapperTest {
     }
 
     @Test
-    @SneakyThrows
     void test_badBooleanValue() {
         // Arrange
         var assetJsonLd = createObjectBuilder()
@@ -150,7 +162,6 @@ class AssetMapperTest {
     }
 
     @Test
-    @SneakyThrows
     void test_noBooleanValue() {
         // Arrange
         var assetJsonLd = createObjectBuilder()

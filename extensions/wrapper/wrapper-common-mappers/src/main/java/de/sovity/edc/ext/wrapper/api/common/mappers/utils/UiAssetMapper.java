@@ -30,9 +30,12 @@ public class UiAssetMapper {
         var uiAsset = new UiAsset();
         uiAsset.setAssetJsonLd(buildCompactAssetJsonLd(assetJsonLd));
 
-        uiAsset.setAssetId(JsonLdUtils.string(assetJsonLd, Prop.ID));
+        String id = JsonLdUtils.string(assetJsonLd, Prop.ID);
+        String title = JsonLdUtils.string(properties, Prop.Dcterms.TITLE);
+
+        uiAsset.setAssetId(id);
+        uiAsset.setName(title == null ? id : title);
         uiAsset.setLicenseUrl(JsonLdUtils.string(properties, Prop.Dcterms.LICENSE));
-        uiAsset.setName(JsonLdUtils.string(properties, Prop.Dcterms.TITLE));
         uiAsset.setDescription(JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION));
         uiAsset.setLanguage(JsonLdUtils.string(properties, Prop.Dcterms.LANGUAGE));
         uiAsset.setVersion(JsonLdUtils.string(properties, Prop.Dcat.VERSION));

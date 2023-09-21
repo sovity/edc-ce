@@ -38,7 +38,7 @@ public class UiAsset {
     @Schema(description = "Asset Id", requiredMode = Schema.RequiredMode.REQUIRED)
     private String assetId;
 
-    @Schema(description = "Asset Name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Asset Name", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 
     @Schema(description = "Asset Language", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
