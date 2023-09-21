@@ -11,6 +11,7 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +35,7 @@ public class UiAssetMapper {
         String title = JsonLdUtils.string(properties, Prop.Dcterms.TITLE);
 
         uiAsset.setAssetId(id);
-        uiAsset.setName(title == null ? id : title);
+        uiAsset.setName(StringUtils.isBlank(title) ? id : title);
         uiAsset.setLicenseUrl(JsonLdUtils.string(properties, Prop.Dcterms.LICENSE));
         uiAsset.setDescription(JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION));
         uiAsset.setLanguage(JsonLdUtils.string(properties, Prop.Dcterms.LANGUAGE));
