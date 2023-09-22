@@ -84,8 +84,24 @@ begin
                    then 'https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams'
                when 'asset:prop:datasource:http:hints:proxyBody'
                    then 'https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody'
-               else replace(asset_property_key, 'asset:prop:', 'custom:')
+               else pg_temp.migrate_unknown_asset_property_name(asset_property_key)
         end;
+end;
+$$
+    language plpgsql;
+
+-- Migrates an unknown Asset Property Name to EDC 0 (if possible)
+create
+    or replace function pg_temp.migrate_unknown_asset_property_name(asset_property_key text) returns text as
+$$
+begin
+    asset_property_key := replace(asset_property_key, 'asset:prop:', '');
+    if pg_temp.starts_with(asset_property_key, 'http://') or
+       pg_temp.starts_with(asset_property_key, 'https://') then
+        return asset_property_key;
+    end if;
+
+    return 'http://unknown/' || replace(asset_property_key, ':', '-');
 end;
 $$
     language plpgsql;
@@ -97,8 +113,9 @@ create
     or replace function pg_temp.migrate_asset_keywords(keywords_comma_joined text) returns text as
 $$
 begin
-    return (select json_agg(to_json(trim(keyword)))::text
-            from unnest(regexp_split_to_array(keywords_comma_joined, ',')) as keyword);
+    return (select coalesce(json_agg(to_json(trim(keyword)))::text, '[]')
+            from unnest(regexp_split_to_array(keywords_comma_joined, ',')) as keyword
+            where trim(keyword) <> '');
 end;
 $$
     language plpgsql;
@@ -245,7 +262,7 @@ $$
 begin
     return case
                when pg_temp.ends_with(str, old_suffix) then
-                       substring(str from 1 for length(str) - length(old_suffix)) || new_suffix
+                       left(str, length(str) - length(old_suffix)) || new_suffix
                else
                    str
         end;
@@ -259,6 +276,15 @@ create or replace function pg_temp.ends_with(str text, suffix text)
 $$
 begin
     return right(str, length(suffix)) = suffix;
+end;
+$$ language plpgsql;
+
+-- Utility Function: startsWith
+create or replace function pg_temp.starts_with(str text, prefix text)
+    returns boolean as
+$$
+begin
+    return left(str, length(prefix)) = prefix;
 end;
 $$ language plpgsql;
 
@@ -286,7 +312,8 @@ alter table edc_asset_property
 alter table edc_contract_negotiation
     drop constraint contract_negotiation_contract_agreement_id_fk;
 update edc_contract_negotiation
-set agreement_id = pg_temp.migrate_contract_agreement_id(agreement_id, pg_temp.migrate_asset_id(contract_offers -> 0 -> 'asset' ->> 'id'));
+set agreement_id = pg_temp.migrate_contract_agreement_id(agreement_id,
+                                                         pg_temp.migrate_asset_id(contract_offers -> 0 -> 'asset' ->> 'id'));
 update edc_contract_agreement
 set agr_id = pg_temp.migrate_contract_agreement_id(agr_id, asset_id);
 update edc_data_request

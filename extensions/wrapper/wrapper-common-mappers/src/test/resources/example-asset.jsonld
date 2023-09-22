@@ -32,10 +32,12 @@
     "http://w3id.org/mds#dataModel": "my-data-model-001",
     "http://w3id.org/mds#geoReferenceMethod": "my-geo-reference-method",
     "http://w3id.org/mds#transportMode": "my-geo-reference-method",
-    "http://unknown/some-custom-property": "test"
+    "http://unknown/some-custom-string": "some-string-value",
+    "http://unknown/some-custom-obj": {"http://unknown/a": "b"}
   },
   "privateProperties": {
-    "idk": "abc"
+    "http://unknown/some-custom-private-string": "some-private-value",
+    "http://unknown/some-custom-private-obj": {"http://unknown/a-private": "b-private"}
   },
   "https://w3id.org/edc/v0.0.1/ns/DataAddress": {
     "https://w3id.org/edc/v0.0.1/ns/type": "HttpData",

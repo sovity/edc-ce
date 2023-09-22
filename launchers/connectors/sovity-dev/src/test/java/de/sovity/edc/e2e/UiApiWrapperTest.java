@@ -137,6 +137,10 @@ class UiApiWrapperTest {
                         Prop.Edc.METHOD, "GET",
                         Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
                 ))
+                .additionalProperties(Map.of("http://unknown/a", "x"))
+                .additionalJsonProperties(Map.of("http://unknown/b", "{\"http://unknown/c\":\"y\"}"))
+                .privateProperties(Map.of("http://unknown/a-private", "x-private"))
+                .privateJsonProperties(Map.of("http://unknown/b-private", "{\"http://unknown/c-private\":\"y-private\"}"))
                 .build()).getId();
         assertThat(assetId).isEqualTo("asset-1");
 
@@ -153,6 +157,10 @@ class UiApiWrapperTest {
                                 .build())
                         .build()))
                 .build());
+
+        var assets = providerClient.uiApi().assetPage().getAssets();
+        assertThat(assets).hasSize(1);
+        var asset = assets.get(0);
 
         var dataOffers = consumerClient.uiApi().catalogPageDataOffers(getProtocolEndpoint(providerConnector));
         assertThat(dataOffers).hasSize(1);
@@ -187,6 +195,24 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyPath()).isFalse();
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyQueryParams()).isFalse();
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyBody()).isFalse();
+        assertThat(dataOffer.getAsset().getAdditionalProperties())
+                .containsExactlyEntriesOf(Map.of("http://unknown/a", "x"));
+        assertThat(dataOffer.getAsset().getAdditionalJsonProperties())
+                .containsExactlyEntriesOf(Map.of("http://unknown/b", "{\"http://unknown/c\":\"y\"}"));
+        assertThat(dataOffer.getAsset().getPrivateProperties()).isNullOrEmpty();
+        assertThat(dataOffer.getAsset().getPrivateJsonProperties()).isNullOrEmpty();
+
+        // while the data offer on the consumer side won't contain private properties, the asset page on the provider side should
+        assertThat(asset.getAssetId()).isEqualTo(assetId);
+        assertThat(asset.getName()).isEqualTo("AssetName");
+        assertThat(asset.getAdditionalProperties())
+                .containsExactlyEntriesOf(Map.of("http://unknown/a", "x"));
+        assertThat(asset.getAdditionalJsonProperties())
+                .containsExactlyEntriesOf(Map.of("http://unknown/b", "{\"http://unknown/c\":\"y\"}"));
+        assertThat(asset.getPrivateProperties())
+                .containsExactlyEntriesOf(Map.of("http://unknown/a-private", "x-private"));
+        assertThat(asset.getPrivateJsonProperties())
+                .containsExactlyEntriesOf(Map.of("http://unknown/b-private", "{\"http://unknown/c-private\":\"y-private\"}"));
 
         // Test Policy
         assertThat(contractOffer.getPolicy().getConstraints()).hasSize(1);

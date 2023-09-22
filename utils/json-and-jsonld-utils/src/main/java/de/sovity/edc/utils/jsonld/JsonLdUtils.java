@@ -13,7 +13,11 @@
 
 package de.sovity.edc.utils.jsonld;
 
+import com.apicatalog.jsonld.JsonLdError;
+import com.apicatalog.jsonld.document.JsonDocument;
 import de.sovity.edc.utils.JsonUtils;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
+import jakarta.json.Json;
 import jakarta.json.JsonNumber;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonString;
@@ -25,6 +29,24 @@ import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonLdUtils {
+    private static final JsonDocument EMPTY_CONTEXT_DOCUMENT = JsonDocument.of(Json.createObjectBuilder()
+            .add(Prop.CONTEXT, Json.createObjectBuilder())
+            .build());
+
+    /**
+     * Compact JSON-LD, but don't compact property names to namespaces.
+     *
+     * @param json json-ld
+     * @return compacted values
+     */
+    public static JsonObject tryCompact(JsonObject json) {
+        try {
+            return com.apicatalog.jsonld.JsonLd.compact(JsonDocument.of(json), EMPTY_CONTEXT_DOCUMENT).get();
+        } catch (JsonLdError e) {
+            return json;
+        }
+    }
+
 
     /**
      * Get the ID value of an object

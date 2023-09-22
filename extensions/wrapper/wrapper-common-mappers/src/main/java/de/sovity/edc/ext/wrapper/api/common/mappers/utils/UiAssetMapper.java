@@ -9,16 +9,23 @@ import de.sovity.edc.utils.jsonld.vocab.Prop.SovityDcatExt.HttpDatasourceHints;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
+import jakarta.json.JsonString;
+import jakarta.json.JsonValue;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNull;
 import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNullArray;
+import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNullJsonValue;
 
 @RequiredArgsConstructor
 public class UiAssetMapper {
@@ -29,7 +36,7 @@ public class UiAssetMapper {
         var properties = JsonLdUtils.object(assetJsonLd, Prop.Edc.PROPERTIES);
 
         var uiAsset = new UiAsset();
-        uiAsset.setAssetJsonLd(buildCompactAssetJsonLd(assetJsonLd));
+        uiAsset.setAssetJsonLd(JsonUtils.toJson(JsonLdUtils.tryCompact(assetJsonLd)));
 
         String id = JsonLdUtils.string(assetJsonLd, Prop.ID);
         String title = JsonLdUtils.string(properties, Prop.Dcterms.TITLE);
@@ -60,29 +67,60 @@ public class UiAssetMapper {
         var creator = JsonLdUtils.object(properties, Prop.Dcterms.CREATOR);
         uiAsset.setCreatorOrganizationName(JsonLdUtils.string(creator, Prop.Foaf.NAME));
 
-        uiAsset.setAdditionalProperties(Map.of());
-        uiAsset.setAdditionalJsonProperties(Map.of());
-        uiAsset.setPrivateProperties(Map.of());
-        uiAsset.setPrivateJsonProperties(Map.of());
+        // Additional / Remaining Properties
+        // TODO: diff nested objects
+        JsonObject remaining = removeHandledProperties(properties, List.of(
+                // Implicitly handled / should be skipped if found
+                Prop.ID,
+                Prop.TYPE,
+                Prop.CONTEXT,
+                Prop.Edc.ID,
+                Prop.Dcterms.IDENTIFIER,
+
+                // Explicitly handled
+                Prop.Dcat.KEYWORDS,
+                Prop.Dcat.LANDING_PAGE,
+                Prop.Dcat.MEDIATYPE,
+                Prop.Dcat.VERSION,
+                Prop.Dcterms.CREATOR,
+                Prop.Dcterms.DESCRIPTION,
+                Prop.Dcterms.LANGUAGE,
+                Prop.Dcterms.LICENSE,
+                Prop.Dcterms.PUBLISHER,
+                Prop.Dcterms.TITLE,
+                Prop.Mds.DATA_CATEGORY,
+                Prop.Mds.DATA_MODEL,
+                Prop.Mds.DATA_SUBCATEGORY,
+                Prop.Mds.GEO_REFERENCE_METHOD,
+                Prop.Mds.TRANSPORT_MODE,
+                HttpDatasourceHints.BODY,
+                HttpDatasourceHints.METHOD,
+                HttpDatasourceHints.PATH,
+                HttpDatasourceHints.QUERY_PARAMS
+        ));
+        uiAsset.setAdditionalProperties(getStringProperties(remaining));
+        uiAsset.setAdditionalJsonProperties(getJsonProperties(remaining));
+
+        // Private Properties
+        var privateProperties = JsonLdUtils.tryCompact(getPrivateProperties(assetJsonLd));
+        uiAsset.setPrivateProperties(getStringProperties(privateProperties));
+        uiAsset.setPrivateJsonProperties(getJsonProperties(privateProperties));
 
         return uiAsset;
-    }
-
-    private String buildCompactAssetJsonLd(JsonObject assetJsonLd) {
-        var compacted = jsonLd.compact(assetJsonLd).orElseThrow(FailedMappingException::ofFailure);
-        return JsonUtils.toJson(compacted);
     }
 
     @SneakyThrows
     @Nullable
     public JsonObject buildAssetJsonLd(UiAssetCreateRequest uiAssetCreateRequest) {
         var properties = getAssetProperties(uiAssetCreateRequest);
+        var privateProperties = getAssetPrivateProperties(uiAssetCreateRequest);
         var dataAddress = getDataAddress(uiAssetCreateRequest);
 
         return Json.createObjectBuilder()
                 .add(Prop.ID, uiAssetCreateRequest.getId())
                 .add(Prop.TYPE, Prop.Edc.TYPE_ASSET)
                 .add(Prop.Edc.PROPERTIES, properties)
+                .add(Prop.Edc.PRIVATE_PROPERTIES, privateProperties)
                 .add(Prop.Edc.DATA_ADDRESS, dataAddress)
                 .build();
     }
@@ -123,7 +161,33 @@ public class UiAssetMapper {
             addNonNull(properties, HttpDatasourceHints.METHOD, trueIfTrue(dataAddress, Prop.Edc.PROXY_METHOD));
         }
 
+        var additionalProperties = uiAssetCreateRequest.getAdditionalProperties();
+        if (additionalProperties != null) {
+            additionalProperties.forEach((k, v) -> addNonNull(properties, k, v));
+        }
+
+        var additionalJsonProperties = uiAssetCreateRequest.getAdditionalJsonProperties();
+        if (additionalJsonProperties != null) {
+            additionalJsonProperties.forEach((k, v) -> addNonNullJsonValue(properties, k, v));
+        }
+
         return properties;
+    }
+
+    private JsonObjectBuilder getAssetPrivateProperties(UiAssetCreateRequest uiAssetCreateRequest) {
+        var privateProperties = Json.createObjectBuilder();
+
+        var stringProperties = uiAssetCreateRequest.getPrivateProperties();
+        if (stringProperties != null) {
+            stringProperties.forEach((k, v) -> addNonNull(privateProperties, k, v));
+        }
+
+        var jsonProperties = uiAssetCreateRequest.getPrivateJsonProperties();
+        if (jsonProperties != null) {
+            jsonProperties.forEach((k, v) -> addNonNullJsonValue(privateProperties, k, v));
+        }
+
+        return privateProperties;
     }
 
     private String trueIfTrue(Map<String, String> dataAddressProperties, String key) {
@@ -135,5 +199,50 @@ public class UiAssetMapper {
         return Json.createObjectBuilder()
                 .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
                 .add(Prop.Edc.PROPERTIES, Json.createObjectBuilder(props));
+    }
+
+    private Map<String, String> getStringProperties(JsonObject jsonObject) {
+        return getPropertyMap(
+                jsonObject,
+                it -> it.getValueType() == JsonValue.ValueType.STRING,
+                it -> ((JsonString) it).getString()
+        );
+    }
+
+    private Map<String, String> getJsonProperties(JsonObject jsonObject) {
+        return getPropertyMap(
+                jsonObject,
+                it -> it.getValueType() != JsonValue.ValueType.STRING,
+                JsonUtils::toJson
+        );
+    }
+
+    private JsonObject removeHandledProperties(JsonObject properties, List<String> handledProperties) {
+        var remaining = Json.createObjectBuilder(JsonLdUtils.tryCompact(properties));
+        handledProperties.forEach(remaining::remove);
+        return remaining.build();
+    }
+
+    private Map<String, String> getPropertyMap(
+            JsonObject jsonObject,
+            Predicate<JsonValue> filter,
+            Function<JsonValue, String> mapper) {
+        return jsonObject.entrySet().stream()
+                .filter(entry -> filter.test(entry.getValue()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> mapper.apply(entry.getValue())
+                ));
+    }
+
+    private JsonObject getPrivateProperties(JsonObject assetJsonLd) {
+        if (assetJsonLd.containsKey(Prop.Edc.PRIVATE_PROPERTIES)) {
+            return JsonLdUtils.object(assetJsonLd, Prop.Edc.PRIVATE_PROPERTIES);
+        } else if (assetJsonLd.containsKey("privateProperties")) {
+            // Tests claim this path exists
+            return JsonLdUtils.object(assetJsonLd, "privateProperties");
+        } else {
+            return JsonValue.EMPTY_JSON_OBJECT;
+        }
     }
 }
