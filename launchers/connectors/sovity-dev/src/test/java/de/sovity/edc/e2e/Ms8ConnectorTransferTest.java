@@ -23,7 +23,6 @@ import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.data.TemporalUnitLessThanOffset;
-import org.eclipse.edc.connector.contract.spi.ContractId;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
