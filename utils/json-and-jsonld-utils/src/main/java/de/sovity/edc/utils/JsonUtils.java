@@ -31,6 +31,12 @@ public class JsonUtils {
         }
     }
 
+    public static JsonValue parseJsonValue(String string) {
+        try (var reader = Json.createReader(new StringReader(string))) {
+            return reader.readValue();
+        }
+    }
+
     public static String toJson(JsonValue json) {
         if (json == null) {
             return "null";

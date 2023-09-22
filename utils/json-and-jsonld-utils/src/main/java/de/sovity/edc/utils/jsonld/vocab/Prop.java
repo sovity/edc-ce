@@ -32,6 +32,7 @@ public class Prop {
         public final String ID = CTX + "id";
         public final String PARTICIPANT_ID = CTX + "participantId";
         public final String PROPERTIES = CTX + "properties";
+        public final String PRIVATE_PROPERTIES = CTX + "privateProperties";
         public final String DATA_ADDRESS = CTX + "dataAddress";
         public final String TYPE = CTX + "type";
         public final String BASE_URL = CTX + "baseUrl";

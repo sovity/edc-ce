@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 import static jakarta.json.Json.createArrayBuilder;
 import static jakarta.json.Json.createObjectBuilder;
@@ -35,7 +36,7 @@ class AssetMapperTest {
     @SneakyThrows
     void test_buildAssetDto() {
         // Arrange
-        String assetJsonLd = new String(Files.readAllBytes(Paths.get(getClass().getResource("/example-asset-jsonld.json").toURI())));
+        String assetJsonLd = new String(Files.readAllBytes(Paths.get(getClass().getResource("/example-asset.jsonld").toURI())));
 
         // Act
         var uiAsset = assetMapper.buildUiAsset(JsonUtils.parseJsonObj(assetJsonLd));
@@ -62,6 +63,14 @@ class AssetMapperTest {
         assertThat(uiAsset.getGeoReferenceMethod()).isEqualTo("my-geo-reference-method");
         assertThat(uiAsset.getTransportMode()).isEqualTo("my-geo-reference-method");
         assertThat(uiAsset.getAssetJsonLd()).contains("\"%s\"".formatted(Prop.Edc.ID));
+        assertThat(uiAsset.getAdditionalProperties()).containsExactlyEntriesOf(Map.of(
+                "http://unknown/some-custom-string", "some-string-value"));
+        assertThat(uiAsset.getAdditionalJsonProperties()).containsExactlyEntriesOf(Map.of(
+                "http://unknown/some-custom-obj", "{\"http://unknown/a\":\"b\"}"));
+        assertThat(uiAsset.getPrivateProperties()).containsExactlyEntriesOf(Map.of(
+                "http://unknown/some-custom-private-string", "some-private-value"));
+        assertThat(uiAsset.getPrivateJsonProperties()).containsExactlyEntriesOf(Map.of(
+                "http://unknown/some-custom-private-obj", "{\"http://unknown/a-private\":\"b-private\"}"));
     }
 
     @Test

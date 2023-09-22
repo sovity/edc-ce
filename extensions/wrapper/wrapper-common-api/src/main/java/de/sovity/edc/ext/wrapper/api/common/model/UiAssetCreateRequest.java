@@ -80,12 +80,15 @@ public class UiAssetCreateRequest {
     @Schema(description = "Data Address", requiredMode = Schema.RequiredMode.REQUIRED)
     private Map<String, String> dataAddressProperties;
 
-    @Schema(description = "Asset additional Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Custom Asset Properties (that are strings)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> additionalProperties;
 
-    @Schema(description = "Asset Private Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Custom Asset Properties (that are not strings but other JSON values)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Map<String, String> additionalJsonProperties;
+
+    @Schema(description = "Private Asset Properties (that are strings)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> privateProperties;
 
-    @Schema(description = "Asset Json Properties", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Map<String, String> additionalJsonProperties;
+    @Schema(description = "Private Asset Properties (that are not strings but other JSON values)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Map<String, String> privateJsonProperties;
 }
