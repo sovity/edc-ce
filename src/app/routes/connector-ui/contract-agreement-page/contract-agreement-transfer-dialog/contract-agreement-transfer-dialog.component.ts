@@ -28,37 +28,37 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
   get proxyMethod(): boolean {
     return (
       this.showAllHttpParameterizationFields ||
-      this.data.asset.httpProxyMethod == true
+      this.data.asset.httpDatasourceHintsProxyMethod == true
     );
   }
 
   get proxyPath(): boolean {
     return (
       this.showAllHttpParameterizationFields ||
-      this.data.asset.httpProxyPath == true
+      this.data.asset.httpDatasourceHintsProxyPath == true
     );
   }
 
   get proxyQueryParams(): boolean {
     return (
       this.showAllHttpParameterizationFields ||
-      this.data.asset.httpProxyQueryParams == true
+      this.data.asset.httpDatasourceHintsProxyQueryParams == true
     );
   }
 
   get proxyBody(): boolean {
     return (
       this.showAllHttpParameterizationFields ||
-      this.data.asset.httpProxyBody == true
+      this.data.asset.httpDatasourceHintsProxyBody == true
     );
   }
 
   get showHttpParameterizationToggleButton(): boolean {
     return (
-      this.data.asset.httpProxyMethod !== true ||
-      this.data.asset.httpProxyPath !== true ||
-      this.data.asset.httpProxyQueryParams !== true ||
-      this.data.asset.httpProxyBody !== true
+      this.data.asset.httpDatasourceHintsProxyMethod !== true ||
+      this.data.asset.httpDatasourceHintsProxyPath !== true ||
+      this.data.asset.httpDatasourceHintsProxyQueryParams !== true ||
+      this.data.asset.httpDatasourceHintsProxyBody !== true
     );
   }
 
@@ -123,9 +123,9 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
       const customJson: any = JSON.parse(
         value.transferProcessRequest?.trim() ?? '',
       );
-      customJson.assetId = this.data.asset.id;
+      customJson.assetId = this.data.asset.assetId;
       customJson.contractId = this.data.contractId;
-      customJson.connectorAddress = this.data.asset.originator;
+      customJson.connectorAddress = this.data.asset.connectorEndpoint;
 
       return {
         type: 'CUSTOM_JSON',
@@ -139,7 +139,8 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
         value,
       );
 
-    let dataSinkProperties = this.dataAddressMapper.buildDataAddressProperties(value) ?? {};
+    let dataSinkProperties =
+      this.dataAddressMapper.buildDataAddressProperties(value) ?? {};
 
     return {
       type: 'PARAMS_ONLY',

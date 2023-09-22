@@ -7,6 +7,7 @@ import {
 import {Observable, Subject, isObservable} from 'rxjs';
 import {filter, finalize, takeUntil} from 'rxjs/operators';
 import {ContractNegotiationService} from '../../../core/services/api/contract-negotiation.service';
+import {EdcApiService} from '../../../core/services/api/edc-api.service';
 import {Asset} from '../../../core/services/models/asset';
 import {NotificationService} from '../../../core/services/notification.service';
 import {ContractAgreementTransferDialogData} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-data';
@@ -18,7 +19,6 @@ import {
 import {PropertyGridGroup} from '../../property-grid/property-grid-group/property-grid-group';
 import {AssetDetailDialogData} from './asset-detail-dialog-data';
 import {AssetDetailDialogResult} from './asset-detail-dialog-result';
-import {EdcApiService} from "../../../core/services/api/edc-api.service";
 
 /**
  * Asset Detail Dialog
@@ -76,10 +76,10 @@ export class AssetDetailDialogComponent implements OnDestroy {
   onDeleteClick() {
     this.confirmDelete().subscribe(() => {
       this.blockingRequest({
-        successMessage: `Deleted asset ${this.asset.id}.`,
-        failureMessage: `Failed deleting asset ${this.asset.id}.`,
+        successMessage: `Deleted asset ${this.asset.assetId}.`,
+        failureMessage: `Failed deleting asset ${this.asset.assetId}.`,
         onsuccess: () => this.close({refreshList: true}),
-        req: () => this.edcApiService.deleteAsset(this.asset.id),
+        req: () => this.edcApiService.deleteAsset(this.asset.assetId),
       });
     });
   }

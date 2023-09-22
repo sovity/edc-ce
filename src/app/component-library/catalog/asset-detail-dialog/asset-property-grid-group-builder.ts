@@ -36,7 +36,7 @@ export class AssetPropertyGridGroupBuilder {
         icon: 'category',
         label: 'ID',
         labelTitle: AssetProperties.id,
-        ...this.propertyGridUtils.guessValue(asset.id),
+        ...this.propertyGridUtils.guessValue(asset.assetId),
       },
       {
         icon: 'file_copy',
@@ -54,32 +54,32 @@ export class AssetPropertyGridGroupBuilder {
         icon: 'apartment',
         label: 'Publisher',
         labelTitle: AssetProperties.publisher,
-        ...this.propertyGridUtils.guessValue(asset.publisher),
+        ...this.propertyGridUtils.guessValue(asset.publisherHomepage),
       },
       {
         icon: 'bookmarks',
         label: 'Endpoint Documentation',
         labelTitle: AssetProperties.endpointDocumentation,
-        ...this.propertyGridUtils.guessValue(asset.endpointDocumentation),
+        ...this.propertyGridUtils.guessValue(asset.landingPageUrl),
       },
       {
         icon: 'gavel',
         label: 'Standard License',
         labelTitle: AssetProperties.standardLicense,
-        ...this.propertyGridUtils.guessValue(asset.standardLicense),
+        ...this.propertyGridUtils.guessValue(asset.licenseUrl),
       },
-      this.buildConnectorEndpointField(asset.originator!!),
+      this.buildConnectorEndpointField(asset.connectorEndpoint),
       {
         icon: 'account_circle',
         label: 'Organization',
         labelTitle: AssetProperties.originatorOrganization,
-        ...this.propertyGridUtils.guessValue(asset.originatorOrganization),
+        ...this.propertyGridUtils.guessValue(asset.creatorOrganizationName),
       },
       {
         icon: 'category',
         label: 'Content Type',
         labelTitle: AssetProperties.contentType,
-        ...this.propertyGridUtils.guessValue(asset.contentType),
+        ...this.propertyGridUtils.guessValue(asset.mediaType),
       },
     ];
 

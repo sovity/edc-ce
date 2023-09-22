@@ -39,13 +39,13 @@ export class AssetCreateDialogComponent implements OnDestroy {
 
   onSave() {
     const formValue = this.form.value;
-    const assetEntry =
+    const uiAssetCreateRequest =
       this.assetEntryBuilder.buildAssetCreateRequest(formValue);
 
     this.form.all.disable();
     this.loading = true;
     this.edcApiService
-      .createAsset(assetEntry)
+      .createAsset(uiAssetCreateRequest)
       .pipe(
         takeUntil(this.ngOnDestroy$),
         finalize(() => {

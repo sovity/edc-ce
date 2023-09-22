@@ -3,9 +3,9 @@ import {
   ContractDefinitionEntry,
   ContractDefinitionPage,
   PolicyDefinitionDto,
-  UiCriterionDto,
+  UiCriterion,
 } from '@sovity.de/edc-client';
-import {OPERATOR_SYMBOLS} from '../../../../core/services/api/policy-type-ext';
+import {CRITERION_OPERATOR_SYMBOLS} from '../../../../core/services/api/criterion-type-ext';
 import {AssetProperties} from '../../../../core/services/asset-properties';
 import {Asset} from '../../../../core/services/models/asset';
 import {associateBy} from '../../../../core/utils/map-utils';
@@ -23,7 +23,7 @@ export class ContractDefinitionCardBuilder {
     assets: Asset[],
     policyDefinitions: PolicyDefinitionDto[],
   ): ContractDefinitionCard[] {
-    const assetById = associateBy(assets, (asset) => asset.id);
+    const assetById = associateBy(assets, (asset) => asset.assetId);
     const policyDefinitionById = associateBy(
       policyDefinitions,
       (policyDefinition) => policyDefinition.policyDefinitionId,
@@ -73,7 +73,7 @@ export class ContractDefinitionCardBuilder {
     };
   }
 
-  private extractCriterionOperation(criterion: UiCriterionDto): string {
+  private extractCriterionOperation(criterion: UiCriterion): string {
     const {operandLeft, operator} = criterion;
     if (
       operandLeft.toLowerCase() === AssetProperties.id.toLowerCase() &&
@@ -82,12 +82,12 @@ export class ContractDefinitionCardBuilder {
       return 'Assets';
     }
 
-    let operatorStr = OPERATOR_SYMBOLS[operator] ?? operator;
+    let operatorStr = CRITERION_OPERATOR_SYMBOLS[operator] ?? operator;
     return `${operandLeft} ${operatorStr}`;
   }
 
   private extractCriterionValues(
-    criterion: UiCriterionDto,
+    criterion: UiCriterion,
     assetsById: Map<string, Asset>,
   ): ContractDefinitionCardCriterionValue[] {
     let {operandLeft, operandRight} = criterion;

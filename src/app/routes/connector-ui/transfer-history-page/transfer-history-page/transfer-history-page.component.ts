@@ -9,7 +9,11 @@ import {
   switchMap,
 } from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {TransferHistoryEntry, TransferHistoryPage} from '@sovity.de/edc-client';
+import {
+  TransferHistoryEntry,
+  TransferHistoryPage,
+  UiAsset,
+} from '@sovity.de/edc-client';
 import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
 import {JsonDialogService} from '../../../../component-library/json-dialog/json-dialog/json-dialog.service';
@@ -62,12 +66,12 @@ export class TransferHistoryPageComponent implements OnInit, OnDestroy {
     return this.edcApiService
       .getTransferProcessAsset(item.transferProcessId)
       .pipe(
-        map((asset) =>
-          this.assetPropertyMapper.buildAsset({
+        map((uiAsset: UiAsset) => {
+          return this.assetPropertyMapper.buildAsset({
+            uiAsset,
             connectorEndpoint: item.counterPartyConnectorEndpoint,
-            properties: asset.properties,
-          }),
-        ),
+          });
+        }),
       );
   }
 

@@ -33,13 +33,17 @@ export class HttpRequestParamsMapper {
     const contentType = value.httpProxiedBodyContentType?.trim() || null;
 
     let proxyMethod =
-      value.showAllHttpParameterizationFields || asset.httpProxyMethod;
+      value.showAllHttpParameterizationFields ||
+      asset.httpDatasourceHintsProxyMethod;
     let proxyPath =
-      value.showAllHttpParameterizationFields || asset.httpProxyPath;
+      value.showAllHttpParameterizationFields ||
+      asset.httpDatasourceHintsProxyPath;
     let proxyQueryParams =
-      value.showAllHttpParameterizationFields || asset.httpProxyQueryParams;
+      value.showAllHttpParameterizationFields ||
+      asset.httpDatasourceHintsProxyQueryParams;
     let proxyBody =
-      value.showAllHttpParameterizationFields || asset.httpProxyBody;
+      value.showAllHttpParameterizationFields ||
+      asset.httpDatasourceHintsProxyBody;
 
     return removeNullValues({
       method: proxyMethod ? method : null,

@@ -1,8 +1,6 @@
 import {Inject, Injectable} from '@angular/core';
 import {Observable, from} from 'rxjs';
 import {
-  AssetCreateRequest,
-  AssetDto,
   AssetPage,
   ConnectorLimits,
   ContractAgreementPage,
@@ -15,6 +13,8 @@ import {
   PolicyDefinitionCreateRequest,
   PolicyDefinitionPage,
   TransferHistoryPage,
+  UiAsset,
+  UiAssetCreateRequest,
   buildEdcClient,
 } from '@sovity.de/edc-client';
 import {APP_CONFIG, AppConfig} from '../../config/app-config';
@@ -35,9 +35,9 @@ export class EdcApiService {
   }
 
   createAsset(
-    assetCreateRequest: AssetCreateRequest,
+    uiAssetCreateRequest: UiAssetCreateRequest,
   ): Observable<IdResponseDto> {
-    return from(this.edcClient.uiApi.createAsset({assetCreateRequest}));
+    return from(this.edcClient.uiApi.createAsset({uiAssetCreateRequest}));
   }
 
   getAssetPage(): Observable<AssetPage> {
@@ -104,7 +104,7 @@ export class EdcApiService {
     return from(this.edcClient.uiApi.transferHistoryPageEndpoint());
   }
 
-  getTransferProcessAsset(transferProcessId: string): Observable<AssetDto> {
+  getTransferProcessAsset(transferProcessId: string): Observable<UiAsset> {
     return from(
       this.edcClient.uiApi.getTransferProcessAsset({transferProcessId}),
     );

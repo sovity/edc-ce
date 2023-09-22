@@ -30,6 +30,6 @@ export class AssetsIdValidatorBuilder {
   private fetchAssetIds(): Observable<Set<string>> {
     return this.assetServiceMapped
       .fetchAssets()
-      .pipe(map((assets) => new Set(assets.map((asset) => asset.id))));
+      .pipe(map((assets) => new Set(assets.map((asset) => asset.assetId))));
   }
 }

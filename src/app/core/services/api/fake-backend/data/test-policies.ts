@@ -1,7 +1,7 @@
-import {UiPolicyDto} from '@sovity.de/edc-client';
+import {UiPolicy} from '@sovity.de/edc-client';
 
 export namespace TestPolicies {
-  export const connectorRestricted: UiPolicyDto = {
+  export const connectorRestricted: UiPolicy = {
     policyJsonLd: '{"example-policy-jsonld": true}',
     constraints: [
       {
@@ -13,7 +13,7 @@ export namespace TestPolicies {
     errors: [],
   };
 
-  export const warnings: UiPolicyDto = {
+  export const warnings: UiPolicy = {
     policyJsonLd: '{"example-policy-jsonld": true}',
     constraints: [
       {
@@ -24,7 +24,7 @@ export namespace TestPolicies {
     ],
     errors: ['$.duties: Duties are currently unsupported.'],
   };
-  export const failedMapping: UiPolicyDto = {
+  export const failedMapping: UiPolicy = {
     policyJsonLd: '{"example-policy-jsonld": true}',
     constraints: [],
     errors: ['No constraints found!'],

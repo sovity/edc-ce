@@ -28,7 +28,7 @@
     "@ng-apimock/core": "^3.11.0",
     "@ngxs/store": "^3.8.1",
     "@sovity.de/broker-server-client": "0.20230712.71619-main-a4860cff",
-    "@sovity.de/edc-client": "0.20230830.155424-main-b314d7e2",
+    "@sovity.de/edc-client": "0.20230921.115850-main-5e87f14f",
     "clean-deep": "^3.4.0",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",

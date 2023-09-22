@@ -9,7 +9,7 @@
         {{ asset.name }}
       </a>
     </mat-card-title>
-    <mat-card-subtitle>{{ asset.originatorOrganization }}</mat-card-subtitle>
+    <mat-card-subtitle>{{ asset.creatorOrganizationName }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content class="flex flex-col space-y-[16px]">
     <!-- Description -->
@@ -18,7 +18,7 @@
     </div>
 
     <!-- Tag List -->
-    <div *ngIf="asset.keywords.length || asset.version">
+    <div *ngIf="asset.keywords?.length || asset.version">
       <mat-chip-list aria-label="Tags">
         <mat-chip *ngIf="asset.version" color="primary" selected>{{
           asset.version

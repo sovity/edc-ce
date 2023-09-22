@@ -30,5 +30,5 @@ export function search<T>(
  * @param asset
  */
 export function assetSearchTargets(asset: Asset): (string | null)[] {
-  return [asset.id, asset.name, ...asset.keywords];
+  return [asset.assetId, asset.name, ...(asset.keywords ?? [])];
 }

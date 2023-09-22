@@ -22,10 +22,10 @@ export class AssetServiceMapped {
   fetchAssets(): Observable<Asset[]> {
     return this.edcApiService.getAssetPage().pipe(
       map((assetPage) =>
-        assetPage.assets.map((asset) =>
+        assetPage.assets.map((uiAsset) =>
           this.assetPropertyMapper.buildAsset({
             connectorEndpoint: this.config.connectorEndpoint,
-            properties: asset.properties,
+            uiAsset,
           }),
         ),
       ),

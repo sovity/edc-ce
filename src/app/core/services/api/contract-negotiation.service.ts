@@ -56,7 +56,7 @@ export class ContractNegotiationService {
     return (
       this.runningNegotiations.get(contractOffer.id) !== undefined ||
       !!this.runningTransferProcesses.find(
-        (tp) => tp.assetId === contractOffer.asset.id,
+        (tp) => tp.assetId === contractOffer.asset.assetId,
       )
     );
   }
@@ -67,7 +67,7 @@ export class ContractNegotiationService {
 
   getState(contractOffer: ContractOffer): string {
     const transferProcess = this.runningTransferProcesses.find(
-      (tp) => tp.assetId === contractOffer.asset.id,
+      (tp) => tp.assetId === contractOffer.asset.assetId,
     );
     if (transferProcess) {
       return TransferProcessStates[transferProcess.state];
@@ -83,11 +83,11 @@ export class ContractNegotiationService {
 
   negotiate(contractOffer: ContractOffer) {
     const initiateRequest: NegotiationInitiateRequestDto = {
-      connectorAddress: contractOffer.asset.originator!,
+      connectorAddress: contractOffer.asset.connectorEndpoint!,
 
       offer: {
         offerId: contractOffer.id,
-        assetId: contractOffer.asset.id,
+        assetId: contractOffer.asset.assetId,
         policy: contractOffer.policy,
       },
       connectorId: 'my-connector',

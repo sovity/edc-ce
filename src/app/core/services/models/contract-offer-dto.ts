@@ -1,5 +1,5 @@
+import {UiAsset} from '@sovity.de/edc-client';
 import {Policy} from '../api/legacy-managent-api-client';
-import {AssetDto} from './asset-dto';
 
 /**
  * Contract Offer (API Model)
@@ -9,5 +9,5 @@ export interface ContractOfferDto {
   policy: Policy;
   provider: string;
   consumer: string;
-  asset: AssetDto;
+  asset: UiAsset;
 }
