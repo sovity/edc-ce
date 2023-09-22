@@ -26,7 +26,9 @@ import de.sovity.edc.client.gen.model.UiContractOffer;
 import de.sovity.edc.client.gen.model.UiCriterion;
 import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiDataOffer;
+import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
@@ -38,6 +40,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -97,11 +100,19 @@ class UiApiWrapperTest {
     void provide_consume_assetMapping_policyMapping() {
         // arrange
         var data = "expected data 123";
+        var yesterday = OffsetDateTime.now().minusDays(1);
 
         var policyId = providerClient.uiApi().createPolicyDefinition(PolicyDefinitionCreateRequest.builder()
                 .policyDefinitionId("policy-1")
                 .policy(UiPolicyCreateRequest.builder()
-                        .constraints(List.of())
+                        .constraints(List.of(UiPolicyConstraint.builder()
+                                .left("EVALUATION_TIME")
+                                .operator(UiPolicyConstraint.OperatorEnum.GT)
+                                .right(UiPolicyLiteral.builder()
+                                        .type(UiPolicyLiteral.TypeEnum.STRING)
+                                        .value(yesterday.toString())
+                                        .build())
+                                .build()))
                         .build())
                 .build()).getId();
 
@@ -176,6 +187,15 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyPath()).isFalse();
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyQueryParams()).isFalse();
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyBody()).isFalse();
+
+        // Test Policy
+        assertThat(contractOffer.getPolicy().getConstraints()).hasSize(1);
+        var constraint = contractOffer.getPolicy().getConstraints().get(0);
+        assertThat(constraint.getLeft()).isEqualTo("EVALUATION_TIME");
+        assertThat(constraint.getOperator()).isEqualTo(UiPolicyConstraint.OperatorEnum.GT);
+        assertThat(constraint.getRight().getType()).isEqualTo(UiPolicyLiteral.TypeEnum.STRING);
+        assertThat(constraint.getRight().getValue()).isEqualTo(yesterday.toString());
+
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
     }
 

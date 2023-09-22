@@ -60,6 +60,11 @@ public class UiAssetMapper {
         var creator = JsonLdUtils.object(properties, Prop.Dcterms.CREATOR);
         uiAsset.setCreatorOrganizationName(JsonLdUtils.string(creator, Prop.Foaf.NAME));
 
+        uiAsset.setAdditionalProperties(Map.of());
+        uiAsset.setAdditionalJsonProperties(Map.of());
+        uiAsset.setPrivateProperties(Map.of());
+        uiAsset.setPrivateJsonProperties(Map.of());
+
         return uiAsset;
     }
 
