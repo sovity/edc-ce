@@ -30,7 +30,7 @@ public class DspCatalogService {
     private final CatalogService catalogService;
     private final DspDataOfferBuilder dspDataOfferBuilder;
 
-    public List<DspDataOffer> fetchDataOffers(String endpoint) {
+    public List<DspDataOffer> fetchDataOffers(String endpoint) throws DspCatalogServiceException {
         var catalogJson = fetchDcatResponse(endpoint);
         return dspDataOfferBuilder.buildDataOffers(endpoint, catalogJson);
     }
@@ -43,7 +43,9 @@ public class DspCatalogService {
 
     @SneakyThrows
     private byte[] fetchDcatRaw(String connectorEndpoint) {
-        return catalogService.requestCatalog(connectorEndpoint, "dataspace-protocol-http",
-                QuerySpec.max()).get().getContent();
+        return catalogService
+                .requestCatalog(connectorEndpoint, "dataspace-protocol-http", QuerySpec.max())
+                .get()
+                .orElseThrow(DspCatalogServiceException::ofFailure);
     }
 }

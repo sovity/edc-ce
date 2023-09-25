@@ -13,6 +13,7 @@
 
 package de.sovity.edc.utils.catalog.mapper;
 
+import de.sovity.edc.utils.catalog.DspCatalogServiceException;
 import de.sovity.edc.utils.catalog.model.DspContractOffer;
 import de.sovity.edc.utils.catalog.model.DspDataOffer;
 import de.sovity.edc.utils.jsonld.JsonLdUtils;
@@ -31,7 +32,7 @@ public class DspDataOfferBuilder {
     private final JsonLd jsonLd;
 
     public List<DspDataOffer> buildDataOffers(String endpoint, JsonObject json) {
-        json = jsonLd.expand(json).getContent();
+        json = jsonLd.expand(json).orElseThrow(DspCatalogServiceException::ofFailure);
         String participantId = JsonLdUtils.string(json, Prop.Edc.PARTICIPANT_ID);
 
         return JsonLdUtils.listOfObjects(json, Prop.Dcat.DATASET).stream()

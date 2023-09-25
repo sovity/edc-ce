@@ -73,7 +73,7 @@ class UiApiWrapperTest {
 
     @BeforeEach
     void setup() {
-        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 22000, PROVIDER_DATABASE);
+        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 21000, PROVIDER_DATABASE);
         providerEdcContext.setConfiguration(providerConfig.getProperties());
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
@@ -106,7 +106,7 @@ class UiApiWrapperTest {
                 .policyDefinitionId("policy-1")
                 .policy(UiPolicyCreateRequest.builder()
                         .constraints(List.of(UiPolicyConstraint.builder()
-                                .left("EVALUATION_TIME")
+                                .left("POLICY_EVALUATION_TIME")
                                 .operator(UiPolicyConstraint.OperatorEnum.GT)
                                 .right(UiPolicyLiteral.builder()
                                         .type(UiPolicyLiteral.TypeEnum.STRING)
@@ -217,7 +217,7 @@ class UiApiWrapperTest {
         // Test Policy
         assertThat(contractOffer.getPolicy().getConstraints()).hasSize(1);
         var constraint = contractOffer.getPolicy().getConstraints().get(0);
-        assertThat(constraint.getLeft()).isEqualTo("EVALUATION_TIME");
+        assertThat(constraint.getLeft()).isEqualTo("POLICY_EVALUATION_TIME");
         assertThat(constraint.getOperator()).isEqualTo(UiPolicyConstraint.OperatorEnum.GT);
         assertThat(constraint.getRight().getType()).isEqualTo(UiPolicyLiteral.TypeEnum.STRING);
         assertThat(constraint.getRight().getValue()).isEqualTo(yesterday.toString());

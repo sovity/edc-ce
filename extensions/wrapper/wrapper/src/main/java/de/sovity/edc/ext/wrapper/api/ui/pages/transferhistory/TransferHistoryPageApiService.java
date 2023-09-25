@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;
 
+import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryEntry;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -120,16 +121,16 @@ public class TransferHistoryPageApiService {
 
     @NotNull
     private List<ContractAgreement> getAllContractAgreements() {
-        return contractAgreementService.query(QuerySpec.max()).getContent().toList();
+        return contractAgreementService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
     }
 
     @NotNull
     private List<TransferProcess> getAllTransferProcesses() {
-        return transferProcessService.query(QuerySpec.max()).getContent().toList();
+        return transferProcessService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
     }
 
     @NotNull
     private List<Asset> getAllAssets() {
-        return assetService.query(QuerySpec.max()).getContent().toList();
+        return assetService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
     }
 }

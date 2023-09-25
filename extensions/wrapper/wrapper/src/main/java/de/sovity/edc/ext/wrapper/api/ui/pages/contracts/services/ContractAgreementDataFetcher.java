@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services;
 
+import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.utils.MapUtils;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -78,11 +79,11 @@ public class ContractAgreementDataFetcher {
 
     @NotNull
     private List<ContractAgreement> getAllContractAgreements() {
-        return contractAgreementService.query(QuerySpec.max()).getContent().toList();
+        return contractAgreementService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
     }
 
     @NotNull
     private List<TransferProcess> getAllTransferProcesses() {
-        return transferProcessService.query(QuerySpec.max()).getContent().toList();
+        return transferProcessService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
     }
 }
