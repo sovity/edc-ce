@@ -20,37 +20,33 @@ import org.eclipse.edc.policy.model.Operator;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.spi.monitor.Monitor;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
 
-public class TimeIntervalFunction implements AtomicConstraintFunction<Permission> {
-
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+public class PolicyEvaluationTimeFunction implements AtomicConstraintFunction<Permission> {
     private final Monitor monitor;
-    
-    public TimeIntervalFunction(Monitor monitor) {
+
+    public PolicyEvaluationTimeFunction(Monitor monitor) {
         this.monitor = monitor;
     }
-    
+
     @Override
     public boolean evaluate(Operator operator, Object rightValue, Permission rule, PolicyContext context) {
         try {
-            var policyDate = DATE_FORMAT.parse((String) rightValue);
-            var nowDate = new Date();
+            var policyDate = OffsetDateTime.parse((String) rightValue);
+            var nowDate = OffsetDateTime.now();
             return switch (operator) {
-                case LT -> nowDate.before(policyDate);
-                case LEQ -> nowDate.before(policyDate) || nowDate.equals(policyDate);
-                case GT -> nowDate.after(policyDate);
-                case GEQ -> nowDate.after(policyDate) || nowDate.equals(policyDate);
+                case LT -> nowDate.isBefore(policyDate);
+                case LEQ -> nowDate.isBefore(policyDate) || nowDate.equals(policyDate);
+                case GT -> nowDate.isAfter(policyDate);
+                case GEQ -> nowDate.isAfter(policyDate) || nowDate.equals(policyDate);
                 case EQ -> nowDate.equals(policyDate);
                 case NEQ -> !nowDate.equals(policyDate);
                 default -> false;
             };
-        } catch (ParseException e) {
+        } catch (DateTimeParseException e) {
             monitor.severe("Failed to parse right value of constraint to date.");
             return false;
         }
     }
-    
 }

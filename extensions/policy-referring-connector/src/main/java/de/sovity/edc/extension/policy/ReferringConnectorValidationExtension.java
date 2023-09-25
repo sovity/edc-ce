@@ -92,7 +92,7 @@ public class ReferringConnectorValidationExtension implements ServiceExtension {
 
     @Override
     public String name() {
-        return "ReferringConnector Validation Extension";
+        return "Policy Function: REFERRING_CONNECTOR";
     }
 
     @Override
