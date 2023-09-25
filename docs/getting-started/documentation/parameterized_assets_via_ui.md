@@ -1,26 +1,27 @@
-# Parameterized Assets Guide
+How to share parameterized HTTP data sources to expose entire APIs using our UI
+========
 
-This guide will help you understand how to set up and use HTTP Data assets in our system.
+This guide will help you understand how to provide and consume parameterized HTTP data offers.
 
 ## What are Parameterized Assets?
 
-These are HTTP Data assets where you can change certain settings, or "parameters".
+Assets with Parameterized HTTP Data Sources are asset where you can change parts of the HTTP Request, e.g. choose a
+different method, change the path, add query params or provide a custom request body.
 
 ## Settings You Can Change
-![asset-settings.png](screenshots/asset-settings.png)
+![parameterized-asset.png](screenshots/parameterized-asset.png)
 
 When you're choosing a HTTP Data asset in the user interface (UI), there are options you can turn on or off to let you
 change certain parts of the HTTP request. These are called "overridable" fields because you can change, or "override,"
 the default settings. Here's what each option does:
 
 ### Method Overridability:
-When you're using an asset and you've enabled "Method Overridability," you're required to specify a "Custom HTTP Method."
+When you're using an asset, and you've enabled "Method Overridability," you're required to specify a "Custom HTTP Method."
 
 A "method" is a type of request you make to a server. Common examples include GET (asking a server to show you a webpage), POST (sending information to a server, like filling out a form), PUT (updating information on a server), and DELETE (asking a server to remove information). So, when "Method Overridability" is enabled, you need to tell the system which of these types of requests to make to the server. This specified request type is your "Custom HTTP Method."
 
 ### Path Overridability:
 When "Path Overridability" is turned on, you have the ability to append additional paths to the URL specified by the provider. The path is the part of the URL that comes after the domain name. However, keep in mind that you're not replacing the entire path provided by the URL, but just adding to it at the end.
-
 
 ### Query Parameter Overridability:
 When "Query Parameter Overridability" is enabled, you can add or modify parameters in your HTTP request's URL. This is particularly useful when you need to customize your request. Simply put, the system will merge the default parameters of the HTTP Data asset and the ones you provide. In case of any conflicts, your parameters will have the upper hand. For example, if the default parameter is 'color=blue' and you provide 'color=red', your 'color' preference 'red' will be used.
@@ -36,11 +37,11 @@ When "Request Body Overridability" is enabled, you can alter the data you're sen
 
 # Understanding Parameter Validation and Its Limitations
 
-When you're using our HTTP Data asset with parameterization enabled, it's important to understand how parameter validation works and some of the limitations you might encounter.
+When you're using our HTTP Data asset with parameterization enabled, it's important to understand how parameter validation works and the limitations you might encounter.
 
 ## Invalid Parameters
 
-The HTTP Data asset validates parameters when making a request. If parameters are invalid, a notable issue is that the system reports a complete data transfer even when no data has been exchanged. This happens because the validation checks parameters at the data plane stage, not at the control plane stage.
+The HTTP Data asset validates parameters when making a request. If parameters are invalid, a notable issue is that the system reports a complete data transfer even when no data has been exchanged. For example, a GET request can never have a request body, and a PUT / PATCH request requires a request body. This happens because the validation checks parameters at the data plane stage, not at the control plane stage.
 
 ## Missing Method
 
@@ -48,5 +49,5 @@ If you don't provide a method for your request, even though you've turned on met
 
 ## Asset Properties
 
-The parameterization process creates special "asset properties" that let you know what kind of parameterization is enabled for the HTTP Data asset. However, these properties aren't shown in the user interface yet. Thus, this information needs to be noted down manually.
+The parameterization process adds metadata to the asset that lets you know what kind of parameterization is enabled for the HTTP Data asset. However, due to an issue with asset metadata not getting persisted for consuming contract agreements, the available / required options aren't shown when initiating a transfer. Thus, currently, this information needs to be noted down manually from the catalog.
 
