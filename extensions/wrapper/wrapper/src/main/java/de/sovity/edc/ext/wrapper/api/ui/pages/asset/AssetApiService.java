@@ -31,6 +31,7 @@ import java.util.List;
 public class AssetApiService {
     private final AssetService assetService;
     private final AssetMapper assetMapper;
+    private final AssetIdValidator assetIdValidator;
 
     public List<UiAsset> getAssets() {
         var assets = getAllAssets();
@@ -40,6 +41,7 @@ public class AssetApiService {
 
     @NotNull
     public IdResponseDto createAsset(UiAssetCreateRequest request) {
+        assetIdValidator.assertValid(request.getId());
         var asset = assetMapper.buildAsset(request);
         asset = assetService.create(asset).getContent();
         return new IdResponseDto(asset.getId());
