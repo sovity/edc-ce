@@ -3,8 +3,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {combineLatest, distinctUntilChanged, pairwise} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {value$} from '../../../../../core/utils/form-group-utils';
-import {noWhitespaceValidator} from '../../../../../core/validators/no-whitespace-validator';
-import {requiresPrefixValidator} from '../../../../../core/validators/requires-prefix-validator';
+import {noWhitespacesOrColonsValidator} from '../../../../../core/validators/no-whitespaces-or-colons-validator';
 import {urlValidator} from '../../../../../core/validators/url-validator';
 import {LanguageSelectItem} from '../../language-select/language-select-item';
 import {LanguageSelectItemService} from '../../language-select/language-select-item.service';
@@ -24,11 +23,7 @@ export class AssetMetadataFormBuilder {
       this.formBuilder.nonNullable.group({
         id: [
           '',
-          [
-            Validators.required,
-            noWhitespaceValidator,
-            requiresPrefixValidator('urn:artifact:'),
-          ],
+          [Validators.required, noWhitespacesOrColonsValidator],
           [this.assetsIdValidatorBuilder.assetIdDoesNotExistsValidator()],
         ],
         name: ['', Validators.required],
@@ -74,12 +69,12 @@ export class AssetMetadataFormBuilder {
   }
 
   private generateId(name: string | null, version: string | null) {
-    if (!name) return 'urn:artifact:';
+    if (!name) return '';
     const normalizedName = name
       .replace(':', '')
       .replaceAll(' ', '-')
       .toLowerCase();
-    if (version) return `urn:artifact:${normalizedName}:${version}`;
-    return `urn:artifact:${normalizedName}`;
+    if (version) return `${normalizedName}-${version}`;
+    return normalizedName;
   }
 }

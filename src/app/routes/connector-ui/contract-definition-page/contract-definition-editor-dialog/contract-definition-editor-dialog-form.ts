@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PolicyDefinitionDto} from '@sovity.de/edc-client';
 import {Asset} from '../../../../core/services/models/asset';
-import {noWhitespaceValidator} from '../../../../core/validators/no-whitespace-validator';
+import {noWhitespacesOrColonsValidator} from '../../../../core/validators/no-whitespaces-or-colons-validator';
 import {
   ContractDefinitionEditorDialogFormModel,
   ContractDefinitionEditorDialogFormValue,
@@ -26,7 +26,7 @@ export class ContractDefinitionEditorDialogForm {
 
   buildFormGroup(): FormGroup<ContractDefinitionEditorDialogFormModel> {
     return this.formBuilder.nonNullable.group({
-      id: ['', [Validators.required, noWhitespaceValidator]],
+      id: ['', [Validators.required, noWhitespacesOrColonsValidator]],
       accessPolicy: [null as PolicyDefinitionDto | null, Validators.required],
       contractPolicy: [null as PolicyDefinitionDto | null, Validators.required],
       assets: [[] as Asset[], Validators.required],

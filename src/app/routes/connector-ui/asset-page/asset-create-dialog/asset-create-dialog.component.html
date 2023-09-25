@@ -31,14 +31,14 @@
           <mat-form-field
             *ngIf="form.metadata.controls.id; let ctrl"
             class="grow">
-            <mat-label>Id</mat-label>
+            <mat-label>Asset ID</mat-label>
             <input
               placeholder="urn:artifact:..."
               matInput
               autocomplete="new-id"
               [formControl]="ctrl" />
             <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
-              {{ validationMessages.invalidWhitespacesMessage }}
+              {{ validationMessages.invalidWhitespacesOrColonsMessage }}
             </mat-error>
             <mat-error *ngIf="ctrl.invalid && ctrl.errors?.requiresPrefix">
               {{ validationMessages.invalidPrefix('ID', 'urn:artifact') }}

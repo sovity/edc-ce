@@ -4,10 +4,9 @@ import {Injectable} from '@angular/core';
 export class ValidationMessages {
   invalidUrlMessage = 'Must be valid URL, e.g. https://example.com';
   invalidJsonMessage = 'Must be valid JSON';
-  invalidWhitespacesMessage = 'Must not contain whitespaces.';
+  invalidWhitespacesOrColonsMessage = 'Must not contain whitespaces or colons.';
   invalidPrefix = (field: string, prefix: string): string =>
     `${field} must start with "${prefix}".`;
   invalidDateRangeMessage = 'Need valid date range.';
-  invalidDateMessage = 'Must be valid date.';
   idExistsErrorMessage = 'ID already exists.';
 }
