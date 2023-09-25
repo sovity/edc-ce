@@ -30,6 +30,7 @@ import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.jsonld.util.JacksonJsonLd;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.monitor.ConsoleMonitor;
+import org.eclipse.edc.spi.result.Failure;
 
 import java.net.URI;
 import java.time.Duration;
@@ -168,8 +169,7 @@ public class ConnectorRemote {
 
             var responseBody = objectMapper.readValue(response, JsonObject.class);
 
-            var catalog =
-                    jsonLd.expand(responseBody).orElseThrow(f -> new EdcException(f.getFailureDetail()));
+            var catalog = jsonLd.expand(responseBody).orElseThrow(this::throwFailure);
 
             var datasets = catalog.getJsonArray(DCAT_DATASET_ATTRIBUTE);
             assertThat(datasets).isNotEmpty();
@@ -206,7 +206,7 @@ public class ConnectorRemote {
                 .add("offer", createObjectBuilder()
                         .add("offerId", offerId)
                         .add("assetId", assetId)
-                        .add("policy", jsonLd.compact(policy).getContent())
+                        .add("policy", jsonLd.compact(policy).orElseThrow(this::throwFailure))
                 )
                 .build();
 
@@ -381,6 +381,10 @@ public class ConnectorRemote {
 
     public ContractId getDatasetContractId(JsonObject dataset) {
         var id = dataset.getJsonArray(ODRL_POLICY_ATTRIBUTE).get(0).asJsonObject().getString(ID);
-        return ContractId.parseId(id).getContent();
+        return ContractId.parseId(id).orElseThrow(this::throwFailure);
+    }
+
+    private RuntimeException throwFailure(Failure failure) {
+        return new IllegalStateException(failure.getFailureDetail());
     }
 }

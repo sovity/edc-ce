@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services;
 
+import de.sovity.edc.ext.wrapper.api.ServiceException;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
@@ -32,7 +33,7 @@ public class ContractNegotiationUtils {
         var querySpec = QuerySpec.Builder.newInstance()
                 .filter(List.of(new Criterion("contractAgreement.id", "=", contractAgreementId)))
                 .build();
-        return contractNegotiationService.query(querySpec).getContent()
+        return contractNegotiationService.query(querySpec).orElseThrow(ServiceException::new)
                 .findFirst()
                 .orElseThrow(() -> new EdcException("Could not fetch contractNegotiation for " +
                         "contractAgreement"));

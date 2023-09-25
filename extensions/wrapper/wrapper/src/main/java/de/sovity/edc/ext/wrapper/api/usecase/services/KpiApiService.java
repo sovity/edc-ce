@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
+import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import de.sovity.edc.ext.wrapper.api.usecase.model.TransferProcessStatesDto;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +58,7 @@ public class KpiApiService {
     }
 
     private int getContractAgreementsCount() {
-        return contractAgreementService.query(QuerySpec.max()).getContent().toList().size();
+        return contractAgreementService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList().size();
     }
 
     private TransferProcessStatesDto getTransferProcessesDto() {

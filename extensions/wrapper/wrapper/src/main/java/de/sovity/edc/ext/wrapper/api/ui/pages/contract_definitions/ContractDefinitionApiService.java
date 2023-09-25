@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions;
 
+import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionEntry;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
@@ -54,17 +55,17 @@ public class ContractDefinitionApiService {
     @NotNull
     public IdResponseDto createContractDefinition(ContractDefinitionRequest request) {
         var contractDefinition = contractDefinitionBuilder.buildContractDefinition(request);
-        contractDefinition = contractDefinitionService.create(contractDefinition).getContent();
+        contractDefinition = contractDefinitionService.create(contractDefinition).orElseThrow(ServiceException::new);
         return new IdResponseDto(contractDefinition.getId());
     }
 
     @NotNull
     public IdResponseDto deleteContractDefinition(String contractDefinitionId) {
-        var response = contractDefinitionService.delete(contractDefinitionId);
-        return new IdResponseDto(response.getContent().getId());
+        var response = contractDefinitionService.delete(contractDefinitionId).orElseThrow(ServiceException::new);
+        return new IdResponseDto(response.getId());
     }
 
     private List<ContractDefinition> getAllContractDefinitions() {
-        return contractDefinitionService.query(QuerySpec.max()).getContent().toList();
+        return contractDefinitionService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
     }
 }
