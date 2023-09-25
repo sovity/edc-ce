@@ -39,7 +39,7 @@ create
     or replace function pg_temp.migrate_connector_endpoint(endpoint text) returns text as
 $$
 begin
-    return pg_temp.replace_suffix(endpoint, '/api/v1/ids/data', '/dsp');
+    return pg_temp.replace_suffix(endpoint, '/api/v1/ids/data', '/api/dsp');
 end;
 $$
     language plpgsql;

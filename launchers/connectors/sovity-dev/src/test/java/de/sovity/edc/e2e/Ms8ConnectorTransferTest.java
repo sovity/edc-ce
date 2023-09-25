@@ -66,7 +66,7 @@ class Ms8ConnectorTransferTest {
 
     @BeforeEach
     void setup() {
-        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 22000, PROVIDER_DATABASE);
+        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 21000, PROVIDER_DATABASE);
         providerConfig.setProperty("edc.flyway.additional.migration.locations",
                 "filesystem:%s".formatted(getAbsoluteTestResourcePath("db/additional-test-data/provider")));
         providerEdcContext.setConfiguration(providerConfig.getProperties());
