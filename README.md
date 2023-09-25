@@ -94,9 +94,9 @@ supported, once the base EDC has a reliable version.
 
 ## Getting Started
 
-The fastest way to get started is our [Getting Started Guide](docs/README.md)
-which takes you through the steps of configuring and starting via
-[docker-compose.yaml](docker-compose.yaml).
+The fastest way to get started is our [Getting Started Guide](docs/getting-started/README.md)
+which takes you through the steps of either starting a local [docker-compose.yaml](docker-compose.yaml) or deploying a
+productive sovity EDC CE or MDS EDC CE Connector.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -110,7 +110,9 @@ learn, inspire, and create. Any contributions you make are **greatly
 appreciated**.
 
 If you have a suggestion that would improve this project, please fork the repo and
-create a pull request. You can also simply open a [feature request](https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md). Don't forget to leave the project a ⭐, if you like the effort put into this version!
+create a pull request. You can also simply open
+a [feature request](https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md). Don't forget to
+leave the project a ⭐, if you like the effort put into this version!
 
 Our contribution guideline can be found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -158,7 +160,7 @@ https://img.shields.io/github/issues/sovity/edc-extensions.svg?style=for-the-bad
 [license-shield]:
 https://img.shields.io/github/license/sovity/edc-extensions.svg?style=for-the-badge
 
-[license-url]: https://github.com/sovity/edc-extensions/blob/master/LICENSE.txt
+[license-url]: https://github.com/sovity/edc-extensions/blob/master/LICENSE
 
 [linkedin-shield]:
 https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555

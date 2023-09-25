@@ -1,5 +1,3 @@
-> Note: For a guide on how to implement these steps using our user interface, see the [Parameterization Documentation](./parameterization-documentation.md).
-
 How to share parameterized HTTP data sources to expose entire APIs
 ========
 
