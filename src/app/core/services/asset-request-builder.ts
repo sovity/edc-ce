@@ -5,7 +5,7 @@ import {APP_CONFIG, AppConfig} from '../config/app-config';
 import {DataAddressMapper} from './data-address-mapper';
 
 @Injectable()
-export class AssetEntryBuilder {
+export class AssetRequestBuilder {
   constructor(
     @Inject(APP_CONFIG) private config: AppConfig,
     private dataAddressMapper: DataAddressMapper,

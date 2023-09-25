@@ -4,7 +4,6 @@ import {Subject} from 'rxjs';
 import {finalize} from 'rxjs/operators';
 import {ContractAgreementTransferRequest} from '@sovity.de/edc-client';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {AssetEntryBuilder} from '../../../../core/services/asset-entry-builder';
 import {DataAddressMapper} from '../../../../core/services/data-address-mapper';
 import {HttpRequestParamsMapper} from '../../../../core/services/http-params-mapper.service';
 import {NotificationService} from '../../../../core/services/notification.service';
@@ -17,7 +16,7 @@ import {ContractAgreementTransferDialogResult} from './contract-agreement-transf
 @Component({
   selector: 'contract-agreement-transfer-dialog',
   templateUrl: './contract-agreement-transfer-dialog.component.html',
-  providers: [ContractAgreementTransferDialogForm, AssetEntryBuilder],
+  providers: [ContractAgreementTransferDialogForm],
 })
 export class ContractAgreementTransferDialogComponent implements OnDestroy {
   loading = false;

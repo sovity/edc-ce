@@ -4,7 +4,6 @@ import {Subject} from 'rxjs';
 import {finalize, takeUntil} from 'rxjs/operators';
 import {PolicyDefinitionDto} from '@sovity.de/edc-client';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {AssetEntryBuilder} from '../../../../core/services/asset-entry-builder';
 import {AssetServiceMapped} from '../../../../core/services/asset-service-mapped';
 import {ContractDefinitionBuilder} from '../../../../core/services/contract-definition-builder';
 import {Asset} from '../../../../core/services/models/asset';
@@ -16,7 +15,7 @@ import {ContractDefinitionEditorDialogResult} from './contract-definition-editor
 @Component({
   selector: 'contract-definition-editor-dialog',
   templateUrl: './contract-definition-editor-dialog.component.html',
-  providers: [ContractDefinitionEditorDialogForm, AssetEntryBuilder],
+  providers: [ContractDefinitionEditorDialogForm],
 })
 export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
   policies: PolicyDefinitionDto[] = [];

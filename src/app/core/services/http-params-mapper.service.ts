@@ -3,8 +3,9 @@ import {AssetDatasourceFormValue} from '../../routes/connector-ui/asset-page/ass
 import {HttpDatasourceHeaderFormValue} from '../../routes/connector-ui/asset-page/asset-create-dialog/model/http-datasource-header-form-model';
 import {HttpDatasourceQueryParamFormValue} from '../../routes/connector-ui/asset-page/asset-create-dialog/model/http-datasource-query-param-form-model';
 import {ContractAgreementTransferDialogFormValue} from '../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-form-model';
-import {removeNullValues} from '../utils/record-utils';
+import {mapKeys, removeNullValues} from '../utils/record-utils';
 import {everythingAfter, everythingBefore} from '../utils/string-utils';
+import {DataAddressProperty} from './data-address-properties';
 import {Asset} from './models/asset';
 import {HttpRequestParams} from './models/http-request-params';
 
@@ -46,33 +47,36 @@ export class HttpRequestParamsMapper {
       asset.httpDatasourceHintsProxyBody;
 
     return removeNullValues({
-      method: proxyMethod ? method : null,
-      pathSegments: proxyPath ? pathSegments : null,
-      queryParams: proxyQueryParams ? queryParams : null,
-      body: proxyBody ? body : null,
-      mediaType: proxyBody ? contentType : null,
+      [DataAddressProperty.method]: proxyMethod ? method : null,
+      [DataAddressProperty.pathSegments]: proxyPath ? pathSegments : null,
+      [DataAddressProperty.queryParams]: proxyQueryParams ? queryParams : null,
+      [DataAddressProperty.body]: proxyBody ? body : null,
+      [DataAddressProperty.mediaType]: proxyBody ? contentType : null,
     });
   }
 
   encodeHttpRequestParams(
     httpRequestParams: HttpRequestParams,
   ): Record<string, string> {
+    const bool = (b?: boolean | null) => (b ? 'true' : null);
+
     const props: Record<string, string | null> = {
-      type: 'HttpData',
-      baseUrl: httpRequestParams.baseUrl,
-      method: httpRequestParams.method,
-      authKey: httpRequestParams.authHeaderName,
-      authCode: httpRequestParams.authHeaderValue,
-      secretName: httpRequestParams.authHeaderSecretName,
-      proxyMethod: httpRequestParams.proxyMethod ? 'true' : null,
-      proxyPath: httpRequestParams.proxyPath ? 'true' : null,
-      proxyQueryParams: httpRequestParams.proxyQueryParams ? 'true' : null,
-      proxyBody: httpRequestParams.proxyBody ? 'true' : null,
-      queryParams: httpRequestParams.queryParams,
-      ...Object.fromEntries(
-        Object.entries(httpRequestParams.headers).map(
-          ([headerName, headerValue]) => [`header:${headerName}`, headerValue],
-        ),
+      [DataAddressProperty.type]: 'HttpData',
+      [DataAddressProperty.baseUrl]: httpRequestParams.baseUrl,
+      [DataAddressProperty.method]: httpRequestParams.method,
+      [DataAddressProperty.authKey]: httpRequestParams.authHeaderName,
+      [DataAddressProperty.authCode]: httpRequestParams.authHeaderValue,
+      [DataAddressProperty.secretName]: httpRequestParams.authHeaderSecretName,
+      [DataAddressProperty.proxyMethod]: bool(httpRequestParams.proxyMethod),
+      [DataAddressProperty.proxyPath]: bool(httpRequestParams.proxyPath),
+      [DataAddressProperty.proxyQueryParams]: bool(
+        httpRequestParams.proxyQueryParams,
+      ),
+      [DataAddressProperty.proxyBody]: bool(httpRequestParams.proxyBody),
+      [DataAddressProperty.queryParams]: httpRequestParams.queryParams,
+      ...mapKeys(
+        httpRequestParams.headers,
+        (k) => `${DataAddressProperty.header}:${k}`,
       ),
     };
     return removeNullValues(props);

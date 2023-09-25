@@ -3,7 +3,7 @@ import {MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {finalize, takeUntil} from 'rxjs/operators';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {AssetEntryBuilder} from '../../../../core/services/asset-entry-builder';
+import {AssetRequestBuilder} from '../../../../core/services/asset-request-builder';
 import {NotificationService} from '../../../../core/services/notification.service';
 import {ValidationMessages} from '../../../../core/validators/validation-messages';
 import {AssetCreateDialogForm} from './asset-create-dialog-form';
@@ -19,7 +19,7 @@ import {AssetMetadataFormBuilder} from './model/asset-metadata-form-builder';
     AssetAdvancedFormBuilder,
     AssetDatasourceFormBuilder,
     AssetCreateDialogForm,
-    AssetEntryBuilder,
+    AssetRequestBuilder,
     AssetMetadataFormBuilder,
   ],
 })
@@ -32,7 +32,7 @@ export class AssetCreateDialogComponent implements OnDestroy {
     private edcApiService: EdcApiService,
     public form: AssetCreateDialogForm,
     public validationMessages: ValidationMessages,
-    private assetEntryBuilder: AssetEntryBuilder,
+    private assetEntryBuilder: AssetRequestBuilder,
     private notificationService: NotificationService,
     private dialogRef: MatDialogRef<AssetCreateDialogComponent>,
   ) {}
