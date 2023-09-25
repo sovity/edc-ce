@@ -13,6 +13,7 @@
 
 package de.sovity.edc.client;
 
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -88,7 +89,7 @@ public class TransferProcessTestUtils {
     private static void createAsset(AssetService assetStore, DataAddress dataAddress, String assetId, String assetName) throws ParseException {
         var asset = Asset.Builder.newInstance()
                 .id(assetId)
-                .property(Asset.PROPERTY_NAME, assetName)
+                .property(Prop.Dcterms.TITLE, assetName)
                 .createdAt(dateFormatterToLong("2023-06-01"))
                 .build();
 

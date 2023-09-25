@@ -11,30 +11,61 @@ All notable changes to this project will be documented in this file.
 - Major changes to the management API
   - Examples for the new requests are located in the postman collection in the `docs` folder
   - The `OpenAPI` file has been updated to represent the EDC version `0.1.2`
+- Reworked Deployment Guide & Docker-Compose:
+  - The Getting Started Docker Compose file now launches connectors for local demo purposes.
+  - For productive deployments, a detailed deployment guide has been added.
+  - The Dev-Images now also require a PostgreSQL Database.
 
 ### Minor Changes
 
 - UI API Wrapper Model:
-  - Opinionated Policy Model and Mappers for EDC UI and Broker Server Extension
+  - UiPolicy + PolicyMapper for EDC UI and Broker Server
+  - UiAsset + AssetMapper for EDC UI and Broker Server
 - UI API Wrapper Endpoints:
   - Asset Page
   - Create Asset
   - Delete Asset
+  - Catalog / Data Offers
   - Contract Definition Page
+  - Contract Negotiation Create / By ID
   - Create Contract Definition
   - Delete Contract Definition
   - Policy Definition Page
   - Create Policy Definition
   - Delete Policy Definition
+- DCAT Catalog Service: Parse DCAT Catalog responses for use in the UI API Wrapper and the Broker Server.
+- JSON and JSON-LD Utilities: Centralized Vocab collection for dealing with EDC / DCAT JSON-LD
 
 ### Migration Notes
 
-1. The `MY_EDC_IDS_BASE_URL` has been renamed to `MY_EDC_PROTOCOL_BASE_URL`
-2. The default value of `WEB_HTTP_PROTOCOL_PATH` been changed from `${MY_EDC_BASE_PATH}/api/v1/ids` to `${MY_EDC_BASE_PATH}/api/v1/dsp`
-3. New environment variable: `EDC_PARTICIPANT_ID`: `provider`
-4. New environment variable: `EDC_JSONLD_HTTPS_ENABLED`: `true`
-5. New environment variable: `EDC_DSP_CALLBACK_ADDRESS`: `http://edc:11003/api/v1/dsp`
-6. `v1` Management API has been deprecated in favor of the `JSON-LD` `v2` Management API. All endpoints have a `v2` prefix now (example: `http://localhost:11002/api/v1/management/assets/request` is now available at `http://localhost:11002/api/management/v2/assets/request`)
+1. The Connector Endpoint changed to `https://[FQDN]/api/dsp`, used to be `https://[FQDN]/api/v1/ids/data`.
+2. The `v1` Management API has been removed in favor of the `JSON-LD` `v2` Management API. All endpoints have a `v2` prefix now (example: `http://localhost:11002/api/v1/management/assets/request` is now available at `http://localhost:11002/api/management/v2/assets/request`)
+
+## [4.2.0] - 2023-09-01
+
+### Overview
+
+MDS 1.2 release using MS8 EDC.
+
+### EDC UI
+
+- https://github.com/sovity/edc-ui/releases/tag/v0.0.1-milestone-8-sovity13
+
+### EDC-Extensions
+
+#### Patch Changes
+
+- Fixed issues with Broker Client Extension causing exceptions, because the MDS no longer uses the legacy broker.
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:4.2.0`
+    - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.2.0`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.2.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity13`
 
 ## [4.1.0] - 2023-07-24
 

@@ -13,6 +13,7 @@
  */
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @Schema(description = "All data for the Contract Definition Page")
 public class ContractDefinitionPage {
-    
+
     @Schema(description = "Contract Definition Entries", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<ContractDefinitionEntry> contractDefinitions;
 }

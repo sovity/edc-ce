@@ -37,6 +37,7 @@ public class DatabaseMigrationManager {
     }
 
     public void migrateAllDataSources() {
+        flywayService.cleanDatabase(DEFAULT_DATASOURCE, new JdbcConnectionProperties(config, DEFAULT_DATASOURCE));
         for (String datasourceName : getDataSourceNames(config)) {
             var jdbcConnectionProperties = new JdbcConnectionProperties(config, datasourceName);
             List<String> additionalMigrationLocations = getAdditionalFlywayMigrationLocations(datasourceName);

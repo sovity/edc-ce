@@ -1,0 +1,30 @@
+openapi: 3.0.1
+info:
+  title: sovity EDC CE Public Endpoints
+  description: Required publicly exposed EDC Connector endpoints
+  version: 4.2.0
+servers:
+  - url: https://your-edc
+tags:
+  - name: Protocol API
+    description: Port 11003 on the Backend Container.
+paths:
+  /api/v1/ids/data:
+    post:
+      tags:
+        - Protocol API
+      description: IDS Message Endpoint
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK or empty response if token validation failed
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+
+

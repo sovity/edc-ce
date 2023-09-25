@@ -18,6 +18,8 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.13.0")
 
     api("${edcGroup}:junit:${edcVersion}")
+    api("org.awaitility:awaitility:${awaitilityVersion}")
+    api(project(":utils:json-and-jsonld-utils"))
     implementation("${edcGroup}:sql-core:${edcVersion}")
     implementation("${edcGroup}:json-ld-spi:${edcVersion}")
     implementation("${edcGroup}:json-ld:${edcVersion}")
@@ -26,5 +28,15 @@ dependencies {
     implementation("org.testcontainers:junit-jupiter:${testcontainersVersion}")
     implementation("org.testcontainers:postgresql:${testcontainersVersion}")
     implementation("io.rest-assured:rest-assured:${restAssured}")
-    implementation("org.awaitility:awaitility:${awaitilityVersion}")
+}
+
+val sovityEdcExtensionGroup: String by project
+group = sovityEdcExtensionGroup
+
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            from(components["java"])
+        }
+    }
 }

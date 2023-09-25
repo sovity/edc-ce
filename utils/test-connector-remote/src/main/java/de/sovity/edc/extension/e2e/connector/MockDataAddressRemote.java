@@ -17,7 +17,10 @@ import de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroupConfig;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Map;
+
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.buildDataAddressJsonLd;
+import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.buildDataAddressProperties;
 
 @RequiredArgsConstructor
 public class MockDataAddressRemote {
@@ -41,5 +44,9 @@ public class MockDataAddressRemote {
 
     public JsonObject getDataSinkJsonLd() {
         return buildDataAddressJsonLd(getDataSinkUrl(), "PUT");
+    }
+
+    public Map<String, String> getDataSinkProperties() {
+        return buildDataAddressProperties(getDataSinkUrl(), "PUT");
     }
 }

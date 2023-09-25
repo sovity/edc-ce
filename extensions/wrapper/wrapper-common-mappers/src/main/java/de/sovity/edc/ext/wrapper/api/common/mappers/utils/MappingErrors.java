@@ -1,5 +1,6 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers.utils;
 
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 /**
  * Trying to reduce an ODRL {@link org.eclipse.edc.policy.model.Policy} to a
- * {@link de.sovity.edc.ext.wrapper.api.common.model.UiPolicyDto} is a lossful operation.
+ * {@link UiPolicy} is a lossful operation.
  * <p>
  * During the mapping errors can occur, as parts of the ODRL Policy aren't supported.
  * <p>

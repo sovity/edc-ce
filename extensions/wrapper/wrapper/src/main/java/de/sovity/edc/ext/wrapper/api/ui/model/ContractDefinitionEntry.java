@@ -33,5 +33,5 @@ public class ContractDefinitionEntry {
     private String contractPolicyId;
 
     @Schema(description = "Criteria for the contract", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<UiCriterionDto> assetSelector;
+    private List<UiCriterion> assetSelector;
 }

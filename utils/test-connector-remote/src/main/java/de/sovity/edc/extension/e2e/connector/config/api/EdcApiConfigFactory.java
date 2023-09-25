@@ -39,9 +39,9 @@ public class EdcApiConfigFactory {
      */
     public static EdcApiConfig configureApi(int firstPort, String managementApiKey) {
         var defaultApiGroup = unprotected(DEFAULT, "/api", firstPort + 1);
-        var protocolApiGroup = unprotected(PROTOCOL, "/dsp", firstPort + 2);
-        var managementApiGroup = apiKeyAuth(MANAGEMENT, "/api/management", firstPort + 3, managementApiKey);
-        var unprotected = unprotected(CONTROL, "/control", firstPort + 4);
+        var managementApiGroup = apiKeyAuth(MANAGEMENT, "/api/management", firstPort + 2, managementApiKey);
+        var protocolApiGroup = unprotected(PROTOCOL, "/api/dsp", firstPort + 3);
+        var unprotected = unprotected(CONTROL, "/api/control", firstPort + 4);
 
         return EdcApiConfig.builder()
                 .defaultApiGroup(defaultApiGroup)
