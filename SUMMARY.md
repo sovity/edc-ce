@@ -11,7 +11,8 @@
 * [Data Transfer Modes](./docs/getting-started/documentation/data-transfer-methods.md)
 * [API Wrapper](./docs/getting-started/documentation/api_wrapper.md)
 * [OAuth Data Address](./docs/getting-started/documentation/oauth-data-address.md)
-* [Parameterized Assets](./docs/getting-started/documentation/parameterized_assets.md)
+* [Parameterized Assets via UI](./docs/getting-started/documentation/parameterized_assets_via_ui.md)
+* [Parameterized Assets via Managment API](./docs/getting-started/documentation/parameterized_assets.md)
 * [Pull Data Transfer](./docs/getting-started/documentation/pull-data-transfer.md)
 
 ## Deployment Documentation
