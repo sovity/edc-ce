@@ -15,7 +15,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 @RequiredArgsConstructor
 public class PolicyValidator {
 
-    public static final String ALLOWED_ACTION = "use";
+    public static final String ALLOWED_ACTION = "USE";
 
     public void validateOtherPolicyFieldsUnset(Policy policy, MappingErrors errors) {
         if (policy == null) {

@@ -7,7 +7,7 @@ services:
     environment:
       - EDC_UI_ACTIVE_PROFILE=${EDC_UI_ACTIVE_PROFILE}
       - EDC_UI_CONFIG_URL=edc-ui-config
-      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/management/v2
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:11002/api/management
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
       - EDC_UI_CATALOG_URLS=http://edc2:11003/api/v1/dsp
 
@@ -25,6 +25,7 @@ services:
       MY_EDC_MAINTAINER_NAME: "sovity GmbH"
 
       MY_EDC_FQDN: "edc"
+      EDC_API_AUTH_KEY: ApiKeyDefaultValue
 
       MY_EDC_JDBC_URL: jdbc:postgresql://postgresql:5432/edc
       MY_EDC_JDBC_USER: edc
@@ -52,7 +53,7 @@ services:
     environment:
       - EDC_UI_ACTIVE_PROFILE=${EDC_UI_ACTIVE_PROFILE}
       - EDC_UI_CONFIG_URL=edc-ui-config
-      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:22002/api/management/v2
+      - EDC_UI_DATA_MANAGEMENT_API_URL=http://localhost:22002/api/management
       - EDC_UI_DATA_MANAGEMENT_API_KEY=ApiKeyDefaultValue
       - EDC_UI_CATALOG_URLS=http://edc:11003/api/v1/dsp
 
@@ -70,6 +71,7 @@ services:
       MY_EDC_MAINTAINER_NAME: "sovity GmbH"
 
       MY_EDC_FQDN: "edc2"
+      EDC_API_AUTH_KEY: ApiKeyDefaultValue
 
       MY_EDC_JDBC_URL: jdbc:postgresql://postgresql2:5432/edc
       MY_EDC_JDBC_USER: edc

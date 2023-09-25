@@ -38,12 +38,8 @@ All notable changes to this project will be documented in this file.
 
 ### Migration Notes
 
-1. The `MY_EDC_IDS_BASE_URL` has been renamed to `MY_EDC_PROTOCOL_BASE_URL`
-2. The default value of `WEB_HTTP_PROTOCOL_PATH` been changed from `${MY_EDC_BASE_PATH}/api/v1/ids` to `${MY_EDC_BASE_PATH}/api/v1/dsp`
-3. New environment variable: `EDC_PARTICIPANT_ID`: `provider`
-4. New environment variable: `EDC_JSONLD_HTTPS_ENABLED`: `true`
-5. New environment variable: `EDC_DSP_CALLBACK_ADDRESS`: `http://edc:11003/api/v1/dsp`
-6. `v1` Management API has been deprecated in favor of the `JSON-LD` `v2` Management API. All endpoints have a `v2` prefix now (example: `http://localhost:11002/api/v1/management/assets/request` is now available at `http://localhost:11002/api/management/v2/assets/request`)
+1. The Connector Endpoint changed to `https://[FQDN]/api/dsp`, used to be `https://[FQDN]/api/v1/ids/data`.
+2. The `v1` Management API has been removed in favor of the `JSON-LD` `v2` Management API. All endpoints have a `v2` prefix now (example: `http://localhost:11002/api/v1/management/assets/request` is now available at `http://localhost:11002/api/management/v2/assets/request`)
 
 ## [4.2.0] - 2023-09-01
 

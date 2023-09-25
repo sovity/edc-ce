@@ -115,7 +115,7 @@ class PolicyValidatorTest {
         var errors = MappingErrors.root();
         var permission = Permission.Builder.newInstance()
                 .constraint(mock(Constraint.class))
-                .action(Action.Builder.newInstance().type("use").build())
+                .action(Action.Builder.newInstance().type("USE").build())
                 .build();
 
         // act
@@ -152,7 +152,7 @@ class PolicyValidatorTest {
                 "$: Permission has an assigner, which is currently unsupported.",
                 "$: Permission has an assignee, which is currently unsupported.",
                 "$: Permission has a target.",
-                "$.action: Action has a type that is not 'use', but 'idk'.",
+                "$.action: Action has a type that is not 'USE', but 'idk'.",
                 "$.action: Action has a value for includedIn, which is currently unsupported.",
                 "$.action: Action has a constraint, which is currently unsupported."
         );
