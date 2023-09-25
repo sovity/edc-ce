@@ -1,6 +1,9 @@
 How to share parameterized HTTP data sources to expose entire APIs
 ========
 
+> Note: For a guide on how to implement these steps using our user interface, see the [Parameterization Documentation](./parameterized_assets_via_ui.md).
+
+
 Provider Asset
 ========
 Create an `Custom Datasource Config (JSON)` asset over the edc-ui using the following Json:
@@ -12,7 +15,7 @@ Create an `Custom Datasource Config (JSON)` asset over the edc-ui using the foll
     "proxyPath": "true",
     "proxyBody": "true",
     "proxyMethod": "true",
-    "proxyQueryParams": "true"
+    "proxyQuery[screenshots](..%2F..%2Fscreenshots)Params": "true"
   }
 }
 ```
