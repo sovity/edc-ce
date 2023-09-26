@@ -195,7 +195,7 @@ public class UiResource {
         return contractNegotiationApiService.initiateContractNegotiation(contractNegotiationRequest);
     }
 
-    @POST
+    @GET
     @Path("pages/catalog-page/contract-negotiations/{contractNegotiationId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
