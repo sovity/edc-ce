@@ -16,6 +16,7 @@ package de.sovity.edc.client;
 
 import de.sovity.edc.client.gen.model.ContractAgreementTransferRequest;
 import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestParams;
+import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestType;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -60,7 +61,7 @@ class ContractAgreementTransferApiServiceTest {
         createContractNegotiation(store, COUNTER_PARTY_ADDRESS, contractId);
 
         var request = new ContractAgreementTransferRequest(
-                ContractAgreementTransferRequest.TypeEnum.PARAMS_ONLY,
+                ContractAgreementTransferRequestType.PARAMS_ONLY,
                 new ContractAgreementTransferRequestParams(
                         contractId,
                         Map.of(

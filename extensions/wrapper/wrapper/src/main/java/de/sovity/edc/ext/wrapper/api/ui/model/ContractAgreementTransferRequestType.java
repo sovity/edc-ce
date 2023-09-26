@@ -16,7 +16,7 @@ package de.sovity.edc.ext.wrapper.api.ui.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Type of Transfer Request")
+@Schema(description = "Type of Transfer Request", enumAsRef = true)
 public enum ContractAgreementTransferRequestType {
     PARAMS_ONLY,
     CUSTOM_JSON

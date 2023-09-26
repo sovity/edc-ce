@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-@Schema(description = "Operator for constraints")
+@Schema(description = "Operator for constraints", enumAsRef = true)
 public enum UiCriterionOperator {
     EQ,
     IN,

@@ -23,7 +23,7 @@ import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
-@Schema(description = "Whether the contract agreement is incoming or outgoing")
+@Schema(description = "Whether the contract agreement is incoming or outgoing", enumAsRef = true)
 public enum ContractAgreementDirection {
     CONSUMING(ContractNegotiation.Type.CONSUMER),
     PROVIDING(ContractNegotiation.Type.PROVIDER);

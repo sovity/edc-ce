@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions;
 
 
 import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionLiteral;
+import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionLiteralType;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Collection;
@@ -38,7 +39,7 @@ public class CriterionLiteralMapper {
             case VALUE -> dto.getValue();
             case VALUE_LIST -> dto.getValueList();
             default -> throw new IllegalStateException("Unhandled %s: %s".formatted(
-                    UiCriterionLiteral.CriterionLiteralTypeDto.class.getName(),
+                    UiCriterionLiteralType.class.getName(),
                     dto.getType()
             ));
         };
