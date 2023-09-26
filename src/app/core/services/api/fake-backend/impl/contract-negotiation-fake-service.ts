@@ -1,7 +1,7 @@
 import {
   ContractNegotiationRequest,
+  ContractNegotiationSimplifiedState,
   ContractNegotiationState,
-  ContractNegotiationStateSimplifiedStateEnum,
   UiContractNegotiation,
 } from '@sovity.de/edc-client';
 import {Patcher, patchObj} from '../../../../utils/object-utils';
@@ -12,13 +12,13 @@ import {getPolicyDefinitionByJsonLd} from './policy-definition-fake-service';
 const initiated: ContractNegotiationState = {
   name: 'INITIATED',
   code: 500,
-  simplifiedState: ContractNegotiationStateSimplifiedStateEnum.InProgress,
+  simplifiedState: ContractNegotiationSimplifiedState.InProgress,
 };
 
 const agreed: ContractNegotiationState = {
   name: 'AGREED',
   code: 1000,
-  simplifiedState: ContractNegotiationStateSimplifiedStateEnum.Agreed,
+  simplifiedState: ContractNegotiationSimplifiedState.Agreed,
 };
 
 let negotiations: UiContractNegotiation[] = [

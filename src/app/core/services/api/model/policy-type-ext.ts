@@ -1,13 +1,9 @@
-import {UiPolicyConstraintOperatorEnum} from '@sovity.de/edc-client';
+import {OperatorDto} from '@sovity.de/edc-client';
 
 export const PolicyLeftExpressions = {
   PolicyEvaluationTime: 'POLICY_EVALUATION_TIME',
   ReferringConnector: 'REFERRING_CONNECTOR',
 };
-
-export type OperatorDto =
-  | UiPolicyConstraintOperatorEnum
-  | UiPolicyConstraintOperatorEnum;
 
 export const OPERATOR_SYMBOLS: Record<OperatorDto, string> = {
   GT: '>',

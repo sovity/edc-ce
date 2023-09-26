@@ -4,8 +4,9 @@
   [formControl]="formControl"
   [compareWith]="'id' | compareByField">
   <mat-list-option
-    *ngFor="let item of state.visibleItems; trackBy: 'id' | trackByField"
+    *ngFor="let item of state.visibleItems"
     class="max-two-lines-list-item"
+    trackByField="id"
     checkboxPosition="before"
     [class.italic]="item.type === 'NO_VALUE'"
     [value]="item"

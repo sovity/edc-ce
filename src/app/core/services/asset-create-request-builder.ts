@@ -30,14 +30,13 @@ export class AssetCreateRequestBuilder {
     let creatorOrganizationName = this.config.curatorOrganizationName;
     let publisherHomepage = formValue.metadata?.publisher;
     let mediaType = formValue.metadata?.contentType;
+    let landingPageUrl = formValue.metadata?.endpointDocumentation;
 
     let dataCategory = formValue.advanced?.dataModel;
     let dataSubcategory = formValue.advanced?.dataSubcategory?.id;
     let transportMode = formValue.advanced?.transportMode?.id;
     let geoReferenceMethod = formValue.advanced?.geoReferenceMethod;
     let dataModel = formValue.advanced?.dataModel;
-
-    let landingPageUrl = formValue.datasource?.httpUrl;
 
     const dataAddressProperties =
       this.dataAddressMapper.buildDataAddressProperties(formValue.datasource);
@@ -59,9 +58,6 @@ export class AssetCreateRequestBuilder {
       geoReferenceMethod,
       transportMode,
       dataAddressProperties,
-      additionalProperties: {},
-      privateProperties: {},
-      additionalJsonProperties: {},
     };
   }
 }

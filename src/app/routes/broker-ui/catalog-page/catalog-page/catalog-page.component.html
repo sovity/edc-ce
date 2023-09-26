@@ -89,12 +89,9 @@
   <!-- Filters Accordeon -->
   <mat-accordion>
     <mat-expansion-panel
-      *ngFor="
-        let filter of state?.filters!! | values;
-        let first = first;
-        trackBy: 'id' | trackByField
-      "
+      *ngFor="let filter of state?.filters!! | values; let first = first"
       class="w-[300px] mat-expansion-panel-flex-col"
+      trackByField="id"
       [expanded]="first">
       <mat-expansion-panel-header>
         <mat-panel-title

@@ -2,11 +2,9 @@
   No transfer processes started yet.
 </i>
 <div
-  *ngFor="
-    let transfer of contractAgreement!!.transferProcesses;
-    trackBy: 'transferProcessId' | trackByField
-  "
-  class="flex flex-row space-x-[10px]">
+  *ngFor="let transfer of contractAgreement!!.transferProcesses"
+  class="flex flex-row space-x-[10px]"
+  trackByField="transferProcessId">
   <mat-icon class="mat-icon-[28px]" style="flex-shrink: 0; margin-top: 6px">{{
     contractAgreement!!.direction === 'PROVIDING' ? 'upload' : 'download'
   }}</mat-icon>
