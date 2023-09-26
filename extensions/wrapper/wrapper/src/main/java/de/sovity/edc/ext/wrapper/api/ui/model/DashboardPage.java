@@ -26,7 +26,7 @@ public class DashboardPage {
     private List<UiAsset> assets;
 
     @Schema(description = "List Of Policies", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<UiPolicy> contractPolicy;
+    private List<UiPolicy> policies;
 
     @Schema(description = "Connector's Endpoint", requiredMode = Schema.RequiredMode.REQUIRED)
     private String endpoint;
