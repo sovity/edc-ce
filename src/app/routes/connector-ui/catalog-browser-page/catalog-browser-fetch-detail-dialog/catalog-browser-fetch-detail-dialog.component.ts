@@ -3,7 +3,7 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {ContractOffer} from '../../../../core/services/models/contract-offer';
+import {DataOffer} from '../../../../core/services/models/data-offer';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {CatalogBrowserPageData} from '../catalog-browser-page/catalog-browser-page.data';
 import {CatalogBrowserFetchDetailDialogData} from './catalog-browser-fetch-detail-dialog.data';
@@ -38,7 +38,7 @@ export class CatalogBrowserFetchDetailDialogComponent
     this.ngOnDestroy$.complete();
   }
 
-  errorMessages(data: Fetched<ContractOffer[]>): string[] {
+  errorMessages(data: Fetched<DataOffer[]>): string[] {
     if (!data.isError) {
       return [];
     }

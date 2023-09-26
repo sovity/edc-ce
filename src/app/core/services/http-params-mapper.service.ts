@@ -5,9 +5,9 @@ import {HttpDatasourceQueryParamFormValue} from '../../routes/connector-ui/asset
 import {ContractAgreementTransferDialogFormValue} from '../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-form-model';
 import {mapKeys, removeNullValues} from '../utils/record-utils';
 import {everythingAfter, everythingBefore} from '../utils/string-utils';
-import {DataAddressProperty} from './data-address-properties';
 import {Asset} from './models/asset';
-import {HttpRequestParams} from './models/http-request-params';
+import {DataAddressProperty} from './models/data-address-properties';
+import {HttpDataAddressParams} from './models/http-data-address-params';
 
 @Injectable({providedIn: 'root'})
 export class HttpRequestParamsMapper {
@@ -56,7 +56,7 @@ export class HttpRequestParamsMapper {
   }
 
   encodeHttpRequestParams(
-    httpRequestParams: HttpRequestParams,
+    httpRequestParams: HttpDataAddressParams,
   ): Record<string, string> {
     const bool = (b?: boolean | null) => (b ? 'true' : null);
 
@@ -84,7 +84,7 @@ export class HttpRequestParamsMapper {
 
   buildHttpRequestParams(
     formValue: AssetDatasourceFormValue | undefined,
-  ): HttpRequestParams {
+  ): HttpDataAddressParams {
     let proxyMethod = !!formValue?.httpProxyMethod;
     let proxyPath = !!formValue?.httpProxyPath;
     let proxyQueryParams = !!formValue?.httpProxyQueryParams;

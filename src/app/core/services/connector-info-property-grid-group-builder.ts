@@ -6,8 +6,8 @@ import {PropertyGridGroup} from '../../component-library/property-grid/property-
 import {PropertyGridField} from '../../component-library/property-grid/property-grid/property-grid-field';
 import {PropertyGridFieldService} from '../../component-library/property-grid/property-grid/property-grid-field.service';
 import {APP_CONFIG, AppConfig} from '../config/app-config';
+import {LastCommitInfo} from './api/model/last-commit-info';
 import {Fetched} from './models/fetched';
-import {LastCommitInfo} from './models/last-commit-info';
 
 @Injectable({providedIn: 'root'})
 export class ConnectorInfoPropertyGridGroupBuilder {

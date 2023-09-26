@@ -1,1 +1,1 @@
-export type DateInput = Date | string
+export type DateInput = Date | string;

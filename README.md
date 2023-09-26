@@ -86,21 +86,8 @@ for a list of extensions used.
 
 ## Getting Started
 
-The fastest way to get started is to run our
-[docker-compose.yaml](docs/getting-started/docker-compose.yaml).
-
-```shell
-cd docs/getting-started
-
-# Pull latest images
-docker compose pull
-
-# On ARM64, e.g. MAC with M1, you need to cross compile your own UI image
-# (cd ../../ && docker buildx build -f "docker/Dockerfile" --platform linux/arm64 -t "ghcr.io/sovity/edc-ui:latest" .)
-
-# Runs EDC and EDC UI at localhost:11000
-docker compose up
-```
+The fastest way to get started is using our Getting Started Guide in
+[sovity EDC CE Getting Started Guide](https://github.com/sovity/edc-extensions#getting-started).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

@@ -1,11 +1,11 @@
-import {ContractOffer} from '../../../../core/services/models/contract-offer';
+import {DataOffer} from '../../../../core/services/models/data-offer';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {MultiFetched} from '../../../../core/services/models/multi-fetched';
 
 export interface CatalogBrowserPageData {
-  requestTotals: MultiFetched<ContractOffer[]>;
+  requestTotals: MultiFetched<DataOffer[]>;
   requests: ContractOfferRequest[];
-  filteredContractOffers: ContractOffer[];
+  filteredDataOffers: DataOffer[];
   numTotalContractOffers: number;
 }
 
@@ -13,7 +13,7 @@ export function emptyCatalogBrowserPageData(): CatalogBrowserPageData {
   return {
     requests: [],
     requestTotals: MultiFetched.empty(),
-    filteredContractOffers: [],
+    filteredDataOffers: [],
     numTotalContractOffers: 0,
   };
 }
@@ -21,5 +21,5 @@ export function emptyCatalogBrowserPageData(): CatalogBrowserPageData {
 export interface ContractOfferRequest {
   url: string;
   isPresetUrl: boolean;
-  data: Fetched<ContractOffer[]>;
+  data: Fetched<DataOffer[]>;
 }

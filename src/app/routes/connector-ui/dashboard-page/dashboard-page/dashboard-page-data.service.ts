@@ -1,17 +1,12 @@
 import {Injectable} from '@angular/core';
-import {Observable, combineLatest, merge, of, scan} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {TransferHistoryEntry} from '@sovity.de/edc-client';
-import {CatalogApiUrlService} from '../../../../core/services/api/catalog-api-url.service';
-import {ContractOfferService} from '../../../../core/services/api/contract-offer.service';
+import {Observable, combineLatest, merge, of, sampleTime, scan} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
+import {TransferHistoryEntry, UiDataOffer} from '@sovity.de/edc-client';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {
-  ContractAgreementService,
-  ContractDefinitionService,
-} from '../../../../core/services/api/legacy-managent-api-client';
+import {LastCommitInfoService} from '../../../../core/services/api/last-commit-info.service';
 import {ConnectorInfoPropertyGridGroupBuilder} from '../../../../core/services/connector-info-property-grid-group-builder';
-import {LastCommitInfoService} from '../../../../core/services/last-commit-info.service';
 import {Fetched} from '../../../../core/services/models/fetched';
+import {CatalogApiUrlService} from '../../catalog-browser-page/catalog-browser-page/catalog-api-url.service';
 import {DonutChartData} from '../dashboard-donut-chart/donut-chart-data';
 import {DashboardPageData, defaultDashboardData} from './dashboard-page-data';
 
@@ -19,9 +14,6 @@ import {DashboardPageData, defaultDashboardData} from './dashboard-page-data';
 export class DashboardPageDataService {
   constructor(
     private edcApiService: EdcApiService,
-    private catalogBrowserService: ContractOfferService,
-    private contractDefinitionService: ContractDefinitionService,
-    private contractAgreementService: ContractAgreementService,
     private catalogApiUrlService: CatalogApiUrlService,
     private lastCommitInfoService: LastCommitInfoService,
     private connectorInfoPropertyGridGroupBuilder: ConnectorInfoPropertyGridGroupBuilder,
@@ -61,20 +53,18 @@ export class DashboardPageDataService {
   }
 
   private contractDefinitionKpis(): Observable<Partial<DashboardPageData>> {
-    return this.contractDefinitionService
-      .getAllContractDefinitions(0, 10_000_000)
-      .pipe(
-        map((contractDefinitions) => contractDefinitions.length),
-        Fetched.wrap({
-          failureMessage: 'Failed fetching number of contract definitions.',
-        }),
-        map((numContractDefinitions) => ({numContractDefinitions})),
-      );
+    return this.edcApiService.getContractDefinitionPage().pipe(
+      map((page) => page.contractDefinitions.length),
+      Fetched.wrap({
+        failureMessage: 'Failed fetching number of contract definitions.',
+      }),
+      map((numContractDefinitions) => ({numContractDefinitions})),
+    );
   }
 
   private contractAgreementKpis(): Observable<Partial<DashboardPageData>> {
-    return this.contractAgreementService.getAllAgreements(0, 10_000_000).pipe(
-      map((contractAgreements) => contractAgreements.length),
+    return this.edcApiService.getContractAgreementPage().pipe(
+      map((page) => page.contractAgreements.length),
       Fetched.wrap({
         failureMessage: 'Failed fetching contract agreements.',
       }),
@@ -83,12 +73,27 @@ export class DashboardPageDataService {
   }
 
   private catalogBrowserKpis(): Observable<Partial<DashboardPageData>> {
-    return this.catalogBrowserService.getAllContractOffers().pipe(
-      map((contractDefinitions) => contractDefinitions.length),
+    return this.getAllDataOffers().pipe(
+      map((dataOffers) => dataOffers.length),
       Fetched.wrap({
         failureMessage: 'Failed fetching data offers.',
       }),
       map((numOffers) => ({numCatalogEntries: numOffers})),
+    );
+  }
+
+  private getAllDataOffers(): Observable<UiDataOffer[]> {
+    const catalogUrls = this.catalogApiUrlService.getAllProviders();
+
+    const dataOffers = catalogUrls.map((it) =>
+      this.edcApiService
+        .getCatalogPageDataOffers(it)
+        .pipe(catchError(() => of([]))),
+    );
+
+    return merge(...dataOffers).pipe(
+      sampleTime(50),
+      map((results) => results.flat()),
     );
   }
 

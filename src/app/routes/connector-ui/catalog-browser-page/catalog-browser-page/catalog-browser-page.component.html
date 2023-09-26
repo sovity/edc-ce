@@ -79,7 +79,7 @@
       *ngIf="data.requestTotals.isSomeReady"
       [hidePageSize]="true"
       [disabled]="true"
-      [pageSize]="data.filteredContractOffers.length"
+      [pageSize]="data.filteredDataOffers.length"
       [length]="data.numTotalContractOffers">
     </mat-paginator>
   </div>
@@ -100,19 +100,15 @@
       class="min-h-[35rem]"
       [error]="data.requestTotals.results[0].errorOrUndefined"></error-state>
     <empty-state
-      *ngIf="
-        data.requestTotals.isSomeReady && !data.filteredContractOffers.length
-      "
+      *ngIf="data.requestTotals.isSomeReady && !data.filteredDataOffers.length"
       class="min-h-[35rem]"
       emptyMessage="No contract offers found with this filter"></empty-state>
   </div>
   <div
     *ngIf="data.requestTotals.isSomeReady && !!data.numTotalContractOffers"
     class="flex flex-row flex-wrap">
-    <contract-offer-cards
-      [contractOffers]="data.filteredContractOffers"
-      (contractOfferClick)="
-        onContractOfferClick($event)
-      "></contract-offer-cards>
+    <data-offer-cards
+      [dataOffers]="data.filteredDataOffers"
+      (dataOfferClick)="onDataOfferClick($event)"></data-offer-cards>
   </div>
 </div>

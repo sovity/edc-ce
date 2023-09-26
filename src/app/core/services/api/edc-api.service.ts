@@ -7,6 +7,7 @@ import {
   ContractAgreementTransferRequest,
   ContractDefinitionPage,
   ContractDefinitionRequest,
+  ContractNegotiationRequest,
   EdcClient,
   IdResponse,
   IdResponseDto,
@@ -15,6 +16,8 @@ import {
   TransferHistoryPage,
   UiAsset,
   UiAssetCreateRequest,
+  UiContractNegotiation,
+  UiDataOffer,
   buildEdcClient,
 } from '@sovity.de/edc-client';
 import {APP_CONFIG, AppConfig} from '../../config/app-config';
@@ -112,5 +115,31 @@ export class EdcApiService {
 
   getEnterpriseEditionConnectorLimits(): Observable<ConnectorLimits> {
     return from(this.edcClient.enterpriseEditionApi.connectorLimits());
+  }
+
+  getCatalogPageDataOffers(
+    connectorEndpoint: string,
+  ): Observable<UiDataOffer[]> {
+    return from(
+      this.edcClient.uiApi.catalogPageDataOffers({connectorEndpoint}),
+    );
+  }
+
+  initiateContractNegotiation(
+    contractNegotiationRequest: ContractNegotiationRequest,
+  ): Observable<UiContractNegotiation> {
+    return from(
+      this.edcClient.uiApi.initiateContractNegotiation({
+        contractNegotiationRequest,
+      }),
+    );
+  }
+
+  getContractNegotiation(
+    contractNegotiationId: string,
+  ): Observable<UiContractNegotiation> {
+    return from(
+      this.edcClient.uiApi.getContractNegotiation({contractNegotiationId}),
+    );
   }
 }

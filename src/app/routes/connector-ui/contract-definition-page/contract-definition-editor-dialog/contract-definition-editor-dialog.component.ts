@@ -4,7 +4,7 @@ import {Subject} from 'rxjs';
 import {finalize, takeUntil} from 'rxjs/operators';
 import {PolicyDefinitionDto} from '@sovity.de/edc-client';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {AssetServiceMapped} from '../../../../core/services/asset-service-mapped';
+import {AssetService} from '../../../../core/services/asset.service';
 import {ContractDefinitionBuilder} from '../../../../core/services/contract-definition-builder';
 import {Asset} from '../../../../core/services/models/asset';
 import {NotificationService} from '../../../../core/services/notification.service';
@@ -23,7 +23,7 @@ export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
   loading = false;
 
   constructor(
-    private assetServiceMapped: AssetServiceMapped,
+    private assetServiceMapped: AssetService,
     public form: ContractDefinitionEditorDialogForm,
     private notificationService: NotificationService,
     private edcApiService: EdcApiService,

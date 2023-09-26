@@ -1,12 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Observable, combineLatest} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
-import {CatalogApiUrlService} from '../../../../core/services/api/catalog-api-url.service';
-import {ContractOfferService} from '../../../../core/services/api/contract-offer.service';
-import {ContractOffer} from '../../../../core/services/models/contract-offer';
+import {UiDataOffer} from '@sovity.de/edc-client';
+import {EdcApiService} from '../../../../core/services/api/edc-api.service';
+import {AssetBuilder} from '../../../../core/services/asset-builder';
+import {DataOffer} from '../../../../core/services/models/data-offer';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {MultiFetched} from '../../../../core/services/models/multi-fetched';
 import {assetSearchTargets, search} from '../../../../core/utils/search-utils';
+import {CatalogApiUrlService} from './catalog-api-url.service';
 import {
   CatalogBrowserPageData,
   ContractOfferRequest,
@@ -15,8 +17,9 @@ import {
 @Injectable({providedIn: 'root'})
 export class CatalogBrowserPageService {
   constructor(
-    private contractOfferService: ContractOfferService,
+    private edcApiService: EdcApiService,
     private catalogApiUrlService: CatalogApiUrlService,
+    private assetBuilder: AssetBuilder,
   ) {}
 
   contractOfferPageData$(
@@ -30,7 +33,6 @@ export class CatalogBrowserPageService {
       map(([data, searchText]): CatalogBrowserPageData => {
         // Merge fetch results
         const contractOffers = data.requestTotals.data.flat();
-
         // Apply filter
         const filteredContractOffers = this.filterContractOffers(
           contractOffers,
@@ -40,7 +42,7 @@ export class CatalogBrowserPageService {
         return {
           requests: data.requests,
           requestTotals: data.requestTotals,
-          filteredContractOffers,
+          filteredDataOffers: filteredContractOffers,
           numTotalContractOffers: contractOffers.length,
         };
       }),
@@ -48,11 +50,11 @@ export class CatalogBrowserPageService {
   }
 
   filterContractOffers(
-    contractOffers: ContractOffer[],
+    dataOffers: DataOffer[],
     searchText: string,
-  ): ContractOffer[] {
-    return search(contractOffers, searchText, (contractOffer) =>
-      assetSearchTargets(contractOffer.asset),
+  ): DataOffer[] {
+    return search(dataOffers, searchText, (dataOffer) =>
+      assetSearchTargets(dataOffer.asset),
     );
   }
 
@@ -62,16 +64,16 @@ export class CatalogBrowserPageService {
     // Prepare to fetch individual Catalogs
     const urls = this.catalogApiUrlService.getAllProviders();
     const sources = urls.map((it) =>
-      this.contractOfferService
-        .getContractOffers(it)
-        .pipe(Fetched.wrap({failureMessage: 'Failed fetching catalog.'})),
+      this.fetchDataOffers(it).pipe(
+        Fetched.wrap({failureMessage: 'Failed fetching catalog.'}),
+      ),
     );
 
     return combineLatest(sources).pipe(
       map((results) => MultiFetched.aggregate(results)),
       map(
         (
-          requestTotals: MultiFetched<ContractOffer[]>,
+          requestTotals: MultiFetched<DataOffer[]>,
         ): Pick<CatalogBrowserPageData, 'requests' | 'requestTotals'> => {
           const presetUrls = this.catalogApiUrlService.getPresetProviders();
           return {
@@ -87,5 +89,22 @@ export class CatalogBrowserPageService {
         },
       ),
     );
+  }
+
+  private fetchDataOffers(endpoint: string) {
+    return this.edcApiService
+      .getCatalogPageDataOffers(endpoint)
+      .pipe(
+        map((dataOffers) =>
+          dataOffers.map((dataOffer) => this.buildDataOffer(dataOffer)),
+        ),
+      );
+  }
+
+  private buildDataOffer(dataOffer: UiDataOffer): DataOffer {
+    return {
+      ...dataOffer,
+      asset: this.assetBuilder.buildAsset(dataOffer.asset, dataOffer.endpoint),
+    };
   }
 }

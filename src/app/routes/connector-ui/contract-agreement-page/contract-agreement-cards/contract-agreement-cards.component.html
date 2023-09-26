@@ -18,7 +18,7 @@
         </a>
       </mat-card-title>
       <mat-card-subtitle>
-        {{ card.asset.originatorOrganization }}
+        {{ card.asset.creatorOrganizationName }}
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="flex flex-col space-y-[16px]">
@@ -34,18 +34,6 @@
           <div class="text-slate text-sm uppercase tracking-wider">Signed</div>
           <div>
             <ago [date]="card.contractSigningDate"></ago>
-          </div>
-        </div>
-
-        <!-- Validity -->
-        <div class="flex flex-col">
-          <div class="text-slate text-sm uppercase tracking-wider">
-            Validity
-          </div>
-          <div>
-            <date [date]="card.contractStartDate"></date>
-            -
-            <date [date]="card.contractEndDate"></date>
           </div>
         </div>
 
@@ -97,7 +85,7 @@
       </div>
 
       <!-- Tag List -->
-      <div *ngIf="card.asset.keywords.length || card.asset.version">
+      <div *ngIf="card.asset.keywords?.length || card.asset.version">
         <mat-chip-list aria-label="Tags">
           <mat-chip *ngIf="card.asset.version" color="primary" selected>{{
             card.asset.version

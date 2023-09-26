@@ -4,7 +4,7 @@ import {BehaviorSubject, Subject} from 'rxjs';
 import {filter, map, switchMap} from 'rxjs/operators';
 import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
-import {AssetServiceMapped} from '../../../../core/services/asset-service-mapped';
+import {AssetService} from '../../../../core/services/asset.service';
 import {Asset} from '../../../../core/services/models/asset';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {AssetCreateDialogResult} from '../asset-create-dialog/asset-create-dialog-result';
@@ -26,7 +26,7 @@ export class AssetPageComponent implements OnInit, OnDestroy {
   private fetch$ = new BehaviorSubject(null);
 
   constructor(
-    private assetServiceMapped: AssetServiceMapped,
+    private assetServiceMapped: AssetService,
     private assetDetailDialogDataService: AssetDetailDialogDataService,
     private assetDetailDialogService: AssetDetailDialogService,
     private dialog: MatDialog,

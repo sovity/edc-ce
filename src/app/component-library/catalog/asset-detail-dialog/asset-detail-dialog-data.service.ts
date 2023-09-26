@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Asset} from '../../../core/services/models/asset';
-import {ContractOffer} from '../../../core/services/models/contract-offer';
+import {DataOffer} from '../../../core/services/models/data-offer';
 import {BrokerDataOffer} from '../../../routes/broker-ui/catalog-page/catalog-page/mapping/broker-data-offer';
 import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
 import {AssetDetailDialogData} from './asset-detail-dialog-data';
@@ -26,9 +26,9 @@ export class AssetDetailDialogDataService {
     };
   }
 
-  contractOfferDetails(contractOffer: ContractOffer): AssetDetailDialogData {
-    let asset = contractOffer.asset;
-    let contractPolicy = contractOffer.policy;
+  dataOfferDetails(dataOffer: DataOffer): AssetDetailDialogData {
+    let asset = dataOffer.asset;
+    let contractPolicy = dataOffer.contractOffers[0].policy;
 
     const propertyGridGroups = [
       this.assetPropertyGridGroupBuilder.buildAssetPropertiesGroup(asset, null),
@@ -40,9 +40,9 @@ export class AssetDetailDialogDataService {
     ].filter((it) => it.properties.length);
 
     return {
-      type: 'contract-offer',
-      asset: contractOffer.asset,
-      contractOffer,
+      type: 'data-offer',
+      asset: dataOffer.asset,
+      dataOffer,
       propertyGridGroups,
     };
   }
@@ -51,9 +51,6 @@ export class AssetDetailDialogDataService {
     contractAgreement: ContractAgreementCardMapped,
   ): AssetDetailDialogData {
     let asset = contractAgreement.asset;
-    let contractPolicy = JSON.parse(
-      contractAgreement.contractPolicy.policyJsonLd,
-    );
 
     const propertyGridGroups = [
       this.assetPropertyGridGroupBuilder.buildContractAgreementGroup(
@@ -61,7 +58,7 @@ export class AssetDetailDialogDataService {
       ),
       this.assetPropertyGridGroupBuilder.buildPolicyGroup(
         asset,
-        contractPolicy,
+        contractAgreement.contractPolicy,
       ),
       this.assetPropertyGridGroupBuilder.buildAssetPropertiesGroup(
         asset,
@@ -89,7 +86,7 @@ export class AssetDetailDialogDataService {
       ),
       this.assetPropertyGridGroupBuilder.buildAdditionalPropertiesGroup(asset),
       ...dataOffer.contractOffers.map((contractOffer, i) =>
-        this.assetPropertyGridGroupBuilder.buildContractOfferGroup(
+        this.assetPropertyGridGroupBuilder.buildBrokerContractOfferGroup(
           asset,
           contractOffer,
           i,

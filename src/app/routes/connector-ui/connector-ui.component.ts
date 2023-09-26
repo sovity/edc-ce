@@ -15,7 +15,6 @@ import {routes} from './connector-ui-routing.module';
   providers: [TitleUtilsService],
 })
 export class ConnectorUiComponent implements OnInit {
-
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(

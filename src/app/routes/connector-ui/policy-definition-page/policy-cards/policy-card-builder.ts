@@ -4,7 +4,7 @@ import {
   PolicyDefinitionPage,
   UiPolicyLiteral,
 } from '@sovity.de/edc-client';
-import {OPERATOR_SYMBOLS} from '../../../../core/services/api/policy-type-ext';
+import {OPERATOR_SYMBOLS} from '../../../../core/services/api/model/policy-type-ext';
 import {PolicyCard, PolicyCardConstraint} from './policy-card';
 
 @Injectable({providedIn: 'root'})

@@ -1,6 +1,5 @@
 import {PolicyDto as BrokerPolicyDto} from '@sovity.de/broker-server-client';
 import {PolicyDto} from '@sovity.de/edc-client';
-import {Policy} from '../../../core/services/api/legacy-managent-api-client';
 
 /**
  * Maps our API Wrapper Policy to the Core EDC Policy JSON.
@@ -10,8 +9,6 @@ import {Policy} from '../../../core/services/api/legacy-managent-api-client';
  * @param policyDto our policy dto
  * @returns core edc policy
  */
-export function getLegacyPolicy(
-  policyDto: PolicyDto | BrokerPolicyDto,
-): Policy {
-  return JSON.parse(policyDto.legacyPolicy ?? 'null') as Policy;
+export function getLegacyPolicy(policyDto: BrokerPolicyDto): any {
+  return JSON.parse(policyDto.legacyPolicy ?? 'null');
 }

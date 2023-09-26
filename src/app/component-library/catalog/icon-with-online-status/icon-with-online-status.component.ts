@@ -15,11 +15,11 @@ import {
       >{{ onlineStatusIcon }}</mat-icon
     >
 
-    <mat-icon class="mat-icon-[40px]">{{ mainIcon }}</mat-icon>
+    <mat-icon class="mat-card-avatar-icon">{{ mainIcon }}</mat-icon>
   `,
 })
 export class IconWithOnlineStatusComponent {
-  @HostBinding('class.mat-icon-[40px]')
+  @HostBinding('class.mat-card-avatar-icon')
   cls = true;
 
   @Input()

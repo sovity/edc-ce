@@ -3,7 +3,7 @@ import {MatDialogRef} from '@angular/material/dialog';
 import {Subject} from 'rxjs';
 import {finalize, takeUntil} from 'rxjs/operators';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {AssetRequestBuilder} from '../../../../core/services/asset-request-builder';
+import {AssetCreateRequestBuilder} from '../../../../core/services/asset-create-request-builder';
 import {NotificationService} from '../../../../core/services/notification.service';
 import {ValidationMessages} from '../../../../core/validators/validation-messages';
 import {AssetCreateDialogForm} from './asset-create-dialog-form';
@@ -19,7 +19,7 @@ import {AssetMetadataFormBuilder} from './model/asset-metadata-form-builder';
     AssetAdvancedFormBuilder,
     AssetDatasourceFormBuilder,
     AssetCreateDialogForm,
-    AssetRequestBuilder,
+    AssetCreateRequestBuilder,
     AssetMetadataFormBuilder,
   ],
 })
@@ -32,20 +32,20 @@ export class AssetCreateDialogComponent implements OnDestroy {
     private edcApiService: EdcApiService,
     public form: AssetCreateDialogForm,
     public validationMessages: ValidationMessages,
-    private assetEntryBuilder: AssetRequestBuilder,
+    private assetEntryBuilder: AssetCreateRequestBuilder,
     private notificationService: NotificationService,
     private dialogRef: MatDialogRef<AssetCreateDialogComponent>,
   ) {}
 
   onSave() {
     const formValue = this.form.value;
-    const uiAssetCreateRequest =
+    const assetCreateRequest =
       this.assetEntryBuilder.buildAssetCreateRequest(formValue);
 
     this.form.all.disable();
     this.loading = true;
     this.edcApiService
-      .createAsset(uiAssetCreateRequest)
+      .createAsset(assetCreateRequest)
       .pipe(
         takeUntil(this.ngOnDestroy$),
         finalize(() => {

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable, combineLatest, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {AssetServiceMapped} from '../../../../core/services/asset-service-mapped';
+import {AssetService} from '../../../../core/services/asset.service';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {search} from '../../../../core/utils/search-utils';
 import {ContractDefinitionCard} from '../contract-definition-cards/contract-definition-card';
@@ -17,7 +17,7 @@ export interface ContractDefinitionList {
 export class ContractDefinitionPageService {
   constructor(
     private edcApiService: EdcApiService,
-    private assetServiceMapped: AssetServiceMapped,
+    private assetServiceMapped: AssetService,
     private contractDefinitionCardBuilder: ContractDefinitionCardBuilder,
   ) {}
 

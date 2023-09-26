@@ -35,11 +35,15 @@ mat-paginator {
 }
 
 // Fix Icon sizes used in card avatars
-mat-icon[mat-card-avatar] {
-  font-size: 40px;
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
+mat-icon[mat-card-avatar],
+.mat-card-avatar-icon {
+  font-size: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  margin-top: 1px;
+  margin-right: -3px;
+  margin-left: 2px;
 }
 
 // Fix mat-chips exploding out and/or having multiline exploding strings

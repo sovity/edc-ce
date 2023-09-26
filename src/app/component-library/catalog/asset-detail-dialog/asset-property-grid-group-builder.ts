@@ -1,14 +1,11 @@
 import {Injectable} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
 import {CatalogContractOffer} from '@sovity.de/broker-server-client';
+import {UiPolicy} from '@sovity.de/edc-client';
 import {ActiveFeatureSet} from '../../../core/config/active-feature-set';
-import {Policy} from '../../../core/services/api/legacy-managent-api-client';
-import {AssetProperties} from '../../../core/services/asset-properties';
 import {Asset} from '../../../core/services/models/asset';
 import {BrokerDataOffer} from '../../../routes/broker-ui/catalog-page/catalog-page/mapping/broker-data-offer';
 import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
-import {JsonDialogComponent} from '../../json-dialog/json-dialog/json-dialog.component';
-import {JsonDialogData} from '../../json-dialog/json-dialog/json-dialog.data';
+import {JsonDialogService} from '../../json-dialog/json-dialog/json-dialog.service';
 import {PropertyGridGroup} from '../../property-grid/property-grid-group/property-grid-group';
 import {PropertyGridField} from '../../property-grid/property-grid/property-grid-field';
 import {PropertyGridFieldService} from '../../property-grid/property-grid/property-grid-field.service';
@@ -22,9 +19,9 @@ import {getLegacyPolicy} from './policy-utils';
 @Injectable()
 export class AssetPropertyGridGroupBuilder {
   constructor(
-    private matDialog: MatDialog,
     private activeFeatureSet: ActiveFeatureSet,
     private propertyGridUtils: PropertyGridFieldService,
+    private jsonDialogService: JsonDialogService,
   ) {}
 
   buildAssetPropertiesGroup(
@@ -35,50 +32,42 @@ export class AssetPropertyGridGroupBuilder {
       {
         icon: 'category',
         label: 'ID',
-        labelTitle: AssetProperties.id,
         ...this.propertyGridUtils.guessValue(asset.assetId),
       },
       {
         icon: 'file_copy',
         label: 'Version',
-        labelTitle: AssetProperties.version,
         ...this.propertyGridUtils.guessValue(asset.version),
       },
       {
         icon: 'language',
         label: 'Language',
-        labelTitle: AssetProperties.language,
         ...this.propertyGridUtils.guessValue(asset.language?.label),
       },
       {
         icon: 'apartment',
         label: 'Publisher',
-        labelTitle: AssetProperties.publisher,
         ...this.propertyGridUtils.guessValue(asset.publisherHomepage),
       },
       {
         icon: 'bookmarks',
         label: 'Endpoint Documentation',
-        labelTitle: AssetProperties.endpointDocumentation,
         ...this.propertyGridUtils.guessValue(asset.landingPageUrl),
       },
       {
         icon: 'gavel',
         label: 'Standard License',
-        labelTitle: AssetProperties.standardLicense,
         ...this.propertyGridUtils.guessValue(asset.licenseUrl),
       },
       this.buildConnectorEndpointField(asset.connectorEndpoint),
       {
         icon: 'account_circle',
         label: 'Organization',
-        labelTitle: AssetProperties.originatorOrganization,
         ...this.propertyGridUtils.guessValue(asset.creatorOrganizationName),
       },
       {
         icon: 'category',
         label: 'Content Type',
-        labelTitle: AssetProperties.contentType,
         ...this.propertyGridUtils.guessValue(asset.mediaType),
       },
     ];
@@ -101,7 +90,7 @@ export class AssetPropertyGridGroupBuilder {
     }
 
     fields.push(
-      ...asset.additionalProperties.map((prop) => {
+      ...asset.mergedAdditionalProperties.map((prop) => {
         return {
           icon: 'category ',
           label: prop.key,
@@ -123,7 +112,6 @@ export class AssetPropertyGridGroupBuilder {
       fields.push({
         icon: 'commute',
         label: 'Transport Mode',
-        labelTitle: AssetProperties.transportMode,
         ...this.propertyGridUtils.guessValue(asset.transportMode?.label),
       });
     }
@@ -131,7 +119,6 @@ export class AssetPropertyGridGroupBuilder {
       fields.push({
         icon: 'commute',
         label: 'Data Category',
-        labelTitle: AssetProperties.dataCategory,
         ...this.propertyGridUtils.guessValue(asset.dataCategory?.label),
       });
     }
@@ -139,7 +126,6 @@ export class AssetPropertyGridGroupBuilder {
       fields.push({
         icon: 'commute',
         label: 'Data Subcategory',
-        labelTitle: AssetProperties.dataSubcategory,
         ...this.propertyGridUtils.guessValue(asset.dataSubcategory?.label),
       });
     }
@@ -147,7 +133,6 @@ export class AssetPropertyGridGroupBuilder {
       fields.push({
         icon: 'category',
         label: 'Data Model',
-        labelTitle: AssetProperties.dataModel,
         ...this.propertyGridUtils.guessValue(asset.dataModel),
       });
     }
@@ -155,28 +140,13 @@ export class AssetPropertyGridGroupBuilder {
       fields.push({
         icon: 'commute',
         label: 'Geo Reference Method',
-        labelTitle: AssetProperties.geoReferenceMethod,
         ...this.propertyGridUtils.guessValue(asset.geoReferenceMethod),
       });
     }
     return fields;
   }
 
-  onShowPolicyDetailsClick(
-    title: string,
-    subtitle: string,
-    policyDetails: Policy,
-  ) {
-    const data: JsonDialogData = {
-      title,
-      subtitle,
-      icon: 'policy',
-      objectForJson: policyDetails,
-    };
-    this.matDialog.open(JsonDialogComponent, {data});
-  }
-
-  buildContractOfferGroup(
+  buildBrokerContractOfferGroup(
     asset: Asset,
     contractOffer: CatalogContractOffer,
     i: number,
@@ -189,11 +159,12 @@ export class AssetPropertyGridGroupBuilder {
         label: 'Contract Policy',
         text: 'Show Policy Details',
         onclick: () =>
-          this.onShowPolicyDetailsClick(
-            `${groupLabel} Contract Policy)`,
-            asset.name,
-            getLegacyPolicy(contractOffer.contractPolicy),
-          ),
+          this.jsonDialogService.showJsonDetailDialog({
+            title: `${groupLabel} Contract Policy)`,
+            subtitle: asset.name,
+            icon: 'policy',
+            objectForJson: getLegacyPolicy(contractOffer.contractPolicy),
+          }),
       },
       {
         icon: 'category',
@@ -213,7 +184,7 @@ export class AssetPropertyGridGroupBuilder {
 
   buildPolicyGroup(
     asset: Asset,
-    contractPolicy: Policy | null,
+    contractPolicy: UiPolicy | null,
     groupLabel: string = 'Policies',
   ) {
     let properties: PropertyGridField[] = [];
@@ -225,20 +196,6 @@ export class AssetPropertyGridGroupBuilder {
     return {groupLabel, properties};
   }
 
-  buildContractPolicyField(contractPolicy: Policy, subtitle: string) {
-    return {
-      icon: 'policy',
-      label: 'Contract Policy',
-      text: 'Show Policy Details',
-      onclick: () =>
-        this.onShowPolicyDetailsClick(
-          'Contract Policy',
-          subtitle,
-          contractPolicy,
-        ),
-    };
-  }
-
   buildContractAgreementGroup(contractAgreement: ContractAgreementCardMapped) {
     let properties: PropertyGridField[] = [
       {
@@ -248,22 +205,6 @@ export class AssetPropertyGridGroupBuilder {
           this.propertyGridUtils.formatDate(
             contractAgreement.contractSigningDate,
           ),
-        ),
-      },
-      {
-        icon: 'category',
-        label: 'Valid From',
-        ...this.propertyGridUtils.guessValue(
-          this.propertyGridUtils.formatDate(
-            contractAgreement.contractStartDate,
-          ),
-        ),
-      },
-      {
-        icon: 'category',
-        label: 'Valid To',
-        ...this.propertyGridUtils.guessValue(
-          this.propertyGridUtils.formatDate(contractAgreement.contractEndDate),
         ),
       },
       {
@@ -280,7 +221,7 @@ export class AssetPropertyGridGroupBuilder {
       },
       {
         icon: 'link',
-        label: 'Other Connector ID',
+        label: 'Other Connector Participant ID',
         ...this.propertyGridUtils.guessValue(contractAgreement.counterPartyId),
       },
       {
@@ -306,6 +247,21 @@ export class AssetPropertyGridGroupBuilder {
     return {
       groupLabel: 'Contract Agreement',
       properties,
+    };
+  }
+
+  buildContractPolicyField(contractPolicy: UiPolicy, subtitle: string) {
+    return {
+      icon: 'policy',
+      label: 'Contract Policy',
+      text: 'Show Policy Details',
+      onclick: () =>
+        this.jsonDialogService.showJsonDetailDialog({
+          title: 'Contract Policy',
+          subtitle,
+          icon: 'policy',
+          objectForJson: JSON.parse(contractPolicy.policyJsonLd),
+        }),
     };
   }
 

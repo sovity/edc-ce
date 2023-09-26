@@ -18,7 +18,7 @@ import {AssetDetailDialogDataService} from '../../../../component-library/catalo
 import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
 import {JsonDialogService} from '../../../../component-library/json-dialog/json-dialog/json-dialog.service';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {AssetPropertyMapper} from '../../../../core/services/asset-property-mapper';
+import {AssetBuilder} from '../../../../core/services/asset-builder';
 import {Asset} from '../../../../core/services/models/asset';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {NotificationService} from '../../../../core/services/notification.service';
@@ -45,7 +45,7 @@ export class TransferHistoryPageComponent implements OnInit, OnDestroy {
     private edcApiService: EdcApiService,
     private assetDetailDialogDataService: AssetDetailDialogDataService,
     private assetDetailDialogService: AssetDetailDialogService,
-    private assetPropertyMapper: AssetPropertyMapper,
+    private assetBuilder: AssetBuilder,
     private notificationService: NotificationService,
     private jsonDialogService: JsonDialogService,
   ) {}
@@ -66,11 +66,11 @@ export class TransferHistoryPageComponent implements OnInit, OnDestroy {
     return this.edcApiService
       .getTransferProcessAsset(item.transferProcessId)
       .pipe(
-        map((uiAsset: UiAsset) => {
-          return this.assetPropertyMapper.buildAsset({
-            uiAsset,
-            connectorEndpoint: item.counterPartyConnectorEndpoint,
-          });
+        map((asset: UiAsset) => {
+          return this.assetBuilder.buildAsset(
+            asset,
+            item.counterPartyConnectorEndpoint,
+          );
         }),
       );
   }

@@ -1,5 +1,5 @@
 <div class="mat-card-header" mat-dialog-title removeClass="mat-dialog-title">
-  <mat-icon *ngIf="data.type === 'asset-details'" class="mat-icon-[40px]">
+  <mat-icon *ngIf="data.type === 'asset-details'" class="mat-card-avatar-icon">
     upload
   </mat-icon>
   <icon-with-online-status
@@ -7,14 +7,16 @@
     mainIcon="sim_card"
     [onlineStatus]="data.brokerDataOffer!!.connectorOnlineStatus">
   </icon-with-online-status>
-  <mat-icon *ngIf="data.type === 'contract-agreement'" class="mat-icon-[40px]">
+  <mat-icon
+    *ngIf="data.type === 'contract-agreement'"
+    class="mat-card-avatar-icon">
     {{
       data.contractAgreement!!.direction === 'PROVIDING' ? 'upload' : 'download'
     }}
   </mat-icon>
   <contract-offer-icon
-    *ngIf="data.type === 'contract-offer'"
-    [contractOffer]="data.contractOffer!"></contract-offer-icon>
+    *ngIf="data.type === 'data-offer'"
+    [dataOffer]="data.dataOffer!"></contract-offer-icon>
   <div class="mat-card-header-text">
     <div class="mat-card-title">
       {{ asset.name }}
@@ -29,8 +31,8 @@
   <!-- Progress Bar -->
   <mat-progress-bar
     *ngIf="
-      (data.type === 'contract-offer' &&
-        contractNegotiationService.isBusy(data.contractOffer!)) ||
+      (data.type === 'data-offer' &&
+        contractNegotiationService.isBusy(data.dataOffer!.contractOffers[0])) ||
       (data.type === 'contract-agreement' &&
         data.contractAgreement!.isInProgress)
     "
@@ -81,7 +83,7 @@
       </button>
 
       <button
-        *ngIf="data.type === 'contract-offer'"
+        *ngIf="data.type === 'data-offer'"
         mat-raised-button
         color="primary"
         [disabled]="negotiationState != 'ready'"

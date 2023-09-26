@@ -6,8 +6,8 @@ import {
 } from '@angular/material/dialog';
 import {Observable, Subject, isObservable} from 'rxjs';
 import {filter, finalize, takeUntil} from 'rxjs/operators';
-import {ContractNegotiationService} from '../../../core/services/api/contract-negotiation.service';
 import {EdcApiService} from '../../../core/services/api/edc-api.service';
+import {ContractNegotiationService} from '../../../core/services/contract-negotiation.service';
 import {Asset} from '../../../core/services/models/asset';
 import {NotificationService} from '../../../core/services/notification.service';
 import {ContractAgreementTransferDialogData} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-data';
@@ -40,13 +40,16 @@ export class AssetDetailDialogComponent implements OnDestroy {
   loading = false;
 
   get negotiationState(): 'ready' | 'negotiating' | 'negotiated' {
-    const contractOffer = this.data.contractOffer!;
-    if (this.contractNegotiationService.isNegotiated(contractOffer)) {
+    const dataOffer = this.data.dataOffer!;
+    let contractOffer = dataOffer.contractOffers[0];
+    let isNegotiated =
+      this.contractNegotiationService.isNegotiated(contractOffer);
+    if (isNegotiated) {
       return 'negotiated';
-    } else if (this.contractNegotiationService.isBusy(contractOffer)) {
-      return 'negotiating';
     }
-    return 'ready';
+
+    let isBusy = this.contractNegotiationService.isBusy(contractOffer);
+    return isBusy ? 'negotiating' : 'ready';
   }
 
   constructor(
@@ -85,7 +88,10 @@ export class AssetDetailDialogComponent implements OnDestroy {
   }
 
   onNegotiateClick() {
-    this.contractNegotiationService.negotiate(this.data.contractOffer!);
+    this.contractNegotiationService.negotiate(
+      this.data.dataOffer!,
+      this.data.dataOffer!.contractOffers[0],
+    );
   }
 
   onTransferClick() {

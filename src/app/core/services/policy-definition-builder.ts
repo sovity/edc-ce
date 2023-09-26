@@ -5,7 +5,7 @@ import {
 } from '@sovity.de/edc-client';
 import {addDays} from 'date-fns';
 import {NewPolicyDialogFormValue} from '../../routes/connector-ui/policy-definition-page/new-policy-dialog/new-policy-dialog-form-model';
-import {OperatorDto, PolicyLeftExpressions} from './api/policy-type-ext';
+import {OperatorDto, PolicyLeftExpressions} from './api/model/policy-type-ext';
 
 @Injectable({
   providedIn: 'root',

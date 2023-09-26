@@ -5,9 +5,9 @@ import {
   PolicyDefinitionDto,
   UiCriterion,
 } from '@sovity.de/edc-client';
-import {CRITERION_OPERATOR_SYMBOLS} from '../../../../core/services/api/criterion-type-ext';
-import {AssetProperties} from '../../../../core/services/asset-properties';
+import {CRITERION_OPERATOR_SYMBOLS} from '../../../../core/services/api/model/criterion-type-ext';
 import {Asset} from '../../../../core/services/models/asset';
+import {AssetProperty} from '../../../../core/services/models/asset-properties';
 import {associateBy} from '../../../../core/utils/map-utils';
 import {assetSearchTargets} from '../../../../core/utils/search-utils';
 import {
@@ -76,7 +76,7 @@ export class ContractDefinitionCardBuilder {
   private extractCriterionOperation(criterion: UiCriterion): string {
     const {operandLeft, operator} = criterion;
     if (
-      operandLeft.toLowerCase() === AssetProperties.id.toLowerCase() &&
+      operandLeft === AssetProperty.id &&
       (operator === 'EQ' || operator === 'IN')
     ) {
       return 'Assets';
@@ -107,7 +107,7 @@ export class ContractDefinitionCardBuilder {
       };
 
       // Try to find asset
-      if (operandLeft === AssetProperties.id) {
+      if (operandLeft === AssetProperty.id) {
         let asset = assetsById.get(it);
         if (asset) {
           return {

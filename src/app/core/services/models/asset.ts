@@ -5,20 +5,13 @@ import {LanguageSelectItem} from '../../../routes/connector-ui/asset-page/langua
 import {TransportModeSelectItem} from '../../../routes/connector-ui/asset-page/transport-mode-select/transport-mode-select-item';
 
 /**
- * Asset (UI Dto / Type Safe)
+ * Asset (UI Dto)
  *
  * Also includes full items / labels for fixed vocabulary values, e.g. language
  */
 export type Asset = Omit<
   UiAsset,
-  | 'language'
-  | 'dataCategory'
-  | 'dataSubcategory'
-  | 'transportMode'
-  | 'additionalProperties'
-  | 'additionalJsonProperties'
-  | 'privateProperties'
-  | 'privateJsonProperties'
+  'language' | 'dataCategory' | 'dataSubcategory' | 'transportMode'
 > & {
   connectorEndpoint: string;
 
@@ -30,7 +23,7 @@ export type Asset = Omit<
   transportMode: TransportModeSelectItem | null;
 
   // Unhandled Additional Properties
-  additionalProperties: AdditionalAssetProperty[];
+  mergedAdditionalProperties: AdditionalAssetProperty[];
 };
 
 export interface AdditionalAssetProperty {

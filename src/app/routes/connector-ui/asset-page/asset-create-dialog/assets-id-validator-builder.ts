@@ -6,13 +6,13 @@ import {
 } from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {AssetServiceMapped} from '../../../../core/services/asset-service-mapped';
+import {AssetService} from '../../../../core/services/asset.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AssetsIdValidatorBuilder {
-  constructor(private assetServiceMapped: AssetServiceMapped) {}
+  constructor(private assetServiceMapped: AssetService) {}
 
   assetIdDoesNotExistsValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {

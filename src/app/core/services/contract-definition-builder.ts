@@ -4,7 +4,7 @@ import {
   UiCriterionLiteralTypeEnum,
 } from '@sovity.de/edc-client';
 import {ContractDefinitionEditorDialogFormValue} from '../../routes/connector-ui/contract-definition-page/contract-definition-editor-dialog/contract-definition-editor-dialog-form-model';
-import {AssetProperties} from './asset-properties';
+import {AssetProperty} from './models/asset-properties';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +25,7 @@ export class ContractDefinitionBuilder {
       contractPolicyId: formValue.contractPolicy!.policyDefinitionId,
       assetSelector: [
         {
-          operandLeft: AssetProperties.id,
+          operandLeft: AssetProperty.id,
           operator: 'IN',
           operandRight: {
             type: UiCriterionLiteralTypeEnum.ValueList,

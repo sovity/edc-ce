@@ -1,5 +1,5 @@
 import {Asset} from 'src/app/core/services/models/asset';
-import {ContractOffer} from '../../../core/services/models/contract-offer';
+import {DataOffer} from '../../../core/services/models/data-offer';
 import {BrokerDataOffer} from '../../../routes/broker-ui/catalog-page/catalog-page/mapping/broker-data-offer';
 import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
 import {PropertyGridGroup} from '../../property-grid/property-grid-group/property-grid-group';
@@ -7,12 +7,12 @@ import {PropertyGridGroup} from '../../property-grid/property-grid-group/propert
 export interface AssetDetailDialogData {
   type:
     | 'asset-details'
-    | 'contract-offer'
+    | 'data-offer'
     | 'contract-agreement'
     | 'broker-data-offer';
   propertyGridGroups: PropertyGridGroup[];
   asset: Asset;
-  contractOffer?: ContractOffer;
+  dataOffer?: DataOffer;
   contractAgreement?: ContractAgreementCardMapped;
   brokerDataOffer?: BrokerDataOffer;
   showDeleteButton?: boolean;

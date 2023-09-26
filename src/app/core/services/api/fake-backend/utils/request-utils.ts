@@ -13,3 +13,8 @@ export const getBody = (input: RequestInit | undefined): null | any => {
   let body = input?.body?.toString();
   return body ? JSON.parse(body) : null;
 };
+
+export const getQueryParams = (input: Request | string): URLSearchParams => {
+  let url = new URL(typeof input === 'string' ? input : input.url);
+  return url.searchParams;
+};

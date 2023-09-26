@@ -92,9 +92,9 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
         }),
       )
       .subscribe({
-        next: (transferProcessId) =>
+        next: (response) =>
           this.close({
-            transferProcessId,
+            transferProcessId: response.id!,
             contractId: this.data.contractId,
           }),
         error: (err) => {

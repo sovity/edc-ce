@@ -4,6 +4,7 @@ import {
   ContractAgreementTransferRequestFromJSON,
   ContractDefinitionPageToJSON,
   ContractDefinitionRequestFromJSON,
+  ContractNegotiationRequestFromJSON,
   FetchAPI,
   IdResponseDtoToJSON,
   PolicyDefinitionCreateRequestFromJSON,
@@ -11,27 +12,39 @@ import {
   TransferHistoryPageToJSON,
   UiAssetCreateRequestFromJSON,
   UiAssetToJSON,
+  UiContractNegotiationToJSON,
+  UiDataOfferToJSON,
 } from '@sovity.de/edc-client';
-import {assetPage, createAsset, deleteAsset} from './asset-fake-service';
+import {assetPage, createAsset, deleteAsset} from './impl/asset-fake-service';
+import {getCatalogPageDataOffers} from './impl/catalog-fake-service';
 import {
   contractAgreementInitiateTransfer,
   contractAgreementPage,
-} from './contract-agreement-fake-service';
+} from './impl/contract-agreement-fake-service';
 import {
   contractDefinitionPage,
   createContractDefinition,
   deleteContractDefinition,
-} from './contract-definition-fake-service';
+} from './impl/contract-definition-fake-service';
+import {
+  getContractNegotiation,
+  initiateContractNegotiation,
+} from './impl/contract-negotiation-fake-service';
 import {
   createPolicyDefinition,
   deletePolicyDefinition,
   policyDefinitionPage,
-} from './policy-definition-fake-service';
+} from './impl/policy-definition-fake-service';
 import {
   transferHistoryPage,
   transferProcessAsset,
-} from './transfer-history-fake-service';
-import {getBody, getMethod, getUrl} from './utils/request-utils';
+} from './impl/transfer-history-fake-service';
+import {
+  getBody,
+  getMethod,
+  getQueryParams,
+  getUrl,
+} from './utils/request-utils';
 import {ok} from './utils/response-utils';
 import {UrlInterceptor} from './utils/url-interceptor';
 
@@ -42,8 +55,17 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
   let url = getUrl(input, 'http://edc.fake-backend/wrapper/ui/');
   let method = getMethod(init);
   let body = getBody(init);
+  let params = getQueryParams(input);
 
-  console.log(...['Fake Backend:', method, url, body].filter((it) => !!it));
+  console.log(
+    ...[
+      'Fake Backend:',
+      method,
+      url,
+      (params as any)['size'] ? params : null,
+      body,
+    ].filter((it) => !!it),
+  );
 
   return new UrlInterceptor(url, method)
 
@@ -127,6 +149,26 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
     .on('GET', (transferProcessId) => {
       let asset = transferProcessAsset(transferProcessId);
       return ok(UiAssetToJSON(asset));
+    })
+
+    .url('pages/catalog-page/data-offers')
+    .on('GET', () => {
+      let connectorEndpoint = params.get('connectorEndpoint')!;
+      let dataOffers = getCatalogPageDataOffers(connectorEndpoint);
+      return ok(dataOffers.map(UiDataOfferToJSON));
+    })
+
+    .url('pages/catalog-page/contract-negotiations')
+    .on('POST', () => {
+      let createRequest = ContractNegotiationRequestFromJSON(body);
+      let contractNegotiation = initiateContractNegotiation(createRequest);
+      return ok(UiContractNegotiationToJSON(contractNegotiation));
+    })
+
+    .url('pages/catalog-page/contract-negotiations/*')
+    .on('GET', (contractNegotiationId) => {
+      let contractNegotiation = getContractNegotiation(contractNegotiationId);
+      return ok(UiContractNegotiationToJSON(contractNegotiation));
     })
 
     .tryMatch();

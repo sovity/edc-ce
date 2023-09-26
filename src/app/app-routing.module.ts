@@ -1,12 +1,7 @@
 import {NgModule} from '@angular/core';
-import {
-  ROUTES,
-  RouterModule,
-  Routes,
-} from '@angular/router';
+import {ROUTES, RouterModule, Routes} from '@angular/router';
+import {PageNotFoundComponent} from './component-library/error-404-component/page-not-found.component';
 import {APP_CONFIG, AppConfig} from './core/config/app-config';
-import {PageNotFoundComponent} from "./component-library/error-404-component/page-not-found.component";
-
 
 @NgModule({
   imports: [RouterModule.forRoot([], {paramsInheritanceStrategy: 'always'})],
@@ -22,24 +17,26 @@ import {PageNotFoundComponent} from "./component-library/error-404-component/pag
         switch (config.routes) {
           case 'broker-ui':
             routes.push({
-              path: '', loadChildren: () =>
+              path: '',
+              loadChildren: () =>
                 import('./routes/broker-ui/broker-ui.module').then(
                   (m) => m.BrokerUiModule,
-                )
+                ),
             });
             break;
           case 'connector-ui':
             routes.push({
-              path: '', loadChildren: () =>
+              path: '',
+              loadChildren: () =>
                 import('./routes/connector-ui/connector-ui.module').then(
                   (m) => m.ConnectorUiModule,
-                )
+                ),
             });
             break;
           default:
             throw new Error(`Unhandled PageSet: ${config.routes}`);
         }
-        routes.push({path: '**', component: PageNotFoundComponent})
+        routes.push({path: '**', component: PageNotFoundComponent});
         return routes;
       },
     },
