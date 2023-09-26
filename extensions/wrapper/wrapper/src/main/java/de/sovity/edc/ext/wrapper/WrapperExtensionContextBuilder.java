@@ -44,6 +44,8 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreeme
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractNegotiationUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequestBuilder;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DashboardDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
@@ -179,6 +181,18 @@ public class WrapperExtensionContextBuilder {
         var contractNegotiationBuilder = new ContractNegotiationBuilder(contractOfferMapper);
         var contractNegotiationStateService = new ContractNegotiationStateService();
         var contractNegotiationApiService = new ContractNegotiationApiService(contractNegotiationService, contractNegotiationBuilder, contractNegotiationStateService);
+        var dashboardDataFetcher = new DashboardDataFetcher(
+                contractAgreementService,
+                contractNegotiationStore,
+                transferProcessService,
+                assetIndex,
+                policyDefinitionService
+        );
+        var dashboardApiService = new DashboardPageApiService(
+                dashboardDataFetcher,
+                contractAgreementPageCardBuilder,
+                assetMapper,
+                policyMapper);
         var uiResource = new UiResource(
                 contractAgreementApiService,
                 contractAgreementTransferApiService,
@@ -188,7 +202,8 @@ public class WrapperExtensionContextBuilder {
                 policyDefinitionApiService,
                 catalogApiService,
                 contractDefinitionApiService,
-                contractNegotiationApiService
+                contractNegotiationApiService,
+                dashboardApiService
         );
 
         // Use Case API
