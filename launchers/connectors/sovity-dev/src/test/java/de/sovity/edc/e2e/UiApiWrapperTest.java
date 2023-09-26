@@ -44,6 +44,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
+import static de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection.PROVIDING;
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
@@ -94,7 +95,6 @@ class UiApiWrapperTest {
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
-
 
     @Test
     void provide_consume_assetMapping_policyMapping() {
@@ -172,6 +172,10 @@ class UiApiWrapperTest {
         var negotiation = negotiate(dataOffer, contractOffer);
         initiateTransfer(negotiation);
 
+        var contractAgreements =  providerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
+        assertThat(contractAgreements).hasSize(1);
+        var contractAgreement = contractAgreements.get(0);
+
         // assert
         assertThat(dataOffer.getEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
         assertThat(dataOffer.getParticipantId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
@@ -223,6 +227,24 @@ class UiApiWrapperTest {
         assertThat(constraint.getRight().getValue()).isEqualTo(yesterday.toString());
 
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
+
+        // Test Contract Agreement
+        assertThat(contractAgreement.getContractAgreementId()).isEqualTo("Zmlyc3QtY2Q=:Zmlyc3QtYXNzZXQtMS4w:MjgzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNi");
+        assertThat(contractAgreement.getDirection()).isEqualTo(PROVIDING);
+        assertThat(contractAgreement.getCounterPartyAddress()).isEqualTo(getProtocolEndpoint(consumerConnector));
+        assertThat(contractAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
+
+        assertThat(contractAgreement.getContractPolicy().getConstraints()).hasSize(1);
+        var contractAgreementPolicyConstraint = contractOffer.getPolicy().getConstraints().get(0);
+        assertThat(contractAgreementPolicyConstraint.getLeft()).isEqualTo("POLICY_EVALUATION_TIME");
+        assertThat(contractAgreementPolicyConstraint.getOperator()).isEqualTo(UiPolicyConstraint.OperatorEnum.GT);
+        assertThat(contractAgreementPolicyConstraint.getRight().getType()).isEqualTo(UiPolicyLiteral.TypeEnum.STRING);
+        assertThat(contractAgreementPolicyConstraint.getRight().getValue()).isEqualTo(yesterday.toString());
+
+
+        assertThat(contractAgreement.getAsset().getAssetId()).isEqualTo("first-asset-1.0");
+        assertThat(contractAgreement.getAsset().getName()).isEqualTo("first-asset-1.0");
+
     }
 
     private UiContractNegotiation negotiate(UiDataOffer dataOffer, UiContractOffer contractOffer) {
