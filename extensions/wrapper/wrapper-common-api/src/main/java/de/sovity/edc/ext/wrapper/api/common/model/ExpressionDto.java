@@ -39,16 +39,9 @@ public class ExpressionDto {
             * `XOR` - Several constraints, of which exactly one must be respected
             """
     )
-    private Type type;
+    private ExpressionType type;
     private AtomicConstraintDto atomicConstraint;
     private List<ExpressionDto> and;
     private List<ExpressionDto> or;
     private List<ExpressionDto> xor;
-
-    /**
-     * Sum type enum.
-     */
-    public enum Type {
-        EMPTY, ATOMIC_CONSTRAINT, AND, OR, XOR
-    }
 }

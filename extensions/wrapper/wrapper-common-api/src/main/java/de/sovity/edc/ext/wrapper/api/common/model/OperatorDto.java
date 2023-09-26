@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  *
  * @author tim.dahlmanns@isst.fraunhofer.de
  */
-@Schema(description = "Operator for constraints")
+@Schema(description = "Operator for policies", enumAsRef = true)
 public enum OperatorDto {
     EQ,
     NEQ,

@@ -14,8 +14,8 @@
 package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.client.gen.model.TransferHistoryEntry;
-import de.sovity.edc.client.gen.model.TransferProcessState;
+import de.sovity.edc.client.gen.model.ContractAgreementDirection;
+import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.ext.wrapper.utils.EdcDateUtils;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
@@ -151,10 +151,10 @@ class Ms8ConnectorTransferTest {
         assertThat(providerTransfer.getContractAgreementId()).isEqualTo("Zmlyc3QtY2Q=:Zmlyc3QtYXNzZXQtMS4w:MjgzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNi");
         assertThat(providerTransfer.getCounterPartyConnectorEndpoint()).isEqualTo(endpoint(consumerConnector));
         assertIsEqualOffsetDateTime(providerTransfer.getCreatedDate(), EdcDateUtils.utcMillisToOffsetDateTime(1695208010855L));
-        assertThat(providerTransfer.getDirection()).isEqualTo(TransferHistoryEntry.DirectionEnum.PROVIDING);
+        assertThat(providerTransfer.getDirection()).isEqualTo(ContractAgreementDirection.PROVIDING);
         assertThat(providerTransfer.getErrorMessage()).isNull();
         assertIsEqualOffsetDateTime(providerTransfer.getLastUpdatedDate(), EdcDateUtils.utcMillisToOffsetDateTime(1695208010083L));
-        assertThat(providerTransfer.getState().getSimplifiedState()).isEqualTo(TransferProcessState.SimplifiedStateEnum.OK);
+        assertThat(providerTransfer.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
         assertThat(providerTransfer.getTransferProcessId()).isEqualTo("27075fc4-b18f-44e1-8bde-a9f62817dab2");
     }
 
@@ -177,10 +177,10 @@ class Ms8ConnectorTransferTest {
         assertThat(consumerTransfer.getContractAgreementId()).isEqualTo("Zmlyc3QtY2Q=:Zmlyc3QtYXNzZXQtMS4w:MjgzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNi");
         assertThat(consumerTransfer.getCounterPartyConnectorEndpoint()).isEqualTo(endpoint(providerConnector));
         assertIsEqualOffsetDateTime(consumerTransfer.getCreatedDate(), EdcDateUtils.utcMillisToOffsetDateTime(1695208008652L));
-        assertThat(consumerTransfer.getDirection()).isEqualTo(TransferHistoryEntry.DirectionEnum.CONSUMING);
+        assertThat(consumerTransfer.getDirection()).isEqualTo(ContractAgreementDirection.CONSUMING);
         assertThat(consumerTransfer.getErrorMessage()).isNull();
         assertIsEqualOffsetDateTime(consumerTransfer.getLastUpdatedDate(), EdcDateUtils.utcMillisToOffsetDateTime(1695208011094L));
-        assertThat(consumerTransfer.getState().getSimplifiedState()).isEqualTo(TransferProcessState.SimplifiedStateEnum.OK);
+        assertThat(consumerTransfer.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
         assertThat(consumerTransfer.getTransferProcessId()).isEqualTo("946aadd4-d4bf-47e9-8aea-c2279070e839");
     }
 

@@ -1,13 +1,8 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
-import de.sovity.edc.ext.wrapper.api.common.model.ExpressionDto.Type;
-import java.util.List;
-
 import de.sovity.edc.ext.wrapper.api.common.model.AtomicConstraintDto;
 import de.sovity.edc.ext.wrapper.api.common.model.ExpressionDto;
+import de.sovity.edc.ext.wrapper.api.common.model.ExpressionType;
 import de.sovity.edc.ext.wrapper.api.common.model.OperatorDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
@@ -21,6 +16,11 @@ import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
 import org.eclipse.edc.policy.model.XoneConstraint;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PolicyMappingServiceTest {
 
@@ -67,7 +67,7 @@ class PolicyMappingServiceTest {
         var constraint = new AtomicConstraintDto("left", OperatorDto.EQ, "right");
         var dto = PolicyDto.builder()
                 .permission(PermissionDto.builder()
-                        .constraints(new ExpressionDto(Type.ATOMIC_CONSTRAINT, constraint, null, null, null))
+                        .constraints(new ExpressionDto(ExpressionType.ATOMIC_CONSTRAINT, constraint, null, null, null))
                         .build())
                 .build();
 
@@ -87,12 +87,12 @@ class PolicyMappingServiceTest {
     void policyDtoToPolicy_andConstraint_returnPolicy() {
         // arrange
         var constraint1 = new AtomicConstraintDto("left1", OperatorDto.EQ, "right1");
-        var expression1 = new ExpressionDto(Type.ATOMIC_CONSTRAINT, constraint1, null, null, null);
+        var expression1 = new ExpressionDto(ExpressionType.ATOMIC_CONSTRAINT, constraint1, null, null, null);
         var constraint2 = new AtomicConstraintDto("left2", OperatorDto.EQ, "right2");
-        var expression2 = new ExpressionDto(Type.ATOMIC_CONSTRAINT, constraint2, null, null, null);
+        var expression2 = new ExpressionDto(ExpressionType.ATOMIC_CONSTRAINT, constraint2, null, null, null);
         var dto = PolicyDto.builder()
                 .permission(PermissionDto.builder()
-                        .constraints(new ExpressionDto(Type.AND, null, List.of(expression1, expression2), null, null))
+                        .constraints(new ExpressionDto(ExpressionType.AND, null, List.of(expression1, expression2), null, null))
                         .build())
                 .build();
 
@@ -116,12 +116,12 @@ class PolicyMappingServiceTest {
     void policyDtoToPolicy_orConstraint_returnPolicy() {
         // arrange
         var constraint1 = new AtomicConstraintDto("left1", OperatorDto.EQ, "right1");
-        var expression1 = new ExpressionDto(Type.ATOMIC_CONSTRAINT, constraint1, null, null, null);
+        var expression1 = new ExpressionDto(ExpressionType.ATOMIC_CONSTRAINT, constraint1, null, null, null);
         var constraint2 = new AtomicConstraintDto("left2", OperatorDto.EQ, "right2");
-        var expression2 = new ExpressionDto(Type.ATOMIC_CONSTRAINT, constraint2, null, null, null);
+        var expression2 = new ExpressionDto(ExpressionType.ATOMIC_CONSTRAINT, constraint2, null, null, null);
         var dto = PolicyDto.builder()
                 .permission(PermissionDto.builder()
-                        .constraints(new ExpressionDto(Type.OR, null, null, List.of(expression1, expression2), null))
+                        .constraints(new ExpressionDto(ExpressionType.OR, null, null, List.of(expression1, expression2), null))
                         .build())
                 .build();
 
@@ -145,12 +145,12 @@ class PolicyMappingServiceTest {
     void policyDtoToPolicy_xorConstraint_returnPolicy() {
         // arrange
         var constraint1 = new AtomicConstraintDto("left1", OperatorDto.EQ, "right1");
-        var expression1 = new ExpressionDto(Type.ATOMIC_CONSTRAINT, constraint1, null, null, null);
+        var expression1 = new ExpressionDto(ExpressionType.ATOMIC_CONSTRAINT, constraint1, null, null, null);
         var constraint2 = new AtomicConstraintDto("left2", OperatorDto.EQ, "right2");
-        var expression2 = new ExpressionDto(Type.ATOMIC_CONSTRAINT, constraint2, null, null, null);
+        var expression2 = new ExpressionDto(ExpressionType.ATOMIC_CONSTRAINT, constraint2, null, null, null);
         var dto = PolicyDto.builder()
                 .permission(PermissionDto.builder()
-                        .constraints(new ExpressionDto(Type.XOR, null, null, null, List.of(expression1, expression2)))
+                        .constraints(new ExpressionDto(ExpressionType.XOR, null, null, null, List.of(expression1, expression2)))
                         .build())
                 .build();
 
@@ -174,16 +174,16 @@ class PolicyMappingServiceTest {
     void policyToPolicyDto_nestedLogicalConstraints_returnPolicy() {
         // arrange
         var constraint1 = new AtomicConstraintDto("left1", OperatorDto.EQ, "right1");
-        var expression1 = new ExpressionDto(Type.ATOMIC_CONSTRAINT, constraint1, null, null, null);
+        var expression1 = new ExpressionDto(ExpressionType.ATOMIC_CONSTRAINT, constraint1, null, null, null);
         var constraint2 = new AtomicConstraintDto("left2", OperatorDto.EQ, "right2");
-        var expression2 = new ExpressionDto(Type.ATOMIC_CONSTRAINT, constraint2, null, null, null);
+        var expression2 = new ExpressionDto(ExpressionType.ATOMIC_CONSTRAINT, constraint2, null, null, null);
 
-        var andExpression1 = new ExpressionDto(Type.AND, null, List.of(expression1, expression2),
+        var andExpression1 = new ExpressionDto(ExpressionType.AND, null, List.of(expression1, expression2),
                 null, null);
-        var andExpression2 = new ExpressionDto(Type.AND, null, List.of(expression1, expression2),
+        var andExpression2 = new ExpressionDto(ExpressionType.AND, null, List.of(expression1, expression2),
                 null, null);
 
-        var orExpression = new ExpressionDto(Type.OR, null, null, List.of(andExpression1, andExpression2),
+        var orExpression = new ExpressionDto(ExpressionType.OR, null, null, List.of(andExpression1, andExpression2),
                 null);
 
         var dto = PolicyDto.builder()

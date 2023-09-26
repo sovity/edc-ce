@@ -4,6 +4,8 @@ import de.sovity.edc.client.gen.model.ContractDefinitionEntry;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.UiCriterion;
 import de.sovity.edc.client.gen.model.UiCriterionLiteral;
+import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
+import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -48,8 +50,8 @@ class ContractDefinitionPageApiServiceTest {
 
         var criterionEntry = contractDefinition.getAssetSelector().get(0);
         assertThat(criterionEntry.getOperandLeft()).isEqualTo("exampleLeft1");
-        assertThat(criterionEntry.getOperator()).isEqualTo(UiCriterion.OperatorEnum.EQ);
-        assertThat(criterionEntry.getOperandRight().getType()).isEqualTo(UiCriterionLiteral.TypeEnum.VALUE);
+        assertThat(criterionEntry.getOperator()).isEqualTo(UiCriterionOperator.EQ);
+        assertThat(criterionEntry.getOperandRight().getType()).isEqualTo(UiCriterionLiteralType.VALUE);
         assertThat(criterionEntry.getOperandRight().getValue()).isEqualTo("abc");
     }
 
@@ -95,8 +97,8 @@ class ContractDefinitionPageApiServiceTest {
         var client = TestUtils.edcClient();
         var criterion = new UiCriterion(
                 "exampleLeft1",
-                UiCriterion.OperatorEnum.EQ,
-                new UiCriterionLiteral(UiCriterionLiteral.TypeEnum.VALUE, "test", null));
+                UiCriterionOperator.EQ,
+                new UiCriterionLiteral(UiCriterionLiteralType.VALUE, "test", null));
 
         var contractDefinition = ContractDefinitionRequest.builder()
                 .contractDefinitionId("contractDefinition-id-1")
@@ -119,8 +121,8 @@ class ContractDefinitionPageApiServiceTest {
 
         var criterionEntry = contractDefinition.getAssetSelector().get(0);
         assertThat(criterionEntry.getOperandLeft()).isEqualTo("exampleLeft1");
-        assertThat(criterionEntry.getOperator()).isEqualTo(UiCriterion.OperatorEnum.EQ);
-        assertThat(criterionEntry.getOperandRight().getType()).isEqualTo(UiCriterionLiteral.TypeEnum.VALUE);
+        assertThat(criterionEntry.getOperator()).isEqualTo(UiCriterionOperator.EQ);
+        assertThat(criterionEntry.getOperandRight().getType()).isEqualTo(UiCriterionLiteralType.VALUE);
         assertThat(criterionEntry.getOperandRight().getValue()).isEqualTo("test");
     }
 

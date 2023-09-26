@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * <p>
  * That distinction has to be made somewhere. Let's rather do that distinction in the backend.
  */
-@Schema(description = "Simplified Transfer Process State to be used in UI")
+@Schema(description = "Simplified Transfer Process State to be used in UI", enumAsRef = true)
 public enum TransferProcessSimplifiedState {
     RUNNING,
     OK,
