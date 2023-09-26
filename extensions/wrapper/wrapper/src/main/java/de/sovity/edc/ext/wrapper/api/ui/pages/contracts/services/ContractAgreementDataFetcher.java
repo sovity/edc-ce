@@ -29,6 +29,7 @@ import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -48,7 +49,7 @@ public class ContractAgreementDataFetcher {
     @NotNull
     public List<ContractAgreementData> getContractAgreements() {
         var agreements = getAllContractAgreements();
-        var assets = getAllAssets();
+        var assets = MapUtils.associateBy(getAllAssets(), Asset::getId);
 
         var negotiations = getAllContractNegotiations().stream()
                 .filter(it -> it.getContractAgreement() != null)
@@ -61,15 +62,30 @@ public class ContractAgreementDataFetcher {
         return agreements.stream()
                 .flatMap(agreement -> negotiations.getOrDefault(agreement.getId(), List.of()).stream()
                         .map(negotiation -> {
-                            var asset = MapUtils.associateBy(assets, Asset::getId).get(agreement.getAssetId());
+                            var asset = getAsset(agreement, negotiation, assets);
                             var contractTransfers = transfers.getOrDefault(agreement.getId(), List.of());
                             return new ContractAgreementData(agreement, negotiation, asset, contractTransfers);
                         }))
                 .toList();
     }
 
+    private Asset getAsset(ContractAgreement agreement, ContractNegotiation negotiation, Map<String, Asset> assets) {
+        var assetId = agreement.getAssetId();
+
+        if (negotiation.getType() == ContractNegotiation.Type.CONSUMER) {
+            return dummyAsset(assetId);
+        }
+
+        var asset = assets.get(assetId);
+        return asset == null ? dummyAsset(assetId) : asset;
+    }
+
+    private Asset dummyAsset(String assetId) {
+        return Asset.Builder.newInstance().id(assetId).build();
+    }
+
     private List<Asset> getAllAssets() {
-        return assetIndex.queryAssets(QuerySpec.max()).collect(Collectors.toList());
+        return assetIndex.queryAssets(QuerySpec.max()).toList();
     }
 
     @NotNull
