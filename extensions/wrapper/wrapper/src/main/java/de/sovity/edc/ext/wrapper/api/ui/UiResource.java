@@ -195,9 +195,8 @@ public class UiResource {
         return contractNegotiationApiService.initiateContractNegotiation(contractNegotiationRequest);
     }
 
-    @POST
+    @GET
     @Path("pages/catalog-page/contract-negotiations/{contractNegotiationId}")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Get Contract Negotiation Information")
     public UiContractNegotiation getContractNegotiation(@PathParam("contractNegotiationId") String contractNegotiationId){

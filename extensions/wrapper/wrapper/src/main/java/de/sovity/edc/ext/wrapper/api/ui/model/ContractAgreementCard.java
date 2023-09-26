@@ -51,12 +51,6 @@ public class ContractAgreementCard {
     @Schema(description = "Contract Agreements Signing Date", requiredMode = Schema.RequiredMode.REQUIRED)
     private OffsetDateTime contractSigningDate;
 
-    @Schema(description = "Contract Agreements Start Date", requiredMode = Schema.RequiredMode.REQUIRED)
-    private OffsetDateTime contractStartDate;
-
-    @Schema(description = "Contract Agreements End Date", requiredMode = Schema.RequiredMode.REQUIRED)
-    private OffsetDateTime contractEndDate;
-
     @Schema(description = "Asset details", requiredMode = Schema.RequiredMode.REQUIRED)
     private UiAsset asset;
 
