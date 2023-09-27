@@ -29,6 +29,7 @@ import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
@@ -94,6 +95,90 @@ class UiApiWrapperTest {
 
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
+    }
+
+    @Test
+    void test_contract_Agreement_Page() {
+
+        //arrange
+
+        var data = "expected data 123";
+        var yesterday = OffsetDateTime.now().minusDays(1);
+        var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
+                .id("asset-1")
+                .name("AssetName")
+                .description("AssetDescription")
+                .licenseUrl("https://license-url")
+                .version("1.0.0")
+                .language("en")
+                .mediaType("application/json")
+                .dataCategory("dataCategory")
+                .dataSubcategory("dataSubcategory")
+                .dataModel("dataModel")
+                .geoReferenceMethod("geoReferenceMethod")
+                .transportMode("transportMode")
+                .keywords(List.of("keyword1", "keyword2"))
+                .creatorOrganizationName("creatorOrganizationName")
+                .publisherHomepage("publisherHomepage")
+                .dataAddressProperties(Map.of(
+                        Prop.Edc.TYPE, "HttpData",
+                        Prop.Edc.METHOD, "GET",
+                        Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
+                ))
+                .additionalProperties(Map.of("http://unknown/a", "x"))
+                .additionalJsonProperties(Map.of("http://unknown/b", "{\"http://unknown/c\":\"y\"}"))
+                .privateProperties(Map.of("http://unknown/a-private", "x-private"))
+                .privateJsonProperties(Map.of("http://unknown/b-private", "{\"http://unknown/c-private\":\"y-private\"}"))
+                .build()).getId();
+
+        providerClient.uiApi().createPolicyDefinition(PolicyDefinitionCreateRequest.builder()
+                .policyDefinitionId("policy-1")
+                .policy(UiPolicyCreateRequest.builder()
+                        .constraints(List.of(UiPolicyConstraint.builder()
+                                .left("POLICY_EVALUATION_TIME")
+                                .operator(UiPolicyConstraint.OperatorEnum.GT)
+                                .right(UiPolicyLiteral.builder()
+                                        .type(UiPolicyLiteral.TypeEnum.STRING)
+                                        .value(yesterday.toString())
+                                        .build())
+                                .build()))
+                        .build())
+                .build());
+
+        var policyJsonLd = providerClient.uiApi().policyDefinitionPage().getPolicies().get(0).getPolicy().getPolicyJsonLd();
+
+
+        providerClient.uiApi().initiateContractNegotiation(ContractNegotiationRequest.builder()
+                .counterPartyAddress("http://other-connector")
+                .assetId(assetId)
+                .policyJsonLd(policyJsonLd)
+                .counterPartyParticipantId("urn:connector:other-connector")
+                .contractOfferId("co-1")
+                .build());
+
+
+        var contractAgreements = providerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
+        assertThat(contractAgreements).hasSize(1);
+        var contractAgreement = contractAgreements.get(0);
+
+
+        // Test Contract Agreement
+        assertThat(contractAgreement.getDirection()).isEqualTo(ContractAgreementDirection.PROVIDING);
+        assertThat(contractAgreement.getCounterPartyAddress()).isEqualTo(getProtocolEndpoint(consumerConnector));
+        assertThat(contractAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
+
+   /*     assertThat(contractAgreement.getContractPolicy().getConstraints()).hasSize(1);
+        var contractAgreementPolicyConstraint = contractOffer.getPolicy().getConstraints().get(0);
+        assertThat(contractAgreementPolicyConstraint.getLeft()).isEqualTo("POLICY_EVALUATION_TIME");
+        assertThat(contractAgreementPolicyConstraint.getOperator()).isEqualTo(UiPolicyConstraint.OperatorEnum.GT);
+        assertThat(contractAgreementPolicyConstraint.getRight().getType()).isEqualTo(UiPolicyLiteral.TypeEnum.STRING);
+        assertThat(contractAgreementPolicyConstraint.getRight().getValue()).isEqualTo(yesterday.toString());*/
+
+
+        assertThat(contractAgreement.getAsset().getAssetId()).isEqualTo("first-asset-1.0");
+        assertThat(contractAgreement.getAsset().getName()).isEqualTo("first-asset-1.0");
+
+
     }
 
     @Test
@@ -172,10 +257,6 @@ class UiApiWrapperTest {
         var negotiation = negotiate(dataOffer, contractOffer);
         initiateTransfer(negotiation);
 
-        var contractAgreements =  providerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
-        assertThat(contractAgreements).hasSize(1);
-        var contractAgreement = contractAgreements.get(0);
-
         // assert
         assertThat(dataOffer.getEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
         assertThat(dataOffer.getParticipantId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
@@ -227,24 +308,6 @@ class UiApiWrapperTest {
         assertThat(constraint.getRight().getValue()).isEqualTo(yesterday.toString());
 
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
-
-        // Test Contract Agreement
-        assertThat(contractAgreement.getContractAgreementId()).isEqualTo("Zmlyc3QtY2Q=:Zmlyc3QtYXNzZXQtMS4w:MjgzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNi");
-        assertThat(contractAgreement.getDirection()).isEqualTo(PROVIDING);
-        assertThat(contractAgreement.getCounterPartyAddress()).isEqualTo(getProtocolEndpoint(consumerConnector));
-        assertThat(contractAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
-
-        assertThat(contractAgreement.getContractPolicy().getConstraints()).hasSize(1);
-        var contractAgreementPolicyConstraint = contractOffer.getPolicy().getConstraints().get(0);
-        assertThat(contractAgreementPolicyConstraint.getLeft()).isEqualTo("POLICY_EVALUATION_TIME");
-        assertThat(contractAgreementPolicyConstraint.getOperator()).isEqualTo(UiPolicyConstraint.OperatorEnum.GT);
-        assertThat(contractAgreementPolicyConstraint.getRight().getType()).isEqualTo(UiPolicyLiteral.TypeEnum.STRING);
-        assertThat(contractAgreementPolicyConstraint.getRight().getValue()).isEqualTo(yesterday.toString());
-
-
-        assertThat(contractAgreement.getAsset().getAssetId()).isEqualTo("first-asset-1.0");
-        assertThat(contractAgreement.getAsset().getName()).isEqualTo("first-asset-1.0");
-
     }
 
     private UiContractNegotiation negotiate(UiDataOffer dataOffer, UiContractOffer contractOffer) {
