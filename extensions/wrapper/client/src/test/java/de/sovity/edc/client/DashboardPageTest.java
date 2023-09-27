@@ -86,7 +86,6 @@ class DashboardPageTest {
             TransferProcessStore transferProcessStore,
             AssetIndex assetIndex
     ) {
-
         // arrange
         assetIndex.create(asset(ASSET_ID)).orElseThrow(storeFailure -> new RuntimeException("Failed to create asset"));
         contractNegotiationStore.save(contractDefinition(CONTRACT_DEFINITION_ID));
