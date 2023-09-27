@@ -15,7 +15,9 @@ import {AssetDetailDialogDataService} from './asset-detail-dialog/asset-detail-d
 import {AssetDetailDialogComponent} from './asset-detail-dialog/asset-detail-dialog.component';
 import {AssetDetailDialogService} from './asset-detail-dialog/asset-detail-dialog.service';
 import {AssetPropertyGridGroupBuilder} from './asset-detail-dialog/asset-property-grid-group-builder';
+import {PolicyPropertyFieldBuilder} from './asset-detail-dialog/policy-property-field-builder';
 import {ContractOfferIconComponent} from './contract-offer-icon/contract-offer-icon.component';
+import {ContractOfferMiniListComponent} from './contract-offer-mini-list/contract-offer-mini-list.component';
 import {DataOfferCardsComponent} from './data-offer-cards/data-offer-cards.component';
 import {IconWithOnlineStatusComponent} from './icon-with-online-status/icon-with-online-status.component';
 import {TransferHistoryMiniListComponent} from './transfer-history-mini-list/transfer-history-mini-list.component';
@@ -43,6 +45,7 @@ import {TransferHistoryMiniListComponent} from './transfer-history-mini-list/tra
   declarations: [
     AssetDetailDialogComponent,
     ContractOfferIconComponent,
+    ContractOfferMiniListComponent,
     DataOfferCardsComponent,
     TransferHistoryMiniListComponent,
     IconWithOnlineStatusComponent,
@@ -50,6 +53,7 @@ import {TransferHistoryMiniListComponent} from './transfer-history-mini-list/tra
   exports: [
     AssetDetailDialogComponent,
     ContractOfferIconComponent,
+    ContractOfferMiniListComponent,
     DataOfferCardsComponent,
     TransferHistoryMiniListComponent,
     IconWithOnlineStatusComponent,
@@ -58,6 +62,7 @@ import {TransferHistoryMiniListComponent} from './transfer-history-mini-list/tra
     AssetPropertyGridGroupBuilder,
     AssetDetailDialogDataService,
     AssetDetailDialogService,
+    PolicyPropertyFieldBuilder,
   ],
 })
 export class CatalogModule {}

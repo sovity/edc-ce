@@ -1,9 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, combineLatest} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
-import {UiDataOffer} from '@sovity.de/edc-client';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {AssetBuilder} from '../../../../core/services/asset-builder';
 import {DataOffer} from '../../../../core/services/models/data-offer';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {MultiFetched} from '../../../../core/services/models/multi-fetched';
@@ -13,13 +11,14 @@ import {
   CatalogBrowserPageData,
   ContractOfferRequest,
 } from './catalog-browser-page.data';
+import {DataOfferBuilder} from './data-offer-builder';
 
-@Injectable({providedIn: 'root'})
+@Injectable()
 export class CatalogBrowserPageService {
   constructor(
     private edcApiService: EdcApiService,
     private catalogApiUrlService: CatalogApiUrlService,
-    private assetBuilder: AssetBuilder,
+    private dataOfferBuilder: DataOfferBuilder,
   ) {}
 
   contractOfferPageData$(
@@ -96,15 +95,10 @@ export class CatalogBrowserPageService {
       .getCatalogPageDataOffers(endpoint)
       .pipe(
         map((dataOffers) =>
-          dataOffers.map((dataOffer) => this.buildDataOffer(dataOffer)),
+          dataOffers.map((dataOffer) =>
+            this.dataOfferBuilder.buildDataOffer(dataOffer),
+          ),
         ),
       );
-  }
-
-  private buildDataOffer(dataOffer: UiDataOffer): DataOffer {
-    return {
-      ...dataOffer,
-      asset: this.assetBuilder.buildAsset(dataOffer.asset, dataOffer.endpoint),
-    };
   }
 }

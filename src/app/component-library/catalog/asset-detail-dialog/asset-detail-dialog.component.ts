@@ -6,6 +6,7 @@ import {
 } from '@angular/material/dialog';
 import {Observable, Subject, isObservable} from 'rxjs';
 import {filter, finalize, takeUntil} from 'rxjs/operators';
+import {UiContractOffer} from '@sovity.de/edc-client';
 import {EdcApiService} from '../../../core/services/api/edc-api.service';
 import {ContractNegotiationService} from '../../../core/services/contract-negotiation.service';
 import {Asset} from '../../../core/services/models/asset';
@@ -39,17 +40,19 @@ export class AssetDetailDialogComponent implements OnDestroy {
 
   loading = false;
 
-  get negotiationState(): 'ready' | 'negotiating' | 'negotiated' {
-    const dataOffer = this.data.dataOffer!;
-    let contractOffer = dataOffer.contractOffers[0];
-    let isNegotiated =
-      this.contractNegotiationService.isNegotiated(contractOffer);
-    if (isNegotiated) {
-      return 'negotiated';
+  get showProgressBar(): boolean {
+    switch (this.data.type) {
+      case 'data-offer':
+        return (
+          this.data.dataOffer?.contractOffers?.some((it) =>
+            this.contractNegotiationService.isBusy(it),
+          ) ?? false
+        );
+      case 'contract-agreement':
+        return this.data.contractAgreement!.isInProgress;
+      default:
+        return false;
     }
-
-    let isBusy = this.contractNegotiationService.isBusy(contractOffer);
-    return isBusy ? 'negotiating' : 'ready';
   }
 
   constructor(
@@ -87,10 +90,10 @@ export class AssetDetailDialogComponent implements OnDestroy {
     });
   }
 
-  onNegotiateClick() {
+  onNegotiateClick(contractOffer: UiContractOffer) {
     this.contractNegotiationService.negotiate(
       this.data.dataOffer!,
-      this.data.dataOffer!.contractOffers[0],
+      contractOffer,
     );
   }
 

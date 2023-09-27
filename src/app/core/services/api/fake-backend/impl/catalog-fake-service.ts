@@ -9,11 +9,13 @@ let dataOffers: UiDataOffer[] = [
     asset: TestAssets.full,
     contractOffers: [
       {
-        contractOfferId: 'test-contract-offer-1',
+        contractOfferId:
+          'Zmlyc3QtY2Q=:Zmlyc3QtYXNzZXQtMS4w:MjgzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNi',
         policy: TestPolicies.connectorRestricted,
       },
       {
-        contractOfferId: 'test-contract-offer-2',
+        contractOfferId:
+          'Bmlyf3Qt62Q=:Zmlyc3QtYXNzZXQtMS4w:NigzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNj',
         policy: TestPolicies.warnings,
       },
     ],

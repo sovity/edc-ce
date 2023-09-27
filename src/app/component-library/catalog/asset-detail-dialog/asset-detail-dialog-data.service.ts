@@ -28,20 +28,14 @@ export class AssetDetailDialogDataService {
 
   dataOfferDetails(dataOffer: DataOffer): AssetDetailDialogData {
     let asset = dataOffer.asset;
-    let contractPolicy = dataOffer.contractOffers[0].policy;
-
     const propertyGridGroups = [
       this.assetPropertyGridGroupBuilder.buildAssetPropertiesGroup(asset, null),
       this.assetPropertyGridGroupBuilder.buildAdditionalPropertiesGroup(asset),
-      this.assetPropertyGridGroupBuilder.buildPolicyGroup(
-        asset,
-        contractPolicy,
-      ),
     ].filter((it) => it.properties.length);
 
     return {
       type: 'data-offer',
-      asset: dataOffer.asset,
+      asset: asset,
       dataOffer,
       propertyGridGroups,
     };
@@ -56,9 +50,9 @@ export class AssetDetailDialogDataService {
       this.assetPropertyGridGroupBuilder.buildContractAgreementGroup(
         contractAgreement,
       ),
-      this.assetPropertyGridGroupBuilder.buildPolicyGroup(
-        asset,
+      this.assetPropertyGridGroupBuilder.buildContractPolicyGroup(
         contractAgreement.contractPolicy,
+        asset.name,
       ),
       this.assetPropertyGridGroupBuilder.buildAssetPropertiesGroup(
         asset,

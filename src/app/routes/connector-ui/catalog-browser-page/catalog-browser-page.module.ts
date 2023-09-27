@@ -28,10 +28,14 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterModule} from '@angular/router';
 import {CatalogModule} from '../../../component-library/catalog/catalog.module';
+import {JsonDialogModule} from '../../../component-library/json-dialog/json-dialog.module';
 import {PipesAndDirectivesModule} from '../../../component-library/pipes-and-directives/pipes-and-directives.module';
+import {PropertyGridModule} from '../../../component-library/property-grid/property-grid.module';
 import {UiElementsModule} from '../../../component-library/ui-elements/ui-elements.module';
 import {CatalogBrowserFetchDetailDialogComponent} from './catalog-browser-fetch-detail-dialog/catalog-browser-fetch-detail-dialog.component';
+import {CatalogBrowserPageService} from './catalog-browser-page/catalog-browser-page-service';
 import {CatalogBrowserPageComponent} from './catalog-browser-page/catalog-browser-page.component';
+import {DataOfferBuilder} from './catalog-browser-page/data-offer-builder';
 
 @NgModule({
   imports: [
@@ -74,11 +78,14 @@ import {CatalogBrowserPageComponent} from './catalog-browser-page/catalog-browse
     CatalogModule,
     PipesAndDirectivesModule,
     UiElementsModule,
+    JsonDialogModule,
+    PropertyGridModule,
   ],
   declarations: [
     CatalogBrowserPageComponent,
     CatalogBrowserFetchDetailDialogComponent,
   ],
   exports: [CatalogBrowserPageComponent],
+  providers: [CatalogBrowserPageService, DataOfferBuilder, DataOfferBuilder],
 })
 export class CatalogBrowserPageModule {}

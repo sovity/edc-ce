@@ -14,6 +14,7 @@ import {
   getOnlineStatusColor,
   getOnlineStatusIcon,
 } from '../icon-with-online-status/online-status-utils';
+import {PolicyPropertyFieldBuilder} from './policy-property-field-builder';
 
 @Injectable()
 export class AssetPropertyGridGroupBuilder {
@@ -21,6 +22,7 @@ export class AssetPropertyGridGroupBuilder {
     private activeFeatureSet: ActiveFeatureSet,
     private propertyGridUtils: PropertyGridFieldService,
     private jsonDialogService: JsonDialogService,
+    private policyPropertyFieldBuilder: PolicyPropertyFieldBuilder,
   ) {}
 
   buildAssetPropertiesGroup(
@@ -183,20 +185,6 @@ export class AssetPropertyGridGroupBuilder {
     return {groupLabel, properties};
   }
 
-  buildPolicyGroup(
-    asset: Asset,
-    contractPolicy: UiPolicy | null,
-    groupLabel: string = 'Policies',
-  ) {
-    let properties: PropertyGridField[] = [];
-    if (contractPolicy) {
-      properties.push(
-        this.buildContractPolicyField(contractPolicy, asset.name),
-      );
-    }
-    return {groupLabel, properties};
-  }
-
   buildContractAgreementGroup(contractAgreement: ContractAgreementCardMapped) {
     let properties: PropertyGridField[] = [
       {
@@ -251,18 +239,17 @@ export class AssetPropertyGridGroupBuilder {
     };
   }
 
-  buildContractPolicyField(contractPolicy: UiPolicy, subtitle: string) {
+  buildContractPolicyGroup(
+    contractPolicy: UiPolicy,
+    subtitle: string,
+  ): PropertyGridGroup {
     return {
-      icon: 'policy',
-      label: 'Contract Policy',
-      text: 'Show Policy Details',
-      onclick: () =>
-        this.jsonDialogService.showJsonDetailDialog({
-          title: 'Contract Policy',
-          subtitle,
-          icon: 'policy',
-          objectForJson: JSON.parse(contractPolicy.policyJsonLd),
-        }),
+      groupLabel: 'Contract Policy',
+      properties: this.policyPropertyFieldBuilder.buildPolicyPropertyFields(
+        contractPolicy,
+        'Contract Policy JSON-LD',
+        subtitle,
+      ),
     };
   }
 

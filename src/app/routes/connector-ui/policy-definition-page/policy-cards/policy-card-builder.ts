@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {
   PolicyDefinitionDto,
   PolicyDefinitionPage,
+  UiPolicy,
   UiPolicyLiteral,
 } from '@sovity.de/edc-client';
 import {OPERATOR_SYMBOLS} from '../../../../core/services/api/model/policy-type-ext';
@@ -21,15 +22,13 @@ export class PolicyCardBuilder {
       id: policyDefinition.policyDefinitionId,
       isRegular: !irregularities.length,
       irregularities,
-      constraints: this.buildPolicyCardConstraints(policyDefinition),
+      constraints: this.buildPolicyCardConstraints(policyDefinition.policy),
       objectForJson: JSON.parse(policyDefinition.policy.policyJsonLd),
     };
   }
 
-  private buildPolicyCardConstraints(
-    policyDefinition: PolicyDefinitionDto,
-  ): PolicyCardConstraint[] {
-    const constraints = policyDefinition.policy?.constraints ?? [];
+  buildPolicyCardConstraints(policy: UiPolicy): PolicyCardConstraint[] {
+    const constraints = policy?.constraints ?? [];
     return constraints.map((constraint) => {
       let left = constraint.left;
       let operator = OPERATOR_SYMBOLS[constraint.operator];

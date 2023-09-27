@@ -1,32 +1,36 @@
-import {UiPolicy} from '@sovity.de/edc-client';
+import {UiPolicy, UiPolicyConstraint} from '@sovity.de/edc-client';
 
 export namespace TestPolicies {
-  export const connectorRestricted: UiPolicy = {
-    policyJsonLd: '{"example-policy-jsonld": true}',
-    constraints: [
-      {
-        left: 'REFERRING_CONNECTOR',
-        operator: 'EQ',
-        right: {type: 'STRING', value: 'https://my-other-connector'},
-      },
-    ],
-    errors: [],
-  };
+  const policy = (
+    constraints: UiPolicyConstraint[],
+    errors: string[] = [],
+  ) => ({
+    policyJsonLd: JSON.stringify({
+      _description:
+        'The actual JSON-LD will look different. This is just data from the fake backend.',
+      constraints,
+    }),
+    constraints,
+    errors,
+  });
 
-  export const warnings: UiPolicy = {
-    policyJsonLd: '{"example-policy-jsonld": true}',
-    constraints: [
+  export const connectorRestricted: UiPolicy = policy([
+    {
+      left: 'REFERRING_CONNECTOR',
+      operator: 'EQ',
+      right: {type: 'STRING', value: 'https://my-other-connector'},
+    },
+  ]);
+
+  export const warnings: UiPolicy = policy(
+    [
       {
         left: 'SOME_UNKNOWN_PROP',
         operator: 'HAS_PART',
         right: {type: 'STRING_LIST', valueList: ['A', 'B', 'C']},
       },
     ],
-    errors: ['$.duties: Duties are currently unsupported.'],
-  };
-  export const failedMapping: UiPolicy = {
-    policyJsonLd: '{"example-policy-jsonld": true}',
-    constraints: [],
-    errors: ['No constraints found!'],
-  };
+    ['$.duties: Duties are currently unsupported.'],
+  );
+  export const failedMapping: UiPolicy = policy([], ['No constraints found!']);
 }
