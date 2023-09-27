@@ -101,7 +101,6 @@ class UiApiWrapperTest {
     void test_contract_Agreement_Page() {
 
         //arrange
-
         var data = "expected data 123";
         var yesterday = OffsetDateTime.now().minusDays(1);
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
@@ -156,29 +155,19 @@ class UiApiWrapperTest {
                 .contractOfferId("co-1")
                 .build());
 
-
+        // act
         var contractAgreements = providerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
         assertThat(contractAgreements).hasSize(1);
         var contractAgreement = contractAgreements.get(0);
 
 
-        // Test Contract Agreement
+        // assert
         assertThat(contractAgreement.getDirection()).isEqualTo(ContractAgreementDirection.PROVIDING);
         assertThat(contractAgreement.getCounterPartyAddress()).isEqualTo(getProtocolEndpoint(consumerConnector));
         assertThat(contractAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
 
-   /*     assertThat(contractAgreement.getContractPolicy().getConstraints()).hasSize(1);
-        var contractAgreementPolicyConstraint = contractOffer.getPolicy().getConstraints().get(0);
-        assertThat(contractAgreementPolicyConstraint.getLeft()).isEqualTo("POLICY_EVALUATION_TIME");
-        assertThat(contractAgreementPolicyConstraint.getOperator()).isEqualTo(UiPolicyConstraint.OperatorEnum.GT);
-        assertThat(contractAgreementPolicyConstraint.getRight().getType()).isEqualTo(UiPolicyLiteral.TypeEnum.STRING);
-        assertThat(contractAgreementPolicyConstraint.getRight().getValue()).isEqualTo(yesterday.toString());*/
-
-
-        assertThat(contractAgreement.getAsset().getAssetId()).isEqualTo("first-asset-1.0");
-        assertThat(contractAgreement.getAsset().getName()).isEqualTo("first-asset-1.0");
-
-
+        assertThat(contractAgreement.getAsset().getAssetId()).isEqualTo(assetId);
+        assertThat(contractAgreement.getContractPolicy().getPolicyJsonLd()).isEqualTo(policyJsonLd);
     }
 
     @Test
