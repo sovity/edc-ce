@@ -6,7 +6,7 @@ plugins {
     `maven-publish`
     id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.16" //./gradlew clean resolve
     id("org.hidetake.swagger.generator") version "2.19.2" //./gradlew generateSwaggerUI
-    id("org.openapi.generator") version "6.6.0" //./gradlew openApiValidate && ./gradlew openApiGenerate
+    id("org.openapi.generator") version "7.0.1" //./gradlew openApiValidate && ./gradlew openApiGenerate
 }
 
 dependencies {
