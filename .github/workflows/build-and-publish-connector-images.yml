@@ -80,7 +80,7 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value=release,enable=${{ startsWith(github.ref, 'refs/tags/') }}
       - name: Build and push EDC image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           file: connector/Dockerfile
           context: .
