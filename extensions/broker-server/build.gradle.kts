@@ -18,8 +18,8 @@ configurations.all {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:1.18.28")
-    compileOnly("org.projectlombok:lombok:1.18.28")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
+    compileOnly("org.projectlombok:lombok:1.18.30")
     implementation("org.apache.commons:commons-lang3:3.13.0")
 
     implementation("${edcGroup}:control-plane-spi:${edcVersion}")
@@ -30,8 +30,8 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:${okHttpVersion}")
 
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.28")
-    testCompileOnly("org.projectlombok:lombok:1.18.28")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
+    testCompileOnly("org.projectlombok:lombok:1.18.30")
     testImplementation("org.assertj:assertj-core:${assertj}")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.mockito:mockito-inline:${mockitoVersion}")

@@ -41,8 +41,8 @@ dependencies {
     flywayMigration("org.postgresql:postgresql:42.6.0")
     implementation("com.zaxxer:HikariCP:5.0.1")
 
-    annotationProcessor("org.projectlombok:lombok:1.18.28")
-    compileOnly("org.projectlombok:lombok:1.18.28")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
+    compileOnly("org.projectlombok:lombok:1.18.30")
     implementation("org.apache.commons:commons-lang3:3.13.0")
 
     implementation("${edcGroup}:core-spi:${edcVersion}")
