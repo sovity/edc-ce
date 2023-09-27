@@ -16,19 +16,24 @@ package de.sovity.edc.e2e;
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractAgreementTransferRequest;
 import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestParams;
+import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestType;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
-import de.sovity.edc.client.gen.model.ContractNegotiationState.SimplifiedStateEnum;
+import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
+import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiContractOffer;
 import de.sovity.edc.client.gen.model.UiCriterion;
 import de.sovity.edc.client.gen.model.UiCriterionLiteral;
+import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
+import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
+import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
@@ -107,9 +112,9 @@ class UiApiWrapperTest {
                 .policy(UiPolicyCreateRequest.builder()
                         .constraints(List.of(UiPolicyConstraint.builder()
                                 .left("POLICY_EVALUATION_TIME")
-                                .operator(UiPolicyConstraint.OperatorEnum.GT)
+                                .operator(OperatorDto.GT)
                                 .right(UiPolicyLiteral.builder()
-                                        .type(UiPolicyLiteral.TypeEnum.STRING)
+                                        .type(UiPolicyLiteralType.STRING)
                                         .value(yesterday.toString())
                                         .build())
                                 .build()))
@@ -150,9 +155,9 @@ class UiApiWrapperTest {
                 .contractPolicyId(policyId)
                 .assetSelector(List.of(UiCriterion.builder()
                         .operandLeft(Prop.Edc.ID)
-                        .operator(UiCriterion.OperatorEnum.EQ)
+                        .operator(UiCriterionOperator.EQ)
                         .operandRight(UiCriterionLiteral.builder()
-                                .type(UiCriterionLiteral.TypeEnum.VALUE)
+                                .type(UiCriterionLiteralType.VALUE)
                                 .value(assetId)
                                 .build())
                         .build()))
@@ -218,8 +223,8 @@ class UiApiWrapperTest {
         assertThat(contractOffer.getPolicy().getConstraints()).hasSize(1);
         var constraint = contractOffer.getPolicy().getConstraints().get(0);
         assertThat(constraint.getLeft()).isEqualTo("POLICY_EVALUATION_TIME");
-        assertThat(constraint.getOperator()).isEqualTo(UiPolicyConstraint.OperatorEnum.GT);
-        assertThat(constraint.getRight().getType()).isEqualTo(UiPolicyLiteral.TypeEnum.STRING);
+        assertThat(constraint.getOperator()).isEqualTo(OperatorDto.GT);
+        assertThat(constraint.getRight().getType()).isEqualTo(UiPolicyLiteralType.STRING);
         assertThat(constraint.getRight().getValue()).isEqualTo(yesterday.toString());
 
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
@@ -239,17 +244,17 @@ class UiApiWrapperTest {
 
         var negotiation = Awaitility.await().atMost(consumerConnector.timeout).until(
                 () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
-                it -> it.getState().getSimplifiedState() != SimplifiedStateEnum.IN_PROGRESS
+                it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
         );
 
-        assertThat(negotiation.getState().getSimplifiedState()).isEqualTo(SimplifiedStateEnum.AGREED);
+        assertThat(negotiation.getState().getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.AGREED);
         return negotiation;
     }
 
     private void initiateTransfer(UiContractNegotiation negotiation) {
         var contractAgreementId = negotiation.getContractAgreementId();
         var transferRequest = ContractAgreementTransferRequest.builder()
-                .type(ContractAgreementTransferRequest.TypeEnum.PARAMS_ONLY)
+                .type(ContractAgreementTransferRequestType.PARAMS_ONLY)
                 .params(ContractAgreementTransferRequestParams.builder()
                         .contractAgreementId(contractAgreementId)
                         .dataSinkProperties(dataAddress.getDataSinkProperties())

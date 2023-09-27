@@ -14,9 +14,9 @@
 
 package de.sovity.edc.client;
 
-import de.sovity.edc.client.gen.model.ContractAgreementCard;
-import de.sovity.edc.client.gen.model.TransferProcessState;
-import de.sovity.edc.client.gen.model.UiPolicyConstraint;
+import de.sovity.edc.client.gen.model.ContractAgreementDirection;
+import de.sovity.edc.client.gen.model.OperatorDto;
+import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
@@ -90,7 +90,7 @@ class ContractAgreementPageTest {
         var agreement = actual.get(0);
         assertThat(agreement.getContractAgreementId()).isEqualTo("my-contract-agreement-1");
         assertThat(agreement.getContractNegotiationId()).isEqualTo("my-contract-negotiation-1");
-        assertThat(agreement.getDirection()).isEqualTo(ContractAgreementCard.DirectionEnum.PROVIDING);
+        assertThat(agreement.getDirection()).isEqualTo(ContractAgreementDirection.PROVIDING);
         assertThat(agreement.getCounterPartyAddress()).isEqualTo("http://other-connector");
         assertThat(agreement.getCounterPartyId()).isEqualTo("urn:connector:other-connector");
         assertThat(agreement.getContractSigningDate()).isEqualTo(todayPlusDays(0));
@@ -103,12 +103,12 @@ class ContractAgreementPageTest {
         assertThat(transfer.getLastUpdatedDate()).isNotNull();
         assertThat(transfer.getState().getName()).isEqualTo("COMPLETED");
         assertThat(transfer.getState().getCode()).isEqualTo(800);
-        assertThat(transfer.getState().getSimplifiedState()).isEqualTo(TransferProcessState.SimplifiedStateEnum.OK);
+        assertThat(transfer.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
         assertThat(transfer.getErrorMessage()).isEqualTo("my-error-message-1");
 
         var constraint = agreement.getContractPolicy().getConstraints().get(0);
         assertThat(constraint.getLeft()).isEqualTo("ALWAYS_TRUE");
-        assertThat(constraint.getOperator()).isEqualTo(UiPolicyConstraint.OperatorEnum.EQ);
+        assertThat(constraint.getOperator()).isEqualTo(OperatorDto.EQ);
         assertThat(constraint.getRight().getValue()).isEqualTo("true");
     }
 

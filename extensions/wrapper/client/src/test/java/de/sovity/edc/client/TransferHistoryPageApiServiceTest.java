@@ -14,6 +14,7 @@
 
 package de.sovity.edc.client;
 
+import de.sovity.edc.client.gen.model.ContractAgreementDirection;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
@@ -27,8 +28,6 @@ import java.text.ParseException;
 
 import static de.sovity.edc.client.TransferProcessTestUtils.createConsumingTransferProcesses;
 import static de.sovity.edc.client.TransferProcessTestUtils.createProvidingTransferProcesses;
-import static de.sovity.edc.client.gen.model.TransferHistoryEntry.DirectionEnum.CONSUMING;
-import static de.sovity.edc.client.gen.model.TransferHistoryEntry.DirectionEnum.PROVIDING;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
@@ -67,7 +66,7 @@ class TransferHistoryPageApiServiceTest {
         assertThat(consumingProcess.getAssetId()).isEqualTo(TransferProcessTestUtils.UNKNOWN_ASSET_ID);
         assertThat(consumingProcess.getCounterPartyConnectorEndpoint()).isEqualTo(TransferProcessTestUtils.COUNTER_PARTY_ADDRESS);
         assertThat(consumingProcess.getContractAgreementId()).isEqualTo(TransferProcessTestUtils.CONSUMING_CONTRACT_ID);
-        assertThat(consumingProcess.getDirection()).isEqualTo(CONSUMING);
+        assertThat(consumingProcess.getDirection()).isEqualTo(ContractAgreementDirection.CONSUMING);
         assertThat(consumingProcess.getState().getCode()).isEqualTo(800);
         assertThat(consumingProcess.getAssetName()).isEqualTo(TransferProcessTestUtils.UNKNOWN_ASSET_ID);
         assertThat(consumingProcess.getErrorMessage()).isEmpty();
@@ -78,7 +77,7 @@ class TransferHistoryPageApiServiceTest {
         assertThat(providingProcess.getAssetId()).isEqualTo(TransferProcessTestUtils.VALID_ASSET_ID);
         assertThat(providingProcess.getCounterPartyConnectorEndpoint()).isEqualTo(TransferProcessTestUtils.COUNTER_PARTY_ADDRESS);
         assertThat(providingProcess.getContractAgreementId()).isEqualTo(TransferProcessTestUtils.PROVIDING_CONTRACT_ID);
-        assertThat(providingProcess.getDirection()).isEqualTo(PROVIDING);
+        assertThat(providingProcess.getDirection()).isEqualTo(ContractAgreementDirection.PROVIDING);
         assertThat(providingProcess.getState().getCode()).isEqualTo(800);
         assertThat(providingProcess.getAssetName()).isEqualTo(TransferProcessTestUtils.ASSET_NAME);
         assertThat(providingProcess.getErrorMessage()).isEqualTo("TransferProcessManager: attempt #8 failed to send transfer");

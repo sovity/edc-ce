@@ -18,11 +18,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UiCriterionLiteral {
 
-    public enum CriterionLiteralTypeDto {
-        VALUE, VALUE_LIST
-    }
-
-    private CriterionLiteralTypeDto type;
+    private UiCriterionLiteralType type;
 
     @Schema(description = "Only for type VALUE. The single value representation.")
     private String value;
@@ -31,10 +27,10 @@ public class UiCriterionLiteral {
     private List<String> valueList;
 
     public static UiCriterionLiteral ofValue(@NonNull String value) {
-        return new UiCriterionLiteral(CriterionLiteralTypeDto.VALUE, value, null);
+        return new UiCriterionLiteral(UiCriterionLiteralType.VALUE, value, null);
     }
 
     public static UiCriterionLiteral ofValueList(@NonNull List<String> valueList) {
-        return new UiCriterionLiteral(CriterionLiteralTypeDto.VALUE_LIST, null, valueList);
+        return new UiCriterionLiteral(UiCriterionLiteralType.VALUE_LIST, null, valueList);
     }
 }

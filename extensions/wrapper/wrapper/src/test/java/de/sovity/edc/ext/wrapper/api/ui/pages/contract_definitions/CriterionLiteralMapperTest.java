@@ -1,6 +1,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionLiteral;
+import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionLiteralType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ class CriterionLiteralMapperTest {
         String value = "testValue";
         UiCriterionLiteral literal = criterionLiteralMapper.buildUiCriterionLiteral(value);
 
-        assertThat(literal.getType()).isEqualTo(UiCriterionLiteral.CriterionLiteralTypeDto.VALUE);
+        assertThat(literal.getType()).isEqualTo(UiCriterionLiteralType.VALUE);
         assertThat(literal.getValue()).isEqualTo(value);
         assertThat(literal.getValueList()).isNull();
     }
@@ -32,7 +33,7 @@ class CriterionLiteralMapperTest {
         List<?> valueList = Arrays.asList("value1", "value2", null);
         UiCriterionLiteral literal = criterionLiteralMapper.buildUiCriterionLiteral(valueList);
 
-        assertThat(literal.getType()).isEqualTo(UiCriterionLiteral.CriterionLiteralTypeDto.VALUE_LIST);
+        assertThat(literal.getType()).isEqualTo(UiCriterionLiteralType.VALUE_LIST);
         assertThat(literal.getValueList()).containsExactly("value1", "value2", null);
         assertThat(literal.getValue()).isNull();
     }
