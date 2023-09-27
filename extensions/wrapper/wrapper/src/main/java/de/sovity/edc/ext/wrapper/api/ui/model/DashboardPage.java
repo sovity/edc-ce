@@ -19,10 +19,10 @@ public class DashboardPage {
     private int numberOfPolicies;
 
     @Schema(description = "Consuming Contract Agreement amounts", requiredMode = Schema.RequiredMode.REQUIRED)
-    private int numberOfConsumingAgreements;
+    private long numberOfConsumingAgreements;
 
     @Schema(description = "Providing Contract Agreement amounts", requiredMode = Schema.RequiredMode.REQUIRED)
-    private int numberOfProvidingAgreements;
+    private long numberOfProvidingAgreements;
 
     @Schema(description = "Connector's Endpoint", requiredMode = Schema.RequiredMode.REQUIRED)
     private String endpoint;

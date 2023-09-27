@@ -99,8 +99,8 @@ class DashboardPageTest {
         // assert
         assertThat(dashboardPage.getNumberOfAssets()).isEqualTo(1);
         assertThat(dashboardPage.getNumberOfPolicies()).isEqualTo(1);
-        assertThat(dashboardPage.getNumberOfConsumingAgreements()).isEqualTo(0);
-        assertThat(dashboardPage.getNumberOfProvidingAgreements()).isEqualTo(0);
+        assertThat(dashboardPage.getNumberOfConsumingAgreements()).isZero();
+        assertThat(dashboardPage.getNumberOfProvidingAgreements()).isEqualTo(1);
         assertThat(dashboardPage.getEndpoint()).isEqualTo("urn:connector:other-connector");
         assertThat(dashboardPage.getNumberOfTransferProcesses()).isEqualTo(1);
     }
