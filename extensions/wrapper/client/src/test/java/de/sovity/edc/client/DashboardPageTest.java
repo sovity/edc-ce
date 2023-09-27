@@ -14,10 +14,12 @@
 
 package de.sovity.edc.client;
 
+import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
+import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
@@ -67,9 +69,9 @@ class DashboardPageTest {
 
     UiPolicyConstraint constraint = UiPolicyConstraint.builder()
             .left("a")
-            .operator(UiPolicyConstraint.OperatorEnum.EQ)
+            .operator(OperatorDto.EQ)
             .right(UiPolicyLiteral.builder()
-                    .type(UiPolicyLiteral.TypeEnum.STRING)
+                    .type(UiPolicyLiteralType.STRING)
                     .value("b")
                     .build())
             .build();
