@@ -45,14 +45,12 @@ public class DashboardPageApiService {
                         agreement.agreement(), agreement.negotiation(), agreement.asset(), agreement.transfers()))
                 .sorted(Comparator.comparing(ContractAgreementCard::getContractSigningDate).reversed())
                 .toList();
-        var consumingCards = cards.stream().filter(card -> ContractAgreementDirection.fromType(card.getDirection().getType()).equals(CONSUMER)).toList();
-        var providingCards = cards.stream().filter(card -> ContractAgreementDirection.fromType(card.getDirection().getType()).equals(PROVIDER)).toList();
+        var numberOfConsumingAgreements = cards.stream().filter(card -> ContractAgreementDirection.fromType(card.getDirection().getType()).equals(CONSUMER)).toList().size();
+        var numberOfProvidingAgreements = cards.stream().filter(card -> ContractAgreementDirection.fromType(card.getDirection().getType()).equals(PROVIDER)).toList().size();
 
-        var transferProcessamount = cards.stream().filter(card -> ContractAgreementDirection.fromType(card.getDirection().getType()).equals(CONSUMER)).toList();
+        var numberOfAssets = dashboardDataFetcher.getAllAssets().stream().map(assetMapper::buildUiAsset).toList().size();
+        var numberOfPolicies = dashboardDataFetcher.getAllPolicies().stream().map(policyMapper::buildUiPolicy).toList().size();
 
-        var uiAssets = dashboardDataFetcher.getAllAssets().stream().map(assetMapper::buildUiAsset).toList();
-        var uiPolicies = dashboardDataFetcher.getAllPolicies().stream().map(policyMapper::buildUiPolicy).toList();
-
-        return new DashboardPage(consumingCards, providingCards, dashboardDataFetcher.getTransferProcessesAmount(), uiAssets, uiPolicies, connectorEndpoint);
+        return new DashboardPage(dashboardDataFetcher.getTransferProcessesAmount(), numberOfAssets, numberOfPolicies, numberOfConsumingAgreements, numberOfProvidingAgreements, connectorEndpoint);
     }
 }

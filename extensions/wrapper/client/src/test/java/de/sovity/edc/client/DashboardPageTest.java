@@ -97,9 +97,12 @@ class DashboardPageTest {
         var dashboardPage = client.uiApi().dashboardPageEndpoint("urn:connector:other-connector");
 
         // assert
-        assertThat(dashboardPage.getAssets().get(0).getAssetId()).isEqualTo(ASSET_ID);
+        assertThat(dashboardPage.getNumberOfAssets()).isEqualTo(1);
+        assertThat(dashboardPage.getNumberOfPolicies()).isEqualTo(1);
+        assertThat(dashboardPage.getNumberOfConsumingAgreements()).isEqualTo(0);
+        assertThat(dashboardPage.getNumberOfProvidingAgreements()).isEqualTo(0);
         assertThat(dashboardPage.getEndpoint()).isEqualTo("urn:connector:other-connector");
-        assertThat(dashboardPage.getTransferProcessAmounts()).isEqualTo(1);
+        assertThat(dashboardPage.getNumberOfTransferProcesses()).isEqualTo(1);
     }
 
     private DataAddress dataAddress() {
