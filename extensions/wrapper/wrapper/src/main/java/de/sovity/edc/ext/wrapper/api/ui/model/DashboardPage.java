@@ -51,15 +51,15 @@ public class DashboardPage {
     @Schema(description = "Consuming Transfer Process Amounts", requiredMode = Schema.RequiredMode.REQUIRED)
     private DashboardTransferAmounts consumingTransferProcesses;
 
-    @Schema(description = "Asset amounts", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Number of Assets", requiredMode = Schema.RequiredMode.REQUIRED)
     private int numberOfAssets;
 
-    @Schema(description = "Policy amounts", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Number of Policies", requiredMode = Schema.RequiredMode.REQUIRED)
     private int numberOfPolicies;
 
-    @Schema(description = "Consuming Contract Agreement Amounts", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Number of consuming Contract Agreements", requiredMode = Schema.RequiredMode.REQUIRED)
     private long numberOfConsumingAgreements;
 
-    @Schema(description = "Providing Contract Agreement Amounts", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Number of providing Contract Agreements", requiredMode = Schema.RequiredMode.REQUIRED)
     private long numberOfProvidingAgreements;
 }
