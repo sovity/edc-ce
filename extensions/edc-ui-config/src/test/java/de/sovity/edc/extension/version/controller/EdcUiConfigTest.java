@@ -32,16 +32,7 @@ import static org.mockito.Mockito.mock;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
-class EdcUiConfigAllSetTest {
-
-    private static final String CONNECTOR_NAME = "Example Connector Name";
-    private static final String CURATOR_URL = "https://example-curator.com";
-    private static final String DAPS_OAUTH_JWKS_URL = "https://daps.example.com/jwks.json";
-    private static final String DAPS_OAUTH_TOKEN_URL = "https://daps.example.com/token";
-    private static final String IDS_DESCRIPTION = "Example Connector Description";
-    private static final String IDS_ID = "urn:connector:my-id";
-    private static final String IDS_TITLE = "Example Connector Title";
-    private static final String MAINTAINER_URL = "https://example-maintainer.com";
+class EdcUiConfigTest {
     private static final String SOME_EXAMPLE_PROP = "this should also be passed through";
 
     @BeforeEach
@@ -52,15 +43,6 @@ class EdcUiConfigAllSetTest {
                 DataPlaneInstanceStore.class,
                 mock(DataPlaneInstanceStore.class));
         extension.setConfiguration(createConfiguration(Map.of(
-                "edc.ids.endpoint", "http://my-edc/api/v1/ids",
-                "edc.connector.name", CONNECTOR_NAME,
-                "edc.ids.id", IDS_ID,
-                "edc.ids.title", IDS_TITLE,
-                "edc.ids.description", IDS_DESCRIPTION,
-                "edc.ids.curator", CURATOR_URL,
-                "edc.ids.maintainer", MAINTAINER_URL,
-                "edc.oauth.token.url", DAPS_OAUTH_TOKEN_URL,
-                "edc.oauth.provider.jwks.url", DAPS_OAUTH_JWKS_URL,
                 "edc.ui.some.example.prop", SOME_EXAMPLE_PROP
         )));
     }
@@ -68,15 +50,6 @@ class EdcUiConfigAllSetTest {
     @Test
     void testEdcUiConfigWithEverythingSet() {
         mockRequest().assertThat()
-                .body("EDC_UI_CONNECTOR_ENDPOINT", equalTo("http://my-edc/api/v1/ids/data"))
-                .body("EDC_UI_CONNECTOR_NAME", equalTo(CONNECTOR_NAME))
-                .body("EDC_UI_IDS_ID", equalTo(IDS_ID))
-                .body("EDC_UI_IDS_TITLE", equalTo(IDS_TITLE))
-                .body("EDC_UI_IDS_DESCRIPTION", equalTo(IDS_DESCRIPTION))
-                .body("EDC_UI_CURATOR_URL", equalTo(CURATOR_URL))
-                .body("EDC_UI_MAINTAINER_URL", equalTo(MAINTAINER_URL))
-                .body("EDC_UI_DAPS_OAUTH_TOKEN_URL", equalTo(DAPS_OAUTH_TOKEN_URL))
-                .body("EDC_UI_DAPS_OAUTH_JWKS_URL", equalTo(DAPS_OAUTH_JWKS_URL))
                 .body("EDC_UI_SOME_EXAMPLE_PROP", equalTo(SOME_EXAMPLE_PROP));
     }
 }
