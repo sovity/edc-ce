@@ -18,7 +18,6 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementPageCardBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DashboardDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,6 @@ import static de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedSt
 @RequiredArgsConstructor
 public class DashboardPageApiService {
     private final DashboardDataFetcher dashboardDataFetcher;
-    private final ContractAgreementPageCardBuilder contractAgreementPageCardBuilder;
     private final AssetMapper assetMapper;
     private final PolicyMapper policyMapper;
     private final TransferProcessStateService transferProcessStateService;
