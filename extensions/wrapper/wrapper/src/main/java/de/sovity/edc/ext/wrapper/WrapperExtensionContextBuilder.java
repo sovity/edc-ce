@@ -182,7 +182,6 @@ public class WrapperExtensionContextBuilder {
         var contractNegotiationStateService = new ContractNegotiationStateService();
         var contractNegotiationApiService = new ContractNegotiationApiService(contractNegotiationService, contractNegotiationBuilder, contractNegotiationStateService);
         var dashboardDataFetcher = new DashboardDataFetcher(
-                contractAgreementService,
                 contractNegotiationStore,
                 transferProcessService,
                 assetIndex,
