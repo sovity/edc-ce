@@ -44,8 +44,6 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreeme
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractNegotiationUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequestBuilder;
-import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
-import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DashboardDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
@@ -94,6 +92,7 @@ public class WrapperExtensionContextBuilder {
             AssetIndex assetIndex,
             AssetService assetService,
             CatalogService catalogService,
+            Config config,
             ContractAgreementService contractAgreementService,
             ContractDefinitionService contractDefinitionService,
             ContractDefinitionStore contractDefinitionStore,
@@ -181,15 +180,14 @@ public class WrapperExtensionContextBuilder {
         var contractNegotiationBuilder = new ContractNegotiationBuilder(contractOfferMapper);
         var contractNegotiationStateService = new ContractNegotiationStateService();
         var contractNegotiationApiService = new ContractNegotiationApiService(contractNegotiationService, contractNegotiationBuilder, contractNegotiationStateService);
-        var dashboardDataFetcher = new DashboardDataFetcher(
-                contractNegotiationStore,
-                transferProcessService,
-                assetIndex,
-                policyDefinitionService
-        );
+        var selfDescriptionService = new SelfDescriptionService(config);
+        var miwConfigBuilder = new MiwConfigService(config);
+        var dapsConfigBuilder = new DapsConfigService(config);
         var dashboardApiService = new DashboardPageApiService(
-                dashboardDataFetcher,
-                transferProcessStateService);
+                dapsConfigBuilder,
+                miwConfigBuilder,
+                selfDescriptionService
+        );
         var uiResource = new UiResource(
                 contractAgreementApiService,
                 contractAgreementTransferApiService,

@@ -23,7 +23,6 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
-import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
@@ -35,7 +34,6 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefin
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractNegotiationApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.ContractAgreementTransferApiService;
-import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
@@ -194,7 +192,7 @@ public class UiResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Initiate a new Contract Negotiation")
-    public UiContractNegotiation initiateContractNegotiation(ContractNegotiationRequest contractNegotiationRequest){
+    public UiContractNegotiation initiateContractNegotiation(ContractNegotiationRequest contractNegotiationRequest) {
         return contractNegotiationApiService.initiateContractNegotiation(contractNegotiationRequest);
     }
 
@@ -202,14 +200,15 @@ public class UiResource {
     @Path("pages/catalog-page/contract-negotiations/{contractNegotiationId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Get Contract Negotiation Information")
-    public UiContractNegotiation getContractNegotiation(@PathParam("contractNegotiationId") String contractNegotiationId){
+    public UiContractNegotiation getContractNegotiation(@PathParam("contractNegotiationId") String contractNegotiationId) {
         return contractNegotiationApiService.getContractNegotiation(contractNegotiationId);
     }
+
     @GET
-    @Path("pages/dashboard-page/{endpoint}")
+    @Path("pages/dashboard-page")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Collect all data for Dashboard Page")
-    public DashboardPage dashboardPageEndpoint(@PathParam("endpoint") String connectorEndpoint) {
-        return dashboardPageApiService.dashboardPage(connectorEndpoint);
+    @Operation(description = "Collect all data for the Dashboard Page")
+    public DashboardPage dashboardPageEndpoint() {
+        return dashboardPageApiService.dashboardPage();
     }
 }

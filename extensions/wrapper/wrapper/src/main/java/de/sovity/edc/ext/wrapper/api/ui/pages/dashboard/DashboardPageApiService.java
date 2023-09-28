@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard;
 
+<<<<<<<HEAD
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardTransferAmounts;
@@ -35,6 +36,9 @@ import static de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedSt
 public class DashboardPageApiService {
     private final DashboardDataFetcher dashboardDataFetcher;
     private final TransferProcessStateService transferProcessStateService;
+    private final DapsConfigService dapsConfigService;
+    private final MiwConfigService miwConfigService;
+    private final SelfDescriptionService selfDescriptionService;
 
     @NotNull
     public DashboardPage dashboardPage(String connectorEndpoint) {
@@ -53,15 +57,26 @@ public class DashboardPageApiService {
                 .map(negotiation -> negotiation.getContractAgreement().getId())
                 .collect(Collectors.toSet());
 
-        DashboardPage dashboard = new DashboardPage();
-        dashboard.setNumberOfAssets(dashboardDataFetcher.getNumberOfAssets());
-        dashboard.setNumberOfPolicies(dashboardDataFetcher.getNumberOfPolicies());
-        dashboard.setProvidingTransferProcesses(getTransferAmounts(transferProcesses, providingAgreements));
-        dashboard.setConsumingTransferProcesses(getTransferAmounts(transferProcesses, consumingAgreements));
-        dashboard.setNumberOfProvidingAgreements(providingAgreements.size());
-        dashboard.setNumberOfConsumingAgreements(consumingAgreements.size());
-        dashboard.setEndpoint(connectorEndpoint);
-        return dashboard;
+        DashboardPage dashboardPage = new DashboardPage();
+        dashboardPage.setConnectorTitle(selfDescriptionService.getConnectorTitle());
+        dashboardPage.setConnectorDescription(selfDescriptionService.getConnectorDescription());
+        dashboardPage.setConnectorEndpoint(selfDescriptionService.getConnectorEndpoint());
+        dashboardPage.setConnectorParticipantId(selfDescriptionService.getParticipantId());
+
+        dashboardPage.setConnectorCuratorUrl(selfDescriptionService.getCuratorUrl());
+        dashboardPage.setConnectorCuratorName(selfDescriptionService.getCuratorName());
+        dashboardPage.setConnectorMaintainerUrl(selfDescriptionService.getMaintainerUrl());
+        dashboardPage.setConnectorMaintainerName(selfDescriptionService.getMaintainerName());
+
+        dashboardPage.setConnectorMiwConfig(miwConfigService.buildMiwConfigOrNull());
+        dashboardPage.setConnectorDapsConfig(dapsConfigService.buildDapsConfigOrNull());
+        dashboardPage.setNumberOfAssets(dashboardDataFetcher.getNumberOfAssets());
+        dashboardPage.setNumberOfPolicies(dashboardDataFetcher.getNumberOfPolicies());
+        dashboardPage.setProvidingTransferProcesses(getTransferAmounts(transferProcesses, providingAgreements));
+        dashboardPage.setConsumingTransferProcesses(getTransferAmounts(transferProcesses, consumingAgreements));
+        dashboardPage.setNumberOfProvidingAgreements(providingAgreements.size());
+        dashboardPage.setNumberOfConsumingAgreements(consumingAgreements.size());
+        return dashboardPage;
     }
 
     DashboardTransferAmounts getTransferAmounts(
