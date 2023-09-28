@@ -9,8 +9,14 @@ import lombok.Data;
 @AllArgsConstructor
 public class DashboardPage {
 
-    @Schema(description = "Transfer Process amounts", requiredMode = Schema.RequiredMode.REQUIRED)
-    private int numberOfTransferProcesses;
+    @Schema(description = "Running Transfer Process Amount", requiredMode = Schema.RequiredMode.REQUIRED)
+    private long runningTransferProcesses;
+
+    @Schema(description = "Completed Transfer Process Amount", requiredMode = Schema.RequiredMode.REQUIRED)
+    private long completedTransferProcesses;
+
+    @Schema(description = "Interrupted Transfer Process Amount", requiredMode = Schema.RequiredMode.REQUIRED)
+    private long interruptedTransferProcesses;
 
     @Schema(description = "Asset amounts", requiredMode = Schema.RequiredMode.REQUIRED)
     private int numberOfAssets;

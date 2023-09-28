@@ -73,7 +73,7 @@ public class TransferProcessStateService {
     }
 
     @NotNull
-    private TransferProcessSimplifiedState getSimplifiedState(int code) {
+    public TransferProcessSimplifiedState getSimplifiedState(int code) {
         if (isError(code)) {
             return TransferProcessSimplifiedState.ERROR;
         }

@@ -15,11 +15,8 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services;
 
 import de.sovity.edc.ext.wrapper.api.ServiceException;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementData;
-import de.sovity.edc.ext.wrapper.utils.MapUtils;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
-import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
@@ -33,10 +30,7 @@ import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.groupingBy;
 
 @RequiredArgsConstructor
 public class DashboardDataFetcher {
@@ -45,48 +39,6 @@ public class DashboardDataFetcher {
     private final TransferProcessService transferProcessService;
     private final AssetIndex assetIndex;
     private final PolicyDefinitionService policyDefinitionService;
-
-    /**
-     * Fetches all contract agreements as {@link ContractAgreementData}s.
-     *
-     * @return {@link ContractAgreementData}s
-     */
-    @NotNull
-    public List<ContractAgreementData> getContractAgreements() {
-        var agreements = getAllContractAgreements();
-        var assets = MapUtils.associateBy(getAllAssets(), Asset::getId);
-
-        var negotiations = getAllContractNegotiations().stream()
-                .filter(it -> it.getContractAgreement() != null)
-                .collect(groupingBy(it -> it.getContractAgreement().getId()));
-
-        var transfers = getAllTransferProcesses().stream()
-                .collect(groupingBy(it -> it.getDataRequest().getContractId()));
-
-        // A ContractAgreement has multiple ContractNegotiations when doing a loopback consumption
-        return agreements.stream()
-                .flatMap(agreement -> negotiations.getOrDefault(agreement.getId(), List.of()).stream()
-                        .map(negotiation -> {
-                            var asset = getAsset(agreement, negotiation, assets);
-                            var contractTransfers = transfers.getOrDefault(agreement.getId(), List.of());
-                            return new ContractAgreementData(agreement, negotiation, asset, contractTransfers);
-                        }))
-                .toList();
-    }
-    private Asset getAsset(ContractAgreement agreement, ContractNegotiation negotiation, Map<String, Asset> assets) {
-        var assetId = agreement.getAssetId();
-
-        if (negotiation.getType() == ContractNegotiation.Type.CONSUMER) {
-            return dummyAsset(assetId);
-        }
-
-        var asset = assets.get(assetId);
-        return asset == null ? dummyAsset(assetId) : asset;
-    }
-
-    private Asset dummyAsset(String assetId) {
-        return Asset.Builder.newInstance().id(assetId).build();
-    }
 
     public List<Asset> getAllAssets() {
         return assetIndex.queryAssets(QuerySpec.max()).toList();
@@ -100,25 +52,12 @@ public class DashboardDataFetcher {
                 .collect(Collectors.toList());
     }
 
-
     @NotNull
-    private List<ContractNegotiation> getAllContractNegotiations() {
+    public List<ContractNegotiation> getAllContractNegotiations() {
         return contractNegotiationStore.queryNegotiations(QuerySpec.max()).toList();
     }
-
     @NotNull
-    private List<ContractAgreement> getAllContractAgreements() {
-        return contractAgreementService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
-    }
-
-    @NotNull
-    private List<TransferProcess> getAllTransferProcesses() {
+    public List<TransferProcess> getTransferProcessesAmount() {
         return transferProcessService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
-    }
-
-
-    @NotNull
-    public Integer getTransferProcessesAmount() {
-        return transferProcessService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList().size();
     }
 }

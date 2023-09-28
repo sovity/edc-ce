@@ -192,7 +192,8 @@ public class WrapperExtensionContextBuilder {
                 dashboardDataFetcher,
                 contractAgreementPageCardBuilder,
                 assetMapper,
-                policyMapper);
+                policyMapper,
+                transferProcessStateService);
         var uiResource = new UiResource(
                 contractAgreementApiService,
                 contractAgreementTransferApiService,
