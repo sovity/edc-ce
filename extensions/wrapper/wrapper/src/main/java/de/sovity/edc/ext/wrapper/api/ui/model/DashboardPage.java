@@ -3,10 +3,17 @@ package de.sovity.edc.ext.wrapper.api.ui.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class DashboardPage {
 
     @Schema(description = "Running Transfer Process Amount", requiredMode = Schema.RequiredMode.REQUIRED)

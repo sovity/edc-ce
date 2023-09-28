@@ -40,16 +40,16 @@ public class DashboardDataFetcher {
     private final AssetIndex assetIndex;
     private final PolicyDefinitionService policyDefinitionService;
 
-    public List<Asset> getAllAssets() {
-        return assetIndex.queryAssets(QuerySpec.max()).toList();
+    public int getNumberOfAssets() {
+        return assetIndex.queryAssets(QuerySpec.max()).toList().size();
     }
 
-    public List<Policy> getAllPolicies() {
+    public int getNumberOfPolicies() {
         var policyDefinitions = policyDefinitionService.query(QuerySpec.max())
                 .orElseThrow(ServiceException::new);
         return policyDefinitions
                 .map(PolicyDefinition::getPolicy)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()).size();
     }
 
     @NotNull
@@ -57,7 +57,7 @@ public class DashboardDataFetcher {
         return contractNegotiationStore.queryNegotiations(QuerySpec.max()).toList();
     }
     @NotNull
-    public List<TransferProcess> getTransferProcessesAmount() {
+    public List<TransferProcess> getTransferProcesses() {
         return transferProcessService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
     }
 }

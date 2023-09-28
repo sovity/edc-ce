@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DashboardDataFetcher;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import static de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState.ERROR;
 import static de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState.OK;
 import static de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState.RUNNING;
+import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcSecondsToOffsetDateTime;
 
 @RequiredArgsConstructor
 public class DashboardPageApiService {
@@ -37,15 +39,17 @@ public class DashboardPageApiService {
     @NotNull
     public DashboardPage dashboardPage(String connectorEndpoint) {
 
-        var runningTransferProcesses = dashboardDataFetcher.getTransferProcessesAmount().stream()
+        var transferProcesses = dashboardDataFetcher.getTransferProcesses();
+
+        var runningTransferProcesses = transferProcesses.stream()
                 .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(RUNNING))
                 .count();
 
-        var completedTransferProcesses = dashboardDataFetcher.getTransferProcessesAmount().stream()
+        var completedTransferProcesses = transferProcesses.stream()
                 .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(OK))
                 .count();
 
-        var interruptedTransferProcesses = dashboardDataFetcher.getTransferProcessesAmount().stream()
+        var interruptedTransferProcesses = transferProcesses.stream()
                 .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(ERROR))
                 .count();
 
@@ -58,11 +62,15 @@ public class DashboardPageApiService {
                 .filter(negotiation -> ContractAgreementDirection.fromType(negotiation.getType()).equals(ContractAgreementDirection.CONSUMING))
                 .count();
 
-
-        var numberOfAssets = dashboardDataFetcher.getAllAssets().stream().map(assetMapper::buildUiAsset).toList().size();
-
-        var numberOfPolicies = dashboardDataFetcher.getAllPolicies().stream().map(policyMapper::buildUiPolicy).toList().size();
-
-        return new DashboardPage(runningTransferProcesses, completedTransferProcesses, interruptedTransferProcesses, numberOfAssets, numberOfPolicies, numberOfConsumingAgreements, numberOfProvidingAgreements, connectorEndpoint);
+        DashboardPage dashboard = new DashboardPage();
+        dashboard.setNumberOfAssets(dashboardDataFetcher.getNumberOfAssets());
+        dashboard.setNumberOfPolicies(dashboardDataFetcher.getNumberOfPolicies());
+        dashboard.setCompletedTransferProcesses(completedTransferProcesses);
+        dashboard.setRunningTransferProcesses(runningTransferProcesses);
+        dashboard.setInterruptedTransferProcesses(interruptedTransferProcesses);
+        dashboard.setNumberOfProvidingAgreements(numberOfProvidingAgreements);
+        dashboard.setNumberOfConsumingAgreements(numberOfConsumingAgreements);
+        dashboard.setEndpoint(connectorEndpoint);
+        return dashboard;
     }
 }
