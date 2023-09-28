@@ -35,6 +35,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 
+import static de.sovity.edc.client.TestUtils.PROTOCOL_ENDPOINT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation.Type.CONSUMER;
 import static org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation.Type.PROVIDER;
@@ -113,7 +114,7 @@ class DashboardPageApiServiceTest {
 
 
         // act
-        var dashboardPage = client.uiApi().dashboardPageEndpoint("urn:connector:other-connector");
+        var dashboardPage = client.uiApi().dashboardPageEndpoint();
 
         // assert
         assertThat(dashboardPage.getNumberOfAssets()).isEqualTo(assets.size());
@@ -126,6 +127,23 @@ class DashboardPageApiServiceTest {
         assertThat(dashboardPage.getProvidingTransferProcesses().getNumError()).isEqualTo(1);
         assertThat(dashboardPage.getConsumingTransferProcesses().getNumRunning()).isEqualTo(1);
         assertThat(dashboardPage.getProvidingTransferProcesses().getNumRunning()).isEqualTo(1);
+
+        //test Connector Properties
+        assertThat(dashboardPage.getConnectorParticipantId()).isEqualTo("my-edc-participant-id");
+        assertThat(dashboardPage.getConnectorDescription()).isEqualTo("My Connector Description");
+        assertThat(dashboardPage.getConnectorTitle()).isEqualTo("My Connector");
+        assertThat(dashboardPage.getConnectorEndpoint()).isEqualTo(PROTOCOL_ENDPOINT);
+        assertThat(dashboardPage.getConnectorCuratorName()).isEqualTo("My Org");
+        assertThat(dashboardPage.getConnectorCuratorUrl()).isEqualTo("https://connector.my-org");
+        assertThat(dashboardPage.getConnectorMaintainerName()).isEqualTo("Maintainer Org");
+        assertThat(dashboardPage.getConnectorMaintainerUrl()).isEqualTo("https://maintainer-org");
+        assertThat(dashboardPage.getConnectorDapsConfig()).isNotNull();
+        assertThat(dashboardPage.getConnectorDapsConfig().getTokenUrl()).isEqualTo("https://token-url.daps");
+        assertThat(dashboardPage.getConnectorDapsConfig().getJwksUrl()).isEqualTo("https://jwks-url.daps");
+        assertThat(dashboardPage.getConnectorMiwConfig()).isNotNull();
+        assertThat(dashboardPage.getConnectorMiwConfig().getAuthorityId()).isEqualTo("my-authority-id");
+        assertThat(dashboardPage.getConnectorMiwConfig().getUrl()).isEqualTo("https://miw");
+        assertThat(dashboardPage.getConnectorMiwConfig().getTokenUrl()).isEqualTo("https://token.miw");
     }
 
     private TransferProcess mockTransferProcess(String id, int contractId, int state) {

@@ -14,11 +14,13 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard;
 
-<<<<<<<HEAD
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardTransferAmounts;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DapsConfigService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DashboardDataFetcher;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.MiwConfigService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
@@ -41,7 +43,7 @@ public class DashboardPageApiService {
     private final SelfDescriptionService selfDescriptionService;
 
     @NotNull
-    public DashboardPage dashboardPage(String connectorEndpoint) {
+    public DashboardPage dashboardPage() {
 
         var transferProcesses = dashboardDataFetcher.getTransferProcesses();
         var negotiations = dashboardDataFetcher.getAllContractNegotiations();

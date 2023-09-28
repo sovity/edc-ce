@@ -1,7 +1,6 @@
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-<<<<<<< HEAD
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

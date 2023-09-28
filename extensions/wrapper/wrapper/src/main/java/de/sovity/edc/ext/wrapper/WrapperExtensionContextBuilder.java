@@ -44,6 +44,11 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreeme
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractAgreementUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractNegotiationUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequestBuilder;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DapsConfigService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DashboardDataFetcher;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.MiwConfigService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
@@ -72,6 +77,7 @@ import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
 import java.util.List;
@@ -183,7 +189,15 @@ public class WrapperExtensionContextBuilder {
         var selfDescriptionService = new SelfDescriptionService(config);
         var miwConfigBuilder = new MiwConfigService(config);
         var dapsConfigBuilder = new DapsConfigService(config);
+        var dashboardDataFetcher = new DashboardDataFetcher(
+                contractNegotiationStore,
+                transferProcessService,
+                assetIndex,
+                policyDefinitionService
+        );
         var dashboardApiService = new DashboardPageApiService(
+                dashboardDataFetcher,
+                transferProcessStateService,
                 dapsConfigBuilder,
                 miwConfigBuilder,
                 selfDescriptionService
