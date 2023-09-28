@@ -1,14 +1,20 @@
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
-@Data
-@NoArgsConstructor
-@Schema(description = "Dashboard page data", requiredMode = Schema.RequiredMode.REQUIRED)
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class DashboardPage {
+
     @Schema(description = "Your Connector's Connector Endpoint", requiredMode = Schema.RequiredMode.REQUIRED)
     private String connectorEndpoint;
 
@@ -38,4 +44,22 @@ public class DashboardPage {
 
     @Schema(description = "Your Connector's MIW Configuration (if present)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private DashboardMiwConfig connectorMiwConfig;
+
+    @Schema(description = "Providing Transfer Process Amounts", requiredMode = Schema.RequiredMode.REQUIRED)
+    private DashboardTransferAmounts providingTransferProcesses;
+
+    @Schema(description = "Consuming Transfer Process Amounts", requiredMode = Schema.RequiredMode.REQUIRED)
+    private DashboardTransferAmounts consumingTransferProcesses;
+
+    @Schema(description = "Number of Assets", requiredMode = Schema.RequiredMode.REQUIRED)
+    private int numberOfAssets;
+
+    @Schema(description = "Number of Policies", requiredMode = Schema.RequiredMode.REQUIRED)
+    private int numberOfPolicies;
+
+    @Schema(description = "Number of consuming Contract Agreements", requiredMode = Schema.RequiredMode.REQUIRED)
+    private long numberOfConsumingAgreements;
+
+    @Schema(description = "Number of providing Contract Agreements", requiredMode = Schema.RequiredMode.REQUIRED)
+    private long numberOfProvidingAgreements;
 }

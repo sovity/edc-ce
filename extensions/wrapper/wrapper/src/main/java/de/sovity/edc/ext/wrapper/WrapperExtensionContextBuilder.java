@@ -46,6 +46,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.ContractNegotia
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequestBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DapsConfigService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DashboardDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.MiwConfigService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
@@ -211,7 +212,15 @@ public class WrapperExtensionContextBuilder {
         );
         var miwConfigBuilder = new MiwConfigService(config);
         var dapsConfigBuilder = new DapsConfigService(config);
+        var dashboardDataFetcher = new DashboardDataFetcher(
+                contractNegotiationStore,
+                transferProcessService,
+                assetIndex,
+                policyDefinitionService
+        );
         var dashboardApiService = new DashboardPageApiService(
+                dashboardDataFetcher,
+                transferProcessStateService,
                 dapsConfigBuilder,
                 miwConfigBuilder,
                 selfDescriptionService
