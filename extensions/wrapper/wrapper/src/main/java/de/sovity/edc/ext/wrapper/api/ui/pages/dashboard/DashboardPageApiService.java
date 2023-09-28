@@ -37,33 +37,60 @@ public class DashboardPageApiService {
 
         var runningTransferProcesses = transferProcesses.stream()
                 .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(RUNNING))
-                .count();
-
+                .toList();
         var completedTransferProcesses = transferProcesses.stream()
                 .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(OK))
-                .count();
-
+                .toList();
         var interruptedTransferProcesses = transferProcesses.stream()
                 .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(ERROR))
-                .count();
+                .toList();
 
 
         var negotiations = dashboardDataFetcher.getAllContractNegotiations();
-        var numberOfProvidingAgreements = negotiations.stream()
+
+
+        var providingAgreements = negotiations.stream()
                 .filter(negotiation -> ContractAgreementDirection.fromType(negotiation.getType()).equals(ContractAgreementDirection.PROVIDING))
+                .map(negotiation -> negotiation.getContractAgreement().getId())
+                .toList();
+
+        var completedProvidingTransferProcesses = completedTransferProcesses.stream()
+                .filter(transferProcess -> providingAgreements.contains(transferProcess.getDataRequest().getContractId()))
                 .count();
-        var numberOfConsumingAgreements = negotiations.stream()
+        var interruptedProvidingTransferProcesses = interruptedTransferProcesses.stream()
+                .filter(transferProcess -> providingAgreements.contains(transferProcess.getDataRequest().getContractId()))
+                .count();
+        var runningProvidingTransferProcesses = runningTransferProcesses.stream()
+                .filter(transferProcess -> providingAgreements.contains(transferProcess.getDataRequest().getContractId()))
+                .count();
+
+
+        var consumingAgreements = negotiations.stream()
                 .filter(negotiation -> ContractAgreementDirection.fromType(negotiation.getType()).equals(ContractAgreementDirection.CONSUMING))
+                .map(negotiation -> negotiation.getContractAgreement().getId())
+                .toList();
+
+        var completedConsumingTransferProcesses = completedTransferProcesses.stream()
+                .filter(transferProcess -> consumingAgreements.contains(transferProcess.getDataRequest().getContractId()))
+                .count();
+        var interruptedConsumingTransferProcesses = interruptedTransferProcesses.stream()
+                .filter(transferProcess -> consumingAgreements.contains(transferProcess.getDataRequest().getContractId()))
+                .count();
+        var runningConsumingTransferProcesses = runningTransferProcesses.stream()
+                .filter(transferProcess -> consumingAgreements.contains(transferProcess.getDataRequest().getContractId()))
                 .count();
 
         DashboardPage dashboard = new DashboardPage();
         dashboard.setNumberOfAssets(dashboardDataFetcher.getNumberOfAssets());
         dashboard.setNumberOfPolicies(dashboardDataFetcher.getNumberOfPolicies());
-        dashboard.setCompletedTransferProcesses(completedTransferProcesses);
-        dashboard.setRunningTransferProcesses(runningTransferProcesses);
-        dashboard.setInterruptedTransferProcesses(interruptedTransferProcesses);
-        dashboard.setNumberOfProvidingAgreements(numberOfProvidingAgreements);
-        dashboard.setNumberOfConsumingAgreements(numberOfConsumingAgreements);
+        dashboard.setNumberOfCompletedProvidingTransferProcesses(completedProvidingTransferProcesses);
+        dashboard.setNumberOfInterruptedProvidingTransferProcesses(interruptedProvidingTransferProcesses);
+        dashboard.setNumberOfRunningProvidingTransferProcesses(runningProvidingTransferProcesses);
+        dashboard.setNumberOfCompletedConsumingTransferProcesses(completedConsumingTransferProcesses);
+        dashboard.setNumberOfInterruptedConsumingTransferProcesses(interruptedConsumingTransferProcesses);
+        dashboard.setNumberOfRunningConsumingTransferProcesses(runningConsumingTransferProcesses);
+        dashboard.setNumberOfProvidingAgreements(providingAgreements.size());
+        dashboard.setNumberOfConsumingAgreements(consumingAgreements.size());
         dashboard.setEndpoint(connectorEndpoint);
         return dashboard;
     }

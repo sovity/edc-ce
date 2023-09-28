@@ -103,9 +103,12 @@ class DashboardPageTest {
         assertThat(dashboardPage.getNumberOfConsumingAgreements()).isZero();
         assertThat(dashboardPage.getNumberOfProvidingAgreements()).isEqualTo(1);
         assertThat(dashboardPage.getEndpoint()).isEqualTo("urn:connector:other-connector");
-        assertThat(dashboardPage.getCompletedTransferProcesses()).isEqualTo(1);
-        assertThat(dashboardPage.getRunningTransferProcesses()).isZero();
-        assertThat(dashboardPage.getInterruptedTransferProcesses()).isZero();
+        assertThat(dashboardPage.getNumberOfCompletedConsumingTransferProcesses()).isZero();
+        assertThat(dashboardPage.getNumberOfCompletedProvidingTransferProcesses()).isEqualTo(1);
+        assertThat(dashboardPage.getNumberOfInterruptedConsumingTransferProcesses()).isZero();
+        assertThat(dashboardPage.getNumberOfInterruptedProvidingTransferProcesses()).isZero();
+        assertThat(dashboardPage.getNumberOfRunningConsumingTransferProcesses()).isZero();
+        assertThat(dashboardPage.getNumberOfRunningProvidingTransferProcesses()).isZero();
     }
 
     private DataAddress dataAddress() {
