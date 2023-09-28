@@ -57,9 +57,9 @@ public class DashboardPage {
     @Schema(description = "Policy amounts", requiredMode = Schema.RequiredMode.REQUIRED)
     private int numberOfPolicies;
 
-    @Schema(description = "Consuming Contract Agreement amounts", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Consuming Contract Agreement Amounts", requiredMode = Schema.RequiredMode.REQUIRED)
     private long numberOfConsumingAgreements;
 
-    @Schema(description = "Providing Contract Agreement amounts", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Providing Contract Agreement Amounts", requiredMode = Schema.RequiredMode.REQUIRED)
     private long numberOfProvidingAgreements;
 }

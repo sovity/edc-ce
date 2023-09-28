@@ -104,7 +104,9 @@ class DashboardPageApiServiceTest {
                 mockContractNegotiation(3, CONSUMER),
                 mockContractNegotiation(4, PROVIDER),
                 mockContractNegotiation(5, PROVIDER),
-                mockContractNegotiation(6, PROVIDER)
+                mockContractNegotiation(6, PROVIDER),
+                mockContractNegotiation(7, PROVIDER),
+                mockContractNegotiationInProgress(PROVIDER)
         );
 
         when(assetIndex.queryAssets(eq(QuerySpec.max()))).thenReturn(assets.stream());
@@ -120,7 +122,7 @@ class DashboardPageApiServiceTest {
         assertThat(dashboardPage.getNumberOfAssets()).isEqualTo(assets.size());
         assertThat(dashboardPage.getNumberOfPolicies()).isEqualTo(policyDefinitions.size());
         assertThat(dashboardPage.getNumberOfConsumingAgreements()).isEqualTo(3);
-        assertThat(dashboardPage.getNumberOfProvidingAgreements()).isEqualTo(3);
+        assertThat(dashboardPage.getNumberOfProvidingAgreements()).isEqualTo(4);
         assertThat(dashboardPage.getConsumingTransferProcesses().getNumOk()).isEqualTo(1);
         assertThat(dashboardPage.getProvidingTransferProcesses().getNumOk()).isEqualTo(1);
         assertThat(dashboardPage.getConsumingTransferProcesses().getNumError()).isEqualTo(1);
@@ -173,6 +175,12 @@ class DashboardPageApiServiceTest {
         when(contractNegotiation.getType()).thenReturn(type);
         when(contractNegotiation.getContractAgreement()).thenReturn(contractAgreement);
 
+        return contractNegotiation;
+    }
+
+    private ContractNegotiation mockContractNegotiationInProgress(ContractNegotiation.Type type) {
+        var contractNegotiation = mock(ContractNegotiation.class);
+        when(contractNegotiation.getType()).thenReturn(type);
         return contractNegotiation;
     }
 }

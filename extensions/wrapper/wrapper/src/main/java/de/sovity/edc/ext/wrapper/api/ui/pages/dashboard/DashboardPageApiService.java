@@ -50,12 +50,14 @@ public class DashboardPageApiService {
 
         var providingAgreements = negotiations.stream()
                 .filter(negotiation -> ContractAgreementDirection.fromType(negotiation.getType()).equals(ContractAgreementDirection.PROVIDING))
+                .filter(negotiation -> negotiation.getContractAgreement() != null)
                 .map(negotiation -> negotiation.getContractAgreement().getId())
                 .collect(Collectors.toSet());
 
 
         var consumingAgreements = negotiations.stream()
                 .filter(negotiation -> ContractAgreementDirection.fromType(negotiation.getType()).equals(ContractAgreementDirection.CONSUMING))
+                .filter(negotiation -> negotiation.getContractAgreement() != null)
                 .map(negotiation -> negotiation.getContractAgreement().getId())
                 .collect(Collectors.toSet());
 

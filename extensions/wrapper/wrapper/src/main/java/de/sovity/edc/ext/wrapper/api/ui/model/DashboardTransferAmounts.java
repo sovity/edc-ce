@@ -15,12 +15,12 @@ import lombok.ToString;
 @RequiredArgsConstructor
 public class DashboardTransferAmounts {
 
-    @Schema(description = "Running Transfer Process Amount", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Number of running Transfer Processes", requiredMode = Schema.RequiredMode.REQUIRED)
     private long numRunning;
 
-    @Schema(description = "Completed Transfer Process Amount", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Number of successful Transfer Processes", requiredMode = Schema.RequiredMode.REQUIRED)
     private long numOk;
 
-    @Schema(description = "Number of Failed Transfer Processes", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Number of failed Transfer Processes", requiredMode = Schema.RequiredMode.REQUIRED)
     private long numError;
 }

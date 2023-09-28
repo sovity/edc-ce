@@ -18,7 +18,6 @@ import de.sovity.edc.ext.wrapper.api.ServiceException;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
-import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
 import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
@@ -27,7 +26,6 @@ import org.eclipse.edc.spi.query.QuerySpec;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class DashboardDataFetcher {
@@ -41,11 +39,9 @@ public class DashboardDataFetcher {
     }
 
     public int getNumberOfPolicies() {
-        var policyDefinitions = policyDefinitionService.query(QuerySpec.max())
-                .orElseThrow(ServiceException::new);
-        return policyDefinitions
-                .map(PolicyDefinition::getPolicy)
-                .collect(Collectors.toList()).size();
+        return Math.toIntExact(policyDefinitionService.query(QuerySpec.max())
+                .orElseThrow(ServiceException::new)
+                .count());
     }
 
     @NotNull
