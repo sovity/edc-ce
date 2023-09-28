@@ -36,6 +36,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
 import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcMillisToOffsetDateTime;
@@ -63,9 +64,10 @@ public class TransferHistoryPageApiService {
 
         var negotiationsById = getAllContractNegotiations().stream()
                 .filter(negotiation -> negotiation.getContractAgreement() != null)
-                .collect(groupingBy(
+                .collect(toMap(
                         it -> it.getContractAgreement().getId(),
-                        collectingAndThen(maxBy(Comparator.comparing(Entity::getCreatedAt)), Optional::get)
+                        Function.identity(),
+                        BinaryOperator.maxBy(Comparator.comparing(Entity::getCreatedAt))
                 ));
 
         var agreementsById = getAllContractAgreements().stream().collect(toMap(

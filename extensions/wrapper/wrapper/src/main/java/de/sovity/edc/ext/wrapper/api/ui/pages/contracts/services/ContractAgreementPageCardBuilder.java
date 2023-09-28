@@ -41,6 +41,7 @@ public class ContractAgreementPageCardBuilder {
     private final PolicyMapper policyMapper;
     private final TransferProcessStateService transferProcessStateService;
     private final AssetMapper assetMapper;
+    private final ContractNegotiationUtils contractNegotiationUtils;
 
     @NotNull
     public ContractAgreementCard buildContractAgreementCard(
@@ -49,6 +50,9 @@ public class ContractAgreementPageCardBuilder {
             @NonNull Asset asset,
             @NonNull List<TransferProcess> transferProcesses
     ) {
+        var assetParticipantId = contractNegotiationUtils.getProviderParticipantId(negotiation);
+        var assetConnectorEndpoint = contractNegotiationUtils.getProviderConnectorEndpoint(negotiation);
+
         ContractAgreementCard card = new ContractAgreementCard();
         card.setContractAgreementId(agreement.getId());
         card.setContractNegotiationId(negotiation.getId());
@@ -56,7 +60,7 @@ public class ContractAgreementPageCardBuilder {
         card.setCounterPartyAddress(negotiation.getCounterPartyAddress());
         card.setCounterPartyId(negotiation.getCounterPartyId());
         card.setContractSigningDate(utcSecondsToOffsetDateTime(agreement.getContractSigningDate()));
-        card.setAsset(assetMapper.buildUiAsset(asset));
+        card.setAsset(assetMapper.buildUiAsset(asset, assetConnectorEndpoint, assetParticipantId));
         card.setContractPolicy(policyMapper.buildUiPolicy(agreement.getPolicy()));
         card.setTransferProcesses(buildTransferProcesses(transferProcesses));
         return card;

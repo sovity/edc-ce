@@ -22,13 +22,13 @@ public class AssetMapper {
     private final UiAssetMapper uiAssetMapper;
     private final JsonLd jsonLd;
 
-    public UiAsset buildUiAsset(Asset asset) {
+    public UiAsset buildUiAsset(Asset asset, String connectorEndpoint, String participantId) {
         var assetJsonLd = buildAssetJsonLd(asset);
-        return buildUiAsset(assetJsonLd);
+        return buildUiAsset(assetJsonLd, connectorEndpoint, participantId);
     }
 
-    public UiAsset buildUiAsset(JsonObject assetJsonLd) {
-        return uiAssetMapper.buildUiAsset(assetJsonLd);
+    public UiAsset buildUiAsset(JsonObject assetJsonLd, String connectorEndpoint, String participantId) {
+        return uiAssetMapper.buildUiAsset(assetJsonLd, connectorEndpoint, participantId);
     }
 
     public Asset buildAsset(UiAssetCreateRequest createRequest) {

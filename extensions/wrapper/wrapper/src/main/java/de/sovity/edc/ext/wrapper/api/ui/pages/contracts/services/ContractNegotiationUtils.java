@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services;
 
 import de.sovity.edc.ext.wrapper.api.ServiceException;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;
@@ -28,6 +29,7 @@ import java.util.List;
 public class ContractNegotiationUtils {
 
     private final ContractNegotiationService contractNegotiationService;
+    private final SelfDescriptionService selfDescriptionService;
 
     public ContractNegotiation findByContractAgreementIdOrThrow(String contractAgreementId) {
         var querySpec = QuerySpec.Builder.newInstance()
@@ -37,5 +39,33 @@ public class ContractNegotiationUtils {
                 .findFirst()
                 .orElseThrow(() -> new EdcException("Could not fetch contractNegotiation for " +
                         "contractAgreement"));
+    }
+
+    /**
+     * Return's the asset provider's connector endpoint
+     *
+     * @param negotiation negotiation
+     * @return participant ID
+     */
+    public String getProviderConnectorEndpoint(ContractNegotiation negotiation) {
+        if (negotiation.getType() == ContractNegotiation.Type.PROVIDER) {
+            return selfDescriptionService.getConnectorEndpoint();
+        }
+
+        return negotiation.getCounterPartyAddress();
+    }
+
+    /**
+     * Return's the asset provider's participant ID
+     *
+     * @param negotiation negotiation
+     * @return participant ID
+     */
+    public String getProviderParticipantId(ContractNegotiation negotiation) {
+        if (negotiation.getType() == ContractNegotiation.Type.PROVIDER) {
+            return selfDescriptionService.getParticipantId();
+        }
+
+        return negotiation.getCounterPartyId();
     }
 }

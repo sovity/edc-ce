@@ -24,11 +24,14 @@ import static org.mockito.Mockito.mock;
 class AssetMapperTest {
     AssetMapper assetMapper;
 
+    String endpoint = "https://my-connector/api/dsp";
+    String participantId = "my-connector";
+
     @BeforeEach
     void setup() {
         var jsonLd = new TitaniumJsonLd(mock(Monitor.class));
         var typeTransformerRegistry = mock(TypeTransformerRegistry.class);
-        var uiAssetBuilder = new UiAssetMapper(new EdcPropertyUtils(), jsonLd);
+        var uiAssetBuilder = new UiAssetMapper(new EdcPropertyUtils());
         assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetBuilder, jsonLd);
     }
 
@@ -39,10 +42,12 @@ class AssetMapperTest {
         String assetJsonLd = new String(Files.readAllBytes(Paths.get(getClass().getResource("/example-asset.jsonld").toURI())));
 
         // Act
-        var uiAsset = assetMapper.buildUiAsset(JsonUtils.parseJsonObj(assetJsonLd));
+        var uiAsset = assetMapper.buildUiAsset(JsonUtils.parseJsonObj(assetJsonLd), endpoint, participantId);
 
         // Assert
         assertThat(uiAsset.getAssetId()).isEqualTo("urn:artifact:my-asset");
+        assertThat(uiAsset.getConnectorEndpoint()).isEqualTo(endpoint);
+        assertThat(uiAsset.getParticipantId()).isEqualTo(participantId);
         assertThat(uiAsset.getName()).isEqualTo("My Asset");
         assertThat(uiAsset.getLanguage()).isEqualTo("https://w3id.org/idsa/code/EN");
         assertThat(uiAsset.getDescription()).isEqualTo("Lorem Ipsum ...");
@@ -81,7 +86,7 @@ class AssetMapperTest {
                 .add(Prop.ID, "my-asset-1")
                 .build();
         // Act
-        var uiAsset = assetMapper.buildUiAsset(assetJsonLd);
+        var uiAsset = assetMapper.buildUiAsset(assetJsonLd, endpoint, participantId);
 
         // Assert
         assertThat(uiAsset).isNotNull();
@@ -100,7 +105,7 @@ class AssetMapperTest {
                         .build())
                 .build();
         // Act
-        var uiAsset = assetMapper.buildUiAsset(assetJsonLd);
+        var uiAsset = assetMapper.buildUiAsset(assetJsonLd, endpoint, participantId);
 
         // Assert
         assertThat(uiAsset).isNotNull();
@@ -120,7 +125,7 @@ class AssetMapperTest {
                 .build();
 
         // Act
-        var uiAsset = assetMapper.buildUiAsset(assetJsonLd);
+        var uiAsset = assetMapper.buildUiAsset(assetJsonLd, endpoint, participantId);
 
         // Assert
         assertThat(uiAsset).isNotNull();
@@ -145,7 +150,7 @@ class AssetMapperTest {
                 .build();
 
         // Act
-        var uiAsset = assetMapper.buildUiAsset(assetJsonLd);
+        var uiAsset = assetMapper.buildUiAsset(assetJsonLd, endpoint, participantId);
 
         // Assert
         assertThat(uiAsset).isNotNull();
@@ -163,7 +168,7 @@ class AssetMapperTest {
                 .build();
 
         // Act
-        var uiAsset = assetMapper.buildUiAsset(assetJsonLd);
+        var uiAsset = assetMapper.buildUiAsset(assetJsonLd, endpoint, participantId);
 
         // Assert
         assertThat(uiAsset).isNotNull();
@@ -181,7 +186,7 @@ class AssetMapperTest {
                 .build();
 
         // Act
-        var uiAsset = assetMapper.buildUiAsset(assetJsonLd);
+        var uiAsset = assetMapper.buildUiAsset(assetJsonLd, endpoint, participantId);
 
         // Assert
         assertThat(uiAsset).isNotNull();
