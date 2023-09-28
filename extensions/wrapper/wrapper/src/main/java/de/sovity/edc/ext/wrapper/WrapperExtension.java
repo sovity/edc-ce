@@ -98,6 +98,7 @@ public class WrapperExtension implements ServiceExtension {
                 assetIndex,
                 assetService,
                 catalogService,
+                context.getConfig(),
                 contractAgreementService,
                 contractDefinitionService,
                 contractDefinitionStore,
