@@ -15,23 +15,11 @@ import lombok.ToString;
 @RequiredArgsConstructor
 public class DashboardPage {
 
-    @Schema(description = "Running Providing Transfer Process Amount", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long numberOfRunningProvidingTransferProcesses;
+    @Schema(description = "Providing Transfer Process Amounts", requiredMode = Schema.RequiredMode.REQUIRED)
+    private DashboardTransferAmounts providingTransferProcesses;
 
-    @Schema(description = "Completed Providing Transfer Process Amount", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long numberOfCompletedProvidingTransferProcesses;
-
-    @Schema(description = "Interrupted Providing Transfer Process Amount", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long numberOfInterruptedProvidingTransferProcesses;
-
-    @Schema(description = "Running Consuming Transfer Process Amount", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long numberOfRunningConsumingTransferProcesses;
-
-    @Schema(description = "Completed Consuming Transfer Process Amount", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long numberOfCompletedConsumingTransferProcesses;
-
-    @Schema(description = "Interrupted Consuming Transfer Process Amount", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long numberOfInterruptedConsumingTransferProcesses;
+    @Schema(description = "Consuming Transfer Process Amounts", requiredMode = Schema.RequiredMode.REQUIRED)
+    private DashboardTransferAmounts consumingTransferProcesses;
 
     @Schema(description = "Asset amounts", requiredMode = Schema.RequiredMode.REQUIRED)
     private int numberOfAssets;
