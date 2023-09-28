@@ -163,6 +163,9 @@ class UiApiWrapperTest {
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
 
+        var policiesProvider = providerClient.uiApi().policyDefinitionPage().getPolicies();
+        var consumerPolicies = consumerClient.uiApi().policyDefinitionPage().getPolicies();
+
         var dataOffers = consumerClient.uiApi().catalogPageDataOffers(getProtocolEndpoint(providerConnector));
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
