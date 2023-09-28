@@ -19,14 +19,11 @@ import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
-import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
-import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
-import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -34,7 +31,6 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class DashboardDataFetcher {
-    private final ContractAgreementService contractAgreementService;
     private final ContractNegotiationStore contractNegotiationStore;
     private final TransferProcessService transferProcessService;
     private final AssetIndex assetIndex;
