@@ -14,9 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DashboardDataFetcher;
@@ -27,13 +24,10 @@ import org.jetbrains.annotations.NotNull;
 import static de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState.ERROR;
 import static de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState.OK;
 import static de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState.RUNNING;
-import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcSecondsToOffsetDateTime;
 
 @RequiredArgsConstructor
 public class DashboardPageApiService {
     private final DashboardDataFetcher dashboardDataFetcher;
-    private final AssetMapper assetMapper;
-    private final PolicyMapper policyMapper;
     private final TransferProcessStateService transferProcessStateService;
 
     @NotNull
