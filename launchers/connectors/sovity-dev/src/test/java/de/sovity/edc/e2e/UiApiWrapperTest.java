@@ -14,6 +14,7 @@
 package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.client.gen.model.ContractAgreementCard;
 import de.sovity.edc.client.gen.model.ContractAgreementTransferRequest;
 import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestParams;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
@@ -35,6 +36,7 @@ import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
+import org.apache.commons.lang3.tuple.Pair;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
@@ -156,9 +158,15 @@ class UiApiWrapperTest {
                 .build());
 
         // act
-        var contractAgreements = providerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
-        assertThat(contractAgreements).hasSize(1);
-        var contractAgreement = contractAgreements.get(0);
+
+        var contractAgreements = Awaitility.await().atMost(consumerConnector.timeout).until(
+                () -> consumerClient.uiApi().contractAgreementEndpoint(),
+                it -> it.getContractAgreements().get(0).getDirection().equals(ContractAgreementCard.DirectionEnum.PROVIDING)
+        );
+
+
+        assertThat(contractAgreements.getContractAgreements()).hasSize(1);
+        var contractAgreement = contractAgreements.getContractAgreements().get(0);
 
 
         // assert
@@ -171,7 +179,7 @@ class UiApiWrapperTest {
     }
 
     @Test
-    void provide_consume_assetMapping_policyMapping() {
+    void provide_consume_assetMapping_policyMapping_agreements() {
         // arrange
         var data = "expected data 123";
         var yesterday = OffsetDateTime.now().minusDays(1);
@@ -242,6 +250,14 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getContractOffers()).hasSize(1);
         var contractOffer = dataOffer.getContractOffers().get(0);
 
+        var providerAgreements = providerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
+        assertThat(providerAgreements).hasSize(1);
+        var providerAgreeement = providerAgreements.get(0);
+
+        var consumerAgreements = consumerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
+        assertThat(consumerAgreements).hasSize(1);
+        var consumerAgreement = consumerAgreements.get(0);
+
         // act
         var negotiation = negotiate(dataOffer, contractOffer);
         initiateTransfer(negotiation);
@@ -288,6 +304,17 @@ class UiApiWrapperTest {
         assertThat(asset.getPrivateJsonProperties())
                 .containsExactlyEntriesOf(Map.of("http://unknown/b-private", "{\"http://unknown/c-private\":\"y-private\"}"));
 
+        // Contract Agreement
+        assertThat(providerAgreeement.getContractAgreementId()).isEqualTo(consumerAgreement.getContractAgreementId());
+
+
+        // Provider Contract Agreeement
+        // TODO
+
+
+        // Consumer Contract Agreement
+        // TODO
+
         // Test Policy
         assertThat(contractOffer.getPolicy().getConstraints()).hasSize(1);
         var constraint = contractOffer.getPolicy().getConstraints().get(0);
@@ -297,6 +324,18 @@ class UiApiWrapperTest {
         assertThat(constraint.getRight().getValue()).isEqualTo(yesterday.toString());
 
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
+    }
+
+    private Pair<UiDataOffer, UiContractOffer> createDataOffer(
+            UiAssetCreateRequest assetCreateRequest,
+            PolicyDefinitionCreateRequest policy,
+            String contractDefinitionId
+    ) {
+
+
+        val catalog = consumerClient.uiApi().geCata();
+
+        return catalog.find
     }
 
     private UiContractNegotiation negotiate(UiDataOffer dataOffer, UiContractOffer contractOffer) {
