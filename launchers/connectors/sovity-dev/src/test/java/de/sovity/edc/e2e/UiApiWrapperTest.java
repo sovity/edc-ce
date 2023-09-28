@@ -30,13 +30,11 @@ import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
-import org.apache.commons.lang3.tuple.Pair;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +45,6 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection.PROVIDING;
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
@@ -100,85 +97,6 @@ class UiApiWrapperTest {
     }
 
     @Test
-    void test_contract_Agreement_Page() {
-
-        //arrange
-        var data = "expected data 123";
-        var yesterday = OffsetDateTime.now().minusDays(1);
-        var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
-                .id("asset-1")
-                .name("AssetName")
-                .description("AssetDescription")
-                .licenseUrl("https://license-url")
-                .version("1.0.0")
-                .language("en")
-                .mediaType("application/json")
-                .dataCategory("dataCategory")
-                .dataSubcategory("dataSubcategory")
-                .dataModel("dataModel")
-                .geoReferenceMethod("geoReferenceMethod")
-                .transportMode("transportMode")
-                .keywords(List.of("keyword1", "keyword2"))
-                .creatorOrganizationName("creatorOrganizationName")
-                .publisherHomepage("publisherHomepage")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
-                ))
-                .additionalProperties(Map.of("http://unknown/a", "x"))
-                .additionalJsonProperties(Map.of("http://unknown/b", "{\"http://unknown/c\":\"y\"}"))
-                .privateProperties(Map.of("http://unknown/a-private", "x-private"))
-                .privateJsonProperties(Map.of("http://unknown/b-private", "{\"http://unknown/c-private\":\"y-private\"}"))
-                .build()).getId();
-
-        providerClient.uiApi().createPolicyDefinition(PolicyDefinitionCreateRequest.builder()
-                .policyDefinitionId("policy-1")
-                .policy(UiPolicyCreateRequest.builder()
-                        .constraints(List.of(UiPolicyConstraint.builder()
-                                .left("POLICY_EVALUATION_TIME")
-                                .operator(UiPolicyConstraint.OperatorEnum.GT)
-                                .right(UiPolicyLiteral.builder()
-                                        .type(UiPolicyLiteral.TypeEnum.STRING)
-                                        .value(yesterday.toString())
-                                        .build())
-                                .build()))
-                        .build())
-                .build());
-
-        var policyJsonLd = providerClient.uiApi().policyDefinitionPage().getPolicies().get(0).getPolicy().getPolicyJsonLd();
-
-
-        providerClient.uiApi().initiateContractNegotiation(ContractNegotiationRequest.builder()
-                .counterPartyAddress("http://other-connector")
-                .assetId(assetId)
-                .policyJsonLd(policyJsonLd)
-                .counterPartyParticipantId("urn:connector:other-connector")
-                .contractOfferId("co-1")
-                .build());
-
-        // act
-
-        var contractAgreements = Awaitility.await().atMost(consumerConnector.timeout).until(
-                () -> consumerClient.uiApi().contractAgreementEndpoint(),
-                it -> it.getContractAgreements().get(0).getDirection().equals(ContractAgreementCard.DirectionEnum.PROVIDING)
-        );
-
-
-        assertThat(contractAgreements.getContractAgreements()).hasSize(1);
-        var contractAgreement = contractAgreements.getContractAgreements().get(0);
-
-
-        // assert
-        assertThat(contractAgreement.getDirection()).isEqualTo(ContractAgreementDirection.PROVIDING);
-        assertThat(contractAgreement.getCounterPartyAddress()).isEqualTo(getProtocolEndpoint(consumerConnector));
-        assertThat(contractAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
-
-        assertThat(contractAgreement.getAsset().getAssetId()).isEqualTo(assetId);
-        assertThat(contractAgreement.getContractPolicy().getPolicyJsonLd()).isEqualTo(policyJsonLd);
-    }
-
-    @Test
     void provide_consume_assetMapping_policyMapping_agreements() {
         // arrange
         var data = "expected data 123";
@@ -197,6 +115,7 @@ class UiApiWrapperTest {
                                 .build()))
                         .build())
                 .build()).getId();
+        var policyJsonLd = providerClient.uiApi().policyDefinitionPage().getPolicies().get(0).getPolicy().getPolicyJsonLd();
 
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
                 .id("asset-1")
@@ -250,16 +169,11 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getContractOffers()).hasSize(1);
         var contractOffer = dataOffer.getContractOffers().get(0);
 
-        var providerAgreements = providerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
-        assertThat(providerAgreements).hasSize(1);
-        var providerAgreeement = providerAgreements.get(0);
-
-        var consumerAgreements = consumerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
-        assertThat(consumerAgreements).hasSize(1);
-        var consumerAgreement = consumerAgreements.get(0);
-
         // act
         var negotiation = negotiate(dataOffer, contractOffer);
+        var providerAgreements = providerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
+        var consumerAgreements = consumerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
+        var consumerPolicyJsonLd = consumerClient.uiApi().policyDefinitionPage().getPolicies().get(0).getPolicy().getPolicyJsonLd();
         initiateTransfer(negotiation);
 
         // assert
@@ -305,15 +219,30 @@ class UiApiWrapperTest {
                 .containsExactlyEntriesOf(Map.of("http://unknown/b-private", "{\"http://unknown/c-private\":\"y-private\"}"));
 
         // Contract Agreement
-        assertThat(providerAgreeement.getContractAgreementId()).isEqualTo(consumerAgreement.getContractAgreementId());
+        assertThat(providerAgreements).hasSize(1);
+        var providerAgreement = providerAgreements.get(0);
 
+        assertThat(consumerAgreements).hasSize(1);
+        var consumerAgreement = consumerAgreements.get(0);
 
-        // Provider Contract Agreeement
-        // TODO
+        assertThat(providerAgreement.getContractAgreementId()).isEqualTo(consumerAgreement.getContractAgreementId());
 
+        // Provider Contract Agreement
+        assertThat(providerAgreement.getContractAgreementId()).isEqualTo(negotiation.getContractAgreementId());
+        assertThat(providerAgreement.getDirection()).isEqualTo(ContractAgreementCard.DirectionEnum.PROVIDING);
+        assertThat(providerAgreement.getCounterPartyAddress()).isEqualTo("http://localhost:23003/api/dsp");
+        assertThat(providerAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
+        assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
+        assertThat(providerAgreement.getContractPolicy().getPolicyJsonLd()).isEqualTo(consumerPolicyJsonLd);
 
         // Consumer Contract Agreement
-        // TODO
+        assertThat(providerAgreement.getContractAgreementId()).isEqualTo(negotiation.getContractAgreementId());
+        assertThat(providerAgreement.getContractNegotiationId()).isEqualTo(negotiation.getContractNegotiationId());
+        assertThat(providerAgreement.getDirection()).isEqualTo(ContractAgreementCard.DirectionEnum.CONSUMING);
+        assertThat(providerAgreement.getCounterPartyAddress()).isEqualTo(dataOffer.getEndpoint());
+        assertThat(providerAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
+        assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
+        assertThat(providerAgreement.getContractPolicy().getPolicyJsonLd()).isEqualTo(consumerPolicyJsonLd);
 
         // Test Policy
         assertThat(contractOffer.getPolicy().getConstraints()).hasSize(1);
@@ -324,18 +253,6 @@ class UiApiWrapperTest {
         assertThat(constraint.getRight().getValue()).isEqualTo(yesterday.toString());
 
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
-    }
-
-    private Pair<UiDataOffer, UiContractOffer> createDataOffer(
-            UiAssetCreateRequest assetCreateRequest,
-            PolicyDefinitionCreateRequest policy,
-            String contractDefinitionId
-    ) {
-
-
-        val catalog = consumerClient.uiApi().geCata();
-
-        return catalog.find
     }
 
     private UiContractNegotiation negotiate(UiDataOffer dataOffer, UiContractOffer contractOffer) {
