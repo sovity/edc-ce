@@ -14,7 +14,6 @@
 package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.client.gen.model.ContractAgreementCard;
 import de.sovity.edc.client.gen.model.ContractAgreementTransferRequest;
 import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestParams;
 import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestType;
