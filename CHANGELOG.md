@@ -15,13 +15,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Minor
 
+#### Patch
+
+### Deployment Migration Notes
+
+## [v1.1.0] - 2023-09-29
+
+### Overview
+
+Bugfix release for the asset proprties issue. Also contains the connector delete endpoint.
+
+### Detailed Changes
+
+#### Minor
+
 - New Admin API Endpoint: Delete Connectors
 
 #### Patch
 
-- Fix a bug with non-string asset properties causing exceptions.
-
-### Deployment Migration Notes
+- Fixed a bug causing exceptions when non-string asset properties were used.
 
 ### Deployment Migration Notes
 
@@ -34,6 +46,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
         --header 'X-Api-Key: ApiKeyDefaultValue' \
         --data '["https://some-connector-to-delete/api/v1/ids/data", "https://some-other-connector-to-delete/api/v1/ids/data"]'
     ```
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:1.1.0`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity13`
+- Sovity EDC CE: [`4.2.0`](https://github.com/sovity/edc-extensions/tree/v4.2.0/connector)
 
 ## [v1.0.3] - 2023-09-01
 
