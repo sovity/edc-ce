@@ -34,6 +34,7 @@ import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
+import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
@@ -77,6 +78,7 @@ class UiApiWrapperTest {
     private EdcClient providerClient;
     private EdcClient consumerClient;
     private MockDataAddressRemote dataAddress;
+    private TransferProcessStateService transferProcessStateService;
 
     @BeforeEach
     void setup() {
@@ -97,6 +99,8 @@ class UiApiWrapperTest {
                 .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
                 .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
                 .build();
+
+        transferProcessStateService = new TransferProcessStateService();
 
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
@@ -178,9 +182,9 @@ class UiApiWrapperTest {
 
         // act
         var negotiation = negotiate(dataOffer, contractOffer);
+        initiateTransfer(negotiation);
         var providerAgreements = providerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
         var consumerAgreements = consumerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
-        initiateTransfer(negotiation);
 
         // assert
         assertThat(dataOffer.getEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
@@ -254,6 +258,8 @@ class UiApiWrapperTest {
         assertThat(consumerAgreement.getCounterPartyAddress()).isEqualTo(dataOffer.getEndpoint());
         assertThat(consumerAgreement.getCounterPartyId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
         assertThat(consumerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
+
+        assertThat(transferProcessStateService.getSimplifiedState(consumerAgreement.getTransferProcesses().get(0).getState().getCode()).name()).isEqualTo("RUNNING");
 
         var consumingContractPolicyConstraint = consumerAgreement.getContractPolicy().getConstraints().get(0);
         assertThat(consumingContractPolicyConstraint).usingRecursiveComparison().isEqualTo(consumingContractPolicyConstraint);
