@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Patch
 
+- Fix a bug with non-string asset properties causing exceptions.
+
 ### Deployment Migration Notes
 
 ## [v1.0.3] - 2023-09-01

@@ -26,6 +26,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -89,7 +91,24 @@ public class DataOfferBuilder {
     @NotNull
     @SneakyThrows
     private String getAssetPropertiesJson(Asset asset) {
-        return objectMapper.writeValueAsString(asset.getProperties());
+        var properties = asset.getProperties().entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> getAssetPropertyValue(entry.getValue())
+                ));
+        return objectMapper.writeValueAsString(properties);
+    }
+
+    @NotNull
+    @SneakyThrows
+    private String getAssetPropertyValue(Object value) {
+        if (value instanceof String stringValue) {
+            return stringValue;
+        }
+
+        // Using JSON Properties in the MS8 EDC causes the broker to fail
+        // this is why we map them to their JSON to "show them", but not fail due to them
+        return objectMapper.writeValueAsString(value);
     }
 
     @NotNull

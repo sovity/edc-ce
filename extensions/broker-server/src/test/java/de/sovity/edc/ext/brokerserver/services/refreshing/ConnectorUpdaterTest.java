@@ -37,6 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
@@ -85,6 +86,7 @@ class ConnectorUpdaterTest {
             var dataOffer = dataOffers.get(0);
             assertThat(dataOffer.getAssetId()).isEqualTo("test-asset-1");
             assertThat(dataOffer.getAssetProperties().data()).contains("Test Asset 1");
+            assertThat(dataOffer.getAssetProperties().data()).contains("\"some-example-prop\": \"{\\\"key\\\":\\\"value\\\"}\"");
 
             var contractOffers = dsl.selectFrom(Tables.DATA_OFFER_CONTRACT_OFFER).stream().toList();
             assertThat(contractOffers).hasSize(1);
@@ -119,6 +121,7 @@ class ConnectorUpdaterTest {
                 .id(assetId)
                 .property(AssetProperty.ASSET_ID, assetId)
                 .property(AssetProperty.ASSET_NAME, assetName)
+                .property("some-example-prop", new LinkedHashMap<>(Map.of("key", "value")))
                 .build();
         var dataAddress = DataAddress.Builder.newInstance()
                 .properties(Map.of(
