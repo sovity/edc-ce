@@ -37,8 +37,8 @@ public class TransferProcessTestUtils {
     public static final String COUNTER_PARTY_ADDRESS = "http://some-other-connector/api/v1/ids/data";
     public static final String PROVIDING_CONTRACT_ID = "provider-contract:eb934d1f-6582-4bab-85e6-af19a76f7e2b";
     public static final String CONSUMING_CONTRACT_ID = "consumer-contract:f52a5d30-6356-4a55-a75a-3c45d7a88c3e";
-    public static final String VALID_ASSET_ID = "urn:artifact:asset";
-    public static final String UNKNOWN_ASSET_ID = "urn:junk";
+    public static final String VALID_ASSET_ID = "my-asset";
+    public static final String UNKNOWN_ASSET_ID = "some-asset-on-another-connector";
     public static final String ASSET_NAME = "Test asset";
     public static final String PROVIDING_TRANSFER_PROCESS_ID = "81cdf4cf-8427-480f-9662-8a29d66ddd3b";
     public static final String CONSUMING_TRANSFER_PROCESS_ID = "be0cac12-bb43-420e-aa29-d66bb3d0e0ac";

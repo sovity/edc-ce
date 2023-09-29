@@ -181,8 +181,10 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
         assertThat(dataOffer.getParticipantId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
         assertThat(dataOffer.getAsset().getAssetId()).isEqualTo(assetId);
-        assertThat(dataOffer.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
         assertThat(dataOffer.getAsset().getName()).isEqualTo("AssetName");
+        assertThat(dataOffer.getAsset().getConnectorEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
+        assertThat(dataOffer.getAsset().getParticipantId()).isEqualTo(providerConnector.getParticipantId());
+        assertThat(dataOffer.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
         assertThat(dataOffer.getAsset().getDescription()).isEqualTo("AssetDescription");
         assertThat(dataOffer.getAsset().getVersion()).isEqualTo("1.0.0");
         assertThat(dataOffer.getAsset().getLanguage()).isEqualTo("en");
@@ -210,6 +212,8 @@ class UiApiWrapperTest {
         // while the data offer on the consumer side won't contain private properties, the asset page on the provider side should
         assertThat(asset.getAssetId()).isEqualTo(assetId);
         assertThat(asset.getName()).isEqualTo("AssetName");
+        assertThat(asset.getConnectorEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
+        assertThat(asset.getParticipantId()).isEqualTo(providerConnector.getParticipantId());
         assertThat(asset.getAdditionalProperties())
                 .containsExactlyEntriesOf(Map.of("http://unknown/a", "x"));
         assertThat(asset.getAdditionalJsonProperties())

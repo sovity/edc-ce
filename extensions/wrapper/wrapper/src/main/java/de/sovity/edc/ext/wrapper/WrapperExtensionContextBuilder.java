@@ -127,8 +127,8 @@ public class WrapperExtensionContextBuilder {
                 atomicConstraintMapper,
                 typeTransformerRegistry);
         var edcPropertyUtils = new EdcPropertyUtils();
-        var assetBuilder = new UiAssetMapper(edcPropertyUtils);
-        var assetMapper = new AssetMapper(typeTransformerRegistry, assetBuilder, jsonLd);
+        var uiAssetMapper = new UiAssetMapper(edcPropertyUtils);
+        var assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetMapper, jsonLd);
         var transferProcessStateService = new TransferProcessStateService();
         var selfDescriptionService = new SelfDescriptionService(config);
         var contractNegotiationUtils = new ContractNegotiationUtils(
