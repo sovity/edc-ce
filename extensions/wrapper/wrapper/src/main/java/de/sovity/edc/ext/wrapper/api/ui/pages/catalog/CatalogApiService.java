@@ -20,6 +20,7 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiContractOffer;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.model.DspContractOffer;
 import de.sovity.edc.utils.catalog.model.DspDataOffer;
@@ -32,6 +33,7 @@ public class CatalogApiService {
     private final AssetMapper assetMapper;
     private final PolicyMapper policyMapper;
     private final DspCatalogService dspCatalogService;
+    private final SelfDescriptionService selfDescriptionService;
 
     public List<UiDataOffer> fetchDataOffers(String connectorEndpoint) {
         var dataOffers = dspCatalogService.fetchDataOffers(connectorEndpoint);
@@ -62,7 +64,7 @@ public class CatalogApiService {
 
     private UiAsset buildUiAsset(DspDataOffer dataOffer) {
         var asset = assetMapper.buildAssetFromDatasetProperties(dataOffer.getAssetPropertiesJsonLd());
-        return assetMapper.buildUiAsset(asset);
+        return assetMapper.buildUiAsset(asset, dataOffer.getEndpoint(), dataOffer.getParticipantId());
     }
 
     private UiPolicy buildUiPolicy(DspContractOffer contractOffer) {

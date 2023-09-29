@@ -38,6 +38,12 @@ public class UiAsset {
     @Schema(description = "Asset Id", requiredMode = Schema.RequiredMode.REQUIRED)
     private String assetId;
 
+    @Schema(description = "Providing Connector's Connector Endpoint", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String connectorEndpoint;
+
+    @Schema(description = "Providing Connector's Participant ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String participantId;
+
     @Schema(description = "Asset Name", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 

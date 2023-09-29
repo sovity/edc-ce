@@ -19,7 +19,6 @@ import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,8 +52,8 @@ class GetTransferProcessAssetApiServiceTest {
         var providerAssetResult = client.uiApi().getTransferProcessAsset(TransferProcessTestUtils.PROVIDING_TRANSFER_PROCESS_ID);
 
         //assert
-        assertThat(providerAssetResult.getAssetId()).isEqualTo(TransferProcessTestUtils.VALID_ASSET_ID);
-        assertThat(providerAssetResult.getName()).isEqualTo(TransferProcessTestUtils.ASSET_NAME);
+        assertThat(providerAssetResult.getAssetId()).isEqualTo(TransferProcessTestUtils.PROVIDING_ASSET_ID);
+        assertThat(providerAssetResult.getName()).isEqualTo(TransferProcessTestUtils.PROVIDING_ASSET_NAME);
     }
 
     @Test
@@ -70,8 +69,8 @@ class GetTransferProcessAssetApiServiceTest {
         var consumerAssetResult = client.uiApi().getTransferProcessAsset(TransferProcessTestUtils.CONSUMING_TRANSFER_PROCESS_ID);
 
         //assert
-        assertThat(consumerAssetResult.getAssetId()).isEqualTo(TransferProcessTestUtils.UNKNOWN_ASSET_ID);
-        assertThat(consumerAssetResult.getName()).isEqualTo(TransferProcessTestUtils.UNKNOWN_ASSET_ID);
+        assertThat(consumerAssetResult.getAssetId()).isEqualTo(TransferProcessTestUtils.CONSUMING_ASSET_ID);
+        assertThat(consumerAssetResult.getName()).isEqualTo(TransferProcessTestUtils.CONSUMING_ASSET_ID);
     }
 
 }

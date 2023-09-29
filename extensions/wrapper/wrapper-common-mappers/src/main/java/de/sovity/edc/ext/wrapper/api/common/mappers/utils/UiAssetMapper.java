@@ -30,9 +30,8 @@ import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtil
 @RequiredArgsConstructor
 public class UiAssetMapper {
     private final EdcPropertyUtils edcPropertyUtils;
-    private final JsonLd jsonLd;
 
-    public UiAsset buildUiAsset(JsonObject assetJsonLd) {
+    public UiAsset buildUiAsset(JsonObject assetJsonLd, String connectorEndpoint, String participantId) {
         var properties = JsonLdUtils.object(assetJsonLd, Prop.Edc.PROPERTIES);
 
         var uiAsset = new UiAsset();
@@ -42,6 +41,8 @@ public class UiAssetMapper {
         String title = JsonLdUtils.string(properties, Prop.Dcterms.TITLE);
 
         uiAsset.setAssetId(id);
+        uiAsset.setConnectorEndpoint(connectorEndpoint);
+        uiAsset.setParticipantId(participantId);
         uiAsset.setName(StringUtils.isBlank(title) ? id : title);
         uiAsset.setLicenseUrl(JsonLdUtils.string(properties, Prop.Dcterms.LICENSE));
         uiAsset.setDescription(JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION));

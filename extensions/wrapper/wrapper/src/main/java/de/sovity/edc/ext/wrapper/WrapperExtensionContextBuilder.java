@@ -128,13 +128,19 @@ public class WrapperExtensionContextBuilder {
                 atomicConstraintMapper,
                 typeTransformerRegistry);
         var edcPropertyUtils = new EdcPropertyUtils();
-        var assetBuilder = new UiAssetMapper(edcPropertyUtils, jsonLd);
-        var assetMapper = new AssetMapper(typeTransformerRegistry, assetBuilder, jsonLd);
+        var uiAssetMapper = new UiAssetMapper(edcPropertyUtils);
+        var assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetMapper, jsonLd);
         var transferProcessStateService = new TransferProcessStateService();
+        var selfDescriptionService = new SelfDescriptionService(config);
+        var contractNegotiationUtils = new ContractNegotiationUtils(
+                contractNegotiationService,
+                selfDescriptionService
+        );
         var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
                 policyMapper,
                 transferProcessStateService,
-                assetMapper
+                assetMapper,
+                contractNegotiationUtils
         );
         var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
                 contractAgreementService,
@@ -156,15 +162,23 @@ public class WrapperExtensionContextBuilder {
                 contractAgreementService,
                 contractNegotiationStore,
                 transferProcessService,
-                transferProcessStateService);
+                transferProcessStateService
+        );
         var transferHistoryPageAssetFetcherService = new TransferHistoryPageAssetFetcherService(
                 assetService,
                 transferProcessService,
-                assetMapper);
-        var contractNegotiationUtils = new ContractNegotiationUtils(contractNegotiationService);
+                assetMapper,
+                contractNegotiationStore,
+                contractNegotiationUtils
+        );
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
         var assetIdValidator = new AssetIdValidator();
-        var assetApiService = new AssetApiService(assetService, assetMapper, assetIdValidator);
+        var assetApiService = new AssetApiService(
+                assetService,
+                assetMapper,
+                assetIdValidator,
+                selfDescriptionService
+        );
         var transferRequestBuilder = new TransferRequestBuilder(
                 objectMapper,
                 contractAgreementUtils,
@@ -178,15 +192,24 @@ public class WrapperExtensionContextBuilder {
         );
         var policyDefinitionApiService = new PolicyDefinitionApiService(
                 policyDefinitionService,
-                policyMapper);
+                policyMapper
+        );
         var dataOfferBuilder = new DspDataOfferBuilder(jsonLd);
         var dspCatalogService = new DspCatalogService(catalogService, dataOfferBuilder);
-        var catalogApiService = new CatalogApiService(assetMapper, policyMapper, dspCatalogService);
+        var catalogApiService = new CatalogApiService(
+                assetMapper,
+                policyMapper,
+                dspCatalogService,
+                selfDescriptionService
+        );
         var contractOfferMapper = new ContractOfferMapper(policyMapper);
         var contractNegotiationBuilder = new ContractNegotiationBuilder(contractOfferMapper);
         var contractNegotiationStateService = new ContractNegotiationStateService();
-        var contractNegotiationApiService = new ContractNegotiationApiService(contractNegotiationService, contractNegotiationBuilder, contractNegotiationStateService);
-        var selfDescriptionService = new SelfDescriptionService(config);
+        var contractNegotiationApiService = new ContractNegotiationApiService(
+                contractNegotiationService,
+                contractNegotiationBuilder,
+                contractNegotiationStateService
+        );
         var miwConfigBuilder = new MiwConfigService(config);
         var dapsConfigBuilder = new DapsConfigService(config);
         var dashboardDataFetcher = new DashboardDataFetcher(
@@ -230,11 +253,13 @@ public class WrapperExtensionContextBuilder {
                 policyDefinitionStore,
                 contractDefinitionStore,
                 policyMappingService,
-                edcPropertyUtils);
+                edcPropertyUtils
+        );
         var useCaseResource = new UseCaseResource(
                 kpiApiService,
                 supportedPolicyApiService,
-                offeringService);
+                offeringService
+        );
 
         // Collect all JAX-RS resources
         return new WrapperExtensionContext(List.of(

@@ -19,6 +19,7 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.spi.query.QuerySpec;
@@ -33,11 +34,15 @@ public class AssetApiService {
     private final AssetService assetService;
     private final AssetMapper assetMapper;
     private final AssetIdValidator assetIdValidator;
+    private final SelfDescriptionService selfDescriptionService;
 
     public List<UiAsset> getAssets() {
         var assets = getAllAssets();
+        var connectorEndpoint = selfDescriptionService.getConnectorEndpoint();
+        var participantId = selfDescriptionService.getParticipantId();
         return assets.stream().sorted(Comparator.comparing(Asset::getCreatedAt).reversed())
-                .map(assetMapper::buildUiAsset).toList();
+                .map(asset -> assetMapper.buildUiAsset(asset, connectorEndpoint, participantId))
+                .toList();
     }
 
     @NotNull
