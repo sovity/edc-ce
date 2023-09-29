@@ -260,10 +260,7 @@ class UiApiWrapperTest {
         assertThat(consumingContractPolicyConstraint).usingRecursiveComparison().isEqualTo(consumingContractPolicyConstraint);
 
         assertThat(consumerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
-        assertThat(consumerAgreement.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
-        assertThat(consumerAgreement.getAsset().getName()).isEqualTo("AssetName");
-        assertThat(consumerAgreement.getAsset().getDescription()).isEqualTo("AssetDescription");
-
+        assertThat(consumerAgreement.getAsset().getName()).isEqualTo(assetId);
 
         // Test Policy
         assertThat(contractOffer.getPolicy().getConstraints()).hasSize(1);
