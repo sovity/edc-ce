@@ -165,6 +165,19 @@ curl --request PUT \
   --data '["https://some-new-connector/api/v1/ids/data", "https://some-other-new-connector/api/v1/ids/data"]'
 ```
 
+#### Removing Connectors at runtime
+
+Connectors can be dynamically removed at runtime by using the following endpoint:
+
+```shell script
+# Response should be 204 No Content
+curl --request DELETE \
+  --url 'http://localhost:11002/backend/api/v1/management/wrapper/broker/connectors?adminApiKey=DefaultBrokerServerAdminApiKey' \
+  --header 'Content-Type: application/json' \
+  --header 'X-Api-Key: ApiKeyDefaultValue' \
+  --data '["https://some-connector-to-be-removed/api/v1/ids/data", "https://some-other-connector-to-be-removed/api/v1/ids/data"]'
+```
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## License
