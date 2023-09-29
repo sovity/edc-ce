@@ -115,7 +115,6 @@ class UiApiWrapperTest {
                                 .build()))
                         .build())
                 .build()).getId();
-        var policyJsonLd = providerClient.uiApi().policyDefinitionPage().getPolicies().get(0).getPolicy().getPolicyJsonLd();
 
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
                 .id("asset-1")
@@ -163,9 +162,6 @@ class UiApiWrapperTest {
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
 
-        var policiesProvider = providerClient.uiApi().policyDefinitionPage().getPolicies();
-        var consumerPolicies = consumerClient.uiApi().policyDefinitionPage().getPolicies();
-
         var dataOffers = consumerClient.uiApi().catalogPageDataOffers(getProtocolEndpoint(providerConnector));
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
@@ -176,7 +172,6 @@ class UiApiWrapperTest {
         var negotiation = negotiate(dataOffer, contractOffer);
         var providerAgreements = providerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
         var consumerAgreements = consumerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
-        var consumerPolicyJsonLd = consumerClient.uiApi().policyDefinitionPage().getPolicies().get(0).getPolicy().getPolicyJsonLd();
         initiateTransfer(negotiation);
 
         // assert
@@ -236,7 +231,6 @@ class UiApiWrapperTest {
         assertThat(providerAgreement.getCounterPartyAddress()).isEqualTo("http://localhost:23003/api/dsp");
         assertThat(providerAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
         assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
-        assertThat(providerAgreement.getContractPolicy().getPolicyJsonLd()).isEqualTo(consumerPolicyJsonLd);
 
         // Consumer Contract Agreement
         assertThat(providerAgreement.getContractAgreementId()).isEqualTo(negotiation.getContractAgreementId());
@@ -245,7 +239,18 @@ class UiApiWrapperTest {
         assertThat(providerAgreement.getCounterPartyAddress()).isEqualTo(dataOffer.getEndpoint());
         assertThat(providerAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
         assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
-        assertThat(providerAgreement.getContractPolicy().getPolicyJsonLd()).isEqualTo(consumerPolicyJsonLd);
+
+        var contractPolicyConstraint = providerAgreement.getContractPolicy().getConstraints().get(0);
+        assertThat(contractPolicyConstraint.getLeft()).isEqualTo("POLICY_EVALUATION_TIME");
+        assertThat(contractPolicyConstraint.getOperator()).isEqualTo(UiPolicyConstraint.OperatorEnum.GT);
+        assertThat(contractPolicyConstraint.getRight().getType()).isEqualTo(UiPolicyLiteral.TypeEnum.STRING);
+        assertThat(contractPolicyConstraint.getRight().getValue()).isEqualTo(yesterday.toString());
+
+        assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
+        assertThat(providerAgreement.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
+        assertThat(providerAgreement.getAsset().getName()).isEqualTo("AssetName");
+        assertThat(providerAgreement.getAsset().getDescription()).isEqualTo("AssetDescription");
+
 
         // Test Policy
         assertThat(contractOffer.getPolicy().getConstraints()).hasSize(1);
