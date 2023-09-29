@@ -38,5 +38,4 @@ public class ContractAgreementTransferProcess {
     private TransferProcessState state;
     @Schema(description = "Error Message")
     private String errorMessage;
-
 }
