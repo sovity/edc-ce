@@ -109,7 +109,7 @@ class UiApiWrapperTest {
         var data = "expected data 123";
         var yesterday = OffsetDateTime.now().minusDays(1);
 
-        UiPolicyConstraint constraintRequest = UiPolicyConstraint.builder()
+        var constraintRequest = UiPolicyConstraint.builder()
                 .left("POLICY_EVALUATION_TIME")
                 .operator(OperatorDto.GT)
                 .right(UiPolicyLiteral.builder()
