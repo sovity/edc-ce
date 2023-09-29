@@ -23,10 +23,6 @@ additional `EDC_UI_` properties from the backend.
 
 It will pass all config properties starting with `edc.ui.` in general.
 
-It will build `EDC_UI_` properties from backend properties where possible.
-
-This excludes the Management Endpoint API URL itself, API keys or other sensitive data.
-
 ## Why does this extension exist?
 
 By not having to repeat ourselves when configuring the EDC UI, we save time and reduce the risk of errors.

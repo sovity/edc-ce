@@ -15,11 +15,13 @@
 package de.sovity.edc.client;
 
 
+import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionDto;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
+import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -41,9 +43,9 @@ class PolicyDefinitionApiServiceTest {
 
     UiPolicyConstraint constraint = UiPolicyConstraint.builder()
             .left("a")
-            .operator(UiPolicyConstraint.OperatorEnum.EQ)
+            .operator(OperatorDto.EQ)
             .right(UiPolicyLiteral.builder()
-                    .type(UiPolicyLiteral.TypeEnum.STRING)
+                    .type(UiPolicyLiteralType.STRING)
                     .value("b")
                     .build())
             .build();
