@@ -276,6 +276,12 @@ class UiApiWrapperTest {
         assertThat(constraint.getRight().getValue()).isEqualTo(yesterday.toString());
 
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
+
+        //Currently the Core Edc which prevent the transfer process to be marked as completed
+        var completedProvidingTransferProcesses = providerClient.uiApi().contractAgreementEndpoint().getContractAgreements().get(0).getTransferProcesses().get(0).getState().getCode();
+        var completedConsumingTransferProcesses = consumerClient.uiApi().contractAgreementEndpoint().getContractAgreements().get(0).getTransferProcesses().get(0).getState().getCode();
+        assertThat(transferProcessStateService.getSimplifiedState(completedConsumingTransferProcesses).name()).isEqualTo("RUNNING");
+        assertThat(transferProcessStateService.getSimplifiedState(completedProvidingTransferProcesses).name()).isEqualTo("RUNNING");
     }
 
     private UiContractNegotiation negotiate(UiDataOffer dataOffer, UiContractOffer contractOffer) {
