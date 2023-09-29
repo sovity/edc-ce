@@ -22,6 +22,7 @@ import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiContractOffer;
@@ -34,7 +35,6 @@ import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
-import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
@@ -78,7 +78,6 @@ class UiApiWrapperTest {
     private EdcClient providerClient;
     private EdcClient consumerClient;
     private MockDataAddressRemote dataAddress;
-    private TransferProcessStateService transferProcessStateService;
 
     @BeforeEach
     void setup() {
@@ -99,8 +98,6 @@ class UiApiWrapperTest {
                 .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
                 .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
                 .build();
-
-        transferProcessStateService = new TransferProcessStateService();
 
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
@@ -259,8 +256,6 @@ class UiApiWrapperTest {
         assertThat(consumerAgreement.getCounterPartyId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
         assertThat(consumerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
 
-        assertThat(transferProcessStateService.getSimplifiedState(consumerAgreement.getTransferProcesses().get(0).getState().getCode()).name()).isEqualTo("RUNNING");
-
         var consumingContractPolicyConstraint = consumerAgreement.getContractPolicy().getConstraints().get(0);
         assertThat(consumingContractPolicyConstraint).usingRecursiveComparison().isEqualTo(consumingContractPolicyConstraint);
 
@@ -278,10 +273,10 @@ class UiApiWrapperTest {
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
 
         //Currently the Core Edc which prevent the transfer process to be marked as completed
-        var completedProvidingTransferProcesses = providerClient.uiApi().contractAgreementEndpoint().getContractAgreements().get(0).getTransferProcesses().get(0).getState().getCode();
-        var completedConsumingTransferProcesses = consumerClient.uiApi().contractAgreementEndpoint().getContractAgreements().get(0).getTransferProcesses().get(0).getState().getCode();
-        assertThat(transferProcessStateService.getSimplifiedState(completedConsumingTransferProcesses).name()).isEqualTo("RUNNING");
-        assertThat(transferProcessStateService.getSimplifiedState(completedProvidingTransferProcesses).name()).isEqualTo("RUNNING");
+        var completedProvidingTransferProcess = providerClient.uiApi().contractAgreementEndpoint().getContractAgreements().get(0).getTransferProcesses().get(0);
+        var completedConsumingTransferProcess = consumerClient.uiApi().contractAgreementEndpoint().getContractAgreements().get(0).getTransferProcesses().get(0);
+        assertThat(completedProvidingTransferProcess.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.RUNNING);
+        assertThat(completedConsumingTransferProcess.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.RUNNING);
     }
 
     private UiContractNegotiation negotiate(UiDataOffer dataOffer, UiContractOffer contractOffer) {
