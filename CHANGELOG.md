@@ -15,11 +15,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Minor
 
+- New Admin API Endpoint: Delete Connectors
+
 #### Patch
 
 - Fix a bug with non-string asset properties causing exceptions.
 
 ### Deployment Migration Notes
+
+### Deployment Migration Notes
+
+1. Connectors can now be dynamically deleted at runtime by using the following endpoint:
+    ```shell script
+    # Response should be 204 No Content
+    curl --request DELETE \
+        --url 'http://localhost:11002/backend/api/v1/management/wrapper/broker/connectors?adminApiKey=DefaultBrokerServerAdminApiKey' \
+        --header 'Content-Type: application/json' \
+        --header 'X-Api-Key: ApiKeyDefaultValue' \
+        --data '["https://some-connector-to-delete/api/v1/ids/data", "https://some-other-connector-to-delete/api/v1/ids/data"]'
+    ```
 
 ## [v1.0.3] - 2023-09-01
 
@@ -83,6 +97,7 @@ Bugfix / Feature Release for the Broker MvP with MS8: Connectors can now be adde
 - Broker Server API is now part of this repository.
 - Dead Connectors are now deleted periodically.
 - Connector Online Status is now visualized.
+- New Admin API Endpoint: Add Connectors
 
 #### Patch
 

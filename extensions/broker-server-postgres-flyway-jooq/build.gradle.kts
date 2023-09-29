@@ -119,6 +119,8 @@ flyway {
     baselineOnMigrate = true
     locations = arrayOf("filesystem:${migrationsDir}", "filesystem:${testDataDir}")
     configurations = arrayOf("flywayMigration")
+
+    mixed = true
 }
 
 tasks.withType<FlywayCleanTask> {

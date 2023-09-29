@@ -15,8 +15,10 @@
 package de.sovity.edc.ext.brokerserver;
 
 import de.sovity.edc.ext.brokerserver.client.BrokerServerClient;
+import de.sovity.edc.ext.brokerserver.client.gen.ApiException;
 import de.sovity.edc.ext.brokerserver.db.PostgresFlywayExtension;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
+import org.assertj.core.api.ThrowableAssert;
 import org.eclipse.edc.protocol.ids.api.configuration.IdsApiConfigurationExtension;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 
 public class TestUtils {
@@ -93,5 +97,15 @@ public class TestUtils {
             .managementApiUrl(TestUtils.MANAGEMENT_ENDPOINT)
             .managementApiKey(TestUtils.MANAGEMENT_API_KEY)
             .build();
+    }
+
+
+    public static void assertIs401(ThrowableAssert.ThrowingCallable callable) {
+        assertThatThrownBy(callable)
+                .isInstanceOf(ApiException.class)
+                .satisfies(ex -> {
+                    var apiException = (ApiException) ex;
+                    assertThat(apiException.getCode()).isEqualTo(401);
+                });
     }
 }

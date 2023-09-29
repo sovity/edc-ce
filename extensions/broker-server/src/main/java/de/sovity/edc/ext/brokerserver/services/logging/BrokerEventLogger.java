@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 
 import java.time.OffsetDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,19 @@ import java.util.stream.Collectors;
  */
 @RequiredArgsConstructor
 public class BrokerEventLogger {
+
+    public void logConnectorsDeleted(DSLContext dsl, Collection<String> connectorEndpoints) {
+        var records = connectorEndpoints.stream().map(connectorEndpoint -> {
+            var logEntry = dsl.newRecord(Tables.BROKER_EVENT_LOG);
+            logEntry.setEvent(BrokerEventType.CONNECTOR_DELETED);
+            logEntry.setEventStatus(BrokerEventStatus.OK);
+            logEntry.setConnectorEndpoint(connectorEndpoint);
+            logEntry.setCreatedAt(OffsetDateTime.now());
+            logEntry.setUserMessage("Connector was deleted.");
+            return logEntry;
+        }).toList();
+        dsl.batchInsert(records).execute();
+    }
 
     public void logConnectorUpdated(DSLContext dsl, String connectorEndpoint, ConnectorChangeTracker changes) {
         var logEntry = dsl.newRecord(Tables.BROKER_EVENT_LOG);

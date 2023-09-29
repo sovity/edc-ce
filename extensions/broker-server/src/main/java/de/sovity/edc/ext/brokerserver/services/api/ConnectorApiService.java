@@ -25,6 +25,7 @@ import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageSortingType;
 import de.sovity.edc.ext.brokerserver.dao.pages.connector.ConnectorPageQueryService;
 import de.sovity.edc.ext.brokerserver.dao.pages.connector.model.ConnectorDetailsRs;
 import de.sovity.edc.ext.brokerserver.dao.pages.connector.model.ConnectorListEntryRs;
+import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
 import de.sovity.edc.ext.brokerserver.utils.UrlUtils;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -41,6 +42,7 @@ public class ConnectorApiService {
     private final ConnectorPageQueryService connectorPageQueryService;
     private final ConnectorService connectorService;
     private final PaginationMetadataUtils paginationMetadataUtils;
+    private final BrokerEventLogger brokerEventLogger;
 
     public ConnectorPageResult connectorPage(DSLContext dsl, ConnectorPageQuery query) {
         Objects.requireNonNull(query, "query must not be null");
@@ -134,5 +136,10 @@ public class ConnectorApiService {
                 .filter(endpoint -> !existingEndpoints.contains(endpoint))
                 .collect(toSet());
         connectorService.addConnectors(dsl, endpoints, ADDED_ON_API_CALL);
+    }
+
+    public void deleteConnectors(DSLContext dsl, List<String> connectorEndpoints) {
+        connectorService.deleteConnectors(dsl, connectorEndpoints);
+        brokerEventLogger.logConnectorsDeleted(dsl, connectorEndpoints);
     }
 }

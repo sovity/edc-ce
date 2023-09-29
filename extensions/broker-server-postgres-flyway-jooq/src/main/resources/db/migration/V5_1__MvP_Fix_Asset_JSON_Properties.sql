@@ -1,6 +1,7 @@
--- Maps JSON Values to String
+-- Maps JSON Asset Properties to String
 -- '{"a": "b", "c": [1, 2], "d": true}'::jsonb becomes '{"a": "b", "c": "[1, 2]", "d": "true"}'::jsonb
-create or replace function pg_temp.migrate_asset_properties(asset_properties jsonb) returns jsonb as
+create
+or replace function pg_temp.migrate_asset_properties(asset_properties jsonb) returns jsonb as
 $$
 begin
 return (select jsonb_object_agg(key, case when jsonb_typeof(value) = 'string' then value #>> '{}' else value::text end)
@@ -12,3 +13,6 @@ language plpgsql;
 -- Fix existing data offer asssets
 update data_offer
 set asset_properties = pg_temp.migrate_asset_properties(asset_properties);
+
+-- Add new Event Log Status
+alter type broker_event_type add value 'CONNECTOR_DELETED';

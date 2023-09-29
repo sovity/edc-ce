@@ -42,6 +42,7 @@ public class FlywayFactory {
                 .cleanDisabled(!config.getBoolean(FLYWAY_CLEAN_ENABLE, false))
                 .table("flyway_schema_history")
                 .locations("classpath:db/migration")
+                .mixed(true)
                 .load();
     }
 }

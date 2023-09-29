@@ -15,7 +15,8 @@
 package de.sovity.edc.ext.brokerserver.services.api;
 
 import de.sovity.edc.ext.brokerserver.BrokerServerExtension;
-import de.sovity.edc.ext.brokerserver.client.gen.ApiException;
+import de.sovity.edc.ext.brokerserver.TestUtils;
+import de.sovity.edc.ext.brokerserver.client.BrokerServerClient;
 import de.sovity.edc.ext.brokerserver.client.gen.model.ConnectorListEntry;
 import de.sovity.edc.ext.brokerserver.client.gen.model.ConnectorPageQuery;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
@@ -40,24 +41,20 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ApiTest
 @ExtendWith(EdcExtension.class)
 class AddConnectorsApiTest {
+    BrokerServerClient client;
 
     @RegisterExtension
     private static final TestDatabase TEST_DATABASE = TestDatabaseFactory.getTestDatabase();
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-        extension.setConfiguration(createConfiguration(TEST_DATABASE, Map.of(
-            BrokerServerExtension.CATALOG_PAGE_PAGE_SIZE, "10",
-            BrokerServerExtension.DEFAULT_CONNECTOR_DATASPACE, "MDS",
-            BrokerServerExtension.KNOWN_DATASPACE_CONNECTORS, "Example1=http://my-connector2/ids/data,Example2=http://my-connector3/ids/data"
-        )));
+        extension.setConfiguration(createConfiguration(TEST_DATABASE, Map.of()));
+        client = brokerServerClient();
     }
 
     @Test
-    void testAddAndMerge() {
+    void testAddConnectors() {
         TEST_DATABASE.testTransaction(dsl -> {
-            var client = brokerServerClient();
-
             client.brokerServerApi().addConnectors(ADMIN_API_KEY, List.of());
 
             client.brokerServerApi().addConnectors(ADMIN_API_KEY, Arrays.asList(
@@ -82,21 +79,12 @@ class AddConnectorsApiTest {
             assertThat(client.brokerServerApi().connectorPage(new ConnectorPageQuery()).getConnectors())
                     .extracting(ConnectorListEntry::getEndpoint)
                     .containsExactlyInAnyOrder("http://a", "http://b", "http://c");
-
         });
     }
 
     @Test
-    void testWrongApiKey() {
-        TEST_DATABASE.testTransaction(dsl -> {
-            var client = brokerServerClient();
-
-            assertThatThrownBy(() -> client.brokerServerApi().addConnectors("wrong-api-key", List.of()))
-                    .isInstanceOf(ApiException.class)
-                    .satisfies(ex -> {
-                        var apiException = (ApiException) ex;
-                        assertThat(apiException.getCode()).isEqualTo(401);
-                    });
-        });
+    void testAddWrongApiKey() {
+        TEST_DATABASE.testTransaction(dsl -> TestUtils.assertIs401(() ->
+                client.brokerServerApi().addConnectors("wrong-api-key", List.of())));
     }
 }

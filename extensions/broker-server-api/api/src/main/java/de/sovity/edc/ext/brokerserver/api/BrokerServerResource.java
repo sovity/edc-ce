@@ -25,6 +25,7 @@ import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -71,4 +72,10 @@ public interface BrokerServerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Add unknown Connectors to the Broker Server")
     void addConnectors(List<String> endpoints, @QueryParam("adminApiKey") String adminApiKey);
+
+    @DELETE
+    @Path("connectors")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Delete known Connectors from the Broker Server")
+    void deleteConnectors(List<String> endpoints, @QueryParam("adminApiKey") String adminApiKey);
 }

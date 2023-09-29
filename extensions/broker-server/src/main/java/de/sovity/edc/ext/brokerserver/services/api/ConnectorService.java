@@ -14,15 +14,16 @@
 
 package de.sovity.edc.ext.brokerserver.services.api;
 
+import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.services.ConnectorCreator;
 import de.sovity.edc.ext.brokerserver.services.queue.ConnectorQueue;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.TableField;
 
 import java.util.Collection;
 import java.util.Set;
-
-import static de.sovity.edc.ext.brokerserver.db.jooq.Tables.CONNECTOR;
 
 @RequiredArgsConstructor
 public class ConnectorService {
@@ -34,7 +35,23 @@ public class ConnectorService {
         connectorQueue.addAll(connectorEndpoints, priority);
     }
 
+    public void deleteConnectors(DSLContext dsl, Collection<String> endpoints) {
+        removeConnectorRows(dsl, Tables.BROKER_EXECUTION_TIME_MEASUREMENT.CONNECTOR_ENDPOINT, endpoints);
+        removeConnectorRows(dsl, Tables.DATA_OFFER_CONTRACT_OFFER.CONNECTOR_ENDPOINT, endpoints);
+        removeConnectorRows(dsl, Tables.DATA_OFFER.CONNECTOR_ENDPOINT, endpoints);
+        removeConnectorRows(dsl, Tables.DATA_OFFER_VIEW_COUNT.CONNECTOR_ENDPOINT, endpoints);
+        removeConnectorRows(dsl, Tables.CONNECTOR.ENDPOINT, endpoints);
+    }
+
     public Set<String> getConnectorEndpoints(DSLContext dsl) {
-        return dsl.select(CONNECTOR.ENDPOINT).from(CONNECTOR).fetchSet(CONNECTOR.ENDPOINT);
+        return dsl.select(Tables.CONNECTOR.ENDPOINT).from(Tables.CONNECTOR).fetchSet(Tables.CONNECTOR.ENDPOINT);
+    }
+
+    private <T extends Record> void removeConnectorRows(
+            DSLContext dsl,
+            TableField<T, String> endpointField,
+            Collection<String> endpoints
+    ) {
+        dsl.deleteFrom(endpointField.getTable()).where(endpointField.in(endpoints)).execute();
     }
 }

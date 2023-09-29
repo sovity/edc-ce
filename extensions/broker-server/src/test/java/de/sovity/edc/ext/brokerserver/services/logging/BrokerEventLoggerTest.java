@@ -17,9 +17,15 @@ package de.sovity.edc.ext.brokerserver.services.logging;
 import de.sovity.edc.ext.brokerserver.db.FlywayTestUtils;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
 import de.sovity.edc.ext.brokerserver.db.TestDatabaseFactory;
+import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
+import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class BrokerEventLoggerTest {
     @RegisterExtension
@@ -44,6 +50,13 @@ class BrokerEventLoggerTest {
             brokerEventLogger.logConnectorUpdateContractOfferLimitOk(dsl, endpoint);
             brokerEventLogger.logConnectorUpdateDataOfferLimitExceeded(dsl, 10, endpoint);
             brokerEventLogger.logConnectorUpdateDataOfferLimitOk(dsl, endpoint);
+            brokerEventLogger.logConnectorsDeleted(dsl, Set.of(endpoint));
+
+            assertThat(numLogEntries(dsl)).isEqualTo(8);
         });
+    }
+
+    private Integer numLogEntries(DSLContext dsl) {
+        return dsl.selectCount().from(Tables.BROKER_EVENT_LOG).fetchOne().component1();
     }
 }
