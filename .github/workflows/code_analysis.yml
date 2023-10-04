@@ -17,7 +17,7 @@ jobs:
       spotbugs_active: ${{ steps.check_spotbugs.outputs.spotbugs_active }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Check file existence
         id: check_files
         uses: andstor/file-existence-action@v2
@@ -34,7 +34,7 @@ jobs:
     if: needs.is_java_project.outputs.pom_exists == 'true' && needs.is_java_project.outputs.checkstyle_active == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v3
         with:
@@ -48,7 +48,7 @@ jobs:
     if: needs.is_java_project.outputs.pom_exists == 'true' && needs.is_java_project.outputs.spotbugs_active == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v3
         with:
