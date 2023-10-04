@@ -33,6 +33,7 @@ import java.util.Map;
 
 import static de.sovity.edc.extension.policy.AlwaysTruePolicyConstants.POLICY_DEFINITION_ID;
 import static java.util.Objects.requireNonNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @ApiTest
@@ -61,7 +62,7 @@ class AlwaysTruePolicyExtensionTest {
         );
 
         // assert
-        Assertions.assertTrue(result.succeeded(), "Always True Policy wasn't true.");
+        assertTrue(result.succeeded(), "Always True Policy wasn't true.");
     }
 
     @NotNull

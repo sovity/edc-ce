@@ -16,7 +16,6 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.ext.wrapper.TestUtils;
-import org.assertj.core.api.Assertions;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
@@ -30,6 +29,7 @@ import java.text.ParseException;
 
 import static de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessTestUtils.createConsumingTransferProcesses;
 import static de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessTestUtils.createProvidingTransferProcesses;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
@@ -53,8 +53,8 @@ class TransferProcessAssetApiServiceTest {
         var providerAssetResult = client.uiApi().getTransferProcessAsset(TransferProcessTestUtils.PROVIDING_TRANSFER_PROCESS_ID);
 
         // assert
-        Assertions.assertThat(providerAssetResult.getAssetId()).isEqualTo(TransferProcessTestUtils.PROVIDING_ASSET_ID);
-        Assertions.assertThat(providerAssetResult.getName()).isEqualTo(TransferProcessTestUtils.PROVIDING_ASSET_NAME);
+        assertThat(providerAssetResult.getAssetId()).isEqualTo(TransferProcessTestUtils.PROVIDING_ASSET_ID);
+        assertThat(providerAssetResult.getName()).isEqualTo(TransferProcessTestUtils.PROVIDING_ASSET_NAME);
     }
 
     @Test
@@ -67,8 +67,8 @@ class TransferProcessAssetApiServiceTest {
         var consumerAssetResult = client.uiApi().getTransferProcessAsset(TransferProcessTestUtils.CONSUMING_TRANSFER_PROCESS_ID);
 
         // assert
-        Assertions.assertThat(consumerAssetResult.getAssetId()).isEqualTo(TransferProcessTestUtils.CONSUMING_ASSET_ID);
-        Assertions.assertThat(consumerAssetResult.getName()).isEqualTo(TransferProcessTestUtils.CONSUMING_ASSET_ID);
+        assertThat(consumerAssetResult.getAssetId()).isEqualTo(TransferProcessTestUtils.CONSUMING_ASSET_ID);
+        assertThat(consumerAssetResult.getName()).isEqualTo(TransferProcessTestUtils.CONSUMING_ASSET_ID);
     }
 
 }

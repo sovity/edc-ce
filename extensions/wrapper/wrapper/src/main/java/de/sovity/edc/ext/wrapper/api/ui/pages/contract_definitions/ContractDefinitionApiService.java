@@ -15,8 +15,8 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions;
 
 import de.sovity.edc.ext.wrapper.api.ServiceException;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionEntry;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;

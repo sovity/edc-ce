@@ -22,7 +22,6 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.FailedMappingException;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
-import org.assertj.core.api.Assertions;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -68,10 +67,10 @@ public class AssetApiServiceTest {
 
         // assert
         var assets = result.getAssets();
-        Assertions.assertThat(assets).hasSize(1);
+        assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        Assertions.assertThat(asset.getAssetId()).isEqualTo(properties.get(Asset.PROPERTY_ID));
-        Assertions.assertThat(asset.getLandingPageUrl()).isEqualTo(properties.get(Prop.Dcat.LANDING_PAGE));
+        assertThat(asset.getAssetId()).isEqualTo(properties.get(Asset.PROPERTY_ID));
+        assertThat(asset.getLandingPageUrl()).isEqualTo(properties.get(Prop.Dcat.LANDING_PAGE));
     }
 
     @Test
@@ -85,7 +84,7 @@ public class AssetApiServiceTest {
         var result = client.uiApi().getAssetPage();
 
         // assert
-        Assertions.assertThat(result.getAssets())
+        assertThat(result.getAssets())
                 .extracting(UiAsset::getAssetId)
                 .containsExactly("asset-3", "asset-2", "asset-1");
     }
@@ -124,30 +123,30 @@ public class AssetApiServiceTest {
         var response = client.uiApi().createAsset(uiAssetRequest);
 
         // assert
-        Assertions.assertThat(response.getId()).isEqualTo("asset-1");
+        assertThat(response.getId()).isEqualTo("asset-1");
 
         var assets = client.uiApi().getAssetPage().getAssets();
-        Assertions.assertThat(assets).hasSize(1);
+        assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        Assertions.assertThat(asset.getAssetId()).isEqualTo("asset-1");
-        Assertions.assertThat(asset.getName()).isEqualTo("AssetName");
-        Assertions.assertThat(asset.getDescription()).isEqualTo("AssetDescription");
-        Assertions.assertThat(asset.getVersion()).isEqualTo("1.0.0");
-        Assertions.assertThat(asset.getLanguage()).isEqualTo("en");
-        Assertions.assertThat(asset.getMediaType()).isEqualTo("application/json");
-        Assertions.assertThat(asset.getDataCategory()).isEqualTo("dataCategory");
-        Assertions.assertThat(asset.getDataSubcategory()).isEqualTo("dataSubcategory");
-        Assertions.assertThat(asset.getDataModel()).isEqualTo("dataModel");
-        Assertions.assertThat(asset.getGeoReferenceMethod()).isEqualTo("geoReferenceMethod");
-        Assertions.assertThat(asset.getTransportMode()).isEqualTo("transportMode");
-        Assertions.assertThat(asset.getLicenseUrl()).isEqualTo("https://license-url");
-        Assertions.assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
-        Assertions.assertThat(asset.getCreatorOrganizationName()).isEqualTo("creatorOrganizationName");
-        Assertions.assertThat(asset.getPublisherHomepage()).isEqualTo("publisherHomepage");
-        Assertions.assertThat(asset.getHttpDatasourceHintsProxyMethod()).isTrue();
-        Assertions.assertThat(asset.getHttpDatasourceHintsProxyPath()).isTrue();
-        Assertions.assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isTrue();
-        Assertions.assertThat(asset.getHttpDatasourceHintsProxyBody()).isTrue();
+        assertThat(asset.getAssetId()).isEqualTo("asset-1");
+        assertThat(asset.getName()).isEqualTo("AssetName");
+        assertThat(asset.getDescription()).isEqualTo("AssetDescription");
+        assertThat(asset.getVersion()).isEqualTo("1.0.0");
+        assertThat(asset.getLanguage()).isEqualTo("en");
+        assertThat(asset.getMediaType()).isEqualTo("application/json");
+        assertThat(asset.getDataCategory()).isEqualTo("dataCategory");
+        assertThat(asset.getDataSubcategory()).isEqualTo("dataSubcategory");
+        assertThat(asset.getDataModel()).isEqualTo("dataModel");
+        assertThat(asset.getGeoReferenceMethod()).isEqualTo("geoReferenceMethod");
+        assertThat(asset.getTransportMode()).isEqualTo("transportMode");
+        assertThat(asset.getLicenseUrl()).isEqualTo("https://license-url");
+        assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
+        assertThat(asset.getCreatorOrganizationName()).isEqualTo("creatorOrganizationName");
+        assertThat(asset.getPublisherHomepage()).isEqualTo("publisherHomepage");
+        assertThat(asset.getHttpDatasourceHintsProxyMethod()).isTrue();
+        assertThat(asset.getHttpDatasourceHintsProxyPath()).isTrue();
+        assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isTrue();
+        assertThat(asset.getHttpDatasourceHintsProxyBody()).isTrue();
 
         var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
         assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddressProperties);
@@ -169,14 +168,14 @@ public class AssetApiServiceTest {
         var response = client.uiApi().createAsset(uiAssetRequest);
 
         // assert
-        Assertions.assertThat(response.getId()).isEqualTo("asset-1");
+        assertThat(response.getId()).isEqualTo("asset-1");
         var assets = client.uiApi().getAssetPage().getAssets();
-        Assertions.assertThat(assets).hasSize(1);
+        assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        Assertions.assertThat(asset.getHttpDatasourceHintsProxyMethod()).isFalse();
-        Assertions.assertThat(asset.getHttpDatasourceHintsProxyPath()).isFalse();
-        Assertions.assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isFalse();
-        Assertions.assertThat(asset.getHttpDatasourceHintsProxyBody()).isFalse();
+        assertThat(asset.getHttpDatasourceHintsProxyMethod()).isFalse();
+        assertThat(asset.getHttpDatasourceHintsProxyPath()).isFalse();
+        assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isFalse();
+        assertThat(asset.getHttpDatasourceHintsProxyBody()).isFalse();
     }
 
     @Test
@@ -194,14 +193,14 @@ public class AssetApiServiceTest {
         var response = client.uiApi().createAsset(uiAssetRequest);
 
         // assert
-        Assertions.assertThat(response.getId()).isEqualTo("asset-1");
+        assertThat(response.getId()).isEqualTo("asset-1");
         var assets = client.uiApi().getAssetPage().getAssets();
-        Assertions.assertThat(assets).hasSize(1);
+        assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        Assertions.assertThat(asset.getHttpDatasourceHintsProxyMethod()).isNull();
-        Assertions.assertThat(asset.getHttpDatasourceHintsProxyPath()).isNull();
-        Assertions.assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isNull();
-        Assertions.assertThat(asset.getHttpDatasourceHintsProxyBody()).isNull();
+        assertThat(asset.getHttpDatasourceHintsProxyMethod()).isNull();
+        assertThat(asset.getHttpDatasourceHintsProxyPath()).isNull();
+        assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isNull();
+        assertThat(asset.getHttpDatasourceHintsProxyBody()).isNull();
     }
 
     @Test
@@ -214,7 +213,7 @@ public class AssetApiServiceTest {
         var response = client.uiApi().deleteAsset("asset-1");
 
         // assert
-        Assertions.assertThat(response.getId()).isEqualTo("asset-1");
+        assertThat(response.getId()).isEqualTo("asset-1");
         assertThat(assetService.query(QuerySpec.max()).getContent()).isEmpty();
     }
 

@@ -28,7 +28,6 @@ import org.eclipse.edc.policy.engine.spi.PolicyContext;
 import org.eclipse.edc.policy.model.Operator;
 import org.eclipse.edc.spi.agent.ParticipantAgent;
 import org.eclipse.edc.spi.monitor.Monitor;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,6 +36,9 @@ import org.mockito.Mockito;
 
 import java.util.Collections;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AbstractReferringConnectorValidationTest {
 
@@ -71,7 +73,7 @@ class AbstractReferringConnectorValidationTest {
         prepareReferringConnectorClaim("http://example.org");
 
         // invoke & assert
-        Assertions.assertFalse(validation.evaluate(operator, "foo", policyContext));
+        assertFalse(validation.evaluate(operator, "foo", policyContext));
     }
 
     @Test
@@ -82,7 +84,7 @@ class AbstractReferringConnectorValidationTest {
         prepareReferringConnectorClaim("http://example.org");
 
         // invoke & assert
-        Assertions.assertFalse(validation.evaluate(Operator.EQ, 1, policyContext));
+        assertFalse(validation.evaluate(Operator.EQ, 1, policyContext));
     }
 
     @Test
@@ -95,7 +97,7 @@ class AbstractReferringConnectorValidationTest {
         final boolean isValid = validation.evaluate(Operator.EQ, "http://example.org", policyContext);
 
         // assert
-        Assertions.assertFalse(isValid);
+        assertFalse(isValid);
     }
 
     @Test
@@ -113,8 +115,8 @@ class AbstractReferringConnectorValidationTest {
         final boolean isContainedTrue = validation.evaluate(Operator.EQ, "http://example.org", policyContext);
 
         // assert
-        Assertions.assertTrue(isEqualsTrue);
-        Assertions.assertFalse(isContainedTrue);
+        assertTrue(isEqualsTrue);
+        assertFalse(isContainedTrue);
     }
 
     @Test
@@ -132,8 +134,8 @@ class AbstractReferringConnectorValidationTest {
         final boolean isContainedTrue = validation.evaluate(Operator.EQ, "http://example.org", policyContext);
 
         // assert
-        Assertions.assertTrue(isEqualsTrue);
-        Assertions.assertFalse(isContainedTrue);
+        assertTrue(isEqualsTrue);
+        assertFalse(isContainedTrue);
     }
 
     @Test
@@ -147,7 +149,7 @@ class AbstractReferringConnectorValidationTest {
         final boolean isValid = validation.evaluate(Operator.EQ, "http://example.org", policyContext);
 
         // Mockito.verify(monitor.debug(Mockito.anyString());
-        Assertions.assertFalse(isValid);
+        assertFalse(isValid);
     }
 
     @Test
@@ -161,7 +163,7 @@ class AbstractReferringConnectorValidationTest {
         final boolean isContainedTrue = validation.evaluate(Operator.EQ, "http://example.org", policyContext);
 
         // Mockito.verify(monitor.debug(Mockito.anyString());
-        Assertions.assertTrue(isContainedTrue);
+        assertTrue(isContainedTrue);
     }
 
     @Test
@@ -171,9 +173,9 @@ class AbstractReferringConnectorValidationTest {
         prepareReferringConnectorClaim("http://example.org");
 
         // invoke & verify
-        Assertions.assertTrue(validation.evaluate(Operator.IN, List.of("http://example.org", "http://example.com"), policyContext));
-        Assertions.assertTrue(validation.evaluate(Operator.IN, List.of(1, "http://example.org"), policyContext));
-        Assertions.assertTrue(validation.evaluate(Operator.IN, List.of("http://example.org", "http://example.org"), policyContext));
+        assertTrue(validation.evaluate(Operator.IN, List.of("http://example.org", "http://example.com"), policyContext));
+        assertTrue(validation.evaluate(Operator.IN, List.of(1, "http://example.org"), policyContext));
+        assertTrue(validation.evaluate(Operator.IN, List.of("http://example.org", "http://example.org"), policyContext));
     }
 
     private void prepareContextProblems(List<String> problems) {

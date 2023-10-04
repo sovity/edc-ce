@@ -8,7 +8,6 @@ import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.ext.wrapper.TestUtils;
-import org.assertj.core.api.Assertions;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -46,18 +45,18 @@ class ContractDefinitionPageApiServiceTest {
 
         // assert
         var contractDefinitions = result.getContractDefinitions();
-        Assertions.assertThat(contractDefinitions).hasSize(1);
+        assertThat(contractDefinitions).hasSize(1);
         var contractDefinition = contractDefinitions.get(0);
-        Assertions.assertThat(contractDefinition.getContractDefinitionId()).isEqualTo("contractDefinition-id-1");
-        Assertions.assertThat(contractDefinition.getContractPolicyId()).isEqualTo("contractPolicy-id-1");
-        Assertions.assertThat(contractDefinition.getAccessPolicyId()).isEqualTo("accessPolicy-id-1");
-        Assertions.assertThat(contractDefinition.getAssetSelector()).hasSize(1);
+        assertThat(contractDefinition.getContractDefinitionId()).isEqualTo("contractDefinition-id-1");
+        assertThat(contractDefinition.getContractPolicyId()).isEqualTo("contractPolicy-id-1");
+        assertThat(contractDefinition.getAccessPolicyId()).isEqualTo("accessPolicy-id-1");
+        assertThat(contractDefinition.getAssetSelector()).hasSize(1);
 
         var criterionEntry = contractDefinition.getAssetSelector().get(0);
-        Assertions.assertThat(criterionEntry.getOperandLeft()).isEqualTo("exampleLeft1");
-        Assertions.assertThat(criterionEntry.getOperator()).isEqualTo(UiCriterionOperator.EQ);
-        Assertions.assertThat(criterionEntry.getOperandRight().getType()).isEqualTo(UiCriterionLiteralType.VALUE);
-        Assertions.assertThat(criterionEntry.getOperandRight().getValue()).isEqualTo("abc");
+        assertThat(criterionEntry.getOperandLeft()).isEqualTo("exampleLeft1");
+        assertThat(criterionEntry.getOperator()).isEqualTo(UiCriterionOperator.EQ);
+        assertThat(criterionEntry.getOperandRight().getType()).isEqualTo(UiCriterionLiteralType.VALUE);
+        assertThat(criterionEntry.getOperandRight().getValue()).isEqualTo("abc");
     }
 
     @Test
@@ -90,7 +89,7 @@ class ContractDefinitionPageApiServiceTest {
         var result = client.uiApi().getContractDefinitionPage();
 
         // assert
-        Assertions.assertThat(result.getContractDefinitions())
+        assertThat(result.getContractDefinitions())
                 .extracting(ContractDefinitionEntry::getContractPolicyId)
                 .containsExactly("contractPolicy-id-3", "contractPolicy-id-2", "contractPolicy-id-1");
 
@@ -116,7 +115,7 @@ class ContractDefinitionPageApiServiceTest {
         var response = client.uiApi().createContractDefinition(contractDefinition);
 
         // assert
-        Assertions.assertThat(response).isNotNull();
+        assertThat(response).isNotNull();
         var contractDefinitions = contractDefinitionService.query(QuerySpec.max()).getContent().toList();
         assertThat(contractDefinitions).hasSize(1);
         var contractDefinitionEntry = contractDefinitions.get(0);
@@ -144,7 +143,7 @@ class ContractDefinitionPageApiServiceTest {
         var response = client.uiApi().deleteContractDefinition(contractDefinition.getId());
 
         // assert
-        Assertions.assertThat(response.getId()).isEqualTo(contractDefinition.getId());
+        assertThat(response.getId()).isEqualTo(contractDefinition.getId());
         assertThat(contractDefinitionService.query(QuerySpec.max()).getContent()).isEmpty();
     }
 
