@@ -24,7 +24,6 @@ import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.spi.agent.ParticipantAgent;
 import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
