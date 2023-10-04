@@ -27,12 +27,12 @@ import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.mockito.Mockito.mock;
 
 public class TestUtils {
-    private static final int DATA_PORT = getFreePort();
+    private static final int MANAGEMENT_PORT = getFreePort();
     private static final int PROTOCOL_PORT = getFreePort();
-    private static final String DATA_PATH = "/api/management";
+    private static final String MANAGEMENT_PATH = "/api/management";
     private static final String PROTOCOL_PATH = "/api/dsp";
     public static final String MANAGEMENT_API_KEY = "123456";
-    public static final String MANAGEMENT_ENDPOINT = "http://localhost:" + DATA_PORT + DATA_PATH;
+    public static final String MANAGEMENT_ENDPOINT = "http://localhost:" + MANAGEMENT_PORT + MANAGEMENT_PATH;
 
 
     public static final String PROTOCOL_HOST = "http://localhost:" + PROTOCOL_PORT;
@@ -44,8 +44,8 @@ public class TestUtils {
         Map<String, String> config = new HashMap<>();
         config.put("web.http.port", String.valueOf(getFreePort()));
         config.put("web.http.path", "/api");
-        config.put("web.http.management.port", String.valueOf(DATA_PORT));
-        config.put("web.http.management.path", DATA_PATH);
+        config.put("web.http.management.port", String.valueOf(MANAGEMENT_PORT));
+        config.put("web.http.management.path", MANAGEMENT_PATH);
         config.put("web.http.protocol.port", String.valueOf(PROTOCOL_PORT));
         config.put("web.http.protocol.path", PROTOCOL_PATH);
         config.put("edc.api.auth.key", MANAGEMENT_API_KEY);
@@ -87,8 +87,8 @@ public class TestUtils {
 
     public static RequestSpecification givenManagementEndpoint() {
         return given()
-                .baseUri("http://localhost:" + DATA_PORT)
-                .basePath("/api/v1/data")
-                .header("x-api-key", MANAGEMENT_API_KEY);
+                .baseUri("http://localhost:" + MANAGEMENT_PORT)
+                .basePath(MANAGEMENT_PATH)
+                .header("X-Api-Key", MANAGEMENT_API_KEY);
     }
 }

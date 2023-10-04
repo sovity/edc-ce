@@ -38,13 +38,13 @@ public class UseCaseResourceImpl implements UseCaseResource {
     private final OfferingService offeringService;
 
     @Override
-    public void createOfferEndpoint(CreateOfferingDto dto) {
+    public void createOffer(CreateOfferingDto dto) {
         offeringService.create(dto);
     }
 
     @Override
-    public KpiResult getKpiEndpoint() {
-        return kpiApiService.getKpiEndpoint();
+    public KpiResult getKpis() {
+        return kpiApiService.getKpis();
     }
 
     @Override

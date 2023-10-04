@@ -32,7 +32,7 @@ public class GreetingResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String greeting() {
-        return "Backend-fetched KPI Information:%n%s".formatted(edcClient.useCaseApi().getKpiEndpoint().toString());
+        return "Backend-fetched KPI Information:%n%s".formatted(edcClient.useCaseApi().getKpis().toString());
     }
 
     @POST

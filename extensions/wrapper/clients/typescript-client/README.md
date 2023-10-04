@@ -40,7 +40,7 @@ const edcClient: EdcClient = buildEdcClient({
     managementApiKey: 'ApiKeyDefaultValue',
 });
 
-let kpiData: KpiResult = await edcClient.useCaseApi.getKpiEndpoint();
+let kpiData: KpiResult = await edcClient.useCaseApi.getKpis();
 ```
 
 A minimal example project using the typescript API client can be found

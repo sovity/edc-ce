@@ -59,6 +59,71 @@ public class UiResourceImpl implements UiResource {
     private final DashboardPageApiService dashboardPageApiService;
 
     @Override
+    public DashboardPage getDashboardPage() {
+        return dashboardPageApiService.dashboardPage();
+    }
+
+    @Override
+    public AssetPage getAssetPage() {
+        return new AssetPage(assetApiService.getAssets());
+    }
+
+    @Override
+    public IdResponseDto createAsset(UiAssetCreateRequest uiAssetCreateRequest) {
+        return assetApiService.createAsset(uiAssetCreateRequest);
+    }
+
+    @Override
+    public IdResponseDto deleteAsset(String assetId) {
+        return assetApiService.deleteAsset(assetId);
+    }
+
+    @Override
+    public PolicyDefinitionPage getPolicyDefinitionPage() {
+        return new PolicyDefinitionPage(policyDefinitionApiService.getPolicyDefinitions());
+    }
+
+    @Override
+    public IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto) {
+        return policyDefinitionApiService.createPolicyDefinition(policyDefinitionDtoDto);
+    }
+
+    @Override
+    public IdResponseDto deletePolicyDefinition(String policyId) {
+        return policyDefinitionApiService.deletePolicyDefinition(policyId);
+    }
+
+    @Override
+    public ContractDefinitionPage getContractDefinitionPage() {
+        return new ContractDefinitionPage(contractDefinitionApiService.getContractDefinitions());
+    }
+
+    @Override
+    public IdResponseDto createContractDefinition(ContractDefinitionRequest contractDefinitionRequest) {
+        return contractDefinitionApiService.createContractDefinition(contractDefinitionRequest);
+    }
+
+    @Override
+    public IdResponseDto deleteContractDefinition(String contractDefinitionId) {
+        return contractDefinitionApiService.deleteContractDefinition(contractDefinitionId);
+    }
+
+    @Override
+    public List<UiDataOffer> getCatalogPageDataOffers(String connectorEndpoint) {
+        return catalogApiService.fetchDataOffers(connectorEndpoint);
+    }
+
+    @Override
+    public UiContractNegotiation initiateContractNegotiation(ContractNegotiationRequest contractNegotiationRequest) {
+        return contractNegotiationApiService.initiateContractNegotiation(contractNegotiationRequest);
+    }
+
+    @Override
+    public UiContractNegotiation getContractNegotiation(String contractNegotiationId) {
+        return contractNegotiationApiService.getContractNegotiation(contractNegotiationId);
+    }
+
+    @Override
     public ContractAgreementPage getContractAgreementPage() {
         return contractAgreementApiService.contractAgreementPage();
     }
@@ -80,70 +145,5 @@ public class UiResourceImpl implements UiResource {
     @Override
     public UiAsset getTransferProcessAsset(String transferProcessId) {
         return transferHistoryPageAssetFetcherService.getAssetForTransferHistoryPage(transferProcessId);
-    }
-
-    @Override
-    public AssetPage getAssetPage() {
-        return new AssetPage(assetApiService.getAssets());
-    }
-
-    @Override
-    public IdResponseDto createAsset(UiAssetCreateRequest uiAssetCreateRequest) {
-        return assetApiService.createAsset(uiAssetCreateRequest);
-    }
-
-    @Override
-    public IdResponseDto deleteAsset(String assetId) {
-        return assetApiService.deleteAsset(assetId);
-    }
-
-    @Override
-    public List<UiDataOffer> getCatalogPageDataOffers(String connectorEndpoint) {
-        return catalogApiService.fetchDataOffers(connectorEndpoint);
-    }
-
-    @Override
-    public ContractDefinitionPage getContractDefinitionPage() {
-        return new ContractDefinitionPage(contractDefinitionApiService.getContractDefinitions());
-    }
-
-    @Override
-    public IdResponseDto createContractDefinition(ContractDefinitionRequest contractDefinitionRequest) {
-        return contractDefinitionApiService.createContractDefinition(contractDefinitionRequest);
-    }
-
-    @Override
-    public IdResponseDto deleteContractDefinition(String contractDefinitionId) {
-        return contractDefinitionApiService.deleteContractDefinition(contractDefinitionId);
-    }
-
-    @Override
-    public PolicyDefinitionPage getPolicyDefinitionPage() {
-        return new PolicyDefinitionPage(policyDefinitionApiService.getPolicyDefinitions());
-    }
-
-    @Override
-    public IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto) {
-        return policyDefinitionApiService.createPolicyDefinition(policyDefinitionDtoDto);
-    }
-
-    @Override
-    public IdResponseDto deletePolicyDefinition(String policyId) {
-        return policyDefinitionApiService.deletePolicyDefinition(policyId);
-    }
-
-    @Override
-    public UiContractNegotiation initiateContractNegotiation(ContractNegotiationRequest contractNegotiationRequest) {
-        return contractNegotiationApiService.initiateContractNegotiation(contractNegotiationRequest);
-    }
-
-    @Override
-    public UiContractNegotiation getContractNegotiation(String contractNegotiationId) {
-        return contractNegotiationApiService.getContractNegotiation(contractNegotiationId);
-    }
-
-    @Override
-    public DashboardPage getDashboardPage() {
-        return dashboardPageApiService.dashboardPage();
     }
 }

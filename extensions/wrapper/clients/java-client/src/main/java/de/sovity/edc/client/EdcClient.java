@@ -35,6 +35,6 @@ public class EdcClient {
     }
 
     public void testConnection() {
-        useCaseApi.getKpiEndpoint();
+        useCaseApi.getKpis();
     }
 }

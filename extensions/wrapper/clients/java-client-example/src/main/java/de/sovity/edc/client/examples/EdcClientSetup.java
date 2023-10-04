@@ -15,6 +15,7 @@
 package de.sovity.edc.client.examples;
 
 import de.sovity.edc.client.EdcClient;
+import io.quarkus.runtime.configuration.ConfigUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.logging.Logger;
@@ -24,19 +25,16 @@ import javax.enterprise.inject.Produces;
 public class EdcClientSetup {
     private static final Logger LOG = Logger.getLogger(EdcClientSetup.class.getName());
 
-    @ConfigProperty(name = "client-example.management-api-url")
+    @ConfigProperty(name = "my-edc.management-api-url")
     String managementApiUrl;
 
-    @ConfigProperty(name = "client-example.management-api-key")
+    @ConfigProperty(name = "my-edc.management-api-key")
     String managementApiKey;
-
-    @ConfigProperty(name = "client-example.test-connection")
-    Boolean testConnection;
 
     @Produces
     @ApplicationScoped
     public EdcClient buildEdcClient() {
-        EdcClient client = EdcClient.builder()
+        var client = EdcClient.builder()
                 .managementApiUrl(managementApiUrl)
                 .managementApiKey(managementApiKey)
                 .build();
@@ -45,12 +43,12 @@ public class EdcClientSetup {
     }
 
     private void testEdcConnection(EdcClient client) {
-        if (Boolean.TRUE.equals(testConnection)) {
-            LOG.info("Testing EDC connection...");
-            client.testConnection();
-            LOG.info("Successfully connected to EDC.");
-        } else {
+        if (ConfigUtils.getProfiles().contains("test")) {
             LOG.info("Skipping EDC connection test.");
+            return;
         }
+
+        client.testConnection();
+        LOG.info("Successfully connected to EDC Connector %s.".formatted(managementApiUrl));
     }
 }

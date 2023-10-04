@@ -45,7 +45,7 @@ class GreetingResourceTest {
         var myResult = mock(KpiResult.class);
         when(myResult.toString()).thenReturn("RESULT");
 
-        when(useCaseApi.getKpiEndpoint()).thenReturn(myResult);
+        when(useCaseApi.getKpis()).thenReturn(myResult);
 
         given()
                 .when().get("/")

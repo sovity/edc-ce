@@ -39,17 +39,16 @@ import java.util.List;
 @Tag(name = "Use Case", description = "Generic Use Case Application API Endpoints.")
 public interface UseCaseResource {
     @POST
-    @Path("contract-offer")
+    @Path("data-offer")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Creates a new data offer, consisting of an asset, a policy definition and a contract definition.")
-    void createOfferEndpoint(CreateOfferingDto dto);
+    void createOffer(CreateOfferingDto dto);
 
     @GET
     @Path("kpis")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Basic KPIs about the running EDC Connector.")
-    KpiResult getKpiEndpoint();
+    KpiResult getKpis();
 
     @GET
     @Path("supported-policy-functions")

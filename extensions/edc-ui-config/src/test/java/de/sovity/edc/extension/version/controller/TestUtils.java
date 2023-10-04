@@ -45,7 +45,7 @@ public class TestUtils {
         return given()
                 .baseUri("http://localhost:" + DATA_PORT)
                 .basePath("/api/v1/data")
-                .header("x-api-key", API_KEY)
+                .header("X-Api-Key", API_KEY)
                 .when()
                 .contentType(ContentType.TEXT)
                 .get("/edc-ui-config")

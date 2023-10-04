@@ -35,7 +35,7 @@ services:
       MY_EDC_PROTOCOL: "http://"
       MY_EDC_IDS_BASE_URL: "http://edc:11003"
       EDC_WEB_REST_CORS_ENABLED: 'true'
-      EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
+      EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,X-Api-Key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
     ports:
       - '11001:11001'
@@ -81,7 +81,7 @@ services:
       MY_EDC_PROTOCOL: "http://"
       MY_EDC_IDS_BASE_URL: "http://edc2:11003"
       EDC_WEB_REST_CORS_ENABLED: 'true'
-      EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,x-api-key'
+      EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,X-Api-Key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
     ports:
       - '22001:11001'

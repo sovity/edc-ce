@@ -10,7 +10,7 @@
   let kpiData: Promise<KpiResult>;
 
   function refresh() {
-    kpiData = edcClient.useCaseApi.getKpiEndpoint();
+    kpiData = edcClient.useCaseApi.getKpis();
   }
 
   refresh();

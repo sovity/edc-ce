@@ -68,8 +68,10 @@ class PolicyDefinitionApiServiceTest {
 
         // assert
         var policyDefinitions = response.getPolicies();
-        assertThat(policyDefinitions).hasSize(1);
-        var policyDefinition = policyDefinitions.get(0);
+        assertThat(policyDefinitions).hasSize(2);
+        var policyDefinition = policyDefinitions.stream()
+                .filter(it -> it.getPolicyDefinitionId().equals("my-policy-def-1"))
+                .findFirst().get();
         assertThat(policyDefinition.getPolicyDefinitionId()).isEqualTo("my-policy-def-1");
         assertThat(policyDefinition.getPolicy().getConstraints()).hasSize(1);
 
@@ -90,21 +92,23 @@ class PolicyDefinitionApiServiceTest {
         // assert
         assertThat(result.getPolicies())
                 .extracting(PolicyDefinitionDto::getPolicyDefinitionId)
-                .containsExactly("my-policy-def-2", "my-policy-def-1", "my-policy-def-0");
+                .containsExactly("always-true", "my-policy-def-2", "my-policy-def-1", "my-policy-def-0");
     }
 
     @Test
     void test_delete(PolicyDefinitionService policyDefinitionService) {
         // arrange
         createPolicyDefinition("my-policy-def-1");
-        assertThat(policyDefinitionService.query(QuerySpec.max()).getContent().toList()).extracting(Entity::getId).containsExactly("my-policy-def-1");
+        assertThat(policyDefinitionService.query(QuerySpec.max()).getContent().toList())
+                .extracting(Entity::getId).contains("always-true", "my-policy-def-1");
 
         // act
         var response = client.uiApi().deletePolicyDefinition("my-policy-def-1");
 
         // assert
         assertThat(response.getId()).isEqualTo("my-policy-def-1");
-        assertThat(policyDefinitionService.query(QuerySpec.max()).getContent()).isEmpty();
+        assertThat(policyDefinitionService.query(QuerySpec.max()).getContent())
+                .extracting(Entity::getId).containsExactly("always-true");
     }
 
     private void createPolicyDefinition(String policyDefinitionId) {

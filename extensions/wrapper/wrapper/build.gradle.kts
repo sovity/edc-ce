@@ -34,7 +34,10 @@ dependencies {
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
 
     testImplementation(project(":extensions:wrapper:clients:java-client"))
+    testImplementation(project(":extensions:policy-always-true"))
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
+    testImplementation("${edcGroup}:dsp:${edcVersion}")
+    testImplementation("${edcGroup}:iam-mock:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
     testImplementation("${edcGroup}:http:${edcVersion}") {
         exclude(group = "org.eclipse.jetty", module = "jetty-client")
@@ -57,9 +60,6 @@ dependencies {
     testImplementation("${edcGroup}:dsp-http-spi:${edcVersion}")
     testImplementation("${edcGroup}:dsp-api-configuration:${edcVersion}")
     testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
-    testImplementation("io.rest-assured:rest-assured:${restAssured}")
-    testImplementation(project(":extensions:policy-always-true"))
-
 
     testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")

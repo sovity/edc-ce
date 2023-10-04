@@ -43,7 +43,7 @@ public class KpiApiService {
     private final ContractAgreementService contractAgreementService;
     private final TransferProcessStateService transferProcessStateService;
 
-    public KpiResult getKpiEndpoint() {
+    public KpiResult getKpis() {
         var assetsCount = getAssetsCount();
         var policiesCount = getPoliciesCount();
         var contractDefinitionsCount = getContractDefinitionsCount();

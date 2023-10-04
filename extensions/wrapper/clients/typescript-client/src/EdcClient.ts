@@ -23,7 +23,7 @@ export function buildEdcClient(opts: EdcClientOptions): EdcClient {
     const config = new Configuration({
         basePath: opts.managementApiUrl,
         headers: {
-            'x-api-key': opts.managementApiKey ?? 'ApiKeyDefaultValue',
+            'X-Api-Key': opts.managementApiKey ?? 'ApiKeyDefaultValue',
         },
         credentials: 'same-origin',
         ...opts.configOverrides,

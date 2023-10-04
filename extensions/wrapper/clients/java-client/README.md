@@ -55,7 +55,7 @@ public class WrapperClientExample {
                 .build();
 
         // EDC API Wrapper APIs are now available for use
-        KpiResult kpiResult = client.useCaseApi().getKpiEndpoint();
+        KpiResult kpiResult = client.useCaseApi().getKpis();
         System.out.println(kpiResult);
     }
 }
@@ -92,7 +92,7 @@ public class WrapperClientExample {
                 .build();
 
         // EDC API Wrapper APIs are now available for use
-        KpiResult kpiResult = client.useCaseApi().getKpiEndpoint();
+        KpiResult kpiResult = client.useCaseApi().getKpis();
         System.out.println(kpiResult);
     }
 }

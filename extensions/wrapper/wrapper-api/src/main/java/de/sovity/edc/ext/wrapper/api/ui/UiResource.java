@@ -48,27 +48,10 @@ import java.util.List;
 interface UiResource {
 
     @GET
-    @Path("pages/contract-agreement-page")
+    @Path("pages/dashboard-page")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Collect all data for Contract Agreement Page")
-    ContractAgreementPage getContractAgreementPage();
-
-    @POST
-    @Path("pages/contract-agreement-page/transfers")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Initiate a Transfer Process")
-    IdResponseDto initiateTransfer(ContractAgreementTransferRequest contractAgreementTransferRequest);
-
-    @GET
-    @Path("pages/transfer-history-page")
-    @Produces(MediaType.APPLICATION_JSON)
-    TransferHistoryPage getTransferHistoryPage();
-
-    @GET
-    @Path("pages/transfer-history-page/transfer-processes/{transferProcessId}/asset")
-    @Produces(MediaType.APPLICATION_JSON)
-    UiAsset getTransferProcessAsset(@PathParam("transferProcessId") String transferProcessId);
+    @Operation(description = "Collect all data for the Dashboard Page")
+    DashboardPage getDashboardPage();
 
     @GET
     @Path("pages/asset-page")
@@ -90,10 +73,23 @@ interface UiResource {
     IdResponseDto deleteAsset(@PathParam("assetId") String assetId);
 
     @GET
-    @Path("pages/catalog-page/data-offers")
+    @Path("pages/policy-page")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Fetch a connector's data offers")
-    List<UiDataOffer> getCatalogPageDataOffers(@QueryParam("connectorEndpoint") String connectorEndpoint);
+    @Operation(description = "Collect all data for Policy Definition Page")
+    PolicyDefinitionPage getPolicyDefinitionPage();
+
+    @POST
+    @Path("pages/policy-page/policy-definitions")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Create a new Policy Definition")
+    IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto);
+
+    @DELETE
+    @Path("pages/policy-page/policy-definitions/{policyId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Delete a Policy Definition")
+    IdResponseDto deletePolicyDefinition(@PathParam("policyId") String policyId);
 
     @GET
     @Path("pages/contract-definition-page")
@@ -115,23 +111,10 @@ interface UiResource {
     IdResponseDto deleteContractDefinition(@PathParam("contractDefinitionId") String contractDefinitionId);
 
     @GET
-    @Path("pages/policy-page")
+    @Path("pages/catalog-page/data-offers")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Collect all data for Policy Definition Page")
-    PolicyDefinitionPage getPolicyDefinitionPage();
-
-    @POST
-    @Path("pages/policy-page/policy-definitions")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Create a new Policy Definition")
-    IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto);
-
-    @DELETE
-    @Path("pages/policy-page/policy-definitions/{policyId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Delete a Policy Definition")
-    IdResponseDto deletePolicyDefinition(@PathParam("policyId") String policyId);
+    @Operation(description = "Fetch a connector's data offers")
+    List<UiDataOffer> getCatalogPageDataOffers(@QueryParam("connectorEndpoint") String connectorEndpoint);
 
     @POST
     @Path("pages/catalog-page/contract-negotiations")
@@ -147,8 +130,25 @@ interface UiResource {
     UiContractNegotiation getContractNegotiation(@PathParam("contractNegotiationId") String contractNegotiationId);
 
     @GET
-    @Path("pages/dashboard-page")
+    @Path("pages/contract-agreement-page")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Collect all data for the Dashboard Page")
-    DashboardPage getDashboardPage();
+    @Operation(description = "Collect all data for Contract Agreement Page")
+    ContractAgreementPage getContractAgreementPage();
+
+    @POST
+    @Path("pages/contract-agreement-page/transfers")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Initiate a Transfer Process")
+    IdResponseDto initiateTransfer(ContractAgreementTransferRequest contractAgreementTransferRequest);
+
+    @GET
+    @Path("pages/transfer-history-page")
+    @Produces(MediaType.APPLICATION_JSON)
+    TransferHistoryPage getTransferHistoryPage();
+
+    @GET
+    @Path("pages/transfer-history-page/transfer-processes/{transferProcessId}/asset")
+    @Produces(MediaType.APPLICATION_JSON)
+    UiAsset getTransferProcessAsset(@PathParam("transferProcessId") String transferProcessId);
 }

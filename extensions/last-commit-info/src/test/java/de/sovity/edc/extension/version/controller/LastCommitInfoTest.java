@@ -57,7 +57,7 @@ class LastCommitInfoTest {
         var request = given()
                 .baseUri("http://localhost:" + TestUtils.DATA_PORT)
                 .basePath("/api/v1/data")
-                .header("x-api-key", TestUtils.AUTH_KEY)
+                .header("X-Api-Key", TestUtils.AUTH_KEY)
                 .when()
                 .contentType(ContentType.JSON)
                 .get("/last-commit-info")
