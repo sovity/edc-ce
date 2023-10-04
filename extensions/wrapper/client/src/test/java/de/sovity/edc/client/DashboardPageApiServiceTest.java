@@ -116,7 +116,7 @@ class DashboardPageApiServiceTest {
 
 
         // act
-        var dashboardPage = client.uiApi().dashboardPageEndpoint();
+        var dashboardPage = client.uiApi().getDashboardPage();
 
         // assert
         assertThat(dashboardPage.getNumberOfAssets()).isEqualTo(assets.size());

@@ -23,7 +23,7 @@ val openapiYaml = configurations.create("openapiGenerator")
 
 dependencies {
     // We only need the openapi.yaml file from this dependency
-    openapiYaml(project(":extensions:wrapper:wrapper")) {
+    openapiYaml(project(":extensions:wrapper:wrapper-api")) {
         isTransitive = false
     }
 

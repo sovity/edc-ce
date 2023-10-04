@@ -98,7 +98,7 @@ class Ms8ConnectorTransferTest {
         var providerEndpoint = endpoint(providerConnector);
 
         // act
-        var dataOffers = consumerClient.uiApi().catalogPageDataOffers(providerEndpoint);
+        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerEndpoint);
         var asset = first(dataOffers, it -> it.getAsset().getAssetId().equals("first-asset-1.0")).getAsset();
 
         // assert
@@ -141,7 +141,7 @@ class Ms8ConnectorTransferTest {
         // arrange
 
         // act
-        var providerTransfers = providerClient.uiApi().transferHistoryPageEndpoint().getTransferEntries();
+        var providerTransfers = providerClient.uiApi().getTransferHistoryPage().getTransferEntries();
         assertThat(providerTransfers).hasSize(1);
         var providerTransfer = providerTransfers.get(0);
 
@@ -167,7 +167,7 @@ class Ms8ConnectorTransferTest {
         // arrange
 
         // act
-        var consumerTransfers = consumerClient.uiApi().transferHistoryPageEndpoint().getTransferEntries();
+        var consumerTransfers = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries();
         assertThat(consumerTransfers).hasSize(1);
         var consumerTransfer = consumerTransfers.get(0);
 

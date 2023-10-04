@@ -60,7 +60,7 @@ public class AssetApiServiceTest {
         createAsset(assetStore, "2023-06-01", properties);
 
         // act
-        var result = client.uiApi().assetPage();
+        var result = client.uiApi().getAssetPage();
 
         // assert
         var assets = result.getAssets();
@@ -79,7 +79,7 @@ public class AssetApiServiceTest {
         createAsset(assetService, "2023-06-02", Map.of(Asset.PROPERTY_ID, "asset-2"));
 
         // act
-        var result = client.uiApi().assetPage();
+        var result = client.uiApi().getAssetPage();
 
         // assert
         assertThat(result.getAssets())
@@ -124,7 +124,7 @@ public class AssetApiServiceTest {
         // assert
         assertThat(response.getId()).isEqualTo("asset-1");
 
-        var assets = client.uiApi().assetPage().getAssets();
+        var assets = client.uiApi().getAssetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
         assertThat(asset.getAssetId()).isEqualTo("asset-1");
@@ -169,7 +169,7 @@ public class AssetApiServiceTest {
 
         // assert
         assertThat(response.getId()).isEqualTo("asset-1");
-        var assets = client.uiApi().assetPage().getAssets();
+        var assets = client.uiApi().getAssetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
         assertThat(asset.getHttpDatasourceHintsProxyMethod()).isFalse();
@@ -195,7 +195,7 @@ public class AssetApiServiceTest {
 
         // assert
         assertThat(response.getId()).isEqualTo("asset-1");
-        var assets = client.uiApi().assetPage().getAssets();
+        var assets = client.uiApi().getAssetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
         assertThat(asset.getHttpDatasourceHintsProxyMethod()).isNull();

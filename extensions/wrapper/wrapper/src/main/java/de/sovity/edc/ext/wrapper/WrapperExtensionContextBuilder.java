@@ -24,7 +24,7 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.LiteralMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
-import de.sovity.edc.ext.wrapper.api.ui.UiResource;
+import de.sovity.edc.ext.wrapper.api.ui.UiResourceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetIdValidator;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
@@ -53,7 +53,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
-import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResource;
+import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResourceImpl;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
@@ -225,7 +225,7 @@ public class WrapperExtensionContextBuilder {
                 miwConfigBuilder,
                 selfDescriptionService
         );
-        var uiResource = new UiResource(
+        var uiResource = new UiResourceImpl(
                 contractAgreementApiService,
                 contractAgreementTransferApiService,
                 transferHistoryPageApiService,
@@ -244,7 +244,8 @@ public class WrapperExtensionContextBuilder {
                 policyDefinitionStore,
                 contractDefinitionStore,
                 transferProcessStore,
-                contractAgreementService
+                contractAgreementService,
+                transferProcessStateService
         );
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
         var policyMappingService = new PolicyMappingService();
@@ -255,7 +256,7 @@ public class WrapperExtensionContextBuilder {
                 policyMappingService,
                 edcPropertyUtils
         );
-        var useCaseResource = new UseCaseResource(
+        var useCaseResource = new UseCaseResourceImpl(
                 kpiApiService,
                 supportedPolicyApiService,
                 offeringService

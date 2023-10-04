@@ -52,7 +52,7 @@ class TransferHistoryPageApiServiceTest {
         createConsumingTransferProcesses(negotiationStore, transferProcessStore);
 
         // act
-        var actual = client.uiApi().transferHistoryPageEndpoint().getTransferEntries();
+        var actual = client.uiApi().getTransferHistoryPage().getTransferEntries();
 
         // assert for consuming request entry
         var consumingProcess = actual.get(0);

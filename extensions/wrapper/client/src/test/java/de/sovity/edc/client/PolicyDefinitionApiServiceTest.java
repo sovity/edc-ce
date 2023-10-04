@@ -62,7 +62,7 @@ class PolicyDefinitionApiServiceTest {
         createPolicyDefinition("my-policy-def-1");
 
         // act
-        var response = client.uiApi().policyDefinitionPage();
+        var response = client.uiApi().getPolicyDefinitionPage();
 
         // assert
         var policyDefinitions = response.getPolicies();
@@ -83,7 +83,7 @@ class PolicyDefinitionApiServiceTest {
         createPolicyDefinition(policyDefinitionService, "my-policy-def-1", 1628956801000L);
 
         // act
-        var result = client.uiApi().policyDefinitionPage();
+        var result = client.uiApi().getPolicyDefinitionPage();
 
         // assert
         assertThat(result.getPolicies())

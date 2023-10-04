@@ -83,7 +83,7 @@ class ContractAgreementPageTest {
         transferProcessStore.updateOrCreate(transferProcess(1, 1, TransferProcessStates.COMPLETED.code()));
 
         // act
-        var actual = client.uiApi().contractAgreementEndpoint().getContractAgreements();
+        var actual = client.uiApi().getContractAgreementPage().getContractAgreements();
         assertThat(actual).hasSize(1);
 
         // assert

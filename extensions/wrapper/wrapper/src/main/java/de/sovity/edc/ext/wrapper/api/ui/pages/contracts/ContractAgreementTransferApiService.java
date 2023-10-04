@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contracts;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contracts.services.TransferRequestBuilder;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.api.model.IdResponse;
@@ -30,15 +31,12 @@ public class ContractAgreementTransferApiService {
     private final TransferProcessService transferProcessService;
 
     @NotNull
-    public IdResponse initiateTransfer(
+    public IdResponseDto initiateTransfer(
             ContractAgreementTransferRequest request
     ) {
         var transferRequest = transferRequestBuilder.buildTransferRequest(request);
         var transferProcess = transferProcessService.initiateTransfer(transferRequest)
                 .orElseThrow(exceptionMapper(TransferProcess.class, transferRequest.getId()));
-        return IdResponse.Builder.newInstance()
-                .id(transferProcess.getId())
-                .createdAt(transferProcess.getCreatedAt())
-                .build();
+        return new IdResponseDto(transferProcess.getId());
     }
 }

@@ -34,7 +34,7 @@ class UseCaseClientTest {
     @Test
     void kpiEndpoint() {
         var client = TestUtils.edcClient();
-        var result = client.useCaseApi().kpiEndpoint();
+        var result = client.useCaseApi().getKpiEndpoint();
         assertThat(result.getAssetsCount()).isZero();
     }
 }

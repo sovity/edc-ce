@@ -16,9 +16,6 @@ package de.sovity.edc.ext.wrapper.api.usecase;
 
 import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
-import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
-import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
-import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
@@ -27,9 +24,8 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 
 
 /**
@@ -41,42 +37,23 @@ import lombok.RequiredArgsConstructor;
  */
 @Path("wrapper/use-case-api")
 @Tag(name = "Use Case", description = "Generic Use Case Application API Endpoints.")
-@RequiredArgsConstructor
-@Produces(MediaType.APPLICATION_JSON)
-public class UseCaseResource {
-    private final KpiApiService kpiApiService;
-    private final SupportedPolicyApiService supportedPolicyApiService;
-    /** Service for managing offerings. */
-    private final OfferingService offeringService;
-
-    /**
-     * Creates a new offer consisting of asset, policy definition and contract definition.
-     *
-     * @param dto contains all required information for the offer.
-     * @return a 204 response, if creating the usecase was successful.
-     */
+public interface UseCaseResource {
     @POST
     @Path("contract-offer")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Creates an offer")
-    public Response createOfferEndpoint(CreateOfferingDto dto) {
-        offeringService.create(dto);
-        return Response.status(Response.Status.NO_CONTENT).build();
-    }
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Creates a new data offer, consisting of an asset, a policy definition and a contract definition.")
+    void createOfferEndpoint(CreateOfferingDto dto);
 
     @GET
     @Path("kpis")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Basic KPIs about the running EDC Connector.")
-    public KpiResult kpiEndpoint() {
-        return kpiApiService.kpiEndpoint();
-    }
+    KpiResult getKpiEndpoint();
 
     @GET
     @Path("supported-policy-functions")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "List available functions in policies, prohibitions and obligations.")
-    public List<String> getSupportedFunctions() {
-        return supportedPolicyApiService.getSupportedFunctions();
-    }
+    List<String> getSupportedFunctions();
 }

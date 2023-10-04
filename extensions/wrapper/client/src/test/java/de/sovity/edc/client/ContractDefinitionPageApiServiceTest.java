@@ -37,7 +37,7 @@ class ContractDefinitionPageApiServiceTest {
         createContractDefinition(contractDefinitionService, "contractDefinition-id-1", "contractPolicy-id-1", "accessPolicy-id-1", criterion);
 
         // act
-        var result = client.uiApi().contractDefinitionPage();
+        var result = client.uiApi().getContractDefinitionPage();
 
         // assert
         var contractDefinitions = result.getContractDefinitions();
@@ -82,7 +82,7 @@ class ContractDefinitionPageApiServiceTest {
                 1628956802000L);
 
         // act
-        var result = client.uiApi().contractDefinitionPage();
+        var result = client.uiApi().getContractDefinitionPage();
 
         // assert
         assertThat(result.getContractDefinitions())

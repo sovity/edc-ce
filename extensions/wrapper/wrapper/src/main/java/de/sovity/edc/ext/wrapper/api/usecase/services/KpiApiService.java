@@ -15,6 +15,8 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
 import de.sovity.edc.ext.wrapper.api.ServiceException;
+import de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState;
+import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import de.sovity.edc.ext.wrapper.api.usecase.model.TransferProcessStatesDto;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +42,7 @@ public class KpiApiService {
     private final ContractDefinitionStore contractDefinitionStore;
     private final TransferProcessStore transferProcessStore;
     private final ContractAgreementService contractAgreementService;
+    private final TransferProcessStateService transferProcessStateService;
 
     public KpiResult kpiEndpoint() {
         var assetsCount = getAssetsCount();
@@ -66,16 +69,20 @@ public class KpiApiService {
         return new TransferProcessStatesDto(getIncoming(transferProcesses), getOutgoing(transferProcesses));
     }
 
-    private Map<TransferProcessStates, Long> getIncoming(List<TransferProcess> transferProcesses) {
+    private Map<TransferProcessSimplifiedState, Long> getIncoming(List<TransferProcess> transferProcesses) {
         return transferProcesses.stream()
                 .filter(it -> it.getType() == TransferProcess.Type.CONSUMER)
-                .collect(groupingBy(it -> TransferProcessStates.from(it.getState()), counting()));
+                .collect(groupingBy(this::getTransferProcessStates, counting()));
     }
 
-    private Map<TransferProcessStates, Long> getOutgoing(List<TransferProcess> transferProcesses) {
+    private Map<TransferProcessSimplifiedState, Long> getOutgoing(List<TransferProcess> transferProcesses) {
         return transferProcesses.stream()
                 .filter(it -> it.getType() == TransferProcess.Type.PROVIDER)
-                .collect(groupingBy(it -> TransferProcessStates.from(it.getState()), counting()));
+                .collect(groupingBy(this::getTransferProcessStates, counting()));
+    }
+
+    private TransferProcessSimplifiedState getTransferProcessStates(TransferProcess transferProcess) {
+        return transferProcessStateService.getSimplifiedState(transferProcess.getState());
     }
 
     private int getContractDefinitionsCount() {
