@@ -15,14 +15,12 @@
 package de.sovity.edc.ext.wrapper;
 
 import de.sovity.edc.client.EdcClient;
-import io.restassured.specification.RequestSpecification;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.restassured.RestAssured.given;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.mockito.Mockito.mock;
 
@@ -83,12 +81,5 @@ public class TestUtils {
                 .managementApiUrl(TestUtils.MANAGEMENT_ENDPOINT)
                 .managementApiKey(TestUtils.MANAGEMENT_API_KEY)
                 .build();
-    }
-
-    public static RequestSpecification givenManagementEndpoint() {
-        return given()
-                .baseUri("http://localhost:" + MANAGEMENT_PORT)
-                .basePath(MANAGEMENT_PATH)
-                .header("X-Api-Key", MANAGEMENT_API_KEY);
     }
 }

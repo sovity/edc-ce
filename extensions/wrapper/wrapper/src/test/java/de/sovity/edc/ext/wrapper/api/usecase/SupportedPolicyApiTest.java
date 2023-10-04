@@ -14,40 +14,33 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase;
 
+import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.ext.wrapper.TestUtils;
-import io.restassured.http.ContentType;
-import io.restassured.response.ValidatableResponse;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static de.sovity.edc.ext.wrapper.TestUtils.givenManagementEndpoint;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
 class SupportedPolicyApiTest {
+    EdcClient edcClient;
 
     @BeforeEach
     void setUp(EdcExtension extension) {
         TestUtils.setupExtension(extension);
-    }
-
-    static ValidatableResponse whenSupportedPolicyFunctions() {
-        return givenManagementEndpoint()
-                .when()
-                .get("/wrapper/use-case-api/supported-policy-functions")
-                .then()
-                .statusCode(200)
-                .contentType(ContentType.JSON);
+        edcClient = TestUtils.edcClient();
     }
 
     @Test
     void supportedPolicies() {
-        whenSupportedPolicyFunctions()
-                .assertThat()
-                .body(equalTo("[\"ALWAYS_TRUE\",\"https://w3id.org/edc/v0.0.1/ns/inForceDate\"]"));
+        // act
+        var actual = edcClient.useCaseApi().getSupportedFunctions();
+
+        // assert
+        assertThat(actual).containsExactly("ALWAYS_TRUE", "https://w3id.org/edc/v0.0.1/ns/inForceDate");
     }
 }

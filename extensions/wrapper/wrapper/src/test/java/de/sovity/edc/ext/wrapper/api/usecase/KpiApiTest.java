@@ -36,13 +36,16 @@ class KpiApiTest {
     }
     @Test
     void getKpis() {
-        var result = client.useCaseApi().getKpis();
-        assertThat(result.getAssetsCount()).isZero();
-        assertThat(result.getContractAgreementsCount()).isZero();
-        assertThat(result.getContractDefinitionsCount()).isZero();
-        assertThat(result.getPoliciesCount()).isZero();
-        assertThat(result.getTransferProcessDto().getIncomingTransferProcessCounts()).isEmpty();
-        assertThat(result.getTransferProcessDto().getOutgoingTransferProcessCounts()).isEmpty();
-        assertThat(result.getAssetsCount()).isZero();
+        // act
+        var actual = client.useCaseApi().getKpis();
+
+        // assert
+        assertThat(actual.getAssetsCount()).isZero();
+        assertThat(actual.getContractAgreementsCount()).isZero();
+        assertThat(actual.getContractDefinitionsCount()).isZero();
+        assertThat(actual.getPoliciesCount()).isEqualTo(1);
+        assertThat(actual.getTransferProcessDto().getIncomingTransferProcessCounts()).isEmpty();
+        assertThat(actual.getTransferProcessDto().getOutgoingTransferProcessCounts()).isEmpty();
+        assertThat(actual.getAssetsCount()).isZero();
     }
 }
