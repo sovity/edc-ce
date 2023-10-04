@@ -33,13 +33,13 @@
 ## Extensions
 
 * [API Wrapper](./extensions/wrapper/README.md)
-    * [API Commons Endpoint](./extensions/wrapper/wrapper-common-api/README.md)
-    * [API EE Endpoint](./extensions/wrapper/wrapper-ee-api/README.md)
-    * [Java Implementation](./extensions/wrapper/client/README.md)
-    * [Java Example](./extensions/wrapper/client-example/README.md)
-    * [TypeScript Implementation](./extensions/wrapper/client-ts/README.md)
-    * [TypeScript Example](./extensions/wrapper/client-ts-example/README.md)
-* [Policies]()
+    * [Community Edition API](./extensions/wrapper/wrapper-api/README.md)
+    * [Enterprise Edition API](./extensions/wrapper/wrapper-ee-api/README.md)
+    * [Java API Client Library](./extensions/wrapper/clients/java-client/README.md)
+    * [Java API Client Library Example](./extensions/wrapper/clients/java-client-example/README.md)
+    * [TypeScript API Client Library](./extensions/wrapper/clients/typescript-client/README.md)
+    * [TypeScript API Client Library Example](./extensions/wrapper/clients/typescript-client-example/README.md)
+* Policies
     * [Always True](./extensions/policy-always-true/README.md)
     * [Referring Connector](./extensions/policy-referring-connector/README.md)
     * [Time Interval](./extensions/policy-time-interval/README.md)

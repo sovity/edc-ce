@@ -10,9 +10,6 @@ val jettyGroup: String by project
 plugins {
     `java-library`
     `maven-publish`
-    id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.14" //./gradlew clean resolve
-    id("org.hidetake.swagger.generator") version "2.19.2" //./gradlew generateSwaggerUI
-    id("org.openapi.generator") version "6.6.0" //./gradlew openApiValidate && ./gradlew openApiGenerate
 }
 
 dependencies {
@@ -22,9 +19,8 @@ dependencies {
     implementation("${edcGroup}:api-core:${edcVersion}")
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
     implementation("${edcGroup}:dsp-http-spi:${edcVersion}")
-    api(project(":extensions:wrapper:wrapper-common-api"))
+    api(project(":extensions:wrapper:wrapper-api"))
     api(project(":extensions:wrapper:wrapper-common-mappers"))
-    api(project(":extensions:wrapper:wrapper-ee-api"))
     api(project(":utils:catalog-parser"))
     api(project(":utils:json-and-jsonld-utils"))
     api("${edcGroup}:contract-definition-api:${edcVersion}")
@@ -32,17 +28,16 @@ dependencies {
     api("${edcGroup}:core-spi:${edcVersion}")
     api("${edcGroup}:policy-definition-api:${edcVersion}")
     api("${edcGroup}:transfer-process-api:${edcVersion}")
-
-    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
-    implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
-    implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.15")
-    implementation("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.15")
-    implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
-    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
-    implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
     implementation("org.apache.commons:commons-lang3:3.13.0")
 
+    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+
+    testImplementation(project(":extensions:wrapper:clients:java-client"))
+    testImplementation(project(":extensions:policy-always-true"))
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
+    testImplementation("${edcGroup}:dsp:${edcVersion}")
+    testImplementation("${edcGroup}:iam-mock:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
     testImplementation("${edcGroup}:http:${edcVersion}") {
         exclude(group = "org.eclipse.jetty", module = "jetty-client")
@@ -61,57 +56,16 @@ dependencies {
     testImplementation("${jettyGroup}:jetty-util:${jettyVersion}")
     testImplementation("${jettyGroup}:jetty-webapp:${jettyVersion}")
 
-    testImplementation(project(":extensions:policy-always-true"))
-    testImplementation("io.rest-assured:rest-assured:${restAssured}")
+    testImplementation("${edcGroup}:json-ld:${edcVersion}")
+    testImplementation("${edcGroup}:dsp-http-spi:${edcVersion}")
+    testImplementation("${edcGroup}:dsp-api-configuration:${edcVersion}")
     testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
+
+    testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.assertj:assertj-core:${assertj}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
-}
-
-val openapiFileDir = "${project.buildDir}/swagger"
-val openapiFileFilename = "edc-api-wrapper.yaml"
-val openapiFile = "$openapiFileDir/$openapiFileFilename"
-
-tasks.withType<io.swagger.v3.plugins.gradle.tasks.ResolveTask> {
-    outputDir = file(openapiFileDir)
-    outputFileName = openapiFileFilename.removeSuffix(".yaml")
-    prettyPrint = true
-    outputFormat = io.swagger.v3.plugins.gradle.tasks.ResolveTask.Format.YAML
-    classpath = java.sourceSets["main"].runtimeClasspath
-    buildClasspath = classpath
-    resourcePackages = setOf("de.sovity.edc.ext.wrapper.api")
-}
-
-task<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiGenerateTypeScriptClient") {
-    dependsOn("resolve")
-    generatorName.set("typescript-fetch")
-    configOptions.set(mutableMapOf(
-            "supportsES6" to "true",
-            "npmVersion" to "8.15.0",
-            "typescriptThreePlus" to "true",
-    ))
-
-    inputSpec.set(openapiFile)
-    val outputDirectory = buildFile.parentFile.resolve("../client-ts/src/generated").normalize()
-    outputDir.set(outputDirectory.toString())
-
-    doFirst {
-        project.delete(fileTree(outputDirectory).exclude("**/.gitignore"))
-    }
-
-    doLast {
-        outputDirectory.resolve("src/generated").renameTo(outputDirectory)
-    }
-}
-
-tasks.withType<org.gradle.jvm.tasks.Jar> {
-    dependsOn("resolve")
-    dependsOn("openApiGenerateTypeScriptClient")
-    from(openapiFileDir) {
-        include(openapiFileFilename)
-    }
 }
 
 val sovityEdcExtensionGroup: String by project

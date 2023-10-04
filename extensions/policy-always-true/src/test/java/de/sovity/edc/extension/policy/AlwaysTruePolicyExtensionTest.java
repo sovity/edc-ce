@@ -24,7 +24,6 @@ import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.spi.agent.ParticipantAgent;
 import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +32,7 @@ import java.util.Map;
 
 import static de.sovity.edc.extension.policy.AlwaysTruePolicyConstants.POLICY_DEFINITION_ID;
 import static java.util.Objects.requireNonNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @ApiTest
@@ -61,7 +61,7 @@ class AlwaysTruePolicyExtensionTest {
         );
 
         // assert
-        Assertions.assertTrue(result.succeeded(), "Always True Policy wasn't true.");
+        assertTrue(result.succeeded(), "Always True Policy wasn't true.");
     }
 
     @NotNull

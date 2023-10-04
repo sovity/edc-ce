@@ -1,7 +1,5 @@
 package de.sovity.edc.ext.wrapper.api.usecase.services;
 
-import java.util.Optional;
-
 import de.sovity.edc.ext.wrapper.api.common.model.AtomicConstraintDto;
 import de.sovity.edc.ext.wrapper.api.common.model.ExpressionDto;
 import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
@@ -17,6 +15,8 @@ import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
 import org.eclipse.edc.policy.model.XoneConstraint;
+
+import java.util.Optional;
 
 /**
  * Mapper class to convert a {@link PolicyDto} to an EDC {@link Policy}.

@@ -14,46 +14,33 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase;
 
-import io.restassured.http.ContentType;
-import io.restassured.response.ValidatableResponse;
-import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
-import org.eclipse.edc.jsonld.spi.JsonLd;
+import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.ext.wrapper.TestUtils;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static de.sovity.edc.ext.wrapper.TestUtils.createConfiguration;
-import static de.sovity.edc.ext.wrapper.TestUtils.givenManagementEndpoint;
-import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
 class SupportedPolicyApiTest {
+    EdcClient edcClient;
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-        extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
-        extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
-        extension.setConfiguration(createConfiguration());
-    }
-
-    static ValidatableResponse whenSupportedPolicyFunctions() {
-        return givenManagementEndpoint()
-                .when()
-                .get("/wrapper/use-case-api/supported-policy-functions")
-                .then()
-                .statusCode(200)
-                .contentType(ContentType.JSON);
+        TestUtils.setupExtension(extension);
+        edcClient = TestUtils.edcClient();
     }
 
     @Test
     void supportedPolicies() {
-        whenSupportedPolicyFunctions()
-                .assertThat()
-                .body(equalTo("[\"ALWAYS_TRUE\",\"https://w3id.org/edc/v0.0.1/ns/inForceDate\"]"));
+        // act
+        var actual = edcClient.useCaseApi().getSupportedFunctions();
+
+        // assert
+        assertThat(actual).containsExactly("ALWAYS_TRUE", "https://w3id.org/edc/v0.0.1/ns/inForceDate");
     }
 }

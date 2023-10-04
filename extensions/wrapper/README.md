@@ -16,18 +16,23 @@
 
 ## About this Extension
 
-This extension contains multiple APIs designed for auto-generation of API Clients to speed up development process. It
-contains multiple components:
+To provide type-safe JSON APIs for both our Connector UI and Use Case Applications,
+we provide an API Wrapper around the Connector over the JSON-LD Management API of the EDC Connector.
 
-- APIs for
-    - EDC UI
-    - Use Cases
-    - Further APIs
-- An [EDC Extension](./wrapper) serving the implementations
-- Auto generated
-    - [Java API Client](./client)
-    - [TypeScript API Client](./client-ts)
+These APIs are more opinionated and use-case tailored.
+
+This module contains:
+
+- API Definitions:
+    - [sovity Community Edition EDC API](./wrapper-api)
+    - [sovity Enterprise Edition EDC API](./wrapper-ee-api)
+    - [Broker / Connector Common API](./wrapper-common-api)
+- API Client Libraries:
+    - [Java API Client](./clients/java-client)
+    - [TypeScript API Client](./clients/typescript-client)
     - more to come
+- An [EDC Extension](./wrapper) serving the implementations for the sovity Community Edition API.
+- [Broker / Connector Common Services](./wrapper-common-mappers)
 
 ## Why does this extension exist?
 

@@ -22,7 +22,7 @@ Add the Java Client Library to your Maven/Gradle project: https://github.com/sov
 
 Configuring The Client
 ========
-- Configure the Client with either an API Key or OAuth2 Client Credentials: https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper/client#usage
+- Configure the Client with either an API Key or OAuth2 Client Credentials: https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper/clients/java-client#usage
 - Your management API URL should look like https://your-connector-name.prod-sovity.azure.sovity.io/control/data
 
 Using The Client
@@ -30,5 +30,5 @@ Using The Client
 Feel free to use the endpoints of the aforementioned API groups.
 Example Usage of a Use Case API Endpoint:
 ```java
-KpiResult kpiResult = client.useCaseApi().kpiEndpoint();
+KpiResult kpiResult = client.useCaseApi().getKpis();
 ```

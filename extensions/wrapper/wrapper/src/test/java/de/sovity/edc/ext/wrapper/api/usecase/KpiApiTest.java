@@ -14,46 +14,38 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase;
 
-import io.restassured.http.ContentType;
-import io.restassured.response.ValidatableResponse;
-import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
-import org.eclipse.edc.jsonld.spi.JsonLd;
+import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.ext.wrapper.TestUtils;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static de.sovity.edc.ext.wrapper.TestUtils.createConfiguration;
-import static de.sovity.edc.ext.wrapper.TestUtils.givenManagementEndpoint;
-import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
 class KpiApiTest {
+    EdcClient client;
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-        extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
-        extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
-        extension.setConfiguration(createConfiguration());
+        TestUtils.setupExtension(extension);
+        client = TestUtils.edcClient();
     }
-
-    ValidatableResponse whenKpiEndpoint() {
-        return givenManagementEndpoint()
-                .when()
-                .get("/wrapper/use-case-api/kpis")
-                .then()
-                .statusCode(200)
-                .contentType(ContentType.JSON);
-    }
-
     @Test
-    void exampleEndpoint() {
-        whenKpiEndpoint()
-                .assertThat()
-                .body("assetsCount", equalTo(0));
+    void getKpis() {
+        // act
+        var actual = client.useCaseApi().getKpis();
+
+        // assert
+        assertThat(actual.getAssetsCount()).isZero();
+        assertThat(actual.getContractAgreementsCount()).isZero();
+        assertThat(actual.getContractDefinitionsCount()).isZero();
+        assertThat(actual.getPoliciesCount()).isEqualTo(1);
+        assertThat(actual.getTransferProcessDto().getIncomingTransferProcessCounts()).isEmpty();
+        assertThat(actual.getTransferProcessDto().getOutgoingTransferProcessCounts()).isEmpty();
+        assertThat(actual.getAssetsCount()).isZero();
     }
 }

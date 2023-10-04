@@ -14,7 +14,6 @@ import jakarta.json.JsonValue;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

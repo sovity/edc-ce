@@ -167,11 +167,11 @@ class UiApiWrapperTest {
                         .build()))
                 .build());
 
-        var assets = providerClient.uiApi().assetPage().getAssets();
+        var assets = providerClient.uiApi().getAssetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
 
-        var dataOffers = consumerClient.uiApi().catalogPageDataOffers(getProtocolEndpoint(providerConnector));
+        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
         assertThat(dataOffer.getContractOffers()).hasSize(1);
@@ -180,8 +180,8 @@ class UiApiWrapperTest {
         // act
         var negotiation = negotiate(dataOffer, contractOffer);
         initiateTransfer(negotiation);
-        var providerAgreements = providerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
-        var consumerAgreements = consumerClient.uiApi().contractAgreementEndpoint().getContractAgreements();
+        var providerAgreements = providerClient.uiApi().getContractAgreementPage().getContractAgreements();
+        var consumerAgreements = consumerClient.uiApi().getContractAgreementPage().getContractAgreements();
 
         // assert
         assertThat(dataOffer.getEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
@@ -277,8 +277,8 @@ class UiApiWrapperTest {
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
 
         //Currently the Core Edc which prevent the transfer process to be marked as completed
-        var completedProvidingTransferProcess = providerClient.uiApi().contractAgreementEndpoint().getContractAgreements().get(0).getTransferProcesses().get(0);
-        var completedConsumingTransferProcess = consumerClient.uiApi().contractAgreementEndpoint().getContractAgreements().get(0).getTransferProcesses().get(0);
+        var completedProvidingTransferProcess = providerClient.uiApi().getContractAgreementPage().getContractAgreements().get(0).getTransferProcesses().get(0);
+        var completedConsumingTransferProcess = consumerClient.uiApi().getContractAgreementPage().getContractAgreements().get(0).getTransferProcesses().get(0);
         assertThat(completedProvidingTransferProcess.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.RUNNING);
         assertThat(completedConsumingTransferProcess.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.RUNNING);
     }

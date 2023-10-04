@@ -84,6 +84,6 @@ public class EdcApiConfigFactory {
                 BASE_URL,
                 port,
                 path,
-                new ApiKeyAuthProvider("x-api-key", apiKey));
+                new ApiKeyAuthProvider("X-Api-Key", apiKey));
     }
 }

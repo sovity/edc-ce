@@ -849,7 +849,7 @@
 		"apikey": [
 			{
 				"key": "key",
-				"value": "x-api-key",
+				"value": "X-Api-Key",
 				"type": "string"
 			},
 			{

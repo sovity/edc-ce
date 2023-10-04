@@ -160,7 +160,7 @@ https://img.shields.io/github/issues/sovity/edc-extensions.svg?style=for-the-bad
 [license-shield]:
 https://img.shields.io/github/license/sovity/edc-extensions.svg?style=for-the-badge
 
-[license-url]: https://github.com/sovity/edc-extensions/blob/master/LICENSE
+[license-url]: https://github.com/sovity/edc-extensions/blob/main/LICENSE
 
 [linkedin-shield]:
 https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
