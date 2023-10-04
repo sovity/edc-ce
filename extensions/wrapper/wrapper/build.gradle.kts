@@ -28,16 +28,12 @@ dependencies {
     api("${edcGroup}:core-spi:${edcVersion}")
     api("${edcGroup}:policy-definition-api:${edcVersion}")
     api("${edcGroup}:transfer-process-api:${edcVersion}")
-
-    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
-    implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
-    implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.15")
-    implementation("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.15")
-    implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
-    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
-    implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
     implementation("org.apache.commons:commons-lang3:3.13.0")
 
+    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+
+    testImplementation(project(":extensions:wrapper:clients:java-client"))
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
     testImplementation("${edcGroup}:http:${edcVersion}") {
@@ -57,9 +53,15 @@ dependencies {
     testImplementation("${jettyGroup}:jetty-util:${jettyVersion}")
     testImplementation("${jettyGroup}:jetty-webapp:${jettyVersion}")
 
-    testImplementation(project(":extensions:policy-always-true"))
-    testImplementation("io.rest-assured:rest-assured:${restAssured}")
+    testImplementation("${edcGroup}:json-ld:${edcVersion}")
+    testImplementation("${edcGroup}:dsp-http-spi:${edcVersion}")
+    testImplementation("${edcGroup}:dsp-api-configuration:${edcVersion}")
     testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
+    testImplementation("io.rest-assured:rest-assured:${restAssured}")
+    testImplementation(project(":extensions:policy-always-true"))
+
+
+    testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.assertj:assertj-core:${assertj}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")

@@ -15,7 +15,7 @@ dependencies {
 
     testImplementation(project(":extensions:test-backend-controller"))
     testImplementation(project(":utils:test-connector-remote"))
-    testImplementation(project(":extensions:wrapper:client"))
+    testImplementation(project(":extensions:wrapper:clients:java-client"))
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.assertj:assertj-core:${assertj}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")

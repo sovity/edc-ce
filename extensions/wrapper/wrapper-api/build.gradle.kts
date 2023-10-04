@@ -57,7 +57,7 @@ task<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiGenera
     ))
 
     inputSpec.set(openapiFile)
-    val outputDirectory = buildFile.parentFile.resolve("../client-ts/src/generated").normalize()
+    val outputDirectory = buildFile.parentFile.resolve("../clients/typescript-client/src/generated").normalize()
     outputDir.set(outputDirectory.toString())
 
     doFirst {

@@ -14,21 +14,13 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase;
 
-import io.restassured.http.ContentType;
-import io.restassured.response.ValidatableResponse;
-import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
-import org.eclipse.edc.jsonld.spi.JsonLd;
+import de.sovity.edc.ext.wrapper.TestUtils;
+import org.assertj.core.api.Assertions;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import static de.sovity.edc.ext.wrapper.TestUtils.createConfiguration;
-import static de.sovity.edc.ext.wrapper.TestUtils.givenManagementEndpoint;
-import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.Mockito.mock;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
@@ -36,24 +28,12 @@ class KpiApiTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-        extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
-        extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
-        extension.setConfiguration(createConfiguration());
+        TestUtils.setupExtension(extension);
     }
-
-    ValidatableResponse whenKpiEndpoint() {
-        return givenManagementEndpoint()
-                .when()
-                .get("/wrapper/use-case-api/kpis")
-                .then()
-                .statusCode(200)
-                .contentType(ContentType.JSON);
-    }
-
     @Test
-    void exampleEndpoint() {
-        whenKpiEndpoint()
-                .assertThat()
-                .body("assetsCount", equalTo(0));
+    void getKpiEndpoint() {
+        var client = TestUtils.edcClient();
+        var result = client.useCaseApi().getKpiEndpoint();
+        Assertions.assertThat(result.getAssetsCount()).isZero();
     }
 }

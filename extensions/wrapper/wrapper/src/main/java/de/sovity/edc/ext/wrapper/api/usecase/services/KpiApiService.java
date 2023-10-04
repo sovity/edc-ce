@@ -25,7 +25,6 @@ import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
 import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
-import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
 
@@ -44,7 +43,7 @@ public class KpiApiService {
     private final ContractAgreementService contractAgreementService;
     private final TransferProcessStateService transferProcessStateService;
 
-    public KpiResult kpiEndpoint() {
+    public KpiResult getKpiEndpoint() {
         var assetsCount = getAssetsCount();
         var policiesCount = getPoliciesCount();
         var contractDefinitionsCount = getContractDefinitionsCount();

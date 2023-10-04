@@ -44,7 +44,7 @@ public class UseCaseResourceImpl implements UseCaseResource {
 
     @Override
     public KpiResult getKpiEndpoint() {
-        return kpiApiService.kpiEndpoint();
+        return kpiApiService.getKpiEndpoint();
     }
 
     @Override

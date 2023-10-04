@@ -41,39 +41,6 @@ dependencies {
     // Lombok
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
-    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-
-    testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
-    testImplementation("${edcGroup}:junit:${edcVersion}")
-    testImplementation("${edcGroup}:http:${edcVersion}") {
-        exclude(group = "org.eclipse.jetty", module = "jetty-client")
-        exclude(group = "org.eclipse.jetty", module = "jetty-http")
-        exclude(group = "org.eclipse.jetty", module = "jetty-io")
-        exclude(group = "org.eclipse.jetty", module = "jetty-server")
-        exclude(group = "org.eclipse.jetty", module = "jetty-util")
-        exclude(group = "org.eclipse.jetty", module = "jetty-webapp")
-    }
-
-    // Updated jetty versions for e.g. CVE-2023-26048
-    testImplementation("${jettyGroup}:jetty-client:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-http:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-io:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-server:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-util:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-webapp:${jettyVersion}")
-
-    testImplementation("${edcGroup}:json-ld:${edcVersion}")
-    testImplementation("${edcGroup}:dsp-http-spi:${edcVersion}")
-    testImplementation("${edcGroup}:dsp-api-configuration:${edcVersion}")
-    testImplementation(project(":extensions:wrapper:wrapper"))
-    testImplementation(project(":extensions:wrapper:wrapper-common-mappers"))
-    testImplementation("io.rest-assured:rest-assured:${restAssured}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
-    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
-    testImplementation("org.assertj:assertj-core:${assertj}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
 tasks.getByName<Test>("test") {

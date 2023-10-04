@@ -30,5 +30,5 @@ Using The Client
 Feel free to use the endpoints of the aforementioned API groups.
 Example Usage of a Use Case API Endpoint:
 ```java
-KpiResult kpiResult = client.useCaseApi().kpiEndpoint();
+KpiResult kpiResult = client.useCaseApi().getKpiEndpoint();
 ```
