@@ -81,8 +81,7 @@ public class SelfDescriptionService {
 
     public void validateSelfDescriptionConfig() {
         var missing = REQUIRED.stream()
-                .map(this::configValue)
-                .filter(StringUtils::isBlank)
+                .filter(key -> StringUtils.isBlank(configValue(key)))
                 .toList();
         Validate.isTrue(
                 missing.isEmpty(),
