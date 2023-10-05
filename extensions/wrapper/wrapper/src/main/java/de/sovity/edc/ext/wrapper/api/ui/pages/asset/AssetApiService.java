@@ -48,7 +48,8 @@ public class AssetApiService {
     @NotNull
     public IdResponseDto createAsset(UiAssetCreateRequest request) {
         assetIdValidator.assertValid(request.getId());
-        var asset = assetMapper.buildAsset(request);
+        var organizationName = selfDescriptionService.getCuratorName();
+        var asset = assetMapper.buildAsset(request, organizationName);
         asset = assetService.create(asset).orElseThrow(ServiceException::new);
         return new IdResponseDto(asset.getId());
     }

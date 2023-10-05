@@ -114,7 +114,6 @@ public class AssetApiServiceTest {
                 .geoReferenceMethod("geoReferenceMethod")
                 .transportMode("transportMode")
                 .keywords(List.of("keyword1", "keyword2"))
-                .creatorOrganizationName("creatorOrganizationName")
                 .publisherHomepage("publisherHomepage")
                 .dataAddressProperties(dataAddressProperties)
                 .build();
@@ -141,7 +140,7 @@ public class AssetApiServiceTest {
         assertThat(asset.getTransportMode()).isEqualTo("transportMode");
         assertThat(asset.getLicenseUrl()).isEqualTo("https://license-url");
         assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
-        assertThat(asset.getCreatorOrganizationName()).isEqualTo("creatorOrganizationName");
+        assertThat(asset.getCreatorOrganizationName()).isEqualTo("My Org");
         assertThat(asset.getPublisherHomepage()).isEqualTo("publisherHomepage");
         assertThat(asset.getHttpDatasourceHintsProxyMethod()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyPath()).isTrue();

@@ -41,9 +41,6 @@ public class UiAssetCreateRequest {
     @Schema(description = "Asset Description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String description;
 
-    @Schema(description = "Asset Organization Name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String creatorOrganizationName;
-
     @Schema(description = "Asset Homepage", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String publisherHomepage;
 

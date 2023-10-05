@@ -139,7 +139,6 @@ class UiApiWrapperTest {
                 .geoReferenceMethod("geoReferenceMethod")
                 .transportMode("transportMode")
                 .keywords(List.of("keyword1", "keyword2"))
-                .creatorOrganizationName("creatorOrganizationName")
                 .publisherHomepage("publisherHomepage")
                 .dataAddressProperties(Map.of(
                         Prop.Edc.TYPE, "HttpData",
@@ -202,7 +201,7 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getAsset().getTransportMode()).isEqualTo("transportMode");
         assertThat(dataOffer.getAsset().getLicenseUrl()).isEqualTo("https://license-url");
         assertThat(dataOffer.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
-        assertThat(dataOffer.getAsset().getCreatorOrganizationName()).isEqualTo("creatorOrganizationName");
+        assertThat(dataOffer.getAsset().getCreatorOrganizationName()).isEqualTo("Curator Name provider");
         assertThat(dataOffer.getAsset().getPublisherHomepage()).isEqualTo("publisherHomepage");
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyMethod()).isFalse();
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyPath()).isFalse();
