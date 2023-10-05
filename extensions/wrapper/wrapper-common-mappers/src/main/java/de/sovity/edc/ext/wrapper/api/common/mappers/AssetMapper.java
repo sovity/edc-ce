@@ -31,8 +31,8 @@ public class AssetMapper {
         return uiAssetMapper.buildUiAsset(assetJsonLd, connectorEndpoint, participantId);
     }
 
-    public Asset buildAsset(UiAssetCreateRequest createRequest) {
-        var assetJsonLd = uiAssetMapper.buildAssetJsonLd(createRequest);
+    public Asset buildAsset(UiAssetCreateRequest createRequest, String organizationName) {
+        var assetJsonLd = uiAssetMapper.buildAssetJsonLd(createRequest, organizationName);
         return buildAsset(assetJsonLd);
     }
 

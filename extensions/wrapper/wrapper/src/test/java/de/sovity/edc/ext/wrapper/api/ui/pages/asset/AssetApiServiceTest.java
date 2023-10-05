@@ -102,7 +102,7 @@ public class AssetApiServiceTest {
         );
         var uiAssetRequest = UiAssetCreateRequest.builder()
                 .id("asset-1")
-                .name("AssetName")
+                .title("AssetTitle")
                 .description("AssetDescription")
                 .licenseUrl("https://license-url")
                 .version("1.0.0")
@@ -114,7 +114,6 @@ public class AssetApiServiceTest {
                 .geoReferenceMethod("geoReferenceMethod")
                 .transportMode("transportMode")
                 .keywords(List.of("keyword1", "keyword2"))
-                .creatorOrganizationName("creatorOrganizationName")
                 .publisherHomepage("publisherHomepage")
                 .dataAddressProperties(dataAddressProperties)
                 .build();
@@ -129,7 +128,7 @@ public class AssetApiServiceTest {
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
         assertThat(asset.getAssetId()).isEqualTo("asset-1");
-        assertThat(asset.getName()).isEqualTo("AssetName");
+        assertThat(asset.getTitle()).isEqualTo("AssetTitle");
         assertThat(asset.getDescription()).isEqualTo("AssetDescription");
         assertThat(asset.getVersion()).isEqualTo("1.0.0");
         assertThat(asset.getLanguage()).isEqualTo("en");
@@ -141,7 +140,7 @@ public class AssetApiServiceTest {
         assertThat(asset.getTransportMode()).isEqualTo("transportMode");
         assertThat(asset.getLicenseUrl()).isEqualTo("https://license-url");
         assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
-        assertThat(asset.getCreatorOrganizationName()).isEqualTo("creatorOrganizationName");
+        assertThat(asset.getCreatorOrganizationName()).isEqualTo("My Org");
         assertThat(asset.getPublisherHomepage()).isEqualTo("publisherHomepage");
         assertThat(asset.getHttpDatasourceHintsProxyMethod()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyPath()).isTrue();

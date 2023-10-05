@@ -266,6 +266,6 @@ public class WrapperExtensionContextBuilder {
         return new WrapperExtensionContext(List.of(
                 uiResource,
                 useCaseResource
-        ));
+        ), selfDescriptionService);
     }
 }

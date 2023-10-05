@@ -44,17 +44,17 @@ public class UiAsset {
     @Schema(description = "Providing Connector's Participant ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String participantId;
 
-    @Schema(description = "Asset Name", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String name;
+    @Schema(description = "Asset Title", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String title;
+
+    @Schema(description = "Asset Organization Name", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String creatorOrganizationName;
 
     @Schema(description = "Asset Language", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String language;
 
     @Schema(description = "Asset Description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String description;
-
-    @Schema(description = "Asset Organization Name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String creatorOrganizationName;
 
     @Schema(description = "Asset Homepage", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String publisherHomepage;

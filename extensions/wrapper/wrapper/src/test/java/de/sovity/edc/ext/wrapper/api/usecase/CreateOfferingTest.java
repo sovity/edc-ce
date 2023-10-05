@@ -91,7 +91,7 @@ class CreateOfferingTest {
         var dataOffer = dataOffers.get(0);
 
         assertThat(dataOffer.getAsset().getAssetId()).isEqualTo("asset-1");
-        assertThat(dataOffer.getAsset().getName()).isEqualTo("Asset 1");
+        assertThat(dataOffer.getAsset().getTitle()).isEqualTo("Asset 1");
         assertThat(dataOffer.getContractOffers()).hasSize(1);
 
         var contractOffer = dataOffer.getContractOffers().get(0);

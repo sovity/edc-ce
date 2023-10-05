@@ -13,7 +13,6 @@ import jakarta.json.JsonString;
 import jakarta.json.JsonValue;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -25,6 +24,7 @@ import java.util.stream.Collectors;
 import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNull;
 import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNullArray;
 import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNullJsonValue;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @RequiredArgsConstructor
 public class UiAssetMapper {
@@ -36,13 +36,18 @@ public class UiAssetMapper {
         var uiAsset = new UiAsset();
         uiAsset.setAssetJsonLd(JsonUtils.toJson(JsonLdUtils.tryCompact(assetJsonLd)));
 
-        String id = JsonLdUtils.string(assetJsonLd, Prop.ID);
-        String title = JsonLdUtils.string(properties, Prop.Dcterms.TITLE);
+        var id = JsonLdUtils.string(assetJsonLd, Prop.ID);
+        var title = JsonLdUtils.string(properties, Prop.Dcterms.TITLE);
+        title = isBlank(title) ? id : title;
+
+        var creator = JsonLdUtils.object(properties, Prop.Dcterms.CREATOR);
+        var creatorOrganizationName = JsonLdUtils.string(creator, Prop.Foaf.NAME);
+        creatorOrganizationName = isBlank(creatorOrganizationName) ? participantId : creatorOrganizationName;
 
         uiAsset.setAssetId(id);
         uiAsset.setConnectorEndpoint(connectorEndpoint);
         uiAsset.setParticipantId(participantId);
-        uiAsset.setName(StringUtils.isBlank(title) ? id : title);
+        uiAsset.setTitle(title);
         uiAsset.setLicenseUrl(JsonLdUtils.string(properties, Prop.Dcterms.LICENSE));
         uiAsset.setDescription(JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION));
         uiAsset.setLanguage(JsonLdUtils.string(properties, Prop.Dcterms.LANGUAGE));
@@ -64,8 +69,7 @@ public class UiAssetMapper {
         var publisher = JsonLdUtils.object(properties, Prop.Dcterms.PUBLISHER);
         uiAsset.setPublisherHomepage(JsonLdUtils.string(publisher, Prop.Foaf.HOMEPAGE));
 
-        var creator = JsonLdUtils.object(properties, Prop.Dcterms.CREATOR);
-        uiAsset.setCreatorOrganizationName(JsonLdUtils.string(creator, Prop.Foaf.NAME));
+        uiAsset.setCreatorOrganizationName(creatorOrganizationName);
 
         // Additional / Remaining Properties
         // TODO: diff nested objects
@@ -111,8 +115,11 @@ public class UiAssetMapper {
 
     @SneakyThrows
     @Nullable
-    public JsonObject buildAssetJsonLd(UiAssetCreateRequest uiAssetCreateRequest) {
-        var properties = getAssetProperties(uiAssetCreateRequest);
+    public JsonObject buildAssetJsonLd(
+            UiAssetCreateRequest uiAssetCreateRequest,
+            String organizationName
+    ) {
+        var properties = getAssetProperties(uiAssetCreateRequest, organizationName);
         var privateProperties = getAssetPrivateProperties(uiAssetCreateRequest);
         var dataAddress = getDataAddress(uiAssetCreateRequest);
 
@@ -125,12 +132,15 @@ public class UiAssetMapper {
                 .build();
     }
 
-    private JsonObjectBuilder getAssetProperties(UiAssetCreateRequest uiAssetCreateRequest) {
+    private JsonObjectBuilder getAssetProperties(
+            UiAssetCreateRequest uiAssetCreateRequest,
+            String organizationName
+    ) {
         var properties = Json.createObjectBuilder();
 
         addNonNull(properties, Prop.Edc.ID, uiAssetCreateRequest.getId());
         addNonNull(properties, Prop.Dcterms.LICENSE, uiAssetCreateRequest.getLicenseUrl());
-        addNonNull(properties, Prop.Dcterms.TITLE, uiAssetCreateRequest.getName());
+        addNonNull(properties, Prop.Dcterms.TITLE, uiAssetCreateRequest.getTitle());
         addNonNull(properties, Prop.Dcterms.DESCRIPTION, uiAssetCreateRequest.getDescription());
         addNonNull(properties, Prop.Dcterms.LANGUAGE, uiAssetCreateRequest.getLanguage());
         addNonNull(properties, Prop.Dcat.VERSION, uiAssetCreateRequest.getVersion());
@@ -148,10 +158,8 @@ public class UiAssetMapper {
                     .add(Prop.Foaf.HOMEPAGE, uiAssetCreateRequest.getPublisherHomepage()));
         }
 
-        if (uiAssetCreateRequest.getCreatorOrganizationName() != null) {
-            properties.add(Prop.Dcterms.CREATOR, Json.createObjectBuilder()
-                    .add(Prop.Foaf.NAME, uiAssetCreateRequest.getCreatorOrganizationName()));
-        }
+        properties.add(Prop.Dcterms.CREATOR, Json.createObjectBuilder()
+                .add(Prop.Foaf.NAME, organizationName));
 
         var dataAddress = uiAssetCreateRequest.getDataAddressProperties();
         if (dataAddress.get(Prop.Edc.TYPE).equals("HttpData")) {

@@ -111,6 +111,8 @@ public class WrapperExtension implements ServiceExtension {
                 typeTransformerRegistry
         );
 
+        wrapperExtensionContext.selfDescriptionService().validateSelfDescriptionConfig();
+
         wrapperExtensionContext.jaxRsResources().forEach(resource ->
                 webService.registerResource(dataManagementApiConfiguration.getContextAlias(), resource));
     }

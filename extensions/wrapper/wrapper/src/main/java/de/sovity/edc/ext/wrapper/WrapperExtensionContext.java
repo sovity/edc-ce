@@ -14,17 +14,21 @@
 
 package de.sovity.edc.ext.wrapper;
 
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
+
 import java.util.List;
 
 
 /**
  * Manual Dependency Injection result
  *
- * @param jaxRsResources Jax RS Resource implementations to register. Implementations of
- *                       APIs supported by our EDC API Client that don't have their own
- *                       extension should land here.
+ * @param jaxRsResources         Jax RS Resource implementations to register. Implementations of
+ *                               APIs supported by our EDC API Client that don't have their own
+ *                               extension should land here.
+ * @param selfDescriptionService Required here for validation on start-up
  */
 public record WrapperExtensionContext(
-        List<Object> jaxRsResources
+        List<Object> jaxRsResources,
+        SelfDescriptionService selfDescriptionService
 ) {
 }

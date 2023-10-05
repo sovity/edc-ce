@@ -32,17 +32,14 @@ public class UiAssetCreateRequest {
     @Schema(description = "Asset Id", requiredMode = Schema.RequiredMode.REQUIRED)
     private String id;
 
-    @Schema(description = "Asset Name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String name;
+    @Schema(description = "Asset Title", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String title;
 
     @Schema(description = "Asset Language", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String language;
 
     @Schema(description = "Asset Description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String description;
-
-    @Schema(description = "Asset Organization Name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String creatorOrganizationName;
 
     @Schema(description = "Asset Homepage", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String publisherHomepage;
