@@ -26,7 +26,7 @@
     "type": "module",
     "main": "./dist/sovity-edc-client.umd.cjs",
     "module": "./dist/sovity-edc-client.js",
-    "types": "./dist/index.d.ts",
+    "types": "./dist/sovity-edc-client.d.ts",
     "exports": {
         ".": {
             "import": "./dist/sovity-edc-client.js",
