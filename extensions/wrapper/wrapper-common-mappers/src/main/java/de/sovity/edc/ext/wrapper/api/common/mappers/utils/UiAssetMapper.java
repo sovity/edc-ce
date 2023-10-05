@@ -13,7 +13,6 @@ import jakarta.json.JsonString;
 import jakarta.json.JsonValue;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -48,7 +47,7 @@ public class UiAssetMapper {
         uiAsset.setAssetId(id);
         uiAsset.setConnectorEndpoint(connectorEndpoint);
         uiAsset.setParticipantId(participantId);
-        uiAsset.setName(title);
+        uiAsset.setTitle(title);
         uiAsset.setLicenseUrl(JsonLdUtils.string(properties, Prop.Dcterms.LICENSE));
         uiAsset.setDescription(JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION));
         uiAsset.setLanguage(JsonLdUtils.string(properties, Prop.Dcterms.LANGUAGE));
@@ -141,7 +140,7 @@ public class UiAssetMapper {
 
         addNonNull(properties, Prop.Edc.ID, uiAssetCreateRequest.getId());
         addNonNull(properties, Prop.Dcterms.LICENSE, uiAssetCreateRequest.getLicenseUrl());
-        addNonNull(properties, Prop.Dcterms.TITLE, uiAssetCreateRequest.getName());
+        addNonNull(properties, Prop.Dcterms.TITLE, uiAssetCreateRequest.getTitle());
         addNonNull(properties, Prop.Dcterms.DESCRIPTION, uiAssetCreateRequest.getDescription());
         addNonNull(properties, Prop.Dcterms.LANGUAGE, uiAssetCreateRequest.getLanguage());
         addNonNull(properties, Prop.Dcat.VERSION, uiAssetCreateRequest.getVersion());

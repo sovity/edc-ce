@@ -48,7 +48,7 @@ class AssetMapperTest {
         assertThat(uiAsset.getAssetId()).isEqualTo("urn:artifact:my-asset");
         assertThat(uiAsset.getConnectorEndpoint()).isEqualTo(endpoint);
         assertThat(uiAsset.getParticipantId()).isEqualTo(participantId);
-        assertThat(uiAsset.getName()).isEqualTo("My Asset");
+        assertThat(uiAsset.getTitle()).isEqualTo("My Asset");
         assertThat(uiAsset.getLanguage()).isEqualTo("https://w3id.org/idsa/code/EN");
         assertThat(uiAsset.getDescription()).isEqualTo("Lorem Ipsum ...");
         assertThat(uiAsset.getCreatorOrganizationName()).isEqualTo("My Organization Name");
@@ -91,7 +91,7 @@ class AssetMapperTest {
         // Assert
         assertThat(uiAsset).isNotNull();
         assertThat(uiAsset.getAssetId()).isEqualTo("my-asset-1");
-        assertThat(uiAsset.getName()).isEqualTo("my-asset-1");
+        assertThat(uiAsset.getTitle()).isEqualTo("my-asset-1");
     }
 
     @Test
@@ -120,7 +120,7 @@ class AssetMapperTest {
                 .add(Prop.ID, "my-asset-1")
                 .add(Prop.Edc.PROPERTIES, createObjectBuilder()
                         .add(Prop.Dcterms.TITLE, createObjectBuilder()
-                                .add(Prop.VALUE, "AssetName")
+                                .add(Prop.VALUE, "AssetTitle")
                                 .add(Prop.LANGUAGE, "en")))
                 .build();
 
@@ -129,7 +129,7 @@ class AssetMapperTest {
 
         // Assert
         assertThat(uiAsset).isNotNull();
-        assertThat(uiAsset.getName()).isEqualTo("AssetName");
+        assertThat(uiAsset.getTitle()).isEqualTo("AssetTitle");
     }
 
     @Test
@@ -140,7 +140,7 @@ class AssetMapperTest {
                 .add(Prop.Dcterms.TITLE, createArrayBuilder()
                         .add(createObjectBuilder()
                                 .add(Prop.TYPE, "SomeType")
-                                .add(Prop.VALUE, "AssetName")
+                                .add(Prop.VALUE, "AssetTitle")
                         )
                 )
                 .build();
@@ -154,7 +154,7 @@ class AssetMapperTest {
 
         // Assert
         assertThat(uiAsset).isNotNull();
-        assertThat(uiAsset.getName()).isEqualTo("AssetName");
+        assertThat(uiAsset.getTitle()).isEqualTo("AssetTitle");
     }
 
     @Test

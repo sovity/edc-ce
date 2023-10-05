@@ -127,7 +127,7 @@ class UiApiWrapperTest {
 
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
                 .id("asset-1")
-                .name("AssetName")
+                .title("AssetName")
                 .description("AssetDescription")
                 .licenseUrl("https://license-url")
                 .version("1.0.0")
@@ -186,7 +186,7 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
         assertThat(dataOffer.getParticipantId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
         assertThat(dataOffer.getAsset().getAssetId()).isEqualTo(assetId);
-        assertThat(dataOffer.getAsset().getName()).isEqualTo("AssetName");
+        assertThat(dataOffer.getAsset().getTitle()).isEqualTo("AssetName");
         assertThat(dataOffer.getAsset().getConnectorEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
         assertThat(dataOffer.getAsset().getParticipantId()).isEqualTo(providerConnector.getParticipantId());
         assertThat(dataOffer.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
@@ -216,7 +216,7 @@ class UiApiWrapperTest {
 
         // while the data offer on the consumer side won't contain private properties, the asset page on the provider side should
         assertThat(asset.getAssetId()).isEqualTo(assetId);
-        assertThat(asset.getName()).isEqualTo("AssetName");
+        assertThat(asset.getTitle()).isEqualTo("AssetName");
         assertThat(asset.getConnectorEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
         assertThat(asset.getParticipantId()).isEqualTo(providerConnector.getParticipantId());
         assertThat(asset.getAdditionalProperties())
@@ -249,7 +249,7 @@ class UiApiWrapperTest {
 
         assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
         assertThat(providerAgreement.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
-        assertThat(providerAgreement.getAsset().getName()).isEqualTo("AssetName");
+        assertThat(providerAgreement.getAsset().getTitle()).isEqualTo("AssetName");
         assertThat(providerAgreement.getAsset().getDescription()).isEqualTo("AssetDescription");
 
         // Consumer Contract Agreement
@@ -263,7 +263,7 @@ class UiApiWrapperTest {
         assertThat(consumingContractPolicyConstraint).usingRecursiveComparison().isEqualTo(consumingContractPolicyConstraint);
 
         assertThat(consumerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
-        assertThat(consumerAgreement.getAsset().getName()).isEqualTo(assetId);
+        assertThat(consumerAgreement.getAsset().getTitle()).isEqualTo(assetId);
 
         // Test Policy
         assertThat(contractOffer.getPolicy().getConstraints()).hasSize(1);

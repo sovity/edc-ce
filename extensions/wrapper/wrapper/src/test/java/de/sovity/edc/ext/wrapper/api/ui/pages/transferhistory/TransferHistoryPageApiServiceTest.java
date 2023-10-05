@@ -93,7 +93,7 @@ class TransferHistoryPageApiServiceTest {
 
         // assert for the order of entries
         assertThat(result.getAssetId()).isEqualTo(TransferProcessTestUtils.PROVIDING_ASSET_ID);
-        assertThat(result.getName()).isEqualTo(TransferProcessTestUtils.PROVIDING_ASSET_NAME);
+        assertThat(result.getTitle()).isEqualTo(TransferProcessTestUtils.PROVIDING_ASSET_NAME);
     }
 
     @Test
@@ -109,6 +109,6 @@ class TransferHistoryPageApiServiceTest {
 
         // assert for the order of entries
         assertThat(result.getAssetId()).isEqualTo(TransferProcessTestUtils.CONSUMING_ASSET_ID);
-        assertThat(result.getName()).isEqualTo(TransferProcessTestUtils.CONSUMING_ASSET_ID);
+        assertThat(result.getTitle()).isEqualTo(TransferProcessTestUtils.CONSUMING_ASSET_ID);
     }
 }

@@ -102,7 +102,7 @@ public class AssetApiServiceTest {
         );
         var uiAssetRequest = UiAssetCreateRequest.builder()
                 .id("asset-1")
-                .name("AssetName")
+                .title("AssetTitle")
                 .description("AssetDescription")
                 .licenseUrl("https://license-url")
                 .version("1.0.0")
@@ -128,7 +128,7 @@ public class AssetApiServiceTest {
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
         assertThat(asset.getAssetId()).isEqualTo("asset-1");
-        assertThat(asset.getName()).isEqualTo("AssetName");
+        assertThat(asset.getTitle()).isEqualTo("AssetTitle");
         assertThat(asset.getDescription()).isEqualTo("AssetDescription");
         assertThat(asset.getVersion()).isEqualTo("1.0.0");
         assertThat(asset.getLanguage()).isEqualTo("en");

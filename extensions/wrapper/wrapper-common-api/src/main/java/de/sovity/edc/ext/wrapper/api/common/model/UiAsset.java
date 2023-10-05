@@ -44,8 +44,8 @@ public class UiAsset {
     @Schema(description = "Providing Connector's Participant ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String participantId;
 
-    @Schema(description = "Asset Name", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String name;
+    @Schema(description = "Asset Title", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String title;
 
     @Schema(description = "Asset Organization Name", requiredMode = Schema.RequiredMode.REQUIRED)
     private String creatorOrganizationName;

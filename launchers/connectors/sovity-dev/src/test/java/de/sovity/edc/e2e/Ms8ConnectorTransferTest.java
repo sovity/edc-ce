@@ -120,7 +120,7 @@ class Ms8ConnectorTransferTest {
             softly.assertThat(asset.getLanguage()).isEqualTo("https://w3id.org/idsa/code/EN");
             softly.assertThat(asset.getLicenseUrl()).isEqualTo("https://standard-license");
             softly.assertThat(asset.getMediaType()).isEqualTo("text/plain");
-            softly.assertThat(asset.getName()).isEqualTo("First Asset");
+            softly.assertThat(asset.getTitle()).isEqualTo("First Asset");
             softly.assertThat(asset.getPublisherHomepage()).isEqualTo("https://publisher");
             softly.assertThat(asset.getTransportMode()).isEqualTo("Rail");
             softly.assertThat(asset.getVersion()).isEqualTo("1.0");
