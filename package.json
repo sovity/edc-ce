@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^14.2.12",
-    "@angular/cli": "^14.2.12",
+    "@angular/cli": "^14.2.13",
     "@angular/compiler-cli": "^14.3.0",
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "@types/jasmine": "^4.3.6",
