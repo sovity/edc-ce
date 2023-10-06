@@ -23,16 +23,21 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.MiwConfigServic
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
+import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState.ERROR;
 import static de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState.OK;
 import static de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState.RUNNING;
+import static java.util.stream.Collectors.toSet;
 
 @RequiredArgsConstructor
 public class DashboardPageApiService {
@@ -44,24 +49,33 @@ public class DashboardPageApiService {
 
     @NotNull
     public DashboardPage dashboardPage() {
-
         var transferProcesses = dashboardDataFetcher.getTransferProcesses();
         var negotiations = dashboardDataFetcher.getAllContractNegotiations();
 
         var providingAgreements = negotiations.stream()
-                .filter(negotiation -> ContractAgreementDirection.fromType(negotiation.getType()).equals(ContractAgreementDirection.PROVIDING))
-                .filter(negotiation -> negotiation.getContractAgreement() != null)
-                .map(negotiation -> negotiation.getContractAgreement().getId())
-                .collect(Collectors.toSet());
+                .filter(it -> it.getType() == ContractNegotiation.Type.PROVIDER)
+                .map(ContractNegotiation::getContractAgreement)
+                .filter(Objects::nonNull)
+                .map(ContractAgreement::getId)
+                .collect(toSet());
 
 
         var consumingAgreements = negotiations.stream()
-                .filter(negotiation -> ContractAgreementDirection.fromType(negotiation.getType()).equals(ContractAgreementDirection.CONSUMING))
-                .filter(negotiation -> negotiation.getContractAgreement() != null)
-                .map(negotiation -> negotiation.getContractAgreement().getId())
-                .collect(Collectors.toSet());
+                .filter(it -> it.getType() == ContractNegotiation.Type.CONSUMER)
+                .map(ContractNegotiation::getContractAgreement)
+                .filter(Objects::nonNull)
+                .map(ContractAgreement::getId)
+                .collect(toSet());
 
         DashboardPage dashboardPage = new DashboardPage();
+        dashboardPage.setNumAssets(dashboardDataFetcher.getNumberOfAssets());
+        dashboardPage.setNumPolicies(dashboardDataFetcher.getNumberOfPolicies());
+        dashboardPage.setNumContractDefinitions(dashboardDataFetcher.getNumberOfContractDefinitions());
+        dashboardPage.setNumContractAgreementsProviding(providingAgreements.size());
+        dashboardPage.setNumContractAgreementsConsuming(consumingAgreements.size());
+        dashboardPage.setTransferProcessesProviding(getTransferAmounts(transferProcesses, providingAgreements));
+        dashboardPage.setTransferProcessesConsuming(getTransferAmounts(transferProcesses, consumingAgreements));
+
         dashboardPage.setConnectorTitle(selfDescriptionService.getConnectorTitle());
         dashboardPage.setConnectorDescription(selfDescriptionService.getConnectorDescription());
         dashboardPage.setConnectorEndpoint(selfDescriptionService.getConnectorEndpoint());
@@ -74,12 +88,6 @@ public class DashboardPageApiService {
 
         dashboardPage.setConnectorMiwConfig(miwConfigService.buildMiwConfigOrNull());
         dashboardPage.setConnectorDapsConfig(dapsConfigService.buildDapsConfigOrNull());
-        dashboardPage.setNumberOfAssets(dashboardDataFetcher.getNumberOfAssets());
-        dashboardPage.setNumberOfPolicies(dashboardDataFetcher.getNumberOfPolicies());
-        dashboardPage.setProvidingTransferProcesses(getTransferAmounts(transferProcesses, providingAgreements));
-        dashboardPage.setConsumingTransferProcesses(getTransferAmounts(transferProcesses, consumingAgreements));
-        dashboardPage.setNumberOfProvidingAgreements(providingAgreements.size());
-        dashboardPage.setNumberOfConsumingAgreements(consumingAgreements.size());
         return dashboardPage;
     }
 
@@ -87,21 +95,25 @@ public class DashboardPageApiService {
             List<TransferProcess> transferProcesses,
             Set<String> agreements
     ) {
-        var numOk = transferProcesses.stream()
-                .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(OK))
+        var numTotal = transferProcesses.stream()
                 .filter(transferProcess -> agreements.contains(transferProcess.getDataRequest().getContractId()))
+                .count();
+
+        var numOk = transferProcesses.stream()
+                .filter(transferProcess -> agreements.contains(transferProcess.getDataRequest().getContractId()))
+                .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(OK))
                 .count();
 
         var numRunning = transferProcesses.stream()
-                .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(RUNNING))
                 .filter(transferProcess -> agreements.contains(transferProcess.getDataRequest().getContractId()))
+                .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(RUNNING))
                 .count();
 
         var numError = transferProcesses.stream()
-                .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(ERROR))
                 .filter(transferProcess -> agreements.contains(transferProcess.getDataRequest().getContractId()))
+                .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(ERROR))
                 .count();
 
-        return new DashboardTransferAmounts(numRunning, numOk, numError);
+        return new DashboardTransferAmounts(numTotal, numRunning, numOk, numError);
     }
 }

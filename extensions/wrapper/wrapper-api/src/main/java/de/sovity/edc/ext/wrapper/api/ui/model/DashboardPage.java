@@ -15,6 +15,27 @@ import lombok.ToString;
 @RequiredArgsConstructor
 public class DashboardPage {
 
+    @Schema(description = "Number of Assets", requiredMode = Schema.RequiredMode.REQUIRED)
+    private int numAssets;
+
+    @Schema(description = "Number of Policies", requiredMode = Schema.RequiredMode.REQUIRED)
+    private int numPolicies;
+
+    @Schema(description = "Number of Contract Definitions", requiredMode = Schema.RequiredMode.REQUIRED)
+    private int numContractDefinitions;
+
+    @Schema(description = "Number of consuming Contract Agreements", requiredMode = Schema.RequiredMode.REQUIRED)
+    private long numContractAgreementsConsuming;
+
+    @Schema(description = "Number of providing Contract Agreements", requiredMode = Schema.RequiredMode.REQUIRED)
+    private long numContractAgreementsProviding;
+
+    @Schema(description = "Consuming Transfer Process Amounts", requiredMode = Schema.RequiredMode.REQUIRED)
+    private DashboardTransferAmounts transferProcessesConsuming;
+
+    @Schema(description = "Providing Transfer Process Amounts", requiredMode = Schema.RequiredMode.REQUIRED)
+    private DashboardTransferAmounts transferProcessesProviding;
+
     @Schema(description = "Your Connector's Connector Endpoint", requiredMode = Schema.RequiredMode.REQUIRED)
     private String connectorEndpoint;
 
@@ -44,22 +65,4 @@ public class DashboardPage {
 
     @Schema(description = "Your Connector's MIW Configuration (if present)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private DashboardMiwConfig connectorMiwConfig;
-
-    @Schema(description = "Providing Transfer Process Amounts", requiredMode = Schema.RequiredMode.REQUIRED)
-    private DashboardTransferAmounts providingTransferProcesses;
-
-    @Schema(description = "Consuming Transfer Process Amounts", requiredMode = Schema.RequiredMode.REQUIRED)
-    private DashboardTransferAmounts consumingTransferProcesses;
-
-    @Schema(description = "Number of Assets", requiredMode = Schema.RequiredMode.REQUIRED)
-    private int numberOfAssets;
-
-    @Schema(description = "Number of Policies", requiredMode = Schema.RequiredMode.REQUIRED)
-    private int numberOfPolicies;
-
-    @Schema(description = "Number of consuming Contract Agreements", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long numberOfConsumingAgreements;
-
-    @Schema(description = "Number of providing Contract Agreements", requiredMode = Schema.RequiredMode.REQUIRED)
-    private long numberOfProvidingAgreements;
 }
