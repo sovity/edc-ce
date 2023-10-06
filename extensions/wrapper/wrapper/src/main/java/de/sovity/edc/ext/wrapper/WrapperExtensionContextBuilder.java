@@ -216,7 +216,8 @@ public class WrapperExtensionContextBuilder {
                 contractNegotiationStore,
                 transferProcessService,
                 assetIndex,
-                policyDefinitionService
+                policyDefinitionService,
+                contractDefinitionService
         );
         var dashboardApiService = new DashboardPageApiService(
                 dashboardDataFetcher,
