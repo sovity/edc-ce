@@ -20,7 +20,7 @@ export class UrlInterceptor {
   }
 
   on(method: string, response: ResponseFn): this {
-    let urlPattern = this.lastUrlPattern;
+    const urlPattern = this.lastUrlPattern;
     if (!urlPattern) {
       throw new Error('Call .url() before calling .on()');
     }
@@ -34,7 +34,7 @@ export class UrlInterceptor {
         continue;
       }
 
-      let regexp = '^' + entry.urlPattern.replace(/\*/g, '(.*)') + '$';
+      const regexp = '^' + entry.urlPattern.replace(/\*/g, '(.*)') + '$';
       let match = this.requestUrl.match(regexp);
       if (!match) {
         continue;

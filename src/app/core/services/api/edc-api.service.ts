@@ -8,8 +8,8 @@ import {
   ContractDefinitionPage,
   ContractDefinitionRequest,
   ContractNegotiationRequest,
+  DashboardPage,
   EdcClient,
-  IdResponse,
   IdResponseDto,
   PolicyDefinitionCreateRequest,
   PolicyDefinitionPage,
@@ -37,40 +37,26 @@ export class EdcApiService {
     });
   }
 
+  getDashboardPage(): Observable<DashboardPage> {
+    return from(this.edcClient.uiApi.getDashboardPage());
+  }
+
+  getAssetPage(): Observable<AssetPage> {
+    return from(this.edcClient.uiApi.getAssetPage());
+  }
+
   createAsset(
     uiAssetCreateRequest: UiAssetCreateRequest,
   ): Observable<IdResponseDto> {
     return from(this.edcClient.uiApi.createAsset({uiAssetCreateRequest}));
   }
 
-  getAssetPage(): Observable<AssetPage> {
-    return from(this.edcClient.uiApi.assetPage());
-  }
-
   deleteAsset(assetId: string): Observable<IdResponseDto> {
     return from(this.edcClient.uiApi.deleteAsset({assetId}));
   }
 
-  createContractDefinition(
-    contractDefinitionRequest: ContractDefinitionRequest,
-  ): Observable<IdResponseDto> {
-    return from(
-      this.edcClient.uiApi.createContractDefinition({
-        contractDefinitionRequest,
-      }),
-    );
-  }
-
-  getContractDefinitionPage(): Observable<ContractDefinitionPage> {
-    return from(this.edcClient.uiApi.contractDefinitionPage());
-  }
-
-  deleteContractDefinition(
-    contractDefinitionId: string,
-  ): Observable<IdResponseDto> {
-    return from(
-      this.edcClient.uiApi.deleteContractDefinition({contractDefinitionId}),
-    );
+  getPolicyDefinitionPage(): Observable<PolicyDefinitionPage> {
+    return from(this.edcClient.uiApi.getPolicyDefinitionPage());
   }
 
   createPolicyDefinition(
@@ -83,45 +69,37 @@ export class EdcApiService {
     );
   }
 
-  getPolicyDefinitionPage(): Observable<PolicyDefinitionPage> {
-    return from(this.edcClient.uiApi.policyDefinitionPage());
-  }
-
   deletePolicyDefinition(policyId: string): Observable<IdResponseDto> {
     return from(this.edcClient.uiApi.deletePolicyDefinition({policyId}));
   }
 
-  getContractAgreementPage(): Observable<ContractAgreementPage> {
-    return from(this.edcClient.uiApi.contractAgreementEndpoint());
+  getContractDefinitionPage(): Observable<ContractDefinitionPage> {
+    return from(this.edcClient.uiApi.getContractDefinitionPage());
   }
 
-  initiateTranfer(
-    contractAgreementTransferRequest: ContractAgreementTransferRequest,
-  ): Observable<IdResponse> {
+  createContractDefinition(
+    contractDefinitionRequest: ContractDefinitionRequest,
+  ): Observable<IdResponseDto> {
     return from(
-      this.edcClient.uiApi.initiateTransfer({contractAgreementTransferRequest}),
+      this.edcClient.uiApi.createContractDefinition({
+        contractDefinitionRequest,
+      }),
     );
   }
 
-  getTransferHistoryPage(): Observable<TransferHistoryPage> {
-    return from(this.edcClient.uiApi.transferHistoryPageEndpoint());
-  }
-
-  getTransferProcessAsset(transferProcessId: string): Observable<UiAsset> {
+  deleteContractDefinition(
+    contractDefinitionId: string,
+  ): Observable<IdResponseDto> {
     return from(
-      this.edcClient.uiApi.getTransferProcessAsset({transferProcessId}),
+      this.edcClient.uiApi.deleteContractDefinition({contractDefinitionId}),
     );
-  }
-
-  getEnterpriseEditionConnectorLimits(): Observable<ConnectorLimits> {
-    return from(this.edcClient.enterpriseEditionApi.connectorLimits());
   }
 
   getCatalogPageDataOffers(
     connectorEndpoint: string,
   ): Observable<UiDataOffer[]> {
     return from(
-      this.edcClient.uiApi.catalogPageDataOffers({connectorEndpoint}),
+      this.edcClient.uiApi.getCatalogPageDataOffers({connectorEndpoint}),
     );
   }
 
@@ -141,5 +119,31 @@ export class EdcApiService {
     return from(
       this.edcClient.uiApi.getContractNegotiation({contractNegotiationId}),
     );
+  }
+
+  getContractAgreementPage(): Observable<ContractAgreementPage> {
+    return from(this.edcClient.uiApi.getContractAgreementPage());
+  }
+
+  initiateTransfer(
+    contractAgreementTransferRequest: ContractAgreementTransferRequest,
+  ): Observable<IdResponseDto> {
+    return from(
+      this.edcClient.uiApi.initiateTransfer({contractAgreementTransferRequest}),
+    );
+  }
+
+  getTransferHistoryPage(): Observable<TransferHistoryPage> {
+    return from(this.edcClient.uiApi.getTransferHistoryPage());
+  }
+
+  getTransferProcessAsset(transferProcessId: string): Observable<UiAsset> {
+    return from(
+      this.edcClient.uiApi.getTransferProcessAsset({transferProcessId}),
+    );
+  }
+
+  getEnterpriseEditionConnectorLimits(): Observable<ConnectorLimits> {
+    return from(this.edcClient.enterpriseEditionApi.connectorLimits());
   }
 }

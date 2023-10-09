@@ -64,18 +64,18 @@ export class ContractAgreementPageService {
     contractAgreementPage: ContractAgreementPage,
     connectorLimits: ConnectorLimits | null,
   ): ContractAgreementPageData {
-    let contractAgreements = this.mapContractAgreements(
+    const contractAgreements = this.mapContractAgreements(
       contractAgreementPage.contractAgreements,
     );
 
     let consumingContractAgreements = contractAgreements.filter(
       (it) => it.direction === 'CONSUMING',
     );
-    let providingContractAgreements = contractAgreements.filter(
+    const providingContractAgreements = contractAgreements.filter(
       (it) => it.direction === 'PROVIDING',
     );
 
-    let isConsumingLimitsEnforced =
+    const isConsumingLimitsEnforced =
       connectorLimits?.maxActiveConsumingContractAgreements != null &&
       connectorLimits.maxActiveConsumingContractAgreements >= 0;
     if (isConsumingLimitsEnforced) {

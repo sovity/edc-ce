@@ -30,7 +30,7 @@ export class LocationHistoryUtils {
       '/',
     ];
 
-    let url = urlsToTry.find(
+    const url = urlsToTry.find(
       (url) => url && !url.startsWith(opts.skipUrlsStartingWith),
     );
 

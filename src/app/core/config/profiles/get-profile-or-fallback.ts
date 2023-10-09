@@ -20,7 +20,7 @@ export function getProfileOrFallback(profile?: string | null): {
 
   const fallback: EdcUiProfile = 'sovity-open-source';
 
-  let availableProfiles = Object.keys(EDC_UI_PROFILE_DATA)
+  const availableProfiles = Object.keys(EDC_UI_PROFILE_DATA)
     .map((s) => `"${s}"`)
     .join(', ');
 

@@ -53,7 +53,7 @@ export class AssetDatasourceFormBuilder {
       const httpAuth = value.httpAuthHeaderType !== 'None';
       const httpAuthByValue = value.httpAuthHeaderType === 'Value';
       const httpAuthByVault = value.httpAuthHeaderType === 'Vault-Secret';
-      let proxyPath = !!value.httpProxyPath;
+      const proxyPath = !!value.httpProxyPath;
 
       return {
         dataAddressType: true,

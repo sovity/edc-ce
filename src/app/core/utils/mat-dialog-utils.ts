@@ -17,7 +17,7 @@ export function showDialogUntil<T, R>(
   config: MatDialogConfig<T>,
   until$: Observable<unknown>,
 ): Observable<R | undefined> {
-  let ref = dialogService.open(dialog, config);
+  const ref = dialogService.open(dialog, config);
   until$.subscribe({
     next: () => ref.close(),
     complete: () => ref.close(),

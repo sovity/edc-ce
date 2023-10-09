@@ -3,12 +3,17 @@ import {UiAsset} from '@sovity.de/edc-client';
 export namespace TestAssets {
   export const boring: UiAsset = {
     assetId: 'data-sample-ckd-skd-demands-2023-Jan',
-    name: 'data-sample-ckd-skd-demands-2023-Jan',
+    title: 'data-sample-ckd-skd-demands-2023-Jan',
+    connectorEndpoint: 'https://my-other-connector/api/dsp',
+    participantId: 'my-other-connector',
+    creatorOrganizationName: 'my-other-connector',
   };
 
   export const full: UiAsset = {
     assetId: 'ckd-skd-demands-2023-Jan',
-    name: 'CKD / SKD Demands January 2023',
+    title: 'CKD / SKD Demands January 2023',
+    connectorEndpoint: 'https://my-other-connector/api/dsp',
+    participantId: 'my-other-connector',
     version: '2023-A-Program',
     creatorOrganizationName: 'My-German-OEM',
     keywords: ['automotive', 'part-demands', '2023', 'January'],
@@ -40,13 +45,12 @@ export namespace TestAssets {
   };
 
   export function toDummyAsset(entry: UiAsset): UiAsset {
-    return dummyAsset(entry.assetId);
-  }
-
-  export function dummyAsset(assetId: string): UiAsset {
     return {
-      assetId,
-      name: assetId,
+      assetId: entry.assetId,
+      title: entry.assetId,
+      participantId: entry.participantId,
+      connectorEndpoint: entry.connectorEndpoint,
+      creatorOrganizationName: entry.participantId,
     };
   }
 }

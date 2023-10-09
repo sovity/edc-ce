@@ -34,7 +34,7 @@ export class NotificationService {
       horizontalPosition: 'center',
       panelClass: ['snackbar-info-style'], //see styles.scss
     };
-    let ref = this.snackBar.open(message, action, config);
+    const ref = this.snackBar.open(message, action, config);
 
     if (onAction) {
       ref.onAction().subscribe(() => onAction());
@@ -52,7 +52,7 @@ export class NotificationService {
       panelClass: ['snackbar-error-style'], //see styles.scss
     };
 
-    let ref = this.snackBar.open(message, undefined, config);
+    const ref = this.snackBar.open(message, undefined, config);
     return ref.afterDismissed();
   }
 }

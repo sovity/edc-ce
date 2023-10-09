@@ -82,7 +82,7 @@ export class ContractDefinitionCardBuilder {
       return 'Assets';
     }
 
-    let operatorStr = CRITERION_OPERATOR_SYMBOLS[operator] ?? operator;
+    const operatorStr = CRITERION_OPERATOR_SYMBOLS[operator] ?? operator;
     return `${operandLeft} ${operatorStr}`;
   }
 
@@ -90,7 +90,7 @@ export class ContractDefinitionCardBuilder {
     criterion: UiCriterion,
     assetsById: Map<string, Asset>,
   ): ContractDefinitionCardCriterionValue[] {
-    let {operandLeft, operandRight} = criterion;
+    const {operandLeft, operandRight} = criterion;
 
     let values: string[] = [];
     if (operandRight.type === 'VALUE_LIST') {
@@ -108,7 +108,7 @@ export class ContractDefinitionCardBuilder {
 
       // Try to find asset
       if (operandLeft === AssetProperty.id) {
-        let asset = assetsById.get(it);
+        const asset = assetsById.get(it);
         if (asset) {
           return {
             type: 'asset',

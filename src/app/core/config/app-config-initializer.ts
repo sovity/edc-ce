@@ -9,7 +9,7 @@ let appConfig: AppConfig | null = null;
 export async function loadAppConfig(): Promise<AppConfig> {
   const merger = new AppConfigMerger();
   const builder = new AppConfigBuilder();
-  const fetcher = new AppConfigFetcher(merger, builder);
+  const fetcher = new AppConfigFetcher(merger);
   return fetcher
     .fetchEffectiveConfig('/assets/config/app-config.json', null)
     .then((json) => builder.buildAppConfig(json))

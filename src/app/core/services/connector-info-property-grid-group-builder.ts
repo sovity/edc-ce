@@ -1,18 +1,17 @@
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
+import {DashboardPage} from '@sovity.de/edc-client';
 import {JsonDialogComponent} from '../../component-library/json-dialog/json-dialog/json-dialog.component';
 import {JsonDialogData} from '../../component-library/json-dialog/json-dialog/json-dialog.data';
 import {PropertyGridGroup} from '../../component-library/property-grid/property-grid-group/property-grid-group';
 import {PropertyGridField} from '../../component-library/property-grid/property-grid/property-grid-field';
 import {PropertyGridFieldService} from '../../component-library/property-grid/property-grid/property-grid-field.service';
-import {APP_CONFIG, AppConfig} from '../config/app-config';
 import {LastCommitInfo} from './api/model/last-commit-info';
 import {Fetched} from './models/fetched';
 
 @Injectable({providedIn: 'root'})
 export class ConnectorInfoPropertyGridGroupBuilder {
   constructor(
-    @Inject(APP_CONFIG) private config: AppConfig,
     private propertyGridUtils: PropertyGridFieldService,
     private matDialog: MatDialog,
   ) {}
@@ -140,76 +139,114 @@ export class ConnectorInfoPropertyGridGroupBuilder {
 
   buildConnectorPropertyGridGroup(
     groupLabel: string | null,
+    dashboardData: Fetched<DashboardPage>,
   ): PropertyGridGroup {
-    const config = this.config;
-
-    const fields: PropertyGridField[] = [
-      {
-        icon: 'link',
-        label: 'Connector Endpoint',
-        ...this.propertyGridUtils.guessValue(config.connectorEndpoint),
-      },
-      {
-        icon: 'vpn_key',
-        label: 'DAPS Token URL',
-        ...this.propertyGridUtils.guessValue(config.dapsOauthTokenUrl),
-      },
-      {
-        icon: 'lock',
-        label: 'DAPS JWKS URL',
-        ...this.propertyGridUtils.guessValue(config.dapsOauthJwksUrl),
-      },
-      {
-        icon: 'category',
-        label: 'Connector ID',
-        ...this.propertyGridUtils.guessValue(config.connectorId),
-      },
-      {
-        icon: 'category',
-        label: 'Connector Name',
-        ...this.propertyGridUtils.guessValue(config.connectorName),
-      },
-      {
-        icon: 'category',
-        label: 'Connector IDS ID',
-        ...this.propertyGridUtils.guessValue(config.connectorIdsId),
-      },
-      {
-        icon: 'title',
-        label: 'Title',
-        ...this.propertyGridUtils.guessValue(config.connectorIdsTitle),
-      },
-      {
-        icon: 'apartment',
-        label: 'Curator Organization Name',
-        ...this.propertyGridUtils.guessValue(config.curatorOrganizationName),
-      },
-      {
-        icon: 'apartment',
-        label: 'Curator URL',
-        ...this.propertyGridUtils.guessValue(config.curatorUrl),
-      },
-      {
-        icon: 'title',
-        label: 'Description',
-        ...this.propertyGridUtils.guessValue(config.connectorIdsDescription),
-      },
-      {
-        icon: 'contact_support',
-        label: 'Maintainer Organization Name',
-        ...this.propertyGridUtils.guessValue(config.maintainerOrganizationName),
-      },
-      {
-        icon: 'contact_support',
-        label: 'Maintainer URL',
-        ...this.propertyGridUtils.guessValue(config.maintainerUrl),
-      },
-    ];
+    const fields: PropertyGridField[] = dashboardData.match({
+      ifLoading: () => [{icon: 'info', label: 'Loading', text: 'Loading...'}],
+      ifError: () => [
+        {
+          icon: 'error',
+          label: 'Error',
+          text: 'Failed loading connector information',
+        },
+      ],
+      ifOk: (data) => this.buildConnectorMetadata(data),
+    });
 
     return {
       groupLabel,
       properties: fields,
     };
+  }
+
+  private buildConnectorMetadata(data: DashboardPage) {
+    const fields = [
+      {
+        icon: 'link',
+        label: 'Connector Endpoint',
+        ...this.propertyGridUtils.guessValue(data.connectorEndpoint),
+      },
+      {
+        icon: 'category',
+        label: 'Participant ID',
+        ...this.propertyGridUtils.guessValue(data.connectorParticipantId),
+      },
+      {
+        icon: 'title',
+        label: 'Title',
+        ...this.propertyGridUtils.guessValue(data.connectorTitle),
+      },
+      {
+        icon: 'apartment',
+        label: 'Curator Organization Name',
+        ...this.propertyGridUtils.guessValue(data.connectorCuratorName),
+      },
+      {
+        icon: 'apartment',
+        label: 'Curator URL',
+        ...this.propertyGridUtils.guessValue(data.connectorCuratorUrl),
+      },
+      {
+        icon: 'title',
+        label: 'Description',
+        ...this.propertyGridUtils.guessValue(data.connectorDescription),
+      },
+      {
+        icon: 'contact_support',
+        label: 'Maintainer Organization Name',
+        ...this.propertyGridUtils.guessValue(data.connectorMaintainerName),
+      },
+      {
+        icon: 'contact_support',
+        label: 'Maintainer URL',
+        ...this.propertyGridUtils.guessValue(data.connectorMaintainerUrl),
+      },
+    ];
+
+    if (data.connectorDapsConfig != null) {
+      fields.push(
+        {
+          icon: 'vpn_key',
+          label: 'DAPS Token URL',
+          ...this.propertyGridUtils.guessValue(
+            data.connectorDapsConfig.tokenUrl,
+          ),
+        },
+        {
+          icon: 'lock',
+          label: 'DAPS JWKS URL',
+          ...this.propertyGridUtils.guessValue(
+            data.connectorDapsConfig.jwksUrl,
+          ),
+        },
+      );
+    }
+
+    if (data.connectorMiwConfig != null) {
+      fields.push(
+        {
+          icon: 'category',
+          label: 'MIW Authority ID',
+          ...this.propertyGridUtils.guessValue(
+            data.connectorMiwConfig.authorityId,
+          ),
+        },
+        {
+          icon: 'link',
+          label: 'MIW URL',
+          ...this.propertyGridUtils.guessValue(data.connectorMiwConfig.url),
+        },
+        {
+          icon: 'vpn_key',
+          label: 'MIW Token URL',
+          ...this.propertyGridUtils.guessValue(
+            data.connectorMiwConfig.tokenUrl,
+          ),
+        },
+      );
+    }
+
+    return fields;
   }
 
   buildConnectorVersionGroup(
@@ -230,11 +267,10 @@ export class ConnectorInfoPropertyGridGroupBuilder {
     lastCommitInformation: Fetched<LastCommitInfo>,
     UiBuildDate: Fetched<string>,
     UiCommitDetails: Fetched<string>,
+    dashboardPageData: Fetched<DashboardPage>,
   ): PropertyGridGroup[] {
-    let fieldGroups: PropertyGridGroup[];
-
-    fieldGroups = [
-      this.buildConnectorPropertyGridGroup(null),
+    const fieldGroups: PropertyGridGroup[] = [
+      this.buildConnectorPropertyGridGroup(null, dashboardPageData),
       this.buildConnectorVersionGroup(
         lastCommitInformation,
         UiBuildDate,

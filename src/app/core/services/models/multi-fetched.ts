@@ -45,9 +45,9 @@ export class MultiFetched<T> {
    * @param results fetched reuslts
    */
   static aggregate<T>(results: Fetched<T>[]): MultiFetched<T> {
-    let numTotal = results.length;
-    let numDone = results.filter((it) => !it.isLoading).length;
-    let numOk = results.filter((it) => it.isReady).length;
+    const numTotal = results.length;
+    const numDone = results.filter((it) => !it.isLoading).length;
+    const numOk = results.filter((it) => it.isReady).length;
 
     return new MultiFetched<T>(numTotal, numDone, numOk, results);
   }

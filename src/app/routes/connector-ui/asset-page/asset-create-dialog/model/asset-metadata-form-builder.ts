@@ -26,7 +26,7 @@ export class AssetMetadataFormBuilder {
           [Validators.required, noWhitespacesOrColonsValidator],
           [this.assetsIdValidatorBuilder.assetIdDoesNotExistsValidator()],
         ],
-        name: ['', Validators.required],
+        title: ['', Validators.required],
         version: '',
         contentType: '',
         description: '',
@@ -41,7 +41,7 @@ export class AssetMetadataFormBuilder {
     // generate id from name and version(if available)
     this.initIdGeneration(
       metadata.controls.id,
-      metadata.controls.name,
+      metadata.controls.title,
       metadata.controls.version,
     );
 
@@ -50,31 +50,38 @@ export class AssetMetadataFormBuilder {
 
   private initIdGeneration(
     idCtrl: FormControl<string>,
-    nameCtrl: FormControl<string>,
+    titleCtrl: FormControl<string>,
     versionCtrl: FormControl<string>,
   ) {
     combineLatest([
-      value$<string>(nameCtrl).pipe(distinctUntilChanged()),
+      value$<string>(titleCtrl).pipe(distinctUntilChanged()),
       value$<string>(versionCtrl).pipe(distinctUntilChanged()),
     ])
       .pipe(
-        map(([name, version]) => this.generateId(name, version)),
+        map(([title, version]) => this.generateId(title, version)),
         pairwise(),
       )
-      .subscribe(([previousName, currentName]) => {
-        if (!idCtrl.value || idCtrl.value == previousName) {
-          idCtrl.setValue(currentName);
+      .subscribe(([previousId, currentId]) => {
+        if (!idCtrl.value || idCtrl.value === previousId) {
+          idCtrl.setValue(currentId);
         }
       });
   }
 
-  private generateId(name: string | null, version: string | null) {
-    if (!name) return '';
-    const normalizedName = name
-      .replace(':', '')
+  private generateId(title: string | null, version: string | null) {
+    if (!title) {
+      return '';
+    }
+    const titleClean = this.cleanIdComponent(title);
+    const versionClean = this.cleanIdComponent(version);
+    return version ? `${titleClean}-${versionClean}` : titleClean;
+  }
+
+  private cleanIdComponent(s: string | null) {
+    return (s ?? '')
+      .trim()
+      .replace(':', '-')
       .replaceAll(' ', '-')
       .toLowerCase();
-    if (version) return `${normalizedName}-${version}`;
-    return normalizedName;
   }
 }

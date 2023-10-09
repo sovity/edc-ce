@@ -84,7 +84,7 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
     this.form.all.disable();
 
     this.edcApiService
-      .initiateTranfer(this.buildTransferRequest(this.form.value))
+      .initiateTransfer(this.buildTransferRequest(this.form.value))
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -132,13 +132,13 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
       };
     }
 
-    let transferProcessProperties =
+    const transferProcessProperties =
       this.httpRequestParamsMapper.encodeHttpProxyTransferRequestProperties(
         this.data.asset,
         value,
       );
 
-    let dataSinkProperties =
+    const dataSinkProperties =
       this.dataAddressMapper.buildDataAddressProperties(value) ?? {};
 
     return {

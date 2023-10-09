@@ -21,14 +21,10 @@ export class AppConfigBuilder {
       ...profileConfig,
 
       // EDC Backend Endpoints
-      connectorEndpoint:
-        vars[AppConfigProperties.connectorEndpoint] ??
-        vars[AppConfigProperties._legacyConnectorEndpoint] ??
-        'https://no-connector-endpoint-configured',
       managementApiKey:
-        this.getManagementApiKey(vars) ?? 'no-api-key-configured',
+        vars[AppConfigProperties.managementApiKey] ?? 'no-api-key-configured',
       managementApiUrl:
-        this.getManagementApiUrl(vars) ??
+        vars[AppConfigProperties.managementApiUrl] ??
         'https://no-backend-api-url-configured',
       logoutUrl:
         vars[AppConfigProperties.logoutUrl] ??
@@ -36,57 +32,7 @@ export class AppConfigBuilder {
 
       // Other EDC Backend Endpoints
       catalogUrls: vars[AppConfigProperties.catalogUrls] ?? '',
-
-      // Connector Self-Description
-      connectorId:
-        vars[AppConfigProperties.connectorId] ??
-        'https://missing-edc-connector-id',
-      connectorName:
-        vars[AppConfigProperties.connectorName] ??
-        'EDC Connector (No Name Configured)',
-      connectorIdsId:
-        vars[AppConfigProperties.connectorIdsId] ??
-        'no-ids-connector-id-configured',
-      connectorIdsTitle:
-        vars[AppConfigProperties.connectorIdsTitle] ??
-        'EDC Connector (No Title Configured)',
-      connectorIdsDescription:
-        vars[AppConfigProperties.connectorIdsDescription] ??
-        'No Connector Description was configured.',
-      curatorUrl:
-        vars[AppConfigProperties.curatorUrl] ??
-        'http://no-curator-url-configured',
-      curatorOrganizationName:
-        vars[AppConfigProperties.curatorOrganizationName] ??
-        vars[AppConfigProperties._legacyCuratorOrganizationName] ??
-        'No Curator Organization Name Configured',
-      dapsOauthTokenUrl:
-        vars[AppConfigProperties.dapsOauthTokenUrl] ??
-        'http://no-daps-oauth-token-url-configured',
-      dapsOauthJwksUrl:
-        vars[AppConfigProperties.dapsOauthJwksUrl] ??
-        'http://no-daps-oauth-jwks-url-configured',
-      maintainerUrl:
-        vars[AppConfigProperties.maintainerUrl] ??
-        'http://no-maintainer-url-configured',
-      maintainerOrganizationName:
-        vars[AppConfigProperties.maintainerOrganizationName] ??
-        'No Maintainer Organization Name Configured',
       useFakeBackend: vars[AppConfigProperties.useFakeBackend] === 'true',
     };
-  }
-
-  getManagementApiKey(vars: Record<string, string | null>): string | null {
-    return (
-      vars[AppConfigProperties.managementApiKey] ??
-      vars[AppConfigProperties._legacyManagementApiKey]
-    );
-  }
-
-  getManagementApiUrl(vars: Record<string, string | null>): string | null {
-    return (
-      vars[AppConfigProperties.managementApiUrl] ??
-      vars[AppConfigProperties._legacyManagementApiUrl]
-    );
   }
 }

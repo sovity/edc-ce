@@ -66,7 +66,7 @@ let transferHistoryEntries: TransferHistoryEntry[] = [
     contractAgreementId: 'test-asset-4-cd:f52a5d30-6356-4a55-a75a-3c45d7a88c3e',
     direction: 'PROVIDING',
     counterPartyConnectorEndpoint: 'https://sovity-demo2-edc/api/v1/ids/data',
-    assetName: TestAssets.full.name || TestAssets.full.assetId,
+    assetName: TestAssets.full.title,
     assetId: TestAssets.full.assetId,
   },
 ];
@@ -78,13 +78,19 @@ export const transferHistoryPage = (): TransferHistoryPage => {
 };
 
 export const transferProcessAsset = (transferProcessId: string): UiAsset => {
-  let transfer = transferHistoryEntries.find(
+  const transfer = transferHistoryEntries.find(
     (it) => it.transferProcessId === transferProcessId,
   );
   const assetId = transfer?.assetId ?? 'unknown';
   const isProviding = transfer?.direction === 'PROVIDING';
 
-  const dummyAsset: UiAsset = TestAssets.dummyAsset(assetId);
+  const dummyAsset: UiAsset = {
+    assetId,
+    title: assetId,
+    participantId: 'unknown',
+    connectorEndpoint: 'https://unknown/api/dsp',
+    creatorOrganizationName: 'unknown',
+  };
 
   const assetEntry = getAssetById(assetId);
 

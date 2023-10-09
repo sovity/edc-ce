@@ -14,25 +14,46 @@ the detailed section referring to by linking pull requests or issues.
 
 ### Detailed Changes
 
-#### Added
+#### Major
+
+- Switched to semantic versioning
+- Migrated transfer history page to the api wrapper
+- Migrated contract definition page to the api wrapper
+- Migrated policy definition page to the api wrapper
+- Migrated asset page to the api wrapper
+- Migrated dashboard page to the api wrapper
+
+#### Minor
 
 - Added custom 404 pages to connector and broker ui
+- New Asset Property "Participant ID"
 
-#### Fixed
+#### Patch
 
 - Removed 404-causing login polling from broker UI
-- Migrated transfer history page to api wrapper
-- Migrated contract definition page to api wrapper
-- Migrated policy definition page to api wrapper
-- Migrated asset page to api wrapper
-- Broker: Fixed popularity not logged when clicking on a data offer.
+- Renamed button from cancel to close in json-dialogs
+- Broker: Fixed popularity not logged when clicking on a data offer
 - Broker: Fixed missing name in legal notice
 
-#### Removed
+#### Deployment Migration Notes
 
-#### Fixed
-
-- Renamed button from cancel to close in json-dialogs
+- The following ENV Vars were changed:
+  - ~~`EDC_UI_DATA_MANAGEMENT_API_URL`~~ became `EDC_UI_MANAGEMENT_API_URL`
+  - ~~`EDC_UI_DATA_MANAGEMENT_API_KEY`~~ became `EDC_UI_MANAGEMENT_API_KEY`
+- The following ENV Vars were removed and should not be specified anymore:
+  - `EDC_UI_CONNECTOR_ID`
+  - `EDC_UI_CONNECTOR_NAME`
+  - `EDC_UI_CURATOR_ORGANIZATION_NAME`
+  - `EDC_UI_CURATOR_URL`
+  - `EDC_UI_DAPS_OAUTH_JWKS_URL`
+  - `EDC_UI_DAPS_OAUTH_TOKEN_URL`
+  - `EDC_UI_IDS_DESCRIPTION`
+  - `EDC_UI_IDS_ID`
+  - `EDC_UI_IDS_TITLE`
+  - `EDC_UI_MAINTAINER_ORGANIZATION_NAME`
+  - `EDC_UI_MAINTAINER_URL`
+  - `EDC_UI_ASSET_PROP_ORIGINATOR_ORGANIZATION`
+  - `EDC_UI_ASSET_PROP_ORIGINATOR`
 
 ## [v0.0.1-milestone-8-sovity12] 12.07.2023
 
@@ -191,7 +212,7 @@ information is now displayed.
 
 #### Changed
 
-- Marked `EDC_UI_DATA_MANAGEMENT_API_URL` as deprecated in favor of
+- Marked `EDC_UI_MANAGEMENT_API_URL` as deprecated in favor of
   `EDC_UI_MANAGEMENT_API_URL`.
 - Marked `EDC_UI_DATA_MANAGEMENT_API_KEY` as deprecated in favor of
   `EDC_UI_MANAGEMENT_API_KEY`.

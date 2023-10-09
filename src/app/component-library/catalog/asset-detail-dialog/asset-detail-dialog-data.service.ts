@@ -27,7 +27,7 @@ export class AssetDetailDialogDataService {
   }
 
   dataOfferDetails(dataOffer: DataOffer): AssetDetailDialogData {
-    let asset = dataOffer.asset;
+    const asset = dataOffer.asset;
     const propertyGridGroups = [
       this.assetPropertyGridGroupBuilder.buildAssetPropertiesGroup(asset, null),
       this.assetPropertyGridGroupBuilder.buildAdditionalPropertiesGroup(asset),
@@ -44,7 +44,7 @@ export class AssetDetailDialogDataService {
   contractAgreementDetails(
     contractAgreement: ContractAgreementCardMapped,
   ): AssetDetailDialogData {
-    let asset = contractAgreement.asset;
+    const asset = contractAgreement.asset;
 
     const propertyGridGroups = [
       this.assetPropertyGridGroupBuilder.buildContractAgreementGroup(
@@ -52,7 +52,7 @@ export class AssetDetailDialogDataService {
       ),
       this.assetPropertyGridGroupBuilder.buildContractPolicyGroup(
         contractAgreement.contractPolicy,
-        asset.name,
+        asset.title,
       ),
       this.assetPropertyGridGroupBuilder.buildAssetPropertiesGroup(
         asset,
@@ -70,7 +70,7 @@ export class AssetDetailDialogDataService {
   }
 
   brokerDataOfferDetails(dataOffer: BrokerDataOffer): AssetDetailDialogData {
-    let asset = dataOffer.asset;
+    const asset = dataOffer.asset;
 
     const propertyGridGroups = [
       this.assetPropertyGridGroupBuilder.buildBrokerDataOfferGroup(dataOffer),

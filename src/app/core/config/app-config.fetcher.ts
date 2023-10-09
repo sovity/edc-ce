@@ -1,14 +1,10 @@
 import urlJoin from 'url-join';
 import {validUrlPattern} from '../validators/url-validator';
 import {AppConfigProperties} from './app-config-properties';
-import {AppConfigBuilder} from './app-config.builder';
 import {AppConfigMerger} from './app-config.merger';
 
 export class AppConfigFetcher {
-  constructor(
-    private appConfigMerger: AppConfigMerger,
-    private appConfigBuilder: AppConfigBuilder,
-  ) {}
+  constructor(private appConfigMerger: AppConfigMerger) {}
 
   /**
    * Fetches app-config.json, applies {@link AppConfigProperties.configJson},
@@ -24,7 +20,7 @@ export class AppConfigFetcher {
 
     const additionalConfigUrl = this.buildAdditionConfigUrl(config);
     if (additionalConfigUrl) {
-      apiKey = this.appConfigBuilder.getManagementApiKey(config) ?? apiKey;
+      apiKey = config[AppConfigProperties.managementApiKey] ?? apiKey;
       const additionalConfig = await this.fetchEffectiveConfig(
         additionalConfigUrl,
         apiKey,
@@ -70,18 +66,17 @@ export class AppConfigFetcher {
     }
 
     // Relative URL
-    const dataManagementApiUrl =
-      this.appConfigBuilder.getManagementApiUrl(config);
+    const managementApiUrl = config[AppConfigProperties.managementApiUrl];
 
-    if (!dataManagementApiUrl) {
+    if (!managementApiUrl) {
       console.error(
         `Invalid value for ${AppConfigProperties.configUrl} and ${AppConfigProperties.managementApiUrl}. Could not build Additional Config URL:`,
         relativeUrl,
-        dataManagementApiUrl,
+        managementApiUrl,
       );
       return null;
     }
 
-    return urlJoin(dataManagementApiUrl!!, relativeUrl);
+    return urlJoin(managementApiUrl!!, relativeUrl);
   }
 }

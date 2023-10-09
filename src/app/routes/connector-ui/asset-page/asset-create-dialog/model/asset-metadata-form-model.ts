@@ -6,7 +6,7 @@ import {LanguageSelectItem} from '../../language-select/language-select-item';
  */
 export interface AssetMetadataFormModel {
   id: FormControl<string>;
-  name: FormControl<string>;
+  title: FormControl<string>;
   version: FormControl<string>;
   contentType: FormControl<string>;
   description: FormControl<string>;

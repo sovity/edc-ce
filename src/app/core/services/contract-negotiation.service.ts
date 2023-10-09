@@ -32,13 +32,13 @@ export class ContractNegotiationService {
   negotiationState(
     contractOffer: UiContractOffer,
   ): 'ready' | 'negotiating' | 'negotiated' {
-    let isNegotiated = this.isNegotiated(contractOffer);
+    const isNegotiated = this.isNegotiated(contractOffer);
 
     if (isNegotiated) {
       return 'negotiated';
     }
 
-    let isBusy = this.isBusy(contractOffer);
+    const isBusy = this.isBusy(contractOffer);
     return isBusy ? 'negotiating' : 'ready';
   }
 

@@ -6,8 +6,8 @@
       [formControl]="control"
       [compareWith]="'id' | compareByField">
       <mat-option *ngFor="let asset of assets" [value]="asset">
-        <div *ngIf="asset.name" class="flex flex-col">
-          {{ asset.name }}
+        <div *ngIf="asset.title" class="flex flex-col">
+          {{ asset.title }}
         </div>
       </mat-option>
     </mat-select>
@@ -19,7 +19,7 @@
           class="link"
           href="javascript:void(0)"
           (click)="onAssetClick(asset!!)">
-          {{ asset.name }}
+          {{ asset.title }}
         </a>
       </mat-card-content>
     </mat-card>

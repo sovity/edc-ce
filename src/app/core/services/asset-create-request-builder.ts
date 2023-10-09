@@ -1,15 +1,11 @@
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {UiAssetCreateRequest} from '@sovity.de/edc-client';
 import {AssetEditorDialogFormValue} from '../../routes/connector-ui/asset-page/asset-create-dialog/asset-editor-dialog-form-model';
-import {APP_CONFIG, AppConfig} from '../config/app-config';
 import {DataAddressMapper} from './data-address-mapper';
 
 @Injectable()
 export class AssetCreateRequestBuilder {
-  constructor(
-    @Inject(APP_CONFIG) private config: AppConfig,
-    private dataAddressMapper: DataAddressMapper,
-  ) {}
+  constructor(private dataAddressMapper: DataAddressMapper) {}
 
   /**
    * Build {@link UiAssetCreateRequest} from {@link AssetEditorDialogFormValue}
@@ -20,32 +16,30 @@ export class AssetCreateRequestBuilder {
   buildAssetCreateRequest(
     formValue: AssetEditorDialogFormValue,
   ): UiAssetCreateRequest {
-    let id = formValue.metadata?.id!;
-    let name = formValue.metadata?.name!;
-    let version = formValue.metadata?.version;
-    let description = formValue.metadata?.description;
-    let language = formValue.metadata?.language?.id;
-    let keywords = formValue.metadata?.keywords;
-    let licenseUrl = formValue.metadata?.standardLicense;
-    let creatorOrganizationName = this.config.curatorOrganizationName;
-    let publisherHomepage = formValue.metadata?.publisher;
-    let mediaType = formValue.metadata?.contentType;
-    let landingPageUrl = formValue.metadata?.endpointDocumentation;
+    const id = formValue.metadata?.id!;
+    const title = formValue.metadata?.title!;
+    const version = formValue.metadata?.version;
+    const description = formValue.metadata?.description;
+    const language = formValue.metadata?.language?.id;
+    const keywords = formValue.metadata?.keywords;
+    const licenseUrl = formValue.metadata?.standardLicense;
+    const publisherHomepage = formValue.metadata?.publisher;
+    const mediaType = formValue.metadata?.contentType;
+    const landingPageUrl = formValue.metadata?.endpointDocumentation;
 
-    let dataCategory = formValue.advanced?.dataModel;
-    let dataSubcategory = formValue.advanced?.dataSubcategory?.id;
-    let transportMode = formValue.advanced?.transportMode?.id;
-    let geoReferenceMethod = formValue.advanced?.geoReferenceMethod;
-    let dataModel = formValue.advanced?.dataModel;
+    const dataCategory = formValue.advanced?.dataModel;
+    const dataSubcategory = formValue.advanced?.dataSubcategory?.id;
+    const transportMode = formValue.advanced?.transportMode?.id;
+    const geoReferenceMethod = formValue.advanced?.geoReferenceMethod;
+    const dataModel = formValue.advanced?.dataModel;
 
     const dataAddressProperties =
       this.dataAddressMapper.buildDataAddressProperties(formValue.datasource);
     return {
       id,
-      name,
+      title,
       language,
       description,
-      creatorOrganizationName,
       publisherHomepage,
       licenseUrl,
       version,

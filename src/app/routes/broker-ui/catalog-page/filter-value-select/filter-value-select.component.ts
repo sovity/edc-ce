@@ -46,7 +46,7 @@ export class FilterValueSelectComponent
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.state) {
-      let selectedItems = this.formControl.value ?? [];
+      const selectedItems = this.formControl.value ?? [];
       if (!this.state.isEqualSelectedItems(selectedItems)) {
         this.formControl.setValue(this.state.model.selectedItems);
       }

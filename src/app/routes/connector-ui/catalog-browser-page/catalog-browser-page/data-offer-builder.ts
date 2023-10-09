@@ -15,10 +15,7 @@ export class DataOfferBuilder {
     private propertyGridFieldService: PropertyGridFieldService,
   ) {}
   buildDataOffer(dataOffer: UiDataOffer): DataOffer {
-    let asset = this.assetBuilder.buildAsset(
-      dataOffer.asset,
-      dataOffer.endpoint,
-    );
+    const asset = this.assetBuilder.buildAsset(dataOffer.asset);
     return {
       ...dataOffer,
       asset,
@@ -41,9 +38,10 @@ export class DataOfferBuilder {
     contractOffer: UiContractOffer,
     iContractOffer: number,
   ): ContractOffer {
-    const groupLabel = `Contract Offer ${
-      dataOffer.contractOffers.length > 1 ? iContractOffer + 1 : ''
-    }`;
+    const groupLabel = this.getGroupLabel(
+      iContractOffer,
+      dataOffer.contractOffers.length,
+    );
     return {
       ...contractOffer,
       properties: [
@@ -57,9 +55,13 @@ export class DataOfferBuilder {
         ...this.policyPropertyFieldBuilder.buildPolicyPropertyFields(
           contractOffer.policy,
           `${groupLabel} Contract Policy JSON-LD`,
-          asset.name,
+          asset.title,
         ),
       ],
     };
+  }
+
+  private getGroupLabel(i: number, total: number) {
+    return `Contract Offer ${total > 1 ? i : ''}`;
   }
 }

@@ -30,9 +30,9 @@ export class PolicyCardBuilder {
   buildPolicyCardConstraints(policy: UiPolicy): PolicyCardConstraint[] {
     const constraints = policy?.constraints ?? [];
     return constraints.map((constraint) => {
-      let left = constraint.left;
-      let operator = OPERATOR_SYMBOLS[constraint.operator];
-      let right = this.policyLiteralToString(constraint.right);
+      const left = constraint.left;
+      const operator = OPERATOR_SYMBOLS[constraint.operator];
+      const right = this.policyLiteralToString(constraint.right);
 
       return {
         left,

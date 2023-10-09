@@ -133,16 +133,16 @@ export class CatalogPageState implements OnDestroy {
     ctx: Ctx,
     action: CatalogPage.RemoveActiveFilterItem,
   ) {
-    let state: CatalogPageStateModel = ctx.getState();
-    let item = action.item;
+    const state: CatalogPageStateModel = ctx.getState();
+    const item = action.item;
     if (item.type === 'SEARCH_TEXT') {
       // Reset the Search
       this.onUpdateSearchText(ctx, new CatalogPage.UpdateSearchText(''));
     } else if (item.type === 'SELECTED_FILTER_ITEM') {
       // Remove the selected filter option
-      let filterId = item.selectedFilterId!;
-      let itemId = item.selectedFilterItem!.id;
-      let selectedItems = state.filters[filterId].model.selectedItems;
+      const filterId = item.selectedFilterId!;
+      const itemId = item.selectedFilterItem!.id;
+      const selectedItems = state.filters[filterId].model.selectedItems;
 
       this.onUpdateFilterSelectedItems(
         ctx,
@@ -214,8 +214,8 @@ export class CatalogPageState implements OnDestroy {
   ): CatalogPageStateModel {
     const filters = data.availableFilters.fields.map(
       (filter): FilterValueSelectVisibleState => {
-        let availableItems = mapCnfFilterItems(filter.values);
-        let existingFilter = state.filters[filter.id];
+        const availableItems = mapCnfFilterItems(filter.values);
+        const existingFilter = state.filters[filter.id];
         return FilterValueSelectVisibleState.buildVisibleState({
           id: filter.id,
           title: filter.title,

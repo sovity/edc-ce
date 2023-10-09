@@ -1,8 +1,12 @@
 import {Injectable} from '@angular/core';
 import {UiAsset} from '@sovity.de/edc-client';
+import {DataCategorySelectItem} from '../../routes/connector-ui/asset-page/data-category-select/data-category-select-item';
 import {DataCategorySelectItemService} from '../../routes/connector-ui/asset-page/data-category-select/data-category-select-item.service';
+import {DataSubcategorySelectItem} from '../../routes/connector-ui/asset-page/data-subcategory-select/data-subcategory-select-item';
 import {DataSubcategorySelectItemService} from '../../routes/connector-ui/asset-page/data-subcategory-select/data-subcategory-select-item.service';
+import {LanguageSelectItem} from '../../routes/connector-ui/asset-page/language-select/language-select-item';
 import {LanguageSelectItemService} from '../../routes/connector-ui/asset-page/language-select/language-select-item.service';
+import {TransportModeSelectItem} from '../../routes/connector-ui/asset-page/transport-mode-select/transport-mode-select-item';
 import {TransportModeSelectItemService} from '../../routes/connector-ui/asset-page/transport-mode-select/transport-mode-select-item.service';
 import {AdditionalAssetProperty, Asset} from './models/asset';
 
@@ -20,7 +24,7 @@ export class AssetBuilder {
     private dataSubcategorySelectItemService: DataSubcategorySelectItemService,
   ) {}
 
-  buildAsset(asset: UiAsset, connectorEndpoint: string): Asset {
+  buildAsset(asset: UiAsset): Asset {
     const {
       additionalProperties,
       additionalJsonProperties,
@@ -32,39 +36,50 @@ export class AssetBuilder {
       transportMode,
       ...assetProperties
     } = asset;
-
-    const languageSelectItem =
-      language == null
-        ? null
-        : this.languageSelectItemService.findById(language);
-    const dataCategorySelectItem =
-      dataCategory == null
-        ? null
-        : this.dataCategorySelectItemService.findById(dataCategory);
-    const dataSubcategorySelectItem =
-      dataSubcategory == null
-        ? null
-        : this.dataSubcategorySelectItemService.findById(dataSubcategory);
-    const transportModeSelectItem =
-      transportMode == null
-        ? null
-        : this.transportModeSelectItemService.findById(transportMode);
-
     return {
       ...assetProperties,
-      connectorEndpoint: connectorEndpoint,
-      creatorOrganizationName:
-        asset.creatorOrganizationName || 'Unknown Organization',
-      language: languageSelectItem,
-      dataCategory: dataCategorySelectItem,
-      dataSubcategory: dataSubcategorySelectItem,
-      transportMode: transportModeSelectItem,
+      language: this.getLanguageItem(language),
+      dataCategory: this.getDataCategoryItem(dataCategory),
+      dataSubcategory: this.getDataSubcategoryItem(dataSubcategory),
+      transportMode: this.getTransportModeItem(transportMode),
       mergedAdditionalProperties: this.buildAdditionalProperties(asset),
     };
   }
 
-  buildAdditionalProperties(asset: UiAsset): AdditionalAssetProperty[] {
-    let result: AdditionalAssetProperty[] = [];
+  private getTransportModeItem(
+    transportMode: string | undefined,
+  ): TransportModeSelectItem | null {
+    return transportMode == null
+      ? null
+      : this.transportModeSelectItemService.findById(transportMode);
+  }
+
+  private getDataSubcategoryItem(
+    dataSubcategory: string | undefined,
+  ): DataSubcategorySelectItem | null {
+    return dataSubcategory == null
+      ? null
+      : this.dataSubcategorySelectItemService.findById(dataSubcategory);
+  }
+
+  private getDataCategoryItem(
+    dataCategory: string | undefined,
+  ): DataCategorySelectItem | null {
+    return dataCategory == null
+      ? null
+      : this.dataCategorySelectItemService.findById(dataCategory);
+  }
+
+  private getLanguageItem(
+    language: string | undefined,
+  ): LanguageSelectItem | null {
+    return language == null
+      ? null
+      : this.languageSelectItemService.findById(language);
+  }
+
+  private buildAdditionalProperties(asset: UiAsset): AdditionalAssetProperty[] {
+    const result: AdditionalAssetProperty[] = [];
     type AssetKey =
       | 'additionalProperties'
       | 'additionalJsonProperties'

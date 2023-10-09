@@ -16,8 +16,9 @@ export class PolicyPropertyFieldBuilder {
     policyDetailDialogTitle: string,
     policyDetailDialogSubtitle: string,
   ): PropertyGridField[] {
-    let constraints = this.policyCardBuilder.buildPolicyCardConstraints(policy);
-    let irregularities = policy.errors;
+    const constraints =
+      this.policyCardBuilder.buildPolicyCardConstraints(policy);
+    const irregularities = policy.errors;
     return [
       {
         icon: 'policy',

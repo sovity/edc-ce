@@ -55,7 +55,7 @@ export class AppConfigMerger {
     }
 
     // Remove Embedded Config key from config for cleanliness
-    let {[AppConfigProperties.configJson]: _, ...rest} = config;
+    const {[AppConfigProperties.configJson]: _, ...rest} = config;
 
     // Merge with original config taking precedence
     config = this.mergeConfigs(

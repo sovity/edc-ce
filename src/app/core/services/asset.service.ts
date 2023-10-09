@@ -1,7 +1,6 @@
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {APP_CONFIG, AppConfig} from '../config/app-config';
 import {EdcApiService} from './api/edc-api.service';
 import {AssetBuilder} from './asset-builder';
 import {Asset} from './models/asset';
@@ -14,7 +13,6 @@ import {Asset} from './models/asset';
 })
 export class AssetService {
   constructor(
-    @Inject(APP_CONFIG) private config: AppConfig,
     private assetBuilder: AssetBuilder,
     private edcApiService: EdcApiService,
   ) {}
@@ -24,9 +22,7 @@ export class AssetService {
       .getAssetPage()
       .pipe(
         map((assetPage) =>
-          assetPage.assets.map((asset) =>
-            this.assetBuilder.buildAsset(asset, this.config.connectorEndpoint),
-          ),
+          assetPage.assets.map((asset) => this.assetBuilder.buildAsset(asset)),
         ),
       );
   }

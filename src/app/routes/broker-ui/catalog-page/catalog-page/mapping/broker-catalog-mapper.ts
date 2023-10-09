@@ -21,13 +21,14 @@ export class BrokerCatalogMapper {
   private buildUiDataOffer(offer: CatalogDataOffer): BrokerDataOffer {
     return {
       ...offer,
-      asset: this.assetBuilder.buildAsset(
-        {
-          assetId: offer.properties['asset:prop:id'],
-          name: offer.properties['asset:prop:id'],
-        },
-        offer.connectorEndpoint,
-      ),
+      asset: this.assetBuilder.buildAsset({
+        // TODO: Use UiAsset as soon as the broker is migrated to 0.3
+        assetId: offer.assetId,
+        title: offer.assetId,
+        connectorEndpoint: offer.connectorEndpoint,
+        participantId: 'unknown-participant-id',
+        creatorOrganizationName: 'Unknown Organization',
+      }),
     };
   }
 }

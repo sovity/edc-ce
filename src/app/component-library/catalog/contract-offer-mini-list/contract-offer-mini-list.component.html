@@ -23,7 +23,9 @@
     [columns]="3"
     [props]="contractOffer.properties"></property-grid>
 
-  <div *ngIf="contractOffers.length > 1" class="flex flex-row mt-[15px]">
+  <div
+    *ngIf="contractOffers.length > 1"
+    class="flex flex-row justify-end mt-[15px]">
     <button
       mat-raised-button
       color="primary"

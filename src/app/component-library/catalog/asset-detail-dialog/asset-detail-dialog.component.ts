@@ -108,10 +108,7 @@ export class AssetDetailDialogComponent implements OnDestroy {
   }
 
   private confirmDelete(): Observable<boolean> {
-    const dialogData = ConfirmDialogModel.forDelete(
-      'asset',
-      `"${this.asset.name}"`,
-    );
+    const dialogData = ConfirmDialogModel.forDelete('asset', this.asset.title);
     const ref = this.matDialog.open(ConfirmationDialogComponent, {
       maxWidth: '20%',
       data: dialogData,

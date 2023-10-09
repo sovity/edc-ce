@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, combineLatest, merge, of, sampleTime, scan} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {TransferHistoryEntry, UiDataOffer} from '@sovity.de/edc-client';
+import {DashboardTransferAmounts, UiDataOffer} from '@sovity.de/edc-client';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {LastCommitInfoService} from '../../../../core/services/api/last-commit-info.service';
 import {ConnectorInfoPropertyGridGroupBuilder} from '../../../../core/services/connector-info-property-grid-group-builder';
@@ -27,48 +27,15 @@ export class DashboardPageDataService {
 
     // Dashboard is built from different API calls
     const sources: Observable<Partial<DashboardPageData>>[] = [
-      this.assetKpis(),
       this.catalogBrowserKpis(),
-      this.contractAgreementKpis(),
-      this.contractDefinitionKpis(),
       this.numCatalogs(),
-      this.policyKpis(),
-      this.transferProcessKpis(),
-      this.connectorProperties(),
+      this.dashboardData(),
     ];
 
     // We merge all results as they come in, constructing our DashboardData
     // This allows single KPIs to have their own individual loading statuses
     return merge(...sources).pipe(
       scan((data, patch) => ({...data, ...patch}), initial),
-    );
-  }
-
-  private policyKpis(): Observable<Partial<DashboardPageData>> {
-    return this.edcApiService.getPolicyDefinitionPage().pipe(
-      map((policyDefinitionPage) => policyDefinitionPage.policies.length),
-      Fetched.wrap({failureMessage: 'Failed fetching number of policies.'}),
-      map((numPolicies) => ({numPolicies})),
-    );
-  }
-
-  private contractDefinitionKpis(): Observable<Partial<DashboardPageData>> {
-    return this.edcApiService.getContractDefinitionPage().pipe(
-      map((page) => page.contractDefinitions.length),
-      Fetched.wrap({
-        failureMessage: 'Failed fetching number of contract definitions.',
-      }),
-      map((numContractDefinitions) => ({numContractDefinitions})),
-    );
-  }
-
-  private contractAgreementKpis(): Observable<Partial<DashboardPageData>> {
-    return this.edcApiService.getContractAgreementPage().pipe(
-      map((page) => page.contractAgreements.length),
-      Fetched.wrap({
-        failureMessage: 'Failed fetching contract agreements.',
-      }),
-      map((numContractAgreements) => ({numContractAgreements})),
     );
   }
 
@@ -97,16 +64,6 @@ export class DashboardPageDataService {
     );
   }
 
-  private assetKpis(): Observable<Partial<DashboardPageData>> {
-    return this.edcApiService.getAssetPage().pipe(
-      map((assetPage) => assetPage.assets.length),
-      Fetched.wrap({
-        failureMessage: 'Failed fetching assets.',
-      }),
-      map((numAssets) => ({numAssets})),
-    );
-  }
-
   private numCatalogs(): Observable<Partial<DashboardPageData>> {
     return of({
       numCatalogs: Fetched.ready(
@@ -115,71 +72,36 @@ export class DashboardPageDataService {
     });
   }
 
-  private transferProcessKpis(): Observable<Partial<DashboardPageData>> {
-    return this.edcApiService.getTransferHistoryPage().pipe(
-      Fetched.wrap({
-        failureMessage: 'Failed fetching transfer processes.',
-      }),
-      map((transferData) => ({
-        incomingTransfersChart: transferData.map((it) =>
-          this.buildTransferChart(it.transferEntries, 'CONSUMING'),
-        ),
-        outgoingTransfersChart: transferData.map((it) =>
-          this.buildTransferChart(it.transferEntries, 'PROVIDING'),
-        ),
-      })),
-    );
-  }
-
   private buildTransferChart(
-    transfers: TransferHistoryEntry[],
+    transfers: DashboardTransferAmounts,
     direction: 'CONSUMING' | 'PROVIDING',
   ): DonutChartData {
-    const filteredTransfers =
-      direction === 'CONSUMING'
-        ? transfers.filter((it) => it.direction === 'CONSUMING')
-        : transfers.filter((it) => it.direction === 'PROVIDING');
+    const amounts: {label: string; amount: number; color: string}[] = [
+      {label: 'Completed', amount: transfers.numOk, color: '#b2e061'},
+      {label: 'In Progress', amount: transfers.numRunning, color: '#7eb0d5'},
+      {label: 'Error', amount: transfers.numError, color: '#fd7f6f'},
+    ].filter((it) => it.amount);
 
-    const states = [
-      ...new Set(
-        filteredTransfers
-          .sort((a, b) => a.state.code - b.state.code)
-          .map((it) => it.state.name),
-      ),
-    ];
-
-    const colorsByState = new Map<string, string>();
-    colorsByState.set('IN_PROGRESS', '#7eb0d5');
-    colorsByState.set('ERROR', '#fd7f6f');
-    colorsByState.set('COMPLETED', '#b2e061');
-    const defaultColor = '#bd7ebe';
-
-    const amountsByState = states.map(
-      (state) =>
-        filteredTransfers.filter((it) => it.state.name === state).length,
-    );
+    const total = transfers.numTotal;
 
     return {
       totalLabel: 'Total',
-      totalValue: filteredTransfers.length,
-      isEmpty: !filteredTransfers.length,
+      totalValue: total,
+      isEmpty: !total,
       emptyMessage: `No ${direction} transfer processes.`,
-
-      labels: states,
+      labels: amounts.map((it) => it.label),
       datasets: [
         {
           label: 'Number of Transfer Processes',
-          data: amountsByState,
-          backgroundColor: states.map(
-            (it) => colorsByState.get(it) ?? defaultColor,
-          ),
+          data: amounts.map((it) => it.amount),
+          backgroundColor: amounts.map((it) => it.color),
         },
       ],
       options: {responsive: false},
     };
   }
 
-  private connectorProperties(): Observable<Partial<DashboardPageData>> {
+  private dashboardData(): Observable<Partial<DashboardPageData>> {
     return combineLatest([
       this.lastCommitInfoService.getLastCommitInfoData().pipe(
         Fetched.wrap({
@@ -196,15 +118,55 @@ export class DashboardPageDataService {
           failureMessage: 'Failed fetching UI Last Commit Data',
         }),
       ),
+      this.edcApiService.getDashboardPage().pipe(
+        Fetched.wrap({
+          failureMessage: 'Failed fetching Dashboard Page Data',
+        }),
+      ),
     ]).pipe(
-      map(([lastCommitInfo, uiBuildDate, uiCommitDetails]) => ({
+      map(([lastCommitInfo, uiBuildDate, uiCommitDetails, fetched]) => ({
+        title: this.extractString(fetched, (it) => it.connectorTitle),
+        description: this.extractString(
+          fetched,
+          (it) => it.connectorDescription,
+        ),
+        numAssets: fetched.map((it) => it.numAssets),
+        numPolicies: fetched.map((it) => it.numPolicies),
+        numContractDefinitions: fetched.map((it) => it.numContractDefinitions),
+        numContractAgreements: fetched.map(
+          (it) =>
+            it.numContractAgreementsConsuming +
+            it.numContractAgreementsProviding,
+        ),
+        connectorEndpoint: this.extractString(
+          fetched,
+          (it) => it.connectorEndpoint,
+        ),
+        incomingTransfersChart: fetched.map((it) =>
+          this.buildTransferChart(it.transferProcessesConsuming, 'CONSUMING'),
+        ),
+        outgoingTransfersChart: fetched.map((it) =>
+          this.buildTransferChart(it.transferProcessesProviding, 'PROVIDING'),
+        ),
         connectorProperties:
           this.connectorInfoPropertyGridGroupBuilder.buildPropertyGridGroups(
             lastCommitInfo,
             uiBuildDate,
             uiCommitDetails,
+            fetched,
           ),
       })),
     );
+  }
+
+  private extractString<T>(
+    fetched: Fetched<T>,
+    extractor: (item: T) => string,
+  ): string {
+    return fetched.match({
+      ifLoading: () => 'Loading...',
+      ifError: () => 'Failed loading.',
+      ifOk: extractor,
+    });
   }
 }

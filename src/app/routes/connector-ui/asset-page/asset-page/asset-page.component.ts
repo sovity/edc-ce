@@ -40,7 +40,7 @@ export class AssetPageComponent implements OnInit, OnDestroy {
             map(
               (assets): AssetList => ({
                 filteredAssets: assets.filter((asset) =>
-                  asset.name?.includes(this.searchText),
+                  asset.title?.includes(this.searchText),
                 ),
                 numTotalAssets: assets.length,
               }),

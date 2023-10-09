@@ -4,7 +4,7 @@ import {DataAddressTypeSelectMode} from './data-address-type-select-mode';
 export const dataAddressTypeSelectItems = (
   type: DataAddressTypeSelectMode,
 ): DataAddressTypeSelectItem[] => {
-  let items: DataAddressTypeSelectItem[] = [
+  const items: DataAddressTypeSelectItem[] = [
     {
       id: 'Http',
       label: 'REST-API Endpoint',

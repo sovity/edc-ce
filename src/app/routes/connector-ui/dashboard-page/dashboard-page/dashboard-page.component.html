@@ -61,10 +61,10 @@
     <mat-card>
       <mat-card-title>EDC Connector</mat-card-title>
       <mat-card-subtitle>
-        {{ config.connectorIdsTitle }}
+        {{ data.title }}
       </mat-card-subtitle>
-      <p *ngIf="config.connectorIdsDescription" class="text-justify">
-        {{ config.connectorIdsDescription }}
+      <p *ngIf="data.description" class="text-justify">
+        {{ data.description }}
       </p>
       <p class="text-justify">
         Share the following Connector Endpoint to let others access your EDC
@@ -78,14 +78,14 @@
           matInput
           ngDefaultControl
           readonly
-          [ngModel]="config.connectorEndpoint"
+          [ngModel]="data.connectorEndpoint"
           (focus)="input.select()" />
         <mat-icon matPrefix>link</mat-icon>
         <button
           mat-icon-button
           matSuffix
           matTooltip="Copy to clipboard"
-          [cdkCopyToClipboard]="config.connectorEndpoint">
+          [cdkCopyToClipboard]="data.connectorEndpoint">
           <mat-icon>content_copy</mat-icon>
         </button>
       </mat-form-field>

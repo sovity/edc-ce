@@ -20,9 +20,11 @@ export const getAssetById = (id: string) =>
 export const createAsset = (asset: UiAssetCreateRequest): IdResponseDto => {
   assets.push({
     assetId: asset.id,
-    name: asset.name ?? asset.id,
+    title: asset.title ?? asset.id,
+    connectorEndpoint: 'https://my-connector/api/dsp',
+    participantId: 'my-connector',
     description: asset.description,
-    creatorOrganizationName: asset.creatorOrganizationName,
+    creatorOrganizationName: 'My Org',
     publisherHomepage: asset.publisherHomepage,
     licenseUrl: asset.licenseUrl,
     version: asset.version,

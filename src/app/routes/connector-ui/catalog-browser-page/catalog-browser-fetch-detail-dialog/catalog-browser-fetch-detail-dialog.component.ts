@@ -43,7 +43,7 @@ export class CatalogBrowserFetchDetailDialogComponent
       return [];
     }
 
-    let error = data.errorOrUndefined?.error;
+    const error = data.errorOrUndefined?.error;
     if (error instanceof HttpErrorResponse) {
       if (!error.status) {
         return [

@@ -68,6 +68,11 @@ export class AssetPropertyGridGroupBuilder {
       },
       {
         icon: 'category',
+        label: 'Participant ID',
+        ...this.propertyGridUtils.guessValue(asset.participantId),
+      },
+      {
+        icon: 'category',
         label: 'Content Type',
         ...this.propertyGridUtils.guessValue(asset.mediaType),
       },
@@ -154,7 +159,7 @@ export class AssetPropertyGridGroupBuilder {
     total: number,
   ) {
     const groupLabel = `Contract Offer ${total > 1 ? i + 1 : ''}`;
-    let properties: PropertyGridField[] = [
+    const properties: PropertyGridField[] = [
       {
         icon: 'policy',
         label: 'Contract Policy',
@@ -162,7 +167,7 @@ export class AssetPropertyGridGroupBuilder {
         onclick: () =>
           this.jsonDialogService.showJsonDetailDialog({
             title: `${groupLabel} Contract Policy)`,
-            subtitle: asset.name,
+            subtitle: asset.title,
             icon: 'policy',
             objectForJson: JSON.parse(
               contractOffer.contractPolicy.legacyPolicy ?? 'null',
@@ -186,7 +191,7 @@ export class AssetPropertyGridGroupBuilder {
   }
 
   buildContractAgreementGroup(contractAgreement: ContractAgreementCardMapped) {
-    let properties: PropertyGridField[] = [
+    const properties: PropertyGridField[] = [
       {
         icon: 'category',
         label: 'Signed',

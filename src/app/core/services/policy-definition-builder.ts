@@ -31,7 +31,7 @@ export class PolicyDefinitionBuilder {
   private buildPolicyConstraints(
     formValue: NewPolicyDialogFormValue,
   ): UiPolicyConstraint[] {
-    let policyType = formValue.policyType;
+    const policyType = formValue.policyType;
     switch (policyType) {
       case 'Time-Period-Restricted':
         return this.buildTimePeriodRestrictionPermissions(formValue);

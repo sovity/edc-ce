@@ -33,16 +33,16 @@ export class HttpRequestParamsMapper {
     const body = value.httpProxiedBody?.trim() || null;
     const contentType = value.httpProxiedBodyContentType?.trim() || null;
 
-    let proxyMethod =
+    const proxyMethod =
       value.showAllHttpParameterizationFields ||
       asset.httpDatasourceHintsProxyMethod;
-    let proxyPath =
+    const proxyPath =
       value.showAllHttpParameterizationFields ||
       asset.httpDatasourceHintsProxyPath;
-    let proxyQueryParams =
+    const proxyQueryParams =
       value.showAllHttpParameterizationFields ||
       asset.httpDatasourceHintsProxyQueryParams;
-    let proxyBody =
+    const proxyBody =
       value.showAllHttpParameterizationFields ||
       asset.httpDatasourceHintsProxyBody;
 
@@ -85,12 +85,12 @@ export class HttpRequestParamsMapper {
   buildHttpRequestParams(
     formValue: AssetDatasourceFormValue | undefined,
   ): HttpDataAddressParams {
-    let proxyMethod = !!formValue?.httpProxyMethod;
-    let proxyPath = !!formValue?.httpProxyPath;
-    let proxyQueryParams = !!formValue?.httpProxyQueryParams;
-    let proxyBody = !!formValue?.httpProxyBody;
+    const proxyMethod = !!formValue?.httpProxyMethod;
+    const proxyPath = !!formValue?.httpProxyPath;
+    const proxyQueryParams = !!formValue?.httpProxyQueryParams;
+    const proxyBody = !!formValue?.httpProxyBody;
 
-    let {authHeaderName, authHeaderValue, authHeaderSecretName} =
+    const {authHeaderName, authHeaderValue, authHeaderSecretName} =
       this.getAuthFields(formValue);
 
     let method = formValue?.httpMethod?.trim().toUpperCase() || null;
@@ -98,7 +98,7 @@ export class HttpRequestParamsMapper {
       method = null;
     }
 
-    let {url: baseUrl, queryParams} = this.getUrlAndQueryParams(
+    const {url: baseUrl, queryParams} = this.getUrlAndQueryParams(
       formValue?.httpUrl,
       formValue?.httpQueryParams,
     );
@@ -150,12 +150,12 @@ export class HttpRequestParamsMapper {
   } {
     let rawUrlTrimmed = rawUrl?.trim() ?? '';
 
-    let url = everythingBefore('?', rawUrlTrimmed);
+    const url = everythingBefore('?', rawUrlTrimmed);
 
-    let queryParamSegments = (rawQueryParams ?? []).map((param) =>
+    const queryParamSegments = (rawQueryParams ?? []).map((param) =>
       this.encodeQueryParam(param),
     );
-    let queryParams = [
+    const queryParams = [
       everythingAfter('?', rawUrlTrimmed),
       ...queryParamSegments,
     ]
@@ -166,8 +166,8 @@ export class HttpRequestParamsMapper {
   }
 
   private encodeQueryParam(param: HttpDatasourceQueryParamFormValue): string {
-    let k = param.paramName?.trim() ?? '';
-    let v = param.paramValue?.trim() ?? '';
+    const k = param.paramName?.trim() ?? '';
+    const v = param.paramValue?.trim() ?? '';
     return `${encodeURIComponent(k)}=${encodeURIComponent(v)}`;
   }
 
