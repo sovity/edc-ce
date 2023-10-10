@@ -47,6 +47,7 @@ EDC 0 compatible version (Connector UI only).
 
 #### Patch
 
+- Fixed HTTP Parameterization Hints not showing in Asset Details.
 - Removed 404-causing login polling from broker UI
 - Renamed button from cancel to close in json-dialogs
 - Broker: Fixed popularity not logged when clicking on a data offer

@@ -33,9 +33,9 @@ export namespace TestAssets {
     geoReferenceMethod: 'Lat/Lon',
     transportMode: 'Rail',
     httpDatasourceHintsProxyQueryParams: true,
-    httpDatasourceHintsProxyPath: false,
-    httpDatasourceHintsProxyMethod: false,
-    httpDatasourceHintsProxyBody: false,
+    httpDatasourceHintsProxyPath: true,
+    httpDatasourceHintsProxyMethod: true,
+    httpDatasourceHintsProxyBody: true,
     additionalProperties: {
       'http://unknown/usecase': 'my-use-case',
     },

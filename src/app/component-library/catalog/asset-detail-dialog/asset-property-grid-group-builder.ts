@@ -71,11 +71,7 @@ export class AssetPropertyGridGroupBuilder {
         label: 'Participant ID',
         ...this.propertyGridUtils.guessValue(asset.participantId),
       },
-      {
-        icon: 'category',
-        label: 'Content Type',
-        ...this.propertyGridUtils.guessValue(asset.mediaType),
-      },
+      ...this.buildHttpDatasourceFields(asset),
     ];
 
     if (this.activeFeatureSet.hasMdsFields()) {
@@ -86,6 +82,42 @@ export class AssetPropertyGridGroupBuilder {
       groupLabel,
       properties: fields,
     };
+  }
+
+  private buildHttpDatasourceFields(asset: Asset): PropertyGridField[] {
+    const fields: PropertyGridField[] = [];
+
+    const hints: {label: string; value: boolean | undefined}[] = [
+      {label: 'Method', value: asset.httpDatasourceHintsProxyMethod},
+      {label: 'Path', value: asset.httpDatasourceHintsProxyPath},
+      {label: 'Query Params', value: asset.httpDatasourceHintsProxyQueryParams},
+      {label: 'Body', value: asset.httpDatasourceHintsProxyBody},
+    ];
+
+    if (hints.some((hint) => hint.value != null)) {
+      const text = hints.some((hint) => hint.value)
+        ? hints
+            .filter((hint) => hint.value)
+            .map((hint) => hint.label)
+            .join(', ')
+        : 'Disabled';
+
+      fields.push({
+        icon: 'api',
+        label: 'HTTP Data Source Parameterization',
+        text,
+      });
+    }
+
+    if (asset.mediaType) {
+      fields.push({
+        icon: 'category',
+        label: 'Content Type',
+        ...this.propertyGridUtils.guessValue(asset.mediaType),
+      });
+    }
+
+    return fields;
   }
 
   buildAdditionalPropertiesGroup(asset: Asset): PropertyGridGroup {
