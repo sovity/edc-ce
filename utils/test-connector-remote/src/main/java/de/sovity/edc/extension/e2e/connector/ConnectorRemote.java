@@ -87,7 +87,7 @@ public class ConnectorRemote {
     public List<String> getAssetIds() {
         var requestBody = createObjectBuilder()
                 .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
-                .add(TYPE, "QuerySpecDto")
+                .add(TYPE, EDC_NAMESPACE + "QuerySpec")
                 .build();
         return prepareManagementApiCall()
                 .contentType(JSON)
@@ -103,8 +103,8 @@ public class ConnectorRemote {
     public String createPolicy(JsonObject policyJsonObject) {
         var requestBody = createObjectBuilder()
                 .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
-                .add(TYPE, "PolicyDefinitionDto")
-                .add("policy", policyJsonObject)
+                .add(TYPE, EDC_NAMESPACE + "PolicyDefinition")
+                .add(EDC_NAMESPACE + "policy", policyJsonObject)
                 .build();
 
         return prepareManagementApiCall()
@@ -152,9 +152,9 @@ public class ConnectorRemote {
         var datasetReference = new AtomicReference<JsonArray>();
         var requestBody = createObjectBuilder()
                 .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
-                .add(TYPE, "CatalogRequest")
-                .add("providerUrl", providerProtocolEndpoint.toString())
-                .add("protocol", "dataspace-protocol-http")
+                .add(TYPE, EDC_NAMESPACE + "CatalogRequest")
+                .add(EDC_NAMESPACE + "counterPartyAddress", providerProtocolEndpoint.toString())
+                .add(EDC_NAMESPACE + "protocol", "dataspace-protocol-http")
                 .build();
 
         await().atMost(timeout).untilAsserted(() -> {
@@ -197,16 +197,15 @@ public class ConnectorRemote {
             JsonObject policy) {
         var requestBody = createObjectBuilder()
                 .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
-                .add(TYPE, "NegotiationInitiateRequestDto")
-                .add("connectorId", providerParticipantId)
-                .add("consumerId", config.getParticipantId())
-                .add("providerId", providerParticipantId)
-                .add("connectorAddress", providerProtocolEndpoint.toString())
-                .add("protocol", "dataspace-protocol-http")
-                .add("offer", createObjectBuilder()
-                        .add("offerId", offerId)
-                        .add("assetId", assetId)
-                        .add("policy", jsonLd.compact(policy).orElseThrow(this::throwFailure))
+                .add(TYPE, EDC_NAMESPACE + "ContractRequest")
+                .add(EDC_NAMESPACE + "consumerId", config.getParticipantId())
+                .add(EDC_NAMESPACE + "providerId", providerParticipantId)
+                .add(EDC_NAMESPACE + "connectorAddress", providerProtocolEndpoint.toString())
+                .add(EDC_NAMESPACE + "protocol", "dataspace-protocol-http")
+                .add(EDC_NAMESPACE + "offer", createObjectBuilder()
+                        .add(EDC_NAMESPACE + "offerId", offerId)
+                        .add(EDC_NAMESPACE + "assetId", assetId)
+                        .add(EDC_NAMESPACE + "policy", jsonLd.compact(policy).orElseThrow(this::throwFailure))
                 )
                 .build();
 
@@ -273,16 +272,15 @@ public class ConnectorRemote {
             URI providerProtocolApi,
             JsonObject destination) {
         var requestBody = createObjectBuilder()
-                .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
-                .add(TYPE, "TransferRequestDto")
-                .add("dataDestination", destination)
-                .add("protocol", "dataspace-protocol-http")
-                .add("managedResources", false)
-                .add("assetId", assetId)
-                .add("contractId", contractAgreementId)
-                .add("connectorAddress", providerProtocolApi.toString())
-                .add("privateProperties", Json.createObjectBuilder().build())
-                .add("connectorId", config.getParticipantId())
+                .add(TYPE, EDC_NAMESPACE + "TransferRequest")
+                .add(EDC_NAMESPACE + "protocol", "dataspace-protocol-http")
+                .add(EDC_NAMESPACE + "connectorAddress", providerProtocolApi.toString())
+                .add(EDC_NAMESPACE + "connectorId", config.getParticipantId())
+                .add(EDC_NAMESPACE + "assetId", assetId)
+                .add(EDC_NAMESPACE + "dataDestination", destination)
+                .add(EDC_NAMESPACE + "contractId", contractAgreementId)
+                .add(EDC_NAMESPACE + "privateProperties", Json.createObjectBuilder().build())
+                .add(EDC_NAMESPACE + "managedResources", false)
                 .build();
 
         return prepareManagementApiCall()
@@ -336,14 +334,12 @@ public class ConnectorRemote {
             String targetUrl
     ) {
         Map<String, Object> dataSource = Map.of(
-                "name", "transfer-test",
-                "baseUrl", targetUrl,
-                "type", "HttpData",
-                "proxyQueryParams", "true"
+                EDC_NAMESPACE + "type", "HttpData",
+                EDC_NAMESPACE + "baseUrl", targetUrl,
+                EDC_NAMESPACE + "proxyQueryParams", "true"
         );
 
         var policy = createObjectBuilder()
-                .add(CONTEXT, "https://www.w3.org/ns/odrl.jsonld")
                 .add(TYPE, "use")
                 .build();
 

@@ -28,7 +28,7 @@ import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validat
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 
-class ConnectorTransferTest {
+class ManagementApiTransferTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = "provider";
     private static final String CONSUMER_PARTICIPANT_ID = "consumer";
