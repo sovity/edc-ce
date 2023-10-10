@@ -19,6 +19,15 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
     - [ ] Write or review the current [Productive Deployment Guide](https://github.com/sovity/edc-extensions/blob/main/docs/deployment-guide/goals/production)
     - [ ] Write or review the current [Development Deployment Guide](https://github.com/sovity/edc-extensions/blob/main/docs/deployment-guide/goals/development)
     - [ ] Write or review the current [Local Demo Deployment Guide](https://github.com/sovity/edc-extensions/blob/main/docs/deployment-guide/goals/local-demo)
+    - [ ] For Major version updates: If we want to continue supporting the old major version:
+        - [ ] Keep the old Productive Development Guide in a separate location.
+            - [ ] Add a note to the old version about its deprecation status.
+            - [ ] Add a Link the old version in the new version for discoverability.
+            - [ ] Check all links in the old version.
+        - [ ] Keep the old Productive Development Guide in a separate location.
+            - [ ] Add a note to the old version about its deprecation status.
+            - [ ] Add a Link the old version in the new version for discoverability.
+            - [ ] Check all links in the old version.
     - [ ] Update the CHANGELOG.md.
         - [ ] Add a clean `Unreleased` version.
         - [ ] Add the version to the old section.

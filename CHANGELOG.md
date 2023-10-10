@@ -42,7 +42,7 @@ All notable changes to this project will be documented in this file.
 - New modules with common UI models and mappers for the Connector UI and Broker UI: `:extensions:wrapper:wrapper-common-api` and `:extensions:wrapper:wrapper-common-mappers`.
 - New module with centralized Vocab and utilities for dealing with EDC / DCAT JSON-LD: `:utils:json-and-jsonld-utils`
 - New module with utilities for parsing DCAT Catalog responses for use in the UI API Wrapper and the Broker Server: `:utils:catalog-parser`
-- New modules  with utilities for E2E Testing Connectors: `:utils:test-connector-remote` and `:extensions:test-backend-controller`
+- New modules with utilities for E2E Testing Connectors: `:utils:test-connector-remote` and `:extensions:test-backend-controller`
 
 ### Patch Changes
 
@@ -52,11 +52,19 @@ All notable changes to this project will be documented in this file.
 
 ### Deployment Migration Notes
 
-1. There are Deployment Migration Notes for the EDC UI: https://github.com/sovity/edc-ui/releases/tag/v2.0.0
-2. The Connector Endpoint changed to `https://[FQDN]/api/dsp` from ~~`https://[FQDN]/api/v1/ids/data`~~.
-3. The `v1` Management API has been removed in favor of the `JSON-LD` `v2` Management API. See the postman collection for more details.
+1. Deployment Migration Notes for the EDC UI: https://github.com/sovity/edc-ui/releases/tag/v2.0.0
+2. The Connector Endpoint changed to `https://[FQDN]/api/dsp` from ~~`https://[FQDN]/api/v1/ids/data`~~. 
+3. The Management Endpoint changed to `https://[FQDN]/api/management` from ~~`https://[FQDN]/api/v1/management`~~.
+4. The `v1` Eclipse EDC Management API has been replaced by the Eclipse EDC `JSON-LD` `v2` Management API. Our Postman Collection shows some example requests. 
+   However, a switch to our [API Wrapper](extensions/wrapper/README.md) is recommended. Despite our Use Case API Wrapper API still being in development, 
+   the Connector UI API Wrapper is fully functional and can be used in concatenation with our type-safe generated API Client Libraries to both provide and 
+   consume data offers.
+5. The Connector now uses the Data Space Protocol (DSP) instead of the IDS Protocol. This requires different paths to be available from the internet. 
+   Please refer to our deployment guide for more information.
+6. If the old protocol endpoint required HTTP communication to pass as a workaround for a certain bug, this should be undone now, 
+   with all protocol endpoints being secured by HTTPS/TLS.
 
-#### Compatible Versions
+#### Compatible Versionss
 
 ## [4.2.0] - 2023-09-01
 

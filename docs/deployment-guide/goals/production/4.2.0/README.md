@@ -1,5 +1,7 @@
-Deployment Goal: Production (EDC CE 4.2.0)
+Deployment Goal: Production
 ========
+
+> This is for an old major version sovity EDC CE 4.2.0. [Go back](../README.md)
 
 ## About this Guide
 
@@ -37,9 +39,9 @@ The EDC Backend opens up multiple ports with different functionalities. They are
 proxy (at least the protocol endpoint needs to be).
 
 - The sovity EDC Connector is meant to be deployed with a reverse proxy merging the following ports:
-    - The UI's `80` port. Henceforth called the UI.
-    - The Backend's `11002` port. Henceforth called the Management API.
-    - The Backend's `11003` port. Henceforth called the Protocol API.
+    - The UI's `80` port. Henceforth, called the UI.
+    - The Backend's `11002` port. Henceforth, called the Management API.
+    - The Backend's `11003` port. Henceforth, called the Protocol API.
 - The mapping should look like this:
     - `/api/v1/ids` -> `edc:11003/api/v1/ids`
     - `/api/v1/management` -> `edc:11002/api/v1/management`
@@ -56,7 +58,7 @@ proxy (at least the protocol endpoint needs to be).
       Authority / DAPS and the configured certificates.
 - Exposing to the internet:
     - The Protocol API must be reachable via the internet. The required endpoints can be found in
-      this [ms8-public-endpoints.yaml](public-endpoints.yaml)
+      this [public-endpoints.yaml](public-endpoints.yaml)
     - Exposing the UI or the Management Endpoint to the internet requires an intermediate auth proxy.
 
 ## EDC UI Configuration
@@ -71,7 +73,7 @@ EDC_UI_ACTIVE_PROFILE: sovity-open-source (or mds-open-source)
 EDC_UI_DATA_MANAGEMENT_API_URL: https://[EDC URL]/api/v1/management
 
 # Management API Key
-EDC_API_AUTH_KEY: "ApiKeyDefaultValue"
+EDC_UI_DATA_MANAGEMENT_API_KEY: "ApiKeyDefaultValue"
 
 # Enable config fetching from the backend
 EDC_UI_CONFIG_URL: "edc-ui-config"
