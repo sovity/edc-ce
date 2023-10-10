@@ -14,10 +14,14 @@
 
 package de.sovity.edc.client;
 
+import de.sovity.edc.client.gen.ApiClient;
 import de.sovity.edc.client.oauth2.OAuth2ClientCredentials;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import okhttp3.OkHttpClient;
+
+import java.util.function.Consumer;
 
 @Getter
 @Setter
@@ -37,6 +41,13 @@ public class EdcClientBuilder {
      * Enables OAuth2 "Client Credentials Flow" authentication.
      */
     private OAuth2ClientCredentials oauth2ClientCredentials;
+
+    /**
+     * Custom configurer for the {@link ApiClient} and the {@link ApiClient#getHttpClient()}/{@link ApiClient#setHttpClient(OkHttpClient)}
+     * for environments with custom authentication mechanisms.
+     */
+    private Consumer<ApiClient> customConfigurer;
+
 
     public EdcClient build() {
         return EdcClientFactory.newClient(this);
