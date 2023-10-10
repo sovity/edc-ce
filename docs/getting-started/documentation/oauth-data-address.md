@@ -23,13 +23,11 @@ following `Custom Datasource Config (JSON)` can be created:
 
 ```json
 {
-  "properties": {
-    "type": "HttpData",
-    "baseUrl": "{{target-url}}",
-    "oauth2:tokenUrl": "{{token-url}}",
-    "oauth2:clientId": "{{client-id}}",
-    "oauth2:clientSecret": "{{client-secret}}"
-  }
+  "https://w3id.org/edc/v0.0.1/ns/type": "HttpData",
+  "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{target-url}}",
+  "oauth2:tokenUrl": "{{token-url}}",
+  "oauth2:clientId": "{{client-id}}",
+  "oauth2:clientSecret": "{{client-secret}}"
 }
 ```
 
@@ -43,30 +41,38 @@ following request:
 
 ```json
 {
-  "asset": {
-    "properties": {
-      "asset:prop:name": "test-asset",
-      "asset:prop:curatorOrganizationName": "organization",
-      "asset:prop:contenttype": "application/json",
-      "asset:prop:description": "description",
-      "asset:prop:datasource:http:hints:proxyBody": "false",
-      "asset:prop:datasource:http:hints:proxyMethod": "false",
-      "asset:prop:version": "1.0",
-      "asset:prop:id": "urn:artifact:test-asset:1.0",
-      "asset:prop:datasource:http:hints:proxyPath": "false",
-      "asset:prop:datasource:http:hints:proxyQueryParams": "false",
-      "asset:prop:originator": "{{originator-base-path}}/control/api/v1/ids/data",
-      "asset:prop:language": "https://w3id.org/idsa/code/EN"
+  "@type": "https://w3id.org/edc/v0.0.1/ns/Asset",
+  "https://w3id.org/edc/v0.0.1/ns/properties": {
+    "https://w3id.org/edc/v0.0.1/ns/id": "my-asset-1.0",
+    "http://www.w3.org/ns/dcat#version": "1.0",
+    "http://purl.org/dc/terms/language": "https://w3id.org/idsa/code/EN",
+    "http://purl.org/dc/terms/title": "test-document",
+    "http://purl.org/dc/terms/description": "my test document",
+    "http://www.w3.org/ns/dcat#keyword": [
+      "keyword1",
+      "keyword2"
+    ],
+    "http://purl.org/dc/terms/creator": {
+      "http://xmlns.com/foaf/0.1/name": "My Org"
+    },
+    "http://purl.org/dc/terms/license": "https://creativecommons.org/licenses/by/4.0/",
+    "http://www.w3.org/ns/dcat#landingPage": "https://mydepartment.myorg.com/my-offer",
+    "http://www.w3.org/ns/dcat#mediaType": "text/plain",
+    "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod": "false",
+    "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath": "false",
+    "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams": "false",
+    "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody": "false",
+    "http://purl.org/dc/terms/publisher": {
+      "http://xmlns.com/foaf/0.1/homepage": "https://myorg.com/"
     }
   },
-  "dataAddress": {
-    "properties": {
-      "type": "HttpData",
-      "baseUrl": "{{target-url}}",
-      "oauth2:tokenUrl": "{{token-url}}",
-      "oauth2:clientId": "{{client-id}}",
-      "oauth2:clientSecret": "{{client-secret}}"
-    }
+  "https://w3id.org/edc/v0.0.1/ns/privateProperties": {},
+  "https://w3id.org/edc/v0.0.1/ns/dataAddress": {
+    "https://w3id.org/edc/v0.0.1/ns/type": "HttpData",
+    "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{target-url}}",
+    "oauth2:tokenUrl": "{{token-url}}",
+    "oauth2:clientId": "{{client-id}}",
+    "oauth2:clientSecret": "{{client-secret}}"
   }
 }
 ```
@@ -82,13 +88,11 @@ following `Custom Datasink Config (JSON)` type can be started:
 
 ```json
 {
-  "properties": {
-    "type": "HttpData",
-    "baseUrl": "{{target-url}}",
-    "oauth2:tokenUrl": "{{token-url}}",
-    "oauth2:clientId": "{{client-id}}",
-    "oauth2:clientSecret": "{{client-secret}}"
-  }
+  "https://w3id.org/edc/v0.0.1/ns/type": "HttpData",
+  "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{target-url}}",
+  "oauth2:tokenUrl": "{{token-url}}",
+  "oauth2:clientId": "{{client-id}}",
+  "oauth2:clientSecret": "{{client-secret}}"
 }
 ```
 
@@ -98,28 +102,25 @@ API
 To start a transfer to an oauth2 protected API the management-API of the EDC can be used to send the
 following request:
 
-`POST` to `{{connector-base-url}}/control/data/transferprocess`
+`POST` to `{{connector-fqdn}}/api/management/v2/transferprocesses`
 
 ```json
 {
-  "protocol": "ids-multipart",
-  "assetId": "urn:artifact:http",
-  "contractId": "{{contract-id}}",
-  "dataDestination": {
-    "properties": {
-      "type": "HttpData",
-      "baseUrl": "{{target-url}}",
-      "oauth2:tokenUrl": "{{token-url}}",
-      "oauth2:clientId": "{{client-id}}",
-      "oauth2:clientSecret": "{{client-secret}}"
-    }
+  "@type": "https://w3id.org/edc/v0.0.1/ns/TransferRequest",
+  "https://w3id.org/edc/v0.0.1/ns/assetId": "{{ASSET_ID}}",
+  "https://w3id.org/edc/v0.0.1/ns/contractId": "{{CONTRACT_ID}}",
+  "https://w3id.org/edc/v0.0.1/ns/connectorAddress": "https://{{PROVIDER_EDC_FQDN}}/api/dsp",
+  "https://w3id.org/edc/v0.0.1/ns/connectorId": "{{PROVIDER_EDC_PARTICIPANT_ID}}",
+  "https://w3id.org/edc/v0.0.1/ns/dataDestination": {
+    "https://w3id.org/edc/v0.0.1/ns/type": "HttpData",
+    "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{target-url}}",
+    "oauth2:tokenUrl": "{{token-url}}",
+    "oauth2:clientId": "{{client-id}}",
+    "oauth2:clientSecret": "{{client-secret}}"
   },
-  "transferType": {
-    "contentType": "application/octet-stream",
-    "isFinite": true
-  },
-  "managedResources": false,
-  "connectorAddress": "https://{{providerConnectorUrl}}/api/v1/ids/data",
-  "connectorId": "consumer"
+  "https://w3id.org/edc/v0.0.1/ns/properties": {},
+  "https://w3id.org/edc/v0.0.1/ns/privateProperties": {},
+  "https://w3id.org/edc/v0.0.1/ns/protocol": "dataspace-protocol-http",
+  "https://w3id.org/edc/v0.0.1/ns/managedResources": false
 }
 ```
