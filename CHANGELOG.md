@@ -4,9 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [x.x.x] - UNRELEASED
 
-### Major Changes
+### Overview
 
-### Minor Changes
+### EDC UI
+
+### EDC Extensions
+
+#### Major Changes
+
+#### Minor Changes
 
 ### Deployment Migration Notes
 
@@ -14,7 +20,19 @@ All notable changes to this project will be documented in this file.
 
 ## [5.0.0] - 10.10.2023
 
-### Major Changes
+### Overview
+
+Migration from Eclipse EDC Milestone 8 to Eclispe EDC 0.2.1.
+
+The API Wrapper and API Client Libraries can now be used to fully control a sovity EDC Connector.
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v2.0.0
+
+### EDC Extensions
+
+#### Major Changes
 
 - Bump Eclipse EDC Version to `0.2.1`:
   - Now using the Data Space Protocol (DSP) over the ~~IDS Protocol~~.
@@ -24,7 +42,7 @@ All notable changes to this project will be documented in this file.
   - For productive deployments, a detailed deployment guide has been added.
   - The Dev-Images now also require a PostgreSQL Database.
 
-### Minor Changes
+#### Minor Changes
 
 - All Connector UI Endpoints were migrated to our UI API Wrapper. New UI API Wrapper Endpoints:
     - Asset Page
@@ -44,7 +62,7 @@ All notable changes to this project will be documented in this file.
 - New module with utilities for parsing DCAT Catalog responses for use in the UI API Wrapper and the Broker Server: `:utils:catalog-parser`
 - New modules with utilities for E2E Testing Connectors: `:utils:test-connector-remote` and `:extensions:test-backend-controller`
 
-### Patch Changes
+#### Patch Changes
 
 - New modules in `:launchers:common` and `:launchers:connectors` so building different variants no longer requires separate builds.
 - New module `:extensions:wrapper:wrapper-api` split from `:extensions:wrapper:wrapper` so integration tests in `wrapper` can use the Java Client Library.
@@ -64,7 +82,13 @@ All notable changes to this project will be documented in this file.
 6. If the old protocol endpoint required HTTP communication to pass as a workaround for a certain bug, this should be undone now, 
    with all protocol endpoints being secured by HTTPS/TLS.
 
-#### Compatible Versionss
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:5.0.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:5.0.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:5.0.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.0.0`
 
 ## [4.2.0] - 2023-09-01
 
@@ -76,7 +100,7 @@ MDS 1.2 release using MS8 EDC.
 
 - https://github.com/sovity/edc-ui/releases/tag/v0.0.1-milestone-8-sovity13
 
-### EDC-Extensions
+### Detailed Changes
 
 #### Patch Changes
 
@@ -88,7 +112,7 @@ MDS 1.2 release using MS8 EDC.
 
 - Connector Backend Docker Images:
     - Dev EDC: `ghcr.io/sovity/edc-dev:4.2.0`
-    - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.2.0`
+    - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.2.0`
     - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.2.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity13`
 
@@ -123,7 +147,7 @@ Security improvements of container image and enhancements for the `ReferringConn
 
 - Connector Backend Docker Images:
   - Dev EDC: `ghcr.io/sovity/edc-dev:4.1.0`
-  - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.1.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.1.0`
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.1.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity12`
 
@@ -151,7 +175,7 @@ No changes besides docker image versions.
 
 - Connector Backend Docker Images:
   - Dev EDC: `ghcr.io/sovity/edc-dev:4.0.1`
-  - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.1`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.1`
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.1`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity11`
 
@@ -187,7 +211,7 @@ No changes besides docker image versions.
 
 - Connector Backend Docker Images:
   - Dev EDC: `ghcr.io/sovity/edc-dev:4.0.0`
-  - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.0`
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity9`
 
