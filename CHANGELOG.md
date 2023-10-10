@@ -16,6 +16,22 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Major
 
+#### Minor
+
+#### Patch
+
+#### Deployment Migration Notes
+
+## [v2.0.0] 10.10.2023
+
+### Overview
+
+EDC 0 compatible version (Connector UI only).
+
+### Detailed Changes
+
+#### Major
+
 - Switched to semantic versioning
 - Migrated transfer history page to the api wrapper
 - Migrated contract definition page to the api wrapper
