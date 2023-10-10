@@ -1,7 +1,7 @@
 ---
 name: Release
 about: Create an issue to track a release process.
-title: "Release v0.0.1-milestone-8-sovity{{version}}"
+title: "Release x.y.z"
 labels: ["task/release", "scope/ce"]
 assignees: ""
 ---
@@ -11,7 +11,7 @@ assignees: ""
 ## Work Breakdown
 
 Feel free to edit this release checklist in-progress depending on what tasks need to be done:
-- [ ] Decide a release version depending on the previous release.
+- [ ] Decide a release version depending on major/minor/patch changes in the CHANGELOG.md.
 - [ ] Update this issue's title to the new version
 - [ ] `release-prep` PR:
   - [ ] Update the CHANGELOG.md.
