@@ -34,8 +34,10 @@ dependencies {
 }
 
 val openapiFileDir = "${project.buildDir}/swagger"
-val openapiFileFilename = "edc-api-wrapper.yaml"
+val openapiFileFilename = "sovity-edc-api-wrapper.yaml"
 val openapiFile = "$openapiFileDir/$openapiFileFilename"
+
+val openapiDocsDir = project.rootProject.rootDir.resolve("docs")
 
 tasks.withType<io.swagger.v3.plugins.gradle.tasks.ResolveTask> {
     outputDir = file(openapiFileDir)
@@ -47,8 +49,15 @@ tasks.withType<io.swagger.v3.plugins.gradle.tasks.ResolveTask> {
     resourcePackages = setOf("de.sovity.edc.ext.wrapper.api")
 }
 
+tasks.register<Copy>("copyOpenapiYamlToDocs") {
+    dependsOn("resolve")
+    from(openapiFile)
+    into(openapiDocsDir)
+}
+
 task<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiGenerateTypeScriptClient") {
     dependsOn("resolve")
+    dependsOn("copyOpenapiYamlToDocs")
     generatorName.set("typescript-fetch")
     configOptions.set(mutableMapOf(
             "supportsES6" to "true",

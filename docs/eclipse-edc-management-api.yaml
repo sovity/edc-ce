@@ -4,7 +4,7 @@ info:
   description: REST API documentation for the Eclipse EDC management-api. This does not include endpoints of the sovity EDC API Wrapper.
   version: 0.2.1
 servers:
-  - url: /
+  - url: https://[MY_EDC_FQDN]/api/management
 paths:
   /callback/{processId}/deprovision:
     post:

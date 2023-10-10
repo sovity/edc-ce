@@ -5,7 +5,7 @@
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
-<h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Clients</h3>
+<h3 align="center">sovity EDC API Wrapper</h3>
 
   <p align="center">
     <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
@@ -14,31 +14,35 @@
   </p>
 </div>
 
-## About this Extension
+## sovity EDC API Wrapper
 
-To provide type-safe JSON APIs for both our Connector UI and Use Case Applications,
-we provide an API Wrapper around the Connector over the JSON-LD Management API of the EDC Connector.
+We provide a full type-safe and opinionated API Wrapper for better access to the EDC Connector's functionality.
 
-These APIs are more opinionated and use-case tailored.
+## Explore
 
-This module contains:
+Create and consume Data Offers using clean type-safe JSON REST APIs:
+- [API Wrapper OpenAPI YAML](../../docs/sovity-edc-api-wrapper.yaml).
+- [Java API Client Library](./clients/java-client)
+- [TypeScript API Client Library](./clients/typescript-client)
 
+## Compatibility
+
+Our EDC API Wrapper APIs and API Clients are compatible with both our sovity EDC Community Edition and sovity EDC Enterprise Editions.
+
+## Modules
+
+- The [sovity EDC API Wrapper Extension](./wrapper), serving implementations for our Community Edition APIs.
 - API Definitions:
-    - [sovity Community Edition EDC API](./wrapper-api)
-    - [sovity Enterprise Edition EDC API](./wrapper-ee-api)
-    - [Broker / Connector Common API](./wrapper-common-api)
-- API Client Libraries:
-    - [Java API Client](./clients/java-client)
-    - [TypeScript API Client](./clients/typescript-client)
-    - more to come
-- An [EDC Extension](./wrapper) serving the implementations for the sovity Community Edition API.
-- [Broker / Connector Common Services](./wrapper-common-mappers)
-
-## Why does this extension exist?
-
-The goal is to design an API such that it can be used losslessly with OpenAPI 3.0 generators to provide different client
-implementations. Furthermore, the decoupling of EDC Core APIs and a custom API facade allows better backwards
-compatibility.
+  - The sovity Community Edition EDC [API Definitions](./wrapper-api), including the [Connector UI API](wrapper-api/src/main/java/de/sovity/edc/ext/wrapper/api/ui) and [Use Case API](wrapper-api/src/main/java/de/sovity/edc/ext/wrapper/api/usecase).
+  - The sovity Enterprise Edition EDC [API Definitions](./wrapper-ee-api).
+- [Client Libraries](./clients) and example projects:
+  - [Java API Client Library](./clients/java-client)
+  - [Java API Client Library Example](./clients/java-client-example)
+  - [TypeScript API Client Library](./clients/typescript-client)
+  - [TypeScript API Client Library Example](./clients/typescript-client-example)
+- Utilities:
+  - Broker UI / Connector UI [Common Models](./wrapper-common-api)
+  - Broker / Connector [Common Services](./wrapper-common-mappers)
 
 ## License
 

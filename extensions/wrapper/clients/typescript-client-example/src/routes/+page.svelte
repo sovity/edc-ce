@@ -3,7 +3,7 @@
   import { buildEdcClient, type EdcClient } from '@sovity.de/edc-client';
 
   const edcClient: EdcClient = buildEdcClient({
-    managementApiUrl: 'http://localhost:11002/api/v1/management',
+    managementApiUrl: 'http://localhost:11002/api/management',
     managementApiKey: 'ApiKeyDefaultValue'
   });
 

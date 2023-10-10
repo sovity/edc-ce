@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
+import io.swagger.v3.oas.annotations.servers.Server;
 
 @OpenAPIDefinition(
         info = @Info(
@@ -37,6 +38,9 @@ import io.swagger.v3.oas.annotations.info.License;
                         url = "https://github.com/sovity/edc-extensions/blob/main/LICENSE"
                 )
         ),
+        servers = {
+                @Server(url = "https://[MY_EDC_FQDN]/api/management")
+        },
         externalDocs = @ExternalDocumentation(
                 description = "EDC API Wrapper Project in sovity/edc-extensions",
                 url = "https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper"
