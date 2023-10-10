@@ -38,6 +38,7 @@ EDC 0 compatible version (Connector UI only).
 - Migrated policy definition page to the api wrapper
 - Migrated asset page to the api wrapper
 - Migrated dashboard page to the api wrapper
+- The Docker Container now uses the port `8080` instead of ~~`80`~~.
 
 #### Minor
 
@@ -53,6 +54,7 @@ EDC 0 compatible version (Connector UI only).
 
 #### Deployment Migration Notes
 
+- The Docker Container now uses the port `8080` instead of ~~`80`~~.
 - The following ENV Vars were changed:
   - ~~`EDC_UI_DATA_MANAGEMENT_API_URL`~~ became `EDC_UI_MANAGEMENT_API_URL`
   - ~~`EDC_UI_DATA_MANAGEMENT_API_KEY`~~ became `EDC_UI_MANAGEMENT_API_KEY`
