@@ -6,7 +6,7 @@ export const DataAddressProperty = {
   baseUrl: `${EDC}baseUrl`,
   body: `${EDC}body`,
   header: `${EDC}header`,
-  mediaType: `${EDC}mediaType`,
+  contentType: `${EDC}contentType`,
   method: `${EDC}method`,
   pathSegments: `${EDC}pathSegments`,
   proxyBody: `${EDC}proxyBody`,

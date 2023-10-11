@@ -51,7 +51,7 @@ export class HttpRequestParamsMapper {
       [DataAddressProperty.pathSegments]: proxyPath ? pathSegments : null,
       [DataAddressProperty.queryParams]: proxyQueryParams ? queryParams : null,
       [DataAddressProperty.body]: proxyBody ? body : null,
-      [DataAddressProperty.mediaType]: proxyBody ? contentType : null,
+      [DataAddressProperty.contentType]: proxyBody ? contentType : null,
     });
   }
 

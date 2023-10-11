@@ -23,7 +23,7 @@
         <mat-label>Custom Datasink Config (JSON)</mat-label>
         <textarea
           matInput
-          placeholder='{"properties": {"type": "HttpData", ...}}'
+          placeholder='{"https://w3id.org/edc/v0.0.1/ns/type": "HttpData", ...}'
           [formControl]="ctrl"></textarea>
         <mat-error *ngIf="ctrl.invalid && ctrl.errors?.jsonInvalid">
           {{ validationMessages.invalidJsonMessage }}
@@ -44,8 +44,8 @@
           {{ validationMessages.invalidJsonMessage }}
         </mat-error>
         <mat-hint>
-          JSON Fields "assetId", "contractId" and "connectorAddress" will be
-          overridden.
+          JSON-LD values for "edc:connectorId", "edc:contractId",
+          "edc:connectorId" and "edc:connectorAddress" will be overridden.
         </mat-hint>
       </mat-form-field>
 

@@ -122,9 +122,6 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
       const customJson: any = JSON.parse(
         value.transferProcessRequest?.trim() ?? '',
       );
-      customJson.assetId = this.data.asset.assetId;
-      customJson.contractId = this.data.contractId;
-      customJson.connectorAddress = this.data.asset.connectorEndpoint;
 
       return {
         type: 'CUSTOM_JSON',
