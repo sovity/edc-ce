@@ -53,7 +53,7 @@ class GreetingResourceTest {
                 .when().get("/")
                 .then()
                 .statusCode(200)
-                .body("assetCount", is(3));
+                .body("assetsCount", is(3));
     }
 
 }
