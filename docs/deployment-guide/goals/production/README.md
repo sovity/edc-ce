@@ -3,7 +3,6 @@ Productive Deployment Guide
 
 > This is for our latest version. There is another guide for [4.2.0](4.2.0/README.md).
 
-
 ## About this Guide
 
 This is a productive deployment guide for self-hosting a functional sovity CE EDC Connector or MDS CE EDC Connector.
@@ -20,13 +19,13 @@ to technical reasons, reachability via the internet and well-defined URLs across
 
 To deploy an EDC multiple deployment units must be deployed and configured.
 
-| Deployment Unit                                                | Version / Details                                                                              |
-|----------------------------------------------------------------|------------------------------------------------------------------------------------------------|
-| An Auth Proxy / Auth solution of your choice.                  | (deployment specific, required to secure UI and management API)                                |
-| Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                                          |
-| Postgresql                                                     | 13 or compatible version                                                                       |
-| EDC Backend                                                    | edc-ce or edc-ce-mds, see [CHANGELOG.md](../../../../../CHANGELOG.md) for compatible versions. |
-| EDC UI                                                         | edc-ui, see  [CHANGELOG.md](../../../../../CHANGELOG.md) for compatible versions.              |
+| Deployment Unit                                                | Version / Details                                                                           |
+|----------------------------------------------------------------|---------------------------------------------------------------------------------------------|
+| An Auth Proxy / Auth solution of your choice.                  | (deployment specific, required to secure UI and management API)                             |
+| Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                                       |
+| Postgresql                                                     | 13 or compatible version                                                                    |
+| EDC Backend                                                    | edc-ce or edc-ce-mds, see [CHANGELOG.md](../../../../CHANGELOG.md) for compatible versions. |
+| EDC UI                                                         | edc-ui, see  [CHANGELOG.md](../../../../CHANGELOG.md) for compatible versions.              |
 
 ## Configuration
 
@@ -89,7 +88,8 @@ A sovity EDC CE or MDS EDC CE Backend deployment requires:
 - The following configuration properties
 
 > [!WARNING]
-> Please be careful with overriding any of the ENV Vars set in our [launchers/.env](../../../../../launchers/.env). Our defaults
+> Please be careful with overriding any of the ENV Vars set in our [launchers/.env](../../../../launchers/.env). Our
+> defaults
 > will respect overrides, and the Core EDC ENV Vars can be in some cases sensitive to edge cases such as trailing
 > slashes.
 
