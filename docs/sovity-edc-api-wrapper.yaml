@@ -229,7 +229,7 @@ paths:
     get:
       tags:
       - UI
-      description: Collect all data for Contract Agreement Page
+      description: Collect all data for the Contract Agreement Page
       operationId: getContractAgreementPage
       responses:
         default:
@@ -300,6 +300,7 @@ paths:
     get:
       tags:
       - UI
+      description: Collect all data for the Transfer History Page
       operationId: getTransferHistoryPage
       responses:
         default:
@@ -312,6 +313,7 @@ paths:
     get:
       tags:
       - UI
+      description: Queries a transfer process' asset
       operationId: getTransferProcessAsset
       parameters:
       - name: transferProcessId

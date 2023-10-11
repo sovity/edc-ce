@@ -44,9 +44,9 @@ class GreetingResourceTest {
     }
 
     @Test
-    void testHelloEndpoint() {
-        var kpiResult = mock(KpiResult.class);
-        when(kpiResult.getAssetsCount()).thenReturn(3);
+    void testGetKpis() {
+        var kpiResult = new KpiResult();
+        kpiResult.setAssetsCount(3);
         when(useCaseApi.getKpis()).thenReturn(kpiResult);
 
         given()
