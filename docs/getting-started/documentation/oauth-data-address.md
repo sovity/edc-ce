@@ -37,7 +37,7 @@ API
 To create an asset providing oauth2 protected data the management-API of the EDC can be used to send the
 following request:
 
-`POST` to `{{connector-base-url}}/control/data/assets`
+`POST` to `https://{{FQDN}}/api/management/v2/assets`
 
 ```json
 {
@@ -102,7 +102,7 @@ API
 To start a transfer to an oauth2 protected API the management-API of the EDC can be used to send the
 following request:
 
-`POST` to `{{connector-fqdn}}/api/management/v2/transferprocesses`
+`POST` to `https://{{FQDN}}/api/management/v2/transferprocesses`
 
 ```json
 {

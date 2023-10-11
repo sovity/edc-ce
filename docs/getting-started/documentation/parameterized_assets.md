@@ -17,10 +17,12 @@ Create an `Custom Datasource Config (JSON)` asset over the edc-ui using the foll
 
 Start Transfer
 ========
-Start a transfer using the `transferprocess`-POST-Endpoint on the management API using the following JSON.
-Make sure to update the `contractId` and `dataDestination`.
-The relevant fields for API parametrization are located in the properties of the `transferProcessDTO` (not in `dataDestination`).
-In this example `pathSegments`, `method` and `queryParams` are passed.
+Start a transfer using the Management API using the following JSON:
+
+The relevant fields for API parametrization are located in the properties section of the transfer process, 
+not the data address of the data sink.
+
+`POST` to `https://{{FQDN}}/api/management/v2/transferprocesses`
 ```json
 {
   "@type": "https://w3id.org/edc/v0.0.1/ns/TransferRequest",

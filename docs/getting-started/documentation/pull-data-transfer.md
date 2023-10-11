@@ -50,48 +50,46 @@ Body:
 
 To pull data a http request to the provided `{{endpoint}}` using the header: `{{authKey}}: {{authCode}}` should be started.
 
-Starting the Data-Transfer using the "Json-Type" using the EDC-Ui
+Starting the Data-Transfer using the Connector UI
 -------------------------------------------------
 
-To trigger a Pull-Data-Transfer the `Json-Type` from the Transfer-Dialog has to be used with the following JSON input:
+To trigger a Pull-Data-Transfer, please select "Custom Transfer Process JSON" when initiating the transfer, and provide:
 ```json
 {
-  "properties": {
-  "type": "HttpProxy",
-  "assetId": "{{assetId}}"
-  }
+  "@type": "https://w3id.org/edc/v0.0.1/ns/TransferRequest",
+  "https://w3id.org/edc/v0.0.1/ns/dataDestination": {
+    "https://w3id.org/edc/v0.0.1/ns/type": "HttpProxy",
+    "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{target-url}}"
+  },
+  "https://w3id.org/edc/v0.0.1/ns/properties": {
+    "https://w3id.org/edc/v0.0.1/ns/receiverHttpEndpoint": "{{target-pull-backend-url}}",
+  },
+  "https://w3id.org/edc/v0.0.1/ns/protocol": "dataspace-protocol-http",
+  "https://w3id.org/edc/v0.0.1/ns/managedResources": false
 }
 ```
-`{{assetId}}`: Id of the asset that should be pulled for instance: urn:artifact:bitcoin
 
 Starting the Data-Transfer using the EDC-Api
 -------------------------------------------------
 
 To start a pull-http-transfer using the management-API of the EDC one can send the following request:
 
-`POST` to `{{connector-base-url}}/control/data/transferprocess`
+`POST` to `https://{{FQDN}}/api/management/v2/transferprocesses`
 ```json
 {
-  "protocol": "ids-multipart",
-  "assetId": "urn:artifact:http-pull",
-  "contractId": "{{contract-id}}",
-  "dataDestination": {
-    "properties": {
-        "type": "HttpProxy",
-        "assetId": "urn:artifact:http-pull"
-    }
+  "@type": "https://w3id.org/edc/v0.0.1/ns/TransferRequest",
+  "https://w3id.org/edc/v0.0.1/ns/assetId": "{{ASSET_ID}}",
+  "https://w3id.org/edc/v0.0.1/ns/contractId": "{{CONTRACT_ID}}",
+  "https://w3id.org/edc/v0.0.1/ns/connectorAddress": "https://{{PROVIDER_EDC_FQDN}}/api/dsp",
+  "https://w3id.org/edc/v0.0.1/ns/connectorId": "{{PROVIDER_EDC_PARTICIPANT_ID}}",
+  "https://w3id.org/edc/v0.0.1/ns/dataDestination": {
+    "https://w3id.org/edc/v0.0.1/ns/type": "HttpProxy",
+    "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{target-url}}"
   },
-  "properties": {
-    "receiver.http.endpoint": "{{target-pull-backend-url}}"
+  "https://w3id.org/edc/v0.0.1/ns/properties": {
+    "https://w3id.org/edc/v0.0.1/ns/receiverHttpEndpoint": "{{target-pull-backend-url}}"
   },
-  "transferType": {
-    "contentType": "application/octet-stream",
-    "isFinite": true
-  },
-  "managedResources": false,
-  "connectorAddress": "https://{{providerConnectorUrl}}/api/v1/ids/data",
-  "connectorId": "consumer"
+  "https://w3id.org/edc/v0.0.1/ns/protocol": "dataspace-protocol-http",
+  "https://w3id.org/edc/v0.0.1/ns/managedResources": false
 }
 ```
-
-The `receiver.http.endpoint` setting is used to set the endpoint of the Pulling-Backend dynamically. Note that this setting will be renamed `https://w3id.org/edc/v0.0.1/ns/receiverHttpEndpoint` in the future `0.1.0` version of the EDC.
