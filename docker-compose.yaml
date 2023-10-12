@@ -43,6 +43,8 @@ services:
       POSTGRESQL_USERNAME: edc
       POSTGRESQL_PASSWORD: edc
       POSTGRESQL_DATABASE: edc
+    ports:
+      - '54321:5432'
     volumes:
       - 'broker-postgresql:/bitnami/postgresql'
   connector-ui:

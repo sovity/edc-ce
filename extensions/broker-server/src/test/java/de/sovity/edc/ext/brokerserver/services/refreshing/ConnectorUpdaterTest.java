@@ -21,6 +21,7 @@ import de.sovity.edc.ext.brokerserver.db.TestDatabase;
 import de.sovity.edc.ext.brokerserver.db.TestDatabaseFactory;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
+import io.restassured.path.json.JsonPath;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
@@ -37,7 +38,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
@@ -86,7 +89,22 @@ class ConnectorUpdaterTest {
             var dataOffer = dataOffers.get(0);
             assertThat(dataOffer.getAssetId()).isEqualTo("test-asset-1");
             assertThat(dataOffer.getAssetProperties().data()).contains("Test Asset 1");
-            assertThat(dataOffer.getAssetProperties().data()).contains("\"some-example-prop\": \"{\\\"key\\\":\\\"value\\\"}\"");
+
+            var props = JsonPath.from(dataOffer.getAssetProperties().data());
+            assertThat(props.getString("\"asset:prop:name\"")).isEqualTo("Test Asset 1");
+            assertThat(props.getString("test-array")).isEqualTo("[\"a\",\"b\"]");
+            assertThat(props.getString("test-int")).isEqualTo("5");
+            assertThat(props.getString("test-double")).isEqualTo("5.1");
+            assertThat(props.getString("test-boolean")).isEqualTo("true");
+            assertThat(props.getString("test-uri")).isEqualTo("https://w3id.org/idsa/code/AB");
+
+            var testObj = JsonPath.from(props.getString("test-obj"));
+            assertThat((Map<?, ?>) testObj.get("test-obj")).isEqualTo(Map.of("key", "value"));
+            assertThat((List<?>) testObj.get("test-array")).isEqualTo(List.of("a", "b"));
+            assertThat((Integer) testObj.get("test-int")).isEqualTo(5);
+            assertThat((Float) testObj.get("test-double")).isEqualTo(5.1f);
+            assertThat((Boolean) testObj.get("test-boolean")).isTrue();
+            assertThat((String) testObj.get("test-uri")).isEqualTo("https://w3id.org/idsa/code/AB");
 
             var contractOffers = dsl.selectFrom(Tables.DATA_OFFER_CONTRACT_OFFER).stream().toList();
             assertThat(contractOffers).hasSize(1);
@@ -121,7 +139,25 @@ class ConnectorUpdaterTest {
                 .id(assetId)
                 .property(AssetProperty.ASSET_ID, assetId)
                 .property(AssetProperty.ASSET_NAME, assetName)
-                .property("some-example-prop", new LinkedHashMap<>(Map.of("key", "value")))
+                .property("test-uri", "https://w3id.org/idsa/code/AB")
+                .property("http://test-uri-key", "value")
+                .property("test-obj", new LinkedHashMap<>(Map.of(
+                        "test-uri", "https://w3id.org/idsa/code/AB",
+                        "http://test-uri-key", "value",
+                        "test-obj", new LinkedHashMap<>(Map.of(
+                                "key", "value"
+                        )),
+                        "test-array", new ArrayList<>(List.of("a", "b")),
+                        "test-string", "hello",
+                        "test-int", 5,
+                        "test-double", 5.1,
+                        "test-boolean", true
+                )))
+                .property("test-array", new ArrayList<>(List.of("a", "b")))
+                .property("test-string", "hello")
+                .property("test-int", 5)
+                .property("test-double", 5.1)
+                .property("test-boolean", true)
                 .build();
         var dataAddress = DataAddress.Builder.newInstance()
                 .properties(Map.of(

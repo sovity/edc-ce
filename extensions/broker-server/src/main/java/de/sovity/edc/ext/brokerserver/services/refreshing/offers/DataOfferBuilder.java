@@ -20,13 +20,16 @@ import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDa
 import de.sovity.edc.ext.brokerserver.utils.StreamUtils2;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractOffer;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -91,17 +94,23 @@ public class DataOfferBuilder {
     @NotNull
     @SneakyThrows
     private String getAssetPropertiesJson(Asset asset) {
-        var properties = asset.getProperties().entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> getAssetPropertyValue(entry.getValue())
-                ));
+        var properties = mapNonNullValues(asset.getProperties(), this::getAssetPropertyValue);
         return objectMapper.writeValueAsString(properties);
     }
 
-    @NotNull
     @SneakyThrows
     private String getAssetPropertyValue(Object value) {
+        if (value == null) {
+            return null;
+        }
+
+        if (value instanceof URI uri) {
+            // I don't know why the Eclipse EDC is casting Strings to URIs, but it does
+            // We need to prevent this from hitting the writeValueAsString or additional
+            // quotes are added
+            return uri.toString();
+        }
+
         if (value instanceof String stringValue) {
             return stringValue;
         }
@@ -115,5 +124,12 @@ public class DataOfferBuilder {
     @SneakyThrows
     private String getPolicyJson(ContractOffer offer) {
         return objectMapper.writeValueAsString(offer.getPolicy());
+    }
+
+    private <T, K, R> Map<K, R> mapNonNullValues(Map<K, T> map, Function<T, R> valueMapper) {
+        return map.entrySet().stream()
+                .map(entry -> Pair.of(entry.getKey(), valueMapper.apply(entry.getValue())))
+                .filter(entry -> entry.getValue() != null)
+                .collect(Collectors.toMap(Pair::getLeft, Pair::getRight));
     }
 }
