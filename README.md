@@ -110,6 +110,16 @@ provided ENV vars take precedence, however.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### (Optional) Configuring the NGINX
+
+```yaml
+# Customizable ENV Vars and their defaults
+NGINX_BIND: '0.0.0.0'
+NGINX_PORT: '8080'
+NGINX_ACCESS_LOG: '/dev/stdout'
+NGINX_ERROR_LOG: '/dev/stderr'
+```
+
 <!-- RUNNING DEV MODE -->
 
 ## Running dev mode

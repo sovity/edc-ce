@@ -1,5 +1,5 @@
-access_log /dev/stdout;
-error_log /dev/stderr;
+access_log ${NGINX_ACCESS_LOG};
+error_log ${NGINX_ERROR_LOG};
 disable_symlinks if_not_owner;
 
 server {

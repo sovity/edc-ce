@@ -73,6 +73,9 @@ EDC 0 compatible version (Connector UI only).
   - `EDC_UI_MAINTAINER_URL`
   - `EDC_UI_ASSET_PROP_ORIGINATOR_ORGANIZATION`
   - `EDC_UI_ASSET_PROP_ORIGINATOR`
+- New **optional** ENV Vars:
+  - `NGINX_ACCESS_LOG`, default: `/dev/stdout`
+  - `NGINX_ERROR_LOG`, default: `/dev/stderr`
 
 ## [v0.0.1-milestone-8-sovity12] 12.07.2023
 

@@ -37,6 +37,8 @@ USER nginx:nginx
 
 ENV NGINX_BIND="0.0.0.0"
 ENV NGINX_PORT=8080
+ENV NGINX_ACCESS_LOG=/dev/stdout
+ENV NGINX_ERROR_LOG=/dev/stderr
 
 HEALTHCHECK --interval=2s --timeout=5s --retries=10 \
   CMD curl -f http://$NGINX_BIND:$NGINX_PORT/ || exit 1
