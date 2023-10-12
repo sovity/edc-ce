@@ -1,8 +1,11 @@
-How Can OAuth2 be used for Http-Data-Sources and Sinks?
+Data Sources and Data Sinks protected by OAuth2
 ========
 
-Overview
-========
+> [!NOTE]
+> This feature is only available in our sovity EDC Enterprise Edition.
+
+## Overview
+
 OAuth2 protected APIs can be used for both Http-Data-Sources and Http-Data-Sinks. For both the
 following properties can be used:
 
@@ -12,11 +15,12 @@ following properties can be used:
 | oauth2:clientId     | The client id                                                |
 | oauth2:clientSecret | The secret of the client authenticating to the OAuth2-Server |
 
-Provider
-========
+> [!NOTE]
+> The only supported flow right now is the "Client Credentials" flow.
 
-UI
---
+## Data Sources secured via OAuth2
+
+### Providing the Asset via the UI
 
 To provide data from an oauth2 protected API using the EDC-Ui an asset with the
 following `Custom Datasource Config (JSON)` can be created:
@@ -31,8 +35,7 @@ following `Custom Datasource Config (JSON)` can be created:
 }
 ```
 
-API
----
+### Providing the Asset via the Management API
 
 To create an asset providing oauth2 protected data the management-API of the EDC can be used to send the
 following request:
@@ -77,11 +80,9 @@ following request:
 }
 ```
 
-Consumer
-========
+## Data Sinks secured by OAuth2
 
-UI
---
+### Initiating the Transfer via the UI
 
 To start a transfer to an oauth2 protected API using the EDC-Ui a transfer with the
 following `Custom Datasink Config (JSON)` type can be started:
@@ -96,8 +97,7 @@ following `Custom Datasink Config (JSON)` type can be started:
 }
 ```
 
-API
----
+### Initiating the Transfer via the Management API
 
 To start a transfer to an oauth2 protected API the management-API of the EDC can be used to send the
 following request:
