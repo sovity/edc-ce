@@ -14,12 +14,11 @@
 package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.client.gen.model.ContractAgreementTransferRequest;
-import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestParams;
-import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestType;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
+import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
+import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
@@ -39,9 +38,14 @@ import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
+import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
+import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -282,6 +286,64 @@ class UiApiWrapperTest {
         assertThat(completedConsumingTransferProcess.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.RUNNING);
     }
 
+    @Test
+    void customTransferRequest() {
+        // arrange
+        var data = "expected data 123";
+
+        var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
+                .id("asset-1")
+                .dataAddressProperties(Map.of(
+                        Prop.Edc.TYPE, "HttpData",
+                        Prop.Edc.METHOD, "GET",
+                        Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
+                ))
+                .build()).getId();
+        assertThat(assetId).isEqualTo("asset-1");
+
+        var policyId = providerClient.uiApi().createPolicyDefinition(PolicyDefinitionCreateRequest.builder()
+                .policyDefinitionId("policy-1")
+                .policy(UiPolicyCreateRequest.builder()
+                        .constraints(List.of())
+                        .build())
+                .build()).getId();
+
+        providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
+                .contractDefinitionId("cd-1")
+                .accessPolicyId(policyId)
+                .contractPolicyId(policyId)
+                .assetSelector(List.of())
+                .build());
+
+        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
+        assertThat(dataOffers).hasSize(1);
+        var dataOffer = dataOffers.get(0);
+        assertThat(dataOffer.getContractOffers()).hasSize(1);
+        var contractOffer = dataOffer.getContractOffers().get(0);
+
+        // act
+        var negotiation = negotiate(dataOffer, contractOffer);
+        var transferRequestJsonLd = Json.createObjectBuilder()
+                .add(
+                        Prop.Edc.DATA_DESTINATION,
+                        getDatasinkPropertiesJsonObject()
+                )
+                .add(Prop.Edc.CTX + "transferType", Json.createObjectBuilder()
+                        .add(Prop.Edc.CTX + "contentType", "application/octet-stream")
+                        .add(Prop.Edc.CTX + "isFinite", true)
+                )
+                .add(Prop.Edc.CTX + "protocol", HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
+                .add(Prop.Edc.CTX + "managedResources", false)
+                .build();
+        var transferRequest = InitiateCustomTransferRequest.builder()
+                .contractAgreementId(negotiation.getContractAgreementId())
+                .transferProcessRequestJsonLd(JsonUtils.toJson(transferRequestJsonLd))
+                .build();
+        consumerClient.uiApi().initiateCustomTransfer(transferRequest);
+
+        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
+    }
+
     private UiContractNegotiation negotiate(UiDataOffer dataOffer, UiContractOffer contractOffer) {
         var negotiationRequest = ContractNegotiationRequest.builder()
                 .counterPartyAddress(dataOffer.getEndpoint())
@@ -305,14 +367,17 @@ class UiApiWrapperTest {
 
     private void initiateTransfer(UiContractNegotiation negotiation) {
         var contractAgreementId = negotiation.getContractAgreementId();
-        var transferRequest = ContractAgreementTransferRequest.builder()
-                .type(ContractAgreementTransferRequestType.PARAMS_ONLY)
-                .params(ContractAgreementTransferRequestParams.builder()
-                        .contractAgreementId(contractAgreementId)
-                        .dataSinkProperties(dataAddress.getDataSinkProperties())
-                        .build())
+        var transferRequest = InitiateTransferRequest.builder()
+                .contractAgreementId(contractAgreementId)
+                .dataSinkProperties(dataAddress.getDataSinkProperties())
                 .build();
         consumerClient.uiApi().initiateTransfer(transferRequest);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private JsonObject getDatasinkPropertiesJsonObject() {
+        var props = dataAddress.getDataSinkProperties();
+        return Json.createObjectBuilder((Map<String, Object>) (Map) props).build();
     }
 
     private String getProtocolEndpoint(ConnectorRemote connector) {

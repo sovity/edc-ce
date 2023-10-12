@@ -180,11 +180,10 @@ public class WrapperExtensionContextBuilder {
                 selfDescriptionService
         );
         var transferRequestBuilder = new TransferRequestBuilder(
-                objectMapper,
                 contractAgreementUtils,
                 contractNegotiationUtils,
                 edcPropertyUtils,
-                serviceExtensionContext.getConnectorId()
+                typeTransformerRegistry
         );
         var contractAgreementTransferApiService = new ContractAgreementTransferApiService(
                 transferRequestBuilder,

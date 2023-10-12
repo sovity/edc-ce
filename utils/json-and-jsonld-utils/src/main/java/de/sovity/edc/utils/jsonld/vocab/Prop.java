@@ -27,6 +27,7 @@ public class Prop {
     @UtilityClass
     public class Edc {
         public final String CTX = "https://w3id.org/edc/v0.0.1/ns/";
+        public final String CTX_ALIAS = "edc";
         public final String TYPE_ASSET = CTX + "Asset";
         public final String TYPE_DATA_ADDRESS = CTX + "DataAddress";
         public final String ID = CTX + "id";
@@ -41,6 +42,14 @@ public class Prop {
         public final String PROXY_PATH = CTX + "proxyPath";
         public final String PROXY_QUERY_PARAMS = CTX + "proxyQueryParams";
         public final String PROXY_BODY = CTX + "proxyBody";
+
+        // Transfer Request Related
+        public static String TYPE_TRANSFER_REQUEST = CTX + "TransferRequest";
+        public final String CONNECTOR_ADDRESS = CTX + "connectorAddress";
+        public final String CONTRACT_ID = CTX + "contractId";
+        public final String CONNECTOR_ID = CTX + "connectorId";
+        public final String ASSET_ID = CTX + "assetId";
+        public final String DATA_DESTINATION = CTX + "dataDestination";
     }
 
     /**

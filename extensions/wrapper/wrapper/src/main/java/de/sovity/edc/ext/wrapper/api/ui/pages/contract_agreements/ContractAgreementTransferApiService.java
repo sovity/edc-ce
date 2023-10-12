@@ -14,12 +14,14 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements;
 
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.InitiateCustomTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.InitiateTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.TransferRequestBuilder;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
+import org.eclipse.edc.connector.transfer.spi.types.TransferRequest;
 import org.jetbrains.annotations.NotNull;
 
 import static org.eclipse.edc.web.spi.exception.ServiceResultHandler.exceptionMapper;
@@ -30,10 +32,19 @@ public class ContractAgreementTransferApiService {
     private final TransferProcessService transferProcessService;
 
     @NotNull
-    public IdResponseDto initiateTransfer(
-            ContractAgreementTransferRequest request
-    ) {
-        var transferRequest = transferRequestBuilder.buildTransferRequest(request);
+    public IdResponseDto initiateTransfer(InitiateTransferRequest request) {
+        var transferRequest = transferRequestBuilder.buildCustomTransferRequest(request);
+        return initiate(transferRequest);
+    }
+
+    @NotNull
+    public IdResponseDto initiateCustomTransfer(InitiateCustomTransferRequest request) {
+        var transferRequest = transferRequestBuilder.buildCustomTransferRequest(request);
+        return initiate(transferRequest);
+    }
+
+    @NotNull
+    private IdResponseDto initiate(TransferRequest transferRequest) {
         var transferProcess = transferProcessService.initiateTransfer(transferRequest)
                 .orElseThrow(exceptionMapper(TransferProcess.class, transferRequest.getId()));
         return new IdResponseDto(transferProcess.getId());
