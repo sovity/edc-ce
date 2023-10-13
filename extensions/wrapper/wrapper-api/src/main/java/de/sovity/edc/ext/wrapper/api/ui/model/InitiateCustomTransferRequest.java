@@ -27,13 +27,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Schema(description = "Required data for starting a Contract Agreement's Transfer Process")
-public class ContractAgreementTransferRequest {
-    @Schema(description = "Type of request", requiredMode = Schema.RequiredMode.REQUIRED)
-    private ContractAgreementTransferRequestType type;
+public class InitiateCustomTransferRequest {
+    @Schema(description = "Contract Agreement ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String contractAgreementId;
 
-    @Schema(description = "For type PARAMS_ONLY: Required data for starting a Transfer Process")
-    private ContractAgreementTransferRequestParams params;
-
-    @Schema(description = "For type CUSTOM_JSON: Custom Transfer Process Create Dto JSON")
-    private String customJson;
+    @Schema(description = "Partial TransferProcessRequestJsonLd JSON-LD. Fields participantId, connectorEndpoint, assetId and contractId can be omitted, they will be overridden with information from the contract.")
+    private String transferProcessRequestJsonLd;
 }

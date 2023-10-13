@@ -15,10 +15,12 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreement;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.client.gen.model.ContractAgreementTransferRequest;
-import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestParams;
-import de.sovity.edc.client.gen.model.ContractAgreementTransferRequestType;
+import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
+import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.ext.wrapper.TestUtils;
+import de.sovity.edc.utils.JsonUtils;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
+import jakarta.json.Json;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -63,17 +65,13 @@ class ContractAgreementTransferApiServiceTest {
         var contractId = UUID.randomUUID().toString();
         createContractNegotiation(store, COUNTER_PARTY_ADDRESS, contractId);
 
-        var request = new ContractAgreementTransferRequest(
-                ContractAgreementTransferRequestType.PARAMS_ONLY,
-                new ContractAgreementTransferRequestParams(
-                        contractId,
-                        Map.of(
-                                "type", "HttpData",
-                                "baseUrl", DATA_SINK
-                        ),
-                        Map.of("privateProperty", "privateValue")
+        var request = new InitiateTransferRequest(
+                contractId,
+                Map.of(
+                        "type", "HttpData",
+                        "baseUrl", DATA_SINK
                 ),
-                null
+                Map.of("privateProperty", "privateValue")
         );
 
         // act
@@ -92,6 +90,49 @@ class ContractAgreementTransferApiServiceTest {
         assertThat(dataRequest.getDataDestination().getProperties()).containsAllEntriesOf(Map.of(
                 "https://w3id.org/edc/v0.0.1/ns/type", "HttpData",
                 "baseUrl", DATA_SINK
+        ));
+    }
+
+    @Test
+    void startCustomTransferProcessForAgreementId(
+            ContractNegotiationStore store,
+            TransferProcessStore transferProcessStore
+    ) {
+        // arrange
+        var contractId = UUID.randomUUID().toString();
+        createContractNegotiation(store, COUNTER_PARTY_ADDRESS, contractId);
+
+        var customRequestJson = Json.createObjectBuilder()
+                .add(Prop.Edc.DATA_DESTINATION, Json.createObjectBuilder()
+                        .add(Prop.Edc.TYPE, "HttpData")
+                        .add(Prop.Edc.BASE_URL, DATA_SINK))
+                .add(Prop.Edc.PRIVATE_PROPERTIES, Json.createObjectBuilder()
+                        .add(Prop.Edc.RECEIVER_HTTP_ENDPOINT, "http://my-pull-backend")
+                        .add("this-will-disappear", "because-its-not-an-url")
+                        .add("http://unknown/custom-prop", "value"))
+                .build();
+        var request = new InitiateCustomTransferRequest(
+                contractId,
+                JsonUtils.toJson(customRequestJson)
+        );
+
+        // act
+        var result = client.uiApi().initiateCustomTransfer(request);
+
+        // then
+        var transferProcess = transferProcessStore.findById(result.getId());
+        assertThat(transferProcess).isNotNull();
+        assertThat(transferProcess.getPrivateProperties()).containsAllEntriesOf(Map.of(
+                Prop.Edc.RECEIVER_HTTP_ENDPOINT, "http://my-pull-backend",
+                "http://unknown/custom-prop", "value"
+        ));
+
+        var dataRequest = transferProcess.getDataRequest();
+        assertThat(dataRequest.getContractId()).isEqualTo(contractId);
+        assertThat(dataRequest.getConnectorAddress()).isEqualTo(COUNTER_PARTY_ADDRESS);
+        assertThat(dataRequest.getDataDestination().getProperties()).containsAllEntriesOf(Map.of(
+                Prop.Edc.TYPE, "HttpData",
+                Prop.Edc.BASE_URL, DATA_SINK
         ));
     }
 

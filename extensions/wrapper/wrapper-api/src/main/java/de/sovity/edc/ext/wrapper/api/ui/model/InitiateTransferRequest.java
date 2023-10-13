@@ -29,7 +29,7 @@ import java.util.Map;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Schema(description = "For type PARAMS_ONLY: Required data for starting a Transfer Process")
-public class ContractAgreementTransferRequestParams {
+public class InitiateTransferRequest {
     @Schema(description = "Contract Agreement ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String contractAgreementId;
 

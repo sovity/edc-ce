@@ -19,12 +19,13 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.InitiateCustomTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.InitiateTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiContractNegotiation;
@@ -129,12 +130,13 @@ public class UiResourceImpl implements UiResource {
     }
 
     @Override
-    public IdResponseDto initiateTransfer(
-            ContractAgreementTransferRequest contractAgreementTransferRequest
-    ) {
-        return contractAgreementTransferApiService.initiateTransfer(
-                contractAgreementTransferRequest
-        );
+    public IdResponseDto initiateTransfer(InitiateTransferRequest request) {
+        return contractAgreementTransferApiService.initiateTransfer(request);
+    }
+
+    @Override
+    public IdResponseDto initiateCustomTransfer(InitiateCustomTransferRequest request) {
+        return contractAgreementTransferApiService.initiateCustomTransfer(request);
     }
 
     @Override

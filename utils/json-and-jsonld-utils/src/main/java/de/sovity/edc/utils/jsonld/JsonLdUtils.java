@@ -18,9 +18,11 @@ import com.apicatalog.jsonld.document.JsonDocument;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
+import jakarta.json.JsonArray;
 import jakarta.json.JsonNumber;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonString;
+import jakarta.json.JsonStructure;
 import jakarta.json.JsonValue;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -42,6 +44,21 @@ public class JsonLdUtils {
     public static JsonObject tryCompact(JsonObject json) {
         try {
             return com.apicatalog.jsonld.JsonLd.compact(JsonDocument.of(json), EMPTY_CONTEXT_DOCUMENT).get();
+        } catch (JsonLdError e) {
+            return json;
+        }
+    }
+
+    /**
+     * Compact JSON-LD, but don't compact property names to namespaces.
+     *
+     * @param json json-ld
+     * @return compacted values
+     */
+    public static JsonObject expandKeysOnly(JsonObject json) {
+        try {
+            var expanded = com.apicatalog.jsonld.JsonLd.expand(JsonDocument.of(json)).get();
+            return com.apicatalog.jsonld.JsonLd.compact(JsonDocument.of(expanded), EMPTY_CONTEXT_DOCUMENT).get();
         } catch (JsonLdError e) {
             return json;
         }
