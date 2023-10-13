@@ -31,6 +31,8 @@ public class InitiateCustomTransferRequest {
     @Schema(description = "Contract Agreement ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String contractAgreementId;
 
-    @Schema(description = "Partial TransferProcessRequestJsonLd JSON-LD. Fields participantId, connectorEndpoint, assetId and contractId can be omitted, they will be overridden with information from the contract.")
+    @Schema(description = "Partial TransferProcessRequestJsonLd JSON-LD. Fields participantId, connectorEndpoint, " +
+            "assetId and contractId can be omitted, they will be overridden with information from the contract.",
+            requiredMode = Schema.RequiredMode.REQUIRED)
     private String transferProcessRequestJsonLd;
 }

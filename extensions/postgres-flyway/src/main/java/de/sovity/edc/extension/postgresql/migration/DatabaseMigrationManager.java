@@ -20,7 +20,6 @@ import org.eclipse.edc.spi.system.configuration.Config;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DatabaseMigrationManager {
     @Setting
@@ -31,6 +30,19 @@ public class DatabaseMigrationManager {
     private final Config config;
     private final FlywayService flywayService;
 
+    private final List<String> dataSourceNames = List.of(
+            // Pre EDC 0 legacy migrations
+            "asset",
+            "contractdefinition",
+            "policy",
+            "contractnegotiation",
+            "transferprocess",
+            "dataplaneinstance",
+
+            // Actual DB migrations
+            "default"
+    );
+
     public DatabaseMigrationManager(Config config, FlywayService flywayService) {
         this.config = config;
         this.flywayService = flywayService;
@@ -38,23 +50,11 @@ public class DatabaseMigrationManager {
 
     public void migrateAllDataSources() {
         flywayService.cleanDatabase(DEFAULT_DATASOURCE, new JdbcConnectionProperties(config, DEFAULT_DATASOURCE));
-        for (String datasourceName : getDataSourceNames(config)) {
+        for (String datasourceName : dataSourceNames) {
             var jdbcConnectionProperties = new JdbcConnectionProperties(config, datasourceName);
             List<String> additionalMigrationLocations = getAdditionalFlywayMigrationLocations(datasourceName);
             flywayService.migrateDatabase(datasourceName, jdbcConnectionProperties, additionalMigrationLocations);
         }
-    }
-
-    private List<String> getDataSourceNames(Config config) {
-        var edcDatasourceConfig = config.getConfig(EDC_DATASOURCE_PREFIX);
-        var dataSourceNames = edcDatasourceConfig.partition().toList().stream()
-                .map(Config::currentNode)
-                .collect(Collectors.toList());
-        // The default data source is always migrated last
-        if (dataSourceNames.remove(DEFAULT_DATASOURCE)) {
-            dataSourceNames.add(DEFAULT_DATASOURCE);
-        }
-        return dataSourceNames;
     }
 
     public List<String> getAdditionalFlywayMigrationLocations(String datasourceName) {

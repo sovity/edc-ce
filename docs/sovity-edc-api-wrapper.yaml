@@ -346,6 +346,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UiContractNegotiation'
+  /wrapper/ui/pages/contract-agreement-page/transfers/custom:
+    post:
+      tags:
+      - UI
+      description: "Initiate a Transfer Process via a custom Transfer Process JSON-LD.\
+        \ Fields such as connectorId, assetId, providerConnectorId, providerConnectorAddress\
+        \ will be set automatically."
+      operationId: initiateCustomTransfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitiateCustomTransferRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
   /wrapper/ui/pages/contract-agreement-page/transfers:
     post:
       tags:
@@ -356,7 +376,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ContractAgreementTransferRequest'
+              $ref: '#/components/schemas/InitiateTransferRequest'
       responses:
         default:
           description: default response
@@ -1268,20 +1288,22 @@ components:
           type: string
           description: Asset ID
       description: Data for initiating a Contract Negotiation
-    ContractAgreementTransferRequest:
+    InitiateCustomTransferRequest:
       required:
-      - type
+      - contractAgreementId
+      - transferProcessRequestJsonLd
       type: object
       properties:
-        type:
-          $ref: '#/components/schemas/ContractAgreementTransferRequestType'
-        params:
-          $ref: '#/components/schemas/ContractAgreementTransferRequestParams'
-        customJson:
+        contractAgreementId:
           type: string
-          description: "For type CUSTOM_JSON: Custom Transfer Process Create Dto JSON"
+          description: Contract Agreement ID
+        transferProcessRequestJsonLd:
+          type: string
+          description: "Partial TransferProcessRequestJsonLd JSON-LD. Fields participantId,\
+            \ connectorEndpoint, assetId and contractId can be omitted, they will\
+            \ be overridden with information from the contract."
       description: Required data for starting a Contract Agreement's Transfer Process
-    ContractAgreementTransferRequestParams:
+    InitiateTransferRequest:
       required:
       - contractAgreementId
       - dataSinkProperties
@@ -1306,12 +1328,6 @@ components:
           description: Additional transfer process properties. These are not passed
             to the consumer EDC
       description: "For type PARAMS_ONLY: Required data for starting a Transfer Process"
-    ContractAgreementTransferRequestType:
-      type: string
-      description: Type of Transfer Request
-      enum:
-      - PARAMS_ONLY
-      - CUSTOM_JSON
     AssetEntryDto:
       required:
       - assetRequestId
