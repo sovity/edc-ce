@@ -60,7 +60,7 @@ When initiating the transfer, select "Custom Transfer Process JSON", and provide
     "https://w3id.org/edc/v0.0.1/ns/type": "HttpProxy",
     "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{target-url}}"
   },
-  "https://w3id.org/edc/v0.0.1/ns/properties": {
+  "https://w3id.org/edc/v0.0.1/ns/privateProperties": {
     "https://w3id.org/edc/v0.0.1/ns/receiverHttpEndpoint": "{{target-pull-backend-url}}"
   },
   "https://w3id.org/edc/v0.0.1/ns/protocol": "dataspace-protocol-http",

@@ -34,14 +34,13 @@ not the data address of the data sink.
     "https://w3id.org/edc/v0.0.1/ns/type": "HttpData",
     "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{target-url}}"
   },
-  "https://w3id.org/edc/v0.0.1/ns/properties": {
+  "https://w3id.org/edc/v0.0.1/ns/privateProperties": {
     "https://w3id.org/edc/v0.0.1/ns/pathSegments": "my-endpoint",
     "https://w3id.org/edc/v0.0.1/ns/method": "POST",
     "https://w3id.org/edc/v0.0.1/ns/queryParams": "filter=abc&limit=10",
     "https://w3id.org/edc/v0.0.1/ns/contentType": "application/json",
     "https://w3id.org/edc/v0.0.1/ns/body": "{\"myBody\": \"myValue\"}"
   },
-  "https://w3id.org/edc/v0.0.1/ns/privateProperties": {},
   "https://w3id.org/edc/v0.0.1/ns/protocol": "dataspace-protocol-http",
   "https://w3id.org/edc/v0.0.1/ns/managedResources": false
 }

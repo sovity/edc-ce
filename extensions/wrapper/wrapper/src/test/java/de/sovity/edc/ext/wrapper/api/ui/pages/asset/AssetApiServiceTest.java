@@ -98,7 +98,10 @@ public class AssetApiServiceTest {
                 Prop.Edc.PROXY_METHOD, "true",
                 Prop.Edc.PROXY_PATH, "true",
                 Prop.Edc.PROXY_QUERY_PARAMS, "true",
-                Prop.Edc.PROXY_BODY, "true"
+                Prop.Edc.PROXY_BODY, "true",
+
+                // tests that a property without a context URL will survive the JSON-LD mapping
+                "oauth2:tokenUrl", "https://token-url"
         );
         var uiAssetRequest = UiAssetCreateRequest.builder()
                 .id("asset-1")
