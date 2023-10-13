@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "start": "npm run dev",
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
@@ -12,7 +13,7 @@
     "format": "prettier --plugin-search-dir . --write ."
   },
   "dependencies": {
-    "@sovity.de/edc-client": "file: ../typescript-client",
+    "@sovity.de/edc-client": "file:../typescript-client"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^2.0.0",

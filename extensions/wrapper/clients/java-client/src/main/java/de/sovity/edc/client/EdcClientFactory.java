@@ -52,6 +52,10 @@ public class EdcClientFactory {
             apiClient.setHttpClient(httpClient);
         }
 
+        if (builder.customConfigurer() != null) {
+            builder.customConfigurer().accept(apiClient);
+        }
+
         return new EdcClient(
                 new UiApi(apiClient),
                 new UseCaseApi(apiClient),

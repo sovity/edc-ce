@@ -1,97 +1,105 @@
-How Can a Pull-Data-Transfer Be Performed?
+Consuming Data via HttpProxy / HTTP Pull
 ========
 
-Overview
-========
+> [!WARNING]
+> This feature is only available for our sovity EDC Enterprise Edition.
+
+## Overview
 
 The following diagram describes the sequence of actions involved in a Pull-Data-Transfer:
 
-![pull-data-transfer.png](images%2Fpull-data-transfer.png)
+![pull-data-transfer.png](images/pull-data-transfer.png)
 
-Provider
-========
-Steps:
-1.  Create an `Rest-Api-Endpoint` (Technically a HttpData)-Type Asset
-2.  Create a Policy
-3.  Create a ContractDefinition
+The Use Case Application is involved in steps 3, 4 and 11 of the diagram. It should provide an endpoint for receiving
+the EDR (3). These information can then be used to start the tranfser request (4). The result of the transfer request
+will contain the data (11).
 
-Consumer
-========
-Steps:
-1. Prepare a `Pulling-Backend`
-2. Negotiate a Contract with the Provider
-3. Start a Data-Transfer using the `Json-Type`
+## Requirements
 
-Preparing the Pulling-Backend
------------------------------
+- An active contract agreement for a data offer you want to consume.
+- A Use Case Application / Pull Backend that can be reached from the EDC, and that can reach the Data Planes of that
+  EDC.
 
-The `Pulling-Backend` is involved in steps 3, 4 and 11 of the diagram. It should provide an endpoint for receiving information regarding the `Data-Transfer-Request` (3). These information can then be used to start the `Pull-Data-Transfer` (4) and receiving the provider data (11).
+## Initiating the Transfer
 
-The current EDC-Implementation does not support dynamically setting the url of the Pulling-Backend. As a result sovity has to set the endpoint for the backend manually. Please provide us the corresponding endpoint.
+For the EDC send an EDR to your backend application, you need to initiate a transfer process.
 
-Provide an EndpointDataReference Endpoint (4)
----------------------------------------------
-The pulling backend should provide an endpoint to accept the following JSON using a POST Request.
+This "transfer process" represents the lifetime of your EDR in which your backend application can initiate as many
+transfers as it wants, using the EDR it has received.
 
-Header: Content-Type: `application/json`, Authorization: `{{Auth-Key}}`
+### Initiating the Transfer via the UI
 
-Body:
+When initiating the transfer, select "Custom Transfer Process JSON", and provide:
+
+```json
+{
+  "@type": "https://w3id.org/edc/v0.0.1/ns/TransferRequest",
+  "https://w3id.org/edc/v0.0.1/ns/dataDestination": {
+    "https://w3id.org/edc/v0.0.1/ns/type": "HttpProxy"
+  },
+  "https://w3id.org/edc/v0.0.1/ns/properties": {
+    "https://w3id.org/edc/v0.0.1/ns/receiverHttpEndpoint": "{{target-pull-backend-url}}"
+  },
+  "https://w3id.org/edc/v0.0.1/ns/protocol": "dataspace-protocol-http",
+  "https://w3id.org/edc/v0.0.1/ns/managedResources": false
+}
+```
+
+### Initiating the Transfer via the Management API
+
+`POST` to `https://{{FQDN}}/api/management/v2/transferprocesses`
+
+```json
+{
+  "@type": "https://w3id.org/edc/v0.0.1/ns/TransferRequest",
+  "https://w3id.org/edc/v0.0.1/ns/assetId": "{{ASSET_ID}}",
+  "https://w3id.org/edc/v0.0.1/ns/contractId": "{{CONTRACT_ID}}",
+  "https://w3id.org/edc/v0.0.1/ns/connectorAddress": "https://{{PROVIDER_EDC_FQDN}}/api/dsp",
+  "https://w3id.org/edc/v0.0.1/ns/connectorId": "{{PROVIDER_EDC_PARTICIPANT_ID}}",
+  "https://w3id.org/edc/v0.0.1/ns/dataDestination": {
+    "https://w3id.org/edc/v0.0.1/ns/type": "HttpProxy",
+    "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{target-url}}"
+  },
+  "https://w3id.org/edc/v0.0.1/ns/privateProperties": {
+    "https://w3id.org/edc/v0.0.1/ns/receiverHttpEndpoint": "{{target-pull-backend-url}}"
+  },
+  "https://w3id.org/edc/v0.0.1/ns/protocol": "dataspace-protocol-http",
+  "https://w3id.org/edc/v0.0.1/ns/managedResources": false
+}
+```
+
+## Receiving an Endpoint Data Reference (EDR)
+
+Your backend receives the EDR from the EDC by the EDC calling the `{{target-pull-backend-url}}` endpoint.
+
+The EDC will `POST` on `{{target-pull-backend-url}}`:
+
 ```json
 {
   "id": "2d5348ea-b1e0-4b69-a625-07e7b093944a",
   "endpoint": "http://connector-a-dataplane-1:8185/public",
   "authKey": "Authorization",
-  "authCode": "Token",
-  "properties": {
-    "cid": "cd:30c40c02-2e8f-4f16-8790-57e517d8b8ab"
-  }
+  "authCode": "Token ..."
 }
 ```
 
-To pull data a http request to the provided `{{endpoint}}` using the header: `{{authKey}}: {{authCode}}` should be started.
+## Getting the Data
 
-Starting the Data-Transfer using the "Json-Type" using the EDC-Ui
--------------------------------------------------
+Using that EDR, requesting `GET` on the EDR's `{{ endpoint }}` using the header `{{ authKey }}: {{ authCode }}`
+will return the data.
 
-To trigger a Pull-Data-Transfer the `Json-Type` from the Transfer-Dialog has to be used with the following JSON input:
-```json
-{
-  "properties": {
-  "type": "HttpProxy",
-  "assetId": "{{assetId}}"
-  }
-}
-```
-`{{assetId}}`: Id of the asset that should be pulled for instance: urn:artifact:bitcoin
+### Accessing the Contract ID
 
-Starting the Data-Transfer using the EDC-Api
--------------------------------------------------
+The `authCode` JWT Token can be decoded to find the Contract Agreement ID.
 
-To start a pull-http-transfer using the management-API of the EDC one can send the following request:
+### Parameterized HTTP Data Sources
 
-`POST` to `{{connector-base-url}}/control/data/transferprocess`
-```json
-{
-  "protocol": "ids-multipart",
-  "assetId": "urn:artifact:http-pull",
-  "contractId": "{{contract-id}}",
-  "dataDestination": {
-    "properties": {
-        "type": "HttpProxy",
-        "assetId": "urn:artifact:http-pull"
-    }
-  },
-  "properties": {
-    "receiver.http.endpoint": "{{target-pull-backend-url}}"
-  },
-  "transferType": {
-    "contentType": "application/octet-stream",
-    "isFinite": true
-  },
-  "managedResources": false,
-  "connectorAddress": "https://{{providerConnectorUrl}}/api/v1/ids/data",
-  "connectorId": "consumer"
-}
-```
+- When method proxying is enabled on the providing side, the request method can be adjusted and will be used by the
+  providing EDC when fetching data from the data source.
+- When path proxying is enabled on the providing side, any appended path to the `{{ endpoint }}` will be proxied through
+  to the data source.
+- When query params proxying is enabled on the providing side, added query params will be passed through to the data
+  source.
+- When request body proxying is enabled on the providing side, the request body and content-type headers will be proxied
+  to the provider side.
 
-The `receiver.http.endpoint` setting is used to set the endpoint of the Pulling-Backend dynamically. Note that this setting will be renamed `https://w3id.org/edc/v0.0.1/ns/receiverHttpEndpoint` in the future `0.1.0` version of the EDC.

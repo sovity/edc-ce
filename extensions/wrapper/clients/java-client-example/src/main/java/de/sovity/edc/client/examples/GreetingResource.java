@@ -15,11 +15,11 @@
 package de.sovity.edc.client.examples;
 
 import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.client.gen.model.KpiResult;
 
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -30,15 +30,15 @@ public class GreetingResource {
     EdcClient edcClient;
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String greeting() {
-        return "Backend-fetched KPI Information:%n%s".formatted(edcClient.useCaseApi().getKpis().toString());
+    @Produces(MediaType.APPLICATION_JSON)
+    public KpiResult getKpis() {
+        return edcClient.useCaseApi().getKpis();
     }
 
-    @POST
-    @Path("supported-policies")
+    @GET
+    @Path("supported-policy-functions")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<String> getSupportedPolicies() {
+    public List<String> getSupportedPolicyFunctions() {
         return edcClient.useCaseApi().getSupportedFunctions();
     }
 }

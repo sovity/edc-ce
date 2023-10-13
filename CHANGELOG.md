@@ -4,43 +4,91 @@ All notable changes to this project will be documented in this file.
 
 ## [x.x.x] - UNRELEASED
 
-### Major Changes
+### Overview
 
-- Upgrade to core-EDC version `0.2.1`
-- Now using the `Dataspace Protocol`
-- Major changes to the management API
-  - Examples for the new requests are located in the postman collection in the `docs` folder
-  - The `OpenAPI` file has been updated to represent the EDC version `0.1.2`
-- Reworked Deployment Guide & Docker-Compose:
+### EDC UI
+
+### EDC Extensions
+
+#### Major Changes
+
+#### Minor Changes
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+## [5.0.0] - 10.10.2023
+
+### Overview
+
+Migration from Eclipse EDC Milestone 8 to Eclispe EDC 0.2.1.
+
+The API Wrapper and API Client Libraries can now be used to fully control a sovity EDC Connector.
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v2.0.0
+
+### EDC Extensions
+
+#### Major Changes
+
+- Bump Eclipse EDC Version to `0.2.1`:
+  - Now using the Data Space Protocol (DSP) over the ~~IDS Protocol~~.
+  - Major changes to the Management API. See the postman collection / OpenAPI file.
+- The Getting Started Docker Compose file is no longer to be used as reference for deployments:
   - The Getting Started Docker Compose file now launches connectors for local demo purposes.
   - For productive deployments, a detailed deployment guide has been added.
   - The Dev-Images now also require a PostgreSQL Database.
 
-### Minor Changes
+#### Minor Changes
 
-- UI API Wrapper Model:
-  - UiPolicy + PolicyMapper for EDC UI and Broker Server
-  - UiAsset + AssetMapper for EDC UI and Broker Server
-- UI API Wrapper Endpoints:
-  - Asset Page
-  - Create Asset
-  - Delete Asset
-  - Catalog / Data Offers
-  - Contract Definition Page
-  - Contract Negotiation Create / By ID
-  - Create Contract Definition
-  - Delete Contract Definition
-  - Policy Definition Page
-  - Create Policy Definition
-  - Delete Policy Definition
-  - Dashboard Page
-- DCAT Catalog Service: Parse DCAT Catalog responses for use in the UI API Wrapper and the Broker Server.
-- JSON and JSON-LD Utilities: Centralized Vocab collection for dealing with EDC / DCAT JSON-LD
+- All Connector UI Endpoints were migrated to our UI API Wrapper. New UI API Wrapper Endpoints:
+    - Asset Page
+    - Create Asset
+    - Delete Asset
+    - Catalog / Data Offers
+    - Contract Definition Page
+    - Contract Negotiation Start / Detail
+    - Create Contract Definition
+    - Delete Contract Definition
+    - Policy Definition Page
+    - Create Policy Definition
+    - Delete Policy Definition
+    - Dashboard Page
+- New modules with common UI models and mappers for the Connector UI and Broker UI: `:extensions:wrapper:wrapper-common-api` and `:extensions:wrapper:wrapper-common-mappers`.
+- New module with centralized Vocab and utilities for dealing with EDC / DCAT JSON-LD: `:utils:json-and-jsonld-utils`
+- New module with utilities for parsing DCAT Catalog responses for use in the UI API Wrapper and the Broker Server: `:utils:catalog-parser`
+- New modules with utilities for E2E Testing Connectors: `:utils:test-connector-remote` and `:extensions:test-backend-controller`
 
-### Migration Notes
+#### Patch Changes
 
-1. The Connector Endpoint changed to `https://[FQDN]/api/dsp`, used to be `https://[FQDN]/api/v1/ids/data`.
-2. The `v1` Management API has been removed in favor of the `JSON-LD` `v2` Management API. All endpoints have a `v2` prefix now (example: `http://localhost:11002/api/v1/management/assets/request` is now available at `http://localhost:11002/api/management/v2/assets/request`)
+- New modules in `:launchers:common` and `:launchers:connectors` so building different variants no longer requires separate builds.
+- New module `:extensions:wrapper:wrapper-api` split from `:extensions:wrapper:wrapper` so integration tests in `wrapper` can use the Java Client Library.
+- New JUnit E2E Tests in `:launchers:connectors:sovity-dev` that start two connectors and test the data exchange.
+
+### Deployment Migration Notes
+
+1. Deployment Migration Notes for the EDC UI: https://github.com/sovity/edc-ui/releases/tag/v2.0.0
+2. The Connector Endpoint changed to `https://[FQDN]/api/dsp` from ~~`https://[FQDN]/api/v1/ids/data`~~. 
+3. The Management Endpoint changed to `https://[FQDN]/api/management` from ~~`https://[FQDN]/api/v1/management`~~.
+4. The `v1` Eclipse EDC Management API has been replaced by the Eclipse EDC `JSON-LD` `v2` Management API. Our Postman Collection shows some example requests. 
+   However, a switch to our [API Wrapper](extensions/wrapper/README.md) is recommended. Despite our Use Case API Wrapper API still being in development, 
+   the Connector UI API Wrapper is fully functional and can be used in concatenation with our type-safe generated API Client Libraries to both provide and 
+   consume data offers.
+5. The Connector now uses the Data Space Protocol (DSP) instead of the IDS Protocol. This requires different paths to be available from the internet. 
+   Please refer to our deployment guide for more information.
+6. If the old protocol endpoint required HTTP communication to pass as a workaround for a certain bug, this should be undone now, 
+   with all protocol endpoints being secured by HTTPS/TLS.
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:5.0.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:5.0.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:5.0.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.0.0`
 
 ## [4.2.0] - 2023-09-01
 
@@ -52,7 +100,7 @@ MDS 1.2 release using MS8 EDC.
 
 - https://github.com/sovity/edc-ui/releases/tag/v0.0.1-milestone-8-sovity13
 
-### EDC-Extensions
+### Detailed Changes
 
 #### Patch Changes
 
@@ -64,7 +112,7 @@ MDS 1.2 release using MS8 EDC.
 
 - Connector Backend Docker Images:
     - Dev EDC: `ghcr.io/sovity/edc-dev:4.2.0`
-    - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.2.0`
+    - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.2.0`
     - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.2.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity13`
 
@@ -99,7 +147,7 @@ Security improvements of container image and enhancements for the `ReferringConn
 
 - Connector Backend Docker Images:
   - Dev EDC: `ghcr.io/sovity/edc-dev:4.1.0`
-  - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.1.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.1.0`
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.1.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity12`
 
@@ -127,7 +175,7 @@ No changes besides docker image versions.
 
 - Connector Backend Docker Images:
   - Dev EDC: `ghcr.io/sovity/edc-dev:4.0.1`
-  - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.1`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.1`
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.1`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity11`
 
@@ -163,7 +211,7 @@ No changes besides docker image versions.
 
 - Connector Backend Docker Images:
   - Dev EDC: `ghcr.io/sovity/edc-dev:4.0.0`
-  - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.0`
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity9`
 

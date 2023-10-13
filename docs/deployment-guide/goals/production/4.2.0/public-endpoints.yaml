@@ -4,7 +4,7 @@ info:
   description: Required publicly exposed EDC Connector endpoints
   version: 4.2.0
 servers:
-  - url: https://your-edc
+  - url: https://[MY_EDC_FQDN]
 tags:
   - name: Protocol API
     description: Port 11003 on the Backend Container.

@@ -133,7 +133,7 @@ interface UiResource {
     @GET
     @Path("pages/contract-agreement-page")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Collect all data for Contract Agreement Page")
+    @Operation(description = "Collect all data for the Contract Agreement Page")
     ContractAgreementPage getContractAgreementPage();
 
     @POST
@@ -153,10 +153,12 @@ interface UiResource {
     @GET
     @Path("pages/transfer-history-page")
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Collect all data for the Transfer History Page")
     TransferHistoryPage getTransferHistoryPage();
 
     @GET
     @Path("pages/transfer-history-page/transfer-processes/{transferProcessId}/asset")
     @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Queries a transfer process' asset")
     UiAsset getTransferProcessAsset(@PathParam("transferProcessId") String transferProcessId);
 }

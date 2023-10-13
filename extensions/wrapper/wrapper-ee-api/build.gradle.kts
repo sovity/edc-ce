@@ -9,6 +9,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
+    api(project(":extensions:wrapper:wrapper-common-api"))
+
     api("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
     api("jakarta.validation:jakarta.validation-api:3.0.2")
     api("io.swagger.core.v3:swagger-annotations-jakarta:2.2.15")

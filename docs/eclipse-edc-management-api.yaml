@@ -1,26 +1,10 @@
 openapi: 3.0.1
 info:
-  title: EDC REST API
-  description: EDC REST APIs - merged by OpenApiMerger
-  version: 0.1.2-SNAPSHOT
+  title: management-api
+  description: REST API documentation for the Eclipse EDC management-api. This does not include endpoints of the sovity EDC API Wrapper.
+  version: 0.2.1
 servers:
-  - url: /
-tags:
-  - name: Data Plane control API
-    description: 'Api targeted by the Control Plane to delegate a data transfer (Provider
-    Push or Streaming) to the Data Plane after the contract has been successfully
-    negotiated and agreed between the two participants. '
-  - name: Data Plane public API
-    description: "The public API of the Data Plane is a data proxy enabling a data consumer\
-    \ to actively querydata from the provider data source (e.g. backend Rest API,\
-    \ internal database...) through its Data Planeinstance. Thus the Data Plane is\
-    \ the only entry/output door for the data, which avoids the provider to exposedirectly\
-    \ its data externally.The Data Plane public API being a proxy, it supports all\
-    \ verbs (i.e. GET, POST, PUT, PATCH, DELETE), whichcan then conveyed until the\
-    \ data source is required. This is especially useful when the actual data sourceis\
-    \ a Rest API itself.In the same manner, any set of arbitrary query parameters,\
-    \ path parameters and request body are supported (in the limits fixed by the HTTP\
-    \ server) and can also conveyed to the actual data source."
+  - url: https://[MY_EDC_FQDN]/api/management
 paths:
   /callback/{processId}/deprovision:
     post:
@@ -45,7 +29,7 @@ paths:
         default:
           description: default response
           content:
-            application/json: {}
+            application/json: { }
   /callback/{processId}/provision:
     post:
       tags:
@@ -69,7 +53,7 @@ paths:
         default:
           description: default response
           content:
-            application/json: {}
+            application/json: { }
   /check/health:
     get:
       tags:
@@ -83,10 +67,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/HealthStatus'
+                $ref: '#/components/schemas/HealthStatus'
   /check/liveness:
     get:
       tags:
@@ -100,10 +81,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/HealthStatus'
+                $ref: '#/components/schemas/HealthStatus'
   /check/readiness:
     get:
       tags:
@@ -117,10 +95,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/HealthStatus'
+                $ref: '#/components/schemas/HealthStatus'
   /check/startup:
     get:
       tags:
@@ -134,170 +109,32 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/HealthStatus'
-  /instances:
-    get:
-      tags:
-        - Dataplane Selector
-      operationId: getAll
-      responses:
-        default:
-          description: default response
-          content:
-            application/json:
-              schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/DataPlaneInstance'
+                $ref: '#/components/schemas/HealthStatus'
+  /select:
     post:
       tags:
         - Dataplane Selector
-      operationId: addEntry
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DataPlaneInstance'
-      responses:
-        default:
-          description: default response
-          content:
-            application/json: {}
-  /instances/select:
-    post:
-      tags:
-        - Dataplane Selector
+      description: Finds the best fitting data plane instance for a particular query
       operationId: find
       requestBody:
         content:
-          application/json:
+          '*/*':
             schema:
-              $ref: '#/components/schemas/SelectionRequest'
+              $ref: '#/components/schemas/SelectionRequestSchema'
       responses:
-        default:
-          description: default response
+        "200":
+          description: The DataPlane instance that fits best for the given selection
+            request
           content:
-            application/json:
+            '*/*':
               schema:
-                $ref: '#/components/schemas/DataPlaneInstance'
-  /token:
-    get:
-      tags:
-        - Consumer Pull Token Validation
-      description: "Checks that the provided token has been signed by the present\
-        \ entity and asserts its validity. If token is valid, then the data address\
-        \ contained in its claims is decrypted and returned back to the caller."
-      operationId: validate
-      parameters:
-        - name: Authorization
-          in: header
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
-      responses:
-        "200":
-          description: Token is valid
+                $ref: '#/components/schemas/DataPlaneInstanceSchema'
+        "204":
+          description: No suitable DataPlane instance was found
         "400":
-          description: Request was malformed
-        "403":
-          description: Token is invalid
-  /transfer:
-    post:
-      tags:
-        - Data Plane control API
-      description: Initiates a data transfer for the given request. The transfer will
-        be performed asynchronously.
-      operationId: initiateTransfer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DataFlowRequest'
-      responses:
-        "200":
-          description: Data transfer initiated
-        "400":
-          description: Failed to validate request
-  /transfer/{processId}:
-    get:
-      tags:
-        - Data Plane control API
-      description: Get the current state of a data transfer.
-      operationId: getTransferState
-      parameters:
-        - name: processId
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
-      responses:
-        "200":
-          description: Missing access token
-  /transferprocess/{processId}/complete:
-    post:
-      tags:
-        - Transfer Process Control Api
-      description: "Requests completion of the transfer process. Due to the asynchronous\
-        \ nature of transfers, a successful response only indicates that the request\
-        \ was successfully received"
-      operationId: complete
-      parameters:
-        - name: processId
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
-      responses:
-        "400":
-          description: "Request was malformed, e.g. id was null"
+          description: Request body was malformed
           content:
-            application/json:
-              schema:
-                type: array
-                example: null
-                items:
-                  $ref: '#/components/schemas/ApiErrorDetail'
-  /transferprocess/{processId}/fail:
-    post:
-      tags:
-        - Transfer Process Control Api
-      description: "Requests completion of the transfer process. Due to the asynchronous\
-        \ nature of transfers, a successful response only indicates that the request\
-        \ was successfully received"
-      operationId: fail
-      parameters:
-        - name: processId
-          in: path
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-            example: null
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TransferProcessFailStateDto'
-        required: true
-      responses:
-        "400":
-          description: "Request was malformed, e.g. id was null"
-          content:
-            application/json:
+            '*/*':
               schema:
                 type: array
                 example: null
@@ -316,7 +153,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AssetUpdateRequestDto'
+              $ref: '#/components/schemas/Asset'
       responses:
         "200":
           description: Asset was updated successfully
@@ -331,6 +168,7 @@ paths:
                   $ref: '#/components/schemas/ApiErrorDetail'
         "404":
           description: "Asset could not be updated, because it does not exist."
+      deprecated: true
     post:
       tags:
         - Asset
@@ -348,7 +186,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: '#/components/schemas/IdResponse'
         "400":
           description: Request body was malformed
           content:
@@ -368,6 +206,7 @@ paths:
                 example: null
                 items:
                   $ref: '#/components/schemas/ApiErrorDetail'
+      deprecated: true
   /v2/assets/request:
     post:
       tags:
@@ -378,7 +217,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QuerySpecDto'
+              $ref: '#/components/schemas/QuerySpec'
       responses:
         "200":
           description: The assets matching the query
@@ -388,7 +227,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/AssetResponseDto'
+                  $ref: '#/components/schemas/Asset'
         "400":
           description: Request body was malformed
           content:
@@ -398,6 +237,7 @@ paths:
                 example: null
                 items:
                   $ref: '#/components/schemas/ApiErrorDetail'
+      deprecated: true
   /v2/assets/{assetId}/dataaddress:
     put:
       tags:
@@ -417,7 +257,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AssetUpdateRequestDto'
+              $ref: '#/components/schemas/Asset'
       responses:
         "200":
           description: Asset was updated successfully
@@ -439,6 +279,7 @@ paths:
                 example: null
                 items:
                   $ref: '#/components/schemas/ApiErrorDetail'
+      deprecated: true
   /v2/assets/{id}:
     get:
       tags:
@@ -460,7 +301,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssetResponseDto'
+                $ref: '#/components/schemas/Asset'
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -479,6 +320,7 @@ paths:
                 example: null
                 items:
                   $ref: '#/components/schemas/ApiErrorDetail'
+      deprecated: true
     delete:
       tags:
         - Asset
@@ -528,6 +370,7 @@ paths:
                 example: null
                 items:
                   $ref: '#/components/schemas/ApiErrorDetail'
+      deprecated: true
   /v2/assets/{id}/dataaddress:
     get:
       tags:
@@ -549,7 +392,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataAddressDto'
+                $ref: '#/components/schemas/DataAddress'
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -568,6 +411,24 @@ paths:
                 example: null
                 items:
                   $ref: '#/components/schemas/ApiErrorDetail'
+      deprecated: true
+  /v2/catalog/dataset/request:
+    post:
+      tags:
+        - Catalog
+      operationId: getDataset
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatasetRequest'
+      responses:
+        default:
+          description: Gets single dataset from a connector
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dataset'
   /v2/catalog/request:
     post:
       tags:
@@ -577,7 +438,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CatalogRequestDto'
+              $ref: '#/components/schemas/CatalogRequest'
       responses:
         default:
           description: Gets contract offers (=catalog) of a single connector
@@ -595,7 +456,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/QuerySpecDto'
+              $ref: '#/components/schemas/QuerySpec'
       responses:
         "200":
           description: The contract agreements matching the query
@@ -605,7 +466,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ContractAgreementDto'
+                  $ref: '#/components/schemas/ContractAgreement'
         "400":
           description: Request body was malformed
           content:
@@ -636,7 +497,47 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ContractAgreementDto'
+                $ref: '#/components/schemas/ContractAgreement'
+        "400":
+          description: "Request was malformed, e.g. id was null"
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
+        "404":
+          description: An contract agreement with the given ID does not exist
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
+  /v2/contractagreements/{id}/negotiation:
+    get:
+      tags:
+        - Contract Agreement
+      description: Gets a contract negotiation with the given contract agreement ID
+      operationId: getNegotiationByAgreementId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: null
+      responses:
+        "200":
+          description: The contract negotiation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractNegotiation'
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -666,7 +567,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/ContractDefinitionRequestDto'
+              $ref: '#/components/schemas/ContractDefinitionInput'
       responses:
         "204":
           description: Contract definition was updated successfully
@@ -697,7 +598,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/ContractDefinitionRequestDto'
+              $ref: '#/components/schemas/ContractDefinitionInput'
       responses:
         "200":
           description: contract definition was created successfully. Returns the Contract
@@ -705,7 +606,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: '#/components/schemas/IdResponse'
         "400":
           description: Request body was malformed
           content:
@@ -735,7 +636,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: '#/components/schemas/QuerySpecDto'
+              $ref: '#/components/schemas/QuerySpec'
       responses:
         "200":
           description: The contract definitions matching the query
@@ -745,7 +646,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ContractDefinitionResponseDto'
+                  $ref: '#/components/schemas/ContractDefinitionOutput'
         "400":
           description: Request was malformed
           content:
@@ -776,7 +677,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ContractDefinitionResponseDto'
+                $ref: '#/components/schemas/ContractDefinitionOutput'
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -846,7 +747,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NegotiationInitiateRequestDto'
+              $ref: '#/components/schemas/ContractRequest'
       responses:
         "200":
           description: The negotiation was successfully initiated. Returns the contract
@@ -854,7 +755,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: '#/components/schemas/IdResponse'
           links:
             poll-state:
               operationId: getNegotiationState
@@ -879,7 +780,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QuerySpecDto'
+              $ref: '#/components/schemas/QuerySpec'
       responses:
         "200":
           description: The contract negotiations that match the query
@@ -889,7 +790,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/ContractNegotiationDto'
+                  $ref: '#/components/schemas/ContractNegotiation'
         "400":
           description: Request was malformed
           content:
@@ -920,7 +821,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ContractNegotiationDto'
+                $ref: '#/components/schemas/ContractNegotiation'
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -962,7 +863,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ContractAgreementDto'
+                $ref: '#/components/schemas/ContractAgreement'
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -1024,6 +925,7 @@ paths:
                 example: null
                 items:
                   $ref: '#/components/schemas/ApiErrorDetail'
+      deprecated: true
   /v2/contractnegotiations/{id}/decline:
     post:
       tags:
@@ -1067,6 +969,7 @@ paths:
                 example: null
                 items:
                   $ref: '#/components/schemas/ApiErrorDetail'
+      deprecated: true
   /v2/contractnegotiations/{id}/state:
     get:
       tags:
@@ -1107,6 +1010,121 @@ paths:
                 example: null
                 items:
                   $ref: '#/components/schemas/ApiErrorDetail'
+  /v2/contractnegotiations/{id}/terminate:
+    post:
+      tags:
+        - Contract Negotiation
+      description: Terminates the contract negotiation.
+      operationId: terminateNegotiation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: null
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TerminateNegotiationSchema'
+      responses:
+        "200":
+          description: ContractNegotiation is terminating
+          links:
+            poll-state:
+              operationId: getNegotiationState
+        "400":
+          description: Request was malformed
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
+        "404":
+          description: A contract negotiation with the given ID does not exist
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
+  /v2/dataplanes:
+    get:
+      tags:
+        - Dataplane Selector
+      description: Returns a list of all currently registered data plane instances
+      operationId: getAll
+      responses:
+        "204":
+          description: A (potentially empty) list of currently registered data plane
+            instances
+        "400":
+          description: Request body was malformed
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
+    post:
+      tags:
+        - Dataplane Selector
+      description: Adds one datatplane instance to the internal database of the selector
+      operationId: addEntry
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataPlaneInstanceSchema'
+      responses:
+        "200":
+          description: Entry was added successfully to the database
+        "400":
+          description: Request body was malformed
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
+  /v2/dataplanes/select:
+    post:
+      tags:
+        - Dataplane Selector
+      description: Finds the best fitting data plane instance for a particular query
+      operationId: find_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SelectionRequestSchema'
+      responses:
+        "200":
+          description: The DataPlane instance that fits best for the given selection
+            request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataPlaneInstanceSchema'
+        "204":
+          description: No suitable DataPlane instance was found
+        "400":
+          description: Request body was malformed
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
   /v2/policydefinitions:
     post:
       tags:
@@ -1117,7 +1135,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PolicyDefinitionRequestDto'
+              $ref: '#/components/schemas/PolicyDefinitionInput'
       responses:
         "200":
           description: policy definition was created successfully. Returns the Policy
@@ -1125,7 +1143,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: '#/components/schemas/IdResponse'
         "400":
           description: Request body was malformed
           content:
@@ -1155,7 +1173,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QuerySpecDto'
+              $ref: '#/components/schemas/QuerySpec'
       responses:
         "200":
           description: The policy definitions matching the query
@@ -1165,7 +1183,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/PolicyDefinitionResponseDto'
+                  $ref: '#/components/schemas/PolicyDefinitionOutput'
         "400":
           description: Request was malformed
           content:
@@ -1196,7 +1214,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PolicyDefinitionResponseDto'
+                $ref: '#/components/schemas/PolicyDefinitionOutput'
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -1234,7 +1252,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PolicyDefinitionUpdateDto'
+              $ref: '#/components/schemas/PolicyDefinitionInput'
       responses:
         "200":
           description: policy definition was updated successfully. Returns the Policy
@@ -1316,7 +1334,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TransferRequestDto'
+              $ref: '#/components/schemas/TransferRequest'
       responses:
         "200":
           description: The transfer was successfully initiated. Returns the transfer
@@ -1324,7 +1342,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: '#/components/schemas/IdResponse'
           links:
             poll-state:
               operationId: getTransferProcessState
@@ -1349,7 +1367,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QuerySpecDto'
+              $ref: '#/components/schemas/QuerySpec'
       responses:
         "200":
           description: The transfer processes matching the query
@@ -1359,7 +1377,7 @@ paths:
                 type: array
                 example: null
                 items:
-                  $ref: '#/components/schemas/TransferProcessDto'
+                  $ref: '#/components/schemas/TransferProcess'
         "400":
           description: Request was malformed
           content:
@@ -1390,7 +1408,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransferProcessDto'
+                $ref: '#/components/schemas/TransferProcess'
         "400":
           description: "Request was malformed, e.g. id was null"
           content:
@@ -1515,7 +1533,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TerminateTransferDto'
+              $ref: '#/components/schemas/TerminateTransfer'
       responses:
         "200":
           description: Request to cancel the transfer process was successfully received
@@ -1550,86 +1568,197 @@ paths:
                 example: null
                 items:
                   $ref: '#/components/schemas/ApiErrorDetail'
-  /{any}:
-    get:
-      tags:
-        - Data Plane public API
-      description: Send `GET` data query to the Data Plane.
-      operationId: get
-      responses:
-        "400":
-          description: Missing access token
-        "403":
-          description: Access token is expired or invalid
-        "500":
-          description: Failed to transfer data
+  /v3/assets:
     put:
       tags:
-        - Data Plane public API
-      description: Send `PUT` data query to the Data Plane.
-      operationId: put
+        - Asset
+      description: "Updates an asset with the given ID if it exists. If the asset\
+        \ is not found, no further action is taken. DANGER ZONE: Note that updating\
+        \ assets can have unexpected results, especially for contract offers that\
+        \ have been sent out or are ongoing in contract negotiations."
+      operationId: updateAsset_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetInput'
       responses:
+        "200":
+          description: Asset was updated successfully
         "400":
-          description: Missing access token
-        "403":
-          description: Access token is expired or invalid
-        "500":
-          description: Failed to transfer data
+          description: "Request was malformed, e.g. id was null"
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
+        "404":
+          description: "Asset could not be updated, because it does not exist."
     post:
       tags:
-        - Data Plane public API
-      description: Send `POST` data query to the Data Plane.
-      operationId: post
+        - Asset
+      description: Creates a new asset together with a data address
+      operationId: createAsset_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetInput'
       responses:
+        "200":
+          description: Asset was created successfully. Returns the asset Id and created
+            timestamp
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponse'
         "400":
-          description: Missing access token
-        "403":
-          description: Access token is expired or invalid
-        "500":
-          description: Failed to transfer data
+          description: Request body was malformed
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
+        "409":
+          description: "Could not create asset, because an asset with that ID already\
+            \ exists"
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
+  /v3/assets/request:
+    post:
+      tags:
+        - Asset
+      description: ' all assets according to a particular query'
+      operationId: requestAssets_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuerySpec'
+      responses:
+        "200":
+          description: The assets matching the query
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/AssetOutput'
+        "400":
+          description: Request body was malformed
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
+  /v3/assets/{id}:
+    get:
+      tags:
+        - Asset
+      description: Gets an asset with the given ID
+      operationId: getAsset_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: null
+      responses:
+        "200":
+          description: The asset
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetOutput'
+        "400":
+          description: "Request was malformed, e.g. id was null"
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
+        "404":
+          description: An asset with the given ID does not exist
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
     delete:
       tags:
-        - Data Plane public API
-      description: Send `DELETE` data query to the Data Plane.
-      operationId: delete
+        - Asset
+      description: "Removes an asset with the given ID if possible. Deleting an asset\
+        \ is only possible if that asset is not yet referenced by a contract agreement,\
+        \ in which case an error is returned. DANGER ZONE: Note that deleting assets\
+        \ can have unexpected results, especially for contract offers that have been\
+        \ sent out or ongoing or contract negotiations."
+      operationId: removeAsset_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            example: null
       responses:
+        "200":
+          description: Asset was deleted successfully
         "400":
-          description: Missing access token
-        "403":
-          description: Access token is expired or invalid
-        "500":
-          description: Failed to transfer data
-    patch:
-      tags:
-        - Data Plane public API
-      description: Send `PATCH` data query to the Data Plane.
-      operationId: patch
-      responses:
-        "400":
-          description: Missing access token
-        "403":
-          description: Access token is expired or invalid
-        "500":
-          description: Failed to transfer data
+          description: "Request was malformed, e.g. id was null"
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
+        "404":
+          description: An asset with the given ID does not exist
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
+        "409":
+          description: "The asset cannot be deleted, because it is referenced by a\
+            \ contract agreement"
+          content:
+            application/json:
+              schema:
+                type: array
+                example: null
+                items:
+                  $ref: '#/components/schemas/ApiErrorDetail'
 components:
   schemas:
-    Action:
-      type: object
-      properties:
-        constraint:
-          $ref: '#/components/schemas/Constraint'
-        includedIn:
-          type: string
-          example: null
-        type:
-          type: string
-          example: null
-      example: null
     ApiErrorDetail:
       type: object
       properties:
         invalidValue:
-          type: string
+          type: object
           example: null
         message:
           type: string
@@ -1648,6 +1777,8 @@ components:
           type: integer
           format: int64
           example: null
+        dataAddress:
+          $ref: '#/components/schemas/DataAddress'
         id:
           type: string
           example: null
@@ -1672,22 +1803,54 @@ components:
         dataAddress:
           $ref: '#/components/schemas/DataAddress'
       example: null
-    AssetResponseDto:
+    AssetInput:
       type: object
       properties:
-        '@context':
-          type: object
-          example: null
         '@id':
           type: string
           example: null
         '@type':
           type: string
+          example: https://w3id.org/edc/v0.0.1/ns/Asset
+        dataAddress:
+          $ref: '#/components/schemas/DataAddress'
+        privateProperties:
+          type: object
+          additionalProperties:
+            type: object
+            example: null
           example: null
+        properties:
+          type: object
+          additionalProperties:
+            type: object
+            example: null
+          example: null
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@id': asset-id
+        properties:
+          key: value
+        privateProperties:
+          privateKey: privateValue
+        dataAddress:
+          type: HttpData
+    AssetOutput:
+      type: object
+      properties:
+        '@id':
+          type: string
+          example: null
+        '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/Asset
         createdAt:
           type: integer
           format: int64
           example: null
+        dataAddress:
+          $ref: '#/components/schemas/DataAddress'
         privateProperties:
           type: object
           additionalProperties:
@@ -1700,34 +1863,23 @@ components:
             type: object
             example: null
           example: null
-      example: null
-    AssetUpdateRequestDto:
-      required:
-        - properties
-      type: object
-      properties:
+      example:
         '@context':
-          type: object
-          example: null
-        '@type':
-          type: string
-          example: null
-        privateProperties:
-          type: object
-          additionalProperties:
-            type: object
-            example: null
-          example: null
-        properties:
-          type: object
-          additionalProperties:
-            type: object
-            example: null
-          example: null
-      example: null
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@id': asset-id
+        edc:properties:
+          edc:key: value
+        edc:privateProperties:
+          edc:privateKey: privateValue
+        edc:dataAddress:
+          edc:type: HttpData
+        edc:createdAt: 1688465655
     CallbackAddress:
       type: object
       properties:
+        '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/CallbackAddress
         authCodeId:
           type: string
           example: null
@@ -1750,41 +1902,59 @@ components:
       example: null
     Catalog:
       type: object
-      properties:
-        contractOffers:
-          type: array
-          example: null
-          items:
-            $ref: '#/components/schemas/ContractOffer'
-        dataServices:
-          type: array
-          example: null
-          items:
-            $ref: '#/components/schemas/DataService'
-        datasets:
-          type: array
-          example: null
-          items:
-            $ref: '#/components/schemas/Dataset'
-        id:
-          type: string
-          example: null
-        properties:
-          type: object
-          additionalProperties:
-            type: object
-            example: null
-          example: null
-      example: null
-    CatalogRequestDto:
-      required:
-        - providerUrl
+      description: DCAT catalog
+      example:
+        '@id': 7df65569-8c59-4013-b1c0-fa14f6641bf2
+        '@type': dcat:Catalog
+        dcat:dataset:
+          '@id': bcca61be-e82e-4da6-bfec-9716a56cef35
+          '@type': dcat:Dataset
+          odrl:hasPolicy:
+            '@id': OGU0ZTMzMGMtODQ2ZS00ZWMxLThmOGQtNWQxNWM0NmI2NmY4:YmNjYTYxYmUtZTgyZS00ZGE2LWJmZWMtOTcxNmE1NmNlZjM1:NDY2ZTZhMmEtNjQ1Yy00ZGQ0LWFlZDktMjdjNGJkZTU4MDNj
+            '@type': odrl:Set
+            odrl:permission:
+              odrl:target: bcca61be-e82e-4da6-bfec-9716a56cef35
+              odrl:action:
+                odrl:type: http://www.w3.org/ns/odrl/2/use
+              odrl:constraint:
+                odrl:and:
+                  - odrl:leftOperand: https://w3id.org/edc/v0.0.1/ns/inForceDate
+                    odrl:operator:
+                      '@id': odrl:gteq
+                    odrl:rightOperand: 2023-07-07T07:19:58.585601395Z
+                  - odrl:leftOperand: https://w3id.org/edc/v0.0.1/ns/inForceDate
+                    odrl:operator:
+                      '@id': odrl:lteq
+                    odrl:rightOperand: 2023-07-12T07:19:58.585601395Z
+            odrl:prohibition: [ ]
+            odrl:obligation: [ ]
+            odrl:target: bcca61be-e82e-4da6-bfec-9716a56cef35
+          dcat:distribution:
+            - '@type': dcat:Distribution
+              dct:format:
+                '@id': HttpData
+              dcat:accessService: 5e839777-d93e-4785-8972-1005f51cf367
+          edc:description: description
+          edc:id: bcca61be-e82e-4da6-bfec-9716a56cef35
+        dcat:service:
+          '@id': 5e839777-d93e-4785-8972-1005f51cf367
+          '@type': dcat:DataService
+          dct:terms: connector
+          dct:endpointUrl: http://localhost:16806/protocol
+        edc:participantId: urn:connector:provider
+        '@context':
+          dct: https://purl.org/dc/terms/
+          edc: https://w3id.org/edc/v0.0.1/ns/
+          dcat: https://www.w3.org/ns/dcat/
+          odrl: http://www.w3.org/ns/odrl/2/
+          dspace: https://w3id.org/dspace/v0.8/
+    CatalogRequest:
       type: object
       properties:
-        '@context':
-          type: object
-          example: null
         '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/CatalogRequest
+        counterPartyAddress:
           type: string
           example: null
         protocol:
@@ -1792,39 +1962,32 @@ components:
           example: null
         providerUrl:
           type: string
+          description: please use counterPartyAddress instead
           example: null
+          deprecated: true
         querySpec:
-          $ref: '#/components/schemas/QuerySpecDto'
-      example: null
-    Constraint:
-      required:
-        - edctype
-      type: object
-      properties:
-        edctype:
-          type: string
-          example: null
-      example: null
-      discriminator:
-        propertyName: edctype
-    ContractAgreementDto:
-      required:
-        - '@id'
-        - assetId
-        - consumerId
-        - policy
-        - providerId
-      type: object
-      properties:
+          $ref: '#/components/schemas/QuerySpec'
+      example:
         '@context':
-          type: object
-          example: null
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@type': CatalogRequest
+        counterPartyAddress: http://provider-address
+        protocol: dataspace-protocol-http
+        querySpec:
+          offset: 0
+          limit: 50
+          sortOrder: DESC
+          sortField: fieldName
+          filterExpression: [ ]
+    ContractAgreement:
+      type: object
+      properties:
         '@id':
           type: string
           example: null
         '@type':
           type: string
-          example: null
+          example: https://w3id.org/edc/v0.0.1/ns/ContractAgreement
         assetId:
           type: string
           example: null
@@ -1840,19 +2003,31 @@ components:
         providerId:
           type: string
           example: null
-      example: null
-    ContractDefinitionRequestDto:
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@type': https://w3id.org/edc/v0.0.1/ns/ContractAgreement
+        '@id': negotiation-id
+        providerId: provider-id
+        consumerId: consumer-id
+        assetId: asset-id
+        contractSigningDate: 1688465655
+        policy:
+          '@context': http://www.w3.org/ns/odrl.jsonld
+          '@type': Set
+          '@id': offer-id
+          permission:
+            - target: asset-id
+              action: display
+    ContractDefinitionInput:
       type: object
       properties:
-        '@context':
-          type: object
-          example: null
         '@id':
           type: string
           example: null
         '@type':
           type: string
-          example: null
+          example: https://w3id.org/edc/v0.0.1/ns/ContractDefinition
         accessPolicyId:
           type: string
           example: null
@@ -1860,23 +2035,26 @@ components:
           type: array
           example: null
           items:
-            $ref: '#/components/schemas/CriterionDto'
+            $ref: '#/components/schemas/Criterion'
         contractPolicyId:
           type: string
           example: null
-      example: null
-    ContractDefinitionResponseDto:
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@id': definition-id
+        accessPolicyId: asset-policy-id
+        contractPolicyId: contract-policy-id
+        assetsSelector: [ ]
+    ContractDefinitionOutput:
       type: object
       properties:
-        '@context':
-          type: object
-          example: null
         '@id':
           type: string
           example: null
         '@type':
           type: string
-          example: null
+          example: https://w3id.org/edc/v0.0.1/ns/ContractDefinition
         accessPolicyId:
           type: string
           example: null
@@ -1884,7 +2062,7 @@ components:
           type: array
           example: null
           items:
-            $ref: '#/components/schemas/CriterionDto'
+            $ref: '#/components/schemas/Criterion'
         contractPolicyId:
           type: string
           example: null
@@ -1892,19 +2070,23 @@ components:
           type: integer
           format: int64
           example: null
-      example: null
-    ContractNegotiationDto:
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@id': definition-id
+        edc:accessPolicyId: asset-policy-id
+        edc:contractPolicyId: contract-policy-id
+        edc:assetsSelector: [ ]
+        edc:createdAt: 1688465655
+    ContractNegotiation:
       type: object
       properties:
-        '@context':
-          type: object
-          example: null
         '@id':
           type: string
           example: null
         '@type':
           type: string
-          example: null
+          example: https://w3id.org/edc/v0.0.1/ns/ContractNegotiation
         callbackAddresses:
           type: array
           example: null
@@ -1916,9 +2098,8 @@ components:
         counterPartyAddress:
           type: string
           example: null
-        createdAt:
-          type: integer
-          format: int64
+        counterPartyId:
+          type: string
           example: null
         errorDetail:
           type: string
@@ -1935,29 +2116,33 @@ components:
           enum:
             - CONSUMER
             - PROVIDER
-        updatedAt:
-          type: integer
-          format: int64
-          example: null
-      example: null
-    ContractOffer:
-      type: object
-      properties:
-        assetId:
-          type: string
-          example: null
-        id:
-          type: string
-          example: null
-        policy:
-          $ref: '#/components/schemas/Policy'
-        providerId:
-          type: string
-          example: null
-      example: null
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@type': https://w3id.org/edc/v0.0.1/ns/ContractNegotiation
+        '@id': negotiation-id
+        type: PROVIDER
+        protocol: dataspace-protocol-http
+        counterPartyId: counter-party-id
+        counterPartyAddress: http://counter/party/address
+        state: VERIFIED
+        contractAgreementId: contract:agreement:id
+        errorDetail: eventual-error-detail
+        createdAt: 1688465655
+        callbackAddresses:
+          - transactional: false
+            uri: http://callback/url
+            events:
+              - contract.negotiation
+              - transfer.process
+            authKey: auth-key
+            authCodeId: auth-code-id
     ContractOfferDescription:
       type: object
       properties:
+        '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/ContractOfferDescription
         assetId:
           type: string
           example: null
@@ -1967,18 +2152,69 @@ components:
         policy:
           $ref: '#/components/schemas/Policy'
       example: null
-    CriterionDto:
-      required:
-        - operandLeft
-        - operator
+    ContractRequest:
       type: object
       properties:
-        '@context':
-          type: object
-          example: null
         '@type':
           type: string
+          example: https://w3id.org/edc/v0.0.1/ns/ContractRequest
+        callbackAddresses:
+          type: array
           example: null
+          items:
+            $ref: '#/components/schemas/CallbackAddress'
+        connectorAddress:
+          type: string
+          example: null
+        connectorId:
+          type: string
+          description: please use providerId instead
+          example: null
+          deprecated: true
+        consumerId:
+          type: string
+          description: this field is not used anymore
+          example: null
+          deprecated: true
+        offer:
+          $ref: '#/components/schemas/ContractOfferDescription'
+        protocol:
+          type: string
+          example: null
+        providerId:
+          type: string
+          example: null
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@type': https://w3id.org/edc/v0.0.1/ns/ContractRequest
+        connectorAddress: http://provider-address
+        protocol: dataspace-protocol-http
+        providerId: provider-id
+        offer:
+          offerId: offer-id
+          assetId: asset-id
+          policy:
+            '@context': http://www.w3.org/ns/odrl.jsonld
+            '@type': Set
+            '@id': offer-id
+            permission:
+              - target: asset-id
+                action: display
+        callbackAddresses:
+          - transactional: false
+            uri: http://callback/url
+            events:
+              - contract.negotiation
+              - transfer.process
+            authKey: auth-key
+            authCodeId: auth-code-id
+    Criterion:
+      type: object
+      properties:
+        '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/Criterion
         operandLeft:
           type: object
           example: null
@@ -1988,71 +2224,32 @@ components:
         operator:
           type: string
           example: null
-      example: null
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@type': Criterion
+        operandLeft: fieldName
+        operator: =
+        operandRight: some value
     DataAddress:
       type: object
       properties:
-        properties:
-          type: object
-          additionalProperties:
-            type: string
-            example: null
+        '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/DataAddress
+        type:
+          type: string
           example: null
       example: null
-    DataAddressDto:
-      required:
-        - properties
+    DataPlaneInstanceSchema:
       type: object
       properties:
-        '@context':
-          type: object
+        '@id':
+          type: string
           example: null
         '@type':
           type: string
-          example: null
-        properties:
-          type: object
-          additionalProperties:
-            type: string
-            example: null
-          example: null
-      example: null
-    DataFlowRequest:
-      type: object
-      properties:
-        callbackAddress:
-          type: string
-          format: url
-          example: null
-        destinationDataAddress:
-          $ref: '#/components/schemas/DataAddress'
-        id:
-          type: string
-          example: null
-        processId:
-          type: string
-          example: null
-        properties:
-          type: object
-          additionalProperties:
-            type: string
-            example: null
-          example: null
-        sourceDataAddress:
-          $ref: '#/components/schemas/DataAddress'
-        traceContext:
-          type: object
-          additionalProperties:
-            type: string
-            example: null
-          example: null
-        trackable:
-          type: boolean
-          example: null
-      example: null
-    DataPlaneInstance:
-      type: object
-      properties:
+          example: https://w3id.org/edc/v0.0.1/ns/DataPlaneInstance
         allowedDestTypes:
           uniqueItems: true
           type: array
@@ -2067,18 +2264,9 @@ components:
           items:
             type: string
             example: null
-        id:
-          type: string
-          example: null
         lastActive:
           type: integer
           format: int64
-          example: null
-        properties:
-          type: object
-          additionalProperties:
-            type: object
-            example: null
           example: null
         turnCount:
           type: integer
@@ -2088,59 +2276,74 @@ components:
           type: string
           format: url
           example: null
-      example: null
-    DataRequestDto:
-      type: object
-      properties:
-        assetId:
-          type: string
-          example: null
-        connectorId:
-          type: string
-          example: null
-        contractId:
-          type: string
-          example: null
-        id:
-          type: string
-          example: null
-      example: null
-    DataService:
-      type: object
-      properties:
-        endpointUrl:
-          type: string
-          example: null
-        id:
-          type: string
-          example: null
-        terms:
-          type: string
-          example: null
-      example: null
+      example:
+        '@id': your-dataplane-id
+        url: http://somewhere.com:1234/api/v1
+        allowedSourceTypes:
+          - source-type1
+          - source-type2
+        allowedDestTypes:
+          - your-dest-type
     Dataset:
       type: object
+      description: DCAT dataset
+      example:
+        '@id': bcca61be-e82e-4da6-bfec-9716a56cef35
+        '@type': dcat:Dataset
+        odrl:hasPolicy:
+          '@id': OGU0ZTMzMGMtODQ2ZS00ZWMxLThmOGQtNWQxNWM0NmI2NmY4:YmNjYTYxYmUtZTgyZS00ZGE2LWJmZWMtOTcxNmE1NmNlZjM1:NDY2ZTZhMmEtNjQ1Yy00ZGQ0LWFlZDktMjdjNGJkZTU4MDNj
+          '@type': odrl:Set
+          odrl:permission:
+            odrl:target: bcca61be-e82e-4da6-bfec-9716a56cef35
+            odrl:action:
+              odrl:type: http://www.w3.org/ns/odrl/2/use
+            odrl:constraint:
+              odrl:and:
+                - odrl:leftOperand: https://w3id.org/edc/v0.0.1/ns/inForceDate
+                  odrl:operator:
+                    '@id': odrl:gteq
+                  odrl:rightOperand: 2023-07-07T07:19:58.585601395Z
+                - odrl:leftOperand: https://w3id.org/edc/v0.0.1/ns/inForceDate
+                  odrl:operator:
+                    '@id': odrl:lteq
+                  odrl:rightOperand: 2023-07-12T07:19:58.585601395Z
+          odrl:prohibition: [ ]
+          odrl:obligation: [ ]
+          odrl:target: bcca61be-e82e-4da6-bfec-9716a56cef35
+        dcat:distribution:
+          - '@type': dcat:Distribution
+            dct:format:
+              '@id': HttpData
+            dcat:accessService: 5e839777-d93e-4785-8972-1005f51cf367
+        edc:description: description
+        edc:id: bcca61be-e82e-4da6-bfec-9716a56cef35
+        '@context':
+          dct: https://purl.org/dc/terms/
+          edc: https://w3id.org/edc/v0.0.1/ns/
+          dcat: https://www.w3.org/ns/dcat/
+          odrl: http://www.w3.org/ns/odrl/2/
+          dspace: https://w3id.org/dspace/v0.8/
+    DatasetRequest:
+      type: object
       properties:
-        distributions:
-          type: array
-          example: null
-          items:
-            $ref: '#/components/schemas/Distribution'
-        id:
+        '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/CatalogRequest
+        counterPartyAddress:
           type: string
           example: null
-        offers:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/Policy'
+        protocol:
+          type: string
           example: null
-        properties:
-          type: object
-          additionalProperties:
-            type: object
-            example: null
-          example: null
-      example: null
+        querySpec:
+          $ref: '#/components/schemas/QuerySpec'
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@type': DatasetRequest
+        '@id': dataset-id
+        counterPartyAddress: http://counter-party-address
+        protocol: dataspace-protocol-http
     DeprovisionedResource:
       type: object
       properties:
@@ -2154,39 +2357,6 @@ components:
           type: boolean
           example: null
         provisionedResourceId:
-          type: string
-          example: null
-      example: null
-    Distribution:
-      type: object
-      properties:
-        dataService:
-          $ref: '#/components/schemas/DataService'
-        format:
-          type: string
-          example: null
-      example: null
-    Duty:
-      type: object
-      properties:
-        action:
-          $ref: '#/components/schemas/Action'
-        assignee:
-          type: string
-          example: null
-        assigner:
-          type: string
-          example: null
-        consequence:
-          $ref: '#/components/schemas/Duty'
-        constraints:
-          type: array
-          example: null
-          items:
-            $ref: '#/components/schemas/Constraint'
-        parentPermission:
-          $ref: '#/components/schemas/Permission'
-        target:
           type: string
           example: null
       example: null
@@ -2227,23 +2397,21 @@ components:
           type: boolean
           example: null
       example: null
-    IdResponseDto:
+    IdResponse:
       type: object
       properties:
-        '@context':
-          type: object
-          example: null
         '@id':
-          type: string
-          example: null
-        '@type':
           type: string
           example: null
         createdAt:
           type: integer
           format: int64
           example: null
-      example: null
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@id': id-value
+        createdAt: 1688465655
     JsonArray:
       type: array
       properties:
@@ -2299,181 +2467,86 @@ components:
             - "FALSE"
             - "NULL"
       example: null
-    NegotiationInitiateRequestDto:
-      type: object
-      properties:
-        '@context':
-          type: object
-          example: null
-        '@type':
-          type: string
-          example: null
-        callbackAddresses:
-          type: array
-          example: null
-          items:
-            $ref: '#/components/schemas/CallbackAddress'
-        connectorAddress:
-          type: string
-          example: null
-        connectorId:
-          type: string
-          example: null
-        consumerId:
-          type: string
-          example: null
-        offer:
-          $ref: '#/components/schemas/ContractOfferDescription'
-        protocol:
-          type: string
-          example: null
-        providerId:
-          type: string
-          example: null
-      example: null
     NegotiationState:
       type: object
       properties:
-        '@context':
-          type: object
-          example: null
-        '@type':
-          type: string
-          example: null
         state:
-          type: string
-          example: null
-      example: null
-    Permission:
-      type: object
-      properties:
-        action:
-          $ref: '#/components/schemas/Action'
-        assignee:
-          type: string
-          example: null
-        assigner:
-          type: string
-          example: null
-        constraints:
-          type: array
-          example: null
-          items:
-            $ref: '#/components/schemas/Constraint'
-        duties:
-          type: array
-          example: null
-          items:
-            $ref: '#/components/schemas/Duty'
-        target:
           type: string
           example: null
       example: null
     Policy:
       type: object
-      properties:
-        '@type':
-          type: string
-          example: null
-          enum:
-            - SET
-            - OFFER
-            - CONTRACT
-        assignee:
-          type: string
-          example: null
-        assigner:
-          type: string
-          example: null
-        extensibleProperties:
-          type: object
-          additionalProperties:
-            type: object
-            example: null
-          example: null
-        inheritsFrom:
-          type: string
-          example: null
-        obligations:
-          type: array
-          example: null
-          items:
-            $ref: '#/components/schemas/Duty'
-        permissions:
-          type: array
-          example: null
-          items:
-            $ref: '#/components/schemas/Permission'
-        prohibitions:
-          type: array
-          example: null
-          items:
-            $ref: '#/components/schemas/Prohibition'
-        target:
-          type: string
-          example: null
-      example: null
-    PolicyDefinitionRequestDto:
+      description: ODRL policy
+      example:
+        '@context': http://www.w3.org/ns/odrl.jsonld
+        '@id': 0949ba30-680c-44e6-bc7d-1688cbe1847e
+        '@type': odrl:Set
+        permission:
+          target: http://example.com/asset:9898.movie
+          action:
+            type: http://www.w3.org/ns/odrl/2/use
+          constraint:
+            leftOperand: https://w3id.org/edc/v0.0.1/ns/left
+            operator: eq
+            rightOperand: value
+        prohibition: [ ]
+        obligation: [ ]
+    PolicyDefinitionInput:
       type: object
       properties:
         '@id':
           type: string
           example: null
+        '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/PolicyDefinition
         policy:
           $ref: '#/components/schemas/Policy'
-      example: null
-    PolicyDefinitionResponseDto:
-      type: object
-      properties:
+      example:
         '@context':
-          type: object
-          example: null
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@id': definition-id
+        policy:
+          '@context': http://www.w3.org/ns/odrl.jsonld
+          '@type': Set
+          uid: http://example.com/policy:1010
+          permission:
+            - target: http://example.com/asset:9898.movie
+              action: display
+              constraint:
+                - leftOperand: spatial
+                  operator: eq
+                  rightOperand: https://www.wikidata.org/wiki/Q183
+                  comment: i.e Germany
+    PolicyDefinitionOutput:
+      type: object
+      properties:
         '@id':
           type: string
           example: null
         '@type':
           type: string
-          example: null
-        createdAt:
-          type: integer
-          format: int64
-          example: null
+          example: https://w3id.org/edc/v0.0.1/ns/PolicyDefinition
         policy:
           $ref: '#/components/schemas/Policy'
-      example: null
-    PolicyDefinitionUpdateDto:
-      type: object
-      properties:
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@id': definition-id
         policy:
-          $ref: '#/components/schemas/Policy'
-      example: null
-    Prohibition:
-      type: object
-      properties:
-        action:
-          $ref: '#/components/schemas/Action'
-        assignee:
-          type: string
-          example: null
-        assigner:
-          type: string
-          example: null
-        constraints:
-          type: array
-          example: null
-          items:
-            $ref: '#/components/schemas/Constraint'
-        target:
-          type: string
-          example: null
-      example: null
+          '@context': http://www.w3.org/ns/odrl.jsonld
+          '@type': Set
+          uid: http://example.com/policy:1010
+          permission:
+            - target: http://example.com/asset:9898.movie
+              action: display
+              constraint:
+                - leftOperand: spatial
+                  operator: eq
+                  rightOperand: https://www.wikidata.org/wiki/Q183
+                  comment: i.e Germany
+        createdAt: 1688465655
     ProvisionerWebhookRequest:
-      required:
-        - apiKeyJwt
-        - assetId
-        - contentDataAddress
-        - resourceDefinitionId
-        - resourceName
       type: object
       properties:
         apiKeyJwt:
@@ -2494,20 +2567,17 @@ components:
           type: string
           example: null
       example: null
-    QuerySpecDto:
+    QuerySpec:
       type: object
       properties:
-        '@context':
-          type: object
-          example: null
         '@type':
           type: string
-          example: null
+          example: https://w3id.org/edc/v0.0.1/ns/QuerySpec
         filterExpression:
           type: array
           example: null
           items:
-            $ref: '#/components/schemas/CriterionDto'
+            $ref: '#/components/schemas/Criterion'
         limit:
           type: integer
           format: int32
@@ -2525,10 +2595,21 @@ components:
           enum:
             - ASC
             - DESC
-      example: null
-    SelectionRequest:
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@type': QuerySpec
+        offset: 5
+        limit: 10
+        sortOrder: DESC
+        sortField: fieldName
+        filterExpression: [ ]
+    SelectionRequestSchema:
       type: object
       properties:
+        '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/SelectionRequest
         destination:
           $ref: '#/components/schemas/DataAddress'
         source:
@@ -2536,84 +2617,130 @@ components:
         strategy:
           type: string
           example: null
-      example: null
-    TerminateTransferDto:
-      required:
-        - reason
+      example:
+        source:
+          '@type': https://w3id.org/edc/v0.0.1/ns/DataAddress
+          type: test-src1
+        destination:
+          '@type': https://w3id.org/edc/v0.0.1/ns/DataAddress
+          type: test-dst2
+        strategy: you_custom_strategy
+    TerminateNegotiationSchema:
       type: object
       properties:
-        reason:
-          type: string
-          example: null
-      example: null
-    TransferProcessDto:
-      type: object
-      properties:
-        '@context':
-          type: object
-          example: null
         '@id':
           type: string
           example: null
         '@type':
           type: string
+          example: https://w3id.org/edc/v0.0.1/ns/TerminateNegotiation
+        reason:
+          type: string
           example: null
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@type': https://w3id.org/edc/v0.0.1/ns/TerminateNegotiation
+        '@id': negotiation-id
+        reason: a reason to terminate
+    TerminateTransfer:
+      type: object
+      properties:
+        '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/TransferState
+        state:
+          type: string
+          example: null
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@type': https://w3id.org/edc/v0.0.1/ns/TerminateTransfer
+        reason: a reason to terminate
+    TransferProcess:
+      type: object
+      properties:
+        '@id':
+          type: string
+          example: null
+        '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/TransferProcess
         callbackAddresses:
           type: array
           example: null
           items:
             $ref: '#/components/schemas/CallbackAddress'
-        createdAt:
-          type: integer
-          format: int64
+        contractAgreementId:
+          type: string
           example: null
-        dataDestination:
-          $ref: '#/components/schemas/DataAddressDto'
-        dataRequest:
-          $ref: '#/components/schemas/DataRequestDto'
+        counterPartyAddress:
+          type: string
+          example: null
+        counterPartyId:
+          type: string
+          example: null
         errorDetail:
           type: string
+          example: null
+        privateProperties:
+          type: object
+          additionalProperties:
+            type: object
+            example: null
           example: null
         properties:
           type: object
           additionalProperties:
             type: string
             example: null
+            deprecated: true
+          example: null
+          deprecated: true
+        protocol:
+          type: string
           example: null
         state:
           type: string
           example: null
-        stateTimestamp:
-          type: integer
-          format: int64
-          example: null
         type:
           type: string
           example: null
-        updatedAt:
-          type: integer
-          format: int64
-          example: null
-      example: null
-    TransferProcessFailStateDto:
-      required:
-        - errorMessage
+          enum:
+            - CONSUMER
+            - PROVIDER
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@type': https://w3id.org/edc/v0.0.1/ns/TransferProcess
+        '@id': process-id
+        correlationId: correlation-id
+        type: PROVIDER
+        state: STARTED
+        stateTimestamp: 1688465655
+        assetId: asset-id
+        connectorId: connectorId
+        contractId: contractId
+        dataDestination:
+          type: data-destination-type
+        privateProperties:
+          private-key: private-value
+        errorDetail: eventual-error-detail
+        createdAt: 1688465655
+        callbackAddresses:
+          - transactional: false
+            uri: http://callback/url
+            events:
+              - contract.negotiation
+              - transfer.process
+            authKey: auth-key
+            authCodeId: auth-code-id
+    TransferRequest:
       type: object
       properties:
-        errorMessage:
+        '@type':
           type: string
-          example: null
-      example: null
-    TransferRequestDto:
-      required:
-        - assetId
-        - connectorAddress
-        - connectorId
-        - contractId
-        - dataDestination
-        - protocol
-      type: object
-      properties:
+          example: https://w3id.org/edc/v0.0.1/ns/TransferRequest
         assetId:
           type: string
           example: null
@@ -2633,12 +2760,6 @@ components:
           example: null
         dataDestination:
           $ref: '#/components/schemas/DataAddress'
-        id:
-          type: string
-          example: null
-        managedResources:
-          type: boolean
-          example: null
         privateProperties:
           type: object
           additionalProperties:
@@ -2649,16 +2770,49 @@ components:
           type: object
           additionalProperties:
             type: string
+            description: "Deprecated as this field is not used anymore, please use\
+              \ privateProperties instead"
             example: null
+            deprecated: true
+          description: "Deprecated as this field is not used anymore, please use privateProperties\
+            \ instead"
           example: null
+          deprecated: true
         protocol:
           type: string
           example: null
-      example: null
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@type': https://w3id.org/edc/v0.0.1/ns/TransferRequest
+        protocol: dataspace-protocol-http
+        connectorAddress: http://provider-address
+        connectorId: provider-id
+        contractId: contract-id
+        assetId: asset-id
+        dataDestination:
+          type: data-destination-type
+        privateProperties:
+          private-key: private-value
+        callbackAddresses:
+          - transactional: false
+            uri: http://callback/url
+            events:
+              - contract.negotiation
+              - transfer.process
+            authKey: auth-key
+            authCodeId: auth-code-id
     TransferState:
       type: object
       properties:
+        '@type':
+          type: string
+          example: https://w3id.org/edc/v0.0.1/ns/TransferState
         state:
           type: string
           example: null
-      example: null
+      example:
+        '@context':
+          edc: https://w3id.org/edc/v0.0.1/ns/
+        '@type': https://w3id.org/edc/v0.0.1/ns/TransferState
+        state: STARTED

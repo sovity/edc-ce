@@ -14,12 +14,11 @@
 
 package de.sovity.edc.ext.wrapper.api.ee;
 
+import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ee.model.ConnectorLimits;
-import de.sovity.edc.ext.wrapper.api.ee.model.StoredFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -28,9 +27,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Our sovity Enterprise Edition EDC API Endpoints to be included in our generated EDC API Wrapper Clients
@@ -44,36 +40,33 @@ public interface EnterpriseEditionResource {
     @Operation(description = "Available and used resources of a connector.")
     ConnectorLimits connectorLimits();
 
-    @GET
-    @Path("file-storage/stored-files")
+    @POST
+    @Path("file-upload/blobs")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Get all stored files.",
-            description = "Get all files stored in file storage"
+            summary = "Requests a Blob for file upload.",
+            description = "Requests a Blob URL with a SAS Token so that the UI can directly upload the file to the Azure Blob Storage. Returns the Blob ID / Token."
     )
-    List<StoredFile> listStoredFiles();
+    String fileUploadRequestSasToken();
 
     @POST
-    @Path("file-storage/{storedFileId}/assets")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("file-upload/blobs/{blobId}/asset")
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(
-            summary = "Create a file storage asset.",
-            description = "Create an asset using the stored file as data source."
+            summary = "Create an asset from an uploaded file.",
+            description = "Creates an asset using the uploaded file as data source."
     )
-    StoredFile createStoredFileAsset(
-            @PathParam("storedFileId")
+    void fileUploadCreateAsset(
+            @PathParam("blobId")
             @Parameter(
-                    name = "storedFileId",
+                    name = "blobId",
                     in = ParameterIn.PATH,
-                    description = "The id of the StoredFile object.",
-                    schema = @Schema(example = "stored-file-001")
-            ) String storedFileId,
+                    description = "The Blob ID / URL the file was uploaded into."
+            ) String blobId,
 
             @Parameter(
                     required = true,
-                    description = "Map<String, String> representing a list with the asset properties of the stored file.",
-                    schema = @Schema(example = "{\"asset:prop:id\": \"some-asset-1\",\n \"asset:prop:originator\": \"http://my-example-connector/api/v1/ids\"}")
-            ) Map<String, String> assetProperties
+                    description = "Metadata for the Asset. File-related metadata might be overridden."
+            ) UiAssetCreateRequest assetCreateRequest
     );
 }

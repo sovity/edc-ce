@@ -15,15 +15,14 @@
 package de.sovity.edc.client.examples;
 
 import de.sovity.edc.client.EdcClient;
+import io.quarkus.logging.Log;
 import io.quarkus.runtime.configuration.ConfigUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 
 public class EdcClientSetup {
-    private static final Logger LOG = Logger.getLogger(EdcClientSetup.class.getName());
 
     @ConfigProperty(name = "my-edc.management-api-url")
     String managementApiUrl;
@@ -44,11 +43,11 @@ public class EdcClientSetup {
 
     private void testEdcConnection(EdcClient client) {
         if (ConfigUtils.getProfiles().contains("test")) {
-            LOG.info("Skipping EDC connection test.");
+            Log.info("Skipping EDC connection test.");
             return;
         }
 
         client.testConnection();
-        LOG.info("Successfully connected to EDC Connector %s.".formatted(managementApiUrl));
+        Log.info("Successfully connected to EDC Connector %s.".formatted(managementApiUrl));
     }
 }

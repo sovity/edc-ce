@@ -12,13 +12,22 @@ assignees: ""
 
 Feel free to edit this release checklist in-progress depending on what tasks need to be done:
 
-- [ ] Release [edc-ui](https://github.com/sovity/edc-ui), this might require several steps.
+- [ ] Release [edc-ui](https://github.com/sovity/edc-ui), this might require several steps: _Link to EDC UI Release here_
 - [ ] Decide a release version depending on major/minor/patch changes in the CHANGELOG.md.
 - [ ] Update this issue's title to the new version
 - [ ] `release-prep` PR:
     - [ ] Write or review the current [Productive Deployment Guide](https://github.com/sovity/edc-extensions/blob/main/docs/deployment-guide/goals/production)
     - [ ] Write or review the current [Development Deployment Guide](https://github.com/sovity/edc-extensions/blob/main/docs/deployment-guide/goals/development)
     - [ ] Write or review the current [Local Demo Deployment Guide](https://github.com/sovity/edc-extensions/blob/main/docs/deployment-guide/goals/local-demo)
+    - [ ] For Major version updates: If we want to continue supporting the old major version:
+        - [ ] Keep the old Productive Development Guide in a separate location.
+            - [ ] Add a note to the old version about its deprecation status.
+            - [ ] Add a Link the old version in the new version for discoverability.
+            - [ ] Check all links in the old version.
+        - [ ] Keep the old Productive Development Guide in a separate location.
+            - [ ] Add a note to the old version about its deprecation status.
+            - [ ] Add a Link the old version in the new version for discoverability.
+            - [ ] Check all links in the old version.
     - [ ] Update the CHANGELOG.md.
         - [ ] Add a clean `Unreleased` version.
         - [ ] Add the version to the old section.
@@ -30,6 +39,7 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
         - [ ] Write or review a release summary.
         - [ ] Write or review the compatible versions section.
         - [ ] Add a link to the EDC UI Release to the "EDC UI" section.
+        - [ ] Add a link to the EDC UI Release Deployment Migration Notes from the Deployment Migration section if the EDC UI has Deployment Migration Notes.
         - [ ] Remove empty sections from the patch notes.
     - [ ] Replace the existing `docker-compose.yaml` with `docker-compose-dev.yaml`.
     - [ ] Set the version for `EDC_IMAGE` of

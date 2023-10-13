@@ -43,7 +43,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test data offers and contracts of an MS8 connector migrated to the current version.
  */
-class Ms8ConnectorTransferTest {
+class Ms8ConnectorMigrationTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = "provider";
     private static final String CONSUMER_PARTICIPANT_ID = "consumer";

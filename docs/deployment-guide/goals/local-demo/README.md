@@ -1,8 +1,10 @@
 Deployment Goal: Local Demo
 ========
 
+> This is for our latest version. There is another guide for [4.2.0](4.2.0/README.md).
+
 > On how to deploy a productive connector with joining an existing Data Space, please refer
-> to our [Productive Deployment Guide](../production).
+> to our [Productive Deployment Guide](../production/README.md).
 
 ## Quick Start
 

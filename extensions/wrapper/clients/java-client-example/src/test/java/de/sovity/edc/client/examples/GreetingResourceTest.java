@@ -17,10 +17,13 @@ package de.sovity.edc.client.examples;
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.api.UseCaseApi;
 import de.sovity.edc.client.gen.model.KpiResult;
+import de.sovity.edc.client.gen.model.TransferProcessStatesDto;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
@@ -41,17 +44,16 @@ class GreetingResourceTest {
     }
 
     @Test
-    void testHelloEndpoint() {
-        var myResult = mock(KpiResult.class);
-        when(myResult.toString()).thenReturn("RESULT");
-
-        when(useCaseApi.getKpis()).thenReturn(myResult);
+    void testGetKpis() {
+        var kpiResult = new KpiResult();
+        kpiResult.setAssetsCount(3);
+        when(useCaseApi.getKpis()).thenReturn(kpiResult);
 
         given()
                 .when().get("/")
                 .then()
                 .statusCode(200)
-                .body(is("Backend-fetched KPI Information:%nRESULT".formatted()));
+                .body("assetsCount", is(3));
     }
 
 }

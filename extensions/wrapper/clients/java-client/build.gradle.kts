@@ -48,12 +48,12 @@ tasks.getByName<Test>("test") {
 }
 
 // Extract the openapi file from the JAR
-val openapiFile = "edc-api-wrapper.yaml"
+val openapiFile = "sovity-edc-api-wrapper.yaml"
 task<Copy>("extractOpenapiYaml") {
     dependsOn(openapiYaml)
     into("${project.buildDir}")
     from(zipTree(openapiYaml.singleFile)) {
-        include("edc-api-wrapper.yaml")
+        include(openapiFile)
     }
 }
 
