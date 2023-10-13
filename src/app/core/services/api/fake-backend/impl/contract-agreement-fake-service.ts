@@ -2,8 +2,8 @@ import {
   ContractAgreementCard,
   ContractAgreementPage,
   ContractAgreementTransferProcess,
-  ContractAgreementTransferRequest,
   IdResponseDto,
+  InitiateTransferRequest,
 } from '@sovity.de/edc-client';
 import {Patcher, patchObj} from '../../../../utils/object-utils';
 import {TestAssets} from './data/test-assets';
@@ -132,9 +132,9 @@ export const addContractAgreement = (
 };
 
 export const contractAgreementInitiateTransfer = (
-  request: ContractAgreementTransferRequest,
+  request: InitiateTransferRequest,
 ): IdResponseDto => {
-  const contractAgreementId = request?.params?.contractAgreementId ?? '';
+  const contractAgreementId = request?.contractAgreementId ?? '';
   const transferProcessId =
     'transfer-process-' + Math.random().toString().substring(2);
 

@@ -1,8 +1,12 @@
 import {Component, Inject, OnDestroy} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {finalize} from 'rxjs/operators';
-import {ContractAgreementTransferRequest} from '@sovity.de/edc-client';
+import {
+  IdResponseDto,
+  InitiateCustomTransferRequest,
+  InitiateTransferRequest,
+} from '@sovity.de/edc-client';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {DataAddressMapper} from '../../../../core/services/data-address-mapper';
 import {HttpRequestParamsMapper} from '../../../../core/services/http-params-mapper.service';
@@ -83,8 +87,17 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
     this.loading = true;
     this.form.all.disable();
 
-    this.edcApiService
-      .initiateTransfer(this.buildTransferRequest(this.form.value))
+    const value = this.form.value;
+    let request$: Observable<IdResponseDto>;
+    if (value.dataAddressType === 'Custom-Transfer-Process-Request') {
+      const request = this.buildCustomTransferRequest(value);
+      request$ = this.edcApiService.initiateCustomTransfer(request);
+    } else {
+      const request = this.buildTransferRequest(value);
+      request$ = this.edcApiService.initiateTransfer(request);
+    }
+
+    request$
       .pipe(
         finalize(() => {
           this.loading = false;
@@ -117,18 +130,7 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
 
   private buildTransferRequest(
     value: ContractAgreementTransferDialogFormValue,
-  ): ContractAgreementTransferRequest {
-    if (value.dataAddressType === 'Custom-Transfer-Process-Request') {
-      const customJson: any = JSON.parse(
-        value.transferProcessRequest?.trim() ?? '',
-      );
-
-      return {
-        type: 'CUSTOM_JSON',
-        customJson: JSON.stringify(customJson),
-      };
-    }
-
+  ): InitiateTransferRequest {
     const transferProcessProperties =
       this.httpRequestParamsMapper.encodeHttpProxyTransferRequestProperties(
         this.data.asset,
@@ -139,12 +141,18 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
       this.dataAddressMapper.buildDataAddressProperties(value) ?? {};
 
     return {
-      type: 'PARAMS_ONLY',
-      params: {
-        contractAgreementId: this.data.contractId,
-        transferProcessProperties,
-        dataSinkProperties,
-      },
+      contractAgreementId: this.data.contractId,
+      transferProcessProperties,
+      dataSinkProperties,
+    };
+  }
+
+  private buildCustomTransferRequest(
+    value: ContractAgreementTransferDialogFormValue,
+  ): InitiateCustomTransferRequest {
+    return {
+      contractAgreementId: this.data.contractId,
+      transferProcessRequestJsonLd: value.transferProcessRequest,
     };
   }
 }

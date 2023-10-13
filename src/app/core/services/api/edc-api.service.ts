@@ -4,13 +4,14 @@ import {
   AssetPage,
   ConnectorLimits,
   ContractAgreementPage,
-  ContractAgreementTransferRequest,
   ContractDefinitionPage,
   ContractDefinitionRequest,
   ContractNegotiationRequest,
   DashboardPage,
   EdcClient,
   IdResponseDto,
+  InitiateCustomTransferRequest,
+  InitiateTransferRequest,
   PolicyDefinitionCreateRequest,
   PolicyDefinitionPage,
   TransferHistoryPage,
@@ -126,10 +127,20 @@ export class EdcApiService {
   }
 
   initiateTransfer(
-    contractAgreementTransferRequest: ContractAgreementTransferRequest,
+    initiateTransferRequest: InitiateTransferRequest,
   ): Observable<IdResponseDto> {
     return from(
-      this.edcClient.uiApi.initiateTransfer({contractAgreementTransferRequest}),
+      this.edcClient.uiApi.initiateTransfer({initiateTransferRequest}),
+    );
+  }
+
+  initiateCustomTransfer(
+    initiateCustomTransferRequest: InitiateCustomTransferRequest,
+  ): Observable<IdResponseDto> {
+    return from(
+      this.edcClient.uiApi.initiateCustomTransfer({
+        initiateCustomTransferRequest,
+      }),
     );
   }
 

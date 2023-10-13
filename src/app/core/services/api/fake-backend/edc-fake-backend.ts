@@ -1,13 +1,13 @@
 import {
   AssetPageToJSON,
   ContractAgreementPageToJSON,
-  ContractAgreementTransferRequestFromJSON,
   ContractDefinitionPageToJSON,
   ContractDefinitionRequestFromJSON,
   ContractNegotiationRequestFromJSON,
   DashboardPageToJSON,
   FetchAPI,
   IdResponseDtoToJSON,
+  InitiateTransferRequestFromJSON,
   PolicyDefinitionCreateRequestFromJSON,
   PolicyDefinitionPageToJSON,
   TransferHistoryPageToJSON,
@@ -161,7 +161,7 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
 
     .url('pages/contract-agreement-page/transfers')
     .on('POST', () => {
-      const transferRequest = ContractAgreementTransferRequestFromJSON(body);
+      const transferRequest = InitiateTransferRequestFromJSON(body);
       const created = contractAgreementInitiateTransfer(transferRequest);
       return ok(IdResponseDtoToJSON(created));
     })
