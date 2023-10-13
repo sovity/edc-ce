@@ -42,7 +42,6 @@ import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
-import jakarta.json.JsonObjectBuilder;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
