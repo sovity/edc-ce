@@ -50,6 +50,7 @@ public class Prop {
         public final String CONNECTOR_ID = CTX + "connectorId";
         public final String ASSET_ID = CTX + "assetId";
         public final String DATA_DESTINATION = CTX + "dataDestination";
+        public final String RECEIVER_HTTP_ENDPOINT = CTX + "receiverHttpEndpoint";
     }
 
     /**

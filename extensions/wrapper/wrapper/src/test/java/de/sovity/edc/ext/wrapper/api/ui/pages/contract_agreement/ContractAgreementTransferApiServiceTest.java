@@ -21,7 +21,6 @@ import de.sovity.edc.ext.wrapper.TestUtils;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
-import jakarta.json.JsonObject;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -107,8 +106,10 @@ class ContractAgreementTransferApiServiceTest {
                 .add(Prop.Edc.DATA_DESTINATION, Json.createObjectBuilder()
                         .add(Prop.Edc.TYPE, "HttpData")
                         .add(Prop.Edc.BASE_URL, DATA_SINK))
-                .add(Prop.Edc.PROPERTIES, Json.createObjectBuilder()
-                        .add("privateProperty", "privateValue"))
+                .add(Prop.Edc.PRIVATE_PROPERTIES, Json.createObjectBuilder()
+                        .add(Prop.Edc.RECEIVER_HTTP_ENDPOINT, "http://my-pull-backend")
+                        .add("this-will-disappear", "because-its-not-an-url")
+                        .add("http://unknown/custom-prop", "value"))
                 .build();
         var request = new InitiateCustomTransferRequest(
                 contractId,
@@ -122,15 +123,16 @@ class ContractAgreementTransferApiServiceTest {
         var transferProcess = transferProcessStore.findById(result.getId());
         assertThat(transferProcess).isNotNull();
         assertThat(transferProcess.getPrivateProperties()).containsAllEntriesOf(Map.of(
-                "privateProperty", "privateValue"
+                Prop.Edc.RECEIVER_HTTP_ENDPOINT, "http://my-pull-backend",
+                "http://unknown/custom-prop", "value"
         ));
 
         var dataRequest = transferProcess.getDataRequest();
         assertThat(dataRequest.getContractId()).isEqualTo(contractId);
         assertThat(dataRequest.getConnectorAddress()).isEqualTo(COUNTER_PARTY_ADDRESS);
         assertThat(dataRequest.getDataDestination().getProperties()).containsAllEntriesOf(Map.of(
-                "https://w3id.org/edc/v0.0.1/ns/type", "HttpData",
-                "baseUrl", DATA_SINK
+                Prop.Edc.TYPE, "HttpData",
+                Prop.Edc.BASE_URL, DATA_SINK
         ));
     }
 
