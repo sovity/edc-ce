@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AssetJsonLdUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
@@ -109,7 +110,6 @@ public class WrapperExtensionContextBuilder {
             PolicyDefinitionService policyDefinitionService,
             PolicyDefinitionStore policyDefinitionStore,
             PolicyEngine policyEngine,
-            ServiceExtensionContext serviceExtensionContext,
             TransferProcessService transferProcessService,
             TransferProcessStore transferProcessStore,
             TypeTransformerRegistry typeTransformerRegistry
@@ -128,7 +128,8 @@ public class WrapperExtensionContextBuilder {
                 atomicConstraintMapper,
                 typeTransformerRegistry);
         var edcPropertyUtils = new EdcPropertyUtils();
-        var uiAssetMapper = new UiAssetMapper(edcPropertyUtils);
+        var assetJsonLdUtils = new AssetJsonLdUtils();
+        var uiAssetMapper = new UiAssetMapper(edcPropertyUtils, assetJsonLdUtils);
         var assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetMapper, jsonLd);
         var transferProcessStateService = new TransferProcessStateService();
         var selfDescriptionService = new SelfDescriptionService(config);

@@ -105,7 +105,6 @@ public class WrapperExtension implements ServiceExtension {
                 policyDefinitionService,
                 policyDefinitionStore,
                 policyEngine,
-                context,
                 transferProcessService,
                 transferProcessStore,
                 typeTransformerRegistry
