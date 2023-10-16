@@ -71,10 +71,9 @@ jobs:
           git log -1 > extensions/last-commit-info/src/main/resources/jar-last-commit-info.txt
           echo $(date --utc +%FT%TZ) > extensions/last-commit-info/src/main/resources/jar-build-date.txt
       - name: "Gradle: Overwrite Artifact Version (Release Only)"
+        if: ${{ startsWith(github.event.ref, 'refs/tags/') }}
         run: |
-          if [ "${{ startsWith(github.ref, 'refs/tags/') }}" == "true" ]; then
-            GRADLE_ARGS="-PsovityEdcExtensionsVersion=${GITHUB_REF#refs/tags/v}"
-          fi
+          GRADLE_ARGS="-PsovityEdcExtensionsVersion=${GITHUB_REF#refs/tags/}"
           echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
       - name: "Gradle: Build"
         uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
@@ -156,17 +155,21 @@ jobs:
         uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
         with:
           arguments: :extensions:wrapper:wrapper:build -x test
-      - name: "NPM: Dist Tag & Version"
+      - name: "NPM: Dist Tag & Version Release"
+        if: ${{ startsWith(github.event.ref, 'refs/tags/') }}
         working-directory: ./extensions/wrapper/clients/typescript-client
         run: |
-          if [ "${{ startsWith(github.ref, 'refs/tags/') }}" == "true" ]; then
-            # Full Release
-            VERSION="${GITHUB_REF#refs/tags/v}"
-            DIST_TAG=latest
-          else
-            VERSION="0.$(date '+%Y%m%d.%H%M%S')-main-$CI_SHA_SHORT"
-            DIST_TAG=main
-          fi
+          # Full Release
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          DIST_TAG=latest
+          npm version $VERSION
+          echo "DIST_TAG=$DIST_TAG" >> $GITHUB_ENV
+      - name: "NPM: Dist Tag & Version Dev"
+        if: ${{ !startsWith(github.event.ref, 'refs/tags/') }}
+        working-directory: ./extensions/wrapper/clients/typescript-client
+        run: |
+          VERSION="0.$(date '+%Y%m%d.%H%M%S')-main-$CI_SHA_SHORT"
+          DIST_TAG=main
           npm version $VERSION
           echo "DIST_TAG=$DIST_TAG" >> $GITHUB_ENV
       - name: "NPM: Build"
