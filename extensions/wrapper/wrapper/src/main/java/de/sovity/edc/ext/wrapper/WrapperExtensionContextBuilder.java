@@ -198,8 +198,7 @@ public class WrapperExtensionContextBuilder {
         var catalogApiService = new CatalogApiService(
                 assetMapper,
                 policyMapper,
-                dspCatalogService,
-                selfDescriptionService
+                dspCatalogService
         );
         var contractOfferMapper = new ContractOfferMapper(policyMapper);
         var contractNegotiationBuilder = new ContractNegotiationBuilder(contractOfferMapper);

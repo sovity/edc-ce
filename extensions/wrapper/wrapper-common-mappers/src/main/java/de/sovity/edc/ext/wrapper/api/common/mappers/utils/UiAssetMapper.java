@@ -36,9 +36,9 @@ public class UiAssetMapper {
         var uiAsset = new UiAsset();
         uiAsset.setAssetJsonLd(JsonUtils.toJson(JsonLdUtils.tryCompact(assetJsonLd)));
 
-        var id = JsonLdUtils.string(assetJsonLd, Prop.ID);
+        var id = JsonLdUtils.string(assetJsonLd, Prop.ID); // TODO: own method (AP1)
         var title = JsonLdUtils.string(properties, Prop.Dcterms.TITLE);
-        title = isBlank(title) ? id : title;
+        title = isBlank(title) ? id : title; // TODO: own method (AP1)
 
         var creator = JsonLdUtils.object(properties, Prop.Dcterms.CREATOR);
         var creatorOrganizationName = JsonLdUtils.string(creator, Prop.Foaf.NAME);
