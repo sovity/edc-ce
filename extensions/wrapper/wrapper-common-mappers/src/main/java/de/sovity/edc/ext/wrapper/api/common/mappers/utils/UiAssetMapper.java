@@ -21,6 +21,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.AssetJsonLdUtils.getId;
+import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.AssetJsonLdUtils.getTitle;
 import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNull;
 import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNullArray;
 import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNullJsonValue;
@@ -36,9 +38,9 @@ public class UiAssetMapper {
         var uiAsset = new UiAsset();
         uiAsset.setAssetJsonLd(JsonUtils.toJson(JsonLdUtils.tryCompact(assetJsonLd)));
 
-        var id = JsonLdUtils.string(assetJsonLd, Prop.ID); // TODO: own method (AP1)
-        var title = JsonLdUtils.string(properties, Prop.Dcterms.TITLE);
-        title = isBlank(title) ? id : title; // TODO: own method (AP1)
+        var id = getId(assetJsonLd);
+        var title = getTitle(properties);
+        title = isBlank(title) ? id : title;
 
         var creator = JsonLdUtils.object(properties, Prop.Dcterms.CREATOR);
         var creatorOrganizationName = JsonLdUtils.string(creator, Prop.Foaf.NAME);

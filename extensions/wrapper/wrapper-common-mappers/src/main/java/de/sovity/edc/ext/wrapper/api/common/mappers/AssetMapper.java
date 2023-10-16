@@ -54,7 +54,7 @@ public class AssetMapper {
                 .orElseThrow(FailedMappingException::ofFailure);
     }
 
-    private JsonObject buildAssetJsonLdFromDatasetProperties(JsonObject json) { // TODO: public (AP1)
+    public JsonObject buildAssetJsonLdFromDatasetProperties(JsonObject json) {
         // Try to use the EDC Prop ID, but if it's not available, fall back to the "@id" property
         var assetId = Optional.ofNullable(JsonLdUtils.string(json, Prop.Edc.ID))
                 .orElseGet(() -> JsonLdUtils.string(json, Prop.ID));
