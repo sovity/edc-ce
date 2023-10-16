@@ -15,7 +15,7 @@ package de.sovity.edc.utils.catalog;
 
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
-import de.sovity.edc.utils.catalog.model.DspDataOffer;
+import de.sovity.edc.utils.catalog.model.DspCatalog;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -23,14 +23,13 @@ import org.eclipse.edc.connector.spi.catalog.CatalogService;
 import org.eclipse.edc.spi.query.QuerySpec;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 @RequiredArgsConstructor
 public class DspCatalogService {
     private final CatalogService catalogService;
     private final DspDataOfferBuilder dspDataOfferBuilder;
 
-    public List<DspDataOffer> fetchDataOffers(String endpoint) throws DspCatalogServiceException {
+    public DspCatalog fetchDataOffers(String endpoint) throws DspCatalogServiceException {
         var catalogJson = fetchDcatResponse(endpoint);
         return dspDataOfferBuilder.buildDataOffers(endpoint, catalogJson);
     }
