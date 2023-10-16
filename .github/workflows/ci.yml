@@ -65,7 +65,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: "Gradle: Validate Gradle Wrapper"
-        uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
+        uses: gradle/wrapper-validation-action@342dbebe7272035434f9baccc29a816ec6dd2c7b
       - name: "Gradle: Include last commit info and build date for JARs"
         run: |
           git log -1 > extensions/last-commit-info/src/main/resources/jar-last-commit-info.txt
@@ -150,7 +150,7 @@ jobs:
           cache: 'npm'
           cache-dependency-path: extensions/wrapper/clients/typescript-client/package.json
       - name: "Gradle: Validate Gradle Wrapper"
-        uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
+        uses: gradle/wrapper-validation-action@342dbebe7272035434f9baccc29a816ec6dd2c7b
       - name: "Gradle: Generate TS Code"
         uses: gradle/gradle-build-action@a4cf152f482c7ca97ef56ead29bf08bcd953284c
         with:
