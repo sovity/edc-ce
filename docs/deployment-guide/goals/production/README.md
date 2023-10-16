@@ -165,13 +165,3 @@ You can use a script (if you're on WSL or Linux) to generate the SKI, AKI and jk
 
 No, locally run connectors cannot exchange data with online connectors. A connector must have a proper URL +
 configuration and be accesible from the data provider via REST calls.
-
-### (MDS Only) Can I disable the ClearingHouse-Client-Extension?
-
-Yes, it can still be disabled via configuration:
-
-```yaml
-# Extension Configuration
-CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED: false # enabled by default
-```
-

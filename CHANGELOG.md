@@ -41,6 +41,8 @@ https://github.com/sovity/edc-ui/releases/tag/v2.0.0
   - The Getting Started Docker Compose file now launches connectors for local demo purposes.
   - For productive deployments, a detailed deployment guide has been added.
   - The Dev-Images now also require a PostgreSQL Database.
+- Removed IDS Broker Extension.
+- Removed IDS Clearing House Extension.
 
 #### Minor Changes
 
