@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file.
 
 #### Patch Changes
 
-- Improve common mappers for broker
+- Improved `:extensions:wrapper:wrapper-common-mappers` for broker: `AssetJsonLdUtils`, made some methods public.
 
 ### Deployment Migration Notes
 
