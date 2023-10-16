@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2023 sovity GmbH
+ *
+ *  This program and the accompanying materials are made available under the
+ *  terms of the Apache License, Version 2.0 which is available at
+ *  https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
+ *  Contributors:
+ *      sovity GmbH - init
+ */
+
 package de.sovity.edc.ext.wrapper.api.common.mappers.utils;
 
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
@@ -29,6 +42,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @RequiredArgsConstructor
 public class UiAssetMapper {
     private final EdcPropertyUtils edcPropertyUtils;
+    private final AssetJsonLdUtils assetJsonLdUtils;
 
     public UiAsset buildUiAsset(JsonObject assetJsonLd, String connectorEndpoint, String participantId) {
         var properties = JsonLdUtils.object(assetJsonLd, Prop.Edc.PROPERTIES);
@@ -36,9 +50,8 @@ public class UiAssetMapper {
         var uiAsset = new UiAsset();
         uiAsset.setAssetJsonLd(JsonUtils.toJson(JsonLdUtils.tryCompact(assetJsonLd)));
 
-        var id = JsonLdUtils.string(assetJsonLd, Prop.ID);
-        var title = JsonLdUtils.string(properties, Prop.Dcterms.TITLE);
-        title = isBlank(title) ? id : title;
+        var id = assetJsonLdUtils.getId(assetJsonLd);
+        var title = assetJsonLdUtils.getTitle(assetJsonLd);
 
         var creator = JsonLdUtils.object(properties, Prop.Dcterms.CREATOR);
         var creatorOrganizationName = JsonLdUtils.string(creator, Prop.Foaf.NAME);

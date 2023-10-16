@@ -20,7 +20,6 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiContractOffer;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
-import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.model.DspContractOffer;
 import de.sovity.edc.utils.catalog.model.DspDataOffer;
@@ -33,20 +32,22 @@ public class CatalogApiService {
     private final AssetMapper assetMapper;
     private final PolicyMapper policyMapper;
     private final DspCatalogService dspCatalogService;
-    private final SelfDescriptionService selfDescriptionService;
 
     public List<UiDataOffer> fetchDataOffers(String connectorEndpoint) {
-        var dataOffers = dspCatalogService.fetchDataOffers(connectorEndpoint);
-        return dataOffers.stream()
-                .map(this::buildDataOffer)
+        var dspCatalog = dspCatalogService.fetchDataOffers(connectorEndpoint);
+        var endpoint = dspCatalog.getEndpoint();
+        var participantId = dspCatalog.getParticipantId();
+
+        return dspCatalog.getDataOffers().stream()
+                .map(dataOffer -> buildDataOffer(dataOffer, endpoint, participantId))
                 .toList();
     }
 
-    private UiDataOffer buildDataOffer(DspDataOffer dataOffer) {
+    private UiDataOffer buildDataOffer(DspDataOffer dataOffer, String endpoint, String participantId) {
         var uiDataOffer = new UiDataOffer();
-        uiDataOffer.setEndpoint(dataOffer.getEndpoint());
-        uiDataOffer.setParticipantId(dataOffer.getParticipantId());
-        uiDataOffer.setAsset(buildUiAsset(dataOffer));
+        uiDataOffer.setEndpoint(endpoint);
+        uiDataOffer.setParticipantId(participantId);
+        uiDataOffer.setAsset(buildUiAsset(dataOffer, endpoint, participantId));
         uiDataOffer.setContractOffers(buildContractOffers(dataOffer.getContractOffers()));
         return uiDataOffer;
     }
@@ -62,9 +63,9 @@ public class CatalogApiService {
         return uiContractOffer;
     }
 
-    private UiAsset buildUiAsset(DspDataOffer dataOffer) {
+    private UiAsset buildUiAsset(DspDataOffer dataOffer, String endpoint, String participantId) {
         var asset = assetMapper.buildAssetFromDatasetProperties(dataOffer.getAssetPropertiesJsonLd());
-        return assetMapper.buildUiAsset(asset, dataOffer.getEndpoint(), dataOffer.getParticipantId());
+        return assetMapper.buildUiAsset(asset, endpoint, participantId);
     }
 
     private UiPolicy buildUiPolicy(DspContractOffer contractOffer) {

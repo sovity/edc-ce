@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AssetJsonLdUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
@@ -76,7 +77,6 @@ import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
-import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
@@ -109,7 +109,6 @@ public class WrapperExtensionContextBuilder {
             PolicyDefinitionService policyDefinitionService,
             PolicyDefinitionStore policyDefinitionStore,
             PolicyEngine policyEngine,
-            ServiceExtensionContext serviceExtensionContext,
             TransferProcessService transferProcessService,
             TransferProcessStore transferProcessStore,
             TypeTransformerRegistry typeTransformerRegistry
@@ -128,7 +127,8 @@ public class WrapperExtensionContextBuilder {
                 atomicConstraintMapper,
                 typeTransformerRegistry);
         var edcPropertyUtils = new EdcPropertyUtils();
-        var uiAssetMapper = new UiAssetMapper(edcPropertyUtils);
+        var assetJsonLdUtils = new AssetJsonLdUtils();
+        var uiAssetMapper = new UiAssetMapper(edcPropertyUtils, assetJsonLdUtils);
         var assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetMapper, jsonLd);
         var transferProcessStateService = new TransferProcessStateService();
         var selfDescriptionService = new SelfDescriptionService(config);
@@ -198,8 +198,7 @@ public class WrapperExtensionContextBuilder {
         var catalogApiService = new CatalogApiService(
                 assetMapper,
                 policyMapper,
-                dspCatalogService,
-                selfDescriptionService
+                dspCatalogService
         );
         var contractOfferMapper = new ContractOfferMapper(policyMapper);
         var contractNegotiationBuilder = new ContractNegotiationBuilder(contractOfferMapper);

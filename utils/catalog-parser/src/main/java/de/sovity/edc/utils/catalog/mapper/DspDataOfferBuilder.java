@@ -14,6 +14,7 @@
 package de.sovity.edc.utils.catalog.mapper;
 
 import de.sovity.edc.utils.catalog.DspCatalogServiceException;
+import de.sovity.edc.utils.catalog.model.DspCatalog;
 import de.sovity.edc.utils.catalog.model.DspContractOffer;
 import de.sovity.edc.utils.catalog.model.DspDataOffer;
 import de.sovity.edc.utils.jsonld.JsonLdUtils;
@@ -24,23 +25,25 @@ import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 public class DspDataOfferBuilder {
 
     private final JsonLd jsonLd;
 
-    public List<DspDataOffer> buildDataOffers(String endpoint, JsonObject json) {
+    public DspCatalog buildDataOffers(String endpoint, JsonObject json) {
         json = jsonLd.expand(json).orElseThrow(DspCatalogServiceException::ofFailure);
         String participantId = JsonLdUtils.string(json, Prop.Edc.PARTICIPANT_ID);
 
-        return JsonLdUtils.listOfObjects(json, Prop.Dcat.DATASET).stream()
-                .map(dataset -> buildDataOffer(endpoint, participantId, dataset))
-                .toList();
+        return new DspCatalog(
+                endpoint,
+                participantId,
+                JsonLdUtils.listOfObjects(json, Prop.Dcat.DATASET).stream()
+                        .map(dataset -> buildDataOffer(dataset))
+                        .toList()
+        );
     }
 
-    private DspDataOffer buildDataOffer(String endpoint, String participantId, JsonObject dataset) {
+    private DspDataOffer buildDataOffer(JsonObject dataset) {
         var contractOffers = JsonLdUtils.listOfObjects(dataset, Prop.Odrl.HAS_POLICY).stream()
                 .map(this::buildContractOffer)
                 .toList();
@@ -55,8 +58,6 @@ public class DspDataOfferBuilder {
 
 
         return new DspDataOffer(
-                endpoint,
-                participantId,
                 assetProperties,
                 contractOffers,
                 distributions

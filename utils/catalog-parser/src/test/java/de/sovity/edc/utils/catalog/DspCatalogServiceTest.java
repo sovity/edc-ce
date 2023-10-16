@@ -59,10 +59,11 @@ class DspCatalogServiceTest {
         var actual = dspCatalogService.fetchDataOffers(endpoint);
 
         // assert
-        assertThat(actual).hasSize(1);
-        var offer = actual.get(0);
-        assertThat(offer.getEndpoint()).isEqualTo(endpoint);
-        assertThat(offer.getParticipantId()).isEqualTo("provider");
+        var offers = actual.getDataOffers();
+        assertThat(offers).hasSize(1);
+        var offer = offers.get(0);
+        assertThat(actual.getEndpoint()).isEqualTo(endpoint);
+        assertThat(actual.getParticipantId()).isEqualTo("provider");
         assertThat(JsonLdUtils.id(offer.getAssetPropertiesJsonLd()))
                 .isEqualTo("test-1.0");
         assertThat(offer.getAssetPropertiesJsonLd().get(Prop.TYPE)).isNull();
