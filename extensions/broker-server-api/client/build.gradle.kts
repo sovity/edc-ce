@@ -26,8 +26,8 @@ dependencies {
     // Generated Client's Dependencies
     implementation("io.swagger:swagger-annotations:1.6.11")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
-    implementation("com.squareup.okhttp3:okhttp:4.11.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("io.gsonfire:gson-fire:1.8.5")
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
