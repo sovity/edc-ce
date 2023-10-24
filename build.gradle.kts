@@ -66,10 +66,12 @@ allprojects {
         mavenCentral()
         mavenLocal()
         maven {
-            url = uri("https://maven.iais.fraunhofer.de/artifactory/eis-ids-public/")
-        }
-        maven {
-            url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+            name = "Github-EDC-Extensions"
+            url = uri("https://maven.pkg.github.com/sovity/edc-extensions")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+            }
         }
     }
 }
