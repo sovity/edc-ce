@@ -26,6 +26,31 @@ All notable changes to this project will be documented in this file.
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:{{ VERSION HERE }}`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity{{ VERSION HERE }}`
 
+## [4.2.1] - 2023-10-24
+
+### Overview
+
+Re-release of v4.2.0 with fixed curl vulnerabilities.
+
+### EDC UI
+
+- https://github.com/sovity/edc-ui/releases/tag/v0.0.1-milestone-8-sovity14
+
+### EDC-Extensions
+
+#### Patch Changes
+
+- Re-built images to fix a HIGH finding for curl.
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:4.2.1`
+    - Sovity EDC CE: `ghcr.io/sovity/edc-ce:4.2.1`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.2.1`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity14`
 
 ## [4.2.0] - 2023-09-01
 
