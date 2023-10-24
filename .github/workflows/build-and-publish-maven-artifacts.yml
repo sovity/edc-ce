@@ -50,6 +50,9 @@ jobs:
       uses: gradle/gradle-build-action@243af859f8ca30903d9d7f7936897ca0358ba691
       with:
         arguments: build ${{ env.GRADLE_ARGS }}
+      env:
+        USERNAME: ${{ github.actor }}
+        TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
     # the publishing section of your build.gradle

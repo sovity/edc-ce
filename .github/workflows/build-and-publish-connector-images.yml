@@ -92,6 +92,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            BUILD_ARGS=${{ matrix.imageVariants.buildArgs }}
+            BUILD_ARGS=${{ matrix.imageVariants.buildArgs }} -Pgpr.user=${{ github.actor }} -Pgpr.key=${{ secrets.GITHUB_TOKEN }}
             EDC_LAST_COMMIT_INFO_ARG="${{ env.LAST_COMMIT_INFO }}"
             EDC_BUILD_DATE_ARG="${{ env.BUILD_DATE }}"
