@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.brokerserver.services.api;
 
-import de.sovity.edc.ext.brokerserver.BrokerServerExtension;
 import de.sovity.edc.ext.brokerserver.TestUtils;
 import de.sovity.edc.ext.brokerserver.client.BrokerServerClient;
 import de.sovity.edc.ext.brokerserver.client.gen.model.ConnectorListEntry;
@@ -33,10 +32,9 @@ import java.util.List;
 import java.util.Map;
 
 import static de.sovity.edc.ext.brokerserver.TestUtils.ADMIN_API_KEY;
-import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
 import static de.sovity.edc.ext.brokerserver.TestUtils.brokerServerClient;
+import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)

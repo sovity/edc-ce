@@ -38,6 +38,7 @@ import de.sovity.edc.ext.brokerserver.services.api.AssetPropertyParser;
 import de.sovity.edc.ext.brokerserver.services.api.CatalogApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorService;
+import de.sovity.edc.ext.brokerserver.services.api.DataOfferCountApiService;
 import de.sovity.edc.ext.brokerserver.services.api.DataOfferDetailApiService;
 import de.sovity.edc.ext.brokerserver.services.api.PaginationMetadataUtils;
 import de.sovity.edc.ext.brokerserver.services.api.PolicyDtoBuilder;
@@ -224,12 +225,14 @@ public class BrokerServerExtensionContextBuilder {
                 policyDtoBuilder,
                 assetPropertyParser
         );
+        var dataOfferCountApiService = new DataOfferCountApiService();
         var brokerServerResource = new BrokerServerResourceImpl(
                 dslContextFactory,
                 connectorApiService,
                 catalogApiService,
                 dataOfferDetailApiService,
-                adminApiKeyValidator
+                adminApiKeyValidator,
+                dataOfferCountApiService
         );
 
         return new BrokerServerExtensionContext(
