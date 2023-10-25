@@ -10,7 +10,7 @@ val jettyGroup: String by project
 plugins {
     `java-library`
     `maven-publish`
-    id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.14" //./gradlew clean resolve
+    id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.18" //./gradlew clean resolve
     id("org.hidetake.swagger.generator") version "2.19.2" //./gradlew generateSwaggerUI
     id("org.openapi.generator") version "6.6.0" //./gradlew openApiValidate && ./gradlew openApiGenerate
 }
