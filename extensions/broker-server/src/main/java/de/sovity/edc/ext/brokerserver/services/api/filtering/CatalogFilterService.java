@@ -23,6 +23,7 @@ import de.sovity.edc.ext.brokerserver.dao.AssetProperty;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQuerySelectedFilterQuery;
 import de.sovity.edc.ext.brokerserver.dao.utils.JsonDeserializationUtils;
+import de.sovity.edc.ext.brokerserver.dao.utils.PostgresqlUtils;
 import de.sovity.edc.ext.brokerserver.utils.CollectionUtils2;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
@@ -75,9 +76,10 @@ public class CatalogFilterService {
                         "Transport Mode"
                 ),
                 catalogFilterAttributeDefinitionService.fromAssetProperty(
-                        AssetProperty.GEO_REFERENCE_METHOD,
-                        "Geo Reference Method"
-                )
+                    AssetProperty.GEO_REFERENCE_METHOD,
+                    "Geo Reference Method"
+                ),
+                catalogFilterAttributeDefinitionService.buildConnectorEndpointFilter()
         );
     }
 

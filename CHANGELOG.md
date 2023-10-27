@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Minor
 
+- Added an endpoint for getting the data offer amounts for connectors.
+- Added a Connector filter to the Catalog Page.
+
 #### Patch
 
 ### Deployment Migration Notes

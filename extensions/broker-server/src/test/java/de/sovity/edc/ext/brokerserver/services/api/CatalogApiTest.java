@@ -47,11 +47,10 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 import static de.sovity.edc.ext.brokerserver.TestUtils.brokerServerClient;
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
-import static java.util.stream.IntStream.*;
+import static java.util.stream.IntStream.range;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
@@ -97,6 +96,33 @@ class CatalogApiTest {
 
             var dataOfferResult = result.getDataOffers().get(0);
             assertThat(dataOfferResult.getConnectorEndpoint()).isEqualTo("http://my-connector2/ids/data");
+        });
+    }
+
+    @Test
+    void testConnectorEndpointFilter_two_connectors_filter_for_one() {
+        TEST_DATABASE.testTransaction(dsl -> {
+            // arrange
+            var today = OffsetDateTime.now().withNano(0);
+
+            createConnector(dsl, today, "http://my-connector/ids/data");
+            createConnector(dsl, today, "http://my-connector2/ids/data");
+            createDataOffer(dsl, today, Map.of(
+                    AssetProperty.ASSET_ID, "urn:artifact:my-asset",
+                    AssetProperty.ASSET_NAME, "my-asset"
+            ), "http://my-connector/ids/data");
+            createDataOffer(dsl, today, Map.of(
+                    AssetProperty.ASSET_ID, "urn:artifact:my-asset",
+                    AssetProperty.ASSET_NAME, "my-asset"
+            ), "http://my-connector2/ids/data");
+
+            var query = new CatalogPageQuery();
+            query.setFilter(new CnfFilterValue(List.of(
+                    new CnfFilterValueAttribute("connectorEndpoint", List.of("http://my-connector/ids/data"))
+            )));
+
+            var result = brokerServerClient().brokerServerApi().catalogPage(query);
+            assertThat(result.getDataOffers()).extracting(CatalogDataOffer::getAssetId).containsExactly("urn:artifact:my-asset");
         });
     }
 
@@ -236,7 +262,8 @@ class CatalogApiTest {
                             AssetProperty.DATA_SUBCATEGORY,
                             AssetProperty.DATA_MODEL,
                             AssetProperty.TRANSPORT_MODE,
-                            AssetProperty.GEO_REFERENCE_METHOD
+                            AssetProperty.GEO_REFERENCE_METHOD,
+                            "connectorEndpoint"
                     );
 
             assertThat(result.getAvailableFilters().getFields())
@@ -247,7 +274,8 @@ class CatalogApiTest {
                             "Data Subcategory",
                             "Data Model",
                             "Transport Mode",
-                            "Geo Reference Method"
+                            "Geo Reference Method",
+                            "Connector"
                     );
 
             var dataCategory = getAvailableFilter(result, AssetProperty.DATA_CATEGORY);
@@ -264,6 +292,11 @@ class CatalogApiTest {
             assertThat(dataSubcategory.getTitle()).isEqualTo("Data Subcategory");
             assertThat(dataSubcategory.getValues()).extracting(CnfFilterItem::getId).containsExactly("my-subcategory-1", "MY-SUBCATEGORY-2", "");
             assertThat(dataSubcategory.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("my-subcategory-1", "MY-SUBCATEGORY-2", "");
+
+            var connectorEndpoint = getAvailableFilter(result, "connectorEndpoint");
+            assertThat(connectorEndpoint.getTitle()).isEqualTo("Connector");
+            assertThat(connectorEndpoint.getValues()).extracting(CnfFilterItem::getId).containsExactly("http://my-connector/ids/data");
+            assertThat(connectorEndpoint.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("http://my-connector/ids/data");
         });
     }
 
