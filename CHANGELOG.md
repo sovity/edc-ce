@@ -15,12 +15,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Minor
 
-- Added an endpoint for getting the data offer amounts for connectors.
-- Added a Connector filter to the Catalog Page.
-
 #### Patch
 
 ### Deployment Migration Notes
+
+## [v1.2.0] - 2023-10-30
+
+### Overview
+
+Adapt to requirements of the Authority Portal - Release v2.0.0.
+
+### Detailed Changes
+
+#### Minor
+
+- Added an endpoint for getting the data offer amounts for connectors.
+- Added a Connector filter to the Catalog Page.
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:1.2.0`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity13`
+- Sovity EDC CE: [`4.2.0`](https://github.com/sovity/edc-extensions/tree/v4.2.0/connector)
 
 ## [v1.1.1] - 2023-10-11
 
