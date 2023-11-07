@@ -33,6 +33,11 @@ An example project using this client can be found [here](../java-client-example)
 
 ## Usage
 
+### Example Consuming and Providing a Data Offer
+
+A full example providing and consuming a data offer using the API Wrapper Client Library can be found
+in [ApiWrapperDemoTest.java](../../../../launchers/connectors/sovity-dev/src/test/java/de/sovity/edc/e2e/ApiWrapperDemoTest.java).
+
 ### Example Using API Key Auth
 
 ```java

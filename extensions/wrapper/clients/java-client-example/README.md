@@ -18,6 +18,9 @@
 
 Example Quarkus Application that uses the Java API Client Library.
 
+A full example providing and consuming a data offer using the API Wrapper Client Library can be found
+in [ApiWrapperDemoTest.java](../../../../launchers/connectors/sovity-dev/src/test/java/de/sovity/edc/e2e/ApiWrapperDemoTest.java).
+
 ## License
 
 Apache License 2.0 - see [LICENSE](../../../../LICENSE)
