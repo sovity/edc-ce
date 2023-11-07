@@ -17,7 +17,7 @@ All notable changes to this project will be documented in this file.
 #### Patch Changes
 
 - Improved `:extensions:wrapper:wrapper-common-mappers` for broker: `AssetJsonLdUtils`, made some methods public.
-- Added example for using the API Wrapper to offer and consume data.w
+- Added example for using the API Wrapper to offer and consume data.
 
 ### Deployment Migration Notes
 
