@@ -23,6 +23,21 @@
     * [Docker Image]()
     * [HELM]()
     * [Docker-compose]()
+* Configuration
+    * [Settings]()
+    * [Firewalls/Proxies]()
+    * [Data Space Configuration]()
+* Administration
+    * [Update Process]()
+    * [Database Migration]()
+* [Troubleshooting & FAQ]()
+* [About Security]()
+
+
+
+
+
+
 
 
 ## User Documentation
