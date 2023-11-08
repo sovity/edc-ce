@@ -12,6 +12,18 @@
 * [What is a Catalog]()
 * [What is a DAPS]()
 
+## Setup
+* Deployment Goals
+    * [Local Demo](./docs/deployment-guide/goals/local-demo)
+    * [Development](./docs/deployment-guide/goals/development)
+    * [Productive](./docs/deployment-guide/goals/production)
+        * [Productive Deployment Guide](./docs/deployment-guide/goals/production)
+        * [Productive Deployment Guide 4.2.0 / MS8 / MDS 1.2](docs/deployment-guide/goals/production/4.2.0/README.md)
+
+
+
+
+
 ## User Documentation
 * [Getting Started](./docs/getting-started/README.md)
 * [Data Transfer Modes](./docs/getting-started/documentation/data-transfer-methods.md)
@@ -21,19 +33,11 @@
 * [Parameterized Assets via Managment API](./docs/getting-started/documentation/parameterized_assets.md)
 * [Pull Data Transfer](./docs/getting-started/documentation/pull-data-transfer.md)
 
-## Deployment Documentation
-* [Deployment Goal: Local Demo](./docs/deployment-guide/goals/local-demo)
-* [Deployment Goal: Development](./docs/deployment-guide/goals/development)
-* [Deployment Goal: Production](./docs/deployment-guide/goals/production)
-    * [Productive Deployment Guide](./docs/deployment-guide/goals/production)
-    * [Productive Deployment Guide 4.2.0 / MS8 / MDS 1.2](docs/deployment-guide/goals/production/4.2.0/README.md)
-
 ## Developer Documentation
 * [Code of Conduct](./CODE_OF_CONDUCT.md)
 * [Contribution Guide](./CONTRIBUTING.md)
 * [Code-Style Guide](./STYLEGUIDE.md)
 * [Security Guide](./SECURITY.md)
-
 
 ## Extensions
 * [API Wrapper](./extensions/wrapper/README.md)
