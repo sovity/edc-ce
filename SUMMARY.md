@@ -19,9 +19,10 @@
     * Productive
         * [Deployment Guide](./docs/deployment-guide/goals/production)
         * [Deployment Guide 4.2.0 / MS8 / MDS 1.2](docs/deployment-guide/goals/production/4.2.0/README.md)
-
-
-
+* Deployment Types
+    * [Docker Image]()
+    * [HELM]()
+    * [Docker-compose]()
 
 
 ## User Documentation
