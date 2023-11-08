@@ -16,9 +16,9 @@
 * Deployment Goals
     * [Local Demo](./docs/deployment-guide/goals/local-demo)
     * [Development](./docs/deployment-guide/goals/development)
-    * [Productive](./docs/deployment-guide/goals/production)
-        * [Productive Deployment Guide](./docs/deployment-guide/goals/production)
-        * [Productive Deployment Guide 4.2.0 / MS8 / MDS 1.2](docs/deployment-guide/goals/production/4.2.0/README.md)
+    * Productive
+        * [Deployment Guide](./docs/deployment-guide/goals/production)
+        * [Deployment Guide 4.2.0 / MS8 / MDS 1.2](docs/deployment-guide/goals/production/4.2.0/README.md)
 
 
 
