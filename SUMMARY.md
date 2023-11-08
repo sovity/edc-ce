@@ -6,8 +6,13 @@
 * [Roadmap]()
 * [About sovity]()
 
-## User Documentation
+## Introduction
+* [What is a Data Space]()
+* [What is a Connector]()
+* [What is a Catalog]()
+* [What is a DAPS]()
 
+## User Documentation
 * [Getting Started](./docs/getting-started/README.md)
 * [Data Transfer Modes](./docs/getting-started/documentation/data-transfer-methods.md)
 * [API Wrapper](./docs/getting-started/documentation/api_wrapper.md)
@@ -24,7 +29,6 @@
     * [Productive Deployment Guide 4.2.0 / MS8 / MDS 1.2](docs/deployment-guide/goals/production/4.2.0/README.md)
 
 ## Developer Documentation
-
 * [Code of Conduct](./CODE_OF_CONDUCT.md)
 * [Contribution Guide](./CONTRIBUTING.md)
 * [Code-Style Guide](./STYLEGUIDE.md)
@@ -32,7 +36,6 @@
 
 
 ## Extensions
-
 * [API Wrapper](./extensions/wrapper/README.md)
     * [Community Edition API](./extensions/wrapper/wrapper-api/README.md)
     * [Enterprise Edition API](./extensions/wrapper/wrapper-ee-api/README.md)
