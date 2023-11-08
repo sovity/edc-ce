@@ -69,25 +69,16 @@
         * [TypeScript API Client Library](./extensions/wrapper/clients/typescript-client/README.md)
         * [TypeScript API Client Library Example](./extensions/wrapper/clients/typescript-client-example/README.md)
 
-
-
-
-
-
-
-
-## User Documentation
-* [Getting Started](./docs/getting-started/README.md)
-* [API Wrapper](./docs/getting-started/documentation/api_wrapper.md)
-* [Parameterized Assets via UI](./docs/getting-started/documentation/parameterized_assets_via_ui.md)
-* [Parameterized Assets via Managment API](./docs/getting-started/documentation/parameterized_assets.md)
-
-## Developer Documentation
+## Community
 * [Code of Conduct](./CODE_OF_CONDUCT.md)
 * [Contribution Guide](./CONTRIBUTING.md)
 * [Code-Style Guide](./STYLEGUIDE.md)
 * [Security Guide](./SECURITY.md)
 
+## How Tos & FAQ
+* [Notifications]()
+* [Integration: Use Case Pattern]()
 
-
-
+## sovity's Connector-as-a-Service (CaaS)
+* [Comparison Table of offerings]()
+* [Versions]()
