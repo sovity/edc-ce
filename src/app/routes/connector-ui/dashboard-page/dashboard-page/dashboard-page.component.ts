@@ -1,6 +1,7 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {switchMap, takeUntil} from 'rxjs/operators';
+import {APP_CONFIG, AppConfig} from 'src/app/core/config/app-config';
 import {ConnectorInfoPropertyGridGroupBuilder} from '../../../../core/services/connector-info-property-grid-group-builder';
 import {DashboardPageData, defaultDashboardData} from './dashboard-page-data';
 import {DashboardPageDataService} from './dashboard-page-data.service';
@@ -14,7 +15,10 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   data: DashboardPageData = defaultDashboardData();
   private refresh$ = new BehaviorSubject(true);
 
-  constructor(private dashboardDataService: DashboardPageDataService) {}
+  constructor(
+    @Inject(APP_CONFIG) public config: AppConfig,
+    private dashboardDataService: DashboardPageDataService,
+  ) {}
 
   ngOnInit() {
     this.refresh$

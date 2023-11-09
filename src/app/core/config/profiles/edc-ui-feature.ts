@@ -12,4 +12,7 @@ export type EdcUiFeature =
   | 'open-source-marketing'
 
   // Enterprise Edition specific attribute to view limits enforced on consuming contract agreements
-  | 'connector-limits';
+  | 'connector-limits'
+
+  // Enterprise Edition specific flag to enable marketing for other Enterprise Edition variants in basic connectors
+  | 'mds-ee-basic-marketing';

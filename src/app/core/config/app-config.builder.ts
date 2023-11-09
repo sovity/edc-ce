@@ -33,6 +33,10 @@ export class AppConfigBuilder {
       // Other EDC Backend Endpoints
       catalogUrls: vars[AppConfigProperties.catalogUrls] ?? '',
       useFakeBackend: vars[AppConfigProperties.useFakeBackend] === 'true',
+
+      // Enterprise Edition
+      showEeBasicMarketing:
+        vars[AppConfigProperties.showEeBasicMarketing] === 'true',
     };
   }
 }

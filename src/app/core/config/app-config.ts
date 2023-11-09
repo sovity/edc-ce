@@ -34,4 +34,7 @@ export interface AppConfig {
   // Other EDC Backend Endpoints
   catalogUrls: string;
   useFakeBackend: boolean;
+
+  // Enterprise Edition
+  showEeBasicMarketing: boolean;
 }

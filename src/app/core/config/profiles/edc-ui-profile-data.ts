@@ -27,7 +27,11 @@ export const EDC_UI_PROFILE_DATA = inferEdcUiProfileType({
   'mds-hosted-by-sovity': {
     ...MDS_THEME,
     routes: 'connector-ui',
-    features: new Set(['mds-fields', ...ENTERPRISE_EDITION_FEATURES]),
+    features: new Set([
+      'mds-fields',
+      'mds-ee-basic-marketing',
+      ...ENTERPRISE_EDITION_FEATURES,
+    ]),
   },
   broker: {
     ...MDS_THEME,

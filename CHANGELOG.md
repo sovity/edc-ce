@@ -18,9 +18,14 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
+- New optional marketing banner for MDS Basic Enterprise Edition Connectors.
+
 #### Patch
 
 #### Deployment Migration Notes
+
+- Enterprise Edition only, MDS variants only: New optional config variable
+  `EDC_UI_SHOW_EE_BASIC_MARKETING=true`. Default `false`
 
 ## [v2.0.0] 10.10.2023
 

@@ -54,4 +54,10 @@ export const AppConfigProperties = {
    * Whether to use the fake backend (local development).
    */
   useFakeBackend: 'EDC_UI_USE_FAKE_BACKEND',
+
+  /**
+   * Only for Enterprise Edition.
+   * Enables Marketing for other Enterprise Edition Variants.
+   */
+  showEeBasicMarketing: 'EDC_UI_SHOW_EE_BASIC_MARKETING',
 };

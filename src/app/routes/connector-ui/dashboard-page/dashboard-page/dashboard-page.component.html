@@ -91,6 +91,43 @@
       </mat-form-field>
     </mat-card>
 
+    <mat-card
+      *ngIf="
+        ('mds-ee-basic-marketing' | isActiveFeature) &&
+        config.showEeBasicMarketing
+      ">
+      <mat-card-title
+        ><span class="flex flex-row items-center"
+          >Provided by
+          <img
+            class="h-6 ml-2 mt-1"
+            src="/assets/images/sovity_logo.svg"
+            alt="sovity logo" /></span
+      ></mat-card-title>
+      <mat-card-subtitle>Basic Edition EDC</mat-card-subtitle>
+
+      <div class="flex flex-row h-fit">
+        <div>
+          <p class="text-justify mx-2">
+            This EDC Connector on the subscription level "Basic" is provided by sovity to 
+            enable your first steps in the Mobility Data Space (MDS).
+          </p>
+          <p class="text-justify mx-2">
+            For additional features and advanced capacities, please feel free to contact us.
+          </p>
+        </div>
+      </div>
+      <div class="flex flex-row !space-x-[10px]">
+        <a
+          color="secondary"
+          href="https://sovity.de/en/contact/"
+          mat-stroked-button
+          target="_blank">
+          Contact us
+        </a>
+      </div>
+    </mat-card>
+
     <mat-card *ngIf="'open-source-marketing' | isActiveFeature">
       <mat-card-title>Get Managed EDC</mat-card-title>
       <mat-card-subtitle>Connector-as-a-Service</mat-card-subtitle>
