@@ -4,7 +4,7 @@
 * [Connector Versions](./launchers/README.md)
 * [Changelog](./CHANGELOG.md)
 * [Roadmap]()
-* [About sovity](https://sovity.de/)
+* [About sovity](https://sovity.de/en/sovity-en/)
 
 ## Introduction
 * [What is a Data Space]()
