@@ -22,6 +22,9 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
+- Improved visibility of buttons in "Create New Asset" and "Initiate Transfer"
+  Dialogs
+
 #### Deployment Migration Notes
 
 - Enterprise Edition only, MDS variants only: New optional config variable

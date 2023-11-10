@@ -85,8 +85,8 @@
           *ngIf="form.all.controls.httpAuthHeaderType.value === 'None'"
           class="flex flex-row mb-[10px]">
           <button
-            mat-button
-            color="primary"
+            mat-stroked-button
+            color="accent"
             (click)="
               form.all.controls.httpAuthHeaderType.setValue('Vault-Secret')
             ">
@@ -194,8 +194,8 @@
         <!-- Add Header Button -->
         <div class="flex flex-row mb-[10px]">
           <button
-            mat-button
-            color="primary"
+            mat-stroked-button
+            color="accent"
             (click)="form.onHttpHeadersAddClick()">
             Add Additional Header
           </button>
@@ -302,8 +302,8 @@
           <div class="flex flex-row mb-[10px] space-x-[10px]">
             <!-- Add Query Param Button -->
             <button
-              mat-button
-              color="primary"
+              mat-stroked-button
+              color="accent"
               (click)="form.onHttpQueryParamsAddClick()">
               Add Custom Query Param
             </button>
@@ -343,8 +343,8 @@
           "
           class="flex flex-row mb-[10px]">
           <button
-            mat-button
-            [color]="ctrl.value ? 'warn' : 'primary'"
+            mat-stroked-button
+            [color]="ctrl.value ? 'warn' : 'accent'"
             (click)="ctrl.setValue(!ctrl.value)">
             {{ ctrl.value ? 'Hide' : 'Show' }} Http Datasource Parameterization
             Fields

@@ -196,7 +196,6 @@
               {{ validationMessages.invalidJsonMessage }}
             </mat-error>
           </mat-form-field>
-
           <ng-container *ngIf="form.dataAddressType === 'Http'">
             <div class="form-section-title">Method</div>
 
@@ -225,8 +224,8 @@
               *ngIf="form.datasource.controls.httpProxyMethod; let ctrl"
               class="flex flex-row mb-[10px]">
               <button
-                mat-button
-                [color]="ctrl.value ? 'warn' : 'primary'"
+                mat-stroked-button
+                [color]="ctrl.value ? 'warn' : 'accent'"
                 (click)="ctrl.setValue(!ctrl.value)">
                 {{ ctrl.value ? 'Disable' : 'Enable' }} Method Parameterization
               </button>
@@ -257,8 +256,8 @@
               *ngIf="form.datasource.controls.httpProxyPath; let ctrl"
               class="flex flex-row mb-[10px]">
               <button
-                mat-button
-                [color]="ctrl.value ? 'warn' : 'primary'"
+                mat-stroked-button
+                [color]="ctrl.value ? 'warn' : 'accent'"
                 (click)="ctrl.setValue(!ctrl.value)">
                 {{ ctrl.value ? 'Disable' : 'Enable' }} Path Parameterization
               </button>
@@ -316,17 +315,17 @@
             <div class="flex flex-row mb-[10px] space-x-[10px]">
               <!-- Add Query Param Button -->
               <button
-                mat-button
-                color="primary"
+                mat-stroked-button
+                color="accent"
                 (click)="form.onHttpQueryParamsAddClick()">
                 Add {{ form.proxyQueryParams ? 'Default' : '' }} Query Param
               </button>
 
-              <!-- Toggle Proxy QueryParams Button -->
+              <!-- Toggle Proxy Query Param Parameterization Button -->
               <button
                 *ngIf="form.datasource.controls.httpProxyQueryParams; let ctrl"
-                mat-button
-                [color]="ctrl.value ? 'warn' : 'primary'"
+                mat-stroked-button
+                [color]="ctrl.value ? 'warn' : 'accent'"
                 (click)="ctrl.setValue(!ctrl.value)">
                 {{ ctrl.value ? 'Disable' : 'Enable' }} Query Param
                 Parameterization
@@ -345,8 +344,8 @@
               *ngIf="form.datasource.controls.httpProxyBody; let ctrl"
               class="flex flex-row mb-[10px]">
               <button
-                mat-button
-                [color]="ctrl.value ? 'warn' : 'primary'"
+                mat-stroked-button
+                [color]="ctrl.value ? 'warn' : 'accent'"
                 (click)="ctrl.setValue(!ctrl.value)">
                 {{ ctrl.value ? 'Disable' : 'Enable' }} Request Body
                 Parameterization
@@ -362,8 +361,8 @@
               "
               class="flex flex-row mb-[10px]">
               <button
-                mat-button
-                color="primary"
+                mat-stroked-button
+                color="accent"
                 (click)="
                   form.datasource.controls.httpAuthHeaderType.setValue(
                     'Vault-Secret'
@@ -442,7 +441,7 @@
               "
               class="flex flex-row mb-[10px]">
               <button
-                mat-button
+                mat-stroked-button
                 color="warn"
                 (click)="
                   form.datasource.controls.httpAuthHeaderType.setValue('None')
@@ -492,8 +491,8 @@
             <!-- Add Header Button -->
             <div class="flex flex-row mb-[10px]">
               <button
-                mat-button
-                color="primary"
+                mat-stroked-button
+                color="accent"
                 (click)="form.onHttpHeadersAddClick()">
                 Add Additional Header
               </button>
