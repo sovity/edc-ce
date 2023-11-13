@@ -7,7 +7,7 @@
 * [About sovity](https://sovity.de/en/sovity-en/)
 
 ## Introduction
-* [What is a Data Space]()
+* [What is a Data Space](./docs/gitbook/what_is_a_dataspace.md)
 * [What is a Connector]()
 * [What is a Catalog]()
 * [What is a DAPS]()
