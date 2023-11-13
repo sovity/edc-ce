@@ -3,7 +3,7 @@
 * [Start](./README.md)
 * [Connector Versions](./launchers/README.md)
 * [Changelog](./CHANGELOG.md)
-* [Roadmap]()
+* [Roadmap](./docs/gitbook/roadmap.md)
 * [About sovity](https://sovity.de/en/sovity-en/)
 
 ## Introduction
