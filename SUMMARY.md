@@ -8,9 +8,9 @@
 
 ## Introduction
 * [What is a Data Space](./docs/gitbook/what_is_a_dataspace.md)
-* [What is a Connector]()
-* [What is a Catalog]()
-* [What is a DAPS]()
+* [What is a Connector](./docs/gitbook/what_is_a_dataspace.md)
+* [What is a Catalog](./docs/gitbook/what_is_a_catalog.md)
+* [What is a DAPS](./docs/gitbook/what_is_a_daps.md)
 
 ## Setup
 * Deployment Goals
