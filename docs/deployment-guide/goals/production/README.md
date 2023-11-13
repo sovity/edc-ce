@@ -43,9 +43,9 @@ proxy (at least the protocol endpoint needs to be).
     - The Backend's `11002` port. Henceforth, called the Management API.
     - The Backend's `11003` port. Henceforth, called the Protocol API.
 - The mapping should look like this:
-    - `/api/dsp` -> `edc:11003/api/dsp`
-    - `/api/management` -> `edc:11002/api/management`
-    - All other requests should be mapped to `edc-ui:80`
+    - `https://[MY_EDC_FQDN]/api/dsp` -> `edc:11003/api/dsp`
+    - `https://[MY_EDC_FQDN]/api/management` -> **Auth Proxy** -> `edc:11002/api/management`
+    - All other requests -> **Auth Proxy** -> `edc-ui:80`
 - Regarding TLS/HTTPS:
     - All endpoints need to be secured by TLS/HTTPS. A productive connector won't work without it.
     - All endpoint should have HTTP to HTTPS redirects.
