@@ -36,7 +36,7 @@
 ## Developer
 * [Architecture](./docs/gitbook/architecture.md)
 * [Data Model](./docs/gitbook/data_model.md)
-* [DSPACE Protocol](./docs/gitbook/dspace_protocol.md)
+* [DSPACE Protocol](https://docs.internationaldataspaces.org/ids-knowledgebase/v/dataspace-protocol/overview/readme)
 * API documentation
     * [Management API](./docs/gitbook/management_api.md)
     * [Wrapper API](./docs/gitbook/wrapper_api.md)
