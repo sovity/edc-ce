@@ -35,7 +35,7 @@
 
 ## Developer
 * [Architecture](./docs/gitbook/architecture.md)
-* [Data Model](./docs/gitbook/data_model.md)
+* [Data Model](https://github.com/eclipse-edc/Connector/blob/release/0.0.1-20230220.patch1-SNAPSHOT/docs/developer/architecture/domain-model.md#domain-model)
 * [DSPACE Protocol](https://docs.internationaldataspaces.org/ids-knowledgebase/v/dataspace-protocol/overview/readme)
 * API documentation
     * [Management API](./docs/gitbook/management_api.md)
