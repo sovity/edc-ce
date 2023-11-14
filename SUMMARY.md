@@ -43,7 +43,7 @@
         * [Create Asset](./docs/gitbook/create_asset.md)
         * [Create Policy](./docs/gitbook/create_policy.md)
         * [Create Contract Definition](./docs/gitbook/create_contract_definition.md)
-    * [Postman Collection](./docs/gitbook/postman_collection.md)
+    * [Postman Collection](https://github.com/sovity/edc-extensions/blob/main/docs/postman_collection.json)
 * [Data Transfer Modes](./docs/getting-started/documentation/data-transfer-methods.md)
     * [Data Push](./docs/gitbook/data_push.md)
     * [Data Proxy/Pull](./docs/getting-started/documentation/pull-data-transfer.md)
