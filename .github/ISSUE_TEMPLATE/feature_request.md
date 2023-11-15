@@ -26,11 +26,11 @@ _What problems does that user face that existing functionalities do solve?_
 
 _Describe whether this request is related to an existing workflow, feature, or otherwise something in the product today. Or, does this open us up to new innovative ideas?_
 
-## (Leave Blank)Stakeholders
+## (For sovity Team to complete) Stakeholders
 
 _Add more on who asked for this, i.e. company, person, how much they pay us, what their tier is, are they a strategic account, etc. Who needs to be kept up-to-date about this feature?_
 
-## (Leave Balnk)Solution Proposal and Work Breakdown
+## (For sovity Team to complete) Solution Proposal and Work Breakdown
 
 _If possible, provide a (brief!) solution proposal._
 
