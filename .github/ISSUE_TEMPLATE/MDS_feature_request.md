@@ -1,5 +1,5 @@
 ---
-name: Feature Request
+name: MDS Feature Request
 about: Help us improve your product experience with new features suggestions
 title: ""
 labels: ["kind/enhancement", "scope/mds"]
