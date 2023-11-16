@@ -31,7 +31,7 @@
     * [Update Process](./docs/gitbook/update_process.md) <!-- TODO -->
     * [Database Migration](./extensions/postgres-flyway/README.md)
 * [Troubleshooting & FAQ](./docs/gitbook/troubleshooting_faq.md) <!-- TODO -->
-* [About Security](./docs/gitbook/about_security.md) <!-- TODO -->
+* [About Security](https://github.com/sovity/edc-extensions/security)
 
 ## Developer
 * [Architecture](./docs/gitbook/architecture.md) <!-- TODO -->
