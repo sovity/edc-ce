@@ -38,7 +38,7 @@
 * [Data Model](https://github.com/eclipse-edc/Connector/blob/release/0.0.1-20230220.patch1-SNAPSHOT/docs/developer/architecture/domain-model.md#domain-model)
 * [DSPACE Protocol](https://docs.internationaldataspaces.org/ids-knowledgebase/v/dataspace-protocol/overview/readme)
 * API documentation
-    * [Management API](./docs/gitbook/management_api.md) <!-- TODO -->
+    * [Management API](https://app.swaggerhub.com/apis/eclipse-edc-bot/management-api/0.2.1)
     * [Wrapper API](./docs/gitbook/wrapper_api.md)
         * [Create Asset](./docs/gitbook/create_asset.md) <!-- TODO -->
         * [Create Policy](./docs/gitbook/create_policy.md) <!-- TODO -->
