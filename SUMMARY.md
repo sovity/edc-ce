@@ -25,7 +25,7 @@
     * [Docker-compose](https://github.com/sovity/edc-extensions/blob/main/docker-compose.yaml)
 * Configuration
     * [Settings](./docs/gitbook/settings.md) <!-- TODO -->
-    * [Firewalls/Proxies](./docs/gitbook/firewall_proxies.md) <!-- TODO -->
+    * [Firewalls/Proxies](https://github.com/sovity/edc-extensions/tree/main/docs/deployment-guide/goals/production#configuration)
     * [Data Space Configuration](./docs/gitbook/data_space_configuration.md) <!-- TODO -->
 * Administration
     * [Update Process](./docs/gitbook/update_process.md) <!-- TODO -->
