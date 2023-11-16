@@ -30,7 +30,7 @@
 * Administration
     * [Update Process](./docs/gitbook/update_process.md) <!-- TODO -->
     * [Database Migration](./extensions/postgres-flyway/README.md)
-* [Troubleshooting & FAQ](./docs/gitbook/troubleshooting_faq.md) <!-- TODO -->
+* [Troubleshooting & FAQ](https://github.com/sovity/edc-extensions/blob/main/docs/deployment-guide/goals/production/README.md#faq)
 * [About Security](https://github.com/sovity/edc-extensions/security/policy)
 
 ## Developer
