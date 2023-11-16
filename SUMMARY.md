@@ -34,7 +34,7 @@
 * [About Security](https://github.com/sovity/edc-extensions/security/policy)
 
 ## Developer
-* [Architecture](./docs/gitbook/architecture.md) <!-- TODO -->
+* [Architecture](https://eclipse-edc.github.io/docs/#/submodule/Connector/docs/developer/?id=architecture)
 * [Data Model](https://github.com/eclipse-edc/Connector/blob/release/0.0.1-20230220.patch1-SNAPSHOT/docs/developer/architecture/domain-model.md#domain-model)
 * [DSPACE Protocol](https://docs.internationaldataspaces.org/ids-knowledgebase/v/dataspace-protocol/overview/readme)
 * API documentation
