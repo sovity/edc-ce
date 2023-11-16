@@ -20,7 +20,7 @@
         * [Deployment Guide](./docs/deployment-guide/goals/production)
         * [Deployment Guide 4.2.0 / MS8 / MDS 1.2](docs/deployment-guide/goals/production/4.2.0/README.md)
 * Deployment Types
-    * [Docker Image](./docs/gitbook/docker_image.md)
+    * [Docker Image](https://github.com/sovity/edc-extensions/pkgs/container/edc-ce)
     * [HELM](./docs/gitbook/helm.md)
     * [Docker-compose](https://github.com/sovity/edc-extensions/blob/main/docker-compose.yaml)
 * Configuration
