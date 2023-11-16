@@ -22,7 +22,7 @@
 * Deployment Types
     * [Docker Image](./docs/gitbook/docker_image.md)
     * [HELM](./docs/gitbook/helm.md)
-    * [Docker-compose](./docs/gitbook/docker-compose.md)
+    * [Docker-compose](https://github.com/sovity/edc-extensions/blob/main/docker-compose.yaml)
 * Configuration
     * [Settings](./docs/gitbook/settings.md)
     * [Firewalls/Proxies](./docs/gitbook/firewall_proxies.md)
