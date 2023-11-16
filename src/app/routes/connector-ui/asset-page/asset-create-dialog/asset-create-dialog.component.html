@@ -224,7 +224,7 @@
               *ngIf="form.datasource.controls.httpProxyMethod; let ctrl"
               class="flex flex-row mb-[10px]">
               <button
-                mat-stroked-button
+                mat-button
                 [color]="ctrl.value ? 'warn' : 'accent'"
                 (click)="ctrl.setValue(!ctrl.value)">
                 {{ ctrl.value ? 'Disable' : 'Enable' }} Method Parameterization
@@ -256,7 +256,7 @@
               *ngIf="form.datasource.controls.httpProxyPath; let ctrl"
               class="flex flex-row mb-[10px]">
               <button
-                mat-stroked-button
+                mat-button
                 [color]="ctrl.value ? 'warn' : 'accent'"
                 (click)="ctrl.setValue(!ctrl.value)">
                 {{ ctrl.value ? 'Disable' : 'Enable' }} Path Parameterization
@@ -315,7 +315,7 @@
             <div class="flex flex-row mb-[10px] space-x-[10px]">
               <!-- Add Query Param Button -->
               <button
-                mat-stroked-button
+                mat-button
                 color="accent"
                 (click)="form.onHttpQueryParamsAddClick()">
                 Add {{ form.proxyQueryParams ? 'Default' : '' }} Query Param
@@ -324,7 +324,7 @@
               <!-- Toggle Proxy Query Param Parameterization Button -->
               <button
                 *ngIf="form.datasource.controls.httpProxyQueryParams; let ctrl"
-                mat-stroked-button
+                mat-button
                 [color]="ctrl.value ? 'warn' : 'accent'"
                 (click)="ctrl.setValue(!ctrl.value)">
                 {{ ctrl.value ? 'Disable' : 'Enable' }} Query Param
@@ -344,7 +344,7 @@
               *ngIf="form.datasource.controls.httpProxyBody; let ctrl"
               class="flex flex-row mb-[10px]">
               <button
-                mat-stroked-button
+                mat-button
                 [color]="ctrl.value ? 'warn' : 'accent'"
                 (click)="ctrl.setValue(!ctrl.value)">
                 {{ ctrl.value ? 'Disable' : 'Enable' }} Request Body
@@ -361,7 +361,7 @@
               "
               class="flex flex-row mb-[10px]">
               <button
-                mat-stroked-button
+                mat-button
                 color="accent"
                 (click)="
                   form.datasource.controls.httpAuthHeaderType.setValue(
@@ -441,7 +441,7 @@
               "
               class="flex flex-row mb-[10px]">
               <button
-                mat-stroked-button
+                mat-button
                 color="warn"
                 (click)="
                   form.datasource.controls.httpAuthHeaderType.setValue('None')
@@ -491,7 +491,7 @@
             <!-- Add Header Button -->
             <div class="flex flex-row mb-[10px]">
               <button
-                mat-stroked-button
+                mat-button
                 color="accent"
                 (click)="form.onHttpHeadersAddClick()">
                 Add Additional Header
