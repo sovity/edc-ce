@@ -80,5 +80,5 @@
 * [Integration: Use Case Pattern](./docs/gitbook/integration_use_case_pattern.md) <!-- TODO -->
 
 ## sovity's Connector-as-a-Service (CaaS)
-* [Comparison Table of offerings](./docs/gitbook/comparison_table_of_offerings.md) <!-- TODO -->
+* [Comparison Table of offerings](https://sovity.de/en/connect-to-data-space-en/)
 * [Versions](./docs/gitbook/versions.md) <!-- TODO -->
