@@ -10,7 +10,7 @@
 * [What is a Data Space](./docs/gitbook/what_is_a_dataspace.md) <!-- TODO -->
 * [What is a Connector](./docs/gitbook/what_is_a_connector.md) <!-- TODO -->
 * [What is a Catalog](./docs/gitbook/what_is_a_catalog.md) <!-- TODO -->
-* [What is a DAPS](https://github.com/International-Data-Spaces-Association/IDS-RAM_4_0/blob/main/documentation/3_Layers_of_the_Reference_Architecture_Model/3_5_System_Layer/3_5_1_Identity_Provider.md#dynamic-attribute-provisioning-service-daps)
+* [What is a DAPS](./docs/gitbook/what_is_a_daps.md) <!-- TODO -->
 
 ## Setup
 * Deployment Goals
