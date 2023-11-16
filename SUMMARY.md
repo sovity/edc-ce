@@ -81,4 +81,4 @@
 
 ## sovity's Connector-as-a-Service (CaaS)
 * [Comparison Table of offerings](https://sovity.de/en/connect-to-data-space-en/)
-* [Versions](./docs/gitbook/versions.md) <!-- TODO -->
+* [Versions](https://github.com/sovity/edc-extensions/releases)

@@ -1,4 +1,0 @@
-Comparison Table of offerings
-========
-
-...
