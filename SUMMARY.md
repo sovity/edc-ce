@@ -60,7 +60,7 @@
         * [Always True](./extensions/policy-always-true/README.md)
         * [Referring Connector](./extensions/policy-referring-connector/README.md)
         * [Time Interval](./extensions/policy-time-interval/README.md)
-    * [Postgres-flyway](./docs/gitbook/postgres_flyway.md) <!-- TODO -->
+    * [Postgres-flyway](./extensions/postgres-flyway/README.md)
     * [API Wrapper](./extensions/wrapper/README.md)
         * [Community Edition API](./extensions/wrapper/wrapper-api/README.md)
         * [Enterprise Edition API](./extensions/wrapper/wrapper-ee-api/README.md)
