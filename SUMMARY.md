@@ -48,7 +48,7 @@
     * [Data Push](./docs/gitbook/data_push.md) <!-- TODO -->
     * [Data Proxy/Pull](./docs/getting-started/documentation/pull-data-transfer.md)
     * [Data out of band](./docs/gitbook/data_out_of_band.md) <!-- TODO -->
-* [Authentication](./docs/gitbook/authentication.md)
+* [Authentication](./docs/gitbook/authentication.md) <!-- TODO -->
     * [API Key](./docs/gitbook/api_key.md) <!-- TODO -->
     * [Basic Auth](./docs/gitbook/basic_auth.md) <!-- TODO -->
     * [Custom Headers](./docs/gitbook/custom_headers.md) <!-- TODO -->
