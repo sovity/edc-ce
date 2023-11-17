@@ -19,10 +19,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
+/**
+ * Contains catalog response as required for writing into DB.
+ */
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FetchedDataOfferContractOffer {
-    String contractOfferId;
-    String policyJson;
+public class FetchedCatalog {
+    String participantId;
+    List<FetchedDataOffer> dataOffers;
 }

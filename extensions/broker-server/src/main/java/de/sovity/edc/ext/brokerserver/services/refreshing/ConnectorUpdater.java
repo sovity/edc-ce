@@ -19,7 +19,7 @@ import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.MeasurementErrorStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerExecutionTimeLogger;
-import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferFetcher;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.CatalogFetcher;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.time.StopWatch;
 import org.eclipse.edc.spi.monitor.Monitor;
@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RequiredArgsConstructor
 public class ConnectorUpdater {
-    private final DataOfferFetcher dataOfferFetcher;
+    private final CatalogFetcher catalogFetcher;
     private final ConnectorUpdateSuccessWriter connectorUpdateSuccessWriter;
     private final ConnectorUpdateFailureWriter connectorUpdateFailureWriter;
     private final ConnectorQueries connectorQueries;
@@ -51,12 +51,12 @@ public class ConnectorUpdater {
         try {
             monitor.info("Updating connector: " + connectorEndpoint);
 
-            var dataOffers = dataOfferFetcher.fetch(connectorEndpoint);
+            var catalog = catalogFetcher.fetchCatalog(connectorEndpoint);
 
             // Update connector in a single transaction
             dslContextFactory.transaction(dsl -> {
                 ConnectorRecord connectorRecord = connectorQueries.findByEndpoint(dsl, connectorEndpoint);
-                connectorUpdateSuccessWriter.handleConnectorOnline(dsl, connectorRecord, dataOffers);
+                connectorUpdateSuccessWriter.handleConnectorOnline(dsl, connectorRecord, catalog);
             });
         } catch (Exception e) {
             failed = true;

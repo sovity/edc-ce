@@ -14,8 +14,6 @@
 
 package de.sovity.edc.ext.brokerserver.dao.pages.catalog;
 
-import com.github.t9t.jooq.json.JsonbDSL;
-import de.sovity.edc.ext.brokerserver.dao.AssetProperty;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.Connector;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.DataOffer;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.DataOfferViewCount;
@@ -42,10 +40,6 @@ public class CatalogQueryFields {
     DataOfferViewCount dataOfferViewCountTable;
 
     // Asset Properties from JSON to be used in sorting / filtering
-    Field<String> assetId;
-    Field<String> assetName;
-    Field<String> assetDescription;
-    Field<String> assetKeywords;
     Field<String> dataSpace;
 
     // This date should always be non-null
@@ -64,10 +58,6 @@ public class CatalogQueryFields {
         this.dataOfferTable = dataOfferTable;
         this.dataOfferViewCountTable = dataOfferViewCountTable;
         this.dataSpaceConfig = dataSpaceConfig;
-        assetId = dataOfferTable.ASSET_ID;
-        assetName = dataOfferTable.ASSET_NAME;
-        assetDescription = getAssetProperty(AssetProperty.DESCRIPTION);
-        assetKeywords = getAssetProperty(AssetProperty.KEYWORDS);
         offlineSinceOrLastUpdatedAt = DSL.coalesce(
                 connectorTable.LAST_SUCCESSFUL_REFRESH_AT,
                 connectorTable.CREATED_AT
@@ -92,10 +82,6 @@ public class CatalogQueryFields {
         }
 
         return dspCase.else_(DSL.val(dataSpaceConfig.defaultDataSpace()));
-    }
-
-    public Field<String> getAssetProperty(String name) {
-        return JsonbDSL.fieldByKeyText(dataOfferTable.ASSET_PROPERTIES, name);
     }
 
     public CatalogQueryFields withSuffix(String additionalSuffix) {

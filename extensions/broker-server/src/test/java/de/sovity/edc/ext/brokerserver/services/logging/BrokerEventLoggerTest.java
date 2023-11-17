@@ -42,7 +42,7 @@ class BrokerEventLoggerTest {
             var brokerEventLogger = new BrokerEventLogger();
 
             // Test that insertions insert required fields and don't cause DB errors
-            String endpoint = "https://example.com/ids/data";
+            String endpoint = "https://example.com/api/dsp";
             brokerEventLogger.logConnectorUpdated(dsl, endpoint, new ConnectorChangeTracker());
             brokerEventLogger.logConnectorOnline(dsl, endpoint);
             brokerEventLogger.logConnectorOffline(dsl, endpoint, new BrokerEventErrorMessage("Message", "Stacktrace"));

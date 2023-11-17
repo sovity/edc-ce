@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.api.model;
 
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDto;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,6 +41,6 @@ public class DataOfferDetailContractOffer {
     private OffsetDateTime updatedAt;
 
     @Schema(description = "Contract Policy", requiredMode = Schema.RequiredMode.REQUIRED)
-    private PolicyDto contractPolicy;
+    private UiPolicy contractPolicy;
 }
 

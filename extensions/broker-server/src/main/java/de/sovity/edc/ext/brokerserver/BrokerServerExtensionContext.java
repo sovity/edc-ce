@@ -18,6 +18,9 @@ import de.sovity.edc.ext.brokerserver.api.BrokerServerResource;
 import de.sovity.edc.ext.brokerserver.services.BrokerServerInitializer;
 import de.sovity.edc.ext.brokerserver.services.ConnectorCreator;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdater;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferRecordUpdater;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.FetchedCatalogBuilder;
+import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 
 
 /**
@@ -32,7 +35,10 @@ public record BrokerServerExtensionContext(
 
         // Required for Integration Tests
         ConnectorUpdater connectorUpdater,
-        ConnectorCreator connectorCreator
+        ConnectorCreator connectorCreator,
+        PolicyMapper policyMapper,
+        FetchedCatalogBuilder fetchedCatalogBuilder,
+        DataOfferRecordUpdater dataOfferRecordUpdater
 ) {
     /**
      * This is a hack for our tests.

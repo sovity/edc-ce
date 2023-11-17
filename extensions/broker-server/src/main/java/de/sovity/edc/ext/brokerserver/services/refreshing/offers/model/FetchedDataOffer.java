@@ -21,12 +21,23 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
+/**
+ * Contains data offer response as required for writing into DB.
+ */
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FetchedDataOffer {
     String assetId;
-    String assetName;
-    String assetPropertiesJson;
-    List<FetchedDataOfferContractOffer> contractOffers;
+    String assetTitle;
+    String description;
+    String curatorOrganizationName;
+    String dataCategory;
+    String dataSubcategory;
+    String dataModel;
+    String transportMode;
+    String geoReferenceMethod;
+    List<String> keywords;
+    String assetJsonLd;
+    List<FetchedContractOffer> contractOffers;
 }

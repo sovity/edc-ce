@@ -2,23 +2,23 @@
 
 insert into connector (endpoint, connector_id, created_at, last_refresh_attempt_at, last_successful_refresh_at,
                        online_status)
-values ('https://my-connector.com/ids/data', 'test-connector-1', '2019-01-01 00:00:00',
+values ('https://my-connector.com/api/v1/ids/data', 'test-connector-1', '2019-01-01 00:00:00',
         '2019-01-01 00:00:00', '2019-01-01 00:00:00', 'ONLINE');
 insert into data_offer (connector_endpoint, asset_id, asset_properties, created_at, updated_at)
-values ('https://my-connector.com/ids/data',
+values ('https://my-connector.com/api/v1/ids/data',
         'test-asset-1',
         '{
           "asset:prop:id": "test-asset-1"
         }',
         '2019-01-01 00:00:00',
         '2019-01-01 00:00:00'),
-       ('https://my-connector.com/ids/data',
+       ('https://my-connector.com/api/v1/ids/data',
         'test-asset-2',
         '{
           "asset:prop:id": "urn:artifact:db-rail-network-2023-jan",
           "asset:prop:name": "Rail Network DB 2023 January",
           "asset:prop:version": "1.1",
-          "asset:prop:originator": "https://example-connector.rail-mgmt.bahn.de/api/v1/ids/data",
+          "asset:prop:originator": "https://example-connector.rail-mgmt.bahn.de/api/v1/api/v1/ids/data",
           "asset:prop:originatorOrganization": "Deutsche Bahn AG",
           "asset:prop:keywords": "db, bahn, rail, Rail-Designer",
           "asset:prop:contenttype": "application/json",
@@ -38,13 +38,13 @@ values ('https://my-connector.com/ids/data',
 
 insert into data_offer_contract_offer (contract_offer_id, connector_endpoint, asset_id, policy, created_at, updated_at)
 values ('test-contract-offer-1',
-        'https://my-connector.com/ids/data',
+        'https://my-connector.com/api/v1/ids/data',
         'test-asset-1',
         '"test-policy-1"',
         '2019-01-01 00:00:00',
         '2019-01-01 00:00:00'),
        ('test-contract-offer-2',
-        'https://my-connector.com/ids/data',
+        'https://my-connector.com/api/v1/ids/data',
         'test-asset-2',
         '"test-policy-2"',
         '2019-01-01 00:00:00',
@@ -56,13 +56,13 @@ values ('2019-01-01 00:00:00',
         'Connector was successfully updated, and changes were incorporated',
         'CONNECTOR_UPDATED',
         'OK',
-        'https://my-connector.com/ids/data',
+        'https://my-connector.com/api/v1/ids/data',
         'test-asset-1',
         null,
         100);
 
 insert into broker_execution_time_measurement (connector_endpoint, created_at, type, error_status, duration_in_ms)
-values ('https://my-connector.com/ids/data',
+values ('https://my-connector.com/api/v1/ids/data',
         '2019-01-01 00:00:00',
         'CONNECTOR_REFRESH',
         'OK',

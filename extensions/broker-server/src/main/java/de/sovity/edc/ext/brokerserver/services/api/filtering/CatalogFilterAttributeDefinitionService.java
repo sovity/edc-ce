@@ -16,27 +16,31 @@ package de.sovity.edc.ext.brokerserver.services.api.filtering;
 
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.CatalogQueryFields;
 import de.sovity.edc.ext.brokerserver.dao.utils.PostgresqlUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jooq.Field;
-import org.jooq.impl.DSL;
+
+import java.util.function.Function;
 
 public class CatalogFilterAttributeDefinitionService {
 
-    public CatalogFilterAttributeDefinition fromAssetProperty(String assetProperty, String label) {
+    public CatalogFilterAttributeDefinition forField(
+            Function<CatalogQueryFields, Field<String>> fieldExtractor,
+            String name,
+            String label
+    ) {
         return new CatalogFilterAttributeDefinition(
-                assetProperty,
-                label,
-                fields -> getValue(fields, assetProperty),
-                (fields, values) -> PostgresqlUtils.in(getValue(fields, assetProperty), values)
+            name,
+            label,
+            fieldExtractor::apply,
+            (fields, values) -> PostgresqlUtils.in(fieldExtractor.apply(fields), values)
         );
     }
 
     public CatalogFilterAttributeDefinition buildDataSpaceFilter() {
         return new CatalogFilterAttributeDefinition(
-                "dataSpace",
-                "Data Space",
-                CatalogQueryFields::getDataSpace,
-                (fields, values) -> PostgresqlUtils.in(fields.getDataSpace(), values)
+            "dataSpace",
+            "Data Space",
+            CatalogQueryFields::getDataSpace,
+            (fields, values) -> PostgresqlUtils.in(fields.getDataSpace(), values)
         );
     }
 
@@ -47,10 +51,5 @@ public class CatalogFilterAttributeDefinitionService {
             fields -> fields.getDataOfferTable().CONNECTOR_ENDPOINT,
             (fields, values) -> PostgresqlUtils.in(fields.getDataOfferTable().CONNECTOR_ENDPOINT, values)
         );
-    }
-
-    @NotNull
-    private Field<String> getValue(CatalogQueryFields fields, String assetProperty) {
-        return DSL.coalesce(fields.getAssetProperty(assetProperty), DSL.value(""));
     }
 }

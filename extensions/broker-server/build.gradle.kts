@@ -11,6 +11,7 @@ val okHttpVersion: String by project
 val restAssured: String by project
 val testcontainersVersion: String by project
 val sovityEdcGroup: String by project
+val sovityEdcExtensionGroup: String by project
 val sovityEdcExtensionsVersion: String by project
 
 configurations.all {
@@ -22,6 +23,10 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.30")
     implementation("org.apache.commons:commons-lang3:3.13.0")
 
+    api("${sovityEdcGroup}:catalog-parser:${sovityEdcExtensionsVersion}") { isChanging = true }
+    api("${sovityEdcGroup}:json-and-jsonld-utils:${sovityEdcExtensionsVersion}") { isChanging = true }
+    api("${sovityEdcGroup}:wrapper-common-mappers:${sovityEdcExtensionsVersion}") { isChanging = true }
+
     implementation("${edcGroup}:control-plane-spi:${edcVersion}")
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
 
@@ -32,14 +37,18 @@ dependencies {
 
     testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
     testCompileOnly("org.projectlombok:lombok:1.18.30")
+    testImplementation("${sovityEdcGroup}:client:${sovityEdcExtensionsVersion}") { isChanging = true }
+    testImplementation("${sovityEdcExtensionGroup}:sovity-edc-extensions-package:${sovityEdcExtensionsVersion}") { isChanging = true }
     testImplementation("org.assertj:assertj-core:${assertj}")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.mockito:mockito-inline:${mockitoVersion}")
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
+    testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
     testImplementation("${edcGroup}:http:${edcVersion}")
     testImplementation("${edcGroup}:iam-mock:${edcVersion}")
-    testImplementation("${edcGroup}:ids:${edcVersion}")
+    testImplementation("${edcGroup}:dsp:${edcVersion}")
+    testImplementation("${edcGroup}:json-ld:${edcVersion}")
     testImplementation("${edcGroup}:monitor-jdk-logger:${edcVersion}")
     testImplementation("${edcGroup}:configuration-filesystem:${edcVersion}")
     testImplementation(project(":extensions:broker-server-api:client"))

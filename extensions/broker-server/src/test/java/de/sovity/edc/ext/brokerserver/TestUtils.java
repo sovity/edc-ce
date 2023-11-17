@@ -19,7 +19,6 @@ import de.sovity.edc.ext.brokerserver.client.gen.ApiException;
 import de.sovity.edc.ext.brokerserver.db.PostgresFlywayExtension;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
 import org.assertj.core.api.ThrowableAssert;
-import org.eclipse.edc.protocol.ids.api.configuration.IdsApiConfigurationExtension;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -31,19 +30,19 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 
 public class TestUtils {
-
-    private static final int DATA_PORT = getFreePort();
+    private static final int MANAGEMENT_PORT = getFreePort();
     private static final int PROTOCOL_PORT = getFreePort();
-    private static final String DATA_PATH = "/api/v1/data";
-    private static final String PROTOCOL_PATH = "/api/v1/ids";
+    private static final String MANAGEMENT_PATH = "/api/management";
+    private static final String PROTOCOL_PATH = "/api/dsp";
     public static final String MANAGEMENT_API_KEY = "123456";
-    public static final String MANAGEMENT_ENDPOINT = "http://localhost:" + DATA_PORT + DATA_PATH;
-
+    public static final String MANAGEMENT_ENDPOINT = "http://localhost:" + MANAGEMENT_PORT + MANAGEMENT_PATH;
     public static final String ADMIN_API_KEY = "123456";
 
 
     public static final String PROTOCOL_HOST = "http://localhost:" + PROTOCOL_PORT;
-    public static final String PROTOCOL_ENDPOINT = PROTOCOL_HOST + PROTOCOL_PATH + "/data";
+    public static final String PROTOCOL_ENDPOINT = PROTOCOL_HOST + PROTOCOL_PATH;
+    public static final String PARTICIPANT_ID = "my-edc-participant-id";
+    public static final String CURATOR_NAME = "My Org";
 
     @NotNull
     public static Map<String, String> createConfiguration(
@@ -51,16 +50,26 @@ public class TestUtils {
             Map<String, String> additionalConfigProperties
     ) {
         Map<String, String> config = new HashMap<>();
+
         config.put("web.http.port", String.valueOf(getFreePort()));
         config.put("web.http.path", "/api");
-        config.put("web.http.management.port", String.valueOf(DATA_PORT));
-        config.put("web.http.management.path", DATA_PATH);
+        config.put("web.http.management.port", String.valueOf(MANAGEMENT_PORT));
+        config.put("web.http.management.path", MANAGEMENT_PATH);
         config.put("web.http.protocol.port", String.valueOf(PROTOCOL_PORT));
         config.put("web.http.protocol.path", PROTOCOL_PATH);
         config.put("edc.api.auth.key", MANAGEMENT_API_KEY);
-        config.put("edc.ids.endpoint", PROTOCOL_ENDPOINT);
-        config.put(IdsApiConfigurationExtension.IDS_WEBHOOK_ADDRESS, PROTOCOL_HOST);
+        config.put("edc.dsp.callback.address", PROTOCOL_ENDPOINT);
         config.put("edc.oauth.provider.audience", "idsc:IDS_CONNECTORS_ALL");
+
+        config.put("edc.participant.id", PARTICIPANT_ID);
+        config.put("my.edc.name.kebab.case", PARTICIPANT_ID);
+        config.put("my.edc.title", "My Connector");
+        config.put("my.edc.description", "My Connector Description");
+        config.put("my.edc.curator.url", "https://connector.my-org");
+        config.put("my.edc.curator.name", CURATOR_NAME);
+        config.put("my.edc.maintainer.url", "https://maintainer-org");
+        config.put("my.edc.maintainer.name", "Maintainer Org");
+
         config.put(PostgresFlywayExtension.JDBC_URL, testDatabase.getJdbcUrl());
         config.put(PostgresFlywayExtension.JDBC_USER, testDatabase.getJdbcUser());
         config.put(PostgresFlywayExtension.JDBC_PASSWORD, testDatabase.getJdbcPassword());

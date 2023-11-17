@@ -20,7 +20,6 @@ import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorDataOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
 import de.sovity.edc.ext.brokerserver.utils.CollectionUtils2;
-import de.sovity.edc.ext.brokerserver.utils.UrlUtils;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
@@ -56,7 +55,7 @@ public class ConnectorCreator {
     private ConnectorRecord newConnectorRow(String endpoint) {
         var connector = new ConnectorRecord();
         connector.setEndpoint(endpoint);
-        connector.setConnectorId(UrlUtils.getEverythingBeforeThePath(endpoint));
+        connector.setParticipantId("");
         connector.setCreatedAt(OffsetDateTime.now());
         connector.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
         connector.setDataOffersExceeded(ConnectorDataOffersExceeded.OK);

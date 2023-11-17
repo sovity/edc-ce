@@ -14,13 +14,13 @@
 
 package de.sovity.edc.ext.brokerserver.services.refreshing.offers;
 
-import de.sovity.edc.ext.brokerserver.dao.DataOfferContractOfferQueries;
+import de.sovity.edc.ext.brokerserver.dao.ContractOfferQueries;
 import de.sovity.edc.ext.brokerserver.dao.DataOfferQueries;
-import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferContractOfferRecord;
+import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ContractOfferRecord;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferRecord;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.DataOfferPatch;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedContractOffer;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOffer;
-import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOfferContractOffer;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 
@@ -32,7 +32,7 @@ import static java.util.stream.Collectors.groupingBy;
 
 @RequiredArgsConstructor
 public class DataOfferPatchBuilder {
-    private final DataOfferContractOfferQueries dataOfferContractOfferQueries;
+    private final ContractOfferQueries contractOfferQueries;
     private final DataOfferQueries dataOfferQueries;
     private final DataOfferRecordUpdater dataOfferRecordUpdater;
     private final ContractOfferRecordUpdater contractOfferRecordUpdater;
@@ -52,9 +52,9 @@ public class DataOfferPatchBuilder {
     ) {
         var patch = new DataOfferPatch();
         var dataOffers = dataOfferQueries.findByConnectorEndpoint(dsl, connectorEndpoint);
-        var contractOffersByAssetId = dataOfferContractOfferQueries.findByConnectorEndpoint(dsl, connectorEndpoint)
+        var contractOffersByAssetId = contractOfferQueries.findByConnectorEndpoint(dsl, connectorEndpoint)
                 .stream()
-                .collect(groupingBy(DataOfferContractOfferRecord::getAssetId));
+                .collect(groupingBy(ContractOfferRecord::getAssetId));
 
         var diff = DiffUtils.compareLists(
                 dataOffers,
@@ -97,16 +97,16 @@ public class DataOfferPatchBuilder {
     private boolean patchContractOffers(
             DataOfferPatch patch,
             DataOfferRecord dataOffer,
-            Collection<DataOfferContractOfferRecord> contractOffers,
-            Collection<FetchedDataOfferContractOffer> fetchedContractOffers
+            Collection<ContractOfferRecord> contractOffers,
+            Collection<FetchedContractOffer> fetchedContractOffers
     ) {
         var hasUpdates = new AtomicBoolean(false);
 
         var diff = DiffUtils.compareLists(
                 contractOffers,
-                DataOfferContractOfferRecord::getContractOfferId,
+                ContractOfferRecord::getContractOfferId,
                 fetchedContractOffers,
-                FetchedDataOfferContractOffer::getContractOfferId
+                FetchedContractOffer::getContractOfferId
         );
 
         diff.added().forEach(fetched -> {

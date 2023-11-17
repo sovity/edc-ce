@@ -30,10 +30,10 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @Schema(description = "A Contract Offer's Connector Status")
 public class ConnectorListEntry {
-    @Schema(description = "Connector ID", example = "https://my-test.connector", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String id;
+    @Schema(description = "Connector Participant ID", example = "my-test-connector", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String participantId;
 
-    @Schema(description = "Connector Endpoint", example = "https://my-test.connector/control/ids/data", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Connector Endpoint", example = "https://my-test.connector/api/dsp", requiredMode = Schema.RequiredMode.REQUIRED)
     private String endpoint;
 
     @Schema(description = "Creation date in Broker", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -49,6 +49,6 @@ public class ConnectorListEntry {
     private ConnectorOnlineStatus onlineStatus;
 
     @Schema(description = "Number of known data offerings")
-    private Integer numContractOffers;
+    private Integer numDataOffers;
 }
 

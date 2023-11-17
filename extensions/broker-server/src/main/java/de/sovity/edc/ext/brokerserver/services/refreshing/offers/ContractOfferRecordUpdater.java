@@ -15,9 +15,9 @@
 package de.sovity.edc.ext.brokerserver.services.refreshing.offers;
 
 import de.sovity.edc.ext.brokerserver.dao.utils.JsonbUtils;
-import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferContractOfferRecord;
+import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ContractOfferRecord;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferRecord;
-import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOfferContractOffer;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedContractOffer;
 import lombok.RequiredArgsConstructor;
 import org.jooq.JSONB;
 
@@ -25,7 +25,7 @@ import java.time.OffsetDateTime;
 import java.util.Objects;
 
 /**
- * Creates or updates {@link DataOfferContractOfferRecord} DB Rows.
+ * Creates or updates {@link ContractOfferRecord} DB Rows.
  * <p>
  * (Or at least prepares them for batch inserts / updates)
  */
@@ -33,14 +33,14 @@ import java.util.Objects;
 public class ContractOfferRecordUpdater {
 
     /**
-     * Create new {@link DataOfferContractOfferRecord} from {@link FetchedDataOfferContractOffer}.
+     * Create new {@link ContractOfferRecord} from {@link FetchedContractOffer}.
      *
      * @param dataOffer            parent data offer db row
      * @param fetchedContractOffer fetched contract offer
      * @return new db row
      */
-    public DataOfferContractOfferRecord newContractOffer(DataOfferRecord dataOffer, FetchedDataOfferContractOffer fetchedContractOffer) {
-        var contractOffer = new DataOfferContractOfferRecord();
+    public ContractOfferRecord newContractOffer(DataOfferRecord dataOffer, FetchedContractOffer fetchedContractOffer) {
+        var contractOffer = new ContractOfferRecord();
         contractOffer.setConnectorEndpoint(dataOffer.getConnectorEndpoint());
         contractOffer.setContractOfferId(fetchedContractOffer.getContractOfferId());
         contractOffer.setAssetId(dataOffer.getAssetId());
@@ -50,13 +50,13 @@ public class ContractOfferRecordUpdater {
     }
 
     /**
-     * Update existing {@link DataOfferContractOfferRecord} with changes from {@link FetchedDataOfferContractOffer}.
+     * Update existing {@link ContractOfferRecord} with changes from {@link FetchedContractOffer}.
      *
      * @param contractOffer        existing row
      * @param fetchedContractOffer changes to be integrated
      * @return if anything was changed
      */
-    public boolean updateContractOffer(DataOfferContractOfferRecord contractOffer, FetchedDataOfferContractOffer fetchedContractOffer) {
+    public boolean updateContractOffer(ContractOfferRecord contractOffer, FetchedContractOffer fetchedContractOffer) {
         var existingPolicy = JsonbUtils.getDataOrNull(contractOffer.getPolicy());
         var fetchedPolicy = fetchedContractOffer.getPolicyJson();
         var changed = false;

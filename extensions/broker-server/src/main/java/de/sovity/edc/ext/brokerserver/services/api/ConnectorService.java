@@ -37,7 +37,7 @@ public class ConnectorService {
 
     public void deleteConnectors(DSLContext dsl, Collection<String> endpoints) {
         removeConnectorRows(dsl, Tables.BROKER_EXECUTION_TIME_MEASUREMENT.CONNECTOR_ENDPOINT, endpoints);
-        removeConnectorRows(dsl, Tables.DATA_OFFER_CONTRACT_OFFER.CONNECTOR_ENDPOINT, endpoints);
+        removeConnectorRows(dsl, Tables.CONTRACT_OFFER.CONNECTOR_ENDPOINT, endpoints);
         removeConnectorRows(dsl, Tables.DATA_OFFER.CONNECTOR_ENDPOINT, endpoints);
         removeConnectorRows(dsl, Tables.DATA_OFFER_VIEW_COUNT.CONNECTOR_ENDPOINT, endpoints);
         removeConnectorRows(dsl, Tables.CONNECTOR.ENDPOINT, endpoints);

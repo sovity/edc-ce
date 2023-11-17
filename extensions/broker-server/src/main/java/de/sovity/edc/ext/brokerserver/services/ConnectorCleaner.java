@@ -22,7 +22,7 @@ import java.util.Collection;
 
 public class ConnectorCleaner {
     public void removeDataForDeadConnectors(DSLContext dsl, Collection<String> endpoints) {
-        var doco = Tables.DATA_OFFER_CONTRACT_OFFER;
+        var doco = Tables.CONTRACT_OFFER;
         var dof = Tables.DATA_OFFER;
         dsl.deleteFrom(doco).where(PostgresqlUtils.in(doco.CONNECTOR_ENDPOINT, endpoints)).execute();
         dsl.deleteFrom(dof).where(PostgresqlUtils.in(dof.CONNECTOR_ENDPOINT, endpoints)).execute();

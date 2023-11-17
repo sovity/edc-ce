@@ -27,6 +27,8 @@ import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageResult;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
 import de.sovity.edc.ext.brokerserver.services.api.CatalogApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorApiService;
+import de.sovity.edc.ext.brokerserver.services.api.ConnectorDetailApiService;
+import de.sovity.edc.ext.brokerserver.services.api.ConnectorListApiService;
 import de.sovity.edc.ext.brokerserver.services.api.DataOfferCountApiService;
 import de.sovity.edc.ext.brokerserver.services.api.DataOfferDetailApiService;
 import de.sovity.edc.ext.brokerserver.services.config.AdminApiKeyValidator;
@@ -42,6 +44,8 @@ import java.util.List;
 public class BrokerServerResourceImpl implements BrokerServerResource {
     private final DslContextFactory dslContextFactory;
     private final ConnectorApiService connectorApiService;
+    private final ConnectorListApiService connectorListApiService;
+    private final ConnectorDetailApiService connectorDetailApiService;
     private final CatalogApiService catalogApiService;
     private final DataOfferDetailApiService dataOfferDetailApiService;
     private final AdminApiKeyValidator adminApiKeyValidator;
@@ -54,7 +58,7 @@ public class BrokerServerResourceImpl implements BrokerServerResource {
 
     @Override
     public ConnectorPageResult connectorPage(ConnectorPageQuery query) {
-        return dslContextFactory.transactionResult(dsl -> connectorApiService.connectorPage(dsl, query));
+        return dslContextFactory.transactionResult(dsl -> connectorListApiService.connectorListPage(dsl, query));
     }
 
     @Override
@@ -64,7 +68,7 @@ public class BrokerServerResourceImpl implements BrokerServerResource {
 
     @Override
     public ConnectorDetailPageResult connectorDetailPage(ConnectorDetailPageQuery query) {
-        return dslContextFactory.transactionResult(dsl -> connectorApiService.connectorDetailPage(dsl, query));
+        return dslContextFactory.transactionResult(dsl -> connectorDetailApiService.connectorDetailPage(dsl, query));
     }
 
     @Override

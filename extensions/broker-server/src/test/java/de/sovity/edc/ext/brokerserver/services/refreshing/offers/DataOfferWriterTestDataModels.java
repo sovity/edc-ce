@@ -29,7 +29,7 @@ class DataOfferWriterTestDataModels {
         @With
         String assetId;
         @With
-        String assetName;
+        String assetTitle;
         @With
         List<Co> contractOffers;
 
@@ -40,7 +40,7 @@ class DataOfferWriterTestDataModels {
         }
 
         public static Do forName(String name) {
-            return new Do(name, name + " Name", List.of(new Co(name + " CO", name + " Policy")));
+            return new Do(name, name + " Title", List.of(new Co(name + " CO", name + " Policy")));
         }
     }
 

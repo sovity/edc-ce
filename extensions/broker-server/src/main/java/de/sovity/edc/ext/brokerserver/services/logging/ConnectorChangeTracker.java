@@ -34,8 +34,11 @@ public class ConnectorChangeTracker {
     @Setter
     private int numOffersUpdated = 0;
 
+    @Setter
+    private String participantIdChanged = null;
+
     public boolean isEmpty() {
-        return numOffersAdded == 0 && numOffersDeleted == 0 && numOffersUpdated == 0;
+        return numOffersAdded == 0 && numOffersDeleted == 0 && numOffersUpdated == 0 && participantIdChanged == null;
     }
 
     @Override
@@ -57,6 +60,9 @@ public class ConnectorChangeTracker {
                 offersMsgs.add("%d deleted".formatted(numOffersDeleted));
             }
             msg += " Data Offers changed: %s.".formatted(String.join(", ", offersMsgs));
+        }
+        if (participantIdChanged != null) {
+            msg += " Participant ID changed to %s.".formatted(participantIdChanged);
         }
         return msg;
     }

@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.services.refreshing.offers.model;
 
-import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferContractOfferRecord;
+import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ContractOfferRecord;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferRecord;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -35,9 +35,9 @@ public class DataOfferPatch {
     List<DataOfferRecord> dataOffersToUpdate = new ArrayList<>();
     List<DataOfferRecord> dataOffersToDelete = new ArrayList<>();
 
-    List<DataOfferContractOfferRecord> contractOffersToInsert = new ArrayList<>();
-    List<DataOfferContractOfferRecord> contractOffersToUpdate = new ArrayList<>();
-    List<DataOfferContractOfferRecord> contractOffersToDelete = new ArrayList<>();
+    List<ContractOfferRecord> contractOffersToInsert = new ArrayList<>();
+    List<ContractOfferRecord> contractOffersToUpdate = new ArrayList<>();
+    List<ContractOfferRecord> contractOffersToDelete = new ArrayList<>();
 
     public void insertDataOffer(DataOfferRecord offer) {
         dataOffersToInsert.add(offer);
@@ -51,15 +51,15 @@ public class DataOfferPatch {
         dataOffersToDelete.add(offer);
     }
 
-    public void insertContractOffer(DataOfferContractOfferRecord offer) {
+    public void insertContractOffer(ContractOfferRecord offer) {
         contractOffersToInsert.add(offer);
     }
 
-    public void updateContractOffer(DataOfferContractOfferRecord offer) {
+    public void updateContractOffer(ContractOfferRecord offer) {
         contractOffersToUpdate.add(offer);
     }
 
-    public void deleteContractOffer(DataOfferContractOfferRecord offer) {
+    public void deleteContractOffer(ContractOfferRecord offer) {
         contractOffersToDelete.add(offer);
     }
 }

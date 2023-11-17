@@ -46,13 +46,8 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.13.0")
 
     implementation("${edcGroup}:core-spi:${edcVersion}")
-    implementation("${edcGroup}:sql-core:${edcVersion}")
 
     // Adds Database-Related EDC-Extensions (EDC-SQL-Stores, JDBC-Driver, Pool and Transactions)
-    implementation("${edcGroup}:control-plane-sql:${edcVersion}")
-    implementation("${edcGroup}:data-plane-instance-store-sql:${edcVersion}")
-    implementation("${edcGroup}:sql-pool-apache-commons:${edcVersion}")
-    implementation("${edcGroup}:transaction-local:${edcVersion}")
     implementation("org.postgresql:postgresql:${postgresVersion}")
 
     api("org.flywaydb:flyway-core:${flywayVersion}")

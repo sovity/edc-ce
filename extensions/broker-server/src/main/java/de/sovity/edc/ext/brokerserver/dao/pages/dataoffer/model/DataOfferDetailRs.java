@@ -28,12 +28,13 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DataOfferDetailRs {
     String assetId;
-    String assetPropertiesJson;
+    String assetJsonLd;
     OffsetDateTime createdAt;
     OffsetDateTime updatedAt;
     List<ContractOfferRs> contractOffers;
     String connectorEndpoint;
     ConnectorOnlineStatus connectorOnlineStatus;
+    String connectorParticipantId;
     OffsetDateTime connectorOfflineSinceOrLastUpdatedAt;
     Integer viewCount;
 }

@@ -19,8 +19,8 @@ services:
       MY_EDC_JDBC_URL: jdbc:postgresql://broker-postgresql:5432/edc
       MY_EDC_JDBC_USER: edc
       MY_EDC_JDBC_PASSWORD: edc
-      EDC_BROKER_SERVER_KNOWN_CONNECTORS: "http://connector:11003/api/v1/ids/data"
-      EDC_BROKER_SERVER_KNOWN_DATASPACE_CONNECTORS: "Mobilithek=https://some-other-connector/ids/data"
+      EDC_BROKER_SERVER_KNOWN_CONNECTORS: "http://connector:11003/api/dsp"
+      EDC_BROKER_SERVER_KNOWN_DATASPACE_CONNECTORS: "Mobilithek=https://some-other-connector/api/dsp"
 
       # Local Dev / Docker-Compose Config
       MY_EDC_PROTOCOL: "http://" # We don't have TLS in the docker container
@@ -44,7 +44,7 @@ services:
       POSTGRESQL_PASSWORD: edc
       POSTGRESQL_DATABASE: edc
     ports:
-      - '54321:5432'
+        - '54321:5432'
     volumes:
       - 'broker-postgresql:/bitnami/postgresql'
   connector-ui:

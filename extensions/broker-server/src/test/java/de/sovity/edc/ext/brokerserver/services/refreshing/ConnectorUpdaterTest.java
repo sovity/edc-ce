@@ -14,184 +14,171 @@
 
 package de.sovity.edc.ext.brokerserver.services.refreshing;
 
+import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
+import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
+import de.sovity.edc.client.gen.model.UiCriterion;
+import de.sovity.edc.client.gen.model.UiCriterionLiteral;
+import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
+import de.sovity.edc.client.gen.model.UiCriterionOperator;
+import de.sovity.edc.ext.brokerserver.AssertionUtils;
 import de.sovity.edc.ext.brokerserver.BrokerServerExtensionContext;
 import de.sovity.edc.ext.brokerserver.TestUtils;
-import de.sovity.edc.ext.brokerserver.dao.AssetProperty;
+import de.sovity.edc.ext.brokerserver.client.BrokerServerClient;
+import de.sovity.edc.ext.brokerserver.client.gen.model.CatalogPageQuery;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
 import de.sovity.edc.ext.brokerserver.db.TestDatabaseFactory;
-import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
-import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
-import io.restassured.path.json.JsonPath;
-import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
-import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
-import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
-import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
-import org.eclipse.edc.connector.spi.asset.AssetService;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.eclipse.edc.policy.model.Policy;
-import org.eclipse.edc.spi.asset.AssetSelectorExpression;
-import org.eclipse.edc.spi.persistence.EdcPersistenceException;
-import org.eclipse.edc.spi.types.domain.DataAddress;
-import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static de.sovity.edc.ext.brokerserver.TestPolicy.createAfterYesterdayConstraint;
+import static de.sovity.edc.ext.brokerserver.TestPolicy.createAfterYesterdayPolicyEdcGen;
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ApiTest
-@ExtendWith(EdcExtension.class)
 class ConnectorUpdaterTest {
 
     @RegisterExtension
     private static final TestDatabase TEST_DATABASE = TestDatabaseFactory.getTestDatabase();
 
+    @RegisterExtension
+    static EdcExtension consumerEdcContext = new EdcExtension();
+
+    private EdcClient providerClient;
+
+    private BrokerServerClient brokerServerClient;
+
     @BeforeEach
     void setUp(EdcExtension extension) {
         extension.setConfiguration(createConfiguration(TEST_DATABASE, Map.of()));
+
+        providerClient = EdcClient.builder()
+            .managementApiUrl(TestUtils.MANAGEMENT_ENDPOINT)
+            .managementApiKey(TestUtils.MANAGEMENT_API_KEY)
+            .build();
+
+        brokerServerClient = BrokerServerClient.builder()
+            .managementApiUrl(TestUtils.MANAGEMENT_ENDPOINT)
+            .managementApiKey(TestUtils.MANAGEMENT_API_KEY)
+            .build();
     }
 
     @Test
-    void testConnectorUpdate(
-            AssetService assetService,
-            PolicyDefinitionStore policyDefinitionStore,
-            ContractDefinitionStore contractDefinitionStore
-    ) {
+    void testConnectorUpdate() {
         TEST_DATABASE.testTransaction(dsl -> {
             // arrange
-            var connectorEndpoint = TestUtils.PROTOCOL_ENDPOINT;
             var connectorUpdater = BrokerServerExtensionContext.instance.connectorUpdater();
             var connectorCreator = BrokerServerExtensionContext.instance.connectorCreator();
+            String connectorEndpoint = TestUtils.PROTOCOL_ENDPOINT;
 
-            createAlwaysTruePolicyDefinition(policyDefinitionStore);
-            createAlwaysTrueContractDefinition(contractDefinitionStore);
-            
-            var nestedObjProperty = new LinkedHashMap<String, Object>(Map.of(
-                    "test-string", "hello",
-                    "test-uri", "https://w3id.org/idsa/code/AB",
-                    "http://test-uri-key", "value",
-
-                    "test-array", new ArrayList<>(List.of("a", "b")),
-                    "test-float", 5.1,
-                    "test-int", 5,
-                    "test-boolean", true,
-
-                    "test-obj", new LinkedHashMap<>(Map.of("key", "value"))
-            ));
-            nestedObjProperty.put("test-null", null);
-
-            var asset = Asset.Builder.newInstance()
-                    .id("test-asset-1")
-                    .property(AssetProperty.ASSET_ID, "test-asset-1")
-                    .property(AssetProperty.ASSET_NAME, "Test Asset 1")
-                    .property("test-string", "hello")
-                    .property("test-uri", "https://w3id.org/idsa/code/AB")
-                    .property("http://test-uri-key", "value")
-
-                    .property("test-array", new ArrayList<>(List.of("a", "b")))
-                    .property("test-float", 5.1)
-                    .property("test-int", 5)
-                    .property("test-boolean", true)
-
-                    .property("test-obj", nestedObjProperty)
-                    .build();
-
-            assetService.create(asset, dataAddress());
+            var policyId = createPolicyDefinition();
+            var assetId = createAsset();
+            createContractDefinition(policyId, assetId);
             connectorCreator.addConnector(dsl, connectorEndpoint);
 
             // act
             connectorUpdater.updateConnector(connectorEndpoint);
 
             // assert
-            var connectors = dsl.selectFrom(Tables.CONNECTOR).stream().toList();
-            assertThat(connectors.get(0).getOnlineStatus()).isEqualTo(ConnectorOnlineStatus.ONLINE);
-            assertThat(connectors.get(0).getEndpoint()).isEqualTo(connectorEndpoint);
-
-            var dataOffers = dsl.selectFrom(Tables.DATA_OFFER).stream().toList();
-            assertThat(dataOffers).hasSize(1);
-
-            var dataOffer = dataOffers.get(0);
-            assertThat(dataOffer.getAssetId()).isEqualTo("test-asset-1");
-            assertThat(dataOffer.getAssetProperties().data()).contains("Test Asset 1");
-
-            var props = JsonPath.from(dataOffer.getAssetProperties().data());
-            assertThat(props.getString("\"asset:prop:name\"")).isEqualTo("Test Asset 1");
-            assertThat(props.getString("test-string")).isEqualTo("hello");
-            assertThat(props.getString("test-uri")).isEqualTo("https://w3id.org/idsa/code/AB");
-            assertThat(props.getString("http://test-uri-key")).isEqualTo("value");
-
-            assertThat(props.getString("test-array")).isEqualTo("[\"a\",\"b\"]");
-            assertThat(props.getString("test-int")).isEqualTo("5");
-            assertThat(props.getString("test-float")).isEqualTo("5.1");
-            assertThat(props.getString("test-boolean")).isEqualTo("true");
-
-            var testObj = JsonPath.from(props.getString("test-obj"));
-            assertThat((String) testObj.get("test-string")).isEqualTo("hello");
-            assertThat((String) testObj.get("test-uri")).isEqualTo("https://w3id.org/idsa/code/AB");
-            assertThat((String) testObj.get("http://test-uri-key")).isEqualTo("value");
-
-            assertThat((List<?>) testObj.get("test-array")).isEqualTo(List.of("a", "b"));
-            assertThat((Integer) testObj.get("test-int")).isEqualTo(5);
-            assertThat((Float) testObj.get("test-float")).isEqualTo(5.1f);
-            assertThat((Boolean) testObj.get("test-boolean")).isTrue();
-            assertThat((Map<?, ?>) testObj.get("test-obj")).isEqualTo(Map.of("key", "value"));
-
-            // the nested object's null will have disappeared
-            assertThat(testObj.getMap("")).containsKey("test-string");
-            assertThat(testObj.getMap("")).doesNotContainKey("test-null");
-
-            var contractOffers = dsl.selectFrom(Tables.DATA_OFFER_CONTRACT_OFFER).stream().toList();
-            assertThat(contractOffers).hasSize(1);
+            var catalog = brokerServerClient.brokerServerApi().catalogPage(new CatalogPageQuery());
+            assertThat(catalog.getDataOffers()).hasSize(1);
+            var dataOffer = catalog.getDataOffers().get(0);
+            assertThat(dataOffer.getContractOffers()).hasSize(1);
+            var contractOffer = dataOffer.getContractOffers().get(0);
+            var asset = dataOffer.getAsset();
+            assertThat(asset.getAssetId()).isEqualTo(assetId);
+            assertThat(asset.getTitle()).isEqualTo("AssetName");
+            assertThat(asset.getConnectorEndpoint()).isEqualTo(TestUtils.PROTOCOL_ENDPOINT);
+            assertThat(asset.getParticipantId()).isEqualTo(TestUtils.PARTICIPANT_ID);
+            assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
+            assertThat(asset.getDescription()).isEqualTo("AssetDescription");
+            assertThat(asset.getVersion()).isEqualTo("1.0.0");
+            assertThat(asset.getLanguage()).isEqualTo("en");
+            assertThat(asset.getMediaType()).isEqualTo("application/json");
+            assertThat(asset.getDataCategory()).isEqualTo("dataCategory");
+            assertThat(asset.getDataSubcategory()).isEqualTo("dataSubcategory");
+            assertThat(asset.getDataModel()).isEqualTo("dataModel");
+            assertThat(asset.getGeoReferenceMethod()).isEqualTo("geoReferenceMethod");
+            assertThat(asset.getTransportMode()).isEqualTo("transportMode");
+            assertThat(asset.getLicenseUrl()).isEqualTo("https://license-url");
+            assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
+            assertThat(asset.getCreatorOrganizationName()).isEqualTo(TestUtils.CURATOR_NAME);
+            assertThat(asset.getPublisherHomepage()).isEqualTo("publisherHomepage");
+            assertThat(asset.getHttpDatasourceHintsProxyMethod()).isFalse();
+            assertThat(asset.getHttpDatasourceHintsProxyPath()).isFalse();
+            assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isFalse();
+            assertThat(asset.getHttpDatasourceHintsProxyBody()).isFalse();
+            assertThat(asset.getAdditionalProperties())
+                    .containsExactlyEntriesOf(Map.of("http://unknown/a", "x"));
+            assertThat(dataOffer.getAsset().getAdditionalJsonProperties())
+                    .containsExactlyEntriesOf(Map.of("http://unknown/b", "{\"http://unknown/c\":\"y\"}"));
+            assertThat(dataOffer.getAsset().getPrivateProperties()).isEmpty();
+            assertThat(dataOffer.getAsset().getPrivateJsonProperties()).isEmpty();
+            var policy = contractOffer.getContractPolicy();
+            assertThat(policy.getConstraints()).hasSize(1);
+            AssertionUtils.assertEqualUsingJson(policy.getConstraints().get(0), createAfterYesterdayConstraint());
         });
     }
 
-    @Test
-    void testTopLevelAssetPropertyCannotBeNull(AssetService assetService) {
-        var asset = Asset.Builder.newInstance()
-                .id("test-asset-1")
-                .property("test-null", null)
+    private String createPolicyDefinition() {
+        var policyDefinition = PolicyDefinitionCreateRequest.builder()
+                .policyDefinitionId("policy-1")
+                .policy(createAfterYesterdayPolicyEdcGen())
                 .build();
-        var dataAddress = dataAddress();
-        assertThatThrownBy(() -> assetService.create(asset, dataAddress))
-                .isInstanceOf(EdcPersistenceException.class)
-                .hasMessage("java.lang.NullPointerException: Cannot invoke \"Object.getClass()\" because the return value of \"java.util.Map$Entry.getValue()\" is null");
+
+        return providerClient.uiApi().createPolicyDefinition(policyDefinition).getId();
     }
 
-    private DataAddress dataAddress() {
-        return DataAddress.Builder.newInstance()
-                .properties(Map.of(
-                        "type", "HttpData",
-                        "baseUrl", "https://jsonplaceholder.typicode.com/todos/1"
-                ))
-                .build();
+    public void createContractDefinition(String policyId, String assetId) {
+        providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
+                .contractDefinitionId("cd-1")
+                .accessPolicyId(policyId)
+                .contractPolicyId(policyId)
+                .assetSelector(List.of(UiCriterion.builder()
+                    .operandLeft(Prop.Edc.ID)
+                    .operator(UiCriterionOperator.EQ)
+                    .operandRight(UiCriterionLiteral.builder()
+                        .type(UiCriterionLiteralType.VALUE)
+                        .value(assetId)
+                        .build())
+                    .build()))
+                .build());
     }
 
-    private void createAlwaysTruePolicyDefinition(PolicyDefinitionStore policyDefinitionStore) {
-        var policyDefinition = PolicyDefinition.Builder.newInstance()
-                .id("always-true")
-                .policy(Policy.Builder.newInstance().build())
-                .build();
-        policyDefinitionStore.save(policyDefinition);
+    private String createAsset() {
+        return providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
+            .id("asset-1")
+            .title("AssetName")
+            .description("AssetDescription")
+            .licenseUrl("https://license-url")
+            .version("1.0.0")
+            .language("en")
+            .mediaType("application/json")
+            .dataCategory("dataCategory")
+            .dataSubcategory("dataSubcategory")
+            .dataModel("dataModel")
+            .geoReferenceMethod("geoReferenceMethod")
+            .transportMode("transportMode")
+            .keywords(List.of("keyword1", "keyword2"))
+            .publisherHomepage("publisherHomepage")
+            .dataAddressProperties(Map.of(
+                Prop.Edc.TYPE, "HttpData",
+                Prop.Edc.METHOD, "GET",
+                Prop.Edc.BASE_URL, "http://some.url"
+            ))
+            .additionalProperties(Map.of("http://unknown/a", "x"))
+            .additionalJsonProperties(Map.of("http://unknown/b", "{\"http://unknown/c\":\"y\"}"))
+            .privateProperties(Map.of("http://unknown/a-private", "x-private"))
+            .privateJsonProperties(Map.of("http://unknown/b-private", "{\"http://unknown/c-private\":\"y-private\"}"))
+            .build()).getId();
     }
-
-    public void createAlwaysTrueContractDefinition(ContractDefinitionStore contractDefinitionStore) {
-        var contractDefinition = ContractDefinition.Builder.newInstance()
-                .id("always-true-cd")
-                .contractPolicyId("always-true")
-                .accessPolicyId("always-true")
-                .selectorExpression(AssetSelectorExpression.SELECT_ALL)
-                .validity(1000) //else throws "validity must be strictly positive"
-                .build();
-        contractDefinitionStore.save(contractDefinition);
-    }
-
 }

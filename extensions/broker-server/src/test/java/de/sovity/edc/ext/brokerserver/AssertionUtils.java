@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver;
 
+import de.sovity.edc.ext.brokerserver.client.gen.JSON;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -25,5 +26,9 @@ public class AssertionUtils {
     @SneakyThrows
     public static void assertEqualJson(String expected, String actual) {
         JSONAssert.assertEquals(expected, actual, JSONCompareMode.STRICT);
+    }
+
+    public static void assertEqualUsingJson(Object expected, Object actual) {
+        assertEqualJson(JSON.serialize(expected), JSON.serialize(actual));
     }
 }

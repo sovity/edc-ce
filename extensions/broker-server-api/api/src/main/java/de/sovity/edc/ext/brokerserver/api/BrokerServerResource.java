@@ -65,7 +65,7 @@ public interface BrokerServerResource {
     @Path("connector-detail-page")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Query a Known Connector's Detail Page")
+    @Operation(description = "Query a known Connector's Detail Page")
     ConnectorDetailPageResult connectorDetailPage(ConnectorDetailPageQuery query);
 
     @PUT

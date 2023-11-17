@@ -55,18 +55,19 @@ public class CatalogQueryDataOfferFetcher {
         var d = fields.getDataOfferTable();
 
         var select = DSL.select(
-                fields.getAssetId().as("assetId"),
-                d.ASSET_PROPERTIES.cast(String.class).as("assetPropertiesJson"),
+                d.ASSET_ID.as("assetId"),
+                d.ASSET_JSON_LD.cast(String.class).as("assetJsonLd"),
                 d.CREATED_AT,
                 d.UPDATED_AT,
-                catalogQueryContractOfferFetcher.getContractOffers(fields).as("contractOffers"),
+                catalogQueryContractOfferFetcher.getContractOffers(d).as("contractOffers"),
                 c.ENDPOINT.as("connectorEndpoint"),
                 c.ONLINE_STATUS.as("connectorOnlineStatus"),
+                c.PARTICIPANT_ID.as("connectorParticipantId"),
                 fields.getOfflineSinceOrLastUpdatedAt().as("connectorOfflineSinceOrLastUpdatedAt")
         );
 
         var query = from(select, fields)
-                .where(catalogQueryFilterService.filter(fields, searchQuery, filters))
+                .where(catalogQueryFilterService.filterDbQuery(fields, searchQuery, filters))
                 .orderBy(catalogQuerySortingService.getOrderBy(fields, sorting))
                 .limit(pageQuery.offset(), pageQuery.limit());
 
@@ -83,7 +84,7 @@ public class CatalogQueryDataOfferFetcher {
      */
     public Field<Integer> queryNumDataOffers(CatalogQueryFields fields, String searchQuery, List<CatalogQueryFilter> filters) {
         var query = from(DSL.select(DSL.count()), fields)
-                .where(catalogQueryFilterService.filter(fields, searchQuery, filters));
+                .where(catalogQueryFilterService.filterDbQuery(fields, searchQuery, filters));
         return DSL.field(query);
     }
 

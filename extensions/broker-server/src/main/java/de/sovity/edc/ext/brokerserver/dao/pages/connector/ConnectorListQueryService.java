@@ -15,12 +15,10 @@
 package de.sovity.edc.ext.brokerserver.dao.pages.connector;
 
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageSortingType;
-import de.sovity.edc.ext.brokerserver.dao.pages.connector.model.ConnectorDetailsRs;
 import de.sovity.edc.ext.brokerserver.dao.pages.connector.model.ConnectorListEntryRs;
 import de.sovity.edc.ext.brokerserver.dao.utils.SearchUtils;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
-import de.sovity.edc.ext.brokerserver.db.jooq.enums.MeasurementErrorStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.Connector;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
@@ -30,36 +28,24 @@ import org.jooq.impl.DSL;
 
 import java.util.List;
 
-public class ConnectorPageQueryService {
+public class ConnectorListQueryService {
     public List<ConnectorListEntryRs> queryConnectorPage(DSLContext dsl, String searchQuery, ConnectorPageSortingType sorting) {
         var c = Tables.CONNECTOR;
-        var filterBySearchQuery = SearchUtils.simpleSearch(searchQuery, List.of(c.ENDPOINT, c.CONNECTOR_ID));
+        var filterBySearchQuery = SearchUtils.simpleSearch(searchQuery, List.of(c.ENDPOINT, c.PARTICIPANT_ID));
 
-        return dsl.select(c.asterisk(), dataOfferCount(c.ENDPOINT).as("numDataOffers"))
-                .from(c)
-                .where(filterBySearchQuery)
-                .orderBy(sortConnectorPage(c, sorting))
-                .fetchInto(ConnectorListEntryRs.class);
-    }
-
-    public ConnectorDetailsRs queryConnectorDetailPage(DSLContext dsl, String connectorEndpoint) {
-        var c = Tables.CONNECTOR;
-        var betm = Tables.BROKER_EXECUTION_TIME_MEASUREMENT;
-
-        var filterBySearchQuery = SearchUtils.simpleSearch(connectorEndpoint, List.of(c.ENDPOINT, c.CONNECTOR_ID));
-
-        var avgSuccessfulCrawlTimeInMs = dsl.select(DSL.avg(betm.DURATION_IN_MS))
-                .from(betm)
-                .where(betm.CONNECTOR_ENDPOINT.eq(connectorEndpoint), betm.ERROR_STATUS.eq(MeasurementErrorStatus.OK))
-                .asField();
-
-        return dsl.select(c.asterisk(),
-                    dataOfferCount(c.ENDPOINT).as("numDataOffers"),
-                    avgSuccessfulCrawlTimeInMs.as("connectorCrawlingTimeAvg"))
-                .from(c)
-                .where(filterBySearchQuery)
-                .groupBy(c.ENDPOINT)
-                .fetchOneInto(ConnectorDetailsRs.class);
+        return dsl.select(
+                c.ENDPOINT.as("endpoint"),
+                c.PARTICIPANT_ID.as("participantId"),
+                c.CREATED_AT.as("createdAt"),
+                c.LAST_SUCCESSFUL_REFRESH_AT.as("lastSuccessfulRefreshAt"),
+                c.LAST_REFRESH_ATTEMPT_AT.as("lastRefreshAttemptAt"),
+                c.ONLINE_STATUS.as("onlineStatus"),
+                dataOfferCount(c.ENDPOINT).as("numDataOffers")
+            )
+            .from(c)
+            .where(filterBySearchQuery)
+            .orderBy(sortConnectorPage(c, sorting))
+            .fetchInto(ConnectorListEntryRs.class);
     }
 
     @NotNull
@@ -73,7 +59,7 @@ public class ConnectorPageQueryService {
                 .asc();
 
         if (sorting == null || sorting == ConnectorPageSortingType.ONLINE_STATUS) {
-            return  List.of(onlineStatus, alphabetically);
+            return List.of(onlineStatus, alphabetically);
         } else if (sorting == ConnectorPageSortingType.TITLE) {
             return List.of(alphabetically, recentFirst);
         } else if (sorting == ConnectorPageSortingType.MOST_RECENT) {

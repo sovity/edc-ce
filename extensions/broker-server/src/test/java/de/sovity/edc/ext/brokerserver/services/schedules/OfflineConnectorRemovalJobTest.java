@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.brokerserver.services.schedules;
 
-import de.sovity.edc.ext.brokerserver.TestUtils;
 import de.sovity.edc.ext.brokerserver.dao.ConnectorQueries;
 import de.sovity.edc.ext.brokerserver.db.FlywayTestUtils;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
@@ -78,7 +77,7 @@ class OfflineConnectorRemovalJobTest {
 
             // assert
             dsl.select().from(CONNECTOR).fetch().forEach(record -> {
-                assertThat(record.get(CONNECTOR.CONNECTOR_ID)).isEqualTo("http://example.org");
+                assertThat(record.get(CONNECTOR.ENDPOINT)).isEqualTo("https://my-connector/api/dsp");
                 assertThat(record.get(CONNECTOR.ONLINE_STATUS)).isEqualTo(ConnectorOnlineStatus.DEAD);
             });
         });
@@ -96,7 +95,7 @@ class OfflineConnectorRemovalJobTest {
 
             // assert
             dsl.select().from(CONNECTOR).fetch().forEach(record -> {
-                assertThat(record.get(CONNECTOR.CONNECTOR_ID)).isEqualTo("http://example.org");
+                assertThat(record.get(CONNECTOR.ENDPOINT)).isEqualTo("https://my-connector/api/dsp");
                 assertThat(record.get(CONNECTOR.ONLINE_STATUS)).isNotEqualTo(ConnectorOnlineStatus.DEAD);
             });
         });
@@ -104,8 +103,8 @@ class OfflineConnectorRemovalJobTest {
 
     private static void createConnector(DSLContext dsl, int createdDaysAgo) {
         dsl.insertInto(CONNECTOR)
-            .set(CONNECTOR.CONNECTOR_ID, "http://example.org")
-            .set(CONNECTOR.ENDPOINT, TestUtils.MANAGEMENT_ENDPOINT)
+            .set(CONNECTOR.ENDPOINT, "https://my-connector/api/dsp")
+            .set(CONNECTOR.PARTICIPANT_ID, "my-connector")
             .set(CONNECTOR.ONLINE_STATUS, ConnectorOnlineStatus.OFFLINE)
             .set(CONNECTOR.LAST_SUCCESSFUL_REFRESH_AT, OffsetDateTime.now().minusDays(createdDaysAgo))
             .set(CONNECTOR.CREATED_AT, OffsetDateTime.now().minusDays(6))

@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.services.api;
 
+import de.sovity.edc.ext.brokerserver.TestPolicy;
 import de.sovity.edc.ext.brokerserver.TestUtils;
 import de.sovity.edc.ext.brokerserver.client.BrokerServerClient;
 import de.sovity.edc.ext.brokerserver.client.gen.model.ConnectorListEntry;
@@ -28,9 +29,7 @@ import de.sovity.edc.ext.brokerserver.db.jooq.enums.MeasurementType;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.jooq.DSLContext;
-import org.jooq.JSONB;
 import org.jooq.Record;
-import org.jooq.Record1;
 import org.jooq.TableField;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +41,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static de.sovity.edc.ext.brokerserver.TestAsset.getAssetJsonLd;
+import static de.sovity.edc.ext.brokerserver.TestAsset.setDataOfferAssetMetadata;
 import static de.sovity.edc.ext.brokerserver.TestUtils.ADMIN_API_KEY;
 import static de.sovity.edc.ext.brokerserver.TestUtils.brokerServerClient;
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
@@ -72,7 +73,7 @@ class DeleteConnectorsApiTest {
 
             var connectorsBefore = List.of(firstConnector, otherConnector);
             assertContainsEndpoints(dsl, Tables.BROKER_EXECUTION_TIME_MEASUREMENT.CONNECTOR_ENDPOINT, connectorsBefore);
-            assertContainsEndpoints(dsl, Tables.DATA_OFFER_CONTRACT_OFFER.CONNECTOR_ENDPOINT, connectorsBefore);
+            assertContainsEndpoints(dsl, Tables.CONTRACT_OFFER.CONNECTOR_ENDPOINT, connectorsBefore);
             assertContainsEndpoints(dsl, Tables.DATA_OFFER.CONNECTOR_ENDPOINT, connectorsBefore);
             assertContainsEndpoints(dsl, Tables.DATA_OFFER_VIEW_COUNT.CONNECTOR_ENDPOINT, connectorsBefore);
             assertContainsEndpoints(dsl, Tables.CONNECTOR.ENDPOINT, connectorsBefore);
@@ -87,7 +88,7 @@ class DeleteConnectorsApiTest {
 
             var connectorsAfter = List.of(otherConnector);
             assertContainsEndpoints(dsl, Tables.BROKER_EXECUTION_TIME_MEASUREMENT.CONNECTOR_ENDPOINT, connectorsAfter);
-            assertContainsEndpoints(dsl, Tables.DATA_OFFER_CONTRACT_OFFER.CONNECTOR_ENDPOINT, connectorsAfter);
+            assertContainsEndpoints(dsl, Tables.CONTRACT_OFFER.CONNECTOR_ENDPOINT, connectorsAfter);
             assertContainsEndpoints(dsl, Tables.DATA_OFFER.CONNECTOR_ENDPOINT, connectorsAfter);
             assertContainsEndpoints(dsl, Tables.DATA_OFFER_VIEW_COUNT.CONNECTOR_ENDPOINT, connectorsAfter);
             assertContainsEndpoints(dsl, Tables.CONNECTOR.ENDPOINT, connectorsAfter);
@@ -109,20 +110,18 @@ class DeleteConnectorsApiTest {
         var assetId = "my-asset";
 
         var dataOffer = dsl.newRecord(Tables.DATA_OFFER);
-        dataOffer.setAssetId(assetId);
-        dataOffer.setAssetName("My Asset");
-        dataOffer.setAssetProperties(JSONB.valueOf("{}"));
+        setDataOfferAssetMetadata(dataOffer, getAssetJsonLd("my-asset"), "my-participant-id");
         dataOffer.setConnectorEndpoint(endpoint);
         dataOffer.setCreatedAt(OffsetDateTime.now());
         dataOffer.setUpdatedAt(OffsetDateTime.now());
         dataOffer.insert();
 
-        var contractOffer = dsl.newRecord(Tables.DATA_OFFER_CONTRACT_OFFER);
+        var contractOffer = dsl.newRecord(Tables.CONTRACT_OFFER);
         contractOffer.setAssetId(assetId);
         contractOffer.setConnectorEndpoint(endpoint);
         contractOffer.setContractOfferId("my-asset-co");
         contractOffer.setCreatedAt(OffsetDateTime.now());
-        contractOffer.setPolicy(JSONB.valueOf("{}"));
+        contractOffer.setPolicy(TestPolicy.createAfterYesterdayPolicyJson());
         contractOffer.setUpdatedAt(OffsetDateTime.now());
         contractOffer.insert();
 

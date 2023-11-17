@@ -14,9 +14,6 @@
 
 package de.sovity.edc.ext.brokerserver.db;
 
-import org.eclipse.edc.connector.dataplane.selector.store.sql.schema.DataPlaneInstanceStatements;
-import org.eclipse.edc.connector.dataplane.selector.store.sql.schema.postgres.PostgresDataPlaneInstanceStatements;
-import org.eclipse.edc.runtime.metamodel.annotation.Provider;
 import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
@@ -38,11 +35,6 @@ public class PostgresFlywayExtension implements ServiceExtension {
     public static final String DB_CONNECTION_POOL_SIZE = "edc.broker.server.db.connection.pool.size";
     @Setting
     public static final String DB_CONNECTION_TIMEOUT_IN_MS = "edc.broker.server.db.connection.timeout.in.ms";
-
-    @Provider
-    public DataPlaneInstanceStatements dataPlaneInstanceStatements() {
-        return new PostgresDataPlaneInstanceStatements();
-    }
 
     @Override
     public String name() {

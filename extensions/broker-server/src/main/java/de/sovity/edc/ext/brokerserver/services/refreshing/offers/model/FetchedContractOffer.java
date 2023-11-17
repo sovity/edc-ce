@@ -12,25 +12,17 @@
  *
  */
 
-package de.sovity.edc.ext.brokerserver.dao.pages.connector.model;
+package de.sovity.edc.ext.brokerserver.services.refreshing.offers.model;
 
-import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.time.OffsetDateTime;
-
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ConnectorListEntryRs {
-    String endpoint;
-    String participantId;
-    OffsetDateTime createdAt;
-    OffsetDateTime lastSuccessfulRefreshAt;
-    OffsetDateTime lastRefreshAttemptAt;
-    ConnectorOnlineStatus onlineStatus;
-    Integer numDataOffers;
+public class FetchedContractOffer {
+    String contractOfferId;
+    String policyJson;
 }

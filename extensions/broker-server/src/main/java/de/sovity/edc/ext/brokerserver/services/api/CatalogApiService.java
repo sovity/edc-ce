@@ -37,8 +37,7 @@ import java.util.stream.Stream;
 public class CatalogApiService {
     private final PaginationMetadataUtils paginationMetadataUtils;
     private final CatalogQueryService catalogQueryService;
-    private final PolicyDtoBuilder policyDtoBuilder;
-    private final AssetPropertyParser assetPropertyParser;
+    private final DataOfferMappingUtils dataOfferMappingUtils;
     private final CatalogFilterService catalogFilterService;
     private final BrokerServerSettings brokerServerSettings;
 
@@ -84,11 +83,17 @@ public class CatalogApiService {
     }
 
     private CatalogDataOffer buildCatalogDataOffer(DataOfferListEntryRs dataOfferRs) {
+        var asset = dataOfferMappingUtils.buildUiAsset(
+            dataOfferRs.getAssetJsonLd(),
+            dataOfferRs.getConnectorEndpoint(),
+            dataOfferRs.getConnectorParticipantId()
+        );
+
         var dataOffer = new CatalogDataOffer();
         dataOffer.setAssetId(dataOfferRs.getAssetId());
         dataOffer.setCreatedAt(dataOfferRs.getCreatedAt());
         dataOffer.setUpdatedAt(dataOfferRs.getUpdatedAt());
-        dataOffer.setProperties(assetPropertyParser.parsePropertiesFromJsonString(dataOfferRs.getAssetPropertiesJson()));
+        dataOffer.setAsset(asset);
         dataOffer.setContractOffers(buildCatalogContractOffers(dataOfferRs));
         dataOffer.setConnectorEndpoint(dataOfferRs.getConnectorEndpoint());
         dataOffer.setConnectorOfflineSinceOrLastUpdatedAt(dataOfferRs.getConnectorOfflineSinceOrLastUpdatedAt());
@@ -105,7 +110,7 @@ public class CatalogApiService {
     private CatalogContractOffer buildCatalogContractOffer(ContractOfferRs contractOfferDbRow) {
         var contractOffer = new CatalogContractOffer();
         contractOffer.setContractOfferId(contractOfferDbRow.getContractOfferId());
-        contractOffer.setContractPolicy(policyDtoBuilder.buildPolicyFromJson(contractOfferDbRow.getPolicyJson()));
+        contractOffer.setContractPolicy(dataOfferMappingUtils.buildUiPolicy(contractOfferDbRow.getPolicyJson()));
         contractOffer.setCreatedAt(contractOfferDbRow.getCreatedAt());
         contractOffer.setUpdatedAt(contractOfferDbRow.getUpdatedAt());
         return contractOffer;

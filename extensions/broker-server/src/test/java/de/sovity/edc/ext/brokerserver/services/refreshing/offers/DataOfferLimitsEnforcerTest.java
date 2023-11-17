@@ -19,8 +19,8 @@ import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorDataOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
 import de.sovity.edc.ext.brokerserver.services.config.BrokerServerSettings;
 import de.sovity.edc.ext.brokerserver.services.logging.BrokerEventLogger;
+import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedContractOffer;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOffer;
-import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOfferContractOffer;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,7 +58,7 @@ class DataOfferLimitsEnforcerTest {
         when(settings.getMaxContractOffersPerDataOffer()).thenReturn(maxContractOffers);
 
         var myDataOffer = new FetchedDataOffer();
-        myDataOffer.setContractOffers(List.of(new FetchedDataOfferContractOffer(), new FetchedDataOfferContractOffer()));
+        myDataOffer.setContractOffers(List.of(new FetchedContractOffer(), new FetchedContractOffer()));
         var dataOffers = List.of(myDataOffer, myDataOffer);
 
         // act
@@ -104,7 +104,7 @@ class DataOfferLimitsEnforcerTest {
         when(settings.getMaxContractOffersPerDataOffer()).thenReturn(maxContractOffers);
 
         var myDataOffer = new FetchedDataOffer();
-        myDataOffer.setContractOffers(List.of(new FetchedDataOfferContractOffer(), new FetchedDataOfferContractOffer()));
+        myDataOffer.setContractOffers(List.of(new FetchedContractOffer(), new FetchedContractOffer()));
         var dataOffers = List.of(myDataOffer, myDataOffer);
 
         // act
@@ -133,7 +133,7 @@ class DataOfferLimitsEnforcerTest {
         when(settings.getMaxContractOffersPerDataOffer()).thenReturn(maxContractOffers);
 
         var myDataOffer = new FetchedDataOffer();
-        myDataOffer.setContractOffers(List.of(new FetchedDataOfferContractOffer(), new FetchedDataOfferContractOffer()));
+        myDataOffer.setContractOffers(List.of(new FetchedContractOffer(), new FetchedContractOffer()));
         var dataOffers = List.of(myDataOffer, myDataOffer);
 
         // act
@@ -157,7 +157,7 @@ class DataOfferLimitsEnforcerTest {
         when(settings.getMaxContractOffersPerDataOffer()).thenReturn(maxContractOffers);
 
         var myDataOffer = new FetchedDataOffer();
-        myDataOffer.setContractOffers(List.of(new FetchedDataOfferContractOffer(), new FetchedDataOfferContractOffer()));
+        myDataOffer.setContractOffers(List.of(new FetchedContractOffer(), new FetchedContractOffer()));
         var dataOffers = List.of(myDataOffer, myDataOffer);
 
         // act
@@ -181,7 +181,7 @@ class DataOfferLimitsEnforcerTest {
         when(settings.getMaxContractOffersPerDataOffer()).thenReturn(maxContractOffers);
 
         var myDataOffer = new FetchedDataOffer();
-        myDataOffer.setContractOffers(List.of(new FetchedDataOfferContractOffer(), new FetchedDataOfferContractOffer()));
+        myDataOffer.setContractOffers(List.of(new FetchedContractOffer(), new FetchedContractOffer()));
         var dataOffers = List.of(myDataOffer, myDataOffer);
 
         // act
@@ -205,7 +205,7 @@ class DataOfferLimitsEnforcerTest {
         when(settings.getMaxContractOffersPerDataOffer()).thenReturn(maxContractOffers);
 
         var myDataOffer = new FetchedDataOffer();
-        myDataOffer.setContractOffers(List.of(new FetchedDataOfferContractOffer(), new FetchedDataOfferContractOffer()));
+        myDataOffer.setContractOffers(List.of(new FetchedContractOffer(), new FetchedContractOffer()));
         var dataOffers = List.of(myDataOffer, myDataOffer);
 
         // act

@@ -17,6 +17,7 @@ package de.sovity.edc.ext.brokerserver.dao.pages.catalog;
 import de.sovity.edc.ext.brokerserver.dao.pages.dataoffer.model.ContractOfferRs;
 import de.sovity.edc.ext.brokerserver.dao.utils.MultisetUtils;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
+import de.sovity.edc.ext.brokerserver.db.jooq.tables.DataOffer;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Field;
 import org.jooq.impl.DSL;
@@ -29,12 +30,11 @@ public class CatalogQueryContractOfferFetcher {
     /**
      * Query a data offer's contract offers.
      *
-     * @param fields query fields
+     * @param d Data offer table
      * @return {@link Field} of {@link ContractOfferRs}s
      */
-    public Field<List<ContractOfferRs>> getContractOffers(CatalogQueryFields fields) {
-        var d = fields.getDataOfferTable();
-        var co = Tables.DATA_OFFER_CONTRACT_OFFER;
+    public Field<List<ContractOfferRs>> getContractOffers(DataOffer d) {
+        var co = Tables.CONTRACT_OFFER;
 
         var query = DSL.select(
                 co.CONTRACT_OFFER_ID,

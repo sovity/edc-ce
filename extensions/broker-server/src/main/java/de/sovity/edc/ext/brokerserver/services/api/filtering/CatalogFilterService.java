@@ -19,11 +19,10 @@ import de.sovity.edc.ext.brokerserver.api.model.CnfFilterAttribute;
 import de.sovity.edc.ext.brokerserver.api.model.CnfFilterItem;
 import de.sovity.edc.ext.brokerserver.api.model.CnfFilterValue;
 import de.sovity.edc.ext.brokerserver.api.model.CnfFilterValueAttribute;
-import de.sovity.edc.ext.brokerserver.dao.AssetProperty;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQueryFilter;
 import de.sovity.edc.ext.brokerserver.dao.pages.catalog.models.CatalogQuerySelectedFilterQuery;
 import de.sovity.edc.ext.brokerserver.dao.utils.JsonDeserializationUtils;
-import de.sovity.edc.ext.brokerserver.dao.utils.PostgresqlUtils;
+import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.utils.CollectionUtils2;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
@@ -58,40 +57,50 @@ public class CatalogFilterService {
      */
     private List<CatalogFilterAttributeDefinition> getAvailableFilters() {
         return List.of(
-                catalogFilterAttributeDefinitionService.buildDataSpaceFilter(),
-                catalogFilterAttributeDefinitionService.fromAssetProperty(
-                        AssetProperty.DATA_CATEGORY,
-                        "Data Category"
-                ),
-                catalogFilterAttributeDefinitionService.fromAssetProperty(
-                        AssetProperty.DATA_SUBCATEGORY,
-                        "Data Subcategory"
-                ),
-                catalogFilterAttributeDefinitionService.fromAssetProperty(
-                        AssetProperty.DATA_MODEL,
-                        "Data Model"
-                ),
-                catalogFilterAttributeDefinitionService.fromAssetProperty(
-                        AssetProperty.TRANSPORT_MODE,
-                        "Transport Mode"
-                ),
-                catalogFilterAttributeDefinitionService.fromAssetProperty(
-                    AssetProperty.GEO_REFERENCE_METHOD,
-                    "Geo Reference Method"
-                ),
-                catalogFilterAttributeDefinitionService.buildConnectorEndpointFilter()
+            catalogFilterAttributeDefinitionService.buildDataSpaceFilter(),
+            catalogFilterAttributeDefinitionService.forField(
+                fields -> fields.getDataOfferTable().DATA_CATEGORY,
+                "dataCategory",
+                "Data Category"
+            ),
+            catalogFilterAttributeDefinitionService.forField(
+                fields -> fields.getDataOfferTable().DATA_SUBCATEGORY,
+                "dataSubcategory",
+                "Data Subcategory"
+            ),
+            catalogFilterAttributeDefinitionService.forField(
+                fields -> fields.getDataOfferTable().DATA_MODEL,
+                "dataModel",
+                "Data Model"
+            ),
+            catalogFilterAttributeDefinitionService.forField(
+                fields -> fields.getDataOfferTable().TRANSPORT_MODE,
+                "transportMode",
+                "Transport Mode"
+            ),
+            catalogFilterAttributeDefinitionService.forField(
+                fields -> fields.getDataOfferTable().GEO_REFERENCE_METHOD,
+                "geoReferenceMethod",
+                "Geo Reference Method"
+            ),
+            catalogFilterAttributeDefinitionService.forField(
+                fields -> fields.getDataOfferTable().CURATOR_ORGANIZATION_NAME,
+                "curatorOrganizationName",
+                "Organization Name"
+            ),
+            catalogFilterAttributeDefinitionService.buildConnectorEndpointFilter()
         );
     }
 
     public List<CatalogQueryFilter> getCatalogQueryFilters(CnfFilterValue cnfFilterValue) {
         var values = getCnfFilterValuesMap(cnfFilterValue);
         return getAvailableFilters().stream()
-                .map(filter -> new CatalogQueryFilter(
-                        filter.name(),
-                        filter.valueGetter(),
-                        getQueryFilter(filter, values.get(filter.name()))
-                ))
-                .toList();
+            .map(filter -> new CatalogQueryFilter(
+                filter.name(),
+                filter.valueGetter(),
+                getQueryFilter(filter, values.get(filter.name()))
+            ))
+            .toList();
     }
 
     private CatalogQuerySelectedFilterQuery getQueryFilter(CatalogFilterAttributeDefinition filter, List<String> values) {
@@ -102,34 +111,34 @@ public class CatalogFilterService {
     }
 
     public CnfFilter buildAvailableFilters(String filterValuesJson) {
-        var filterValues = JsonDeserializationUtils.deserializeStringArray2(filterValuesJson);
+        var filterValues = JsonDeserializationUtils.read2dStringList(filterValuesJson);
         var filterAttributes = zipAvailableFilters(getAvailableFilters(), filterValues)
-                .map(availableFilter -> new CnfFilterAttribute(
-                        availableFilter.definition().name(),
-                        availableFilter.definition().label(),
-                        buildAvailableFilterValues(availableFilter)
-                ))
-                .toList();
+            .map(availableFilter -> new CnfFilterAttribute(
+                availableFilter.definition().name(),
+                availableFilter.definition().label(),
+                buildAvailableFilterValues(availableFilter)
+            ))
+            .toList();
         return new CnfFilter(filterAttributes);
     }
 
     private List<CnfFilterItem> buildAvailableFilterValues(AvailableFilter availableFilter) {
         return availableFilter.availableValues().stream()
-                .sorted(caseInsensitiveEmptyStringLast)
-                .map(value -> new CnfFilterItem(value, value))
-                .toList();
+            .sorted(caseInsensitiveEmptyStringLast)
+            .map(value -> new CnfFilterItem(value, value))
+            .toList();
     }
 
     private Stream<AvailableFilter> zipAvailableFilters(List<CatalogFilterAttributeDefinition> availableFilters, List<List<String>> filterValues) {
         Validate.isTrue(
-                availableFilters.size() == filterValues.size(),
-                "Number of available filters and filter values must match: %d != %d",
-                availableFilters.size(),
-                filterValues.size()
+            availableFilters.size() == filterValues.size(),
+            "Number of available filters and filter values must match: %d != %d",
+            availableFilters.size(),
+            filterValues.size()
         );
         return Stream.iterate(0, i -> i + 1)
-                .limit(availableFilters.size())
-                .map(i -> new AvailableFilter(availableFilters.get(i), filterValues.get(i)));
+            .limit(availableFilters.size())
+            .map(i -> new AvailableFilter(availableFilters.get(i), filterValues.get(i)));
     }
 
     private record AvailableFilter(CatalogFilterAttributeDefinition definition, List<String> availableValues) {
@@ -140,7 +149,7 @@ public class CatalogFilterService {
             return Map.of();
         }
         return cnfFilterValue.getSelectedAttributeValues().stream()
-                .filter(it -> it.getId() != null && CollectionUtils2.isNotEmpty(it.getSelectedIds()))
-                .collect(toMap(CnfFilterValueAttribute::getId, CnfFilterValueAttribute::getSelectedIds));
+            .filter(it -> it.getId() != null && CollectionUtils2.isNotEmpty(it.getSelectedIds()))
+            .collect(toMap(CnfFilterValueAttribute::getId, CnfFilterValueAttribute::getSelectedIds));
     }
 }

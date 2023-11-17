@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     id("java")
     id("checkstyle")
@@ -26,8 +29,12 @@ allprojects {
     tasks.getByName<Test>("test") {
         useJUnitPlatform()
         testLogging {
-            events("passed", "skipped", "failed")
+            events = setOf(TestLogEvent.FAILED)
+            exceptionFormat = TestExceptionFormat.FULL
+            showExceptions = true
+            showCauses = true
         }
+        failFast = true
     }
 
     checkstyle {

@@ -14,20 +14,18 @@
 
 package de.sovity.edc.ext.brokerserver.services.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.ext.brokerserver.dao.AssetProperty;
+import de.sovity.edc.ext.brokerserver.TestPolicy;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
 import de.sovity.edc.ext.brokerserver.db.TestDatabaseFactory;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorContractOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorDataOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
-import lombok.SneakyThrows;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AssetJsonLdUtils;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.policy.model.Policy;
 import org.jooq.DSLContext;
-import org.jooq.JSONB;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,6 +35,8 @@ import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Map;
 
+import static de.sovity.edc.ext.brokerserver.TestAsset.getAssetJsonLd;
+import static de.sovity.edc.ext.brokerserver.TestAsset.setDataOfferAssetMetadata;
 import static de.sovity.edc.ext.brokerserver.TestUtils.brokerServerClient;
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
 import static groovy.json.JsonOutput.toJson;
@@ -88,7 +88,7 @@ class DataOfferCountApiTest {
 
     private void createConnector(DSLContext dsl, OffsetDateTime today, int iConnector) {
         var connector = dsl.newRecord(Tables.CONNECTOR);
-        connector.setConnectorId("https://my-connector");
+        connector.setParticipantId("my-connector");
         connector.setEndpoint(getEndpoint(iConnector));
         connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);
         connector.setCreatedAt(today.minusDays(1));
@@ -105,26 +105,22 @@ class DataOfferCountApiTest {
 
     private void createDataOffer(DSLContext dsl, OffsetDateTime today, int iConnector, int iDataOffer) {
         var connectorEndpoint = getEndpoint(iConnector);
-        var assetProperties = Map.of(
-                AssetProperty.ASSET_ID, "urn:artifact:my-asset-%d".formatted(iDataOffer)
-        );
+        var assetJsonLd = getAssetJsonLd("my-asset-%d".formatted(iDataOffer));
 
         var dataOffer = dsl.newRecord(Tables.DATA_OFFER);
-        dataOffer.setAssetId(assetProperties.get(AssetProperty.ASSET_ID));
-        dataOffer.setAssetName(assetProperties.getOrDefault(AssetProperty.ASSET_NAME, dataOffer.getAssetId()));
-        dataOffer.setAssetProperties(JSONB.jsonb(assetProperties(assetProperties)));
+        setDataOfferAssetMetadata(dataOffer, assetJsonLd, "my-participant-id");
         dataOffer.setConnectorEndpoint(connectorEndpoint);
         dataOffer.setCreatedAt(today.minusDays(5));
         dataOffer.setUpdatedAt(today);
         dataOffer.insert();
 
-        var contractOffer = dsl.newRecord(Tables.DATA_OFFER_CONTRACT_OFFER);
+        var contractOffer = dsl.newRecord(Tables.CONTRACT_OFFER);
         contractOffer.setContractOfferId("my-contract-offer-1");
         contractOffer.setConnectorEndpoint(connectorEndpoint);
-        contractOffer.setAssetId(assetProperties.get(AssetProperty.ASSET_ID));
+        contractOffer.setAssetId(dataOffer.getAssetId());
         contractOffer.setCreatedAt(today.minusDays(5));
         contractOffer.setUpdatedAt(today);
-        contractOffer.setPolicy(JSONB.jsonb(policyToJson(dummyPolicy())));
+        contractOffer.setPolicy(TestPolicy.createAfterYesterdayPolicyJson());
         contractOffer.insert();
     }
 
@@ -136,10 +132,5 @@ class DataOfferCountApiTest {
 
     private String policyToJson(Policy policy) {
         return toJson(policy);
-    }
-
-    @SneakyThrows
-    private String assetProperties(Map<String, String> assetProperties) {
-        return new ObjectMapper().writeValueAsString(assetProperties);
     }
 }

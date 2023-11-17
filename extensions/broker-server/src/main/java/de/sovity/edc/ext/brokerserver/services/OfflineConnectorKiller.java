@@ -12,7 +12,6 @@
  *
  */
 
-
 package de.sovity.edc.ext.brokerserver.services;
 
 import de.sovity.edc.ext.brokerserver.dao.ConnectorQueries;

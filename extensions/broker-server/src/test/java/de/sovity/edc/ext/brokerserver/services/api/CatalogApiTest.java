@@ -25,13 +25,15 @@ import de.sovity.edc.ext.brokerserver.client.gen.model.CnfFilterValue;
 import de.sovity.edc.ext.brokerserver.client.gen.model.CnfFilterValueAttribute;
 import de.sovity.edc.ext.brokerserver.client.gen.model.DataOfferDetailPageQuery;
 import de.sovity.edc.ext.brokerserver.client.gen.model.DataOfferDetailPageResult;
-import de.sovity.edc.ext.brokerserver.dao.AssetProperty;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
 import de.sovity.edc.ext.brokerserver.db.TestDatabaseFactory;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorContractOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorDataOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AssetJsonLdUtils;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
+import jakarta.json.JsonObject;
 import lombok.SneakyThrows;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -48,6 +50,8 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
+import static de.sovity.edc.ext.brokerserver.TestAsset.getAssetJsonLd;
+import static de.sovity.edc.ext.brokerserver.TestAsset.setDataOfferAssetMetadata;
 import static de.sovity.edc.ext.brokerserver.TestUtils.brokerServerClient;
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
 import static java.util.stream.IntStream.range;
@@ -65,7 +69,7 @@ class CatalogApiTest {
         extension.setConfiguration(createConfiguration(TEST_DATABASE, Map.of(
                 BrokerServerExtension.CATALOG_PAGE_PAGE_SIZE, "10",
                 BrokerServerExtension.DEFAULT_CONNECTOR_DATASPACE, "MDS",
-                BrokerServerExtension.KNOWN_DATASPACE_CONNECTORS, "Example1=http://my-connector2/ids/data,Example2=http://my-connector3/ids/data"
+                BrokerServerExtension.KNOWN_DATASPACE_CONNECTORS, "Example1=https://my-connector2/api/dsp,Example2=https://my-connector3/api/dsp"
         )));
     }
 
@@ -75,16 +79,15 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today, "http://my-connector/ids/data"); // Dataspace: MDS
-            createConnector(dsl, today, "http://my-connector2/ids/data"); // Dataspace: Example1
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset",
-                    AssetProperty.ASSET_NAME, "my-asset"
-            ), "http://my-connector/ids/data"); // Dataspace: MDS
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset",
-                    AssetProperty.ASSET_NAME, "my-asset"
-            ), "http://my-connector2/ids/data"); // Dataspace: Example1
+            var assetJsonLd = getAssetJsonLd("my-asset", Map.of(Prop.Dcterms.TITLE, "My Asset"));
+
+            // Dataspace: MDS
+            createConnector(dsl, today, "https://my-connector/api/dsp");
+            createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd);
+
+            // Dataspace: Example1
+            createConnector(dsl, today, "https://my-connector2/api/dsp");
+            createDataOffer(dsl, today, "https://my-connector2/api/dsp", assetJsonLd);
 
             var query = new CatalogPageQuery();
             query.setFilter(new CnfFilterValue(List.of(
@@ -95,7 +98,7 @@ class CatalogApiTest {
             assertThat(result.getDataOffers()).hasSize(1);
 
             var dataOfferResult = result.getDataOffers().get(0);
-            assertThat(dataOfferResult.getConnectorEndpoint()).isEqualTo("http://my-connector2/ids/data");
+            assertThat(dataOfferResult.getConnectorEndpoint()).isEqualTo("https://my-connector2/api/dsp");
         });
     }
 
@@ -105,24 +108,21 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today, "http://my-connector/ids/data");
-            createConnector(dsl, today, "http://my-connector2/ids/data");
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset",
-                    AssetProperty.ASSET_NAME, "my-asset"
-            ), "http://my-connector/ids/data");
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset",
-                    AssetProperty.ASSET_NAME, "my-asset"
-            ), "http://my-connector2/ids/data");
+            var assetJsonLd = getAssetJsonLd("my-asset", Map.of(Prop.Dcterms.TITLE, "My Asset"));
+
+            createConnector(dsl, today, "https://my-connector/api/dsp");
+            createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd);
+
+            createConnector(dsl, today, "https://my-connector2/api/dsp");
+            createDataOffer(dsl, today, "https://my-connector2/api/dsp", assetJsonLd);
 
             var query = new CatalogPageQuery();
             query.setFilter(new CnfFilterValue(List.of(
-                    new CnfFilterValueAttribute("connectorEndpoint", List.of("http://my-connector/ids/data"))
+                    new CnfFilterValueAttribute("connectorEndpoint", List.of("https://my-connector/api/dsp"))
             )));
 
             var result = brokerServerClient().brokerServerApi().catalogPage(query);
-            assertThat(result.getDataOffers()).extracting(CatalogDataOffer::getAssetId).containsExactly("urn:artifact:my-asset");
+            assertThat(result.getDataOffers()).extracting(CatalogDataOffer::getConnectorEndpoint).containsExactly("https://my-connector/api/dsp");
         });
     }
 
@@ -132,29 +132,18 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today, "http://my-connector/ids/data"); // Dataspace: MDS
-            createConnector(dsl, today, "http://my-connector2/ids/data"); // Dataspace: Example1
-            createConnector(dsl, today, "http://my-connector3/ids/data"); // Dataspace: Example2
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset",
-                    AssetProperty.ASSET_NAME, "my-asset",
-                    AssetProperty.LANGUAGE, "de"
-            ), "http://my-connector/ids/data"); // Dataspace: MDS
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset",
-                    AssetProperty.ASSET_NAME, "my-asset",
-                    AssetProperty.LANGUAGE, "en"
-            ), "http://my-connector2/ids/data"); // Dataspace: Example1
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset2",
-                    AssetProperty.ASSET_NAME, "my-asset",
-                    AssetProperty.LANGUAGE, "fr"
-            ), "http://my-connector2/ids/data"); // Dataspace: Example1
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset3",
-                    AssetProperty.ASSET_NAME, "my-asset",
-                    AssetProperty.LANGUAGE, "fr"
-            ), "http://my-connector3/ids/data"); // Dataspace: Example2
+            createConnector(dsl, today, "https://my-connector/api/dsp"); // Dataspace: MDS
+            createConnector(dsl, today, "https://my-connector2/api/dsp"); // Dataspace: Example1
+            createConnector(dsl, today, "https://my-connector3/api/dsp"); // Dataspace: Example2
+
+            var assetJsonLd1 = getAssetJsonLd("my-asset-1");
+            var assetJsonLd2 = getAssetJsonLd("my-asset-2");
+            var assetJsonLd3 = getAssetJsonLd("my-asset-3");
+
+            createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd1); // Dataspace: MDS
+            createDataOffer(dsl, today, "https://my-connector2/api/dsp", assetJsonLd1); // Dataspace: Example1
+            createDataOffer(dsl, today, "https://my-connector2/api/dsp", assetJsonLd2); // Dataspace: Example1
+            createDataOffer(dsl, today, "https://my-connector3/api/dsp", assetJsonLd3); // Dataspace: Example2
 
             // get all available filter values
             var result = brokerServerClient().brokerServerApi().catalogPage(new CatalogPageQuery());
@@ -175,25 +164,23 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today, "http://my-connector/ids/data");
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset",
-                    AssetProperty.ASSET_NAME, "my-asset"
-            ), "http://my-connector/ids/data");
+            var assetJsonLd = getAssetJsonLd("my-asset-1", Map.of(
+                Prop.Dcterms.TITLE, "My Asset"
+            ));
 
+            createConnector(dsl, today, "https://my-connector/api/dsp");
+            createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd);
 
             var result = brokerServerClient().brokerServerApi().catalogPage(new CatalogPageQuery());
             assertThat(result.getDataOffers()).hasSize(1);
 
             var dataOfferResult = result.getDataOffers().get(0);
-            assertThat(dataOfferResult.getConnectorEndpoint()).isEqualTo("http://my-connector/ids/data");
+            assertThat(dataOfferResult.getConnectorEndpoint()).isEqualTo("https://my-connector/api/dsp");
             assertThat(dataOfferResult.getConnectorOfflineSinceOrLastUpdatedAt()).isEqualTo(today);
             assertThat(dataOfferResult.getConnectorOnlineStatus()).isEqualTo(CatalogDataOffer.ConnectorOnlineStatusEnum.ONLINE);
-            assertThat(dataOfferResult.getAssetId()).isEqualTo("urn:artifact:my-asset");
-            assertThat(dataOfferResult.getProperties()).isEqualTo(Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset",
-                    AssetProperty.ASSET_NAME, "my-asset"
-            ));
+            assertThat(dataOfferResult.getAssetId()).isEqualTo("my-asset-1");
+            assertThat(dataOfferResult.getAsset().getAssetId()).isEqualTo("my-asset-1");
+            assertThat(dataOfferResult.getAsset().getTitle()).isEqualTo("My Asset");
             assertThat(dataOfferResult.getCreatedAt()).isEqualTo(today.minusDays(5));
         });
     }
@@ -206,7 +193,7 @@ class CatalogApiTest {
         TEST_DATABASE.testTransaction(dsl -> {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
-            createConnector(dsl, today, "http://my-connector/ids/data");
+            createConnector(dsl, today, "https://my-connector/api/dsp");
 
             // act
             var result = brokerServerClient().brokerServerApi().catalogPage(new CatalogPageQuery());
@@ -226,31 +213,39 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today, "http://my-connector/ids/data");
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset-1",
-                    AssetProperty.DATA_CATEGORY, "my-category-1",
-                    AssetProperty.TRANSPORT_MODE, "MY-TRANSPORT-MODE-1",
-                    AssetProperty.DATA_SUBCATEGORY, "MY-SUBCATEGORY-2"
-            ), "http://my-connector/ids/data");
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset-2",
-                    AssetProperty.DATA_CATEGORY, "my-category-1",
-                    AssetProperty.TRANSPORT_MODE, "my-transport-mode-2",
-                    AssetProperty.DATA_SUBCATEGORY, "MY-SUBCATEGORY-2"
-            ), "http://my-connector/ids/data");
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset-3",
-                    AssetProperty.DATA_CATEGORY, "my-category-1",
-                    AssetProperty.TRANSPORT_MODE, "MY-TRANSPORT-MODE-1",
-                    AssetProperty.DATA_SUBCATEGORY, "my-subcategory-1"
-            ), "http://my-connector/ids/data");
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset-4",
-                    AssetProperty.DATA_CATEGORY, "my-category-1",
-                    AssetProperty.TRANSPORT_MODE, ""
-            ), "http://my-connector/ids/data");
+            var assetJsonLd1 = getAssetJsonLd("my-asset-1", Map.of(
+                Prop.Mds.DATA_CATEGORY, "my-category-1",
+                Prop.Mds.TRANSPORT_MODE, "MY-TRANSPORT-MODE-1",
+                Prop.Mds.DATA_SUBCATEGORY, "MY-SUBCATEGORY-2",
+                Prop.Mds.DATA_MODEL, "my-data-model",
+                Prop.Mds.GEO_REFERENCE_METHOD, "my-geo-ref",
+                Prop.Dcterms.CREATOR, Map.of(
+                    Prop.Foaf.NAME, "my-org"
+                )
+            ));
 
+            var assetJsonLd2 = getAssetJsonLd("my-asset-2", Map.of(
+                Prop.Mds.DATA_CATEGORY, "my-category-1",
+                Prop.Mds.TRANSPORT_MODE, "my-transport-mode-2",
+                Prop.Mds.DATA_SUBCATEGORY, "MY-SUBCATEGORY-2"
+            ));
+
+            var assetJsonLd3 = getAssetJsonLd("my-asset-3", Map.of(
+                Prop.Mds.DATA_CATEGORY, "my-category-1",
+                Prop.Mds.TRANSPORT_MODE, "MY-TRANSPORT-MODE-1",
+                Prop.Mds.DATA_SUBCATEGORY, "my-subcategory-1"
+            ));
+
+            var assetJsonLd4 = getAssetJsonLd("my-asset-4", Map.of(
+                Prop.Mds.DATA_CATEGORY, "my-category-1",
+                Prop.Mds.TRANSPORT_MODE, ""
+            ));
+
+            createConnector(dsl, today, "https://my-connector/api/dsp");
+            createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd1);
+            createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd2);
+            createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd3);
+            createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd4);
 
             var result = brokerServerClient().brokerServerApi().catalogPage(new CatalogPageQuery());
 
@@ -258,11 +253,12 @@ class CatalogApiTest {
                     .extracting(CnfFilterAttribute::getId)
                     .containsExactly(
                             "dataSpace",
-                            AssetProperty.DATA_CATEGORY,
-                            AssetProperty.DATA_SUBCATEGORY,
-                            AssetProperty.DATA_MODEL,
-                            AssetProperty.TRANSPORT_MODE,
-                            AssetProperty.GEO_REFERENCE_METHOD,
+                            "dataCategory",
+                            "dataSubcategory",
+                            "dataModel",
+                            "transportMode",
+                            "geoReferenceMethod",
+                            "curatorOrganizationName",
                             "connectorEndpoint"
                     );
 
@@ -275,28 +271,41 @@ class CatalogApiTest {
                             "Data Model",
                             "Transport Mode",
                             "Geo Reference Method",
+                            "Organization Name",
                             "Connector"
                     );
 
-            var dataCategory = getAvailableFilter(result, AssetProperty.DATA_CATEGORY);
-            assertThat(dataCategory.getTitle()).isEqualTo("Data Category");
+            var dataSpace = getAvailableFilter(result, "dataSpace");
+            assertThat(dataSpace.getValues()).extracting(CnfFilterItem::getId).containsExactly("MDS");
+            assertThat(dataSpace.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("MDS");
+
+            var dataCategory = getAvailableFilter(result, "dataCategory");
             assertThat(dataCategory.getValues()).extracting(CnfFilterItem::getId).containsExactly("my-category-1");
             assertThat(dataCategory.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("my-category-1");
 
-            var transportMode = getAvailableFilter(result, AssetProperty.TRANSPORT_MODE);
-            assertThat(transportMode.getTitle()).isEqualTo("Transport Mode");
-            assertThat(transportMode.getValues()).extracting(CnfFilterItem::getId).containsExactly("MY-TRANSPORT-MODE-1", "my-transport-mode-2", "");
-            assertThat(transportMode.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("MY-TRANSPORT-MODE-1", "my-transport-mode-2", "");
-
-            var dataSubcategory = getAvailableFilter(result, AssetProperty.DATA_SUBCATEGORY);
-            assertThat(dataSubcategory.getTitle()).isEqualTo("Data Subcategory");
+            var dataSubcategory = getAvailableFilter(result, "dataSubcategory");
             assertThat(dataSubcategory.getValues()).extracting(CnfFilterItem::getId).containsExactly("my-subcategory-1", "MY-SUBCATEGORY-2", "");
             assertThat(dataSubcategory.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("my-subcategory-1", "MY-SUBCATEGORY-2", "");
 
+            var dataModel = getAvailableFilter(result, "dataModel");
+            assertThat(dataModel.getValues()).extracting(CnfFilterItem::getId).containsExactly("my-data-model", "");
+            assertThat(dataModel.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("my-data-model", "");
+
+            var transportMode = getAvailableFilter(result, "transportMode");
+            assertThat(transportMode.getValues()).extracting(CnfFilterItem::getId).containsExactly("MY-TRANSPORT-MODE-1", "my-transport-mode-2", "");
+            assertThat(transportMode.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("MY-TRANSPORT-MODE-1", "my-transport-mode-2", "");
+
+            var geoReferenceMethod = getAvailableFilter(result, "geoReferenceMethod");
+            assertThat(geoReferenceMethod.getValues()).extracting(CnfFilterItem::getId).containsExactly("my-geo-ref", "");
+            assertThat(geoReferenceMethod.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("my-geo-ref", "");
+
+            var curatorOrganizationName = getAvailableFilter(result, "curatorOrganizationName");
+            assertThat(curatorOrganizationName.getValues()).extracting(CnfFilterItem::getId).containsExactly("my-org", "my-participant-id"); // second value comes from tests mocking
+            assertThat(curatorOrganizationName.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("my-org", "my-participant-id");
+
             var connectorEndpoint = getAvailableFilter(result, "connectorEndpoint");
-            assertThat(connectorEndpoint.getTitle()).isEqualTo("Connector");
-            assertThat(connectorEndpoint.getValues()).extracting(CnfFilterItem::getId).containsExactly("http://my-connector/ids/data");
-            assertThat(connectorEndpoint.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("http://my-connector/ids/data");
+            assertThat(connectorEndpoint.getValues()).extracting(CnfFilterItem::getId).containsExactly("https://my-connector/api/dsp");
+            assertThat(connectorEndpoint.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("https://my-connector/api/dsp");
         });
     }
 
@@ -312,11 +321,10 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today, "http://my-connector/ids/data");
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "123",
-                    AssetProperty.ASSET_NAME, "Hello"
-            ), "http://my-connector/ids/data");
+            var assetJsonLd = getAssetJsonLd("123", Map.of(Prop.Dcterms.TITLE, "Hello"));
+
+            createConnector(dsl, today, "https://my-connector/api/dsp");
+            createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd);
 
 
             // act
@@ -341,34 +349,31 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today, "http://my-connector/ids/data");
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset-1",
-                    AssetProperty.DATA_CATEGORY, "my-category",
-                    AssetProperty.DATA_SUBCATEGORY, "my-subcategory"
-            ), "http://my-connector/ids/data");
-            createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset-2",
-                    AssetProperty.DATA_SUBCATEGORY, "my-other-subcategory"
-            ), "http://my-connector/ids/data");
+            var assetJsonLd1 = getAssetJsonLd("my-asset-1", Map.of(
+                Prop.Mds.DATA_CATEGORY, "my-category",
+                Prop.Mds.DATA_SUBCATEGORY, "my-subcategory"
+            ));
 
+            var assetJsonLd2 = getAssetJsonLd("my-asset-2", Map.of(
+                Prop.Mds.DATA_SUBCATEGORY, "my-other-subcategory"
+            ));
+
+            createConnector(dsl, today, "https://my-connector/api/dsp");
+            createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd1);
+            createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd2);
 
             var query = new CatalogPageQuery();
             query.setFilter(new CnfFilterValue(List.of(
-                    new CnfFilterValueAttribute(AssetProperty.DATA_CATEGORY, List.of(""))
+                    new CnfFilterValueAttribute("dataCategory", List.of(""))
             )));
 
             var result = brokerServerClient().brokerServerApi().catalogPage(query);
 
-            var dataCategory = getAvailableFilter(result, AssetProperty.DATA_CATEGORY);
-            assertThat(dataCategory.getId()).isEqualTo(AssetProperty.DATA_CATEGORY);
-            assertThat(dataCategory.getTitle()).isEqualTo("Data Category");
+            var dataCategory = getAvailableFilter(result, "dataCategory");
             assertThat(dataCategory.getValues()).extracting(CnfFilterItem::getId).containsExactly("my-category", "");
             assertThat(dataCategory.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("my-category", "");
 
-            var dataSubcategory = getAvailableFilter(result, AssetProperty.DATA_SUBCATEGORY);
-            assertThat(dataSubcategory.getId()).isEqualTo(AssetProperty.DATA_SUBCATEGORY);
-            assertThat(dataSubcategory.getTitle()).isEqualTo("Data Subcategory");
+            var dataSubcategory = getAvailableFilter(result, "dataSubcategory");
             assertThat(dataSubcategory.getValues()).extracting(CnfFilterItem::getId).containsExactly("my-other-subcategory");
             assertThat(dataSubcategory.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("my-other-subcategory");
         });
@@ -380,14 +385,9 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today, "http://my-connector/ids/data");
-            range(0, 15).forEach(i -> createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset-%d".formatted(i)
-            ), "http://my-connector/ids/data"));
-            range(0, 15).forEach(i -> createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:some-other-asset-%d".formatted(i)
-            ), "http://my-connector/ids/data"));
-
+            createConnector(dsl, today, "https://my-connector/api/dsp");
+            range(0, 15).forEach(i -> createDataOffer(dsl, today, "https://my-connector/api/dsp", getAssetJsonLd("my-asset-%d".formatted(i))));
+            range(0, 15).forEach(i -> createDataOffer(dsl, today, "https://my-connector/api/dsp", getAssetJsonLd("some-other-asset-%d".formatted(i))));
 
             var query = new CatalogPageQuery();
             query.setSearchQuery("my-asset");
@@ -395,7 +395,7 @@ class CatalogApiTest {
 
             var result = brokerServerClient().brokerServerApi().catalogPage(query);
             assertThat(result.getDataOffers()).extracting(CatalogDataOffer::getAssetId)
-                    .isEqualTo(range(0, 10).mapToObj("urn:artifact:my-asset-%d"::formatted).toList());
+                    .isEqualTo(range(0, 10).mapToObj("my-asset-%d"::formatted).toList());
 
             var actual = result.getPaginationMetadata();
             assertThat(actual.getPageOneBased()).isEqualTo(1);
@@ -411,13 +411,9 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            createConnector(dsl, today, "http://my-connector/ids/data");
-            range(0, 15).forEach(i -> createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:my-asset-%d".formatted(i)
-            ), "http://my-connector/ids/data"));
-            range(0, 15).forEach(i -> createDataOffer(dsl, today, Map.of(
-                    AssetProperty.ASSET_ID, "urn:artifact:some-other-asset-%d".formatted(i)
-            ), "http://my-connector/ids/data"));
+            createConnector(dsl, today, "https://my-connector/api/dsp");
+            range(0, 15).forEach(i -> createDataOffer(dsl, today, "https://my-connector/api/dsp", getAssetJsonLd("my-asset-%d".formatted(i))));
+            range(0, 15).forEach(i -> createDataOffer(dsl, today, "https://my-connector/api/dsp", getAssetJsonLd("some-other-asset-%d".formatted(i))));
 
 
             var query = new CatalogPageQuery();
@@ -428,7 +424,7 @@ class CatalogApiTest {
             var result = brokerServerClient().brokerServerApi().catalogPage(query);
 
             assertThat(result.getDataOffers()).extracting(CatalogDataOffer::getAssetId)
-                    .isEqualTo(range(10, 15).mapToObj("urn:artifact:my-asset-%d"::formatted).toList());
+                    .isEqualTo(range(10, 15).mapToObj("my-asset-%d"::formatted).toList());
 
             var actual = result.getPaginationMetadata();
             assertThat(actual.getPageOneBased()).isEqualTo(2);
@@ -444,14 +440,14 @@ class CatalogApiTest {
             // arrange
             var today = OffsetDateTime.now().withNano(0);
 
-            var endpoint = "http://my-connector/ids/data";
+            var endpoint = "https://my-connector/api/dsp";
             createConnector(dsl, today, endpoint);
-            createDataOffer(dsl, today, Map.of(AssetProperty.ASSET_ID, "urn:artifact:asset-1"), endpoint);
-            createDataOffer(dsl, today, Map.of(AssetProperty.ASSET_ID, "urn:artifact:asset-2"), endpoint);
-            createDataOffer(dsl, today, Map.of(AssetProperty.ASSET_ID, "urn:artifact:asset-3"), endpoint);
+            createDataOffer(dsl, today, endpoint, getAssetJsonLd("asset-1"));
+            createDataOffer(dsl, today, endpoint, getAssetJsonLd("asset-2"));
+            createDataOffer(dsl, today, endpoint, getAssetJsonLd("asset-3"));
 
-            range(0, 3).forEach(i -> dataOfferDetails(endpoint, "urn:artifact:asset-1"));
-            range(0, 5).forEach(i -> dataOfferDetails(endpoint, "urn:artifact:asset-2"));
+            range(0, 3).forEach(i -> dataOfferDetails(endpoint, "asset-1"));
+            range(0, 5).forEach(i -> dataOfferDetails(endpoint, "asset-2"));
 
 
             var query = new CatalogPageQuery();
@@ -459,27 +455,25 @@ class CatalogApiTest {
 
             var result = brokerServerClient().brokerServerApi().catalogPage(query);
             assertThat(result.getDataOffers()).extracting(CatalogDataOffer::getAssetId).containsExactly(
-                    "urn:artifact:asset-2",
-                    "urn:artifact:asset-1",
-                    "urn:artifact:asset-3"
+                    "asset-2",
+                    "asset-1",
+                    "asset-3"
             );
         });
     }
 
-    private void createDataOffer(DSLContext dsl, OffsetDateTime today, Map<String, String> assetProperties, String connectorEndpoint) {
+    private void createDataOffer(DSLContext dsl, OffsetDateTime today, String connectorEndpoint, JsonObject assetJsonLd) {
         var dataOffer = dsl.newRecord(Tables.DATA_OFFER);
-        dataOffer.setAssetId(assetProperties.get(AssetProperty.ASSET_ID));
-        dataOffer.setAssetName(assetProperties.getOrDefault(AssetProperty.ASSET_NAME, dataOffer.getAssetId()));
-        dataOffer.setAssetProperties(JSONB.jsonb(assetProperties(assetProperties)));
+        setDataOfferAssetMetadata(dataOffer, assetJsonLd, "my-participant-id");
         dataOffer.setConnectorEndpoint(connectorEndpoint);
         dataOffer.setCreatedAt(today.minusDays(5));
         dataOffer.setUpdatedAt(today);
         dataOffer.insert();
 
-        var contractOffer = dsl.newRecord(Tables.DATA_OFFER_CONTRACT_OFFER);
+        var contractOffer = dsl.newRecord(Tables.CONTRACT_OFFER);
         contractOffer.setContractOfferId("my-contract-offer-1");
         contractOffer.setConnectorEndpoint(connectorEndpoint);
-        contractOffer.setAssetId(assetProperties.get(AssetProperty.ASSET_ID));
+        contractOffer.setAssetId(dataOffer.getAssetId());
         contractOffer.setCreatedAt(today.minusDays(5));
         contractOffer.setUpdatedAt(today);
         contractOffer.setPolicy(JSONB.jsonb(policyToJson(dummyPolicy())));
@@ -488,7 +482,7 @@ class CatalogApiTest {
 
     private void createConnector(DSLContext dsl, OffsetDateTime today, String connectorEndpoint) {
         var connector = dsl.newRecord(Tables.CONNECTOR);
-        connector.setConnectorId("http://my-connector");
+        connector.setParticipantId("my-connector");
         connector.setEndpoint(connectorEndpoint);
         connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);
         connector.setCreatedAt(today.minusDays(1));
@@ -520,10 +514,5 @@ class CatalogApiTest {
     @SneakyThrows
     private String toJson(Object o) {
         return new ObjectMapper().writeValueAsString(o);
-    }
-
-    @SneakyThrows
-    private String assetProperties(Map<String, String> assetProperties) {
-        return new ObjectMapper().writeValueAsString(assetProperties);
     }
 }

@@ -32,13 +32,17 @@ import java.util.Objects;
 public class DataOfferDetailApiService {
     private final DataOfferDetailPageQueryService dataOfferDetailPageQueryService;
     private final ViewCountLogger viewCountLogger;
-    private final PolicyDtoBuilder policyDtoBuilder;
-    private final AssetPropertyParser assetPropertyParser;
+    private final DataOfferMappingUtils dataOfferMappingUtils;
 
     public DataOfferDetailPageResult dataOfferDetailPage(DSLContext dsl, DataOfferDetailPageQuery query) {
         Objects.requireNonNull(query, "query must not be null");
 
         var dataOffer = dataOfferDetailPageQueryService.queryDataOfferDetailsPage(dsl, query.getAssetId(), query.getConnectorEndpoint());
+        var asset = dataOfferMappingUtils.buildUiAsset(
+            dataOffer.getAssetJsonLd(),
+            dataOffer.getConnectorEndpoint(),
+            dataOffer.getConnectorParticipantId()
+        );
         viewCountLogger.increaseDataOfferViewCount(dsl, query.getAssetId(), query.getConnectorEndpoint());
 
         var result = new DataOfferDetailPageResult();
@@ -46,7 +50,7 @@ public class DataOfferDetailApiService {
         result.setConnectorEndpoint(dataOffer.getConnectorEndpoint());
         result.setConnectorOnlineStatus(mapConnectorOnlineStatus(dataOffer.getConnectorOnlineStatus()));
         result.setConnectorOfflineSinceOrLastUpdatedAt(dataOffer.getConnectorOfflineSinceOrLastUpdatedAt());
-        result.setProperties(assetPropertyParser.parsePropertiesFromJsonString(dataOffer.getAssetPropertiesJson()));
+        result.setAsset(asset);
         result.setCreatedAt(dataOffer.getCreatedAt());
         result.setUpdatedAt(dataOffer.getUpdatedAt());
         result.setContractOffers(buildDataOfferDetailContractOffers(dataOffer.getContractOffers()));
@@ -78,7 +82,7 @@ public class DataOfferDetailApiService {
         newOffer.setCreatedAt(offer.getCreatedAt());
         newOffer.setUpdatedAt(offer.getUpdatedAt());
         newOffer.setContractOfferId(offer.getContractOfferId());
-        newOffer.setContractPolicy(policyDtoBuilder.buildPolicyFromJson(offer.getPolicyJson()));
+        newOffer.setContractPolicy(dataOfferMappingUtils.buildUiPolicy(offer.getPolicyJson()));
         return newOffer;
     }
 }

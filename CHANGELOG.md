@@ -13,11 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Major
 
+- Migrated to Eclipse EDC 0.2.1
+- Migrated to edc-extensions 5.0.0
+- Migrated Assets to JSON-LD
+
 #### Minor
+
+- New Filter: Organization Name
+- Search now hits Organization Name
 
 #### Patch
 
 ### Deployment Migration Notes
+
+- All connectors need to be re-crawled for detailed asset metadata and participant IDs to work
 
 ## [v1.2.0] - 2023-10-30
 
@@ -85,7 +94,7 @@ Bugfix release for the asset properties issue. Also contains the connector delet
         --url 'http://localhost:11002/backend/api/v1/management/wrapper/broker/connectors?adminApiKey=DefaultBrokerServerAdminApiKey' \
         --header 'Content-Type: application/json' \
         --header 'X-Api-Key: ApiKeyDefaultValue' \
-        --data '["https://some-connector-to-delete/api/v1/ids/data", "https://some-other-connector-to-delete/api/v1/ids/data"]'
+        --data '["https://some-connector-to-delete/api/dsp", "https://some-other-connector-to-delete/api/dsp"]'
     ```
 
 #### Compatible Versions
@@ -201,7 +210,7 @@ Bugfix / Feature Release for the Broker MvP with MS8: Connectors can now be adde
         --url 'http://localhost:11002/backend/api/v1/management/wrapper/broker/connectors?adminApiKey=DefaultBrokerServerAdminApiKey' \
         --header 'Content-Type: application/json' \
         --header 'X-Api-Key: ApiKeyDefaultValue' \
-        --data '["https://some-new-connector/api/v1/ids/data", "https://some-other-new-connector/api/v1/ids/data"]'
+        --data '["https://some-new-connector/api/dsp", "https://some-other-new-connector/api/dsp"]'
     ```
    
 #### Compatible Versions
@@ -248,7 +257,7 @@ Broker MvP using Core EDC MS8.
 1. There are new **required** configuration properties:
     ```yaml
     # List of Data Space Names for special Connectors (default: '')
-    EDC_BROKER_SERVER_KNOWN_DATASPACE_CONNECTORS: "Mobilithek=https://some-connector/ids/data,OtherDataspace=https://some-other-connector/ids/data"
+    EDC_BROKER_SERVER_KNOWN_DATASPACE_CONNECTORS: "Mobilithek=https://some-connector/api/dsp,OtherDataspace=https://some-other-connector/api/dsp"
     ```
 2. There are new **optional** configuration properties available for overriding:
     ```yaml
