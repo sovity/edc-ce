@@ -32,7 +32,7 @@ public class DataSourceFactory {
      *
      * @return {@link DataSource}.
      */
-    public DataSource newDataSource() {
+    public HikariDataSource newDataSource() {
         var jdbcCredentials = JdbcCredentials.fromConfig(config);
         int maxPoolSize = config.getInteger(PostgresFlywayExtension.DB_CONNECTION_POOL_SIZE);
         int connectionTimeoutInMs = config.getInteger(PostgresFlywayExtension.DB_CONNECTION_TIMEOUT_IN_MS);
@@ -49,7 +49,7 @@ public class DataSourceFactory {
      * @param connectionTimeoutInMs connection timeout in ms
      * @return {@link DataSource}.
      */
-    public static DataSource newDataSource(
+    public static HikariDataSource newDataSource(
             JdbcCredentials jdbcCredentials,
             int maxPoolSize,
             int connectionTimeoutInMs

@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.db;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
@@ -36,6 +37,8 @@ public class PostgresFlywayExtension implements ServiceExtension {
     @Setting
     public static final String DB_CONNECTION_TIMEOUT_IN_MS = "edc.broker.server.db.connection.timeout.in.ms";
 
+    private HikariDataSource dataSource;
+
     @Override
     public String name() {
         return "Postgres Flyway Extension (Broker Server)";
@@ -47,11 +50,16 @@ public class PostgresFlywayExtension implements ServiceExtension {
         var monitor = context.getMonitor();
 
         var dataSourceFactory = new DataSourceFactory(config);
-        var dataSource = dataSourceFactory.newDataSource();
+        dataSource = dataSourceFactory.newDataSource();
 
         var flywayFactory = new FlywayFactory(config);
         var flyway = flywayFactory.setupFlyway(dataSource);
         var flywayMigrator = new FlywayMigrator(flyway, config, monitor);
         flywayMigrator.migrateAndRepair();
+    }
+
+    @Override
+    public void shutdown() {
+        dataSource.close();
     }
 }
