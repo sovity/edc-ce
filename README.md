@@ -50,7 +50,11 @@ This IDS Broker is written on basis of the EDC and should be used in tandem with
 
 ## Development
 
-For development, access to the GitHub Maven Registry is required.
+### Local Development
+
+#### Local Backend Development
+
+For local backend development, access to the GitHub Maven Registry is required.
 
 To access the GitHub Maven Registry you need to provide the following properties, e.g. by providing
 a `~/.gradle/gradle.properties`.
@@ -60,11 +64,59 @@ gpr.user={your github username}
 gpr.key={your github pat with packages.read}
 ```
 
+Developing the Broker Backend tests are used to validate functionality:
+
+- There are Integration Tests using the Broker Server Java Client Library for testing API Endpoints of a running
+  backend.
+- There are Integration Tests using the Broker Server Java Client Library and sovity EDC Extensions to integration
+  test the Broker with a running EDC where communication works through the Data Space Protocol (DSP).
+- There are Unit Tests with Mockito for testing local complexity, e.g. mappers, data structures, utilities.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+#### Local UI Development
+
+The Broker UI is a profile `broker` of the [EDC UI](https://github.com/sovity/edc-ui):
+
+The Broker UI depends on the NPM
+Package [@sovity/broker-server-client](https://www.npmjs.com/package/@sovity.de/broker-server-client) built on the main
+branch or on releases.
+
+Local Broker UI Development can start with the type-safe broker server fake backend once the Client Library version is
+bumped to contain the up-to-date API Models.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Local E2E Development
+
+There is currently no support for Local E2E Development (a locally running backend build server and a locally running
+frontend build server).
+
+For debugging UI issues, however, the UI can be manually configured to use a live backend, e.g. one started via
+the [docker-compose.yaml](#local-demo).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Local Demo
+
+There is a [docker-compose.yaml](docker-compose.yaml) that starts a broker and a connector.
+
+At release time it is pinned down to the release versions.
+
+Mid-development it might be un-pinned back to latest versions.
+
+|                     | Broker                                                           | Conncetor                                                                    |
+|---------------------|------------------------------------------------------------------|:-----------------------------------------------------------------------------|
+| Homepage            | http://localhost:11000                                           | http://localhost:22000                                                       |
+| Management Endpoint | http://localhost:11002/api/management                            | http://localhost:22002/api/management                                        |
+| Management API Key  | `ApiKeyDefaultValue`                                             | `ApiKeyDefaultValue`                                                         |
+| Connector Endpoint  | http://broker:11003/api/dsp <br> Requires Docker Compose Network | http://connector:22003/api/dsp          <br> Requires Docker Compose Network |
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Releasing
 
-Create an issue using the [release template](.github/ISSUE_TEMPLATE/release.md) and follow the instructions.
+[Create a Release Issue](https://github.com/sovity/edc-broker-server-extension/issues/new?assignees=&labels=task%2Frelease%2Cscope%2Fmds&projects=&template=release.md&title=Release+x.x.x) and follow the instructions.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -89,13 +141,13 @@ or if it's broken.
 
 - The broker is meant to be served via TLS/HTTPS.
 - The broker is meant to be deployed with a reverse proxy merging the following ports:
-    - The UI's `80` port.
+    - The UI's `8080` port.
     - The Backend's `11002` port.
     - The Backend's `11003` port.
 - The mapping should look like this:
-    - `/backend/api/v1/ids` -> `broker-backend:11003/backend/api/v1/ids`
-    - `/backend/api/v1/management` -> `broker-backend:11002/backend/api/v1/management`
-    - All other requests should be mapped to `broker-ui:80`
+    - `https://[MY_EDC_FQDN]/backend/api/dsp` -> `broker-backend:11003/backend/api/dsp`
+    - `https://[MY_EDC_FQDN]/backend/api/management` -> `broker-backend:11002/backend/api/management`
+    - All other requests -> `broker-ui:8080`
 
 #### Backend Configuration
 
@@ -146,10 +198,10 @@ in [connector/.env](connector/.env).
 EDC_UI_ACTIVE_PROFILE: broker
 
 # Required: Management API URL
-EDC_UI_DATA_MANAGEMENT_API_URL: https://my-broker.com/backend/api/v1/management
+EDC_UI_MANAGEMENT_API_URL: https://my-broker.com/backend/api/management
 
 # Required: Management API Key
-EDC_API_AUTH_KEY: "ApiKeyDefaultValue"
+EDC_UI_MANAGEMENT_API_KEY: "ApiKeyDefaultValue"
 ```
 
 #### Adding Connectors at runtime
@@ -159,9 +211,9 @@ Connectors can be dynamically added at runtime by using the following endpoint:
 ```shell script
 # Response should be 204 No Content
 curl --request PUT \
-  --url 'http://localhost:11002/backend/api/v1/management/wrapper/broker/connectors?adminApiKey=DefaultBrokerServerAdminApiKey' \
+  --url 'http://localhost:11002/backend/api/management/wrapper/broker/connectors?adminApiKey=DefaultBrokerServerAdminApiKey' \
   --header 'Content-Type: application/json' \
-  --header 'X-Api-Key: ApiKeyDefaultValue' \
+  --header 'x-api-key: ApiKeyDefaultValue' \
   --data '["https://some-new-connector/api/dsp", "https://some-other-new-connector/api/dsp"]'
 ```
 
@@ -172,9 +224,9 @@ Connectors can be dynamically removed at runtime by using the following endpoint
 ```shell script
 # Response should be 204 No Content
 curl --request DELETE \
-  --url 'http://localhost:11002/backend/api/v1/management/wrapper/broker/connectors?adminApiKey=DefaultBrokerServerAdminApiKey' \
+  --url 'http://localhost:11002/backend/api/management/wrapper/broker/connectors?adminApiKey=DefaultBrokerServerAdminApiKey' \
   --header 'Content-Type: application/json' \
-  --header 'X-Api-Key: ApiKeyDefaultValue' \
+  --header 'x-api-key: ApiKeyDefaultValue' \
   --data '["https://some-connector-to-be-removed/api/dsp", "https://some-other-connector-to-be-removed/api/dsp"]'
 ```
 

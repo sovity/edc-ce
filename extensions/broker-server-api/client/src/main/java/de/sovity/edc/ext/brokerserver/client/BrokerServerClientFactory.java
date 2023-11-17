@@ -32,7 +32,7 @@ public class BrokerServerClientFactory {
                 .setBasePath(builder.managementApiUrl());
 
         if (StringUtils.isNotBlank(builder.managementApiKey())) {
-            apiClient.addDefaultHeader("X-Api-Key", builder.managementApiKey());
+            apiClient.addDefaultHeader("x-api-key", builder.managementApiKey());
         }
 
         return new BrokerServerClient(

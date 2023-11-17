@@ -44,3 +44,4 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
     - [ ] Update the [gradle.properties](https://github.com/sovity/edc-broker-server-extension/blob/main/gradle.properties) to contain the edc-extensions version `0.0.1-SNAPSHOT`.
     - [ ] Revisit the changed list of tasks and compare it with [.github/ISSUE_TEMPLATE/release.md](https://github.com/sovity/edc-broker-server-extension/blob/main/.github/ISSUE_TEMPLATE/release.md). Apply changes where it makes sense.
     - [ ] Merge the `release-cleanup` PR.
+- [ ] Close this issue.
