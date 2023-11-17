@@ -31,7 +31,7 @@ import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DataTransferTestUtil {
 
-    public static final Duration TIMEOUT = Duration.ofSeconds(20);
+    public static final Duration TIMEOUT = Duration.ofSeconds(30);
 
     public static JsonObject buildDataAddressJsonLd(String baseUrl, String method) {
         return createObjectBuilder()

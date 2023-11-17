@@ -3,12 +3,6 @@ Deployment Goal: Development
 
 There is currently no way to launch running EDCs directly from our gradle projects.
 
-During development, the [docker-compose-dev.yaml](../../../../docker-compose-dev.yaml)
-and [docker-compose-dev.yaml](../../../../.env.dev) are kept up-to-date for the next release.
-
-However, starting the images with the latest tags are unstable, as they are snapshot versions built from the latest main
-branches and might still be mid-development.
-
 ## Launching the `docker-compose-dev.yaml`
 
 To try out the latest snapshots of the EDC CE and EDC UI please run:
@@ -67,9 +61,9 @@ EDC_UI_ACTIVE_PROFILE=mds-open-source docker compose --env-file .env-dev -f dock
 
 The default configuration launches two local EDC Connectors with the following credentials:
 
-|                     | First Connector                                                  | Second Connector                                                           |
-|---------------------|------------------------------------------------------------------|:---------------------------------------------------------------------------|
-| Homepage            | http://localhost:11000                                           | http://localhost:22000                                                     |
-| Management Endpoint | http://localhost:11002/api/v1/management                         | http://localhost:22002/api/v1/management                                   |
-| Management API Key  | `ApiKeyDefaultValue`                                             | `ApiKeyDefaultValue`                                                       |
-| Connector Endpoint  | http://edc:11003/api/v1/dsp <br> Requires Docker Compose Network | http://edc2:22003/api/v1/dsp          <br> Requires Docker Compose Network |
+|                     | First Connector                                               | Second Connector                                               |
+|---------------------|---------------------------------------------------------------|:---------------------------------------------------------------|
+| Homepage            | http://localhost:11000                                        | http://localhost:22000                                         |
+| Management Endpoint | http://localhost:11002/api/management                         | http://localhost:22002/api/management                          |
+| Management API Key  | `ApiKeyDefaultValue`                                          | `ApiKeyDefaultValue`                                           |
+| Connector Endpoint  | http://edc:11003/api/dsp <br> Requires Docker Compose Network | http://edc2:22003/api/dsp <br> Requires Docker Compose Network |

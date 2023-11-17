@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
-import static org.mockito.Mockito.mock;
 
 public class TestUtils {
     private static final int MANAGEMENT_PORT = getFreePort();
@@ -73,7 +72,7 @@ public class TestUtils {
     }
 
     public static void setupExtension(EdcExtension extension, Map<String, String> configProperties) {
-        extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
+        extension.registerServiceMock(ProtocolWebhook.class, () -> PROTOCOL_ENDPOINT);
         extension.setConfiguration(createConfiguration(configProperties));
     }
 
