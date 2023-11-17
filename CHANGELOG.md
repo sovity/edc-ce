@@ -18,6 +18,20 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
+#### Patch
+
+#### Deployment Migration Notes
+
+## [v2.1.0] 17.11.2023
+
+### Overview
+
+Broker UI EDC 0 Upgrade and some Connector UI bugfixes.
+
+### Detailed Changes
+
+#### Minor
+
 - New optional marketing banner for MDS Basic Enterprise Edition Connectors.
 - Finalize Migrate Broker UI to EDC 0
 
