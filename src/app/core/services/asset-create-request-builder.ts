@@ -27,7 +27,7 @@ export class AssetCreateRequestBuilder {
     const mediaType = formValue.metadata?.contentType;
     const landingPageUrl = formValue.metadata?.endpointDocumentation;
 
-    const dataCategory = formValue.advanced?.dataModel;
+    const dataCategory = formValue.advanced?.dataCategory?.id;
     const dataSubcategory = formValue.advanced?.dataSubcategory?.id;
     const transportMode = formValue.advanced?.transportMode?.id;
     const geoReferenceMethod = formValue.advanced?.geoReferenceMethod;

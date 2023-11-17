@@ -26,6 +26,7 @@ the detailed section referring to by linking pull requests or issues.
 - Improved visibility of buttons in "Create New Asset" and "Initiate Transfer"
   Dialogs
 - Broker Server API now also has a type-safe fake backend.
+- Fix Data Category not being set correctly when creating assets.
 
 #### Deployment Migration Notes
 
