@@ -68,6 +68,10 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
+tasks.getByName<Test>("test") {
+    maxParallelForks = 1
+}
+
 val sovityEdcExtensionGroup: String by project
 group = sovityEdcExtensionGroup
 

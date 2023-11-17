@@ -165,3 +165,13 @@ You can use a script (if you're on WSL or Linux) to generate the SKI, AKI and jk
 
 No, locally run connectors cannot exchange data with online connectors. A connector must have a proper URL +
 configuration and be accesible from the data provider via REST calls.
+
+### Can I still use the deprecated Omejdn DAPS?
+
+For Omejdn one needs the following overrides in the backend:
+
+```yaml
+EDC_OAUTH_PROVIDER_AUDIENCE: idsc:IDS_CONNECTORS_ALL
+EDC_OAUTH_ENDPOINT_AUDIENCE: idsc:IDS_CONNECTORS_ALL
+EDC_AGENT_IDENTITY_KEY: client_id
+```

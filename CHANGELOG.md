@@ -23,11 +23,52 @@ All notable changes to this project will be documented in this file.
 
 #### Compatible Versions
 
+## [6.0.0] - 2023-11-17
+
+### Overview
+
+Connectors are now pre-configured for the sovity DAPS over Omejdn.
+
+This fixes issues with MDS Connectors not being able to connect to the MDS 2.0.
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v2.1.0
+
+### EDC Extensions
+
+#### Major Changes
+
+- The default DAPS configuration now supports the sovity DAPS over Omejdn.
+
+#### Patch Changes
+
+- Improved `:extensions:wrapper:wrapper-common-mappers` for broker: `AssetJsonLdUtils`, made some methods public.
+- Added example for using the API Wrapper to offer and consume data.
+
+### Deployment Migration Notes
+
+Omejdn DAPS users need to manually add the following Backend ENV Vars:
+
+```yaml
+EDC_OAUTH_PROVIDER_AUDIENCE: idsc:IDS_CONNECTORS_ALL
+EDC_OAUTH_ENDPOINT_AUDIENCE: idsc:IDS_CONNECTORS_ALL
+EDC_AGENT_IDENTITY_KEY: client_id
+```
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:6.0.0`
+    - sovity EDC CE: `ghcr.io/sovity/edc-ce:6.0.0`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:6.0.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.1.0`
+
 ## [5.0.0] - 10.10.2023
 
 ### Overview
 
-Migration from Eclipse EDC Milestone 8 to Eclispe EDC 0.2.1.
+Migration from Eclipse EDC Milestone 8 to Eclipse EDC 0.2.1.
 
 The API Wrapper and API Client Libraries can now be used to fully control a sovity EDC Connector.
 
