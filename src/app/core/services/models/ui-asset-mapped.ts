@@ -5,11 +5,11 @@ import {LanguageSelectItem} from '../../../routes/connector-ui/asset-page/langua
 import {TransportModeSelectItem} from '../../../routes/connector-ui/asset-page/transport-mode-select/transport-mode-select-item';
 
 /**
- * Asset (UI Dto)
+ * UiAsset with replaced fixed vocabulary items.
  *
- * Also includes full items / labels for fixed vocabulary values, e.g. language
+ * This exists, because certain metadata has labels which are added in the UI, e.g. language.
  */
-export type Asset = Omit<
+export type UiAssetMapped = Omit<
   UiAsset,
   'language' | 'dataCategory' | 'dataSubcategory' | 'transportMode'
 > & {

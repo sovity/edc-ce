@@ -1,6 +1,6 @@
-import {Asset} from '../../../../core/services/models/asset';
+import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
 
 export interface ContractAgreementTransferDialogData {
   contractId: string;
-  asset: Asset;
+  asset: UiAssetMapped;
 }

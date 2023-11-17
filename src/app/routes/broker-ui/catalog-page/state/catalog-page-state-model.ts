@@ -4,8 +4,8 @@ import {
   PaginationMetadata,
 } from '@sovity.de/broker-server-client';
 import {Fetched} from '../../../../core/services/models/fetched';
-import {BrokerCatalogPageResult} from '../catalog-page/mapping/broker-catalog-page-result';
-import {FilterValueSelectVisibleState} from '../filter-value-select/filter-value-select-visible-state';
+import {CatalogPageResultMapped} from '../catalog-page/mapping/catalog-page-result-mapped';
+import {FilterBoxVisibleState} from '../filter-box/filter-box-visible-state';
 import {CatalogActiveFilterPill} from './catalog-active-filter-pill';
 
 export interface CatalogPageStateModel {
@@ -28,7 +28,7 @@ export interface CatalogPageStateModel {
    * User Input: Selected Filters
    * (and also includes filter definitions)
    */
-  filters: Record<string, FilterValueSelectVisibleState>;
+  filters: Record<string, FilterBoxVisibleState>;
 
   /**
    * sorting definitions
@@ -48,7 +48,7 @@ export interface CatalogPageStateModel {
   /**
    * Data
    */
-  fetchedData: Fetched<BrokerCatalogPageResult>;
+  fetchedData: Fetched<CatalogPageResultMapped>;
 
   /**
    * Pagination Information kept also between calls so we can render the pagination component, always.

@@ -12,27 +12,25 @@ import {
 import {FormControl} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {FilterValueSelectItem} from './filter-value-select-item';
-import {FilterValueSelectVisibleState} from './filter-value-select-visible-state';
+import {FilterBoxItem} from './filter-box-item';
+import {FilterBoxVisibleState} from './filter-box-visible-state';
 
 @Component({
-  selector: 'filter-value-select',
-  templateUrl: './filter-value-select.component.html',
+  selector: 'filter-box',
+  templateUrl: './filter-box.component.html',
 })
-export class FilterValueSelectComponent
-  implements OnInit, OnChanges, OnDestroy
-{
+export class FilterBoxComponent implements OnInit, OnChanges, OnDestroy {
   @HostBinding('class.flex')
   @HostBinding('class.flex-col')
   @HostBinding('class.space-y-[10px]')
   cls = true;
 
   @Input()
-  state!: FilterValueSelectVisibleState;
+  state!: FilterBoxVisibleState;
 
   @Output()
-  selectedItemsChange = new EventEmitter<FilterValueSelectItem[]>();
-  formControl = new FormControl<FilterValueSelectItem[]>([]);
+  selectedItemsChange = new EventEmitter<FilterBoxItem[]>();
+  formControl = new FormControl<FilterBoxItem[]>([]);
 
   ngOnInit(): void {
     this.formControl.valueChanges

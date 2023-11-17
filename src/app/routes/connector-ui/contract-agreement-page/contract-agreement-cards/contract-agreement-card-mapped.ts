@@ -1,11 +1,11 @@
 import {ContractAgreementCard} from '@sovity.de/edc-client';
-import {Asset} from '../../../../core/services/models/asset';
+import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
 
 export type ContractAgreementCardMapped = Omit<
   ContractAgreementCard,
   'asset'
 > & {
-  asset: Asset;
+  asset: UiAssetMapped;
   isInProgress: boolean;
   isConsumingLimitsEnforced: boolean;
   statusText: string;

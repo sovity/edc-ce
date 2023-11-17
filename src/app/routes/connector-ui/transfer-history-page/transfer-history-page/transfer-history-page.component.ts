@@ -19,8 +19,8 @@ import {AssetDetailDialogService} from '../../../../component-library/catalog/as
 import {JsonDialogService} from '../../../../component-library/json-dialog/json-dialog/json-dialog.service';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {AssetBuilder} from '../../../../core/services/asset-builder';
-import {Asset} from '../../../../core/services/models/asset';
 import {Fetched} from '../../../../core/services/models/fetched';
+import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
 import {NotificationService} from '../../../../core/services/notification.service';
 
 @Component({
@@ -62,7 +62,7 @@ export class TransferHistoryPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  loadAssetDetails(item: TransferHistoryEntry): Observable<Asset> {
+  loadAssetDetails(item: TransferHistoryEntry): Observable<UiAssetMapped> {
     return this.edcApiService
       .getTransferProcessAsset(item.transferProcessId)
       .pipe(map((asset: UiAsset) => this.assetBuilder.buildAsset(asset)));

@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {associateBy} from '../../../../core/utils/map-utils';
 import {LANGUAGE_SELECT_DATA} from './language-select-data';
 import {LanguageSelectItem} from './language-select-item';
 
@@ -19,11 +18,12 @@ export class LanguageSelectItemService {
   ];
   highlightItems: LanguageSelectItem[];
   otherItems: LanguageSelectItem[];
-  itemsById = associateBy(LANGUAGE_SELECT_DATA, (it) => it.id);
+  itemsByKeyword: Map<string, LanguageSelectItem>;
 
   constructor() {
     this.highlightItems = this.buildHighlightItems();
     this.otherItems = this.buildOtherItems();
+    this.itemsByKeyword = this.buildItemLookupMap();
   }
 
   /**
@@ -31,14 +31,11 @@ export class LanguageSelectItemService {
    * @param id language select item id
    */
   findById(id: string): LanguageSelectItem {
-    const item = this.itemsById.get(id);
-    if (item != null) {
-      return item;
+    let item = this.itemsByKeyword.get(id);
+    if (!item) {
+      item = {id, label: id};
     }
-    return {
-      id,
-      label: id,
-    };
+    return item;
   }
 
   english(): LanguageSelectItem {
@@ -55,5 +52,19 @@ export class LanguageSelectItemService {
     return LANGUAGE_SELECT_DATA.filter(
       (it) => !this.highlightItemIds.includes(it.id),
     );
+  }
+
+  private buildItemLookupMap(): Map<string, LanguageSelectItem> {
+    const map = new Map<string, LanguageSelectItem>();
+    LANGUAGE_SELECT_DATA.forEach((it) => {
+      map.set(it.id, it);
+      if (it.idShort) {
+        map.set(it.idShort, it);
+      }
+      if (it.sameAs) {
+        map.set(it.sameAs, it);
+      }
+    });
+    return map;
   }
 }

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {Asset} from '../../../core/services/models/asset';
 import {DataOffer} from '../../../core/services/models/data-offer';
-import {BrokerDataOffer} from '../../../routes/broker-ui/catalog-page/catalog-page/mapping/broker-data-offer';
+import {UiAssetMapped} from '../../../core/services/models/ui-asset-mapped';
+import {CatalogDataOfferMapped} from '../../../routes/broker-ui/catalog-page/catalog-page/mapping/catalog-page-result-mapped';
 import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
 import {AssetDetailDialogData} from './asset-detail-dialog-data';
 import {AssetPropertyGridGroupBuilder} from './asset-property-grid-group-builder';
@@ -12,7 +12,10 @@ export class AssetDetailDialogDataService {
     private assetPropertyGridGroupBuilder: AssetPropertyGridGroupBuilder,
   ) {}
 
-  assetDetails(asset: Asset, allowDelete: boolean): AssetDetailDialogData {
+  assetDetails(
+    asset: UiAssetMapped,
+    allowDelete: boolean,
+  ): AssetDetailDialogData {
     const propertyGridGroups = [
       this.assetPropertyGridGroupBuilder.buildAssetPropertiesGroup(asset, null),
       this.assetPropertyGridGroupBuilder.buildAdditionalPropertiesGroup(asset),
@@ -69,7 +72,9 @@ export class AssetDetailDialogDataService {
     };
   }
 
-  brokerDataOfferDetails(dataOffer: BrokerDataOffer): AssetDetailDialogData {
+  brokerDataOfferDetails(
+    dataOffer: CatalogDataOfferMapped,
+  ): AssetDetailDialogData {
     const asset = dataOffer.asset;
 
     const propertyGridGroups = [

@@ -33,7 +33,7 @@ import {PipesAndDirectivesModule} from '../../../component-library/pipes-and-dir
 import {UiElementsModule} from '../../../component-library/ui-elements/ui-elements.module';
 import {BrokerDataOfferCardsComponent} from './broker-data-offer-cards/broker-data-offer-cards.component';
 import {CatalogPageComponent} from './catalog-page/catalog-page.component';
-import {FilterValueSelectComponent} from './filter-value-select/filter-value-select.component';
+import {FilterBoxComponent} from './filter-box/filter-box.component';
 import {CatalogPageState} from './state/catalog-page-state';
 
 @NgModule({
@@ -84,7 +84,7 @@ import {CatalogPageState} from './state/catalog-page-state';
   declarations: [
     CatalogPageComponent,
     BrokerDataOfferCardsComponent,
-    FilterValueSelectComponent,
+    FilterBoxComponent,
   ],
   exports: [CatalogPageComponent],
 })

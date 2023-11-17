@@ -6,8 +6,8 @@ import {
   UiCriterion,
 } from '@sovity.de/edc-client';
 import {CRITERION_OPERATOR_SYMBOLS} from '../../../../core/services/api/model/criterion-type-ext';
-import {Asset} from '../../../../core/services/models/asset';
 import {AssetProperty} from '../../../../core/services/models/asset-properties';
+import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
 import {associateBy} from '../../../../core/utils/map-utils';
 import {assetSearchTargets} from '../../../../core/utils/search-utils';
 import {
@@ -20,7 +20,7 @@ import {
 export class ContractDefinitionCardBuilder {
   buildContractDefinitionCards(
     contractDefinitionPage: ContractDefinitionPage,
-    assets: Asset[],
+    assets: UiAssetMapped[],
     policyDefinitions: PolicyDefinitionDto[],
   ): ContractDefinitionCard[] {
     const assetById = associateBy(assets, (asset) => asset.assetId);
@@ -41,7 +41,7 @@ export class ContractDefinitionCardBuilder {
 
   buildContractDefinitionCard(
     contractDefinition: ContractDefinitionEntry,
-    assetById: Map<string, Asset>,
+    assetById: Map<string, UiAssetMapped>,
     policyDefinitionById: Map<string, PolicyDefinitionDto>,
   ): ContractDefinitionCard {
     return {
@@ -88,7 +88,7 @@ export class ContractDefinitionCardBuilder {
 
   private extractCriterionValues(
     criterion: UiCriterion,
-    assetsById: Map<string, Asset>,
+    assetsById: Map<string, UiAssetMapped>,
   ): ContractDefinitionCardCriterionValue[] {
     const {operandLeft, operandRight} = criterion;
 

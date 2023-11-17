@@ -13,6 +13,7 @@ import {
   buildBrokerServerClient,
 } from '@sovity.de/broker-server-client';
 import {APP_CONFIG, AppConfig} from '../../config/app-config';
+import {BROKER_SERVER_FAKE_BACKEND} from './fake-backend/broker-server-fake-backend';
 
 @Injectable({providedIn: 'root'})
 export class BrokerServerApiService {
@@ -22,6 +23,11 @@ export class BrokerServerApiService {
     this.brokerServerClient = buildBrokerServerClient({
       managementApiUrl: this.config.managementApiUrl,
       managementApiKey: this.config.managementApiKey,
+      configOverrides: {
+        fetchApi: config.useFakeBackend
+          ? BROKER_SERVER_FAKE_BACKEND
+          : undefined,
+      },
     });
   }
 

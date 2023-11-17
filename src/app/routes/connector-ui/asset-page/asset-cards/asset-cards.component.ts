@@ -5,7 +5,7 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import {Asset} from '../../../../core/services/models/asset';
+import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
 
 @Component({
   selector: 'asset-cards',
@@ -18,8 +18,8 @@ export class AssetCardsComponent {
   cls = true;
 
   @Input()
-  assets: Asset[] = [];
+  assets: UiAssetMapped[] = [];
 
   @Output()
-  assetClick = new EventEmitter<Asset>();
+  assetClick = new EventEmitter<UiAssetMapped>();
 }

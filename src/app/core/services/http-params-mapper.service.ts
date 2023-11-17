@@ -5,9 +5,9 @@ import {HttpDatasourceQueryParamFormValue} from '../../routes/connector-ui/asset
 import {ContractAgreementTransferDialogFormValue} from '../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-form-model';
 import {mapKeys, removeNullValues} from '../utils/record-utils';
 import {everythingAfter, everythingBefore} from '../utils/string-utils';
-import {Asset} from './models/asset';
 import {DataAddressProperty} from './models/data-address-properties';
 import {HttpDataAddressParams} from './models/http-data-address-params';
+import {UiAssetMapped} from './models/ui-asset-mapped';
 
 @Injectable({providedIn: 'root'})
 export class HttpRequestParamsMapper {
@@ -22,7 +22,7 @@ export class HttpRequestParamsMapper {
   }
 
   encodeHttpProxyTransferRequestProperties(
-    asset: Asset,
+    asset: UiAssetMapped,
     value: ContractAgreementTransferDialogFormValue,
   ): Record<string, string> {
     const method = value.httpProxiedMethod?.trim() ?? '';

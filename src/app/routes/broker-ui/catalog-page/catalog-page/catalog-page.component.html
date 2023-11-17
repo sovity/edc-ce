@@ -92,7 +92,8 @@
       *ngFor="let filter of state?.filters!! | values; let first = first"
       class="w-[300px] mat-expansion-panel-flex-col"
       trackByField="id"
-      [expanded]="first">
+      [expanded]="filter.id === expandedFilterId"
+      (expandedChange)="onExpandedFilterChange(filter.id, $event)">
       <mat-expansion-panel-header>
         <mat-panel-title
           >{{ filter.model.title }}
@@ -120,11 +121,11 @@
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
-      <filter-value-select
+      <filter-box
         [state]="filter"
         (selectedItemsChange)="
           onSelectedItemsChange(filter, $event)
-        "></filter-value-select>
+        "></filter-box>
     </mat-expansion-panel>
   </mat-accordion>
 </div>

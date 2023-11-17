@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {EdcApiService} from './api/edc-api.service';
 import {AssetBuilder} from './asset-builder';
-import {Asset} from './models/asset';
+import {UiAssetMapped} from './models/ui-asset-mapped';
 
 /**
  * Wrapped AssetService with AssetPropertyMapper
@@ -17,7 +17,7 @@ export class AssetService {
     private edcApiService: EdcApiService,
   ) {}
 
-  fetchAssets(): Observable<Asset[]> {
+  fetchAssets(): Observable<UiAssetMapped[]> {
     return this.edcApiService
       .getAssetPage()
       .pipe(

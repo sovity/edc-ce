@@ -2,7 +2,7 @@ import {
   ContractDefinitionEntry,
   PolicyDefinitionDto,
 } from '@sovity.de/edc-client';
-import {Asset} from '../../../../core/services/models/asset';
+import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
 
 export interface ContractDefinitionCard {
   id: string;
@@ -27,6 +27,6 @@ export interface ContractDefinitionCardCriterionValue {
   type: 'string' | 'asset' | 'json';
   searchTargets: (string | null)[];
   value?: string;
-  asset?: Asset;
+  asset?: UiAssetMapped;
   json?: any;
 }

@@ -3,7 +3,7 @@ import {FormControl} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
-import {Asset} from '../../../../core/services/models/asset';
+import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
 
 @Component({
   selector: 'asset-select',
@@ -14,17 +14,17 @@ export class AssetSelectComponent implements OnDestroy {
   label!: string;
 
   @Input()
-  control!: FormControl<Asset[]>;
+  control!: FormControl<UiAssetMapped[]>;
 
   @Input()
-  assets: Asset[] = [];
+  assets: UiAssetMapped[] = [];
 
   constructor(
     private assetDetailDialogDataService: AssetDetailDialogDataService,
     private assetDetailDialogService: AssetDetailDialogService,
   ) {}
 
-  onAssetClick(asset: Asset) {
+  onAssetClick(asset: UiAssetMapped) {
     const data = this.assetDetailDialogDataService.assetDetails(asset, false);
     this.assetDetailDialogService.open(data, this.ngOnDestroy$);
   }

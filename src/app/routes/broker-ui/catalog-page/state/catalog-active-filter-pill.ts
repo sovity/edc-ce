@@ -1,4 +1,4 @@
-import {FilterValueSelectItem} from '../filter-value-select/filter-value-select-item';
+import {FilterBoxItem} from '../filter-box/filter-box-item';
 
 export interface CatalogActiveFilterPill {
   type: 'SEARCH_TEXT' | 'SELECTED_FILTER_ITEM';
@@ -6,5 +6,5 @@ export interface CatalogActiveFilterPill {
   value: string;
 
   selectedFilterId?: string;
-  selectedFilterItem?: FilterValueSelectItem;
+  selectedFilterItem?: FilterBoxItem;
 }

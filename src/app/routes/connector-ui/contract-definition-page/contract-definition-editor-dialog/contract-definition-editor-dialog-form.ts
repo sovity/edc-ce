@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PolicyDefinitionDto} from '@sovity.de/edc-client';
-import {Asset} from '../../../../core/services/models/asset';
+import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
 import {noWhitespacesOrColonsValidator} from '../../../../core/validators/no-whitespaces-or-colons-validator';
 import {
   ContractDefinitionEditorDialogFormModel,
@@ -29,7 +29,7 @@ export class ContractDefinitionEditorDialogForm {
       id: ['', [Validators.required, noWhitespacesOrColonsValidator]],
       accessPolicy: [null as PolicyDefinitionDto | null, Validators.required],
       contractPolicy: [null as PolicyDefinitionDto | null, Validators.required],
-      assets: [[] as Asset[], Validators.required],
+      assets: [[] as UiAssetMapped[], Validators.required],
     });
   }
 }

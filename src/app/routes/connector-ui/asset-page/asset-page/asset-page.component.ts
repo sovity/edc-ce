@@ -5,13 +5,13 @@ import {filter, map, switchMap} from 'rxjs/operators';
 import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
 import {AssetService} from '../../../../core/services/asset.service';
-import {Asset} from '../../../../core/services/models/asset';
 import {Fetched} from '../../../../core/services/models/fetched';
+import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
 import {AssetCreateDialogResult} from '../asset-create-dialog/asset-create-dialog-result';
 import {AssetCreateDialogComponent} from '../asset-create-dialog/asset-create-dialog.component';
 
 export interface AssetList {
-  filteredAssets: Asset[];
+  filteredAssets: UiAssetMapped[];
   numTotalAssets: number;
 }
 
@@ -67,7 +67,7 @@ export class AssetPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  onAssetClick(asset: Asset) {
+  onAssetClick(asset: UiAssetMapped) {
     const data = this.assetDetailDialogDataService.assetDetails(asset, true);
     this.assetDetailDialogService
       .open(data, this.ngOnDestroy$)

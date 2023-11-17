@@ -16,7 +16,7 @@ import {ConfirmDialogModel} from '../../../../component-library/confirmation-dia
 import {JsonDialogComponent} from '../../../../component-library/json-dialog/json-dialog/json-dialog.component';
 import {JsonDialogData} from '../../../../component-library/json-dialog/json-dialog/json-dialog.data';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {Asset} from '../../../../core/services/models/asset';
+import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
 import {NotificationService} from '../../../../core/services/notification.service';
 import {ContractDefinitionCard} from './contract-definition-card';
 
@@ -57,7 +57,7 @@ export class ContractDefinitionCardsComponent implements OnDestroy {
     this.matDialog.open(JsonDialogComponent, {data});
   }
 
-  onAssetClick(asset: Asset) {
+  onAssetClick(asset: UiAssetMapped) {
     const data = this.assetDetailDialogDataService.assetDetails(asset, false);
     this.assetDetailDialogService
       .open(data, this.ngOnDestroy$)

@@ -1,5 +1,5 @@
 import {CatalogPageSortingItem} from '@sovity.de/broker-server-client';
-import {FilterValueSelectItem} from '../filter-value-select/filter-value-select-item';
+import {FilterBoxItem} from '../filter-box/filter-box-item';
 import {CatalogActiveFilterPill} from './catalog-active-filter-pill';
 
 export namespace CatalogPage {
@@ -40,7 +40,7 @@ export namespace CatalogPage {
 
     constructor(
       public filterId: string,
-      public selectedItems: FilterValueSelectItem[],
+      public selectedItems: FilterBoxItem[],
     ) {}
   }
 

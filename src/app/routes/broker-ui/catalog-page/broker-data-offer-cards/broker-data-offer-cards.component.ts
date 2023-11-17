@@ -5,7 +5,7 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import {BrokerDataOffer} from '../catalog-page/mapping/broker-data-offer';
+import {CatalogDataOfferMapped} from '../catalog-page/mapping/catalog-page-result-mapped';
 
 @Component({
   selector: 'broker-data-offer-cards',
@@ -18,8 +18,8 @@ export class BrokerDataOfferCardsComponent {
   cls = true;
 
   @Input()
-  dataOffers: BrokerDataOffer[] = [];
+  dataOffers: CatalogDataOfferMapped[] = [];
 
   @Output()
-  dataOfferClick = new EventEmitter<BrokerDataOffer>();
+  dataOfferClick = new EventEmitter<CatalogDataOfferMapped>();
 }

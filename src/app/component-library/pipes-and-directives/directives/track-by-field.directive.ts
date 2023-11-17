@@ -1,5 +1,5 @@
 import {NgForOf} from '@angular/common';
-import {Attribute, Directive, TrackByFunction, inject} from '@angular/core';
+import {Attribute, Directive, Host, TrackByFunction} from '@angular/core';
 
 export const newTrackByFn =
   <T>(key: keyof T): TrackByFunction<T> =>
@@ -10,13 +10,15 @@ export const newTrackByFn =
  * Creates Track By Function for ngFor loops
  */
 @Directive({
-  selector: '[ngFor][ngForOf][trackByField]',
+  selector: '[trackByField]',
 })
 export class TrackByFieldDirective {
   constructor(
+    @Host() ngForOf: NgForOf<unknown>,
     @Attribute('trackByField') private readonly trackByField: string,
   ) {
-    const ngForOf = inject(NgForOf<unknown>, {self: true});
-    ngForOf.ngForTrackBy = newTrackByFn(this.trackByField);
+    if (!ngForOf.ngForTrackBy) {
+      ngForOf.ngForTrackBy = newTrackByFn(this.trackByField);
+    }
   }
 }

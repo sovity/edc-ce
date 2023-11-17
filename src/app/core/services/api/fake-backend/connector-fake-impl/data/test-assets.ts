@@ -53,4 +53,12 @@ export namespace TestAssets {
       creatorOrganizationName: entry.participantId,
     };
   }
+
+  export function withSuffix(asset: UiAsset, suffix: string): UiAsset {
+    return {
+      ...asset,
+      assetId: `${asset.assetId}-${suffix}`,
+      title: `${asset.title} ${suffix}`,
+    };
+  }
 }

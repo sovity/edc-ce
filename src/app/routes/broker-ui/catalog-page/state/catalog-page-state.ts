@@ -1,19 +1,23 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {Subject} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {Action, State, StateContext} from '@ngxs/store';
 import {
   CatalogPageQuery,
-  CatalogPageResult,
+  CnfFilter,
+  CnfFilterAttribute,
 } from '@sovity.de/broker-server-client';
 import {BrokerServerApiService} from '../../../../core/services/api/broker-server-api.service';
 import {Fetched} from '../../../../core/services/models/fetched';
+import {associateAsObj} from '../../../../core/utils/object-utils';
 import {BrokerCatalogMapper} from '../catalog-page/mapping/broker-catalog-mapper';
+import {CatalogPageResultMapped} from '../catalog-page/mapping/catalog-page-result-mapped';
+import {FilterBoxItem} from '../filter-box/filter-box-item';
 import {
-  FilterValueSelectItem,
-  mapCnfFilterItems,
-} from '../filter-value-select/filter-value-select-item';
-import {FilterValueSelectModel} from '../filter-value-select/filter-value-select-model';
-import {FilterValueSelectVisibleState} from '../filter-value-select/filter-value-select-visible-state';
+  FilterBoxModel,
+  buildFilterBoxModelWithNewData,
+} from '../filter-box/filter-box-model';
+import {FilterBoxVisibleState} from '../filter-box/filter-box-visible-state';
 import {CatalogActiveFilterPill} from './catalog-active-filter-pill';
 import {CatalogPage} from './catalog-page-actions';
 import {
@@ -55,17 +59,16 @@ export class CatalogPageState implements OnDestroy {
     const fetchSubscription = this.brokerServerApiService
       .catalogPage(query)
       .pipe(
-        Fetched.wrap({failureMessage: 'Failed fetching data offers.'}),
-        Fetched.map((data) =>
-          this.brokerCatalogMapper.buildUiCatalogPageResult(data),
+        map((data) =>
+          this.brokerCatalogMapper.buildCatalogPageResultMapped(data),
         ),
+        Fetched.wrap({failureMessage: 'Failed fetching data offers.'}),
       )
       .subscribe((fetchedData) => {
         let state = {...ctx.getState(), fetchedData};
-        state = fetchedData.ifReadyElse(
-          (data) => this._setData(state, data),
-          state,
-        );
+        fetchedData.ifReady((data) => {
+          state = this._withReadyCatalogResult(state, data);
+        });
         ctx.setState(state);
       });
 
@@ -105,7 +108,7 @@ export class CatalogPageState implements OnDestroy {
     action: CatalogPage.UpdateFilterSelectedItems,
   ) {
     let state = ctx.getState();
-    state = this._updateFilter(state, action.filterId, (model) => ({
+    state = this._updateFilterModelById(state, action.filterId, (model) => ({
       ...model,
       selectedItems: action.selectedItems,
     }));
@@ -121,7 +124,7 @@ export class CatalogPageState implements OnDestroy {
     action: CatalogPage.UpdateFilterSearchText,
   ) {
     let state = ctx.getState();
-    state = this._updateFilter(state, action.filterId, (model) => ({
+    state = this._updateFilterModelById(state, action.filterId, (model) => ({
       ...model,
       searchText: action.searchText,
     }));
@@ -171,8 +174,8 @@ export class CatalogPageState implements OnDestroy {
     }
 
     const buildFilterItem = (
-      filter: FilterValueSelectVisibleState,
-      item: FilterValueSelectItem,
+      filter: FilterBoxVisibleState,
+      item: FilterBoxItem,
     ): CatalogActiveFilterPill => ({
       type: 'SELECTED_FILTER_ITEM',
       label: filter.model.title,
@@ -193,37 +196,28 @@ export class CatalogPageState implements OnDestroy {
     };
   }
 
-  private _updateFilter(
+  private _updateFilterModelById(
     state: CatalogPageStateModel,
-    id: string,
-    patcher: (filter: FilterValueSelectModel) => FilterValueSelectModel,
+    filterId: string,
+    patcher: (filter: FilterBoxModel) => FilterBoxModel,
   ): CatalogPageStateModel {
-    const newModel = patcher(state.filters[id].model);
+    const newModel = patcher(state.filters[filterId].model);
     return {
       ...state,
       filters: {
         ...state.filters,
-        [id]: FilterValueSelectVisibleState.buildVisibleState(newModel),
+        [filterId]: FilterBoxVisibleState.buildVisibleState(newModel),
       },
     };
   }
 
-  private _setData(
+  private _withReadyCatalogResult(
     state: CatalogPageStateModel,
-    data: CatalogPageResult,
+    data: CatalogPageResultMapped,
   ): CatalogPageStateModel {
-    const filters = data.availableFilters.fields.map(
-      (filter): FilterValueSelectVisibleState => {
-        const availableItems = mapCnfFilterItems(filter.values);
-        const existingFilter = state.filters[filter.id];
-        return FilterValueSelectVisibleState.buildVisibleState({
-          id: filter.id,
-          title: filter.title,
-          availableItems,
-          searchText: existingFilter?.model?.searchText ?? '',
-          selectedItems: existingFilter?.model?.selectedItems ?? [],
-        });
-      },
+    const filters = this.buildFiltersWithNewData(
+      data.availableFilters,
+      state.filters,
     );
 
     return {
@@ -233,8 +227,23 @@ export class CatalogPageState implements OnDestroy {
       paginationMetadata: data.paginationMetadata,
       sortings: data.availableSortings,
       activeSorting: state.activeSorting ?? data.availableSortings[0] ?? null,
-      filters: Object.fromEntries(filters.map((it) => [it.model.id, it])),
+      filters,
     };
+  }
+
+  private buildFiltersWithNewData(
+    cnfFilter: CnfFilter,
+    oldFilter: Record<string, FilterBoxVisibleState>,
+  ): Record<string, FilterBoxVisibleState> {
+    return associateAsObj(
+      cnfFilter.fields,
+      (it: CnfFilterAttribute) => it.id,
+      (it: CnfFilterAttribute) => {
+        const old = oldFilter[it.id]?.model ?? null;
+        const updated = buildFilterBoxModelWithNewData(it, old);
+        return FilterBoxVisibleState.buildVisibleState(updated);
+      },
+    );
   }
 
   private buildCatalogPageQuery(state: CatalogPageStateModel) {

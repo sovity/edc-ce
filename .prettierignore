@@ -4,7 +4,8 @@ e2e
 node_modules
 .angular
 .github
+dist
+
+package-lock.json
 
 openapi
-src/modules/edc-dmgmt-client
-src/assets/config/app-config.json

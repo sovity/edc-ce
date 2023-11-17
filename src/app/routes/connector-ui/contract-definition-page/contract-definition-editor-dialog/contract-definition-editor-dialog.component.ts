@@ -6,7 +6,7 @@ import {PolicyDefinitionDto} from '@sovity.de/edc-client';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {AssetService} from '../../../../core/services/asset.service';
 import {ContractDefinitionBuilder} from '../../../../core/services/contract-definition-builder';
-import {Asset} from '../../../../core/services/models/asset';
+import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
 import {NotificationService} from '../../../../core/services/notification.service';
 import {ValidationMessages} from '../../../../core/validators/validation-messages';
 import {ContractDefinitionEditorDialogForm} from './contract-definition-editor-dialog-form';
@@ -19,7 +19,7 @@ import {ContractDefinitionEditorDialogResult} from './contract-definition-editor
 })
 export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
   policies: PolicyDefinitionDto[] = [];
-  assets: Asset[] = [];
+  assets: UiAssetMapped[] = [];
   loading = false;
 
   constructor(

@@ -9,7 +9,7 @@ import {filter, finalize, takeUntil} from 'rxjs/operators';
 import {UiContractOffer} from '@sovity.de/edc-client';
 import {EdcApiService} from '../../../core/services/api/edc-api.service';
 import {ContractNegotiationService} from '../../../core/services/contract-negotiation.service';
-import {Asset} from '../../../core/services/models/asset';
+import {UiAssetMapped} from '../../../core/services/models/ui-asset-mapped';
 import {NotificationService} from '../../../core/services/notification.service';
 import {ContractAgreementTransferDialogData} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-data';
 import {ContractAgreementTransferDialogComponent} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog.component';
@@ -35,7 +35,7 @@ import {AssetDetailDialogResult} from './asset-detail-dialog-result';
 })
 export class AssetDetailDialogComponent implements OnDestroy {
   data!: AssetDetailDialogData;
-  asset!: Asset;
+  asset!: UiAssetMapped;
   propGroups!: PropertyGridGroup[];
 
   loading = false;

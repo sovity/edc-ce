@@ -8,7 +8,7 @@ import {LanguageSelectItem} from '../../routes/connector-ui/asset-page/language-
 import {LanguageSelectItemService} from '../../routes/connector-ui/asset-page/language-select/language-select-item.service';
 import {TransportModeSelectItem} from '../../routes/connector-ui/asset-page/transport-mode-select/transport-mode-select-item';
 import {TransportModeSelectItemService} from '../../routes/connector-ui/asset-page/transport-mode-select/transport-mode-select-item.service';
-import {AdditionalAssetProperty, Asset} from './models/asset';
+import {AdditionalAssetProperty, UiAssetMapped} from './models/ui-asset-mapped';
 
 /**
  * Maps between EDC Asset and our type safe asset
@@ -24,7 +24,7 @@ export class AssetBuilder {
     private dataSubcategorySelectItemService: DataSubcategorySelectItemService,
   ) {}
 
-  buildAsset(asset: UiAsset): Asset {
+  buildAsset(asset: UiAsset): UiAssetMapped {
     const {
       additionalProperties,
       additionalJsonProperties,

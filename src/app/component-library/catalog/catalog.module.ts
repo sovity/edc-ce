@@ -8,6 +8,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {JsonDialogModule} from '../json-dialog/json-dialog.module';
 import {PipesAndDirectivesModule} from '../pipes-and-directives/pipes-and-directives.module';
 import {PropertyGridModule} from '../property-grid/property-grid.module';
 import {UiElementsModule} from '../ui-elements/ui-elements.module';
@@ -38,6 +39,7 @@ import {TransferHistoryMiniListComponent} from './transfer-history-mini-list/tra
     MatTooltipModule,
 
     // Features
+    JsonDialogModule,
     PropertyGridModule,
     UiElementsModule,
     PipesAndDirectivesModule,

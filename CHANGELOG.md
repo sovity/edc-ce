@@ -19,11 +19,13 @@ the detailed section referring to by linking pull requests or issues.
 #### Minor
 
 - New optional marketing banner for MDS Basic Enterprise Edition Connectors.
+- Finalize Migrate Broker UI to EDC 0
 
 #### Patch
 
 - Improved visibility of buttons in "Create New Asset" and "Initiate Transfer"
   Dialogs
+- Broker Server API now also has a type-safe fake backend.
 
 #### Deployment Migration Notes
 

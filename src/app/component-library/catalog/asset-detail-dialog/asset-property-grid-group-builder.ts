@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {CatalogContractOffer} from '@sovity.de/broker-server-client';
 import {UiPolicy} from '@sovity.de/edc-client';
 import {ActiveFeatureSet} from '../../../core/config/active-feature-set';
-import {Asset} from '../../../core/services/models/asset';
-import {BrokerDataOffer} from '../../../routes/broker-ui/catalog-page/catalog-page/mapping/broker-data-offer';
+import {UiAssetMapped} from '../../../core/services/models/ui-asset-mapped';
+import {CatalogDataOfferMapped} from '../../../routes/broker-ui/catalog-page/catalog-page/mapping/catalog-page-result-mapped';
 import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
 import {JsonDialogService} from '../../json-dialog/json-dialog/json-dialog.service';
 import {PropertyGridGroup} from '../../property-grid/property-grid-group/property-grid-group';
@@ -26,7 +26,7 @@ export class AssetPropertyGridGroupBuilder {
   ) {}
 
   buildAssetPropertiesGroup(
-    asset: Asset,
+    asset: UiAssetMapped,
     groupLabel: string | null,
   ): PropertyGridGroup {
     const fields: PropertyGridField[] = [
@@ -84,7 +84,7 @@ export class AssetPropertyGridGroupBuilder {
     };
   }
 
-  private buildHttpDatasourceFields(asset: Asset): PropertyGridField[] {
+  private buildHttpDatasourceFields(asset: UiAssetMapped): PropertyGridField[] {
     const fields: PropertyGridField[] = [];
 
     const hints: {label: string; value: boolean | undefined}[] = [
@@ -120,7 +120,7 @@ export class AssetPropertyGridGroupBuilder {
     return fields;
   }
 
-  buildAdditionalPropertiesGroup(asset: Asset): PropertyGridGroup {
+  buildAdditionalPropertiesGroup(asset: UiAssetMapped): PropertyGridGroup {
     const fields: PropertyGridField[] = [];
 
     if (!this.activeFeatureSet.hasMdsFields()) {
@@ -144,7 +144,10 @@ export class AssetPropertyGridGroupBuilder {
     };
   }
 
-  buildMdsProperties(asset: Asset, includeEmpty: boolean): PropertyGridField[] {
+  buildMdsProperties(
+    asset: UiAssetMapped,
+    includeEmpty: boolean,
+  ): PropertyGridField[] {
     const fields: PropertyGridField[] = [];
     if (includeEmpty || asset.transportMode) {
       fields.push({
@@ -185,7 +188,7 @@ export class AssetPropertyGridGroupBuilder {
   }
 
   buildBrokerContractOfferGroup(
-    asset: Asset,
+    asset: UiAssetMapped,
     contractOffer: CatalogContractOffer,
     i: number,
     total: number,
@@ -202,7 +205,7 @@ export class AssetPropertyGridGroupBuilder {
             subtitle: asset.title,
             icon: 'policy',
             objectForJson: JSON.parse(
-              contractOffer.contractPolicy.legacyPolicy ?? 'null',
+              contractOffer.contractPolicy.policyJsonLd,
             ),
           }),
       },
@@ -290,7 +293,9 @@ export class AssetPropertyGridGroupBuilder {
     };
   }
 
-  buildBrokerDataOfferGroup(dataOffer: BrokerDataOffer): PropertyGridGroup {
+  buildBrokerDataOfferGroup(
+    dataOffer: CatalogDataOfferMapped,
+  ): PropertyGridGroup {
     const lastUpdate = formatDateAgo(
       dataOffer.connectorOfflineSinceOrLastUpdatedAt,
     );
