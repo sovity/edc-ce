@@ -52,12 +52,18 @@ public class CatalogApiService {
                 brokerServerSettings.getCatalogPagePageSize()
         );
 
+        var availableSortings = buildAvailableSortings();
+        var sorting = query.getSorting();
+        if (sorting == null) {
+            sorting = availableSortings.get(0).getSorting();
+        }
+
         // execute db query
         var catalogPageRs = catalogQueryService.queryCatalogPage(
                 dsl,
                 query.getSearchQuery(),
                 filters,
-                query.getSorting(),
+                sorting,
                 pageQuery
         );
 
@@ -69,7 +75,7 @@ public class CatalogApiService {
         );
 
         var result = new CatalogPageResult();
-        result.setAvailableSortings(buildAvailableSortings());
+        result.setAvailableSortings(availableSortings);
         result.setPaginationMetadata(paginationMetadata);
         result.setAvailableFilters(catalogFilterService.buildAvailableFilters(catalogPageRs.getAvailableFilterValues()));
         result.setDataOffers(buildCatalogDataOffers(catalogPageRs.getDataOffers()));

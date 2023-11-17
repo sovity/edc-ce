@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Patch
 
 - Fixed some issues with DB Connections not released between tests.
+- Fixed issue with initial sorting not being the first sorting.
 
 ### Deployment Migration Notes
 

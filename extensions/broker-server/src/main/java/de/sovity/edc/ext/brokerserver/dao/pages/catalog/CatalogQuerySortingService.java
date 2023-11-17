@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.brokerserver.dao.pages.catalog;
 
 import de.sovity.edc.ext.brokerserver.api.model.CatalogPageSortingType;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.OrderField;
@@ -24,9 +25,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CatalogQuerySortingService {
     @NotNull
-    public List<OrderField<?>> getOrderBy(CatalogQueryFields fields, CatalogPageSortingType sorting) {
+    public List<OrderField<?>> getOrderBy(CatalogQueryFields fields, @NonNull CatalogPageSortingType sorting) {
         List<OrderField<?>> orderBy;
-        if (sorting == null || sorting == CatalogPageSortingType.TITLE) {
+        if (sorting == CatalogPageSortingType.TITLE) {
             orderBy = List.of(
                     fields.getDataOfferTable().ASSET_TITLE.asc(),
                     fields.getConnectorTable().ENDPOINT.asc()

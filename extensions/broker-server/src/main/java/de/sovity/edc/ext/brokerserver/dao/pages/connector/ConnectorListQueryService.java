@@ -20,6 +20,7 @@ import de.sovity.edc.ext.brokerserver.dao.utils.SearchUtils;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.Connector;
+import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
 import org.jooq.Field;
@@ -49,7 +50,7 @@ public class ConnectorListQueryService {
     }
 
     @NotNull
-    private List<OrderField<?>> sortConnectorPage(Connector c, ConnectorPageSortingType sorting) {
+    private List<OrderField<?>> sortConnectorPage(Connector c, @NonNull ConnectorPageSortingType sorting) {
         var alphabetically = c.ENDPOINT.asc();
         var recentFirst = c.CREATED_AT.desc();
         var onlineStatus = DSL.case_(c.ONLINE_STATUS)
@@ -58,7 +59,7 @@ public class ConnectorListQueryService {
                 .else_(3)
                 .asc();
 
-        if (sorting == null || sorting == ConnectorPageSortingType.ONLINE_STATUS) {
+        if (sorting == ConnectorPageSortingType.ONLINE_STATUS) {
             return List.of(onlineStatus, alphabetically);
         } else if (sorting == ConnectorPageSortingType.TITLE) {
             return List.of(alphabetically, recentFirst);

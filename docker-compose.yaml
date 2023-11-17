@@ -58,7 +58,7 @@ services:
     environment:
       EDC_UI_ACTIVE_PROFILE: mds-open-source
       EDC_UI_CONFIG_URL: edc-ui-config
-      EDC_UI_MANAGEMENT_API_URL: http://localhost:22002/api/v1/management
+      EDC_UI_MANAGEMENT_API_URL: http://localhost:22002/api/management
       EDC_UI_MANAGEMENT_API_KEY: ApiKeyDefaultValue
       NGINX_ACCESS_LOG: off
   connector:
@@ -94,7 +94,7 @@ services:
       - '22004:11004'
       - '22005:5005'
   connector-postgresql:
-    image: docker.io/bitnami/postgresql:11
+    image: docker.io/bitnami/postgresql:15
     restart: always
     environment:
       POSTGRESQL_USERNAME: edc

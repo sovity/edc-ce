@@ -37,10 +37,16 @@ public class ConnectorListApiService {
     public ConnectorPageResult connectorListPage(DSLContext dsl, ConnectorPageQuery query) {
         Objects.requireNonNull(query, "query must not be null");
 
-        var connectorDbRows = connectorListQueryService.queryConnectorPage(dsl, query.getSearchQuery(), query.getSorting());
+        var availableSortings = buildAvailableSortings();
+        var sorting = query.getSorting();
+        if (sorting == null) {
+            sorting = availableSortings.get(0).getSorting();
+        }
+
+        var connectorDbRows = connectorListQueryService.queryConnectorPage(dsl, query.getSearchQuery(), sorting);
 
         var result = new ConnectorPageResult();
-        result.setAvailableSortings(buildAvailableSortings());
+        result.setAvailableSortings(availableSortings);
         result.setPaginationMetadata(paginationMetadataUtils.buildDummyPaginationMetadata(connectorDbRows.size()));
         result.setConnectors(buildConnectorListEntries(connectorDbRows));
         return result;
