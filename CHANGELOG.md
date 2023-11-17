@@ -13,6 +13,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Major
 
+#### Minor
+
+#### Patch
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:{{ CE_VERSION }}`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI_VERSION }}`
+- Sovity EDC CE: {{ CE Release Link }}
+
+## [v2.0.0] - 2023-11-17
+
+### Overview
+
+EDC 0 Release, some bugfixes.
+
+### Detailed Changes
+
+#### Major
+
 - Migrated to Eclipse EDC 0.2.1
 - Migrated to edc-extensions 5.0.0
 - Migrated Assets to JSON-LD
@@ -30,10 +52,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deployment Migration Notes
 
 1. Connectors and Data Offers require an initial crawl before their metadata is filled again.
-2. Deployment Migration Notes for the Broker UI: https://github.com/sovity/edc-ui/releases/tag/v2.0.0
+2. UI Migration Notes since the last Broker Release: https://github.com/sovity/edc-ui/releases/tag/v2.0.0
 3. The Protocol Endpoint changed to `https://[MY_EDC_FQDN]/backend/api/dsp`, ~~used to be `https://[MY_EDC_FQDN]/backend/api/v1/ids`~~.
 4. The Management Endpoint changed to `https://[MY_EDC_FQDN]/backend/api/management`, ~~used to be `https://[MY_EDC_FQDN]/backend/api/v1/management`~~.
 5. The Connector Endpoint changed to `https://[MY_EDC_FQDN]/backend/api/dsp`, ~~used to be `https://[MY_EDC_FQDN]/backend/api/v1/ids/data`~~.
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:2.0.0`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:2.1.0`
+- Sovity EDC CE: [`6.0.0`](https://github.com/sovity/edc-extensions/releases/tag/6.0.0)
 
 ## [v1.2.0] - 2023-10-30
 
