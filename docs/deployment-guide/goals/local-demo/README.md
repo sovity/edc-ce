@@ -54,9 +54,9 @@ EDC_UI_ACTIVE_PROFILE=mds-open-source docker compose up
 
 The default configuration launches two local EDC Connectors with the following credentials:
 
-|                     | First Connector                                                  | Second Connector                                                           |
-|---------------------|------------------------------------------------------------------|:---------------------------------------------------------------------------|
-| Homepage            | http://localhost:11000                                           | http://localhost:22000                                                     |
-| Management Endpoint | http://localhost:11002/api/v1/management                         | http://localhost:22002/api/v1/management                                   |
-| Management API Key  | `ApiKeyDefaultValue`                                             | `ApiKeyDefaultValue`                                                       |
-| Connector Endpoint  | http://edc:11003/api/v1/dsp <br> Requires Docker Compose Network | http://edc2:22003/api/v1/dsp          <br> Requires Docker Compose Network |
+|                     | First Connector                                               | Second Connector                                                        |
+|---------------------|---------------------------------------------------------------|:------------------------------------------------------------------------|
+| Homepage            | http://localhost:11000                                        | http://localhost:22000                                                  |
+| Management Endpoint | http://localhost:11002/api/management                         | http://localhost:22002/api/management                                   |
+| Management API Key  | `ApiKeyDefaultValue`                                          | `ApiKeyDefaultValue`                                                    |
+| Connector Endpoint  | http://edc:11003/api/dsp <br> Requires Docker Compose Network | http://edc2:22003/api/dsp          <br> Requires Docker Compose Network |
