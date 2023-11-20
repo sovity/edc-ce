@@ -25,6 +25,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Broker UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI_VERSION }}`
 - Sovity EDC CE: {{ CE Release Link }}
 
+## [v2.0.1] - 2023-11-17
+
+### Overview
+
+EDC 0 Bugfix Release.
+
+### Detailed Changes
+
+#### Patch
+
+- Fixed an issue preventing DAPS roll-in with the `broker-server-ce` variant.
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:2.0.1`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:2.1.0`
+- Sovity EDC CE: [`6.0.0`](https://github.com/sovity/edc-extengsions/releases/tag/v6.0.0)
+
+
 ## [v2.0.0] - 2023-11-17
 
 ### Overview
@@ -61,7 +82,7 @@ EDC 0 Release, some bugfixes.
 
 - Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:2.0.0`
 - Broker UI Docker Image: `ghcr.io/sovity/edc-ui:2.1.0`
-- Sovity EDC CE: [`6.0.0`](https://github.com/sovity/edc-extensions/releases/tag/6.0.0)
+- Sovity EDC CE: [`6.0.0`](https://github.com/sovity/edc-extensions/releases/tag/v6.0.0)
 
 ## [v1.2.0] - 2023-10-30
 
