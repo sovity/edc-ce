@@ -1,9 +1,9 @@
 ---
-name: Feature Request
+name: MDS Feature Request
 about: Help us improve your product experience with new features suggestions
 title: ""
-labels: ["kind/enhancement", "scope/mds"]
-assignees: ""
+labels: ["kind/enhancement", "scope/mds", "status/blocked/needs-product"]
+assignees: ["jkbquabeck", "AbdullahMuk"]
 ---
 
 # Feature Request
@@ -32,8 +32,8 @@ _Add more on who asked for this, i.e. company, person, how much they pay us, wha
 
 ## (For sovity Team to complete) Solution Proposal and Work Breakdown
 
-_If possible, provide a (brief!) solution proposal._
+```[tasklist]
+- [ ] Fix the GitHub Projects Labels, Sprint and other Metadata
+- [ ] Refine further action items for this feature request
+```
 
--   [ ] Step 1
--   [ ] Step 2
--   ...

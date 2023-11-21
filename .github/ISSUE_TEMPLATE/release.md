@@ -36,12 +36,15 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
 - [ ] Check if the pipeline built the release versions in the Actions-Section (or you won't see it).
 - [ ] Checkout the release tag and check test the `docker-compose.yaml`.
 - [ ] Check the contents of the Deployment Docs Zip from the GitHub Release.
-- [ ] Notify the deployment team with Deployment Docs Zip file attached to the release, which should now contain both product changes and a deployment migration guide.
-- [ ] `release-cleanup` PR:
+- [ ] Send out a release notification E-Mail to the MDS, the MDS integrator company and the MDS operator company.
+    - [ ] Check @jkbquabeck for an up-to-date mailing list, separated into "To" and "Cc".
+    - [ ] Attach the Deployment Docs Zip generated during the GitHub release, which should now contain the CHANGELOG, deployment migration notes, an initial deployment guide and a local demo docker compose.
+- [ ] Optional, this can be done mid-development if required:
+    - [ ] Create a `release-cleanup` PR. 
     - [ ] Revert the versions in the [docker-compose's .env file](.env) back to latest for the EDC UI.
     - [ ] Revert the versions in the [docker-compose's .env file](.env) back to latest for the EDC CE.
     - [ ] Revert the versions in the [docker-compose's .env file](.env) back to latest for the Broker Server.
     - [ ] Update the [gradle.properties](https://github.com/sovity/edc-broker-server-extension/blob/main/gradle.properties) to contain the edc-extensions version `0.0.1-SNAPSHOT`.
-    - [ ] Revisit the changed list of tasks and compare it with [.github/ISSUE_TEMPLATE/release.md](https://github.com/sovity/edc-broker-server-extension/blob/main/.github/ISSUE_TEMPLATE/release.md). Apply changes where it makes sense.
     - [ ] Merge the `release-cleanup` PR.
+- [ ] Revisit the changed list of tasks and compare it with [.github/ISSUE_TEMPLATE/release.md](https://github.com/sovity/edc-broker-server-extension/blob/main/.github/ISSUE_TEMPLATE/release.md). Apply changes where it makes sense.
 - [ ] Close this issue.
