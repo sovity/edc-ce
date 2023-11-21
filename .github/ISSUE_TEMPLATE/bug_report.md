@@ -44,8 +44,7 @@ _Add any other context about the problem here._
 
 ## Possible Implementation and Work Breakdown
 
-_You already know the root cause of the erroneous state and how to fix it? Feel free to share your thoughts._
-
--   [ ] Task 1
--   [ ] Task 2
--   ...
+```[tasklist]
+- [ ] Fix the GitHub Projects Labels, Sprint and other Metadata
+- [ ] Refine a Solution Proposal / Work Breakdown
+```
