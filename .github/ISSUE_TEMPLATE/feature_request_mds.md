@@ -1,8 +1,8 @@
 ---
 name: Feature Request (MDS)
-about: Help us improve your product experience with new features suggestions
+about: Help us improve the MDS CE EDC Connector product experience with new features suggestions
 title: ""
-labels: ["kind/enhancement", "scope/mds", "status/blocked/needs-product"]
+labels: ["kind/enhancement", "task/analyze", "status/blocked/needs-product", "scope/mds", "scope/ce"]
 assignees: ["jkbquabeck", "AbdullahMuk"]
 ---
 

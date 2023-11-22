@@ -1,8 +1,8 @@
 ---
 name: Feature Request
-about: Help us improve your product experience with new features suggestions
+about: Help us improve the sovity CE EDC Connector product experience with new features suggestions
 title: ""
-labels: ["kind/enhancement", "status/blocked/needs-product"]
+labels: ["kind/enhancement", "task/analyze", "status/blocked/needs-product", "scope/ce"]
 assignees: ["AbdullahMuk"]
 ---
 

@@ -2,7 +2,7 @@
 name: Bug Report
 about: Create a report to help us improve
 title: ""
-labels: ["kind/bug", "task/analyze"]
+labels: ["kind/bug", "task/analyze", "scope/ce"]
 assignees: ""
 ---
 
