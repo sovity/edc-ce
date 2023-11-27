@@ -33,6 +33,11 @@ export const EDC_UI_PROFILE_DATA = inferEdcUiProfileType({
       ...ENTERPRISE_EDITION_FEATURES,
     ]),
   },
+  'mds-blue-hosted-by-sovity': {
+    ...SOVITY_THEME,
+    routes: 'connector-ui',
+    features: new Set(['mds-fields', ...ENTERPRISE_EDITION_FEATURES]),
+  },
   broker: {
     ...MDS_THEME,
     routes: 'broker-ui',
