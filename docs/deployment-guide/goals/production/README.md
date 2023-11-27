@@ -124,9 +124,6 @@ EDC_API_AUTH_KEY: ApiKeyDefaultValue
 MY_EDC_MAINTAINER_URL: "https://sovity.de"
 MY_EDC_MAINTAINER_NAME: "sovity GmbH"
 
-# (MDS Only) Clearing House
-EDC_CLEARINGHOUSE_LOG_URL: 'https://clearing.test.mobility-dataspace.eu/messages/log'
-
 # DAPS URL
 EDC_OAUTH_TOKEN_URL: 'https://daps.test.mobility-dataspace.eu/token'
 EDC_OAUTH_PROVIDER_JWKS_URL: 'https://daps.test.mobility-dataspace.eu/jwks.json'
