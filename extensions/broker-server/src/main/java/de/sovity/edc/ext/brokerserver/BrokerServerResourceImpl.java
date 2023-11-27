@@ -15,21 +15,21 @@
 package de.sovity.edc.ext.brokerserver;
 
 import de.sovity.edc.ext.brokerserver.api.BrokerServerResource;
+import de.sovity.edc.ext.brokerserver.api.model.AuthorityPortalConnectorInfo;
 import de.sovity.edc.ext.brokerserver.api.model.CatalogPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.CatalogPageResult;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorDetailPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorDetailPageResult;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageResult;
-import de.sovity.edc.ext.brokerserver.api.model.DataOfferCountResult;
 import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageResult;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
+import de.sovity.edc.ext.brokerserver.services.api.AuthorityPortalConnectorMetadataApiService;
 import de.sovity.edc.ext.brokerserver.services.api.CatalogApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorDetailApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorListApiService;
-import de.sovity.edc.ext.brokerserver.services.api.DataOfferCountApiService;
 import de.sovity.edc.ext.brokerserver.services.api.DataOfferDetailApiService;
 import de.sovity.edc.ext.brokerserver.services.config.AdminApiKeyValidator;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +49,7 @@ public class BrokerServerResourceImpl implements BrokerServerResource {
     private final CatalogApiService catalogApiService;
     private final DataOfferDetailApiService dataOfferDetailApiService;
     private final AdminApiKeyValidator adminApiKeyValidator;
-    private final DataOfferCountApiService dataOfferCountApiService;
+    private final AuthorityPortalConnectorMetadataApiService authorityPortalConnectorMetadataApiService;
 
     @Override
     public CatalogPageResult catalogPage(CatalogPageQuery query) {
@@ -84,7 +84,8 @@ public class BrokerServerResourceImpl implements BrokerServerResource {
     }
 
     @Override
-    public DataOfferCountResult dataOfferCount(List<String> endpoints) {
-        return dslContextFactory.transactionResult(dsl -> dataOfferCountApiService.countByEndpoints(dsl, endpoints));
+    public List<AuthorityPortalConnectorInfo> getConnectorMetadata(List<String> endpoints, String adminApiKey) {
+        adminApiKeyValidator.validateAdminApiKey(adminApiKey);
+        return dslContextFactory.transactionResult(dsl -> authorityPortalConnectorMetadataApiService.getMetadataByEndpoints(dsl, endpoints));
     }
 }

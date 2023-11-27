@@ -13,11 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Major
 
+- Authority Portal API: Removed data offer count endpoint in favor of new Connector Metadata Endpoint.
+
 #### Minor
+
+- Authority Portal API: Added new Connector Metadata endpoint that includes online status, participant ID and data offer counts.
 
 #### Patch
 
 ### Deployment Migration Notes
+
+- Authority Portal API: The data offer count endpoint was removed in favor of the new Connector Metadata Endpoint: `wrapper/broker/authority-portal-api/connectors`, used to be ~~``authority-portal-api/data-offer-counts``~~.
 
 #### Compatible Versions
 

@@ -58,10 +58,7 @@ public class CatalogQueryFields {
         this.dataOfferTable = dataOfferTable;
         this.dataOfferViewCountTable = dataOfferViewCountTable;
         this.dataSpaceConfig = dataSpaceConfig;
-        offlineSinceOrLastUpdatedAt = DSL.coalesce(
-                connectorTable.LAST_SUCCESSFUL_REFRESH_AT,
-                connectorTable.CREATED_AT
-        );
+        offlineSinceOrLastUpdatedAt = offlineSinceOrLastUpdatedAt(connectorTable);
 
         dataSpace = buildDataSpaceField(connectorTable, dataSpaceConfig);
     }
@@ -104,5 +101,12 @@ public class CatalogQueryFields {
                         .and(dataOfferViewCountTable.CONNECTOR_ENDPOINT.eq(connectorTable.ENDPOINT)));
 
         return subquery.asField();
+    }
+
+    public static Field<OffsetDateTime> offlineSinceOrLastUpdatedAt(Connector connectorTable) {
+        return DSL.coalesce(
+                connectorTable.LAST_SUCCESSFUL_REFRESH_AT,
+                connectorTable.CREATED_AT
+        );
     }
 }

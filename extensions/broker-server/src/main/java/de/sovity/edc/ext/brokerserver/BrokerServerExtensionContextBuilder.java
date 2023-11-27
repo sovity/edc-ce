@@ -38,13 +38,14 @@ import de.sovity.edc.ext.brokerserver.services.ConnectorCreator;
 import de.sovity.edc.ext.brokerserver.services.ConnectorKiller;
 import de.sovity.edc.ext.brokerserver.services.KnownConnectorsInitializer;
 import de.sovity.edc.ext.brokerserver.services.OfflineConnectorKiller;
+import de.sovity.edc.ext.brokerserver.services.api.AuthorityPortalConnectorMetadataApiService;
+import de.sovity.edc.ext.brokerserver.services.api.AuthorityPortalConnectorQueryService;
 import de.sovity.edc.ext.brokerserver.services.api.CatalogApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorDetailApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorListApiService;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorOnlineStatusMapper;
 import de.sovity.edc.ext.brokerserver.services.api.ConnectorService;
-import de.sovity.edc.ext.brokerserver.services.api.DataOfferCountApiService;
 import de.sovity.edc.ext.brokerserver.services.api.DataOfferDetailApiService;
 import de.sovity.edc.ext.brokerserver.services.api.DataOfferMappingUtils;
 import de.sovity.edc.ext.brokerserver.services.api.PaginationMetadataUtils;
@@ -282,7 +283,11 @@ public class BrokerServerExtensionContextBuilder {
                 viewCountLogger,
                 dataOfferMappingUtils
         );
-        var dataOfferCountApiService = new DataOfferCountApiService();
+        var connectorQueryService = new AuthorityPortalConnectorQueryService();
+        var dataOfferCountApiService = new AuthorityPortalConnectorMetadataApiService(
+                connectorQueryService,
+                connectorOnlineStatusMapper
+        );
         var connectorDetailApiService = new ConnectorDetailApiService(connectorDetailQueryService, connectorOnlineStatusMapper);
         var connectorListApiService = new ConnectorListApiService(connectorListQueryService, connectorOnlineStatusMapper, paginationMetadataUtils);
         var brokerServerResource = new BrokerServerResourceImpl(
