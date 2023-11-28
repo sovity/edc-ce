@@ -7,25 +7,30 @@ Productive Deployment Guide
 
 This is a productive deployment guide for self-hosting a functional sovity CE EDC Connector or MDS CE EDC Connector.
 
-## Requirements
+## Prerequisites
 
-A productive EDC Connector deployment has strict requirements, with slight errors in configuration already causing
-contract negotiations / data transfer to fail.
+### Technical Skills
 
-In general a productive EDC Connector requires a DAPS Server, DAPS Credentials, a reverse proxy configured in detail due
-to technical reasons, reachability via the internet and well-defined URLs across all configurations.
+- Ability to deploy, run and expose containered applications to the internet.
+- Ability to Ingress Routes to merge multiple services under a single domain.
+- Know-how on how to secure an otherwise unprotected application with an auth proxy or other solutions fitting
+  your situation.
+
+### Third Party Services
+
+- The dataspace you are joining must have a running DAPS that follows the subset of OAuth2 as described in the DSP Specification.
 
 ## Deployment Units
 
 To deploy an EDC multiple deployment units must be deployed and configured.
 
-| Deployment Unit                                                | Version / Details                                                                           |
-|----------------------------------------------------------------|---------------------------------------------------------------------------------------------|
-| An Auth Proxy / Auth solution of your choice.                  | (deployment specific, required to secure UI and management API)                             |
-| Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                                       |
-| Postgresql                                                     | 13 or compatible version                                                                    |
-| EDC Backend                                                    | edc-ce or edc-ce-mds, see [CHANGELOG.md](../../../../CHANGELOG.md) for compatible versions. |
-| EDC UI                                                         | edc-ui, see  [CHANGELOG.md](../../../../CHANGELOG.md) for compatible versions.              |
+| Deployment Unit                                                   | Version / Details                                                                           |
+|-------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
+| An Auth Proxy / Auth solution of your choice.                     | (deployment specific, required to secure UI and management API)                             |
+| Reverse Proxy that merges multiple services and removes the ports | (deployment specific)                                                                       |
+| Postgresql                                                        | 13 or compatible version                                                                    |
+| EDC Backend                                                       | edc-ce or edc-ce-mds, see [CHANGELOG.md](../../../../CHANGELOG.md) for compatible versions. |
+| EDC UI                                                            | edc-ui, see  [CHANGELOG.md](../../../../CHANGELOG.md) for compatible versions.              |
 
 ## Configuration
 
@@ -82,7 +87,6 @@ EDC_UI_CONFIG_URL: "edc-ui-config"
 A sovity EDC CE or MDS EDC CE Backend deployment requires:
 
 - A running DAPS
-- (MDS Only) A running Clearing House
 - DAPS Access
   and [a generated SKI/AKI pair and .jks file](#faq)
 - The following configuration properties
