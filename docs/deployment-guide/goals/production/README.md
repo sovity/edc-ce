@@ -16,9 +16,12 @@ This is a productive deployment guide for self-hosting a functional sovity CE ED
 - Know-how on how to secure an otherwise unprotected application with an auth proxy or other solutions fitting
   your situation.
 
-### Third Party Services
+### Dataspace
 
-- The dataspace you are joining must have a running DAPS that follows the subset of OAuth2 as described in the DSP Specification.
+- Must have a running DAPS that follows the subset of OAuth2 as described in the DSP Specification.
+- You must have a valid Connector Certificate in the form of [a generated SKI/AKI pair and .jks file](#faq).
+- You must have a valid Participant ID / Connector ID, which is configured in the claim "referringConnector" in the
+  DAPS.
 
 ## Deployment Units
 
@@ -84,12 +87,7 @@ EDC_UI_CONFIG_URL: "edc-ui-config"
 
 ## EDC Backend Configuration
 
-A sovity EDC CE or MDS EDC CE Backend deployment requires:
-
-- A running DAPS
-- DAPS Access
-  and [a generated SKI/AKI pair and .jks file](#faq)
-- The following configuration properties
+A sovity EDC CE or MDS EDC CE Backend deployment requires the following environment variables:
 
 > [!WARNING]
 > Please be careful with overriding any of the ENV Vars set in our [launchers/.env](../../../../launchers/.env). Our
@@ -101,8 +99,9 @@ A sovity EDC CE or MDS EDC CE Backend deployment requires:
 # Connector Host Name
 MY_EDC_FQDN: "my-edc-deployment1.example.com"
 
-# Connector Technical Name
-MY_EDC_NAME_KEBAB_CASE: "example-connector"
+# Participant ID / Connector ID
+# Must be configured as the value of the "referringConnector" claim in the DAPS for this connector
+MY_EDC_PARTICIPANT_ID: "MDSL1234XX.C1234XX"
 
 # Connector Localized Name / Title
 MY_EDC_TITLE: "EDC Connector"
@@ -169,10 +168,5 @@ configuration and be accesible from the data provider via REST calls.
 
 ### Can I still use the deprecated Omejdn DAPS?
 
-For Omejdn one needs the following overrides in the backend:
-
-```yaml
-EDC_OAUTH_PROVIDER_AUDIENCE: idsc:IDS_CONNECTORS_ALL
-EDC_OAUTH_ENDPOINT_AUDIENCE: idsc:IDS_CONNECTORS_ALL
-EDC_AGENT_IDENTITY_KEY: client_id
-```
+In the current version of the sovity EDC CE Connector the Omejdn DAPS is not supported due to the Omejdn DAPS requiring
+a special OAuth2 extension and custom messages that exceed the default DSP Oauth2 Specification.

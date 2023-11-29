@@ -73,9 +73,9 @@ public class TransferHistoryPageApiService {
         var assetsById = getAllAssets().stream()
                 .collect(toMap(Asset::getId, Function.identity()));
 
-        var transferStream = getAllTransferProcesses().stream();
+        var transferProcesses = getAllTransferProcesses();
 
-        return transferStream.map(process -> {
+        return transferProcesses.stream().map(process -> {
             var agreement = agreementsById.get(process.getDataRequest().getContractId());
             var negotiation = negotiationsById.get(process.getDataRequest().getContractId());
             var asset = assetLookup(assetsById, process);
@@ -93,7 +93,7 @@ public class TransferHistoryPageApiService {
             }
             transferHistoryEntry.setContractAgreementId(agreement.getId());
             transferHistoryEntry.setCounterPartyConnectorEndpoint(negotiation.getCounterPartyAddress());
-            transferHistoryEntry.setCounterPartyParticipantId(negotiation.getCounterPartyId());
+            transferHistoryEntry.setCounterPartyParticipantId(process.getDataRequest().getConnectorId());
             transferHistoryEntry.setCreatedDate(utcMillisToOffsetDateTime(negotiation.getCreatedAt()));
             transferHistoryEntry.setDirection(direction);
             transferHistoryEntry.setErrorMessage(process.getErrorDetail());

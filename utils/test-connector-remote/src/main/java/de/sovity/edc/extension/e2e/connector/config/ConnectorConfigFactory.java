@@ -46,7 +46,7 @@ public class ConnectorConfigFactory {
         properties.put("edc.last.commit.info", "test env commit message");
         properties.put("edc.build.date", "2023-05-08T15:30:00Z");
 
-        properties.put("my.edc.name.kebab.case", participantId);
+        properties.put("my.edc.participant.id", participantId);
         properties.put("my.edc.title", "Connector Title %s".formatted(participantId));
         properties.put("my.edc.description", "Connector Description %s".formatted(participantId));
         properties.put("my.edc.curator.url", "http://curator.%s".formatted(participantId));

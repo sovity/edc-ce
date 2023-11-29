@@ -77,6 +77,7 @@ import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
+import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
@@ -105,6 +106,7 @@ public class WrapperExtensionContextBuilder {
             ContractNegotiationService contractNegotiationService,
             ContractNegotiationStore contractNegotiationStore,
             JsonLd jsonLd,
+            Monitor monitor,
             ObjectMapper objectMapper,
             PolicyDefinitionService policyDefinitionService,
             PolicyDefinitionStore policyDefinitionStore,
@@ -131,7 +133,7 @@ public class WrapperExtensionContextBuilder {
         var uiAssetMapper = new UiAssetMapper(edcPropertyUtils, assetJsonLdUtils);
         var assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetMapper, jsonLd);
         var transferProcessStateService = new TransferProcessStateService();
-        var selfDescriptionService = new SelfDescriptionService(config);
+        var selfDescriptionService = new SelfDescriptionService(config, monitor);
         var contractNegotiationUtils = new ContractNegotiationUtils(
                 contractNegotiationService,
                 selfDescriptionService

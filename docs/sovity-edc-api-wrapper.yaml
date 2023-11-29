@@ -1215,6 +1215,7 @@ components:
       - assetName
       - contractAgreementId
       - counterPartyConnectorEndpoint
+      - counterPartyParticipantId
       - createdDate
       - direction
       - lastUpdatedDate
@@ -1243,6 +1244,9 @@ components:
         counterPartyConnectorEndpoint:
           type: string
           description: Other Connector's Endpoint
+        counterPartyParticipantId:
+          type: string
+          description: Other Connector's Participant ID
         assetName:
           type: string
           description: Asset Name

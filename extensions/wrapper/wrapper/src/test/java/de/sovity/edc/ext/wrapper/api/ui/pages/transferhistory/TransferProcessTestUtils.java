@@ -142,6 +142,8 @@ public class TransferProcessTestUtils {
                 .assetId(assetId)
                 .contractId(contractId)
                 .dataDestination(dataAddress)
+                .connectorAddress(COUNTER_PARTY_ADDRESS)
+                .connectorId(COUNTER_PARTY_ID)
                 .build();
 
         var transferProcess = TransferProcess.Builder.newInstance()

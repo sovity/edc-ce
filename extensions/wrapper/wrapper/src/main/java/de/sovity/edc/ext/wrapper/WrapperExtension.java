@@ -101,6 +101,7 @@ public class WrapperExtension implements ServiceExtension {
                 contractNegotiationService,
                 contractNegotiationStore,
                 jsonLd,
+                context.getMonitor(),
                 objectMapper,
                 policyDefinitionService,
                 policyDefinitionStore,

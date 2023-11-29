@@ -45,8 +45,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class Ms8ConnectorMigrationTest {
 
-    private static final String PROVIDER_PARTICIPANT_ID = "provider";
-    private static final String CONSUMER_PARTICIPANT_ID = "consumer";
+    private static final String PROVIDER_PARTICIPANT_ID = "example-provider";
+    private static final String CONSUMER_PARTICIPANT_ID = "example-consumer";
 
     @RegisterExtension
     static EdcExtension providerEdcContext = new EdcExtension();
