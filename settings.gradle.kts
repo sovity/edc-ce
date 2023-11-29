@@ -1,6 +1,7 @@
 rootProject.name = "edc-extensions"
 
 include(":extensions:edc-ui-config")
+include(":extensions:jwks")
 include(":extensions:last-commit-info")
 include(":extensions:policy-always-true")
 include(":extensions:policy-referring-connector")
@@ -28,3 +29,4 @@ include(":tests")
 include(":utils:catalog-parser")
 include(":utils:json-and-jsonld-utils")
 include(":utils:test-connector-remote")
+include("extensions:jwks")
