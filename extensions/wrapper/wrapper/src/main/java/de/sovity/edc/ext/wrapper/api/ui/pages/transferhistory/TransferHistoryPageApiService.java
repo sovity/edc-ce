@@ -93,6 +93,7 @@ public class TransferHistoryPageApiService {
             }
             transferHistoryEntry.setContractAgreementId(agreement.getId());
             transferHistoryEntry.setCounterPartyConnectorEndpoint(negotiation.getCounterPartyAddress());
+            transferHistoryEntry.setCounterPartyParticipantId(negotiation.getCounterPartyId());
             transferHistoryEntry.setCreatedDate(utcMillisToOffsetDateTime(negotiation.getCreatedAt()));
             transferHistoryEntry.setDirection(direction);
             transferHistoryEntry.setErrorMessage(process.getErrorDetail());

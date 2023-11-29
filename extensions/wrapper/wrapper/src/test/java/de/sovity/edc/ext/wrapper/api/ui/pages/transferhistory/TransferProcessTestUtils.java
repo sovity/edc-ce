@@ -34,6 +34,7 @@ import java.util.UUID;
 public class TransferProcessTestUtils {
     public static final String DATA_SINK = "http://my-data-sink/api/stuff";
     public static final String COUNTER_PARTY_ADDRESS = "http://some-other-connector/api/v1/ids/data";
+    public static final String COUNTER_PARTY_ID = "some-other-connector";
     public static final String PROVIDING_CONTRACT_ID = "provider-contract:eb934d1f-6582-4bab-85e6-af19a76f7e2b";
     public static final String CONSUMING_CONTRACT_ID = "consumer-contract:f52a5d30-6356-4a55-a75a-3c45d7a88c3e";
     public static final String PROVIDING_ASSET_ID = "my-asset";
@@ -48,7 +49,7 @@ public class TransferProcessTestUtils {
 
         // preparing providing transfer process
         var providerAgreement = createContractAgreement(PROVIDING_CONTRACT_ID, PROVIDING_ASSET_ID);
-        createContractNegotiation(store, COUNTER_PARTY_ADDRESS, providerAgreement, ContractNegotiation.Type.PROVIDER);
+        createContractNegotiation(store, COUNTER_PARTY_ADDRESS, COUNTER_PARTY_ID, providerAgreement, ContractNegotiation.Type.PROVIDER);
         createTransferProcess(PROVIDING_ASSET_ID,
                 PROVIDING_CONTRACT_ID,
                 dataAddress,
@@ -64,7 +65,7 @@ public class TransferProcessTestUtils {
 
         // preparing consuming transfer process
         var consumerAgreement = createContractAgreement(CONSUMING_CONTRACT_ID, CONSUMING_ASSET_ID);
-        createContractNegotiation(store, COUNTER_PARTY_ADDRESS, consumerAgreement, ContractNegotiation.Type.CONSUMER);
+        createContractNegotiation(store, COUNTER_PARTY_ADDRESS, COUNTER_PARTY_ID, consumerAgreement, ContractNegotiation.Type.CONSUMER);
         createTransferProcess(CONSUMING_ASSET_ID,
                 CONSUMING_CONTRACT_ID,
                 dataAddress,
@@ -108,12 +109,13 @@ public class TransferProcessTestUtils {
     private static void createContractNegotiation(
             ContractNegotiationStore store,
             String counterPartyAddress,
+            String counterPartyConnectorId,
             ContractAgreement agreement,
             ContractNegotiation.Type type
     ) {
         var negotiation = ContractNegotiation.Builder.newInstance()
                 .id(UUID.randomUUID().toString())
-                .counterPartyId(UUID.randomUUID().toString())
+                .counterPartyId(counterPartyConnectorId)
                 .counterPartyAddress(counterPartyAddress)
                 .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
                 .contractAgreement(agreement)
@@ -125,7 +127,16 @@ public class TransferProcessTestUtils {
         store.save(negotiation);
     }
 
-    private static void createTransferProcess(String assetId, String contractId, DataAddress dataAddress, TransferProcess.Type type, String transferProcessId, String lastUpdateDateForTransferProcess, String errorMessage, TransferProcessStore transferProcessStore) throws ParseException {
+    private static void createTransferProcess(
+            String assetId,
+            String contractId,
+            DataAddress dataAddress,
+            TransferProcess.Type type,
+            String transferProcessId,
+            String lastUpdateDateForTransferProcess,
+            String errorMessage,
+            TransferProcessStore transferProcessStore
+    ) throws ParseException {
 
         var dataRequestForTransfer = DataRequest.Builder.newInstance()
                 .assetId(assetId)

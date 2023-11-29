@@ -150,6 +150,7 @@ class Ms8ConnectorMigrationTest {
         assertThat(providerTransfer.getAssetName()).isEqualTo("First Asset");
         assertThat(providerTransfer.getContractAgreementId()).isEqualTo("Zmlyc3QtY2Q=:Zmlyc3QtYXNzZXQtMS4w:MjgzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNi");
         assertThat(providerTransfer.getCounterPartyConnectorEndpoint()).isEqualTo(endpoint(consumerConnector));
+        assertThat(providerTransfer.getCounterPartyParticipantId()).isEqualTo(consumerConnector.getParticipantId());
         assertIsEqualOffsetDateTime(providerTransfer.getCreatedDate(), EdcDateUtils.utcMillisToOffsetDateTime(1695208010855L));
         assertThat(providerTransfer.getDirection()).isEqualTo(ContractAgreementDirection.PROVIDING);
         assertThat(providerTransfer.getErrorMessage()).isNull();
@@ -176,6 +177,7 @@ class Ms8ConnectorMigrationTest {
         assertThat(consumerTransfer.getAssetName()).isEqualTo("first-asset-1.0");
         assertThat(consumerTransfer.getContractAgreementId()).isEqualTo("Zmlyc3QtY2Q=:Zmlyc3QtYXNzZXQtMS4w:MjgzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNi");
         assertThat(consumerTransfer.getCounterPartyConnectorEndpoint()).isEqualTo(endpoint(providerConnector));
+        assertThat(consumerTransfer.getCounterPartyParticipantId()).isEqualTo(providerConnector.getParticipantId());
         assertIsEqualOffsetDateTime(consumerTransfer.getCreatedDate(), EdcDateUtils.utcMillisToOffsetDateTime(1695208008652L));
         assertThat(consumerTransfer.getDirection()).isEqualTo(ContractAgreementDirection.CONSUMING);
         assertThat(consumerTransfer.getErrorMessage()).isNull();
