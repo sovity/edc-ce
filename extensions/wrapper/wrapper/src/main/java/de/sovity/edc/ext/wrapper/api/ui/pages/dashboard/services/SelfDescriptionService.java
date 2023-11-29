@@ -60,7 +60,7 @@ public class SelfDescriptionService {
      *
      * @deprecated Use {@link #PARTICIPANT_ID} instead.
      */
-    @Deprecated(forRemoval = true, since = "6.0.0")
+    @Deprecated(forRemoval = true)
     private static final String NAME_KEBAB_CASE = configKey("MY_EDC_NAME_KEBAB_CASE");
 
     public String getParticipantId() {

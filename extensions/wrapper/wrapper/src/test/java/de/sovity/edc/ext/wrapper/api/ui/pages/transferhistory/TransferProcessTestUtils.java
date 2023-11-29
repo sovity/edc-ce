@@ -49,7 +49,7 @@ public class TransferProcessTestUtils {
 
         // preparing providing transfer process
         var providerAgreement = createContractAgreement(PROVIDING_CONTRACT_ID, PROVIDING_ASSET_ID);
-        createContractNegotiation(store, COUNTER_PARTY_ADDRESS, COUNTER_PARTY_ID, providerAgreement, ContractNegotiation.Type.PROVIDER);
+        createContractNegotiation(store, COUNTER_PARTY_ADDRESS, providerAgreement, ContractNegotiation.Type.PROVIDER);
         createTransferProcess(PROVIDING_ASSET_ID,
                 PROVIDING_CONTRACT_ID,
                 dataAddress,
@@ -65,7 +65,7 @@ public class TransferProcessTestUtils {
 
         // preparing consuming transfer process
         var consumerAgreement = createContractAgreement(CONSUMING_CONTRACT_ID, CONSUMING_ASSET_ID);
-        createContractNegotiation(store, COUNTER_PARTY_ADDRESS, COUNTER_PARTY_ID, consumerAgreement, ContractNegotiation.Type.CONSUMER);
+        createContractNegotiation(store, COUNTER_PARTY_ADDRESS, consumerAgreement, ContractNegotiation.Type.CONSUMER);
         createTransferProcess(CONSUMING_ASSET_ID,
                 CONSUMING_CONTRACT_ID,
                 dataAddress,
@@ -109,13 +109,12 @@ public class TransferProcessTestUtils {
     private static void createContractNegotiation(
             ContractNegotiationStore store,
             String counterPartyAddress,
-            String counterPartyConnectorId,
             ContractAgreement agreement,
             ContractNegotiation.Type type
     ) {
         var negotiation = ContractNegotiation.Builder.newInstance()
                 .id(UUID.randomUUID().toString())
-                .counterPartyId(counterPartyConnectorId)
+                .counterPartyId(COUNTER_PARTY_ID)
                 .counterPartyAddress(counterPartyAddress)
                 .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
                 .contractAgreement(agreement)

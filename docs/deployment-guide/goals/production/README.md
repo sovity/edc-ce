@@ -12,7 +12,8 @@ This is a productive deployment guide for self-hosting a functional sovity CE ED
 ### Technical Skills
 
 - Ability to deploy, run and expose containered applications to the internet.
-- Ability to Ingress Routes to merge multiple services under a single domain.
+- Ability to configure ingress routes or a reverse proxy of your choice to merge multiple services under a single
+  domain.
 - Know-how on how to secure an otherwise unprotected application with an auth proxy or other solutions fitting
   your situation.
 
