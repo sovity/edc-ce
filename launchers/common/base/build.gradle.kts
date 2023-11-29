@@ -15,7 +15,6 @@ dependencies {
     api("${edcGroup}:http:${edcVersion}")
     api("${edcGroup}:dsp:${edcVersion}")
     api("${edcGroup}:json-ld:${edcVersion}")
-    api("${edcGroup}:monitor-jdk-logger:${edcVersion}")
 
     // Data Management API Key
     api("${edcGroup}:auth-tokenbased:${edcVersion}")
@@ -34,9 +33,6 @@ dependencies {
     api("${edcGroup}:data-plane-framework:${edcVersion}")
     api("${edcGroup}:data-plane-core:${edcVersion}")
     api("${edcGroup}:data-plane-util:${edcVersion}")
-
-    // JDK Logger
-    api("${edcGroup}:monitor-jdk-logger:${edcVersion}")
 }
 
 val sovityEdcGroup: String by project

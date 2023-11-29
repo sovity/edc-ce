@@ -39,7 +39,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 )
         ),
         servers = {
-                @Server(url = "https://[MY_EDC_FQDN]/api/management")
+                @Server(url = "https://my-connector/api/management")
         },
         externalDocs = @ExternalDocumentation(
                 description = "EDC API Wrapper Project in sovity/edc-extensions",

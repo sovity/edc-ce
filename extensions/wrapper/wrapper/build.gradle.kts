@@ -68,7 +68,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
-tasks.getByName<Test>("test") {
+tasks.withType<Test> {
     maxParallelForks = 1
 }
 

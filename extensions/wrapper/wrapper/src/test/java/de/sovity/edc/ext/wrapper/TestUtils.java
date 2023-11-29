@@ -21,11 +21,10 @@ import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
-
 public class TestUtils {
-    private static final int MANAGEMENT_PORT = getFreePort();
-    private static final int PROTOCOL_PORT = getFreePort();
+    private static final int MANAGEMENT_PORT = 34002;
+    private static final int PROTOCOL_PORT = 34003;
+    private static final int WEB_PORT = 34001;
     private static final String MANAGEMENT_PATH = "/api/management";
     private static final String PROTOCOL_PATH = "/api/dsp";
     public static final String MANAGEMENT_API_KEY = "123456";
@@ -39,7 +38,7 @@ public class TestUtils {
             Map<String, String> additionalConfigProperties
     ) {
         Map<String, String> config = new HashMap<>();
-        config.put("web.http.port", String.valueOf(getFreePort()));
+        config.put("web.http.port", String.valueOf(WEB_PORT));
         config.put("web.http.path", "/api");
         config.put("web.http.management.port", String.valueOf(MANAGEMENT_PORT));
         config.put("web.http.management.path", MANAGEMENT_PATH);
@@ -68,6 +67,7 @@ public class TestUtils {
     }
 
     public static void setupExtension(EdcExtension extension) {
+        System.out.println("Hello World from TestUtils#setupExtension!");
         setupExtension(extension, Map.of());
     }
 

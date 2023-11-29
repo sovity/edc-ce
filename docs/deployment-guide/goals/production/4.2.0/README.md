@@ -99,7 +99,7 @@ A sovity EDC CE or MDS EDC CE Backend deployment requires:
 MY_EDC_FQDN: "my-edc-deployment1.example.com"
 
 # Connector Technical Name
-MY_EDC_PARTICIPANT_ID: "example-connector"
+MY_EDC_NAME_KEBAB_CASE: "example-connector"
 
 # Connector Localized Name / Title
 MY_EDC_TITLE: "EDC Connector"

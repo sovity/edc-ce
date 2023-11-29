@@ -21,6 +21,7 @@ import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
+import org.eclipse.edc.spi.monitor.Monitor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,9 +44,13 @@ class TransferProcessAssetApiServiceTest {
     }
 
     @Test
-    void testProviderTransferProcess(ContractNegotiationStore negotiationStore,
-                                     TransferProcessStore transferProcessStore,
-                                     AssetService assetStore) throws ParseException {
+    void testProviderTransferProcess(
+            ContractNegotiationStore negotiationStore,
+            TransferProcessStore transferProcessStore,
+            AssetService assetStore,
+            Monitor monitor
+    ) throws ParseException {
+        monitor.info("Hello World from TransferProcessAssetApiServiceTest#testProviderTransferProcess!");
         // arrange
         createProvidingTransferProcesses(negotiationStore, transferProcessStore, assetStore);
 

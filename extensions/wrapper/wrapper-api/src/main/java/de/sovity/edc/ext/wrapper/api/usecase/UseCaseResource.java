@@ -14,13 +14,10 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase;
 
-import de.sovity.edc.ext.wrapper.api.usecase.model.CreateOfferingDto;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
@@ -30,19 +27,10 @@ import java.util.List;
 
 /**
  * Provides the endpoints for use-case specific requests.
- *
- * @author Ronja Quensel (ronja.quensel@isst.fraunhofer.de)
- * @author Richard Treier
- * @author Tim Dahlmanns
  */
 @Path("wrapper/use-case-api")
 @Tag(name = "Use Case", description = "Generic Use Case Application API Endpoints.")
 public interface UseCaseResource {
-    @POST
-    @Path("data-offer")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Creates a new data offer, consisting of an asset, a policy definition and a contract definition.")
-    void createOffer(CreateOfferingDto dto);
 
     @GET
     @Path("kpis")

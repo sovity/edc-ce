@@ -56,8 +56,6 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPag
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResourceImpl;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
-import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
-import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
@@ -249,18 +247,9 @@ public class WrapperExtensionContextBuilder {
                 transferProcessStateService
         );
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
-        var policyMappingService = new PolicyMappingService();
-        var offeringService = new OfferingService(
-                assetIndex,
-                policyDefinitionStore,
-                contractDefinitionStore,
-                policyMappingService,
-                edcPropertyUtils
-        );
         var useCaseResource = new UseCaseResourceImpl(
                 kpiApiService,
-                supportedPolicyApiService,
-                offeringService
+                supportedPolicyApiService
         );
 
         // Collect all JAX-RS resources
