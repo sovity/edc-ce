@@ -1,6 +1,7 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+For documentation on how to update this changelog,
+please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 ## [x.x.x] - UNRELEASED
 
@@ -18,6 +19,7 @@ All notable changes to this project will be documented in this file.
 
 - Improved `:extensions:wrapper:wrapper-common-mappers` for broker: `AssetJsonLdUtils`, made some methods public.
 - Added example for using the API Wrapper to offer and consume data.
+- Improved development documentation documenting our CHANGELOG.
 
 ### Deployment Migration Notes
 
