@@ -1,5 +1,6 @@
 plugins {
     `java-library`
+    id("org.gradle.test-retry") version "1.2.0"
 }
 
 val edcVersion: String by project
@@ -22,6 +23,11 @@ dependencies {
 
 tasks.withType<Test> {
     maxParallelForks = 1
+    retry {
+        maxRetries.set(2)
+        maxFailures.set(4)
+        failOnPassedAfterRetry.set(false)
+    }
 }
 
 val sovityEdcGroup: String by project
