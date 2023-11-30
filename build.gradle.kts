@@ -58,6 +58,7 @@ allprojects {
             exceptionFormat = TestExceptionFormat.FULL
             showExceptions = true
             showCauses = true
+            showStandardStreams = true
         }
         failFast = true
     }
