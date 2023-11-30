@@ -17,11 +17,17 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
+- Marked `MY_EDC_NAME_KEBAB_CASE` as deprecated in favor of `MY_EDC_PARTICIPANT_ID`.
+- Fixed an issue preventing Contract Negotiations between MDS Connectors.
 - Improved `:extensions:wrapper:wrapper-common-mappers` for broker: `AssetJsonLdUtils`, made some methods public.
 - Added example for using the API Wrapper to offer and consume data.
 - Improved development documentation documenting our CHANGELOG.
 
 ### Deployment Migration Notes
+
+- Renamed ~~`MY_EDC_NAME_KEBAB_CASE`~~ to `MY_EDC_PARTICIPANT_ID`. ~~`MY_EDC_NAME_KEBAB_CASE`~~ continues working, but prints a warning on startup.
+- The value of `MY_EDC_PARTICIPANT_ID` must coincide with the claim value `referringConnector`
+  as configured for this Connector in the DAPS.
 
 #### Compatible Versions
 

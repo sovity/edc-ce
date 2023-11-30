@@ -56,8 +56,6 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPag
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResourceImpl;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
-import de.sovity.edc.ext.wrapper.api.usecase.services.OfferingService;
-import de.sovity.edc.ext.wrapper.api.usecase.services.PolicyMappingService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
@@ -77,6 +75,7 @@ import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
+import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
@@ -105,6 +104,7 @@ public class WrapperExtensionContextBuilder {
             ContractNegotiationService contractNegotiationService,
             ContractNegotiationStore contractNegotiationStore,
             JsonLd jsonLd,
+            Monitor monitor,
             ObjectMapper objectMapper,
             PolicyDefinitionService policyDefinitionService,
             PolicyDefinitionStore policyDefinitionStore,
@@ -131,7 +131,7 @@ public class WrapperExtensionContextBuilder {
         var uiAssetMapper = new UiAssetMapper(edcPropertyUtils, assetJsonLdUtils);
         var assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetMapper, jsonLd);
         var transferProcessStateService = new TransferProcessStateService();
-        var selfDescriptionService = new SelfDescriptionService(config);
+        var selfDescriptionService = new SelfDescriptionService(config, monitor);
         var contractNegotiationUtils = new ContractNegotiationUtils(
                 contractNegotiationService,
                 selfDescriptionService
@@ -247,18 +247,9 @@ public class WrapperExtensionContextBuilder {
                 transferProcessStateService
         );
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
-        var policyMappingService = new PolicyMappingService();
-        var offeringService = new OfferingService(
-                assetIndex,
-                policyDefinitionStore,
-                contractDefinitionStore,
-                policyMappingService,
-                edcPropertyUtils
-        );
         var useCaseResource = new UseCaseResourceImpl(
                 kpiApiService,
-                supportedPolicyApiService,
-                offeringService
+                supportedPolicyApiService
         );
 
         // Collect all JAX-RS resources

@@ -43,6 +43,9 @@ public class TransferHistoryEntry {
     @Schema(description = "Other Connector's Endpoint", requiredMode = Schema.RequiredMode.REQUIRED)
     private String counterPartyConnectorEndpoint;
 
+    @Schema(description = "Other Connector's Participant ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String counterPartyParticipantId;
+
     @Schema(description = "Asset Name", requiredMode = Schema.RequiredMode.REQUIRED)
     private String assetName;
 

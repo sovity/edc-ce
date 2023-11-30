@@ -9,7 +9,8 @@ val edcGroup: String by project
 
 dependencies {
     api(project(":launchers:common:base"))
-    api(project(":launchers:common:base-prod"))
+    api(project(":launchers:common:auth-daps"))
+    api(project(":launchers:common:observability"))
 }
 
 application {
