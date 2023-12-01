@@ -1,0 +1,28 @@
+<mat-form-field class="grow" appearance="outline" color="accent">
+  <mat-label>{{ participantIdLocalization.participantIdPlural }}</mat-label>
+  <mat-chip-list
+    #chipList
+    [attr.aria-label]="'Other ' + participantIdLocalization.participantIdPlural"
+    [formControl]="control">
+    <mat-chip
+      *ngFor="let participantId of control?.value ?? []"
+      (removed)="remove(participantId)">
+      {{ participantId }}
+      <button matChipRemove>
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip>
+    <input
+      [placeholder]="
+        participantIdLocalization.participantIdPlaceholder + ', ...'
+      "
+      [matChipInputAddOnBlur]="true"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="add($event)" />
+  </mat-chip-list>
+  <mat-hint>
+    The {{ participantIdLocalization.participantId }} of your Connector can be
+    found on the dashboard of your Connector.
+  </mat-hint>
+</mat-form-field>

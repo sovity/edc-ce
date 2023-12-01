@@ -3,6 +3,7 @@ import {CatalogContractOffer} from '@sovity.de/broker-server-client';
 import {UiPolicy} from '@sovity.de/edc-client';
 import {ActiveFeatureSet} from '../../../core/config/active-feature-set';
 import {UiAssetMapped} from '../../../core/services/models/ui-asset-mapped';
+import {ParticipantIdLocalization} from '../../../core/services/participant-id-localization';
 import {CatalogDataOfferMapped} from '../../../routes/broker-ui/catalog-page/catalog-page/mapping/catalog-page-result-mapped';
 import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
 import {JsonDialogService} from '../../json-dialog/json-dialog/json-dialog.service';
@@ -19,6 +20,7 @@ import {PolicyPropertyFieldBuilder} from './policy-property-field-builder';
 @Injectable()
 export class AssetPropertyGridGroupBuilder {
   constructor(
+    private participantIdLocalization: ParticipantIdLocalization,
     private activeFeatureSet: ActiveFeatureSet,
     private propertyGridUtils: PropertyGridFieldService,
     private jsonDialogService: JsonDialogService,
@@ -60,17 +62,17 @@ export class AssetPropertyGridGroupBuilder {
         label: 'Standard License',
         ...this.propertyGridUtils.guessValue(asset.licenseUrl),
       },
-      this.buildConnectorEndpointField(asset.connectorEndpoint),
+      {
+        icon: 'category',
+        label: this.participantIdLocalization.participantId,
+        ...this.propertyGridUtils.guessValue(asset.participantId),
+      },
       {
         icon: 'account_circle',
         label: 'Organization',
         ...this.propertyGridUtils.guessValue(asset.creatorOrganizationName),
       },
-      {
-        icon: 'category',
-        label: 'Participant ID',
-        ...this.propertyGridUtils.guessValue(asset.participantId),
-      },
+      this.buildConnectorEndpointField(asset.connectorEndpoint),
       ...this.buildHttpDatasourceFields(asset),
     ];
 
@@ -242,22 +244,22 @@ export class AssetPropertyGridGroupBuilder {
         ...this.propertyGridUtils.guessValue(contractAgreement.direction),
       },
       {
-        icon: 'link',
-        label: 'Other Connector Endpoint',
-        ...this.propertyGridUtils.guessValue(
-          contractAgreement.counterPartyAddress,
-        ),
-      },
-      {
-        icon: 'link',
-        label: 'Other Connector Participant ID',
-        ...this.propertyGridUtils.guessValue(contractAgreement.counterPartyId),
-      },
-      {
         icon: 'category',
         label: 'Contract Agreement ID',
         ...this.propertyGridUtils.guessValue(
           contractAgreement.contractAgreementId,
+        ),
+      },
+      {
+        icon: 'link',
+        label: `Counter-Party ${this.participantIdLocalization.participantId}`,
+        ...this.propertyGridUtils.guessValue(contractAgreement.counterPartyId),
+      },
+      {
+        icon: 'link',
+        label: 'Counter-Party Connector Endpoint',
+        ...this.propertyGridUtils.guessValue(
+          contractAgreement.counterPartyAddress,
         ),
       },
     ];

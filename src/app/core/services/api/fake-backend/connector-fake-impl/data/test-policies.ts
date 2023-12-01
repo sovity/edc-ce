@@ -18,7 +18,7 @@ export namespace TestPolicies {
     {
       left: 'REFERRING_CONNECTOR',
       operator: 'EQ',
-      right: {type: 'STRING', value: 'https://my-other-connector'},
+      right: {type: 'STRING', value: 'MDSL1234XX.C1234XX'},
     },
   ]);
 

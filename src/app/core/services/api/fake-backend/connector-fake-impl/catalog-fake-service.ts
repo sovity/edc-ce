@@ -5,7 +5,7 @@ import {TestPolicies} from './data/test-policies';
 let dataOffers: UiDataOffer[] = [
   {
     endpoint: 'http://existing-other-connector/api/dsp',
-    participantId: 'existing-other-connector',
+    participantId: 'MDSL1234XX.C1234XX',
     asset: TestAssets.full,
     contractOffers: [
       {
@@ -23,7 +23,7 @@ let dataOffers: UiDataOffer[] = [
   {
     endpoint: 'http://existing-other-connector/api/dsp',
     asset: TestAssets.boring,
-    participantId: 'existing-other-connector',
+    participantId: 'MDSL1234XX.C1234XX',
     contractOffers: [
       {
         contractOfferId: 'test-contract-offer-3',

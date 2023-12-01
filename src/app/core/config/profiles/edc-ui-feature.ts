@@ -2,6 +2,9 @@ export type EdcUiFeature =
   // Enables MDS Specific Asset Fields such as Data Category, Transport Mode
   | 'mds-fields'
 
+  // Enables MDS Specific Connector ID support
+  | 'mds-connector-id'
+
   // Enables support functionalities of connectors commercially hosted by sovity.
   | 'sovity-zammad-integration'
 
@@ -15,4 +18,4 @@ export type EdcUiFeature =
   | 'connector-limits'
 
   // Enterprise Edition specific flag to enable marketing for other Enterprise Edition variants in basic connectors
-  | 'mds-ee-basic-marketing';
+  | 'mds-marketing';

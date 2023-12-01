@@ -12,7 +12,7 @@ export const OPERATOR_SYMBOLS: Record<OperatorDto, string> = {
   NEQ: '≠',
   GEQ: '≥',
   LEQ: '≤',
-  IN: '∈',
+  IN: 'IN',
   HAS_PART: '`HAS_PART`',
   IS_A: '`IS_A`',
   IS_ALL_OF: '`IS_ALL_OF`',

@@ -22,7 +22,7 @@ export const createAsset = (asset: UiAssetCreateRequest): IdResponseDto => {
     assetId: asset.id,
     title: asset.title ?? asset.id,
     connectorEndpoint: 'https://my-connector/api/dsp',
-    participantId: 'my-connector',
+    participantId: 'MDSL1234XX.C1234XX',
     description: asset.description,
     creatorOrganizationName: 'My Org',
     publisherHomepage: asset.publisherHomepage,

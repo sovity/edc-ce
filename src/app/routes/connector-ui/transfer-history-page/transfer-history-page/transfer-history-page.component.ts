@@ -22,6 +22,7 @@ import {AssetBuilder} from '../../../../core/services/asset-builder';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
 import {NotificationService} from '../../../../core/services/notification.service';
+import {ParticipantIdLocalization} from '../../../../core/services/participant-id-localization';
 
 @Component({
   selector: 'transfer-history-page',
@@ -34,6 +35,7 @@ export class TransferHistoryPageComponent implements OnInit, OnDestroy {
     'lastUpdated',
     'assetName',
     'state',
+    'counterPartyParticipantId',
     'counterPartyConnectorEndpoint',
     'details',
   ];
@@ -48,6 +50,7 @@ export class TransferHistoryPageComponent implements OnInit, OnDestroy {
     private assetBuilder: AssetBuilder,
     private notificationService: NotificationService,
     private jsonDialogService: JsonDialogService,
+    public participantIdLocalization: ParticipantIdLocalization,
   ) {}
 
   onTransferHistoryDetailsClick(item: TransferHistoryEntry) {

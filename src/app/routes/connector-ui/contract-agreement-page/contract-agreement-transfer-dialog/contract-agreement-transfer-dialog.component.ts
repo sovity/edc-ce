@@ -152,7 +152,7 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
   ): InitiateCustomTransferRequest {
     return {
       contractAgreementId: this.data.contractId,
-      transferProcessRequestJsonLd: value.transferProcessRequest,
+      transferProcessRequestJsonLd: value.transferProcessRequest!,
     };
   }
 }

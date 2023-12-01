@@ -5,6 +5,7 @@ import {MatBadgeModule} from '@angular/material/badge';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatChipsModule} from '@angular/material/chips';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -18,6 +19,7 @@ import {RouterModule} from '@angular/router';
 import {JsonDialogModule} from '../../../component-library/json-dialog/json-dialog.module';
 import {UiElementsModule} from '../../../component-library/ui-elements/ui-elements.module';
 import {NewPolicyDialogComponent} from './new-policy-dialog/new-policy-dialog.component';
+import {ParticipantIdSelectComponent} from './participant-id-select/participant-id-select.component';
 import {PolicyCardsComponent} from './policy-cards/policy-cards.component';
 import {PolicyDefinitionPageComponent} from './policy-definition-page/policy-definition-page.component';
 
@@ -34,6 +36,7 @@ import {PolicyDefinitionPageComponent} from './policy-definition-page/policy-def
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatChipsModule,
     MatDatepickerModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
@@ -50,6 +53,7 @@ import {PolicyDefinitionPageComponent} from './policy-definition-page/policy-def
   ],
   declarations: [
     NewPolicyDialogComponent,
+    ParticipantIdSelectComponent,
     PolicyCardsComponent,
     PolicyDefinitionPageComponent,
   ],

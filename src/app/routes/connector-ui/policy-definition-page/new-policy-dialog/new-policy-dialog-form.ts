@@ -44,7 +44,7 @@ export class NewPolicyDialogForm {
           },
           {validators: dateRangeRequired},
         ),
-        connectorId: ['', Validators.required],
+        participantIds: [new Array<string>(), Validators.required],
       });
 
     switchDisabledControls<NewPolicyDialogFormValue>(
@@ -59,7 +59,7 @@ export class NewPolicyDialogForm {
           id: true,
           policyType: true,
           range: timePeriodRestricted,
-          connectorId: connecterRestrictedUsage,
+          participantIds: connecterRestrictedUsage,
         };
       },
     );

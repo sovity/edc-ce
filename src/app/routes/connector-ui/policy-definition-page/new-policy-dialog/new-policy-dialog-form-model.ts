@@ -16,7 +16,7 @@ export interface NewPolicyDialogFormModel {
     start: FormControl<Date | null>;
     end: FormControl<Date | null>;
   }>;
-  connectorId: FormControl<string>;
+  participantIds: FormControl<string[]>;
 }
 
 export type PolicyType =

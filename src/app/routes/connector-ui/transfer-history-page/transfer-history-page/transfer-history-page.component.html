@@ -102,9 +102,17 @@
           </div>
         </td>
       </ng-container>
+      <ng-container matColumnDef="counterPartyParticipantId">
+        <th *matHeaderCellDef mat-header-cell scope="col">
+          Counterparty {{ participantIdLocalization.participantId }}
+        </th>
+        <td *matCellDef="let item" mat-cell>
+          {{ item.counterPartyParticipantId }}
+        </td>
+      </ng-container>
       <ng-container matColumnDef="counterPartyConnectorEndpoint">
         <th *matHeaderCellDef mat-header-cell scope="col">
-          Counter-party Connector Endpoint
+          Counterparty Connector Endpoint
         </th>
         <td *matCellDef="let item" mat-cell>
           {{ item.counterPartyConnectorEndpoint }}

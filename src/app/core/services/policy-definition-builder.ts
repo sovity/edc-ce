@@ -45,12 +45,31 @@ export class PolicyDefinitionBuilder {
   private buildConnectorRestrictedConstraint(
     formValue: NewPolicyDialogFormValue,
   ): UiPolicyConstraint {
+    return this.inOrEqIfOne(
+      PolicyLeftExpressions.ReferringConnector,
+      formValue.participantIds!,
+    );
+  }
+
+  private inOrEqIfOne(left: string, values: string[]): UiPolicyConstraint {
+    if (values.length === 1) {
+      const value = values[0];
+      return {
+        left,
+        operator: 'EQ',
+        right: {
+          type: 'STRING',
+          value,
+        },
+      };
+    }
+
     return {
-      left: PolicyLeftExpressions.ReferringConnector,
-      operator: 'EQ',
+      left,
+      operator: 'IN',
       right: {
-        type: 'STRING',
-        value: formValue.connectorId!,
+        type: 'STRING_LIST',
+        valueList: values,
       },
     };
   }

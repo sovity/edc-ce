@@ -8,10 +8,12 @@ import {PropertyGridField} from '../../component-library/property-grid/property-
 import {PropertyGridFieldService} from '../../component-library/property-grid/property-grid/property-grid-field.service';
 import {LastCommitInfo} from './api/model/last-commit-info';
 import {Fetched} from './models/fetched';
+import {ParticipantIdLocalization} from './participant-id-localization';
 
 @Injectable({providedIn: 'root'})
 export class ConnectorInfoPropertyGridGroupBuilder {
   constructor(
+    private participantIdLocalization: ParticipantIdLocalization,
     private propertyGridUtils: PropertyGridFieldService,
     private matDialog: MatDialog,
   ) {}
@@ -168,7 +170,7 @@ export class ConnectorInfoPropertyGridGroupBuilder {
       },
       {
         icon: 'category',
-        label: 'Participant ID',
+        label: this.participantIdLocalization.participantId,
         ...this.propertyGridUtils.guessValue(data.connectorParticipantId),
       },
       {

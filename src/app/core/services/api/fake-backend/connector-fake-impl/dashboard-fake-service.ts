@@ -18,7 +18,7 @@ export const dashboardPage = (): DashboardPage => ({
     numError: 0,
     numRunning: 0,
   },
-  connectorParticipantId: 'my-connector',
+  connectorParticipantId: 'MDSL1234XX.C1234XX',
   connectorTitle: 'My Connector',
   connectorDescription: 'Example Connector with Fake Backend',
   connectorMaintainerName: 'sovity GmbH',

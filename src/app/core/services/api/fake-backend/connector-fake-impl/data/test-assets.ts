@@ -5,7 +5,7 @@ export namespace TestAssets {
     assetId: 'data-sample-ckd-skd-demands-2023-Jan',
     title: 'data-sample-ckd-skd-demands-2023-Jan',
     connectorEndpoint: 'https://my-other-connector/api/dsp',
-    participantId: 'my-other-connector',
+    participantId: 'MDSL1234XX.C1234XX',
     creatorOrganizationName: 'my-other-connector',
   };
 
@@ -13,7 +13,7 @@ export namespace TestAssets {
     assetId: 'ckd-skd-demands-2023-Jan',
     title: 'CKD / SKD Demands January 2023',
     connectorEndpoint: 'https://my-other-connector/api/dsp',
-    participantId: 'my-other-connector',
+    participantId: 'MDSL1234XX.C1234XX',
     version: '2023-A-Program',
     creatorOrganizationName: 'My-German-OEM',
     keywords: ['automotive', 'part-demands', '2023', 'January'],
