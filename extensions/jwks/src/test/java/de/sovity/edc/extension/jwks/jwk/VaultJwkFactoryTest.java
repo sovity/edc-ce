@@ -18,6 +18,9 @@ import com.nimbusds.jose.jwk.RSAKey;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.security.Vault;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 
@@ -27,15 +30,18 @@ import static de.sovity.edc.extension.jwks.util.TestCertFromFileUtil.getCertStri
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+
+@ExtendWith(MockitoExtension.class)
 class VaultJwkFactoryTest {
 
     private static final String PARSE_CERTIFICATE_FAILED_MESSAGE =
             "Couldn't parse PEM-encoded X.509 certificate";
     private static final String JWK_ALIAS = "jwk-alias";
-    private Vault vault = mock(Vault.class);
+
+    @Mock
+    private Vault vault;
 
     @Test
     void jwkFromAliasSuccessful() throws IOException {

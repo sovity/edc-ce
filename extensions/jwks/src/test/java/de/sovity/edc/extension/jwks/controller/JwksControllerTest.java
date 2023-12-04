@@ -20,20 +20,28 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class JwksControllerTest {
+
+    @Mock
+    private Monitor monitor;
+    @Mock
+    private VaultJwkFactory vaultJkwFactory;
+    @Mock
+    private JwksJsonTransformer jwksJsonTransformer;
 
     @Test
     void loadingJwkSucceeds() {
         // given
-        var monitor = mock(Monitor.class);
-        var vaultJkwFactory = mock(VaultJwkFactory.class);
-        var jwksJsonTransformer = mock(JwksJsonTransformer.class);
         var jwksController = new JwksController(
                 vaultJkwFactory,
                 jwksJsonTransformer,
@@ -59,9 +67,6 @@ class JwksControllerTest {
     @Test
     void loadingJwkFails() {
         // given
-        var monitor = mock(Monitor.class);
-        var vaultJkwFactory = mock(VaultJwkFactory.class);
-        var jwksJsonTransformer = mock(JwksJsonTransformer.class);
         var jwksController = new JwksController(
                 vaultJkwFactory,
                 jwksJsonTransformer,
@@ -84,9 +89,6 @@ class JwksControllerTest {
     @Test
     void loadingJwkFailsNoAliasConfigured() {
         // given
-        var monitor = mock(Monitor.class);
-        var vaultJkwFactory = mock(VaultJwkFactory.class);
-        var jwksJsonTransformer = mock(JwksJsonTransformer.class);
         var jwksController = new JwksController(
                 vaultJkwFactory,
                 jwksJsonTransformer,
