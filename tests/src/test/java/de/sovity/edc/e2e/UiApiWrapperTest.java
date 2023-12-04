@@ -52,6 +52,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.CONSUMING;
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.PROVIDING;
@@ -59,6 +60,7 @@ import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validat
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
 class UiApiWrapperTest {
 
@@ -278,11 +280,12 @@ class UiApiWrapperTest {
 
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
 
-        //Currently the Core Edc which prevent the transfer process to be marked as completed
-        var completedProvidingTransferProcess = providerClient.uiApi().getContractAgreementPage().getContractAgreements().get(0).getTransferProcesses().get(0);
-        var completedConsumingTransferProcess = consumerClient.uiApi().getContractAgreementPage().getContractAgreements().get(0).getTransferProcesses().get(0);
-        assertThat(completedProvidingTransferProcess.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.RUNNING);
-        assertThat(completedConsumingTransferProcess.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.RUNNING);
+        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
+            var providing = providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
+            var consuming = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
+            assertThat(providing.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
+            assertThat(consuming.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
+        });
     }
 
     @Test
