@@ -5,6 +5,7 @@ val mockitoVersion: String by project
 val lombokVersion: String by project
 val jettyVersion: String by project
 val jettyGroup: String by project
+val nimbusJoseJwtVersion: String by project
 
 plugins {
     `java-library`
@@ -12,6 +13,8 @@ plugins {
 }
 
 dependencies {
+    implementation("com.nimbusds:nimbus-jose-jwt:${nimbusJoseJwtVersion}")
+
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 

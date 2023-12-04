@@ -14,17 +14,25 @@
 
 package de.sovity.edc.extension.jwks;
 
-import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
+import de.sovity.edc.extension.jwks.controller.JwksController;
+import de.sovity.edc.extension.jwks.controller.JwksJsonTransformerImpl;
+import de.sovity.edc.extension.jwks.jwk.VaultJwkFactoryImpl;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
+import org.eclipse.edc.spi.security.Vault;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.web.spi.WebService;
 
+
 public class JwksExtension implements ServiceExtension {
 
     public static final String EXTENSION_NAME = "JwksExtension";
+    public static final String TOKEN_VERIFIER_PUBLIC_KEY_ALIAS =
+            "edc.transfer.proxy.token.verifier.publickey.alias";
     @Inject
     private WebService webService;
+    @Inject
+    private Vault vault;
 
     @Override
     public String name() {
@@ -33,7 +41,17 @@ public class JwksExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        var controller = new JwksController();
+        var monitor = context.getMonitor();
+        var pemSecretAlias = context.getSetting(TOKEN_VERIFIER_PUBLIC_KEY_ALIAS, null);
+        if (pemSecretAlias == null) {
+            monitor.warning(() -> "No vault alias provided for JWKS-Extension");
+        }
+        var controller = new JwksController(
+                new VaultJwkFactoryImpl(vault),
+                new JwksJsonTransformerImpl(),
+                pemSecretAlias,
+                monitor);
         webService.registerResource(controller);
     }
+
 }

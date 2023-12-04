@@ -15,6 +15,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
+- Added `JWKS-Extension`, which provides an endpoint in the default API, that returns the JWKS of the connector.
+
 #### Patch Changes
 
 - Marked `MY_EDC_NAME_KEBAB_CASE` as deprecated in favor of `MY_EDC_PARTICIPANT_ID`.
