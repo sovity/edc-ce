@@ -21,11 +21,13 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.monitor.Monitor;
 
 import java.util.Objects;
 
+@RequiredArgsConstructor
 @Produces({MediaType.APPLICATION_JSON})
 @Path(JwksController.JWKS_PATH)
 public class JwksController {
@@ -40,17 +42,6 @@ public class JwksController {
     private final JwksJsonTransformer jwksJsonTransformer;
     private final String pemSecretAlias;
     private final Monitor monitor;
-
-    public JwksController(
-            VaultJwkFactory vaultJkwFactory,
-            JwksJsonTransformer jwksJsonTransformer,
-            String pemSecretAlias,
-            Monitor monitor) {
-        this.vaultJkwFactory = vaultJkwFactory;
-        this.jwksJsonTransformer = jwksJsonTransformer;
-        this.pemSecretAlias = pemSecretAlias;
-        this.monitor = monitor;
-    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

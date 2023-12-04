@@ -16,18 +16,16 @@ package de.sovity.edc.extension.jwks.jwk;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWK;
+import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.security.Vault;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
 public class VaultJwkFactoryImpl implements VaultJwkFactory {
 
     private final Vault vault;
-
-    public VaultJwkFactoryImpl(Vault vault) {
-        this.vault = vault;
-    }
 
     @Override
     public JWK publicX509JwkFromAlias(String alias) {

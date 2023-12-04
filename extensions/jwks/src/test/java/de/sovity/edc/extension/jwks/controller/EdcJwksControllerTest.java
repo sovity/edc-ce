@@ -45,11 +45,9 @@ public class EdcJwksControllerTest {
     private static final String WEB_HTTP_PATH = "/api";
 
     private static final String CERTIFICATE_VAULT_ALIAS = "transfer-proxy";
-    private EdcExtension extension;
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-        this.extension = extension;
         extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
         extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
         extension.registerServiceMock(
