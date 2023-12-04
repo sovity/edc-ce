@@ -21,8 +21,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static de.sovity.edc.extension.jwks.jwk.VaultJwkFactoryImpl.PARSE_VALUE_FROM_VAULT_FAILED_MESSAGE;
-import static de.sovity.edc.extension.jwks.jwk.VaultJwkFactoryImpl.RESOLVE_ALIAS_FROM_VAULT_FAILED_MESSAGE;
+import static de.sovity.edc.extension.jwks.jwk.VaultJwkFactory.PARSE_VALUE_FROM_VAULT_FAILED_MESSAGE;
+import static de.sovity.edc.extension.jwks.jwk.VaultJwkFactory.RESOLVE_ALIAS_FROM_VAULT_FAILED_MESSAGE;
 import static de.sovity.edc.extension.jwks.util.TestCertFromFileUtil.getCertStringFromFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -40,7 +40,7 @@ class VaultJwkFactoryTest {
     @Test
     void jwkFromAliasSuccessful() throws IOException {
         // arrange
-        var vaultJwkFactory = new VaultJwkFactoryImpl(vault);
+        var vaultJwkFactory = new VaultJwkFactory(vault);
         var certString = getCertStringFromFile();
         when(vault.resolveSecret(JWK_ALIAS)).thenReturn(certString);
 
@@ -63,7 +63,7 @@ class VaultJwkFactoryTest {
     @Test
     void jwkFromAliasVaultJwkNull() {
         // arrange
-        var vaultJwkFactory = new VaultJwkFactoryImpl(vault);
+        var vaultJwkFactory = new VaultJwkFactory(vault);
         when(vault.resolveSecret(JWK_ALIAS)).thenReturn(null);
 
         // act & assert
@@ -77,7 +77,7 @@ class VaultJwkFactoryTest {
     @Test
     void jwkFromAliasVaultInvalidValue() {
         // arrange
-        var vaultJksFactory = new VaultJwkFactoryImpl(vault);
+        var vaultJksFactory = new VaultJwkFactory(vault);
         when(vault.resolveSecret(JWK_ALIAS)).thenReturn("invalid-value");
 
         // act & assert
