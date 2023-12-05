@@ -34,7 +34,7 @@ public class JwksController {
 
     static final String ALIAS_NOT_SET_MESSAGE = String.format(
             "No alias for JWKS-Extension configured. Please set the %s property",
-            JwksExtension.TOKEN_VERIFIER_PUBLIC_KEY_ALIAS);
+            JwksExtension.CERTIFICATE_ALIAS);
     static final String JWKS_RESPONSE_FAILED_MESSAGE_TEMPLATE =
             "Creating JWKS response failed: %s";
     public static final String JWKS_PATH = "/jwks";

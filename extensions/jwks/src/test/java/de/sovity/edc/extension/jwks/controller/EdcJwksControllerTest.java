@@ -61,7 +61,7 @@ public class EdcJwksControllerTest {
                 "edc.api.auth.key", AUTH_KEY,
                 "edc.last.commit.info", "test env commit message",
                 "edc.build.date", "2023-05-08T15:30:00Z",
-                JwksExtension.TOKEN_VERIFIER_PUBLIC_KEY_ALIAS, CERTIFICATE_VAULT_ALIAS));
+                JwksExtension.CERTIFICATE_ALIAS, CERTIFICATE_VAULT_ALIAS));
     }
 
     @Test

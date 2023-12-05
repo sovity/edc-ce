@@ -27,8 +27,7 @@ import org.eclipse.edc.web.spi.WebService;
 public class JwksExtension implements ServiceExtension {
 
     public static final String EXTENSION_NAME = "JwksExtension";
-    public static final String TOKEN_VERIFIER_PUBLIC_KEY_ALIAS =
-            "edc.transfer.proxy.token.verifier.publickey.alias";
+    public static final String CERTIFICATE_ALIAS = "edc.oauth.certificate.alias";
     @Inject
     private WebService webService;
     @Inject
@@ -42,7 +41,7 @@ public class JwksExtension implements ServiceExtension {
     @Override
     public void initialize(ServiceExtensionContext context) {
         var monitor = context.getMonitor();
-        var pemSecretAlias = context.getSetting(TOKEN_VERIFIER_PUBLIC_KEY_ALIAS, null);
+        var pemSecretAlias = context.getSetting(CERTIFICATE_ALIAS, null);
         if (pemSecretAlias == null) {
             monitor.warning(() -> "No vault alias provided for JWKS-Extension");
         }
