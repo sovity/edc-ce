@@ -18,13 +18,27 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
+#### Patch
+
+#### Deployment Migration Notes
+
+## [v2.2.0] 05.12.2023
+
+### Overview
+
+Aligned Participant ID / Connector ID and Connector Restricted Policy.
+
+### Detailed Changes
+
+#### Minor
+
 - MDS Connector UI: Renamed Participant IDs to MDS Connector IDs
 - Connector Restricted Policy now supports entry of multiple connectors.
 - New Transfer History Page Column: Participant ID / Connector ID
 
-#### Patch
-
 #### Deployment Migration Notes
+
+_No special deployment migration steps required_
 
 ## [v2.1.0] 17.11.2023
 
