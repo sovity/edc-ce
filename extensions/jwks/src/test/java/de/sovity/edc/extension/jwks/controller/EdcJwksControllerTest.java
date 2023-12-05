@@ -28,7 +28,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.UUID;
 
 import static de.sovity.edc.extension.jwks.util.TestCertFromFileUtil.getCertStringFromFile;
 import static io.restassured.RestAssured.given;
@@ -40,9 +39,8 @@ import static org.mockito.Mockito.mock;
 @ExtendWith(EdcExtension.class)
 public class EdcJwksControllerTest {
 
-    private static final String AUTH_KEY = UUID.randomUUID().toString();
-    private static final int WEB_HTTP_PORT = getFreePort();
-    private static final String WEB_HTTP_PATH = "/api";
+    private static final int WEB_HTTP_PROTOCOL_PORT = getFreePort();
+    private static final String WEB_HTTP_PROTOCOL_PATH = "/api/v1/dsp";
 
     private static final String CERTIFICATE_VAULT_ALIAS = "transfer-proxy";
 
@@ -54,13 +52,10 @@ public class EdcJwksControllerTest {
                 DataPlaneInstanceStore.class,
                 mock(DataPlaneInstanceStore.class));
         extension.setConfiguration(Map.of(
-                "web.http.port", String.valueOf(WEB_HTTP_PORT),
-                "web.http.path", WEB_HTTP_PATH,
+                "web.http.protocol.port", String.valueOf(WEB_HTTP_PROTOCOL_PORT),
+                "web.http.protocol.path", WEB_HTTP_PROTOCOL_PATH,
                 "web.http.management.port", String.valueOf(getFreePort()),
                 "web.http.management.path", "/api/v1/data",
-                "edc.api.auth.key", AUTH_KEY,
-                "edc.last.commit.info", "test env commit message",
-                "edc.build.date", "2023-05-08T15:30:00Z",
                 JwksExtension.CERTIFICATE_ALIAS, CERTIFICATE_VAULT_ALIAS));
     }
 
@@ -68,8 +63,8 @@ public class EdcJwksControllerTest {
     void jwksSuccessfullyExposed(Vault vault) throws IOException {
         vault.storeSecret(CERTIFICATE_VAULT_ALIAS, getCertStringFromFile());
         var request = given()
-                .baseUri("http://localhost:" + WEB_HTTP_PORT)
-                .basePath(WEB_HTTP_PATH)
+                .baseUri("http://localhost:" + WEB_HTTP_PROTOCOL_PORT)
+                .basePath(WEB_HTTP_PROTOCOL_PATH)
                 .when()
                 .get(JwksController.JWKS_PATH)
                 .then()
@@ -85,14 +80,13 @@ public class EdcJwksControllerTest {
                 .body("keys[0].nbf", equalTo(1701353600))
                 .body("keys[0].exp", equalTo(4854953600L))
                 .body("keys[0].x5c", notNullValue());
-
     }
 
     @Test
     void certificateCannotBeLoadedFromVault() {
         given()
-                .baseUri("http://localhost:" + WEB_HTTP_PORT)
-                .basePath(WEB_HTTP_PATH)
+                .baseUri("http://localhost:" + WEB_HTTP_PROTOCOL_PORT)
+                .basePath(WEB_HTTP_PROTOCOL_PATH)
                 .when()
                 .get(JwksController.JWKS_PATH)
                 .then()

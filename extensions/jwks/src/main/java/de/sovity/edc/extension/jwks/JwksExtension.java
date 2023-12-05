@@ -17,6 +17,7 @@ package de.sovity.edc.extension.jwks;
 import de.sovity.edc.extension.jwks.controller.JwksController;
 import de.sovity.edc.extension.jwks.controller.JwksJsonTransformer;
 import de.sovity.edc.extension.jwks.jwk.VaultJwkFactory;
+import org.eclipse.edc.protocol.dsp.api.configuration.DspApiConfigurationExtension;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.security.Vault;
 import org.eclipse.edc.spi.system.ServiceExtension;
@@ -50,7 +51,7 @@ public class JwksExtension implements ServiceExtension {
                 new JwksJsonTransformer(),
                 pemSecretAlias,
                 monitor);
-        webService.registerResource(controller);
+        webService.registerResource(DspApiConfigurationExtension.CONTEXT_ALIAS, controller);
     }
 
 }

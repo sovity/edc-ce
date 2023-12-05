@@ -18,7 +18,7 @@
 
 The JWKS-Extension provides an endpoint in the default API of the EDC-Connector, that returns the
 [JWKS]{https://datatracker.ietf.org/doc/html/rfc7517#section-5} of the connector. It can be accessed
-using the `:{WEB_HTTP_PORT}/{WEB_HTTP_PATH}/jwks` (default: `:11001/api/jwks`) endpoint.
+using the `:{WEB_HTTP_PROTOCOL_PORT}/{WEB_HTTP_PROTOCOL_PATH}/jwks` (default: `:11003/api/dsp/jwks`) endpoint.
 
 ## Why does this extension exist?
 
@@ -30,7 +30,7 @@ goal of simplifying the on-boarding process of connectors to a DAPS.
 ### X509 Secret Alias
 
 The alias of the pem-encoded X509-certificate stored in the `Vault` is determined by
-the `edc.transfer.proxy.token.verifier.publickey.alias` property.
+the `edc.oauth.certificate.alias` property.
 
 ## License
 
