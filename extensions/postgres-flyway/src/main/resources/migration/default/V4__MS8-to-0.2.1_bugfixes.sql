@@ -37,3 +37,12 @@ set consumer_agent_id = neg.counterparty_id
 from edc_contract_negotiation neg
 where neg.agreement_id = edc_contract_agreement.agr_id
   and neg.type = 'PROVIDER';
+
+-- Optimizations for Transfer Processes
+create index transfer_process_status
+    on edc_transfer_process (state);
+
+-- Fix transfer processes stuck in running state
+update edc_transfer_process
+set state = 800
+where state = 600;

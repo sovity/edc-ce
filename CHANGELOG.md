@@ -17,10 +17,11 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
-- Marked `MY_EDC_NAME_KEBAB_CASE` as deprecated in favor of `MY_EDC_PARTICIPANT_ID`.
 - Fixed an issue preventing Contract Negotiations between MDS Connectors.
+- Fixed an issue preventing transfer processes from being marked as `COMPLETED` in Eclipse EDC `0.2`.
 - Improved `:extensions:wrapper:wrapper-common-mappers` for broker: `AssetJsonLdUtils`, made some methods public.
 - Added example for using the API Wrapper to offer and consume data.
+- Marked `MY_EDC_NAME_KEBAB_CASE` as deprecated in favor of `MY_EDC_PARTICIPANT_ID`.
 - Improved development documentation documenting our CHANGELOG.
 
 ### Deployment Migration Notes
