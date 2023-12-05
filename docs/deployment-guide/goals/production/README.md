@@ -167,7 +167,34 @@ You can use a script (if you're on WSL or Linux) to generate the SKI, AKI and jk
 No, locally run connectors cannot exchange data with online connectors. A connector must have a proper URL +
 configuration and be accesible from the data provider via REST calls.
 
+### Can I use a different DAT Claim for the Participant ID verification?
+
+The checked DAT claim name can be changed by overriding `EDC_AGENT_IDENTITY_KEY`. However, this must be done in sync
+with all connectors of the data space for contract negotations and transfers to work.
+
+### What if I have no Participant ID / Connector ID concept in my Dataspace?
+
+If there is no Participant ID / Connector ID concept in your Dataspace, you could use the AKI / SKI Client ID as
+Participant ID / Connector ID:
+
+- `EDC_AGENT_IDENTITY_KEY` could be set to the claim name of the AKI / SKI Client ID.
+- This would be is `sub` for a sovity DAPS and `client_id` for an Omejdn DAPS.
+- `MY_EDC_PARTICIPANT_ID` would have to be set to the AKI / SKI Client ID.
+
+The downside to doing this is that the AKI / SKI Client ID is not human-readable, but will be shown in many places.
+
 ### Can I still use the deprecated Omejdn DAPS?
 
 In the current version of the sovity EDC CE Connector the Omejdn DAPS is not supported due to the Omejdn DAPS requiring
 a special OAuth2 extension and custom messages that exceed the default DSP Oauth2 Specification.
+
+When using the required extension, these additional env variables would be required for the backend to be configured for
+the Omejdn DAPS:
+
+```yaml
+# Omejdn DAPS Only: DAPS Config
+EDC_OAUTH_PROVIDER_AUDIENCE: 'idsc:IDS_CONNECTORS_ALL'
+EDC_OAUTH_ENDPOINT_AUDIENCE: 'idsc:IDS_CONNECTORS_ALL'
+EDC_AGENT_IDENTITY_KEY: 'client_id'
+MY_EDC_PARTICIPANT_ID: '_your SKI/AKI_'
+```

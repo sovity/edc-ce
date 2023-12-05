@@ -5,11 +5,12 @@ services:
     ports:
       - '11000:8080'
     environment:
-      - EDC_UI_ACTIVE_PROFILE=${EDC_UI_ACTIVE_PROFILE}
-      - EDC_UI_CONFIG_URL=edc-ui-config
-      - EDC_UI_MANAGEMENT_API_URL=http://localhost:11002/api/management
-      - EDC_UI_MANAGEMENT_API_KEY=ApiKeyDefaultValue
-      - EDC_UI_CATALOG_URLS=http://edc2:11003/api/dsp
+      EDC_UI_ACTIVE_PROFILE: ${EDC_UI_ACTIVE_PROFILE}
+      EDC_UI_CONFIG_URL: edc-ui-config
+      EDC_UI_MANAGEMENT_API_URL: http://localhost:11002/api/management
+      EDC_UI_MANAGEMENT_API_KEY: ApiKeyDefaultValue
+      EDC_UI_CATALOG_URLS: http://edc2:11003/api/dsp
+      NGINX_ACCESS_LOG: off
 
   edc:
     image: ${EDC_IMAGE}
@@ -37,6 +38,7 @@ services:
       EDC_WEB_REST_CORS_ENABLED: 'true'
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,X-Api-Key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
+      EDC_AGENT_IDENTITY_KEY: 'client_id' # required for Mock IAM to work
     ports:
       - '11001:11001'
       - '11002:11002'
@@ -49,11 +51,12 @@ services:
     ports:
       - '22000:8080'
     environment:
-      - EDC_UI_ACTIVE_PROFILE=${EDC_UI_ACTIVE_PROFILE}
-      - EDC_UI_CONFIG_URL=edc-ui-config
-      - EDC_UI_MANAGEMENT_API_URL=http://localhost:22002/api/management
-      - EDC_UI_MANAGEMENT_API_KEY=ApiKeyDefaultValue
-      - EDC_UI_CATALOG_URLS=http://edc:11003/api/dsp
+      EDC_UI_ACTIVE_PROFILE: ${EDC_UI_ACTIVE_PROFILE}
+      EDC_UI_CONFIG_URL: edc-ui-config
+      EDC_UI_MANAGEMENT_API_URL: http://localhost:22002/api/management
+      EDC_UI_MANAGEMENT_API_KEY: ApiKeyDefaultValue
+      EDC_UI_CATALOG_URLS: http://edc:11003/api/dsp
+      NGINX_ACCESS_LOG: off
 
   edc2:
     image: ${EDC_IMAGE}
@@ -81,6 +84,7 @@ services:
       EDC_WEB_REST_CORS_ENABLED: 'true'
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,X-Api-Key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
+      EDC_AGENT_IDENTITY_KEY: 'client_id' # required for Mock IAM to work
     ports:
       - '22001:11001'
       - '22002:11002'

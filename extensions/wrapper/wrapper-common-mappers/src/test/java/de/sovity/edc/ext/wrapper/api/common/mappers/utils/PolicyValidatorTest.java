@@ -75,7 +75,6 @@ class PolicyValidatorTest {
                 "$: Policy has inheritsFrom, which is currently unsupported.",
                 "$: Policy has an assigner, which is currently unsupported.",
                 "$: Policy has an assignee, which is currently unsupported.",
-                "$: Policy has a target.",
                 "$: Policy has extensible properties.",
                 "$: Policy does not have type SET, but OFFER, which is currently unsupported."
         );
@@ -151,7 +150,6 @@ class PolicyValidatorTest {
                 "$: Permission has duties, which is currently unsupported.",
                 "$: Permission has an assigner, which is currently unsupported.",
                 "$: Permission has an assignee, which is currently unsupported.",
-                "$: Permission has a target.",
                 "$.action: Action has a type that is not 'USE', but 'idk'.",
                 "$.action: Action has a value for includedIn, which is currently unsupported.",
                 "$.action: Action has a constraint, which is currently unsupported."
