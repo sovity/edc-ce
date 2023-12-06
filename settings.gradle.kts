@@ -1,6 +1,7 @@
 rootProject.name = "edc-extensions"
 
 include(":extensions:edc-ui-config")
+include(":extensions:jwks")
 include(":extensions:last-commit-info")
 include(":extensions:policy-always-true")
 include(":extensions:policy-referring-connector")
