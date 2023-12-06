@@ -58,8 +58,7 @@ https://github.com/sovity/edc-ui/releases/tag/v2.2.0
 - If a given data space has no "Participant ID" / "Connector ID" concept or does not use the `referringConnector` claim:
     - It is possible to override the checked claim by overriding `EDC_AGENT_IDENTITY_KEY`.
     - `EDC_AGENT_IDENTITY_KEY` could be set to the claim name of the AKI / SKI Client ID, which should always be part of
-      the issued DAT.
-    - This would be is `sub` for a sovity DAPS and `client_id` for an Omejdn DAPS.
+      the issued DAT. This would be `sub` for a sovity DAPS and `client_id` for an Omejdn DAPS.
     - `MY_EDC_PARTICIPANT_ID` would have to be set to the AKI / SKI Client ID.
 - Renamed ~~`MY_EDC_NAME_KEBAB_CASE`~~ to `MY_EDC_PARTICIPANT_ID`. ~~`MY_EDC_NAME_KEBAB_CASE`~~ continues working, but
   prints a warning on startup if configured.

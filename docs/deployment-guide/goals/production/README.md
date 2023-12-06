@@ -172,14 +172,30 @@ configuration and be accesible from the data provider via REST calls.
 The checked DAT claim name can be changed by overriding `EDC_AGENT_IDENTITY_KEY`. However, this must be done in sync
 with all connectors of the data space for contract negotations and transfers to work.
 
+### Can I change the Participant ID of my connector?
+
+You can always re-start your connector with a different Participant ID. Please make sure your changed Participant ID is
+deposited in the DAPS as new Contract Negotiations or Transfer Processes will validate the Participant ID of each
+connector. Both connectors must also be configured to check for the same claim.
+
+After changing your Participant ID old Contract Agreements will stop working, because the Participant ID is heavily
+referenced in both connectors, and there is no way for the other connector to know what your Participant ID changed to.
+
+This is relevant, because for MS8 connectors the Participant ID concept did not exist yet or was not enforced in any
+way, which might force participants to re-negotiate old contracts.
+
 ### What if I have no Participant ID / Connector ID concept in my Dataspace?
 
 If there is no Participant ID / Connector ID concept in your Dataspace, you could use the AKI / SKI Client ID as
 Participant ID / Connector ID:
 
-- `EDC_AGENT_IDENTITY_KEY` could be set to the claim name of the AKI / SKI Client ID.
-- This would be is `sub` for a sovity DAPS and `client_id` for an Omejdn DAPS.
-- `MY_EDC_PARTICIPANT_ID` would have to be set to the AKI / SKI Client ID.
+```yaml
+# Using the SKI / AKI Client ID as Participant ID
+MY_EDC_PARTICIPANT_ID: '_your SKI/AKI_'
+
+# Claim Name of the AKI / SKI Client ID:
+EDC_AGENT_IDENTITY_KEY: 'sub' # or 'client_id' in Omejdn
+```
 
 The downside to doing this is that the AKI / SKI Client ID is not human-readable, but will be shown in many places.
 
@@ -192,9 +208,9 @@ When using the required extension, these additional env variables would be requi
 the Omejdn DAPS:
 
 ```yaml
-# Omejdn DAPS Only: DAPS Config
+# Required Config for an Omejdn DAPS:
+MY_EDC_PARTICIPANT_ID: '_your SKI/AKI_'
+EDC_AGENT_IDENTITY_KEY: 'client_id'
 EDC_OAUTH_PROVIDER_AUDIENCE: 'idsc:IDS_CONNECTORS_ALL'
 EDC_OAUTH_ENDPOINT_AUDIENCE: 'idsc:IDS_CONNECTORS_ALL'
-EDC_AGENT_IDENTITY_KEY: 'client_id'
-MY_EDC_PARTICIPANT_ID: '_your SKI/AKI_'
 ```
