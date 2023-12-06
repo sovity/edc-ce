@@ -1,6 +1,6 @@
 plugins {
     `java-library`
-    id("org.gradle.test-retry") version "1.5.7"
+    id("org.gradle.test-retry") version "1.5.8"
 }
 
 val edcVersion: String by project
