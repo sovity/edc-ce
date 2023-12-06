@@ -1,7 +1,7 @@
 ---
 name: Release
 about: Create an issue to track a release process.
-title: "Release x.x.x"
+title: "Release vx.x.x"
 labels: ["task/release", "scope/mds"]
 assignees: ""
 ---
@@ -35,6 +35,7 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
 - [ ] Create a release and re-use the changelog section as release description, and the version as title.
 - [ ] Check if the pipeline built the release versions in the Actions-Section (or you won't see it).
 - [ ] Checkout the release tag and check test the `docker-compose.yaml`.
+  - [ ] Ensure with a `docker ps -a` that all containers are healthy, and not `healthy: starting` or `healthy: unhealthy`. 
 - [ ] Check the contents of the Deployment Docs Zip from the GitHub Release.
 - [ ] Send out a release notification E-Mail to the MDS, the MDS integrator company and the MDS operator company.
     - [ ] Check @jkbquabeck for an up-to-date mailing list, separated into "To" and "Cc".

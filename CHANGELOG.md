@@ -13,23 +13,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Major
 
-- Authority Portal API: Removed data offer count endpoint in favor of new Connector Metadata Endpoint.
-
 #### Minor
-
-- Authority Portal API: Added new Connector Metadata endpoint that includes online status, participant ID and data offer counts.
 
 #### Patch
 
 ### Deployment Migration Notes
-
-- Authority Portal API: The data offer count endpoint was removed in favor of the new Connector Metadata Endpoint: `wrapper/broker/authority-portal-api/connectors`, used to be ~~``authority-portal-api/data-offer-counts``~~.
 
 #### Compatible Versions
 
 - Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:{{ CE_VERSION }}`
 - Broker UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI_VERSION }}`
 - Sovity EDC CE: {{ CE Release Link }}
+
+## [v3.0.0] - 2023-06-12
+
+### Overview
+
+EDC 0 / MDS 2.0 bugfix release, Authority Portal API Connector Metadata Endpoint.
+
+### Detailed Changes
+
+#### Major
+
+- Authority Portal API: Removed data offer count endpoint in favor of new Connector Metadata Endpoint.
+
+#### Minor
+
+- Bumped sovity EDC CE to `7.0.0`.
+- Bumped Broker UI to `2.2.0`.
+- Authority Portal API: Added new Connector Metadata endpoint that includes online status, participant ID and data offer
+  counts.
+
+### Deployment Migration Notes
+
+- The DAPS needs to contain the claim `referringConnector=broker` for the broker. The expected value `broker` could be overridden by
+  specifying a different value for `MY_EDC_PARTICIPANT_ID`.
+- Authority Portal API: The data offer count endpoint was removed in favor of the new Connector Metadata
+  Endpoint: `wrapper/broker/authority-portal-api/connectors`, used to be ~~``authority-portal-api/data-offer-counts``~~.
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:3.0.0`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:2.2.0`
+- Sovity EDC CE: [`7.0.0`](https://github.com/sovity/edc-extensions/releases/tag/v7.0.0)
 
 ## [v2.0.2] - 2023-11-23
 
@@ -75,7 +101,6 @@ _No special migration steps required._
 - Broker UI Docker Image: `ghcr.io/sovity/edc-ui:2.1.0`
 - Sovity EDC CE: [`6.0.0`](https://github.com/sovity/edc-extensions/releases/tag/v6.0.0)
 
-
 ## [v2.0.0] - 2023-11-17
 
 ### Overview
@@ -104,9 +129,12 @@ EDC 0 Release, some bugfixes.
 
 1. Connectors and Data Offers require an initial crawl before their metadata is filled again.
 2. UI Migration Notes since the last Broker Release: https://github.com/sovity/edc-ui/releases/tag/v2.0.0
-3. The Protocol Endpoint changed to `https://[MY_EDC_FQDN]/backend/api/dsp`, ~~used to be `https://[MY_EDC_FQDN]/backend/api/v1/ids`~~.
-4. The Management Endpoint changed to `https://[MY_EDC_FQDN]/backend/api/management`, ~~used to be `https://[MY_EDC_FQDN]/backend/api/v1/management`~~.
-5. The Connector Endpoint changed to `https://[MY_EDC_FQDN]/backend/api/dsp`, ~~used to be `https://[MY_EDC_FQDN]/backend/api/v1/ids/data`~~.
+3. The Protocol Endpoint changed to `https://[MY_EDC_FQDN]/backend/api/dsp`, ~~used to
+   be `https://[MY_EDC_FQDN]/backend/api/v1/ids`~~.
+4. The Management Endpoint changed to `https://[MY_EDC_FQDN]/backend/api/management`, ~~used to
+   be `https://[MY_EDC_FQDN]/backend/api/v1/management`~~.
+5. The Connector Endpoint changed to `https://[MY_EDC_FQDN]/backend/api/dsp`, ~~used to
+   be `https://[MY_EDC_FQDN]/backend/api/v1/ids/data`~~.
 
 #### Compatible Versions
 
@@ -258,6 +286,7 @@ Bugfix / Feature Release for the Broker MvP with MS8: Connectors can now be adde
 - Fixed Backend Docker Healthcheck
 
 ### Deployment Migration Notes
+
 1. Added new **required** configuration properties:
     ```yaml
     # Broker Server Admin Api Key (required)                                            
@@ -298,14 +327,14 @@ Bugfix / Feature Release for the Broker MvP with MS8: Connectors can now be adde
         --header 'x-api-key: ApiKeyDefaultValue' \
         --data '["https://some-new-connector/api/dsp", "https://some-other-new-connector/api/dsp"]'
     ```
-   
+
 #### Compatible Versions
 
 - Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:1.0.1`
 - Broker UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity12`
 - Sovity EDC CE: [`4.0.1`](https://github.com/sovity/edc-extensions/tree/v4.0.1/connector)
 
-## [v1.0.0] 
+## [v1.0.0]
 
 Release was deleted in favor of above release. There was a bug, and we just decided to re-do the release.
 
