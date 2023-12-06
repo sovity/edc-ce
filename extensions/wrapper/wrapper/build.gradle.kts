@@ -28,7 +28,7 @@ dependencies {
     api("${edcGroup}:core-spi:${edcVersion}")
     api("${edcGroup}:policy-definition-api:${edcVersion}")
     api("${edcGroup}:transfer-process-api:${edcVersion}")
-    implementation("org.apache.commons:commons-lang3:3.13.0")
+    implementation("org.apache.commons:commons-lang3:3.14.0")
 
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")

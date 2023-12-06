@@ -15,7 +15,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
     api("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    implementation("org.apache.commons:commons-lang3:3.13.0")
+    implementation("org.apache.commons:commons-lang3:3.14.0")
 
     api("${edcGroup}:junit:${edcVersion}")
     api("org.awaitility:awaitility:${awaitilityVersion}")

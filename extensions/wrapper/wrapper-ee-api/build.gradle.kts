@@ -17,7 +17,7 @@ dependencies {
     api("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.15")
     api("jakarta.servlet:jakarta.servlet-api:5.0.0")
 
-    implementation("org.apache.commons:commons-lang3:3.13.0")
+    implementation("org.apache.commons:commons-lang3:3.14.0")
     implementation("org.glassfish.jersey.media:jersey-media-multipart:3.1.3")
 }
 
