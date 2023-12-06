@@ -1,4 +1,4 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+v<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 
 <a name="readme-top"></a>
 
@@ -156,6 +156,9 @@ A productive configuration will require you to join a DAPS.
 For that you will need a SKI/AKI ClientID. Please refer
 to [edc-extension's Getting Started Guide](https://github.com/sovity/edc-extensions/tree/main/docs/getting-started#faq)
 on how to generate one.
+
+The DAPS needs to contain the claim `referringConnector=broker` for the broker.
+The expected value `broker` could be overridden by specifying a different value for `MY_EDC_PARTICIPANT_ID`.
 
 ```yaml
 # Required: Fully Qualified Domain Name
