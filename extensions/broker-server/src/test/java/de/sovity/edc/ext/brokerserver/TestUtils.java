@@ -62,7 +62,7 @@ public class TestUtils {
         config.put("edc.oauth.provider.audience", "idsc:IDS_CONNECTORS_ALL");
 
         config.put("edc.participant.id", PARTICIPANT_ID);
-        config.put("my.edc.name.kebab.case", PARTICIPANT_ID);
+        config.put("my.edc.participant.id", PARTICIPANT_ID);
         config.put("my.edc.title", "My Connector");
         config.put("my.edc.description", "My Connector Description");
         config.put("my.edc.curator.url", "https://connector.my-org");

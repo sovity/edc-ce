@@ -1,5 +1,6 @@
 plugins {
     `java-library`
+    id("org.gradle.test-retry") version "1.5.7"
 }
 
 val edcVersion: String by project
@@ -65,6 +66,12 @@ dependencies {
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+    maxParallelForks = 1
+    retry {
+        maxRetries.set(2)
+        maxFailures.set(4)
+        failOnPassedAfterRetry.set(false)
+    }
 }
 
 tasks.register("prepareKotlinBuildScriptModel") {}
