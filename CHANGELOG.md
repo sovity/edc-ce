@@ -15,8 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Minor
 
-- Authority Portal API: Re-added the deprecated data offer endpoint: `authority-portal-api/data-offer-counts`
-
 ### Deployment Migration Notes
 
 #### Compatible Versions
@@ -24,6 +22,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:{{ CE_VERSION }}`
 - Broker UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI_VERSION }}`
 - Sovity EDC CE: {{ CE Release Link }}
+
+## [v3.1.0] - 2023-08-12
+
+### Overview
+
+Re-added deprecated endpoints for Authority Portal API backward compatibility.
+
+### Detailed Changes
+
+#### Minor
+
+- Authority Portal API: Removed data offer count endpoint in favor of new Connector Metadata Endpoint.
+
+### Deployment Migration Notes
+
+_No special migration steps required._
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:3.1.0`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:2.2.0`
+- Sovity EDC CE: [`7.0.0`](https://github.com/sovity/edc-extensions/releases/tag/v7.0.0)
 
 ## [v3.0.0] - 2023-06-12
 
@@ -46,7 +66,8 @@ EDC 0 / MDS 2.0 bugfix release, Authority Portal API Connector Metadata Endpoint
 
 ### Deployment Migration Notes
 
-- The DAPS needs to contain the claim `referringConnector=broker` for the broker. The expected value `broker` could be overridden by
+- The DAPS needs to contain the claim `referringConnector=broker` for the broker. The expected value `broker` could be
+  overridden by
   specifying a different value for `MY_EDC_PARTICIPANT_ID`.
 - Authority Portal API: The data offer count endpoint was removed in favor of the new Connector Metadata
   Endpoint: `authority-portal-api/connectors`, used to be ~~``authority-portal-api/data-offer-counts``~~.
