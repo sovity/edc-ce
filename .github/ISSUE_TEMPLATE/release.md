@@ -33,7 +33,7 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
 - [ ] Wait for the main branch to be green.
 - [ ] Test the `docker-compose.yaml` with `BROKER_IMAGE=ghcr.io/sovity/broker-server-dev:main`.
 - [ ] Create a release and re-use the changelog section as release description, and the version as title.
-- [ ] Check if the pipeline built the release versions in the Actions-Section (or you won't see it).
+- [ ] Check if the pipeline built the release versions in the [Actions-Section](https://github.com/sovity/edc-broker-server-extension/actions?query=event%3Arelease) (or you won't see it).
 - [ ] Checkout the release tag and check test the `docker-compose.yaml`.
   - [ ] Ensure with a `docker ps -a` that all containers are healthy, and not `healthy: starting` or `healthy: unhealthy`. 
 - [ ] Check the contents of the Deployment Docs Zip from the GitHub Release.
