@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Minor
 
-#### Patch
+- Authority Portal API: Re-added the deprecated data offer endpoint: `authority-portal-api/data-offer-counts`
 
 ### Deployment Migration Notes
 
@@ -49,7 +49,7 @@ EDC 0 / MDS 2.0 bugfix release, Authority Portal API Connector Metadata Endpoint
 - The DAPS needs to contain the claim `referringConnector=broker` for the broker. The expected value `broker` could be overridden by
   specifying a different value for `MY_EDC_PARTICIPANT_ID`.
 - Authority Portal API: The data offer count endpoint was removed in favor of the new Connector Metadata
-  Endpoint: `wrapper/broker/authority-portal-api/connectors`, used to be ~~``authority-portal-api/data-offer-counts``~~.
+  Endpoint: `authority-portal-api/connectors`, used to be ~~``authority-portal-api/data-offer-counts``~~.
 
 #### Compatible Versions
 

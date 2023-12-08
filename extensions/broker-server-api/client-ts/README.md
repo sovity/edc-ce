@@ -38,7 +38,7 @@ import {
 } from '@sovity.de/broker-server-client';
 
 const brokerServerClient: BrokerServerClient = buildBrokerServerClient({
-    managementApiUrl: 'http://localhost:11002/api/v1/management',
+    managementApiUrl: 'http://localhost:11002/api/management',
     managementApiKey: 'ApiKeyDefaultValue',
 });
 

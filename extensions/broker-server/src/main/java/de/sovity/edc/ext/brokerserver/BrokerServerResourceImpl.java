@@ -22,6 +22,7 @@ import de.sovity.edc.ext.brokerserver.api.model.ConnectorDetailPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorDetailPageResult;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageResult;
+import de.sovity.edc.ext.brokerserver.api.model.DataOfferCountResult;
 import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageResult;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
@@ -87,5 +88,10 @@ public class BrokerServerResourceImpl implements BrokerServerResource {
     public List<AuthorityPortalConnectorInfo> getConnectorMetadata(List<String> endpoints, String adminApiKey) {
         adminApiKeyValidator.validateAdminApiKey(adminApiKey);
         return dslContextFactory.transactionResult(dsl -> authorityPortalConnectorMetadataApiService.getMetadataByEndpoints(dsl, endpoints));
+    }
+
+    @Override
+    public DataOfferCountResult dataOfferCount(List<String> endpoints) {
+        return dslContextFactory.transactionResult(dsl -> authorityPortalConnectorMetadataApiService.countByEndpoints(dsl, endpoints));
     }
 }

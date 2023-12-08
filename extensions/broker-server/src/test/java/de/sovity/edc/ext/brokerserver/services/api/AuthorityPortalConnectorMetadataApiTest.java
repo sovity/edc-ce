@@ -44,7 +44,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
-class ConnectorMetadataApiTest {
+class AuthorityPortalConnectorMetadataApiTest {
 
     @RegisterExtension
     private static final TestDatabase TEST_DATABASE = TestDatabaseFactory.getTestDatabase();
@@ -97,6 +97,44 @@ class ConnectorMetadataApiTest {
             assertThat(fourth.getDataOfferCount()).isEqualTo(0);
             assertThat(fourth.getOnlineStatus()).isEqualTo(AuthorityPortalConnectorInfo.OnlineStatusEnum.ONLINE);
             assertThat(fourth.getOfflineSinceOrLastUpdatedAt()).isEqualTo(now);
+        });
+    }
+
+    @Test
+    void testCountByEndpoints() {
+        TEST_DATABASE.testTransaction(dsl -> {
+            // arrange
+            var now = OffsetDateTime.now().withNano(0);
+
+            createConnector(dsl, now, 1);
+            createDataOffer(dsl, now, 1, 1);
+            createDataOffer(dsl, now, 1, 2);
+
+            createConnector(dsl, now, 2);
+            createDataOffer(dsl, now, 2, 1);
+
+            createConnector(dsl, now, 3);
+            createDataOffer(dsl, now, 3, 1);
+
+            createConnector(dsl, now, 4);
+
+            // act
+            var actual = brokerServerClient().brokerServerApi().dataOfferCount(
+                Arrays.asList(
+                    getEndpoint(1),
+                    getEndpoint(1), // having this twice should not crash the query
+                    getEndpoint(2),
+                    getEndpoint(4),
+                    getEndpoint(5) // having this not existing should not crash the query
+            ));
+
+            // assert
+            var dataOfferCountMap = actual.getDataOfferCount();
+            assertThat(dataOfferCountMap).isEqualTo(Map.of(
+                getEndpoint(1), 2,
+                getEndpoint(2), 1,
+                getEndpoint(4), 0
+            ));
         });
     }
 
