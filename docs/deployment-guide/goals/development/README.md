@@ -30,10 +30,10 @@ the [docker-compose-dev.yaml](../../../../docker-compose-dev.yaml), execute:
 docker login ghcr.io
 
 # Pull the latest images
-docker compose --env-file .env-dev -f docker-compose-dev.yaml pull
+docker compose --env-file .env.dev -f docker-compose-dev.yaml pull
 
 # Start sovity EDC Connectors
-docker compose --env-file .env-dev -f docker-compose-dev.yaml up
+docker compose --env-file .env.dev -f docker-compose-dev.yaml up
 ```
 
 </td>
@@ -46,10 +46,10 @@ docker compose --env-file .env-dev -f docker-compose-dev.yaml up
 docker login ghcr.io
 
 # Pull the latest images
-docker compose --env-file .env-dev -f docker-compose-dev.yaml pull
+docker compose --env-file .env.dev -f docker-compose-dev.yaml pull
 
 # Start MDS EDC Connectors
-EDC_UI_ACTIVE_PROFILE=mds-open-source docker compose --env-file .env-dev -f docker-compose-dev.yaml up
+EDC_UI_ACTIVE_PROFILE=mds-open-source docker compose --env-file .env.dev -f docker-compose-dev.yaml up
 ```
 
 </td>

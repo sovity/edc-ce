@@ -17,7 +17,7 @@ externalDocs:
   description: EDC API Wrapper Project in sovity/edc-extensions
   url: https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper
 servers:
-- url: "https://[MY_EDC_FQDN]/api/management"
+- url: https://my-connector/api/management
 tags:
 - name: Enterprise Edition
   description: sovity Enterprise Edition EDC API Endpoints. Requires our sovity Enterprise
@@ -384,23 +384,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
-  /wrapper/use-case-api/data-offer:
-    post:
-      tags:
-      - Use Case
-      description: "Creates a new data offer, consisting of an asset, a policy definition\
-        \ and a contract definition."
-      operationId: createOffer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateOfferingDto'
-      responses:
-        default:
-          description: default response
-          content:
-            '*/*': {}
   /wrapper/use-case-api/kpis:
     get:
       tags:
@@ -1215,6 +1198,7 @@ components:
       - assetName
       - contractAgreementId
       - counterPartyConnectorEndpoint
+      - counterPartyParticipantId
       - createdDate
       - direction
       - lastUpdatedDate
@@ -1243,6 +1227,9 @@ components:
         counterPartyConnectorEndpoint:
           type: string
           description: Other Connector's Endpoint
+        counterPartyParticipantId:
+          type: string
+          description: Other Connector's Participant ID
         assetName:
           type: string
           description: Asset Name
@@ -1328,150 +1315,6 @@ components:
           description: Additional transfer process properties. These are not passed
             to the consumer EDC
       description: "For type PARAMS_ONLY: Required data for starting a Transfer Process"
-    AssetEntryDto:
-      required:
-      - assetRequestId
-      - dataAddressProperties
-      type: object
-      properties:
-        assetRequestId:
-          type: string
-        assetRequestProperties:
-          type: object
-          additionalProperties:
-            type: object
-        dataAddressProperties:
-          type: object
-          additionalProperties:
-            type: string
-            description: At least a property 'type' must be set
-          description: At least a property 'type' must be set
-    AtomicConstraintDto:
-      required:
-      - leftExpression
-      - operator
-      - rightExpression
-      type: object
-      properties:
-        leftExpression:
-          type: string
-          description: Left part of the constraint.
-        operator:
-          $ref: '#/components/schemas/OperatorDto'
-        rightExpression:
-          type: string
-          description: Right part of the constraint.
-      description: Type-Safe OpenAPI generator friendly Constraint DTO that supports
-        an opinionated subset of the original EDC Constraint Entity.
-    ContractDefinitionRequestDto:
-      required:
-      - accessPolicyId
-      - assetsSelector
-      - contractPolicyId
-      type: object
-      properties:
-        id:
-          type: string
-        accessPolicyId:
-          type: string
-        contractPolicyId:
-          type: string
-        assetsSelector:
-          type: array
-          items:
-            $ref: '#/components/schemas/CriterionDto'
-    CreateOfferingDto:
-      type: object
-      properties:
-        assetEntry:
-          $ref: '#/components/schemas/AssetEntryDto'
-        policyDefinitionRequest:
-          $ref: '#/components/schemas/PolicyDefinitionRequestDto'
-        contractDefinitionRequest:
-          $ref: '#/components/schemas/ContractDefinitionRequestDto'
-      description: Necessary data for creating an offer
-    CriterionDto:
-      required:
-      - operandLeft
-      - operator
-      type: object
-      properties:
-        operandLeft:
-          type: object
-        operator:
-          type: string
-        operandRight:
-          type: object
-    ExpressionDto:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/ExpressionType'
-        atomicConstraint:
-          $ref: '#/components/schemas/AtomicConstraintDto'
-        and:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExpressionDto'
-        or:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExpressionDto'
-        xor:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExpressionDto'
-      description: Possible constraints for the permission
-    ExpressionType:
-      type: string
-      description: |
-        Expression types:
-        * `EMPTY` - No constraints for the policy
-        * `ATOMIC_CONSTRAINT` - A single constraint for the policy
-        * `AND` - Several constraints, all of which must be respected
-        * `OR` - Several constraints, of which at least one must be respected
-        * `XOR` - Several constraints, of which exactly one must be respected
-      enum:
-      - EMPTY
-      - ATOMIC_CONSTRAINT
-      - AND
-      - OR
-      - XOR
-    PermissionDto:
-      required:
-      - constraints
-      type: object
-      properties:
-        constraints:
-          $ref: '#/components/schemas/ExpressionDto'
-      description: Permission for this policy
-    PolicyDefinitionRequestDto:
-      required:
-      - id
-      - policy
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID chosen by the user
-        policy:
-          $ref: '#/components/schemas/PolicyDto'
-      description: Data for creating a policy definition request
-    PolicyDto:
-      required:
-      - legacyPolicy
-      - permission
-      type: object
-      properties:
-        legacyPolicy:
-          type: string
-          description: Legacy JSON as built by the Management API. Will be replaced
-            in the future by a type-safe variant without polymorphisms that can be
-            used for our generated clients.
-        permission:
-          $ref: '#/components/schemas/PermissionDto'
-      description: Type-Safe OpenAPI generator friendly Policy DTO that supports an
-        opinionated subset of the original EDC Policy Entity.
     KpiResult:
       required:
       - assetsCount

@@ -25,7 +25,7 @@ APIs to be implemented outside the wrapper extension itself create their own Gra
 e.g. [:extensions:wrapper:wrapper-ee-api](../wrapper-ee-api).
 
 There are few models we can profit from sharing between all APIs. For example,
-[`PolicyDto`](src/main/java/de/sovity/edc/ext/wrapper/api/common/model/PolicyDto.java), which
+[`UiPolicy`](src/main/java/de/sovity/edc/ext/wrapper/api/common/model/UiPolicy.java), which
 contains a supported subset of the original EDC Policy-Entity. We create such a custom policy model
 because the core EDC Policy model struggles in OpenAPI Specification YAMLs due to its polymorphism.
 

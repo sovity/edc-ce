@@ -34,6 +34,7 @@ import java.util.UUID;
 public class TransferProcessTestUtils {
     public static final String DATA_SINK = "http://my-data-sink/api/stuff";
     public static final String COUNTER_PARTY_ADDRESS = "http://some-other-connector/api/v1/ids/data";
+    public static final String COUNTER_PARTY_ID = "some-other-connector";
     public static final String PROVIDING_CONTRACT_ID = "provider-contract:eb934d1f-6582-4bab-85e6-af19a76f7e2b";
     public static final String CONSUMING_CONTRACT_ID = "consumer-contract:f52a5d30-6356-4a55-a75a-3c45d7a88c3e";
     public static final String PROVIDING_ASSET_ID = "my-asset";
@@ -113,7 +114,7 @@ public class TransferProcessTestUtils {
     ) {
         var negotiation = ContractNegotiation.Builder.newInstance()
                 .id(UUID.randomUUID().toString())
-                .counterPartyId(UUID.randomUUID().toString())
+                .counterPartyId(COUNTER_PARTY_ID)
                 .counterPartyAddress(counterPartyAddress)
                 .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
                 .contractAgreement(agreement)
@@ -125,12 +126,23 @@ public class TransferProcessTestUtils {
         store.save(negotiation);
     }
 
-    private static void createTransferProcess(String assetId, String contractId, DataAddress dataAddress, TransferProcess.Type type, String transferProcessId, String lastUpdateDateForTransferProcess, String errorMessage, TransferProcessStore transferProcessStore) throws ParseException {
+    private static void createTransferProcess(
+            String assetId,
+            String contractId,
+            DataAddress dataAddress,
+            TransferProcess.Type type,
+            String transferProcessId,
+            String lastUpdateDateForTransferProcess,
+            String errorMessage,
+            TransferProcessStore transferProcessStore
+    ) throws ParseException {
 
         var dataRequestForTransfer = DataRequest.Builder.newInstance()
                 .assetId(assetId)
                 .contractId(contractId)
                 .dataDestination(dataAddress)
+                .connectorAddress(COUNTER_PARTY_ADDRESS)
+                .connectorId(COUNTER_PARTY_ID)
                 .build();
 
         var transferProcess = TransferProcess.Builder.newInstance()

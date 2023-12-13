@@ -42,4 +42,4 @@ Using The Client
 Feel free to use the endpoints of the aforementioned API groups.
 
 A full example providing and consuming a data offer using the API Wrapper Client Library can be found
-in [ApiWrapperDemoTest.java](../../../launchers/connectors/sovity-dev/src/test/java/de/sovity/edc/e2e/ApiWrapperDemoTest.java).
+in [ApiWrapperDemoTest.java](../../../tests/src/test/java/de/sovity/edc/e2e/ApiWrapperDemoTest.java).

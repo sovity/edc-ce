@@ -60,10 +60,6 @@ public class PolicyValidator {
             errors.add("Policy has an assignee, which is currently unsupported.");
         }
 
-        if (StringUtils.isNotBlank(policy.getTarget())) {
-            errors.add("Policy has a target.");
-        }
-
         if (policy.getExtensibleProperties() != null && !policy.getExtensibleProperties().isEmpty()) {
             errors.add("Policy has extensible properties.");
         }
@@ -93,10 +89,6 @@ public class PolicyValidator {
 
         if (isNotBlank(permission.getAssignee())) {
             errors.add("Permission has an assignee, which is currently unsupported.");
-        }
-
-        if (isNotBlank(permission.getTarget())) {
-            errors.add("Permission has a target.");
         }
 
         validateAction(permission.getAction(), errors.forChildObject("action"));

@@ -15,15 +15,63 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
-#### Patch Changes
+- Added `JWKS-Extension`, which provides an endpoint in the default API, that returns the JWKS of the connector.
 
-- Improved `:extensions:wrapper:wrapper-common-mappers` for broker: `AssetJsonLdUtils`, made some methods public.
-- Added example for using the API Wrapper to offer and consume data.
-- Improved development documentation documenting our CHANGELOG.
+#### Patch Changes
 
 ### Deployment Migration Notes
 
 #### Compatible Versions
+
+## [7.0.0] - 2023-12-06
+
+### Overview
+
+`MY_EDC_PARTICIPANT_ID` must now coincide with a DAT claim.
+This fixes the Contract Negotiation issue that affected `5.0.0` and `6.0.0`.
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v2.2.0
+
+### EDC Extensions
+
+#### Major Changes
+
+- Participant IDs must now coincide with a DAT claim.
+
+#### Patch Changes
+
+- Fixed an issue preventing Contract Negotiations.
+- Fixed an issue preventing transfer processes from being marked as `COMPLETED` in Eclipse EDC `0.2`.
+- Fixed policy and permission targets shown as warnings in the UI.
+- Added example for using the API Wrapper to offer and consume data.
+- Added CHANGELOG documentation.
+- Marked `MY_EDC_NAME_KEBAB_CASE` as deprecated in favor of `MY_EDC_PARTICIPANT_ID`.
+
+### Deployment Migration Notes
+
+- The configured value of `MY_EDC_PARTICIPANT_ID` will now be validated via the DAPS:
+    - The configured value of `MY_EDC_PARTICIPANT_ID` must coincide with the claim value `referringConnector`
+      as configured for this Connector in the DAPS.
+    - For MS8-migrated connectors, if the Participant ID was not configured well before, existing contract agreements
+      will stop working. The Participant ID is referenced heavily in counter-party connectors, which makes a migration
+      of Participant IDs for old contract agreements impractical.
+- If a given data space has no "Participant ID" / "Connector ID" concept or does not use the `referringConnector` claim:
+    - It is possible to override the checked claim by overriding `EDC_AGENT_IDENTITY_KEY`.
+    - `EDC_AGENT_IDENTITY_KEY` could be set to the claim name of the AKI / SKI Client ID, which should always be part of
+      the issued DAT. This would be `sub` for a sovity DAPS and `client_id` for an Omejdn DAPS.
+    - `MY_EDC_PARTICIPANT_ID` would have to be set to the AKI / SKI Client ID.
+- Renamed ~~`MY_EDC_NAME_KEBAB_CASE`~~ to `MY_EDC_PARTICIPANT_ID`. ~~`MY_EDC_NAME_KEBAB_CASE`~~ continues working, but
+  prints a warning on startup if configured.
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:7.0.0`
+    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.0.0`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.0.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.2.0`
 
 ## [6.0.0] - 2023-11-17
 

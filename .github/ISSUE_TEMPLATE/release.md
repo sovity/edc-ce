@@ -53,6 +53,7 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
     - [ ] Merge the `release-prep` PR.
 - [ ] Wait for the main branch to be green.
 - [ ] Test the release `docker-compose.yaml` with `RELEASE_EDC_IMAGE=ghcr.io/sovity/edc-dev:latest`.
+    - [ ] Ensure with a `docker ps -a` that all containers are healthy, and not `healthy: starting` or `healthy: unhealthy`.
 - [ ] Test the postman collection against that running docker-compose.
 - [ ] Create a release and re-use the changelog section as release description, and the version as title.
 - [ ] Check if the pipeline built the release versions in the Actions-Section (or you won't see it).

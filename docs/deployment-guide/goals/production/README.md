@@ -7,25 +7,34 @@ Productive Deployment Guide
 
 This is a productive deployment guide for self-hosting a functional sovity CE EDC Connector or MDS CE EDC Connector.
 
-## Requirements
+## Prerequisites
 
-A productive EDC Connector deployment has strict requirements, with slight errors in configuration already causing
-contract negotiations / data transfer to fail.
+### Technical Skills
 
-In general a productive EDC Connector requires a DAPS Server, DAPS Credentials, a reverse proxy configured in detail due
-to technical reasons, reachability via the internet and well-defined URLs across all configurations.
+- Ability to deploy, run and expose containered applications to the internet.
+- Ability to configure ingress routes or a reverse proxy of your choice to merge multiple services under a single
+  domain.
+- Know-how on how to secure an otherwise unprotected application with an auth proxy or other solutions fitting
+  your situation.
+
+### Dataspace
+
+- Must have a running DAPS that follows the subset of OAuth2 as described in the DSP Specification.
+- You must have a valid Connector Certificate in the form of [a generated SKI/AKI pair and .jks file](#faq).
+- You must have a valid Participant ID / Connector ID, which is configured in the claim "referringConnector" in the
+  DAPS.
 
 ## Deployment Units
 
 To deploy an EDC multiple deployment units must be deployed and configured.
 
-| Deployment Unit                                                | Version / Details                                                                           |
-|----------------------------------------------------------------|---------------------------------------------------------------------------------------------|
-| An Auth Proxy / Auth solution of your choice.                  | (deployment specific, required to secure UI and management API)                             |
-| Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                                       |
-| Postgresql                                                     | 13 or compatible version                                                                    |
-| EDC Backend                                                    | edc-ce or edc-ce-mds, see [CHANGELOG.md](../../../../CHANGELOG.md) for compatible versions. |
-| EDC UI                                                         | edc-ui, see  [CHANGELOG.md](../../../../CHANGELOG.md) for compatible versions.              |
+| Deployment Unit                                                   | Version / Details                                                                           |
+|-------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
+| An Auth Proxy / Auth solution of your choice.                     | (deployment specific, required to secure UI and management API)                             |
+| Reverse Proxy that merges multiple services and removes the ports | (deployment specific)                                                                       |
+| Postgresql                                                        | 13 or compatible version                                                                    |
+| EDC Backend                                                       | edc-ce or edc-ce-mds, see [CHANGELOG.md](../../../../CHANGELOG.md) for compatible versions. |
+| EDC UI                                                            | edc-ui, see  [CHANGELOG.md](../../../../CHANGELOG.md) for compatible versions.              |
 
 ## Configuration
 
@@ -79,13 +88,7 @@ EDC_UI_CONFIG_URL: "edc-ui-config"
 
 ## EDC Backend Configuration
 
-A sovity EDC CE or MDS EDC CE Backend deployment requires:
-
-- A running DAPS
-- (MDS Only) A running Clearing House
-- DAPS Access
-  and [a generated SKI/AKI pair and .jks file](#faq)
-- The following configuration properties
+A sovity EDC CE or MDS EDC CE Backend deployment requires the following environment variables:
 
 > [!WARNING]
 > Please be careful with overriding any of the ENV Vars set in our [launchers/.env](../../../../launchers/.env). Our
@@ -97,8 +100,9 @@ A sovity EDC CE or MDS EDC CE Backend deployment requires:
 # Connector Host Name
 MY_EDC_FQDN: "my-edc-deployment1.example.com"
 
-# Connector Technical Name
-MY_EDC_NAME_KEBAB_CASE: "example-connector"
+# Participant ID / Connector ID
+# Must be configured as the value of the "referringConnector" claim in the DAPS for this connector
+MY_EDC_PARTICIPANT_ID: "MDSL1234XX.C1234XX"
 
 # Connector Localized Name / Title
 MY_EDC_TITLE: "EDC Connector"
@@ -123,9 +127,6 @@ EDC_API_AUTH_KEY: ApiKeyDefaultValue
 # The company hosting the EDC Connector
 MY_EDC_MAINTAINER_URL: "https://sovity.de"
 MY_EDC_MAINTAINER_NAME: "sovity GmbH"
-
-# (MDS Only) Clearing House
-EDC_CLEARINGHOUSE_LOG_URL: 'https://clearing.test.mobility-dataspace.eu/messages/log'
 
 # DAPS URL
 EDC_OAUTH_TOKEN_URL: 'https://daps.test.mobility-dataspace.eu/token'
@@ -166,12 +167,50 @@ You can use a script (if you're on WSL or Linux) to generate the SKI, AKI and jk
 No, locally run connectors cannot exchange data with online connectors. A connector must have a proper URL +
 configuration and be accesible from the data provider via REST calls.
 
-### Can I still use the deprecated Omejdn DAPS?
+### Can I use a different DAT Claim for the Participant ID verification?
 
-For Omejdn one needs the following overrides in the backend:
+The checked DAT claim name can be changed by overriding `EDC_AGENT_IDENTITY_KEY`. However, this must be done in sync
+with all connectors of the data space for contract negotations and transfers to work.
+
+### Can I change the Participant ID of my connector?
+
+You can always re-start your connector with a different Participant ID. Please make sure your changed Participant ID is
+deposited in the DAPS as new Contract Negotiations or Transfer Processes will validate the Participant ID of each
+connector. Both connectors must also be configured to check for the same claim.
+
+After changing your Participant ID old Contract Agreements will stop working, because the Participant ID is heavily
+referenced in both connectors, and there is no way for the other connector to know what your Participant ID changed to.
+
+This is relevant, because for MS8 connectors the Participant ID concept did not exist yet or was not enforced in any
+way, which might force participants to re-negotiate old contracts.
+
+### What if I have no Participant ID / Connector ID concept in my Dataspace?
+
+If there is no Participant ID / Connector ID concept in your Dataspace, you could use the AKI / SKI Client ID as
+Participant ID / Connector ID:
 
 ```yaml
-EDC_OAUTH_PROVIDER_AUDIENCE: idsc:IDS_CONNECTORS_ALL
-EDC_OAUTH_ENDPOINT_AUDIENCE: idsc:IDS_CONNECTORS_ALL
-EDC_AGENT_IDENTITY_KEY: client_id
+# Using the SKI / AKI Client ID as Participant ID
+MY_EDC_PARTICIPANT_ID: '_your SKI/AKI_'
+
+# Claim Name of the AKI / SKI Client ID:
+EDC_AGENT_IDENTITY_KEY: 'sub' # or 'client_id' in Omejdn
+```
+
+The downside to doing this is that the AKI / SKI Client ID is not human-readable, but will be shown in many places.
+
+### Can I still use the deprecated Omejdn DAPS?
+
+In the current version of the sovity EDC CE Connector the Omejdn DAPS is not supported due to the Omejdn DAPS requiring
+a special OAuth2 extension and custom messages that exceed the default DSP Oauth2 Specification.
+
+When using the required extension, these additional env variables would be required for the backend to be configured for
+the Omejdn DAPS:
+
+```yaml
+# Required Config for an Omejdn DAPS:
+MY_EDC_PARTICIPANT_ID: '_your SKI/AKI_'
+EDC_AGENT_IDENTITY_KEY: 'client_id'
+EDC_OAUTH_PROVIDER_AUDIENCE: 'idsc:IDS_CONNECTORS_ALL'
+EDC_OAUTH_ENDPOINT_AUDIENCE: 'idsc:IDS_CONNECTORS_ALL'
 ```
