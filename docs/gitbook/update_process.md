@@ -13,7 +13,7 @@ Please also take into consideration which data space your connector is in.
 Depending on the data space, there may also be a set mandatory connector version that all participants must adhere to in order to avoid any compatibility problems between connector versions.
 
 Due to the constant developments in the message protocol for connector-to-connector communication, it may happen that a connector version is not compatible with another connector version in the sense that they cannot talk to each other.
-Please keep this in mind if you are considering an update and if in doubt, please contact you Data Space operator as to whether an update is technically recommended.
+Please keep this in mind if you are considering an update and if in doubt, please contact your Data Space operator as to whether an update is technically recommended.
 
 Link to release overview:
 https://github.com/sovity/edc-extensions/releases
