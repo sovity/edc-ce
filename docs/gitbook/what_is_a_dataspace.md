@@ -25,3 +25,6 @@ With an identity provider and connectors we would now have the definition of a m
 Depending on the requirements of the data space and its purpose, additional components can exist in the data space.
 For example, a data space may decide to introduce a central component in which all data offerings in the data space are displayed to a human user like in a kind of shop window.
 If a connector does not prohibit it, metadata about its offers will also be displayed in this central component, called broker, in addition to a possible direct query of its data catalog by other connectors.
+If there is no central broker, a request about the offers of a providing connector from a consuming connector can be done.
+The consuming connector can then decide whether it wants to start the contract negotiation and consume the data or not.
+Depending on the use case, there are additional components that either have to be operated as central components or around the connector deployed for a company on its side.
