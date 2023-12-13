@@ -25,7 +25,7 @@
     * [Firewalls/Proxies](https://github.com/sovity/edc-extensions/tree/main/docs/deployment-guide/goals/production#configuration)
     * [Data Space Configuration](./docs/gitbook/data_space_configuration.md) <!-- TODO -->
 * Administration
-    * [Update Process](./docs/gitbook/update_process.md) <!-- TODO -->
+    * [Update Process](./docs/gitbook/update_process.md)
     * [Database Migration](./extensions/postgres-flyway/README.md)
 * [Troubleshooting & FAQ](https://github.com/sovity/edc-extensions/blob/main/docs/deployment-guide/goals/production/README.md#faq)
 * [About Security](https://github.com/sovity/edc-extensions/security/policy)
