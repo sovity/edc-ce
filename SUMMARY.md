@@ -7,10 +7,7 @@
 * [About sovity](https://sovity.de/en/sovity-en/)
 
 ## Introduction
-* [What is a Data Space](./docs/gitbook/what_is_a_dataspace.md) <!-- TODO -->
-* [What is a Connector](./docs/gitbook/what_is_a_connector.md) <!-- TODO -->
-* [What is a Catalog](./docs/gitbook/what_is_a_catalog.md) <!-- TODO -->
-* [What is a DAPS](./docs/gitbook/what_is_a_daps.md) <!-- TODO -->
+* [What is a Data Space](./docs/gitbook/what_is_a_dataspace.md)
 
 ## Setup
 * Deployment Goals
