@@ -23,6 +23,7 @@ import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
+import de.sovity.edc.client.gen.model.UiAssetEditRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiContractOffer;
 import de.sovity.edc.client.gen.model.UiCriterion;
@@ -280,12 +281,7 @@ class UiApiWrapperTest {
 
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
 
-        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-            var providing = providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
-            var consuming = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
-            assertThat(providing.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
-            assertThat(consuming.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
-        });
+        validateTransferProcessesOk();
     }
 
     @Test
@@ -346,6 +342,60 @@ class UiApiWrapperTest {
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
     }
 
+    @Test
+    void editAssetOnLiveContract() {
+        // arrange
+        var data = "expected data 123";
+
+        var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
+                .id("asset-1")
+                .title("Bad Asset Title")
+                .dataAddressProperties(Map.of(
+                        Prop.Edc.TYPE, "HttpData",
+                        Prop.Edc.METHOD, "GET",
+                        Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
+                ))
+                .build()).getId();
+
+        providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
+                .contractDefinitionId("cd-1")
+                .accessPolicyId("always-true")
+                .contractPolicyId("always-true")
+                .assetSelector(List.of(UiCriterion.builder()
+                        .operandLeft(Prop.Edc.ID)
+                        .operator(UiCriterionOperator.EQ)
+                        .operandRight(UiCriterionLiteral.builder()
+                                .type(UiCriterionLiteralType.VALUE)
+                                .value(assetId)
+                                .build())
+                        .build()))
+                .build());
+
+        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
+        assertThat(dataOffers).hasSize(1);
+        var dataOffer = dataOffers.get(0);
+        assertThat(dataOffer.getContractOffers()).hasSize(1);
+        var contractOffer = dataOffer.getContractOffers().get(0);
+        var negotiation = negotiate(dataOffer, contractOffer);
+
+        // act
+        providerClient.uiApi().editAsset(assetId, UiAssetEditRequest.builder()
+                .title("Good Asset Title")
+                .dataAddressProperties(Map.of(
+                        Prop.Edc.TYPE, "HttpData",
+                        Prop.Edc.METHOD, "GET",
+                        Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
+                )).build());
+        initiateTransfer(negotiation);
+
+        // assert
+        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector)).get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
+        assertThat(providerClient.uiApi().getContractAgreementPage().getContractAgreements().get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
+        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
+        validateTransferProcessesOk();
+        assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo("Good Asset Title");
+    }
+
     private UiContractNegotiation negotiate(UiDataOffer dataOffer, UiContractOffer contractOffer) {
         var negotiationRequest = ContractNegotiationRequest.builder()
                 .counterPartyAddress(dataOffer.getEndpoint())
@@ -374,6 +424,15 @@ class UiApiWrapperTest {
                 .dataSinkProperties(dataAddress.getDataSinkProperties())
                 .build();
         consumerClient.uiApi().initiateTransfer(transferRequest);
+    }
+
+    private void validateTransferProcessesOk() {
+        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
+            var providing = providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
+            var consuming = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
+            assertThat(providing.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
+            assertThat(consuming.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
+        });
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

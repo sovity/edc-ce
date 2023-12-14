@@ -18,6 +18,7 @@ import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
+import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +29,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public class AssetApiService {
     private final AssetService assetService;
     private final AssetMapper assetMapper;
-    private final AssetIdValidator assetIdValidator;
+    private final AssetUpdater assetUpdater;
     private final SelfDescriptionService selfDescriptionService;
 
     public List<UiAsset> getAssets() {
@@ -47,10 +49,16 @@ public class AssetApiService {
 
     @NotNull
     public IdResponseDto createAsset(UiAssetCreateRequest request) {
-        assetIdValidator.assertValid(request.getId());
-        var organizationName = selfDescriptionService.getCuratorName();
-        var asset = assetMapper.buildAsset(request, organizationName);
+        var asset = assetUpdater.createAsset(request);
         asset = assetService.create(asset).orElseThrow(ServiceException::new);
+        return new IdResponseDto(asset.getId());
+    }
+
+    public IdResponseDto editAsset(String assetId, UiAssetEditRequest request) {
+        var asset = assetService.findById(assetId);
+        Objects.requireNonNull(asset, "Asset with ID %s not found".formatted(assetId));
+        asset = assetUpdater.editAsset(asset, request);
+        asset = assetService.update(asset).orElseThrow(ServiceException::new);
         return new IdResponseDto(asset.getId());
     }
 
