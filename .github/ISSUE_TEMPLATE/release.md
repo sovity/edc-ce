@@ -21,6 +21,7 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
     - [ ] Write or review a `Deployment Migration Notes` section.
     - [ ] Write or review a release summary.
     - [ ] Remove empty sections from the patch notes.
+  - [ ] Review the Screenshots in the Readme and update them if necessary.
   - [ ] Merge the `release-prep` PR.
 - [ ] Wait for the main branch to be green.
 - [ ] Create a release and re-use the changelog section as release description, and the version as title.

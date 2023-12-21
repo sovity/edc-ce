@@ -62,25 +62,23 @@ dataspace technologies.
 
 Our extension of EDC DataDashboard functionalities has been made open source and
 will be kept compatible to mostly stock EDCs with minimal API extending
-extensions. See [Compatibility](#compatibility).
+extensions.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- COMPATIBILITY -->
+<div>
+  <div style="float:left;width:33%;">
+    <img src="docs/screenshots/screenshot-dashboard.png" style="max-width:300px;">
+  </div>
+  <div style="float:left;width:33%;">
+    <img src="docs/screenshots/screenshot-contracts.png" style="max-width:300px;">
+  </div>
+  <div style="float:left;width:33%;">
+    <img src="docs/screenshots/screenshot-assets.png" style="max-width:300px;">
+  </div>
+</div>
 
-## Compatibility
-
-Our compatibility target for the profile `sovity-open-source` is our open-source
-built
-[ghcr.io/sovity/edc](https://github.com/sovity/edc-extensions/pkgs/container/edc)
-by
-[sovity/edc-extensions/blob/main/connector](https://github.com/sovity/edc-extensions/blob/main/connector).
-
-See
-https://github.com/sovity/edc-extensions/blob/main/connector/build.gradle.kts#L12
-for a list of extensions used.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<br style="clear:both;"/>
 
 <!-- GETTING STARTED -->
 
