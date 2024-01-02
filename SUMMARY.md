@@ -37,9 +37,6 @@
 * API documentation
     * [Management API](https://app.swaggerhub.com/apis/eclipse-edc-bot/management-api/0.2.1)
     * [Wrapper API](./docs/gitbook/wrapper_api.md) <!-- TODO -->
-        * [Create Asset](./docs/gitbook/create_asset.md) <!-- TODO -->
-        * [Create Policy](./docs/gitbook/create_policy.md) <!-- TODO -->
-        * [Create Contract Definition](./docs/gitbook/create_contract_definition.md) <!-- TODO -->
     * [Postman Collection](https://github.com/sovity/edc-extensions/blob/main/docs/postman_collection.json)
 * [Data Transfer Modes](./docs/getting-started/documentation/data-transfer-methods.md)
     * [Data Push](./docs/gitbook/data_push.md) <!-- TODO -->
