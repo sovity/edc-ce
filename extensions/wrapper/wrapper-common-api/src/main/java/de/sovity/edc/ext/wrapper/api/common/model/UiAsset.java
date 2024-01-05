@@ -56,6 +56,9 @@ public class UiAsset {
     @Schema(description = "Asset Description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String description;
 
+    @Schema(description = "Asset Description Short Text", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String descriptionShortText;
+
     @Schema(description = "Asset Homepage", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String publisherHomepage;
 

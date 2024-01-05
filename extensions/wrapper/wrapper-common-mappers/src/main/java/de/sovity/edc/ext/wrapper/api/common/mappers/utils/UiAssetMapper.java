@@ -39,6 +39,12 @@ import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtil
 import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNullJsonValue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+import com.vladsch.flexmark.util.ast.Node;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.data.MutableDataSet;
+import org.jsoup.Jsoup;
+
 @RequiredArgsConstructor
 public class UiAssetMapper {
     private final EdcPropertyUtils edcPropertyUtils;
@@ -57,12 +63,25 @@ public class UiAssetMapper {
         var creatorOrganizationName = JsonLdUtils.string(creator, Prop.Foaf.NAME);
         creatorOrganizationName = isBlank(creatorOrganizationName) ? participantId : creatorOrganizationName;
 
+        var description = JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION);
+        String shortDescription = null;
+
+        if(description != null) {
+            var options = new MutableDataSet();
+            Parser parser = Parser.builder(options).build();
+            HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+            Node document = parser.parse(description);
+            String html = renderer.render(document);
+            shortDescription = Jsoup.parse(html).text();
+        }
+
         uiAsset.setAssetId(id);
         uiAsset.setConnectorEndpoint(connectorEndpoint);
         uiAsset.setParticipantId(participantId);
         uiAsset.setTitle(title);
         uiAsset.setLicenseUrl(JsonLdUtils.string(properties, Prop.Dcterms.LICENSE));
-        uiAsset.setDescription(JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION));
+        uiAsset.setDescription(description);
+        uiAsset.setDescriptionShortText(shortDescription);
         uiAsset.setLanguage(JsonLdUtils.string(properties, Prop.Dcterms.LANGUAGE));
         uiAsset.setVersion(JsonLdUtils.string(properties, Prop.Dcat.VERSION));
         uiAsset.setMediaType(JsonLdUtils.string(properties, Prop.Dcat.MEDIATYPE));

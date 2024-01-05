@@ -718,6 +718,9 @@ components:
         description:
           type: string
           description: Asset Description
+        shortDescription:
+          type: string
+          description: Asset Short Description
         publisherHomepage:
           type: string
           description: Asset Homepage

@@ -51,7 +51,8 @@ class AssetMapperTest {
         assertThat(uiAsset.getParticipantId()).isEqualTo(participantId);
         assertThat(uiAsset.getTitle()).isEqualTo("My Asset");
         assertThat(uiAsset.getLanguage()).isEqualTo("https://w3id.org/idsa/code/EN");
-        assertThat(uiAsset.getDescription()).isEqualTo("Lorem Ipsum ...");
+        assertThat(uiAsset.getDescription()).isEqualTo("# Lorem Ipsum...\n## h2 title\n[Link text Here](example.com)");
+        assertThat(uiAsset.getDescriptionShortText()).isEqualTo("Lorem Ipsum... h2 title Link text Here");
         assertThat(uiAsset.getCreatorOrganizationName()).isEqualTo("My Organization Name");
         assertThat(uiAsset.getPublisherHomepage()).isEqualTo("https://data-source.my-org/about");
         assertThat(uiAsset.getLicenseUrl()).isEqualTo("https://data-source.my-org/license");
