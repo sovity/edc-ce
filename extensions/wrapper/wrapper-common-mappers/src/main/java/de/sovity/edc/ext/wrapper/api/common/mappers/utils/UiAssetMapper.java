@@ -19,11 +19,7 @@ import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.JsonLdUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import de.sovity.edc.utils.jsonld.vocab.Prop.SovityDcatExt.HttpDatasourceHints;
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonObjectBuilder;
-import jakarta.json.JsonString;
-import jakarta.json.JsonValue;
+import jakarta.json.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
@@ -34,21 +30,14 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNull;
-import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNullArray;
-import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNullJsonValue;
+import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-
-import com.vladsch.flexmark.util.ast.Node;
-import com.vladsch.flexmark.html.HtmlRenderer;
-import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.util.data.MutableDataSet;
-import org.jsoup.Jsoup;
 
 @RequiredArgsConstructor
 public class UiAssetMapper {
     private final EdcPropertyUtils edcPropertyUtils;
     private final AssetJsonLdUtils assetJsonLdUtils;
+    private final MarkdownToTextConverter markdownToTextConverter;
 
     public UiAsset buildUiAsset(JsonObject assetJsonLd, String connectorEndpoint, String participantId) {
         var properties = JsonLdUtils.object(assetJsonLd, Prop.Edc.PROPERTIES);
@@ -66,13 +55,8 @@ public class UiAssetMapper {
         var description = JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION);
         String shortDescription = null;
 
-        if(description != null) {
-            var options = new MutableDataSet();
-            Parser parser = Parser.builder(options).build();
-            HtmlRenderer renderer = HtmlRenderer.builder(options).build();
-            Node document = parser.parse(description);
-            String html = renderer.render(document);
-            shortDescription = Jsoup.parse(html).text();
+        if (description != null) {
+            shortDescription = markdownToTextConverter.extractText(description);
         }
 
         uiAsset.setAssetId(id);

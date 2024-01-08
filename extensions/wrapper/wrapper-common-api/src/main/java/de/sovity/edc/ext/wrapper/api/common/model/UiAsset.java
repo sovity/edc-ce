@@ -15,12 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.common.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 import java.util.Map;
@@ -53,10 +48,10 @@ public class UiAsset {
     @Schema(description = "Asset Language", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String language;
 
-    @Schema(description = "Asset Description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Asset Description. Supports markdown.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String description;
 
-    @Schema(description = "Asset Description Short Text", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Asset Description Short Text generated from description. Contains no markdown.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String descriptionShortText;
 
     @Schema(description = "Asset Homepage", requiredMode = Schema.RequiredMode.NOT_REQUIRED)

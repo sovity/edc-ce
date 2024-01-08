@@ -2,6 +2,7 @@ package de.sovity.edc.ext.wrapper.api.common.mappers;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AssetJsonLdUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MarkdownToTextConverter;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -32,7 +33,7 @@ class AssetMapperTest {
     void setup() {
         var jsonLd = new TitaniumJsonLd(mock(Monitor.class));
         var typeTransformerRegistry = mock(TypeTransformerRegistry.class);
-        var uiAssetBuilder = new UiAssetMapper(new EdcPropertyUtils(), new AssetJsonLdUtils());
+        var uiAssetBuilder = new UiAssetMapper(new EdcPropertyUtils(), new AssetJsonLdUtils(), new MarkdownToTextConverter());
         assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetBuilder, jsonLd);
     }
 
