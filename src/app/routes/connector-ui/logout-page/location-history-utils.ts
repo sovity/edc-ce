@@ -9,7 +9,7 @@ import {PreviousRouteListener} from './previous-route-listener';
  *  - For that we need to replace the logout page's state with the correct URL to return to.
  *  - For that we need that URL in the first place.
  */
-@Injectable({providedIn: 'root'})
+@Injectable()
 export class LocationHistoryUtils {
   constructor(
     private location: Location,

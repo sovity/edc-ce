@@ -20,6 +20,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
+- Fix broken `/logout` page
+
 #### Deployment Migration Notes
 
 ## [v2.2.0] 05.12.2023
