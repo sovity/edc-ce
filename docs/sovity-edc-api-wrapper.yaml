@@ -717,10 +717,11 @@ components:
           description: Asset Language
         description:
           type: string
-          description: Asset Description
-        shortDescription:
+          description: Asset Description. Supports markdown.
+        descriptionShortText:
           type: string
-          description: Asset Short Description
+          description: Asset Description Short Text generated from description. Contains
+            no markdown.
         publisherHomepage:
           type: string
           description: Asset Homepage

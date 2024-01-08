@@ -19,7 +19,11 @@ import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.JsonLdUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import de.sovity.edc.utils.jsonld.vocab.Prop.SovityDcatExt.HttpDatasourceHints;
-import jakarta.json.*;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
+import jakarta.json.JsonString;
+import jakarta.json.JsonValue;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +34,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.*;
+import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNull;
+import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNullArray;
+import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNullJsonValue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @RequiredArgsConstructor
@@ -38,6 +44,7 @@ public class UiAssetMapper {
     private final EdcPropertyUtils edcPropertyUtils;
     private final AssetJsonLdUtils assetJsonLdUtils;
     private final MarkdownToTextConverter markdownToTextConverter;
+    private final TextUtils textUtils;
 
     public UiAsset buildUiAsset(JsonObject assetJsonLd, String connectorEndpoint, String participantId) {
         var properties = JsonLdUtils.object(assetJsonLd, Prop.Edc.PROPERTIES);
@@ -53,19 +60,13 @@ public class UiAssetMapper {
         creatorOrganizationName = isBlank(creatorOrganizationName) ? participantId : creatorOrganizationName;
 
         var description = JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION);
-        String shortDescription = null;
-
-        if (description != null) {
-            shortDescription = markdownToTextConverter.extractText(description);
-        }
-
         uiAsset.setAssetId(id);
         uiAsset.setConnectorEndpoint(connectorEndpoint);
         uiAsset.setParticipantId(participantId);
         uiAsset.setTitle(title);
         uiAsset.setLicenseUrl(JsonLdUtils.string(properties, Prop.Dcterms.LICENSE));
         uiAsset.setDescription(description);
-        uiAsset.setDescriptionShortText(shortDescription);
+        uiAsset.setDescriptionShortText(buildShortDescription(description));
         uiAsset.setLanguage(JsonLdUtils.string(properties, Prop.Dcterms.LANGUAGE));
         uiAsset.setVersion(JsonLdUtils.string(properties, Prop.Dcat.VERSION));
         uiAsset.setMediaType(JsonLdUtils.string(properties, Prop.Dcat.MEDIATYPE));
@@ -268,5 +269,12 @@ public class UiAssetMapper {
         } else {
             return JsonValue.EMPTY_JSON_OBJECT;
         }
+    }
+
+    private String buildShortDescription(String description) {
+        if (description != null) {
+            return textUtils.abbreviate(markdownToTextConverter.extractText(description), 300);
+        }
+        return null;
     }
 }
