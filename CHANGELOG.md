@@ -16,6 +16,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Minor Changes
 
 - Added `JWKS-Extension`, which provides an endpoint in the default API, that returns the JWKS of the connector.
+- Added shortDescriptionText to `UiAsset`
 
 #### Patch Changes
 

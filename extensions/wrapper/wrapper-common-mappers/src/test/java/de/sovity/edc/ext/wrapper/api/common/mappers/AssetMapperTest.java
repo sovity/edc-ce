@@ -2,6 +2,8 @@ package de.sovity.edc.ext.wrapper.api.common.mappers;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AssetJsonLdUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MarkdownToTextConverter;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.TextUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -32,7 +34,7 @@ class AssetMapperTest {
     void setup() {
         var jsonLd = new TitaniumJsonLd(mock(Monitor.class));
         var typeTransformerRegistry = mock(TypeTransformerRegistry.class);
-        var uiAssetBuilder = new UiAssetMapper(new EdcPropertyUtils(), new AssetJsonLdUtils());
+        var uiAssetBuilder = new UiAssetMapper(new EdcPropertyUtils(), new AssetJsonLdUtils(), new MarkdownToTextConverter(), new TextUtils());
         assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetBuilder, jsonLd);
     }
 
@@ -51,7 +53,8 @@ class AssetMapperTest {
         assertThat(uiAsset.getParticipantId()).isEqualTo(participantId);
         assertThat(uiAsset.getTitle()).isEqualTo("My Asset");
         assertThat(uiAsset.getLanguage()).isEqualTo("https://w3id.org/idsa/code/EN");
-        assertThat(uiAsset.getDescription()).isEqualTo("Lorem Ipsum ...");
+        assertThat(uiAsset.getDescription()).isEqualTo("# Lorem Ipsum...\n## h2 title\n[Link text Here](example.com) 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789");
+        assertThat(uiAsset.getDescriptionShortText()).isEqualTo("Lorem Ipsum... h2 title Link text Here 012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
         assertThat(uiAsset.getCreatorOrganizationName()).isEqualTo("My Organization Name");
         assertThat(uiAsset.getPublisherHomepage()).isEqualTo("https://data-source.my-org/about");
         assertThat(uiAsset.getLicenseUrl()).isEqualTo("https://data-source.my-org/license");

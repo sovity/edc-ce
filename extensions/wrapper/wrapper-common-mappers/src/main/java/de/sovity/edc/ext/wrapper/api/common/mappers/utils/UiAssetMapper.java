@@ -43,6 +43,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class UiAssetMapper {
     private final EdcPropertyUtils edcPropertyUtils;
     private final AssetJsonLdUtils assetJsonLdUtils;
+    private final MarkdownToTextConverter markdownToTextConverter;
+    private final TextUtils textUtils;
 
     public UiAsset buildUiAsset(JsonObject assetJsonLd, String connectorEndpoint, String participantId) {
         var properties = JsonLdUtils.object(assetJsonLd, Prop.Edc.PROPERTIES);
@@ -57,12 +59,14 @@ public class UiAssetMapper {
         var creatorOrganizationName = JsonLdUtils.string(creator, Prop.Foaf.NAME);
         creatorOrganizationName = isBlank(creatorOrganizationName) ? participantId : creatorOrganizationName;
 
+        var description = JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION);
         uiAsset.setAssetId(id);
         uiAsset.setConnectorEndpoint(connectorEndpoint);
         uiAsset.setParticipantId(participantId);
         uiAsset.setTitle(title);
         uiAsset.setLicenseUrl(JsonLdUtils.string(properties, Prop.Dcterms.LICENSE));
-        uiAsset.setDescription(JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION));
+        uiAsset.setDescription(description);
+        uiAsset.setDescriptionShortText(buildShortDescription(description));
         uiAsset.setLanguage(JsonLdUtils.string(properties, Prop.Dcterms.LANGUAGE));
         uiAsset.setVersion(JsonLdUtils.string(properties, Prop.Dcat.VERSION));
         uiAsset.setMediaType(JsonLdUtils.string(properties, Prop.Dcat.MEDIATYPE));
@@ -265,5 +269,14 @@ public class UiAssetMapper {
         } else {
             return JsonValue.EMPTY_JSON_OBJECT;
         }
+    }
+
+    private String buildShortDescription(String description) {
+        if (description == null) {
+            return null;
+        }
+        
+        var text = markdownToTextConverter.extractText(description);
+        return textUtils.abbreviate(text, 300);
     }
 }
