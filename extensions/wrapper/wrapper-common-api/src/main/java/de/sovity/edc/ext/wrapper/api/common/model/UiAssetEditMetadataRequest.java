@@ -28,7 +28,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Data for editing an asset.")
-public class UiAssetEditRequest {
+public class UiAssetEditMetadataRequest {
     @Schema(description = "Asset Title", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String title;
 
@@ -70,9 +70,6 @@ public class UiAssetEditRequest {
 
     @Schema(description = "Transport Mode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String transportMode;
-
-    @Schema(description = "Data Address", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Map<String, String> dataAddressProperties;
 
     @Schema(description = "Custom Asset Properties (that are strings)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> additionalProperties;

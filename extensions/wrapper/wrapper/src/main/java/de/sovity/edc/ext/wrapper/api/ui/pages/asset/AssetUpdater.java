@@ -15,8 +15,9 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
-import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
+import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditMetadataRequest;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
@@ -24,6 +25,7 @@ import org.eclipse.edc.spi.types.domain.asset.Asset;
 @RequiredArgsConstructor
 public class AssetUpdater {
     private final AssetMapper assetMapper;
+    private final EdcPropertyUtils edcPropertyUtils;
     private final AssetIdValidator assetIdValidator;
     private final SelfDescriptionService selfDescriptionService;
 
@@ -40,30 +42,31 @@ public class AssetUpdater {
     }
 
     /**
-     * Returns an edited copy of an {@link Asset} updated with a {@link UiAssetEditRequest}
+     * Returns an edited copy of an {@link Asset} updated with the given {@link UiAssetEditMetadataRequest}
      *
      * @param asset   {@link Asset} (immutable)
-     * @param request {@link UiAssetEditRequest}
+     * @param request {@link UiAssetEditMetadataRequest}
      * @return copy of {@link Asset}
      */
-    public Asset editAsset(Asset asset, UiAssetEditRequest request) {
-        var createRequest = buildCreateRequest(asset.getId(), request);
+    public Asset editAssetMetadata(Asset asset, UiAssetEditMetadataRequest request) {
+        var createRequest = buildCreateRequest(asset, request);
         var tmpAsset = createAsset(createRequest);
 
         return asset.toBuilder()
-                .dataAddress(tmpAsset.getDataAddress())
                 .properties(tmpAsset.getProperties())
                 .privateProperties(tmpAsset.getPrivateProperties())
                 .build();
     }
 
 
-    private UiAssetCreateRequest buildCreateRequest(String id, UiAssetEditRequest editRequest) {
+    private UiAssetCreateRequest buildCreateRequest(Asset asset, UiAssetEditMetadataRequest editRequest) {
+        var dataAddress = edcPropertyUtils.truncateToMapOfString(asset.getDataAddress().getProperties());
+
         var createRequest = new UiAssetCreateRequest();
-        createRequest.setId(id);
+        createRequest.setId(asset.getId());
+        createRequest.setDataAddressProperties(dataAddress);
         createRequest.setAdditionalJsonProperties(editRequest.getAdditionalJsonProperties());
         createRequest.setAdditionalProperties(editRequest.getAdditionalProperties());
-        createRequest.setDataAddressProperties(editRequest.getDataAddressProperties());
         createRequest.setDataCategory(editRequest.getDataCategory());
         createRequest.setDataModel(editRequest.getDataModel());
         createRequest.setDataSubcategory(editRequest.getDataSubcategory());
@@ -82,5 +85,4 @@ public class AssetUpdater {
         createRequest.setVersion(editRequest.getVersion());
         return createRequest;
     }
-
 }

@@ -178,7 +178,12 @@ public class WrapperExtensionContextBuilder {
         );
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
         var assetIdValidator = new AssetIdValidator();
-        var assetUpdater = new AssetUpdater(assetMapper, assetIdValidator, selfDescriptionService);
+        var assetUpdater = new AssetUpdater(
+                assetMapper,
+                edcPropertyUtils,
+                assetIdValidator,
+                selfDescriptionService
+        );
         var assetApiService = new AssetApiService(
                 assetService,
                 assetMapper,

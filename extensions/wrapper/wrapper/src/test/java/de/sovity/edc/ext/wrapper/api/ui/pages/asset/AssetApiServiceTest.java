@@ -17,7 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.UiAsset;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
-import de.sovity.edc.client.gen.model.UiAssetEditRequest;
+import de.sovity.edc.client.gen.model.UiAssetEditMetadataRequest;
 import de.sovity.edc.ext.wrapper.TestUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.FailedMappingException;
@@ -156,9 +156,9 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void testAssetEditing(AssetService assetService) {
+    void testEditAssetMetadata(AssetService assetService) {
         // arrange
-        var createRequestAddress = Map.of(
+        var dataAddress = Map.of(
                 Prop.Edc.TYPE, "HttpData",
                 Prop.Edc.BASE_URL, DATA_SINK,
                 Prop.Edc.PROXY_METHOD, "true",
@@ -182,18 +182,10 @@ public class AssetApiServiceTest {
                 .transportMode("transportMode")
                 .keywords(List.of("keyword1", "keyword2"))
                 .publisherHomepage("publisherHomepage")
-                .dataAddressProperties(createRequestAddress)
+                .dataAddressProperties(dataAddress)
                 .build();
         client.uiApi().createAsset(createRequest);
-        var editRequestAddress = Map.of(
-                Prop.Edc.TYPE, "HttpData",
-                Prop.Edc.BASE_URL, DATA_SINK + "/v2",
-                Prop.Edc.PROXY_METHOD, "false",
-                Prop.Edc.PROXY_PATH, "false",
-                Prop.Edc.PROXY_QUERY_PARAMS, "false",
-                Prop.Edc.PROXY_BODY, "false"
-        );
-        var editRequest = UiAssetEditRequest.builder()
+        var editRequest = UiAssetEditMetadataRequest.builder()
                 .title("AssetTitle 2")
                 .description("AssetDescription 2")
                 .licenseUrl("https://license-url/2")
@@ -207,11 +199,10 @@ public class AssetApiServiceTest {
                 .transportMode("transportMode2")
                 .keywords(List.of("keyword3"))
                 .publisherHomepage("publisherHomepage2")
-                .dataAddressProperties(editRequestAddress)
                 .build();
 
         // act
-        var response = client.uiApi().editAsset("asset-1", editRequest);
+        var response = client.uiApi().editAssetMetadata("asset-1", editRequest);
 
         // assert
         assertThat(response.getId()).isEqualTo("asset-1");
@@ -234,13 +225,13 @@ public class AssetApiServiceTest {
         assertThat(asset.getKeywords()).isEqualTo(List.of("keyword3"));
         assertThat(asset.getCreatorOrganizationName()).isEqualTo("My Org");
         assertThat(asset.getPublisherHomepage()).isEqualTo("publisherHomepage2");
-        assertThat(asset.getHttpDatasourceHintsProxyMethod()).isFalse();
-        assertThat(asset.getHttpDatasourceHintsProxyPath()).isFalse();
-        assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isFalse();
-        assertThat(asset.getHttpDatasourceHintsProxyBody()).isFalse();
+        assertThat(asset.getHttpDatasourceHintsProxyMethod()).isTrue();
+        assertThat(asset.getHttpDatasourceHintsProxyPath()).isTrue();
+        assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isTrue();
+        assertThat(asset.getHttpDatasourceHintsProxyBody()).isTrue();
 
         var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
-        assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(editRequestAddress);
+        assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddress);
     }
 
     @Test

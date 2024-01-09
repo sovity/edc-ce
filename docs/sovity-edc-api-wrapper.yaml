@@ -136,29 +136,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
   /wrapper/ui/pages/asset-page/assets/{assetId}:
-    put:
-      tags:
-      - UI
-      description: Updates an Asset
-      operationId: editAsset
-      parameters:
-      - name: assetId
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UiAssetEditRequest'
-      responses:
-        default:
-          description: default response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IdResponseDto'
     delete:
       tags:
       - UI
@@ -208,6 +185,30 @@ paths:
         required: true
         schema:
           type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/pages/asset-page/assets/{assetId}/metadata:
+    put:
+      tags:
+      - UI
+      description: Updates an Asset's metadata
+      operationId: editAssetMetadata
+      parameters:
+      - name: assetId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UiAssetEditMetadataRequest'
       responses:
         default:
           description: default response
@@ -700,9 +701,7 @@ components:
       - STRING
       - STRING_LIST
       - JSON
-    UiAssetEditRequest:
-      required:
-      - dataAddressProperties
+    UiAssetEditMetadataRequest:
       type: object
       properties:
         title:
@@ -750,12 +749,6 @@ components:
         transportMode:
           type: string
           description: Transport Mode
-        dataAddressProperties:
-          type: object
-          additionalProperties:
-            type: string
-            description: Data Address
-          description: Data Address
         additionalProperties:
           type: object
           additionalProperties:

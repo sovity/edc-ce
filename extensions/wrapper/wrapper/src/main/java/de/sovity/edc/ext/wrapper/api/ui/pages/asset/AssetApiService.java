@@ -18,7 +18,7 @@ import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
-import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
+import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditMetadataRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import lombok.RequiredArgsConstructor;
@@ -54,10 +54,10 @@ public class AssetApiService {
         return new IdResponseDto(asset.getId());
     }
 
-    public IdResponseDto editAsset(String assetId, UiAssetEditRequest request) {
+    public IdResponseDto editAsset(String assetId, UiAssetEditMetadataRequest request) {
         var asset = assetService.findById(assetId);
         Objects.requireNonNull(asset, "Asset with ID %s not found".formatted(assetId));
-        asset = assetUpdater.editAsset(asset, request);
+        asset = assetUpdater.editAssetMetadata(asset, request);
         asset = assetService.update(asset).orElseThrow(ServiceException::new);
         return new IdResponseDto(asset.getId());
     }

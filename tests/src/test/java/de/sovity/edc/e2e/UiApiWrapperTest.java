@@ -23,7 +23,7 @@ import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
-import de.sovity.edc.client.gen.model.UiAssetEditRequest;
+import de.sovity.edc.client.gen.model.UiAssetEditMetadataRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiContractOffer;
 import de.sovity.edc.client.gen.model.UiCriterion;
@@ -343,7 +343,7 @@ class UiApiWrapperTest {
     }
 
     @Test
-    void editAssetOnLiveContract() {
+    void editAssetMetadataOnLiveContract() {
         // arrange
         var data = "expected data 123";
 
@@ -379,13 +379,9 @@ class UiApiWrapperTest {
         var negotiation = negotiate(dataOffer, contractOffer);
 
         // act
-        providerClient.uiApi().editAsset(assetId, UiAssetEditRequest.builder()
+        providerClient.uiApi().editAssetMetadata(assetId, UiAssetEditMetadataRequest.builder()
                 .title("Good Asset Title")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
-                )).build());
+                .build());
         initiateTransfer(negotiation);
 
         // assert
