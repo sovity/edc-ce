@@ -192,6 +192,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/pages/asset-page/assets/{assetId}/metadata:
+    put:
+      tags:
+      - UI
+      description: Updates an Asset's metadata
+      operationId: editAssetMetadata
+      parameters:
+      - name: assetId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UiAssetEditMetadataRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
   /wrapper/ui/pages/asset-page:
     get:
       tags:
@@ -677,6 +701,83 @@ components:
       - STRING
       - STRING_LIST
       - JSON
+    UiAssetEditMetadataRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Asset Title
+        language:
+          type: string
+          description: Asset Language
+        description:
+          type: string
+          description: Asset Description
+        publisherHomepage:
+          type: string
+          description: Asset Homepage
+        licenseUrl:
+          type: string
+          description: License URL
+        version:
+          type: string
+          description: Version
+        keywords:
+          type: array
+          description: Asset Keywords
+          items:
+            type: string
+            description: Asset Keywords
+        mediaType:
+          type: string
+          description: Asset MediaType
+        landingPageUrl:
+          type: string
+          description: Landing Page URL
+        dataCategory:
+          type: string
+          description: Data Category
+        dataSubcategory:
+          type: string
+          description: Data Subcategory
+        dataModel:
+          type: string
+          description: Data Model
+        geoReferenceMethod:
+          type: string
+          description: Geo-Reference Method
+        transportMode:
+          type: string
+          description: Transport Mode
+        additionalProperties:
+          type: object
+          additionalProperties:
+            type: string
+            description: Custom Asset Properties (that are strings)
+          description: Custom Asset Properties (that are strings)
+        additionalJsonProperties:
+          type: object
+          additionalProperties:
+            type: string
+            description: Custom Asset Properties (that are not strings but other JSON
+              values)
+          description: Custom Asset Properties (that are not strings but other JSON
+            values)
+        privateProperties:
+          type: object
+          additionalProperties:
+            type: string
+            description: Private Asset Properties (that are strings)
+          description: Private Asset Properties (that are strings)
+        privateJsonProperties:
+          type: object
+          additionalProperties:
+            type: string
+            description: Private Asset Properties (that are not strings but other
+              JSON values)
+          description: Private Asset Properties (that are not strings but other JSON
+            values)
+      description: Data for editing an asset.
     AssetPage:
       required:
       - assets

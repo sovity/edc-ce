@@ -38,7 +38,7 @@ public class DspDataOfferBuilder {
                 endpoint,
                 participantId,
                 JsonLdUtils.listOfObjects(json, Prop.Dcat.DATASET).stream()
-                        .map(dataset -> buildDataOffer(dataset))
+                        .map(this::buildDataOffer)
                         .toList()
         );
     }
