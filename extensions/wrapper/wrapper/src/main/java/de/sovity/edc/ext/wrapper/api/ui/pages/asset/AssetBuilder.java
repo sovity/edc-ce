@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 
 @RequiredArgsConstructor
-public class AssetUpdater {
+public class AssetBuilder {
     private final AssetMapper assetMapper;
     private final EdcPropertyUtils edcPropertyUtils;
     private final AssetIdValidator assetIdValidator;
@@ -35,7 +35,7 @@ public class AssetUpdater {
      * @param request {@link UiAssetCreateRequest}
      * @return {@link Asset}
      */
-    public Asset createAsset(UiAssetCreateRequest request) {
+    public Asset fromCreateRequest(UiAssetCreateRequest request) {
         assetIdValidator.assertValid(request.getId());
         var organizationName = selfDescriptionService.getCuratorName();
         return assetMapper.buildAsset(request, organizationName);
@@ -48,9 +48,9 @@ public class AssetUpdater {
      * @param request {@link UiAssetEditMetadataRequest}
      * @return copy of {@link Asset}
      */
-    public Asset editAssetMetadata(Asset asset, UiAssetEditMetadataRequest request) {
+    public Asset fromEditMetadataRequest(Asset asset, UiAssetEditMetadataRequest request) {
         var createRequest = buildCreateRequest(asset, request);
-        var tmpAsset = createAsset(createRequest);
+        var tmpAsset = fromCreateRequest(createRequest);
 
         return asset.toBuilder()
                 .properties(tmpAsset.getProperties())

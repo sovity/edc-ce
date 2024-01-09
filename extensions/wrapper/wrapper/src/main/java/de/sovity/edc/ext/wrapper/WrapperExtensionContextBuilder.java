@@ -30,7 +30,7 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
 import de.sovity.edc.ext.wrapper.api.ui.UiResourceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetIdValidator;
-import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetUpdater;
+import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTransferApiService;
@@ -178,7 +178,7 @@ public class WrapperExtensionContextBuilder {
         );
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
         var assetIdValidator = new AssetIdValidator();
-        var assetUpdater = new AssetUpdater(
+        var assetBuilder = new AssetBuilder(
                 assetMapper,
                 edcPropertyUtils,
                 assetIdValidator,
@@ -187,7 +187,7 @@ public class WrapperExtensionContextBuilder {
         var assetApiService = new AssetApiService(
                 assetService,
                 assetMapper,
-                assetUpdater,
+                assetBuilder,
                 selfDescriptionService
         );
         var transferRequestBuilder = new TransferRequestBuilder(

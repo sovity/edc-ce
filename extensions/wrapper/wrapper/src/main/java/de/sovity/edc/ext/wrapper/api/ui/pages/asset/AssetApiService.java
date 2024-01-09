@@ -35,7 +35,7 @@ import java.util.Objects;
 public class AssetApiService {
     private final AssetService assetService;
     private final AssetMapper assetMapper;
-    private final AssetUpdater assetUpdater;
+    private final AssetBuilder assetBuilder;
     private final SelfDescriptionService selfDescriptionService;
 
     public List<UiAsset> getAssets() {
@@ -49,7 +49,7 @@ public class AssetApiService {
 
     @NotNull
     public IdResponseDto createAsset(UiAssetCreateRequest request) {
-        var asset = assetUpdater.createAsset(request);
+        var asset = assetBuilder.fromCreateRequest(request);
         asset = assetService.create(asset).orElseThrow(ServiceException::new);
         return new IdResponseDto(asset.getId());
     }
@@ -57,7 +57,7 @@ public class AssetApiService {
     public IdResponseDto editAsset(String assetId, UiAssetEditMetadataRequest request) {
         var asset = assetService.findById(assetId);
         Objects.requireNonNull(asset, "Asset with ID %s not found".formatted(assetId));
-        asset = assetUpdater.editAssetMetadata(asset, request);
+        asset = assetBuilder.fromEditMetadataRequest(asset, request);
         asset = assetService.update(asset).orElseThrow(ServiceException::new);
         return new IdResponseDto(asset.getId());
     }
