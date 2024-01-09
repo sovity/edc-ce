@@ -14,7 +14,7 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers.utils;
 
 public class TextUtils {
-    String abbreviate(String text, int maxCharacters) {
+    public String abbreviate(String text, int maxCharacters) {
         if (text == null) {
             return null;
         }

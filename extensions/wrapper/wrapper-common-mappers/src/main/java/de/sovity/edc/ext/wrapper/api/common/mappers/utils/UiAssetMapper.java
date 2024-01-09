@@ -272,9 +272,11 @@ public class UiAssetMapper {
     }
 
     private String buildShortDescription(String description) {
-        if (description != null) {
-            return textUtils.abbreviate(markdownToTextConverter.extractText(description), 300);
+        if (description == null) {
+            return null;
         }
-        return null;
+        
+        var text = markdownToTextConverter.extractText(description);
+        return textUtils.abbreviate(text, 300);
     }
 }

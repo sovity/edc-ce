@@ -19,7 +19,7 @@ class TextUtilsTest {
         String text = null;
 
         // act
-        var actual = textUtils.abbreviate(text, 300);
+        var actual = textUtils.abbreviate(text, 1);
 
         // assert
         assertThat(actual).isEqualTo(null);
@@ -28,10 +28,10 @@ class TextUtilsTest {
     @Test
     void test_abbreviate_emptyString() {
         // arrange
-        String text = "";
+        var text = "";
 
         // act
-        var actual = textUtils.abbreviate(text, 300);
+        var actual = textUtils.abbreviate(text, 1);
 
         // assert
         assertThat(actual).isEqualTo("");
@@ -40,26 +40,24 @@ class TextUtilsTest {
     @Test
     void test_abbreviate_lengthLessThanMaxCharacters() {
         // arrange
-        String text = "Hello";
+        var text = "a";
 
         // act
-        var actual = textUtils.abbreviate(text, 300);
+        var actual = textUtils.abbreviate(text, 2);
 
         // assert
-        assertThat(actual).isEqualTo("Hello");
+        assertThat(actual).isEqualTo("a");
     }
 
     @Test
     void test_abbreviate_lengthLongerThanMaxCharacters() {
         // arrange
-        var tmp = "0123456789";
-        var text = tmp.repeat(40); // 400 length String
-        var expected = tmp.repeat(30);
+        var text = "aa";
 
         // act
-        var actual = textUtils.abbreviate(text, 300);
+        var actual = textUtils.abbreviate(text, 1);
 
         // assert
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isEqualTo("a");
     }
 }
