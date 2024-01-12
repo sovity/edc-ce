@@ -22,7 +22,7 @@ export class AssetDetailDialogService {
     return showDialogUntil(
       this.dialog,
       AssetDetailDialogComponent,
-      {data, maxHeight: '90vh'},
+      {data, maxWidth: '1000px', maxHeight: '90vh', autoFocus: false},
       until$,
     );
   }

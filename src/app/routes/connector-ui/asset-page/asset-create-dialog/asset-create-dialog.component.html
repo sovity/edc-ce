@@ -49,13 +49,25 @@
           </mat-form-field>
 
           <!-- Description -->
+
           <mat-form-field>
             <mat-label>Description</mat-label>
             <textarea
+              class="h-36"
               matInput
               [formControl]="form.metadata.controls.description"
-              [placeholder]="'1.0'"></textarea>
+              [placeholder]="
+                '# My Asset\n\nAt vero eos et accusam et justo duo dolores et ea rebum.\n\n## Details\n\nAt vero eos et accusam et justo duo dolores et ea **rebum**.'
+              "></textarea>
+            <mat-hint class="flex flex-row items-center gap-1 mb-1">
+              The description uses
+              <a class="link" href="https://www.markdownguide.org/basic-syntax/"
+                >Markdown syntax</a
+              >
+            </mat-hint>
           </mat-form-field>
+
+          <div class="my-2"></div>
 
           <!-- Keywords -->
           <keyword-select

@@ -21,12 +21,9 @@
         color="primary"
         mode="indeterminate"></mat-progress-bar>
 
-      <!-- Description -->
-      <div
-        *ngIf="asset.description"
-        class="whitespace-pre-line truncate-lines-5">
-        {{ asset.description }}
-      </div>
+      <!-- Description Short Text -->
+      <truncated-short-description
+        [text]="asset.descriptionShortText"></truncated-short-description>
 
       <!-- Tag List -->
       <div *ngIf="asset.keywords?.length || asset.version">

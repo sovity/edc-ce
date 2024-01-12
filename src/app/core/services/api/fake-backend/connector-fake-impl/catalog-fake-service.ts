@@ -31,6 +31,17 @@ let dataOffers: UiDataOffer[] = [
       },
     ],
   },
+  {
+    endpoint: 'http://existing-other-connector/api/dsp',
+    asset: TestAssets.short,
+    participantId: 'MDSL1234XX.C1234XX',
+    contractOffers: [
+      {
+        contractOfferId: 'test-contract-offer-3',
+        policy: TestPolicies.failedMapping,
+      },
+    ],
+  },
 ];
 
 export const getCatalogPageDataOffers = (

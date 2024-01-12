@@ -35,9 +35,12 @@
     mode="indeterminate"></mat-progress-bar>
 
   <!-- Description -->
-  <div class="whitespace-pre-line">
-    {{ asset.description }}
-    <i *ngIf="!asset.description">No description.</i>
+  <markdown-description
+    class="pt-3"
+    [description]="asset.description"></markdown-description>
+
+  <div>
+    <hr class="h-px my-5 bg-gray-200 border-0" />
   </div>
 
   <!-- Tag List -->

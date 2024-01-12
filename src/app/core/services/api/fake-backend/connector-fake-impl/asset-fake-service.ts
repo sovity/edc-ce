@@ -6,7 +6,7 @@ import {
 } from '@sovity.de/edc-client';
 import {TestAssets} from './data/test-assets';
 
-let assets: UiAsset[] = [TestAssets.full, TestAssets.boring];
+let assets: UiAsset[] = [TestAssets.full, TestAssets.boring, TestAssets.short];
 
 export const assetPage = (): AssetPage => {
   return {

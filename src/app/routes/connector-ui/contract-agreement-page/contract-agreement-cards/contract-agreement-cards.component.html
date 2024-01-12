@@ -75,12 +75,9 @@
         </div>
       </div>
 
-      <!-- Description -->
-      <div
-        *ngIf="card.asset.description"
-        class="whitespace-pre-line truncate-lines-5">
-        {{ card.asset.description }}
-      </div>
+      <!-- Description Short Text -->
+      <truncated-short-description
+        [text]="card.asset.descriptionShortText"></truncated-short-description>
 
       <!-- Tag List -->
       <div *ngIf="card.asset.keywords?.length || card.asset.version">

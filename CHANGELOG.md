@@ -18,6 +18,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
+- Implemented markdown for asset descriptions
+
 #### Patch
 
 - Fix broken `/logout` page

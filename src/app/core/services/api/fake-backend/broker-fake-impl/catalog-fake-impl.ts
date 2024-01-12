@@ -67,6 +67,24 @@ const DATA_OFFERS: DataOfferDetailPageResult[] = [
       },
     ],
   },
+  {
+    assetId: TestAssets.short.assetId,
+    asset: TestAssets.short as UiAsset,
+    connectorEndpoint: 'https://example-connector/api/dsp',
+    viewCount: 33,
+    connectorOfflineSinceOrLastUpdatedAt: subDays(new Date(), 3),
+    updatedAt: subMinutes(new Date(), 5),
+    createdAt: subDays(new Date(), 7),
+    connectorOnlineStatus: 'DEAD',
+    contractOffers: [
+      {
+        contractOfferId: 'contract-offer-1',
+        updatedAt: subMinutes(new Date(), 5),
+        createdAt: subDays(new Date(), 7),
+        contractPolicy: TestPolicies.warnings,
+      },
+    ],
+  },
 ];
 
 export const getCatalogPage = (query: CatalogPageQuery): CatalogPageResult => {
