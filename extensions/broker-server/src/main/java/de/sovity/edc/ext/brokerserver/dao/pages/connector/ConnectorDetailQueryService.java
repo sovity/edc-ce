@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.dao.pages.connector;
 
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.CatalogQueryFields;
 import de.sovity.edc.ext.brokerserver.dao.pages.connector.model.ConnectorDetailsRs;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.MeasurementErrorStatus;
@@ -32,6 +33,7 @@ public class ConnectorDetailQueryService {
         return dsl.select(
                 c.ENDPOINT.as("endpoint"),
                 c.PARTICIPANT_ID.as("participantId"),
+                CatalogQueryFields.organizationName(c.MDS_ID).as("organizationName"),
                 c.CREATED_AT.as("createdAt"),
                 c.LAST_SUCCESSFUL_REFRESH_AT.as("lastSuccessfulRefreshAt"),
                 c.LAST_REFRESH_ATTEMPT_AT.as("lastRefreshAttemptAt"),

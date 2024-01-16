@@ -35,6 +35,7 @@ public class DataOfferDetailRs {
     String connectorEndpoint;
     ConnectorOnlineStatus connectorOnlineStatus;
     String connectorParticipantId;
+    String organizationName;
     OffsetDateTime connectorOfflineSinceOrLastUpdatedAt;
     Integer viewCount;
 }

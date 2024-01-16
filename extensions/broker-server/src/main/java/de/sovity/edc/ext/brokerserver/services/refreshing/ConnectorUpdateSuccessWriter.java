@@ -21,6 +21,7 @@ import de.sovity.edc.ext.brokerserver.services.logging.ConnectorChangeTracker;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferLimitsEnforcer;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.DataOfferWriter;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedCatalog;
+import de.sovity.edc.ext.brokerserver.utils.MdsIdUtils;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 
@@ -69,6 +70,7 @@ public class ConnectorUpdateSuccessWriter {
         connector.setLastRefreshAttemptAt(now);
         if (!Objects.equals(connector.getParticipantId(), participantId)) {
             connector.setParticipantId(participantId);
+            connector.setMdsId(MdsIdUtils.getMdsIdFromParticipantId(participantId));
             changes.setParticipantIdChanged(participantId);
         }
         connector.update();

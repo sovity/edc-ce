@@ -27,8 +27,11 @@ import de.sovity.edc.ext.brokerserver.BrokerServerExtensionContext;
 import de.sovity.edc.ext.brokerserver.TestUtils;
 import de.sovity.edc.ext.brokerserver.client.BrokerServerClient;
 import de.sovity.edc.ext.brokerserver.client.gen.model.CatalogPageQuery;
+import de.sovity.edc.ext.brokerserver.client.gen.model.ConnectorListEntry;
+import de.sovity.edc.ext.brokerserver.client.gen.model.ConnectorPageQuery;
 import de.sovity.edc.ext.brokerserver.db.TestDatabase;
 import de.sovity.edc.ext.brokerserver.db.TestDatabaseFactory;
+import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -36,6 +39,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +48,7 @@ import static de.sovity.edc.ext.brokerserver.TestPolicy.createAfterYesterdayCons
 import static de.sovity.edc.ext.brokerserver.TestPolicy.createAfterYesterdayPolicyEdcGen;
 import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 @ApiTest
 class ConnectorUpdaterTest {
@@ -87,6 +93,7 @@ class ConnectorUpdaterTest {
 
             // act
             connectorUpdater.updateConnector(connectorEndpoint);
+            var connectorPage = brokerServerClient.brokerServerApi().connectorPage(new ConnectorPageQuery());
 
             // assert
             var catalog = brokerServerClient.brokerServerApi().catalogPage(new CatalogPageQuery());
@@ -111,7 +118,7 @@ class ConnectorUpdaterTest {
             assertThat(asset.getTransportMode()).isEqualTo("transportMode");
             assertThat(asset.getLicenseUrl()).isEqualTo("https://license-url");
             assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
-            assertThat(asset.getCreatorOrganizationName()).isEqualTo(TestUtils.CURATOR_NAME);
+            assertThat(asset.getCreatorOrganizationName()).isEqualTo("Unknown");
             assertThat(asset.getPublisherHomepage()).isEqualTo("publisherHomepage");
             assertThat(asset.getHttpDatasourceHintsProxyMethod()).isFalse();
             assertThat(asset.getHttpDatasourceHintsProxyPath()).isFalse();
@@ -126,6 +133,15 @@ class ConnectorUpdaterTest {
             var policy = contractOffer.getContractPolicy();
             assertThat(policy.getConstraints()).hasSize(1);
             AssertionUtils.assertEqualUsingJson(policy.getConstraints().get(0), createAfterYesterdayConstraint());
+
+            var connector = connectorPage.getConnectors().get(0);
+            assertThat(connector.getOnlineStatus()).isEqualTo(ConnectorListEntry.OnlineStatusEnum.ONLINE);
+            assertThat(connector.getParticipantId()).isEqualTo(TestUtils.PARTICIPANT_ID);
+            assertThat(connector.getOrganizationName()).isEqualTo("Unknown");
+            assertThat(connector.getLastRefreshAttemptAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.SECONDS));
+
+            var connectorRecord = dsl.selectFrom(Tables.CONNECTOR).fetchOne();
+            assertThat(connectorRecord.getMdsId()).isEqualTo("MDSL1234ZZ");
         });
     }
 

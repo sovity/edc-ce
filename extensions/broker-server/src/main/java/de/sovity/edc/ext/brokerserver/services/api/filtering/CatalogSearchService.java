@@ -33,7 +33,9 @@ public class CatalogSearchService {
             fields.getDataOfferTable().DESCRIPTION,
             fields.getDataOfferTable().CURATOR_ORGANIZATION_NAME,
             fields.getDataOfferTable().KEYWORDS_COMMA_JOINED,
-            fields.getConnectorTable().ENDPOINT
+            fields.getConnectorTable().ENDPOINT,
+            fields.getConnectorTable().PARTICIPANT_ID,
+            fields.getOrganizationName()
         ));
     }
 }

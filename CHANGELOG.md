@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Minor
 
+- Added an endpoint for syncing organization metadata from the Authority Portal.
+- Added organization information to connectors and data offers.
+
 ### Deployment Migration Notes
 
 #### Compatible Versions

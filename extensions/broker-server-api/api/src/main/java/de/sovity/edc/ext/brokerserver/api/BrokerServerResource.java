@@ -14,13 +14,14 @@
 
 package de.sovity.edc.ext.brokerserver.api;
 
+import de.sovity.edc.ext.brokerserver.api.model.AuthorityPortalConnectorInfo;
+import de.sovity.edc.ext.brokerserver.api.model.AuthorityPortalOrganizationMetadataRequest;
 import de.sovity.edc.ext.brokerserver.api.model.CatalogPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.CatalogPageResult;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorDetailPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorDetailPageResult;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageResult;
-import de.sovity.edc.ext.brokerserver.api.model.AuthorityPortalConnectorInfo;
 import de.sovity.edc.ext.brokerserver.api.model.DataOfferCountResult;
 import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageResult;
@@ -96,4 +97,10 @@ public interface BrokerServerResource {
     @Operation(description = "Query the amount of public Data Offers by provided Connector URLs." +
         "This endpoint has been replaced by the Authority Portal Connector Metadata endpoint and will be removed in the near future.")
     DataOfferCountResult dataOfferCount(List<String> endpoints);
+
+    @POST
+    @Path("authority-portal-api/organization-metadata")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Update organization metadata. Organizations not contained in the payload will be deleted.")
+    void setOrganizationMetadata(AuthorityPortalOrganizationMetadataRequest organizationMetadataRequest, @QueryParam("adminApiKey") String adminApiKey);
 }

@@ -49,6 +49,7 @@ public class DataOfferDetailPageQueryService {
                         c.ENDPOINT.as("connectorEndpoint"),
                         c.ONLINE_STATUS.as("connectorOnlineStatus"),
                         c.PARTICIPANT_ID.as("connectorParticipantId"),
+                        fields.getOrganizationName().as("organizationName"),
                         fields.getViewCount().as("viewCount"))
                 .from(d)
                 .leftJoin(c).on(c.ENDPOINT.eq(d.CONNECTOR_ENDPOINT))

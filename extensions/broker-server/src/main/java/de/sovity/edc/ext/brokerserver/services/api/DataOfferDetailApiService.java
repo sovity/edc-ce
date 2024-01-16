@@ -41,7 +41,8 @@ public class DataOfferDetailApiService {
         var asset = dataOfferMappingUtils.buildUiAsset(
             dataOffer.getAssetJsonLd(),
             dataOffer.getConnectorEndpoint(),
-            dataOffer.getConnectorParticipantId()
+            dataOffer.getConnectorParticipantId(),
+            dataOffer.getOrganizationName()
         );
         viewCountLogger.increaseDataOfferViewCount(dsl, query.getAssetId(), query.getConnectorEndpoint());
 

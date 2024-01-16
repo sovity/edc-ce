@@ -34,6 +34,7 @@ public class ConnectorDetailApiService {
         var dto = new ConnectorDetailPageResult();
         dto.setParticipantId(connectorDbRow.getParticipantId());
         dto.setEndpoint(connectorDbRow.getEndpoint());
+        dto.setOrganizationName(connectorDbRow.getOrganizationName());
         dto.setCreatedAt(connectorDbRow.getCreatedAt());
         dto.setLastRefreshAttemptAt(connectorDbRow.getLastRefreshAttemptAt());
         dto.setLastSuccessfulRefreshAt(connectorDbRow.getLastSuccessfulRefreshAt());

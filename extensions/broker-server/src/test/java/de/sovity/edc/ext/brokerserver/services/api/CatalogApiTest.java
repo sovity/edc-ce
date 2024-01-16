@@ -218,10 +218,7 @@ class CatalogApiTest {
                 Prop.Mds.TRANSPORT_MODE, "MY-TRANSPORT-MODE-1",
                 Prop.Mds.DATA_SUBCATEGORY, "MY-SUBCATEGORY-2",
                 Prop.Mds.DATA_MODEL, "my-data-model",
-                Prop.Mds.GEO_REFERENCE_METHOD, "my-geo-ref",
-                Prop.Dcterms.CREATOR, Map.of(
-                    Prop.Foaf.NAME, "my-org"
-                )
+                Prop.Mds.GEO_REFERENCE_METHOD, "my-geo-ref"
             ));
 
             var assetJsonLd2 = getAssetJsonLd("my-asset-2", Map.of(
@@ -241,7 +238,8 @@ class CatalogApiTest {
                 Prop.Mds.TRANSPORT_MODE, ""
             ));
 
-            createConnector(dsl, today, "https://my-connector/api/dsp");
+            createOrganizationMetadata(dsl, "MDSL123456AA", "Test Org");
+            createConnector(dsl, today, "https://my-connector/api/dsp", "MDSL123456AA");
             createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd1);
             createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd2);
             createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd3);
@@ -300,8 +298,8 @@ class CatalogApiTest {
             assertThat(geoReferenceMethod.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("my-geo-ref", "");
 
             var curatorOrganizationName = getAvailableFilter(result, "curatorOrganizationName");
-            assertThat(curatorOrganizationName.getValues()).extracting(CnfFilterItem::getId).containsExactly("my-org", "my-participant-id"); // second value comes from tests mocking
-            assertThat(curatorOrganizationName.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("my-org", "my-participant-id");
+            assertThat(curatorOrganizationName.getValues()).extracting(CnfFilterItem::getId).containsExactly("Test Org");
+            assertThat(curatorOrganizationName.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("Test Org");
 
             var connectorEndpoint = getAvailableFilter(result, "connectorEndpoint");
             assertThat(connectorEndpoint.getValues()).extracting(CnfFilterItem::getId).containsExactly("https://my-connector/api/dsp");
@@ -462,6 +460,118 @@ class CatalogApiTest {
         });
     }
 
+    @Test
+    void testFilterByOrgName() {
+        TEST_DATABASE.testTransaction(dsl -> {
+            // arrange
+            var today = OffsetDateTime.now().withNano(0);
+
+            var endpoint1 = "https://my-connector-1/api/dsp";
+            createConnector(dsl, today, endpoint1, "MDSL1111AA");
+            createDataOffer(dsl, today, endpoint1, getAssetJsonLd("asset-1"));
+
+            var endpoint2 = "https://my-connector-2/api/dsp";
+            createConnector(dsl, today, endpoint2, "MDSL2222BB");
+            createDataOffer(dsl, today, endpoint2, getAssetJsonLd("asset-2"));
+
+            createOrganizationMetadata(dsl, "MDSL1111AA", "Test Org");
+
+            // act
+            var query = new CatalogPageQuery();
+            query.setFilter(new CnfFilterValue(List.of(
+                new CnfFilterValueAttribute("curatorOrganizationName", List.of("Test Org"))
+            )));
+
+            var actual = brokerServerClient().brokerServerApi().catalogPage(query);
+
+            // assert
+            assertThat(actual.getDataOffers()).extracting(CatalogDataOffer::getConnectorEndpoint).containsExactly(endpoint1);
+        });
+    }
+
+    @Test
+    void testSearchForOrgName() {
+        TEST_DATABASE.testTransaction(dsl -> {
+            // arrange
+            var today = OffsetDateTime.now().withNano(0);
+
+            var endpoint1 = "https://my-connector-1/api/dsp";
+            createConnector(dsl, today, endpoint1, "MDSL1111AA");
+            createDataOffer(dsl, today, endpoint1, getAssetJsonLd("asset-1"));
+
+            var endpoint2 = "https://my-connector-2/api/dsp";
+            createConnector(dsl, today, endpoint2, "MDSL2222BB");
+            createDataOffer(dsl, today, endpoint2, getAssetJsonLd("asset-2"));
+
+            createOrganizationMetadata(dsl, "MDSL1111AA", "Test Org");
+
+            // act
+            var query = new CatalogPageQuery();
+            query.setSearchQuery("tEsT");
+
+            var actual = brokerServerClient().brokerServerApi().catalogPage(query);
+
+            // assert
+            assertThat(actual.getDataOffers()).extracting(CatalogDataOffer::getConnectorEndpoint).containsExactly(endpoint1);
+        });
+    }
+
+    @Test
+    void testFilterByUnknown() {
+        TEST_DATABASE.testTransaction(dsl -> {
+            // arrange
+            var today = OffsetDateTime.now().withNano(0);
+
+            var endpoint1 = "https://my-connector-1/api/dsp";
+            createConnector(dsl, today, endpoint1, "MDSL1111AA");
+            createDataOffer(dsl, today, endpoint1, getAssetJsonLd("asset-1"));
+
+            var endpoint2 = "https://my-connector-2/api/dsp";
+            createConnector(dsl, today, endpoint2, "MDSL2222BB");
+            createDataOffer(dsl, today, endpoint2, getAssetJsonLd("asset-2"));
+
+            createOrganizationMetadata(dsl, "MDSL1111AA", "Test Org");
+
+            // act
+            var query = new CatalogPageQuery();
+            query.setFilter(new CnfFilterValue(List.of(
+                    new CnfFilterValueAttribute("curatorOrganizationName", List.of("Unknown"))
+            )));
+
+            var actual = brokerServerClient().brokerServerApi().catalogPage(query);
+
+            // assert
+            assertThat(actual.getDataOffers()).extracting(CatalogDataOffer::getConnectorEndpoint).containsExactly(endpoint2);
+        });
+    }
+
+    @Test
+    void testSearchForUnknown() {
+        TEST_DATABASE.testTransaction(dsl -> {
+            // arrange
+            var today = OffsetDateTime.now().withNano(0);
+
+            var endpoint1 = "https://my-connector-1/api/dsp";
+            createConnector(dsl, today, endpoint1, "MDSL1111AA");
+            createDataOffer(dsl, today, endpoint1, getAssetJsonLd("asset-1"));
+
+            var endpoint2 = "https://my-connector-2/api/dsp";
+            createConnector(dsl, today, endpoint2, "MDSL2222BB");
+            createDataOffer(dsl, today, endpoint2, getAssetJsonLd("asset-2"));
+
+            createOrganizationMetadata(dsl, "MDSL1111AA", "Test Org");
+
+            // act
+            var query = new CatalogPageQuery();
+            query.setSearchQuery("uNkN");
+
+            var actual = brokerServerClient().brokerServerApi().catalogPage(query);
+
+            // assert
+            assertThat(actual.getDataOffers()).extracting(CatalogDataOffer::getConnectorEndpoint).containsExactly(endpoint2);
+        });
+    }
+
     private void createDataOffer(DSLContext dsl, OffsetDateTime today, String connectorEndpoint, JsonObject assetJsonLd) {
         var dataOffer = dsl.newRecord(Tables.DATA_OFFER);
         setDataOfferAssetMetadata(dataOffer, assetJsonLd, "my-participant-id");
@@ -481,8 +591,13 @@ class CatalogApiTest {
     }
 
     private void createConnector(DSLContext dsl, OffsetDateTime today, String connectorEndpoint) {
+        createConnector(dsl, today, connectorEndpoint, null);
+    }
+
+    private void createConnector(DSLContext dsl, OffsetDateTime today, String connectorEndpoint, String mdsId) {
         var connector = dsl.newRecord(Tables.CONNECTOR);
         connector.setParticipantId("my-connector");
+        connector.setMdsId(mdsId);
         connector.setEndpoint(connectorEndpoint);
         connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);
         connector.setCreatedAt(today.minusDays(1));
@@ -491,6 +606,13 @@ class CatalogApiTest {
         connector.setDataOffersExceeded(ConnectorDataOffersExceeded.OK);
         connector.setContractOffersExceeded(ConnectorContractOffersExceeded.OK);
         connector.insert();
+    }
+
+    private void createOrganizationMetadata(DSLContext dsl, String mdsId, String name) {
+        var organizationMetadata = dsl.newRecord(Tables.ORGANIZATION_METADATA);
+        organizationMetadata.setMdsId(mdsId);
+        organizationMetadata.setName(name);
+        organizationMetadata.insert();
     }
 
     private Policy dummyPolicy() {

@@ -63,6 +63,7 @@ public class CatalogQueryDataOfferFetcher {
                 c.ENDPOINT.as("connectorEndpoint"),
                 c.ONLINE_STATUS.as("connectorOnlineStatus"),
                 c.PARTICIPANT_ID.as("connectorParticipantId"),
+                fields.getOrganizationName().as("organizationName"),
                 fields.getOfflineSinceOrLastUpdatedAt().as("connectorOfflineSinceOrLastUpdatedAt")
         );
 

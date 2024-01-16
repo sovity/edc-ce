@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.brokerserver.dao.pages.connector;
 
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageSortingType;
+import de.sovity.edc.ext.brokerserver.dao.pages.catalog.CatalogQueryFields;
 import de.sovity.edc.ext.brokerserver.dao.pages.connector.model.ConnectorListEntryRs;
 import de.sovity.edc.ext.brokerserver.dao.utils.SearchUtils;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
@@ -32,11 +33,16 @@ import java.util.List;
 public class ConnectorListQueryService {
     public List<ConnectorListEntryRs> queryConnectorPage(DSLContext dsl, String searchQuery, ConnectorPageSortingType sorting) {
         var c = Tables.CONNECTOR;
-        var filterBySearchQuery = SearchUtils.simpleSearch(searchQuery, List.of(c.ENDPOINT, c.PARTICIPANT_ID));
+        var filterBySearchQuery = SearchUtils.simpleSearch(searchQuery, List.of(
+                c.ENDPOINT,
+                c.PARTICIPANT_ID,
+                CatalogQueryFields.organizationName(c.MDS_ID)
+        ));
 
         return dsl.select(
                 c.ENDPOINT.as("endpoint"),
                 c.PARTICIPANT_ID.as("participantId"),
+                CatalogQueryFields.organizationName(c.MDS_ID).as("organizationName"),
                 c.CREATED_AT.as("createdAt"),
                 c.LAST_SUCCESSFUL_REFRESH_AT.as("lastSuccessfulRefreshAt"),
                 c.LAST_REFRESH_ATTEMPT_AT.as("lastRefreshAttemptAt"),

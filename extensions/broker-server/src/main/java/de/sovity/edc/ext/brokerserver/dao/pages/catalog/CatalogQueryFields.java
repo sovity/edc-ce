@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.dao.pages.catalog;
 
+import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.Connector;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.DataOffer;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.DataOfferViewCount;
@@ -26,6 +27,8 @@ import org.jooq.Table;
 import org.jooq.impl.DSL;
 
 import java.time.OffsetDateTime;
+
+import static org.jooq.impl.DSL.coalesce;
 
 /**
  * Tables and fields used in the catalog page query.
@@ -103,10 +106,24 @@ public class CatalogQueryFields {
         return subquery.asField();
     }
 
+    public Field<String> getOrganizationName() {
+        return organizationName(connectorTable.MDS_ID);
+    }
+
     public static Field<OffsetDateTime> offlineSinceOrLastUpdatedAt(Connector connectorTable) {
         return DSL.coalesce(
                 connectorTable.LAST_SUCCESSFUL_REFRESH_AT,
                 connectorTable.CREATED_AT
         );
+    }
+
+    public static Field<String> organizationName(Field<String> mdsId) {
+        var om = Tables.ORGANIZATION_METADATA;
+        var organizationName = DSL.select(om.NAME)
+                .from(om)
+                .where(om.MDS_ID.eq(mdsId))
+                .asField()
+                .cast(String.class);
+        return coalesce(organizationName, "Unknown");
     }
 }

@@ -92,7 +92,8 @@ public class CatalogApiService {
         var asset = dataOfferMappingUtils.buildUiAsset(
             dataOfferRs.getAssetJsonLd(),
             dataOfferRs.getConnectorEndpoint(),
-            dataOfferRs.getConnectorParticipantId()
+            dataOfferRs.getConnectorParticipantId(),
+            dataOfferRs.getOrganizationName()
         );
 
         var dataOffer = new CatalogDataOffer();

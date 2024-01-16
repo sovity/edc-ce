@@ -28,6 +28,7 @@ import java.time.OffsetDateTime;
 public class ConnectorDetailsRs {
     String endpoint;
     String participantId;
+    String organizationName;
     OffsetDateTime createdAt;
     OffsetDateTime lastSuccessfulRefreshAt;
     OffsetDateTime lastRefreshAttemptAt;

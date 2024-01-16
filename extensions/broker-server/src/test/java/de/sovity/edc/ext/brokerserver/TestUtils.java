@@ -41,7 +41,7 @@ public class TestUtils {
 
     public static final String PROTOCOL_HOST = "http://localhost:" + PROTOCOL_PORT;
     public static final String PROTOCOL_ENDPOINT = PROTOCOL_HOST + PROTOCOL_PATH;
-    public static final String PARTICIPANT_ID = "my-edc-participant-id";
+    public static final String PARTICIPANT_ID = "MDSL1234ZZ.C4321AA";
     public static final String CURATOR_NAME = "My Org";
 
     @NotNull

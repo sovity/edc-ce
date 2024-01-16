@@ -60,6 +60,7 @@ public class ConnectorListApiService {
         var dto = new ConnectorListEntry();
         dto.setParticipantId(connector.getParticipantId());
         dto.setEndpoint(connector.getEndpoint());
+        dto.setOrganizationName(connector.getOrganizationName());
         dto.setCreatedAt(connector.getCreatedAt());
         dto.setLastRefreshAttemptAt(connector.getLastRefreshAttemptAt());
         dto.setLastSuccessfulRefreshAt(connector.getLastSuccessfulRefreshAt());
