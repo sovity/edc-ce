@@ -18,6 +18,11 @@ export class JsonDialogService {
     data: JsonDialogData,
     until$: Observable<any> = NEVER,
   ): Observable<unknown> {
-    return showDialogUntil(this.dialog, JsonDialogComponent, {data}, until$);
+    return showDialogUntil(
+      this.dialog,
+      JsonDialogComponent,
+      {data, autoFocus: 'first-tabbable'},
+      until$,
+    );
   }
 }

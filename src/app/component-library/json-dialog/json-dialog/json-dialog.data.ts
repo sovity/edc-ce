@@ -6,12 +6,12 @@ export interface JsonDialogData {
   subtitle: string;
   icon: string;
   objectForJson: unknown;
-  actionButton?: DialogButton;
+  toolbarButton?: DialogToolbarButton;
 }
 
-export interface DialogButton {
+export interface DialogToolbarButton {
   text: string;
-  color: 'accent' | 'warn' | 'primary';
+  icon: string;
   action: () => Observable<any> | any;
   confirmation?: ConfirmDialogModel;
 }

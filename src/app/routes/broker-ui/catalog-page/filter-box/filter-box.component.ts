@@ -7,11 +7,11 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges,
 } from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {SimpleChangesTyped} from '../../../../core/utils/angular-utils';
 import {FilterBoxItem} from './filter-box-item';
 import {FilterBoxVisibleState} from './filter-box-visible-state';
 
@@ -42,7 +42,7 @@ export class FilterBoxComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChangesTyped<FilterBoxComponent>) {
     if (changes.state) {
       const selectedItems = this.formControl.value ?? [];
       if (!this.state.isEqualSelectedItems(selectedItems)) {

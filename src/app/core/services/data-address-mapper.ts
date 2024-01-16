@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AssetDatasourceFormValue} from '../../routes/connector-ui/asset-page/asset-create-dialog/model/asset-datasource-form-model';
+import {AssetDatasourceFormValue} from '../../routes/connector-ui/asset-page/asset-edit-dialog/form/model/asset-datasource-form-model';
 import {ContractAgreementTransferDialogFormValue} from '../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-form-model';
 import {HttpRequestParamsMapper} from './http-params-mapper.service';
 

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {AssetDatasourceFormValue} from '../../routes/connector-ui/asset-page/asset-create-dialog/model/asset-datasource-form-model';
-import {HttpDatasourceHeaderFormValue} from '../../routes/connector-ui/asset-page/asset-create-dialog/model/http-datasource-header-form-model';
-import {HttpDatasourceQueryParamFormValue} from '../../routes/connector-ui/asset-page/asset-create-dialog/model/http-datasource-query-param-form-model';
+import {AssetDatasourceFormValue} from '../../routes/connector-ui/asset-page/asset-edit-dialog/form/model/asset-datasource-form-model';
+import {HttpDatasourceHeaderFormValue} from '../../routes/connector-ui/asset-page/asset-edit-dialog/form/model/http-datasource-header-form-model';
+import {HttpDatasourceQueryParamFormValue} from '../../routes/connector-ui/asset-page/asset-edit-dialog/form/model/http-datasource-query-param-form-model';
 import {ContractAgreementTransferDialogFormValue} from '../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-form-model';
 import {mapKeys, removeNullValues} from '../utils/record-utils';
 import {everythingAfter, everythingBefore} from '../utils/string-utils';

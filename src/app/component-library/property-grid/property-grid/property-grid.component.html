@@ -27,8 +27,7 @@
     <a
       *ngIf="prop.url"
       class="link break-all"
-      target="_blank"
-      rel="noreferrer"
+      externalLink
       [ngClass]="prop.additionalClasses"
       [attr.href]="prop.url"
       >{{ prop.text }}</a

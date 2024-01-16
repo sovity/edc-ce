@@ -74,10 +74,8 @@ export class TransferHistoryPageComponent implements OnInit, OnDestroy {
   onAssetDetailsClick(item: TransferHistoryEntry) {
     this.loadAssetDetails(item).subscribe({
       next: (asset) => {
-        const data = this.assetDetailDialogDataService.assetDetails(
-          asset,
-          false,
-        );
+        const data =
+          this.assetDetailDialogDataService.assetDetailsReadonly(asset);
         this.assetDetailDialogService.open(data, this.ngOnDestroy$);
       },
       error: (error) => {

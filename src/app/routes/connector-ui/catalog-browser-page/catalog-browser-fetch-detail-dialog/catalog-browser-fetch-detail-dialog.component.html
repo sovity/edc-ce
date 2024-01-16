@@ -23,7 +23,7 @@
 </div>
 
 <div class="w-full flex flex-row justify-end" mat-dialog-actions>
-  <button mat-dialog-close mat-button color="default">Cancel</button>
+  <button mat-button color="default" [mat-dialog-close]="null">Cancel</button>
   <button mat-flat-button color="primary" (click)="dialogData.refresh()">
     Refresh
   </button>

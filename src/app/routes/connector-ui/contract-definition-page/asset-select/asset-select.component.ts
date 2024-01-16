@@ -25,7 +25,7 @@ export class AssetSelectComponent implements OnDestroy {
   ) {}
 
   onAssetClick(asset: UiAssetMapped) {
-    const data = this.assetDetailDialogDataService.assetDetails(asset, false);
+    const data = this.assetDetailDialogDataService.assetDetailsReadonly(asset);
     this.assetDetailDialogService.open(data, this.ngOnDestroy$);
   }
 

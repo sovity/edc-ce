@@ -58,7 +58,7 @@ export class ContractDefinitionCardsComponent implements OnDestroy {
   }
 
   onAssetClick(asset: UiAssetMapped) {
-    const data = this.assetDetailDialogDataService.assetDetails(asset, false);
+    const data = this.assetDetailDialogDataService.assetDetailsReadonly(asset);
     this.assetDetailDialogService
       .open(data, this.ngOnDestroy$)
       .pipe(filter((it) => !!it?.refreshList))
@@ -72,9 +72,9 @@ export class ContractDefinitionCardsComponent implements OnDestroy {
       subtitle: 'Contract Definition',
       icon: 'policy',
       objectForJson: card.detailJsonObj,
-      actionButton: {
+      toolbarButton: {
         text: 'Delete',
-        color: 'warn',
+        icon: 'delete',
         confirmation: ConfirmDialogModel.forDelete(
           'contract definition',
           card.id,

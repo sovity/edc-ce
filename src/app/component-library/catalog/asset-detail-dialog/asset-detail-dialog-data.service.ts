@@ -3,7 +3,10 @@ import {DataOffer} from '../../../core/services/models/data-offer';
 import {UiAssetMapped} from '../../../core/services/models/ui-asset-mapped';
 import {CatalogDataOfferMapped} from '../../../routes/broker-ui/catalog-page/catalog-page/mapping/catalog-page-result-mapped';
 import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
-import {AssetDetailDialogData} from './asset-detail-dialog-data';
+import {
+  AssetDetailDialogData,
+  OnAssetEditClickFn,
+} from './asset-detail-dialog-data';
 import {AssetPropertyGridGroupBuilder} from './asset-property-grid-group-builder';
 
 @Injectable()
@@ -12,10 +15,7 @@ export class AssetDetailDialogDataService {
     private assetPropertyGridGroupBuilder: AssetPropertyGridGroupBuilder,
   ) {}
 
-  assetDetails(
-    asset: UiAssetMapped,
-    allowDelete: boolean,
-  ): AssetDetailDialogData {
+  assetDetailsReadonly(asset: UiAssetMapped): AssetDetailDialogData {
     const propertyGridGroups = [
       this.assetPropertyGridGroupBuilder.buildAssetPropertiesGroup(asset, null),
       this.assetPropertyGridGroupBuilder.buildAdditionalPropertiesGroup(asset),
@@ -24,8 +24,19 @@ export class AssetDetailDialogDataService {
     return {
       type: 'asset-details',
       asset,
-      showDeleteButton: allowDelete,
       propertyGridGroups,
+    };
+  }
+
+  assetDetailsEditable(
+    asset: UiAssetMapped,
+    opts: {onAssetEditClick: OnAssetEditClickFn},
+  ): AssetDetailDialogData {
+    return {
+      ...this.assetDetailsReadonly(asset),
+      showDeleteButton: true,
+      showEditButton: true,
+      onAssetEditClick: opts.onAssetEditClick,
     };
   }
 

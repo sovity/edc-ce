@@ -47,9 +47,9 @@ export class PolicyCardsComponent {
       subtitle: 'Policy',
       icon: 'policy',
       objectForJson: policyCard.objectForJson,
-      actionButton: {
+      toolbarButton: {
         text: 'Delete',
-        color: 'warn',
+        icon: 'delete',
         confirmation: ConfirmDialogModel.forDelete('policy', policyCard.id),
         action: () =>
           this.edcApiService.deletePolicyDefinition(policyCard.id).pipe(

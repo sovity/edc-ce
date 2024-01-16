@@ -4,8 +4,8 @@ import {DataAddressType} from '../../../../component-library/data-address/data-a
 import {switchDisabledControls} from '../../../../core/utils/form-group-utils';
 import {jsonValidator} from '../../../../core/validators/json-validator';
 import {urlValidator} from '../../../../core/validators/url-validator';
-import {HttpDatasourceAuthHeaderType} from '../../asset-page/asset-create-dialog/model/http-datasource-auth-header-type';
-import {HttpDatasourceQueryParamFormModel} from '../../asset-page/asset-create-dialog/model/http-datasource-query-param-form-model';
+import {HttpDatasourceAuthHeaderType} from '../../asset-page/asset-edit-dialog/form/model/http-datasource-auth-header-type';
+import {HttpDatasourceQueryParamFormModel} from '../../asset-page/asset-edit-dialog/form/model/http-datasource-query-param-form-model';
 import {
   ContractAgreementTransferDialogFormModel,
   ContractAgreementTransferDialogFormValue,

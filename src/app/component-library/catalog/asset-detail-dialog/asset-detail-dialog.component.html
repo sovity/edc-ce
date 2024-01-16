@@ -1,29 +1,55 @@
-<div class="mat-card-header" mat-dialog-title removeClass="mat-dialog-title">
-  <mat-icon *ngIf="data.type === 'asset-details'" class="mat-card-avatar-icon">
-    upload
-  </mat-icon>
-  <icon-with-online-status
-    *ngIf="data.type === 'broker-data-offer'"
-    mainIcon="sim_card"
-    [onlineStatus]="data.brokerDataOffer!!.connectorOnlineStatus">
-  </icon-with-online-status>
-  <mat-icon
-    *ngIf="data.type === 'contract-agreement'"
-    class="mat-card-avatar-icon">
-    {{
-      data.contractAgreement!!.direction === 'PROVIDING' ? 'upload' : 'download'
-    }}
-  </mat-icon>
-  <contract-offer-icon
-    *ngIf="data.type === 'data-offer'"
-    [dataOffer]="data.dataOffer!"></contract-offer-icon>
-  <div class="mat-card-header-text">
-    <div class="mat-card-title">
-      {{ asset.title }}
+<div class="flex flex-row justify-between space-x-[10px]">
+  <div class="mat-card-header" mat-dialog-title removeClass="mat-dialog-title">
+    <mat-icon
+      *ngIf="data.type === 'asset-details'"
+      class="mat-card-avatar-icon">
+      upload
+    </mat-icon>
+    <icon-with-online-status
+      *ngIf="data.type === 'broker-data-offer'"
+      mainIcon="sim_card"
+      [onlineStatus]="data.brokerDataOffer!!.connectorOnlineStatus">
+    </icon-with-online-status>
+    <mat-icon
+      *ngIf="data.type === 'contract-agreement'"
+      class="mat-card-avatar-icon">
+      {{
+        data.contractAgreement!!.direction === 'PROVIDING'
+          ? 'upload'
+          : 'download'
+      }}
+    </mat-icon>
+    <contract-offer-icon
+      *ngIf="data.type === 'data-offer'"
+      [dataOffer]="data.dataOffer!"></contract-offer-icon>
+    <div class="mat-card-header-text">
+      <div class="mat-card-title">
+        {{ asset.title }}
+      </div>
+      <div class="mat-card-subtitle">
+        {{ asset.creatorOrganizationName }}
+      </div>
     </div>
-    <div class="mat-card-subtitle">
-      {{ asset.creatorOrganizationName }}
-    </div>
+  </div>
+  <div
+    *ngIf="data.showDeleteButton || data.showEditButton"
+    class="flex flex-row">
+    <button
+      *ngIf="data.showEditButton"
+      class="hover:!bg-[#EDEDED]"
+      mat-icon-button
+      matTooltip="Edit"
+      (click)="onEditClick()">
+      <mat-icon class="mat-icon-[22px]">edit</mat-icon>
+    </button>
+    <button
+      *ngIf="data.showDeleteButton"
+      class="hover:!bg-[#EDEDED]"
+      mat-icon-button
+      matTooltip="Delete"
+      (click)="onDeleteClick()">
+      <mat-icon class="mat-icon-[22px]">delete</mat-icon>
+    </button>
   </div>
 </div>
 
@@ -76,15 +102,8 @@
 <mat-dialog-actions>
   <div class="w-full flex flex-row justify-end">
     <div>
-      <button mat-dialog-close mat-button [disabled]="loading">Close</button>
-
-      <button
-        *ngIf="data.showDeleteButton"
-        mat-raised-button
-        color="warn"
-        [disabled]="loading"
-        (click)="onDeleteClick()">
-        Delete
+      <button mat-button [mat-dialog-close]="null" [disabled]="loading">
+        Close
       </button>
 
       <button

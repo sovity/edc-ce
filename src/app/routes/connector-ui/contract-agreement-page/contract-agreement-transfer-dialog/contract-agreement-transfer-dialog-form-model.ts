@@ -5,7 +5,7 @@ import {
   ɵFormGroupValue,
 } from '@angular/forms';
 import {DataAddressType} from '../../../../component-library/data-address/data-address-type-select/data-address-type';
-import {HttpDatasourceQueryParamFormModel} from '../../asset-page/asset-create-dialog/model/http-datasource-query-param-form-model';
+import {HttpDatasourceQueryParamFormModel} from '../../asset-page/asset-edit-dialog/form/model/http-datasource-query-param-form-model';
 import {HttpDatasinkAuthHeaderType} from './http-datasink-auth-header-type';
 import {HttpDatasinkHeaderFormModel} from './http-datasink-header-form-model';
 

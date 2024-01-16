@@ -5,45 +5,52 @@ import {map} from 'rxjs/operators';
 import {value$} from '../../../../../core/utils/form-group-utils';
 import {noWhitespacesOrColonsValidator} from '../../../../../core/validators/no-whitespaces-or-colons-validator';
 import {urlValidator} from '../../../../../core/validators/url-validator';
-import {LanguageSelectItem} from '../../language-select/language-select-item';
-import {LanguageSelectItemService} from '../../language-select/language-select-item.service';
+import {AssetEditDialogMode} from '../asset-edit-dialog-mode';
 import {AssetsIdValidatorBuilder} from '../assets-id-validator-builder';
-import {AssetMetadataFormModel} from './asset-metadata-form-model';
+import {
+  AssetMetadataFormModel,
+  AssetMetadataFormValue,
+} from './model/asset-metadata-form-model';
 
 @Injectable()
 export class AssetMetadataFormBuilder {
   constructor(
     private formBuilder: FormBuilder,
-    private languageSelectItemService: LanguageSelectItemService,
     private assetsIdValidatorBuilder: AssetsIdValidatorBuilder,
   ) {}
 
-  buildFormGroup(): FormGroup<AssetMetadataFormModel> {
+  buildFormGroup(
+    initial: AssetMetadataFormValue,
+    mode: AssetEditDialogMode,
+  ): FormGroup<AssetMetadataFormModel> {
     const metadata: FormGroup<AssetMetadataFormModel> =
       this.formBuilder.nonNullable.group({
         id: [
-          '',
+          initial?.id!,
           [Validators.required, noWhitespacesOrColonsValidator],
           [this.assetsIdValidatorBuilder.assetIdDoesNotExistsValidator()],
         ],
-        title: ['', Validators.required],
-        version: '',
-        contentType: '',
-        description: '',
-        keywords: [new Array<string>()],
-        language:
-          this.languageSelectItemService.english() as LanguageSelectItem | null,
-        publisher: ['', urlValidator],
-        standardLicense: ['', urlValidator],
-        endpointDocumentation: ['', urlValidator],
+        title: [initial?.title!, Validators.required],
+        version: [initial?.version!],
+        contentType: [initial?.contentType!],
+        description: [initial?.description!],
+        keywords: [initial?.keywords!],
+        language: [initial?.language ?? null],
+        publisher: [initial?.publisher!, urlValidator],
+        standardLicense: [initial?.standardLicense!, urlValidator],
+        endpointDocumentation: [initial?.endpointDocumentation!, urlValidator],
       });
 
     // generate id from name and version(if available)
-    this.initIdGeneration(
-      metadata.controls.id,
-      metadata.controls.title,
-      metadata.controls.version,
-    );
+    if (mode === 'CREATE') {
+      this.initIdGeneration(
+        metadata.controls.id,
+        metadata.controls.title,
+        metadata.controls.version,
+      );
+    } else {
+      metadata.controls.id.disable();
+    }
 
     return metadata;
   }

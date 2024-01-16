@@ -20,6 +20,7 @@ the detailed section referring to by linking pull requests or issues.
 
 - Implemented markdown for asset descriptions
 - Implemented list view for Broker UI
+- Asset Metadata is now editable
 - Now displaying organization information on BrokerUI's `/connectors` page
 
 #### Patch

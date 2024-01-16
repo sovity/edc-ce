@@ -1,6 +1,9 @@
 import {Injectable} from '@angular/core';
-import {UiAssetCreateRequest} from '@sovity.de/edc-client';
-import {AssetEditorDialogFormValue} from '../../routes/connector-ui/asset-page/asset-create-dialog/asset-editor-dialog-form-model';
+import {
+  UiAssetCreateRequest,
+  UiAssetEditMetadataRequest,
+} from '@sovity.de/edc-client';
+import {AssetEditorDialogFormValue} from '../../routes/connector-ui/asset-page/asset-edit-dialog/form/model/asset-editor-dialog-form-model';
 import {DataAddressMapper} from './data-address-mapper';
 
 @Injectable()
@@ -11,12 +14,32 @@ export class AssetCreateRequestBuilder {
    * Build {@link UiAssetCreateRequest} from {@link AssetEditorDialogFormValue}
    *
    * @param formValue form value
-   * @return asset create dto
+   * @return {@link UiAssetCreateRequest}
    */
   buildAssetCreateRequest(
     formValue: AssetEditorDialogFormValue,
   ): UiAssetCreateRequest {
     const id = formValue.metadata?.id!;
+    const metadata = this.buildEditMetadataRequest(formValue);
+    const dataAddressProperties =
+      this.dataAddressMapper.buildDataAddressProperties(formValue.datasource);
+
+    return {
+      id,
+      ...metadata,
+      dataAddressProperties,
+    };
+  }
+
+  /**
+   * Build {@link UiAssetEditMetadataRequest} from {@link AssetEditorDialogFormValue}
+   *
+   * @param formValue form value
+   * @return {@link UiAssetEditMetadataRequest}
+   */
+  buildEditMetadataRequest(
+    formValue: AssetEditorDialogFormValue,
+  ): UiAssetEditMetadataRequest {
     const title = formValue.metadata?.title!;
     const version = formValue.metadata?.version;
     const description = formValue.metadata?.description;
@@ -33,10 +56,7 @@ export class AssetCreateRequestBuilder {
     const geoReferenceMethod = formValue.advanced?.geoReferenceMethod;
     const dataModel = formValue.advanced?.dataModel;
 
-    const dataAddressProperties =
-      this.dataAddressMapper.buildDataAddressProperties(formValue.datasource);
     return {
-      id,
       title,
       language,
       description,
@@ -51,7 +71,6 @@ export class AssetCreateRequestBuilder {
       dataModel,
       geoReferenceMethod,
       transportMode,
-      dataAddressProperties,
     };
   }
 }

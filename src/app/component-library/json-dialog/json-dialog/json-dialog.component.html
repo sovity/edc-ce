@@ -1,15 +1,26 @@
-<div class="mat-card-header" mat-dialog-title removeClass="mat-dialog-title">
-  <mat-icon class="mat-card-avatar-icon">
-    {{ data.icon }}
-  </mat-icon>
-  <div class="mat-card-header-text">
-    <div class="mat-card-title">
-      {{ data.title }}
-    </div>
-    <div class="mat-card-subtitle">
-      {{ data.subtitle }}
+<div class="flex flex-row justify-between space-x-[10px]">
+  <div class="mat-card-header" mat-dialog-title removeClass="mat-dialog-title">
+    <mat-icon class="mat-card-avatar-icon">
+      {{ data.icon }}
+    </mat-icon>
+    <div class="mat-card-header-text">
+      <div class="mat-card-title">
+        {{ data.title }}
+      </div>
+      <div class="mat-card-subtitle">
+        {{ data.subtitle }}
+      </div>
     </div>
   </div>
+  <button
+    *ngIf="data.toolbarButton"
+    class="hover:!bg-[#EDEDED]"
+    mat-icon-button
+    [tabIndex]="-1"
+    [matTooltip]="data.toolbarButton.text"
+    (click)="onAction(data.toolbarButton)">
+    <mat-icon class="mat-icon-[22px]">{{ data.toolbarButton.icon }}</mat-icon>
+  </button>
 </div>
 
 <div mat-dialog-content>
@@ -37,16 +48,12 @@
     </mat-checkbox>
   </div>
   <div class="flex flex-row">
-    <button mat-dialog-close mat-button color="default" [disabled]="busy">
-      Close
-    </button>
     <button
-      *ngIf="data.actionButton"
-      mat-flat-button
-      color="{{ data.actionButton.color }}"
-      [disabled]="busy"
-      (click)="onAction(data.actionButton)">
-      {{ data.actionButton.text }}
+      mat-button
+      color="default"
+      [mat-dialog-close]="null"
+      [disabled]="busy">
+      Close
     </button>
   </div>
 </div>

@@ -12,6 +12,7 @@ import {
   PolicyDefinitionPageToJSON,
   TransferHistoryPageToJSON,
   UiAssetCreateRequestFromJSON,
+  UiAssetEditMetadataRequestFromJSON,
   UiAssetToJSON,
   UiContractNegotiationToJSON,
   UiDataOfferToJSON,
@@ -20,6 +21,7 @@ import {
   assetPage,
   createAsset,
   deleteAsset,
+  editAssetMetadata,
 } from './connector-fake-impl/asset-fake-service';
 import {getCatalogPageDataOffers} from './connector-fake-impl/catalog-fake-service';
 import {
@@ -97,6 +99,13 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
     .on('DELETE', (assetId) => {
       const deleted = deleteAsset(assetId);
       return ok(IdResponseDtoToJSON(deleted));
+    })
+
+    .url('pages/asset-page/assets/*/metadata')
+    .on('PUT', (assetId) => {
+      const editRequest = UiAssetEditMetadataRequestFromJSON(body);
+      const created = editAssetMetadata(assetId, editRequest);
+      return ok(IdResponseDtoToJSON(created));
     })
 
     .url('pages/policy-page')

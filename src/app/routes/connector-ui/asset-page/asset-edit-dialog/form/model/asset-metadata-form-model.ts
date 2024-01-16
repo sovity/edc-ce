@@ -1,5 +1,5 @@
-import {FormControl} from '@angular/forms';
-import {LanguageSelectItem} from '../../language-select/language-select-item';
+import {FormControl, ɵFormGroupValue} from '@angular/forms';
+import {LanguageSelectItem} from '../../../language-select/language-select-item';
 
 /**
  * Form Model for AssetEditorDialog > Metadata
@@ -16,3 +16,8 @@ export interface AssetMetadataFormModel {
   standardLicense: FormControl<string>;
   endpointDocumentation: FormControl<string>;
 }
+
+/**
+ * Form Value for AssetEditorDialog > Metadata
+ */
+export type AssetMetadataFormValue = ɵFormGroupValue<AssetMetadataFormModel>;

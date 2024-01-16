@@ -61,7 +61,9 @@
 </mat-dialog-content>
 
 <mat-dialog-actions class="flex flex-row justify-end">
-  <button mat-dialog-close mat-button [disabled]="loading">Cancel</button>
+  <button mat-button [mat-dialog-close]="null" [disabled]="loading">
+    Cancel
+  </button>
 
   <button
     color="primary"

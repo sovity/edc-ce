@@ -79,6 +79,12 @@ export class AssetDetailDialogComponent implements OnDestroy {
     this.propGroups = this.data.propertyGridGroups;
   }
 
+  onEditClick() {
+    if (this.data.onAssetEditClick) {
+      this.data.onAssetEditClick(this.data.asset, (data) => this.setData(data));
+    }
+  }
+
   onDeleteClick() {
     this.confirmDelete().subscribe(() => {
       this.blockingRequest({

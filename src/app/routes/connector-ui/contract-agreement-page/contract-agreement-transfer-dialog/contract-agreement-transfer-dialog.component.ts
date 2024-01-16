@@ -12,6 +12,10 @@ import {DataAddressMapper} from '../../../../core/services/data-address-mapper';
 import {HttpRequestParamsMapper} from '../../../../core/services/http-params-mapper.service';
 import {NotificationService} from '../../../../core/services/notification.service';
 import {ValidationMessages} from '../../../../core/validators/validation-messages';
+import {
+  DATA_SINK_HTTP_METHODS,
+  DATA_SOURCE_HTTP_METHODS,
+} from '../../asset-page/asset-edit-dialog/form/http-methods';
 import {ContractAgreementTransferDialogData} from './contract-agreement-transfer-dialog-data';
 import {ContractAgreementTransferDialogForm} from './contract-agreement-transfer-dialog-form';
 import {ContractAgreementTransferDialogFormValue} from './contract-agreement-transfer-dialog-form-model';
@@ -25,8 +29,8 @@ import {ContractAgreementTransferDialogResult} from './contract-agreement-transf
 export class ContractAgreementTransferDialogComponent implements OnDestroy {
   loading = false;
 
-  dataSinkMethods = ['POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'];
-  dataSourceMethods = ['GET', ...this.dataSinkMethods];
+  dataSinkMethods = DATA_SINK_HTTP_METHODS;
+  dataSourceMethods = DATA_SOURCE_HTTP_METHODS;
 
   get proxyMethod(): boolean {
     return (

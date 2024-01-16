@@ -4,7 +4,7 @@ import {
   FormGroup,
   ɵFormGroupValue,
 } from '@angular/forms';
-import {DataAddressType} from '../../../../../component-library/data-address/data-address-type-select/data-address-type';
+import {DataAddressType} from '../../../../../../component-library/data-address/data-address-type-select/data-address-type';
 import {HttpDatasourceAuthHeaderType} from './http-datasource-auth-header-type';
 import {HttpDatasourceHeaderFormModel} from './http-datasource-header-form-model';
 import {HttpDatasourceQueryParamFormModel} from './http-datasource-query-param-form-model';

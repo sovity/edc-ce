@@ -1,11 +1,6 @@
-import {
-  Component,
-  HostBinding,
-  Input,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import {Component, HostBinding, Input, OnChanges} from '@angular/core';
 import {FormControl} from '@angular/forms';
+import {SimpleChangesTyped} from '../../../core/utils/angular-utils';
 import {DataAddressType} from './data-address-type';
 import {dataAddressTypeSelectItems} from './data-address-type-select-items';
 import {DataAddressTypeSelectMode} from './data-address-type-select-mode';
@@ -29,7 +24,7 @@ export class DataAddressTypeSelectComponent implements OnChanges {
   mode: DataAddressTypeSelectMode = 'Datasource';
 
   items = dataAddressTypeSelectItems(this.mode);
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChangesTyped<DataAddressTypeSelectComponent>) {
     if (changes.mode) {
       this.items = dataAddressTypeSelectItems(this.mode);
     }

@@ -77,6 +77,6 @@ export class AppConfigFetcher {
       return null;
     }
 
-    return urlJoin(managementApiUrl!!, relativeUrl);
+    return urlJoin(managementApiUrl, relativeUrl);
   }
 }

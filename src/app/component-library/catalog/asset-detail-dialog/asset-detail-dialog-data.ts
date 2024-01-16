@@ -16,4 +16,14 @@ export interface AssetDetailDialogData {
   contractAgreement?: ContractAgreementCardMapped;
   brokerDataOffer?: CatalogDataOfferMapped;
   showDeleteButton?: boolean;
+  showEditButton?: boolean;
+  onAssetEditClick?: OnAssetEditClickFn;
 }
+
+export type OnAssetEditClickFn = (
+  asset: UiAssetMapped,
+  /**
+   * Required so that after the editing the detail dialog can be updated again
+   */
+  afterEditCb: (updatedDialogData: AssetDetailDialogData) => void,
+) => void;

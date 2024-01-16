@@ -17,7 +17,7 @@ import {filter, finalize, takeUntil} from 'rxjs/operators';
 import {NgxJsonViewerComponent} from 'ngx-json-viewer';
 import {ConfirmationDialogComponent} from '../../confirmation-dialog/confirmation-dialog/confirmation-dialog.component';
 import {cleanJson} from './clean-json';
-import {DialogButton, JsonDialogData} from './json-dialog.data';
+import {DialogToolbarButton, JsonDialogData} from './json-dialog.data';
 
 @Component({
   selector: 'app-json-dialog',
@@ -53,7 +53,7 @@ export class JsonDialogComponent implements OnInit, AfterViewInit, OnDestroy {
       : this.data.objectForJson;
   }
 
-  onAction(button: DialogButton) {
+  onAction(button: DialogToolbarButton) {
     if (button.confirmation) {
       const ref = this.matDialog.open(ConfirmationDialogComponent, {
         maxWidth: '20%',
@@ -69,7 +69,7 @@ export class JsonDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  doAction(button: DialogButton) {
+  doAction(button: DialogToolbarButton) {
     if (this.busy) {
       return;
     }

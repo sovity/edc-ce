@@ -1,12 +1,11 @@
 <div
   class="overflow-hidden relative"
-  #content
   [style.height.px]="isCollapsed ? collapsedDescriptionHeight : null">
   <div
-    *ngIf="description"
     class="markdown-description"
+    #content
     [innerHtml]="
-      htmlSanitizer.sanitize(markdownConverter.toHtml(description))
+      htmlSanitizer.sanitize(markdownConverter.toHtml(description ?? ''))
     "></div>
 
   <i *ngIf="!description">No description.</i>
@@ -28,7 +27,7 @@
   *ngIf="isLargeDescription"
   class="w-full"
   mat-button
-  (click)="isCollapsed = !isCollapsed">
+  (click)="onToggleShowMore()">
   <div class="flex items-center gap-1 justify-center">
     <mat-icon *ngIf="isCollapsed" class="mat-icon-[17px] mt-[2px]"
       >keyboard_double_arrow_down</mat-icon
