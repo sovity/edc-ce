@@ -11,6 +11,7 @@ const CONNECTORS: ConnectorDetailPageResult[] = [
   {
     participantId: 'MDSL1234XX.C1234XX',
     endpoint: 'https://example-connector/api/dsp',
+    organizationName: 'Organization A',
     createdAt: new Date('2023-04-01'),
     lastSuccessfulRefreshAt: subMinutes(new Date(), 5),
     lastRefreshAttemptAt: subMinutes(new Date(), 5),
@@ -19,8 +20,9 @@ const CONNECTORS: ConnectorDetailPageResult[] = [
     connectorCrawlingTimeAvg: 400,
   },
   {
-    participantId: 'MDSL1234XX.C1235XX',
+    participantId: 'MDSL1235XX.C1235XX',
     endpoint: 'https://example-connector2/api/dsp',
+    organizationName: 'Organization B',
     createdAt: new Date('2023-04-01'),
     lastSuccessfulRefreshAt: subMinutes(new Date(), 5),
     lastRefreshAttemptAt: subMinutes(new Date(), 5),
@@ -29,8 +31,9 @@ const CONNECTORS: ConnectorDetailPageResult[] = [
     connectorCrawlingTimeAvg: 400,
   },
   {
-    participantId: 'MDSL1234XX.C1237XX',
+    participantId: 'MDSL1236XX.C1237XX',
     endpoint: 'https://example-connector3/api/dsp',
+    organizationName: 'Organization C',
     createdAt: new Date('2023-04-01'),
     lastSuccessfulRefreshAt: subMinutes(new Date(), 5),
     lastRefreshAttemptAt: subMinutes(new Date(), 5),
@@ -74,6 +77,7 @@ const buildConnectorListEntry = (
   onlineStatus: it.onlineStatus,
   createdAt: it.createdAt,
   endpoint: it.endpoint,
+  organizationName: it.organizationName,
   lastSuccessfulRefreshAt: it.lastSuccessfulRefreshAt,
   lastRefreshAttemptAt: it.lastRefreshAttemptAt,
   numDataOffers: it.numDataOffers,

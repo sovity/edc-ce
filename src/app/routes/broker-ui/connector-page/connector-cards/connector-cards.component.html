@@ -1,16 +1,19 @@
-<mat-card *ngFor="let connector of connectors" class="asset-card">
+<mat-card
+  *ngFor="let connector of connectors"
+  class="asset-card !flex !flex-col">
   <mat-card-header class="header-content">
     <icon-with-online-status
       mat-card-avatar
       mainIcon="link"
       [onlineStatus]="connector.onlineStatus">
     </icon-with-online-status>
+
     <mat-card-title>
-      {{ connector.endpoint }}
+      {{ connector.organizationName }}
     </mat-card-title>
-    <mat-card-subtitle>EDC Connector</mat-card-subtitle>
+    <mat-card-subtitle>{{ connector.participantId }}</mat-card-subtitle>
   </mat-card-header>
-  <mat-card-content class="flex flex-col space-y-[16px]">
+  <mat-card-content class="flex flex-col space-y-[16px] mt-auto">
     <div class="flex flex-row space-x-[10px] justify-between">
       <!-- Created At -->
       <div class="flex flex-col flex-grow">
@@ -50,6 +53,14 @@
         <div class="text-right">
           {{ connector.numDataOffers | number }}
         </div>
+      </div>
+    </div>
+
+    <!-- Endpoint URL -->
+    <div class="flex flex-col">
+      <div class="text-slate text-sm uppercase tracking-wider">Endpoint</div>
+      <div>
+        {{ connector.endpoint }}
       </div>
     </div>
   </mat-card-content>
