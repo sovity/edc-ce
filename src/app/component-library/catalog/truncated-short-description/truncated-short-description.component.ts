@@ -7,7 +7,7 @@ import {Component, HostBinding, Input} from '@angular/core';
 export class TruncatedShortDescription {
   @Input() text!: string | undefined;
   @HostBinding('class.whitespace-pre-line')
-  @HostBinding('class.truncate-lines-5')
+  @HostBinding('class.line-clamp-5')
   cls = true;
   @HostBinding('class.italic')
   get italic(): boolean {

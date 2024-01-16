@@ -1,0 +1,43 @@
+<table mat-table [dataSource]="dataOffers">
+  <ng-container matColumnDef="status">
+    <th *matHeaderCellDef class="status-column" mat-header-cell>Status</th>
+    <td *matCellDef="let offer" class="status-column" mat-cell>
+      <small-icon-with-online-status-text
+        [onlineStatus]="
+          offer.connectorOnlineStatus
+        "></small-icon-with-online-status-text>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <th *matHeaderCellDef class="name-column" mat-header-cell>Name</th>
+    <td *matCellDef="let offer" class="name-column" mat-cell>
+      {{ offer.asset.title }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="organizationName">
+    <th *matHeaderCellDef class="organization-column" mat-header-cell>
+      Organization
+    </th>
+    <td *matCellDef="let offer" class="organization-column" mat-cell>
+      {{ offer.asset.creatorOrganizationName }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="description">
+    <th *matHeaderCellDef class="description-column" mat-header-cell>
+      Description
+    </th>
+    <td *matCellDef="let offer" class="description-column" mat-cell>
+      {{ offer.asset.descriptionShortText }}
+    </td>
+  </ng-container>
+
+  <tr *matHeaderRowDef="columnsToDisplay" mat-header-row></tr>
+  <tr
+    *matRowDef="let rowData; columns: columnsToDisplay"
+    class="cursor-pointer hover:bg-gray-50"
+    mat-row
+    (click)="onRowClick(rowData)"></tr>
+</table>

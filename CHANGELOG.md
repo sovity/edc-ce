@@ -19,6 +19,7 @@ the detailed section referring to by linking pull requests or issues.
 #### Minor
 
 - Implemented markdown for asset descriptions
+- Implemented list view for Broker UI
 
 #### Patch
 

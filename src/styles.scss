@@ -51,15 +51,6 @@ body {
   }
 }
 
-.truncate-lines-5 {
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  line-clamp: 5;
-  -webkit-box-orient: vertical;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
 .asset-card {
   width: 300px;
 }
@@ -181,6 +172,13 @@ body {
   width: 18px !important;
   height: 18px !important;
   line-height: 18px !important;
+}
+
+.mat-icon-\[22px\] {
+  font-size: 22px !important;
+  width: 22px !important;
+  height: 22px !important;
+  line-height: 22px !important;
 }
 
 .mat-icon-\[28px\] {

@@ -1,0 +1,103 @@
+table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+  border-spacing: 0 8px !important;
+}
+
+th.mat-header-cell {
+  padding: 10px 13px;
+  font-size: 14px;
+  font-weight: 600;
+  color: black;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+td.mat-cell {
+  padding: 14px 13px;
+  border: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+tr.mat-row {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+tr.mat-row:last-child {
+  border-bottom: 1px solid transparent;
+}
+
+.name-column {
+  width: 80%;
+}
+
+.description-column {
+  display: none;
+}
+
+.status-column {
+  width: 64px;
+}
+
+.organization-column {
+  width: 40%;
+}
+
+@media (min-width: 1350px) {
+  .name-column {
+    width: 30%;
+  }
+
+  .description-column {
+    width: 20%;
+    display: table-cell;
+  }
+
+  .organization-column {
+    width: 19%;
+  }
+}
+
+@media (min-width: 1700px) {
+  .description-column {
+    width: 35%;
+  }
+
+  .organization-column {
+    width: auto;
+  }
+}
+
+@media (min-width: 1800px) {
+  .name-column {
+    width: 25%;
+  }
+
+  .description-column {
+    width: 45%;
+  }
+}
+
+@media (min-width: 1980px) {
+  .name-column {
+    width: 22%;
+  }
+
+  .description-column {
+    width: 50%;
+  }
+}
+
+@media (min-width: 2150px) {
+  .name-column {
+    width: 20%;
+  }
+
+  .description-column {
+    width: 55%;
+  }
+}

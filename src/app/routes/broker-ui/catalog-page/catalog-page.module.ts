@@ -32,6 +32,7 @@ import {CatalogModule} from '../../../component-library/catalog/catalog.module';
 import {PipesAndDirectivesModule} from '../../../component-library/pipes-and-directives/pipes-and-directives.module';
 import {UiElementsModule} from '../../../component-library/ui-elements/ui-elements.module';
 import {BrokerDataOfferCardsComponent} from './broker-data-offer-cards/broker-data-offer-cards.component';
+import {BrokerDataOfferList} from './broker-data-offer-list/broker-data-offer-list.component';
 import {CatalogPageComponent} from './catalog-page/catalog-page.component';
 import {FilterBoxComponent} from './filter-box/filter-box.component';
 import {CatalogPageState} from './state/catalog-page-state';
@@ -75,6 +76,7 @@ import {CatalogPageState} from './state/catalog-page-state';
     MatTableModule,
     MatTabsModule,
     MatTooltipModule,
+    MatTableModule,
 
     // Feature Modules
     CatalogModule,
@@ -84,6 +86,7 @@ import {CatalogPageState} from './state/catalog-page-state';
   declarations: [
     CatalogPageComponent,
     BrokerDataOfferCardsComponent,
+    BrokerDataOfferList,
     FilterBoxComponent,
   ],
   exports: [CatalogPageComponent],

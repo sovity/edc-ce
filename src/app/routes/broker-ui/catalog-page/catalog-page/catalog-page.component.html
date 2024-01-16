@@ -43,21 +43,8 @@
       [pageIndex]="state.pageZeroBased"
       [length]="state.paginationMetadata.numTotal"
       (page)="onPageChange($event)"></mat-paginator>
-
-    <!-- Sorting Select-->
-    <mat-form-field
-      *ngIf="state.sortings.length"
-      class="mat-form-field-without-margin-bottom"
-      color="accent">
-      <mat-label>Sort By</mat-label>
-      <mat-select
-        [compareWith]="'sorting' | compareByField"
-        [formControl]="sortBy">
-        <mat-option *ngFor="let item of state.sortings" [value]="item">
-          {{ item.title }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <!-- View Switch -->
+    <view-selection [(selected)]="viewMode.value"></view-selection>
   </div>
 
   <!-- Cards -->
@@ -77,15 +64,33 @@
   <div
     *ngIf="
       state.fetchedData.isReady && state.fetchedData.data.dataOffers.length
-    "
-    class="flex flex-row flex-wrap">
+    ">
     <broker-data-offer-cards
+      *ngIf="viewMode.value === viewModeEnum.GRID"
       [dataOffers]="state.fetchedData.data.dataOffers"
       (dataOfferClick)="onDataOfferClick($event)"></broker-data-offer-cards>
+    <broker-data-offer-list
+      *ngIf="viewMode.value === viewModeEnum.LIST"
+      [dataOffers]="state.fetchedData.data.dataOffers"
+      (dataOfferClick)="onDataOfferClick($event)"></broker-data-offer-list>
   </div>
 </div>
 
 <div *ngIf="state.isPageReady" class="flex flex-col space-y-[15px]">
+  <!-- Sorting Select-->
+  <mat-form-field
+    *ngIf="state.sortings.length"
+    class="mat-form-field-without-margin-bottom"
+    color="accent">
+    <mat-label>Sort By</mat-label>
+    <mat-select
+      [compareWith]="'sorting' | compareByField"
+      [formControl]="sortBy">
+      <mat-option *ngFor="let item of state.sortings" [value]="item">
+        {{ item.title }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
   <!-- Filters Accordeon -->
   <mat-accordion>
     <mat-expansion-panel
