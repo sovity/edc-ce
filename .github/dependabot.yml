@@ -6,57 +6,47 @@ updates:
     schedule:
       interval: "weekly"
     target-branch: "main"
-    open-pull-requests-limit: 30
+    open-pull-requests-limit: 50
     labels:
       - "dependencies"
       - "github"
-  # Docker
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    target-branch: "main"
-    open-pull-requests-limit: 30
-    labels:
-      - "dependencies"
-      - "docker"
   # Gradle
   - package-ecosystem: "gradle"
     directory: "/"
     schedule:
       interval: "daily"
     target-branch: "main"
-    open-pull-requests-limit: 30
-    labels:
-      - "dependencies"
-      - "java"
-  # Maven
-  - package-ecosystem: "maven"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    target-branch: "main"
-    open-pull-requests-limit: 30
+    open-pull-requests-limit: 50
     labels:
       - "dependencies"
       - "java"
   # NPM
   - package-ecosystem: "npm"
-    directory: "/"
+    directory: "/extensions/wrapper/clients/typescript-client-example/"
     schedule:
       interval: "daily"
     target-branch: "main"
-    open-pull-requests-limit: 30
+    open-pull-requests-limit: 50
+    labels:
+      - "dependencies"
+      - "javascript"
+  # NPM
+  - package-ecosystem: "npm"
+    directory: "/extensions/wrapper/clients/typescript-client/"
+    schedule:
+      interval: "daily"
+    target-branch: "main"
+    open-pull-requests-limit: 50
     labels:
       - "dependencies"
       - "javascript"
   # Docker
   - package-ecosystem: "docker"
-    directory: "/connector"
+    directory: "/launchers/"
     schedule:
       interval: "daily"
     target-branch: "main"
-    open-pull-requests-limit: 30
+    open-pull-requests-limit: 50
     labels:
       - "dependencies"
       - "docker"
