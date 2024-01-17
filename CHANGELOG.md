@@ -15,16 +15,39 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
-- UI API: New endpoint `editAssetMetadata`
-- Added `JWKS-Extension`, which provides an endpoint in the default API, that returns the JWKS of the connector.
-- Added shortDescriptionText to `UiAsset`
-- Added isOwnConnector to `UiAsset`
-
 #### Patch Changes
 
 ### Deployment Migration Notes
 
 #### Compatible Versions
+
+## [7.1.0] - 2024-01-17
+
+### Overview
+
+MDS feature release: Asset markdown descriptions and editable metadata
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v2.3.0
+
+### EDC Extensions
+
+#### Minor Changes
+
+- Asset metadata is now editable
+- Asset descriptions now support Markdown
+- Negotiate button is no longer shown for own connector endpoints
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:7.1.0`
+    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.1.0`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.1.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.3.0`
 
 ## [7.0.0] - 2023-12-06
 
