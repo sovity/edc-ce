@@ -18,16 +18,33 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
-- Implemented markdown for asset descriptions
-- Implemented list view for Broker UI
-- Asset Metadata is now editable
-- Now displaying organization information on BrokerUI's `/connectors` page
+#### Patch
+
+#### Deployment Migration Notes
+
+## [v2.3.0] 2024-01-17
+
+### Overview
+
+MDS feature release for Connector UI and Broker UI
+
+### Detailed Changes
+
+#### Minor
+
+- Asset descriptions now support Markdown
+- Asset metadata is now editable
+- Broker: Catalog now supports list view
+- Broker: Connectors page now shows organization names and connector IDs
 
 #### Patch
 
-- Fix broken `/logout` page
+- Improved handling of asset keywords in cards
+- EE: Fixed issues around logout page
 
 #### Deployment Migration Notes
+
+_No special deployment migration steps required_
 
 ## [v2.2.0] 05.12.2023
 
