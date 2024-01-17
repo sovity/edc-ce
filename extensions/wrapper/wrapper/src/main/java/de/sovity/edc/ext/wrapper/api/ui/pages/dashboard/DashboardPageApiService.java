@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard;
 
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardTransferAmounts;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DapsConfigService;
@@ -31,8 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState.ERROR;
 import static de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState.OK;

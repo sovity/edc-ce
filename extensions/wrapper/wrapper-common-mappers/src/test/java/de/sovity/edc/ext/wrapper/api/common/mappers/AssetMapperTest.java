@@ -34,7 +34,7 @@ class AssetMapperTest {
     void setup() {
         var jsonLd = new TitaniumJsonLd(mock(Monitor.class));
         var typeTransformerRegistry = mock(TypeTransformerRegistry.class);
-        var uiAssetBuilder = new UiAssetMapper(new EdcPropertyUtils(), new AssetJsonLdUtils(), new MarkdownToTextConverter(), new TextUtils());
+        var uiAssetBuilder = new UiAssetMapper(new EdcPropertyUtils(), new AssetJsonLdUtils(), new MarkdownToTextConverter(), new TextUtils(), x -> endpoint.equals(x));
         assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetBuilder, jsonLd);
     }
 
@@ -55,6 +55,7 @@ class AssetMapperTest {
         assertThat(uiAsset.getLanguage()).isEqualTo("https://w3id.org/idsa/code/EN");
         assertThat(uiAsset.getDescription()).isEqualTo("# Lorem Ipsum...\n## h2 title\n[Link text Here](example.com) 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789");
         assertThat(uiAsset.getDescriptionShortText()).isEqualTo("Lorem Ipsum... h2 title Link text Here 012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
+        assertThat(uiAsset.getIsOwnConnector()).isEqualTo(true);
         assertThat(uiAsset.getCreatorOrganizationName()).isEqualTo("My Organization Name");
         assertThat(uiAsset.getPublisherHomepage()).isEqualTo("https://data-source.my-org/about");
         assertThat(uiAsset.getLicenseUrl()).isEqualTo("https://data-source.my-org/license");
@@ -195,5 +196,20 @@ class AssetMapperTest {
         // Assert
         assertThat(uiAsset).isNotNull();
         assertThat(uiAsset.getHttpDatasourceHintsProxyMethod()).isNull();
+    }
+
+    @Test
+    void test_isNotOwnConnector() {
+        // Arrange
+        var assetJsonLd = createObjectBuilder()
+                .add(Prop.ID, "my-asset-1")
+                .build();
+
+        // Act
+        var uiAsset = assetMapper.buildUiAsset(assetJsonLd, "https://other-connector/api/dsp", participantId);
+
+        // Assert
+        assertThat(uiAsset).isNotNull();
+        assertThat(uiAsset.getIsOwnConnector()).isFalse();
     }
 }

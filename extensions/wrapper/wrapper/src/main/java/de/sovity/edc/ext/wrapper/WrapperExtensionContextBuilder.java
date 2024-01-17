@@ -52,6 +52,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DapsConfigService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DashboardDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.MiwConfigService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.OwnConnectorEndpointServiceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
@@ -133,10 +134,11 @@ public class WrapperExtensionContextBuilder {
         var assetJsonLdUtils = new AssetJsonLdUtils();
         var markdownToTextConverter = new MarkdownToTextConverter();
         var textUtils = new TextUtils();
-        var uiAssetMapper = new UiAssetMapper(edcPropertyUtils, assetJsonLdUtils, markdownToTextConverter, textUtils);
+        var selfDescriptionService = new SelfDescriptionService(config, monitor);
+        var ownConnectorEndpointService = new OwnConnectorEndpointServiceImpl(selfDescriptionService);
+        var uiAssetMapper = new UiAssetMapper(edcPropertyUtils, assetJsonLdUtils, markdownToTextConverter, textUtils, ownConnectorEndpointService);
         var assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetMapper, jsonLd);
         var transferProcessStateService = new TransferProcessStateService();
-        var selfDescriptionService = new SelfDescriptionService(config, monitor);
         var contractNegotiationUtils = new ContractNegotiationUtils(
                 contractNegotiationService,
                 selfDescriptionService
