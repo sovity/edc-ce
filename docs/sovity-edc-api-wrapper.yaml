@@ -826,7 +826,7 @@ components:
             no markdown.
         isOwnConnector:
           type: boolean
-          description: Flag that indicates whether the Connector is owned by you.
+          description: Flag that indicates whether this asset is created by this connector.
         publisherHomepage:
           type: string
           description: Asset Homepage
