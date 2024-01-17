@@ -2,10 +2,18 @@ import {LocalStorageUtils} from './local-storage-utils';
 
 export class LocalStoredValue<T> {
   localStorageUtils = new LocalStorageUtils();
+  cachedValue: T;
 
-  constructor(private cachedValue: T, private key: string) {
-    this.cachedValue =
-      this.localStorageUtils.getData(this.key) ?? this.cachedValue;
+  constructor(
+    defaultValue: T,
+    private key: string,
+    isValidValue: (value: unknown) => value is T,
+  ) {
+    this.cachedValue = this.localStorageUtils.getData(
+      this.key,
+      defaultValue,
+      isValidValue,
+    );
   }
 
   get value(): T {

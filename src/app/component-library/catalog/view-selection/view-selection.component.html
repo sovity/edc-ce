@@ -1,16 +1,13 @@
 <div class="flex flex-row items-center">
   <button
+    *ngFor="let item of items"
     mat-icon-button
-    matTooltip="Grid View"
-    [class.!bg-[#EDEDED]]="selected === viewModeEnum.GRID"
-    (click)="onSelection(viewModeEnum.GRID)">
-    <mat-icon class="mat-icon-[22px]">apps</mat-icon>
-  </button>
-  <button
-    mat-icon-button
-    matTooltip="List View"
-    [class.!bg-[#EDEDED]]="selected === viewModeEnum.LIST"
-    (click)="onSelection(viewModeEnum.LIST)">
-    <mat-icon>view_headline</mat-icon>
+    [matTooltip]="item.tooltip"
+    [ngClass]="{
+      'hover:!bg-[#EDEDED]': selected !== item.value,
+      '!bg-[#EDEDED]': selected === item.value
+    }"
+    (click)="onSelection(item.value)">
+    <mat-icon class="mat-icon-[22px]">{{ item.icon }}</mat-icon>
   </button>
 </div>

@@ -47,7 +47,9 @@ export class MarkdownDescriptionComponent
 
   ngOnChanges(changes: SimpleChangesTyped<MarkdownDescriptionComponent>) {
     if (changes.description && this.isAfterViewInit) {
-      this.recalculateShowMore();
+      // We need to wait for the changes to apply first.
+      // setTimeout(..., 0) appends the task to the end of the microtask queue
+      setTimeout(() => this.recalculateShowMore(), 0);
     }
   }
 

@@ -8,7 +8,10 @@ import {CatalogPageSortingItem} from '@sovity.de/broker-server-client';
 import {LocalStoredValue} from 'src/app/core/utils/local-stored-value';
 import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
-import {ViewModeEnum} from '../../../../component-library/catalog/view-selection/view-mode-enum';
+import {
+  ViewModeEnum,
+  isViewMode,
+} from '../../../../component-library/catalog/view-selection/view-mode-enum';
 import {BrokerServerApiService} from '../../../../core/services/api/broker-server-api.service';
 import {FilterBoxItem} from '../filter-box/filter-box-item';
 import {FilterBoxVisibleState} from '../filter-box/filter-box-visible-state';
@@ -35,6 +38,7 @@ export class CatalogPageComponent implements OnInit, OnDestroy {
   viewMode = new LocalStoredValue<ViewModeEnum>(
     ViewModeEnum.GRID,
     'brokerui.viewMode',
+    isViewMode,
   );
   private fetch$ = new BehaviorSubject(null);
 
