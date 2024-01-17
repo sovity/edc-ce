@@ -18,6 +18,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 - UI API: New endpoint `editAssetMetadata`
 - Added `JWKS-Extension`, which provides an endpoint in the default API, that returns the JWKS of the connector.
 - Added shortDescriptionText to `UiAsset`
+- Added isOwnConnector to `UiAsset`
 
 #### Patch Changes
 
