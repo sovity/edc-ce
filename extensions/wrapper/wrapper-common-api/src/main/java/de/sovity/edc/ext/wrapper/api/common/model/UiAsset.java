@@ -59,6 +59,9 @@ public class UiAsset {
     @Schema(description = "Asset Description Short Text generated from description. Contains no markdown.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String descriptionShortText;
 
+    @Schema(description = "Flag that indicates whether the Connector is owned by you.", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Boolean isOwnConnector;
+
     @Schema(description = "Asset Homepage", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String publisherHomepage;
 

@@ -1,4 +1,4 @@
-package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services;
+package de.sovity.edc.ext.wrapper.api.common.mappers.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

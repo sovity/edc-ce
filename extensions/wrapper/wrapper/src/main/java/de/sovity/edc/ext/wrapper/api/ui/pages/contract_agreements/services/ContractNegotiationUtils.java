@@ -15,7 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services;
 
 import de.sovity.edc.ext.wrapper.api.ServiceException;
-import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.SelfDescriptionService;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.spi.contractnegotiation.ContractNegotiationService;

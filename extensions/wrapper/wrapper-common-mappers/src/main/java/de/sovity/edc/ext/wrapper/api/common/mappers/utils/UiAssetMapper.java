@@ -45,6 +45,7 @@ public class UiAssetMapper {
     private final AssetJsonLdUtils assetJsonLdUtils;
     private final MarkdownToTextConverter markdownToTextConverter;
     private final TextUtils textUtils;
+    private final SelfDescriptionService selfDescriptionService;
 
     public UiAsset buildUiAsset(JsonObject assetJsonLd, String connectorEndpoint, String participantId) {
         var properties = JsonLdUtils.object(assetJsonLd, Prop.Edc.PROPERTIES);
@@ -67,6 +68,7 @@ public class UiAssetMapper {
         uiAsset.setLicenseUrl(JsonLdUtils.string(properties, Prop.Dcterms.LICENSE));
         uiAsset.setDescription(description);
         uiAsset.setDescriptionShortText(buildShortDescription(description));
+        uiAsset.setIsOwnConnector(buildIsOwnConnector(connectorEndpoint));
         uiAsset.setLanguage(JsonLdUtils.string(properties, Prop.Dcterms.LANGUAGE));
         uiAsset.setVersion(JsonLdUtils.string(properties, Prop.Dcat.VERSION));
         uiAsset.setMediaType(JsonLdUtils.string(properties, Prop.Dcat.MEDIATYPE));
@@ -275,8 +277,12 @@ public class UiAssetMapper {
         if (description == null) {
             return null;
         }
-        
+
         var text = markdownToTextConverter.extractText(description);
         return textUtils.abbreviate(text, 300);
+    }
+
+    private Boolean buildIsOwnConnector(String connectorEndpoint) {
+        return selfDescriptionService.getConnectorEndpoint().equals(connectorEndpoint);
     }
 }

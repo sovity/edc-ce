@@ -794,6 +794,7 @@ components:
       - assetId
       - connectorEndpoint
       - creatorOrganizationName
+      - isOwnConnector
       - participantId
       - title
       type: object
@@ -823,6 +824,9 @@ components:
           type: string
           description: Asset Description Short Text generated from description. Contains
             no markdown.
+        isOwnConnector:
+          type: boolean
+          description: Flag that indicates whether the Connector is owned by you.
         publisherHomepage:
           type: string
           description: Asset Homepage

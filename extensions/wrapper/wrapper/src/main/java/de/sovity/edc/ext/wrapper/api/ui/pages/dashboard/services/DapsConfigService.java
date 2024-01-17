@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.system.configuration.Config;
 
 import static com.apicatalog.jsonld.StringUtils.isBlank;
-import static de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.ConfigPropertyUtils.configKey;
+import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConfigPropertyUtils.configKey;
 
 @RequiredArgsConstructor
 public class DapsConfigService {
