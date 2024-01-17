@@ -16,9 +16,9 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.SelfDescriptionService;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditMetadataRequest;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 

@@ -25,7 +25,6 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.LiteralMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MarkdownToTextConverter;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.SelfDescriptionService;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.TextUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
 import de.sovity.edc.ext.wrapper.api.ui.UiResourceImpl;
@@ -53,6 +52,8 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DapsConfigService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DashboardDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.MiwConfigService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.OwnConnectorEndpointServiceImpl;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
@@ -134,7 +135,8 @@ public class WrapperExtensionContextBuilder {
         var markdownToTextConverter = new MarkdownToTextConverter();
         var textUtils = new TextUtils();
         var selfDescriptionService = new SelfDescriptionService(config, monitor);
-        var uiAssetMapper = new UiAssetMapper(edcPropertyUtils, assetJsonLdUtils, markdownToTextConverter, textUtils, selfDescriptionService);
+        var ownConnectorEndpointService = new OwnConnectorEndpointServiceImpl(selfDescriptionService);
+        var uiAssetMapper = new UiAssetMapper(edcPropertyUtils, assetJsonLdUtils, markdownToTextConverter, textUtils, ownConnectorEndpointService);
         var assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetMapper, jsonLd);
         var transferProcessStateService = new TransferProcessStateService();
         var contractNegotiationUtils = new ContractNegotiationUtils(

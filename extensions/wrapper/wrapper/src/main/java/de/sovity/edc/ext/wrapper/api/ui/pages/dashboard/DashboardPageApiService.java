@@ -14,12 +14,12 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.SelfDescriptionService;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardTransferAmounts;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DapsConfigService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DashboardDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.MiwConfigService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;

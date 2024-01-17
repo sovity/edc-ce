@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.wrapper;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.SelfDescriptionService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 
 import java.util.List;
 

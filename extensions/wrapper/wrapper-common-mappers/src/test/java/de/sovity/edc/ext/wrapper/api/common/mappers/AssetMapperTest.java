@@ -3,7 +3,6 @@ package de.sovity.edc.ext.wrapper.api.common.mappers;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AssetJsonLdUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MarkdownToTextConverter;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.SelfDescriptionService;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.TextUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
 import de.sovity.edc.utils.JsonUtils;
@@ -24,7 +23,6 @@ import static jakarta.json.Json.createArrayBuilder;
 import static jakarta.json.Json.createObjectBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class AssetMapperTest {
     AssetMapper assetMapper;
@@ -36,9 +34,7 @@ class AssetMapperTest {
     void setup() {
         var jsonLd = new TitaniumJsonLd(mock(Monitor.class));
         var typeTransformerRegistry = mock(TypeTransformerRegistry.class);
-        var selfDescriptionService = mock(SelfDescriptionService.class);
-        when(selfDescriptionService.getConnectorEndpoint()).thenReturn(endpoint);
-        var uiAssetBuilder = new UiAssetMapper(new EdcPropertyUtils(), new AssetJsonLdUtils(), new MarkdownToTextConverter(), new TextUtils(), selfDescriptionService);
+        var uiAssetBuilder = new UiAssetMapper(new EdcPropertyUtils(), new AssetJsonLdUtils(), new MarkdownToTextConverter(), new TextUtils(), x -> endpoint.equals(x));
         assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetBuilder, jsonLd);
     }
 
