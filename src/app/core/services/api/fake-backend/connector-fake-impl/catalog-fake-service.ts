@@ -26,7 +26,7 @@ let dataOffers: UiDataOffer[] = [
     participantId: 'MDSL1234XX.C1234XX',
     contractOffers: [
       {
-        contractOfferId: 'test-contract-offer-3',
+        contractOfferId: 'test-contract-offer-2',
         policy: TestPolicies.failedMapping,
       },
     ],

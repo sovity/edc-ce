@@ -33,6 +33,7 @@ export const createAsset = (asset: UiAssetCreateRequest): IdResponseDto => {
     ...createAssetMetadata(assetId, asset),
     connectorEndpoint: 'https://my-connector/api/dsp',
     participantId: 'MDSL1234XX.C1234XX',
+    isOwnConnector: false,
     creatorOrganizationName: 'My Org',
   });
   return {
@@ -63,6 +64,7 @@ function createAssetMetadata(
   | 'assetId'
   | 'assetJsonLd'
   | 'connectorEndpoint'
+  | 'isOwnConnector'
   | 'creatorOrganizationName'
   | 'httpDatasourceHintsProxyBody'
   | 'httpDatasourceHintsProxyMethod'

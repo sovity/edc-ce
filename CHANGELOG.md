@@ -34,6 +34,7 @@ MDS feature release for Connector UI and Broker UI
 
 - Asset descriptions now support Markdown
 - Asset metadata is now editable
+- Negotiate button is no longer shown for own connector endpoints
 - Broker: Catalog now supports list view
 - Broker: Connectors page now shows organization names and connector IDs
 

@@ -5,6 +5,7 @@ import {
   Input,
   Output,
 } from '@angular/core';
+import {DataOffer} from 'src/app/core/services/models/data-offer';
 import {ContractNegotiationService} from '../../../core/services/contract-negotiation.service';
 import {ContractOffer} from '../../../core/services/models/contract-offer';
 
@@ -14,7 +15,7 @@ import {ContractOffer} from '../../../core/services/models/contract-offer';
 })
 export class ContractOfferMiniListComponent {
   @Input()
-  contractOffers!: ContractOffer[];
+  data!: DataOffer;
 
   @HostBinding('class.flex')
   @HostBinding('class.flex-col')

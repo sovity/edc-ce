@@ -94,44 +94,55 @@
   <!-- Contract Offers -->
   <contract-offer-mini-list
     *ngIf="data.type === 'data-offer'"
-    [contractOffers]="data.dataOffer!.contractOffers"
+    [data]="data.dataOffer!"
     (negotiateClick)="onNegotiateClick($event)">
   </contract-offer-mini-list>
 </div>
 
 <mat-dialog-actions>
   <div class="w-full flex flex-row justify-end">
-    <div>
+    <div class="flex gap-1 items-center">
       <button mat-button [mat-dialog-close]="null" [disabled]="loading">
         Close
       </button>
 
-      <button
+      <ng-container
         *ngIf="
           data.type === 'data-offer' &&
-          data.dataOffer?.contractOffers?.length === 1
-        "
-        mat-raised-button
-        color="primary"
-        [disabled]="
-          contractNegotiationService.negotiationState(
-            data.dataOffer!.contractOffers[0]
-          ) != 'ready'
-        "
-        [ngSwitch]="
-          contractNegotiationService.negotiationState(
-            data.dataOffer!.contractOffers[0]
-          )
-        "
-        (click)="onNegotiateClick(data.dataOffer!.contractOffers[0])">
-        <ng-container *ngSwitchCase="'ready'">Negotiate</ng-container>
-        <ng-container *ngSwitchCase="'negotiating'">
-          Negotiating...
-        </ng-container>
-        <ng-container *ngSwitchCase="'negotiated'">
-          Successfully Negotiated
-        </ng-container>
-      </button>
+          data.dataOffer!.contractOffers.length === 1
+        ">
+        <button
+          *ngIf="data.asset.isOwnConnector"
+          disabled
+          mat-raised-button
+          matTooltip="Cannot negotiate contracts with your own connector.">
+          Negotiate
+        </button>
+
+        <button
+          *ngIf="!data.asset.isOwnConnector"
+          mat-raised-button
+          color="primary"
+          [disabled]="
+            contractNegotiationService.negotiationState(
+              data.dataOffer!.contractOffers[0]
+            ) != 'ready'
+          "
+          [ngSwitch]="
+            contractNegotiationService.negotiationState(
+              data.dataOffer!.contractOffers[0]
+            )
+          "
+          (click)="onNegotiateClick(data.dataOffer!.contractOffers[0])">
+          <ng-container *ngSwitchCase="'ready'">Negotiate</ng-container>
+          <ng-container *ngSwitchCase="'negotiating'">
+            Negotiating...
+          </ng-container>
+          <ng-container *ngSwitchCase="'negotiated'">
+            Successfully Negotiated
+          </ng-container>
+        </button>
+      </ng-container>
 
       <button
         *ngIf="

@@ -1,14 +1,16 @@
-<ng-container *ngIf="!contractOffers?.length">
+<ng-container *ngIf="!data.contractOffers.length">
   <div class="flex flex-row flex-wrap property-grid-group-title">
     Contract Offers
   </div>
   <i>No contract offers available.</i>
 </ng-container>
 
-<ng-container *ngFor="let contractOffer of contractOffers; let i = index">
+<ng-container *ngFor="let contractOffer of data.contractOffers; let i = index">
   <div
     class="flex flex-row items-center space-x-[5px] property-grid-group-title">
-    <span> Contract Offer {{ contractOffers.length >= 2 ? i + 1 : '' }} </span>
+    <span>
+      Contract Offer {{ data.contractOffers.length >= 2 ? i + 1 : '' }}
+    </span>
 
     <mat-progress-spinner
       *ngIf="contractNegotiationService.isBusy(contractOffer)"
@@ -24,13 +26,15 @@
     [props]="contractOffer.properties"></property-grid>
 
   <div
-    *ngIf="contractOffers.length > 1"
+    *ngIf="data.contractOffers.length > 1"
     class="flex flex-row justify-end mt-[15px]">
     <button
+      *ngIf="!data.asset.isOwnConnector"
       mat-raised-button
       color="primary"
       [disabled]="
-        contractNegotiationService.negotiationState(contractOffer) != 'ready'
+        this.contractNegotiationService.negotiationState(contractOffer) !=
+        'ready'
       "
       [ngSwitch]="contractNegotiationService.negotiationState(contractOffer)"
       (click)="negotiateClick.emit(contractOffer)">
@@ -41,6 +45,13 @@
       <ng-container *ngSwitchCase="'negotiated'">
         Successfully Negotiated
       </ng-container>
+    </button>
+    <button
+      *ngIf="data.asset.isOwnConnector"
+      disabled
+      mat-raised-button
+      matTooltip="Cannot negotiate contracts with your own connector.">
+      Negotiate
     </button>
   </div>
 </ng-container>

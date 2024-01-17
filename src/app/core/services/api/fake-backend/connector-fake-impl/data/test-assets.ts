@@ -79,24 +79,26 @@ This is a short description text that should be fully rendered without being **c
     connectorEndpoint: 'https://my-other-connector/api/dsp',
     participantId: 'MDSL1234XX.C1234XX',
     creatorOrganizationName: 'my-other-connector',
+    isOwnConnector: true,
   };
 
   export const short: UiAsset = {
     assetId: 'data-sample-ckd-skd-demands-2023-Feb',
     title: 'data-sample-ckd-skd-demands-2023-Feb',
     connectorEndpoint: 'https://my-other-connector/api/dsp',
-    participantId: 'MDSL1234XX.C1234XX',
+    participantId: 'MDSL1234XX.C1235XX',
     creatorOrganizationName: 'my-other-connector',
     description: shortMarkdownDescription,
     descriptionShortText:
       'Short Description This is a short description text that should be fully rendered without being collapsed. No show more button should be visible.',
+    isOwnConnector: false,
   };
 
   export const full: UiAsset = {
     assetId: 'ckd-skd-demands-2023-Jan',
     title: 'CKD / SKD Demands January 2023',
     connectorEndpoint: 'https://my-other-connector/api/dsp',
-    participantId: 'MDSL1234XX.C1234XX',
+    participantId: 'MDSL1234XX.C1236XX',
     version: '2023-A-Program',
     creatorOrganizationName: 'My-German-OEM',
     keywords: ['automotive', 'part-demands', '2023', 'January'],
@@ -104,6 +106,7 @@ This is a short description text that should be fully rendered without being **c
     description: markdownDescription,
     descriptionShortText:
       'Part demands for CKD/SKD parts January 2023 Split by plant / day / model code. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.',
+    isOwnConnector: true,
     language: 'https://w3id.org/idsa/code/EN',
     publisherHomepage:
       'https://teamabc.departmentxyz.my-german-oem.de/offers/ckd-skd-demands',
@@ -135,6 +138,7 @@ This is a short description text that should be fully rendered without being **c
       participantId: entry.participantId,
       connectorEndpoint: entry.connectorEndpoint,
       creatorOrganizationName: entry.participantId,
+      isOwnConnector: entry.isOwnConnector,
     };
   }
 
