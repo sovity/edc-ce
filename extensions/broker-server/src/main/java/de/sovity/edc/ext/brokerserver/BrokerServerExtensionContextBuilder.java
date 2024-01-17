@@ -185,7 +185,8 @@ public class BrokerServerExtensionContextBuilder {
                 edcPropertyUtils,
                 assetJsonLdUtils,
                 markdownToTextConverter,
-                textUtils
+                textUtils,
+                endpoint -> false
         );
         var assetMapper = new AssetMapper(
                 typeTransformerRegistry,
