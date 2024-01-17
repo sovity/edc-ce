@@ -18,6 +18,8 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
     - [ ] Add a clean `Unreleased` version.
     - [ ] Add the version to the old section.
     - [ ] Add the current date to the old version.
+    - [ ] Reorder, reword or combine changelog entries from a product perspective for consistency.
+    - [ ] Check the [Dependabot Alerts](https://github.com/sovity/edc-ui/security/dependabot) for anything fixable pre-release.
     - [ ] Write or review a `Deployment Migration Notes` section.
     - [ ] Write or review a release summary.
     - [ ] Remove empty sections from the patch notes.

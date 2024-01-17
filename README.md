@@ -36,7 +36,6 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#about-the-project">About The Project</a></li>
-    <li><a href="#compatibility">Compatibility</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#configuration">Configuration</a></li>
     <li><a href="#running-dev-mode">Running dev mode</a></li>
@@ -161,14 +160,6 @@ docker build -f "docker/Dockerfile" -t "edc-ui:latest" .
 
 # Docker image will serve at :80
 ```
-
-### Configuring docker image
-
-ENV vars `EDC_UI_*` will be collected into `assets/app-config.json` at container
-startup and served.
-
-`NGINX_BIND` and `NGINX_PORT` are templated into `default.conf` and can be used
-to overwrite nginx bind address and port.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
