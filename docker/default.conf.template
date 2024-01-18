@@ -7,9 +7,16 @@ server {
     server_name localhost;
 
     root /usr/share/nginx/html;
-    index index.html;
 
     location / {
-        try_files $uri $uri/ /index.html;
+        index do-not-use-me.html;
+        try_files $uri @index;
+    }
+
+    location @index {
+        add_header Cache-Control no-cache;
+        expires 0;
+        index index.html;
+        try_files /index.html =404;
     }
 }
