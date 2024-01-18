@@ -15,9 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Minor
 
-- Added an endpoint for syncing organization metadata from the Authority Portal.
-- Added organization information to connectors and data offers.
-
 ### Deployment Migration Notes
 
 #### Compatible Versions
@@ -25,6 +22,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:{{ CE_VERSION }}`
 - Broker UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI_VERSION }}`
 - Sovity EDC CE: {{ CE Release Link }}
+
+## [v3.2.0] - 2024-01-18
+
+### Overview
+
+Added validated organization information.
+
+### Detailed Changes
+
+#### Minor
+
+- Validated organization information from the Authority Portal is now displayed
+- Authority Portal API: Added endpoint for receiving organization metadata
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:3.2.0`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:2.3.0`
+- Sovity EDC CE: [`7.1.0`](https://github.com/sovity/edc-extensions/releases/tag/v7.1.0)
 
 ## [v3.1.0] - 2023-08-12
 
