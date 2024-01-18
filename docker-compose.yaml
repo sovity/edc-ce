@@ -67,7 +67,7 @@ services:
     depends_on:
       - connector-postgresql
     environment:
-      MY_EDC_NAME_KEBAB_CASE: "my-connector"
+      MY_EDC_PARTICIPANT_ID: "MDSL00001XX.C0001XX"
       MY_EDC_TITLE: "EDC Connector"
       MY_EDC_DESCRIPTION: "sovity Community Edition EDC Connector"
       MY_EDC_CURATOR_URL: "https://example.com"
