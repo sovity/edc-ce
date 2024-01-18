@@ -43,8 +43,8 @@ _No special deployment migration steps required_
 #### Compatible Versions
 
 - Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:3.2.0`
-- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:2.3.0`
-- Sovity EDC CE: [`7.1.0`](https://github.com/sovity/edc-extensions/releases/tag/v7.1.0)
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:2.3.1`
+- Sovity EDC CE: [`7.1.1`](https://github.com/sovity/edc-extensions/releases/tag/v7.1.1)
 
 ## [v3.1.0] - 2023-08-12
 
