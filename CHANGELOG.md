@@ -16,6 +16,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Minor Changes
 
 #### Patch Changes
+- Docs: Enhanced starting a Http-Pull over the EDC-Ui documentation
 
 ### Deployment Migration Notes
 
