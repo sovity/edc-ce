@@ -7,10 +7,6 @@ export namespace TestAssets {
   no sea takimata sanctus est Lorem ipsum dolor sit amet.
 
   ![scenery2](https://images.pexels.com/photos/255419/pexels-photo-255419.jpeg?cs=srgb&dl=pexels-pixabay-255419.jpg&fm=jpg)
-  
-  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
-  tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
-  vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
 
   Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
   tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
@@ -19,7 +15,11 @@ export namespace TestAssets {
   Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
   tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
   vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-  
+
+  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
+  tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
+  vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
+
   Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
   tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
   vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
@@ -30,35 +30,35 @@ export namespace TestAssets {
 
 
   # Omen
-  
+
   This is **bold!** This is _italic_. This is inline \`code\`.
-  
+
   > here we quote
 
   Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
   tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
   vero eos et accusam et justo duo dolores et ea rebum.
-  
+
   ## Sage
-  
+
   - list item 1
   - list item 2
-  
+
   ### Raze
-  
+
   1. list item 1
   2. list item 2
-  
+
   #### Cypher
-  
+
   \`\`\`javascript
   alert(1);
   \`\`\`
-  
+
   ##### Jett
-  
+
   [Sovity Website](https://sovity.de/)
-  
+
   **Table**
 | Item              | In Stock | Price | Description |
 | :---------------- | :------: | ----: | :---------- |
@@ -76,6 +76,8 @@ This is a short description text that should be fully rendered without being **c
   export const boring: UiAsset = {
     assetId: 'data-sample-ckd-skd-demands-2023-Jan',
     title: 'data-sample-ckd-skd-demands-2023-Jan',
+    description: '',
+    descriptionShortText: '',
     connectorEndpoint: 'https://my-other-connector/api/dsp',
     participantId: 'MDSL1234XX.C1234XX',
     creatorOrganizationName: 'my-other-connector',

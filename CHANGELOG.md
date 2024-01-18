@@ -22,6 +22,22 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Deployment Migration Notes
 
+## [v2.3.1] 2024-01-18
+
+### Overview
+
+Bugfix release for minor UI bugs
+
+### Detailed Changes
+
+#### Patch
+
+- Fixed "No Description" only showing sometimes in cards.
+
+#### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
 ## [v2.3.0] 2024-01-17
 
 ### Overview
