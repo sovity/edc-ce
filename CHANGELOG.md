@@ -20,6 +20,9 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 - Docs: Enhanced starting a Http-Pull over the EDC-Ui documentation
 
 ### Deployment Migration Notes
+- new logging-house-client env for mds:
+  - ```CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED:``` "true"
+  - ```EDC_CLEARINGHOUSE_LOG_URL:``` https://example.com
 
 #### Compatible Versions
 
