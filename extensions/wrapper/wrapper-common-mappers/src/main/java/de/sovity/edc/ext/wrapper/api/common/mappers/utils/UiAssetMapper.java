@@ -73,11 +73,11 @@ public class UiAssetMapper {
         uiAsset.setVersion(JsonLdUtils.string(properties, Prop.Dcat.VERSION));
         uiAsset.setMediaType(JsonLdUtils.string(properties, Prop.Dcat.MEDIATYPE));
         uiAsset.setLandingPageUrl(JsonLdUtils.string(properties, Prop.Dcat.LANDING_PAGE));
-        uiAsset.setDataCategory(JsonLdUtils.string(properties, Prop.Mds.DATA_CATEGORY));
-        uiAsset.setDataSubcategory(JsonLdUtils.string(properties, Prop.Mds.DATA_SUBCATEGORY));
-        uiAsset.setDataModel(JsonLdUtils.string(properties, Prop.Mds.DATA_MODEL));
-        uiAsset.setGeoReferenceMethod(JsonLdUtils.string(properties, Prop.Mds.GEO_REFERENCE_METHOD));
-        uiAsset.setTransportMode(JsonLdUtils.string(properties, Prop.Mds.TRANSPORT_MODE));
+        uiAsset.setDataCategory(JsonLdUtils.string(properties, Prop.Mobility.DATA_CATEGORY));
+        uiAsset.setDataSubcategory(JsonLdUtils.string(properties, Prop.Mobility.DATA_SUBCATEGORY));
+        uiAsset.setDataModel(JsonLdUtils.string(properties, Prop.Mobility.DATA_MODEL));
+        uiAsset.setGeoReferenceMethod(JsonLdUtils.string(properties, Prop.Mobility.GEO_REFERENCE_METHOD));
+        uiAsset.setTransportMode(JsonLdUtils.string(properties, Prop.Mobility.TRANSPORT_MODE));
         uiAsset.setKeywords(JsonLdUtils.stringList(properties, Prop.Dcat.KEYWORDS));
 
         uiAsset.setHttpDatasourceHintsProxyMethod(JsonLdUtils.bool(properties, HttpDatasourceHints.METHOD));
@@ -111,11 +111,11 @@ public class UiAssetMapper {
                 Prop.Dcterms.LICENSE,
                 Prop.Dcterms.PUBLISHER,
                 Prop.Dcterms.TITLE,
-                Prop.Mds.DATA_CATEGORY,
-                Prop.Mds.DATA_MODEL,
-                Prop.Mds.DATA_SUBCATEGORY,
-                Prop.Mds.GEO_REFERENCE_METHOD,
-                Prop.Mds.TRANSPORT_MODE,
+                Prop.Mobility.DATA_CATEGORY,
+                Prop.Mobility.DATA_MODEL,
+                Prop.Mobility.DATA_SUBCATEGORY,
+                Prop.Mobility.GEO_REFERENCE_METHOD,
+                Prop.Mobility.TRANSPORT_MODE,
                 HttpDatasourceHints.BODY,
                 HttpDatasourceHints.METHOD,
                 HttpDatasourceHints.PATH,
@@ -165,11 +165,11 @@ public class UiAssetMapper {
         addNonNull(properties, Prop.Dcat.VERSION, uiAssetCreateRequest.getVersion());
         addNonNull(properties, Prop.Dcat.MEDIATYPE, uiAssetCreateRequest.getMediaType());
         addNonNull(properties, Prop.Dcat.LANDING_PAGE, uiAssetCreateRequest.getLandingPageUrl());
-        addNonNull(properties, Prop.Mds.DATA_CATEGORY, uiAssetCreateRequest.getDataCategory());
-        addNonNull(properties, Prop.Mds.DATA_SUBCATEGORY, uiAssetCreateRequest.getDataSubcategory());
-        addNonNull(properties, Prop.Mds.DATA_MODEL, uiAssetCreateRequest.getDataModel());
-        addNonNull(properties, Prop.Mds.GEO_REFERENCE_METHOD, uiAssetCreateRequest.getGeoReferenceMethod());
-        addNonNull(properties, Prop.Mds.TRANSPORT_MODE, uiAssetCreateRequest.getTransportMode());
+        addNonNull(properties, Prop.Mobility.DATA_CATEGORY, uiAssetCreateRequest.getDataCategory());
+        addNonNull(properties, Prop.Mobility.DATA_SUBCATEGORY, uiAssetCreateRequest.getDataSubcategory());
+        addNonNull(properties, Prop.Mobility.DATA_MODEL, uiAssetCreateRequest.getDataModel());
+        addNonNull(properties, Prop.Mobility.GEO_REFERENCE_METHOD, uiAssetCreateRequest.getGeoReferenceMethod());
+        addNonNull(properties, Prop.Mobility.TRANSPORT_MODE, uiAssetCreateRequest.getTransportMode());
         addNonNullArray(properties, Prop.Dcat.KEYWORDS, uiAssetCreateRequest.getKeywords());
 
         if (uiAssetCreateRequest.getPublisherHomepage() != null) {
