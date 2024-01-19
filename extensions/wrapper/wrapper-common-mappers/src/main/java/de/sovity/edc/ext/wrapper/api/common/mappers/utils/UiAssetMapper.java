@@ -78,6 +78,15 @@ public class UiAssetMapper {
         uiAsset.setDataModel(JsonLdUtils.string(properties, Prop.Mobility.DATA_MODEL));
         uiAsset.setGeoReferenceMethod(JsonLdUtils.string(properties, Prop.Mobility.GEO_REFERENCE_METHOD));
         uiAsset.setTransportMode(JsonLdUtils.string(properties, Prop.Mobility.TRANSPORT_MODE));
+        uiAsset.setSovereign(JsonLdUtils.string(properties, "https://w3id.org/sovereign-tbd"));
+        uiAsset.setGeoLocation(JsonLdUtils.string(properties, "https://w3id.org/geolocation-tbd"));
+        uiAsset.setNutsLocation(JsonLdUtils.stringList(properties, "https://w3id.org/nuts-location-tbd"));
+        uiAsset.setDataSampleUrls(JsonLdUtils.stringList(properties, "https://w3id.org/data-sample-urls-tbd"));
+        uiAsset.setReferenceFileUrls(JsonLdUtils.stringList(properties, "https://w3id.org/reference-files-tbd"));
+        uiAsset.setAdditionalDescription(JsonLdUtils.string(properties, "https://w3id.org/additional-description-tbd"));
+        uiAsset.setConditionsForUse(JsonLdUtils.string(properties, "https://w3id.org/conditions-for-use-tbd"));
+        uiAsset.setDataUpdateFrequency(JsonLdUtils.string(properties, "https://w3id.org/data-update-frequency-tbd"));
+        uiAsset.setTemporalCoverage(JsonLdUtils.stringList(properties, "https://w3id.org/temporal-coverage-tbd"));
         uiAsset.setKeywords(JsonLdUtils.stringList(properties, Prop.Dcat.KEYWORDS));
 
         uiAsset.setHttpDatasourceHintsProxyMethod(JsonLdUtils.bool(properties, HttpDatasourceHints.METHOD));
@@ -116,6 +125,16 @@ public class UiAssetMapper {
                 Prop.Mobility.DATA_SUBCATEGORY,
                 Prop.Mobility.GEO_REFERENCE_METHOD,
                 Prop.Mobility.TRANSPORT_MODE,
+                "https://w3id.org/sovereign-tbd",
+                "https://w3id.org/geolocation-tbd",
+                "https://w3id.org/nuts-location-tbd",
+                "https://w3id.org/data-sample-urls-tbd",
+                "https://w3id.org/reference-files-tbd",
+                "https://w3id.org/additional-description-tbd",
+                "https://w3id.org/conditions-for-use-tbd",
+                "https://w3id.org/data-update-frequency-tbd",
+                "https://w3id.org/temporal-coverage-tbd",
+
                 HttpDatasourceHints.BODY,
                 HttpDatasourceHints.METHOD,
                 HttpDatasourceHints.PATH,
@@ -170,6 +189,16 @@ public class UiAssetMapper {
         addNonNull(properties, Prop.Mobility.DATA_MODEL, uiAssetCreateRequest.getDataModel());
         addNonNull(properties, Prop.Mobility.GEO_REFERENCE_METHOD, uiAssetCreateRequest.getGeoReferenceMethod());
         addNonNull(properties, Prop.Mobility.TRANSPORT_MODE, uiAssetCreateRequest.getTransportMode());
+        addNonNull(properties, "https://w3id.org/sovereign-tbd", uiAssetCreateRequest.getSovereign());
+        addNonNull(properties, "https://w3id.org/geolocation-tbd", uiAssetCreateRequest.getGeoLocation());
+        addNonNullArray(properties, "https://w3id.org/nuts-location-tbd", uiAssetCreateRequest.getNutsLocation());
+        addNonNullArray(properties, "https://w3id.org/data-sample-urls-tbd", uiAssetCreateRequest.getDataSampleUrls());
+        addNonNullArray(properties, "https://w3id.org/reference-files-tbd", uiAssetCreateRequest.getReferenceFileUrls());
+        addNonNull(properties, "https://w3id.org/additional-description-tbd", uiAssetCreateRequest.getAdditionalDescription());
+        addNonNull(properties, "https://w3id.org/conditions-for-use-tbd", uiAssetCreateRequest.getConditionsForUse());
+        addNonNull(properties, "https://w3id.org/data-update-frequency-tbd", uiAssetCreateRequest.getDataUpdateFrequency());
+        addNonNullArray(properties, "https://w3id.org/temporal-coverage-tbd", uiAssetCreateRequest.getTemporalCoverage());
+
         addNonNullArray(properties, Prop.Dcat.KEYWORDS, uiAssetCreateRequest.getKeywords());
 
         if (uiAssetCreateRequest.getPublisherHomepage() != null) {
