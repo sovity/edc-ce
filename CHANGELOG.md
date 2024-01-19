@@ -14,6 +14,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Major Changes
 
 #### Minor Changes
+- Logginghouse-Client: Add logging-house-client extension 0.1.0
 
 #### Patch Changes
 - Docs: Enhanced starting a Http-Pull over the EDC-Ui documentation
