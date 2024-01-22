@@ -507,6 +507,51 @@ components:
         transportMode:
           type: string
           description: Transport Mode
+        sovereignLegalName:
+          type: string
+          description: The sovereign is distinct from the publisher by being the legal
+            owner of the data.
+        geoLocation:
+          type: string
+          description: Geo location
+        nutsLocation:
+          type: array
+          description: Locations by NUTS standard which divides countries into administrative
+            divisions
+          items:
+            type: string
+            description: Locations by NUTS standard which divides countries into administrative
+              divisions
+        dataSampleUrls:
+          type: array
+          description: Data sample URLs
+          items:
+            type: string
+            description: Data sample URLs
+        referenceFileUrls:
+          type: array
+          description: Reference file/schema URLs
+          items:
+            type: string
+            description: Reference file/schema URLs
+        referenceFilesDescription:
+          type: string
+          description: Additional information on reference files/schemas
+        conditionsForUse:
+          type: string
+          description: Instructions for use that are not legally relevant e.g. information
+            on how to cite the dataset in papers
+        dataUpdateFrequency:
+          type: string
+          description: Data update frequency
+        temporalCoverageFrom:
+          type: string
+          description: Temporal coverage start date
+          format: date
+        temporalCoverageToInclusive:
+          type: string
+          description: Temporal coverage end date (inclusive)
+          format: date
         dataAddressProperties:
           type: object
           additionalProperties:
@@ -749,6 +794,51 @@ components:
         transportMode:
           type: string
           description: Transport Mode
+        sovereignLegalName:
+          type: string
+          description: The sovereign is distinct from the publisher by being the legal
+            owner of the data.
+        geoLocation:
+          type: string
+          description: Geo location
+        nutsLocation:
+          type: array
+          description: Locations by NUTS standard which divides countries into administrative
+            divisions
+          items:
+            type: string
+            description: Locations by NUTS standard which divides countries into administrative
+              divisions
+        dataSampleUrls:
+          type: array
+          description: Data sample URLs
+          items:
+            type: string
+            description: Data sample URLs
+        referenceFilesDescription:
+          type: array
+          description: Reference file/schema URLs
+          items:
+            type: string
+            description: Reference file/schema URLs
+        additionalDescription:
+          type: string
+          description: Instructions for use that are not legally relevant e.g. information
+            on how to cite the dataset in papers
+        conditionsForUse:
+          type: string
+          description: Conditions for use
+        dataUpdateFrequency:
+          type: string
+          description: Data update frequency
+        temporalCoverageFrom:
+          type: string
+          description: Temporal coverage start date
+          format: date
+        temporalCoverageToInclusive:
+          type: string
+          description: Temporal coverage end date (inclusive)
+          format: date
         additionalProperties:
           type: object
           additionalProperties:
@@ -875,6 +965,51 @@ components:
         transportMode:
           type: string
           description: Transport Mode
+        sovereignLegalName:
+          type: string
+          description: The sovereign is distinct from the publisher by being the legal
+            owner of the data.
+        geoLocation:
+          type: string
+          description: Geo location
+        nutsLocation:
+          type: array
+          description: Locations by NUTS standard which divides countries into administrative
+            divisions
+          items:
+            type: string
+            description: Locations by NUTS standard which divides countries into administrative
+              divisions
+        dataSampleUrls:
+          type: array
+          description: Data sample URLs
+          items:
+            type: string
+            description: Data sample URLs
+        referenceFileUrls:
+          type: array
+          description: Reference file/schema URLs
+          items:
+            type: string
+            description: Reference file/schema URLs
+        referenceFilesDescription:
+          type: string
+          description: Additional information on reference files/schemas
+        conditionsForUse:
+          type: string
+          description: Instructions for use that are not legally relevant e.g. information
+            on how to cite the dataset in papers
+        dataUpdateFrequency:
+          type: string
+          description: Data update frequency
+        temporalCoverageFrom:
+          type: string
+          description: Temporal coverage start date
+          format: date
+        temporalCoverageToInclusive:
+          type: string
+          description: Temporal coverage end date (inclusive)
+          format: date
         additionalProperties:
           type: object
           additionalProperties:
