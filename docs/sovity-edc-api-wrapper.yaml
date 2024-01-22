@@ -507,6 +507,47 @@ components:
         transportMode:
           type: string
           description: Transport Mode
+        sovereign:
+          type: string
+          description: The publisher and sovereign can be distinct
+        geoLocation:
+          type: string
+          description: Geo location
+        nutsLocation:
+          type: array
+          description: NUTS location
+          items:
+            type: string
+            description: NUTS location
+        dataSampleUrls:
+          type: array
+          description: Data sample URLs
+          items:
+            type: string
+            description: Data sample URLs
+        referenceFileUrls:
+          type: array
+          description: Reference file/schema URLs
+          items:
+            type: string
+            description: Reference file/schema URLs
+        additionalDescription:
+          type: string
+          description: Additional information on reference files/schemas
+        conditionsForUse:
+          type: string
+          description: Conditions for use
+        dataUpdateFrequency:
+          type: string
+          description: Data update frequency
+        temporalCoverageFrom:
+          type: string
+          description: Temporal coverage start date
+          format: date
+        temporalCoverageToInclusive:
+          type: string
+          description: Temporal coverage end date (inclusive)
+          format: date
         dataAddressProperties:
           type: object
           additionalProperties:
@@ -749,6 +790,47 @@ components:
         transportMode:
           type: string
           description: Transport Mode
+        sovereign:
+          type: string
+          description: The publisher and sovereign can be distinct
+        geoLocation:
+          type: string
+          description: Geo location
+        nutsLocation:
+          type: array
+          description: NUTS location
+          items:
+            type: string
+            description: NUTS location
+        dataSampleUrls:
+          type: array
+          description: Data sample URLs
+          items:
+            type: string
+            description: Data sample URLs
+        referenceFileUrls:
+          type: array
+          description: Reference file/schema URLs
+          items:
+            type: string
+            description: Reference file/schema URLs
+        additionalDescription:
+          type: string
+          description: Additional information on reference files/schemas
+        conditionsForUse:
+          type: string
+          description: Conditions for use
+        dataUpdateFrequency:
+          type: string
+          description: Data update frequency
+        temporalCoverageFrom:
+          type: string
+          description: Temporal coverage start date
+          format: date
+        temporalCoverageToInclusive:
+          type: string
+          description: Temporal coverage end date (inclusive)
+          format: date
         additionalProperties:
           type: object
           additionalProperties:
@@ -875,6 +957,47 @@ components:
         transportMode:
           type: string
           description: Transport Mode
+        sovereign:
+          type: string
+          description: The publisher and sovereign can be distinct
+        geoLocation:
+          type: string
+          description: Geo location
+        nutsLocation:
+          type: array
+          description: NUTS location
+          items:
+            type: string
+            description: NUTS location
+        dataSampleUrls:
+          type: array
+          description: Data sample URLs
+          items:
+            type: string
+            description: Data sample URLs
+        referenceFileUrls:
+          type: array
+          description: Reference file/schema URLs
+          items:
+            type: string
+            description: Reference file/schema URLs
+        additionalDescription:
+          type: string
+          description: Additional information on reference files/schemas
+        conditionsForUse:
+          type: string
+          description: Conditions for use
+        dataUpdateFrequency:
+          type: string
+          description: Data update frequency
+        temporalCoverageFrom:
+          type: string
+          description: Temporal coverage start date
+          format: date
+        temporalCoverageToInclusive:
+          type: string
+          description: Temporal coverage end date (inclusive)
+          format: date
         additionalProperties:
           type: object
           additionalProperties:

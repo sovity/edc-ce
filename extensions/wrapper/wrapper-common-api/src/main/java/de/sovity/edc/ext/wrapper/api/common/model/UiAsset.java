@@ -135,7 +135,7 @@ public class UiAsset {
     @Schema(description = "Temporal coverage start date", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private LocalDate temporalCoverageFrom;
 
-    @Schema(description = "Temporal coverage to (inclusive)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Temporal coverage end date (inclusive)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private LocalDate temporalCoverageToInclusive;
 
     @Schema(description = "Unhandled Asset Properties (that were strings)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
