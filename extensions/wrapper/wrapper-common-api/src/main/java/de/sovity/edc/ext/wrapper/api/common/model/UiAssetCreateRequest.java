@@ -75,13 +75,13 @@ public class UiAssetCreateRequest {
     @Schema(description = "Transport Mode", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String transportMode;
 
-    @Schema(description = "The publisher and sovereign can be distinct", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String sovereign;
+    @Schema(description = "The sovereign is distinct from the publisher by being the legal owner of the data.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String sovereignName;
 
     @Schema(description = "Geo location", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String geoLocation;
 
-    @Schema(description = "NUTS location", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Locations by NUTS standard which divides countries into administrative divisions", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private List<String> nutsLocation;
 
     @Schema(description = "Data sample URLs", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
@@ -91,9 +91,9 @@ public class UiAssetCreateRequest {
     private List<String> referenceFileUrls;
 
     @Schema(description = "Additional information on reference files/schemas", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String additionalDescription;
+    private String referenceFilesDescription;
 
-    @Schema(description = "Conditions for use", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Instructions for use that are not legally relevant e.g. information on how to cite the dataset in papers", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String conditionsForUse;
 
     @Schema(description = "Data update frequency", requiredMode = Schema.RequiredMode.NOT_REQUIRED)

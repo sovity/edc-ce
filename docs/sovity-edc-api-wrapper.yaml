@@ -507,18 +507,21 @@ components:
         transportMode:
           type: string
           description: Transport Mode
-        sovereign:
+        sovereignName:
           type: string
-          description: The publisher and sovereign can be distinct
+          description: The sovereign is distinct from the publisher by being the legal
+            owner of the data.
         geoLocation:
           type: string
           description: Geo location
         nutsLocation:
           type: array
-          description: NUTS location
+          description: Locations by NUTS standard which divides countries into administrative
+            divisions
           items:
             type: string
-            description: NUTS location
+            description: Locations by NUTS standard which divides countries into administrative
+              divisions
         dataSampleUrls:
           type: array
           description: Data sample URLs
@@ -531,12 +534,13 @@ components:
           items:
             type: string
             description: Reference file/schema URLs
-        additionalDescription:
+        referenceFilesDescription:
           type: string
           description: Additional information on reference files/schemas
         conditionsForUse:
           type: string
-          description: Conditions for use
+          description: Instructions for use that are not legally relevant e.g. information
+            on how to cite the dataset in papers
         dataUpdateFrequency:
           type: string
           description: Data update frequency
@@ -790,25 +794,28 @@ components:
         transportMode:
           type: string
           description: Transport Mode
-        sovereign:
+        sovereignName:
           type: string
-          description: The publisher and sovereign can be distinct
+          description: The sovereign is distinct from the publisher by being the legal
+            owner of the data.
         geoLocation:
           type: string
           description: Geo location
         nutsLocation:
           type: array
-          description: NUTS location
+          description: Locations by NUTS standard which divides countries into administrative
+            divisions
           items:
             type: string
-            description: NUTS location
+            description: Locations by NUTS standard which divides countries into administrative
+              divisions
         dataSampleUrls:
           type: array
           description: Data sample URLs
           items:
             type: string
             description: Data sample URLs
-        referenceFileUrls:
+        referenceFilesDescription:
           type: array
           description: Reference file/schema URLs
           items:
@@ -816,7 +823,8 @@ components:
             description: Reference file/schema URLs
         additionalDescription:
           type: string
-          description: Additional information on reference files/schemas
+          description: Instructions for use that are not legally relevant e.g. information
+            on how to cite the dataset in papers
         conditionsForUse:
           type: string
           description: Conditions for use
@@ -957,18 +965,21 @@ components:
         transportMode:
           type: string
           description: Transport Mode
-        sovereign:
+        sovereignName:
           type: string
-          description: The publisher and sovereign can be distinct
+          description: The sovereign is distinct from the publisher by being the legal
+            owner of the data.
         geoLocation:
           type: string
           description: Geo location
         nutsLocation:
           type: array
-          description: NUTS location
+          description: Locations by NUTS standard which divides countries into administrative
+            divisions
           items:
             type: string
-            description: NUTS location
+            description: Locations by NUTS standard which divides countries into administrative
+              divisions
         dataSampleUrls:
           type: array
           description: Data sample URLs
@@ -981,12 +992,13 @@ components:
           items:
             type: string
             description: Reference file/schema URLs
-        additionalDescription:
+        referenceFilesDescription:
           type: string
           description: Additional information on reference files/schemas
         conditionsForUse:
           type: string
-          description: Conditions for use
+          description: Instructions for use that are not legally relevant e.g. information
+            on how to cite the dataset in papers
         dataUpdateFrequency:
           type: string
           description: Data update frequency
