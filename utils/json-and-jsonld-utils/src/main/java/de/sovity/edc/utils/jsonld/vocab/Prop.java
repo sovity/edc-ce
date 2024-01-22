@@ -160,15 +160,15 @@ public class Prop {
     public class MdsDcatExt {
         public final String CTX = "https://semantic.sovity.io/mds-dcat-ext#";
 
-        public final String SOVEREIGN = "sovereign";
-        public final String GEO_LOCATION = "geolocation";
-        public final String NUTS_LOCATION = "nuts-location";
-        public final String DATA_SAMPLE_URLS = "data-sample-urls";
-        public final String REFERENCE_FILES = "reference-files";
-        public final String ADDITIONAL_DESCRIPTION = "additional-description";
-        public final String CONDITIONS_FOR_USE = "conditions-for-use";
-        public final String DATA_UPDATE_FREQUENCY = "data-update-frequency";
-        public final String TEMPORAL_COVERAGE_FROM = "temporal-coverage-from";
-        public final String TEMPORAL_COVERAGE_TO = "temporal-coverage-to";
+        public final String SOVEREIGN = CTX + "sovereign";
+        public final String GEO_LOCATION = CTX + "geolocation";
+        public final String NUTS_LOCATION = CTX + "nuts-location";
+        public final String DATA_SAMPLE_URLS = CTX + "data-sample-urls";
+        public final String REFERENCE_FILES = CTX + "reference-files";
+        public final String ADDITIONAL_DESCRIPTION = CTX + "additional-description";
+        public final String CONDITIONS_FOR_USE = CTX + "conditions-for-use";
+        public final String DATA_UPDATE_FREQUENCY = CTX + "data-update-frequency";
+        public final String TEMPORAL_COVERAGE_FROM = CTX + "temporal-coverage-from";
+        public final String TEMPORAL_COVERAGE_TO = CTX + "temporal-coverage-to";
     }
 }

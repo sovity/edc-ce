@@ -1,904 +1,904 @@
 {
-	"info": {
-		"_postman_id": "c9b798b5-5495-49a2-830a-9f8718f34266",
-		"name": "sovity EDC (0.2.1)",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "Assets",
-			"item": [
-				{
-					"name": "1 Create Asset",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "ApiKeyDefaultValue",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/Asset\",\n    \"https://w3id.org/edc/v0.0.1/ns/properties\": {\n        \"https://w3id.org/edc/v0.0.1/ns/id\": \"{{ASSET_ID}}\",\n        \"http://www.w3.org/ns/dcat#version\": \"1.0\",\n        \"http://purl.org/dc/terms/language\": \"https://w3id.org/idsa/code/EN\",\n        \"http://purl.org/dc/terms/title\": \"test-document\",\n        \"http://purl.org/dc/terms/description\": \"my test document\",\n        \"http://www.w3.org/ns/dcat#keyword\": [\n            \"keyword1\", \n            \"keyword2\"\n        ],\n        \"http://purl.org/dc/terms/creator\": {\n            \"http://xmlns.com/foaf/0.1/name\": \"My Org\"\n        },\n        \"http://purl.org/dc/terms/license\": \"https://creativecommons.org/licenses/by/4.0/\",\n        \"http://www.w3.org/ns/dcat#landingPage\": \"https://mydepartment.myorg.com/my-offer\",\n        \"http://www.w3.org/ns/dcat#mediaType\": \"text/plain\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody\": \"false\",\n        \"http://purl.org/dc/terms/publisher\": {\n            \"http://xmlns.com/foaf/0.1/homepage\": \"https://myorg.com/\"\n        }\n    },\n    \"https://w3id.org/edc/v0.0.1/ns/privateProperties\": {},\n    \"https://w3id.org/edc/v0.0.1/ns/dataAddress\": {\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"{{PROVIDER_EDC_SOURCE_URL}}\"\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v3/assets",
-							"host": [
-								"{{PROVIDER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v3",
-								"assets"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "1 Create Asset MDS",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "ApiKeyDefaultValue",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/Asset\",\n    \"https://w3id.org/edc/v0.0.1/ns/properties\": {\n        \"https://w3id.org/edc/v0.0.1/ns/id\": \"{{ASSET_ID}}\",\n        \"http://www.w3.org/ns/dcat#version\": \"1.0\",\n        \"http://purl.org/dc/terms/language\": \"https://w3id.org/idsa/code/EN\",\n        \"http://purl.org/dc/terms/title\": \"test-document\",\n        \"http://purl.org/dc/terms/description\": \"my test document\",\n        \"http://www.w3.org/ns/dcat#keyword\": [\n            \"keyword1\",\n            \"keyword2\"\n        ],\n        \"http://purl.org/dc/terms/creator\": {\n            \"http://xmlns.com/foaf/0.1/name\": \"My Org\"\n        },\n        \"http://purl.org/dc/terms/license\": \"https://creativecommons.org/licenses/by/4.0/\",\n        \"http://www.w3.org/ns/dcat#landingPage\": \"https://mydepartment.myorg.com/my-offer\",\n        \"http://www.w3.org/ns/dcat#mediaType\": \"text/plain\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody\": \"false\",\n        \"http://purl.org/dc/terms/publisher\": {\n            \"http://xmlns.com/foaf/0.1/homepage\": \"https://myorg.com/\"\n        },\n        \"http://w3id.org/mds#transportMode\": \"Road\",\n        \"http://w3id.org/mds#dataCategory\": \"Traffic Information\",\n        \"http://w3id.org/mds#dataSubcategory\": \"Hazard Warnings\",\n        \"http://w3id.org/mds#dataModel\": \"CSV\",\n        \"http://w3id.org/mds#geoReferenceMethod\": \"Geo Ref Method Test\"\n    },\n    \"https://w3id.org/edc/v0.0.1/ns/privateProperties\": {},\n    \"https://w3id.org/edc/v0.0.1/ns/dataAddress\": {\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"{{PROVIDER_EDC_SOURCE_URL}}\"\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v3/assets",
-							"host": [
-								"{{PROVIDER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v3",
-								"assets"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "1 Delete Asset",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/assets/{{ASSET_ID}}",
-							"host": [
-								"{{PROVIDER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"assets",
-								"{{ASSET_ID}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "1 Request Assets",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/assets/request",
-							"host": [
-								"{{PROVIDER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"assets",
-								"request"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Policies",
-			"item": [
-				{
-					"name": "2 Create Simple Policy",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "ApiKeyDefaultValue",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/PolicyDefinition\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": []\n            }\n        ]\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions",
-							"host": [
-								"{{PROVIDER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"policydefinitions"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "2 Create Time Policy",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "ApiKeyDefaultValue",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": [\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/gteq\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2022-05-31T22:00:00.000Z\"\n                    },\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/lt\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2030-06-30T22:00:00.000Z\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions",
-							"host": [
-								"{{PROVIDER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"policydefinitions"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "2 Create Participant Policy",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "ApiKeyDefaultValue",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": [\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"REFERRING_CONNECTOR\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/eq\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"{{CONSUMER_EDC_PARTICIPANT_ID}}\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions",
-							"host": [
-								"{{PROVIDER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"policydefinitions"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "2 Delete Policy",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "pass",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions/{{POLICY_ID}}",
-							"host": [
-								"{{PROVIDER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"policydefinitions",
-								"{{POLICY_ID}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "2 Request Policies",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "pass",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions/request",
-							"host": [
-								"{{PROVIDER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"policydefinitions",
-								"request"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "ContractDefinitions",
-			"item": [
-				{
-					"name": "3 Create ContractDefinition",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "ApiKeyDefaultValue",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"@id\": \"{{CONTRACT_DEFINITION_ID}}\",\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/ContractDefinition\",\n    \"https://w3id.org/edc/v0.0.1/ns/accessPolicyId\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/contractPolicyId\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/assetsSelector\": [\n        {\n            \"@type\": \"CriterionDto\",\n            \"https://w3id.org/edc/v0.0.1/ns/operandLeft\": \"https://w3id.org/edc/v0.0.1/ns/id\",\n            \"https://w3id.org/edc/v0.0.1/ns/operator\": \"=\",\n            \"https://w3id.org/edc/v0.0.1/ns/operandRight\": \"{{ASSET_ID}}\"\n        }\n    ]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/contractdefinitions",
-							"host": [
-								"{{PROVIDER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"contractdefinitions"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "3 Delete ContractDefinition",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/contractdefinitions/{{CONTRACT_DEFINITION_ID}}",
-							"host": [
-								"{{PROVIDER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"contractdefinitions",
-								"{{CONTRACT_DEFINITION_ID}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "3 Request ContractDefinitions",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/contractdefinitions/request",
-							"host": [
-								"{{PROVIDER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"contractdefinitions",
-								"request"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Catalog",
-			"item": [
-				{
-					"name": "4 Request Catalog",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/CatalogRequest\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/protocol\": \"dataspace-protocol-http\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/counterPartyAddress\": \"{{PROVIDER_EDC_PROTOCOL_URL}}\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/querySpec\": {\r\n        \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n        \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n    }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/catalog/request",
-							"host": [
-								"{{CONSUMER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"catalog",
-								"request"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Contract Negotiations",
-			"item": [
-				{
-					"name": "5 Start Negotiation",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "pass",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"@type\": \"https://w3id.org/edc/v0.0.1/ns/ContractRequest\",\r\n  \"https://w3id.org/edc/v0.0.1/ns/consumerId\": \"{{CONSUMER_EDC_PARTICIPANT_ID}}\",\r\n  \"https://w3id.org/edc/v0.0.1/ns/providerId\": \"{{PROVIDER_EDC_PARTICIPANT_ID}}\",\r\n  \"https://w3id.org/edc/v0.0.1/ns/connectorAddress\": \"{{PROVIDER_EDC_PROTOCOL_URL}}\",\r\n  \"https://w3id.org/edc/v0.0.1/ns/protocol\": \"dataspace-protocol-http\",\r\n  \"https://w3id.org/edc/v0.0.1/ns/offer\": {\r\n    \"https://w3id.org/edc/v0.0.1/ns/offerId\": \"Y29udHJhY3QtZGVmaW5pdGlvbi0x:aHR0cC1zb3VyY2UtMQ==:ZjM4ZTJlMTItN2RmMC00ZjU3LTgwNDMtYjM0MzMwYTVkMDA3\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/assetId\": \"{{ASSET_ID}}\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\r\n            \"@id\": \"Y29udHJhY3QtZGVmaW5pdGlvbi0x:aHR0cC1zb3VyY2UtMQ==:ZjM4ZTJlMTItN2RmMC00ZjU3LTgwNDMtYjM0MzMwYTVkMDA3\",\r\n            \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\r\n            \"http://www.w3.org/ns/odrl/2/permission\": {\r\n                \"http://www.w3.org/ns/odrl/2/target\": \"{{ASSET_ID}}\",\r\n                \"http://www.w3.org/ns/odrl/2/action\": {\r\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\r\n                },\r\n                \"http://www.w3.org/ns/odrl/2/constraint\": []\r\n            },\r\n            \"http://www.w3.org/ns/odrl/2/prohibition\": [],\r\n            \"http://www.w3.org/ns/odrl/2/obligation\": [],\r\n            \"http://www.w3.org/ns/odrl/2/target\": \"{{ASSET_ID}}\"\r\n        }\r\n  }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractnegotiations",
-							"host": [
-								"{{CONSUMER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"contractnegotiations"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "5 Request Contract Negotiations",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "ApiKeyDefaultValue",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractnegotiations/request",
-							"host": [
-								"{{CONSUMER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"contractnegotiations",
-								"request"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": "",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "5 Cancel Negotiation",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "pass",
-								"type": "default"
-							}
-						],
-						"url": {
-							"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractnegotiations/3f009db0-775d-4dfc-a965-decdf5a76aea/cancel",
-							"host": [
-								"{{CONSUMER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"contractnegotiations",
-								"3f009db0-775d-4dfc-a965-decdf5a76aea",
-								"cancel"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "5 Decline Negotiation",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "pass",
-								"type": "default"
-							}
-						],
-						"url": {
-							"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractnegotiations/88687cb0-1d97-40c5-86c2-ad744afed538/decline",
-							"host": [
-								"{{CONSUMER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"contractnegotiations",
-								"88687cb0-1d97-40c5-86c2-ad744afed538",
-								"decline"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "5 Get Negotiation",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "pass",
-								"type": "default"
-							}
-						],
-						"url": {
-							"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractnegotiations/88687cb0-1d97-40c5-86c2-ad744afed538",
-							"host": [
-								"{{CONSUMER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"contractnegotiations",
-								"88687cb0-1d97-40c5-86c2-ad744afed538"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Contract Agreements",
-			"item": [
-				{
-					"name": "6 Request Contract Agreements",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractagreements/request",
-							"host": [
-								"{{CONSUMER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"contractagreements",
-								"request"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Data Transfer",
-			"item": [
-				{
-					"name": "7 Start Data Push",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "ApiKeyDefaultValue",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/TransferRequest\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/assetId\": \"{{ASSET_ID}}\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/contractId\": \"Y29udHJhY3QtZGVmaW5pdGlvbi0x:aHR0cC1zb3VyY2UtMQ==:MWZhMDk2YzEtODcwNi00NjBiLWJlMmYtZmQyNDFkZWQxYjE3\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/connectorAddress\": \"{{PROVIDER_EDC_PROTOCOL_URL}}\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/connectorId\": \"{{PROVIDER_EDC_PARTICIPANT_ID}}\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/dataDestination\": {\r\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"{{CONSUMER_EDC_TRANSFER_TARGET_URL}}\"\r\n    },\r\n    \"https://w3id.org/edc/v0.0.1/ns/properties\": {},\r\n    \"https://w3id.org/edc/v0.0.1/ns/privateProperties\": {},\r\n    \"https://w3id.org/edc/v0.0.1/ns/protocol\": \"dataspace-protocol-http\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/managedResources\": false\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/transferprocesses",
-							"host": [
-								"{{CONSUMER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"transferprocesses"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "8 Request Transfer Processes",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "pass",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/transferprocesses/request",
-							"host": [
-								"{{CONSUMER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"transferprocesses",
-								"request"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "8 Cancel Transfer Process",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "X-Api-Key",
-								"value": "pass",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"@type\": \"https://w3id.org/edc/v0.0.1/ns/TerminateTransfer\",\r\n  \"https://w3id.org/edc/v0.0.1/ns/reason\": \"Termination reason\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/transferprocesses/c715355b-1e4b-49a9-9ef0-956405e88fe3/terminate",
-							"host": [
-								"{{CONSUMER_EDC_MANAGEMENT_URL}}"
-							],
-							"path": [
-								"v2",
-								"transferprocesses",
-								"c715355b-1e4b-49a9-9ef0-956405e88fe3",
-								"terminate"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	],
-	"auth": {
-		"type": "apikey",
-		"apikey": [
-			{
-				"key": "key",
-				"value": "X-Api-Key",
-				"type": "string"
-			},
-			{
-				"key": "value",
-				"value": "ApiKeyDefaultValue",
-				"type": "string"
-			}
-		]
-	},
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "PROVIDER_EDC_MANAGEMENT_URL",
-			"value": "http://localhost:11002/api/management",
-			"type": "default"
-		},
-		{
-			"key": "PROVIDER_EDC_PROTOCOL_URL",
-			"value": "http://edc:11003/api/dsp",
-			"type": "default"
-		},
-		{
-			"key": "PROVIDER_EDC_PARTICIPANT_ID",
-			"value": "my-edc",
-			"type": "default"
-		},
-		{
-			"key": "PROVIDER_EDC_SOURCE_URL",
-			"value": "https://api.github.com/repos/sovity/edc-extensions/events",
-			"type": "default"
-		},
-		{
-			"key": "CONSUMER_EDC_MANAGEMENT_URL",
-			"value": "http://localhost:22002/api/management",
-			"type": "default"
-		},
-		{
-			"key": "CONSUMER_EDC_PROTOCOL_URL",
-			"value": "http://edc2:11003/api/dsp",
-			"type": "default"
-		},
-		{
-			"key": "CONSUMER_EDC_PARTICIPANT_ID",
-			"value": "my-edc2",
-			"type": "default"
-		},
-		{
-			"key": "CONSUMER_EDC_TRANSFER_TARGET_URL",
-			"value": "https://webhook.site/a418c986-299d-4e22-a1e1-bf532631913a",
-			"type": "default"
-		},
-		{
-			"key": "COUNTER",
-			"value": "1",
-			"type": "default"
-		},
-		{
-			"key": "ASSET_ID",
-			"value": "http-source-{{COUNTER}}",
-			"type": "default"
-		},
-		{
-			"key": "POLICY_ID",
-			"value": "policy-{{COUNTER}}",
-			"type": "default"
-		},
-		{
-			"key": "CONTRACT_DEFINITION_ID",
-			"value": "contract-definition-{{COUNTER}}",
-			"type": "default"
-		}
-	]
+  "info": {
+    "_postman_id": "c9b798b5-5495-49a2-830a-9f8718f34266",
+    "name": "sovity EDC (0.2.1)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Assets",
+      "item": [
+        {
+          "name": "1 Create Asset",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "ApiKeyDefaultValue",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/Asset\",\n    \"https://w3id.org/edc/v0.0.1/ns/properties\": {\n        \"https://w3id.org/edc/v0.0.1/ns/id\": \"{{ASSET_ID}}\",\n        \"http://www.w3.org/ns/dcat#version\": \"1.0\",\n        \"http://purl.org/dc/terms/language\": \"https://w3id.org/idsa/code/EN\",\n        \"http://purl.org/dc/terms/title\": \"test-document\",\n        \"http://purl.org/dc/terms/description\": \"my test document\",\n        \"http://www.w3.org/ns/dcat#keyword\": [\n            \"keyword1\", \n            \"keyword2\"\n        ],\n        \"http://purl.org/dc/terms/creator\": {\n            \"http://xmlns.com/foaf/0.1/name\": \"My Org\"\n        },\n        \"http://purl.org/dc/terms/license\": \"https://creativecommons.org/licenses/by/4.0/\",\n        \"http://www.w3.org/ns/dcat#landingPage\": \"https://mydepartment.myorg.com/my-offer\",\n        \"http://www.w3.org/ns/dcat#mediaType\": \"text/plain\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody\": \"false\",\n        \"http://purl.org/dc/terms/publisher\": {\n            \"http://xmlns.com/foaf/0.1/homepage\": \"https://myorg.com/\"\n        }\n    },\n    \"https://w3id.org/edc/v0.0.1/ns/privateProperties\": {},\n    \"https://w3id.org/edc/v0.0.1/ns/dataAddress\": {\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"{{PROVIDER_EDC_SOURCE_URL}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v3/assets",
+              "host": [
+                "{{PROVIDER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v3",
+                "assets"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1 Create Asset MDS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "ApiKeyDefaultValue",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/Asset\",\n    \"https://w3id.org/edc/v0.0.1/ns/properties\": {\n        \"https://w3id.org/edc/v0.0.1/ns/id\": \"{{ASSET_ID}}\",\n        \"http://www.w3.org/ns/dcat#version\": \"1.0\",\n        \"http://purl.org/dc/terms/language\": \"https://w3id.org/idsa/code/EN\",\n        \"http://purl.org/dc/terms/title\": \"test-document\",\n        \"http://purl.org/dc/terms/description\": \"my test document\",\n        \"http://www.w3.org/ns/dcat#keyword\": [\n            \"keyword1\",\n            \"keyword2\"\n        ],\n        \"http://purl.org/dc/terms/creator\": {\n            \"http://xmlns.com/foaf/0.1/name\": \"My Org\"\n        },\n        \"http://purl.org/dc/terms/license\": \"https://creativecommons.org/licenses/by/4.0/\",\n        \"http://www.w3.org/ns/dcat#landingPage\": \"https://mydepartment.myorg.com/my-offer\",\n        \"http://www.w3.org/ns/dcat#mediaType\": \"text/plain\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody\": \"false\",\n        \"http://purl.org/dc/terms/publisher\": {\n            \"http://xmlns.com/foaf/0.1/homepage\": \"https://myorg.com/\"\n        },\n        \"https://w3id.org/mobilitydcat-ap/transport-mode\": \"Road\",\n        \"https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category\": \"Traffic Information\",\n        \"https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category\": \"Hazard Warnings\",\n        \"https://w3id.org/mobilitydcat-ap/mobility-data-standard\": \"CSV\",\n        \"https://w3id.org/mobilitydcat-ap/georeferencing-method\": \"Geo Ref Method Test\"\n    },\n    \"https://w3id.org/edc/v0.0.1/ns/privateProperties\": {},\n    \"https://w3id.org/edc/v0.0.1/ns/dataAddress\": {\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"{{PROVIDER_EDC_SOURCE_URL}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v3/assets",
+              "host": [
+                "{{PROVIDER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v3",
+                "assets"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1 Delete Asset",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/assets/{{ASSET_ID}}",
+              "host": [
+                "{{PROVIDER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "assets",
+                "{{ASSET_ID}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "1 Request Assets",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/assets/request",
+              "host": [
+                "{{PROVIDER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "assets",
+                "request"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Policies",
+      "item": [
+        {
+          "name": "2 Create Simple Policy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "ApiKeyDefaultValue",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/PolicyDefinition\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": []\n            }\n        ]\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions",
+              "host": [
+                "{{PROVIDER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "policydefinitions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2 Create Time Policy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "ApiKeyDefaultValue",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": [\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/gteq\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2022-05-31T22:00:00.000Z\"\n                    },\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/lt\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2030-06-30T22:00:00.000Z\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions",
+              "host": [
+                "{{PROVIDER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "policydefinitions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2 Create Participant Policy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "ApiKeyDefaultValue",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": [\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"REFERRING_CONNECTOR\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/eq\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"{{CONSUMER_EDC_PARTICIPANT_ID}}\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions",
+              "host": [
+                "{{PROVIDER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "policydefinitions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2 Delete Policy",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "pass",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions/{{POLICY_ID}}",
+              "host": [
+                "{{PROVIDER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "policydefinitions",
+                "{{POLICY_ID}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2 Request Policies",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "pass",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions/request",
+              "host": [
+                "{{PROVIDER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "policydefinitions",
+                "request"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "ContractDefinitions",
+      "item": [
+        {
+          "name": "3 Create ContractDefinition",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "ApiKeyDefaultValue",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"@id\": \"{{CONTRACT_DEFINITION_ID}}\",\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/ContractDefinition\",\n    \"https://w3id.org/edc/v0.0.1/ns/accessPolicyId\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/contractPolicyId\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/assetsSelector\": [\n        {\n            \"@type\": \"CriterionDto\",\n            \"https://w3id.org/edc/v0.0.1/ns/operandLeft\": \"https://w3id.org/edc/v0.0.1/ns/id\",\n            \"https://w3id.org/edc/v0.0.1/ns/operator\": \"=\",\n            \"https://w3id.org/edc/v0.0.1/ns/operandRight\": \"{{ASSET_ID}}\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/contractdefinitions",
+              "host": [
+                "{{PROVIDER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "contractdefinitions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3 Delete ContractDefinition",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/contractdefinitions/{{CONTRACT_DEFINITION_ID}}",
+              "host": [
+                "{{PROVIDER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "contractdefinitions",
+                "{{CONTRACT_DEFINITION_ID}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3 Request ContractDefinitions",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/contractdefinitions/request",
+              "host": [
+                "{{PROVIDER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "contractdefinitions",
+                "request"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Catalog",
+      "item": [
+        {
+          "name": "4 Request Catalog",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/CatalogRequest\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/protocol\": \"dataspace-protocol-http\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/counterPartyAddress\": \"{{PROVIDER_EDC_PROTOCOL_URL}}\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/querySpec\": {\r\n        \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n        \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/catalog/request",
+              "host": [
+                "{{CONSUMER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "catalog",
+                "request"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Contract Negotiations",
+      "item": [
+        {
+          "name": "5 Start Negotiation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "pass",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"@type\": \"https://w3id.org/edc/v0.0.1/ns/ContractRequest\",\r\n  \"https://w3id.org/edc/v0.0.1/ns/consumerId\": \"{{CONSUMER_EDC_PARTICIPANT_ID}}\",\r\n  \"https://w3id.org/edc/v0.0.1/ns/providerId\": \"{{PROVIDER_EDC_PARTICIPANT_ID}}\",\r\n  \"https://w3id.org/edc/v0.0.1/ns/connectorAddress\": \"{{PROVIDER_EDC_PROTOCOL_URL}}\",\r\n  \"https://w3id.org/edc/v0.0.1/ns/protocol\": \"dataspace-protocol-http\",\r\n  \"https://w3id.org/edc/v0.0.1/ns/offer\": {\r\n    \"https://w3id.org/edc/v0.0.1/ns/offerId\": \"Y29udHJhY3QtZGVmaW5pdGlvbi0x:aHR0cC1zb3VyY2UtMQ==:ZjM4ZTJlMTItN2RmMC00ZjU3LTgwNDMtYjM0MzMwYTVkMDA3\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/assetId\": \"{{ASSET_ID}}\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\r\n            \"@id\": \"Y29udHJhY3QtZGVmaW5pdGlvbi0x:aHR0cC1zb3VyY2UtMQ==:ZjM4ZTJlMTItN2RmMC00ZjU3LTgwNDMtYjM0MzMwYTVkMDA3\",\r\n            \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\r\n            \"http://www.w3.org/ns/odrl/2/permission\": {\r\n                \"http://www.w3.org/ns/odrl/2/target\": \"{{ASSET_ID}}\",\r\n                \"http://www.w3.org/ns/odrl/2/action\": {\r\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\r\n                },\r\n                \"http://www.w3.org/ns/odrl/2/constraint\": []\r\n            },\r\n            \"http://www.w3.org/ns/odrl/2/prohibition\": [],\r\n            \"http://www.w3.org/ns/odrl/2/obligation\": [],\r\n            \"http://www.w3.org/ns/odrl/2/target\": \"{{ASSET_ID}}\"\r\n        }\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractnegotiations",
+              "host": [
+                "{{CONSUMER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "contractnegotiations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5 Request Contract Negotiations",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "ApiKeyDefaultValue",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractnegotiations/request",
+              "host": [
+                "{{CONSUMER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "contractnegotiations",
+                "request"
+              ],
+              "query": [
+                {
+                  "key": "",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5 Cancel Negotiation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "pass",
+                "type": "default"
+              }
+            ],
+            "url": {
+              "raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractnegotiations/3f009db0-775d-4dfc-a965-decdf5a76aea/cancel",
+              "host": [
+                "{{CONSUMER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "contractnegotiations",
+                "3f009db0-775d-4dfc-a965-decdf5a76aea",
+                "cancel"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5 Decline Negotiation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "pass",
+                "type": "default"
+              }
+            ],
+            "url": {
+              "raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractnegotiations/88687cb0-1d97-40c5-86c2-ad744afed538/decline",
+              "host": [
+                "{{CONSUMER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "contractnegotiations",
+                "88687cb0-1d97-40c5-86c2-ad744afed538",
+                "decline"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5 Get Negotiation",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "pass",
+                "type": "default"
+              }
+            ],
+            "url": {
+              "raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractnegotiations/88687cb0-1d97-40c5-86c2-ad744afed538",
+              "host": [
+                "{{CONSUMER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "contractnegotiations",
+                "88687cb0-1d97-40c5-86c2-ad744afed538"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Contract Agreements",
+      "item": [
+        {
+          "name": "6 Request Contract Agreements",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractagreements/request",
+              "host": [
+                "{{CONSUMER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "contractagreements",
+                "request"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Data Transfer",
+      "item": [
+        {
+          "name": "7 Start Data Push",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "ApiKeyDefaultValue",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/TransferRequest\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/assetId\": \"{{ASSET_ID}}\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/contractId\": \"Y29udHJhY3QtZGVmaW5pdGlvbi0x:aHR0cC1zb3VyY2UtMQ==:MWZhMDk2YzEtODcwNi00NjBiLWJlMmYtZmQyNDFkZWQxYjE3\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/connectorAddress\": \"{{PROVIDER_EDC_PROTOCOL_URL}}\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/connectorId\": \"{{PROVIDER_EDC_PARTICIPANT_ID}}\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/dataDestination\": {\r\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"{{CONSUMER_EDC_TRANSFER_TARGET_URL}}\"\r\n    },\r\n    \"https://w3id.org/edc/v0.0.1/ns/properties\": {},\r\n    \"https://w3id.org/edc/v0.0.1/ns/privateProperties\": {},\r\n    \"https://w3id.org/edc/v0.0.1/ns/protocol\": \"dataspace-protocol-http\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/managedResources\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/transferprocesses",
+              "host": [
+                "{{CONSUMER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "transferprocesses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8 Request Transfer Processes",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "pass",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/transferprocesses/request",
+              "host": [
+                "{{CONSUMER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "transferprocesses",
+                "request"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8 Cancel Transfer Process",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Api-Key",
+                "value": "pass",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"@type\": \"https://w3id.org/edc/v0.0.1/ns/TerminateTransfer\",\r\n  \"https://w3id.org/edc/v0.0.1/ns/reason\": \"Termination reason\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/transferprocesses/c715355b-1e4b-49a9-9ef0-956405e88fe3/terminate",
+              "host": [
+                "{{CONSUMER_EDC_MANAGEMENT_URL}}"
+              ],
+              "path": [
+                "v2",
+                "transferprocesses",
+                "c715355b-1e4b-49a9-9ef0-956405e88fe3",
+                "terminate"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-Api-Key",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "ApiKeyDefaultValue",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "PROVIDER_EDC_MANAGEMENT_URL",
+      "value": "http://localhost:11002/api/management",
+      "type": "default"
+    },
+    {
+      "key": "PROVIDER_EDC_PROTOCOL_URL",
+      "value": "http://edc:11003/api/dsp",
+      "type": "default"
+    },
+    {
+      "key": "PROVIDER_EDC_PARTICIPANT_ID",
+      "value": "my-edc",
+      "type": "default"
+    },
+    {
+      "key": "PROVIDER_EDC_SOURCE_URL",
+      "value": "https://api.github.com/repos/sovity/edc-extensions/events",
+      "type": "default"
+    },
+    {
+      "key": "CONSUMER_EDC_MANAGEMENT_URL",
+      "value": "http://localhost:22002/api/management",
+      "type": "default"
+    },
+    {
+      "key": "CONSUMER_EDC_PROTOCOL_URL",
+      "value": "http://edc2:11003/api/dsp",
+      "type": "default"
+    },
+    {
+      "key": "CONSUMER_EDC_PARTICIPANT_ID",
+      "value": "my-edc2",
+      "type": "default"
+    },
+    {
+      "key": "CONSUMER_EDC_TRANSFER_TARGET_URL",
+      "value": "https://webhook.site/a418c986-299d-4e22-a1e1-bf532631913a",
+      "type": "default"
+    },
+    {
+      "key": "COUNTER",
+      "value": "1",
+      "type": "default"
+    },
+    {
+      "key": "ASSET_ID",
+      "value": "http-source-{{COUNTER}}",
+      "type": "default"
+    },
+    {
+      "key": "POLICY_ID",
+      "value": "policy-{{COUNTER}}",
+      "type": "default"
+    },
+    {
+      "key": "CONTRACT_DEFINITION_ID",
+      "value": "contract-definition-{{COUNTER}}",
+      "type": "default"
+    }
+  ]
 }
