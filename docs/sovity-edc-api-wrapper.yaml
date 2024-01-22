@@ -507,7 +507,7 @@ components:
         transportMode:
           type: string
           description: Transport Mode
-        sovereignName:
+        sovereignLegalName:
           type: string
           description: The sovereign is distinct from the publisher by being the legal
             owner of the data.
@@ -794,7 +794,7 @@ components:
         transportMode:
           type: string
           description: Transport Mode
-        sovereignName:
+        sovereignLegalName:
           type: string
           description: The sovereign is distinct from the publisher by being the legal
             owner of the data.
@@ -965,7 +965,7 @@ components:
         transportMode:
           type: string
           description: Transport Mode
-        sovereignName:
+        sovereignLegalName:
           type: string
           description: The sovereign is distinct from the publisher by being the legal
             owner of the data.

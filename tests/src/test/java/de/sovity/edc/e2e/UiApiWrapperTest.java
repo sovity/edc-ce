@@ -146,12 +146,12 @@ class UiApiWrapperTest {
                 .dataModel("dataModel")
                 .geoReferenceMethod("geoReferenceMethod")
                 .transportMode("transportMode")
-                .sovereign("my-sovereign")
+                .sovereignLegalName("my-sovereign")
                 .geoLocation("my-geolocation")
                 .nutsLocation(Arrays.asList("my-nuts-location1", "my-nuts-location2"))
                 .dataSampleUrls(Arrays.asList("my-data-sample-urls1", "my-data-sample-urls2"))
                 .referenceFileUrls(Arrays.asList("my-reference-files1", "my-reference-files2"))
-                .additionalDescription("my-additional-description")
+                .referenceFilesDescription("my-additional-description")
                 .conditionsForUse("my-conditions-for-use")
                 .dataUpdateFrequency("my-data-update-frequency")
                 .temporalCoverageFrom(LocalDate.parse("2007-12-03"))
@@ -217,12 +217,12 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getAsset().getDataModel()).isEqualTo("dataModel");
         assertThat(dataOffer.getAsset().getGeoReferenceMethod()).isEqualTo("geoReferenceMethod");
         assertThat(dataOffer.getAsset().getTransportMode()).isEqualTo("transportMode");
-        assertThat(dataOffer.getAsset().getSovereign()).isEqualTo("my-sovereign");
+        assertThat(dataOffer.getAsset().getSovereignLegalName()).isEqualTo("my-sovereign");
         assertThat(dataOffer.getAsset().getGeoLocation()).isEqualTo("my-geolocation");
         assertThat(dataOffer.getAsset().getNutsLocation()).isEqualTo(Arrays.asList("my-nuts-location1", "my-nuts-location2"));
         assertThat(dataOffer.getAsset().getDataSampleUrls()).isEqualTo(Arrays.asList("my-data-sample-urls1", "my-data-sample-urls2"));
         assertThat(dataOffer.getAsset().getReferenceFileUrls()).isEqualTo(Arrays.asList("my-reference-files1", "my-reference-files2"));
-        assertThat(dataOffer.getAsset().getAdditionalDescription()).isEqualTo("my-additional-description");
+        assertThat(dataOffer.getAsset().getReferenceFilesDescription()).isEqualTo("my-additional-description");
         assertThat(dataOffer.getAsset().getConditionsForUse()).isEqualTo("my-conditions-for-use");
         assertThat(dataOffer.getAsset().getDataUpdateFrequency()).isEqualTo("my-data-update-frequency");
         assertThat(dataOffer.getAsset().getTemporalCoverageFrom()).isEqualTo(LocalDate.parse("2007-12-03"));

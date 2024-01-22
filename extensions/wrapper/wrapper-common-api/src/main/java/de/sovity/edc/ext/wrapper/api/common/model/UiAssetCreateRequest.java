@@ -76,7 +76,7 @@ public class UiAssetCreateRequest {
     private String transportMode;
 
     @Schema(description = "The sovereign is distinct from the publisher by being the legal owner of the data.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String sovereignName;
+    private String sovereignLegalName;
 
     @Schema(description = "Geo location", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String geoLocation;

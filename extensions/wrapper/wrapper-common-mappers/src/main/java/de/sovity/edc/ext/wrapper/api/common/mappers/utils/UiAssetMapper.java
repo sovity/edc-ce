@@ -78,7 +78,7 @@ public class UiAssetMapper {
         uiAsset.setDataModel(JsonLdUtils.string(properties, Prop.Mobility.DATA_MODEL));
         uiAsset.setGeoReferenceMethod(JsonLdUtils.string(properties, Prop.Mobility.GEO_REFERENCE_METHOD));
         uiAsset.setTransportMode(JsonLdUtils.string(properties, Prop.Mobility.TRANSPORT_MODE));
-        uiAsset.setSovereignName(JsonLdUtils.string(properties, Prop.MdsDcatExt.SOVEREIGN));
+        uiAsset.setSovereignLegalName(JsonLdUtils.string(properties, Prop.MdsDcatExt.SOVEREIGN));
         uiAsset.setGeoLocation(JsonLdUtils.string(properties, Prop.MdsDcatExt.GEO_LOCATION));
         uiAsset.setNutsLocation(JsonLdUtils.stringList(properties, Prop.MdsDcatExt.NUTS_LOCATION));
         uiAsset.setDataSampleUrls(JsonLdUtils.stringList(properties, Prop.MdsDcatExt.DATA_SAMPLE_URLS));
@@ -191,7 +191,7 @@ public class UiAssetMapper {
         addNonNull(properties, Prop.Mobility.DATA_MODEL, uiAssetCreateRequest.getDataModel());
         addNonNull(properties, Prop.Mobility.GEO_REFERENCE_METHOD, uiAssetCreateRequest.getGeoReferenceMethod());
         addNonNull(properties, Prop.Mobility.TRANSPORT_MODE, uiAssetCreateRequest.getTransportMode());
-        addNonNull(properties, Prop.MdsDcatExt.SOVEREIGN, uiAssetCreateRequest.getSovereignName());
+        addNonNull(properties, Prop.MdsDcatExt.SOVEREIGN, uiAssetCreateRequest.getSovereignLegalName());
         addNonNull(properties, Prop.MdsDcatExt.GEO_LOCATION, uiAssetCreateRequest.getGeoLocation());
         addNonNullArray(properties, Prop.MdsDcatExt.NUTS_LOCATION, uiAssetCreateRequest.getNutsLocation());
         addNonNullArray(properties, Prop.MdsDcatExt.DATA_SAMPLE_URLS, uiAssetCreateRequest.getDataSampleUrls());
