@@ -18,15 +18,15 @@ import com.apicatalog.jsonld.document.JsonDocument;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
-import jakarta.json.JsonArray;
 import jakarta.json.JsonNumber;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonString;
-import jakarta.json.JsonStructure;
 import jakarta.json.JsonValue;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -96,6 +96,25 @@ public class JsonLdUtils {
             // We do this over throwing errors because we want to be able to handle invalid json-ld
             case ARRAY, OBJECT -> JsonUtils.toJson(value);
         };
+    }
+
+    /**
+     * Get a offset date time property
+     *
+     * @param json json-ld
+     * @return offset date time value or null
+     */
+    public static LocalDate localDate(JsonValue json) {
+        var str = string(json);
+        if (str == null) {
+            return null;
+        }
+
+        try {
+            return LocalDate.parse(str);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
     }
 
     /**
@@ -190,6 +209,21 @@ public class JsonLdUtils {
             return null;
         }
         return string(field);
+    }
+
+    /**
+     * Get a offset date time property
+     *
+     * @param object json-ld
+     * @param key    key
+     * @return offset date time or null
+     */
+    public static LocalDate localDate(JsonObject object, String key) {
+        JsonValue field = object.get(key);
+        if (field == null) {
+            return null;
+        }
+        return localDate(field);
     }
 
     /**

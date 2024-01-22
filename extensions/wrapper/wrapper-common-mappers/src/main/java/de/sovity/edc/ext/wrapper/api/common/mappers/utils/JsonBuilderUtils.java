@@ -21,6 +21,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -29,6 +30,13 @@ public class JsonBuilderUtils {
     protected static JsonObjectBuilder addNonNull(JsonObjectBuilder builder, String key, String value) {
         if (value != null) {
             builder.add(key, value);
+        }
+        return builder;
+    }
+
+    protected static JsonObjectBuilder addNonNull(JsonObjectBuilder builder, String key, LocalDate value) {
+        if (value != null) {
+            builder.add(key, value.toString());
         }
         return builder;
     }

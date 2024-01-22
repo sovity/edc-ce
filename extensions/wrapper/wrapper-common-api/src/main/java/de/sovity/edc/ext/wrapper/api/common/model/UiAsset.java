@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -131,8 +132,11 @@ public class UiAsset {
     @Schema(description = "Data update frequency", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String dataUpdateFrequency;
 
-    @Schema(description = "Temporal coverage", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private List<String> temporalCoverage;
+    @Schema(description = "Temporal coverage start date", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private LocalDate temporalCoverageFrom;
+
+    @Schema(description = "Temporal coverage to (inclusive)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private LocalDate temporalCoverageToInclusive;
 
     @Schema(description = "Unhandled Asset Properties (that were strings)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> additionalProperties;

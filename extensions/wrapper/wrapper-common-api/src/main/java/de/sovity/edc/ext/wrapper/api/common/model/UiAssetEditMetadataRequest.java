@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -95,8 +96,11 @@ public class UiAssetEditMetadataRequest {
     @Schema(description = "Data update frequency", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String dataUpdateFrequency;
 
-    @Schema(description = "Temporal coverage", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private List<String> temporalCoverage;
+    @Schema(description = "Temporal coverage start date", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private LocalDate temporalCoverageFrom;
+
+    @Schema(description = "Temporal coverage to (inclusive)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private LocalDate temporalCoverageToInclusive;
 
     @Schema(description = "Custom Asset Properties (that are strings)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> additionalProperties;

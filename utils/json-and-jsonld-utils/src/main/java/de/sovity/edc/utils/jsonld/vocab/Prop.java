@@ -152,4 +152,23 @@ public class Prop {
         public final String GEO_REFERENCE_METHOD = CTX + "georeferencing-method";
         public final String TRANSPORT_MODE = CTX + "transport-mode";
     }
+
+    /**
+     * Temporary Context for all MDS specific fields awaiting proper classification within the mobilityDCAT-AP specification
+     */
+    @UtilityClass
+    public class MdsDcatExt {
+        public final String CTX = "https://semantic.sovity.io/mds-dcat-ext#";
+
+        public final String SOVEREIGN = "sovereign";
+        public final String GEO_LOCATION = "geolocation";
+        public final String NUTS_LOCATION = "nuts-location";
+        public final String DATA_SAMPLE_URLS = "data-sample-urls";
+        public final String REFERENCE_FILES = "reference-files";
+        public final String ADDITIONAL_DESCRIPTION = "additional-description";
+        public final String CONDITIONS_FOR_USE = "conditions-for-use";
+        public final String DATA_UPDATE_FREQUENCY = "data-update-frequency";
+        public final String TEMPORAL_COVERAGE_FROM = "temporal-coverage-from";
+        public final String TEMPORAL_COVERAGE_TO = "temporal-coverage-to";
+    }
 }
