@@ -85,12 +85,12 @@ public class UiAssetEditMetadataRequest {
     private List<String> dataSampleUrls;
 
     @Schema(description = "Reference file/schema URLs", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private List<String> referenceFilesDescription;
+    private List<String> referenceFileUrls;
+
+    @Schema(description = "Additional information on reference files/schemas", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String referenceFilesDescription;
 
     @Schema(description = "Instructions for use that are not legally relevant e.g. information on how to cite the dataset in papers", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String additionalDescription;
-
-    @Schema(description = "Conditions for use", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String conditionsForUse;
 
     @Schema(description = "Data update frequency", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
