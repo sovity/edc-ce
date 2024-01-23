@@ -214,28 +214,28 @@ class CatalogApiTest {
             var today = OffsetDateTime.now().withNano(0);
 
             var assetJsonLd1 = getAssetJsonLd("my-asset-1", Map.of(
-                Prop.Mds.DATA_CATEGORY, "my-category-1",
-                Prop.Mds.TRANSPORT_MODE, "MY-TRANSPORT-MODE-1",
-                Prop.Mds.DATA_SUBCATEGORY, "MY-SUBCATEGORY-2",
-                Prop.Mds.DATA_MODEL, "my-data-model",
-                Prop.Mds.GEO_REFERENCE_METHOD, "my-geo-ref"
+                Prop.Mobility.DATA_CATEGORY, "my-category-1",
+                Prop.Mobility.TRANSPORT_MODE, "MY-TRANSPORT-MODE-1",
+                Prop.Mobility.DATA_SUBCATEGORY, "MY-SUBCATEGORY-2",
+                Prop.Mobility.DATA_MODEL, "my-data-model",
+                Prop.Mobility.GEO_REFERENCE_METHOD, "my-geo-ref"
             ));
 
             var assetJsonLd2 = getAssetJsonLd("my-asset-2", Map.of(
-                Prop.Mds.DATA_CATEGORY, "my-category-1",
-                Prop.Mds.TRANSPORT_MODE, "my-transport-mode-2",
-                Prop.Mds.DATA_SUBCATEGORY, "MY-SUBCATEGORY-2"
+                Prop.Mobility.DATA_CATEGORY, "my-category-1",
+                Prop.Mobility.TRANSPORT_MODE, "my-transport-mode-2",
+                Prop.Mobility.DATA_SUBCATEGORY, "MY-SUBCATEGORY-2"
             ));
 
             var assetJsonLd3 = getAssetJsonLd("my-asset-3", Map.of(
-                Prop.Mds.DATA_CATEGORY, "my-category-1",
-                Prop.Mds.TRANSPORT_MODE, "MY-TRANSPORT-MODE-1",
-                Prop.Mds.DATA_SUBCATEGORY, "my-subcategory-1"
+                Prop.Mobility.DATA_CATEGORY, "my-category-1",
+                Prop.Mobility.TRANSPORT_MODE, "MY-TRANSPORT-MODE-1",
+                Prop.Mobility.DATA_SUBCATEGORY, "my-subcategory-1"
             ));
 
             var assetJsonLd4 = getAssetJsonLd("my-asset-4", Map.of(
-                Prop.Mds.DATA_CATEGORY, "my-category-1",
-                Prop.Mds.TRANSPORT_MODE, ""
+                Prop.Mobility.DATA_CATEGORY, "my-category-1",
+                Prop.Mobility.TRANSPORT_MODE, ""
             ));
 
             createOrganizationMetadata(dsl, "MDSL123456AA", "Test Org");
@@ -348,12 +348,12 @@ class CatalogApiTest {
             var today = OffsetDateTime.now().withNano(0);
 
             var assetJsonLd1 = getAssetJsonLd("my-asset-1", Map.of(
-                Prop.Mds.DATA_CATEGORY, "my-category",
-                Prop.Mds.DATA_SUBCATEGORY, "my-subcategory"
+                Prop.Mobility.DATA_CATEGORY, "my-category",
+                Prop.Mobility.DATA_SUBCATEGORY, "my-subcategory"
             ));
 
             var assetJsonLd2 = getAssetJsonLd("my-asset-2", Map.of(
-                Prop.Mds.DATA_SUBCATEGORY, "my-other-subcategory"
+                Prop.Mobility.DATA_SUBCATEGORY, "my-other-subcategory"
             ));
 
             createConnector(dsl, today, "https://my-connector/api/dsp");

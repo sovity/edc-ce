@@ -63,12 +63,12 @@ class DataOfferDetailApiTest {
             var today = OffsetDateTime.now().withNano(0);
 
             var assetJsonLd1 = getAssetJsonLd("my-asset-1", Map.of(
-                Prop.Mds.DATA_CATEGORY, "my-category",
+                Prop.Mobility.DATA_CATEGORY, "my-category",
                 Prop.Dcterms.TITLE, "My Asset 1"
             ));
 
             var assetJsonLd2 = getAssetJsonLd("my-asset-2", Map.of(
-                Prop.Mds.DATA_CATEGORY, "my-category-2",
+                Prop.Mobility.DATA_CATEGORY, "my-category-2",
                 Prop.Dcterms.TITLE, "My Asset 2"
             ));
 

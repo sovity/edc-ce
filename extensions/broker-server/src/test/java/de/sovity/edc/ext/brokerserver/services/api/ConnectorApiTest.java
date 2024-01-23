@@ -63,7 +63,7 @@ class ConnectorApiTest {
             var today = OffsetDateTime.now().withNano(0);
 
             var assetJsonLd = getAssetJsonLd("my-asset-1", Map.of(
-                Prop.Mds.DATA_CATEGORY, "my-category",
+                Prop.Mobility.DATA_CATEGORY, "my-category",
                 Prop.Dcterms.TITLE, "My Asset 1"
             ));
 
@@ -89,7 +89,7 @@ class ConnectorApiTest {
             var today = OffsetDateTime.now().withNano(0);
 
             var assetJsonLd = getAssetJsonLd("my-asset-1", Map.of(
-                Prop.Mds.DATA_CATEGORY, "my-category",
+                Prop.Mobility.DATA_CATEGORY, "my-category",
                 Prop.Dcterms.TITLE, "My Asset 1"
             ));
 
