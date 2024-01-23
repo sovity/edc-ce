@@ -815,19 +815,19 @@ components:
           items:
             type: string
             description: Data sample URLs
-        referenceFilesDescription:
+        referenceFileUrls:
           type: array
           description: Reference file/schema URLs
           items:
             type: string
             description: Reference file/schema URLs
-        additionalDescription:
+        referenceFilesDescription:
+          type: string
+          description: Additional information on reference files/schemas
+        conditionsForUse:
           type: string
           description: Instructions for use that are not legally relevant e.g. information
             on how to cite the dataset in papers
-        conditionsForUse:
-          type: string
-          description: Conditions for use
         dataUpdateFrequency:
           type: string
           description: Data update frequency
