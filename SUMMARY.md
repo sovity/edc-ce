@@ -3,7 +3,6 @@
 * [Start](./README.md)
 * [Connector Versions](./launchers/README.md)
 * [Changelog](./CHANGELOG.md)
-* [Roadmap](./docs/gitbook/roadmap.md) <!-- TODO -->
 * [About sovity](https://sovity.de/en/sovity-en/)
 
 ## Introduction
@@ -18,10 +17,8 @@
         * [Deployment Guide 4.2.0 / MS8 / MDS 1.2](docs/deployment-guide/goals/production/4.2.0/README.md)
 * Deployment Types
     * [Docker Image](https://github.com/sovity/edc-extensions/pkgs/container/edc-ce)
-    * [HELM](./docs/gitbook/helm.md) <!-- TODO -->
     * [Docker-compose](https://github.com/sovity/edc-extensions/blob/main/docker-compose.yaml)
 * Configuration
-    * [Settings](./docs/gitbook/settings.md) <!-- TODO -->
     * [Firewalls/Proxies](https://github.com/sovity/edc-extensions/tree/main/docs/deployment-guide/goals/production#configuration)
     * [Data Space Configuration](./docs/gitbook/data_space_configuration.md)
 * Administration
@@ -36,16 +33,11 @@
 * [DSPACE Protocol](https://docs.internationaldataspaces.org/ids-knowledgebase/v/dataspace-protocol/overview/readme)
 * API documentation
     * [Management API](https://app.swaggerhub.com/apis/eclipse-edc-bot/management-api/0.2.1)
-    * [Wrapper API](./docs/gitbook/wrapper_api.md) <!-- TODO -->
     * [Postman Collection](https://github.com/sovity/edc-extensions/blob/main/docs/postman_collection.json)
 * [Data Transfer Modes](./docs/getting-started/documentation/data-transfer-methods.md)
-    * [Data Push](./docs/gitbook/data_push.md) <!-- TODO -->
     * [Data Proxy/Pull](./docs/getting-started/documentation/pull-data-transfer.md)
-    * [Data out of band](./docs/gitbook/data_out_of_band.md) <!-- TODO -->
-* [Authentication](./docs/gitbook/authentication.md) <!-- TODO -->
+* Authentication
     * [API Key](./docs/gitbook/api_key.md)
-    * [Basic Auth](./docs/gitbook/basic_auth.md) <!-- TODO -->
-    * [Custom Headers](./docs/gitbook/custom_headers.md) <!-- TODO -->
     * [OAuth 2.0](./docs/getting-started/documentation/oauth-data-address.md)
 * Extensions
     * [EDC UI Config](./extensions/edc-ui-config/README.md)
@@ -68,10 +60,6 @@
 * [Contribution Guide](./CONTRIBUTING.md)
 * [Code-Style Guide](./STYLEGUIDE.md)
 * [Security Guide](./SECURITY.md)
-
-## How Tos & FAQ
-* [Notifications](./docs/gitbook/notifications.md) <!-- TODO -->
-* [Integration: Use Case Pattern](./docs/gitbook/integration_use_case_pattern.md) <!-- TODO -->
 
 ## sovity's Connector-as-a-Service (CaaS)
 * [CaaS Documentation on Zammad](https://sovity.zammad.com/#knowledge_base/1/locale/en-us)
