@@ -1,4 +1,0 @@
-Integration: Use Case Pattern
-========
-
-...
