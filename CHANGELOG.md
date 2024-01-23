@@ -14,14 +14,64 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Major Changes
 
 #### Minor Changes
-
-- Added `JWKS-Extension`, which provides an endpoint in the default API, that returns the JWKS of the connector.
+- Add new MDS fields and migrate existing MDS asset keys to mobilityDCAT-AP
 
 #### Patch Changes
+- Docs: Enhanced starting a Http-Pull over the EDC-Ui documentation
 
 ### Deployment Migration Notes
 
 #### Compatible Versions
+
+## [7.1.1] - 2024-01-18
+
+### Overview
+
+Bugfix release for minor UI bugs
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v2.3.1
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:7.1.1`
+    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.1.1`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.1.1`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.3.1`
+
+## [7.1.0] - 2024-01-17
+
+### Overview
+
+MDS feature release: Asset markdown descriptions and editable metadata
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v2.3.0
+
+### EDC Extensions
+
+#### Minor Changes
+
+- Asset metadata is now editable
+- Asset descriptions now support Markdown
+- Negotiate button is no longer shown for own connector endpoints
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:7.1.0`
+    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.1.0`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.1.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.3.0`
 
 ## [7.0.0] - 2023-12-06
 

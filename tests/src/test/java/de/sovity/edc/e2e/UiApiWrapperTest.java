@@ -23,6 +23,7 @@ import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
+import de.sovity.edc.client.gen.model.UiAssetEditMetadataRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiContractOffer;
 import de.sovity.edc.client.gen.model.UiCriterion;
@@ -49,7 +50,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -143,6 +146,16 @@ class UiApiWrapperTest {
                 .dataModel("dataModel")
                 .geoReferenceMethod("geoReferenceMethod")
                 .transportMode("transportMode")
+                .sovereignLegalName("my-sovereign")
+                .geoLocation("my-geolocation")
+                .nutsLocation(Arrays.asList("my-nuts-location1", "my-nuts-location2"))
+                .dataSampleUrls(Arrays.asList("my-data-sample-urls1", "my-data-sample-urls2"))
+                .referenceFileUrls(Arrays.asList("my-reference-files1", "my-reference-files2"))
+                .referenceFilesDescription("my-additional-description")
+                .conditionsForUse("my-conditions-for-use")
+                .dataUpdateFrequency("my-data-update-frequency")
+                .temporalCoverageFrom(LocalDate.parse("2007-12-03"))
+                .temporalCoverageToInclusive(LocalDate.parse("2024-01-22"))
                 .keywords(List.of("keyword1", "keyword2"))
                 .publisherHomepage("publisherHomepage")
                 .dataAddressProperties(Map.of(
@@ -204,6 +217,16 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getAsset().getDataModel()).isEqualTo("dataModel");
         assertThat(dataOffer.getAsset().getGeoReferenceMethod()).isEqualTo("geoReferenceMethod");
         assertThat(dataOffer.getAsset().getTransportMode()).isEqualTo("transportMode");
+        assertThat(dataOffer.getAsset().getSovereignLegalName()).isEqualTo("my-sovereign");
+        assertThat(dataOffer.getAsset().getGeoLocation()).isEqualTo("my-geolocation");
+        assertThat(dataOffer.getAsset().getNutsLocation()).isEqualTo(Arrays.asList("my-nuts-location1", "my-nuts-location2"));
+        assertThat(dataOffer.getAsset().getDataSampleUrls()).isEqualTo(Arrays.asList("my-data-sample-urls1", "my-data-sample-urls2"));
+        assertThat(dataOffer.getAsset().getReferenceFileUrls()).isEqualTo(Arrays.asList("my-reference-files1", "my-reference-files2"));
+        assertThat(dataOffer.getAsset().getReferenceFilesDescription()).isEqualTo("my-additional-description");
+        assertThat(dataOffer.getAsset().getConditionsForUse()).isEqualTo("my-conditions-for-use");
+        assertThat(dataOffer.getAsset().getDataUpdateFrequency()).isEqualTo("my-data-update-frequency");
+        assertThat(dataOffer.getAsset().getTemporalCoverageFrom()).isEqualTo(LocalDate.parse("2007-12-03"));
+        assertThat(dataOffer.getAsset().getTemporalCoverageToInclusive()).isEqualTo(LocalDate.parse("2024-01-22"));
         assertThat(dataOffer.getAsset().getLicenseUrl()).isEqualTo("https://license-url");
         assertThat(dataOffer.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
         assertThat(dataOffer.getAsset().getCreatorOrganizationName()).isEqualTo("Curator Name provider");
@@ -280,12 +303,7 @@ class UiApiWrapperTest {
 
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
 
-        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
-            var providing = providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
-            var consuming = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
-            assertThat(providing.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
-            assertThat(consuming.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
-        });
+        validateTransferProcessesOk();
     }
 
     @Test
@@ -346,6 +364,56 @@ class UiApiWrapperTest {
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
     }
 
+    @Test
+    void editAssetMetadataOnLiveContract() {
+        // arrange
+        var data = "expected data 123";
+
+        var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
+                .id("asset-1")
+                .title("Bad Asset Title")
+                .dataAddressProperties(Map.of(
+                        Prop.Edc.TYPE, "HttpData",
+                        Prop.Edc.METHOD, "GET",
+                        Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
+                ))
+                .build()).getId();
+
+        providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
+                .contractDefinitionId("cd-1")
+                .accessPolicyId("always-true")
+                .contractPolicyId("always-true")
+                .assetSelector(List.of(UiCriterion.builder()
+                        .operandLeft(Prop.Edc.ID)
+                        .operator(UiCriterionOperator.EQ)
+                        .operandRight(UiCriterionLiteral.builder()
+                                .type(UiCriterionLiteralType.VALUE)
+                                .value(assetId)
+                                .build())
+                        .build()))
+                .build());
+
+        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
+        assertThat(dataOffers).hasSize(1);
+        var dataOffer = dataOffers.get(0);
+        assertThat(dataOffer.getContractOffers()).hasSize(1);
+        var contractOffer = dataOffer.getContractOffers().get(0);
+        var negotiation = negotiate(dataOffer, contractOffer);
+
+        // act
+        providerClient.uiApi().editAssetMetadata(assetId, UiAssetEditMetadataRequest.builder()
+                .title("Good Asset Title")
+                .build());
+        initiateTransfer(negotiation);
+
+        // assert
+        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector)).get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
+        assertThat(providerClient.uiApi().getContractAgreementPage().getContractAgreements().get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
+        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
+        validateTransferProcessesOk();
+        assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo("Good Asset Title");
+    }
+
     private UiContractNegotiation negotiate(UiDataOffer dataOffer, UiContractOffer contractOffer) {
         var negotiationRequest = ContractNegotiationRequest.builder()
                 .counterPartyAddress(dataOffer.getEndpoint())
@@ -374,6 +442,15 @@ class UiApiWrapperTest {
                 .dataSinkProperties(dataAddress.getDataSinkProperties())
                 .build();
         consumerClient.uiApi().initiateTransfer(transferRequest);
+    }
+
+    private void validateTransferProcessesOk() {
+        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
+            var providing = providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
+            var consuming = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
+            assertThat(providing.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
+            assertThat(consuming.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
+        });
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

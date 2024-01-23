@@ -43,6 +43,9 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class UiAssetMapper {
     private final EdcPropertyUtils edcPropertyUtils;
     private final AssetJsonLdUtils assetJsonLdUtils;
+    private final MarkdownToTextConverter markdownToTextConverter;
+    private final TextUtils textUtils;
+    private final OwnConnectorEndpointService ownConnectorEndpointService;
 
     public UiAsset buildUiAsset(JsonObject assetJsonLd, String connectorEndpoint, String participantId) {
         var properties = JsonLdUtils.object(assetJsonLd, Prop.Edc.PROPERTIES);
@@ -57,21 +60,34 @@ public class UiAssetMapper {
         var creatorOrganizationName = JsonLdUtils.string(creator, Prop.Foaf.NAME);
         creatorOrganizationName = isBlank(creatorOrganizationName) ? participantId : creatorOrganizationName;
 
+        var description = JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION);
         uiAsset.setAssetId(id);
         uiAsset.setConnectorEndpoint(connectorEndpoint);
         uiAsset.setParticipantId(participantId);
         uiAsset.setTitle(title);
         uiAsset.setLicenseUrl(JsonLdUtils.string(properties, Prop.Dcterms.LICENSE));
-        uiAsset.setDescription(JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION));
+        uiAsset.setDescription(description);
+        uiAsset.setDescriptionShortText(buildShortDescription(description));
+        uiAsset.setIsOwnConnector(ownConnectorEndpointService.isOwnConnectorEndpoint(connectorEndpoint));
         uiAsset.setLanguage(JsonLdUtils.string(properties, Prop.Dcterms.LANGUAGE));
         uiAsset.setVersion(JsonLdUtils.string(properties, Prop.Dcat.VERSION));
         uiAsset.setMediaType(JsonLdUtils.string(properties, Prop.Dcat.MEDIATYPE));
         uiAsset.setLandingPageUrl(JsonLdUtils.string(properties, Prop.Dcat.LANDING_PAGE));
-        uiAsset.setDataCategory(JsonLdUtils.string(properties, Prop.Mds.DATA_CATEGORY));
-        uiAsset.setDataSubcategory(JsonLdUtils.string(properties, Prop.Mds.DATA_SUBCATEGORY));
-        uiAsset.setDataModel(JsonLdUtils.string(properties, Prop.Mds.DATA_MODEL));
-        uiAsset.setGeoReferenceMethod(JsonLdUtils.string(properties, Prop.Mds.GEO_REFERENCE_METHOD));
-        uiAsset.setTransportMode(JsonLdUtils.string(properties, Prop.Mds.TRANSPORT_MODE));
+        uiAsset.setDataCategory(JsonLdUtils.string(properties, Prop.Mobility.DATA_CATEGORY));
+        uiAsset.setDataSubcategory(JsonLdUtils.string(properties, Prop.Mobility.DATA_SUBCATEGORY));
+        uiAsset.setDataModel(JsonLdUtils.string(properties, Prop.Mobility.DATA_MODEL));
+        uiAsset.setGeoReferenceMethod(JsonLdUtils.string(properties, Prop.Mobility.GEO_REFERENCE_METHOD));
+        uiAsset.setTransportMode(JsonLdUtils.string(properties, Prop.Mobility.TRANSPORT_MODE));
+        uiAsset.setSovereignLegalName(JsonLdUtils.string(properties, Prop.MdsDcatExt.SOVEREIGN));
+        uiAsset.setGeoLocation(JsonLdUtils.string(properties, Prop.MdsDcatExt.GEO_LOCATION));
+        uiAsset.setNutsLocation(JsonLdUtils.stringList(properties, Prop.MdsDcatExt.NUTS_LOCATION));
+        uiAsset.setDataSampleUrls(JsonLdUtils.stringList(properties, Prop.MdsDcatExt.DATA_SAMPLE_URLS));
+        uiAsset.setReferenceFileUrls(JsonLdUtils.stringList(properties, Prop.MdsDcatExt.REFERENCE_FILES));
+        uiAsset.setReferenceFilesDescription(JsonLdUtils.string(properties, Prop.MdsDcatExt.ADDITIONAL_DESCRIPTION));
+        uiAsset.setConditionsForUse(JsonLdUtils.string(properties, Prop.MdsDcatExt.CONDITIONS_FOR_USE));
+        uiAsset.setDataUpdateFrequency(JsonLdUtils.string(properties, Prop.MdsDcatExt.DATA_UPDATE_FREQUENCY));
+        uiAsset.setTemporalCoverageFrom(JsonLdUtils.localDate(properties, Prop.MdsDcatExt.TEMPORAL_COVERAGE_FROM));
+        uiAsset.setTemporalCoverageToInclusive(JsonLdUtils.localDate(properties, Prop.MdsDcatExt.TEMPORAL_COVERAGE_TO));
         uiAsset.setKeywords(JsonLdUtils.stringList(properties, Prop.Dcat.KEYWORDS));
 
         uiAsset.setHttpDatasourceHintsProxyMethod(JsonLdUtils.bool(properties, HttpDatasourceHints.METHOD));
@@ -105,11 +121,22 @@ public class UiAssetMapper {
                 Prop.Dcterms.LICENSE,
                 Prop.Dcterms.PUBLISHER,
                 Prop.Dcterms.TITLE,
-                Prop.Mds.DATA_CATEGORY,
-                Prop.Mds.DATA_MODEL,
-                Prop.Mds.DATA_SUBCATEGORY,
-                Prop.Mds.GEO_REFERENCE_METHOD,
-                Prop.Mds.TRANSPORT_MODE,
+                Prop.Mobility.DATA_CATEGORY,
+                Prop.Mobility.DATA_MODEL,
+                Prop.Mobility.DATA_SUBCATEGORY,
+                Prop.Mobility.GEO_REFERENCE_METHOD,
+                Prop.Mobility.TRANSPORT_MODE,
+                Prop.MdsDcatExt.SOVEREIGN,
+                Prop.MdsDcatExt.GEO_LOCATION,
+                Prop.MdsDcatExt.NUTS_LOCATION,
+                Prop.MdsDcatExt.DATA_SAMPLE_URLS,
+                Prop.MdsDcatExt.REFERENCE_FILES,
+                Prop.MdsDcatExt.ADDITIONAL_DESCRIPTION,
+                Prop.MdsDcatExt.CONDITIONS_FOR_USE,
+                Prop.MdsDcatExt.DATA_UPDATE_FREQUENCY,
+                Prop.MdsDcatExt.TEMPORAL_COVERAGE_FROM,
+                Prop.MdsDcatExt.TEMPORAL_COVERAGE_TO,
+
                 HttpDatasourceHints.BODY,
                 HttpDatasourceHints.METHOD,
                 HttpDatasourceHints.PATH,
@@ -159,11 +186,22 @@ public class UiAssetMapper {
         addNonNull(properties, Prop.Dcat.VERSION, uiAssetCreateRequest.getVersion());
         addNonNull(properties, Prop.Dcat.MEDIATYPE, uiAssetCreateRequest.getMediaType());
         addNonNull(properties, Prop.Dcat.LANDING_PAGE, uiAssetCreateRequest.getLandingPageUrl());
-        addNonNull(properties, Prop.Mds.DATA_CATEGORY, uiAssetCreateRequest.getDataCategory());
-        addNonNull(properties, Prop.Mds.DATA_SUBCATEGORY, uiAssetCreateRequest.getDataSubcategory());
-        addNonNull(properties, Prop.Mds.DATA_MODEL, uiAssetCreateRequest.getDataModel());
-        addNonNull(properties, Prop.Mds.GEO_REFERENCE_METHOD, uiAssetCreateRequest.getGeoReferenceMethod());
-        addNonNull(properties, Prop.Mds.TRANSPORT_MODE, uiAssetCreateRequest.getTransportMode());
+        addNonNull(properties, Prop.Mobility.DATA_CATEGORY, uiAssetCreateRequest.getDataCategory());
+        addNonNull(properties, Prop.Mobility.DATA_SUBCATEGORY, uiAssetCreateRequest.getDataSubcategory());
+        addNonNull(properties, Prop.Mobility.DATA_MODEL, uiAssetCreateRequest.getDataModel());
+        addNonNull(properties, Prop.Mobility.GEO_REFERENCE_METHOD, uiAssetCreateRequest.getGeoReferenceMethod());
+        addNonNull(properties, Prop.Mobility.TRANSPORT_MODE, uiAssetCreateRequest.getTransportMode());
+        addNonNull(properties, Prop.MdsDcatExt.SOVEREIGN, uiAssetCreateRequest.getSovereignLegalName());
+        addNonNull(properties, Prop.MdsDcatExt.GEO_LOCATION, uiAssetCreateRequest.getGeoLocation());
+        addNonNullArray(properties, Prop.MdsDcatExt.NUTS_LOCATION, uiAssetCreateRequest.getNutsLocation());
+        addNonNullArray(properties, Prop.MdsDcatExt.DATA_SAMPLE_URLS, uiAssetCreateRequest.getDataSampleUrls());
+        addNonNullArray(properties, Prop.MdsDcatExt.REFERENCE_FILES, uiAssetCreateRequest.getReferenceFileUrls());
+        addNonNull(properties, Prop.MdsDcatExt.ADDITIONAL_DESCRIPTION, uiAssetCreateRequest.getReferenceFilesDescription());
+        addNonNull(properties, Prop.MdsDcatExt.CONDITIONS_FOR_USE, uiAssetCreateRequest.getConditionsForUse());
+        addNonNull(properties, Prop.MdsDcatExt.DATA_UPDATE_FREQUENCY, uiAssetCreateRequest.getDataUpdateFrequency());
+        addNonNull(properties, Prop.MdsDcatExt.TEMPORAL_COVERAGE_FROM, uiAssetCreateRequest.getTemporalCoverageFrom());
+        addNonNull(properties, Prop.MdsDcatExt.TEMPORAL_COVERAGE_TO, uiAssetCreateRequest.getTemporalCoverageToInclusive());
+
         addNonNullArray(properties, Prop.Dcat.KEYWORDS, uiAssetCreateRequest.getKeywords());
 
         if (uiAssetCreateRequest.getPublisherHomepage() != null) {
@@ -265,5 +303,14 @@ public class UiAssetMapper {
         } else {
             return JsonValue.EMPTY_JSON_OBJECT;
         }
+    }
+
+    private String buildShortDescription(String description) {
+        if (description == null) {
+            return null;
+        }
+
+        var text = markdownToTextConverter.extractText(description);
+        return textUtils.abbreviate(text, 300);
     }
 }

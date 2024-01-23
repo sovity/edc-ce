@@ -17,6 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.UiAsset;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
+import de.sovity.edc.client.gen.model.UiAssetEditMetadataRequest;
 import de.sovity.edc.ext.wrapper.TestUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.FailedMappingException;
@@ -152,6 +153,85 @@ public class AssetApiServiceTest {
 
         var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
         assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddressProperties);
+    }
+
+    @Test
+    void testEditAssetMetadata(AssetService assetService) {
+        // arrange
+        var dataAddress = Map.of(
+                Prop.Edc.TYPE, "HttpData",
+                Prop.Edc.BASE_URL, DATA_SINK,
+                Prop.Edc.PROXY_METHOD, "true",
+                Prop.Edc.PROXY_PATH, "true",
+                Prop.Edc.PROXY_QUERY_PARAMS, "true",
+                Prop.Edc.PROXY_BODY, "true",
+                "oauth2:tokenUrl", "https://token-url"
+        );
+        var createRequest = UiAssetCreateRequest.builder()
+                .id("asset-1")
+                .title("AssetTitle")
+                .description("AssetDescription")
+                .licenseUrl("https://license-url")
+                .version("1.0.0")
+                .language("en")
+                .mediaType("application/json")
+                .dataCategory("dataCategory")
+                .dataSubcategory("dataSubcategory")
+                .dataModel("dataModel")
+                .geoReferenceMethod("geoReferenceMethod")
+                .transportMode("transportMode")
+                .keywords(List.of("keyword1", "keyword2"))
+                .publisherHomepage("publisherHomepage")
+                .dataAddressProperties(dataAddress)
+                .build();
+        client.uiApi().createAsset(createRequest);
+        var editRequest = UiAssetEditMetadataRequest.builder()
+                .title("AssetTitle 2")
+                .description("AssetDescription 2")
+                .licenseUrl("https://license-url/2")
+                .version("2.0.0")
+                .language("de")
+                .mediaType("application/json+utf8")
+                .dataCategory("dataCategory2")
+                .dataSubcategory("dataSubcategory2")
+                .dataModel("dataModel2")
+                .geoReferenceMethod("geoReferenceMethod2")
+                .transportMode("transportMode2")
+                .keywords(List.of("keyword3"))
+                .publisherHomepage("publisherHomepage2")
+                .build();
+
+        // act
+        var response = client.uiApi().editAssetMetadata("asset-1", editRequest);
+
+        // assert
+        assertThat(response.getId()).isEqualTo("asset-1");
+
+        var assets = client.uiApi().getAssetPage().getAssets();
+        assertThat(assets).hasSize(1);
+        var asset = assets.get(0);
+        assertThat(asset.getAssetId()).isEqualTo("asset-1");
+        assertThat(asset.getTitle()).isEqualTo("AssetTitle 2");
+        assertThat(asset.getDescription()).isEqualTo("AssetDescription 2");
+        assertThat(asset.getVersion()).isEqualTo("2.0.0");
+        assertThat(asset.getLanguage()).isEqualTo("de");
+        assertThat(asset.getMediaType()).isEqualTo("application/json+utf8");
+        assertThat(asset.getDataCategory()).isEqualTo("dataCategory2");
+        assertThat(asset.getDataSubcategory()).isEqualTo("dataSubcategory2");
+        assertThat(asset.getDataModel()).isEqualTo("dataModel2");
+        assertThat(asset.getGeoReferenceMethod()).isEqualTo("geoReferenceMethod2");
+        assertThat(asset.getTransportMode()).isEqualTo("transportMode2");
+        assertThat(asset.getLicenseUrl()).isEqualTo("https://license-url/2");
+        assertThat(asset.getKeywords()).isEqualTo(List.of("keyword3"));
+        assertThat(asset.getCreatorOrganizationName()).isEqualTo("My Org");
+        assertThat(asset.getPublisherHomepage()).isEqualTo("publisherHomepage2");
+        assertThat(asset.getHttpDatasourceHintsProxyMethod()).isTrue();
+        assertThat(asset.getHttpDatasourceHintsProxyPath()).isTrue();
+        assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isTrue();
+        assertThat(asset.getHttpDatasourceHintsProxyBody()).isTrue();
+
+        var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
+        assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddress);
     }
 
     @Test

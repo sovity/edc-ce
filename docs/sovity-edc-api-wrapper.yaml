@@ -192,6 +192,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/pages/asset-page/assets/{assetId}/metadata:
+    put:
+      tags:
+      - UI
+      description: Updates an Asset's metadata
+      operationId: editAssetMetadata
+      parameters:
+      - name: assetId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UiAssetEditMetadataRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
   /wrapper/ui/pages/asset-page:
     get:
       tags:
@@ -483,6 +507,51 @@ components:
         transportMode:
           type: string
           description: Transport Mode
+        sovereignLegalName:
+          type: string
+          description: The sovereign is distinct from the publisher by being the legal
+            owner of the data.
+        geoLocation:
+          type: string
+          description: Geo location
+        nutsLocation:
+          type: array
+          description: Locations by NUTS standard which divides countries into administrative
+            divisions
+          items:
+            type: string
+            description: Locations by NUTS standard which divides countries into administrative
+              divisions
+        dataSampleUrls:
+          type: array
+          description: Data sample URLs
+          items:
+            type: string
+            description: Data sample URLs
+        referenceFileUrls:
+          type: array
+          description: Reference file/schema URLs
+          items:
+            type: string
+            description: Reference file/schema URLs
+        referenceFilesDescription:
+          type: string
+          description: Additional information on reference files/schemas
+        conditionsForUse:
+          type: string
+          description: Instructions for use that are not legally relevant e.g. information
+            on how to cite the dataset in papers
+        dataUpdateFrequency:
+          type: string
+          description: Data update frequency
+        temporalCoverageFrom:
+          type: string
+          description: Temporal coverage start date
+          format: date
+        temporalCoverageToInclusive:
+          type: string
+          description: Temporal coverage end date (inclusive)
+          format: date
         dataAddressProperties:
           type: object
           additionalProperties:
@@ -677,6 +746,128 @@ components:
       - STRING
       - STRING_LIST
       - JSON
+    UiAssetEditMetadataRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Asset Title
+        language:
+          type: string
+          description: Asset Language
+        description:
+          type: string
+          description: Asset Description
+        publisherHomepage:
+          type: string
+          description: Asset Homepage
+        licenseUrl:
+          type: string
+          description: License URL
+        version:
+          type: string
+          description: Version
+        keywords:
+          type: array
+          description: Asset Keywords
+          items:
+            type: string
+            description: Asset Keywords
+        mediaType:
+          type: string
+          description: Asset MediaType
+        landingPageUrl:
+          type: string
+          description: Landing Page URL
+        dataCategory:
+          type: string
+          description: Data Category
+        dataSubcategory:
+          type: string
+          description: Data Subcategory
+        dataModel:
+          type: string
+          description: Data Model
+        geoReferenceMethod:
+          type: string
+          description: Geo-Reference Method
+        transportMode:
+          type: string
+          description: Transport Mode
+        sovereignLegalName:
+          type: string
+          description: The sovereign is distinct from the publisher by being the legal
+            owner of the data.
+        geoLocation:
+          type: string
+          description: Geo location
+        nutsLocation:
+          type: array
+          description: Locations by NUTS standard which divides countries into administrative
+            divisions
+          items:
+            type: string
+            description: Locations by NUTS standard which divides countries into administrative
+              divisions
+        dataSampleUrls:
+          type: array
+          description: Data sample URLs
+          items:
+            type: string
+            description: Data sample URLs
+        referenceFileUrls:
+          type: array
+          description: Reference file/schema URLs
+          items:
+            type: string
+            description: Reference file/schema URLs
+        referenceFilesDescription:
+          type: string
+          description: Additional information on reference files/schemas
+        conditionsForUse:
+          type: string
+          description: Instructions for use that are not legally relevant e.g. information
+            on how to cite the dataset in papers
+        dataUpdateFrequency:
+          type: string
+          description: Data update frequency
+        temporalCoverageFrom:
+          type: string
+          description: Temporal coverage start date
+          format: date
+        temporalCoverageToInclusive:
+          type: string
+          description: Temporal coverage end date (inclusive)
+          format: date
+        additionalProperties:
+          type: object
+          additionalProperties:
+            type: string
+            description: Custom Asset Properties (that are strings)
+          description: Custom Asset Properties (that are strings)
+        additionalJsonProperties:
+          type: object
+          additionalProperties:
+            type: string
+            description: Custom Asset Properties (that are not strings but other JSON
+              values)
+          description: Custom Asset Properties (that are not strings but other JSON
+            values)
+        privateProperties:
+          type: object
+          additionalProperties:
+            type: string
+            description: Private Asset Properties (that are strings)
+          description: Private Asset Properties (that are strings)
+        privateJsonProperties:
+          type: object
+          additionalProperties:
+            type: string
+            description: Private Asset Properties (that are not strings but other
+              JSON values)
+          description: Private Asset Properties (that are not strings but other JSON
+            values)
+      description: Data for editing an asset.
     AssetPage:
       required:
       - assets
@@ -693,6 +884,7 @@ components:
       - assetId
       - connectorEndpoint
       - creatorOrganizationName
+      - isOwnConnector
       - participantId
       - title
       type: object
@@ -717,7 +909,14 @@ components:
           description: Asset Language
         description:
           type: string
-          description: Asset Description
+          description: Asset Description. Supports markdown.
+        descriptionShortText:
+          type: string
+          description: Asset Description Short Text generated from description. Contains
+            no markdown.
+        isOwnConnector:
+          type: boolean
+          description: Flag that indicates whether this asset is created by this connector.
         publisherHomepage:
           type: string
           description: Asset Homepage
@@ -766,6 +965,51 @@ components:
         transportMode:
           type: string
           description: Transport Mode
+        sovereignLegalName:
+          type: string
+          description: The sovereign is distinct from the publisher by being the legal
+            owner of the data.
+        geoLocation:
+          type: string
+          description: Geo location
+        nutsLocation:
+          type: array
+          description: Locations by NUTS standard which divides countries into administrative
+            divisions
+          items:
+            type: string
+            description: Locations by NUTS standard which divides countries into administrative
+              divisions
+        dataSampleUrls:
+          type: array
+          description: Data sample URLs
+          items:
+            type: string
+            description: Data sample URLs
+        referenceFileUrls:
+          type: array
+          description: Reference file/schema URLs
+          items:
+            type: string
+            description: Reference file/schema URLs
+        referenceFilesDescription:
+          type: string
+          description: Additional information on reference files/schemas
+        conditionsForUse:
+          type: string
+          description: Instructions for use that are not legally relevant e.g. information
+            on how to cite the dataset in papers
+        dataUpdateFrequency:
+          type: string
+          description: Data update frequency
+        temporalCoverageFrom:
+          type: string
+          description: Temporal coverage start date
+          format: date
+        temporalCoverageToInclusive:
+          type: string
+          description: Temporal coverage end date (inclusive)
+          format: date
         additionalProperties:
           type: object
           additionalProperties:

@@ -139,4 +139,36 @@ public class Prop {
         public final String GEO_REFERENCE_METHOD = CTX + "geoReferenceMethod";
         public final String TRANSPORT_MODE = CTX + "transportMode";
     }
+
+    /**
+     * MDS Vocabulary
+     */
+    @UtilityClass
+    public class Mobility {
+        public final String CTX = "https://w3id.org/mobilitydcat-ap/";
+        public final String DATA_CATEGORY = CTX + "mobility-theme/data-content-category";
+        public final String DATA_SUBCATEGORY = CTX + "mobility-theme/data-content-sub-category";
+        public final String DATA_MODEL = CTX + "mobility-data-standard";
+        public final String GEO_REFERENCE_METHOD = CTX + "georeferencing-method";
+        public final String TRANSPORT_MODE = CTX + "transport-mode";
+    }
+
+    /**
+     * Temporary Context for all MDS specific fields awaiting proper classification within the mobilityDCAT-AP specification
+     */
+    @UtilityClass
+    public class MdsDcatExt {
+        public final String CTX = "https://semantic.sovity.io/mds-dcat-ext#";
+
+        public final String SOVEREIGN = CTX + "sovereign";
+        public final String GEO_LOCATION = CTX + "geolocation";
+        public final String NUTS_LOCATION = CTX + "nuts-location";
+        public final String DATA_SAMPLE_URLS = CTX + "data-sample-urls";
+        public final String REFERENCE_FILES = CTX + "reference-files";
+        public final String ADDITIONAL_DESCRIPTION = CTX + "additional-description";
+        public final String CONDITIONS_FOR_USE = CTX + "conditions-for-use";
+        public final String DATA_UPDATE_FREQUENCY = CTX + "data-update-frequency";
+        public final String TEMPORAL_COVERAGE_FROM = CTX + "temporal-coverage-from";
+        public final String TEMPORAL_COVERAGE_TO = CTX + "temporal-coverage-to";
+    }
 }
