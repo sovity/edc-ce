@@ -5,6 +5,7 @@ on:
 
 jobs:
   add_pullrequest_to_project:
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     name: add_pullrequest_to_project
     runs-on: ubuntu-latest
     steps:
