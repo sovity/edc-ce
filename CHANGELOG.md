@@ -21,6 +21,7 @@ the detailed section referring to by linking pull requests or issues.
 #### Patch
 
 - Fix auth proxy issues by disabling caching for non-static files
+- Make fonts GDPR compliant
 
 #### Deployment Migration Notes
 
