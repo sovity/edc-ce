@@ -1,22 +1,38 @@
 name: Trivy License Scan
 
 on:
-  pull_request:
-    branches: ["main"]
+  push:
 
 jobs:
-  license_scan:
-    name: license_scan
+  license_scan1:
+    name: License scan (rootfs)
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Run license scanner
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: "rootfs"
+          scan-ref: "."
+          scanners: "license"
+          severity: "CRITICAL,HIGH"
+          exit-code: 1
+  license_scan2:
+    name: License scan (repo)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: npm install (client-ts)
+        run: cd extensions/broker-server-api/client-ts && npm install
+      - name: Run license scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "repo"
           scan-ref: "."
           scanners: "license"
           severity: "CRITICAL,HIGH"
