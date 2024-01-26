@@ -4,6 +4,7 @@ import {
   UiAssetEditMetadataRequest,
 } from '@sovity.de/edc-client';
 import {AssetEditorDialogFormValue} from '../../routes/connector-ui/asset-page/asset-edit-dialog/form/model/asset-editor-dialog-form-model';
+import {toGmtZeroHourDate} from '../utils/date-utils';
 import {DataAddressMapper} from './data-address-mapper';
 
 @Injectable()
@@ -56,6 +57,26 @@ export class AssetCreateRequestBuilder {
     const geoReferenceMethod = formValue.advanced?.geoReferenceMethod;
     const dataModel = formValue.advanced?.dataModel;
 
+    const sovereignLegalName = formValue.advanced?.sovereignLegalName;
+    const geoLocation = formValue.advanced?.geoLocation;
+    const nutsLocations = formValue.advanced?.nutsLocations;
+    const dataSampleUrls = formValue.advanced?.dataSampleUrls;
+    const referenceFileUrls = formValue.advanced?.referenceFileUrls;
+    const referenceFilesDescription =
+      formValue.advanced?.referenceFilesDescription;
+    const conditionsForUse = formValue.advanced?.conditionsForUse;
+    const dataUpdateFrequency = formValue.advanced?.dataUpdateFrequency;
+    let temporalCoverageFrom =
+      formValue.advanced?.temporalCoverage?.from || undefined;
+    let temporalCoverageToInclusive =
+      formValue.advanced?.temporalCoverage?.toInclusive || undefined;
+    temporalCoverageFrom = temporalCoverageFrom
+      ? toGmtZeroHourDate(temporalCoverageFrom)
+      : undefined;
+    temporalCoverageToInclusive = temporalCoverageToInclusive
+      ? toGmtZeroHourDate(temporalCoverageToInclusive)
+      : undefined;
+
     return {
       title,
       language,
@@ -71,6 +92,16 @@ export class AssetCreateRequestBuilder {
       dataModel,
       geoReferenceMethod,
       transportMode,
+      sovereignLegalName,
+      geoLocation,
+      nutsLocation: nutsLocations,
+      dataSampleUrls,
+      referenceFileUrls,
+      referenceFilesDescription,
+      conditionsForUse,
+      dataUpdateFrequency,
+      temporalCoverageFrom,
+      temporalCoverageToInclusive,
     };
   }
 }

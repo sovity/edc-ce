@@ -18,6 +18,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
+- Integrate new MDS fields into asset creation and asset detail dialog
+
 #### Patch
 
 - Fix auth proxy issues by disabling caching for non-static files

@@ -11,6 +11,7 @@ import {PropertyGridGroup} from '../../property-grid/property-grid-group/propert
 import {PropertyGridField} from '../../property-grid/property-grid/property-grid-field';
 import {PropertyGridFieldService} from '../../property-grid/property-grid/property-grid-field.service';
 import {formatDateAgo} from '../../ui-elements/ago/formatDateAgo';
+import {UrlListDialogService} from '../../url-list-dialog/url-list-dialog/url-list-dialog.service';
 import {
   getOnlineStatusColor,
   getOnlineStatusIcon,
@@ -24,6 +25,7 @@ export class AssetPropertyGridGroupBuilder {
     private activeFeatureSet: ActiveFeatureSet,
     private propertyGridUtils: PropertyGridFieldService,
     private jsonDialogService: JsonDialogService,
+    private urlListDialogService: UrlListDialogService,
     private policyPropertyFieldBuilder: PolicyPropertyFieldBuilder,
   ) {}
 
@@ -77,7 +79,7 @@ export class AssetPropertyGridGroupBuilder {
     ];
 
     if (this.activeFeatureSet.hasMdsFields()) {
-      fields.push(...this.buildMdsProperties(asset, true));
+      fields.push(...this.buildMdsProperties(asset));
     }
 
     return {
@@ -126,7 +128,7 @@ export class AssetPropertyGridGroupBuilder {
     const fields: PropertyGridField[] = [];
 
     if (!this.activeFeatureSet.hasMdsFields()) {
-      fields.push(...this.buildMdsProperties(asset, false));
+      fields.push(...this.buildMdsProperties(asset));
     }
 
     fields.push(
@@ -146,44 +148,98 @@ export class AssetPropertyGridGroupBuilder {
     };
   }
 
-  buildMdsProperties(
-    asset: UiAssetMapped,
-    includeEmpty: boolean,
-  ): PropertyGridField[] {
+  buildMdsProperties(asset: UiAssetMapped): PropertyGridField[] {
     const fields: PropertyGridField[] = [];
-    if (includeEmpty || asset.transportMode) {
+    if (asset.transportMode) {
       fields.push({
         icon: 'commute',
         label: 'Transport Mode',
         ...this.propertyGridUtils.guessValue(asset.transportMode?.label),
       });
     }
-    if (includeEmpty || asset.dataCategory) {
+    if (asset.dataCategory) {
       fields.push({
         icon: 'commute',
         label: 'Data Category',
         ...this.propertyGridUtils.guessValue(asset.dataCategory?.label),
       });
     }
-    if (includeEmpty || asset.dataSubcategory) {
+    if (asset.dataSubcategory) {
       fields.push({
         icon: 'commute',
         label: 'Data Subcategory',
         ...this.propertyGridUtils.guessValue(asset.dataSubcategory?.label),
       });
     }
-    if (includeEmpty || asset.dataModel) {
+    if (asset.dataModel) {
       fields.push({
         icon: 'category',
         label: 'Data Model',
         ...this.propertyGridUtils.guessValue(asset.dataModel),
       });
     }
-    if (includeEmpty || asset.geoReferenceMethod) {
+    if (asset.geoReferenceMethod) {
       fields.push({
         icon: 'commute',
         label: 'Geo Reference Method',
         ...this.propertyGridUtils.guessValue(asset.geoReferenceMethod),
+      });
+    }
+    if (asset.geoLocation) {
+      fields.push({
+        icon: 'location_on',
+        label: 'Geo Location',
+        ...this.propertyGridUtils.guessValue(asset.geoLocation),
+      });
+    }
+    if (asset.nutsLocation?.length) {
+      fields.push(this.buildNutsLocationsField(asset.nutsLocation));
+    }
+    if (asset.sovereignLegalName) {
+      fields.push({
+        icon: 'account_balance',
+        label: 'Sovereign',
+        ...this.propertyGridUtils.guessValue(asset.sovereignLegalName),
+      });
+    }
+    if (asset.dataSampleUrls?.length) {
+      fields.push(
+        this.buildDataSampleUrlsField(asset.dataSampleUrls, asset.title),
+      );
+    }
+    if (asset.referenceFileUrls?.length) {
+      fields.push(
+        this.buildReferenceFileUrlsField(
+          asset.referenceFileUrls,
+          asset.referenceFilesDescription,
+          asset.title,
+        ),
+      );
+    }
+    if (asset.conditionsForUse) {
+      fields.push({
+        icon: 'description',
+        label: 'Conditions For Use',
+        ...this.propertyGridUtils.guessValue(asset.conditionsForUse),
+      });
+    }
+    if (asset.dataUpdateFrequency) {
+      fields.push({
+        icon: 'timelapse',
+        label: 'Data Update Frequency',
+        ...this.propertyGridUtils.guessValue(asset.dataUpdateFrequency),
+      });
+    }
+    if (asset.temporalCoverageFrom || asset.temporalCoverageToInclusive) {
+      fields.push({
+        icon: 'today',
+        label: 'Temporal Coverage',
+        ...this.propertyGridUtils.guessValue(
+          this.buildTemporalCoverageString(
+            asset.temporalCoverageFrom,
+            asset.temporalCoverageToInclusive,
+          ),
+        ),
       });
     }
     return fields;
@@ -340,5 +396,66 @@ export class AssetPropertyGridGroupBuilder {
       label: 'Connector Endpoint',
       ...this.propertyGridUtils.guessValue(endpoint),
     };
+  }
+
+  buildNutsLocationsField(locations: string[]): PropertyGridField {
+    return {
+      icon: 'location_on',
+      label: 'NUTS Locations',
+      text: locations.join(', '),
+    };
+  }
+
+  buildDataSampleUrlsField(
+    dataSampleUrls: string[],
+    title: string,
+  ): PropertyGridField {
+    return {
+      icon: 'attachment',
+      label: 'Data Samples',
+      text: 'Show Data Samples',
+      onclick: () =>
+        this.urlListDialogService.showUrlListDialog({
+          title: `Data Samples`,
+          subtitle: title,
+          icon: 'attachment',
+          urls: dataSampleUrls,
+        }),
+    };
+  }
+
+  buildReferenceFileUrlsField(
+    referenceFileUrls: string[],
+    description: string | undefined,
+    title: string,
+  ): PropertyGridField {
+    return {
+      icon: 'receipt',
+      label: 'Reference Files',
+      text: 'Show Reference Files',
+      onclick: () =>
+        this.urlListDialogService.showUrlListDialog({
+          title: `Reference Files`,
+          subtitle: title,
+          icon: 'receipt',
+          urls: referenceFileUrls,
+          description: description,
+        }),
+    };
+  }
+
+  buildTemporalCoverageString(
+    start: Date | undefined,
+    end: Date | undefined,
+  ): string {
+    if (!end) {
+      return `Start: ${start!.toLocaleDateString()}`;
+    }
+
+    if (!start) {
+      return `End: ${end.toLocaleDateString()}`;
+    }
+
+    return `${start.toLocaleDateString()} - ${end.toLocaleDateString()}`;
   }
 }

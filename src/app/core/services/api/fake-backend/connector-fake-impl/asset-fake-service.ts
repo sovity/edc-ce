@@ -89,6 +89,16 @@ function createAssetMetadata(
     transportMode: request.transportMode,
     additionalProperties: request.additionalProperties,
     privateProperties: request.privateProperties,
+    sovereignLegalName: request.sovereignLegalName,
+    geoLocation: request.geoLocation,
+    nutsLocation: request.nutsLocation,
+    dataSampleUrls: request.dataSampleUrls,
+    referenceFileUrls: request.referenceFileUrls,
+    referenceFilesDescription: request.referenceFilesDescription,
+    conditionsForUse: request.conditionsForUse,
+    dataUpdateFrequency: request.dataUpdateFrequency,
+    temporalCoverageFrom: request.temporalCoverageFrom,
+    temporalCoverageToInclusive: request.temporalCoverageToInclusive,
   };
 }
 

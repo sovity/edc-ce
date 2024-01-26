@@ -160,7 +160,10 @@
           <!-- Data Model -->
           <mat-form-field>
             <mat-label>Data Model</mat-label>
-            <input matInput [formControl]="form.advanced.controls.dataModel" />
+            <input
+              matInput
+              placeholder="unspecified"
+              [formControl]="form.advanced.controls.dataModel" />
           </mat-form-field>
 
           <div class="flex flex-row space-x-[10px]">
@@ -177,9 +180,197 @@
               <mat-label>Geo reference method</mat-label>
               <input
                 matInput
+                placeholder="Lat/Lon"
                 [formControl]="form.advanced.controls.geoReferenceMethod" />
             </mat-form-field>
           </div>
+
+          <!-- Sovereign legal name -->
+          <mat-form-field>
+            <mat-label>Sovereign</mat-label>
+            <input
+              matInput
+              placeholder="Data Owning Company GMBH"
+              [formControl]="form.advanced.controls.sovereignLegalName" />
+            <mat-hint>Legal name of the data owner</mat-hint>
+          </mat-form-field>
+
+          <!-- Data update frequency -->
+          <div class="flex flex-row space-x-[10px] mt-[15px]">
+            <mat-form-field class="grow">
+              <mat-label>Data update frequency</mat-label>
+              <input
+                matInput
+                placeholder="every month"
+                [formControl]="form.advanced.controls.dataUpdateFrequency" />
+            </mat-form-field>
+
+            <!-- Geo location -->
+            <mat-form-field class="grow">
+              <mat-label>Geo location</mat-label>
+              <input
+                matInput
+                placeholder="40.741895,-73.989308"
+                [formControl]="form.advanced.controls.geoLocation" />
+            </mat-form-field>
+          </div>
+
+          <!-- NUTS locations -->
+          <div class="form-section-title">NUTS locations</div>
+          <div
+            *ngFor="
+              let location of form.advanced.controls.nutsLocations.controls;
+              let i = index
+            "
+            class="flex flex-row space-x-[10px]">
+            <mat-form-field class="grow">
+              <mat-label>NUTS location</mat-label>
+              <input matInput placeholder="DE929" [formControl]="location" />
+            </mat-form-field>
+
+            <button
+              mat-button
+              color="warn"
+              style="height: 54px; margin-top: 4px; margin-left: 8px"
+              (click)="form.onNutsLocationsRemoveClick(i)">
+              Remove
+            </button>
+          </div>
+
+          <div class="flex flex-row mb-[10px]">
+            <button
+              mat-button
+              color="accent"
+              (click)="form.onNutsLocationsAddClick()">
+              Add location
+            </button>
+          </div>
+
+          <!-- Data sample URLs -->
+          <div class="form-section-title">Data samples</div>
+          <div
+            *ngFor="
+              let sample of form.advanced.controls.dataSampleUrls.controls;
+              let i = index
+            "
+            class="flex flex-row space-x-[10px]">
+            <mat-form-field class="grow">
+              <mat-label>URL</mat-label>
+              <input
+                matInput
+                placeholder="https://my-org.com/my-data-offer/samples/1"
+                [formControl]="sample" />
+            </mat-form-field>
+
+            <button
+              mat-button
+              color="warn"
+              style="height: 54px; margin-top: 4px; margin-left: 8px"
+              (click)="form.onDataSampleUrlsRemoveClick(i)">
+              Remove
+            </button>
+          </div>
+
+          <div class="flex flex-row mb-[10px]">
+            <button
+              mat-button
+              color="accent"
+              (click)="form.onDataSampleUrlsAddClick()">
+              Add data sample
+            </button>
+          </div>
+
+          <!-- Reference file URLs -->
+          <div class="form-section-title">Reference files</div>
+          <div
+            *ngFor="
+              let file of form.advanced.controls.referenceFileUrls.controls;
+              let i = index
+            "
+            class="flex flex-row space-x-[10px]">
+            <mat-form-field class="grow">
+              <mat-label>URL</mat-label>
+              <input
+                matInput
+                placeholder="https://my-org.com/my-data-offer/documentation/api-reference"
+                [formControl]="file" />
+            </mat-form-field>
+
+            <button
+              mat-button
+              color="warn"
+              style="height: 54px; margin-top: 4px; margin-left: 8px"
+              (click)="form.onReferenceFileUrlsRemoveClick(i)">
+              Remove
+            </button>
+          </div>
+
+          <div class="flex flex-row mb-[20px]">
+            <button
+              mat-button
+              color="accent"
+              (click)="form.onReferenceFileUrlsAddClick()">
+              Add reference file
+            </button>
+          </div>
+
+          <!-- Reference files description -->
+          <mat-form-field
+            *ngIf="this.form.advanced.controls.referenceFileUrls.length > 0">
+            <mat-label>Reference files description</mat-label>
+            <textarea
+              class="h-28"
+              matInput
+              placeholder="..."
+              [formControl]="
+                form.advanced.controls.referenceFilesDescription
+              "></textarea>
+            <mat-hint
+              >Additional information regarding the reference files</mat-hint
+            >
+          </mat-form-field>
+
+          <!-- Temporal coverage -->
+          <mat-form-field
+            *ngIf="form.advanced.controls.temporalCoverage; let ctrl"
+            class="mt-[20px]"
+            color="accent">
+            <mat-label>Date Range</mat-label>
+            <mat-date-range-input [formGroup]="ctrl" [rangePicker]="picker">
+              <input
+                matStartDate
+                formControlName="from"
+                placeholder="Start date" />
+              <input
+                matEndDate
+                formControlName="toInclusive"
+                placeholder="End date (inclusive)" />
+            </mat-date-range-input>
+            <mat-hint>DD/MM/YYYY (optional) – DD/MM/YYYY (optional)</mat-hint>
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+            <mat-error *ngIf="ctrl.invalid">{{
+              validationMessages.invalidDateRangeMessage
+            }}</mat-error>
+          </mat-form-field>
+
+          <!-- Conditions for use -->
+          <mat-form-field class="mt-[20px]">
+            <mat-label>Conditions for use</mat-label>
+            <textarea
+              class="h-28"
+              matInput
+              placeholder="Please cite the dataset as..."
+              [formControl]="
+                form.advanced.controls.conditionsForUse
+              "></textarea>
+            <mat-hint
+              >Additional not legally relevant usage instructions (e.g. how to
+              cite the dataset)</mat-hint
+            >
+          </mat-form-field>
         </div>
       </form>
     </mat-step>

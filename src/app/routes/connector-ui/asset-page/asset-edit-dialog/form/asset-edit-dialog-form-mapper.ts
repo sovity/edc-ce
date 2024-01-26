@@ -76,6 +76,18 @@ export class AssetEditDialogFormMapper {
         dataSubcategory: asset.dataSubcategory,
         transportMode: asset.transportMode,
         geoReferenceMethod: asset.geoReferenceMethod,
+        sovereignLegalName: asset.sovereignLegalName,
+        geoLocation: asset.geoLocation,
+        nutsLocations: asset.nutsLocation,
+        dataSampleUrls: asset.dataSampleUrls,
+        referenceFileUrls: asset.referenceFileUrls,
+        referenceFilesDescription: asset.referenceFilesDescription,
+        conditionsForUse: asset.conditionsForUse,
+        dataUpdateFrequency: asset.dataUpdateFrequency,
+        temporalCoverage: {
+          from: asset.temporalCoverageFrom,
+          toInclusive: asset.temporalCoverageToInclusive,
+        },
       },
       datasource: this.forCreate().datasource,
     };

@@ -5,7 +5,7 @@ import {DateRange} from '@angular/material/datepicker';
  * Validates date range is set.
  * @param control control
  */
-export const dateRangeRequired: ValidatorFn = (
+export const validDateRange: ValidatorFn = (
   control: AbstractControl,
 ): ValidationErrors | null => {
   const value: DateRange<Date> = control.value;

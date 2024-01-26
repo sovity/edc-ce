@@ -12,6 +12,7 @@ import {JsonDialogModule} from '../json-dialog/json-dialog.module';
 import {PipesAndDirectivesModule} from '../pipes-and-directives/pipes-and-directives.module';
 import {PropertyGridModule} from '../property-grid/property-grid.module';
 import {UiElementsModule} from '../ui-elements/ui-elements.module';
+import {UrlListDialogModule} from '../url-list-dialog/url-list-dialog.module';
 import {AssetCardTagListComponent} from './asset-card-tag-list/asset-card-tag-list.component';
 import {AssetDetailDialogDataService} from './asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogComponent} from './asset-detail-dialog/asset-detail-dialog.component';
@@ -47,6 +48,7 @@ import {ViewSelectionComponent} from './view-selection/view-selection.component'
 
     // Features
     JsonDialogModule,
+    UrlListDialogModule,
     PropertyGridModule,
     UiElementsModule,
     PipesAndDirectivesModule,

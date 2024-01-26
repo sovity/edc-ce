@@ -147,4 +147,34 @@ export class AssetEditDialogForm {
   onHttpQueryParamsRemoveClick(index: number) {
     this.datasource!.controls.httpQueryParams.removeAt(index);
   }
+
+  onNutsLocationsAddClick() {
+    this.advanced!.controls.nutsLocations.push(
+      this.assetAdvancedFormBuilder.buildRequiredString(''),
+    );
+  }
+
+  onNutsLocationsRemoveClick(index: number) {
+    this.advanced!.controls.nutsLocations.removeAt(index);
+  }
+
+  onDataSampleUrlsAddClick() {
+    this.advanced!.controls.dataSampleUrls.push(
+      this.assetAdvancedFormBuilder.buildRequiredUrl(''),
+    );
+  }
+
+  onDataSampleUrlsRemoveClick(index: number) {
+    this.advanced!.controls.dataSampleUrls.removeAt(index);
+  }
+
+  onReferenceFileUrlsAddClick() {
+    this.advanced!.controls.referenceFileUrls.push(
+      this.assetAdvancedFormBuilder.buildRequiredUrl(''),
+    );
+  }
+
+  onReferenceFileUrlsRemoveClick(index: number) {
+    this.advanced!.controls.referenceFileUrls.removeAt(index);
+  }
 }

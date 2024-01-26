@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {switchDisabledControls} from '../../../../core/utils/form-group-utils';
-import {dateRangeRequired} from '../../../../core/validators/date-range-required';
 import {noWhitespacesOrColonsValidator} from '../../../../core/validators/no-whitespaces-or-colons-validator';
+import {validDateRange} from '../../../../core/validators/valid-date-range';
 import {
   NewPolicyDialogFormModel,
   NewPolicyDialogFormValue,
@@ -42,7 +42,7 @@ export class NewPolicyDialogForm {
             start: null as Date | null,
             end: null as Date | null,
           },
-          {validators: dateRangeRequired},
+          {validators: validDateRange},
         ),
         participantIds: [new Array<string>(), Validators.required],
       });
