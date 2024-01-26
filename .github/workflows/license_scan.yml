@@ -25,6 +25,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
+      - name: npm install (typescript-client)
+        run: cd extensions/wrapper/clients/typescript-client && npm install
+      - name: npm install (typescript-client-example)
+        run: cd extensions/wrapper/clients/typescript-client-example && npm install
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Run license scanner
