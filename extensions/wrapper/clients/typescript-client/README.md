@@ -34,6 +34,8 @@ npm i --save @sovity.de/edc-client
 
 Configure your EDC Client and use endpoints of our API Wrapper Extension:
 
+### Example Using API Key Auth
+
 ```typescript
 const edcClient: EdcClient = buildEdcClient({
     managementApiUrl: 'http://localhost:11002/api/management/v2',
@@ -45,6 +47,22 @@ let kpiData: KpiResult = await edcClient.useCaseApi.getKpis();
 
 A minimal example project using the typescript API client can be found
 [here](https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper/clients/typescript-client-example).
+
+### Example Using OAuth2 Client Credentials
+
+```typescript
+const edcClient: EdcClient = buildEdcClient({
+    managementApiUrl: 'http://localhost:11002/api/management/v2',
+    oAuth2ClientCredentials: {
+        serverUrl: "http://localhost:11002",
+        tokenEndpoint: "/token",
+        clientId: "{{your-connector}}-app",
+        clientSecret: "..."
+    }
+});
+
+let kpiData: KpiResult = await edcClient.useCaseApi.getKpis();
+```
 
 ## License
 
