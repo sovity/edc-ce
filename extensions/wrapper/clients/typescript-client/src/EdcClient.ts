@@ -1,7 +1,12 @@
-import {Configuration, ConfigurationParameters, EnterpriseEditionApi, UIApi, UseCaseApi,} from './generated';
-import {OAuth2ClientCredentials} from "./oauth2/OAuth2ClientCredentials";
-import {OAuth2Client, OAuth2Fetch} from "@badgateway/oauth2-client";
-
+import {OAuth2Client, OAuth2Fetch} from '@badgateway/oauth2-client';
+import {
+    Configuration,
+    ConfigurationParameters,
+    EnterpriseEditionApi,
+    UIApi,
+    UseCaseApi,
+} from './generated';
+import {OAuth2ClientCredentials} from './oauth2/OAuth2ClientCredentials';
 
 /**
  * API Client for our sovity EDC
@@ -57,6 +62,6 @@ export function buildEdcClient(opts: EdcClientOptions): EdcClient {
 export interface EdcClientOptions {
     managementApiUrl: string;
     managementApiKey?: string;
-    oAuth2ClientCredentials?: OAuth2ClientCredentials,
+    oAuth2ClientCredentials?: OAuth2ClientCredentials;
     configOverrides?: Partial<ConfigurationParameters>;
 }

@@ -1,6 +1,6 @@
 export interface OAuth2ClientCredentials {
-     serverUrl: string;
-     tokenEndpoint: string;
-     clientId: string;
-     clientSecret: string;
+    serverUrl: string;
+    tokenEndpoint: string;
+    clientId: string;
+    clientSecret: string;
 }
