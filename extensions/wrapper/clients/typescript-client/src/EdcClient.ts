@@ -1,12 +1,16 @@
-import {OAuth2Client, OAuth2Fetch} from '@badgateway/oauth2-client';
 import {
     Configuration,
     ConfigurationParameters,
     EnterpriseEditionApi,
+    Middleware,
     UIApi,
     UseCaseApi,
 } from './generated';
+import {AccessTokenFetcher} from './oauth2/AccessTokenFetcher';
+import {AccessTokenInjector} from './oauth2/AccessTokenInjector';
+import {AccessTokenStore} from './oauth2/AccessTokenStore';
 import {OAuth2ClientCredentials} from './oauth2/OAuth2ClientCredentials';
+import {OAuthMiddleware} from './oauth2/OAuthMiddleware';
 
 /**
  * API Client for our sovity EDC
@@ -22,21 +26,21 @@ export interface EdcClient {
  * @param opts opts
  */
 export function buildEdcClient(opts: EdcClientOptions): EdcClient {
-    let fetchWrapper: OAuth2Fetch | null = null;
+    let oAuthMiddleware: Middleware[] | undefined;
+
     if (opts.oAuth2ClientCredentials) {
-        const client = new OAuth2Client({
-            server: opts.oAuth2ClientCredentials.serverUrl,
-            tokenEndpoint: opts.oAuth2ClientCredentials.tokenEndpoint,
-            clientId: opts.oAuth2ClientCredentials.clientId,
-            clientSecret: opts.oAuth2ClientCredentials.clientSecret,
-        });
-        // Wrapper for fetch that automatically sets Authorization: Bearer headers and refreshes the token when needed
-        fetchWrapper = new OAuth2Fetch({
-            client: client,
-            getNewToken: async () => {
-                return client.clientCredentials();
-            },
-        });
+        const accessTokenFetcher = new AccessTokenFetcher(
+            opts.oAuth2ClientCredentials,
+        );
+        const accessTokenStore = new AccessTokenStore(accessTokenFetcher);
+        const accessTokenInjector = new AccessTokenInjector();
+
+        const middleware = new OAuthMiddleware(
+            accessTokenInjector,
+            accessTokenStore,
+        ).build();
+
+        oAuthMiddleware = [middleware];
     }
 
     const config = new Configuration({
@@ -45,7 +49,7 @@ export function buildEdcClient(opts: EdcClientOptions): EdcClient {
             'X-Api-Key': opts.managementApiKey ?? 'ApiKeyDefaultValue',
         },
         credentials: 'same-origin',
-        fetchApi: fetchWrapper ? fetchWrapper.fetch : undefined,
+        middleware: oAuthMiddleware ? oAuthMiddleware : undefined,
         ...opts.configOverrides,
     });
 
