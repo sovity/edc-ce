@@ -1,19 +1,23 @@
+import {createUrlEncodedParamsString} from './HttpUtils';
 import {OAuth2ClientCredentials} from './OAuth2ClientCredentials';
 
 export class AccessTokenFetcher {
     private readonly clientCredentials: OAuth2ClientCredentials;
-    private readonly credentialsFormData: FormData;
+    private readonly credentialsBody: string;
 
     constructor(clientCredentials: OAuth2ClientCredentials) {
         this.clientCredentials = clientCredentials;
-        this.credentialsFormData = this.buildFormData();
+        this.credentialsBody = this.buildFormData();
     }
 
     async fetch(): Promise<string | undefined> {
         try {
             let response = await fetch(this.clientCredentials.tokenUrl, {
                 method: 'POST',
-                body: this.credentialsFormData,
+                body: this.credentialsBody,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
             });
             let json: any = await response.json();
             if (json && 'access_token' in json) {
@@ -25,11 +29,13 @@ export class AccessTokenFetcher {
         }
     }
 
-    private buildFormData(): FormData {
-        const formData = new FormData();
-        formData.append('grant_type', 'client_credentials');
-        formData.append('client_id', this.clientCredentials.clientId);
-        formData.append('client_secret', this.clientCredentials.clientSecret);
-        return formData;
+    private buildFormData(): string {
+        const formData = {
+            grant_type: 'client_credentials',
+            client_id: this.clientCredentials.clientId,
+            client_secret: this.clientCredentials.clientSecret,
+        };
+
+        return createUrlEncodedParamsString(formData);
     }
 }
