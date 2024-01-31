@@ -15,7 +15,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 - Add new MDS fields and migrate existing MDS asset keys to mobilityDCAT-AP
-- Add OAuth client credentials option to TS client
+- API Wrapper: TS Client Library now supports OAuth Client Credentials
 
 #### Patch Changes
 - Docs: Enhanced starting a Http-Pull over the EDC-Ui documentation
