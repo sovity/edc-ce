@@ -29,25 +29,16 @@ export function buildEdcClient(opts: EdcClientOptions): EdcClient {
     let oAuthMiddleware: Middleware[] | undefined;
 
     if (opts.oAuth2ClientCredentials) {
-        const accessTokenFetcher = new AccessTokenFetcher(
-            opts.oAuth2ClientCredentials,
-        );
-        const accessTokenStore = new AccessTokenStore(accessTokenFetcher);
-        const accessTokenInjector = new AccessTokenInjector();
-
-        const middleware = new OAuthMiddleware(
-            accessTokenInjector,
-            accessTokenStore,
-        ).build();
-
-        oAuthMiddleware = [middleware];
+        oAuthMiddleware = buildOAuthMiddleware(opts.oAuth2ClientCredentials);
     }
 
     const config = new Configuration({
         basePath: opts.managementApiUrl,
-        headers: {
-            'X-Api-Key': opts.managementApiKey ?? 'ApiKeyDefaultValue',
-        },
+        headers: opts.managementApiKey
+            ? {
+                  'X-Api-Key': opts.managementApiKey,
+              }
+            : undefined,
         credentials: 'same-origin',
         middleware: oAuthMiddleware ? oAuthMiddleware : undefined,
         ...opts.configOverrides,
@@ -58,6 +49,16 @@ export function buildEdcClient(opts: EdcClientOptions): EdcClient {
         useCaseApi: new UseCaseApi(config),
         enterpriseEditionApi: new EnterpriseEditionApi(config),
     };
+}
+
+function buildOAuthMiddleware(
+    clientCredentials: OAuth2ClientCredentials,
+): Middleware[] {
+    const accessTokenFetcher = new AccessTokenFetcher(clientCredentials);
+    const accessTokenStore = new AccessTokenStore(accessTokenFetcher);
+    const accessTokenInjector = new AccessTokenInjector();
+
+    return [new OAuthMiddleware(accessTokenInjector, accessTokenStore).build()];
 }
 
 /**
