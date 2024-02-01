@@ -140,6 +140,16 @@ EDC_OAUTH_CERTIFICATE_ALIAS: 1
 EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
 ```
 
+## Security
+
+Since an API Key must be set for the Management-API and is considered to be a security relevant setting, here are a few tips on what should be taken into account when setting a value or the configuration of the infrastructure:
+- Restrict access to the Management-API to your internal network
+- Use an API Key with high entropy (length, complexity) when configuring the value (e.g. [a-zA-Z0-9+special chars]{32+ chars}).
+- Limit the header size in the reverse proxy so that only a certain number of API Keys can be tested with one API-request (e.g. limit to 8kb).
+- Limit the access rate to the API endpoints and monitor access for attacks like brute force attacks.
+
+If configured insufficiently, this security relevant Management-API could be exploited to attack the EDC's database, thereby attacking the surrounding network.
+
 ## FAQ
 
 ### What should the client ID entry look like?
