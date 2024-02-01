@@ -4,16 +4,10 @@ import {AccessTokenStore} from './AccessTokenStore';
 import {needsAuthentication} from './HttpUtils';
 
 export class OAuthMiddleware {
-    accessTokenInjector: AccessTokenInjector;
-    accessTokenStore: AccessTokenStore;
-
     constructor(
-        accessTokenInjector: AccessTokenInjector,
-        accessTokenStore: AccessTokenStore,
-    ) {
-        this.accessTokenInjector = accessTokenInjector;
-        this.accessTokenStore = accessTokenStore;
-    }
+        private accessTokenInjector: AccessTokenInjector,
+        private accessTokenStore: AccessTokenStore,
+    ) {}
 
     build(): Middleware {
         return {

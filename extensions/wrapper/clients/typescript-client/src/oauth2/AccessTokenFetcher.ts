@@ -10,23 +10,19 @@ export class AccessTokenFetcher {
         this.credentialsBody = this.buildFormData();
     }
 
-    async fetch(): Promise<string | undefined> {
-        try {
-            let response = await fetch(this.clientCredentials.tokenUrl, {
-                method: 'POST',
-                body: this.credentialsBody,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-            });
-            let json: any = await response.json();
-            if (json && 'access_token' in json) {
-                return json['access_token'];
-            }
-            return undefined;
-        } catch (err) {
-            return undefined;
+    async fetch(): Promise<string> {
+        let response = await fetch(this.clientCredentials.tokenUrl, {
+            method: 'POST',
+            body: this.credentialsBody,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        });
+        let json: any = await response.json();
+        if (json && 'access_token' in json) {
+            return json['access_token'];
         }
+        throw new Error('access_token');
     }
 
     private buildFormData(): string {

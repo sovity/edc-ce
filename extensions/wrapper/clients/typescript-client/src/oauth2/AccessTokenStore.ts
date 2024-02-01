@@ -1,38 +1,25 @@
 import {AccessTokenFetcher} from './AccessTokenFetcher';
 
 export class AccessTokenStore {
-    _accessToken?: string;
-    accessTokenFetcher: AccessTokenFetcher;
-    private isRefreshing = false;
-    private currentFetchPromise: Promise<string | undefined> =
-        Promise.resolve(undefined);
+    private activeRequest: Promise<string> | null = null;
 
-    constructor(accessTokenFetcher: AccessTokenFetcher, token?: string) {
-        this.accessToken = token;
-        this.accessTokenFetcher = accessTokenFetcher;
-    }
-
-    get accessToken(): string | undefined {
-        return this._accessToken;
-    }
-
-    set accessToken(token: string | undefined) {
-        this._accessToken = token;
-    }
+    constructor(
+        private accessTokenFetcher: AccessTokenFetcher,
+        public accessToken?: string,
+    ) {}
 
     // Synchronized refreshing of the access token
     async refreshToken() {
-        if (this.isRefreshing) {
-            await this.currentFetchPromise;
+        if (this.activeRequest) {
+            await this.activeRequest;
             return;
         }
 
-        this.isRefreshing = true;
-        this.currentFetchPromise = this.accessTokenFetcher.fetch();
-        const newToken = await this.currentFetchPromise;
+        this.activeRequest = this.accessTokenFetcher.fetch();
+        const newToken = await this.activeRequest;
         if (newToken) {
             this.accessToken = newToken;
         }
-        this.isRefreshing = false;
+        this.activeRequest = null;
     }
 }

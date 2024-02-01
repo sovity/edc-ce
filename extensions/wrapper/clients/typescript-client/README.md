@@ -54,8 +54,7 @@ A minimal example project using the typescript API client can be found
 const edcClient: EdcClient = buildEdcClient({
     managementApiUrl: 'http://localhost:11002/api/management/v2',
     oAuth2ClientCredentials: {
-        serverUrl: 'http://localhost:11002',
-        tokenEndpoint: '/token',
+        tokenUrl: 'http://localhost:11002/token',
         clientId: '{{your-connector}}-app',
         clientSecret: '...',
     },
