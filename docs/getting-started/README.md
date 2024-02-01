@@ -68,6 +68,16 @@ The following example shows you how to fully configure an MDS EDC.
    ```
 6. Visit [localhost:11000](http://localhost:11000)
 
+## Security
+
+Since an API Key must be set for the Management-API in the docker-compose file and is considered to be a security relevant setting, here are a few tips on what should be taken into account when setting a value in the docker-compose or the configuration of the infrastructure, when deploying it in a productive environment:
+- Restrict access to the Management-API to your internal network
+- Use an API Key with high entropy (length, complexity) when configuring the value (e.g. [a-zA-Z0-9+special chars]{32+ chars}).
+- Limit the header size in the reverse proxy so that only a certain number of API Keys can be tested with one API-request (e.g. limit to 8kb).
+- Limit the access rate to the API endpoints and monitor access for attacks like brute force attacks.
+
+If configured insufficiently, this security relevant Management-API could be exploited to attack the EDC's database, thereby attacking the surrounding network.
+
 ## OpenAPI Yaml
 
 There's an [openapi.yaml](../openapi.yaml) that includes the vanilla EDC endpoints exposed by the current control- and
