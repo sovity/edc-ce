@@ -6,7 +6,8 @@ export function withHeader(
     headers?: HeadersInit,
 ): HeadersInit {
     if (!headers) {
-        headers = {headerName: headerValue};
+        headers = {};
+        headers[headerName] = headerValue;
         return headers;
     }
 
@@ -25,8 +26,6 @@ export function withHeader(
         return headers;
     }
 
-    return {
-        ...(headers as Record<string, string>),
-        headerName: headerValue,
-    };
+    headers[headerName] = headerValue;
+    return headers;
 }
