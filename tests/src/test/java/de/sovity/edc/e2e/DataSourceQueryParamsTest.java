@@ -68,9 +68,7 @@ class DataSourceQueryParamsTest {
     private EdcClient providerClient;
     private EdcClient consumerClient;
     private MockDataAddressRemote dataAddress;
-    private final String dateParam = "since=2023-10-13T00:00:00.000Z";
-    private final String encodedDateParam = "since=2023-10-13T00%3A00%3A00.000Z";
-    private final String doubleEncodedDateParam = "since=2023-10-13T00%253A00%253A00.000Z";
+    private final String encodedParam = "a=%25"; // Unencoded param "a=%"
     private final String dataOfferId = "my-data-offer-2023-11";
 
     @BeforeEach
@@ -103,13 +101,10 @@ class DataSourceQueryParamsTest {
     void testDirectQuerying() {
         // arrange
         var paramUrl = String.format("%s?{k}={v}", dataAddress.getDataSourceQueryParamsUrl());
-        var splitParam = dateParam.split("=");
-        var paramKey = splitParam[0];
-        var paramValue = splitParam[1];
 
         // act
         // assert
-        validateDataTransferred(paramUrl, encodedDateParam, paramValue, paramKey);
+        validateDataTransferred(paramUrl, encodedParam, "a", "%");
     }
 
     /**
@@ -121,6 +116,7 @@ class DataSourceQueryParamsTest {
         createPolicy();
         createAsset();
         createContractDefinition();
+        String doubleEncodedParam = "a=%2525";
 
         // act
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
@@ -129,7 +125,7 @@ class DataSourceQueryParamsTest {
         initiateTransfer(negotiation);
 
         // assert
-        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), doubleEncodedDateParam);
+        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), doubleEncodedParam);
     }
 
     private void createAsset() {
@@ -140,7 +136,7 @@ class DataSourceQueryParamsTest {
                         Prop.Edc.TYPE, "HttpData",
                         Prop.Edc.METHOD, "GET",
                         Prop.Edc.BASE_URL, dataAddress.getDataSourceQueryParamsUrl(),
-                        "https://w3id.org/edc/v0.0.1/ns/queryParams", encodedDateParam
+                        "https://w3id.org/edc/v0.0.1/ns/queryParams", encodedParam
                 ))
                 .build();
 
