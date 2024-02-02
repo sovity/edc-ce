@@ -116,7 +116,7 @@ class DataSourceQueryParamsTest {
         createPolicy();
         createAsset();
         createContractDefinition();
-        String doubleEncodedParam = "a=%2525";
+        var expectedDoubleEncodedParam = "a=%2525";
 
         // act
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
@@ -125,7 +125,7 @@ class DataSourceQueryParamsTest {
         initiateTransfer(negotiation);
 
         // assert
-        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), doubleEncodedParam);
+        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), expectedDoubleEncodedParam);
     }
 
     private void createAsset() {
