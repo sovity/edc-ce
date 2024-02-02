@@ -18,7 +18,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 - Docs: Enhanced starting a Http-Pull over the EDC-Ui documentation
-- Add e2e test for faulty double encoding of query parameters
+- Add e2e test for double encoding of query parameters
 
 ### Deployment Migration Notes
 
