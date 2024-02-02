@@ -53,10 +53,10 @@ public class DataTransferTestUtil {
     }
 
 
-    public static void validateDataTransferred(String checkUrl, String expectedData) {
+    public static void validateDataTransferred(String checkUrl, String expectedData, Object... params) {
         await().atMost(TIMEOUT).untilAsserted(() -> {
             var actual = when()
-                    .get(checkUrl)
+                    .get(checkUrl, params)
                     .then()
                     .statusCode(200)
                     .extract().body().asString();
