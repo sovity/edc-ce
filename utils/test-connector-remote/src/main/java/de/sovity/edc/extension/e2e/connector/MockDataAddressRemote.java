@@ -39,7 +39,7 @@ public class MockDataAddressRemote {
     }
 
     public String getDataSourceQueryParamsUrl() {
-        return getMockBackendUrl("data-source-params");
+        return getMockBackendUrl("data-source/echo-query-params");
     }
 
     public String getMockBackendUrl(String path) {

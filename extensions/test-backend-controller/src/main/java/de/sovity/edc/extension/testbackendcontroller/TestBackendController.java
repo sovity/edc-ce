@@ -49,7 +49,7 @@ public class TestBackendController {
     }
 
     @GET
-    @Path("/data-source-params")
+    @Path("/data-source/echo-query-params")
     @Produces(MediaType.APPLICATION_JSON)
     public String echoDataSourceQueryParams(@Context UriInfo uriInfo) {
         return uriInfo.getRequestUri().getRawQuery();
