@@ -35,7 +35,7 @@ import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
+import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -63,9 +63,9 @@ class ApiWrapperDemoTest {
     static EdcExtension consumerEdcContext = new EdcExtension();
 
     @RegisterExtension
-    static final TestDatabase PROVIDER_DATABASE = TestDatabaseFactory.getTestDatabase(1);
+    static final TestDatabase PROVIDER_DATABASE = new TestDatabaseViaTestcontainers();
     @RegisterExtension
-    static final TestDatabase CONSUMER_DATABASE = TestDatabaseFactory.getTestDatabase(2);
+    static final TestDatabase CONSUMER_DATABASE = new TestDatabaseViaTestcontainers();
 
     private ConnectorRemote providerConnector;
     private ConnectorRemote consumerConnector;
