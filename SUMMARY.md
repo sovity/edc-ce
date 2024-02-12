@@ -65,3 +65,6 @@
 * [CaaS Documentation on Zammad](https://sovity.zammad.com/#knowledge_base/1/locale/en-us)
 * [Comparison Table of offerings](https://sovity.de/en/connect-to-data-space-en/)
 * [Versions](https://github.com/sovity/edc-extensions/releases)
+
+## TEST
+* [test](https://github.com/sovity/EDC-deployments/blob/main/docs/dev/changelog_updates.md)
