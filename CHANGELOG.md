@@ -16,12 +16,38 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Minor Changes
 
 #### Patch Changes
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+## [7.1.2] - 2024-02-13
+
+### Overview
+
+### EDC UI
+
+### EDC Extensions
+
+#### Major Changes
+
+#### Minor Changes
+
+#### Patch Changes
 - Fix Connector-Restricted-Usage Policy
 - Fix Connection-Pool issues by switching to the Tractus-X Connection Pool.
 
 ### Deployment Migration Notes
 
+_No special deployment migration steps required_
+
 #### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:7.1.2`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.1.2`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.1.2`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.3.1`
 
 ## [7.1.1] - 2024-01-18
 
