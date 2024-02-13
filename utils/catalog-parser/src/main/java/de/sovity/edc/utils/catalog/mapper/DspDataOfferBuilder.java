@@ -13,7 +13,6 @@
 
 package de.sovity.edc.utils.catalog.mapper;
 
-import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.catalog.DspCatalogServiceException;
 import de.sovity.edc.utils.catalog.model.DspCatalog;
 import de.sovity.edc.utils.catalog.model.DspContractOffer;
@@ -24,21 +23,13 @@ import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.eclipse.edc.connector.contract.spi.ContractId;
 import org.eclipse.edc.jsonld.spi.JsonLd;
-import org.eclipse.edc.spi.monitor.Monitor;
 import org.jetbrains.annotations.NotNull;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
 @RequiredArgsConstructor
 public class DspDataOfferBuilder {
 
     private final JsonLd jsonLd;
-    private final Monitor monitor;
 
     public DspCatalog buildDataOffers(String endpoint, JsonObject json) {
         json = jsonLd.expand(json).orElseThrow(DspCatalogServiceException::ofFailure);
@@ -75,66 +66,10 @@ public class DspDataOfferBuilder {
     }
 
     @NotNull
-    DspContractOffer buildContractOffer(JsonObject json) {
-        /*
-         * /!\ Workaround
-         *
-         * The Eclipse EDC uses a new random UUID for each policy that it returns and in turn a new contract ID.
-         * This Eclipse ID can't be used as such.
-         * As a workaround, we must introduce our own ID.
-         * For a first iteration, we will assume that the content of the policy remains the same (same content, same order)
-         * and hash it to use it as a key.
-         */
+    private DspContractOffer buildContractOffer(JsonObject json) {
+        val stableId = DspContractOfferUtils.buildStableId(json);
+        val withStableId = Json.createObjectBuilder(json).remove(Prop.ID).add(Prop.ID, stableId).build();
 
-        // FIXME: This doesn't enforce any property order and may cause trouble if the returned policy schema is not consistent.
-        //  Use canonical form if needed later.
-        val noId = Json.createObjectBuilder(json).remove(Prop.ID).build();
-        val hash = hashJsonObject(noId);
-        val policyId = stableContractId(hash);
-
-        val idAsString = JsonLdUtils.string(json, Prop.ID);
-
-        val stableId = ContractId
-                .parseId(idAsString)
-                .map(it -> it.definitionPart() + ":" + it.assetIdPart() + ":" + policyId)
-                .orElseThrow((failure) -> {
-                    throw new RuntimeException("Failed to parse the contract id: " + failure.getFailureDetail());
-                });
-
-        val copy = Json.createObjectBuilder(json).remove(Prop.ID).add(Prop.ID, stableId).build();
-
-        return new DspContractOffer(stableId, copy);
-    }
-
-    @NotNull
-    private String hashJsonObject(JsonObject noId) {
-        val policyJsonString = JsonUtils.toJson(noId);
-        val sha1 = sha1(policyJsonString);
-        // encoding with base16 to make the hash readable to humans when decoding with ContractId
-        return toBase16String(sha1);
-    }
-
-    private static String stableContractId(String string) {
-        byte[] stringBytes = string.getBytes(StandardCharsets.UTF_8);
-        byte[] bytes = Base64.getEncoder().encode(stringBytes);
-        return new String(bytes);
-    }
-
-    @NotNull
-    private static String toBase16String(byte[] bytes) {
-        val sb = new StringBuilder();
-        for (byte b : bytes) {
-            sb.append(Character.forDigit(b >> 4 & 0xf, 16));
-            sb.append(Character.forDigit(b & 0xf, 16));
-        }
-        return sb.toString();
-    }
-
-    private static byte[] sha1(String string) {
-        try {
-            return MessageDigest.getInstance("sha-1").digest(string.getBytes());
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        return new DspContractOffer(stableId, withStableId);
     }
 }

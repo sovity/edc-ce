@@ -206,7 +206,7 @@ public class WrapperExtensionContextBuilder {
                 policyDefinitionService,
                 policyMapper
         );
-        var dataOfferBuilder = new DspDataOfferBuilder(jsonLd, monitor);
+        var dataOfferBuilder = new DspDataOfferBuilder(jsonLd);
         var dspCatalogService = new DspCatalogService(catalogService, dataOfferBuilder);
         var catalogApiService = new CatalogApiService(
                 assetMapper,
