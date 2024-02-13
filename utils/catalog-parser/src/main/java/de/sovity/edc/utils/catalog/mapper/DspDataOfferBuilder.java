@@ -98,9 +98,7 @@ public class DspDataOfferBuilder {
                 .parseId(idAsString)
                 .map(it -> it.definitionPart() + ":" + it.assetIdPart() + ":" + policyId)
                 .orElseThrow((failure) -> {
-                    String message = "Failed to parse the contract id: " + failure.getFailureDetail();
-                    monitor.severe(message);
-                    throw new RuntimeException(message);
+                    throw new RuntimeException("Failed to parse the contract id: " + failure.getFailureDetail());
                 });
 
         val copy = Json.createObjectBuilder(json).remove(Prop.ID).add(Prop.ID, stableId).build();
