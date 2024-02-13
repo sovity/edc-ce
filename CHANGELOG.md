@@ -14,6 +14,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Major Changes
 
 #### Minor Changes
+- Fix Connector-Restricted-Usage Policy
 
 #### Patch Changes
 
