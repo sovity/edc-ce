@@ -86,15 +86,11 @@ public class DspDataOfferBuilder {
          * and hash it to use it as a key.
          */
 
-        // FIXME: This doesn't enforce any property order and may cause trouble if the returned policy schema is not consistent
+        // FIXME: This doesn't enforce any property order and may cause trouble if the returned policy schema is not consistent.
         //  Use canonical form if needed later.
         val noId = Json.createObjectBuilder(json).remove(Prop.ID).build();
-        val policyJsonString = JsonUtils.toJson(noId);
-        val sha1 = sha1(policyJsonString);
-        // encoding with base16 to make the hash readable to humans when decoding with ContractId
-        val humanReadableSha1 = toBase16String(sha1);
-        // re-encoding as base64 because this is the format that ContractId expects
-        val policyId = toBase64String(humanReadableSha1);
+        val hash = hashJsonObject(noId);
+        val policyId = stableContractId(hash);
 
         val idAsString = JsonLdUtils.string(json, Prop.ID);
 
@@ -112,7 +108,15 @@ public class DspDataOfferBuilder {
         return new DspContractOffer(stableId, copy);
     }
 
-    private static String toBase64String(String string) {
+    @NotNull
+    private String hashJsonObject(JsonObject noId) {
+        val policyJsonString = JsonUtils.toJson(noId);
+        val sha1 = sha1(policyJsonString);
+        // encoding with base16 to make the hash readable to humans when decoding with ContractId
+        return toBase16String(sha1);
+    }
+
+    private static String stableContractId(String string) {
         byte[] stringBytes = string.getBytes(StandardCharsets.UTF_8);
         byte[] bytes = Base64.getEncoder().encode(stringBytes);
         return new String(bytes);
@@ -128,9 +132,9 @@ public class DspDataOfferBuilder {
         return sb.toString();
     }
 
-    private byte[] sha1(String policyJsonString) {
+    private byte[] sha1(String string) {
         try {
-            return MessageDigest.getInstance("sha-1").digest(policyJsonString.getBytes());
+            return MessageDigest.getInstance("sha-1").digest(string.getBytes());
         } catch (NoSuchAlgorithmException e) {
             monitor.severe("Failed to hash with sha-1", e);
             throw new RuntimeException(e);
