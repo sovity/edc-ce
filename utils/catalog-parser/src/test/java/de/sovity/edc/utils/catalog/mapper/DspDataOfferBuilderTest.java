@@ -23,7 +23,7 @@ class DspDataOfferBuilderTest {
         val result = new DspDataOfferBuilder(new TitaniumJsonLd(monitor), monitor).buildContractOffer(contractOffer);
 
         // assert
-        val stableId = "part1:part2:KbdwJ8MGwX3y7K9mi3lhzplluhc=";
+        val stableId = "part1:part2:MjliNzcwMjdjMzA2YzE3ZGYyZWNhZjY2OGI3OTYxY2U5OTY1YmExNw==";
         assertThat(result.getContractOfferId()).isEqualTo(stableId);
         assertThat(result.getPolicyJsonLd().getString("@id")).isEqualTo(stableId);
     }
