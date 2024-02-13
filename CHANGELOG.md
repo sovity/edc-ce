@@ -19,7 +19,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Patch Changes
 - Docs: Enhanced starting a Http-Pull over the EDC-Ui documentation
 - Fix Connector-Restricted-Usage Policy
-- Fix Connection-Pool issues by switching to the Tractus-X Connection Pool for `<0.4.1` Eclipse EDC.
+- Fix Connection-Pool issues by switching to the Tractus-X Connection Pool.
 
 ### Deployment Migration Notes
 
