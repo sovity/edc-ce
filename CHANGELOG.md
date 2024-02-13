@@ -27,6 +27,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 ### EDC UI
 
+https://github.com/sovity/edc-ui/releases/tag/v2.3.1
+
 ### EDC Extensions
 
 #### Major Changes
