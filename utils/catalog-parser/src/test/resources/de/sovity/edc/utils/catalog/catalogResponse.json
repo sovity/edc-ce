@@ -5,7 +5,7 @@
     "@id": "test-1.0",
     "@type": "dcat:Dataset",
     "odrl:hasPolicy": {
-      "@id": "policy-1",
+      "@id": "contract-id:asset-id:policy-id",
       "@type": "odrl:Set",
       "odrl:permission": {
         "odrl:target": "test-1.0",

@@ -15,6 +15,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 - Add new MDS fields and migrate existing MDS asset keys to mobilityDCAT-AP
+- Introduce a stable ID for contracts offers
 
 #### Patch Changes
 - Docs: Enhanced starting a Http-Pull over the EDC-Ui documentation
