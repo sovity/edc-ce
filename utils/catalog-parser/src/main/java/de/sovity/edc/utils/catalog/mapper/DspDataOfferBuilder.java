@@ -132,11 +132,10 @@ public class DspDataOfferBuilder {
         return sb.toString();
     }
 
-    private byte[] sha1(String string) {
+    private static byte[] sha1(String string) {
         try {
             return MessageDigest.getInstance("sha-1").digest(string.getBytes());
         } catch (NoSuchAlgorithmException e) {
-            monitor.severe("Failed to hash with sha-1", e);
             throw new RuntimeException(e);
         }
     }
