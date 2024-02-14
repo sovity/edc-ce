@@ -35,6 +35,7 @@ https://github.com/sovity/edc-ui/releases/tag/v2.4.0
 - Assets now have new MDS fields
 
 #### Patch Changes
+
 - Docs: Improved documentation of HTTP pull (edc-ui)
 - Docs: Add security recommendations for recent API key vulnerabilities
 - Fixed connector restricted usage policy
