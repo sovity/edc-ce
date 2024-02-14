@@ -141,19 +141,6 @@ public class Prop {
     }
 
     /**
-     * MDS Vocabulary
-     */
-    @UtilityClass
-    public class Mobility {
-        public final String CTX = "https://w3id.org/mobilitydcat-ap/";
-        public final String DATA_CATEGORY = CTX + "mobility-theme/data-content-category";
-        public final String DATA_SUBCATEGORY = CTX + "mobility-theme/data-content-sub-category";
-        public final String DATA_MODEL = CTX + "mobility-data-standard";
-        public final String GEO_REFERENCE_METHOD = CTX + "georeferencing-method";
-        public final String TRANSPORT_MODE = CTX + "transport-mode";
-    }
-
-    /**
      * Temporary Context for all MDS specific fields awaiting proper classification within the mobilityDCAT-AP specification
      */
     @UtilityClass
