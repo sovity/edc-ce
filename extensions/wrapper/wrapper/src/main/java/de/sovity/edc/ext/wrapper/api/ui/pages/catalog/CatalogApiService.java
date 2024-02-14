@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.catalog;
 
+import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
@@ -21,8 +22,10 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiContractOffer;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import de.sovity.edc.utils.catalog.DspCatalogService;
+import de.sovity.edc.utils.catalog.DspCatalogServiceException;
 import de.sovity.edc.utils.catalog.model.DspContractOffer;
 import de.sovity.edc.utils.catalog.model.DspDataOffer;
+import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -34,13 +37,17 @@ public class CatalogApiService {
     private final DspCatalogService dspCatalogService;
 
     public List<UiDataOffer> fetchDataOffers(String connectorEndpoint) {
-        var dspCatalog = dspCatalogService.fetchDataOffers(connectorEndpoint);
-        var endpoint = dspCatalog.getEndpoint();
-        var participantId = dspCatalog.getParticipantId();
+        try {
+            var dspCatalog = dspCatalogService.fetchDataOffers(connectorEndpoint);
+            var endpoint = dspCatalog.getEndpoint();
+            var participantId = dspCatalog.getParticipantId();
 
-        return dspCatalog.getDataOffers().stream()
-                .map(dataOffer -> buildDataOffer(dataOffer, endpoint, participantId))
-                .toList();
+            return dspCatalog.getDataOffers().stream()
+                    .map(dataOffer -> buildDataOffer(dataOffer, endpoint, participantId))
+                    .toList();
+        } catch (DspCatalogServiceException e) {
+            throw new ServiceException(e, Response.Status.BAD_GATEWAY);
+        }
     }
 
     private UiDataOffer buildDataOffer(DspDataOffer dataOffer, String endpoint, String participantId) {

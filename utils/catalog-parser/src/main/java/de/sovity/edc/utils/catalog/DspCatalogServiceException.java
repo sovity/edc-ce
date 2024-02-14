@@ -16,6 +16,11 @@ package de.sovity.edc.utils.catalog;
 import org.eclipse.edc.spi.result.Failure;
 
 public class DspCatalogServiceException extends RuntimeException {
+
+    public DspCatalogServiceException(Throwable cause) {
+        super(cause);
+    }
+
     public DspCatalogServiceException(String message) {
         super(message);
     }

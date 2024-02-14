@@ -18,6 +18,7 @@ import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import de.sovity.edc.utils.jsonld.JsonLdUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
+import lombok.val;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.edc.connector.spi.catalog.CatalogService;
 import org.eclipse.edc.jsonld.TitaniumJsonLd;
@@ -32,6 +33,8 @@ import java.util.concurrent.CompletableFuture;
 
 import static de.sovity.edc.utils.JsonUtils.toJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -78,6 +81,23 @@ class DspCatalogServiceTest {
         assertThat(JsonLdUtils.id(offer.getDistributions().get(0))).isEqualTo("dummy-distribution");
     }
 
+    @Test
+    void testExceptionHandling() throws Exception {
+        // arrange
+        val catalogService = mock(CatalogService.class);
+        val future = mock(CompletableFuture.class);
+        when(catalogService.requestCatalog(any(), any(), any())).thenReturn(future);
+        when(future.get()).thenThrow(InterruptedException.class);
+        val service = new DspCatalogService(catalogService, mock(DspDataOfferBuilder.class));
+
+        // act
+        val exception = assertThrows(
+                DspCatalogServiceException.class,
+                () -> service.fetchDataOffers("http://example.com"));
+
+        // assert
+        assertThat(exception.getCause()).isInstanceOf(InterruptedException.class);
+    }
 
     @SneakyThrows
     private String readFile(String fileName) {

@@ -19,10 +19,13 @@ import de.sovity.edc.utils.catalog.model.DspCatalog;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.val;
 import org.eclipse.edc.connector.spi.catalog.CatalogService;
 import org.eclipse.edc.spi.query.QuerySpec;
 
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 
 @RequiredArgsConstructor
 public class DspCatalogService {
@@ -41,10 +44,14 @@ public class DspCatalogService {
     }
 
     @SneakyThrows
-    private byte[] fetchDcatRaw(String connectorEndpoint) {
-        return catalogService
-                .requestCatalog(connectorEndpoint, "dataspace-protocol-http", QuerySpec.max())
-                .get()
-                .orElseThrow(DspCatalogServiceException::ofFailure);
+    private byte[] fetchDcatRaw(String connectorEndpoint) throws DspCatalogServiceException {
+        val future = catalogService.requestCatalog(connectorEndpoint, "dataspace-protocol-http", QuerySpec.max());
+        try {
+            return future
+                    .get()
+                    .orElseThrow(DspCatalogServiceException::ofFailure);
+        } catch (CancellationException | ExecutionException | InterruptedException e) {
+            throw new DspCatalogServiceException(e);
+        }
     }
 }
