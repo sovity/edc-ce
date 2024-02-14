@@ -90,7 +90,7 @@ public class AssetBuilder {
         createRequest.setReferenceFileUrls(editRequest.getReferenceFileUrls());
         createRequest.setReferenceFilesDescription(editRequest.getReferenceFilesDescription());
         createRequest.setConditionsForUse(editRequest.getConditionsForUse());
-        createRequest.setDataUpdateFrequency(editRequest.getDataUpdateFrequency();
+        createRequest.setDataUpdateFrequency(editRequest.getDataUpdateFrequency());
         createRequest.setTemporalCoverageFrom(editRequest.getTemporalCoverageFrom());
         createRequest.setTemporalCoverageToInclusive(editRequest.getTemporalCoverageToInclusive());
 
