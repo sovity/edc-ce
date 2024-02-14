@@ -18,14 +18,30 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
-- Integrate new MDS fields into asset creation and asset detail dialog
+#### Patch
+
+#### Deployment Migration Notes
+
+## [v2.4.0] 2024-02-14
+
+### Overview
+
+MDS feature and bugfix release for Connector UI and Broker UI
+
+### Detailed Changes
+
+#### Minor
+
+- Added new MDS fields to assets
 
 #### Patch
 
-- Fix auth proxy issues by disabling caching for non-static files
-- Make fonts GDPR compliant
+- Ensured GDPR compliance of Fonts usage
+- Fixed auth proxy issues
 
 #### Deployment Migration Notes
+
+_No special deployment migration steps required_
 
 ## [v2.3.1] 2024-01-18
 
