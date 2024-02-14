@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -72,6 +73,17 @@ class AssetMapperTest {
         assertThat(uiAsset.getDataModel()).isEqualTo("my-data-model-001");
         assertThat(uiAsset.getGeoReferenceMethod()).isEqualTo("my-geo-reference-method");
         assertThat(uiAsset.getTransportMode()).isEqualTo("my-geo-reference-method");
+        assertThat(uiAsset.getSovereignLegalName()).isEqualTo("my-sovereign");
+        assertThat(uiAsset.getGeoLocation()).isEqualTo("my-geolocation");
+        assertThat(uiAsset.getNutsLocation()).isEqualTo(Arrays.asList("my-nuts-location1", "my-nuts-location2"));
+        assertThat(uiAsset.getDataSampleUrls()).isEqualTo(Arrays.asList("my-data-sample-urls1", "my-data-sample-urls2"));
+        assertThat(uiAsset.getReferenceFileUrls()).isEqualTo(Arrays.asList("my-reference-files1", "my-reference-files2"));
+        assertThat(uiAsset.getReferenceFilesDescription()).isEqualTo("my-additional-description");
+        assertThat(uiAsset.getConditionsForUse()).isEqualTo("my-conditions-for-use");
+        assertThat(uiAsset.getDataUpdateFrequency()).isEqualTo("my-data-update-frequency");
+        assertThat(uiAsset.getTemporalCoverageFrom()).isEqualTo("2007-12-03");
+        assertThat(uiAsset.getTemporalCoverageToInclusive()).isEqualTo("2024-01-22");
+
         assertThat(uiAsset.getAssetJsonLd()).contains("\"%s\"".formatted(Prop.Edc.ID));
         assertThat(uiAsset.getAdditionalProperties()).containsExactlyEntriesOf(Map.of(
                 "http://unknown/some-custom-string", "some-string-value"));
