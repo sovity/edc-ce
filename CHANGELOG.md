@@ -32,6 +32,7 @@ MDS bugfix and feature release
 https://github.com/sovity/edc-ui/releases/tag/v2.4.0
 
 #### Minor Changes
+
 - Assets now have new MDS fields
 
 #### Patch Changes
