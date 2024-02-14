@@ -14,16 +14,45 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Major Changes
 
 #### Minor Changes
-- Add new MDS fields and migrate existing MDS asset keys to mobilityDCAT-AP
 
 #### Patch Changes
-- Docs: Enhanced starting a Http-Pull over the EDC-Ui documentation
-- Fix Connector-Restricted-Usage Policy
-- Fix Connection-Pool issues by switching to the Tractus-X Connection Pool.
 
 ### Deployment Migration Notes
 
 #### Compatible Versions
+
+## [7.2.0] - 2024-02-14
+
+### Overview
+
+MDS bugfix and feature release
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v2.4.0
+
+#### Minor Changes
+
+- Assets now have new MDS fields
+
+#### Patch Changes
+
+- Docs: Improved documentation of HTTP pull (edc-ui)
+- Docs: Add security recommendations for recent API key vulnerabilities
+- Fixed connector restricted usage policy
+- Fixed connection pool issues by switching to Tractus-X connection pool
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:7.2.0`
+    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.2.0`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.2.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.4.0`
 
 ## [7.1.1] - 2024-01-18
 
