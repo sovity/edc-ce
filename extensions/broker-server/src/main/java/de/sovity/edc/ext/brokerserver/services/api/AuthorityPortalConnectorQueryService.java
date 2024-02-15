@@ -47,6 +47,23 @@ public class AuthorityPortalConnectorQueryService {
         Integer dataOfferCount;
     }
 
+    @Data
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class ConnectorDetailsRs {
+        String connectorEndpoint;
+        String participantId;
+        ConnectorOnlineStatus onlineStatus;
+        OffsetDateTime offlineSinceOrLastUpdatedAt;
+        List<DataOfferRs> dataOffers;
+    }
+
+    @Data
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class DataOfferRs {
+        String dataOfferId;
+        String dataOfferName;
+    }
+
     @NotNull
     public List<ConnectorMetadataRs> getConnectorMetadata(DSLContext dsl, List<String> endpoints) {
         var c = Tables.CONNECTOR;
@@ -71,5 +88,36 @@ public class AuthorityPortalConnectorQueryService {
             .from(d)
             .where(d.CONNECTOR_ENDPOINT.eq(connectorEndpoint))
             .asField();
+    }
+
+    @NotNull
+    public List<DataOfferRs> getDataOffers(DSLContext dsl, String connectorEndpoint) {
+        var d = Tables.DATA_OFFER;
+
+        return dsl.select(
+                d.ASSET_TITLE.as("dataOfferName"),
+                d.ASSET_ID.as("dataOfferId")
+            )
+            .from(d)
+            .where(d.CONNECTOR_ENDPOINT.eq(connectorEndpoint))
+            .fetchInto(DataOfferRs.class);
+    }
+
+
+    @NotNull
+    public List<ConnectorDetailsRs> getConnectorsDataOffers(DSLContext dsl, List<String> endpoints) {
+        var c = Tables.CONNECTOR;
+
+        var connectors = dsl.select(
+                c.ENDPOINT.as("connectorEndpoint"),
+                c.PARTICIPANT_ID.as("participantId"),
+                c.ONLINE_STATUS.as("onlineStatus"),
+                CatalogQueryFields.offlineSinceOrLastUpdatedAt(c).as("offlineSinceOrLastUpdatedAt")
+            )
+            .from(c)
+            .where(PostgresqlUtils.in(c.ENDPOINT, endpoints))
+            .fetchInto(ConnectorDetailsRs.class);
+        connectors.forEach(connector -> connector.dataOffers = getDataOffers(dsl, connector.connectorEndpoint));
+        return connectors;
     }
 }
