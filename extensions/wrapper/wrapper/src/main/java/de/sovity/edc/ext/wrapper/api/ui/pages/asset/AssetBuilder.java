@@ -83,6 +83,17 @@ public class AssetBuilder {
         createRequest.setTitle(editRequest.getTitle());
         createRequest.setTransportMode(editRequest.getTransportMode());
         createRequest.setVersion(editRequest.getVersion());
+        createRequest.setSovereignLegalName(editRequest.getSovereignLegalName());
+        createRequest.setGeoLocation(editRequest.getGeoLocation());
+        createRequest.setNutsLocation(editRequest.getNutsLocation());
+        createRequest.setDataSampleUrls(editRequest.getDataSampleUrls());
+        createRequest.setReferenceFileUrls(editRequest.getReferenceFileUrls());
+        createRequest.setReferenceFilesDescription(editRequest.getReferenceFilesDescription());
+        createRequest.setConditionsForUse(editRequest.getConditionsForUse());
+        createRequest.setDataUpdateFrequency(editRequest.getDataUpdateFrequency());
+        createRequest.setTemporalCoverageFrom(editRequest.getTemporalCoverageFrom());
+        createRequest.setTemporalCoverageToInclusive(editRequest.getTemporalCoverageToInclusive());
+
         return createRequest;
     }
 }
