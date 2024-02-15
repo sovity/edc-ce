@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.brokerserver.api;
 
+import de.sovity.edc.ext.brokerserver.api.model.AuthorityPortalConnectorDataOfferInfo;
 import de.sovity.edc.ext.brokerserver.api.model.AuthorityPortalConnectorInfo;
 import de.sovity.edc.ext.brokerserver.api.model.AuthorityPortalOrganizationMetadataRequest;
 import de.sovity.edc.ext.brokerserver.api.model.CatalogPageQuery;
@@ -103,4 +104,11 @@ public interface BrokerServerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Update organization metadata. Organizations not contained in the payload will be deleted.")
     void setOrganizationMetadata(AuthorityPortalOrganizationMetadataRequest organizationMetadataRequest, @QueryParam("adminApiKey") String adminApiKey);
+
+    @POST
+    @Path("authority-portal-api/data-offer-info")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Provides information about Data Offers for given Connectors.")
+    List<AuthorityPortalConnectorDataOfferInfo> getConnectorDataOffers(List<String> endpoints, @QueryParam("adminApiKey") String adminApiKey);
 }

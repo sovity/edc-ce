@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.brokerserver;
 
 import de.sovity.edc.ext.brokerserver.api.BrokerServerResource;
+import de.sovity.edc.ext.brokerserver.api.model.AuthorityPortalConnectorDataOfferInfo;
 import de.sovity.edc.ext.brokerserver.api.model.AuthorityPortalConnectorInfo;
 import de.sovity.edc.ext.brokerserver.api.model.AuthorityPortalOrganizationMetadataRequest;
 import de.sovity.edc.ext.brokerserver.api.model.CatalogPageQuery;
@@ -27,6 +28,7 @@ import de.sovity.edc.ext.brokerserver.api.model.DataOfferCountResult;
 import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.DataOfferDetailPageResult;
 import de.sovity.edc.ext.brokerserver.db.DslContextFactory;
+import de.sovity.edc.ext.brokerserver.services.api.AuthorityPortalConnectorDataOfferApiService;
 import de.sovity.edc.ext.brokerserver.services.api.AuthorityPortalConnectorMetadataApiService;
 import de.sovity.edc.ext.brokerserver.services.api.AuthorityPortalOrganizationMetadataApiService;
 import de.sovity.edc.ext.brokerserver.services.api.CatalogApiService;
@@ -53,6 +55,7 @@ public class BrokerServerResourceImpl implements BrokerServerResource {
     private final DataOfferDetailApiService dataOfferDetailApiService;
     private final AdminApiKeyValidator adminApiKeyValidator;
     private final AuthorityPortalConnectorMetadataApiService authorityPortalConnectorMetadataApiService;
+    private final AuthorityPortalConnectorDataOfferApiService authorityPortalConnectorDataOffersApiService;
     private final AuthorityPortalOrganizationMetadataApiService authorityPortalOrganizationMetadataApiService;
 
     @Override
@@ -102,5 +105,11 @@ public class BrokerServerResourceImpl implements BrokerServerResource {
     public void setOrganizationMetadata(AuthorityPortalOrganizationMetadataRequest organizationMetadataRequest, String adminApiKey) {
         adminApiKeyValidator.validateAdminApiKey(adminApiKey);
         dslContextFactory.transaction(dsl -> authorityPortalOrganizationMetadataApiService.setOrganizationMetadata(dsl, organizationMetadataRequest.getOrganizations()));
+    }
+
+    @Override
+    public List<AuthorityPortalConnectorDataOfferInfo> getConnectorDataOffers(List<String> endpoints, String adminApiKey) {
+        adminApiKeyValidator.validateAdminApiKey(adminApiKey);
+        return dslContextFactory.transactionResult(dsl -> authorityPortalConnectorDataOffersApiService.getConnectorDataOffersByEndpoints(dsl, endpoints));
     }
 }

@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Major
 
 #### Minor
+- Authority Portal API: Added endpoint for receiving all data offers of registered connectors
+
 
 #### Patch
 
@@ -30,6 +32,7 @@ MDS bugfix and feature release
 ### Detailed Changes
 
 #### Minor
+
 - Assets now have new MDS fields
 
 ### Deployment Migration Notes

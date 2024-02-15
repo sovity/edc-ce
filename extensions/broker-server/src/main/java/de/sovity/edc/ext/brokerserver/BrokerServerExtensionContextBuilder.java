@@ -38,6 +38,7 @@ import de.sovity.edc.ext.brokerserver.services.ConnectorCreator;
 import de.sovity.edc.ext.brokerserver.services.ConnectorKiller;
 import de.sovity.edc.ext.brokerserver.services.KnownConnectorsInitializer;
 import de.sovity.edc.ext.brokerserver.services.OfflineConnectorKiller;
+import de.sovity.edc.ext.brokerserver.services.api.AuthorityPortalConnectorDataOfferApiService;
 import de.sovity.edc.ext.brokerserver.services.api.AuthorityPortalConnectorMetadataApiService;
 import de.sovity.edc.ext.brokerserver.services.api.AuthorityPortalConnectorQueryService;
 import de.sovity.edc.ext.brokerserver.services.api.AuthorityPortalOrganizationMetadataApiService;
@@ -299,6 +300,7 @@ public class BrokerServerExtensionContextBuilder {
         var connectorDetailApiService = new ConnectorDetailApiService(connectorDetailQueryService, connectorOnlineStatusMapper);
         var connectorListApiService = new ConnectorListApiService(connectorListQueryService, connectorOnlineStatusMapper, paginationMetadataUtils);
         var authorityPortalOrganizationMetadataApiService = new AuthorityPortalOrganizationMetadataApiService();
+        var authorityPortalDataOfferApiService = new AuthorityPortalConnectorDataOfferApiService(connectorQueryService, connectorOnlineStatusMapper);
         var brokerServerResource = new BrokerServerResourceImpl(
                 dslContextFactory,
                 connectorApiService,
@@ -308,6 +310,7 @@ public class BrokerServerExtensionContextBuilder {
                 dataOfferDetailApiService,
                 adminApiKeyValidator,
                 dataOfferCountApiService,
+                authorityPortalDataOfferApiService,
                 authorityPortalOrganizationMetadataApiService
         );
 
