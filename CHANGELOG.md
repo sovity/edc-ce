@@ -14,15 +14,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Major
 
 #### Minor
-- Add new MDS fields and migrate existing MDS asset keys to mobilityDCAT-AP 
+
+#### Patch
 
 ### Deployment Migration Notes
 
 #### Compatible Versions
 
-- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:{{ CE_VERSION }}`
-- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI_VERSION }}`
-- Sovity EDC CE: {{ CE Release Link }}
+## [v3.3.0] - 2024-02-14
+
+### Overview
+
+MDS bugfix and feature release
+
+### Detailed Changes
+
+#### Minor
+- Assets now have new MDS fields
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:3.3.0`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:2.4.0`
+- Sovity EDC CE: [`7.2.0`](https://github.com/sovity/edc-extensions/releases/tag/v7.2.0)
 
 ## [v3.2.0] - 2024-01-18
 
