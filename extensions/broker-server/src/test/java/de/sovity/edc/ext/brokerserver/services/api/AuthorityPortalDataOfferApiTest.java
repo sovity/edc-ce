@@ -39,7 +39,9 @@ import java.util.Map;
 
 import static de.sovity.edc.ext.brokerserver.TestAsset.getAssetJsonLd;
 import static de.sovity.edc.ext.brokerserver.TestAsset.setDataOfferAssetMetadata;
-import static de.sovity.edc.ext.brokerserver.TestUtils.*;
+import static de.sovity.edc.ext.brokerserver.TestUtils.ADMIN_API_KEY;
+import static de.sovity.edc.ext.brokerserver.TestUtils.brokerServerClient;
+import static de.sovity.edc.ext.brokerserver.TestUtils.createConfiguration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 

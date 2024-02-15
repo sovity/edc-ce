@@ -32,6 +32,7 @@ MDS bugfix and feature release
 ### Detailed Changes
 
 #### Minor
+
 - Assets now have new MDS fields
 
 ### Deployment Migration Notes
