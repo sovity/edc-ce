@@ -16,6 +16,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Minor Changes
 
 #### Patch Changes
+- DspCatalogService: Contract Offer IDs are now stable
 
 ### Deployment Migration Notes
 
