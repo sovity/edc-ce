@@ -37,8 +37,8 @@ dependencies {
     api("org.jooq:jooq:3.18.7")
     api("com.github.t9t.jooq:jooq-postgresql-json:4.0.0")
 
-    jooqGenerator("org.postgresql:postgresql:42.6.0")
-    flywayMigration("org.postgresql:postgresql:42.6.0")
+    jooqGenerator("org.postgresql:postgresql:42.7.2")
+    flywayMigration("org.postgresql:postgresql:42.7.2")
     implementation("com.zaxxer:HikariCP:5.0.1")
 
     annotationProcessor("org.projectlombok:lombok:1.18.30")
