@@ -9,31 +9,25 @@ assignees: ""
 # Feature Request
 
 ## Description
-
-_A clear and concise description of what the customer wants to happen._
-
+<!-- A clear and concise description of what the customer wants to happen. Example below. -->
 -   As a USER who PRECONDITIONS, I want to DO_THING, so I can ACCOMPLISH_GOAL.
 
 ## Which Areas Would Be Affected?
-
-_e.g., DPF, CI, build, transfer, etc._
+<!-- e.g., DPF, CI, build, transfer, etc. -->
 
 ## Why Is the Feature Desired?
-
-_Are there any requirements?_
+<!-- Are there any requirements? -->
 
 ## How does this tie into our current product?
-
-_Describe whether this request is related to an existing workflow, feature, or otherwise something in the product today. Or, does this open us up to new markets and innovative ideas?_
+<!-- Describe whether this request is related to an existing workflow, feature, or otherwise something in the product today. Or, does this open us up to new markets and innovative ideas? -->
 
 ## Stakeholders
-
-_Add more on who asked for this, i.e. company, person, how much they pay us, what their tier is, are they a strategic account, etc. Who needs to be kept up-to-date about this feature?_
+<!-- Add more on who asked for this, i.e. company, person, how much they pay us, what their tier is, are they a strategic account, etc. Who needs to be kept up-to-date about this feature? -->
 
 ## Solution Proposal and Work Breakdown
+<!-- If you already know what needs to be done, please add a tasklist. -->
 
-_If possible, provide a (brief!) solution proposal._
-
--   [ ] Step 1
--   [ ] Step 2
--   ...
+```[tasklist]
+- [ ] Fix the GitHub Projects Labels, Sprint and other Metadata
+- [ ] Refine a Solution Proposal / Work Breakdown
+```
