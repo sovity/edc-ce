@@ -5,6 +5,7 @@ on:
 
 jobs:
   add_pullrequest_to_project:
+    if: github.actor != 'dependabot' && github.actor != 'sovitybot' # ignore PRs from bots
     name: add_pullrequest_to_project
     runs-on: ubuntu-latest
     steps:
