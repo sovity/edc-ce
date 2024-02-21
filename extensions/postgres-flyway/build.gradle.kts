@@ -20,7 +20,6 @@ dependencies {
 
     // Adds Database-Related EDC-Extensions (EDC-SQL-Stores, JDBC-Driver, Pool and Transactions)
     implementation("${edcGroup}:control-plane-sql:${edcVersion}")
-    implementation("${edcGroup}:data-plane-instance-store-sql:${edcVersion}")
     implementation("${tractusGroup}:sql-pool:${tractusVersion}")
     implementation("${edcGroup}:transaction-local:${edcVersion}")
 

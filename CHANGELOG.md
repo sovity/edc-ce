@@ -17,6 +17,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 - DspCatalogService: Contract Offer IDs are now stable
+- Fixed some requests' timeouts by removing the data-plane-instance-store-sql Extension
 
 ### Deployment Migration Notes
 
