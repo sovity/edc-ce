@@ -12,7 +12,7 @@ assignees: ""
 
 Feel free to edit this release checklist in-progress depending on what tasks need to be done:
 
-- [ ] Release [edc-ui](https://github.com/sovity/edc-ui), this might require several steps: _Link to EDC UI Release here_
+- [ ] Release [edc-ui](https://github.com/sovity/edc-ui), this might require several steps, first of which is to [create a new `Release` issue](https://github.com/sovity/edc-ui/issues/new/choose)
 - [ ] Decide a release version depending on major/minor/patch changes in the CHANGELOG.md.
 - [ ] Update this issue's title to the new version
 - [ ] `release-prep` PR:
@@ -48,7 +48,8 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
       the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
     - [ ] Set the UI release version for `EDC_UI_IMAGE` of
       the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
-    - [ ] If the core EDC version changed, update the `openapi.yaml`.
+    - [ ] If the Eclipse EDC version changed, update
+      the [eclipse-edc-management-api.yaml file](https://github.com/sovity/edc-extensions/blob/main/docs/eclipse-edc-management-api.yaml).
     - [ ] Update the Postman Collection if required.
     - [ ] Merge the `release-prep` PR.
 - [ ] Wait for the main branch to be green.
@@ -59,6 +60,6 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
 - [ ] Check if the pipeline built the release versions in the Actions-Section (or you won't see it).
 - [ ] Revisit the changed list of tasks and compare it
   with [.github/ISSUE_TEMPLATE/release.md](https://github.com/sovity/edc-extensions/blob/main/.github/ISSUE_TEMPLATE/release.md).
-  Propose changes where it
-  makes sense.
+  Propose changes where it makes sense.
 - [ ] Close this issue.
+- [ ] Inform the Product Manager of this new release
