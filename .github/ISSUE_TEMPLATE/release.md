@@ -12,7 +12,7 @@ assignees: ""
 
 Feel free to edit this release checklist in-progress depending on what tasks need to be done:
 
-- [ ] Release [edc-ui](https://github.com/sovity/edc-ui), this might require [several steps](https://github.com/sovity/edc-ui/blob/main/.github/ISSUE_TEMPLATE/release.md)
+- [ ] Release [edc-ui](https://github.com/sovity/edc-ui), this might require several steps, first of which is to [create a new `Release` issue](https://github.com/sovity/edc-ui/issues/new/choose)
 - [ ] Decide a release version depending on major/minor/patch changes in the CHANGELOG.md.
 - [ ] Update this issue's title to the new version
 - [ ] `release-prep` PR:
