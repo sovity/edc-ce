@@ -1,39 +1,33 @@
 ---
 name: Feature Request
-about: Help us improve the sovity CE EDC Connector product experience with new features suggestions
+about: Help us with new features
 title: ""
-labels: ["kind/enhancement", "task/analyze", "status/blocked/needs-product", "scope/ce"]
-assignees: ["AbdullahMuk"]
+labels: "kind/enhancement"
+assignees: ""
 ---
 
 # Feature Request
 
 ## Description
-
-_A clear and concise description of what the customer wants to happen._
-
+<!-- A clear and concise description of what the customer wants to happen. Example below. -->
 -   As a USER who PRECONDITIONS, I want to DO_THING, so I can ACCOMPLISH_GOAL.
 
 ## Which Areas Would Be Affected?
-
-_e.g., DPF, CI, build, transfer, etc._
+<!-- e.g., DPF, CI, build, transfer, etc. -->
 
 ## Why Is the Feature Desired?
+<!-- Are there any requirements? -->
 
-_What problems does that user face that existing functionalities do solve?_
+## How does this tie into our current product?
+<!-- Describe whether this request is related to an existing workflow, feature, or otherwise something in the product today. Or, does this open us up to new markets and innovative ideas? -->
 
-## How does this tie into the current product?
+## Stakeholders
+<!-- Add more on who asked for this, i.e. company, person, how much they pay us, what their tier is, are they a strategic account, etc. Who needs to be kept up-to-date about this feature? -->
 
-_Describe whether this request is related to an existing workflow, feature, or otherwise something in the product today. Or, does this open us up to new innovative ideas?_
-
-## (For sovity Team to complete) Stakeholders
-
-_Add more on who asked for this, i.e. company, person, how much they pay us, what their tier is, are they a strategic account, etc. Who needs to be kept up-to-date about this feature?_
-
-## (For sovity Team to complete) Solution Proposal and Work Breakdown
+## Solution Proposal and Work Breakdown
+<!-- If you already know what needs to be done, please add a tasklist. -->
 
 ```[tasklist]
 - [ ] Fix the GitHub Projects Labels, Sprint and other Metadata
-- [ ] Refine further action items for this feature request
+- [ ] Refine a Solution Proposal / Work Breakdown
 ```
-
