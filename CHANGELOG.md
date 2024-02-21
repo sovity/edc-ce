@@ -17,6 +17,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 - DspCatalogService: Contract Offer IDs are now stable
+- Removed the DataPlaneInstanceStatementsProviderExtension as it is not necessary here and causes crashes.
 
 ### Deployment Migration Notes
 
