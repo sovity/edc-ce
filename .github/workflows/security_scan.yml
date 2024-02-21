@@ -1,8 +1,8 @@
 name: Trivy Security Scan
 
 on:
-  pull_request:
-    branches: ["main"]
+  push:
+  workflow_dispatch:
 
 jobs:
   security_scan:
@@ -11,20 +11,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Run static analysis
+      - name: Run static analysis (rootfs)
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: "fs"
-          scanners: "vuln,config"
+          scan-type: "rootfs"
+          scanners: "vuln,misconfig"
           ignore-unfixed: true
-          format: "sarif"
-          output: "trivy-results.sarif"
+          format: 'table'
           severity: "CRITICAL,HIGH"
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        continue-on-error: true
+      - name: Run static analysis (repo)
+        uses: aquasecurity/trivy-action@master
         with:
-          sarif_file: "trivy-results.sarif"
-          category: "code"
+          scan-type: "repo"
+          scanners: "vuln,misconfig"
+          ignore-unfixed: true
+          format: 'table'
+          severity: "CRITICAL,HIGH"
