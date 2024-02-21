@@ -59,9 +59,9 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
   - [ ] Test the release `docker-compose.yaml` with `EDC_IMAGE=ghcr.io/sovity/edc-dev:latest`.
   - [ ] Ensure with a `docker ps -a` that all containers are healthy, and not `healthy: starting` or `healthy: unhealthy`.
 - [ ] Test the postman collection against that running docker-compose.
-- [ ] Tag the release
+- [ ] [Create a release](https://github.com/sovity/edc-extensions/releases/new)
   - [ ] In `Choose the tag`, type your new release version in the format `vx.y.z` (for instance `v1.2.3`) then click `+Create new tag vx.y.z on release`.
-- [ ] [Create a release](https://github.com/sovity/edc-extensions/releases/new) and re-use the changelog section as release description, and the version as title.
+  - [ ] Re-use the changelog section as release description, and the version as title.
 - [ ] Check if the pipeline built the release versions in the Actions-Section (or you won't see it).
 - [ ] Revisit the changed list of tasks and compare it
   with [.github/ISSUE_TEMPLATE/release.md](https://github.com/sovity/edc-extensions/blob/main/.github/ISSUE_TEMPLATE/release.md).
