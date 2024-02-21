@@ -65,8 +65,11 @@ public class AssetBuilder {
         var createRequest = new UiAssetCreateRequest();
         createRequest.setId(asset.getId());
         createRequest.setDataAddressProperties(dataAddress);
+        // TODO: rm
         createRequest.setAdditionalJsonProperties(editRequest.getAdditionalJsonProperties());
+        // TODO: rm
         createRequest.setAdditionalProperties(editRequest.getAdditionalProperties());
+        createRequest.setCustomJsonAsString(editRequest.getCustomJsonAsString());
         createRequest.setDataCategory(editRequest.getDataCategory());
         createRequest.setDataModel(editRequest.getDataModel());
         createRequest.setDataSubcategory(editRequest.getDataSubcategory());
@@ -83,6 +86,7 @@ public class AssetBuilder {
         createRequest.setTitle(editRequest.getTitle());
         createRequest.setTransportMode(editRequest.getTransportMode());
         createRequest.setVersion(editRequest.getVersion());
+        // FIXME: alphabetical ordering
         createRequest.setSovereignLegalName(editRequest.getSovereignLegalName());
         createRequest.setGeoLocation(editRequest.getGeoLocation());
         createRequest.setNutsLocation(editRequest.getNutsLocation());

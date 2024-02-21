@@ -26,6 +26,7 @@ import jakarta.json.JsonString;
 import jakarta.json.JsonValue;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -102,6 +103,9 @@ public class UiAssetMapper {
 
         // Additional / Remaining Properties
         // TODO: diff nested objects
+        // TODO: the remaining JSON LD props
+        //  Let users see the JsonLd that was not handled by the UiAsset class.
+        //  Put those properties in customJsonLd.
         JsonObject remaining = removeHandledProperties(properties, List.of(
                 // Implicitly handled / should be skipped if found
                 Prop.ID,
@@ -142,13 +146,25 @@ public class UiAssetMapper {
                 HttpDatasourceHints.PATH,
                 HttpDatasourceHints.QUERY_PARAMS
         ));
+
+        // TODO this must go away
         uiAsset.setAdditionalProperties(getStringProperties(remaining));
+        // TODO this must go away
         uiAsset.setAdditionalJsonProperties(getJsonProperties(remaining));
 
         // Private Properties
+        // TODO this must go away
         var privateProperties = JsonLdUtils.tryCompact(getPrivateProperties(assetJsonLd));
         uiAsset.setPrivateProperties(getStringProperties(privateProperties));
         uiAsset.setPrivateJsonProperties(getJsonProperties(privateProperties));
+
+        // TODO must extract the string properties from CUSTOM_JSON and puts them in
+        //  de.sovity.edc.ext.wrapper.api.common.model.UiAsset.customJson
+
+        // TODO: do I support only object or arbitrary json values?
+        // TODO add postman example for this
+        val customJsonAsString = JsonLdUtils.string(remaining, Prop.SovityDcatExt.CUSTOM_JSON);
+        uiAsset.setCustomJsonAsString(customJsonAsString);
 
         return uiAsset;
     }
@@ -213,13 +229,14 @@ public class UiAssetMapper {
                 .add(Prop.Foaf.NAME, organizationName));
 
         var dataAddress = uiAssetCreateRequest.getDataAddressProperties();
-        if (dataAddress.get(Prop.Edc.TYPE).equals("HttpData")) {
+        if (dataAddress != null && dataAddress.get(Prop.Edc.TYPE).equals("HttpData")) {
             addNonNull(properties, HttpDatasourceHints.BODY, trueIfTrue(dataAddress, Prop.Edc.PROXY_BODY));
             addNonNull(properties, HttpDatasourceHints.PATH, trueIfTrue(dataAddress, Prop.Edc.PROXY_PATH));
             addNonNull(properties, HttpDatasourceHints.QUERY_PARAMS, trueIfTrue(dataAddress, Prop.Edc.PROXY_QUERY_PARAMS));
             addNonNull(properties, HttpDatasourceHints.METHOD, trueIfTrue(dataAddress, Prop.Edc.PROXY_METHOD));
         }
 
+        // TODO: these blocks must be replaced by extracting the sovity:customJson strings props
         var additionalProperties = uiAssetCreateRequest.getAdditionalProperties();
         if (additionalProperties != null) {
             additionalProperties.forEach((k, v) -> addNonNull(properties, k, v));
@@ -229,6 +246,10 @@ public class UiAssetMapper {
         if (additionalJsonProperties != null) {
             additionalJsonProperties.forEach((k, v) -> addNonNullJsonValue(properties, k, v));
         }
+
+        // TODO: merge customJsonLd with the customProperties here
+        
+        addNonNull(properties, Prop.SovityDcatExt.CUSTOM_JSON, uiAssetCreateRequest.getCustomJsonAsString());
 
         return properties;
     }

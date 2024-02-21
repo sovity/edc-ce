@@ -138,18 +138,28 @@ public class UiAsset {
     @Schema(description = "Temporal coverage end date (inclusive)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private LocalDate temporalCoverageToInclusive;
 
+    // TODO: rm
     @Schema(description = "Unhandled Asset Properties (that were strings)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> additionalProperties;
 
+    // TODO: rm
     @Schema(description = "Unhandled Asset Properties (that were not strings but other JSON values)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> additionalJsonProperties;
 
+    // TODO: rm
     @Schema(description = "Private Asset Properties (that were strings)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> privateProperties;
 
+    // TODO: rm
     @Schema(description = "Private Asset Properties (that were not strings but other JSON values)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> privateJsonProperties;
 
     @Schema(description = "Contains the entire asset in the JSON-LD format", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String assetJsonLd;
+
+    @Schema(description = "Contains custom properties as serialized JSON object." +
+            "This string must represent a JSON _object_ (no array, scalar nor null).",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    // TODO: try to make this a map so at least we can easily access the properties
+    private String customJsonAsString;
 }

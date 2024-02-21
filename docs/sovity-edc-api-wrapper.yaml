@@ -586,6 +586,10 @@ components:
               JSON values)
           description: Private Asset Properties (that are not strings but other JSON
             values)
+        customJsonAsString:
+          type: string
+          description: "Contains custom properties as serialized JSON object.This\
+            \ string must represent a JSON _object_ (no array, scalar nor null)."
       description: Type-Safe OpenAPI generator friendly Asset Create DTO that supports
         an opinionated subset of the original EDC Asset Entity.
     IdResponseDto:
@@ -867,6 +871,11 @@ components:
               JSON values)
           description: Private Asset Properties (that are not strings but other JSON
             values)
+        customJsonAsString:
+          type: string
+          description: "Contains all the custom properties in the JSON format serialized\
+            \ in a JSON string.This string must represent a JSON object.The types\
+            \ array, number, string, null are not supported."
       description: Data for editing an asset.
     AssetPage:
       required:
@@ -1041,6 +1050,10 @@ components:
         assetJsonLd:
           type: string
           description: Contains the entire asset in the JSON-LD format
+        customJsonAsString:
+          type: string
+          description: "Contains custom properties as serialized JSON object.This\
+            \ string must represent a JSON _object_ (no array, scalar nor null)."
       description: Type-Safe Asset Metadata as needed by our UI
     UiContractOffer:
       required:
