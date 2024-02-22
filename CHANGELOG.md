@@ -16,8 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Minor
 - Authority Portal API: Added endpoint for receiving all data offers of registered connectors
 
-
 #### Patch
+- Updated dependency version to have stable Policy (and Contract) identifiers.
 
 ### Deployment Migration Notes
 
