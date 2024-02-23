@@ -50,9 +50,9 @@ public class AssetApiService {
 
     @NotNull
     public IdResponseDto createAsset(UiAssetCreateRequest request) {
-        var asset = assetBuilder.fromCreateRequest(request);
-        asset = assetService.create(asset).orElseThrow(ServiceException::new);
-        return new IdResponseDto(asset.getId());
+        val asset = assetBuilder.fromCreateRequest(request);
+        val createdAsset = assetService.create(asset).orElseThrow(ServiceException::new);
+        return new IdResponseDto(createdAsset.getId());
     }
 
     public IdResponseDto editAsset(String assetId, UiAssetEditMetadataRequest request) {

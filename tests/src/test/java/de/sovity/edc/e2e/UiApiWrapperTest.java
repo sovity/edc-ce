@@ -64,6 +64,7 @@ import static de.sovity.edc.client.gen.model.ContractAgreementDirection.PROVIDIN
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
@@ -165,11 +166,18 @@ class UiApiWrapperTest {
                         Prop.Edc.METHOD, "GET",
                         Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
                 ))
-                .privateProperties(Map.of("http://unknown/a-private", "x-private"))
-                .privateJsonProperties(Map.of("http://unknown/b-private", "{\"http://unknown/c-private\":\"y-private\"}"))
-                .customJsonAsString("{\"test\":\"value\"}")
-                .customJsonLdAsString("{\"https://a/b#c\":\"value\"}")
-                // TODO: json ld private
+                .customJsonAsString("""
+                        {"test": "value"}
+                        """)
+                .customJsonLdAsString("""
+                        {"https://public/some#key": "public LD value"}
+                        """)
+                .privateCustomJsonAsString("""
+                        {"private_test": "private value"}
+                        """)
+                .privateCustomJsonLdAsString("""
+                        {"https://private/some#key": "private LD value"}
+                        """)
                 .build()).getId();
         assertThat(assetId).isEqualTo("asset-1");
 
@@ -238,13 +246,14 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyPath()).isFalse();
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyQueryParams()).isFalse();
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyBody()).isFalse();
-        // TODO: rm and provide equivalent in customJsonLd
-//        assertThat(dataOffer.getAsset().getPrivateProperties()).isNullOrEmpty();
-//        assertThat(dataOffer.getAsset().getPrivateJsonProperties()).isNullOrEmpty();
-        assertThat(dataOffer.getAsset().getCustomJsonAsString()).isEqualTo("{\"test\":\"value\"}");
-        assertThat(dataOffer.getAsset().getCustomJsonLdAsString()).isEqualTo("{\"https://a/b#c\":\"value\"}");
-        // TODO: rm and provide equivalent in customJsonLd
-        // TODO: cehck that the private property is empty
+        assertThatJson(dataOffer.getAsset().getCustomJsonAsString()).isEqualTo("""
+                {"test": "value"}
+                """);
+        assertThatJson(dataOffer.getAsset().getCustomJsonLdAsString()).isEqualTo("""
+                {"https://public/some#key":"public LD value"}
+                """);
+        assertThat(dataOffer.getAsset().getPrivateCustomJsonAsString()).isNullOrEmpty();
+        assertThatJson(dataOffer.getAsset().getPrivateCustomJsonLdAsString()).isObject().isEmpty();
 
         // while the data offer on the consumer side won't contain private properties, the asset page on the provider side should
         assertThat(asset.getAssetId()).isEqualTo(assetId);
@@ -252,14 +261,18 @@ class UiApiWrapperTest {
         assertThat(asset.getConnectorEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
         assertThat(asset.getParticipantId()).isEqualTo(providerConnector.getParticipantId());
 
-//        assertThat(asset.getPrivateProperties())
-//                .containsExactlyEntriesOf(Map.of("http://unknown/a-private", "x-private"));
-//        assertThat(asset.getPrivateJsonProperties())
-//                .containsExactlyEntriesOf(Map.of("http://unknown/b-private", "{\"http://unknown/c-private\":\"y-private\"}"));
-        assertThat(asset.getCustomJsonAsString()).isEqualTo("{\"test\":\"value\"}");
-        assertThat(asset.getCustomJsonLdAsString()).isEqualTo("{\"https://a/b#c\":\"value\"}");
-        // TODO: rm and provide equivalent in customJsonLd
-        // TODO: cehck that the private property is present
+        assertThatJson(asset.getCustomJsonAsString()).isEqualTo("""
+                { "test": "value" }
+                """);
+        assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
+                { "https://public/some#key": "public LD value" }
+                """);
+        assertThatJson(asset.getPrivateCustomJsonAsString()).isEqualTo("""
+                { "private_test": "private value" }
+                """);
+        assertThatJson(asset.getPrivateCustomJsonLdAsString()).isEqualTo("""
+                { "https://private/some#key": "private LD value" }
+                """);
 
         // Contract Agreement
         assertThat(providerAgreements).hasSize(1);
@@ -418,8 +431,6 @@ class UiApiWrapperTest {
         val firstAsset = providerClient.uiApi().getContractAgreementPage().getContractAgreements().get(0).getAsset();
         assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");
         assertThat(firstAsset.getCustomJsonAsString()).isEqualTo("{\"edited\":\"new value\"}");
-        assertThat(firstAsset.getCustomJsonLdAsString()).isEqualTo("{\"https://a/b#c\":\"value\"}");
-        // TODO private properties
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
         validateTransferProcessesOk();
         assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo("Good Asset Title");

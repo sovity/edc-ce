@@ -120,5 +120,11 @@ public class UiAssetEditMetadataRequest {
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String customJsonLdAsString;
 
-    // TODO: private json / json ld props
+    @Schema(description = "Same as customJsonAsString but the data will be stored in the private properties.",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String privateCustomJsonAsString;
+
+    @Schema(description = "Same as customJsonLdAsString but the data will be stored in the private properties.",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String privateCustomJsonLdAsString;
 }

@@ -116,13 +116,21 @@ public class UiAssetCreateRequest {
     @Schema(description = "Private Asset Properties (that are not strings but other JSON values)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Map<String, String> privateJsonProperties;
 
-    @Schema(description = "Contains custom properties as serialized JSON object." +
-            "This string must represent a JSON _object_ (no array, scalar nor null).",
+    @Schema(description = "Contains serialized custom properties in the JSON format.",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String customJsonAsString;
 
-    @Schema(description = "Contains custom properties in the JSON LD format serialized in a JSON string." +
-            "Contrary to the customJsonAsString field, this string must represent a JSON LD object and will be affected by compaction and expansion.",
+    @Schema(description = "Contains serialized custom properties in the JSON LD format." +
+            "Contrary to the customJsonAsString field, this string must represent a JSON LD object " +
+            "and will be affected by JSON LD compaction and expansion.",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String customJsonLdAsString;
+
+    @Schema(description = "Same as customJsonAsString but the data will be stored in the private properties.",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String privateCustomJsonAsString;
+
+    @Schema(description = "Same as customJsonLdAsString but the data will be stored in the private properties.",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String privateCustomJsonLdAsString;
 }

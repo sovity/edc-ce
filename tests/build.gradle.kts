@@ -6,6 +6,7 @@ plugins {
 val assertj: String by project
 val edcVersion: String by project
 val edcGroup: String by project
+val jsonUnit: String by project
 val lombokVersion: String by project
 val mockitoVersion: String by project
 
@@ -18,6 +19,7 @@ dependencies {
     testImplementation(project(":extensions:test-backend-controller"))
     testImplementation(project(":utils:test-connector-remote"))
     testImplementation(project(":extensions:wrapper:clients:java-client"))
+    testImplementation("net.javacrumbs.json-unit:json-unit-assertj:${jsonUnit}")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.assertj:assertj-core:${assertj}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")

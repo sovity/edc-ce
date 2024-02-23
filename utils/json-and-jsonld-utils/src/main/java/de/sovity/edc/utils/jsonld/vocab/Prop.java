@@ -107,7 +107,7 @@ public class Prop {
     public class SovityDcatExt {
         public final String CTX = "https://semantic.sovity.io/dcat-ext#";
         public final String CUSTOM_JSON = CTX + "customJson";
-        public final String CUSTOM_JSON_LD = CTX + "customJsonLd";
+        public final String PRIVATE_CUSTOM_JSON = CTX + "privateCustomJson";
 
         @UtilityClass
         public class HttpDatasourceHints {

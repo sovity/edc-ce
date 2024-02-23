@@ -574,14 +574,20 @@ components:
             values)
         customJsonAsString:
           type: string
-          description: "Contains custom properties as serialized JSON object.This\
-            \ string must represent a JSON _object_ (no array, scalar nor null)."
+          description: Contains serialized custom properties in the JSON format.
         customJsonLdAsString:
           type: string
-          description: "Contains custom properties in the JSON LD format serialized\
-            \ in a JSON string.Contrary to the customJsonAsString field, this string\
-            \ must represent a JSON LD object and will be affected by compaction and\
-            \ expansion."
+          description: "Contains serialized custom properties in the JSON LD format.Contrary\
+            \ to the customJsonAsString field, this string must represent a JSON LD\
+            \ object and will be affected by JSON LD compaction and expansion."
+        privateCustomJsonAsString:
+          type: string
+          description: Same as customJsonAsString but the data will be stored in the
+            private properties.
+        privateCustomJsonLdAsString:
+          type: string
+          description: Same as customJsonLdAsString but the data will be stored in
+            the private properties.
       description: Type-Safe OpenAPI generator friendly Asset Create DTO that supports
         an opinionated subset of the original EDC Asset Entity.
     IdResponseDto:
@@ -851,15 +857,20 @@ components:
             values)
         customJsonAsString:
           type: string
-          description: "Contains custom properties in the JSON format serialized in\
-            \ a JSON string.This string must represent a JSON object.The types array,\
-            \ number, string, null are not supported."
+          description: Contains serialized custom properties in the JSON format.
         customJsonLdAsString:
           type: string
-          description: "Contains custom properties in the JSON LD format serialized\
-            \ in a JSON string.Contrary to the customJsonAsString field, this string\
-            \ must represent a JSON LD object and will be affected by compaction and\
-            \ expansion."
+          description: "Contains serialized custom properties in the JSON LD format.Contrary\
+            \ to the customJsonAsString field, this string must represent a JSON LD\
+            \ object and will be affected by JSON LD compaction and expansion."
+        privateCustomJsonAsString:
+          type: string
+          description: Same as customJsonAsString but the data will be stored in the
+            private properties.
+        privateCustomJsonLdAsString:
+          type: string
+          description: Same as customJsonLdAsString but the data will be stored in
+            the private properties.
       description: Data for editing an asset.
     AssetPage:
       required:
@@ -1022,14 +1033,20 @@ components:
           description: Contains the entire asset in the JSON-LD format
         customJsonAsString:
           type: string
-          description: "Contains custom properties as serialized JSON object.This\
-            \ string must represent a JSON _object_ (no array, scalar nor null)."
+          description: Contains serialized custom properties in the JSON format.
         customJsonLdAsString:
           type: string
-          description: "Contains custom properties in the JSON LD format serialized\
-            \ in a JSON string.Contrary to the customJsonAsString field, this string\
-            \ must represent a JSON LD object and will be affected by compaction and\
-            \ expansion."
+          description: "Contains serialized custom properties in the JSON LD format.Contrary\
+            \ to the customJsonAsString field, this string must represent a JSON LD\
+            \ object and will be affected by JSON LD compaction and expansion."
+        privateCustomJsonAsString:
+          type: string
+          description: Same as customJsonAsString but the data will be stored in the
+            private properties.
+        privateCustomJsonLdAsString:
+          type: string
+          description: Same as customJsonLdAsString but the data will be stored in
+            the private properties.
       description: Type-Safe Asset Metadata as needed by our UI
     UiContractOffer:
       required:

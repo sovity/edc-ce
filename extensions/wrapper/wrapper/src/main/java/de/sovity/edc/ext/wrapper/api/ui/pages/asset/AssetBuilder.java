@@ -53,7 +53,8 @@ public class AssetBuilder {
         var createRequest = buildCreateRequest(asset, request);
         var tmpAsset = fromCreateRequest(createRequest);
 
-        // DEBT: On each EDC update, check that no field was added
+        // DEBT: On each EDC update, check that no field was added in
+        //  org.eclipse.edc.spi.types.domain.asset.Asset.toBuilder
         return Asset.Builder.newInstance()
                 .id(asset.getId())
                 .properties(tmpAsset.getProperties())
@@ -87,8 +88,8 @@ public class AssetBuilder {
         createRequest.setLicenseUrl(editRequest.getLicenseUrl());
         createRequest.setMediaType(editRequest.getMediaType());
         createRequest.setNutsLocation(editRequest.getNutsLocation());
-        createRequest.setPrivateJsonProperties(editRequest.getPrivateJsonProperties());
-        createRequest.setPrivateProperties(editRequest.getPrivateProperties());
+        createRequest.setPrivateCustomJsonAsString(editRequest.getPrivateCustomJsonAsString());
+        createRequest.setPrivateCustomJsonLdAsString(editRequest.getPrivateCustomJsonLdAsString());
         createRequest.setPublisherHomepage(editRequest.getPublisherHomepage());
         createRequest.setReferenceFileUrls(editRequest.getReferenceFileUrls());
         createRequest.setReferenceFilesDescription(editRequest.getReferenceFilesDescription());

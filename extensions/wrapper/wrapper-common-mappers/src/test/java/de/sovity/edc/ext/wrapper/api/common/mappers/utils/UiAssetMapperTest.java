@@ -31,10 +31,10 @@ class UiAssetMapperTest {
                 {
                     "https://a/b#string": "value",
                     "https://a/b#array": [1,2,3,4],
-                    "https://a/b#null": null,
-                    "https://a/b#boolean": true,
                     "https://a/b#number": 3.14,
-                    "https://a/b#object": {"key": "value"}
+                    "https://a/b#object": {"https://key": "value"},
+                    "https://a/b#null": null,
+                    "https://a/b#boolean": true
                 }
                 """);
 
@@ -52,12 +52,13 @@ class UiAssetMapperTest {
                         "https://semantic.sovity.io/dcat-ext#customJson",
                         "verbatim JSON string")
                 .containsEntry("https://a/b#string", "value")
-                .containsEntry("https://a/b#boolean", true)
-                .containsEntry("https://a/b#number", 3.14)
-                .containsEntry("https://a/b#object", json("{\"key\": \"value\"}"))
                 .containsEntry("https://a/b#array", json("[1,2,3,4]"))
+                .containsEntry("https://a/b#number", 3.14)
+                .containsEntry("https://a/b#object", json("{\"https://key\": \"value\"}"))
                 // nulls are removed
                 .doesNotContainValue("https://a/b#null")
+                // booleans are not supported
+                .doesNotContainValue("https://a/b#boolean")
         ;
 
         // TODO: can override existing properties with json LD

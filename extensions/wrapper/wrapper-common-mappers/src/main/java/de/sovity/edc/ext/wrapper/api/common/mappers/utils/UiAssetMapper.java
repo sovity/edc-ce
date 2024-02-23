@@ -148,28 +148,38 @@ public class UiAssetMapper {
                 HttpDatasourceHints.PATH,
                 HttpDatasourceHints.QUERY_PARAMS,
 
-                // TODO: private custom JSON
                 Prop.SovityDcatExt.CUSTOM_JSON
         ));
 
-        // Private Properties
-        // TODO this must go away
-        var privateProperties = JsonLdUtils.tryCompact(getPrivateProperties(assetJsonLd));
-        uiAsset.setPrivateProperties(getStringProperties(privateProperties));
-        uiAsset.setPrivateJsonProperties(getJsonProperties(privateProperties));
-
-        // TODO: do I support only object or arbitrary json values?
-
-        // TODO: private equivalents of the existing json / json ld
-
-        val jsonLd = Json.createObjectBuilder();
-        for (val e : remaining.entrySet()) {
-            jsonLd.add(e.getKey(), e.getValue());
-        }
-        val serializedJsonLd = JsonUtils.toJson(jsonLd.build());
+        // custom properties
+        val serializedJsonLd = packRemainingJsonLdProperties(remaining);
         uiAsset.setCustomJsonLdAsString(serializedJsonLd);
 
+        // Private Properties
+        val privateProperties = JsonLdUtils.object(assetJsonLd, Prop.Edc.PRIVATE_PROPERTIES);
+        if (privateProperties != null) {
+            val privateCustomJson = JsonLdUtils.string(privateProperties, Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON);
+            uiAsset.setPrivateCustomJsonAsString(privateCustomJson);
+
+            val privateSerializedJsonLd = packPrivateProperties(privateProperties);
+            uiAsset.setPrivateCustomJsonLdAsString(privateSerializedJsonLd);
+        }
+
         return uiAsset;
+    }
+
+    private String packPrivateProperties(JsonObject privateProperties) {
+        val withoutCustomJson = Json.createObjectBuilder(privateProperties).remove(Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON).build();
+        val compacted = JsonLdUtils.tryCompact(withoutCustomJson);
+        return JsonUtils.toJson(compacted);
+    }
+
+    private static String packRemainingJsonLdProperties(JsonObject remaining) {
+        val customJsonLd = Json.createObjectBuilder();
+        for (val e : remaining.entrySet()) {
+            customJsonLd.add(e.getKey(), e.getValue());
+        }
+        return JsonUtils.toJson(JsonLdUtils.tryCompact(customJsonLd.build()));
     }
 
     @SneakyThrows
@@ -239,19 +249,17 @@ public class UiAssetMapper {
             addNonNull(properties, HttpDatasourceHints.METHOD, trueIfTrue(dataAddress, Prop.Edc.PROXY_METHOD));
         }
 
-        // TODO: how do you remove/delete a property with JsonLd?
-        // TODO: merge customJsonLd with the properties
+        addNonNull(properties, Prop.SovityDcatExt.CUSTOM_JSON, uiAssetCreateRequest.getCustomJsonAsString());
+
         val jsonLdStr = uiAssetCreateRequest.getCustomJsonLdAsString();
         if (jsonLdStr != null) {
             // TODO: JsonParsingException
             val jsonLd = JsonUtils.parseJsonObj(jsonLdStr);
             for (val e : jsonLd.entrySet()) {
-                // TODO: deduplication / override
+                // TODO addNonNull?
                 properties.add(e.getKey(), e.getValue());
             }
         }
-
-        addNonNull(properties, Prop.SovityDcatExt.CUSTOM_JSON, uiAssetCreateRequest.getCustomJsonAsString());
 
         return properties;
     }
@@ -259,16 +267,18 @@ public class UiAssetMapper {
     private JsonObjectBuilder getAssetPrivateProperties(UiAssetCreateRequest uiAssetCreateRequest) {
         var privateProperties = Json.createObjectBuilder();
 
-        // TODO: private counterparts for json / json ld
-
-        var stringProperties = uiAssetCreateRequest.getPrivateProperties();
-        if (stringProperties != null) {
-            stringProperties.forEach((k, v) -> addNonNull(privateProperties, k, v));
+        val privateJsonStr = uiAssetCreateRequest.getPrivateCustomJsonAsString();
+        if (privateJsonStr != null) {
+            addNonNull(
+                    privateProperties,
+                    Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON,
+                    privateJsonStr);
         }
 
-        var jsonProperties = uiAssetCreateRequest.getPrivateJsonProperties();
-        if (jsonProperties != null) {
-            jsonProperties.forEach((k, v) -> addNonNullJsonValue(privateProperties, k, v));
+        val privateJsonLdStr = uiAssetCreateRequest.getPrivateCustomJsonLdAsString();
+        if (privateJsonLdStr != null) {
+            val privateJsonLd = JsonUtils.parseJsonObj(privateJsonLdStr);
+            privateJsonLd.forEach((k, v) -> addNonNullJsonValue(privateProperties, k, v));
         }
 
         return privateProperties;

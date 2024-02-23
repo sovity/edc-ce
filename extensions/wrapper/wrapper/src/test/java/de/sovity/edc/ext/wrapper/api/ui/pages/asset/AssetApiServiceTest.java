@@ -138,10 +138,21 @@ public class AssetApiServiceTest {
                         {
                             "https://string": "value",
                             "https://number": 3.14,
-                            "https://boolean": true,
-                            "https://null-will-be-eliminated": null,
                             "https://array": [1,2,3],
-                            "https://object": { "key": "value },
+                            "https://object": { "https://key": "value" },
+                            "https://booleans/are/not/supported/by/Eclipse/EDC": true,
+                            "https://null/will/be/eliminated": null
+                        }
+                        """)
+                .privateCustomJsonAsString("{\"private test\":\"private value\"}")
+                .privateCustomJsonLdAsString("""
+                        {
+                            "https://private/string": "value",
+                            "https://private/number": 3.14,
+                            "https://private/array": [1,2,3],
+                            "https://private/object": { "https://key": "value" },
+                            "https://private/booleans/are/not/supported/by/Eclipse/EDC": true,
+                            "https://private/null/will/be/eliminated": null
                         }
                         """)
                 .build();
@@ -191,9 +202,19 @@ public class AssetApiServiceTest {
                 {
                     "https://string": "value",
                     "https://number": 3.14,
-                    "https://boolean": true,
-                    "https://array": [1,2,3],
-                    "https://object": { "key": "value },
+                    "https://array": [1.0, 2.0, 3.0],
+                    "https://object": { "https://key": "value" }
+                }
+                """);
+        assertThatJson(asset.getPrivateCustomJsonAsString()).isEqualTo("""
+                { "private test": "private value" }
+                """);
+        assertThatJson(asset.getPrivateCustomJsonLdAsString()).isEqualTo("""
+                {
+                    "https://private/string": "value",
+                    "https://private/number": 3.14,
+                    "https://private/array": [1.0, 2.0, 3.0],
+                    "https://private/object": { "https://key": "value" }
                 }
                 """);
 
