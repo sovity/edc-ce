@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
@@ -132,6 +133,17 @@ public class AssetApiServiceTest {
                 .keywords(List.of("keyword1", "keyword2"))
                 .publisherHomepage("publisherHomepage")
                 .dataAddressProperties(dataAddressProperties)
+                .customJsonAsString("{\"test\":\"value\"}")
+                .customJsonLdAsString("""
+                        {
+                            "https://string": "value",
+                            "https://number": 3.14,
+                            "https://boolean": true,
+                            "https://null-will-be-eliminated": null,
+                            "https://array": [1,2,3],
+                            "https://object": { "key": "value },
+                        }
+                        """)
                 .build();
 
         // act
@@ -172,6 +184,18 @@ public class AssetApiServiceTest {
         assertThat(asset.getHttpDatasourceHintsProxyPath()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyBody()).isTrue();
+        assertThatJson(asset.getCustomJsonAsString()).isEqualTo("""
+                { "test": "value" }
+                """);
+        assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
+                {
+                    "https://string": "value",
+                    "https://number": 3.14,
+                    "https://boolean": true,
+                    "https://array": [1,2,3],
+                    "https://object": { "key": "value },
+                }
+                """);
 
         var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
         assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddressProperties);
@@ -215,8 +239,19 @@ public class AssetApiServiceTest {
                 .keywords(List.of("keyword1", "keyword2"))
                 .publisherHomepage("publisherHomepage")
                 .dataAddressProperties(dataAddress)
+                .customJsonAsString("""
+                        { "test": "value" }
+                        """)
+                .customJsonLdAsString("""
+                        {
+                            "https://to-change": "value1",
+                            "https://for-deletion": "value2"
+                        }
+                        """)
                 .build();
+
         client.uiApi().createAsset(createRequest);
+
         var editRequest = UiAssetEditMetadataRequest.builder()
                 .title("AssetTitle 2")
                 .description("AssetDescription 2")
@@ -241,6 +276,15 @@ public class AssetApiServiceTest {
                 .transportMode("transportMode2")
                 .keywords(List.of("keyword3"))
                 .publisherHomepage("publisherHomepage2")
+                .customJsonAsString("""
+                        { "edited": "new value" }
+                        """)
+                .customJsonLdAsString("""
+                        {
+                            "https://to-change": "new value LD",
+                            "https://for-deletion": null
+                        }
+                        """)
                 .build();
 
         // act
@@ -281,6 +325,14 @@ public class AssetApiServiceTest {
         assertThat(asset.getHttpDatasourceHintsProxyPath()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyBody()).isTrue();
+        assertThat(asset.getCustomJsonAsString()).isEqualTo("""
+                { "edited": "new value" }
+                """);
+        assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
+                { "https://to-change": "new value LD" }
+                """);
+
+        // TODO: test can override exiting properties
 
         var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
         assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddress);
@@ -376,4 +428,3 @@ public class AssetApiServiceTest {
         return formatter.parse(date).getTime();
     }
 }
-

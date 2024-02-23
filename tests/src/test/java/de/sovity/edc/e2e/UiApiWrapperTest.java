@@ -165,11 +165,11 @@ class UiApiWrapperTest {
                         Prop.Edc.METHOD, "GET",
                         Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
                 ))
-                .additionalProperties(Map.of("http://unknown/a", "x"))
-                .additionalJsonProperties(Map.of("http://unknown/b", "{\"http://unknown/c\":\"y\"}"))
                 .privateProperties(Map.of("http://unknown/a-private", "x-private"))
                 .privateJsonProperties(Map.of("http://unknown/b-private", "{\"http://unknown/c-private\":\"y-private\"}"))
                 .customJsonAsString("{\"test\":\"value\"}")
+                .customJsonLdAsString("{\"https://a/b#c\":\"value\"}")
+                // TODO: json ld private
                 .build()).getId();
         assertThat(assetId).isEqualTo("asset-1");
 
@@ -239,28 +239,27 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyQueryParams()).isFalse();
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyBody()).isFalse();
         // TODO: rm and provide equivalent in customJsonLd
-//        assertThat(dataOffer.getAsset().getAdditionalProperties())
-//                .containsExactlyEntriesOf(Map.of("http://unknown/a", "x"));
-//        assertThat(dataOffer.getAsset().getAdditionalJsonProperties())
-//                .containsExactlyEntriesOf(Map.of("http://unknown/b", "{\"http://unknown/c\":\"y\"}"));
 //        assertThat(dataOffer.getAsset().getPrivateProperties()).isNullOrEmpty();
 //        assertThat(dataOffer.getAsset().getPrivateJsonProperties()).isNullOrEmpty();
         assertThat(dataOffer.getAsset().getCustomJsonAsString()).isEqualTo("{\"test\":\"value\"}");
+        assertThat(dataOffer.getAsset().getCustomJsonLdAsString()).isEqualTo("{\"https://a/b#c\":\"value\"}");
+        // TODO: rm and provide equivalent in customJsonLd
+        // TODO: cehck that the private property is empty
 
         // while the data offer on the consumer side won't contain private properties, the asset page on the provider side should
         assertThat(asset.getAssetId()).isEqualTo(assetId);
         assertThat(asset.getTitle()).isEqualTo("AssetName");
         assertThat(asset.getConnectorEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
         assertThat(asset.getParticipantId()).isEqualTo(providerConnector.getParticipantId());
-        // TODO: rm and provide equivalent in customJsonLd
-//        assertThat(asset.getAdditionalProperties())
-//                .containsExactlyEntriesOf(Map.of("http://unknown/a", "x"));
-//        assertThat(asset.getAdditionalJsonProperties())
-//                .containsExactlyEntriesOf(Map.of("http://unknown/b", "{\"http://unknown/c\":\"y\"}"));
+
 //        assertThat(asset.getPrivateProperties())
 //                .containsExactlyEntriesOf(Map.of("http://unknown/a-private", "x-private"));
 //        assertThat(asset.getPrivateJsonProperties())
 //                .containsExactlyEntriesOf(Map.of("http://unknown/b-private", "{\"http://unknown/c-private\":\"y-private\"}"));
+        assertThat(asset.getCustomJsonAsString()).isEqualTo("{\"test\":\"value\"}");
+        assertThat(asset.getCustomJsonLdAsString()).isEqualTo("{\"https://a/b#c\":\"value\"}");
+        // TODO: rm and provide equivalent in customJsonLd
+        // TODO: cehck that the private property is present
 
         // Contract Agreement
         assertThat(providerAgreements).hasSize(1);
@@ -416,21 +415,14 @@ class UiApiWrapperTest {
 
         // assert
         assertThat(consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector)).get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
-        assertThat(providerClient.uiApi().getContractAgreementPage().getContractAgreements().get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
-        assertThat(providerClient.uiApi().getContractAgreementPage().getContractAgreements().get(0).getAsset().getCustomJsonAsString()).isEqualTo("{\"edited\":\"new value\"}");
+        val firstAsset = providerClient.uiApi().getContractAgreementPage().getContractAgreements().get(0).getAsset();
+        assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");
+        assertThat(firstAsset.getCustomJsonAsString()).isEqualTo("{\"edited\":\"new value\"}");
+        assertThat(firstAsset.getCustomJsonLdAsString()).isEqualTo("{\"https://a/b#c\":\"value\"}");
+        // TODO private properties
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
         validateTransferProcessesOk();
         assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo("Good Asset Title");
-    }
-
-    private static UiAsset getAssetById(EdcClient client, String assetId) {
-        return client.uiApi()
-                .getAssetPage()
-                .getAssets()
-                .stream()
-                .filter(it -> it.getAssetId().equals(assetId))
-                .findFirst()
-                .orElseThrow();
     }
 
     private UiContractNegotiation negotiate(UiDataOffer dataOffer, UiContractOffer contractOffer) {

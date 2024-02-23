@@ -99,12 +99,14 @@ public class UiAssetMapper {
         var publisher = JsonLdUtils.object(properties, Prop.Dcterms.PUBLISHER);
         uiAsset.setPublisherHomepage(JsonLdUtils.string(publisher, Prop.Foaf.HOMEPAGE));
 
+        uiAsset.setCustomJsonAsString(JsonLdUtils.string(properties, Prop.SovityDcatExt.CUSTOM_JSON));
+
         uiAsset.setCreatorOrganizationName(creatorOrganizationName);
 
         // Additional / Remaining Properties
         // TODO: diff nested objects
         // TODO: the remaining JSON LD props
-        //  Let users see the JsonLd that was not handled by the UiAsset class.
+        //  Let users see the JsonLd that was not handled in the UiAsset class.
         //  Put those properties in customJsonLd.
         JsonObject remaining = removeHandledProperties(properties, List.of(
                 // Implicitly handled / should be skipped if found
@@ -144,13 +146,11 @@ public class UiAssetMapper {
                 HttpDatasourceHints.BODY,
                 HttpDatasourceHints.METHOD,
                 HttpDatasourceHints.PATH,
-                HttpDatasourceHints.QUERY_PARAMS
-        ));
+                HttpDatasourceHints.QUERY_PARAMS,
 
-        // TODO this must go away
-        uiAsset.setAdditionalProperties(getStringProperties(remaining));
-        // TODO this must go away
-        uiAsset.setAdditionalJsonProperties(getJsonProperties(remaining));
+                // TODO: private custom JSON
+                Prop.SovityDcatExt.CUSTOM_JSON
+        ));
 
         // Private Properties
         // TODO this must go away
@@ -158,13 +158,16 @@ public class UiAssetMapper {
         uiAsset.setPrivateProperties(getStringProperties(privateProperties));
         uiAsset.setPrivateJsonProperties(getJsonProperties(privateProperties));
 
-        // TODO must extract the string properties from CUSTOM_JSON and puts them in
-        //  de.sovity.edc.ext.wrapper.api.common.model.UiAsset.customJson
-
         // TODO: do I support only object or arbitrary json values?
-        // TODO add postman example for this
-        val customJsonAsString = JsonLdUtils.string(remaining, Prop.SovityDcatExt.CUSTOM_JSON);
-        uiAsset.setCustomJsonAsString(customJsonAsString);
+
+        // TODO: private equivalents of the existing json / json ld
+
+        val jsonLd = Json.createObjectBuilder();
+        for (val e : remaining.entrySet()) {
+            jsonLd.add(e.getKey(), e.getValue());
+        }
+        val serializedJsonLd = JsonUtils.toJson(jsonLd.build());
+        uiAsset.setCustomJsonLdAsString(serializedJsonLd);
 
         return uiAsset;
     }
@@ -236,19 +239,18 @@ public class UiAssetMapper {
             addNonNull(properties, HttpDatasourceHints.METHOD, trueIfTrue(dataAddress, Prop.Edc.PROXY_METHOD));
         }
 
-        // TODO: these blocks must be replaced by extracting the sovity:customJson strings props
-        var additionalProperties = uiAssetCreateRequest.getAdditionalProperties();
-        if (additionalProperties != null) {
-            additionalProperties.forEach((k, v) -> addNonNull(properties, k, v));
+        // TODO: how do you remove/delete a property with JsonLd?
+        // TODO: merge customJsonLd with the properties
+        val jsonLdStr = uiAssetCreateRequest.getCustomJsonLdAsString();
+        if (jsonLdStr != null) {
+            // TODO: JsonParsingException
+            val jsonLd = JsonUtils.parseJsonObj(jsonLdStr);
+            for (val e : jsonLd.entrySet()) {
+                // TODO: deduplication / override
+                properties.add(e.getKey(), e.getValue());
+            }
         }
 
-        var additionalJsonProperties = uiAssetCreateRequest.getAdditionalJsonProperties();
-        if (additionalJsonProperties != null) {
-            additionalJsonProperties.forEach((k, v) -> addNonNullJsonValue(properties, k, v));
-        }
-
-        // TODO: merge customJsonLd with the customProperties here
-        
         addNonNull(properties, Prop.SovityDcatExt.CUSTOM_JSON, uiAssetCreateRequest.getCustomJsonAsString());
 
         return properties;
@@ -256,6 +258,8 @@ public class UiAssetMapper {
 
     private JsonObjectBuilder getAssetPrivateProperties(UiAssetCreateRequest uiAssetCreateRequest) {
         var privateProperties = Json.createObjectBuilder();
+
+        // TODO: private counterparts for json / json ld
 
         var stringProperties = uiAssetCreateRequest.getPrivateProperties();
         if (stringProperties != null) {

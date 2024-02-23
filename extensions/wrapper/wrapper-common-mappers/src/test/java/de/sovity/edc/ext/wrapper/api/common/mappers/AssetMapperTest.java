@@ -86,10 +86,6 @@ class AssetMapperTest {
 
         assertThat(uiAsset.getAssetJsonLd()).contains("\"%s\"".formatted(Prop.Edc.ID));
         // TODO: check where to put those old additional properties
-//        assertThat(uiAsset.getAdditionalProperties()).containsExactlyEntriesOf(Map.of(
-//                "http://unknown/some-custom-string", "some-string-value"));
-//        assertThat(uiAsset.getAdditionalJsonProperties()).containsExactlyEntriesOf(Map.of(
-//                "http://unknown/some-custom-obj", "{\"http://unknown/a\":\"b\"}"));
 //        assertThat(uiAsset.getPrivateProperties()).containsExactlyEntriesOf(Map.of(
 //                "http://unknown/some-custom-private-string", "some-private-value"));
 //        assertThat(uiAsset.getPrivateJsonProperties()).containsExactlyEntriesOf(Map.of(

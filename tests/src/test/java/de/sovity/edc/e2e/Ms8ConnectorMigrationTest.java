@@ -124,12 +124,6 @@ class Ms8ConnectorMigrationTest {
             softly.assertThat(asset.getPublisherHomepage()).isEqualTo("https://publisher");
             softly.assertThat(asset.getTransportMode()).isEqualTo("Rail");
             softly.assertThat(asset.getVersion()).isEqualTo("1.0");
-            softly.assertThat(asset.getAdditionalProperties()).isEqualTo(Map.of(
-                    "http://unknown/usecase", "my-use-case",
-                    "http://unknown/custom-prop-1", "1",
-                    "http://custom-prop-2", "2",
-                    "https://custom-prop-3", "3"
-            ));
             softly.assertThat(asset.getAdditionalJsonProperties()).isNullOrEmpty();
             softly.assertThat(asset.getPrivateJsonProperties()).isNullOrEmpty();
             softly.assertThat(asset.getPrivateProperties()).isNullOrEmpty();
