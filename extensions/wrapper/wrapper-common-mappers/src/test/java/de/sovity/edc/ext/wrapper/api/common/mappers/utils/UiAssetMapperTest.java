@@ -60,8 +60,5 @@ class UiAssetMapperTest {
                 // booleans are not supported
                 .doesNotContainValue("https://a/b#boolean")
         ;
-
-        // TODO: can override existing properties with json LD
-        // TODO are there some properties that we should not override?
     }
 }

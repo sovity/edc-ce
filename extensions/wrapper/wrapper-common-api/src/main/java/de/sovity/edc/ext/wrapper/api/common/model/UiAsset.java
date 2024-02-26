@@ -138,14 +138,6 @@ public class UiAsset {
     @Schema(description = "Temporal coverage end date (inclusive)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private LocalDate temporalCoverageToInclusive;
 
-    // TODO: rm
-    @Schema(description = "Private Asset Properties (that were strings)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Map<String, String> privateProperties;
-
-    // TODO: rm
-    @Schema(description = "Private Asset Properties (that were not strings but other JSON values)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Map<String, String> privateJsonProperties;
-
     @Schema(description = "Contains the entire asset in the JSON-LD format", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String assetJsonLd;
 
@@ -153,9 +145,10 @@ public class UiAsset {
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String customJsonAsString;
 
-    @Schema(description = "Contains serialized custom properties in the JSON LD format." +
+    @Schema(description = "Contains serialized custom properties in the JSON LD format. " +
             "Contrary to the customJsonAsString field, this string must represent a JSON LD object " +
-            "and will be affected by JSON LD compaction and expansion.",
+            "and will be affected by JSON LD compaction and expansion. " +
+            "Due to a technical limitation, the properties can't be booleans.",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String customJsonLdAsString;
 
@@ -163,7 +156,8 @@ public class UiAsset {
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String privateCustomJsonAsString;
 
-    @Schema(description = "Same as customJsonLdAsString but the data will be stored in the private properties.",
+    @Schema(description = "Same as customJsonLdAsString but the data will be stored in the private properties. " +
+            "Due to a technical limitation, the properties can't be booleans.",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String privateCustomJsonLdAsString;
 }

@@ -105,9 +105,6 @@ public class UiAssetMapper {
 
         // Additional / Remaining Properties
         // TODO: diff nested objects
-        // TODO: the remaining JSON LD props
-        //  Let users see the JsonLd that was not handled in the UiAsset class.
-        //  Put those properties in customJsonLd.
         JsonObject remaining = removeHandledProperties(properties, List.of(
                 // Implicitly handled / should be skipped if found
                 Prop.ID,
@@ -169,7 +166,9 @@ public class UiAssetMapper {
     }
 
     private String packPrivateProperties(JsonObject privateProperties) {
-        val withoutCustomJson = Json.createObjectBuilder(privateProperties).remove(Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON).build();
+        val withoutCustomJson = Json.createObjectBuilder(privateProperties)
+                .remove(Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON)
+                .build();
         val compacted = JsonLdUtils.tryCompact(withoutCustomJson);
         return JsonUtils.toJson(compacted);
     }
@@ -253,11 +252,9 @@ public class UiAssetMapper {
 
         val jsonLdStr = uiAssetCreateRequest.getCustomJsonLdAsString();
         if (jsonLdStr != null) {
-            // TODO: JsonParsingException
             val jsonLd = JsonUtils.parseJsonObj(jsonLdStr);
             for (val e : jsonLd.entrySet()) {
-                // TODO addNonNull?
-                properties.add(e.getKey(), e.getValue());
+                addNonNullJsonValue(properties, e.getKey(), e.getValue());
             }
         }
 

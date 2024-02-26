@@ -9,9 +9,9 @@ import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
-import org.eclipse.edc.core.transform.TypeTransformerRegistryImpl;
 import org.eclipse.edc.jsonld.TitaniumJsonLd;
 import org.eclipse.edc.spi.monitor.Monitor;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +20,7 @@ import java.util.List;
 
 import static jakarta.json.Json.createArrayBuilder;
 import static jakarta.json.Json.createObjectBuilder;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -32,7 +33,7 @@ class AssetMapperTest {
     @BeforeEach
     void setup() {
         var jsonLd = new TitaniumJsonLd(mock(Monitor.class));
-        var typeTransformerRegistry = mock(TypeTransformerRegistryImpl.class);
+        var typeTransformerRegistry = mock(TypeTransformerRegistry.class);
         var uiAssetBuilder = new UiAssetMapper(new EdcPropertyUtils(), new AssetJsonLdUtils(), new MarkdownToTextConverter(), new TextUtils(), x -> endpoint.equals(x));
         assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetBuilder, jsonLd);
     }
@@ -85,14 +86,50 @@ class AssetMapperTest {
         assertThat(uiAsset.getTemporalCoverageToInclusive()).isEqualTo("2024-01-22");
 
         assertThat(uiAsset.getAssetJsonLd()).contains("\"%s\"".formatted(Prop.Edc.ID));
-        // TODO: check where to put those old additional properties
-//        assertThat(uiAsset.getPrivateProperties()).containsExactlyEntriesOf(Map.of(
-//                "http://unknown/some-custom-private-string", "some-private-value"));
-//        assertThat(uiAsset.getPrivateJsonProperties()).containsExactlyEntriesOf(Map.of(
-//                "http://unknown/some-custom-private-obj", "{\"http://unknown/a-private\":\"b-private\"}"));
 
         JsonAssertions.assertThatJson(uiAsset.getCustomJsonAsString())
-                .isEqualTo(TestUtils.loadResourceAsString("/expected-custom-json.json"));
+                .isEqualTo("""
+                        {
+                          "array": [3, 1, 4, 1, 5],
+                          "boolean": false,
+                          "null": null,
+                          "number": 116,
+                          "object": {
+                            "key": "value"
+                          },
+                          "string": "value"
+                        }
+                        """);
+        JsonAssertions.assertThatJson(uiAsset.getCustomJsonLdAsString())
+                .isObject()
+                .containsEntry("http://unknown/some-custom-string", "some-string-value")
+                .containsEntry("http://unknown/some-custom-obj", json("""
+                        {
+                            "http://unknown/a": "b"
+                        }
+                        """));
+
+        JsonAssertions.assertThatJson(uiAsset.getPrivateCustomJsonAsString())
+                .isEqualTo("""
+                        {
+                          "priv_array": [3, 1, 4, 1, 5],
+                          "priv_boolean": false,
+                          "priv_null": null,
+                          "priv_number": 116,
+                          "priv_object": {
+                            "key": "value"
+                          },
+                          "priv_string": "value"
+                        }
+                        """);
+        JsonAssertions.assertThatJson(uiAsset.getPrivateCustomJsonLdAsString())
+                .isObject()
+                .containsEntry("http://unknown/some-custom-private-string", "some-private-value")
+                .containsEntry("http://unknown/some-custom-private-obj", json("""
+                        {
+                            "http://unknown/a-private": "b-private"
+                        }
+                        """));
     }
 
     @Test
