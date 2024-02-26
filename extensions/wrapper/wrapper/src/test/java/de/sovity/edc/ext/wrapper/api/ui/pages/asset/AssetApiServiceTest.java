@@ -353,8 +353,6 @@ public class AssetApiServiceTest {
                 { "https://to-change": "new value LD" }
                 """);
 
-        // TODO: test can override exiting properties
-
         var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
         assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddress);
     }

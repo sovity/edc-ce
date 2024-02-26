@@ -123,7 +123,6 @@ class Ms8ConnectorMigrationTest {
             softly.assertThat(asset.getPublisherHomepage()).isEqualTo("https://publisher");
             softly.assertThat(asset.getTransportMode()).isEqualTo("Rail");
             softly.assertThat(asset.getVersion()).isEqualTo("1.0");
-            // TODO: how is this asset created? Need to add test for the json / json ld
         });
     }
 
