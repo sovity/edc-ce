@@ -324,6 +324,50 @@ class UiApiWrapperTest {
     }
 
     @Test
+    void canOverrideTheWellKnowPropertiesUsingTheCustomProperties() {
+        // arrange
+        var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
+                .id("asset-1")
+                .title("will be overridden")
+                .dataAddressProperties(Map.of(
+                        Prop.Edc.TYPE, "HttpData",
+                        Prop.Edc.METHOD, "GET",
+                        Prop.Edc.BASE_URL, "http://example.com/base"
+                ))
+                .customJsonLdAsString("""
+                        {
+                            "http://purl.org/dc/terms/title": "The real title",
+                            "https://semantic.sovity.io/mds-dcat-ext#nuts-location": ["a", "b", "c"],
+                            "http://example.com/an-actual-custom-property": "custom value"
+                        }
+                        """)
+                .build()).getId();
+        assertThat(assetId).isEqualTo("asset-1");
+
+        // act
+        val assets = providerClient.uiApi().getAssetPage().getAssets();
+        assertThat(assets).hasSize(1);
+        val asset = assets.get(0);
+
+        // assert
+
+        // while the data offer on the consumer side won't contain private properties, the asset page on the provider side should
+        assertThat(asset.getAssetId()).isEqualTo(assetId);
+        // overridden property
+        assertThat(asset.getTitle()).isEqualTo("The real title");
+        // added property
+        assertThat(asset.getNutsLocation()).isEqualTo(List.of("a", "b", "c"));
+        // remaining custom property
+        assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
+                {
+                    "http://example.com/an-actual-custom-property": "custom value"
+                }
+                """);
+    }
+
+    // TODO throw an error if the id is overridden
+
+    @Test
     void customTransferRequest() {
         // arrange
         var data = "expected data 123";

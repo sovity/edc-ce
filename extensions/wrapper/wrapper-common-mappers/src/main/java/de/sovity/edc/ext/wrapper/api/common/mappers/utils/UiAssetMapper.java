@@ -257,6 +257,14 @@ public class UiAssetMapper {
         return properties;
     }
 
+    private void add(JsonObject overrides, JsonObjectBuilder properties, String key, String value) {
+        val override = JsonLdUtils.string(overrides, key);
+        if (override != null) {
+            properties.add(key, override);
+        }
+        properties.add(key, value);
+    }
+
     private JsonObjectBuilder getAssetPrivateProperties(UiAssetCreateRequest uiAssetCreateRequest) {
         var privateProperties = Json.createObjectBuilder();
 

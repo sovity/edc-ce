@@ -104,9 +104,7 @@ class AssetMapperTest {
                 .isObject()
                 .containsEntry("http://unknown/some-custom-string", "some-string-value")
                 .containsEntry("http://unknown/some-custom-obj", json("""
-                        {
-                            "http://unknown/a": "b"
-                        }
+                        { "http://unknown/a": "b" }
                         """));
 
         JsonAssertions.assertThatJson(uiAsset.getPrivateCustomJsonAsString())
