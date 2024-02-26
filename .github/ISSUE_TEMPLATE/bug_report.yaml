@@ -1,0 +1,62 @@
+name: Bug Report Template
+description: Create a report to help us improve
+labels: ["kind/bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description - What happened? *
+      description: A clear and concise description of the bug.
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior *
+      description: A clear and concise description of what you expected to happen.
+      placeholder: Tell us what you expected!
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed Behavior *
+      description: A clear and concise description of what happened instead.
+      placeholder: Tell us what you observed!
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: Tell us how to reproduce the issue!
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Context Information
+      description: Add any other context about the problem here.
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+    validations:
+      required: false
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots or other information to help explain your problem.
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        <sup>_* These fields are mandatory, without filling them it is not possible to create the issue._</sup>
