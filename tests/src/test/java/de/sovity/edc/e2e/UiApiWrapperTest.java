@@ -394,7 +394,30 @@ class UiApiWrapperTest {
                         Prop.Edc.METHOD, "GET",
                         Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
                 ))
-                .customJsonAsString("{\"test\":\"value\"}")
+                .customJsonAsString("""
+                        {
+                            "test": "value"
+                        }
+                        """)
+                .customJsonLdAsString("""
+                        {
+                            "test": "not a valid key, will be deleted",
+                            "http://example.com/key-to-delete": "with a valida key",
+                            "http://example.com/key-to-edit": "with a valida key"
+                        }
+                        """)
+                .privateCustomJsonAsString("""
+                        {
+                            "private-test": "value"
+                        }
+                        """)
+                .privateCustomJsonLdAsString("""
+                        {
+                            "private-test": "not a valid key, will be deleted",
+                            "http://example.com/private-key-to-delete": "private with a valid key",
+                            "http://example.com/private-key-to-edit": "private with a valid key"
+                        }
+                        """)
                 .build()).getId();
 
         providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
@@ -421,7 +444,32 @@ class UiApiWrapperTest {
         // act
         providerClient.uiApi().editAssetMetadata(assetId, UiAssetEditMetadataRequest.builder()
                 .title("Good Asset Title")
-                .customJsonAsString("{\"edited\":\"new value\"}")
+                .customJsonAsString("""
+                        {
+                            "edited": "new value"
+                        }
+                        """)
+                .customJsonLdAsString("""
+                        {
+                            "edited": "not a valid key, will be deleted",
+                            "http://example.com/key-to-delete": null,
+                            "http://example.com/key-to-edit": "with a valid key",
+                            "http://example.com/extra": "value to add"
+                        }
+                        """)
+                .privateCustomJsonAsString("""
+                        {
+                            "private-edited": "new value"
+                        }
+                        """)
+                .privateCustomJsonLdAsString("""
+                        {
+                            "private-edited": "not a valid key, will be deleted",
+                            "http://example.com/private-key-to-delete": null,
+                            "http://example.com/private-key-to-edit": "private with a valid key",
+                            "http://example.com/private-extra": "private value to add"
+                        }
+                        """)
                 .build());
         initiateTransfer(negotiation);
 
@@ -429,7 +477,28 @@ class UiApiWrapperTest {
         assertThat(consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector)).get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
         val firstAsset = providerClient.uiApi().getContractAgreementPage().getContractAgreements().get(0).getAsset();
         assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");
-        assertThat(firstAsset.getCustomJsonAsString()).isEqualTo("{\"edited\":\"new value\"}");
+        assertThat(firstAsset.getCustomJsonAsString()).isEqualTo("""
+                {
+                    "edited": "new value"
+                }
+                """);
+        assertThatJson(firstAsset.getCustomJsonLdAsString()).isEqualTo("""
+                {
+                    "http://example.com/key-to-edit": "with a valid key",
+                    "http://example.com/extra": "value to add"
+                }
+                """);
+        assertThat(firstAsset.getPrivateCustomJsonAsString()).isEqualTo("""
+                {
+                    "private-edited": "new value"
+                }
+                """);
+        assertThatJson(firstAsset.getPrivateCustomJsonLdAsString()).isEqualTo("""
+                {
+                    "http://example.com/private-key-to-edit": "private with a valid key",
+                    "http://example.com/private-extra": "private value to add"
+                }
+                """);
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
         validateTransferProcessesOk();
         assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo("Good Asset Title");

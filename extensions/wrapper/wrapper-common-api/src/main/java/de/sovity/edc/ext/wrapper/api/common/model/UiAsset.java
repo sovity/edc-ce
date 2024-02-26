@@ -157,7 +157,7 @@ public class UiAsset {
     private String privateCustomJsonAsString;
 
     @Schema(description = "Same as customJsonLdAsString but the data will be stored in the private properties. " +
-            "Due to a technical limitation, the properties can't be booleans.",
+            "The same limitations apply.",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String privateCustomJsonLdAsString;
 }

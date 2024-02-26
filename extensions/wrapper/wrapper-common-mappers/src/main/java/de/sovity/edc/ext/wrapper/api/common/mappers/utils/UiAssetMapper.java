@@ -149,36 +149,32 @@ public class UiAssetMapper {
         ));
 
         // custom properties
-        val serializedJsonLd = packRemainingJsonLdProperties(remaining);
+        val serializedJsonLd = packAsJsonLdProperties(remaining);
         uiAsset.setCustomJsonLdAsString(serializedJsonLd);
 
         // Private Properties
-        val privateProperties = JsonLdUtils.object(assetJsonLd, Prop.Edc.PRIVATE_PROPERTIES);
+        val privateProperties = getPrivateProperties(assetJsonLd);
         if (privateProperties != null) {
             val privateCustomJson = JsonLdUtils.string(privateProperties, Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON);
             uiAsset.setPrivateCustomJsonAsString(privateCustomJson);
 
-            val privateSerializedJsonLd = packPrivateProperties(privateProperties);
+            val privateRemaining = removeHandledProperties(
+                    privateProperties,
+                    List.of(Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON));
+            val privateSerializedJsonLd = packAsJsonLdProperties(privateRemaining);
             uiAsset.setPrivateCustomJsonLdAsString(privateSerializedJsonLd);
         }
 
         return uiAsset;
     }
 
-    private String packPrivateProperties(JsonObject privateProperties) {
-        val withoutCustomJson = Json.createObjectBuilder(privateProperties)
-                .remove(Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON)
-                .build();
-        val compacted = JsonLdUtils.tryCompact(withoutCustomJson);
-        return JsonUtils.toJson(compacted);
-    }
-
-    private static String packRemainingJsonLdProperties(JsonObject remaining) {
+    private static String packAsJsonLdProperties(JsonObject remaining) {
         val customJsonLd = Json.createObjectBuilder();
         for (val e : remaining.entrySet()) {
             customJsonLd.add(e.getKey(), e.getValue());
         }
-        return JsonUtils.toJson(JsonLdUtils.tryCompact(customJsonLd.build()));
+        JsonObject compacted = JsonLdUtils.tryCompact(customJsonLd.build());
+        return JsonUtils.toJson(compacted);
     }
 
     @SneakyThrows
@@ -290,22 +286,6 @@ public class UiAssetMapper {
         return Json.createObjectBuilder()
                 .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
                 .add(Prop.Edc.PROPERTIES, Json.createObjectBuilder(props));
-    }
-
-    private Map<String, String> getStringProperties(JsonObject jsonObject) {
-        return getPropertyMap(
-                jsonObject,
-                it -> it.getValueType() == JsonValue.ValueType.STRING,
-                it -> ((JsonString) it).getString()
-        );
-    }
-
-    private Map<String, String> getJsonProperties(JsonObject jsonObject) {
-        return getPropertyMap(
-                jsonObject,
-                it -> it.getValueType() != JsonValue.ValueType.STRING,
-                JsonUtils::toJson
-        );
     }
 
     private JsonObject removeHandledProperties(JsonObject properties, List<String> handledProperties) {
