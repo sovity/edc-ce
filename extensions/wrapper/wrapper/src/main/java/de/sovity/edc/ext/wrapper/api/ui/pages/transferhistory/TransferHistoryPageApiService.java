@@ -35,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
@@ -76,37 +77,40 @@ public class TransferHistoryPageApiService {
 
         var transferProcesses = getAllTransferProcesses();
 
-        return transferProcesses.stream()
-                .filter(process -> process != null &&
-                        process.getDataRequest() != null &&
-                        process.getDataRequest().getContractId() != null)
-                .map(process -> {
-                    var agreement = agreementsById.get(process.getDataRequest().getContractId());
-                    var negotiation = negotiationsById.get(process.getDataRequest().getContractId());
-                    var asset = assetLookup(assetsById, process);
-                    var direction = ContractAgreementDirection.fromType(negotiation.getType());
-                    var transferHistoryEntry = new TransferHistoryEntry();
-                    transferHistoryEntry.setAssetId(asset.getId());
-                    if (direction == ContractAgreementDirection.CONSUMING) {
-                        transferHistoryEntry.setAssetName(asset.getId());
-                    } else {
-                        transferHistoryEntry.setAssetName(
-                                StringUtils.isBlank((String) asset.getProperties().get(Prop.Dcterms.TITLE))
-                                        ? asset.getId()
-                                        : asset.getProperties().get(Prop.Dcterms.TITLE).toString()
-                        );
-                    }
-                    transferHistoryEntry.setContractAgreementId(agreement.getId());
-                    transferHistoryEntry.setCounterPartyConnectorEndpoint(negotiation.getCounterPartyAddress());
-                    transferHistoryEntry.setCounterPartyParticipantId(negotiation.getCounterPartyId());
-                    transferHistoryEntry.setCreatedDate(utcMillisToOffsetDateTime(negotiation.getCreatedAt()));
-                    transferHistoryEntry.setDirection(direction);
-                    transferHistoryEntry.setErrorMessage(process.getErrorDetail());
-                    transferHistoryEntry.setLastUpdatedDate(utcMillisToOffsetDateTime(process.getUpdatedAt()));
-                    transferHistoryEntry.setState(transferProcessStateService.buildTransferProcessState(process.getState()));
-                    transferHistoryEntry.setTransferProcessId(process.getId());
-                    return transferHistoryEntry;
-                }).sorted(Comparator.comparing(TransferHistoryEntry::getLastUpdatedDate).reversed()).toList();
+        return transferProcesses.stream().map(process -> {
+            var agreement = Optional.ofNullable(agreementsById.get(process.getDataRequest().getContractId()));
+            var negotiation = Optional.ofNullable(negotiationsById.get(process.getDataRequest().getContractId()));
+            var asset = assetLookup(assetsById, process);
+            var direction = negotiation.map(ContractNegotiation::getType).map(ContractAgreementDirection::fromType);
+            var transferHistoryEntry = new TransferHistoryEntry();
+            transferHistoryEntry.setAssetId(asset.getId());
+
+            if (direction.isPresent()) {
+                if (direction.get() == ContractAgreementDirection.CONSUMING) {
+                    transferHistoryEntry.setAssetName(asset.getId());
+                } else {
+                    transferHistoryEntry.setAssetName(
+                            StringUtils.isBlank((String) asset.getProperties().get(Prop.Dcterms.TITLE))
+                                    ? asset.getId()
+                                    : asset.getProperties().get(Prop.Dcterms.TITLE).toString()
+                    );
+                }
+            }
+
+            agreement.ifPresent(it -> transferHistoryEntry.setContractAgreementId(it.getId()));
+            negotiation.ifPresent( it -> {
+                transferHistoryEntry.setCounterPartyConnectorEndpoint(it.getCounterPartyAddress());
+                transferHistoryEntry.setCounterPartyParticipantId(it.getCounterPartyId());
+                transferHistoryEntry.setCreatedDate(utcMillisToOffsetDateTime(it.getCreatedAt()));
+            });
+            direction.ifPresent(transferHistoryEntry::setDirection);
+
+            transferHistoryEntry.setErrorMessage(process.getErrorDetail());
+            transferHistoryEntry.setLastUpdatedDate(utcMillisToOffsetDateTime(process.getUpdatedAt()));
+            transferHistoryEntry.setState(transferProcessStateService.buildTransferProcessState(process.getState()));
+            transferHistoryEntry.setTransferProcessId(process.getId());
+            return transferHistoryEntry;
+        }).sorted(Comparator.comparing(TransferHistoryEntry::getLastUpdatedDate).reversed()).toList();
     }
 
     private Asset assetLookup(Map<String, Asset> assetsById, TransferProcess process) {
