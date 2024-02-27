@@ -17,6 +17,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
+Add a fix for a null pointer exception in the transfer history API.
+
 ### Deployment Migration Notes
 
 #### Compatible Versions
