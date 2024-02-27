@@ -1,6 +1,11 @@
 
 # Updates checklist
 
+List is a checklist about the workarounds that we had to use and may cause trouble in the future.
+These are not easily testable and require a manual check.
+
+- [ ] After each EDC update, check each of the items below for potential breaks.
+
 ## Problem
 
 A list of the element that may break when updating the EDC version.
