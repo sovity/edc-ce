@@ -8,6 +8,8 @@ export namespace CatalogPage {
 
   export class Reset {
     static readonly type = `[${tag}] Reset`;
+
+    constructor(public initialConnectorEndpoints?: string[]) {}
   }
 
   export class NeedFetch {

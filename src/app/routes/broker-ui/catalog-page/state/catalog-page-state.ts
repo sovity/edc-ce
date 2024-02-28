@@ -43,10 +43,17 @@ export class CatalogPageState implements OnDestroy {
   }
 
   @Action(CatalogPage.Reset)
-  onReset(ctx: Ctx) {
+  onReset(ctx: Ctx, action: CatalogPage.Reset) {
     let state = ctx.getState();
     state.fetchSubscription?.unsubscribe();
     state = DEFAULT_CATALOG_PAGE_STATE_MODEL;
+    if (action.initialConnectorEndpoints?.length) {
+      state = this._addFilterBoxes(state, [
+        this._buildConnectorEndpointFilterBoxModel(
+          action.initialConnectorEndpoints,
+        ),
+      ]);
+    }
     ctx.setState(state);
     ctx.dispatch(CatalogPage.NeedFetch);
   }
@@ -102,25 +109,6 @@ export class CatalogPageState implements OnDestroy {
     ctx.dispatch(CatalogPage.NeedFetch);
   }
 
-  @Action(CatalogPage.AddFilterBox)
-  onAddFilterBox(ctx: Ctx, action: CatalogPage.AddFilterBox) {
-    const state = ctx.getState();
-    if (action.filterBox.id in state.filters) {
-      return;
-    }
-    ctx.setState(
-      this._recalculateActiveFilterItems({
-        ...state,
-        filters: {
-          ...state.filters,
-          [action.filterBox.id]: FilterBoxVisibleState.buildVisibleState(
-            action.filterBox,
-          ),
-        },
-      }),
-    );
-  }
-
   @Action(CatalogPage.UpdateFilterSelectedItems)
   onUpdateFilterSelectedItems(
     ctx: Ctx,
@@ -174,6 +162,40 @@ export class CatalogPageState implements OnDestroy {
         ),
       );
     }
+  }
+
+  private _buildConnectorEndpointFilterBoxModel(
+    endpoints: string[],
+  ): FilterBoxModel {
+    const items: FilterBoxItem[] = endpoints.map((x) => ({
+      type: 'ITEM',
+      id: x,
+      label: x,
+    }));
+    return {
+      id: 'connectorEndpoint',
+      title: 'Connector',
+      selectedItems: items,
+      availableItems: items,
+      searchText: '',
+    };
+  }
+
+  private _addFilterBoxes(
+    state: CatalogPageStateModel,
+    filterBoxes: FilterBoxModel[],
+  ): CatalogPageStateModel {
+    return this._recalculateActiveFilterItems({
+      ...state,
+      filters: {
+        ...state.filters,
+        ...associateAsObj(
+          filterBoxes,
+          (x) => x.id,
+          (x) => FilterBoxVisibleState.buildVisibleState(x),
+        ),
+      },
+    });
   }
 
   private _resetPage(state: CatalogPageStateModel): CatalogPageStateModel {

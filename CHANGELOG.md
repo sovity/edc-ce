@@ -18,11 +18,25 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
-- Broker UI: Added query params for the connector endpoints filter
-
 #### Patch
 
 #### Deployment Migration Notes
+
+## [v2.5.0] - 2024-02-28
+
+### Overview
+
+Enable better integration of Broker UI and Authority Portal
+
+### Detailed Changes
+
+#### Minor
+
+- Broker UI: Added query params for the connector endpoints filter
+
+#### Deployment Migration Notes
+
+_No special deployment migration steps required_
 
 ## [v2.4.0] 2024-02-14
 
