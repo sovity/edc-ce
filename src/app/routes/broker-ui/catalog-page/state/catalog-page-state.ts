@@ -102,6 +102,25 @@ export class CatalogPageState implements OnDestroy {
     ctx.dispatch(CatalogPage.NeedFetch);
   }
 
+  @Action(CatalogPage.AddFilterBox)
+  onAddFilterBox(ctx: Ctx, action: CatalogPage.AddFilterBox) {
+    const state = ctx.getState();
+    if (action.filterBox.id in state.filters) {
+      return;
+    }
+    ctx.setState(
+      this._recalculateActiveFilterItems({
+        ...state,
+        filters: {
+          ...state.filters,
+          [action.filterBox.id]: FilterBoxVisibleState.buildVisibleState(
+            action.filterBox,
+          ),
+        },
+      }),
+    );
+  }
+
   @Action(CatalogPage.UpdateFilterSelectedItems)
   onUpdateFilterSelectedItems(
     ctx: Ctx,

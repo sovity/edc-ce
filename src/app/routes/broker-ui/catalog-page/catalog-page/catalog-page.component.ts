@@ -1,6 +1,7 @@
 import {Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {PageEvent} from '@angular/material/paginator';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {filter, map, takeUntil} from 'rxjs/operators';
 import {Store} from '@ngxs/store';
@@ -14,6 +15,7 @@ import {
 } from '../../../../component-library/catalog/view-selection/view-mode-enum';
 import {BrokerServerApiService} from '../../../../core/services/api/broker-server-api.service';
 import {FilterBoxItem} from '../filter-box/filter-box-item';
+import {FilterBoxModel} from '../filter-box/filter-box-model';
 import {FilterBoxVisibleState} from '../filter-box/filter-box-visible-state';
 import {CatalogActiveFilterPill} from '../state/catalog-active-filter-pill';
 import {CatalogPage} from '../state/catalog-page-actions';
@@ -50,10 +52,13 @@ export class CatalogPageComponent implements OnInit, OnDestroy {
     private assetDetailDialogService: AssetDetailDialogService,
     private brokerServerApiService: BrokerServerApiService,
     private store: Store,
+    private route: ActivatedRoute,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.store.dispatch(CatalogPage.Reset);
+    this.setConnectorEndpointFiltersFromQueryParamsOnce();
     this.startListeningToStore();
     this.startEmittingSearchText();
     this.startEmittingSortBy();
@@ -96,6 +101,49 @@ export class CatalogPageComponent implements OnInit, OnDestroy {
           this.store.dispatch(new CatalogPage.UpdateSorting(value));
         }
       });
+  }
+
+  private setConnectorEndpointFiltersFromQueryParamsOnce() {
+    const connectorEndpoints = this.parseConnectorEndpoints(
+      this.route.snapshot.queryParams,
+    );
+    if (!connectorEndpoints?.length) {
+      return;
+    }
+
+    this.store.dispatch(
+      new CatalogPage.AddFilterBox(
+        this.buildConnectorEndpointFilterBoxModel(connectorEndpoints),
+      ),
+    );
+    this.expandedFilterId = 'connectorEndpoint';
+    // remove query params from url
+    this.router.navigate([]);
+  }
+
+  private parseConnectorEndpoints(params: Params): string[] {
+    if (!('connectorEndpoint' in params)) {
+      return [];
+    }
+    const endpoints = params.connectorEndpoint;
+    return Array.isArray(endpoints) ? [...new Set(endpoints)] : [endpoints];
+  }
+
+  private buildConnectorEndpointFilterBoxModel(
+    endpoints: string[],
+  ): FilterBoxModel {
+    const items: FilterBoxItem[] = endpoints.map((x) => ({
+      type: 'ITEM',
+      id: x,
+      label: x,
+    }));
+    return {
+      id: 'connectorEndpoint',
+      title: 'Connector',
+      selectedItems: items,
+      availableItems: items,
+      searchText: '',
+    };
   }
 
   onDataOfferClick(dataOffer: CatalogDataOfferMapped) {

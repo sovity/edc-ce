@@ -18,6 +18,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
+- Broker UI: Added query params for the connector endpoints filter
+
 #### Patch
 
 #### Deployment Migration Notes

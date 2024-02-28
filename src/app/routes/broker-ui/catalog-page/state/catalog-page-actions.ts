@@ -1,5 +1,6 @@
 import {CatalogPageSortingItem} from '@sovity.de/broker-server-client';
 import {FilterBoxItem} from '../filter-box/filter-box-item';
+import {FilterBoxModel} from '../filter-box/filter-box-model';
 import {CatalogActiveFilterPill} from './catalog-active-filter-pill';
 
 export namespace CatalogPage {
@@ -33,6 +34,12 @@ export namespace CatalogPage {
     static readonly type = `[${tag}] Update the selected sorting`;
 
     constructor(public sorting: CatalogPageSortingItem | null) {}
+  }
+
+  export class AddFilterBox {
+    static readonly type = `[${tag}] Add Filter Box`;
+
+    constructor(public filterBox: FilterBoxModel) {}
   }
 
   export class UpdateFilterSelectedItems {
