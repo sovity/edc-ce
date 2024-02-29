@@ -13,13 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Major
 
+- Authority Portal API: Removed deprecated data offer count endpoint
+
 #### Minor
 
 #### Patch
 
 ### Deployment Migration Notes
 
-_No special deployment migration steps required_
+- Authority Portal API: The deprecated data offer count endpoint was removed:  ~~``authority-portal-api/data-offer-counts``~~.
+  Alternatively the connector metadata endpoint should be used: `authority-portal-api/connectors`.
 
 #### Compatible Versions
 

@@ -15,17 +15,10 @@
 package de.sovity.edc.ext.brokerserver.services.api;
 
 import de.sovity.edc.ext.brokerserver.api.model.AuthorityPortalConnectorInfo;
-import de.sovity.edc.ext.brokerserver.api.model.DataOfferCountResult;
-import de.sovity.edc.ext.brokerserver.dao.utils.PostgresqlUtils;
-import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
 
 import java.util.List;
-import java.util.function.Function;
-
-import static java.util.stream.Collectors.toMap;
 
 @RequiredArgsConstructor
 public class AuthorityPortalConnectorMetadataApiService {
@@ -43,16 +36,5 @@ public class AuthorityPortalConnectorMetadataApiService {
                 it.getOfflineSinceOrLastUpdatedAt()
             ))
             .toList();
-    }
-
-    public DataOfferCountResult countByEndpoints(DSLContext dsl, List<String> endpoints) {
-        var connectorMetadata = getMetadataByEndpoints(dsl, endpoints);
-
-        var numDataOffers = connectorMetadata.stream().distinct().collect(toMap(
-            AuthorityPortalConnectorInfo::getConnectorEndpoint,
-            AuthorityPortalConnectorInfo::getDataOfferCount
-        ));
-
-        return new DataOfferCountResult(numDataOffers);
     }
 }
