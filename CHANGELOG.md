@@ -27,6 +27,28 @@ _No special deployment migration steps required_
 - Broker UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI_VERSION }}`
 - Sovity EDC CE: {{ CE Release Link }}
 
+## [v3.5.0] - 2024-02-29
+
+### Overview
+
+Enable better integration of Broker UI and Authority Portal
+
+### Detailed Changes
+
+#### Minor
+
+- Added query params for the connector endpoints filter
+
+#### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:3.5.0`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:2.5.0`
+- Sovity EDC CE: [`7.2.1`](https://github.com/sovity/edc-extensions/releases/tag/v7.2.1)
+
 ## [v3.4.0] - 2024-02-27
 
 ### Overview
