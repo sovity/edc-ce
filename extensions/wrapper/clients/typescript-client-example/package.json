@@ -18,7 +18,7 @@
   "devDependencies": {
     "@sveltejs/adapter-auto": "^2.0.0",
     "@sveltejs/kit": "^1.30.4",
-    "autoprefixer": "^10.4.14",
+    "autoprefixer": "^10.4.18",
     "postcss": "^8.4.21",
     "prettier": "^2.8.0",
     "prettier-plugin-svelte": "^2.8.1",
