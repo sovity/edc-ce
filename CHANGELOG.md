@@ -15,15 +15,11 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
-The `additionalProperties`, `additionalJsonProperties`, `privateProperties` and `privateJsonProperties` have been removed.
-
-They are replaced with the more generic `customJson`, `customJsonLd`, `privateCustomJson` and `privateCustomJsonLd`.
+- UIAsset: Replaced unsafe additional and private properties with safer alternative fields `customJsonAsString` (**not** affected by Json LD manipulation) and `customJsonLdAsString` (affected by Json LD manipulation), along with their private counterparts.
 
 #### Patch Changes
 
 ### Deployment Migration Notes
-
-Check that you don't use the old `additionalProperties` fields anymore, see Minor Changes for details.
 
 #### Compatible Versions
 
