@@ -74,6 +74,8 @@ public class Prop {
         public final String KEYWORDS = CTX + "keyword";
         public final String LANDING_PAGE = CTX + "landingPage";
         public final String MEDIATYPE = CTX + "mediaType";
+        public final String START_DATE = CTX + "startDate";
+        public final String END_DATE = CTX + "endDate";
     }
 
     /**
@@ -98,6 +100,11 @@ public class Prop {
         public final String CREATOR = CTX + "creator";
         public final String PUBLISHER = CTX + "publisher";
         public final String LICENSE = CTX + "license";
+        public final String TEMPORAL = CTX + "temporal";
+        public final String ACCRUAL_PERIODICITY = CTX + "accrualPeriodicity";
+        public final String SPATIAL = CTX + "spatial";
+        public final String RIGHTS_HOLDER = CTX + "rightsHolder";
+        public final String RIGHTS = CTX + "rights";
     }
 
     /**
@@ -159,5 +166,21 @@ public class Prop {
         public final String DATA_UPDATE_FREQUENCY = CTX + "data-update-frequency";
         public final String TEMPORAL_COVERAGE_FROM = CTX + "temporal-coverage-from";
         public final String TEMPORAL_COVERAGE_TO = CTX + "temporal-coverage-to";
+    }
+
+    @UtilityClass
+    public class MobilityDcatAp {
+        public final String CTX = "https://w3id.org/mobilitydcat-ap/";
+        public final String MOBILITY_THEME = CTX + "mobilityTheme";
+
+        public class MobilityTheme {
+            public final String CTX = "https://w3id.org/mobilitydcat-ap/mobility-theme/";
+            public final String DATA_CATEGORY = CTX + "data-content-category";
+            public final String DATA_SUBCATEGORY = CTX + "data-content-sub-category";
+        }
+
+        public final String TRANSPORT_MODE = CTX + "transportMode";
+        public final String GEO_REFERENCE_METHOD = CTX + "geoReferenceMethod";
+        public final String DATA_MODEL = CTX + "mobilityDataStandard";
     }
 }
