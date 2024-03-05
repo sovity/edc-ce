@@ -29,7 +29,7 @@ public class DspContractOfferUtils {
      * @return A base64 string that can be used as an id for the {@code contract}
      */
     public static String buildStableId(JsonObject contract) {
-        // FIXME: This doesn't enforce any property order and may cause trouble if the returned policy schema is not consistent.
+        // NOTE: This doesn't enforce any property order and may cause trouble if the returned policy schema is not consistent.
         //  Use canonical form if needed later.
         val noId = Json.createObjectBuilder(contract).remove(Prop.ID).build();
         val policyId = hash(noId);
