@@ -14,7 +14,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
-    api("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    api("org.junit.jupiter:junit-jupiter-api:5.10.2")
     implementation("org.apache.commons:commons-lang3:3.13.0")
 
     api("${edcGroup}:junit:${edcVersion}")

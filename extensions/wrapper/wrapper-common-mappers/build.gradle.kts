@@ -30,7 +30,7 @@ dependencies {
     testImplementation("${edcGroup}:json-ld:${edcVersion}")
     testImplementation("net.javacrumbs.json-unit:json-unit-assertj:${jsonUnit}")
     testImplementation("org.assertj:assertj-core:${assertj}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.mockito:mockito-inline:${mockitoVersion}")
     testImplementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}")
