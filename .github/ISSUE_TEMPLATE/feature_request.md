@@ -30,4 +30,5 @@ assignees: ""
 ```[tasklist]
 - [ ] Fix the GitHub Projects Labels, Sprint and other Metadata
 - [ ] Refine a Solution Proposal / Work Breakdown
+- [ ] (For Tech Team): Include acceptance criteria for the sub-tasks of the work breakdown
 ```
