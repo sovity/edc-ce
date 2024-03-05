@@ -60,4 +60,13 @@ public class JsonBuilderUtils {
         builder.add(key, value);
         return builder;
     }
+
+    protected static JsonObjectBuilder addNonNullJsonValue(JsonObjectBuilder builder, String key, JsonValue value) {
+        if (value == null || value.getValueType() == JsonValue.ValueType.NULL) {
+            return builder;
+        }
+
+        builder.add(key, value);
+        return builder;
+    }
 }

@@ -41,9 +41,6 @@ INSERT INTO public.edc_asset_property VALUES ('urn:artifact:first-asset:1.0', 'h
 INSERT INTO public.edc_asset_property VALUES ('urn:artifact:first-asset:1.0', 'asset:prop:originator', 'http://localhost:21003/api/v1/ids/data', 'java.lang.String');
 INSERT INTO public.edc_asset_property VALUES ('urn:artifact:first-asset:1.0', 'asset:prop:standardLicense', 'https://standard-license', 'java.lang.String');
 INSERT INTO public.edc_asset_property VALUES ('urn:artifact:first-asset:1.0', 'asset:prop:usecase', 'my-use-case', 'java.lang.String');
-INSERT INTO public.edc_asset_property VALUES ('urn:artifact:first-asset:1.0', 'custom-prop-1', '1', 'java.lang.String');
-INSERT INTO public.edc_asset_property VALUES ('urn:artifact:first-asset:1.0', 'http://custom-prop-2', '2', 'java.lang.String');
-INSERT INTO public.edc_asset_property VALUES ('urn:artifact:first-asset:1.0', 'https://custom-prop-3', '3', 'java.lang.String');
 INSERT INTO public.edc_asset_property VALUES ('urn:artifact:second-asset', 'asset:prop:id', 'urn:artifact:second-asset', 'java.lang.String');
 
 
