@@ -73,7 +73,7 @@ class AssetMapperTest {
         assertThat(uiAsset.getDataSubcategory()).isEqualTo("General Information About Planning Of Routes");
         assertThat(uiAsset.getDataModel()).isEqualTo("my-data-model-001");
         assertThat(uiAsset.getGeoReferenceMethod()).isEqualTo("my-geo-reference-method");
-        assertThat(uiAsset.getTransportMode()).isEqualTo("my-geo-reference-method");
+        assertThat(uiAsset.getTransportMode()).isEqualTo("my-transport-mode");
         assertThat(uiAsset.getSovereignLegalName()).isEqualTo("my-sovereign");
         assertThat(uiAsset.getGeoLocation()).isEqualTo("my-geolocation");
         assertThat(uiAsset.getNutsLocations()).isEqualTo(Arrays.asList("my-nuts-location1", "my-nuts-location2"));
