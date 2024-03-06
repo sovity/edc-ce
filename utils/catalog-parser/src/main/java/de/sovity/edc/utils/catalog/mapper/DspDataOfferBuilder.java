@@ -54,7 +54,6 @@ public class DspDataOfferBuilder {
         var assetProperties = Json.createObjectBuilder(dataset)
                 .remove(Prop.TYPE)
                 .remove(Prop.Odrl.HAS_POLICY)
-                .remove(Prop.Dcat.DISTRIBUTION)
                 .build();
 
 
