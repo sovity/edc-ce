@@ -74,7 +74,7 @@ public class UiAssetMapper {
 
         var spatial = JsonLdUtils.object(properties, Prop.Dcterms.SPATIAL);
         uiAsset.setGeoLocation(JsonLdUtils.string(spatial, Prop.Skos.PREF_LABEL));
-        uiAsset.setNutsLocation(JsonLdUtils.stringList(spatial, Prop.Dcterms.IDENTIFIER));
+        uiAsset.setNutsLocations(JsonLdUtils.stringList(spatial, Prop.Dcterms.IDENTIFIER));
 
         var mobilityTheme = JsonLdUtils.object(properties, Prop.MobilityDcatAp.MOBILITY_THEME);
         uiAsset.setDataCategory(JsonLdUtils.string(mobilityTheme, Prop.MobilityDcatAp.DataCategoryProps.DATA_CATEGORY));
@@ -250,10 +250,10 @@ public class UiAssetMapper {
             properties.add(Prop.Dcterms.TEMPORAL, temporal);
         }
 
-        if (uiAssetCreateRequest.getGeoLocation() != null || uiAssetCreateRequest.getNutsLocation() != null) {
+        if (uiAssetCreateRequest.getGeoLocation() != null || uiAssetCreateRequest.getNutsLocations() != null) {
             var spatial = Json.createObjectBuilder();
             addNonNull(spatial, Prop.Skos.PREF_LABEL, uiAssetCreateRequest.getGeoLocation());
-            addNonNullArray(spatial, Prop.Dcterms.IDENTIFIER, uiAssetCreateRequest.getNutsLocation());
+            addNonNullArray(spatial, Prop.Dcterms.IDENTIFIER, uiAssetCreateRequest.getNutsLocations());
             properties.add(Prop.Dcterms.SPATIAL, spatial);
         }
 
