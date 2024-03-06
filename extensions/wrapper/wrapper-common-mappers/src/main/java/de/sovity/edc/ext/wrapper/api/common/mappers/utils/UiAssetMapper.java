@@ -22,7 +22,6 @@ import de.sovity.edc.utils.jsonld.vocab.Prop.SovityDcatExt.HttpDatasourceHints;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
-import jakarta.json.JsonString;
 import jakarta.json.JsonValue;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -57,6 +56,10 @@ public class UiAssetMapper {
         var id = assetJsonLdUtils.getId(assetJsonLd);
         var title = assetJsonLdUtils.getTitle(assetJsonLd);
 
+        var distribution = JsonLdUtils.object(properties, Prop.Dcat.DISTRIBUTION);
+        var mediaType = JsonLdUtils.string(distribution, Prop.Dcat.MEDIATYPE);
+        uiAsset.setMediaType(mediaType);
+
         var creator = JsonLdUtils.object(properties, Prop.Dcterms.CREATOR);
         var creatorOrganizationName = JsonLdUtils.string(creator, Prop.Foaf.NAME);
         creatorOrganizationName = isBlank(creatorOrganizationName) ? participantId : creatorOrganizationName;
@@ -72,7 +75,6 @@ public class UiAssetMapper {
         uiAsset.setIsOwnConnector(ownConnectorEndpointService.isOwnConnectorEndpoint(connectorEndpoint));
         uiAsset.setLanguage(JsonLdUtils.string(properties, Prop.Dcterms.LANGUAGE));
         uiAsset.setVersion(JsonLdUtils.string(properties, Prop.Dcat.VERSION));
-        uiAsset.setMediaType(JsonLdUtils.string(properties, Prop.Dcat.MEDIATYPE));
         uiAsset.setLandingPageUrl(JsonLdUtils.string(properties, Prop.Dcat.LANDING_PAGE));
         uiAsset.setDataCategory(JsonLdUtils.string(properties, Prop.Mds.DATA_CATEGORY));
         uiAsset.setDataSubcategory(JsonLdUtils.string(properties, Prop.Mds.DATA_SUBCATEGORY));
@@ -114,9 +116,9 @@ public class UiAssetMapper {
                 Prop.Dcterms.IDENTIFIER,
 
                 // Explicitly handled
+                Prop.Dcat.DISTRIBUTION,
                 Prop.Dcat.KEYWORDS,
                 Prop.Dcat.LANDING_PAGE,
-                Prop.Dcat.MEDIATYPE,
                 Prop.Dcat.VERSION,
                 Prop.Dcterms.CREATOR,
                 Prop.Dcterms.DESCRIPTION,
@@ -208,7 +210,6 @@ public class UiAssetMapper {
         addNonNull(properties, Prop.Dcterms.DESCRIPTION, uiAssetCreateRequest.getDescription());
         addNonNull(properties, Prop.Dcterms.LANGUAGE, uiAssetCreateRequest.getLanguage());
         addNonNull(properties, Prop.Dcat.VERSION, uiAssetCreateRequest.getVersion());
-        addNonNull(properties, Prop.Dcat.MEDIATYPE, uiAssetCreateRequest.getMediaType());
         addNonNull(properties, Prop.Dcat.LANDING_PAGE, uiAssetCreateRequest.getLandingPageUrl());
         addNonNull(properties, Prop.Mds.DATA_CATEGORY, uiAssetCreateRequest.getDataCategory());
         addNonNull(properties, Prop.Mds.DATA_SUBCATEGORY, uiAssetCreateRequest.getDataSubcategory());
@@ -235,6 +236,9 @@ public class UiAssetMapper {
 
         properties.add(Prop.Dcterms.CREATOR, Json.createObjectBuilder()
                 .add(Prop.Foaf.NAME, organizationName));
+
+        properties.add(Prop.Dcat.DISTRIBUTION, Json.createObjectBuilder()
+                .add(Prop.Dcat.MEDIATYPE, uiAssetCreateRequest.getMediaType()));
 
         var dataAddress = uiAssetCreateRequest.getDataAddressProperties();
         if (dataAddress != null && dataAddress.get(Prop.Edc.TYPE).equals("HttpData")) {

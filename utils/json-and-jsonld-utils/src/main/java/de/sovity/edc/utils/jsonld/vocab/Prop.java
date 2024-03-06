@@ -69,7 +69,7 @@ public class Prop {
         public final String CTX_WRONG_BUT_USED_BY_CORE_EDC = "https://www.w3.org/ns/dcat/";
 
         public final String DATASET = CTX_WRONG_BUT_USED_BY_CORE_EDC + "dataset";
-        public final String DISTRIBUTION = CTX_WRONG_BUT_USED_BY_CORE_EDC + "distribution";
+        public final String DISTRIBUTION = CTX + "distribution";
         public final String VERSION = CTX + "version";
         public final String KEYWORDS = CTX + "keyword";
         public final String LANDING_PAGE = CTX + "landingPage";
@@ -170,6 +170,10 @@ public class Prop {
         public final String TEMPORAL_COVERAGE_TO = CTX + "temporal-coverage-to";
     }
 
+    /**
+     * Namespace mobilitydcatap as specified in
+     * <a href="https://mobilitydcat-ap.github.io/mobilityDCAT-AP/releases/index.html#namespaces">mobilityDCAT-AP</a>
+     */
     @UtilityClass
     public class MobilityDcatAp {
         public final String CTX = "https://w3id.org/mobilitydcat-ap/";
@@ -185,23 +189,34 @@ public class Prop {
         public final String GEO_REFERENCE_METHOD = CTX + "geoReferenceMethod";
         public final String DATA_MODEL = CTX + "mobilityDataStandard";
 
-        public class DataModelProps {
-            public final String SCHEMA = CTX + "schema";
-        }
+        // Optional property of mobilitydcatap:mobilityDataStandard
+        public final String SCHEMA = CTX + "schema";
     }
 
+    /**
+     * Namespace skos as specified in
+     * <a href="https://mobilitydcat-ap.github.io/mobilityDCAT-AP/releases/index.html#namespaces">mobilityDCAT-AP</a>
+     */
     @UtilityClass
     public class Skos {
         public final String CTX = "http://www.w3.org/2004/02/skos/core#";
         public final String PREF_LABEL = CTX + "prefLabel";
     }
 
+    /**
+     * Namespace adms as specified in
+     * <a href="https://mobilitydcat-ap.github.io/mobilityDCAT-AP/releases/index.html#namespaces">mobilityDCAT-AP</a>
+     */
     @UtilityClass
     public class Adms {
         public final String CTX = "http://www.w3.org/ns/adms#";
         public final String SAMPLE = CTX + "sample";
     }
 
+    /**
+     * Namespace rdfs as specified in
+     * <a href="https://mobilitydcat-ap.github.io/mobilityDCAT-AP/releases/index.html#namespaces">mobilityDCAT-AP</a>
+     */
     @UtilityClass
     public class Rdfs {
         public final String CTX = "http://www.w3.org/2000/01/rdf-schema#";
