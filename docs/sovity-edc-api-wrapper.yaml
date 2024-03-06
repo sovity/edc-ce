@@ -514,7 +514,7 @@ components:
         geoLocation:
           type: string
           description: Geo location
-        nutsLocation:
+        nutsLocations:
           type: array
           description: Locations by NUTS standard which divides countries into administrative
             divisions
@@ -790,7 +790,7 @@ components:
         geoLocation:
           type: string
           description: Geo location
-        nutsLocation:
+        nutsLocations:
           type: array
           description: Locations by NUTS standard which divides countries into administrative
             divisions
@@ -950,7 +950,7 @@ components:
         geoLocation:
           type: string
           description: Geo location
-        nutsLocation:
+        nutsLocations:
           type: array
           description: Locations by NUTS standard which divides countries into administrative
             divisions
