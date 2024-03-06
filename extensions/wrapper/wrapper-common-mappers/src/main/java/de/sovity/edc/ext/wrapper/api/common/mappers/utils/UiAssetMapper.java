@@ -228,20 +228,10 @@ public class UiAssetMapper {
         properties.add(Prop.Dcterms.CREATOR, Json.createObjectBuilder()
                 .add(Prop.Foaf.NAME, organizationName));
 
-        var distribution = Json.createObjectBuilder();
-        addNonNull(distribution, Prop.Dcat.MEDIATYPE, uiAssetCreateRequest.getMediaType());
-        addNonNullArray(distribution, Prop.Adms.SAMPLE, uiAssetCreateRequest.getDataSampleUrls());
-        var rights = Json.createObjectBuilder();
-        addNonNull(rights, Prop.Rdfs.LABEL, uiAssetCreateRequest.getConditionsForUse());
-        var dataModel = Json.createObjectBuilder();
-        addNonNull(dataModel, Prop.ID, uiAssetCreateRequest.getDataModel());
-        var referenceFiles = Json.createObjectBuilder();
-        addNonNullArray(referenceFiles, Prop.Dcat.DOWNLOAD_URL, uiAssetCreateRequest.getReferenceFileUrls());
-        addNonNull(referenceFiles, Prop.Rdfs.LITERAL, uiAssetCreateRequest.getReferenceFilesDescription());
-        dataModel.add(Prop.MobilityDcatAp.SCHEMA, referenceFiles);
-        distribution.add(Prop.Dcterms.RIGHTS, rights);
-        distribution.add(Prop.MobilityDcatAp.DATA_MODEL, dataModel);
-        properties.add(Prop.Dcat.DISTRIBUTION, distribution);
+        var distribution = buildDistribution(uiAssetCreateRequest);
+        if (distribution != null) {
+            properties.add(Prop.Dcat.DISTRIBUTION, distribution);
+        }
 
         if (uiAssetCreateRequest.getTemporalCoverageFrom() != null || uiAssetCreateRequest.getTemporalCoverageToInclusive() != null) {
             var temporal = Json.createObjectBuilder();
@@ -250,7 +240,8 @@ public class UiAssetMapper {
             properties.add(Prop.Dcterms.TEMPORAL, temporal);
         }
 
-        if (uiAssetCreateRequest.getGeoLocation() != null || uiAssetCreateRequest.getNutsLocations() != null) {
+        var nutsLocations = uiAssetCreateRequest.getNutsLocations();
+        if (uiAssetCreateRequest.getGeoLocation() != null || (nutsLocations != null && !nutsLocations.isEmpty())) {
             var spatial = Json.createObjectBuilder();
             addNonNull(spatial, Prop.Skos.PREF_LABEL, uiAssetCreateRequest.getGeoLocation());
             addNonNullArray(spatial, Prop.Dcterms.IDENTIFIER, uiAssetCreateRequest.getNutsLocations());
@@ -360,5 +351,45 @@ public class UiAssetMapper {
 
         var text = markdownToTextConverter.extractText(description);
         return textUtils.abbreviate(text, 300);
+    }
+
+    private JsonObjectBuilder buildDistribution(UiAssetCreateRequest uiAssetCreateRequest) {
+        var dataSampleUrls = uiAssetCreateRequest.getDataSampleUrls();
+        var referenceFileUrls = uiAssetCreateRequest.getReferenceFileUrls();
+        var hasRootLevelFields = uiAssetCreateRequest.getMediaType() != null
+                || (dataSampleUrls != null && !dataSampleUrls.isEmpty());
+        var hasRightsFields = uiAssetCreateRequest.getConditionsForUse() != null;
+        var hasDataModelFields = uiAssetCreateRequest.getDataModel() != null;
+        var hasReferenceFilesFields = (referenceFileUrls != null && !referenceFileUrls.isEmpty())
+                || uiAssetCreateRequest.getReferenceFilesDescription() != null;
+
+        if (!hasRootLevelFields && !hasRightsFields && !hasDataModelFields && !hasReferenceFilesFields) {
+            return null;
+        }
+
+        var distribution = Json.createObjectBuilder();
+        addNonNull(distribution, Prop.Dcat.MEDIATYPE, uiAssetCreateRequest.getMediaType());
+        addNonNullArray(distribution, Prop.Adms.SAMPLE, uiAssetCreateRequest.getDataSampleUrls());
+
+        if (hasRightsFields) {
+            var rights = Json.createObjectBuilder();
+            addNonNull(rights, Prop.Rdfs.LABEL, uiAssetCreateRequest.getConditionsForUse());
+            distribution.add(Prop.Dcterms.RIGHTS, rights);
+        }
+
+        if (!hasDataModelFields && !hasReferenceFilesFields) {
+            return distribution;
+        }
+        var dataModel = Json.createObjectBuilder();
+        addNonNull(dataModel, Prop.ID, uiAssetCreateRequest.getDataModel());
+
+        if (hasReferenceFilesFields) {
+            var referenceFiles = Json.createObjectBuilder();
+            addNonNullArray(referenceFiles, Prop.Dcat.DOWNLOAD_URL, uiAssetCreateRequest.getReferenceFileUrls());
+            addNonNull(referenceFiles, Prop.Rdfs.LITERAL, uiAssetCreateRequest.getReferenceFilesDescription());
+            dataModel.add(Prop.MobilityDcatAp.SCHEMA, referenceFiles);
+        }
+        distribution.add(Prop.MobilityDcatAp.DATA_MODEL, dataModel);
+        return distribution;
     }
 }
