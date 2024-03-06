@@ -259,8 +259,8 @@ public class UiAssetMapper {
 
         if (uiAssetCreateRequest.getDataCategory() != null || uiAssetCreateRequest.getDataSubcategory() != null) {
             var mobilityTheme = Json.createObjectBuilder();
-            addNonNull(mobilityTheme, Prop.Skos.PREF_LABEL, uiAssetCreateRequest.getDataCategory());
-            addNonNull(mobilityTheme, Prop.Dcterms.IDENTIFIER, uiAssetCreateRequest.getDataSubcategory());
+            addNonNull(mobilityTheme, Prop.MobilityDcatAp.DataCategoryProps.DATA_CATEGORY, uiAssetCreateRequest.getDataCategory());
+            addNonNull(mobilityTheme, Prop.MobilityDcatAp.DataCategoryProps.DATA_SUBCATEGORY, uiAssetCreateRequest.getDataSubcategory());
             properties.add(Prop.MobilityDcatAp.MOBILITY_THEME, mobilityTheme);
         }
 
