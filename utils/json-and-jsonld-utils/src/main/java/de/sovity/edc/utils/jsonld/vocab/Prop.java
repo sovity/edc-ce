@@ -76,6 +76,7 @@ public class Prop {
         public final String MEDIATYPE = CTX + "mediaType";
         public final String START_DATE = CTX + "startDate";
         public final String END_DATE = CTX + "endDate";
+        public final String DOWNLOAD_URL = CTX + "downloadURL";
     }
 
     /**
@@ -105,6 +106,7 @@ public class Prop {
         public final String SPATIAL = CTX + "spatial";
         public final String RIGHTS_HOLDER = CTX + "rightsHolder";
         public final String RIGHTS = CTX + "rights";
+        public final String RIGHTS_STATEMENT = CTX + "RightsStatement";
     }
 
     /**
@@ -171,9 +173,9 @@ public class Prop {
     @UtilityClass
     public class MobilityDcatAp {
         public final String CTX = "https://w3id.org/mobilitydcat-ap/";
-        public final String MOBILITY_THEME = CTX + "mobilityTheme";
+        public final String DATA_CATEGORIES = CTX + "mobilityTheme";
 
-        public class MobilityTheme {
+        public class DataCategoryProps {
             public final String CTX = "https://w3id.org/mobilitydcat-ap/mobility-theme/";
             public final String DATA_CATEGORY = CTX + "data-content-category";
             public final String DATA_SUBCATEGORY = CTX + "data-content-sub-category";
@@ -182,5 +184,28 @@ public class Prop {
         public final String TRANSPORT_MODE = CTX + "transportMode";
         public final String GEO_REFERENCE_METHOD = CTX + "geoReferenceMethod";
         public final String DATA_MODEL = CTX + "mobilityDataStandard";
+
+        public class DataModelProps {
+            public final String SCHEMA = CTX + "schema";
+        }
+    }
+
+    @UtilityClass
+    public class Skos {
+        public final String CTX = "http://www.w3.org/2004/02/skos/core#";
+        public final String PREF_LABEL = CTX + "prefLabel";
+    }
+
+    @UtilityClass
+    public class Adms {
+        public final String CTX = "http://www.w3.org/ns/adms#";
+        public final String SAMPLE = CTX + "sample";
+    }
+
+    @UtilityClass
+    public class Rdfs {
+        public final String CTX = "http://www.w3.org/2000/01/rdf-schema#";
+        public final String LITERAL = CTX + "Literal";
+        public final String LABEL = CTX + "label";
     }
 }
