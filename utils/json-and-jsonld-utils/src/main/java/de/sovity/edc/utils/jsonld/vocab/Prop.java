@@ -139,46 +139,15 @@ public class Prop {
     }
 
     /**
-     * MDS Vocabulary
-     */
-    @UtilityClass
-    public class Mds {
-        public final String CTX = "http://w3id.org/mds#";
-        public final String DATA_CATEGORY = CTX + "dataCategory";
-        public final String DATA_SUBCATEGORY = CTX + "dataSubcategory";
-        public final String DATA_MODEL = CTX + "dataModel";
-        public final String GEO_REFERENCE_METHOD = CTX + "geoReferenceMethod";
-        public final String TRANSPORT_MODE = CTX + "transportMode";
-    }
-
-    /**
-     * Temporary Context for all MDS specific fields awaiting proper classification within the mobilityDCAT-AP specification
-     */
-    @UtilityClass
-    public class MdsDcatExt {
-        public final String CTX = "https://semantic.sovity.io/mds-dcat-ext#";
-
-        public final String SOVEREIGN = CTX + "sovereign";
-        public final String GEO_LOCATION = CTX + "geolocation";
-        public final String NUTS_LOCATION = CTX + "nuts-location";
-        public final String DATA_SAMPLE_URLS = CTX + "data-sample-urls";
-        public final String REFERENCE_FILES = CTX + "reference-files";
-        public final String ADDITIONAL_DESCRIPTION = CTX + "additional-description";
-        public final String CONDITIONS_FOR_USE = CTX + "conditions-for-use";
-        public final String DATA_UPDATE_FREQUENCY = CTX + "data-update-frequency";
-        public final String TEMPORAL_COVERAGE_FROM = CTX + "temporal-coverage-from";
-        public final String TEMPORAL_COVERAGE_TO = CTX + "temporal-coverage-to";
-    }
-
-    /**
      * Namespace mobilitydcatap as specified in
      * <a href="https://mobilitydcat-ap.github.io/mobilityDCAT-AP/releases/index.html#namespaces">mobilityDCAT-AP</a>
      */
     @UtilityClass
     public class MobilityDcatAp {
         public final String CTX = "https://w3id.org/mobilitydcat-ap/";
-        public final String DATA_CATEGORIES = CTX + "mobilityTheme";
+        public final String MOBILITY_THEME = CTX + "mobilityTheme";
 
+        @UtilityClass
         public class DataCategoryProps {
             public final String CTX = "https://w3id.org/mobilitydcat-ap/mobility-theme/";
             public final String DATA_CATEGORY = CTX + "data-content-category";
