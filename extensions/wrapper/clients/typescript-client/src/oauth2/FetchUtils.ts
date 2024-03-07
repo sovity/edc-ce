@@ -1,4 +1,6 @@
 import {z} from 'zod';
+import {createUrlEncodedParamsString} from '../utils/HttpUtils';
+import {ClientCredentials} from './model/ClientCredentials';
 
 const ClientCredentialsResponseSchema = z.object({
     access_token: z.string().min(1),
@@ -11,12 +13,15 @@ export type ClientCredentialsResponse = z.infer<
 >;
 
 export async function fetchClientCredentials(
-    url: string,
-    credentialsBody: string,
+    clientCredentials: ClientCredentials,
 ): Promise<ClientCredentialsResponse> {
-    let response = await fetch(url, {
+    let response = await fetch(clientCredentials.tokenUrl, {
         method: 'POST',
-        body: credentialsBody,
+        body: createUrlEncodedParamsString({
+            grant_type: 'client_credentials',
+            client_id: clientCredentials.clientId,
+            client_secret: clientCredentials.clientSecret,
+        }),
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },

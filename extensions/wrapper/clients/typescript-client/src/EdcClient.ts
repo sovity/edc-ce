@@ -6,8 +6,7 @@ import {
     UIApi,
     UseCaseApi,
 } from './generated';
-import {AccessTokenService} from './oauth2/AccessTokenService';
-import {OAuthMiddleware} from './oauth2/OAuthMiddleware';
+import {buildOAuthMiddleware} from './oauth2/Middleware';
 import {ClientCredentials} from './oauth2/model/ClientCredentials';
 
 /**
@@ -47,14 +46,6 @@ export function buildEdcClient(opts: EdcClientOptions): EdcClient {
         useCaseApi: new UseCaseApi(config),
         enterpriseEditionApi: new EnterpriseEditionApi(config),
     };
-}
-
-function buildOAuthMiddleware(
-    clientCredentials: ClientCredentials,
-): Middleware {
-    const accessTokenService = new AccessTokenService(clientCredentials);
-
-    return new OAuthMiddleware(accessTokenService).build();
 }
 
 function buildApiKeyHeader(key: string) {

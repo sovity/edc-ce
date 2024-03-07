@@ -1,18 +1,3 @@
-import {createUrlEncodedParamsString} from '../utils/HttpUtils';
-
-export function buildTokenRequestFormData(
-    clientId: string,
-    clientSecret: string,
-): string {
-    const formData = {
-        grant_type: 'client_credentials',
-        client_id: clientId,
-        client_secret: clientSecret,
-    };
-
-    return createUrlEncodedParamsString(formData);
-}
-
 export function injectAccessTokenHeader(init: RequestInit, token: string) {
     init.headers = withHeader('Authorization', `Bearer ${token}`, init.headers);
 }

@@ -1,19 +1,12 @@
 import {ClientCredentialsResponse, fetchClientCredentials} from './FetchUtils';
-import {buildTokenRequestFormData} from './RequestUtils';
 import {ClientCredentials} from './model/ClientCredentials';
 
 export class AccessTokenService {
     private activeRequest: Promise<ClientCredentialsResponse> | null = null;
     private refreshTimeout?: NodeJS.Timeout;
-    private tokenRequestFormData: string;
     private accessToken: string | null = null;
 
-    constructor(private clientCredentials: ClientCredentials) {
-        this.tokenRequestFormData = buildTokenRequestFormData(
-            clientCredentials.clientId,
-            clientCredentials.clientSecret,
-        );
-    }
+    constructor(private clientCredentials: ClientCredentials) {}
 
     async getAccessToken(): Promise<string> {
         if (!this.accessToken) {
@@ -32,23 +25,18 @@ export class AccessTokenService {
         }
 
         this.accessToken = null;
-        this.activeRequest = fetchClientCredentials(
-            this.clientCredentials.tokenUrl,
-            this.tokenRequestFormData,
-        );
-        const clientCredentialsResponse = await this.activeRequest;
-        this.scheduleNextRefresh(clientCredentialsResponse);
-        this.accessToken = clientCredentialsResponse.access_token;
+        this.activeRequest = fetchClientCredentials(this.clientCredentials);
+        const response = await this.activeRequest;
+        this.scheduleNextRefresh(response);
+        this.accessToken = response.access_token;
         this.activeRequest = null;
 
         return this.accessToken;
     }
 
-    private scheduleNextRefresh(
-        clientCredentialsResponse: ClientCredentialsResponse,
-    ) {
+    private scheduleNextRefresh(response: ClientCredentialsResponse) {
         clearTimeout(this.refreshTimeout);
-        const ms = (clientCredentialsResponse.expires_in - 2) * 1000;
+        const ms = (response.expires_in - 2) * 1000;
         this.refreshTimeout = setTimeout(() => this.refreshAccessToken(), ms);
     }
 }
