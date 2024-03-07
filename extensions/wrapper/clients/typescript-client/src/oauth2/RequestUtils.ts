@@ -17,17 +17,6 @@ export function injectAccessTokenHeader(init: RequestInit, token: string) {
     init.headers = withHeader('Authorization', `Bearer ${token}`, init.headers);
 }
 
-export function isHeaders(object: any): object is Headers {
-    return (
-        'append' in object &&
-        'delete' in object &&
-        'get' in object &&
-        'has' in object &&
-        'set' in object &&
-        'forEach' in object
-    );
-}
-
 function withHeader(
     headerName: string,
     headerValue: string,
@@ -56,4 +45,15 @@ function withHeader(
 
     headers[headerName] = headerValue;
     return headers;
+}
+
+function isHeaders(object: any): object is Headers {
+    return (
+        'append' in object &&
+        'delete' in object &&
+        'get' in object &&
+        'has' in object &&
+        'set' in object &&
+        'forEach' in object
+    );
 }

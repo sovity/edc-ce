@@ -24,7 +24,7 @@ You can find our API Wrapper Project
 
 ## How to install
 
-Requires a NodeJS / NPM project.
+Requires Node.js 18.
 
 ```shell script
 npm i --save @sovity.de/edc-client
