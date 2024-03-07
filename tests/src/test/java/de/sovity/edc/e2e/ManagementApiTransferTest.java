@@ -16,7 +16,7 @@ package de.sovity.edc.e2e;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
+import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,9 +40,9 @@ class ManagementApiTransferTest {
     static EdcExtension consumerEdcContext = new EdcExtension();
 
     @RegisterExtension
-    static final TestDatabase PROVIDER_DATABASE = TestDatabaseFactory.getTestDatabase(1);
+    static final TestDatabase PROVIDER_DATABASE = new TestDatabaseViaTestcontainers();
     @RegisterExtension
-    static final TestDatabase CONSUMER_DATABASE = TestDatabaseFactory.getTestDatabase(2);
+    static final TestDatabase CONSUMER_DATABASE = new TestDatabaseViaTestcontainers();
 
     private ConnectorRemote providerConnector;
     private ConnectorRemote consumerConnector;

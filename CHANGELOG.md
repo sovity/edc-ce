@@ -14,15 +14,77 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Major Changes
 
 #### Minor Changes
-- Add new MDS fields and migrate existing MDS asset keys to mobilityDCAT-AP
+
+- UIAsset: Replaced unsafe additional and private properties with safer alternative fields `customJsonAsString` (**not** affected by Json LD manipulation) and `customJsonLdAsString` (affected by Json LD manipulation), along with their private counterparts.
 - API Wrapper: TS Client Library now supports OAuth Client Credentials
 
 #### Patch Changes
-- Docs: Enhanced starting a Http-Pull over the EDC-Ui documentation
 
 ### Deployment Migration Notes
 
 #### Compatible Versions
+
+## [7.2.1] - 2024-02-21
+
+### Overview
+
+Bugfixes
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v2.4.0
+
+### EDC Extensions
+
+#### Patch Changes
+
+- DspCatalogService: Contract Offer IDs are now stable
+- Fixed some requests' timeouts by removing the data-plane-instance-store-sql Extension
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:7.2.1`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.2.1`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.2.1`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.4.0`
+
+## [7.2.0] - 2024-02-14
+
+### Overview
+
+MDS bugfix and feature release
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v2.4.0
+
+#### Minor Changes
+
+- Assets now have new MDS fields
+
+#### Patch Changes
+
+- Docs: Improved documentation of HTTP pull (edc-ui)
+- Docs: Add security recommendations for recent API key vulnerabilities
+- Fixed connector restricted usage policy
+- Fixed connection pool issues by switching to Tractus-X connection pool
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:7.2.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.2.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.2.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.4.0`
 
 ## [7.1.1] - 2024-01-18
 
@@ -41,9 +103,9 @@ _No special deployment migration steps required_
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:7.1.1`
-    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.1.1`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.1.1`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:7.1.1`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.1.1`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.1.1`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.3.1`
 
 ## [7.1.0] - 2024-01-17
@@ -69,9 +131,9 @@ https://github.com/sovity/edc-ui/releases/tag/v2.3.0
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:7.1.0`
-    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.1.0`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.1.0`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:7.1.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.1.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.1.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.3.0`
 
 ## [7.0.0] - 2023-12-06
@@ -103,25 +165,25 @@ https://github.com/sovity/edc-ui/releases/tag/v2.2.0
 ### Deployment Migration Notes
 
 - The configured value of `MY_EDC_PARTICIPANT_ID` will now be validated via the DAPS:
-    - The configured value of `MY_EDC_PARTICIPANT_ID` must coincide with the claim value `referringConnector`
-      as configured for this Connector in the DAPS.
-    - For MS8-migrated connectors, if the Participant ID was not configured well before, existing contract agreements
-      will stop working. The Participant ID is referenced heavily in counter-party connectors, which makes a migration
-      of Participant IDs for old contract agreements impractical.
+  - The configured value of `MY_EDC_PARTICIPANT_ID` must coincide with the claim value `referringConnector`
+    as configured for this Connector in the DAPS.
+  - For MS8-migrated connectors, if the Participant ID was not configured well before, existing contract agreements
+    will stop working. The Participant ID is referenced heavily in counter-party connectors, which makes a migration
+    of Participant IDs for old contract agreements impractical.
 - If a given data space has no "Participant ID" / "Connector ID" concept or does not use the `referringConnector` claim:
-    - It is possible to override the checked claim by overriding `EDC_AGENT_IDENTITY_KEY`.
-    - `EDC_AGENT_IDENTITY_KEY` could be set to the claim name of the AKI / SKI Client ID, which should always be part of
-      the issued DAT. This would be `sub` for a sovity DAPS and `client_id` for an Omejdn DAPS.
-    - `MY_EDC_PARTICIPANT_ID` would have to be set to the AKI / SKI Client ID.
+  - It is possible to override the checked claim by overriding `EDC_AGENT_IDENTITY_KEY`.
+  - `EDC_AGENT_IDENTITY_KEY` could be set to the claim name of the AKI / SKI Client ID, which should always be part of
+    the issued DAT. This would be `sub` for a sovity DAPS and `client_id` for an Omejdn DAPS.
+  - `MY_EDC_PARTICIPANT_ID` would have to be set to the AKI / SKI Client ID.
 - Renamed ~~`MY_EDC_NAME_KEBAB_CASE`~~ to `MY_EDC_PARTICIPANT_ID`. ~~`MY_EDC_NAME_KEBAB_CASE`~~ continues working, but
   prints a warning on startup if configured.
 
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:7.0.0`
-    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.0.0`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.0.0`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:7.0.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.0.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.2.0`
 
 ## [6.0.0] - 2023-11-17
@@ -160,9 +222,9 @@ EDC_AGENT_IDENTITY_KEY: client_id
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:6.0.0`
-    - sovity EDC CE: `ghcr.io/sovity/edc-ce:6.0.0`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:6.0.0`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:6.0.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:6.0.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:6.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.1.0`
 
 ## [5.0.0] - 10.10.2023
@@ -194,18 +256,18 @@ https://github.com/sovity/edc-ui/releases/tag/v2.0.0
 #### Minor Changes
 
 - All Connector UI Endpoints were migrated to our UI API Wrapper. New UI API Wrapper Endpoints:
-    - Asset Page
-    - Create Asset
-    - Delete Asset
-    - Catalog / Data Offers
-    - Contract Definition Page
-    - Contract Negotiation Start / Detail
-    - Create Contract Definition
-    - Delete Contract Definition
-    - Policy Definition Page
-    - Create Policy Definition
-    - Delete Policy Definition
-    - Dashboard Page
+  - Asset Page
+  - Create Asset
+  - Delete Asset
+  - Catalog / Data Offers
+  - Contract Definition Page
+  - Contract Negotiation Start / Detail
+  - Create Contract Definition
+  - Delete Contract Definition
+  - Policy Definition Page
+  - Create Policy Definition
+  - Delete Policy Definition
+  - Dashboard Page
 - New modules with common UI models and mappers for the Connector UI and Broker UI: `:extensions:wrapper:wrapper-common-api` and `:extensions:wrapper:wrapper-common-mappers`.
 - New module with centralized Vocab and utilities for dealing with EDC / DCAT JSON-LD: `:utils:json-and-jsonld-utils`
 - New module with utilities for parsing DCAT Catalog responses for use in the UI API Wrapper and the Broker Server: `:utils:catalog-parser`
@@ -260,9 +322,9 @@ MDS 1.2 release using MS8 EDC.
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:4.2.0`
-    - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.2.0`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.2.0`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:4.2.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.2.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.2.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity13`
 
 ## [4.1.0] - 2023-07-24
@@ -278,14 +340,17 @@ Security improvements of container image and enhancements for the `ReferringConn
 ### EDC-Extensions
 
 #### Minor Changes
+
 - ReferringConnectorValidationExtension: Added support for comma separated lists of connectors using the EQ operator as well as pure Lists using the IN operator.
 
 #### Patch Changes
+
 - Automatically delete old transfer-processes if there are more than 3000 entries in the transfer-process-table
 - Change base-image to `eclipse-temurin:17-jre-alpine`
 - Run java process with a non-root user
 
 ### Deployment Migration Notes
+
 - `default` datasource has to be added
   - `EDC_DATASOURCE_DEFAULT_NAME`=default
   - `EDC_DATASOURCE_DEFAULT_URL`=jdbc:postgresql://connector:5432/edc
@@ -375,7 +440,6 @@ No changes besides docker image versions.
 ### Patch Changes
 
 - Minor EE API adjustments.
-
 
 ## [3.2.0] - 2023-05-17
 

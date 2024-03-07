@@ -1,30 +1,43 @@
 name: Trivy Security Scan
 
 on:
-  pull_request:
-    branches: ["main"]
+  push:
+  workflow_dispatch:
 
 jobs:
-  security_scan:
-    name: security_scan
+  security_scan_rootfs:
+    name: security_scan_rootfs
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Run static analysis
+        uses: actions/checkout@v4
+      - name: Run static analysis (rootfs)
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: "fs"
-          scanners: "vuln,config"
+          scan-type: "rootfs"
+          scanners: "vuln,misconfig"
           ignore-unfixed: true
           format: "sarif"
-          output: "trivy-results.sarif"
+          output: "trivy-results-rootfs.sarif"
           severity: "CRITICAL,HIGH"
-
-      - name: Upload Trivy scan results to GitHub Security tab
+  security_scan_repo:
+    name: security_scan_repo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run static analysis (repo)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "repo"
+          scanners: "vuln,misconfig"
+          ignore-unfixed: true
+          format: "sarif"
+          output: "trivy-results-repo.sarif"
+          severity: "CRITICAL,HIGH"
+      - name: Upload Trivy scan results to GitHub Security tab (repo)
         uses: github/codeql-action/upload-sarif@v2
         continue-on-error: true
         with:
-          sarif_file: "trivy-results.sarif"
+          sarif_file: "trivy-results-repo.sarif"
           category: "code"
