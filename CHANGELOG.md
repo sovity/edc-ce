@@ -15,9 +15,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
-- UIAsset: Replaced unsafe additional and private properties with safer alternative fields `customJsonAsString` (**not**
-  affected by Json LD manipulation) and `customJsonLdAsString` (affected by Json LD manipulation), along with their
-  private counterparts.
+- UIAsset: Replaced unsafe additional and private properties with safer alternative fields `customJsonAsString` (**not** affected by Json LD manipulation) and `customJsonLdAsString` (affected by Json LD manipulation), along with their private counterparts.
 - API Wrapper: TS Client Library now supports OAuth Client Credentials
 
 #### Patch Changes
@@ -25,6 +23,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 ### Deployment Migration Notes
 
 #### Compatible Versions
+
 
 ## [7.2.1] - 2024-02-21
 
@@ -39,7 +38,6 @@ https://github.com/sovity/edc-ui/releases/tag/v2.4.0
 ### EDC Extensions
 
 #### Patch Changes
-
 - DspCatalogService: Contract Offer IDs are now stable
 - Fixed some requests' timeouts by removing the data-plane-instance-store-sql Extension
 
@@ -48,7 +46,6 @@ https://github.com/sovity/edc-ui/releases/tag/v2.4.0
 _No special deployment migration steps required_
 
 #### Compatible Versions
-
 - Connector Backend Docker Images:
     - Dev EDC: `ghcr.io/sovity/edc-dev:7.2.1`
     - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.2.1`
@@ -270,20 +267,15 @@ https://github.com/sovity/edc-ui/releases/tag/v2.0.0
     - Create Policy Definition
     - Delete Policy Definition
     - Dashboard Page
-- New modules with common UI models and mappers for the Connector UI and Broker
-  UI: `:extensions:wrapper:wrapper-common-api` and `:extensions:wrapper:wrapper-common-mappers`.
+- New modules with common UI models and mappers for the Connector UI and Broker UI: `:extensions:wrapper:wrapper-common-api` and `:extensions:wrapper:wrapper-common-mappers`.
 - New module with centralized Vocab and utilities for dealing with EDC / DCAT JSON-LD: `:utils:json-and-jsonld-utils`
-- New module with utilities for parsing DCAT Catalog responses for use in the UI API Wrapper and the Broker
-  Server: `:utils:catalog-parser`
-- New modules with utilities for E2E Testing Connectors: `:utils:test-connector-remote`
-  and `:extensions:test-backend-controller`
+- New module with utilities for parsing DCAT Catalog responses for use in the UI API Wrapper and the Broker Server: `:utils:catalog-parser`
+- New modules with utilities for E2E Testing Connectors: `:utils:test-connector-remote` and `:extensions:test-backend-controller`
 
 #### Patch Changes
 
-- New modules in `:launchers:common` and `:launchers:connectors` so building different variants no longer requires
-  separate builds.
-- New module `:extensions:wrapper:wrapper-api` split from `:extensions:wrapper:wrapper` so integration tests
-  in `wrapper` can use the Java Client Library.
+- New modules in `:launchers:common` and `:launchers:connectors` so building different variants no longer requires separate builds.
+- New module `:extensions:wrapper:wrapper-api` split from `:extensions:wrapper:wrapper` so integration tests in `wrapper` can use the Java Client Library.
 - New JUnit E2E Tests in `:launchers:connectors:sovity-dev` that start two connectors and test the data exchange.
 
 ### Deployment Migration Notes
@@ -291,18 +283,13 @@ https://github.com/sovity/edc-ui/releases/tag/v2.0.0
 1. Deployment Migration Notes for the EDC UI: https://github.com/sovity/edc-ui/releases/tag/v2.0.0
 2. The Connector Endpoint changed to `https://[FQDN]/api/dsp` from ~~`https://[FQDN]/api/v1/ids/data`~~.
 3. The Management Endpoint changed to `https://[FQDN]/api/management` from ~~`https://[FQDN]/api/v1/management`~~.
-4. The `v1` Eclipse EDC Management API has been replaced by the Eclipse EDC `JSON-LD` `v2` Management API. Our Postman
-   Collection shows some example requests.
-   However, a switch to our [API Wrapper](extensions/wrapper/README.md) is recommended. Despite our Use Case API Wrapper
-   API still being in development,
-   the Connector UI API Wrapper is fully functional and can be used in concatenation with our type-safe generated API
-   Client Libraries to both provide and
+4. The `v1` Eclipse EDC Management API has been replaced by the Eclipse EDC `JSON-LD` `v2` Management API. Our Postman Collection shows some example requests.
+   However, a switch to our [API Wrapper](extensions/wrapper/README.md) is recommended. Despite our Use Case API Wrapper API still being in development,
+   the Connector UI API Wrapper is fully functional and can be used in concatenation with our type-safe generated API Client Libraries to both provide and
    consume data offers.
-5. The Connector now uses the Data Space Protocol (DSP) instead of the IDS Protocol. This requires different paths to be
-   available from the internet.
+5. The Connector now uses the Data Space Protocol (DSP) instead of the IDS Protocol. This requires different paths to be available from the internet.
    Please refer to our deployment guide for more information.
-6. If the old protocol endpoint required HTTP communication to pass as a workaround for a certain bug, this should be
-   undone now,
+6. If the old protocol endpoint required HTTP communication to pass as a workaround for a certain bug, this should be undone now,
    with all protocol endpoints being secured by HTTPS/TLS.
 
 #### Compatible Versions
@@ -352,18 +339,14 @@ Security improvements of container image and enhancements for the `ReferringConn
 ### EDC-Extensions
 
 #### Minor Changes
-
-- ReferringConnectorValidationExtension: Added support for comma separated lists of connectors using the EQ operator as
-  well as pure Lists using the IN operator.
+- ReferringConnectorValidationExtension: Added support for comma separated lists of connectors using the EQ operator as well as pure Lists using the IN operator.
 
 #### Patch Changes
-
 - Automatically delete old transfer-processes if there are more than 3000 entries in the transfer-process-table
 - Change base-image to `eclipse-temurin:17-jre-alpine`
 - Run java process with a non-root user
 
 ### Deployment Migration Notes
-
 - `default` datasource has to be added
     - `EDC_DATASOURCE_DEFAULT_NAME`=default
     - `EDC_DATASOURCE_DEFAULT_URL`=jdbc:postgresql://connector:5432/edc
@@ -453,6 +436,7 @@ No changes besides docker image versions.
 ### Patch Changes
 
 - Minor EE API adjustments.
+
 
 ## [3.2.0] - 2023-05-17
 

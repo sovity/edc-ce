@@ -28,7 +28,7 @@ export class AccessTokenService {
      * Synchronized refreshing of the access token
      */
     async refreshAccessToken(): Promise<string> {
-        console.log("Refreshing");
+        console.log('Refreshing');
         if (this.activeRequest) {
             await this.activeRequest;
             return this.accessToken!;
