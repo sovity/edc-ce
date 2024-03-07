@@ -8,9 +8,7 @@ export class AccessTokenService {
     private tokenRequestFormData: string;
     private accessToken: string | null = null;
 
-    constructor(
-        private clientCredentials: ClientCredentials,
-    ) {
+    constructor(private clientCredentials: ClientCredentials) {
         this.tokenRequestFormData = buildTokenRequestFormData(
             clientCredentials.clientId,
             clientCredentials.clientSecret,
