@@ -6,10 +6,10 @@ export class AccessTokenService {
     private activeRequest: Promise<ClientCredentialsResponse> | null = null;
     private refreshTimeout?: NodeJS.Timeout;
     private tokenRequestFormData: string;
+    private accessToken: string | null = null;
 
     constructor(
         private clientCredentials: ClientCredentials,
-        private accessToken: string | null,
     ) {
         this.tokenRequestFormData = buildTokenRequestFormData(
             clientCredentials.clientId,
@@ -19,16 +19,15 @@ export class AccessTokenService {
 
     async getAccessToken(): Promise<string> {
         if (!this.accessToken) {
-            await this.refreshAccessToken();
+            return await this.refreshAccessToken();
         }
-        return this.accessToken!;
+        return this.accessToken;
     }
 
     /**
      * Synchronized refreshing of the access token
      */
     async refreshAccessToken(): Promise<string> {
-        console.log('Refreshing');
         if (this.activeRequest) {
             await this.activeRequest;
             return this.accessToken!;

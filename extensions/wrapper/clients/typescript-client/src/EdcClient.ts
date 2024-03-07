@@ -52,7 +52,7 @@ export function buildEdcClient(opts: EdcClientOptions): EdcClient {
 function buildOAuthMiddleware(
     clientCredentials: ClientCredentials,
 ): Middleware {
-    const accessTokenService = new AccessTokenService(clientCredentials, null);
+    const accessTokenService = new AccessTokenService(clientCredentials);
 
     return new OAuthMiddleware(accessTokenService).build();
 }
