@@ -1,22 +1,17 @@
 import {Middleware, RequestContext, ResponseContext} from '../generated';
-import {AccessTokenInjector} from './AccessTokenInjector';
-import {AccessTokenStore} from './AccessTokenStore';
-import {needsAuthentication} from './HttpUtils';
+import {needsAuthentication} from '../utils/HttpUtils';
+import {AccessTokenService} from './AccessTokenService';
+import {injectAccessTokenHeader} from './RequestUtils';
 
 export class OAuthMiddleware {
-    constructor(
-        private accessTokenInjector: AccessTokenInjector,
-        private accessTokenStore: AccessTokenStore,
-    ) {}
+    constructor(private accessTokenService: AccessTokenService) {}
 
     build(): Middleware {
         return {
             pre: async (ctx: RequestContext) => {
-                if (!this.accessTokenStore.accessToken) {
-                    await this.accessTokenStore.refreshToken();
-                }
-
-                this.injectAccessTokenHeader(ctx.init);
+                const accessToken =
+                    await this.accessTokenService.getAccessToken();
+                injectAccessTokenHeader(ctx.init, accessToken);
 
                 return Promise.resolve({
                     url: ctx.url,
@@ -25,8 +20,9 @@ export class OAuthMiddleware {
             },
             post: async (ctx: ResponseContext): Promise<Response> => {
                 if (needsAuthentication(ctx.response.status)) {
-                    await this.accessTokenStore.refreshToken();
-                    this.injectAccessTokenHeader(ctx.init);
+                    const accessToken =
+                        await this.accessTokenService.refreshAccessToken();
+                    injectAccessTokenHeader(ctx.init, accessToken);
                     // Use normal fetch to not trigger middleware on retry
                     return await fetch(ctx.url, ctx.init);
                 }
@@ -34,14 +30,5 @@ export class OAuthMiddleware {
                 return Promise.resolve(ctx.response);
             },
         };
-    }
-
-    private injectAccessTokenHeader(req: RequestInit) {
-        if (this.accessTokenStore.accessToken) {
-            this.accessTokenInjector.inject(
-                req,
-                this.accessTokenStore.accessToken,
-            );
-        }
     }
 }

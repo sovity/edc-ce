@@ -6,11 +6,9 @@ import {
     UIApi,
     UseCaseApi,
 } from './generated';
-import {AccessTokenFetcher} from './oauth2/AccessTokenFetcher';
-import {AccessTokenInjector} from './oauth2/AccessTokenInjector';
-import {AccessTokenStore} from './oauth2/AccessTokenStore';
-import {OAuth2ClientCredentials} from './oauth2/OAuth2ClientCredentials';
+import {AccessTokenService} from './oauth2/AccessTokenService';
 import {OAuthMiddleware} from './oauth2/OAuthMiddleware';
+import {OAuth2ClientCredentials} from './oauth2/model/OAuth2ClientCredentials';
 
 /**
  * API Client for our sovity EDC
@@ -29,8 +27,8 @@ export function buildEdcClient(opts: EdcClientOptions): EdcClient {
     let middleware: Middleware[] = [];
     let headers: Record<string, string> = {};
 
-    if (opts.oAuth2ClientCredentials) {
-        middleware.push(buildOAuthMiddleware(opts.oAuth2ClientCredentials));
+    if (opts.clientCredentials) {
+        middleware.push(buildOAuthMiddleware(opts.clientCredentials));
     }
     if (opts.managementApiKey) {
         headers = buildApiKeyHeader(opts.managementApiKey);
@@ -54,11 +52,9 @@ export function buildEdcClient(opts: EdcClientOptions): EdcClient {
 function buildOAuthMiddleware(
     clientCredentials: OAuth2ClientCredentials,
 ): Middleware {
-    const accessTokenFetcher = new AccessTokenFetcher(clientCredentials);
-    const accessTokenStore = new AccessTokenStore(accessTokenFetcher);
-    const accessTokenInjector = new AccessTokenInjector();
+    const accessTokenService = new AccessTokenService(clientCredentials, null);
 
-    return new OAuthMiddleware(accessTokenInjector, accessTokenStore).build();
+    return new OAuthMiddleware(accessTokenService).build();
 }
 
 function buildApiKeyHeader(key: string) {
@@ -73,6 +69,6 @@ function buildApiKeyHeader(key: string) {
 export interface EdcClientOptions {
     managementApiUrl: string;
     managementApiKey?: string;
-    oAuth2ClientCredentials?: OAuth2ClientCredentials;
+    clientCredentials?: OAuth2ClientCredentials;
     configOverrides?: Partial<ConfigurationParameters>;
 }
