@@ -8,7 +8,7 @@ import {
 } from './generated';
 import {AccessTokenService} from './oauth2/AccessTokenService';
 import {OAuthMiddleware} from './oauth2/OAuthMiddleware';
-import {OAuth2ClientCredentials} from './oauth2/model/OAuth2ClientCredentials';
+import {ClientCredentials} from './oauth2/model/ClientCredentials';
 
 /**
  * API Client for our sovity EDC
@@ -50,7 +50,7 @@ export function buildEdcClient(opts: EdcClientOptions): EdcClient {
 }
 
 function buildOAuthMiddleware(
-    clientCredentials: OAuth2ClientCredentials,
+    clientCredentials: ClientCredentials,
 ): Middleware {
     const accessTokenService = new AccessTokenService(clientCredentials, null);
 
@@ -69,6 +69,6 @@ function buildApiKeyHeader(key: string) {
 export interface EdcClientOptions {
     managementApiUrl: string;
     managementApiKey?: string;
-    clientCredentials?: OAuth2ClientCredentials;
+    clientCredentials?: ClientCredentials;
     configOverrides?: Partial<ConfigurationParameters>;
 }

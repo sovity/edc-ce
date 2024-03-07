@@ -1,6 +1,6 @@
 import {ClientCredentialsResponse, fetchClientCredentials} from './FetchUtils';
 import {buildTokenRequestFormData} from './RequestUtils';
-import {OAuth2ClientCredentials} from './model/OAuth2ClientCredentials';
+import {ClientCredentials} from './model/ClientCredentials';
 
 export class AccessTokenService {
     private activeRequest: Promise<ClientCredentialsResponse> | null = null;
@@ -8,7 +8,7 @@ export class AccessTokenService {
     private tokenRequestFormData: string;
 
     constructor(
-        private clientCredentials: OAuth2ClientCredentials,
+        private clientCredentials: ClientCredentials,
         private accessToken: string | null,
     ) {
         this.tokenRequestFormData = buildTokenRequestFormData(
