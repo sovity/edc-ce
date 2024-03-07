@@ -243,12 +243,12 @@ https://github.com/sovity/edc-ui/releases/tag/v2.0.0
 #### Major Changes
 
 - Bump Eclipse EDC Version to `0.2.1`:
-    - Now using the Data Space Protocol (DSP) over the ~~IDS Protocol~~.
-    - Major changes to the Management API. See the postman collection / OpenAPI file.
+  - Now using the Data Space Protocol (DSP) over the ~~IDS Protocol~~.
+  - Major changes to the Management API. See the postman collection / OpenAPI file.
 - The Getting Started Docker Compose file is no longer to be used as reference for deployments:
-    - The Getting Started Docker Compose file now launches connectors for local demo purposes.
-    - For productive deployments, a detailed deployment guide has been added.
-    - The Dev-Images now also require a PostgreSQL Database.
+  - The Getting Started Docker Compose file now launches connectors for local demo purposes.
+  - For productive deployments, a detailed deployment guide has been added.
+  - The Dev-Images now also require a PostgreSQL Database.
 - Removed IDS Broker Extension.
 - Removed IDS Clearing House Extension.
 
@@ -295,9 +295,9 @@ https://github.com/sovity/edc-ui/releases/tag/v2.0.0
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:5.0.0`
-    - sovity EDC CE: `ghcr.io/sovity/edc-ce:5.0.0`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:5.0.0`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:5.0.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:5.0.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:5.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.0.0`
 
 ## [4.2.0] - 2023-09-01
@@ -348,17 +348,17 @@ Security improvements of container image and enhancements for the `ReferringConn
 
 ### Deployment Migration Notes
 - `default` datasource has to be added
-    - `EDC_DATASOURCE_DEFAULT_NAME`=default
-    - `EDC_DATASOURCE_DEFAULT_URL`=jdbc:postgresql://connector:5432/edc
-    - `EDC_DATASOURCE_DEFAULT_USER`=user
-    - `EDC_DATASOURCE_DEFAULT_PASSWORD`=password
+  - `EDC_DATASOURCE_DEFAULT_NAME`=default
+  - `EDC_DATASOURCE_DEFAULT_URL`=jdbc:postgresql://connector:5432/edc
+  - `EDC_DATASOURCE_DEFAULT_USER`=user
+  - `EDC_DATASOURCE_DEFAULT_PASSWORD`=password
 
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:4.1.0`
-    - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.1.0`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.1.0`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:4.1.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.1.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.1.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity12`
 
 ## [4.0.1] - 2023-07-07
@@ -384,9 +384,9 @@ No changes besides docker image versions.
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:4.0.1`
-    - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.1`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.1`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:4.0.1`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.1`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.1`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity11`
 
 ## [4.0.0] - 2023-07-05
@@ -420,9 +420,9 @@ No changes besides docker image versions.
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:4.0.0`
-    - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.0`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.0`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:4.0.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:4.0.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:4.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:0.0.1-milestone-8-sovity9`
 
 ## [3.3.0] - 2023-06-06
