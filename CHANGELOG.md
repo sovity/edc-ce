@@ -20,6 +20,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
+- Fixed an asset select issue resulting from a bad compare function
+
 #### Deployment Migration Notes
 
 ## [v2.5.0] - 2024-02-28

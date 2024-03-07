@@ -4,7 +4,7 @@
     <mat-select
       multiple
       [formControl]="control"
-      [compareWith]="'id' | compareByField">
+      [compareWith]="'assetId' | compareByField">
       <mat-option *ngFor="let asset of assets" [value]="asset">
         <div *ngIf="asset.title" class="flex flex-col">
           {{ asset.title }}
