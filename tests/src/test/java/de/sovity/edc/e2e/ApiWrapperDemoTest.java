@@ -38,6 +38,8 @@ import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.awaitility.Awaitility;
+import org.eclipse.edc.connector.contract.ContractCoreExtension;
+import org.eclipse.edc.connector.contract.spi.negotiation.ContractNegotiationPendingGuard;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,6 +53,9 @@ import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validat
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class ApiWrapperDemoTest {
 
@@ -82,6 +87,9 @@ class ApiWrapperDemoTest {
         // set up provider EDC + Client
         var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 21000, PROVIDER_DATABASE);
         providerEdcContext.setConfiguration(providerConfig.getProperties());
+        ContractNegotiationPendingGuard guard = mock(ContractNegotiationPendingGuard.class);
+        when(guard.test(any())).thenReturn(true);
+        providerEdcContext.registerServiceMock(ContractNegotiationPendingGuard.class, guard);
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
         providerClient = EdcClient.builder()
@@ -220,4 +228,5 @@ class ApiWrapperDemoTest {
     private String getProtocolEndpoint(ConnectorRemote connector) {
         return connector.getConfig().getProtocolEndpoint().getUri().toString();
     }
+
 }

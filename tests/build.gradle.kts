@@ -13,6 +13,7 @@ val mockitoVersion: String by project
 dependencies {
     api(project(":launchers:common:base"))
     api(project(":launchers:common:auth-mock"))
+    implementation("${edcGroup}:contract-core:${edcVersion}")
 
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
