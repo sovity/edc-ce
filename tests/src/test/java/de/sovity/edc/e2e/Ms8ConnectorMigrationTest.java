@@ -20,7 +20,7 @@ import de.sovity.edc.ext.wrapper.utils.EdcDateUtils;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
+import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.data.TemporalUnitLessThanOffset;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -32,7 +32,6 @@ import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
@@ -54,9 +53,9 @@ class Ms8ConnectorMigrationTest {
     static EdcExtension consumerEdcContext = new EdcExtension();
 
     @RegisterExtension
-    static final TestDatabase PROVIDER_DATABASE = TestDatabaseFactory.getTestDatabase(1);
+    static final TestDatabase PROVIDER_DATABASE = new TestDatabaseViaTestcontainers();
     @RegisterExtension
-    static final TestDatabase CONSUMER_DATABASE = TestDatabaseFactory.getTestDatabase(2);
+    static final TestDatabase CONSUMER_DATABASE = new TestDatabaseViaTestcontainers();
 
     private ConnectorRemote providerConnector;
     private ConnectorRemote consumerConnector;
@@ -124,15 +123,6 @@ class Ms8ConnectorMigrationTest {
             softly.assertThat(asset.getPublisherHomepage()).isEqualTo("https://publisher");
             softly.assertThat(asset.getTransportMode()).isEqualTo("Rail");
             softly.assertThat(asset.getVersion()).isEqualTo("1.0");
-            softly.assertThat(asset.getAdditionalProperties()).isEqualTo(Map.of(
-                    "http://unknown/usecase", "my-use-case",
-                    "http://unknown/custom-prop-1", "1",
-                    "http://custom-prop-2", "2",
-                    "https://custom-prop-3", "3"
-            ));
-            softly.assertThat(asset.getAdditionalJsonProperties()).isNullOrEmpty();
-            softly.assertThat(asset.getPrivateJsonProperties()).isNullOrEmpty();
-            softly.assertThat(asset.getPrivateProperties()).isNullOrEmpty();
         });
     }
 

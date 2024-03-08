@@ -558,34 +558,23 @@ components:
             type: string
             description: Data Address
           description: Data Address
-        additionalProperties:
-          type: object
-          additionalProperties:
-            type: string
-            description: Custom Asset Properties (that are strings)
-          description: Custom Asset Properties (that are strings)
-        additionalJsonProperties:
-          type: object
-          additionalProperties:
-            type: string
-            description: Custom Asset Properties (that are not strings but other JSON
-              values)
-          description: Custom Asset Properties (that are not strings but other JSON
-            values)
-        privateProperties:
-          type: object
-          additionalProperties:
-            type: string
-            description: Private Asset Properties (that are strings)
-          description: Private Asset Properties (that are strings)
-        privateJsonProperties:
-          type: object
-          additionalProperties:
-            type: string
-            description: Private Asset Properties (that are not strings but other
-              JSON values)
-          description: Private Asset Properties (that are not strings but other JSON
-            values)
+        customJsonAsString:
+          type: string
+          description: Contains serialized custom properties in the JSON format.
+        customJsonLdAsString:
+          type: string
+          description: "Contains serialized custom properties in the JSON LD format.\
+            \ Contrary to the customJsonAsString field, this string must represent\
+            \ a JSON LD object and will be affected by JSON LD compaction and expansion.\
+            \ Due to a technical limitation, the properties can't be booleans."
+        privateCustomJsonAsString:
+          type: string
+          description: Same as customJsonAsString but the data will be stored in the
+            private properties.
+        privateCustomJsonLdAsString:
+          type: string
+          description: Same as customJsonLdAsString but the data will be stored in
+            the private properties. The same limitations apply.
       description: Type-Safe OpenAPI generator friendly Asset Create DTO that supports
         an opinionated subset of the original EDC Asset Entity.
     IdResponseDto:
@@ -839,34 +828,23 @@ components:
           type: string
           description: Temporal coverage end date (inclusive)
           format: date
-        additionalProperties:
-          type: object
-          additionalProperties:
-            type: string
-            description: Custom Asset Properties (that are strings)
-          description: Custom Asset Properties (that are strings)
-        additionalJsonProperties:
-          type: object
-          additionalProperties:
-            type: string
-            description: Custom Asset Properties (that are not strings but other JSON
-              values)
-          description: Custom Asset Properties (that are not strings but other JSON
-            values)
-        privateProperties:
-          type: object
-          additionalProperties:
-            type: string
-            description: Private Asset Properties (that are strings)
-          description: Private Asset Properties (that are strings)
-        privateJsonProperties:
-          type: object
-          additionalProperties:
-            type: string
-            description: Private Asset Properties (that are not strings but other
-              JSON values)
-          description: Private Asset Properties (that are not strings but other JSON
-            values)
+        customJsonAsString:
+          type: string
+          description: Contains serialized custom properties in the JSON format.
+        customJsonLdAsString:
+          type: string
+          description: "Contains serialized custom properties in the JSON LD format.\
+            \ Contrary to the customJsonAsString field, this string must represent\
+            \ a JSON LD object and will be affected by JSON LD compaction and expansion.\
+            \ Due to a technical limitation, the properties can't be booleans."
+        privateCustomJsonAsString:
+          type: string
+          description: Same as customJsonAsString but the data will be stored in the
+            private properties.
+        privateCustomJsonLdAsString:
+          type: string
+          description: Same as customJsonLdAsString but the data will be stored in
+            the private properties. The same limitations apply.
       description: Data for editing an asset.
     AssetPage:
       required:
@@ -1010,37 +988,26 @@ components:
           type: string
           description: Temporal coverage end date (inclusive)
           format: date
-        additionalProperties:
-          type: object
-          additionalProperties:
-            type: string
-            description: Unhandled Asset Properties (that were strings)
-          description: Unhandled Asset Properties (that were strings)
-        additionalJsonProperties:
-          type: object
-          additionalProperties:
-            type: string
-            description: Unhandled Asset Properties (that were not strings but other
-              JSON values)
-          description: Unhandled Asset Properties (that were not strings but other
-            JSON values)
-        privateProperties:
-          type: object
-          additionalProperties:
-            type: string
-            description: Private Asset Properties (that were strings)
-          description: Private Asset Properties (that were strings)
-        privateJsonProperties:
-          type: object
-          additionalProperties:
-            type: string
-            description: Private Asset Properties (that were not strings but other
-              JSON values)
-          description: Private Asset Properties (that were not strings but other JSON
-            values)
         assetJsonLd:
           type: string
           description: Contains the entire asset in the JSON-LD format
+        customJsonAsString:
+          type: string
+          description: Contains serialized custom properties in the JSON format.
+        customJsonLdAsString:
+          type: string
+          description: "Contains serialized custom properties in the JSON LD format.\
+            \ Contrary to the customJsonAsString field, this string must represent\
+            \ a JSON LD object and will be affected by JSON LD compaction and expansion.\
+            \ Due to a technical limitation, the properties can't be booleans."
+        privateCustomJsonAsString:
+          type: string
+          description: Same as customJsonAsString but the data will be stored in the
+            private properties.
+        privateCustomJsonLdAsString:
+          type: string
+          description: Same as customJsonLdAsString but the data will be stored in
+            the private properties. The same limitations apply.
       description: Type-Safe Asset Metadata as needed by our UI
     UiContractOffer:
       required:

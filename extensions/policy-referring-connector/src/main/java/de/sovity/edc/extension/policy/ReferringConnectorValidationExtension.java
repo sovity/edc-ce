@@ -27,11 +27,15 @@ package de.sovity.edc.extension.policy;
 import de.sovity.edc.extension.policy.functions.ReferringConnectorDutyFunction;
 import de.sovity.edc.extension.policy.functions.ReferringConnectorPermissionFunction;
 import de.sovity.edc.extension.policy.functions.ReferringConnectorProhibitionFunction;
+import org.eclipse.edc.connector.contract.spi.offer.ContractDefinitionResolver;
+import org.eclipse.edc.connector.contract.spi.validation.ContractValidationService;
+import org.eclipse.edc.policy.engine.spi.AtomicConstraintFunction;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.policy.engine.spi.RuleBindingRegistry;
 import org.eclipse.edc.policy.model.Duty;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Prohibition;
+import org.eclipse.edc.policy.model.Rule;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
@@ -97,17 +101,16 @@ public class ReferringConnectorValidationExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        final var monitor = context.getMonitor();
+        ruleBindingRegistry.bind(REFERRING_CONNECTOR_CONSTRAINT_KEY, ContractValidationService.NEGOTIATION_SCOPE);
+        ruleBindingRegistry.bind(REFERRING_CONNECTOR_CONSTRAINT_KEY, ContractDefinitionResolver.CATALOGING_SCOPE);
 
-        final var dutyFunction = new ReferringConnectorDutyFunction(monitor);
-        final var permissionFunction = new ReferringConnectorPermissionFunction(monitor);
-        final var prohibitionFunction = new ReferringConnectorProhibitionFunction(monitor);
+        var monitor = context.getMonitor();
+        registerPolicyFunction(Duty.class, new ReferringConnectorDutyFunction(monitor));
+        registerPolicyFunction(Permission.class, new ReferringConnectorPermissionFunction(monitor));
+        registerPolicyFunction(Prohibition.class, new ReferringConnectorProhibitionFunction(monitor));
+    }
 
-        ruleBindingRegistry.bind("USE", ALL_SCOPES);
-        ruleBindingRegistry.bind(REFERRING_CONNECTOR_CONSTRAINT_KEY, ALL_SCOPES);
-
-        policyEngine.registerFunction(ALL_SCOPES, Duty.class, REFERRING_CONNECTOR_CONSTRAINT_KEY, dutyFunction);
-        policyEngine.registerFunction(ALL_SCOPES, Permission.class, REFERRING_CONNECTOR_CONSTRAINT_KEY, permissionFunction);
-        policyEngine.registerFunction(ALL_SCOPES, Prohibition.class, REFERRING_CONNECTOR_CONSTRAINT_KEY, prohibitionFunction);
+    private <R extends Rule> void registerPolicyFunction(Class<R> type, AtomicConstraintFunction<R> function) {
+        policyEngine.registerFunction(ALL_SCOPES, type, REFERRING_CONNECTOR_CONSTRAINT_KEY, function);
     }
 }

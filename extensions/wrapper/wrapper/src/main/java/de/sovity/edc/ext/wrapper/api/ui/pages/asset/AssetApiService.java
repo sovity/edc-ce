@@ -22,6 +22,7 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditMetadataRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
@@ -49,17 +50,17 @@ public class AssetApiService {
 
     @NotNull
     public IdResponseDto createAsset(UiAssetCreateRequest request) {
-        var asset = assetBuilder.fromCreateRequest(request);
-        asset = assetService.create(asset).orElseThrow(ServiceException::new);
-        return new IdResponseDto(asset.getId());
+        val asset = assetBuilder.fromCreateRequest(request);
+        val createdAsset = assetService.create(asset).orElseThrow(ServiceException::new);
+        return new IdResponseDto(createdAsset.getId());
     }
 
     public IdResponseDto editAsset(String assetId, UiAssetEditMetadataRequest request) {
-        var asset = assetService.findById(assetId);
-        Objects.requireNonNull(asset, "Asset with ID %s not found".formatted(assetId));
-        asset = assetBuilder.fromEditMetadataRequest(asset, request);
-        asset = assetService.update(asset).orElseThrow(ServiceException::new);
-        return new IdResponseDto(asset.getId());
+        val foundAsset = assetService.findById(assetId);
+        Objects.requireNonNull(foundAsset, "Asset with ID %s not found".formatted(assetId));
+        val editedAsset = assetBuilder.fromEditMetadataRequest(foundAsset, request);
+        val updatedAsset = assetService.update(editedAsset).orElseThrow(ServiceException::new);
+        return new IdResponseDto(updatedAsset.getId());
     }
 
     @NotNull

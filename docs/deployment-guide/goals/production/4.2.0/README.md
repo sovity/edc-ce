@@ -59,7 +59,10 @@ proxy (at least the protocol endpoint needs to be).
 - Exposing to the internet:
     - The Protocol API must be reachable via the internet. The required endpoints can be found in
       this [public-endpoints.yaml](public-endpoints.yaml)
-    - Exposing the UI or the Management Endpoint to the internet requires an intermediate auth proxy.
+    - Exposing the UI or the Management Endpoint to the internet requires an intermediate auth proxy, we recommend restricting the access to the Management Endpoint to your internal network.
+- Security:
+    - Limit the header size in the proxy so that only a certain number of API Keys can be tested with one API-request (e.g. limit to 8kb).
+    - Limit the access rate to the API endpoints and monitor access for attacks like brute force attacks.
 
 ## EDC UI Configuration
 
@@ -118,6 +121,7 @@ MY_EDC_JDBC_USER: edc
 MY_EDC_JDBC_PASSWORD: edc
 
 # Management API Key
+# high entropy recommended when configuring the value (length, complexity, e.g. [a-zA-Z0-9+special chars]{32+ chars})
 EDC_API_AUTH_KEY: ApiKeyDefaultValue
 
 # Connector Maintainer

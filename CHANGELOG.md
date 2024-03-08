@@ -14,14 +14,76 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Major Changes
 
 #### Minor Changes
-- Add new MDS fields and migrate existing MDS asset keys to mobilityDCAT-AP
+
+- UIAsset: Replaced unsafe additional and private properties with safer alternative fields `customJsonAsString` (**not** affected by Json LD manipulation) and `customJsonLdAsString` (affected by Json LD manipulation), along with their private counterparts.
+- API Wrapper: TS Client Library now supports OAuth Client Credentials
 
 #### Patch Changes
-- Docs: Enhanced starting a Http-Pull over the EDC-Ui documentation
 
 ### Deployment Migration Notes
 
 #### Compatible Versions
+
+
+## [7.2.1] - 2024-02-21
+
+### Overview
+
+Bugfixes
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v2.4.0
+
+### EDC Extensions
+
+#### Patch Changes
+- DspCatalogService: Contract Offer IDs are now stable
+- Fixed some requests' timeouts by removing the data-plane-instance-store-sql Extension
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:7.2.1`
+    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.2.1`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.2.1`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.4.0`
+
+## [7.2.0] - 2024-02-14
+
+### Overview
+
+MDS bugfix and feature release
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v2.4.0
+
+#### Minor Changes
+
+- Assets now have new MDS fields
+
+#### Patch Changes
+
+- Docs: Improved documentation of HTTP pull (edc-ui)
+- Docs: Add security recommendations for recent API key vulnerabilities
+- Fixed connector restricted usage policy
+- Fixed connection pool issues by switching to Tractus-X connection pool
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:7.2.0`
+    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.2.0`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.2.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.4.0`
 
 ## [7.1.1] - 2024-01-18
 

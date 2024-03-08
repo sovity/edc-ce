@@ -21,41 +21,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-    services:
-      postgres1:
-        image: postgres:15
-        env:
-          POSTGRES_USER: edc
-          POSTGRES_PASSWORD: edc
-          POSTGRES_DB: edc
-        ports:
-          - 54321:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      postgres2:
-        image: postgres:15
-        env:
-          POSTGRES_USER: edc
-          POSTGRES_PASSWORD: edc
-          POSTGRES_DB: edc
-        ports:
-          - 54322:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    env:
-      SKIP_TESTCONTAINERS: true
-      TEST_POSTGRES_1_JDBC_URL: jdbc:postgresql://localhost:54321/edc
-      TEST_POSTGRES_1_JDBC_USER: edc
-      TEST_POSTGRES_1_JDBC_PASSWORD: edc
-      TEST_POSTGRES_2_JDBC_URL: jdbc:postgresql://localhost:54322/edc
-      TEST_POSTGRES_2_JDBC_USER: edc
-      TEST_POSTGRES_2_JDBC_PASSWORD: edc
     steps:
       - uses: FranzDiebold/github-env-vars-action@v2
       - uses: actions/checkout@v3
