@@ -85,6 +85,13 @@ allprojects {
                 password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
             }
         }
+        maven {
+            url = uri("https://maven.pkg.github.com/ids-basecamp/ids-infomodel-java")
+            credentials {
+                username = System.getenv("USERNAME")
+                password = System.getenv("TOKEN")
+            }
+        }
     }
 }
 
