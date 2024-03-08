@@ -1,6 +1,6 @@
 import {z} from 'zod';
-import {createUrlEncodedParamsString} from '../utils/HttpUtils';
-import {ClientCredentials} from './model/ClientCredentials';
+import {ClientCredentials} from '../model/ClientCredentials';
+import {createUrlEncodedParamsString} from './HttpUtils';
 
 const ClientCredentialsResponseSchema = z.object({
     access_token: z.string().min(1),

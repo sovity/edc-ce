@@ -1,5 +1,8 @@
-import {ClientCredentialsResponse, fetchClientCredentials} from './FetchUtils';
 import {ClientCredentials} from './model/ClientCredentials';
+import {
+    ClientCredentialsResponse,
+    fetchClientCredentials,
+} from './utils/FetchUtils';
 
 export class AccessTokenService {
     private activeRequest: Promise<ClientCredentialsResponse> | null = null;
@@ -37,6 +40,8 @@ export class AccessTokenService {
     private scheduleNextRefresh(response: ClientCredentialsResponse) {
         clearTimeout(this.refreshTimeout);
         const ms = (response.expires_in - 2) * 1000;
-        this.refreshTimeout = setTimeout(() => this.refreshAccessToken(), ms);
+        this.refreshTimeout = setTimeout(() => {
+            this.accessToken = null;
+        }, ms);
     }
 }

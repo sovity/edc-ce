@@ -1,8 +1,8 @@
 import {Middleware, RequestContext, ResponseContext} from '../generated';
-import {needsAuthentication} from '../utils/HttpUtils';
 import {AccessTokenService} from './AccessTokenService';
-import {injectAccessTokenHeader} from './RequestUtils';
 import {ClientCredentials} from './model/ClientCredentials';
+import {needsAuthentication} from './utils/HttpUtils';
+import {injectAccessTokenHeader} from './utils/RequestUtils';
 
 export function buildOAuthMiddleware(
     clientCredentials: ClientCredentials,

@@ -24,7 +24,7 @@ You can find our API Wrapper Project
 
 ## How to install
 
-Requires Node.js 18.
+Requires global fetch API (provided by Node.js 18+ or browser).
 
 ```shell script
 npm i --save @sovity.de/edc-client
