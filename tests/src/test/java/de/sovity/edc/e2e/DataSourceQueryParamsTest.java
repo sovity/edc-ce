@@ -103,9 +103,8 @@ class DataSourceQueryParamsTest {
         // arrange
         var expected = "a=%";
         // will be encoded in assertResponseContent before request
-        var queryParams = new HashMap<String, String>() {{
-            put("a", "%");
-        }};
+        var queryParams = new HashMap<String, String>();
+        queryParams.put("a", "%");
 
         // act
         // assert
