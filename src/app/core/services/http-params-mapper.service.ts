@@ -26,7 +26,8 @@ export class HttpRequestParamsMapper {
     value: ContractAgreementTransferDialogFormValue,
   ): Record<string, string> {
     const method = value.httpProxiedMethod?.trim() ?? '';
-    const {url: pathSegments, queryParams} = this.getUrlAndQueryParams(
+    const pathSegments = this.getUrl(value.httpProxiedPath);
+    const queryParams = this.getQueryParams(
       value.httpProxiedPath,
       value.httpProxiedQueryParams,
     );
@@ -98,7 +99,8 @@ export class HttpRequestParamsMapper {
       method = null;
     }
 
-    const {url: baseUrl, queryParams} = this.getUrlAndQueryParams(
+    const baseUrl = this.getUrl(formValue?.httpUrl);
+    const queryParams = this.getRawQueryParams(
       formValue?.httpUrl,
       formValue?.httpQueryParams,
     );
@@ -141,34 +143,59 @@ export class HttpRequestParamsMapper {
     return {authHeaderName, authHeaderValue, authHeaderSecretName};
   }
 
-  getUrlAndQueryParams(
+  getUrl(rawUrl: string | null | undefined): string | null {
+    return everythingBefore('?', this.trimOrEmpty(rawUrl));
+  }
+
+  getQueryParams(
     rawUrl: string | null | undefined,
     rawQueryParams: HttpDatasourceQueryParamFormValue[] | null | undefined,
-  ): {
-    url: string | null;
-    queryParams: string | null;
-  } {
-    let rawUrlTrimmed = rawUrl?.trim() ?? '';
-
-    const url = everythingBefore('?', rawUrlTrimmed);
-
+  ): string | null {
     const queryParamSegments = (rawQueryParams ?? []).map((param) =>
       this.encodeQueryParam(param),
     );
     const queryParams = [
-      everythingAfter('?', rawUrlTrimmed),
+      everythingAfter('?', this.trimOrEmpty(rawUrl)),
       ...queryParamSegments,
     ]
       .filter((it) => !!it)
       .join('&');
 
-    return {url: url || null, queryParams: queryParams || null};
+    return queryParams;
+  }
+
+  getRawQueryParams(
+    rawUrl: string | null | undefined,
+    rawQueryParams: HttpDatasourceQueryParamFormValue[] | null | undefined,
+  ): string | null {
+    const queryParamSegments = (rawQueryParams ?? []).map((param) =>
+      this.buildQueryParam(
+        this.trimOrEmpty(param.paramName),
+        this.trimOrEmpty(param.paramValue),
+      ),
+    );
+    const queryParams = [
+      everythingAfter('?', this.trimOrEmpty(rawUrl)),
+      ...queryParamSegments,
+    ]
+      .filter((it) => !!it)
+      .join('&');
+
+    return queryParams;
   }
 
   private encodeQueryParam(param: HttpDatasourceQueryParamFormValue): string {
-    const k = param.paramName?.trim() ?? '';
-    const v = param.paramValue?.trim() ?? '';
-    return `${encodeURIComponent(k)}=${encodeURIComponent(v)}`;
+    const k = encodeURIComponent(this.trimOrEmpty(param.paramName));
+    const v = encodeURIComponent(this.trimOrEmpty(param.paramValue));
+    return this.buildQueryParam(k, v);
+  }
+
+  private trimOrEmpty(s: string | null | undefined): string {
+    return s?.trim() ?? '';
+  }
+
+  private buildQueryParam(name: string, value: string) {
+    return `${name}=${value}`;
   }
 
   private buildHttpHeaders(

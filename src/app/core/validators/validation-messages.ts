@@ -9,4 +9,5 @@ export class ValidationMessages {
     `${field} must start with "${prefix}".`;
   invalidDateRangeMessage = 'Need valid date range.';
   idExistsErrorMessage = 'ID already exists.';
+  invalidQueryParam = "Must not contain '=' or '&' characters.";
 }

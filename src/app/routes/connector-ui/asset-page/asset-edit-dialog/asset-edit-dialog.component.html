@@ -490,6 +490,14 @@
                   required
                   autocomplete="new-query-param-name"
                   [formControl]="header.controls.paramName" />
+                {{ header.errors }}
+                <mat-error
+                  *ngIf="
+                    header.controls.paramName.invalid &&
+                    header.controls.paramName.errors?.invalidQueryParam
+                  "
+                  >{{ validationMessages.invalidQueryParam }}</mat-error
+                >
               </mat-form-field>
 
               <!-- Query Param Value -->
@@ -500,6 +508,13 @@
                   placeholder="..."
                   autocomplete="new-query-param-value"
                   [formControl]="header.controls.paramValue" />
+                <mat-error
+                  *ngIf="
+                    header.controls.paramValue.invalid &&
+                    header.controls.paramValue.errors?.invalidQueryParam
+                  "
+                  >{{ validationMessages.invalidQueryParam }}</mat-error
+                >
               </mat-form-field>
 
               <!-- Query Param Delete Button -->

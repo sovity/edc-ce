@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {validQueryParam} from 'src/app/core/validators/valid-query-param';
 import {switchDisabledControls} from '../../../../../core/utils/form-group-utils';
 import {jsonValidator} from '../../../../../core/validators/json-validator';
 import {urlValidator} from '../../../../../core/validators/url-validator';
@@ -120,8 +121,8 @@ export class AssetDatasourceFormBuilder {
     initial: HttpDatasourceQueryParamFormValue,
   ): FormGroup<HttpDatasourceQueryParamFormModel> {
     return this.formBuilder.nonNullable.group({
-      paramName: [initial.paramName!, Validators.required],
-      paramValue: [initial.paramValue!],
+      paramName: [initial.paramName!, [Validators.required, validQueryParam]],
+      paramValue: [initial.paramValue!, [validQueryParam]],
     });
   }
 }
