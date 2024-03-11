@@ -15,7 +15,12 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
+- UIAsset: Replaced unsafe additional and private properties with safer alternative fields `customJsonAsString` (**not** affected by Json LD manipulation) and `customJsonLdAsString` (affected by Json LD manipulation), along with their private counterparts.
+- API Wrapper: TS Client Library now supports OAuth Client Credentials
+
 #### Patch Changes
+
+- Add e2e test for double encoding of query parameters
 
 ### Deployment Migration Notes
 

@@ -1,11 +1,12 @@
+val assertj: String by project
 val edcVersion: String by project
 val edcGroup: String by project
-val restAssured: String by project
-val assertj: String by project
-val mockitoVersion: String by project
-val lombokVersion: String by project
-val jettyVersion: String by project
 val jettyGroup: String by project
+val jettyVersion: String by project
+val jsonUnit: String by project
+val lombokVersion: String by project
+val mockitoVersion: String by project
+val restAssured: String by project
 
 plugins {
     `java-library`
@@ -61,6 +62,7 @@ dependencies {
     testImplementation("${edcGroup}:dsp-api-configuration:${edcVersion}")
     testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
 
+    testImplementation("net.javacrumbs.json-unit:json-unit-assertj:${jsonUnit}")
     testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.assertj:assertj-core:${assertj}")

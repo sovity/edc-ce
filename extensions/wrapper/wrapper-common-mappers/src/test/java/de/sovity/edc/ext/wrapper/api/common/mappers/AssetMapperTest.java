@@ -8,20 +8,19 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
+import net.javacrumbs.jsonunit.assertj.JsonAssertions;
 import org.eclipse.edc.jsonld.TitaniumJsonLd;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import static jakarta.json.Json.createArrayBuilder;
 import static jakarta.json.Json.createObjectBuilder;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -43,7 +42,7 @@ class AssetMapperTest {
     @SneakyThrows
     void test_buildAssetDto() {
         // Arrange
-        String assetJsonLd = new String(Files.readAllBytes(Paths.get(getClass().getResource("/example-asset.jsonld").toURI())));
+        String assetJsonLd = TestUtils.loadResourceAsString("/example-asset.jsonld");
 
         // Act
         var uiAsset = assetMapper.buildUiAsset(JsonUtils.parseJsonObj(assetJsonLd), endpoint, participantId);
@@ -54,8 +53,10 @@ class AssetMapperTest {
         assertThat(uiAsset.getParticipantId()).isEqualTo(participantId);
         assertThat(uiAsset.getTitle()).isEqualTo("My Asset");
         assertThat(uiAsset.getLanguage()).isEqualTo("https://w3id.org/idsa/code/EN");
-        assertThat(uiAsset.getDescription()).isEqualTo("# Lorem Ipsum...\n## h2 title\n[Link text Here](example.com) 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789");
-        assertThat(uiAsset.getDescriptionShortText()).isEqualTo("Lorem Ipsum... h2 title Link text Here 012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
+        assertThat(uiAsset.getDescription()).isEqualTo(
+                "# Lorem Ipsum...\n## h2 title\n[Link text Here](example.com) 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789");
+        assertThat(uiAsset.getDescriptionShortText()).isEqualTo(
+                "Lorem Ipsum... h2 title Link text Here 012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
         assertThat(uiAsset.getIsOwnConnector()).isEqualTo(true);
         assertThat(uiAsset.getCreatorOrganizationName()).isEqualTo("My Organization Name");
         assertThat(uiAsset.getPublisherHomepage()).isEqualTo("https://data-source.my-org/about");
@@ -85,14 +86,48 @@ class AssetMapperTest {
         assertThat(uiAsset.getTemporalCoverageToInclusive()).isEqualTo("2024-01-22");
 
         assertThat(uiAsset.getAssetJsonLd()).contains("\"%s\"".formatted(Prop.Edc.ID));
-        assertThat(uiAsset.getAdditionalProperties()).containsExactlyEntriesOf(Map.of(
-                "http://unknown/some-custom-string", "some-string-value"));
-        assertThat(uiAsset.getAdditionalJsonProperties()).containsExactlyEntriesOf(Map.of(
-                "http://unknown/some-custom-obj", "{\"http://unknown/a\":\"b\"}"));
-        assertThat(uiAsset.getPrivateProperties()).containsExactlyEntriesOf(Map.of(
-                "http://unknown/some-custom-private-string", "some-private-value"));
-        assertThat(uiAsset.getPrivateJsonProperties()).containsExactlyEntriesOf(Map.of(
-                "http://unknown/some-custom-private-obj", "{\"http://unknown/a-private\":\"b-private\"}"));
+
+        JsonAssertions.assertThatJson(uiAsset.getCustomJsonAsString())
+                .isEqualTo("""
+                        {
+                          "array": [3, 1, 4, 1, 5],
+                          "boolean": false,
+                          "null": null,
+                          "number": 116,
+                          "object": {
+                            "key": "value"
+                          },
+                          "string": "value"
+                        }
+                        """);
+        JsonAssertions.assertThatJson(uiAsset.getCustomJsonLdAsString())
+                .isObject()
+                .containsEntry("http://unknown/some-custom-string", "some-string-value")
+                .containsEntry("http://unknown/some-custom-obj", json("""
+                        { "http://unknown/a": "b" }
+                        """));
+
+        JsonAssertions.assertThatJson(uiAsset.getPrivateCustomJsonAsString())
+                .isEqualTo("""
+                        {
+                          "priv_array": [3, 1, 4, 1, 5],
+                          "priv_boolean": false,
+                          "priv_null": null,
+                          "priv_number": 116,
+                          "priv_object": {
+                            "key": "value"
+                          },
+                          "priv_string": "value"
+                        }
+                        """);
+        JsonAssertions.assertThatJson(uiAsset.getPrivateCustomJsonLdAsString())
+                .isObject()
+                .containsEntry("http://unknown/some-custom-private-string", "some-private-value")
+                .containsEntry("http://unknown/some-custom-private-obj", json("""
+                        {
+                            "http://unknown/a-private": "b-private"
+                        }
+                        """));
     }
 
     @Test
@@ -102,6 +137,7 @@ class AssetMapperTest {
         var assetJsonLd = createObjectBuilder()
                 .add(Prop.ID, "my-asset-1")
                 .build();
+
         // Act
         var uiAsset = assetMapper.buildUiAsset(assetJsonLd, endpoint, participantId);
 

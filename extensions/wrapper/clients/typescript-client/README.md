@@ -24,7 +24,7 @@ You can find our API Wrapper Project
 
 ## How to install
 
-Requires a NodeJS / NPM project.
+Requires global fetch API (provided by Node.js 18+ or browser).
 
 ```shell script
 npm i --save @sovity.de/edc-client
@@ -33,6 +33,8 @@ npm i --save @sovity.de/edc-client
 ## How to use
 
 Configure your EDC Client and use endpoints of our API Wrapper Extension:
+
+### Example Using API Key Auth
 
 ```typescript
 const edcClient: EdcClient = buildEdcClient({
@@ -45,6 +47,21 @@ let kpiData: KpiResult = await edcClient.useCaseApi.getKpis();
 
 A minimal example project using the typescript API client can be found
 [here](https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper/clients/typescript-client-example).
+
+### Example Using OAuth2 Client Credentials
+
+```typescript
+const edcClient: EdcClient = buildEdcClient({
+    managementApiUrl: 'http://localhost:11002/api/management/v2',
+    clientCredentials: {
+        tokenUrl: 'http://localhost:11002/token',
+        clientId: '{{your-connector}}-app',
+        clientSecret: '...',
+    },
+});
+
+let kpiData: KpiResult = await edcClient.useCaseApi.getKpis();
+```
 
 ## License
 
