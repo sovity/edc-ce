@@ -29,7 +29,6 @@ import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.DataTransferTestUtil;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
@@ -131,7 +130,7 @@ class DataSourceQueryParamsTest {
         initiateTransfer(negotiation);
 
         // assert
-        DataTransferTestUtil.validateDataTransferred(dataAddress.getDataSinkSpyUrl(), encodedParam);
+        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), encodedParam);
     }
 
     private void createAsset() {

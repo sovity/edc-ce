@@ -36,7 +36,6 @@ import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.DataTransferTestUtil;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
@@ -61,6 +60,7 @@ import java.util.concurrent.TimeUnit;
 
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.CONSUMING;
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.PROVIDING;
+import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
@@ -318,7 +318,7 @@ class UiApiWrapperTest {
         assertThat(constraint.getRight().getType()).isEqualTo(UiPolicyLiteralType.STRING);
         assertThat(constraint.getRight().getValue()).isEqualTo(yesterday.toString());
 
-        DataTransferTestUtil.validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
+        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
 
         validateTransferProcessesOk();
     }
@@ -422,7 +422,7 @@ class UiApiWrapperTest {
                 .build();
         consumerClient.uiApi().initiateCustomTransfer(transferRequest);
 
-        DataTransferTestUtil.validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
+        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
     }
 
     @Test
@@ -543,7 +543,7 @@ class UiApiWrapperTest {
                     "http://example.com/private-extra": "private value to add"
                 }
                 """);
-        DataTransferTestUtil.validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
+        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
         validateTransferProcessesOk();
         assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo("Good Asset Title");
     }

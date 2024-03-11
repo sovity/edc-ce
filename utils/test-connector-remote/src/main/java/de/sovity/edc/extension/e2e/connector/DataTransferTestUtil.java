@@ -69,8 +69,7 @@ public class DataTransferTestUtil {
     public static void validateDataTransferred(String checkUrl, Map<String, String> params, String expected) {
         await().atMost(TIMEOUT).untilAsserted(() -> {
             var actual =
-                    given().params(params).
-                            when()
+                    given().params(params).when()
                             .get(checkUrl)
                             .then()
                             .statusCode(200)

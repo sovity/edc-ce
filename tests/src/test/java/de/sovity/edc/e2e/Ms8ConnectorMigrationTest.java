@@ -18,7 +18,6 @@ import de.sovity.edc.client.gen.model.ContractAgreementDirection;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.ext.wrapper.utils.EdcDateUtils;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.DataTransferTestUtil;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
@@ -35,6 +34,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -190,7 +190,7 @@ class Ms8ConnectorMigrationTest {
                 dataAddress.getDataSinkJsonLd());
 
         // assert
-        DataTransferTestUtil.validateDataTransferred(dataAddress.getDataSinkSpyUrl(), "second-asset-data");
+        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), "second-asset-data");
     }
 
     @Test
@@ -209,7 +209,7 @@ class Ms8ConnectorMigrationTest {
 
         // assert
         assertThat(transferProcessId).isNotNull();
-        DataTransferTestUtil.validateDataTransferred(dataAddress.getDataSinkSpyUrl(), "first-asset-data");
+        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), "first-asset-data");
     }
 
     private <T> T first(List<T> items, Predicate<T> predicate) {
