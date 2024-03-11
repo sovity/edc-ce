@@ -102,7 +102,6 @@ class DataSourceQueryParamsTest {
     void testDirectQuerying() {
         // arrange
         var expected = "a=%";
-        var url = String.format("%s", dataAddress.getDataSourceQueryParamsUrl());
         // will be encoded in assertResponseContent before request
         var queryParams = new HashMap<String, String>() {{
             put("a", "%");
@@ -110,7 +109,7 @@ class DataSourceQueryParamsTest {
 
         // act
         // assert
-        validateDataTransferred(url, queryParams, expected);
+        validateDataTransferred(dataAddress.getDataSourceQueryParamsUrl(), queryParams, expected);
     }
 
     /**
