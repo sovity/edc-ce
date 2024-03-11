@@ -14,6 +14,7 @@
 package de.sovity.edc.e2e;
 
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.DataTransferTestUtil;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
@@ -24,7 +25,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.UUID;
 
-import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.assertResponseContent;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 
@@ -76,6 +76,6 @@ class ManagementApiTransferTest {
                 dataAddress.getDataSinkJsonLd());
 
         // assert
-        assertResponseContent(dataAddress.getDataSinkSpyUrl(), TEST_BACKEND_TEST_DATA);
+        DataTransferTestUtil.validateDataTransferred(dataAddress.getDataSinkSpyUrl(), TEST_BACKEND_TEST_DATA);
     }
 }

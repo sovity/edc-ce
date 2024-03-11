@@ -54,7 +54,7 @@ public class DataTransferTestUtil {
     }
 
 
-    public static void assertResponseContent(String checkUrl, String expectedData) {
+    public static void validateDataTransferred(String checkUrl, String expectedData) {
         await().atMost(TIMEOUT).untilAsserted(() -> {
             var actual =
                     when()
@@ -66,7 +66,7 @@ public class DataTransferTestUtil {
         });
     }
 
-    public static void assertResponseContent(String checkUrl, Map<String, String> params, String expected) {
+    public static void validateDataTransferred(String checkUrl, Map<String, String> params, String expected) {
         await().atMost(TIMEOUT).untilAsserted(() -> {
             var actual =
                     given().params(params).

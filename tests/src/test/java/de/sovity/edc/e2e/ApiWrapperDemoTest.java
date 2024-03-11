@@ -33,6 +33,7 @@ import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.DataTransferTestUtil;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
@@ -47,7 +48,6 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.assertResponseContent;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -117,7 +117,7 @@ class ApiWrapperDemoTest {
         initiateTransfer(negotiation);
 
         // check data sink
-        assertResponseContent(dataAddress.getDataSinkSpyUrl(), dataOfferData);
+        DataTransferTestUtil.validateDataTransferred(dataAddress.getDataSinkSpyUrl(), dataOfferData);
     }
 
     private void createAsset() {

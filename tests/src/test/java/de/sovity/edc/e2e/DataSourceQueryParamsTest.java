@@ -44,7 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.assertResponseContent;
+import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -111,7 +111,7 @@ class DataSourceQueryParamsTest {
 
         // act
         // assert
-        assertResponseContent(url, queryParams, expected);
+        validateDataTransferred(url, queryParams, expected);
     }
 
     /**
@@ -131,7 +131,7 @@ class DataSourceQueryParamsTest {
         initiateTransfer(negotiation);
 
         // assert
-        DataTransferTestUtil.assertResponseContent(dataAddress.getDataSinkSpyUrl(), encodedParam);
+        DataTransferTestUtil.validateDataTransferred(dataAddress.getDataSinkSpyUrl(), encodedParam);
     }
 
     private void createAsset() {
