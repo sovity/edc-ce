@@ -20,6 +20,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
+- Add e2e test for double encoding of query parameters
+
 ### Deployment Migration Notes
 
 #### Compatible Versions
