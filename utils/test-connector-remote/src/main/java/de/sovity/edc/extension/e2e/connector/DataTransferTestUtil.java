@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 import java.time.Duration;
 import java.util.Map;
 
+import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static jakarta.json.Json.createObjectBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,14 +54,28 @@ public class DataTransferTestUtil {
     }
 
 
-    public static void validateDataTransferred(String checkUrl, String expectedData, Object... params) {
+    public static void assertResponseContent(String checkUrl, String expectedData) {
         await().atMost(TIMEOUT).untilAsserted(() -> {
-            var actual = when()
-                    .get(checkUrl, params)
-                    .then()
-                    .statusCode(200)
-                    .extract().body().asString();
+            var actual =
+                    when()
+                            .get(checkUrl)
+                            .then()
+                            .statusCode(200)
+                            .extract().body().asString();
             assertThat(actual).isEqualTo(expectedData);
+        });
+    }
+
+    public static void assertResponseContent(String checkUrl, Map<String, String> params, String expected) {
+        await().atMost(TIMEOUT).untilAsserted(() -> {
+            var actual =
+                    given().params(params).
+                            when()
+                            .get(checkUrl)
+                            .then()
+                            .statusCode(200)
+                            .extract().body().asString();
+            assertThat(actual).isEqualTo(expected);
         });
     }
 }

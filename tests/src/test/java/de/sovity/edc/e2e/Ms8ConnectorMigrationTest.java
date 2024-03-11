@@ -34,7 +34,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
+import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.assertResponseContent;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -190,7 +190,7 @@ class Ms8ConnectorMigrationTest {
                 dataAddress.getDataSinkJsonLd());
 
         // assert
-        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), "second-asset-data");
+        assertResponseContent(dataAddress.getDataSinkSpyUrl(), "second-asset-data");
     }
 
     @Test
@@ -209,7 +209,7 @@ class Ms8ConnectorMigrationTest {
 
         // assert
         assertThat(transferProcessId).isNotNull();
-        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), "first-asset-data");
+        assertResponseContent(dataAddress.getDataSinkSpyUrl(), "first-asset-data");
     }
 
     private <T> T first(List<T> items, Predicate<T> predicate) {

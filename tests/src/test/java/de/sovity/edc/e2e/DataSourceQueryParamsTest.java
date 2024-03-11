@@ -29,6 +29,7 @@ import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.DataTransferTestUtil;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
@@ -39,10 +40,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
+import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.assertResponseContent;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -100,11 +102,16 @@ class DataSourceQueryParamsTest {
     @Test
     void testDirectQuerying() {
         // arrange
-        var paramUrl = String.format("%s?{k}={v}", dataAddress.getDataSourceQueryParamsUrl());
+        var expected = "a=%";
+        var url = String.format("%s", dataAddress.getDataSourceQueryParamsUrl());
+        // will be encoded in assertResponseContent before request
+        var queryParams = new HashMap<String, String>() {{
+            put("a", "%");
+        }};
 
         // act
         // assert
-        validateDataTransferred(paramUrl, encodedParam, "a", "%");
+        assertResponseContent(url, queryParams, expected);
     }
 
     /**
@@ -116,7 +123,6 @@ class DataSourceQueryParamsTest {
         createPolicy();
         createAsset();
         createContractDefinition();
-        var expectedDoubleEncodedParam = "a=%2525";
 
         // act
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
@@ -125,7 +131,7 @@ class DataSourceQueryParamsTest {
         initiateTransfer(negotiation);
 
         // assert
-        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), expectedDoubleEncodedParam);
+        DataTransferTestUtil.assertResponseContent(dataAddress.getDataSinkSpyUrl(), encodedParam);
     }
 
     private void createAsset() {
