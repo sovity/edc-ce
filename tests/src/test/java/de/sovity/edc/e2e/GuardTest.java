@@ -36,6 +36,7 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 class GuardTest {
@@ -65,6 +66,7 @@ class GuardTest {
     @BeforeEach
     void setup() {
         var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 21000, PROVIDER_DATABASE);
+        reset(guard);
         providerEdcContext.registerServiceMock(ContractNegotiationPendingGuard.class, guard);
         providerEdcContext.setConfiguration(providerConfig.getProperties());
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));

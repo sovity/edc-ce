@@ -18,6 +18,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
     implementation("${edcGroup}:api-core:${edcVersion}")
+    implementation("${edcGroup}:contract-core:${edcVersion}")
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")
     implementation("${edcGroup}:dsp-http-spi:${edcVersion}")
     api(project(":extensions:wrapper:wrapper-api"))
@@ -34,8 +35,10 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
 
-    testImplementation(project(":extensions:wrapper:clients:java-client"))
     testImplementation(project(":extensions:policy-always-true"))
+    testImplementation(project(":extensions:test-backend-controller"))
+    testImplementation(project(":utils:test-connector-remote"))
+    testImplementation(project(":extensions:wrapper:clients:java-client"))
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:dsp:${edcVersion}")
     testImplementation("${edcGroup}:iam-mock:${edcVersion}")
