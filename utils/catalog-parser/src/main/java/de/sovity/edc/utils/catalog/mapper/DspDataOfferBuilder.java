@@ -22,7 +22,6 @@ import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,9 +66,6 @@ public class DspDataOfferBuilder {
 
     @NotNull
     private DspContractOffer buildContractOffer(JsonObject json) {
-        val stableId = DspContractOfferUtils.buildStableId(json);
-        val withStableId = Json.createObjectBuilder(json).remove(Prop.ID).add(Prop.ID, stableId).build();
-
-        return new DspContractOffer(stableId, withStableId);
+        return new DspContractOffer(JsonLdUtils.id(json), json);
     }
 }
