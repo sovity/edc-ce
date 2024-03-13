@@ -34,10 +34,6 @@ https://github.com/sovity/edc-ui/releases/tag/v2.4.0
 
 ### EDC Extensions
 
-#### Major Changes
-
-#### Minor Changes
-
 #### Patch Changes
 
 - DspCatalogService: Stable Contract Offer IDs removed
