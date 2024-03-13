@@ -2,11 +2,13 @@ package de.sovity.edc.utils.catalog.mapper;
 
 import jakarta.json.Json;
 import lombok.val;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class DspContractOfferUtilsTest {
+    @Disabled("hotfix: the stable ID or the way the new ID is build prevents a contract negotiation.")
     @Test
     void testCanConvertTheRandomIdToStableId() {
         // arrange
