@@ -82,7 +82,7 @@ class ContractAgreementPageTest {
         // arrange
         assetIndex.create(asset(ASSET_ID)).orElseThrow(storeFailure -> new RuntimeException("Failed to create asset"));
         contractNegotiationStore.save(contractDefinition(CONTRACT_DEFINITION_ID));
-        transferProcessStore.updateOrCreate(transferProcess(1, 1, TransferProcessStates.COMPLETED.code()));
+        transferProcessStore.save(transferProcess(1, 1, TransferProcessStates.COMPLETED.code()));
 
         // act
         var actual = client.uiApi().getContractAgreementPage().getContractAgreements();

@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
@@ -132,6 +133,28 @@ public class AssetApiServiceTest {
                 .keywords(List.of("keyword1", "keyword2"))
                 .publisherHomepage("publisherHomepage")
                 .dataAddressProperties(dataAddressProperties)
+                .customJsonAsString("{\"test\":\"value\"}")
+                .customJsonLdAsString("""
+                        {
+                            "https://string": "value",
+                            "https://number": 3.14,
+                            "https://array": [1,2,3],
+                            "https://object": { "https://key": "value" },
+                            "https://booleans/are/not/supported/by/Eclipse/EDC": true,
+                            "https://null/will/be/eliminated": null
+                        }
+                        """)
+                .privateCustomJsonAsString("{\"private test\":\"private value\"}")
+                .privateCustomJsonLdAsString("""
+                        {
+                            "https://private/string": "value",
+                            "https://private/number": 3.14,
+                            "https://private/array": [1,2,3],
+                            "https://private/object": { "https://key": "value" },
+                            "https://private/booleans/are/not/supported/by/Eclipse/EDC": true,
+                            "https://private/null/will/be/eliminated": null
+                        }
+                        """)
                 .build();
 
         // act
@@ -172,6 +195,28 @@ public class AssetApiServiceTest {
         assertThat(asset.getHttpDatasourceHintsProxyPath()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyBody()).isTrue();
+        assertThatJson(asset.getCustomJsonAsString()).isEqualTo("""
+                { "test": "value" }
+                """);
+        assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
+                {
+                    "https://string": "value",
+                    "https://number": 3.14,
+                    "https://array": [1.0, 2.0, 3.0],
+                    "https://object": { "https://key": "value" }
+                }
+                """);
+        assertThatJson(asset.getPrivateCustomJsonAsString()).isEqualTo("""
+                { "private test": "private value" }
+                """);
+        assertThatJson(asset.getPrivateCustomJsonLdAsString()).isEqualTo("""
+                {
+                    "https://private/string": "value",
+                    "https://private/number": 3.14,
+                    "https://private/array": [1.0, 2.0, 3.0],
+                    "https://private/object": { "https://key": "value" }
+                }
+                """);
 
         var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
         assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddressProperties);
@@ -215,8 +260,19 @@ public class AssetApiServiceTest {
                 .keywords(List.of("keyword1", "keyword2"))
                 .publisherHomepage("publisherHomepage")
                 .dataAddressProperties(dataAddress)
+                .customJsonAsString("""
+                        { "test": "value" }
+                        """)
+                .customJsonLdAsString("""
+                        {
+                            "https://to-change": "value1",
+                            "https://for-deletion": "value2"
+                        }
+                        """)
                 .build();
+
         client.uiApi().createAsset(createRequest);
+
         var editRequest = UiAssetEditMetadataRequest.builder()
                 .title("AssetTitle 2")
                 .description("AssetDescription 2")
@@ -241,6 +297,15 @@ public class AssetApiServiceTest {
                 .transportMode("transportMode2")
                 .keywords(List.of("keyword3"))
                 .publisherHomepage("publisherHomepage2")
+                .customJsonAsString("""
+                        { "edited": "new value" }
+                        """)
+                .customJsonLdAsString("""
+                        {
+                            "https://to-change": "new value LD",
+                            "https://for-deletion": null
+                        }
+                        """)
                 .build();
 
         // act
@@ -281,6 +346,12 @@ public class AssetApiServiceTest {
         assertThat(asset.getHttpDatasourceHintsProxyPath()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyBody()).isTrue();
+        assertThat(asset.getCustomJsonAsString()).isEqualTo("""
+                { "edited": "new value" }
+                """);
+        assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
+                { "https://to-change": "new value LD" }
+                """);
 
         var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
         assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddress);
@@ -376,4 +447,3 @@ public class AssetApiServiceTest {
         return formatter.parse(date).getTime();
     }
 }
-
