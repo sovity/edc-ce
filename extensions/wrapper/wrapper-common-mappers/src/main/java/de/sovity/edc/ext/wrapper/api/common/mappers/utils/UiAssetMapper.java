@@ -20,6 +20,7 @@ import de.sovity.edc.utils.jsonld.JsonLdUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import de.sovity.edc.utils.jsonld.vocab.Prop.SovityDcatExt.HttpDatasourceHints;
 import jakarta.json.Json;
+import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonValue;
@@ -127,7 +128,6 @@ public class UiAssetMapper {
 
                 // Explicitly handled
                 Prop.Dcat.DISTRIBUTION,
-                Prop.Dcat.DISTRIBUTION_AS_USED_BY_CORE_EDC,
                 Prop.Dcat.KEYWORDS,
                 Prop.Dcat.LANDING_PAGE,
                 Prop.Dcat.VERSION,
@@ -175,10 +175,10 @@ public class UiAssetMapper {
 
     private static String packAsJsonLdProperties(JsonObject remaining) {
         val customJsonLd = Json.createObjectBuilder();
-        for (val e : remaining.entrySet()) {
-            customJsonLd.add(e.getKey(), e.getValue());
-        }
-        JsonObject compacted = JsonLdUtils.tryCompact(customJsonLd.build());
+        remaining.entrySet().stream()
+                .filter(it -> !JsonLdUtils.isEmptyArray(it.getValue()) || !JsonLdUtils.isEmptyObject(it.getValue()))
+                .forEach(it -> customJsonLd.add(it.getKey(), it.getValue()));
+        val compacted = JsonLdUtils.tryCompact(customJsonLd.build());
         return JsonUtils.toJson(compacted);
     }
 
