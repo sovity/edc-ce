@@ -15,6 +15,7 @@ package de.sovity.edc.e2e;
 
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
+import de.sovity.edc.extension.e2e.connector.config.TestPorts;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -50,11 +51,11 @@ class ManagementApiTransferTest {
 
     @BeforeEach
     void setup() {
-        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 21000, PROVIDER_DATABASE);
+        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, TestPorts.nextFreePorts(), PROVIDER_DATABASE);
         providerEdcContext.setConfiguration(providerConfig.getProperties());
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
-        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 23000, CONSUMER_DATABASE);
+        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, TestPorts.nextFreePorts(), CONSUMER_DATABASE);
         consumerEdcContext.setConfiguration(consumerConfig.getProperties());
         consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
 

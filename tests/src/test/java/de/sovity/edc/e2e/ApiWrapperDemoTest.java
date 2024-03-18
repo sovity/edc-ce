@@ -34,6 +34,7 @@ import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
+import de.sovity.edc.extension.e2e.connector.config.TestPorts;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -80,7 +81,7 @@ class ApiWrapperDemoTest {
     @BeforeEach
     void setup() {
         // set up provider EDC + Client
-        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 21000, PROVIDER_DATABASE);
+        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, TestPorts.nextFreePorts(), PROVIDER_DATABASE);
         providerEdcContext.setConfiguration(providerConfig.getProperties());
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
@@ -90,7 +91,7 @@ class ApiWrapperDemoTest {
                 .build();
 
         // set up consumer EDC + Client
-        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 23000, CONSUMER_DATABASE);
+        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, TestPorts.nextFreePorts(), CONSUMER_DATABASE);
         consumerEdcContext.setConfiguration(consumerConfig.getProperties());
         consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
 

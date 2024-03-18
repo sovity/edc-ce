@@ -28,11 +28,6 @@ dependencies {
 
 tasks.withType<Test> {
     maxParallelForks = 1
-    retry {
-        maxRetries.set(3)
-        maxFailures.set(12)
-        failOnPassedAfterRetry.set(false)
-    }
 }
 
 val sovityEdcGroup: String by project
