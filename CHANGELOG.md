@@ -17,6 +17,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
+- Pinned down known issue "Double Encoding" of query params with an E2E Test
+
 ### Deployment Migration Notes
 
 #### Compatible Versions

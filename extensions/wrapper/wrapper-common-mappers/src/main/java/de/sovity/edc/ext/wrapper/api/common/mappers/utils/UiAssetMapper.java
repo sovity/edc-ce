@@ -117,7 +117,7 @@ public class UiAssetMapper {
 
         // Additional / Remaining Properties
         // TODO: diff nested objects
-        JsonObject remaining = removeHandledProperties(properties, List.of(
+        val remaining = removeHandledProperties(properties, List.of(
                 // Implicitly handled / should be skipped if found
                 Prop.ID,
                 Prop.TYPE,
@@ -127,6 +127,7 @@ public class UiAssetMapper {
 
                 // Explicitly handled
                 Prop.Dcat.DISTRIBUTION,
+                Prop.Dcat.DISTRIBUTION_AS_USED_BY_CORE_EDC,
                 Prop.Dcat.KEYWORDS,
                 Prop.Dcat.LANDING_PAGE,
                 Prop.Dcat.VERSION,
@@ -276,14 +277,6 @@ public class UiAssetMapper {
         return properties;
     }
 
-    private void add(JsonObject overrides, JsonObjectBuilder properties, String key, String value) {
-        val override = JsonLdUtils.string(overrides, key);
-        if (override != null) {
-            properties.add(key, override);
-        }
-        properties.add(key, value);
-    }
-
     private JsonObjectBuilder getAssetPrivateProperties(UiAssetCreateRequest uiAssetCreateRequest) {
         var privateProperties = Json.createObjectBuilder();
 
@@ -319,18 +312,6 @@ public class UiAssetMapper {
         var remaining = Json.createObjectBuilder(JsonLdUtils.tryCompact(properties));
         handledProperties.forEach(remaining::remove);
         return remaining.build();
-    }
-
-    private Map<String, String> getPropertyMap(
-            JsonObject jsonObject,
-            Predicate<JsonValue> filter,
-            Function<JsonValue, String> mapper) {
-        return jsonObject.entrySet().stream()
-                .filter(entry -> filter.test(entry.getValue()))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> mapper.apply(entry.getValue())
-                ));
     }
 
     private JsonObject getPrivateProperties(JsonObject assetJsonLd) {

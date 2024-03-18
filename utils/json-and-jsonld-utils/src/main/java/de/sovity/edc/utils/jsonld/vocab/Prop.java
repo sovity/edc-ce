@@ -70,6 +70,7 @@ public class Prop {
 
         public final String DATASET = CTX_WRONG_BUT_USED_BY_CORE_EDC + "dataset";
         public final String DISTRIBUTION = CTX + "distribution";
+        public final String DISTRIBUTION_AS_USED_BY_CORE_EDC = CTX_WRONG_BUT_USED_BY_CORE_EDC + "distribution";
         public final String VERSION = CTX + "version";
         public final String KEYWORDS = CTX + "keyword";
         public final String LANDING_PAGE = CTX + "landingPage";
