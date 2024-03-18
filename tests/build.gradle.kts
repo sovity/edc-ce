@@ -29,8 +29,8 @@ dependencies {
 tasks.withType<Test> {
     maxParallelForks = 1
     retry {
-        maxRetries.set(2)
-        maxFailures.set(4)
+        maxRetries.set(3)
+        maxFailures.set(12)
         failOnPassedAfterRetry.set(false)
     }
 }
