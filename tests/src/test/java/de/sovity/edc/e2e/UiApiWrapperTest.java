@@ -341,7 +341,9 @@ class UiApiWrapperTest {
                 .customJsonLdAsString("""
                         {
                             "http://purl.org/dc/terms/title": "The real title",
-                            "https://semantic.sovity.io/mds-dcat-ext#nuts-location": ["a", "b", "c"],
+                            "http://purl.org/dc/terms/spatial": {
+                              "http://purl.org/dc/terms/identifier": ["a", "b", "c"]
+                            },
                             "http://example.com/an-actual-custom-property": "custom value"
                         }
                         """)
