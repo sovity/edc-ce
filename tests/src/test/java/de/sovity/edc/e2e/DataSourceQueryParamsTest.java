@@ -83,6 +83,12 @@ class DataSourceQueryParamsTest {
         providerClient = EdcClient.builder()
                 .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
                 .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
+                .customConfigurer((apiClient) -> {
+                    var timeout = 10_000; // ms
+                    apiClient.setConnectTimeout(timeout)
+                            .setReadTimeout(timeout)
+                            .setWriteTimeout(timeout);
+                })
                 .build();
 
         // set up consumer EDC + Client
