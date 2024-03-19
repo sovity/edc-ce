@@ -40,6 +40,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,6 +94,12 @@ class DataSourceQueryParamsTest {
         consumerClient = EdcClient.builder()
                 .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
                 .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
+                .customConfigurer((apiClient) -> {
+                    var timeout = 10_000; // ms
+                    apiClient.setConnectTimeout(timeout)
+                            .setReadTimeout(timeout)
+                            .setWriteTimeout(timeout);
+                })
                 .build();
 
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
