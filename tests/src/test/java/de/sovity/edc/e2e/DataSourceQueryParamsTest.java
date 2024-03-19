@@ -76,7 +76,7 @@ class DataSourceQueryParamsTest {
     @BeforeEach
     void setup() {
         // set up provider EDC + Client
-        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, TestPorts.nextFreePorts(), PROVIDER_DATABASE);
+        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, TestPorts.firstPortWithRange(5), PROVIDER_DATABASE);
         providerEdcContext.setConfiguration(providerConfig.getProperties());
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
@@ -86,7 +86,7 @@ class DataSourceQueryParamsTest {
                 .build();
 
         // set up consumer EDC + Client
-        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, TestPorts.nextFreePorts(), CONSUMER_DATABASE);
+        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, TestPorts.firstPortWithRange(5), CONSUMER_DATABASE);
         consumerEdcContext.setConfiguration(consumerConfig.getProperties());
         consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
 
