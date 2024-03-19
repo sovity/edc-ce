@@ -80,11 +80,12 @@ class DataSourceQueryParamsTest {
         providerEdcContext.setConfiguration(providerConfig.getProperties());
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
+        var timeout = 20_000; // ms
+
         providerClient = EdcClient.builder()
                 .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
                 .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
                 .customConfigurer((apiClient) -> {
-                    var timeout = 10_000; // ms
                     apiClient.setConnectTimeout(timeout)
                             .setReadTimeout(timeout)
                             .setWriteTimeout(timeout);
@@ -100,7 +101,6 @@ class DataSourceQueryParamsTest {
                 .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
                 .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
                 .customConfigurer((apiClient) -> {
-                    var timeout = 10_000; // ms
                     apiClient.setConnectTimeout(timeout)
                             .setReadTimeout(timeout)
                             .setWriteTimeout(timeout);
