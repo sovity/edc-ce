@@ -95,7 +95,7 @@ class UiApiWrapperTest {
 
     @BeforeEach
     void setup() {
-        providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, TestPorts.firstPortWithRange(5), PROVIDER_DATABASE);
+        providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, TestPorts.getFirstPortOfRange(5), PROVIDER_DATABASE);
         providerEdcContext.setConfiguration(providerConfig.getProperties());
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
@@ -104,7 +104,7 @@ class UiApiWrapperTest {
                 .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
                 .build();
 
-        consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, TestPorts.firstPortWithRange(5), CONSUMER_DATABASE);
+        consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, TestPorts.getFirstPortOfRange(5), CONSUMER_DATABASE);
         consumerEdcContext.setConfiguration(consumerConfig.getProperties());
         consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
 

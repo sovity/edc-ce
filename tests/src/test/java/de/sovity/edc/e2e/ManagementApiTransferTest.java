@@ -51,11 +51,11 @@ class ManagementApiTransferTest {
 
     @BeforeEach
     void setup() {
-        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, TestPorts.firstPortWithRange(5), PROVIDER_DATABASE);
+        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, TestPorts.getFirstPortOfRange(5), PROVIDER_DATABASE);
         providerEdcContext.setConfiguration(providerConfig.getProperties());
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
-        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, TestPorts.firstPortWithRange(5), CONSUMER_DATABASE);
+        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, TestPorts.getFirstPortOfRange(5), CONSUMER_DATABASE);
         consumerEdcContext.setConfiguration(consumerConfig.getProperties());
         consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
 

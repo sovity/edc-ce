@@ -24,10 +24,12 @@ public class TestPorts {
     private static Logger logger = Logger.getLogger(TestPorts.class.getCanonicalName());
 
     /**
+     * Get a port range that is available.
+     *
      * @param count How many ports should be free.
      * @return The first port in a series of {@code count} consecutive available ports.
      */
-    public static synchronized int firstPortWithRange(int count) {
+    public static synchronized int getFirstPortOfRange(int count) {
         var start = ++last;
         var end = start;
 
