@@ -19,7 +19,6 @@ import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.ext.wrapper.utils.EdcDateUtils;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
-import de.sovity.edc.extension.e2e.connector.config.TestPorts;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import org.assertj.core.api.SoftAssertions;
@@ -66,7 +65,7 @@ class Ms8ConnectorMigrationTest {
 
     @BeforeEach
     void setup() {
-        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, TestPorts.getFirstPortOfRange(5), PROVIDER_DATABASE);
+        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 21000, PROVIDER_DATABASE);
         providerConfig.setProperty("edc.flyway.additional.migration.locations",
                 "filesystem:%s".formatted(getAbsoluteTestResourcePath("db/additional-test-data/provider")));
         providerEdcContext.setConfiguration(providerConfig.getProperties());
@@ -77,7 +76,7 @@ class Ms8ConnectorMigrationTest {
                 .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
                 .build();
 
-        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, TestPorts.getFirstPortOfRange(5), CONSUMER_DATABASE);
+        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 23000, CONSUMER_DATABASE);
         consumerConfig.setProperty("edc.flyway.additional.migration.locations",
                 "filesystem:%s".formatted(getAbsoluteTestResourcePath("db/additional-test-data/consumer")));
         consumerEdcContext.setConfiguration(consumerConfig.getProperties());
