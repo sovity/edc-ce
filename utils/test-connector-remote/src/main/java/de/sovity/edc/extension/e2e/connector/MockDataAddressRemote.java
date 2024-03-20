@@ -38,6 +38,10 @@ public class MockDataAddressRemote {
         return getMockBackendUrl("data-source?data=%s".formatted(data));
     }
 
+    public String getDataSourceQueryParamsUrl() {
+        return getMockBackendUrl("data-source/echo-query-params");
+    }
+
     public String getMockBackendUrl(String path) {
         return "%s/test-backend/%s".formatted(defaultEndpoint.getUri().toString(), path);
     }

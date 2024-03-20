@@ -43,6 +43,7 @@ import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
+import lombok.val;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
@@ -62,6 +63,7 @@ import static de.sovity.edc.client.gen.model.ContractAgreementDirection.PROVIDIN
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
@@ -163,10 +165,18 @@ class UiApiWrapperTest {
                         Prop.Edc.METHOD, "GET",
                         Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
                 ))
-                .additionalProperties(Map.of("http://unknown/a", "x"))
-                .additionalJsonProperties(Map.of("http://unknown/b", "{\"http://unknown/c\":\"y\"}"))
-                .privateProperties(Map.of("http://unknown/a-private", "x-private"))
-                .privateJsonProperties(Map.of("http://unknown/b-private", "{\"http://unknown/c-private\":\"y-private\"}"))
+                .customJsonAsString("""
+                        {"test": "value"}
+                        """)
+                .customJsonLdAsString("""
+                        {"https://public/some#key": "public LD value"}
+                        """)
+                .privateCustomJsonAsString("""
+                        {"private_test": "private value"}
+                        """)
+                .privateCustomJsonLdAsString("""
+                        {"https://private/some#key": "private LD value"}
+                        """)
                 .build()).getId();
         assertThat(assetId).isEqualTo("asset-1");
 
@@ -235,26 +245,33 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyPath()).isFalse();
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyQueryParams()).isFalse();
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyBody()).isFalse();
-        assertThat(dataOffer.getAsset().getAdditionalProperties())
-                .containsExactlyEntriesOf(Map.of("http://unknown/a", "x"));
-        assertThat(dataOffer.getAsset().getAdditionalJsonProperties())
-                .containsExactlyEntriesOf(Map.of("http://unknown/b", "{\"http://unknown/c\":\"y\"}"));
-        assertThat(dataOffer.getAsset().getPrivateProperties()).isNullOrEmpty();
-        assertThat(dataOffer.getAsset().getPrivateJsonProperties()).isNullOrEmpty();
+        assertThatJson(dataOffer.getAsset().getCustomJsonAsString()).isEqualTo("""
+                {"test": "value"}
+                """);
+        assertThatJson(dataOffer.getAsset().getCustomJsonLdAsString()).isEqualTo("""
+                {"https://public/some#key":"public LD value"}
+                """);
+        assertThat(dataOffer.getAsset().getPrivateCustomJsonAsString()).isNullOrEmpty();
+        assertThatJson(dataOffer.getAsset().getPrivateCustomJsonLdAsString()).isObject().isEmpty();
 
         // while the data offer on the consumer side won't contain private properties, the asset page on the provider side should
         assertThat(asset.getAssetId()).isEqualTo(assetId);
         assertThat(asset.getTitle()).isEqualTo("AssetName");
         assertThat(asset.getConnectorEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
         assertThat(asset.getParticipantId()).isEqualTo(providerConnector.getParticipantId());
-        assertThat(asset.getAdditionalProperties())
-                .containsExactlyEntriesOf(Map.of("http://unknown/a", "x"));
-        assertThat(asset.getAdditionalJsonProperties())
-                .containsExactlyEntriesOf(Map.of("http://unknown/b", "{\"http://unknown/c\":\"y\"}"));
-        assertThat(asset.getPrivateProperties())
-                .containsExactlyEntriesOf(Map.of("http://unknown/a-private", "x-private"));
-        assertThat(asset.getPrivateJsonProperties())
-                .containsExactlyEntriesOf(Map.of("http://unknown/b-private", "{\"http://unknown/c-private\":\"y-private\"}"));
+
+        assertThatJson(asset.getCustomJsonAsString()).isEqualTo("""
+                { "test": "value" }
+                """);
+        assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
+                { "https://public/some#key": "public LD value" }
+                """);
+        assertThatJson(asset.getPrivateCustomJsonAsString()).isEqualTo("""
+                { "private_test": "private value" }
+                """);
+        assertThatJson(asset.getPrivateCustomJsonLdAsString()).isEqualTo("""
+                { "https://private/some#key": "private LD value" }
+                """);
 
         // Contract Agreement
         assertThat(providerAgreements).hasSize(1);
@@ -305,6 +322,50 @@ class UiApiWrapperTest {
 
         validateTransferProcessesOk();
     }
+
+    @Test
+    void canOverrideTheWellKnowPropertiesUsingTheCustomProperties() {
+        // arrange
+        var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
+                .id("asset-1")
+                .title("will be overridden")
+                .dataAddressProperties(Map.of(
+                        Prop.Edc.TYPE, "HttpData",
+                        Prop.Edc.METHOD, "GET",
+                        Prop.Edc.BASE_URL, "http://example.com/base"
+                ))
+                .customJsonLdAsString("""
+                        {
+                            "http://purl.org/dc/terms/title": "The real title",
+                            "https://semantic.sovity.io/mds-dcat-ext#nuts-location": ["a", "b", "c"],
+                            "http://example.com/an-actual-custom-property": "custom value"
+                        }
+                        """)
+                .build()).getId();
+        assertThat(assetId).isEqualTo("asset-1");
+
+        // act
+        val assets = providerClient.uiApi().getAssetPage().getAssets();
+        assertThat(assets).hasSize(1);
+        val asset = assets.get(0);
+
+        // assert
+
+        // while the data offer on the consumer side won't contain private properties, the asset page on the provider side should
+        assertThat(asset.getAssetId()).isEqualTo(assetId);
+        // overridden property
+        assertThat(asset.getTitle()).isEqualTo("The real title");
+        // added property
+        assertThat(asset.getNutsLocation()).isEqualTo(List.of("a", "b", "c"));
+        // remaining custom property
+        assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
+                {
+                    "http://example.com/an-actual-custom-property": "custom value"
+                }
+                """);
+    }
+
+    // TODO throw an error if the id is overridden
 
     @Test
     void customTransferRequest() {
@@ -377,6 +438,30 @@ class UiApiWrapperTest {
                         Prop.Edc.METHOD, "GET",
                         Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
                 ))
+                .customJsonAsString("""
+                        {
+                            "test": "value"
+                        }
+                        """)
+                .customJsonLdAsString("""
+                        {
+                            "test": "not a valid key, will be deleted",
+                            "http://example.com/key-to-delete": "with a valida key",
+                            "http://example.com/key-to-edit": "with a valida key"
+                        }
+                        """)
+                .privateCustomJsonAsString("""
+                        {
+                            "private-test": "value"
+                        }
+                        """)
+                .privateCustomJsonLdAsString("""
+                        {
+                            "private-test": "not a valid key, will be deleted",
+                            "http://example.com/private-key-to-delete": "private with a valid key",
+                            "http://example.com/private-key-to-edit": "private with a valid key"
+                        }
+                        """)
                 .build()).getId();
 
         providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
@@ -403,12 +488,61 @@ class UiApiWrapperTest {
         // act
         providerClient.uiApi().editAssetMetadata(assetId, UiAssetEditMetadataRequest.builder()
                 .title("Good Asset Title")
+                .customJsonAsString("""
+                        {
+                            "edited": "new value"
+                        }
+                        """)
+                .customJsonLdAsString("""
+                        {
+                            "edited": "not a valid key, will be deleted",
+                            "http://example.com/key-to-delete": null,
+                            "http://example.com/key-to-edit": "with a valid key",
+                            "http://example.com/extra": "value to add"
+                        }
+                        """)
+                .privateCustomJsonAsString("""
+                        {
+                            "private-edited": "new value"
+                        }
+                        """)
+                .privateCustomJsonLdAsString("""
+                        {
+                            "private-edited": "not a valid key, will be deleted",
+                            "http://example.com/private-key-to-delete": null,
+                            "http://example.com/private-key-to-edit": "private with a valid key",
+                            "http://example.com/private-extra": "private value to add"
+                        }
+                        """)
                 .build());
         initiateTransfer(negotiation);
 
         // assert
         assertThat(consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector)).get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
-        assertThat(providerClient.uiApi().getContractAgreementPage().getContractAgreements().get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
+        val firstAsset = providerClient.uiApi().getContractAgreementPage().getContractAgreements().get(0).getAsset();
+        assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");
+        assertThat(firstAsset.getCustomJsonAsString()).isEqualTo("""
+                {
+                    "edited": "new value"
+                }
+                """);
+        assertThatJson(firstAsset.getCustomJsonLdAsString()).isEqualTo("""
+                {
+                    "http://example.com/key-to-edit": "with a valid key",
+                    "http://example.com/extra": "value to add"
+                }
+                """);
+        assertThat(firstAsset.getPrivateCustomJsonAsString()).isEqualTo("""
+                {
+                    "private-edited": "new value"
+                }
+                """);
+        assertThatJson(firstAsset.getPrivateCustomJsonLdAsString()).isEqualTo("""
+                {
+                    "http://example.com/private-key-to-edit": "private with a valid key",
+                    "http://example.com/private-extra": "private value to add"
+                }
+                """);
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
         validateTransferProcessesOk();
         assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo("Good Asset Title");

@@ -26,6 +26,7 @@ import jakarta.json.JsonString;
 import jakarta.json.JsonValue;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -98,6 +99,8 @@ public class UiAssetMapper {
         var publisher = JsonLdUtils.object(properties, Prop.Dcterms.PUBLISHER);
         uiAsset.setPublisherHomepage(JsonLdUtils.string(publisher, Prop.Foaf.HOMEPAGE));
 
+        uiAsset.setCustomJsonAsString(JsonLdUtils.string(properties, Prop.SovityDcatExt.CUSTOM_JSON));
+
         uiAsset.setCreatorOrganizationName(creatorOrganizationName);
 
         // Additional / Remaining Properties
@@ -140,17 +143,38 @@ public class UiAssetMapper {
                 HttpDatasourceHints.BODY,
                 HttpDatasourceHints.METHOD,
                 HttpDatasourceHints.PATH,
-                HttpDatasourceHints.QUERY_PARAMS
+                HttpDatasourceHints.QUERY_PARAMS,
+
+                Prop.SovityDcatExt.CUSTOM_JSON
         ));
-        uiAsset.setAdditionalProperties(getStringProperties(remaining));
-        uiAsset.setAdditionalJsonProperties(getJsonProperties(remaining));
+
+        // custom properties
+        val serializedJsonLd = packAsJsonLdProperties(remaining);
+        uiAsset.setCustomJsonLdAsString(serializedJsonLd);
 
         // Private Properties
-        var privateProperties = JsonLdUtils.tryCompact(getPrivateProperties(assetJsonLd));
-        uiAsset.setPrivateProperties(getStringProperties(privateProperties));
-        uiAsset.setPrivateJsonProperties(getJsonProperties(privateProperties));
+        val privateProperties = getPrivateProperties(assetJsonLd);
+        if (privateProperties != null) {
+            val privateCustomJson = JsonLdUtils.string(privateProperties, Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON);
+            uiAsset.setPrivateCustomJsonAsString(privateCustomJson);
+
+            val privateRemaining = removeHandledProperties(
+                    privateProperties,
+                    List.of(Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON));
+            val privateSerializedJsonLd = packAsJsonLdProperties(privateRemaining);
+            uiAsset.setPrivateCustomJsonLdAsString(privateSerializedJsonLd);
+        }
 
         return uiAsset;
+    }
+
+    private static String packAsJsonLdProperties(JsonObject remaining) {
+        val customJsonLd = Json.createObjectBuilder();
+        for (val e : remaining.entrySet()) {
+            customJsonLd.add(e.getKey(), e.getValue());
+        }
+        JsonObject compacted = JsonLdUtils.tryCompact(customJsonLd.build());
+        return JsonUtils.toJson(compacted);
     }
 
     @SneakyThrows
@@ -213,37 +237,49 @@ public class UiAssetMapper {
                 .add(Prop.Foaf.NAME, organizationName));
 
         var dataAddress = uiAssetCreateRequest.getDataAddressProperties();
-        if (dataAddress.get(Prop.Edc.TYPE).equals("HttpData")) {
+        if (dataAddress != null && dataAddress.get(Prop.Edc.TYPE).equals("HttpData")) {
             addNonNull(properties, HttpDatasourceHints.BODY, trueIfTrue(dataAddress, Prop.Edc.PROXY_BODY));
             addNonNull(properties, HttpDatasourceHints.PATH, trueIfTrue(dataAddress, Prop.Edc.PROXY_PATH));
             addNonNull(properties, HttpDatasourceHints.QUERY_PARAMS, trueIfTrue(dataAddress, Prop.Edc.PROXY_QUERY_PARAMS));
             addNonNull(properties, HttpDatasourceHints.METHOD, trueIfTrue(dataAddress, Prop.Edc.PROXY_METHOD));
         }
 
-        var additionalProperties = uiAssetCreateRequest.getAdditionalProperties();
-        if (additionalProperties != null) {
-            additionalProperties.forEach((k, v) -> addNonNull(properties, k, v));
-        }
+        addNonNull(properties, Prop.SovityDcatExt.CUSTOM_JSON, uiAssetCreateRequest.getCustomJsonAsString());
 
-        var additionalJsonProperties = uiAssetCreateRequest.getAdditionalJsonProperties();
-        if (additionalJsonProperties != null) {
-            additionalJsonProperties.forEach((k, v) -> addNonNullJsonValue(properties, k, v));
+        val jsonLdStr = uiAssetCreateRequest.getCustomJsonLdAsString();
+        if (jsonLdStr != null) {
+            val jsonLd = JsonUtils.parseJsonObj(jsonLdStr);
+            for (val e : jsonLd.entrySet()) {
+                addNonNullJsonValue(properties, e.getKey(), e.getValue());
+            }
         }
 
         return properties;
     }
 
+    private void add(JsonObject overrides, JsonObjectBuilder properties, String key, String value) {
+        val override = JsonLdUtils.string(overrides, key);
+        if (override != null) {
+            properties.add(key, override);
+        }
+        properties.add(key, value);
+    }
+
     private JsonObjectBuilder getAssetPrivateProperties(UiAssetCreateRequest uiAssetCreateRequest) {
         var privateProperties = Json.createObjectBuilder();
 
-        var stringProperties = uiAssetCreateRequest.getPrivateProperties();
-        if (stringProperties != null) {
-            stringProperties.forEach((k, v) -> addNonNull(privateProperties, k, v));
+        val privateJsonStr = uiAssetCreateRequest.getPrivateCustomJsonAsString();
+        if (privateJsonStr != null) {
+            addNonNull(
+                    privateProperties,
+                    Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON,
+                    privateJsonStr);
         }
 
-        var jsonProperties = uiAssetCreateRequest.getPrivateJsonProperties();
-        if (jsonProperties != null) {
-            jsonProperties.forEach((k, v) -> addNonNullJsonValue(privateProperties, k, v));
+        val privateJsonLdStr = uiAssetCreateRequest.getPrivateCustomJsonLdAsString();
+        if (privateJsonLdStr != null) {
+            val privateJsonLd = JsonUtils.parseJsonObj(privateJsonLdStr);
+            privateJsonLd.forEach((k, v) -> addNonNullJsonValue(privateProperties, k, v));
         }
 
         return privateProperties;
@@ -258,22 +294,6 @@ public class UiAssetMapper {
         return Json.createObjectBuilder()
                 .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
                 .add(Prop.Edc.PROPERTIES, Json.createObjectBuilder(props));
-    }
-
-    private Map<String, String> getStringProperties(JsonObject jsonObject) {
-        return getPropertyMap(
-                jsonObject,
-                it -> it.getValueType() == JsonValue.ValueType.STRING,
-                it -> ((JsonString) it).getString()
-        );
-    }
-
-    private Map<String, String> getJsonProperties(JsonObject jsonObject) {
-        return getPropertyMap(
-                jsonObject,
-                it -> it.getValueType() != JsonValue.ValueType.STRING,
-                JsonUtils::toJson
-        );
     }
 
     private JsonObject removeHandledProperties(JsonObject properties, List<String> handledProperties) {
