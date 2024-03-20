@@ -20,6 +20,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
+- Add a fix for a null pointer exception in the transfer history API.
 - Add e2e test for double encoding of query parameters
 
 ### Deployment Migration Notes
