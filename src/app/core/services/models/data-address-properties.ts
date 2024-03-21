@@ -5,7 +5,7 @@ export const DataAddressProperty = {
   authKey: `${EDC}authKey`,
   baseUrl: `${EDC}baseUrl`,
   body: `${EDC}body`,
-  header: `${EDC}header`,
+  header: `header`,
   contentType: `${EDC}contentType`,
   method: `${EDC}method`,
   pathSegments: `${EDC}pathSegments`,

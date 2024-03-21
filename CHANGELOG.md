@@ -25,6 +25,7 @@ the detailed section referring to by linking pull requests or issues.
 - Fixed an asset select issue resulting from a bad compare function
 - Asset: Fix double encoding of query params by disallowing '&' and '=' chars in
   form field and sending them unencoded
+- Fixed an issue that prevented custom headers from being included in HTTP Data Transfers
 
 #### Deployment Migration Notes
 
