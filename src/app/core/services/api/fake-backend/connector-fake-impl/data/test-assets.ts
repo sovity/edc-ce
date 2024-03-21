@@ -163,12 +163,9 @@ This is a short description text that should be fully rendered without being **c
     httpDatasourceHintsProxyPath: true,
     httpDatasourceHintsProxyMethod: true,
     httpDatasourceHintsProxyBody: true,
-    additionalProperties: {
-      'http://unknown/usecase': 'my-use-case',
-    },
-    privateProperties: {
-      'http://unknown/internal-id': 'my-internal-id-123',
-    },
+    customJsonAsString: '{"http://unknown/usecase": "my-use-case"}',
+    privateCustomJsonAsString:
+      '{ "http://unknown/internal-id": "my-internal-id-123"}',
   };
 
   export function toDummyAsset(entry: UiAsset): UiAsset {

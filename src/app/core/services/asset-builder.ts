@@ -26,10 +26,10 @@ export class AssetBuilder {
 
   buildAsset(asset: UiAsset): UiAssetMapped {
     const {
-      additionalProperties,
-      additionalJsonProperties,
-      privateProperties,
-      privateJsonProperties,
+      customJsonAsString,
+      customJsonLdAsString,
+      privateCustomJsonAsString,
+      privateCustomJsonLdAsString,
       language,
       dataCategory,
       dataSubcategory,
@@ -81,24 +81,30 @@ export class AssetBuilder {
   private buildAdditionalProperties(asset: UiAsset): AdditionalAssetProperty[] {
     const result: AdditionalAssetProperty[] = [];
     type AssetKey =
-      | 'additionalProperties'
-      | 'additionalJsonProperties'
-      | 'privateProperties'
-      | 'privateJsonProperties';
+      | 'customJsonAsString'
+      | 'customJsonLdAsString'
+      | 'privateCustomJsonAsString'
+      | 'privateCustomJsonLdAsString';
 
     const propertiesToConvert: AssetKey[] = [
-      'additionalProperties',
-      'additionalJsonProperties',
-      'privateProperties',
-      'privateJsonProperties',
+      'customJsonAsString',
+      'customJsonLdAsString',
+      'privateCustomJsonAsString',
+      'privateCustomJsonLdAsString',
     ];
 
     for (let propName of propertiesToConvert) {
-      const propValue = asset[propName];
-      if (propValue) {
-        for (let key in propValue) {
-          result.push({key: key, value: propValue[key]});
+      if (!asset[propName]) {
+        continue;
+      }
+
+      try {
+        const propJson = JSON.parse(asset[propName]!);
+        for (let key in propJson) {
+          result.push({key: key, value: propJson[key]});
         }
+      } catch (e) {
+        console.error('Error parsing additional properties', e);
       }
     }
     return result;
