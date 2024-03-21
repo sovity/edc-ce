@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Minor
 
+- API: Added endpoint for adding connectors and associated MDS IDs
+
 #### Patch
 
 ### Deployment Migration Notes

@@ -26,4 +26,8 @@ public class MdsIdUtils {
 
         return participantId.split("\\.")[0];
     }
+
+    public static Boolean isValidMdsId(String mdsId) {
+        return mdsId != null && mdsId.matches("^MDSL[A-Za-z0-9]+");
+    }
 }

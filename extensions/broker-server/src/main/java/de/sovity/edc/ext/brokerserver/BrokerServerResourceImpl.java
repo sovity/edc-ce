@@ -20,6 +20,7 @@ import de.sovity.edc.ext.brokerserver.api.model.AuthorityPortalConnectorInfo;
 import de.sovity.edc.ext.brokerserver.api.model.AuthorityPortalOrganizationMetadataRequest;
 import de.sovity.edc.ext.brokerserver.api.model.CatalogPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.CatalogPageResult;
+import de.sovity.edc.ext.brokerserver.api.model.ConnectorCreationRequest;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorDetailPageQuery;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorDetailPageResult;
 import de.sovity.edc.ext.brokerserver.api.model.ConnectorPageQuery;
@@ -81,6 +82,12 @@ public class BrokerServerResourceImpl implements BrokerServerResource {
     public void addConnectors(List<String> endpoints, String adminApiKey) {
         adminApiKeyValidator.validateAdminApiKey(adminApiKey);
         dslContextFactory.transaction(dsl -> connectorApiService.addConnectors(dsl, endpoints));
+    }
+
+    @Override
+    public void addConnectorsWithMdsIds(ConnectorCreationRequest connectors, String adminApiKey) {
+        adminApiKeyValidator.validateAdminApiKey(adminApiKey);
+        dslContextFactory.transaction(dsl -> connectorApiService.addConnectorsWithMdsIds(dsl, connectors));
     }
 
     @Override

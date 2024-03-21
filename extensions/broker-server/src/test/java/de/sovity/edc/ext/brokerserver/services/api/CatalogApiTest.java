@@ -257,6 +257,7 @@ class CatalogApiTest {
                             "transportMode",
                             "geoReferenceMethod",
                             "curatorOrganizationName",
+                            "curatorMdsId",
                             "connectorEndpoint"
                     );
 
@@ -270,6 +271,7 @@ class CatalogApiTest {
                             "Transport Mode",
                             "Geo Reference Method",
                             "Organization Name",
+                            "MDS ID",
                             "Connector"
                     );
 
@@ -300,6 +302,10 @@ class CatalogApiTest {
             var curatorOrganizationName = getAvailableFilter(result, "curatorOrganizationName");
             assertThat(curatorOrganizationName.getValues()).extracting(CnfFilterItem::getId).containsExactly("Test Org");
             assertThat(curatorOrganizationName.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("Test Org");
+
+            var curatorMdsId = getAvailableFilter(result, "curatorMdsId");
+            assertThat(curatorMdsId.getValues()).extracting(CnfFilterItem::getId).containsExactly("MDSL123456AA");
+            assertThat(curatorMdsId.getValues()).extracting(CnfFilterItem::getTitle).containsExactly("MDSL123456AA");
 
             var connectorEndpoint = getAvailableFilter(result, "connectorEndpoint");
             assertThat(connectorEndpoint.getValues()).extracting(CnfFilterItem::getId).containsExactly("https://my-connector/api/dsp");
@@ -508,6 +514,33 @@ class CatalogApiTest {
             // act
             var query = new CatalogPageQuery();
             query.setSearchQuery("tEsT");
+
+            var actual = brokerServerClient().brokerServerApi().catalogPage(query);
+
+            // assert
+            assertThat(actual.getDataOffers()).extracting(CatalogDataOffer::getConnectorEndpoint).containsExactly(endpoint1);
+        });
+    }
+
+    @Test
+    void testFilterByMdsId() {
+        TEST_DATABASE.testTransaction(dsl -> {
+            // arrange
+            var today = OffsetDateTime.now().withNano(0);
+
+            var endpoint1 = "https://my-connector-1/api/dsp";
+            createConnector(dsl, today, endpoint1, "MDSL1111AA");
+            createDataOffer(dsl, today, endpoint1, getAssetJsonLd("asset-1"));
+
+            var endpoint2 = "https://my-connector-2/api/dsp";
+            createConnector(dsl, today, endpoint2, "MDSL2222BB");
+            createDataOffer(dsl, today, endpoint2, getAssetJsonLd("asset-2"));
+
+            // act
+            var query = new CatalogPageQuery();
+            query.setFilter(new CnfFilterValue(List.of(
+                new CnfFilterValueAttribute("curatorMdsId", List.of("MDSL1111AA"))
+            )));
 
             var actual = brokerServerClient().brokerServerApi().catalogPage(query);
 

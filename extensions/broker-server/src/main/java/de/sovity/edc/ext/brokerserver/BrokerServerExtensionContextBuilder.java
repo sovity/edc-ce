@@ -285,7 +285,8 @@ public class BrokerServerExtensionContextBuilder {
         );
         var connectorApiService = new ConnectorApiService(
                 connectorService,
-                brokerEventLogger
+                brokerEventLogger,
+                connectorQueries
         );
         var dataOfferDetailApiService = new DataOfferDetailApiService(
                 dataOfferDetailPageQueryService,

@@ -26,6 +26,7 @@ import de.sovity.edc.ext.brokerserver.dao.utils.JsonDeserializationUtils;
 import de.sovity.edc.ext.brokerserver.utils.CollectionUtils2;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
+import org.jooq.impl.DSL;
 
 import java.util.Comparator;
 import java.util.List;
@@ -87,6 +88,11 @@ public class CatalogFilterService {
                 CatalogQueryFields::getOrganizationName,
                 "curatorOrganizationName",
                 "Organization Name"
+            ),
+            catalogFilterAttributeDefinitionService.forField(
+                fields -> DSL.coalesce(fields.getConnectorTable().MDS_ID, "Unknown"),
+                "curatorMdsId",
+                "MDS ID"
             ),
             catalogFilterAttributeDefinitionService.buildConnectorEndpointFilter()
         );
