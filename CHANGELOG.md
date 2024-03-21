@@ -16,6 +16,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Major
 
+- Broker UI: Replaced "connectorEndpoint" with "mdsId" as query parameter on the catalog page
+
 #### Minor
 
 #### Patch

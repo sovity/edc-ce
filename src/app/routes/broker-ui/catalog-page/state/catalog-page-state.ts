@@ -47,10 +47,10 @@ export class CatalogPageState implements OnDestroy {
     let state = ctx.getState();
     state.fetchSubscription?.unsubscribe();
     state = DEFAULT_CATALOG_PAGE_STATE_MODEL;
-    if (action.initialConnectorEndpoints?.length) {
+    if (action.initialMdsIds?.length) {
       state = this._addFilterBoxes(state, [
-        this._buildConnectorEndpointFilterBoxModel(
-          action.initialConnectorEndpoints,
+        this._buildMdsIdFilterBoxModel(
+          action.initialMdsIds,
         ),
       ]);
     }
@@ -164,7 +164,7 @@ export class CatalogPageState implements OnDestroy {
     }
   }
 
-  private _buildConnectorEndpointFilterBoxModel(
+  private _buildMdsIdFilterBoxModel(
     endpoints: string[],
   ): FilterBoxModel {
     const items: FilterBoxItem[] = endpoints.map((x) => ({
@@ -173,8 +173,8 @@ export class CatalogPageState implements OnDestroy {
       label: x,
     }));
     return {
-      id: 'connectorEndpoint',
-      title: 'Connector',
+      id: 'curatorMdsId',
+      title: 'MDS ID',
       selectedItems: items,
       availableItems: items,
       searchText: '',

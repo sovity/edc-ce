@@ -126,6 +126,20 @@ export const getCatalogPage = (query: CatalogPageQuery): CatalogPageResult => {
             },
           ],
         },
+        {
+          id: 'curatorMdsId',
+          title: 'MDS ID',
+          values: [
+            {
+              id: 'MDSL1111AA',
+              title: 'MDSL1111AA',
+            },
+            {
+              id: 'MDSL2222BB',
+              title: 'MDSL2222BB',
+            },
+          ],
+        },
       ],
     },
     paginationMetadata: {

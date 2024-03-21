@@ -63,13 +63,13 @@ export class CatalogPageComponent implements OnInit, OnDestroy {
   }
 
   private initializePage() {
-    const endpoints = this.parseConnectorEndpoints(
+    const mdsIds = this.parseMdsId(
       this.route.snapshot.queryParams,
     );
-    this.store.dispatch(new CatalogPage.Reset(endpoints));
+    this.store.dispatch(new CatalogPage.Reset(mdsIds));
 
-    if (endpoints.length) {
-      this.expandedFilterId = 'connectorEndpoint';
+    if (mdsIds.length) {
+      this.expandedFilterId = 'curatorMdsId';
       // remove query params from url
       this.router.navigate([]);
     }
@@ -114,12 +114,12 @@ export class CatalogPageComponent implements OnInit, OnDestroy {
       });
   }
 
-  private parseConnectorEndpoints(params: Params): string[] {
-    if (!('connectorEndpoint' in params)) {
+  private parseMdsId(params: Params): string[] {
+    if (!('mdsId' in params)) {
       return [];
     }
-    const endpoints = params.connectorEndpoint;
-    return Array.isArray(endpoints) ? [...new Set(endpoints)] : [endpoints];
+    const mdsIds = params.mdsId;
+    return Array.isArray(mdsIds) ? [...new Set(mdsIds)] : [mdsIds];
   }
 
   onDataOfferClick(dataOffer: CatalogDataOfferMapped) {
