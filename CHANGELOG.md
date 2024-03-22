@@ -26,6 +26,7 @@ the detailed section referring to by linking pull requests or issues.
 - Asset: Fix double encoding of query params by disallowing '&' and '=' chars in
   form field and sending them unencoded
 - Fixed an issue that prevented custom headers from being included in HTTP Data Transfers
+- Fix `Content-Type` header being ignored by backend for transfers
 
 #### Deployment Migration Notes
 

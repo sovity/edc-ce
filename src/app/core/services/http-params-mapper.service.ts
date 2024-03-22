@@ -75,10 +75,13 @@ export class HttpRequestParamsMapper {
       ),
       [DataAddressProperty.proxyBody]: bool(httpRequestParams.proxyBody),
       [DataAddressProperty.queryParams]: httpRequestParams.queryParams,
-      ...mapKeys(
-        httpRequestParams.headers,
-        (k) => `${DataAddressProperty.header}:${k}`,
-      ),
+      ...mapKeys(httpRequestParams.headers, (k) => {
+        if (k.toLowerCase() === 'content-type') {
+          // this is required because the EDC sends the Content-Type header if and only if provided using the special field "contentType"
+          return DataAddressProperty.contentType;
+        }
+        return `${DataAddressProperty.header}:${k}`;
+      }),
     };
     return removeNullValues(props);
   }
