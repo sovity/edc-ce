@@ -13,13 +13,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Major
 
+#### Minor
+
+#### Patch
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:{{ CE_VERSION }}`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI_VERSION }}`
+- Sovity EDC CE: {{ CE Release Link }}
+
+## [v4.0.0] - 2024-03-22
+
+### Overview
+
+Release with adjustmets for the ongoing integration with the Authority Portal
+
+### Detailed Changes
+
+#### Major
+
 - Authority Portal API: Removed deprecated data offer count endpoint
 
 #### Minor
 
 - API: Added endpoint for adding connectors and associated MDS IDs
-
-#### Patch
 
 ### Deployment Migration Notes
 
@@ -28,9 +48,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Compatible Versions
 
-- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:{{ CE_VERSION}}`
-- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI_VERSION }}`
-- Sovity EDC CE: {{ CE Release Link }}
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:4.0.0`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:3.0.0`
+- Sovity EDC CE: [`7.2.2`](https://github.com/sovity/edc-extensions/releases/tag/v7.2.2)
 
 ## [v3.5.0] - 2024-02-29
 
