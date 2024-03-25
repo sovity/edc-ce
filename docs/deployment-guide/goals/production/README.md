@@ -92,7 +92,7 @@ EDC_UI_CONFIG_URL: "edc-ui-config"
 You can also optionally set the following config properties:
 ```yaml
 # Override the management API URL shown to the user in the UI
-EDC_UI_SHOWN_MANAGEMENT_API_URL_IN_DASHBOARD: https://[EDC_URL]/api/control/management
+EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD: https://[EDC_URL]/api/control/management
 ```
 
 ## EDC Backend Configuration
