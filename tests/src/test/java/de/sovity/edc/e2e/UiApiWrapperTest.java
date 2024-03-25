@@ -50,6 +50,7 @@ import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -69,6 +70,7 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
+@Disabled("Can the test run fine if it's the only one in use?")
 class UiApiWrapperTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = "provider";

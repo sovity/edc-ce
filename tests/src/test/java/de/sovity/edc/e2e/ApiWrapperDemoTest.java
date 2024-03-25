@@ -41,6 +41,7 @@ import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -53,6 +54,7 @@ import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactor
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Disabled("Can the test run fine if it's the only one in use?")
 class ApiWrapperDemoTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = "provider";

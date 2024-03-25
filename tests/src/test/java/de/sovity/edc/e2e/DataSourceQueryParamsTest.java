@@ -52,7 +52,7 @@ import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactor
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@EndToEndTest
+
 class DataSourceQueryParamsTest {
 
     private Logger logger = Logger.getLogger(DataSourceQueryParamsTest.class.getCanonicalName());

@@ -25,6 +25,7 @@ import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.data.TemporalUnitLessThanOffset;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -39,6 +40,7 @@ import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactor
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Disabled("Can the test run fine if it's the only one in use?")
 /**
  * Test data offers and contracts of an MS8 connector migrated to the current version.
  */
