@@ -72,7 +72,7 @@ class DspCatalogServiceTest {
 
         assertThat(offer.getContractOffers()).hasSize(1);
         var co = offer.getContractOffers().get(0);
-        assertThat(co.getContractOfferId()).isEqualTo("contract-id:asset-id:ODJjMDNjMmM4YzQ5NmE0OTg4ZjVjOTY4OGU2MmMyN2UxYjIxZDAwZQ==");
+        assertThat(co.getContractOfferId()).isEqualTo("policy-1");
         assertThat(toJson(co.getPolicyJsonLd())).contains("ALWAYS_TRUE");
 
         assertThat(offer.getDistributions()).hasSize(1);

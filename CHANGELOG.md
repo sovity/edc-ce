@@ -20,6 +20,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
+- Add a fix for a null pointer exception in the transfer history API.
 - Add e2e test for double encoding of query parameters
 
 ### Deployment Migration Notes
@@ -29,6 +30,35 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
     - optional, defaults to
 
 #### Compatible Versions
+
+
+## [7.2.2] - 2024-03-13
+
+### Overview
+
+Bugfix
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v2.4.0
+
+### EDC Extensions
+
+#### Patch Changes
+
+- DspCatalogService: Stable Contract Offer IDs removed
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:7.2.2`
+    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.2.2`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.2.2`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.4.0`
 
 
 ## [7.2.1] - 2024-02-21
