@@ -41,6 +41,11 @@ export const AppConfigProperties = {
   managementApiKey: 'EDC_UI_MANAGEMENT_API_KEY',
 
   /**
+   * Overridden management API URL to be displayed for the user
+   */
+  shownManagementApiUrl: 'EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD',
+
+  /**
    * Logout URL.
    */
   logoutUrl: 'EDC_UI_LOGOUT_URL',

@@ -18,9 +18,14 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
+- Now displaying the Management API URL on the dashboard. The displayed URL is also overridable.
+
 #### Patch
 
 #### Deployment Migration Notes
+
+- New **optional** environment variable:
+  - `EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD` as override for shown Management API URL on the dashboard
 
 ## [v3.0.0] - 2024-03-22
 

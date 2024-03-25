@@ -89,6 +89,24 @@
           <mat-icon>content_copy</mat-icon>
         </button>
       </mat-form-field>
+      <mat-form-field class="w-full" style="margin-bottom: -10px">
+        <mat-label>Management API URL</mat-label>
+        <input
+          #endpointInput
+          matInput
+          ngDefaultControl
+          readonly
+          [ngModel]="config.shownManagementApiUrl"
+          (focus)="endpointInput.select()" />
+        <mat-icon matPrefix>link</mat-icon>
+        <button
+          mat-icon-button
+          matSuffix
+          matTooltip="Copy to clipboard"
+          [cdkCopyToClipboard]="config.shownManagementApiUrl">
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      </mat-form-field>
     </mat-card>
 
     <mat-card
