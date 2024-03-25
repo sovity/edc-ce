@@ -35,7 +35,6 @@ import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.awaitility.Awaitility;
-import org.eclipse.edc.junit.annotations.EndToEndTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,18 +43,13 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 class DataSourceQueryParamsTest {
-
-    private Logger logger = Logger.getLogger(DataSourceQueryParamsTest.class.getCanonicalName());
 
     private static final String PROVIDER_PARTICIPANT_ID = "provider";
     private static final String CONSUMER_PARTICIPANT_ID = "consumer";
@@ -81,24 +75,16 @@ class DataSourceQueryParamsTest {
 
     @BeforeEach
     void setup() {
-        System.out.println("setup - enter");
         // set up provider EDC + Client
         var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, TestPorts.getFirstPortOfRange(5), PROVIDER_DATABASE);
         providerEdcContext.setConfiguration(providerConfig.getProperties());
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
-        var timeout = 20_000; // ms
-
         providerClient = EdcClient.builder()
                 .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
                 .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-                .customConfigurer((apiClient) -> {
-                    apiClient.setConnectTimeout(timeout)
-                            .setReadTimeout(timeout)
-                            .setWriteTimeout(timeout);
-                })
                 .build();
-        System.out.println("setup - consumer");
+
         // set up consumer EDC + Client
         var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, TestPorts.getFirstPortOfRange(5), CONSUMER_DATABASE);
         consumerEdcContext.setConfiguration(consumerConfig.getProperties());
@@ -108,16 +94,15 @@ class DataSourceQueryParamsTest {
                 .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
                 .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
                 .customConfigurer((apiClient) -> {
+                    var timeout = 10_000; // ms
                     apiClient.setConnectTimeout(timeout)
                             .setReadTimeout(timeout)
                             .setWriteTimeout(timeout);
                 })
                 .build();
 
-        System.out.println("setup - data address");
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
-        System.out.println("setup - exit");
     }
 
     @Test
@@ -144,22 +129,16 @@ class DataSourceQueryParamsTest {
         createContractDefinition();
 
         // act
-        System.out.println("test - act");
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
-        System.out.println("test - initiate");
         var negotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
-        System.out.println("test - await");
         negotiation = awaitNegotiationDone(negotiation.getContractNegotiationId());
-        System.out.println("test - transfer");
         initiateTransfer(negotiation);
 
         // assert
-        System.out.println("test - assert");
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), encodedParam);
     }
 
     private void createAsset() {
-        System.out.println("create asset - enter");
         var asset = UiAssetCreateRequest.builder()
                 .id(dataOfferId)
                 .title("My Data Offer")
@@ -172,11 +151,9 @@ class DataSourceQueryParamsTest {
                 .build();
 
         providerClient.uiApi().createAsset(asset);
-        System.out.println("create asset - exit");
     }
 
     private void createPolicy() {
-        System.out.println("create policy - enter");
         var policyDefinition = PolicyDefinitionCreateRequest.builder()
                 .policyDefinitionId(dataOfferId)
                 .policy(UiPolicyCreateRequest.builder()
@@ -185,11 +162,9 @@ class DataSourceQueryParamsTest {
                 .build();
 
         providerClient.uiApi().createPolicyDefinition(policyDefinition);
-        System.out.println("create policy - exit");
     }
 
     private void createContractDefinition() {
-        System.out.println("create contract - enter");
         var contractDefinition = ContractDefinitionRequest.builder()
                 .contractDefinitionId(dataOfferId)
                 .accessPolicyId(dataOfferId)
@@ -205,11 +180,9 @@ class DataSourceQueryParamsTest {
                 .build();
 
         providerClient.uiApi().createContractDefinition(contractDefinition);
-        System.out.println("create contract - exit");
     }
 
     private UiContractNegotiation initiateNegotiation(UiDataOffer dataOffer, UiContractOffer contractOffer) {
-        System.out.println("initiate negotiation - enter");
         var negotiationRequest = ContractNegotiationRequest.builder()
                 .counterPartyAddress(dataOffer.getEndpoint())
                 .counterPartyParticipantId(dataOffer.getParticipantId())
@@ -218,31 +191,26 @@ class DataSourceQueryParamsTest {
                 .policyJsonLd(contractOffer.getPolicy().getPolicyJsonLd())
                 .build();
 
-        System.out.println("initiate negotiation - exit");
         return consumerClient.uiApi().initiateContractNegotiation(negotiationRequest);
     }
 
     private UiContractNegotiation awaitNegotiationDone(String negotiationId) {
-        System.out.println("await negotiation - enter");
         var negotiation = Awaitility.await().atMost(consumerConnector.timeout).until(
                 () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
                 it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
         );
 
         assertThat(negotiation.getState().getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.AGREED);
-        System.out.println("await negotiation - exit");
         return negotiation;
     }
 
     private void initiateTransfer(UiContractNegotiation negotiation) {
-        System.out.println("init transfer - enter");
         var contractAgreementId = negotiation.getContractAgreementId();
         var transferRequest = InitiateTransferRequest.builder()
                 .contractAgreementId(contractAgreementId)
                 .dataSinkProperties(dataAddress.getDataSinkProperties())
                 .build();
         consumerClient.uiApi().initiateTransfer(transferRequest);
-        System.out.println("init transfer - exit");
     }
 
     private String getProtocolEndpoint(ConnectorRemote connector) {
