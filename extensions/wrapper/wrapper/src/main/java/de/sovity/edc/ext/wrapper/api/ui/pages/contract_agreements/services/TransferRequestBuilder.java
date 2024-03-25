@@ -30,6 +30,7 @@ import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -57,6 +58,7 @@ public class TransferRequestBuilder {
                 .assetId(agreement.getAssetId())
                 .dataDestination(address)
                 .privateProperties(edcPropertyUtils.toMapOfObject(request.getTransferProcessProperties()))
+                .properties(Map.of("method", "PATCH"))
                 .callbackAddresses(List.of())
                 .build();
     }
