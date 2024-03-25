@@ -26,8 +26,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 ### Deployment Migration Notes
 
 - New environment variables:
-  - `EDC_UI_SHOWN_MANAGEMENT_API_URL_IN_DASHBOARD`
-    - optional, defaults to
+  - `EDC_UI_SHOWN_MANAGEMENT_API_URL_IN_DASHBOARD` (optional)
 
 #### Compatible Versions
 
