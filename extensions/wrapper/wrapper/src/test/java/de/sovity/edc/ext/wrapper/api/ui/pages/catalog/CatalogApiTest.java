@@ -45,9 +45,9 @@ public class CatalogApiTest {
         message("Testing");
         // arrange
         createAsset();
-//        createPolicy();
-//        createContractDefinition();
-//        // act
+        createPolicy();
+        createContractDefinition();
+        // act
 //        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers(TestUtils.PROTOCOL_ENDPOINT);
 //
 //        // assert
