@@ -41,6 +41,7 @@ public class CatalogApiTest {
      */
     @Test
     void test_Distribution_Key() {
+        message("Testing");
         // arrange
         createAsset();
         createPolicy();
@@ -55,6 +56,7 @@ public class CatalogApiTest {
     }
 
     private void createAsset() {
+        message("Creating asset");
         var asset = UiAssetCreateRequest.builder()
                 .id(dataOfferId)
                 .title("My Data Offer")
@@ -74,7 +76,12 @@ public class CatalogApiTest {
         client.uiApi().createAsset(asset);
     }
 
+    private void message(String message) {
+        System.err.println(message);
+    }
+
     private void createPolicy() {
+        message("Creating policy");
         var policyDefinition = PolicyDefinitionCreateRequest.builder()
                 .policyDefinitionId(dataOfferId)
                 .policy(UiPolicyCreateRequest.builder()
@@ -86,6 +93,7 @@ public class CatalogApiTest {
     }
 
     private void createContractDefinition() {
+        message("Creating contract definition");
         var contractDefinition = ContractDefinitionRequest.builder()
                 .contractDefinitionId(dataOfferId)
                 .accessPolicyId(dataOfferId)
