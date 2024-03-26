@@ -48,7 +48,7 @@ public class CatalogApiTest {
 //        createPolicy();
 //        createContractDefinition();
         // act
-        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers(TestUtils.PROTOCOL_ENDPOINT);
+        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers("http://wrong.obviously/whatever/doesnt/matter");
 
         // assert
 //        assertThat(catalogPageDataOffers.size()).isEqualTo(1);
