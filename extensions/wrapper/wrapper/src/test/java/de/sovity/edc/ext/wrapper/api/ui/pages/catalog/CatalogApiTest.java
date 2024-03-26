@@ -48,9 +48,9 @@ public class CatalogApiTest {
         createPolicy();
         createContractDefinition();
         // act
-//        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers(TestUtils.PROTOCOL_ENDPOINT);
-//
-//        // assert
+        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers(TestUtils.PROTOCOL_ENDPOINT);
+
+        // assert
 //        assertThat(catalogPageDataOffers.size()).isEqualTo(1);
 //        assertThat(catalogPageDataOffers.get(0).getAsset().getTitle()).isEqualTo("My Data Offer");
 //        assertThat(catalogPageDataOffers.get(0).getAsset().getMediaType()).isEqualTo("Media Type");
