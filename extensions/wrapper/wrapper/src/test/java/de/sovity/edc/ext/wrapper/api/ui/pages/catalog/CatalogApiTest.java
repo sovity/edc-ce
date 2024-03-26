@@ -1,6 +1,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.catalog;
 
 import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.client.gen.ApiException;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
@@ -48,7 +50,11 @@ public class CatalogApiTest {
 //        createPolicy();
 //        createContractDefinition();
         // act
-        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers("http://wrong.obviously/whatever/doesnt/matter");
+        try {
+            var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers("http://wrong.obviously/whatever/doesnt/matter");
+        } catch (Exception e) {
+            fail("Failed to get the catalog page", e);
+        }
 
         // assert
 //        assertThat(catalogPageDataOffers.size()).isEqualTo(1);
