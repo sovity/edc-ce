@@ -10,6 +10,7 @@ services:
       EDC_UI_MANAGEMENT_API_URL: http://localhost:11002/api/management
       EDC_UI_MANAGEMENT_API_KEY: ApiKeyDefaultValue
       EDC_UI_CATALOG_URLS: http://edc2:11003/api/dsp
+      EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD: http://localhost:11002/control/api/management
       NGINX_ACCESS_LOG: off
 
   edc:
