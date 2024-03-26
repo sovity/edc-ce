@@ -34,9 +34,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
@@ -117,9 +120,41 @@ public class AssetApiServiceTest {
                 .dataModel("dataModel")
                 .geoReferenceMethod("geoReferenceMethod")
                 .transportMode("transportMode")
+                .sovereignLegalName("my sovereign")
+                .geoLocation("40.0, 40.0")
+                .nutsLocation(Arrays.asList("DE", "DE929"))
+                .dataSampleUrls(Arrays.asList("https://sample-a", "https://sample-b"))
+                .referenceFileUrls(Arrays.asList("https://reference-a", "https://reference-b"))
+                .referenceFilesDescription("RF Description")
+                .conditionsForUse("Conditions for use")
+                .dataUpdateFrequency("every month")
+                .temporalCoverageFrom(LocalDate.of(2020, 1, 1))
+                .temporalCoverageToInclusive(LocalDate.of(2020, 1, 8))
                 .keywords(List.of("keyword1", "keyword2"))
                 .publisherHomepage("publisherHomepage")
                 .dataAddressProperties(dataAddressProperties)
+                .customJsonAsString("{\"test\":\"value\"}")
+                .customJsonLdAsString("""
+                        {
+                            "https://string": "value",
+                            "https://number": 3.14,
+                            "https://array": [1,2,3],
+                            "https://object": { "https://key": "value" },
+                            "https://booleans/are/not/supported/by/Eclipse/EDC": true,
+                            "https://null/will/be/eliminated": null
+                        }
+                        """)
+                .privateCustomJsonAsString("{\"private test\":\"private value\"}")
+                .privateCustomJsonLdAsString("""
+                        {
+                            "https://private/string": "value",
+                            "https://private/number": 3.14,
+                            "https://private/array": [1,2,3],
+                            "https://private/object": { "https://key": "value" },
+                            "https://private/booleans/are/not/supported/by/Eclipse/EDC": true,
+                            "https://private/null/will/be/eliminated": null
+                        }
+                        """)
                 .build();
 
         // act
@@ -142,6 +177,16 @@ public class AssetApiServiceTest {
         assertThat(asset.getDataModel()).isEqualTo("dataModel");
         assertThat(asset.getGeoReferenceMethod()).isEqualTo("geoReferenceMethod");
         assertThat(asset.getTransportMode()).isEqualTo("transportMode");
+        assertThat(asset.getSovereignLegalName()).isEqualTo("my sovereign");
+        assertThat(asset.getGeoLocation()).isEqualTo("40.0, 40.0");
+        assertThat(asset.getNutsLocation()).isEqualTo(Arrays.asList("DE", "DE929"));
+        assertThat(asset.getDataSampleUrls()).isEqualTo(Arrays.asList("https://sample-a", "https://sample-b"));
+        assertThat(asset.getReferenceFileUrls()).isEqualTo(Arrays.asList("https://reference-a", "https://reference-b"));
+        assertThat(asset.getReferenceFilesDescription()).isEqualTo("RF Description");
+        assertThat(asset.getConditionsForUse()).isEqualTo("Conditions for use");
+        assertThat(asset.getDataUpdateFrequency()).isEqualTo("every month");
+        assertThat(asset.getTemporalCoverageFrom()).isEqualTo(LocalDate.of(2020, 1, 1));
+        assertThat(asset.getTemporalCoverageToInclusive()).isEqualTo(LocalDate.of(2020, 1, 8));
         assertThat(asset.getLicenseUrl()).isEqualTo("https://license-url");
         assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
         assertThat(asset.getCreatorOrganizationName()).isEqualTo("My Org");
@@ -150,6 +195,28 @@ public class AssetApiServiceTest {
         assertThat(asset.getHttpDatasourceHintsProxyPath()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyBody()).isTrue();
+        assertThatJson(asset.getCustomJsonAsString()).isEqualTo("""
+                { "test": "value" }
+                """);
+        assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
+                {
+                    "https://string": "value",
+                    "https://number": 3.14,
+                    "https://array": [1.0, 2.0, 3.0],
+                    "https://object": { "https://key": "value" }
+                }
+                """);
+        assertThatJson(asset.getPrivateCustomJsonAsString()).isEqualTo("""
+                { "private test": "private value" }
+                """);
+        assertThatJson(asset.getPrivateCustomJsonLdAsString()).isEqualTo("""
+                {
+                    "https://private/string": "value",
+                    "https://private/number": 3.14,
+                    "https://private/array": [1.0, 2.0, 3.0],
+                    "https://private/object": { "https://key": "value" }
+                }
+                """);
 
         var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
         assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddressProperties);
@@ -180,11 +247,32 @@ public class AssetApiServiceTest {
                 .dataModel("dataModel")
                 .geoReferenceMethod("geoReferenceMethod")
                 .transportMode("transportMode")
+                .sovereignLegalName("my sovereign")
+                .geoLocation("40.0, 40.0")
+                .nutsLocation(Arrays.asList("DE", "DE929"))
+                .dataSampleUrls(Arrays.asList("https://sample-a", "https://sample-b"))
+                .referenceFileUrls(Arrays.asList("https://reference-a", "https://reference-b"))
+                .referenceFilesDescription("RF Description")
+                .conditionsForUse("Conditions for use")
+                .dataUpdateFrequency("every month")
+                .temporalCoverageFrom(LocalDate.of(2020, 1, 1))
+                .temporalCoverageToInclusive(LocalDate.of(2020, 1, 8))
                 .keywords(List.of("keyword1", "keyword2"))
                 .publisherHomepage("publisherHomepage")
                 .dataAddressProperties(dataAddress)
+                .customJsonAsString("""
+                        { "test": "value" }
+                        """)
+                .customJsonLdAsString("""
+                        {
+                            "https://to-change": "value1",
+                            "https://for-deletion": "value2"
+                        }
+                        """)
                 .build();
+
         client.uiApi().createAsset(createRequest);
+
         var editRequest = UiAssetEditMetadataRequest.builder()
                 .title("AssetTitle 2")
                 .description("AssetDescription 2")
@@ -196,9 +284,28 @@ public class AssetApiServiceTest {
                 .dataSubcategory("dataSubcategory2")
                 .dataModel("dataModel2")
                 .geoReferenceMethod("geoReferenceMethod2")
+                .sovereignLegalName("my sovereign2")
+                .geoLocation("50.0, 50.0")
+                .nutsLocation(Arrays.asList("NL", "NL929"))
+                .dataSampleUrls(Arrays.asList("https://sample-a2", "https://sample-b2"))
+                .referenceFileUrls(Arrays.asList("https://reference-a2", "https://reference-b2"))
+                .referenceFilesDescription("RF Description2")
+                .conditionsForUse("Conditions for use2")
+                .dataUpdateFrequency("every week")
+                .temporalCoverageFrom(LocalDate.of(2021, 1, 1))
+                .temporalCoverageToInclusive(LocalDate.of(2021, 1, 8))
                 .transportMode("transportMode2")
                 .keywords(List.of("keyword3"))
                 .publisherHomepage("publisherHomepage2")
+                .customJsonAsString("""
+                        { "edited": "new value" }
+                        """)
+                .customJsonLdAsString("""
+                        {
+                            "https://to-change": "new value LD",
+                            "https://for-deletion": null
+                        }
+                        """)
                 .build();
 
         // act
@@ -221,6 +328,16 @@ public class AssetApiServiceTest {
         assertThat(asset.getDataModel()).isEqualTo("dataModel2");
         assertThat(asset.getGeoReferenceMethod()).isEqualTo("geoReferenceMethod2");
         assertThat(asset.getTransportMode()).isEqualTo("transportMode2");
+        assertThat(asset.getSovereignLegalName()).isEqualTo("my sovereign2");
+        assertThat(asset.getGeoLocation()).isEqualTo("50.0, 50.0");
+        assertThat(asset.getNutsLocation()).isEqualTo(Arrays.asList("NL", "NL929"));
+        assertThat(asset.getDataSampleUrls()).isEqualTo(Arrays.asList("https://sample-a2", "https://sample-b2"));
+        assertThat(asset.getReferenceFileUrls()).isEqualTo(Arrays.asList("https://reference-a2", "https://reference-b2"));
+        assertThat(asset.getReferenceFilesDescription()).isEqualTo("RF Description2");
+        assertThat(asset.getConditionsForUse()).isEqualTo("Conditions for use2");
+        assertThat(asset.getDataUpdateFrequency()).isEqualTo("every week");
+        assertThat(asset.getTemporalCoverageFrom()).isEqualTo(LocalDate.of(2021, 1, 1));
+        assertThat(asset.getTemporalCoverageToInclusive()).isEqualTo(LocalDate.of(2021, 1, 8));
         assertThat(asset.getLicenseUrl()).isEqualTo("https://license-url/2");
         assertThat(asset.getKeywords()).isEqualTo(List.of("keyword3"));
         assertThat(asset.getCreatorOrganizationName()).isEqualTo("My Org");
@@ -229,6 +346,12 @@ public class AssetApiServiceTest {
         assertThat(asset.getHttpDatasourceHintsProxyPath()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyBody()).isTrue();
+        assertThat(asset.getCustomJsonAsString()).isEqualTo("""
+                { "edited": "new value" }
+                """);
+        assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
+                { "https://to-change": "new value LD" }
+                """);
 
         var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
         assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddress);
@@ -324,4 +447,3 @@ public class AssetApiServiceTest {
         return formatter.parse(date).getTime();
     }
 }
-

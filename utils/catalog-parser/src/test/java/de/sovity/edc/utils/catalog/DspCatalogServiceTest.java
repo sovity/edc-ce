@@ -45,7 +45,8 @@ class DspCatalogServiceTest {
 
         var result = CompletableFuture.completedFuture(StatusResult.success(catalogJson.getBytes(StandardCharsets.UTF_8)));
         when(catalogService.requestCatalog(eq(endpoint), eq("dataspace-protocol-http"), eq(QuerySpec.max()))).thenReturn(result);
-        var dataOfferBuilder = new DspDataOfferBuilder(new TitaniumJsonLd(mock(Monitor.class)));
+        var monitor = mock(Monitor.class);
+        var dataOfferBuilder = new DspDataOfferBuilder(new TitaniumJsonLd(monitor));
 
         return new DspCatalogService(catalogService, dataOfferBuilder);
     }
