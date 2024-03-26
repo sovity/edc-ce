@@ -52,7 +52,7 @@ public class CatalogApiTest {
         // act
         try {
             var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers("http://wrong.obviously/whatever/doesnt/matter");
-        } catch (Exception e) {
+        } catch (Throwable e) {
             fail("Failed to get the catalog page", e);
         }
 
