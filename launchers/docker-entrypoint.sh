@@ -28,7 +28,7 @@ if [[ "x${1:-}" == "xstart" ]]; then
     fi
 
     cmd+=(
-        -javaagent:opentelemetry-javaagent.jar
+        -Djava.util.logging.config.file=${logging_config}
         -jar /app/app.jar
     )
 else
