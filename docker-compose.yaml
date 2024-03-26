@@ -4,6 +4,7 @@ services:
     image: ${EDC_UI_IMAGE}
     ports:
       - '11000:8080'
+      - '33005:5005'
     environment:
       EDC_UI_ACTIVE_PROFILE: ${EDC_UI_ACTIVE_PROFILE}
       EDC_UI_CONFIG_URL: edc-ui-config
