@@ -17,6 +17,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 - UIAsset: Replaced unsafe additional and private properties with safer alternative fields `customJsonAsString` (**not** affected by Json LD manipulation) and `customJsonLdAsString` (affected by Json LD manipulation), along with their private counterparts.
 - API Wrapper: TS Client Library now supports OAuth Client Credentials
+- Added config variables for remote debugging
 
 #### Patch Changes
 
@@ -27,6 +28,12 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 - EDC UI:
   - New **optional** environment variable: `EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD` as override for shown Management API URL on the dashboard
+- EDC Backend:
+  - New **optional** environment variables to enable and configure remote logging & debugging capabilities:
+    - `DEBUG_LOGGING = false`
+    - `REMOTE_DEBUG = false`
+    - `REMOTE_DEBUG_SUSPEND = false`
+    - `REMOTE_DEBUG_BIND = 127.0.0.1:5005`
 
 #### Compatible Versions
 

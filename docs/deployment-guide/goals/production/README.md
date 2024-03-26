@@ -150,6 +150,17 @@ EDC_OAUTH_CERTIFICATE_ALIAS: 1
 EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
 ```
 
+You can also optionally set the following config properties:
+```yaml
+# Enables DEBUG-Level logging
+DEBUG_LOGGING: true
+
+# Enables JDWP Remote Debugging
+REMOTE_DEBUG: true
+REMOTE_DEBUG_SUSPEND: true # default: false
+REMOTE_DEBUG_BIND: 127.0.0.1:5005 # default: 127.0.0.1:5005
+```
+
 ## FAQ
 
 ### What should the client ID entry look like?
