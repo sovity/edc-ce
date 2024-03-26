@@ -51,7 +51,7 @@ public class CatalogApiTest {
 //        createContractDefinition();
         // act
         try {
-            var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers("http://wrong.obviously/whatever/doesnt/matter");
+            var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers(null);
         } catch (Throwable e) {
             fail("Failed to get the catalog page", e);
         }
