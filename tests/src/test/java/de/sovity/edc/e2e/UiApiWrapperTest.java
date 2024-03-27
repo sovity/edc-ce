@@ -150,7 +150,7 @@ class UiApiWrapperTest {
                 .transportMode("transportMode")
                 .sovereignLegalName("my-sovereign")
                 .geoLocation("my-geolocation")
-                .nutsLocations(Arrays.asList("my-nuts-location1", "my-nuts-location2"))
+                .nutsLocation(Arrays.asList("my-nuts-location1", "my-nuts-location2"))
                 .dataSampleUrls(Arrays.asList("my-data-sample-urls1", "my-data-sample-urls2"))
                 .referenceFileUrls(Arrays.asList("my-reference-files1", "my-reference-files2"))
                 .referenceFilesDescription("my-additional-description")
@@ -229,7 +229,7 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getAsset().getTransportMode()).isEqualTo("transportMode");
         assertThat(dataOffer.getAsset().getSovereignLegalName()).isEqualTo("my-sovereign");
         assertThat(dataOffer.getAsset().getGeoLocation()).isEqualTo("my-geolocation");
-        assertThat(dataOffer.getAsset().getNutsLocations()).isEqualTo(Arrays.asList("my-nuts-location1", "my-nuts-location2"));
+        assertThat(dataOffer.getAsset().getNutsLocation()).isEqualTo(Arrays.asList("my-nuts-location1", "my-nuts-location2"));
         assertThat(dataOffer.getAsset().getDataSampleUrls()).isEqualTo(Arrays.asList("my-data-sample-urls1", "my-data-sample-urls2"));
         assertThat(dataOffer.getAsset().getReferenceFileUrls()).isEqualTo(Arrays.asList("my-reference-files1", "my-reference-files2"));
         assertThat(dataOffer.getAsset().getReferenceFilesDescription()).isEqualTo("my-additional-description");
@@ -356,7 +356,7 @@ class UiApiWrapperTest {
         // overridden property
         assertThat(asset.getTitle()).isEqualTo("The real title");
         // added property
-        assertThat(asset.getNutsLocations()).isEqualTo(List.of("a", "b", "c"));
+        assertThat(asset.getNutsLocation()).isEqualTo(List.of("a", "b", "c"));
         // remaining custom property
         assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
                 {

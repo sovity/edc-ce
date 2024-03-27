@@ -79,7 +79,7 @@ public class UiAssetEditMetadataRequest {
     private String geoLocation;
 
     @Schema(description = "Locations by NUTS standard which divides countries into administrative divisions", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private List<String> nutsLocations;
+    private List<String> nutsLocation;
 
     @Schema(description = "Data sample URLs", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private List<String> dataSampleUrls;

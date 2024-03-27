@@ -20,6 +20,7 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditMetadataRequest;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 
 @RequiredArgsConstructor
@@ -86,7 +87,7 @@ public class AssetBuilder {
         createRequest.setLanguage(editRequest.getLanguage());
         createRequest.setLicenseUrl(editRequest.getLicenseUrl());
         createRequest.setMediaType(editRequest.getMediaType());
-        createRequest.setNutsLocations(editRequest.getNutsLocations());
+        createRequest.setNutsLocation(editRequest.getNutsLocation());
         createRequest.setPrivateCustomJsonAsString(editRequest.getPrivateCustomJsonAsString());
         createRequest.setPrivateCustomJsonLdAsString(editRequest.getPrivateCustomJsonLdAsString());
         createRequest.setPublisherHomepage(editRequest.getPublisherHomepage());
