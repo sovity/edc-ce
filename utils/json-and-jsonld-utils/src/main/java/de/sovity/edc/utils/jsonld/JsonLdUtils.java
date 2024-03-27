@@ -64,14 +64,6 @@ public class JsonLdUtils {
         }
     }
 
-    public static boolean isEmptyArray(JsonValue json) {
-        return list(json).isEmpty();
-    }
-
-    public static boolean isEmptyObject(JsonValue json) {
-        return object(json).isEmpty();
-    }
-
 
     /**
      * Get the ID value of an object
@@ -242,16 +234,7 @@ public class JsonLdUtils {
      * @return string or null
      */
     public static JsonObject object(JsonObject object, String key) {
-        return object(object.get(key));
-    }
-
-    /**
-     * Get an object property. Defaults to an empty object for ease of use if not found.
-     *
-     * @param field json-ld
-     * @return string or null
-     */
-    public static JsonObject object(JsonValue field) {
+        JsonValue field = object.get(key);
         if (field == null) {
             return JsonValue.EMPTY_JSON_OBJECT;
         }
