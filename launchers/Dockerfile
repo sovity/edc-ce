@@ -18,6 +18,7 @@ ARG EDC_BUILD_DATE_ARG="The docker container was built outside of github actions
 WORKDIR /app
 COPY ./launchers/connectors/$CONNECTOR_NAME/build/libs/app.jar /app
 COPY ./launchers/logging.properties /app
+COPY ./launchers/logging.dev.properties /app
 COPY ./launchers/.env /app/.env
 RUN touch /app/emtpy-properties-file.properties
 
@@ -28,7 +29,9 @@ ENV EDC_LAST_COMMIT_INFO=$EDC_LAST_COMMIT_INFO_ARG
 ENV EDC_BUILD_DATE=$EDC_BUILD_DATE_ARG
 ENV JVM_ARGS=""
 
-ENTRYPOINT set -a && source /app/.env && set +a && exec java -Djava.util.logging.config.file=/app/logging.properties $JVM_ARGS -jar app.jar
+COPY ./launchers/docker-entrypoint.sh /app/entrypoint.sh
+ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["start"]
 
 # health status is determined by the availability of the /health endpoint
 HEALTHCHECK --interval=5s --timeout=5s --retries=10 CMD curl --fail http://localhost:11001/api/check/health

@@ -18,14 +18,55 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 - UIAsset: Added some Mobility DCAT fields. Asset structure changed.
 - UIAsset: Replaced unsafe additional and private properties with safer alternative fields `customJsonAsString` (**not** affected by Json LD manipulation) and `customJsonLdAsString` (affected by Json LD manipulation), along with their private counterparts.
 - API Wrapper: TS Client Library now supports OAuth Client Credentials
+- EDC Backend: Added config variables for remote debugging
 
 #### Patch Changes
 
 - Pinned down known issue "Double Encoding" of query params with an E2E Test
+- Add a fix for a null pointer exception in the transfer history API.
+- Add e2e test for double encoding of query parameters
 
 ### Deployment Migration Notes
 
+- EDC UI:
+  - New **optional** environment variable: `EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD` as override for shown Management API URL on the dashboard
+- EDC Backend:
+  - New **optional** environment variables to enable and configure remote logging & debugging capabilities:
+    - `DEBUG_LOGGING = false`
+    - `REMOTE_DEBUG = false`
+    - `REMOTE_DEBUG_SUSPEND = false`
+    - `REMOTE_DEBUG_BIND = 127.0.0.1:5005`
+
 #### Compatible Versions
+
+
+## [7.2.2] - 2024-03-13
+
+### Overview
+
+Bugfix
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v2.4.0
+
+### EDC Extensions
+
+#### Patch Changes
+
+- DspCatalogService: Stable Contract Offer IDs removed
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:7.2.2`
+    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.2.2`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.2.2`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:2.4.0`
 
 
 ## [7.2.1] - 2024-02-21

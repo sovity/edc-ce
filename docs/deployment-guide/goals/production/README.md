@@ -89,6 +89,12 @@ EDC_UI_MANAGEMENT_API_KEY: "ApiKeyDefaultValue"
 EDC_UI_CONFIG_URL: "edc-ui-config"
 ```
 
+You can also optionally set the following config properties:
+```yaml
+# Override the management API URL shown to the user in the UI
+EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD: https://[EDC_URL]/api/control/management
+```
+
 ## EDC Backend Configuration
 
 A sovity EDC CE or MDS EDC CE Backend deployment requires the following environment variables:
@@ -142,6 +148,17 @@ EDC_KEYSTORE: '_path to .jks file in container_'
 EDC_KEYSTORE_PASSWORD: '_your keystore password_'
 EDC_OAUTH_CERTIFICATE_ALIAS: 1
 EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
+```
+
+You can also optionally set the following config properties:
+```yaml
+# Enables DEBUG-Level logging
+DEBUG_LOGGING: true
+
+# Enables JDWP Remote Debugging
+REMOTE_DEBUG: true
+REMOTE_DEBUG_SUSPEND: true # default: false
+REMOTE_DEBUG_BIND: 127.0.0.1:5005 # default: 127.0.0.1:5005
 ```
 
 ## FAQ
