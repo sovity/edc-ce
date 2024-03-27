@@ -27,11 +27,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(EdcExtension.class)
 public class CatalogApiTest {
     private EdcClient client;
-    private final String dataOfferId = "my-data-offer-2023-11";
-
 
     @BeforeEach
     void setUp(EdcExtension extension) {
+        message("Setup");
         TestUtils.setupExtension(extension);
         client = TestUtils.edcClient();
     }
@@ -43,74 +42,11 @@ public class CatalogApiTest {
     @Test
     void test_Distribution_Key() {
         message("Testing");
-        // arrange
-//        createAsset();
-//        createPolicy();
-//        createContractDefinition();
-        // act
-//        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers("http://localhost:34003/api/dsp");
-        var catalogPageDataOffers = client.uiApi().getAssetPage();
-
-        // assert
-//        assertThat(catalogPageDataOffers.size()).isEqualTo(1);
-//        assertThat(catalogPageDataOffers.get(0).getAsset().getTitle()).isEqualTo("My Data Offer");
-//        assertThat(catalogPageDataOffers.get(0).getAsset().getMediaType()).isEqualTo("Media Type");
-    }
-
-    private void createAsset() {
-        message("Creating asset");
-        var asset = UiAssetCreateRequest.builder()
-                .id(dataOfferId)
-                .title("My Data Offer")
-                .description("Example Data Offer.")
-                .version("2023-11")
-                .language("EN")
-                .publisherHomepage("https://my-department.my-org.com/my-data-offer")
-                .licenseUrl("https://my-department.my-org.com/my-data-offer#license")
-                .mediaType("Media Type")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, "https://a"
-                ))
-                .build();
-
-        client.uiApi().createAsset(asset);
+        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers("http://localhost:34003/api/dsp");
     }
 
     private void message(String message) {
         System.err.println(message);
-    }
-
-    private void createPolicy() {
-        message("Creating policy");
-        var policyDefinition = PolicyDefinitionCreateRequest.builder()
-                .policyDefinitionId(dataOfferId)
-                .policy(UiPolicyCreateRequest.builder()
-                        .constraints(List.of())
-                        .build())
-                .build();
-
-        client.uiApi().createPolicyDefinition(policyDefinition);
-    }
-
-    private void createContractDefinition() {
-        message("Creating contract definition");
-        var contractDefinition = ContractDefinitionRequest.builder()
-                .contractDefinitionId(dataOfferId)
-                .accessPolicyId(dataOfferId)
-                .contractPolicyId(dataOfferId)
-                .assetSelector(List.of(UiCriterion.builder()
-                        .operandLeft(Prop.Edc.ID)
-                        .operator(UiCriterionOperator.EQ)
-                        .operandRight(UiCriterionLiteral.builder()
-                                .type(UiCriterionLiteralType.VALUE)
-                                .value(dataOfferId)
-                                .build())
-                        .build()))
-                .build();
-
-        client.uiApi().createContractDefinition(contractDefinition);
     }
 
 }
