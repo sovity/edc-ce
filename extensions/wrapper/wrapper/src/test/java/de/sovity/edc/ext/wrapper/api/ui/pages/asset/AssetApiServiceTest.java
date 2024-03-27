@@ -59,6 +59,7 @@ public class AssetApiServiceTest {
 
     @Test
     void assetPage(AssetService assetStore) {
+        client.uiApi().getCatalogPageDataOffers(TestUtils.PROTOCOL_ENDPOINT);
         // arrange
         var properties = Map.of(
                 Asset.PROPERTY_ID, "asset-1",
