@@ -1,6 +1,7 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers.utils;
 
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
+import de.sovity.edc.extension.utils.junit.NotOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -84,7 +85,6 @@ class UiAssetMapperTest {
         assertThat(actual).isNotNull();
         assertThat(actual.getJsonObject(Prop.Edc.PROPERTIES).size()).isEqualTo(2);
     }
-
 
     // The following functions test paths of buildDistribution
     @Test
