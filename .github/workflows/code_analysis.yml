@@ -30,8 +30,6 @@ jobs:
         id: check_spotbugs
         run: echo "spotbugs_active=$(if grep -q "<artifactId>spotbugs-maven-plugin</artifactId>" pom.xml; then echo "true"; else echo "false"; fi)" >> $GITHUB_OUTPUT
   run_checkstyle:
-    needs: [is_java_project]
-    if: needs.is_java_project.outputs.pom_exists == 'true' && needs.is_java_project.outputs.checkstyle_active == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -42,10 +40,8 @@ jobs:
           java-version: "17"
           cache: "maven"
       - name: Run style checks
-        run: mvn -B checkstyle:check --file pom.xml
+        run: mvn -B checkstyle:check --file build.gradle.kts
   run_spotbugs:
-    needs: [is_java_project]
-    if: needs.is_java_project.outputs.pom_exists == 'true' && needs.is_java_project.outputs.spotbugs_active == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -56,4 +52,4 @@ jobs:
           java-version: "17"
           cache: "maven"
       - name: Run static code analysis
-        run: mvn -B compile spotbugs:check --file pom.xml
+        run: mvn -B compile spotbugs:check --file build.gradle.kts
