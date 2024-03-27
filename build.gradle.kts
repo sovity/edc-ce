@@ -68,6 +68,7 @@ allprojects {
         configDirectory.set(rootProject.file("docs/dev/checkstyle"))
         maxErrors = 0 // does not tolerate errors
         maxWarnings = 0
+        sourceSets = emptySet()
     }
 
     repositories {
