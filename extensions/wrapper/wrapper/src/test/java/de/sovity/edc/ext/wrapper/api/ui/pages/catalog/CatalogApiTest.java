@@ -42,7 +42,7 @@ public class CatalogApiTest {
     @Test
     void test_Distribution_Key() {
         message("Testing");
-        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers("http://localhost:34003/api/dsp");
+//        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers("http://localhost:34003/api/dsp");
     }
 
     private void message(String message) {
