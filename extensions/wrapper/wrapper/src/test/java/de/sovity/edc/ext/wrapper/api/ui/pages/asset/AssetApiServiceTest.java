@@ -113,6 +113,8 @@ public class AssetApiServiceTest {
 
         System.err.println("\n");
         System.err.println("request");
+        System.err.println("OpenAPI");
+        System.err.println("OpenApi base URL " + client.uiApi().getCustomBaseUrl());
         System.err.println("protocol " + TestUtils.getPROTOCOL_ENDPOINT());
         client.uiApi().getCatalogPageDataOffers(TestUtils.getPROTOCOL_ENDPOINT());
         System.err.println("end request");
