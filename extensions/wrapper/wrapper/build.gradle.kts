@@ -72,6 +72,15 @@ dependencies {
 
 tasks.withType<Test> {
     maxParallelForks = 1
+
+
+    val runningOnGithub = System.getenv("GITHUB_CI")?.isNotBlank() ?: false
+
+    useJUnitPlatform {
+        if (runningOnGithub) {
+            excludeTags = setOf("not-on-github")
+        }
+    }
 }
 
 val sovityEdcExtensionGroup: String by project
