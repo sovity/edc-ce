@@ -68,6 +68,8 @@ dependencies {
     testImplementation("org.assertj:assertj-core:${assertj}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+
+    testImplementation("cn.com.jeeweb:common-exec:1.0.2")
 }
 
 tasks.withType<Test> {
