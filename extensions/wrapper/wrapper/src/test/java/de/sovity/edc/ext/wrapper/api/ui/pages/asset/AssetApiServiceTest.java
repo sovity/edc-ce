@@ -113,7 +113,7 @@ public class AssetApiServiceTest {
 
         System.err.println("\n");
         System.err.println("request");
-        System.err.println("protocol " + "http://127.0.0.1:34003/api/dsp");
+        System.err.println("protocol " + TestUtils.getPROTOCOL_ENDPOINT());
         client.uiApi().getCatalogPageDataOffers(TestUtils.getPROTOCOL_ENDPOINT());
         System.err.println("end request");
         // arrange

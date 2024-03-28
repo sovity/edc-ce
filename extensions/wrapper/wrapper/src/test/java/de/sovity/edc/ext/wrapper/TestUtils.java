@@ -46,6 +46,7 @@ public class TestUtils {
     public static Map<String, String> createConfiguration(
             Map<String, String> additionalConfigProperties
     ) {
+        System.err.println("Starting EDC with DSP URL = " + getPROTOCOL_ENDPOINT());
         Map<String, String> config = new HashMap<>();
         config.put("web.http.port", String.valueOf(WEB_PORT));
         config.put("web.http.path", "/api");
