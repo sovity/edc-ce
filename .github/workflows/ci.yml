@@ -44,7 +44,7 @@ jobs:
         uses: gradle/gradle-build-action@v3
         with:
           cache-disabled: true
-          arguments: build ${{ env.GRADLE_ARGS }}
+          arguments: --info --stacktrace build ${{ env.GRADLE_ARGS }}
       - name: "Gradle: Publish (Main & Release Only)"
         uses: gradle/gradle-build-action@v2.10.0
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
