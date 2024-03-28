@@ -33,9 +33,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
@@ -60,9 +65,22 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void assetPage(AssetService assetStore) {
+    void assetPage(AssetService assetStore) throws SocketException {
+        System.err.println("listing IPs");
+        List<InetAddress> addrList = new ArrayList<>();
+        for(Enumeration<NetworkInterface> eni = NetworkInterface.getNetworkInterfaces(); eni.hasMoreElements(); ) {
+            final NetworkInterface ifc = eni.nextElement();
+            if(ifc.isUp()) {
+                for(Enumeration<InetAddress> ena = ifc.getInetAddresses(); ena.hasMoreElements(); ) {
+                    addrList.add(ena.nextElement());
+                }
+            }
+        }
+        System.err.println("\n");
+        System.err.println(String.join("\n",  addrList.stream().map(InetAddress::toString).toList()));
+        System.err.println("\n");
         System.err.println("request");
-        System.err.println("protocol" + TestUtils.PROTOCOL_ENDPOINT);
+        System.err.println("protocol " + "http://127.0.0.1:34003/api/dsp");
         client.uiApi().getCatalogPageDataOffers(TestUtils.PROTOCOL_ENDPOINT);
         System.err.println("end request");
         // arrange
