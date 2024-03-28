@@ -16,7 +16,7 @@ env:
 jobs:
   build-gradle-project:
     name: Build Gradle Project
-    runs-on: ubuntu-20.04
+    runs-on: windows-2022
     timeout-minutes: 15
     permissions:
       contents: read
