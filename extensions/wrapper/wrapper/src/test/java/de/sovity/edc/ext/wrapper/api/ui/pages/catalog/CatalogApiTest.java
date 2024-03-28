@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@NotOnGithub
 @ApiTest
 @ExtendWith(EdcExtension.class)
 public class CatalogApiTest {
@@ -41,7 +42,6 @@ public class CatalogApiTest {
      * This test verifies that the field can be used by us.
      */
     @Test
-    @NotOnGithub
     void test_Distribution_Key() {
         // arrange
         createAsset();

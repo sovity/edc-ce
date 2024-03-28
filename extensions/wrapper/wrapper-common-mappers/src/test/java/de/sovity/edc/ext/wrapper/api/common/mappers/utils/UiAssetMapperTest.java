@@ -1,5 +1,6 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers.utils;
 
+import de.sovity.edc.ext.wrapper.api.common.mappers.NotOnGithub;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.mock;
 
+@NotOnGithub
 class UiAssetMapperTest {
     UiAssetMapper uiAssetMapper;
     EdcPropertyUtils edcPropertyUtils;
