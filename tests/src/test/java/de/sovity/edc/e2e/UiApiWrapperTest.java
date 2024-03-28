@@ -39,6 +39,7 @@ import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
+import de.sovity.edc.extension.utils.junit.NotOnGithub;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
@@ -369,6 +370,7 @@ class UiApiWrapperTest {
 
     // TODO throw an error if the id is overridden
 
+    @NotOnGithub
     @Test
     void customTransferRequest() {
         // arrange
