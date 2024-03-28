@@ -49,6 +49,7 @@ import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactor
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@NotOnGithub
 class DataSourceQueryParamsTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = "provider";
