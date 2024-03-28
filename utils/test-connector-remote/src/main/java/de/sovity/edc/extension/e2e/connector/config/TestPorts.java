@@ -16,9 +16,9 @@ package de.sovity.edc.extension.e2e.connector.config;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestPorts {
-    private static final AtomicInteger next = new AtomicInteger(55000);
+    private static final AtomicInteger NEXT = new AtomicInteger(55000);
 
     public static int nextFreePorts() {
-        return next.addAndGet(10);
+        return NEXT.addAndGet(10);
     }
 }
