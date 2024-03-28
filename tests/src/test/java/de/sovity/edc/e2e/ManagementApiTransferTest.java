@@ -15,7 +15,6 @@ package de.sovity.edc.e2e;
 
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
-import de.sovity.edc.extension.e2e.connector.config.TestPorts;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import org.eclipse.edc.junit.extensions.EdcExtension;

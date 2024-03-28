@@ -37,8 +37,6 @@ import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.connector.config.TestPorts;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import de.sovity.edc.utils.JsonUtils;
@@ -83,8 +81,6 @@ class UiApiWrapperTest {
     static final TestDatabase PROVIDER_DATABASE = new TestDatabaseViaTestcontainers();
     @RegisterExtension
     static final TestDatabase CONSUMER_DATABASE = new TestDatabaseViaTestcontainers();
-    private ConnectorConfig consumerConfig;
-    private ConnectorConfig providerConfig;
 
     private ConnectorRemote providerConnector;
     private ConnectorRemote consumerConnector;
@@ -289,7 +285,7 @@ class UiApiWrapperTest {
         // Provider Contract Agreement
         assertThat(providerAgreement.getContractAgreementId()).isEqualTo(negotiation.getContractAgreementId());
         assertThat(providerAgreement.getDirection()).isEqualTo(PROVIDING);
-        assertThat(providerAgreement.getCounterPartyAddress()).isEqualTo(consumerConfig.getProtocolEndpoint().getUri().toString());
+        assertThat(providerAgreement.getCounterPartyAddress()).isEqualTo("http://localhost:23003/api/dsp");
         assertThat(providerAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
 
         assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
