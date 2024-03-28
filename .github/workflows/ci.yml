@@ -43,7 +43,7 @@ jobs:
       - name: "Gradle: Build"
         uses: gradle/gradle-build-action@v3
         with:
-          gradle-version: 7.6
+          cache-disabled: true
           arguments: build ${{ env.GRADLE_ARGS }}
       - name: "Gradle: Publish (Main & Release Only)"
         uses: gradle/gradle-build-action@v2.10.0
