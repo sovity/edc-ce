@@ -52,14 +52,19 @@ public class AssetApiServiceTest {
 
     @BeforeEach
     void setUp(EdcExtension extension) {
+        System.err.println("setup");
         TestUtils.setupExtension(extension);
         edcPropertyUtils = new EdcPropertyUtils();
         client = TestUtils.edcClient();
+        System.err.println("end setup");
     }
 
     @Test
     void assetPage(AssetService assetStore) {
+        System.err.println("request");
+        System.err.println("protocol" + TestUtils.PROTOCOL_ENDPOINT);
         client.uiApi().getCatalogPageDataOffers(TestUtils.PROTOCOL_ENDPOINT);
+        System.err.println("end request");
         // arrange
         var properties = Map.of(
                 Asset.PROPERTY_ID, "asset-1",
