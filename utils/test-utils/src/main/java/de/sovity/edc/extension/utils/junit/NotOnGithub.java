@@ -1,4 +1,4 @@
-package de.sovity.edc.extension.utils.junit;/*
+/*
  *  Copyright (c) 2024 sovity GmbH
  *
  *  This program and the accompanying materials are made available under the
@@ -11,6 +11,7 @@ package de.sovity.edc.extension.utils.junit;/*
  *       sovity GmbH - initial API and implementation
  *
  */
+package de.sovity.edc.extension.utils.junit;
 
 import org.junit.jupiter.api.Tag;
 
