@@ -31,7 +31,7 @@ public class TestUtils {
     public static final String MANAGEMENT_ENDPOINT = "http://127.0.0.1:" + MANAGEMENT_PORT + MANAGEMENT_PATH;
 
 
-    public static final String PROTOCOL_HOST = "http://localhost:" + PROTOCOL_PORT;
+    public static final String PROTOCOL_HOST = "http://127.0.0.1:" + PROTOCOL_PORT;
     public static final String PROTOCOL_ENDPOINT = PROTOCOL_HOST + PROTOCOL_PATH;
 
     public static Map<String, String> createConfiguration(
