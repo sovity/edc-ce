@@ -10,7 +10,7 @@ import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.TestUtils;
-import de.sovity.edc.ext.wrapper.utils.NotOnGithub;
+import de.sovity.edc.extension.utils.junit.NotOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;

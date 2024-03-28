@@ -16,6 +16,7 @@ dependencies {
 
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testImplementation(project(":utils:test-utils"))
     testImplementation(project(":extensions:test-backend-controller"))
     testImplementation(project(":utils:test-connector-remote"))
     testImplementation(project(":extensions:wrapper:clients:java-client"))

@@ -36,6 +36,7 @@ dependencies {
 
     testImplementation(project(":extensions:wrapper:clients:java-client"))
     testImplementation(project(":extensions:policy-always-true"))
+    testImplementation(project(":utils:test-utils"))
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:dsp:${edcVersion}")
     testImplementation("${edcGroup}:iam-mock:${edcVersion}")
@@ -72,14 +73,6 @@ dependencies {
 
 tasks.withType<Test> {
     maxParallelForks = 1
-
-    val runningOnGithub = System.getenv("GITHUB_CI")?.isNotBlank() ?: false
-
-    useJUnitPlatform {
-        if (runningOnGithub) {
-            excludeTags = setOf("not-on-github")
-        }
-    }
 }
 
 val sovityEdcExtensionGroup: String by project
