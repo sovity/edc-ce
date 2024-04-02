@@ -371,8 +371,7 @@ class UiApiWrapperTest {
     }
 
     // TODO throw an error if the id is overridden
-
-    @NotOnGithub
+    
     @Test
     void customTransferRequest() {
         // arrange
