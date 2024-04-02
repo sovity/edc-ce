@@ -114,8 +114,7 @@ class UiApiWrapperTest {
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
-
-    @NotOnGithub
+    
     @Test
     void provide_consume_assetMapping_policyMapping_agreements() {
         // arrange
@@ -326,6 +325,7 @@ class UiApiWrapperTest {
         validateTransferProcessesOk();
     }
 
+    @NotOnGithub
     @Test
     void canOverrideTheWellKnowPropertiesUsingTheCustomProperties() {
         // arrange
@@ -372,6 +372,7 @@ class UiApiWrapperTest {
 
     // TODO throw an error if the id is overridden
 
+    @NotOnGithub
     @Test
     void customTransferRequest() {
         // arrange
@@ -430,6 +431,7 @@ class UiApiWrapperTest {
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
     }
 
+    @NotOnGithub
     @Test
     void editAssetMetadataOnLiveContract() {
         // arrange
