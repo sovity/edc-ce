@@ -371,7 +371,8 @@ class UiApiWrapperTest {
     }
 
     // TODO throw an error if the id is overridden
-    
+
+    @NotOnGithub
     @Test
     void customTransferRequest() {
         // arrange
@@ -429,8 +430,7 @@ class UiApiWrapperTest {
 
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
     }
-
-    @NotOnGithub
+    
     @Test
     void editAssetMetadataOnLiveContract() {
         // arrange
