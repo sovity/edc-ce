@@ -124,12 +124,12 @@ class ConnectorUpdaterTest {
             assertThat(asset.getHttpDatasourceHintsProxyPath()).isFalse();
             assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isFalse();
             assertThat(asset.getHttpDatasourceHintsProxyBody()).isFalse();
-            assertThat(asset.getAdditionalProperties())
-                    .containsExactlyEntriesOf(Map.of("http://unknown/a", "x"));
-            assertThat(dataOffer.getAsset().getAdditionalJsonProperties())
-                    .containsExactlyEntriesOf(Map.of("http://unknown/b", "{\"http://unknown/c\":\"y\"}"));
-            assertThat(dataOffer.getAsset().getPrivateProperties()).isEmpty();
-            assertThat(dataOffer.getAsset().getPrivateJsonProperties()).isEmpty();
+            assertThat(asset.getCustomJsonAsString())
+                    .isEqualTo("{\"a\":\"x\"}");
+            assertThat(dataOffer.getAsset().getCustomJsonLdAsString())
+                    .isEqualTo("{\"http://unknown/b\":{\"http://unknown/c\":\"y\"}}");
+            assertThat(dataOffer.getAsset().getPrivateCustomJsonAsString()).isNull();
+            assertThat(dataOffer.getAsset().getPrivateCustomJsonLdAsString()).isEqualTo("{}");
             var policy = contractOffer.getContractPolicy();
             assertThat(policy.getConstraints()).hasSize(1);
             AssertionUtils.assertEqualUsingJson(policy.getConstraints().get(0), createAfterYesterdayConstraint());
@@ -191,10 +191,10 @@ class ConnectorUpdaterTest {
                 Prop.Edc.METHOD, "GET",
                 Prop.Edc.BASE_URL, "http://some.url"
             ))
-            .additionalProperties(Map.of("http://unknown/a", "x"))
-            .additionalJsonProperties(Map.of("http://unknown/b", "{\"http://unknown/c\":\"y\"}"))
-            .privateProperties(Map.of("http://unknown/a-private", "x-private"))
-            .privateJsonProperties(Map.of("http://unknown/b-private", "{\"http://unknown/c-private\":\"y-private\"}"))
+            .customJsonAsString("{\"a\":\"x\"}")
+            .customJsonLdAsString("{\"http://unknown/b\":{\"http://unknown/c\":\"y\"}}")
+            .privateCustomJsonAsString("{\"a-private\":\"x-private\"}")
+            .privateCustomJsonLdAsString("{\"http://unknown/b-private\":{\"http://unknown/c-private\":\"y-private\"}}")
             .build()).getId();
     }
 }

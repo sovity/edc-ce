@@ -25,6 +25,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Broker UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI_VERSION }}`
 - Sovity EDC CE: {{ CE Release Link }}
 
+## [v4.1.0] - 2024-04-02
+
+### Overview
+
+Pull changes from EDC CE 7.3.0 into the broker.
+
+### Detailed Changes
+
+#### Minor
+
+- Bumped EDC version to 7.3.0:
+  - Broker UI: Support for UIAsset's `customJsonAsString` and `customJsonLdAsString`, along with their private counterparts.
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:4.1.0`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:3.0.0`
+- Sovity EDC CE: [`7.3.0`](https://github.com/sovity/edc-extensions/releases/tag/v7.3.0)
+
 ## [v4.0.0] - 2024-03-22
 
 ### Overview
