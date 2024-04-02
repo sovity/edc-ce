@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@NotOnGithub
 @ApiTest
 @ExtendWith(EdcExtension.class)
 public class CatalogApiTest {
@@ -40,7 +41,6 @@ public class CatalogApiTest {
      * There used to be issues with the Prop.DISTRIBUTION field being occupied by core EDC.
      * This test verifies that the field can be used by us.
      */
-    @NotOnGithub
     @Test
     void test_Distribution_Key() {
         // arrange
