@@ -40,10 +40,11 @@ import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactor
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@NotOnGithub
+
 /**
  * Test data offers and contracts of an MS8 connector migrated to the current version.
  */
+@NotOnGithub
 class Ms8ConnectorMigrationTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = "example-provider";
