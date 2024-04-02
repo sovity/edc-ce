@@ -26,7 +26,6 @@ class UiAssetMapperTest {
         uiAssetMapper = new UiAssetMapper(edcPropertyUtils, assetJsonLdUtils, markdownToTextConverter, textUtils, ownConnectorEndpointService);
     }
 
-    @NotOnGithub
     @Test
     void test_buildAssetJsonLd_only_id() {
         // arrange
@@ -42,7 +41,6 @@ class UiAssetMapperTest {
         assertThat(actual.getString(Prop.ID)).isEqualTo("A");
     }
 
-    @NotOnGithub
     @Test
     void test_buildAssetJsonLd_empty_nuts() {
         // arrange
@@ -58,7 +56,6 @@ class UiAssetMapperTest {
         assertThat(actual.getJsonObject(Prop.Edc.PROPERTIES).size()).isEqualTo(2);
     }
 
-    @NotOnGithub
     @Test
     void test_buildAssetJsonLd_empty_reference_file_urls() {
         // arrange
@@ -74,7 +71,6 @@ class UiAssetMapperTest {
         assertThat(actual.getJsonObject(Prop.Edc.PROPERTIES).size()).isEqualTo(2);
     }
 
-    @NotOnGithub
     @Test
     void test_buildAssetJsonLd_empty_data_sample_urls() {
         // arrange
@@ -91,7 +87,6 @@ class UiAssetMapperTest {
     }
 
     // The following functions test paths of buildDistribution
-    @NotOnGithub
     @Test
     void test_buildAssetJsonLd_distribution1() {
         // arrange
