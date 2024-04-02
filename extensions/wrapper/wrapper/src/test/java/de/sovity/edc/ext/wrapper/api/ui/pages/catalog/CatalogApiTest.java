@@ -10,12 +10,13 @@ import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.TestUtils;
-import de.sovity.edc.extension.utils.junit.NotOnGithub;
+import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class CatalogApiTest {
      * There used to be issues with the Prop.DISTRIBUTION field being occupied by core EDC.
      * This test verifies that the field can be used by us.
      */
-    @NotOnGithub
+    @DisabledOnGithub
     @Test
     void test_Distribution_Key() {
         // arrange

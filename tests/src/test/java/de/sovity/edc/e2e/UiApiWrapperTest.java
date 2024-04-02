@@ -39,7 +39,7 @@ import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
-import de.sovity.edc.extension.utils.junit.NotOnGithub;
+import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
@@ -115,7 +115,7 @@ class UiApiWrapperTest {
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
 
-    @NotOnGithub
+    @DisabledOnGithub
     @Test
     void provide_consume_assetMapping_policyMapping_agreements() {
         // arrange
@@ -372,7 +372,7 @@ class UiApiWrapperTest {
 
     // TODO throw an error if the id is overridden
 
-    @NotOnGithub
+    @DisabledOnGithub
     @Test
     void customTransferRequest() {
         // arrange
@@ -431,7 +431,7 @@ class UiApiWrapperTest {
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
     }
 
-    @NotOnGithub
+    @DisabledOnGithub
     @Test
     void editAssetMetadataOnLiveContract() {
         // arrange

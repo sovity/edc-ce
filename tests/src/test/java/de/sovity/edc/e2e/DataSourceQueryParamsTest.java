@@ -32,7 +32,7 @@ import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
-import de.sovity.edc.extension.utils.junit.NotOnGithub;
+import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -115,7 +115,7 @@ class DataSourceQueryParamsTest {
     /**
      * This test will fail as soon as the handling of query parameters is fixed in the EDC project
      */
-    @NotOnGithub
+    @DisabledOnGithub
     @Test
     void testQueryParamsDoubleEncoded() {
         // arrange
