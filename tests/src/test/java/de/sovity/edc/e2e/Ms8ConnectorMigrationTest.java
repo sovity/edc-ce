@@ -44,7 +44,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test data offers and contracts of an MS8 connector migrated to the current version.
  */
-@NotOnGithub
 class Ms8ConnectorMigrationTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = "example-provider";
@@ -94,6 +93,7 @@ class Ms8ConnectorMigrationTest {
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
 
+    @NotOnGithub
     @Test
     void testMs8DataOffer_Properties() {
         // arrange
@@ -129,6 +129,7 @@ class Ms8ConnectorMigrationTest {
         });
     }
 
+    @NotOnGithub
     @Test
     void testMs8ProvidingTransferProcess() {
         // arrange
@@ -156,6 +157,7 @@ class Ms8ConnectorMigrationTest {
         assertThat(actual).isCloseTo(expected, new TemporalUnitLessThanOffset(1, ChronoUnit.MINUTES));
     }
 
+    @NotOnGithub
     @Test
     void testMs8ConsumingTransferProcess() {
         // arrange
