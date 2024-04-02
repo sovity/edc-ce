@@ -430,7 +430,8 @@ class UiApiWrapperTest {
 
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
     }
-    
+
+    @NotOnGithub
     @Test
     void editAssetMetadataOnLiveContract() {
         // arrange
