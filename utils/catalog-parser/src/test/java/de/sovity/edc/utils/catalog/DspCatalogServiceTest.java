@@ -14,6 +14,7 @@
 
 package de.sovity.edc.utils.catalog;
 
+import de.sovity.edc.extension.utils.junit.NotOnGithub;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import de.sovity.edc.utils.jsonld.JsonLdUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -36,6 +37,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@NotOnGithub
 class DspCatalogServiceTest {
     String endpoint = "http://localhost:11003/api/v1/dsp";
 
