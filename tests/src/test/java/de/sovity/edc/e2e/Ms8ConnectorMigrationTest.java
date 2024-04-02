@@ -21,6 +21,7 @@ import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
+import de.sovity.edc.extension.utils.junit.NotOnGithub;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.data.TemporalUnitLessThanOffset;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -39,6 +40,7 @@ import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactor
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@NotOnGithub
 /**
  * Test data offers and contracts of an MS8 connector migrated to the current version.
  */
