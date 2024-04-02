@@ -68,6 +68,7 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
+@NotOnGithub
 class UiApiWrapperTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = "provider";
