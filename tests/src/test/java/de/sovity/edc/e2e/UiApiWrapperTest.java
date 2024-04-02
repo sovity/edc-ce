@@ -68,7 +68,7 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
-@NotOnGithub
+
 class UiApiWrapperTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = "provider";
@@ -115,6 +115,7 @@ class UiApiWrapperTest {
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
 
+    @NotOnGithub
     @Test
     void provide_consume_assetMapping_policyMapping_agreements() {
         // arrange
@@ -371,7 +372,6 @@ class UiApiWrapperTest {
 
     // TODO throw an error if the id is overridden
 
-    @NotOnGithub
     @Test
     void customTransferRequest() {
         // arrange
