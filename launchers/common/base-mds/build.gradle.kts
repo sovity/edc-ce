@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation("logging-house:logging-house-client:0.2.9")
+    implementation("logging-house:logging-house-client:0.2.10")
 }
 
 val sovityEdcGroup: String by project
