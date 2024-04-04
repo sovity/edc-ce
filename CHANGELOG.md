@@ -15,9 +15,9 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
-#### Patch Changes
+- Migrated MDS fields to mobilityDCAT-AP
 
-- Pinned down known issue "Double Encoding" of query params with an E2E Test
+#### Patch Changes
 
 ### Deployment Migration Notes
 
