@@ -34,18 +34,29 @@
     "http://w3id.org/mds#transportMode": "my-geo-reference-method",
     "https://semantic.sovity.io/mds-dcat-ext#sovereign": "my-sovereign",
     "https://semantic.sovity.io/mds-dcat-ext#geolocation": "my-geolocation",
-    "https://semantic.sovity.io/mds-dcat-ext#nuts-location": ["my-nuts-location1", "my-nuts-location2"],
-    "https://semantic.sovity.io/mds-dcat-ext#data-sample-urls": ["my-data-sample-urls1", "my-data-sample-urls2"],
-    "https://semantic.sovity.io/mds-dcat-ext#reference-files": ["my-reference-files1", "my-reference-files2"],
+    "https://semantic.sovity.io/mds-dcat-ext#nuts-location": [
+      "my-nuts-location1",
+      "my-nuts-location2"
+    ],
+    "https://semantic.sovity.io/mds-dcat-ext#data-sample-urls": [
+      "my-data-sample-urls1",
+      "my-data-sample-urls2"
+    ],
+    "https://semantic.sovity.io/mds-dcat-ext#reference-files": [
+      "my-reference-files1",
+      "my-reference-files2"
+    ],
     "https://semantic.sovity.io/mds-dcat-ext#additional-description": "my-additional-description",
     "https://semantic.sovity.io/mds-dcat-ext#conditions-for-use": "my-conditions-for-use",
     "https://semantic.sovity.io/mds-dcat-ext#data-update-frequency": "my-data-update-frequency",
     "https://semantic.sovity.io/mds-dcat-ext#temporal-coverage-from": "2007-12-03",
     "https://semantic.sovity.io/mds-dcat-ext#temporal-coverage-to": "2024-01-22",
+    "https://semantic.sovity.io/dcat-ext#customJson": "{\"array\":[3,1,4,1,5],\"boolean\":false,\"null\":null,\"number\":116,\"object\":{\"key\":\"value\"},\"string\":\"value\"}",
     "http://unknown/some-custom-string": "some-string-value",
     "http://unknown/some-custom-obj": {"http://unknown/a": "b"}
   },
-  "privateProperties": {
+  "https://w3id.org/edc/v0.0.1/ns/privateProperties": {
+    "https://semantic.sovity.io/dcat-ext#privateCustomJson":"{\"priv_array\":[3,1,4,1,5],\"priv_boolean\":false,\"priv_null\":null,\"priv_number\":116,\"priv_object\":{\"key\":\"value\"},\"priv_string\":\"value\"}",
     "http://unknown/some-custom-private-string": "some-private-value",
     "http://unknown/some-custom-private-obj": {"http://unknown/a-private": "b-private"}
   },
