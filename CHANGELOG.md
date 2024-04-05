@@ -19,9 +19,9 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Patch Changes
 
 ### Deployment Migration Notes
-- new logging-house-client env for mds:
-  - ```EDC_LOGGINGHOUSE_EXTENSION_ENABLED:``` "true"
-  - ```EDC_LOGGINGHOUSE_EXTENSION_URL:``` https://example.com
+- A new LoggingHouse extension is now included in the EDC CE MDS variant, which means that additional properties must be set for it:
+  - ```EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "true"```
+  - ```EDC_LOGGINGHOUSE_EXTENSION_URL: #LoggingHouse URL of the MDS environment```
 
 #### Compatible Versions
 
