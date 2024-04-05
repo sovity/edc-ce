@@ -44,6 +44,9 @@ jobs:
         uses: gradle/gradle-build-action@v2.10.0
         with:
           arguments: build ${{ env.GRADLE_ARGS }}
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "Gradle: Publish (Main & Release Only)"
         uses: gradle/gradle-build-action@v2.10.0
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
