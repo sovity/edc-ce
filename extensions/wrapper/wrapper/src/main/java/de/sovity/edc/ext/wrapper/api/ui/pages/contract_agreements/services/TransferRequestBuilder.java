@@ -57,6 +57,7 @@ public class TransferRequestBuilder {
                 .assetId(agreement.getAssetId())
                 .dataDestination(address)
                 .privateProperties(edcPropertyUtils.toMapOfObject(request.getTransferProcessProperties()))
+                .properties(request.getTransferProcessProperties())
                 .callbackAddresses(List.of())
                 .build();
     }
