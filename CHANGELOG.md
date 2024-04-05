@@ -15,7 +15,6 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 - Logginghouse-Client: Add logging-house-client extension 0.2.10
-- Add new MDS fields and migrate existing MDS asset keys to mobilityDCAT-AP
 
 #### Patch Changes
 
