@@ -40,6 +40,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,6 +61,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
+
+import javax.annotation.Nullable;
 
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.OK;
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.RUNNING;
@@ -107,7 +110,8 @@ class DataSourceMethodParamTest {
     record TestCase(
             String name,
             String method,
-            String body
+            @Nullable String requestBody,
+            String mediaType
     ) {
     }
 
@@ -144,25 +148,11 @@ class DataSourceMethodParamTest {
                 .build();
     }
 
-//    @ParameterizedTest
-//    @MethodSource("source")
-    @Test
-    void canTransferMethodParameterizedAsset() {
+    @ParameterizedTest
+    @MethodSource("source")
+    void canTransferMethodParameterizedAsset(TestCase testCase) {
         // arrange
-        String payload = "patch data 200 ok";
-        mockServer.when(request(SOURCE_PATH).withMethod(HttpMethod.OPTIONS), once())
-                .respond(new HttpResponse()
-                        .withStatusCode(HttpStatusCode.OK_200.code())
-                        .withBody(payload, StandardCharsets.UTF_8));
-
-        val received = new AtomicBoolean(false);
-        mockServer.when(request("/.*").withMethod(HttpMethod.PUT))
-                .respond((HttpRequest httpRequest) -> {
-                    if(new String(httpRequest.getBodyAsRawBytes()).equals(payload)) {
-                        received.set(true);
-                    }
-                    return new HttpResponse().withStatusCode(200);
-                });
+        final var received = prepareDataTransferBackends(testCase);
 
         createPolicy();
         val assetId = createAssetWithParamedMethod();
@@ -172,7 +162,7 @@ class DataSourceMethodParamTest {
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
         var negotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
         negotiation = awaitNegotiationDone(negotiation.getContractNegotiationId());
-        val transferId = initiateTransfer(negotiation, HttpMethod.OPTIONS);
+        val transferId = initiateTransfer(negotiation, testCase.method, testCase.requestBody, testCase.mediaType);
 
         Awaitility.await().atMost(consumerConnector.timeout).until(
                 () -> consumerClient.uiApi()
@@ -194,14 +184,47 @@ class DataSourceMethodParamTest {
         assertThat(received.get()).isTrue();
     }
 
+    @NotNull
+    private AtomicBoolean prepareDataTransferBackends(TestCase testCase) {
+        String payload = "some data to transfer";
+        val requestDefinition = request(SOURCE_PATH).withMethod(testCase.method);
+        if(testCase.requestBody != null) {
+            requestDefinition.withBody(testCase.requestBody);
+        }
+
+        mockServer.when(requestDefinition, once())
+                .respond(new HttpResponse()
+                        .withStatusCode(HttpStatusCode.OK_200.code())
+                        .withBody(payload, StandardCharsets.UTF_8));
+
+        val received = new AtomicBoolean(false);
+        mockServer.when(request(DESTINATION_PATH).withMethod(HttpMethod.PUT))
+                .respond((HttpRequest httpRequest) -> {
+                    if (new String(httpRequest.getBodyAsRawBytes()).equals(payload)) {
+                        received.set(true);
+                    }
+                    return new HttpResponse().withStatusCode(200);
+                });
+        return received;
+    }
+
     private static Stream<TestCase> source() {
+        val forbidBody = List.of(HttpMethod.GET, HttpMethod.HEAD);
         return Stream.of(
+                HttpMethod.POST,
+//                HttpMethod.HEAD,
+                HttpMethod.GET,
+                HttpMethod.DELETE,
+                HttpMethod.PUT,
+                HttpMethod.PATCH,
+                HttpMethod.OPTIONS
+        ).map(method ->
                 new TestCase(
-                        "",
-                        HttpMethod.OPTIONS,
-                        "patch data 200 ok"
-                )
-        );
+                        "Testing " + method,
+                        method,
+                        forbidBody.contains(method) ? null : "{ \"somePayload\" : \"" + method + "\" }",
+                        "application/json"
+                ));
     }
 
     private String createAssetWithParamedMethod() {
@@ -277,7 +300,11 @@ class DataSourceMethodParamTest {
         return negotiation;
     }
 
-    private String initiateTransfer(UiContractNegotiation negotiation, String sourceHttpMethod) {
+    private String initiateTransfer(
+            UiContractNegotiation negotiation,
+            String sourceHttpMethod,
+            @Nullable String requestBody,
+            @Nullable String mediaType) {
         /*
         {
           "@type": "https://w3id.org/edc/v0.0.1/ns/TransferRequest",
@@ -307,14 +334,25 @@ class DataSourceMethodParamTest {
         dataSinkProperties.put(EDC_NAMESPACE + "type", "HttpData"); // TODO: http proxy
         dataSinkProperties.put("https://sovity.de/method", sourceHttpMethod);
 
+        Map<String, String> transferProcessProperties = new HashMap<>(Map.of(
+                "https://w3id.org/edc/v0.0.1/ns/contentType", "application/json",
+                "https://w3id.org/edc/v0.0.1/ns/method", sourceHttpMethod
+        ));
+
+        if (requestBody != null) {
+            dataSinkProperties.put("https://w3id.org/edc/v0.0.1/ns/body", requestBody);
+            dataSinkProperties.put("https://sovity.de/body", requestBody);
+            dataSinkProperties.put("https://sovity.de/mediaType", mediaType);
+
+            transferProcessProperties.put("https://w3id.org/edc/v0.0.1/ns/body", requestBody);
+            transferProcessProperties.put("https://w3id.org/edc/v0.0.1/ns/contentType", mediaType);
+        }
+
         var transferRequest = InitiateTransferRequest.builder()
                 .contractAgreementId(contractAgreementId)
                 .dataSinkProperties(dataSinkProperties)
                 .transferProcessProperties(
-                        Map.of(
-                                "https://w3id.org/edc/v0.0.1/ns/contentType", "application/json",
-                                "https://w3id.org/edc/v0.0.1/ns/method", sourceHttpMethod
-                        )
+                        transferProcessProperties
                 )
                 .build();
         return consumerClient.uiApi().initiateTransfer(transferRequest).getId();
