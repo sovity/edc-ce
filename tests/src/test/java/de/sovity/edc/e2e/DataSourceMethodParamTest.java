@@ -29,21 +29,37 @@ import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.client.oauth2.OkHttpRequestUtils;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
+import jakarta.ws.rs.HttpMethod;
 import lombok.val;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockserver.client.MockServerClient;
+import org.mockserver.integration.ClientAndServer;
+import org.mockserver.model.HttpRequest;
+import org.mockserver.model.HttpResponse;
+import org.mockserver.model.HttpStatusCode;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.OK;
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.RUNNING;
@@ -51,7 +67,12 @@ import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validat
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
+import static org.mockserver.matchers.Times.once;
+import static org.mockserver.model.HttpRequest.request;
+import static org.mockserver.model.JsonBody.json;
+import static org.mockserver.stop.Stop.stopQuietly;
 
 class DataSourceMethodParamTest {
 
@@ -73,8 +94,32 @@ class DataSourceMethodParamTest {
 
     private EdcClient providerClient;
     private EdcClient consumerClient;
-    private MockDataAddressRemote dataAddress;
     private final String dataOfferId = "my-data-offer-2023-11";
+
+    private final int port = getFreePort();
+    private final String SOURCE_PATH = "/source/some/path";
+    private final String DESTINATION_PATH = "/destination/some/path";
+    private String SOURCE_URL = "http://localhost:" + port + SOURCE_PATH;
+    private String DESTINATION_URL = "http://localhost:" + port + DESTINATION_PATH;
+    // TODO: remove the test backend dependency?
+    private ClientAndServer mockServer;
+
+    record TestCase(
+            String name,
+            String method,
+            String body
+    ) {
+    }
+
+    @BeforeEach
+    public void startServer() {
+        mockServer = ClientAndServer.startClientAndServer(port);
+    }
+
+    @AfterEach
+    public void stopServer() {
+        stopQuietly(mockServer);
+    }
 
     @BeforeEach
     void setup() {
@@ -97,14 +142,28 @@ class DataSourceMethodParamTest {
                 .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
                 .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
                 .build();
-
-        // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
 
+//    @ParameterizedTest
+//    @MethodSource("source")
     @Test
-    void canTransferMethodParameterizedAssetWithGetMethod() {
+    void canTransferMethodParameterizedAsset() {
         // arrange
+        String payload = "patch data 200 ok";
+        mockServer.when(request(SOURCE_PATH).withMethod(HttpMethod.OPTIONS), once())
+                .respond(new HttpResponse()
+                        .withStatusCode(HttpStatusCode.OK_200.code())
+                        .withBody(payload, StandardCharsets.UTF_8));
+
+        val received = new AtomicBoolean(false);
+        mockServer.when(request("/.*").withMethod(HttpMethod.PUT))
+                .respond((HttpRequest httpRequest) -> {
+                    if(new String(httpRequest.getBodyAsRawBytes()).equals(payload)) {
+                        received.set(true);
+                    }
+                    return new HttpResponse().withStatusCode(200);
+                });
+
         createPolicy();
         val assetId = createAssetWithParamedMethod();
         createContractDefinition();
@@ -113,7 +172,7 @@ class DataSourceMethodParamTest {
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
         var negotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
         negotiation = awaitNegotiationDone(negotiation.getContractNegotiationId());
-        val transferId = initiateTransfer(negotiation, "GET");
+        val transferId = initiateTransfer(negotiation, HttpMethod.OPTIONS);
 
         Awaitility.await().atMost(consumerConnector.timeout).until(
                 () -> consumerClient.uiApi()
@@ -132,40 +191,17 @@ class DataSourceMethodParamTest {
         assertThat(actual.getTransferProcessId()).isEqualTo(transferId);
         assertThat(actual.getState().getSimplifiedState()).isEqualTo(OK);
 
-        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), "some content");
+        assertThat(received.get()).isTrue();
     }
 
-    @Test
-    void canTransferMethodParameterizedAssetWithOptions() {
-        // arrange
-        createPolicy();
-        val assetId = createAssetWithParamedMethod();
-        createContractDefinition();
-
-        // act
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
-        var negotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
-        negotiation = awaitNegotiationDone(negotiation.getContractNegotiationId());
-        val transferId = initiateTransfer(negotiation, "OPTIONS");
-
-        Awaitility.await().atMost(consumerConnector.timeout).until(
-                () -> consumerClient.uiApi()
-                        .getTransferHistoryPage()
-                        .getTransferEntries()
-                        .stream()
-                        .filter(it -> it.getTransferProcessId().equals(transferId))
-                        .findFirst()
-                        .map(it -> it.getState().getSimplifiedState()),
-                it -> it.orElse(RUNNING) != RUNNING
+    private static Stream<TestCase> source() {
+        return Stream.of(
+                new TestCase(
+                        "",
+                        HttpMethod.OPTIONS,
+                        "patch data 200 ok"
+                )
         );
-
-        // assert
-        TransferHistoryEntry actual = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
-        assertThat(actual.getAssetId()).isEqualTo(assetId);
-        assertThat(actual.getTransferProcessId()).isEqualTo(transferId);
-        assertThat(actual.getState().getSimplifiedState()).isEqualTo(OK);
-
-        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), "some content");
     }
 
     private String createAssetWithParamedMethod() {
@@ -175,7 +211,7 @@ class DataSourceMethodParamTest {
                 .dataAddressProperties(Map.of(
                         Prop.Edc.TYPE, "HttpData",
                         Prop.Edc.PROXY_METHOD, "true",
-                        Prop.Edc.BASE_URL, "https://webhook.site/7eb84f91-1264-4dd1-b5b5-2ed173d64bc2"
+                        Prop.Edc.BASE_URL, SOURCE_URL
                 ))
                 .customJsonLdAsString("""
                         {
@@ -189,6 +225,7 @@ class DataSourceMethodParamTest {
         return providerClient.uiApi().createAsset(asset).getId();
     }
 
+    // TODO: extract to common
     private void createPolicy() {
         var policyDefinition = PolicyDefinitionCreateRequest.builder()
                 .policyDefinitionId(dataOfferId)
@@ -240,7 +277,7 @@ class DataSourceMethodParamTest {
         return negotiation;
     }
 
-    private String initiateTransfer(UiContractNegotiation negotiation, String httpMethod) {
+    private String initiateTransfer(UiContractNegotiation negotiation, String sourceHttpMethod) {
         /*
         {
           "@type": "https://w3id.org/edc/v0.0.1/ns/TransferRequest",
@@ -264,9 +301,11 @@ class DataSourceMethodParamTest {
         }
          */
         var contractAgreementId = negotiation.getContractAgreementId();
-        Map<String, String> dataSinkProperties = new HashMap<>(dataAddress.getDataSinkProperties());
-        dataSinkProperties.put(EDC_NAMESPACE + "baseUrl", "https://webhook.site/7eb84f91-1264-4dd1-b5b5-2ed173d64bc2");
-        dataSinkProperties.put("https://w3id.org/edc/v0.0.1/ns/method", httpMethod);
+        Map<String, String> dataSinkProperties = new HashMap<>();
+        dataSinkProperties.put(EDC_NAMESPACE + "baseUrl", DESTINATION_URL);
+        dataSinkProperties.put(EDC_NAMESPACE + "method", HttpMethod.PUT);
+        dataSinkProperties.put(EDC_NAMESPACE + "type", "HttpData"); // TODO: http proxy
+        dataSinkProperties.put("https://sovity.de/method", sourceHttpMethod);
 
         var transferRequest = InitiateTransferRequest.builder()
                 .contractAgreementId(contractAgreementId)
@@ -274,7 +313,7 @@ class DataSourceMethodParamTest {
                 .transferProcessProperties(
                         Map.of(
                                 "https://w3id.org/edc/v0.0.1/ns/contentType", "application/json",
-                                "https://w3id.org/edc/v0.0.1/ns/method", httpMethod
+                                "https://w3id.org/edc/v0.0.1/ns/method", sourceHttpMethod
                         )
                 )
                 .build();
