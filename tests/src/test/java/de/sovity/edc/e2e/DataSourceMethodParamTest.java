@@ -29,44 +29,37 @@ import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
-import de.sovity.edc.client.oauth2.OkHttpRequestUtils;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.ws.rs.HttpMethod;
 import lombok.val;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.mockserver.client.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.mockserver.model.HttpStatusCode;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
-
 import javax.annotation.Nullable;
 
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.OK;
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.RUNNING;
-import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -74,7 +67,6 @@ import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 import static org.mockserver.matchers.Times.once;
 import static org.mockserver.model.HttpRequest.request;
-import static org.mockserver.model.JsonBody.json;
 import static org.mockserver.stop.Stop.stopQuietly;
 
 class DataSourceMethodParamTest {
@@ -100,8 +92,8 @@ class DataSourceMethodParamTest {
     private final String dataOfferId = "my-data-offer-2023-11";
 
     private final int port = getFreePort();
-    private final String SOURCE_PATH = "/source/some/path";
-    private final String DESTINATION_PATH = "/destination/some/path";
+    private final String SOURCE_PATH = "/source/some/path/";
+    private final String DESTINATION_PATH = "/destination/some/path/";
     private String SOURCE_URL = "http://localhost:" + port + SOURCE_PATH;
     private String DESTINATION_URL = "http://localhost:" + port + DESTINATION_PATH;
     // TODO: remove the test backend dependency?
@@ -111,7 +103,8 @@ class DataSourceMethodParamTest {
             String name,
             String method,
             @Nullable String requestBody,
-            String mediaType
+            String mediaType,
+            @Nullable String path
     ) {
     }
 
@@ -148,7 +141,7 @@ class DataSourceMethodParamTest {
                 .build();
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{0}")
     @MethodSource("source")
     void canTransferMethodParameterizedAsset(TestCase testCase) {
         // arrange
@@ -162,7 +155,7 @@ class DataSourceMethodParamTest {
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
         var negotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
         negotiation = awaitNegotiationDone(negotiation.getContractNegotiationId());
-        val transferId = initiateTransfer(negotiation, testCase.method, testCase.requestBody, testCase.mediaType);
+        val transferId = initiateTransfer(negotiation, testCase);
 
         Awaitility.await().atMost(consumerConnector.timeout).until(
                 () -> consumerClient.uiApi()
@@ -184,13 +177,56 @@ class DataSourceMethodParamTest {
         assertThat(received.get()).isTrue();
     }
 
+    private static Stream<TestCase> source() {
+        Stream<String> httpMethods = Stream.of(
+                HttpMethod.POST,
+//                HttpMethod.HEAD,
+                HttpMethod.GET,
+                HttpMethod.DELETE,
+                HttpMethod.PUT,
+                HttpMethod.PATCH,
+                HttpMethod.OPTIONS
+        );
+
+        return httpMethods.flatMap(method -> {
+            final Stream<Boolean> useBodyChoices;
+
+            if (okhttp3.internal.http.HttpMethod.requiresRequestBody(method)) {
+                useBodyChoices = Stream.of(true);
+            } else if (!okhttp3.internal.http.HttpMethod.permitsRequestBody(method)) {
+                useBodyChoices = Stream.of(false);
+            } else {
+                useBodyChoices = Stream.of(true, false);
+            }
+
+            return useBodyChoices.flatMap(useBody ->
+                    Stream.of(true, false).map(usePath ->
+                            new TestCase(
+                                    method + " body:" + useBody + " path:" + usePath,
+                                    method,
+                                    useBody ? "{ \"somePayload\" : \"" + method + "\" }" : null,
+                                    "application/json",
+                                    usePath ? method.toLowerCase() + "-path/segment" : null
+                            ))
+            );
+        });
+    }
+
     @NotNull
     private AtomicBoolean prepareDataTransferBackends(TestCase testCase) {
-        String payload = "some data to transfer";
+        String payload = generateRandomPayload();
+
         val requestDefinition = request(SOURCE_PATH).withMethod(testCase.method);
-        if(testCase.requestBody != null) {
+
+        if (testCase.requestBody != null) {
             requestDefinition.withBody(testCase.requestBody);
         }
+
+        if (testCase.path != null) {
+            requestDefinition.withPath(SOURCE_PATH + testCase.path);
+        }
+
+        // TODO: force media type
 
         mockServer.when(requestDefinition, once())
                 .respond(new HttpResponse()
@@ -205,26 +241,15 @@ class DataSourceMethodParamTest {
                     }
                     return new HttpResponse().withStatusCode(200);
                 });
+
         return received;
     }
 
-    private static Stream<TestCase> source() {
-        val forbidBody = List.of(HttpMethod.GET, HttpMethod.HEAD);
-        return Stream.of(
-                HttpMethod.POST,
-//                HttpMethod.HEAD,
-                HttpMethod.GET,
-                HttpMethod.DELETE,
-                HttpMethod.PUT,
-                HttpMethod.PATCH,
-                HttpMethod.OPTIONS
-        ).map(method ->
-                new TestCase(
-                        "Testing " + method,
-                        method,
-                        forbidBody.contains(method) ? null : "{ \"somePayload\" : \"" + method + "\" }",
-                        "application/json"
-                ));
+    private static String generateRandomPayload() {
+        byte[] data = new byte[10];
+        new Random().nextBytes(data);
+        String payload = Base64.getEncoder().encodeToString(data);
+        return payload;
     }
 
     private String createAssetWithParamedMethod() {
@@ -302,9 +327,7 @@ class DataSourceMethodParamTest {
 
     private String initiateTransfer(
             UiContractNegotiation negotiation,
-            String sourceHttpMethod,
-            @Nullable String requestBody,
-            @Nullable String mediaType) {
+            TestCase testCase) {
         /*
         {
           "@type": "https://w3id.org/edc/v0.0.1/ns/TransferRequest",
@@ -332,28 +355,30 @@ class DataSourceMethodParamTest {
         dataSinkProperties.put(EDC_NAMESPACE + "baseUrl", DESTINATION_URL);
         dataSinkProperties.put(EDC_NAMESPACE + "method", HttpMethod.PUT);
         dataSinkProperties.put(EDC_NAMESPACE + "type", "HttpData"); // TODO: http proxy
-        dataSinkProperties.put("https://sovity.de/method", sourceHttpMethod);
+        dataSinkProperties.put("https://sovity.de/method", testCase.method);
 
         Map<String, String> transferProcessProperties = new HashMap<>(Map.of(
                 "https://w3id.org/edc/v0.0.1/ns/contentType", "application/json",
-                "https://w3id.org/edc/v0.0.1/ns/method", sourceHttpMethod
+                "https://w3id.org/edc/v0.0.1/ns/method", testCase.method
         ));
 
-        if (requestBody != null) {
-            dataSinkProperties.put("https://w3id.org/edc/v0.0.1/ns/body", requestBody);
-            dataSinkProperties.put("https://sovity.de/body", requestBody);
-            dataSinkProperties.put("https://sovity.de/mediaType", mediaType);
+        if (testCase.requestBody != null) {
+            dataSinkProperties.put("https://w3id.org/edc/v0.0.1/ns/body", testCase.requestBody);
+            dataSinkProperties.put("https://sovity.de/body", testCase.requestBody);
+            dataSinkProperties.put("https://sovity.de/mediaType", testCase.mediaType);
 
-            transferProcessProperties.put("https://w3id.org/edc/v0.0.1/ns/body", requestBody);
-            transferProcessProperties.put("https://w3id.org/edc/v0.0.1/ns/contentType", mediaType);
+            transferProcessProperties.put("https://w3id.org/edc/v0.0.1/ns/body", testCase.requestBody);
+            transferProcessProperties.put("https://w3id.org/edc/v0.0.1/ns/contentType", testCase.mediaType);
+        }
+
+        if (testCase.path != null) {
+            dataSinkProperties.put("https://sovity.de/pathSegments", testCase.path);
         }
 
         var transferRequest = InitiateTransferRequest.builder()
                 .contractAgreementId(contractAgreementId)
                 .dataSinkProperties(dataSinkProperties)
-                .transferProcessProperties(
-                        transferProcessProperties
-                )
+                .transferProcessProperties(transferProcessProperties)
                 .build();
         return consumerClient.uiApi().initiateTransfer(transferRequest).getId();
     }
