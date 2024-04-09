@@ -36,7 +36,9 @@ import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.val;
+import okhttp3.HttpUrl;
 import org.awaitility.Awaitility;
+import org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
@@ -108,7 +110,7 @@ class DataSourceMethodParamTest {
             @Nullable String body,
             @Nullable String mediaType,
             @Nullable String path,
-            @Nullable String queryParams
+            Map<String, List<String>> queryParams
     ) {
         @Override
         public String toString() {
@@ -196,15 +198,21 @@ class DataSourceMethodParamTest {
                 HttpMethod.OPTIONS
         );
 
-        val paths = Arrays.asList("different/path/segment", null);
-        val queryParameters = Arrays.asList("filter=abc&limit=10", null);
+        val paths = Arrays.asList(null, "different/path/segment");
+        val queryParameters = List.of(
+                Map.<String, List<String>>of(),
+                Map.of(
+                        "limit", List.of("10"),
+                        "filter", List.of("a", "b", "c")
+                )
+        );
 
         return httpMethods.stream().flatMap(method ->
                 getBodyOptionsFor(method).stream().flatMap(body ->
                         paths.stream().flatMap(usePath ->
                                 queryParameters.stream().map(params ->
                                         new TestCase(
-                                                method + " body:" + body + " path:" + usePath,
+                                                method + " body:" + body + " path:" + usePath + " params=" + params,
                                                 method,
                                                 body,
                                                 body == null ? null : "application/json",
@@ -243,8 +251,10 @@ class DataSourceMethodParamTest {
         if (testCase.mediaType != null) {
             requestDefinition.withHeader(HttpHeaders.CONTENT_TYPE, testCase.mediaType);
         }
+        if (testCase.queryParams != null) {
+            requestDefinition.withQueryStringParameters(testCase.queryParams);
+        }
 
-        // TODO: force media type
 
         mockServer.when(requestDefinition, once())
                 .respond(new HttpResponse()
@@ -271,7 +281,6 @@ class DataSourceMethodParamTest {
     }
 
     private String createAssetWithParamedMethod(TestCase testCase) {
-
         /*
             "https://w3id.org/edc/v0.0.1/ns/proxyPath": "true",
             "https://w3id.org/edc/v0.0.1/ns/proxyBody": "true",
@@ -291,23 +300,14 @@ class DataSourceMethodParamTest {
         if (testCase.method != null) {
             proxyProperties.put("https://w3id.org/edc/v0.0.1/ns/proxyMethod", "true");
         }
-        // TODO: query params
+        if (testCase.queryParams != null) {
+            proxyProperties.put("https://w3id.org/edc/v0.0.1/ns/proxyQueryParams", "true");
+        }
 
         var asset = UiAssetCreateRequest.builder()
                 .id(dataOfferId)
                 .title("My Data Offer")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.PROXY_METHOD, "true",
-                        Prop.Edc.BASE_URL, SOURCE_URL
-                ))
-                .customJsonLdAsString("""
-                        {
-                            "https://w3id.org/edc/v0.0.1/ns/type": "HttpData",
-                            "https://w3id.org/edc/v0.0.1/ns/baseUrl": "https://app.mydepartment.myorg.com/api",
-                            "https://w3id.org/edc/v0.0.1/ns/proxyMethod": "true"
-                        }
-                        """)
+                .dataAddressProperties(proxyProperties)
                 .build();
 
         return providerClient.uiApi().createAsset(asset).getId();
@@ -413,6 +413,23 @@ class DataSourceMethodParamTest {
 
         if (testCase.path != null) {
             dataSinkProperties.put("https://sovity.de/pathSegments", testCase.path);
+        }
+
+        if (!testCase.queryParams.isEmpty()) {
+            // TODO: test this encoding
+            HttpUrl.Builder builder = new HttpUrl.Builder()
+                    .scheme("http")
+                    .host("example.com");
+
+            for (val multiValueParam : testCase.queryParams.entrySet()) {
+                for(val singleValue: multiValueParam.getValue()){
+                    builder.addQueryParameter(multiValueParam.getKey(), singleValue);
+                }
+            }
+
+            val allQueryParams = builder.build().encodedQuery();
+
+            dataSinkProperties.put("https://sovity.de/" + DataFlowRequestSchema.QUERY_PARAMS, allQueryParams);
         }
 
         var transferRequest = InitiateTransferRequest.builder()
