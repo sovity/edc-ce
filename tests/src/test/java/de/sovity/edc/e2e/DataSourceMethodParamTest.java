@@ -38,7 +38,6 @@ import jakarta.ws.rs.core.HttpHeaders;
 import lombok.val;
 import okhttp3.HttpUrl;
 import org.awaitility.Awaitility;
-import org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
@@ -68,6 +67,10 @@ import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.RUNN
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.BODY;
+import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.MEDIA_TYPE;
+import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.PATH;
+import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.QUERY_PARAMS;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 import static org.mockserver.matchers.Times.once;
@@ -155,7 +158,9 @@ class DataSourceMethodParamTest {
     @MethodSource("source")
     void canTransferMethodParameterizedAsset(TestCase testCase) {
         // arrange
-        final var received = prepareDataTransferBackends(testCase);
+
+        val received = new AtomicBoolean(false);
+        prepareDataTransferBackends(testCase, () -> received.set(true));
 
         createPolicy();
         val assetId = createAssetWithParamedMethod(testCase);
@@ -238,7 +243,7 @@ class DataSourceMethodParamTest {
     }
 
     @NotNull
-    private AtomicBoolean prepareDataTransferBackends(TestCase testCase) {
+    private void prepareDataTransferBackends(TestCase testCase, Runnable onRequestReceived) {
         String payload = generateRandomPayload();
 
         val requestDefinition = request(SOURCE_PATH).withMethod(testCase.method);
@@ -261,16 +266,13 @@ class DataSourceMethodParamTest {
                         .withStatusCode(HttpStatusCode.OK_200.code())
                         .withBody(payload, StandardCharsets.UTF_8));
 
-        val received = new AtomicBoolean(false);
         mockServer.when(request(DESTINATION_PATH).withMethod(HttpMethod.PUT))
                 .respond((HttpRequest httpRequest) -> {
                     if (new String(httpRequest.getBodyAsRawBytes()).equals(payload)) {
-                        received.set(true);
+                        onRequestReceived.run();
                     }
                     return new HttpResponse().withStatusCode(200);
                 });
-
-        return received;
     }
 
     private static String generateRandomPayload() {
@@ -390,29 +392,24 @@ class DataSourceMethodParamTest {
           "https://w3id.org/edc/v0.0.1/ns/managedResources": false
         }
          */
+
+        String ROOT_KEY = "https://sovity.de/workaround/proxy/param/";
+
         var contractAgreementId = negotiation.getContractAgreementId();
         Map<String, String> dataSinkProperties = new HashMap<>();
         dataSinkProperties.put(EDC_NAMESPACE + "baseUrl", DESTINATION_URL);
         dataSinkProperties.put(EDC_NAMESPACE + "method", HttpMethod.PUT);
         dataSinkProperties.put(EDC_NAMESPACE + "type", "HttpData"); // TODO: http proxy
-        dataSinkProperties.put("https://sovity.de/method", testCase.method);
-
-        Map<String, String> transferProcessProperties = new HashMap<>(Map.of(
-                "https://w3id.org/edc/v0.0.1/ns/contentType", "application/json",
-                "https://w3id.org/edc/v0.0.1/ns/method", testCase.method
-        ));
+        dataSinkProperties.put(ROOT_KEY + "method", testCase.method);
 
         if (testCase.body != null) {
             dataSinkProperties.put("https://w3id.org/edc/v0.0.1/ns/body", testCase.body);
-            dataSinkProperties.put("https://sovity.de/body", testCase.body);
-            dataSinkProperties.put("https://sovity.de/mediaType", testCase.mediaType);
-
-            transferProcessProperties.put("https://w3id.org/edc/v0.0.1/ns/body", testCase.body);
-            transferProcessProperties.put("https://w3id.org/edc/v0.0.1/ns/contentType", testCase.mediaType);
+            dataSinkProperties.put(ROOT_KEY + BODY, testCase.body);
+            dataSinkProperties.put(ROOT_KEY + MEDIA_TYPE, testCase.mediaType);
         }
 
         if (testCase.path != null) {
-            dataSinkProperties.put("https://sovity.de/pathSegments", testCase.path);
+            dataSinkProperties.put(ROOT_KEY + PATH, testCase.path);
         }
 
         if (!testCase.queryParams.isEmpty()) {
@@ -422,20 +419,20 @@ class DataSourceMethodParamTest {
                     .host("example.com");
 
             for (val multiValueParam : testCase.queryParams.entrySet()) {
-                for(val singleValue: multiValueParam.getValue()){
+                for (val singleValue : multiValueParam.getValue()) {
                     builder.addQueryParameter(multiValueParam.getKey(), singleValue);
                 }
             }
 
             val allQueryParams = builder.build().encodedQuery();
 
-            dataSinkProperties.put("https://sovity.de/" + DataFlowRequestSchema.QUERY_PARAMS, allQueryParams);
+            dataSinkProperties.put(ROOT_KEY + QUERY_PARAMS, allQueryParams);
         }
 
         var transferRequest = InitiateTransferRequest.builder()
                 .contractAgreementId(contractAgreementId)
                 .dataSinkProperties(dataSinkProperties)
-                .transferProcessProperties(transferProcessProperties)
+//                .transferProcessProperties(transferProcessProperties)
                 .build();
         return consumerClient.uiApi().initiateTransfer(transferRequest).getId();
     }
