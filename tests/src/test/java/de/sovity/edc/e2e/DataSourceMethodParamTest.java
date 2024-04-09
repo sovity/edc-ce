@@ -107,7 +107,8 @@ class DataSourceMethodParamTest {
             String method,
             @Nullable String body,
             @Nullable String mediaType,
-            @Nullable String path
+            @Nullable String path,
+            @Nullable String queryParams
     ) {
         @Override
         public String toString() {
@@ -196,17 +197,20 @@ class DataSourceMethodParamTest {
         );
 
         val paths = Arrays.asList("different/path/segment", null);
+        val queryParameters = Arrays.asList("filter=abc&limit=10", null);
 
         return httpMethods.stream().flatMap(method ->
                 getBodyOptionsFor(method).stream().flatMap(body ->
-                        paths.stream().map(usePath ->
-                                new TestCase(
-                                        method + " body:" + body + " path:" + usePath,
-                                        method,
-                                        body,
-                                        body == null ? null : "application/json",
-                                        usePath
-                                ))
+                        paths.stream().flatMap(usePath ->
+                                queryParameters.stream().map(params ->
+                                        new TestCase(
+                                                method + " body:" + body + " path:" + usePath,
+                                                method,
+                                                body,
+                                                body == null ? null : "application/json",
+                                                usePath,
+                                                params
+                                        )))
                 ));
     }
 
@@ -236,7 +240,7 @@ class DataSourceMethodParamTest {
         if (testCase.path != null) {
             requestDefinition.withPath(SOURCE_PATH + testCase.path);
         }
-        if(testCase.mediaType != null) {
+        if (testCase.mediaType != null) {
             requestDefinition.withHeader(HttpHeaders.CONTENT_TYPE, testCase.mediaType);
         }
 
