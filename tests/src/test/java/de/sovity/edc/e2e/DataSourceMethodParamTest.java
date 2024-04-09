@@ -49,6 +49,7 @@ import org.mockserver.model.HttpResponse;
 import org.mockserver.model.HttpStatusCode;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -102,10 +103,14 @@ class DataSourceMethodParamTest {
     record TestCase(
             String name,
             String method,
-            @Nullable String requestBody,
+            @Nullable String body,
             String mediaType,
             @Nullable String path
     ) {
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 
     @BeforeEach
@@ -148,14 +153,14 @@ class DataSourceMethodParamTest {
         final var received = prepareDataTransferBackends(testCase);
 
         createPolicy();
-        val assetId = createAssetWithParamedMethod();
+        val assetId = createAssetWithParamedMethod(testCase);
         createContractDefinition();
 
         // act
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
         var negotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
         negotiation = awaitNegotiationDone(negotiation.getContractNegotiationId());
-        val transferId = initiateTransfer(negotiation, testCase);
+        val transferId = initiateTransferWithParameters(negotiation, testCase);
 
         Awaitility.await().atMost(consumerConnector.timeout).until(
                 () -> consumerClient.uiApi()
@@ -217,11 +222,9 @@ class DataSourceMethodParamTest {
         String payload = generateRandomPayload();
 
         val requestDefinition = request(SOURCE_PATH).withMethod(testCase.method);
-
-        if (testCase.requestBody != null) {
-            requestDefinition.withBody(testCase.requestBody);
+        if (testCase.body != null) {
+            requestDefinition.withBody(testCase.body);
         }
-
         if (testCase.path != null) {
             requestDefinition.withPath(SOURCE_PATH + testCase.path);
         }
@@ -252,7 +255,29 @@ class DataSourceMethodParamTest {
         return payload;
     }
 
-    private String createAssetWithParamedMethod() {
+    private String createAssetWithParamedMethod(TestCase testCase) {
+
+        /*
+            "https://w3id.org/edc/v0.0.1/ns/proxyPath": "true",
+            "https://w3id.org/edc/v0.0.1/ns/proxyBody": "true",
+            "https://w3id.org/edc/v0.0.1/ns/proxyMethod": "true",
+            "https://w3id.org/edc/v0.0.1/ns/proxyQueryParams": "true"
+         */
+        val proxyProperties = new HashMap<>(Map.of(
+                Prop.Edc.TYPE, "HttpData",
+                Prop.Edc.BASE_URL, SOURCE_URL
+        ));
+        if (testCase.path != null) {
+            proxyProperties.put("https://w3id.org/edc/v0.0.1/ns/proxyPath", "true");
+        }
+        if (testCase.body != null) {
+            proxyProperties.put("https://w3id.org/edc/v0.0.1/ns/proxyBody", "true");
+        }
+        if (testCase.method != null) {
+            proxyProperties.put("https://w3id.org/edc/v0.0.1/ns/proxyMethod", "true");
+        }
+        // TODO: query params
+
         var asset = UiAssetCreateRequest.builder()
                 .id(dataOfferId)
                 .title("My Data Offer")
@@ -325,7 +350,7 @@ class DataSourceMethodParamTest {
         return negotiation;
     }
 
-    private String initiateTransfer(
+    private String initiateTransferWithParameters(
             UiContractNegotiation negotiation,
             TestCase testCase) {
         /*
@@ -362,12 +387,12 @@ class DataSourceMethodParamTest {
                 "https://w3id.org/edc/v0.0.1/ns/method", testCase.method
         ));
 
-        if (testCase.requestBody != null) {
-            dataSinkProperties.put("https://w3id.org/edc/v0.0.1/ns/body", testCase.requestBody);
-            dataSinkProperties.put("https://sovity.de/body", testCase.requestBody);
+        if (testCase.body != null) {
+            dataSinkProperties.put("https://w3id.org/edc/v0.0.1/ns/body", testCase.body);
+            dataSinkProperties.put("https://sovity.de/body", testCase.body);
             dataSinkProperties.put("https://sovity.de/mediaType", testCase.mediaType);
 
-            transferProcessProperties.put("https://w3id.org/edc/v0.0.1/ns/body", testCase.requestBody);
+            transferProcessProperties.put("https://w3id.org/edc/v0.0.1/ns/body", testCase.body);
             transferProcessProperties.put("https://w3id.org/edc/v0.0.1/ns/contentType", testCase.mediaType);
         }
 

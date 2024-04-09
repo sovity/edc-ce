@@ -26,7 +26,7 @@ dependencies {
     testImplementation("org.assertj:assertj-core:${assertj}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiterVersion}")
     testImplementation("org.junit.jupiter:junit-jupiter-params:${jupiterVersion}")
-    testImplementation("org.mock-server:mockserver-netty:${httpMockServerVersion}"){
+    testImplementation("org.mock-server:mockserver-netty:${httpMockServerVersion}") {
         // TODO: increase minimum guava version
     }
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
@@ -34,10 +34,12 @@ dependencies {
 
 tasks.withType<Test> {
     maxParallelForks = 1
-    retry {
-        maxRetries.set(2)
-        maxFailures.set(4)
-        failOnPassedAfterRetry.set(false)
+    if (System.getenv("LOCALDEV") == null) {
+        retry {
+            maxRetries.set(2)
+            maxFailures.set(4)
+            failOnPassedAfterRetry.set(false)
+        }
     }
 }
 
