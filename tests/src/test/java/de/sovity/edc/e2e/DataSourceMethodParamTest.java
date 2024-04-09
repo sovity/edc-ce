@@ -34,6 +34,7 @@ import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.core.HttpHeaders;
 import lombok.val;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -51,6 +52,7 @@ import org.mockserver.model.HttpStatusCode;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +106,7 @@ class DataSourceMethodParamTest {
             String name,
             String method,
             @Nullable String body,
-            String mediaType,
+            @Nullable String mediaType,
             @Nullable String path
     ) {
         @Override
@@ -183,7 +185,7 @@ class DataSourceMethodParamTest {
     }
 
     private static Stream<TestCase> source() {
-        Stream<String> httpMethods = Stream.of(
+        val httpMethods = List.of(
                 HttpMethod.POST,
 //                HttpMethod.HEAD,
                 HttpMethod.GET,
@@ -193,28 +195,34 @@ class DataSourceMethodParamTest {
                 HttpMethod.OPTIONS
         );
 
-        return httpMethods.flatMap(method -> {
-            final Stream<Boolean> useBodyChoices;
+        val paths = Arrays.asList("different/path/segment", null);
 
-            if (okhttp3.internal.http.HttpMethod.requiresRequestBody(method)) {
-                useBodyChoices = Stream.of(true);
-            } else if (!okhttp3.internal.http.HttpMethod.permitsRequestBody(method)) {
-                useBodyChoices = Stream.of(false);
-            } else {
-                useBodyChoices = Stream.of(true, false);
-            }
+        return httpMethods.stream().flatMap(method ->
+                getBodyOptionsFor(method).stream().flatMap(body ->
+                        paths.stream().map(usePath ->
+                                new TestCase(
+                                        method + " body:" + body + " path:" + usePath,
+                                        method,
+                                        body,
+                                        body == null ? null : "application/json",
+                                        usePath
+                                ))
+                ));
+    }
 
-            return useBodyChoices.flatMap(useBody ->
-                    Stream.of(true, false).map(usePath ->
-                            new TestCase(
-                                    method + " body:" + useBody + " path:" + usePath,
-                                    method,
-                                    useBody ? "{ \"somePayload\" : \"" + method + "\" }" : null,
-                                    "application/json",
-                                    usePath ? method.toLowerCase() + "-path/segment" : null
-                            ))
-            );
-        });
+    @NotNull
+    private static List<String> getBodyOptionsFor(String method) {
+        final List<String> useBodyChoices;
+        val payload = "{ \"somePayload\" : \"" + method + "\" }";
+
+        if (okhttp3.internal.http.HttpMethod.requiresRequestBody(method)) {
+            useBodyChoices = List.of(payload);
+        } else if (!okhttp3.internal.http.HttpMethod.permitsRequestBody(method)) {
+            useBodyChoices = Collections.singletonList(null);
+        } else {
+            useBodyChoices = Arrays.asList(payload, null);
+        }
+        return useBodyChoices;
     }
 
     @NotNull
@@ -227,6 +235,9 @@ class DataSourceMethodParamTest {
         }
         if (testCase.path != null) {
             requestDefinition.withPath(SOURCE_PATH + testCase.path);
+        }
+        if(testCase.mediaType != null) {
+            requestDefinition.withHeader(HttpHeaders.CONTENT_TYPE, testCase.mediaType);
         }
 
         // TODO: force media type
