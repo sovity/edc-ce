@@ -77,15 +77,15 @@ import static org.mockserver.matchers.Times.once;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.stop.Stop.stopQuietly;
 
-class DataSourceMethodParamTest {
+class DataSourceParameterizationTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = "provider";
     private static final String CONSUMER_PARTICIPANT_ID = "consumer";
 
     @RegisterExtension
-    static EdcExtension providerEdcContext = new EdcExtension();
+    static final EdcExtension providerEdcContext = new EdcExtension();
     @RegisterExtension
-    static EdcExtension consumerEdcContext = new EdcExtension();
+    static final EdcExtension consumerEdcContext = new EdcExtension();
 
     @RegisterExtension
     static final TestDatabase PROVIDER_DATABASE = TestDatabaseFactory.getTestDatabase(1);
@@ -97,13 +97,13 @@ class DataSourceMethodParamTest {
 
     private EdcClient providerClient;
     private EdcClient consumerClient;
-    private final String dataOfferId = "my-data-offer-2023-11";
+    private static final String dataOfferId = "my-data-offer-2023-11";
 
     private final int port = getFreePort();
     private final String SOURCE_PATH = "/source/some/path/";
     private final String DESTINATION_PATH = "/destination/some/path/";
-    private String SOURCE_URL = "http://localhost:" + port + SOURCE_PATH;
-    private String DESTINATION_URL = "http://localhost:" + port + DESTINATION_PATH;
+    private final String SOURCE_URL = "http://localhost:" + port + SOURCE_PATH;
+    private final String DESTINATION_URL = "http://localhost:" + port + DESTINATION_PATH;
     // TODO: remove the test backend dependency?
     private ClientAndServer mockServer;
 
@@ -156,9 +156,8 @@ class DataSourceMethodParamTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("source")
-    void canTransferMethodParameterizedAsset(TestCase testCase) {
+    void canTransferParameterizedAsset(TestCase testCase) {
         // arrange
-
         val received = new AtomicBoolean(false);
         prepareDataTransferBackends(testCase, () -> received.set(true));
 
