@@ -69,6 +69,7 @@ import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.BODY;
 import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.MEDIA_TYPE;
+import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.METHOD;
 import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.PATH;
 import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.QUERY_PARAMS;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
@@ -83,9 +84,9 @@ class DataSourceParameterizationTest {
     private static final String CONSUMER_PARTICIPANT_ID = "consumer";
 
     @RegisterExtension
-    static final EdcExtension providerEdcContext = new EdcExtension();
+    static final EdcExtension PROVIDER_EDC_CONTEXT = new EdcExtension();
     @RegisterExtension
-    static final EdcExtension consumerEdcContext = new EdcExtension();
+    static final EdcExtension CONSUMER_EDC_CONTEXT = new EdcExtension();
 
     @RegisterExtension
     static final TestDatabase PROVIDER_DATABASE = TestDatabaseFactory.getTestDatabase(1);
@@ -97,13 +98,13 @@ class DataSourceParameterizationTest {
 
     private EdcClient providerClient;
     private EdcClient consumerClient;
-    private static final String dataOfferId = "my-data-offer-2023-11";
+    private static final String DATA_OFFER_ID = "my-data-offer-2023-11";
 
     private final int port = getFreePort();
-    private final String SOURCE_PATH = "/source/some/path/";
-    private final String DESTINATION_PATH = "/destination/some/path/";
-    private final String SOURCE_URL = "http://localhost:" + port + SOURCE_PATH;
-    private final String DESTINATION_URL = "http://localhost:" + port + DESTINATION_PATH;
+    private final String sourcePath = "/source/some/path/";
+    private final String destinationPath = "/destination/some/path/";
+    private final String sourceUrl = "http://localhost:" + port + sourcePath;
+    private final String destinationUrl = "http://localhost:" + port + destinationPath;
     // TODO: remove the test backend dependency?
     private ClientAndServer mockServer;
 
@@ -135,7 +136,7 @@ class DataSourceParameterizationTest {
     void setup() {
         // set up provider EDC + Client
         var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 21000, PROVIDER_DATABASE);
-        providerEdcContext.setConfiguration(providerConfig.getProperties());
+        PROVIDER_EDC_CONTEXT.setConfiguration(providerConfig.getProperties());
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
         providerClient = EdcClient.builder()
@@ -145,7 +146,7 @@ class DataSourceParameterizationTest {
 
         // set up consumer EDC + Client
         var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 23000, CONSUMER_DATABASE);
-        consumerEdcContext.setConfiguration(consumerConfig.getProperties());
+        CONSUMER_EDC_CONTEXT.setConfiguration(consumerConfig.getProperties());
         consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
 
         consumerClient = EdcClient.builder()
@@ -194,7 +195,7 @@ class DataSourceParameterizationTest {
     private static Stream<TestCase> source() {
         val httpMethods = List.of(
                 HttpMethod.POST,
-//                HttpMethod.HEAD,
+                // HttpMethod.HEAD,
                 HttpMethod.GET,
                 HttpMethod.DELETE,
                 HttpMethod.PUT,
@@ -245,12 +246,12 @@ class DataSourceParameterizationTest {
     private void prepareDataTransferBackends(TestCase testCase, Runnable onRequestReceived) {
         String payload = generateRandomPayload();
 
-        val requestDefinition = request(SOURCE_PATH).withMethod(testCase.method);
+        val requestDefinition = request(sourcePath).withMethod(testCase.method);
         if (testCase.body != null) {
             requestDefinition.withBody(testCase.body);
         }
         if (testCase.path != null) {
-            requestDefinition.withPath(SOURCE_PATH + testCase.path);
+            requestDefinition.withPath(sourcePath + testCase.path);
         }
         if (testCase.mediaType != null) {
             requestDefinition.withHeader(HttpHeaders.CONTENT_TYPE, testCase.mediaType);
@@ -265,7 +266,7 @@ class DataSourceParameterizationTest {
                         .withStatusCode(HttpStatusCode.OK_200.code())
                         .withBody(payload, StandardCharsets.UTF_8));
 
-        mockServer.when(request(DESTINATION_PATH).withMethod(HttpMethod.PUT))
+        mockServer.when(request(destinationPath).withMethod(HttpMethod.PUT))
                 .respond((HttpRequest httpRequest) -> {
                     if (new String(httpRequest.getBodyAsRawBytes()).equals(payload)) {
                         onRequestReceived.run();
@@ -290,7 +291,7 @@ class DataSourceParameterizationTest {
          */
         val proxyProperties = new HashMap<>(Map.of(
                 Prop.Edc.TYPE, "HttpData",
-                Prop.Edc.BASE_URL, SOURCE_URL
+                Prop.Edc.BASE_URL, sourceUrl
         ));
         if (testCase.path != null) {
             proxyProperties.put("https://w3id.org/edc/v0.0.1/ns/proxyPath", "true");
@@ -306,7 +307,7 @@ class DataSourceParameterizationTest {
         }
 
         var asset = UiAssetCreateRequest.builder()
-                .id(dataOfferId)
+                .id(DATA_OFFER_ID)
                 .title("My Data Offer")
                 .dataAddressProperties(proxyProperties)
                 .build();
@@ -317,7 +318,7 @@ class DataSourceParameterizationTest {
     // TODO: extract to common
     private void createPolicy() {
         var policyDefinition = PolicyDefinitionCreateRequest.builder()
-                .policyDefinitionId(dataOfferId)
+                .policyDefinitionId(DATA_OFFER_ID)
                 .policy(UiPolicyCreateRequest.builder()
                         .constraints(List.of())
                         .build())
@@ -328,15 +329,15 @@ class DataSourceParameterizationTest {
 
     private void createContractDefinition() {
         var contractDefinition = ContractDefinitionRequest.builder()
-                .contractDefinitionId(dataOfferId)
-                .accessPolicyId(dataOfferId)
-                .contractPolicyId(dataOfferId)
+                .contractDefinitionId(DATA_OFFER_ID)
+                .accessPolicyId(DATA_OFFER_ID)
+                .contractPolicyId(DATA_OFFER_ID)
                 .assetSelector(List.of(UiCriterion.builder()
                         .operandLeft(Prop.Edc.ID)
                         .operator(UiCriterionOperator.EQ)
                         .operandRight(UiCriterionLiteral.builder()
                                 .type(UiCriterionLiteralType.VALUE)
-                                .value(dataOfferId)
+                                .value(DATA_OFFER_ID)
                                 .build())
                         .build()))
                 .build();
@@ -369,25 +370,25 @@ class DataSourceParameterizationTest {
     private String initiateTransferWithParameters(
             UiContractNegotiation negotiation,
             TestCase testCase) {
-        String ROOT_KEY = "https://w3id.org/edc/v0.0.1/ns/";
+        String rootKey = "https://w3id.org/edc/v0.0.1/ns/";
 
-        val transferProcessProperties = new HashMap<String,String>();
+        val transferProcessProperties = new HashMap<String, String>();
 
         var contractAgreementId = negotiation.getContractAgreementId();
         Map<String, String> dataSinkProperties = new HashMap<>();
-        dataSinkProperties.put(EDC_NAMESPACE + "baseUrl", DESTINATION_URL);
+        dataSinkProperties.put(EDC_NAMESPACE + "baseUrl", destinationUrl);
         dataSinkProperties.put(EDC_NAMESPACE + "method", HttpMethod.PUT);
         dataSinkProperties.put(EDC_NAMESPACE + "type", "HttpData"); // TODO: http proxy
-        transferProcessProperties.put(ROOT_KEY + "method", testCase.method);
+        transferProcessProperties.put(rootKey + METHOD, testCase.method);
 
         if (testCase.body != null) {
             dataSinkProperties.put("https://w3id.org/edc/v0.0.1/ns/body", testCase.body);
-            transferProcessProperties.put(ROOT_KEY + BODY, testCase.body);
-            transferProcessProperties.put(ROOT_KEY + MEDIA_TYPE, testCase.mediaType);
+            transferProcessProperties.put(rootKey + BODY, testCase.body);
+            transferProcessProperties.put(rootKey + MEDIA_TYPE, testCase.mediaType);
         }
 
         if (testCase.path != null) {
-            transferProcessProperties.put(ROOT_KEY + PATH, testCase.path);
+            transferProcessProperties.put(rootKey + PATH, testCase.path);
         }
 
         if (!testCase.queryParams.isEmpty()) {
@@ -404,7 +405,7 @@ class DataSourceParameterizationTest {
 
             val allQueryParams = builder.build().encodedQuery();
 
-            transferProcessProperties.put(ROOT_KEY + QUERY_PARAMS, allQueryParams);
+            transferProcessProperties.put(rootKey + QUERY_PARAMS, allQueryParams);
         }
 
         var transferRequest = InitiateTransferRequest.builder()
