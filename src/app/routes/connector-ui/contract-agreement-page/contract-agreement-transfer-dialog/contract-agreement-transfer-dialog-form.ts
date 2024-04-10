@@ -58,7 +58,7 @@ export class ContractAgreementTransferDialogForm {
         showAllHttpParameterizationFields: [false],
 
         httpProxiedPath: [''],
-        httpProxiedMethod: ['GET'],
+        httpProxiedMethod: [''],
         httpProxiedQueryParams: this.formBuilder.array(
           new Array<FormGroup<HttpDatasourceQueryParamFormModel>>(),
         ),

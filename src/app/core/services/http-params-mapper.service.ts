@@ -48,7 +48,7 @@ export class HttpRequestParamsMapper {
       asset.httpDatasourceHintsProxyBody;
 
     return removeNullValues({
-      [DataAddressProperty.method]: proxyMethod ? method : null,
+      [DataAddressProperty.method]: proxyMethod && method ? method : null,
       [DataAddressProperty.pathSegments]: proxyPath ? pathSegments : null,
       [DataAddressProperty.queryParams]: proxyQueryParams ? queryParams : null,
       [DataAddressProperty.body]: proxyBody ? body : null,

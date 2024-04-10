@@ -35,28 +35,28 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
   get proxyMethod(): boolean {
     return (
       this.showAllHttpParameterizationFields ||
-      this.data.asset.httpDatasourceHintsProxyMethod == true
+      this.data.asset.httpDatasourceHintsProxyMethod === true
     );
   }
 
   get proxyPath(): boolean {
     return (
       this.showAllHttpParameterizationFields ||
-      this.data.asset.httpDatasourceHintsProxyPath == true
+      this.data.asset.httpDatasourceHintsProxyPath === true
     );
   }
 
   get proxyQueryParams(): boolean {
     return (
       this.showAllHttpParameterizationFields ||
-      this.data.asset.httpDatasourceHintsProxyQueryParams == true
+      this.data.asset.httpDatasourceHintsProxyQueryParams === true
     );
   }
 
   get proxyBody(): boolean {
     return (
       this.showAllHttpParameterizationFields ||
-      this.data.asset.httpDatasourceHintsProxyBody == true
+      this.data.asset.httpDatasourceHintsProxyBody === true
     );
   }
 

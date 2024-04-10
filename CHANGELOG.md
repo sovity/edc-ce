@@ -50,6 +50,7 @@ Bugfixes and improvement of Broker UI integration with AP
 - Fixed an issue that prevented custom headers from being included in HTTP Data
   Transfers
 - Fix `Content-Type` header being ignored by backend for transfers
+- Fixed Method Parameterization always showing "GET", added unselected option.
 
 #### Deployment Migration Notes
 
