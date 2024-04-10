@@ -370,23 +370,25 @@ class DataSourceMethodParamTest {
     private String initiateTransferWithParameters(
             UiContractNegotiation negotiation,
             TestCase testCase) {
-        String ROOT_KEY = "https://sovity.de/workaround/proxy/param/";
+        String ROOT_KEY = "https://w3id.org/edc/v0.0.1/ns/";
+
+        val transferProcessProperties = new HashMap<String,String>();
 
         var contractAgreementId = negotiation.getContractAgreementId();
         Map<String, String> dataSinkProperties = new HashMap<>();
         dataSinkProperties.put(EDC_NAMESPACE + "baseUrl", DESTINATION_URL);
         dataSinkProperties.put(EDC_NAMESPACE + "method", HttpMethod.PUT);
         dataSinkProperties.put(EDC_NAMESPACE + "type", "HttpData"); // TODO: http proxy
-        dataSinkProperties.put(ROOT_KEY + "method", testCase.method);
+        transferProcessProperties.put(ROOT_KEY + "method", testCase.method);
 
         if (testCase.body != null) {
             dataSinkProperties.put("https://w3id.org/edc/v0.0.1/ns/body", testCase.body);
-            dataSinkProperties.put(ROOT_KEY + BODY, testCase.body);
-            dataSinkProperties.put(ROOT_KEY + MEDIA_TYPE, testCase.mediaType);
+            transferProcessProperties.put(ROOT_KEY + BODY, testCase.body);
+            transferProcessProperties.put(ROOT_KEY + MEDIA_TYPE, testCase.mediaType);
         }
 
         if (testCase.path != null) {
-            dataSinkProperties.put(ROOT_KEY + PATH, testCase.path);
+            transferProcessProperties.put(ROOT_KEY + PATH, testCase.path);
         }
 
         if (!testCase.queryParams.isEmpty()) {
@@ -403,13 +405,13 @@ class DataSourceMethodParamTest {
 
             val allQueryParams = builder.build().encodedQuery();
 
-            dataSinkProperties.put(ROOT_KEY + QUERY_PARAMS, allQueryParams);
+            transferProcessProperties.put(ROOT_KEY + QUERY_PARAMS, allQueryParams);
         }
 
         var transferRequest = InitiateTransferRequest.builder()
                 .contractAgreementId(contractAgreementId)
                 .dataSinkProperties(dataSinkProperties)
-//                .transferProcessProperties(transferProcessProperties)
+                .transferProcessProperties(transferProcessProperties)
                 .build();
         return consumerClient.uiApi().initiateTransfer(transferRequest).getId();
     }

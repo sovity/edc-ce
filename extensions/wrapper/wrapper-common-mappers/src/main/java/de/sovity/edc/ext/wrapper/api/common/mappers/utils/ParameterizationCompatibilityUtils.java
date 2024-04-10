@@ -33,6 +33,7 @@ public class ParameterizationCompatibilityUtils {
                 "https://w3id.org/edc/v0.0.1/ns/pathSegments", "https://sovity.de/workaround/proxy/param/pathSegments",
                 "https://w3id.org/edc/v0.0.1/ns/queryParams", "https://sovity.de/workaround/proxy/param/queryParams",
                 "https://w3id.org/edc/v0.0.1/ns/body", "https://sovity.de/workaround/proxy/param/body",
+                "https://w3id.org/edc/v0.0.1/ns/mediaType", "https://sovity.de/workaround/proxy/param/mediaType",
                 "https://w3id.org/edc/v0.0.1/ns/contentType", "https://sovity.de/workaround/proxy/param/contentType"
         );
 
