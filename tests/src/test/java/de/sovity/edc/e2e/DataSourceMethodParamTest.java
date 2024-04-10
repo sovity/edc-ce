@@ -370,29 +370,6 @@ class DataSourceMethodParamTest {
     private String initiateTransferWithParameters(
             UiContractNegotiation negotiation,
             TestCase testCase) {
-        /*
-        {
-          "@type": "https://w3id.org/edc/v0.0.1/ns/TransferRequest",
-          "https://w3id.org/edc/v0.0.1/ns/assetId": "{{ASSET_ID}}",
-          "https://w3id.org/edc/v0.0.1/ns/contractId": "{{CONTRACT_ID}}",
-          "https://w3id.org/edc/v0.0.1/ns/connectorAddress": "https://{{PROVIDER_EDC_FQDN}}/api/dsp",
-          "https://w3id.org/edc/v0.0.1/ns/connectorId": "{{PROVIDER_EDC_PARTICIPANT_ID}}",
-          "https://w3id.org/edc/v0.0.1/ns/dataDestination": {
-            "https://w3id.org/edc/v0.0.1/ns/type": "HttpData",
-            "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{target-url}}"
-          },
-          "https://w3id.org/edc/v0.0.1/ns/privateProperties": {
-            "https://w3id.org/edc/v0.0.1/ns/pathSegments": "my-endpoint",
-            "https://w3id.org/edc/v0.0.1/ns/method": "POST",
-            "https://w3id.org/edc/v0.0.1/ns/queryParams": "filter=abc&limit=10",
-            "https://w3id.org/edc/v0.0.1/ns/contentType": "application/json",
-            "https://w3id.org/edc/v0.0.1/ns/body": "{\"myBody\": \"myValue\"}"
-          },
-          "https://w3id.org/edc/v0.0.1/ns/protocol": "dataspace-protocol-http",
-          "https://w3id.org/edc/v0.0.1/ns/managedResources": false
-        }
-         */
-
         String ROOT_KEY = "https://sovity.de/workaround/proxy/param/";
 
         var contractAgreementId = negotiation.getContractAgreementId();

@@ -24,6 +24,7 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.LiteralMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MarkdownToTextConverter;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ParameterizationCompatibilityUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.TextUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
@@ -179,6 +180,7 @@ public class WrapperExtensionContextBuilder {
                 contractNegotiationUtils
         );
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
+        var parameterizationCompatibilityUtils = new ParameterizationCompatibilityUtils();
         var assetIdValidator = new AssetIdValidator();
         var assetBuilder = new AssetBuilder(
                 assetMapper,
@@ -196,7 +198,8 @@ public class WrapperExtensionContextBuilder {
                 contractAgreementUtils,
                 contractNegotiationUtils,
                 edcPropertyUtils,
-                typeTransformerRegistry
+                typeTransformerRegistry,
+                parameterizationCompatibilityUtils
         );
         var contractAgreementTransferApiService = new ContractAgreementTransferApiService(
                 transferRequestBuilder,
