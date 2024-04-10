@@ -150,6 +150,13 @@ EDC_OAUTH_CERTIFICATE_ALIAS: 1
 EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
 ```
 
+A LoggingHouse extension is included in the MDS variant, which means that additional properties must be set for it:
+```yaml
+# LoggingHouse Extension
+EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "true"
+EDC_LOGGINGHOUSE_EXTENSION_URL: https://clearing.test.mobility-dataspace.eu
+```
+
 You can also optionally set the following config properties:
 ```yaml
 # Enables DEBUG-Level logging
