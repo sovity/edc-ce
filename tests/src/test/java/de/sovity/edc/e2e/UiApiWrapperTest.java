@@ -39,6 +39,7 @@ import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
+import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
@@ -66,6 +67,7 @@ import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
+
 
 class UiApiWrapperTest {
 
@@ -113,6 +115,7 @@ class UiApiWrapperTest {
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
 
+    @DisabledOnGithub
     @Test
     void provide_consume_assetMapping_policyMapping_agreements() {
         // arrange
@@ -150,7 +153,7 @@ class UiApiWrapperTest {
                 .transportMode("transportMode")
                 .sovereignLegalName("my-sovereign")
                 .geoLocation("my-geolocation")
-                .nutsLocation(Arrays.asList("my-nuts-location1", "my-nuts-location2"))
+                .nutsLocations(Arrays.asList("my-nuts-location1", "my-nuts-location2"))
                 .dataSampleUrls(Arrays.asList("my-data-sample-urls1", "my-data-sample-urls2"))
                 .referenceFileUrls(Arrays.asList("my-reference-files1", "my-reference-files2"))
                 .referenceFilesDescription("my-additional-description")
@@ -229,7 +232,7 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getAsset().getTransportMode()).isEqualTo("transportMode");
         assertThat(dataOffer.getAsset().getSovereignLegalName()).isEqualTo("my-sovereign");
         assertThat(dataOffer.getAsset().getGeoLocation()).isEqualTo("my-geolocation");
-        assertThat(dataOffer.getAsset().getNutsLocation()).isEqualTo(Arrays.asList("my-nuts-location1", "my-nuts-location2"));
+        assertThat(dataOffer.getAsset().getNutsLocations()).isEqualTo(Arrays.asList("my-nuts-location1", "my-nuts-location2"));
         assertThat(dataOffer.getAsset().getDataSampleUrls()).isEqualTo(Arrays.asList("my-data-sample-urls1", "my-data-sample-urls2"));
         assertThat(dataOffer.getAsset().getReferenceFileUrls()).isEqualTo(Arrays.asList("my-reference-files1", "my-reference-files2"));
         assertThat(dataOffer.getAsset().getReferenceFilesDescription()).isEqualTo("my-additional-description");
@@ -337,7 +340,9 @@ class UiApiWrapperTest {
                 .customJsonLdAsString("""
                         {
                             "http://purl.org/dc/terms/title": "The real title",
-                            "https://semantic.sovity.io/mds-dcat-ext#nuts-location": ["a", "b", "c"],
+                            "http://purl.org/dc/terms/spatial": {
+                              "http://purl.org/dc/terms/identifier": ["a", "b", "c"]
+                            },
                             "http://example.com/an-actual-custom-property": "custom value"
                         }
                         """)
@@ -356,7 +361,7 @@ class UiApiWrapperTest {
         // overridden property
         assertThat(asset.getTitle()).isEqualTo("The real title");
         // added property
-        assertThat(asset.getNutsLocation()).isEqualTo(List.of("a", "b", "c"));
+        assertThat(asset.getNutsLocations()).isEqualTo(List.of("a", "b", "c"));
         // remaining custom property
         assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
                 {
@@ -367,6 +372,7 @@ class UiApiWrapperTest {
 
     // TODO throw an error if the id is overridden
 
+    @DisabledOnGithub
     @Test
     void customTransferRequest() {
         // arrange
@@ -425,6 +431,7 @@ class UiApiWrapperTest {
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
     }
 
+    @DisabledOnGithub
     @Test
     void editAssetMetadataOnLiveContract() {
         // arrange

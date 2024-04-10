@@ -36,6 +36,7 @@ dependencies {
 
     testImplementation(project(":extensions:wrapper:clients:java-client"))
     testImplementation(project(":extensions:policy-always-true"))
+    testImplementation(project(":utils:test-utils"))
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:dsp:${edcVersion}")
     testImplementation("${edcGroup}:iam-mock:${edcVersion}")

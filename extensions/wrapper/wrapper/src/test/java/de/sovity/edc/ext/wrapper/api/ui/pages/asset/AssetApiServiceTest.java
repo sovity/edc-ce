@@ -122,7 +122,7 @@ public class AssetApiServiceTest {
                 .transportMode("transportMode")
                 .sovereignLegalName("my sovereign")
                 .geoLocation("40.0, 40.0")
-                .nutsLocation(Arrays.asList("DE", "DE929"))
+                .nutsLocations(Arrays.asList("DE", "DE929"))
                 .dataSampleUrls(Arrays.asList("https://sample-a", "https://sample-b"))
                 .referenceFileUrls(Arrays.asList("https://reference-a", "https://reference-b"))
                 .referenceFilesDescription("RF Description")
@@ -179,7 +179,7 @@ public class AssetApiServiceTest {
         assertThat(asset.getTransportMode()).isEqualTo("transportMode");
         assertThat(asset.getSovereignLegalName()).isEqualTo("my sovereign");
         assertThat(asset.getGeoLocation()).isEqualTo("40.0, 40.0");
-        assertThat(asset.getNutsLocation()).isEqualTo(Arrays.asList("DE", "DE929"));
+        assertThat(asset.getNutsLocations()).isEqualTo(Arrays.asList("DE", "DE929"));
         assertThat(asset.getDataSampleUrls()).isEqualTo(Arrays.asList("https://sample-a", "https://sample-b"));
         assertThat(asset.getReferenceFileUrls()).isEqualTo(Arrays.asList("https://reference-a", "https://reference-b"));
         assertThat(asset.getReferenceFilesDescription()).isEqualTo("RF Description");
@@ -249,7 +249,7 @@ public class AssetApiServiceTest {
                 .transportMode("transportMode")
                 .sovereignLegalName("my sovereign")
                 .geoLocation("40.0, 40.0")
-                .nutsLocation(Arrays.asList("DE", "DE929"))
+                .nutsLocations(Arrays.asList("DE", "DE929"))
                 .dataSampleUrls(Arrays.asList("https://sample-a", "https://sample-b"))
                 .referenceFileUrls(Arrays.asList("https://reference-a", "https://reference-b"))
                 .referenceFilesDescription("RF Description")
@@ -286,7 +286,7 @@ public class AssetApiServiceTest {
                 .geoReferenceMethod("geoReferenceMethod2")
                 .sovereignLegalName("my sovereign2")
                 .geoLocation("50.0, 50.0")
-                .nutsLocation(Arrays.asList("NL", "NL929"))
+                .nutsLocations(Arrays.asList("NL", "NL929"))
                 .dataSampleUrls(Arrays.asList("https://sample-a2", "https://sample-b2"))
                 .referenceFileUrls(Arrays.asList("https://reference-a2", "https://reference-b2"))
                 .referenceFilesDescription("RF Description2")
@@ -330,7 +330,7 @@ public class AssetApiServiceTest {
         assertThat(asset.getTransportMode()).isEqualTo("transportMode2");
         assertThat(asset.getSovereignLegalName()).isEqualTo("my sovereign2");
         assertThat(asset.getGeoLocation()).isEqualTo("50.0, 50.0");
-        assertThat(asset.getNutsLocation()).isEqualTo(Arrays.asList("NL", "NL929"));
+        assertThat(asset.getNutsLocations()).isEqualTo(Arrays.asList("NL", "NL929"));
         assertThat(asset.getDataSampleUrls()).isEqualTo(Arrays.asList("https://sample-a2", "https://sample-b2"));
         assertThat(asset.getReferenceFileUrls()).isEqualTo(Arrays.asList("https://reference-a2", "https://reference-b2"));
         assertThat(asset.getReferenceFilesDescription()).isEqualTo("RF Description2");

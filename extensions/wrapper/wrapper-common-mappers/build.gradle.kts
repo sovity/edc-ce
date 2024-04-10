@@ -27,6 +27,7 @@ dependencies {
 
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testImplementation(project(":utils:test-utils"))
     testImplementation("${edcGroup}:json-ld:${edcVersion}")
     testImplementation("net.javacrumbs.json-unit:json-unit-assertj:${jsonUnit}")
     testImplementation("org.assertj:assertj-core:${assertj}")

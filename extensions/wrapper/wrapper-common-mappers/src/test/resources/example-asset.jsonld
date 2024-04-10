@@ -11,6 +11,27 @@
       "@type": "http://xmlns.com/foaf/0.1/Organization",
       "http://xmlns.com/foaf/0.1/name": "My Organization Name"
     },
+    "http://www.w3.org/ns/dcat#distribution": {
+        "@type": "http://www.w3.org/ns/dcat#Distribution",
+        "http://www.w3.org/ns/dcat#mediaType": "application/json",
+        "https://w3id.org/mobilitydcat-ap/mobilityDataStandard": {
+          "@id": "my-data-model-001",
+          "https://w3id.org/mobilitydcat-ap/schema": {
+            "http://www.w3.org/ns/dcat#downloadURL": [
+              "my-reference-files1",
+              "my-reference-files2"
+            ],
+            "http://www.w3.org/2000/01/rdf-schema#Literal": "my-additional-description"
+          }
+        },
+        "http://www.w3.org/ns/adms#sample": [
+          "my-data-sample-urls1",
+          "my-data-sample-urls2"
+        ],
+        "http://purl.org/dc/terms/rights": {
+          "http://www.w3.org/2000/01/rdf-schema#label": "my-conditions-for-use"
+        }
+    },
     "http://purl.org/dc/terms/publisher": {
       "@type": "http://xmlns.com/foaf/0.1/Organization",
       "http://xmlns.com/foaf/0.1/homepage": "https://data-source.my-org/about"
@@ -21,36 +42,30 @@
       "some",
       "keywords"
     ],
-    "http://www.w3.org/ns/dcat#mediaType": "application/json",
     "http://www.w3.org/ns/dcat#landingPage": "https://data-source.my-org/docs",
     "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod": "true",
     "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath": "true",
     "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams": "true",
     "https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody": "true",
-    "http://w3id.org/mds#dataCategory": "Infrastructure and Logistics",
-    "http://w3id.org/mds#dataSubcategory": "General Information About Planning Of Routes",
-    "http://w3id.org/mds#dataModel": "my-data-model-001",
-    "http://w3id.org/mds#geoReferenceMethod": "my-geo-reference-method",
-    "http://w3id.org/mds#transportMode": "my-geo-reference-method",
-    "https://semantic.sovity.io/mds-dcat-ext#sovereign": "my-sovereign",
-    "https://semantic.sovity.io/mds-dcat-ext#geolocation": "my-geolocation",
-    "https://semantic.sovity.io/mds-dcat-ext#nuts-location": [
-      "my-nuts-location1",
-      "my-nuts-location2"
-    ],
-    "https://semantic.sovity.io/mds-dcat-ext#data-sample-urls": [
-      "my-data-sample-urls1",
-      "my-data-sample-urls2"
-    ],
-    "https://semantic.sovity.io/mds-dcat-ext#reference-files": [
-      "my-reference-files1",
-      "my-reference-files2"
-    ],
-    "https://semantic.sovity.io/mds-dcat-ext#additional-description": "my-additional-description",
-    "https://semantic.sovity.io/mds-dcat-ext#conditions-for-use": "my-conditions-for-use",
-    "https://semantic.sovity.io/mds-dcat-ext#data-update-frequency": "my-data-update-frequency",
-    "https://semantic.sovity.io/mds-dcat-ext#temporal-coverage-from": "2007-12-03",
-    "https://semantic.sovity.io/mds-dcat-ext#temporal-coverage-to": "2024-01-22",
+     "https://w3id.org/mobilitydcat-ap/mobilityTheme": {
+       "https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category": "Infrastructure and Logistics",
+       "https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category": "General Information About Planning Of Routes"
+     },
+    "https://w3id.org/mobilitydcat-ap/georeferencingMethod": "my-geo-reference-method",
+    "https://w3id.org/mobilitydcat-ap/transportMode": "my-transport-mode",
+    "http://purl.org/dc/terms/rightsHolder": "my-sovereign",
+    "http://purl.org/dc/terms/spatial": {
+        "http://www.w3.org/2004/02/skos/core#prefLabel": "my-geolocation",
+        "http://purl.org/dc/terms/identifier": [
+          "my-nuts-location1",
+          "my-nuts-location2"
+        ]
+    },
+    "http://purl.org/dc/terms/accrualPeriodicity": "my-data-update-frequency",
+    "http://purl.org/dc/terms/temporal": {
+        "http://www.w3.org/ns/dcat#startDate": "2007-12-03",
+        "http://www.w3.org/ns/dcat#endDate": "2024-01-22"
+      },
     "https://semantic.sovity.io/dcat-ext#customJson": "{\"array\":[3,1,4,1,5],\"boolean\":false,\"null\":null,\"number\":116,\"object\":{\"key\":\"value\"},\"string\":\"value\"}",
     "http://unknown/some-custom-string": "some-string-value",
     "http://unknown/some-custom-obj": {"http://unknown/a": "b"}

@@ -18,6 +18,7 @@ dependencies {
 
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testImplementation(project(":utils:test-utils"))
     testImplementation(project(":extensions:test-backend-controller"))
     testImplementation(project(":utils:test-connector-remote"))
     testImplementation(project(":extensions:wrapper:clients:java-client"))
@@ -34,13 +35,6 @@ dependencies {
 
 tasks.withType<Test> {
     maxParallelForks = 1
-    if (System.getenv("LOCALDEV") == null) {
-        retry {
-            maxRetries.set(2)
-            maxFailures.set(4)
-            failOnPassedAfterRetry.set(false)
-        }
-    }
 }
 
 val sovityEdcGroup: String by project
