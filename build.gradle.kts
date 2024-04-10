@@ -52,7 +52,14 @@ allprojects {
     }
 
     tasks.getByName<Test>("test") {
-        useJUnitPlatform()
+        val runningOnGithub = System.getenv("GITHUB_CI")?.isNotBlank() ?: false
+
+        useJUnitPlatform {
+            if (runningOnGithub) {
+                excludeTags = setOf("not-on-github")
+            }
+        }
+
         testLogging {
             events = setOf(TestLogEvent.SKIPPED, TestLogEvent.FAILED)
             exceptionFormat = TestExceptionFormat.FULL

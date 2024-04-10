@@ -82,7 +82,7 @@ public class UiAssetCreateRequest {
     private String geoLocation;
 
     @Schema(description = "Locations by NUTS standard which divides countries into administrative divisions", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private List<String> nutsLocation;
+    private List<String> nutsLocations;
 
     @Schema(description = "Data sample URLs", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private List<String> dataSampleUrls;
