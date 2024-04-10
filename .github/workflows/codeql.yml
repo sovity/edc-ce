@@ -31,7 +31,7 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-      
+
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
@@ -39,6 +39,10 @@ jobs:
 
     - name: Autobuild
       uses: github/codeql-action/autobuild@v3
+      with:
+        registry-url: ${{ env.REGISTRY_URL }}
+        registry-user: ${{ env.REGISTRY_USER }}
+        registry-password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3

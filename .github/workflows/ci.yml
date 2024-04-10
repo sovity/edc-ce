@@ -120,6 +120,10 @@ jobs:
           cache-dependency-path: extensions/wrapper/clients/typescript-client/package.json
       - name: "Gradle: Validate Gradle Wrapper"
         uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
+        with:
+          registry-url: ${{ env.REGISTRY_URL }}
+          registry-user: ${{ env.REGISTRY_USER }}
+          registry-password: ${{ secrets.GITHUB_TOKEN }}
       - name: "Gradle: Generate TS Code"
         uses: gradle/gradle-build-action@v2.10.0
         with:
