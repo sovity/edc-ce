@@ -20,7 +20,6 @@ import org.eclipse.edc.spi.types.domain.DataAddress;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ParameterizationCompatibilityUtils {
     public DataAddress enrich(DataAddress dataAddress, Map<String, String> transferProcessProperties) {

@@ -14,8 +14,6 @@
 package de.sovity.edc.extension.testbackendcontroller;
 
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.OPTIONS;
-import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -48,13 +46,6 @@ public class TestBackendController {
     @Produces(MediaType.APPLICATION_JSON)
     public String echoForDataSource(@QueryParam("data") String message) {
         return message;
-    }
-
-    @PATCH
-    @Path("/patch-data-source")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String patchDataSource() {
-        return "/patch-data-source";
     }
 
     @GET
