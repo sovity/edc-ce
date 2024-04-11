@@ -38,8 +38,8 @@ https://github.com/sovity/edc-ui/releases/tag/v3.1.0
 
 ### Deployment Migration Notes
 - A new LoggingHouse extension is now included in the EDC CE MDS variant, which means that additional properties must be set for it:
-    - ```EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "true"```
-    - ```EDC_LOGGINGHOUSE_EXTENSION_URL: #LoggingHouse URL of the MDS environment```
+  - ```EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "true"```
+  - ```EDC_LOGGINGHOUSE_EXTENSION_URL: #LoggingHouse URL of the MDS environment```
 
 [EDC UI Migration Notes](https://github.com/sovity/edc-ui/blob/v3.1.0/CHANGELOG.md#v310---2024-04-11)
 
