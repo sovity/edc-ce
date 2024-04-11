@@ -15,18 +15,42 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
+#### Patch Changes
+
+### Deployment Migration Notes
+
+
+## [7.4.0] - 2024-04-11
+
+### Overview
+
+MDS bugfixes.
+
+### EDC UI
+
+https://github.com/sovity/edc-ui/releases/tag/v3.1.0
+
+#### Minor Changes
+
 - Logginghouse-Client: Add logging-house-client extension 0.2.10
 - Migrated MDS fields to mobilityDCAT-AP
 - Added a workaround for the assets' parameterization using a fork of the Eclipse EDC 0.2.1
-
-#### Patch Changes
 
 ### Deployment Migration Notes
 - A new LoggingHouse extension is now included in the EDC CE MDS variant, which means that additional properties must be set for it:
   - ```EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "true"```
   - ```EDC_LOGGINGHOUSE_EXTENSION_URL: #LoggingHouse URL of the MDS environment```
 
+[EDC UI Migration Notes](https://github.com/sovity/edc-ui/blob/v3.1.0/CHANGELOG.md#v310---2024-04-11)
+
 #### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:7.4.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.4.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.4.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.1.0`
+
 
 ## [7.3.0] - 2024-03-28
 
