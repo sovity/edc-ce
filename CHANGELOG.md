@@ -13,9 +13,11 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Major Changes
 
-#### Minor Changes
-- Logginghouse-Client: Add logging-house-client extension 0.2.10
+- Added a workaround for the assets' parameterization using a fork of the Eclipse EDC 0.2.1
 
+#### Minor Changes
+
+- Logginghouse-Client: Add logging-house-client extension 0.2.10
 - Migrated MDS fields to mobilityDCAT-AP
 
 #### Patch Changes

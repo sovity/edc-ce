@@ -385,6 +385,7 @@ class DataSourceParameterizationTest {
             dataSinkProperties.put("https://w3id.org/edc/v0.0.1/ns/body", testCase.body);
             transferProcessProperties.put(rootKey + BODY, testCase.body);
             transferProcessProperties.put(rootKey + MEDIA_TYPE, testCase.mediaType);
+            transferProcessProperties.put(rootKey + "contentType", testCase.mediaType);
         }
 
         if (testCase.path != null) {
