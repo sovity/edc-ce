@@ -49,7 +49,7 @@ class TransferRequestBuilderTest {
         assertThat(workaroundProperties.get(ROOT_KEY + "pathSegments")).isEqualTo("my-endpoint");
         assertThat(workaroundProperties.get(ROOT_KEY + "method")).isEqualTo("METHOD");
         assertThat(workaroundProperties.get(ROOT_KEY + "queryParams")).isEqualTo("queryParams");
-        assertThat(workaroundProperties.get(ROOT_KEY + "contentType")).isEqualTo("mimetype");
+        assertThat(workaroundProperties.get(ROOT_KEY + "mediaType")).isEqualTo("mimetype");
         assertThat(workaroundProperties.get(ROOT_KEY + "body")).isEqualTo("[]");
     }
 
