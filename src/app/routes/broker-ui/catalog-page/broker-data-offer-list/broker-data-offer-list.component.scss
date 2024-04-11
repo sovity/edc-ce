@@ -31,7 +31,7 @@ tr.mat-row:last-child {
   border-bottom: 1px solid transparent;
 }
 
-.name-column {
+.title-column {
   width: 80%;
 }
 
@@ -48,7 +48,7 @@ tr.mat-row:last-child {
 }
 
 @media (min-width: 1350px) {
-  .name-column {
+  .title-column {
     width: 30%;
   }
 
@@ -73,7 +73,7 @@ tr.mat-row:last-child {
 }
 
 @media (min-width: 1800px) {
-  .name-column {
+  .title-column {
     width: 25%;
   }
 
@@ -83,7 +83,7 @@ tr.mat-row:last-child {
 }
 
 @media (min-width: 1980px) {
-  .name-column {
+  .title-column {
     width: 22%;
   }
 
@@ -93,7 +93,7 @@ tr.mat-row:last-child {
 }
 
 @media (min-width: 2150px) {
-  .name-column {
+  .title-column {
     width: 20%;
   }
 

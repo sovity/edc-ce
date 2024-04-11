@@ -22,6 +22,9 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
+- Broker UI: "Name" column renamed to "Title"
+- Fix status icon for data offers
+
 #### Deployment Migration Notes
 
 - New **optional** environment variable:
@@ -129,7 +132,6 @@ MDS feature release for Connector UI and Broker UI
 
 - Improved handling of asset keywords in cards
 - EE: Fixed issues around logout page
-- Fix status icon for data offers
 
 #### Deployment Migration Notes
 
