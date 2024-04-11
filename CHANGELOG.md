@@ -46,9 +46,9 @@ https://github.com/sovity/edc-ui/releases/tag/v3.1.0
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:7.4.0`
-    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.4.0`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.4.0`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:7.4.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.4.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.4.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.1.0`
 
 
