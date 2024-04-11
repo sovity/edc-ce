@@ -10,7 +10,7 @@ import {
   template: `
     <mat-icon
       *ngIf="onlineStatus"
-      class="absolute mat-icon-[16px] mt-[26px] ml-[26px]"
+      class="absolute mat-icon-[24px] mt-[26px] ml-[26px]"
       [ngClass]="onlineStatusColor"
       >{{ onlineStatusIcon }}</mat-icon
     >
