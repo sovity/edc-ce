@@ -18,7 +18,7 @@ jobs:
   build-gradle-project:
     name: Build Gradle Project
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     permissions:
       contents: read
       packages: write
@@ -124,6 +124,9 @@ jobs:
         uses: gradle/gradle-build-action@v2.10.0
         with:
           arguments: :extensions:wrapper:wrapper:build -x test
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "NPM: Dist Tag & Version"
         working-directory: ./extensions/wrapper/clients/typescript-client
         run: |

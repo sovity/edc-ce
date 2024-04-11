@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services;
 
 import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ParameterizationCompatibilityUtils;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateCustomTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateTransferRequest;
 import de.sovity.edc.utils.JsonUtils;
@@ -38,6 +39,7 @@ public class TransferRequestBuilder {
     private final ContractNegotiationUtils contractNegotiationUtils;
     private final EdcPropertyUtils edcPropertyUtils;
     private final TypeTransformerRegistry typeTransformerRegistry;
+    private final ParameterizationCompatibilityUtils parameterizationCompatibilityUtils;
 
     public TransferRequest buildCustomTransferRequest(
             InitiateTransferRequest request
@@ -45,7 +47,7 @@ public class TransferRequestBuilder {
         var contractId = request.getContractAgreementId();
         var agreement = contractAgreementUtils.findByIdOrThrow(contractId);
         var negotiation = contractNegotiationUtils.findByContractAgreementIdOrThrow(contractId);
-        var address = edcPropertyUtils.buildDataAddress(request.getDataSinkProperties());
+        var address = parameterizationCompatibilityUtils.enrich(edcPropertyUtils.buildDataAddress(request.getDataSinkProperties()), request.getTransferProcessProperties());
         assertIsConsuming(negotiation);
 
         return TransferRequest.Builder.newInstance()
