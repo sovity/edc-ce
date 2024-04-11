@@ -124,9 +124,9 @@ jobs:
         uses: gradle/gradle-build-action@v2.10.0
         with:
           arguments: :extensions:wrapper:wrapper:build -x test
-          registry-url: ${{ env.REGISTRY_URL }}
-          registry-user: ${{ env.REGISTRY_USER }}
-          registry-password: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "NPM: Dist Tag & Version"
         working-directory: ./extensions/wrapper/clients/typescript-client
         run: |
