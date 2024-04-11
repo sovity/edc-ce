@@ -1,3 +1,17 @@
+/*
+ *  Copyright (c) 2024 sovity GmbH
+ *
+ *  This program and the accompanying materials are made available under the
+ *  terms of the Apache License, Version 2.0 which is available at
+ *  https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
+ *  Contributors:
+ *       sovity GmbH - initial API and implementation
+ *
+ */
+
 package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ParameterizationCompatibilityUtils;
@@ -14,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -29,11 +44,11 @@ class TransferRequestBuilderTest {
                         "baseUrl", "http://example.com/segment0"
                 ),
                 Map.of(
-                        "https://w3id.org/edc/v0.0.1/ns/pathSegments", "my-endpoint",
-                        "https://w3id.org/edc/v0.0.1/ns/method", "METHOD",
-                        "https://w3id.org/edc/v0.0.1/ns/queryParams", "queryParams",
-                        "https://w3id.org/edc/v0.0.1/ns/contentType", "mimetype",
-                        "https://w3id.org/edc/v0.0.1/ns/body", "[]"
+                        EDC_NAMESPACE + "pathSegments", "my-endpoint",
+                        EDC_NAMESPACE + "method", "METHOD",
+                        EDC_NAMESPACE + "queryParams", "queryParams",
+                        EDC_NAMESPACE + "contentType", "mimetype",
+                        EDC_NAMESPACE + "body", "[]"
                 )
         );
 
@@ -44,6 +59,7 @@ class TransferRequestBuilderTest {
         // act
         val actual = transformer.buildCustomTransferRequest(request);
 
+        // assert
         val workaroundProperties = actual.getDataDestination().getProperties();
         assertThat(workaroundProperties).isNotEmpty();
         assertThat(workaroundProperties.get(ROOT_KEY + "pathSegments")).isEqualTo("my-endpoint");

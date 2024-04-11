@@ -17,6 +17,7 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
+import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.TransferHistoryEntry;
@@ -32,16 +33,20 @@ import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
+import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
+import jakarta.json.Json;
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.val;
 import okhttp3.HttpUrl;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
+import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -50,6 +55,7 @@ import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.mockserver.model.HttpStatusCode;
 
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
@@ -67,6 +73,7 @@ import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.RUNN
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Fail.fail;
 import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.BODY;
 import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.MEDIA_TYPE;
 import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.METHOD;
@@ -155,6 +162,118 @@ class DataSourceParameterizationTest {
                 .build();
     }
 
+    @Test
+    void canUseTheWorkaroundInCustomTransferRequest() {
+        // arrange
+        val testCase = new TestCase(
+                "",
+                HttpMethod.PATCH,
+                "[]",
+                "application/json",
+                "my-endpoint",
+                Map.of("filter", List.of("a", "b", "c"))
+        );
+        val received = new AtomicBoolean(false);
+        prepareDataTransferBackends(testCase, () -> received.set(true));
+
+        createPolicy();
+        val assetId = createAssetWithParamedMethod(testCase);
+        val contractDefinitionId = createContractDefinition();
+
+        // act
+        val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
+        val startNegotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
+        val negotiation = awaitNegotiationDone(startNegotiation.getContractNegotiationId());
+
+        var transferRequestJsonLd = Json.createObjectBuilder()
+                .add(
+                        Prop.Edc.DATA_DESTINATION,
+                        Json.createObjectBuilder(Map.of(
+                                "https://w3id.org/edc/v0.0.1/ns/type", "HttpData",
+                                "https://w3id.org/edc/v0.0.1/ns/baseUrl", destinationUrl,
+                                "https://w3id.org/edc/v0.0.1/ns/method", "PUT",
+                                "https://sovity.de/workaround/proxy/param/pathSegments", testCase.path,
+                                "https://sovity.de/workaround/proxy/param/method", testCase.method,
+                                "https://sovity.de/workaround/proxy/param/queryParams", "filter=a&filter=b&filter=c",
+                                "https://sovity.de/workaround/proxy/param/mediaType", testCase.mediaType,
+                                "https://sovity.de/workaround/proxy/param/body", testCase.body
+                        )).build()
+                )
+                .add(Prop.Edc.CTX + "transferType", Json.createObjectBuilder()
+                        .add(Prop.Edc.CTX + "contentType", "application/octet-stream")
+                        .add(Prop.Edc.CTX + "isFinite", true)
+                )
+                .add(Prop.Edc.CTX + "protocol", HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
+                .add(Prop.Edc.CTX + "managedResources", false)
+                .build();
+        var transferRequest = InitiateCustomTransferRequest.builder()
+                .contractAgreementId(negotiation.getContractAgreementId())
+                .transferProcessRequestJsonLd(JsonUtils.toJson(transferRequestJsonLd))
+                .build();
+
+        val transferId = consumerClient.uiApi().initiateCustomTransfer(transferRequest).getId();
+
+        awaitTransferCompletion(transferId);
+
+        // assert
+        TransferHistoryEntry actual = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
+        assertThat(actual.getAssetId()).isEqualTo(assetId);
+        assertThat(actual.getTransferProcessId()).isEqualTo(transferId);
+        assertThat(actual.getState().getSimplifiedState()).isEqualTo(OK);
+
+        assertThat(received.get()).isTrue();
+    }
+
+    @Test
+    void sendWithEdcManagementApi() {
+        // arrange
+        val testCase = new TestCase(
+                "",
+                HttpMethod.PATCH,
+                "[]",
+                "application/json",
+                "my-endpoint",
+                Map.of("filter", List.of("a", "b", "c"))
+        );
+        val received = new AtomicBoolean(false);
+        prepareDataTransferBackends(testCase, () -> received.set(true));
+
+        createPolicy();
+        val assetId = createAssetWithParamedMethod(testCase);
+        createContractDefinition();
+
+        // act
+        val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
+        val startNegotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
+        val negotiation = awaitNegotiationDone(startNegotiation.getContractNegotiationId());
+
+        val transferId = consumerConnector.initiateTransfer(
+                negotiation.getContractAgreementId(),
+                assetId,
+                URI.create("http://localhost:21003/api/dsp"),
+                Json.createObjectBuilder(Map.of(
+                        "https://w3id.org/edc/v0.0.1/ns/type", "HttpData",
+                        "https://w3id.org/edc/v0.0.1/ns/baseUrl", destinationUrl,
+                        "https://w3id.org/edc/v0.0.1/ns/method", "PUT",
+                        "https://sovity.de/workaround/proxy/param/pathSegments", testCase.path,
+                        "https://sovity.de/workaround/proxy/param/method", testCase.method,
+                        "https://sovity.de/workaround/proxy/param/queryParams", "filter=a&filter=b&filter=c",
+                        "https://sovity.de/workaround/proxy/param/mediaType", testCase.mediaType,
+                        "https://sovity.de/workaround/proxy/param/body", testCase.body
+                )).build()
+        );
+
+        awaitTransferCompletion(transferId);
+
+        // assert
+        TransferHistoryEntry actual = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
+        assertThat(actual.getAssetId()).isEqualTo(assetId);
+        assertThat(actual.getTransferProcessId()).isEqualTo(transferId);
+        assertThat(actual.getState().getSimplifiedState()).isEqualTo(OK);
+
+        assertThat(received.get()).isTrue();
+    }
+
     @ParameterizedTest(name = "{0}")
     @MethodSource("source")
     void canTransferParameterizedAsset(TestCase testCase) {
@@ -172,16 +291,7 @@ class DataSourceParameterizationTest {
         negotiation = awaitNegotiationDone(negotiation.getContractNegotiationId());
         val transferId = initiateTransferWithParameters(negotiation, testCase);
 
-        Awaitility.await().atMost(consumerConnector.timeout).until(
-                () -> consumerClient.uiApi()
-                        .getTransferHistoryPage()
-                        .getTransferEntries()
-                        .stream()
-                        .filter(it -> it.getTransferProcessId().equals(transferId))
-                        .findFirst()
-                        .map(it -> it.getState().getSimplifiedState()),
-                it -> it.orElse(RUNNING) != RUNNING
-        );
+        awaitTransferCompletion(transferId);
 
         // assert
         TransferHistoryEntry actual = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
@@ -262,7 +372,7 @@ class DataSourceParameterizationTest {
 
 
         mockServer.when(requestDefinition, once())
-                .respond(new HttpResponse()
+                .respond((it) -> new HttpResponse()
                         .withStatusCode(HttpStatusCode.OK_200.code())
                         .withBody(payload, StandardCharsets.UTF_8));
 
@@ -272,6 +382,12 @@ class DataSourceParameterizationTest {
                         onRequestReceived.run();
                     }
                     return new HttpResponse().withStatusCode(200);
+                });
+
+        mockServer.when(request("/.*"))
+                .respond((HttpRequest httpRequest) -> {
+                    fail("Unexpected network call");
+                    return new HttpResponse().withStatusCode(HttpStatusCode.GONE_410.code());
                 });
     }
 
@@ -283,12 +399,6 @@ class DataSourceParameterizationTest {
     }
 
     private String createAssetWithParamedMethod(TestCase testCase) {
-        /*
-            "https://w3id.org/edc/v0.0.1/ns/proxyPath": "true",
-            "https://w3id.org/edc/v0.0.1/ns/proxyBody": "true",
-            "https://w3id.org/edc/v0.0.1/ns/proxyMethod": "true",
-            "https://w3id.org/edc/v0.0.1/ns/proxyQueryParams": "true"
-         */
         val proxyProperties = new HashMap<>(Map.of(
                 Prop.Edc.TYPE, "HttpData",
                 Prop.Edc.BASE_URL, sourceUrl
@@ -315,7 +425,6 @@ class DataSourceParameterizationTest {
         return providerClient.uiApi().createAsset(asset).getId();
     }
 
-    // TODO: extract to common
     private void createPolicy() {
         var policyDefinition = PolicyDefinitionCreateRequest.builder()
                 .policyDefinitionId(DATA_OFFER_ID)
@@ -327,7 +436,7 @@ class DataSourceParameterizationTest {
         providerClient.uiApi().createPolicyDefinition(policyDefinition);
     }
 
-    private void createContractDefinition() {
+    private String createContractDefinition() {
         var contractDefinition = ContractDefinitionRequest.builder()
                 .contractDefinitionId(DATA_OFFER_ID)
                 .accessPolicyId(DATA_OFFER_ID)
@@ -342,7 +451,7 @@ class DataSourceParameterizationTest {
                         .build()))
                 .build();
 
-        providerClient.uiApi().createContractDefinition(contractDefinition);
+        return providerClient.uiApi().createContractDefinition(contractDefinition).getId();
     }
 
     private UiContractNegotiation initiateNegotiation(UiDataOffer dataOffer, UiContractOffer contractOffer) {
@@ -393,7 +502,6 @@ class DataSourceParameterizationTest {
         }
 
         if (!testCase.queryParams.isEmpty()) {
-            // TODO: test this encoding
             HttpUrl.Builder builder = new HttpUrl.Builder()
                     .scheme("http")
                     .host("example.com");
@@ -420,4 +528,18 @@ class DataSourceParameterizationTest {
     private String getProtocolEndpoint(ConnectorRemote connector) {
         return connector.getConfig().getProtocolEndpoint().getUri().toString();
     }
+
+    private void awaitTransferCompletion(String transferId) {
+        Awaitility.await().atMost(consumerConnector.timeout).until(
+                () -> consumerClient.uiApi()
+                        .getTransferHistoryPage()
+                        .getTransferEntries()
+                        .stream()
+                        .filter(it -> it.getTransferProcessId().equals(transferId))
+                        .findFirst()
+                        .map(it -> it.getState().getSimplifiedState()),
+                it -> it.orElse(RUNNING) != RUNNING
+        );
+    }
+
 }

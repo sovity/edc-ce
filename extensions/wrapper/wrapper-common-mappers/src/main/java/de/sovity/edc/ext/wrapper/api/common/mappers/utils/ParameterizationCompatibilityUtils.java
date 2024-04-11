@@ -21,27 +21,33 @@ import org.eclipse.edc.spi.types.domain.DataAddress;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
+
 public class ParameterizationCompatibilityUtils {
+    private static final String WORKAROUND = "https://sovity.de/workaround/proxy/param/";
+
+    private static final Map<String, String> MAPPINGS = Map.of(
+
+            EDC_NAMESPACE + "method", WORKAROUND + "method",
+            EDC_NAMESPACE + "pathSegments", WORKAROUND + "pathSegments",
+            EDC_NAMESPACE + "queryParams", WORKAROUND + "queryParams",
+            EDC_NAMESPACE + "body", WORKAROUND + "body",
+            EDC_NAMESPACE + "mediaType", WORKAROUND + "mediaType",
+            EDC_NAMESPACE + "contentType", WORKAROUND + "mediaType"
+    );
+
     public DataAddress enrich(DataAddress dataAddress, Map<String, String> transferProcessProperties) {
         if(transferProcessProperties == null) {
             return dataAddress;
         }
 
-        Map<String, String> mappings = Map.of(
-                "https://w3id.org/edc/v0.0.1/ns/method", "https://sovity.de/workaround/proxy/param/method",
-                "https://w3id.org/edc/v0.0.1/ns/pathSegments", "https://sovity.de/workaround/proxy/param/pathSegments",
-                "https://w3id.org/edc/v0.0.1/ns/queryParams", "https://sovity.de/workaround/proxy/param/queryParams",
-                "https://w3id.org/edc/v0.0.1/ns/body", "https://sovity.de/workaround/proxy/param/body",
-                "https://w3id.org/edc/v0.0.1/ns/mediaType", "https://sovity.de/workaround/proxy/param/mediaType",
-                "https://w3id.org/edc/v0.0.1/ns/contentType", "https://sovity.de/workaround/proxy/param/mediaType"
-        );
 
         HashMap<String, Object> combined = new HashMap<>(dataAddress.getProperties());
 
-        for (val e : transferProcessProperties.entrySet()) {
-            val mapping = mappings.get(e.getKey());
-            if (mapping != null) {
-                combined.put(mapping, e.getValue());
+        for (val property : transferProcessProperties.entrySet()) {
+            val workaroundProperty = MAPPINGS.get(property.getKey());
+            if (workaroundProperty != null) {
+                combined.put(workaroundProperty, property.getValue());
             }
         }
 
