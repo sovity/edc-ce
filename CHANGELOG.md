@@ -17,7 +17,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
-- Fixed data offer request errors
+- Fixed catalog fetching errors caused by MDS property name
 
 ### Deployment Migration Notes
 
