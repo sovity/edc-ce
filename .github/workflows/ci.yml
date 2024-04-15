@@ -1,4 +1,4 @@
-name: CI
+name: Test-CI-Performance
 
 on:
   push:
