@@ -37,6 +37,7 @@ jobs:
           git log -1 > extensions/last-commit-info/src/main/resources/jar-last-commit-info.txt
           echo $(date --utc +%FT%TZ) > extensions/last-commit-info/src/main/resources/jar-build-date.txt
       - name: "Gradle: Overwrite Artifact Version (Release Only)"
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
         run: |
           GRADLE_ARGS="-PsovityEdcExtensionsVersion=${GITHUB_REF#refs/tags/v}"
           echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
@@ -49,6 +50,7 @@ jobs:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "Gradle: Publish (Main & Release Only)"
         uses: gradle/gradle-build-action@v2.10.0
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
         with:
           arguments: publish ${{ env.GRADLE_ARGS }}
         env:
