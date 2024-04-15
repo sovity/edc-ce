@@ -1,12 +1,13 @@
-name: Test-CI-Performance
+name: CI
 
 on:
   push:
-    branches: [ test-ci-performance ]
+    branches: [ main ]
   release:
     types: [ published ]
   pull_request:
     branches: [ main ]
+
 env:
   REGISTRY_URL: ghcr.io
   REGISTRY_USER: ${{ github.actor }}
