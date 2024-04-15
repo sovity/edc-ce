@@ -1,6 +1,12 @@
 name: CI
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [ test-ci-performance ]
+  release:
+    types: [ published ]
+  pull_request:
+    branches: [ main ]
 env:
   REGISTRY_URL: ghcr.io
   REGISTRY_USER: ${{ github.actor }}
