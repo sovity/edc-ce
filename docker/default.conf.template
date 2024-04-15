@@ -1,6 +1,7 @@
 access_log ${NGINX_ACCESS_LOG};
 error_log ${NGINX_ERROR_LOG};
 disable_symlinks if_not_owner;
+server_tokens off;
 
 server {
     listen ${NGINX_BIND}:${NGINX_PORT};
