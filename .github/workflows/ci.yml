@@ -1,13 +1,6 @@
 name: CI
 
-on:
-  push:
-    branches: [ main ]
-  release:
-    types: [ published ]
-  pull_request:
-    branches: [ main ]
-
+on: workflow_dispatch
 env:
   REGISTRY_URL: ghcr.io
   REGISTRY_USER: ${{ github.actor }}
