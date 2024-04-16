@@ -42,7 +42,7 @@ jobs:
           GRADLE_ARGS="-PsovityEdcExtensionsVersion=${GITHUB_REF#refs/tags/v}"
           echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
       - name: "Gradle: Build"
-        uses: gradle/gradle-build-action@v2.10.0
+        uses: gradle/actions/setup-gradle@v3
         with:
           arguments: build ${{ env.GRADLE_ARGS }}
         env:
