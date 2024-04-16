@@ -1,19 +1,11 @@
-import {Injectable} from '@angular/core';
-import {addHook, sanitize} from 'isomorphic-dompurify';
+import {Injectable, SecurityContext} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Injectable({providedIn: 'root'})
 export class HtmlSanitizer {
-  constructor() {
-    addHook('afterSanitizeAttributes', function (node) {
-      // https://developer.chrome.com/docs/lighthouse/best-practices/external-anchors-use-rel-noopener/
-      if ('target' in node) {
-        node.setAttribute('target', '_blank');
-        node.setAttribute('rel', 'noopener noreferrer');
-      }
-    });
-  }
+  constructor(private readonly domSanitizer: DomSanitizer) {}
 
   sanitize(html: string) {
-    return sanitize(html);
+    return this.domSanitizer.sanitize(SecurityContext.HTML, html);
   }
 }

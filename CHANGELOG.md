@@ -18,6 +18,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
+- Set security headers in NGINX Docker image
+
 #### Patch
 
 #### Deployment Migration Notes
