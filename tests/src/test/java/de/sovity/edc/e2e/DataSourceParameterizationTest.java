@@ -65,6 +65,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
@@ -105,7 +106,6 @@ class DataSourceParameterizationTest {
 
     private EdcClient providerClient;
     private EdcClient consumerClient;
-    private static final String DATA_OFFER_ID = "my-data-offer-2023-11";
 
     private final int port = getFreePort();
     private final String sourcePath = "/source/some/path/";
@@ -115,8 +115,11 @@ class DataSourceParameterizationTest {
     // TODO: remove the test backend dependency?
     private ClientAndServer mockServer;
 
+    public static AtomicInteger dataOfferIndex = new AtomicInteger(0);
+
     record TestCase(
             String name,
+            String dataOfferId,
             String method,
             @Nullable String body,
             @Nullable String mediaType,
@@ -167,6 +170,7 @@ class DataSourceParameterizationTest {
         // arrange
         val testCase = new TestCase(
                 "",
+                "data-offer-" + dataOfferIndex.getAndIncrement(),
                 HttpMethod.PATCH,
                 "[]",
                 "application/json",
@@ -176,9 +180,9 @@ class DataSourceParameterizationTest {
         val received = new AtomicBoolean(false);
         prepareDataTransferBackends(testCase, () -> received.set(true));
 
-        createPolicy();
+        createPolicy(testCase);
         val assetId = createAssetWithParamedMethod(testCase);
-        val contractDefinitionId = createContractDefinition();
+        val contractDefinitionId = createContractDefinition(testCase);
 
         // act
         val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
@@ -229,6 +233,7 @@ class DataSourceParameterizationTest {
         // arrange
         val testCase = new TestCase(
                 "",
+                "data-offer-" + dataOfferIndex.getAndIncrement(),
                 HttpMethod.PATCH,
                 "[]",
                 "application/json",
@@ -238,9 +243,9 @@ class DataSourceParameterizationTest {
         val received = new AtomicBoolean(false);
         prepareDataTransferBackends(testCase, () -> received.set(true));
 
-        createPolicy();
+        createPolicy(testCase);
         val assetId = createAssetWithParamedMethod(testCase);
-        createContractDefinition();
+        createContractDefinition(testCase);
 
         // act
         val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
@@ -281,9 +286,9 @@ class DataSourceParameterizationTest {
         val received = new AtomicBoolean(false);
         prepareDataTransferBackends(testCase, () -> received.set(true));
 
-        createPolicy();
+        createPolicy(testCase);
         val assetId = createAssetWithParamedMethod(testCase);
-        createContractDefinition();
+        createContractDefinition(testCase);
 
         // act
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
@@ -328,6 +333,7 @@ class DataSourceParameterizationTest {
                                 queryParameters.stream().map(params ->
                                         new TestCase(
                                                 method + " body:" + body + " path:" + usePath + " params=" + params,
+                                                "data-offer-" + dataOfferIndex.getAndIncrement(),
                                                 method,
                                                 body,
                                                 body == null ? null : "application/json",
@@ -417,7 +423,7 @@ class DataSourceParameterizationTest {
         }
 
         var asset = UiAssetCreateRequest.builder()
-                .id(DATA_OFFER_ID)
+                .id(testCase.dataOfferId)
                 .title("My Data Offer")
                 .dataAddressProperties(proxyProperties)
                 .build();
@@ -425,9 +431,9 @@ class DataSourceParameterizationTest {
         return providerClient.uiApi().createAsset(asset).getId();
     }
 
-    private void createPolicy() {
+    private void createPolicy(TestCase testCase) {
         var policyDefinition = PolicyDefinitionCreateRequest.builder()
-                .policyDefinitionId(DATA_OFFER_ID)
+                .policyDefinitionId(testCase.dataOfferId)
                 .policy(UiPolicyCreateRequest.builder()
                         .constraints(List.of())
                         .build())
@@ -436,17 +442,17 @@ class DataSourceParameterizationTest {
         providerClient.uiApi().createPolicyDefinition(policyDefinition);
     }
 
-    private String createContractDefinition() {
+    private String createContractDefinition(TestCase testCase) {
         var contractDefinition = ContractDefinitionRequest.builder()
-                .contractDefinitionId(DATA_OFFER_ID)
-                .accessPolicyId(DATA_OFFER_ID)
-                .contractPolicyId(DATA_OFFER_ID)
+                .contractDefinitionId(testCase.dataOfferId)
+                .accessPolicyId(testCase.dataOfferId)
+                .contractPolicyId(testCase.dataOfferId)
                 .assetSelector(List.of(UiCriterion.builder()
                         .operandLeft(Prop.Edc.ID)
                         .operator(UiCriterionOperator.EQ)
                         .operandRight(UiCriterionLiteral.builder()
                                 .type(UiCriterionLiteralType.VALUE)
-                                .value(DATA_OFFER_ID)
+                                .value(testCase.dataOfferId)
                                 .build())
                         .build()))
                 .build();

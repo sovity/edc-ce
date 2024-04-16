@@ -79,6 +79,7 @@ public class UiAssetMapper {
 
         var mobilityTheme = JsonLdUtils.object(properties, Prop.MobilityDcatAp.MOBILITY_THEME);
         uiAsset.setDataCategory(JsonLdUtils.string(mobilityTheme, Prop.MobilityDcatAp.DataCategoryProps.DATA_CATEGORY));
+        uiAsset.setDataCategory(JsonLdUtils.string(mobilityTheme, Prop.MobilityDcatAp.DataCategoryProps.DATA_CATEGORY));
         uiAsset.setDataSubcategory(JsonLdUtils.string(mobilityTheme, Prop.MobilityDcatAp.DataCategoryProps.DATA_SUBCATEGORY));
 
         var creator = JsonLdUtils.object(properties, Prop.Dcterms.CREATOR);
