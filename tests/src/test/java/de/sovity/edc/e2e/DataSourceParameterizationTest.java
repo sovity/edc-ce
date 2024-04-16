@@ -279,35 +279,43 @@ class DataSourceParameterizationTest {
         assertThat(received.get()).isTrue();
     }
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("source")
-    void canTransferParameterizedAsset(TestCase testCase) {
-        // arrange
-        val received = new AtomicBoolean(false);
-        prepareDataTransferBackends(testCase, () -> received.set(true));
+    @Test
+    void canTransferParameterizedAsset() {
+        source().forEach(testCase -> {
+            // arrange
+            val received = new AtomicBoolean(false);
+            prepareDataTransferBackends(testCase, () -> received.set(true));
 
-        createPolicy(testCase);
-        val assetId = createAssetWithParamedMethod(testCase);
-        createContractDefinition(testCase);
+            createPolicy(testCase);
+            createAssetWithParamedMethod(testCase);
+            createContractDefinition(testCase);
 
-        // act
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
-        var negotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
-        negotiation = awaitNegotiationDone(negotiation.getContractNegotiationId());
-        val transferId = initiateTransferWithParameters(negotiation, testCase);
+            // act
+            val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
+            val dataOffer = dataOffers.stream().filter(it -> it.getAsset().getAssetId().equals(testCase.dataOfferId)).findFirst().get();
+            val negotiationInit = initiateNegotiation(dataOffer, dataOffer.getContractOffers().get(0));
+            val negotiation = awaitNegotiationDone(negotiationInit.getContractNegotiationId());
+            val transferId = initiateTransferWithParameters(negotiation, testCase);
 
-        awaitTransferCompletion(transferId);
+            awaitTransferCompletion(transferId);
 
-        // assert
-        TransferHistoryEntry actual = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
-        assertThat(actual.getAssetId()).isEqualTo(assetId);
-        assertThat(actual.getTransferProcessId()).isEqualTo(transferId);
-        assertThat(actual.getState().getSimplifiedState()).isEqualTo(OK);
+            // assert
+            TransferHistoryEntry actual = consumerClient.uiApi()
+                    .getTransferHistoryPage()
+                    .getTransferEntries()
+                    .stream()
+                    .filter(it -> it.getAssetId().equals(testCase.dataOfferId))
+                    .findFirst()
+                    .get();
+            assertThat(actual.getAssetId()).isEqualTo(testCase.dataOfferId);
+            assertThat(actual.getTransferProcessId()).isEqualTo(transferId);
+            assertThat(actual.getState().getSimplifiedState()).isEqualTo(OK);
 
-        assertThat(received.get()).isTrue();
+            assertThat(received.get()).isTrue();
+        });
     }
 
-    private static Stream<TestCase> source() {
+    private Stream<TestCase> source() {
         val httpMethods = List.of(
                 HttpMethod.POST,
                 // HttpMethod.HEAD,
@@ -361,6 +369,7 @@ class DataSourceParameterizationTest {
     @NotNull
     private void prepareDataTransferBackends(TestCase testCase, Runnable onRequestReceived) {
         String payload = generateRandomPayload();
+        mockServer.reset();
 
         val requestDefinition = request(sourcePath).withMethod(testCase.method);
         if (testCase.body != null) {
