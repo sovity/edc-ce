@@ -17,11 +17,33 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
+### Deployment Migration Notes
+
+## [7.4.1] - 2024-04-17
+
+### Overview
+
+MDS Bugfix Release
+
+### EDC Extensions
+
+#### Patch Changes
+
+- Fixed catalog fetching errors
+- Docs: Updated image to explain data-transfer-methods
 - Test Backend: Support parallel test by optional "testId" path parameter
-- Fixed catalog fetching errors caused by MDS property name
-- Documentation: Update image to explain data-transfer-methods.
 
 ### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:7.4.1`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.4.1`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.4.1`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.1.0`
 
 ## [7.4.0] - 2024-04-11
 
