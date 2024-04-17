@@ -48,15 +48,19 @@ public class DspDataOfferBuilder {
                 .map(this::buildContractOffer)
                 .toList();
 
+        var distributions = JsonLdUtils.listOfObjects(dataset, Prop.Dcat.DISTRIBUTION_AS_USED_BY_CORE_EDC);
+
         var assetProperties = Json.createObjectBuilder(dataset)
                 .remove(Prop.TYPE)
                 .remove(Prop.Odrl.HAS_POLICY)
+                .remove(Prop.Dcat.DISTRIBUTION_AS_USED_BY_CORE_EDC)
                 .build();
 
 
         return new DspDataOffer(
                 assetProperties,
-                contractOffers
+                contractOffers,
+                distributions
         );
     }
 
