@@ -19,6 +19,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 - Fixed catalog fetching errors caused by MDS property name
 - Test Backend: Support parallel test by optional "testId" path parameter
+- Documentation: Update image to explain data-transfer-methods.
 
 ### Deployment Migration Notes
 
