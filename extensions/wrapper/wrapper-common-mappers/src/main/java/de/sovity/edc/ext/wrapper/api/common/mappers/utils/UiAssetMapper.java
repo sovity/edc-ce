@@ -58,9 +58,9 @@ public class UiAssetMapper {
         uiAsset.setDataSampleUrls(JsonLdUtils.stringList(distribution, Prop.Adms.SAMPLE));
         var rights = JsonLdUtils.object(distribution, Prop.Dcterms.RIGHTS);
         uiAsset.setConditionsForUse(JsonLdUtils.string(rights, Prop.Rdfs.LABEL));
-        var dataModel = JsonLdUtils.object(distribution, Prop.MobilityDcatAp.DATA_MODEL);
-        uiAsset.setDataModel(JsonLdUtils.string(dataModel, Prop.ID));
-        var referenceFiles = JsonLdUtils.object(dataModel, Prop.MobilityDcatAp.SCHEMA);
+        var mobilityDataStandard = JsonLdUtils.object(distribution, Prop.MobilityDcatAp.MOBILITY_DATA_STANDARD);
+        uiAsset.setDataModel(JsonLdUtils.string(mobilityDataStandard, Prop.MobilityDcatAp.DATA_MODEL));
+        var referenceFiles = JsonLdUtils.object(mobilityDataStandard, Prop.MobilityDcatAp.SCHEMA);
         uiAsset.setReferenceFileUrls(JsonLdUtils.stringList(referenceFiles, Prop.Dcat.DOWNLOAD_URL));
         uiAsset.setReferenceFilesDescription(JsonLdUtils.string(referenceFiles, Prop.Rdfs.LITERAL));
 
@@ -358,7 +358,7 @@ public class UiAssetMapper {
             return distribution;
         }
         var dataModel = Json.createObjectBuilder();
-        addNonNull(dataModel, Prop.ID, uiAssetCreateRequest.getDataModel());
+        addNonNull(dataModel, Prop.MobilityDcatAp.DATA_MODEL, uiAssetCreateRequest.getDataModel());
 
         if (hasReferenceFilesFields) {
             var referenceFiles = Json.createObjectBuilder();
@@ -366,7 +366,7 @@ public class UiAssetMapper {
             addNonNull(referenceFiles, Prop.Rdfs.LITERAL, uiAssetCreateRequest.getReferenceFilesDescription());
             dataModel.add(Prop.MobilityDcatAp.SCHEMA, referenceFiles);
         }
-        distribution.add(Prop.MobilityDcatAp.DATA_MODEL, dataModel);
+        distribution.add(Prop.MobilityDcatAp.MOBILITY_DATA_STANDARD, dataModel);
         return distribution;
     }
 }

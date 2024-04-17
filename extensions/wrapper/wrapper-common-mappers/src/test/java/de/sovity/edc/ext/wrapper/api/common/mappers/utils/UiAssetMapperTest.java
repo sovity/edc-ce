@@ -145,9 +145,9 @@ class UiAssetMapperTest {
         assertThat(properties.size()).isEqualTo(3);
         var distribution = properties.getJsonObject(Prop.Dcat.DISTRIBUTION);
         assertThat(distribution.size()).isEqualTo(1);
-        var dataModel = distribution.getJsonObject(Prop.MobilityDcatAp.DATA_MODEL);
-        assertThat(dataModel.size()).isEqualTo(1);
-        assertThat(dataModel.getString(Prop.ID)).isEqualTo("B");
+        var mobilityDataStandard = distribution.getJsonObject(Prop.MobilityDcatAp.MOBILITY_DATA_STANDARD);
+        assertThat(mobilityDataStandard.size()).isEqualTo(1);
+        assertThat(mobilityDataStandard.getString(Prop.MobilityDcatAp.DATA_MODEL)).isEqualTo("B");
     }
 
     @Test
@@ -167,9 +167,9 @@ class UiAssetMapperTest {
         assertThat(properties.size()).isEqualTo(3);
         var distribution = properties.getJsonObject(Prop.Dcat.DISTRIBUTION);
         assertThat(distribution.size()).isEqualTo(1);
-        var dataModel = distribution.getJsonObject(Prop.MobilityDcatAp.DATA_MODEL);
-        assertThat(dataModel.size()).isEqualTo(1);
-        var referenceFiles = dataModel.getJsonObject(Prop.MobilityDcatAp.SCHEMA);
+        var mobilityDataStandard = distribution.getJsonObject(Prop.MobilityDcatAp.MOBILITY_DATA_STANDARD);
+        assertThat(mobilityDataStandard.size()).isEqualTo(1);
+        var referenceFiles = mobilityDataStandard.getJsonObject(Prop.MobilityDcatAp.SCHEMA);
         assertThat(referenceFiles.size()).isEqualTo(1);
         assertThat(referenceFiles.getString(Prop.Rdfs.LITERAL)).isEqualTo("B");
     }
