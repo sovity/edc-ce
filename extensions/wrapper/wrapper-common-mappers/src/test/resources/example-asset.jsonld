@@ -15,7 +15,7 @@
         "@type": "http://www.w3.org/ns/dcat#Distribution",
         "http://www.w3.org/ns/dcat#mediaType": "application/json",
         "https://w3id.org/mobilitydcat-ap/mobilityDataStandard": {
-          "@id": "my-data-model-001",
+          "https://w3id.org/mobilitydcat-ap/mobility-data-standard": "my-data-model-001",
           "https://w3id.org/mobilitydcat-ap/schema": {
             "http://www.w3.org/ns/dcat#downloadURL": [
               "my-reference-files1",
