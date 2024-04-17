@@ -16,29 +16,31 @@ package de.sovity.edc.extension.testbackendcontroller;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.UriInfo;
 
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Path("/test-backend")
 public class TestBackendController {
-    private final AtomicReference<String> stringValue = new AtomicReference<>("");
+
+    private final ConcurrentHashMap<String, String> dataSink = new ConcurrentHashMap<>();
 
     @GET
     @Path("/data-sink/spy")
     @Produces(MediaType.APPLICATION_JSON)
     public String getDataSinkValue() {
-        return stringValue.get();
+        return getDataSinkValue("default");
     }
 
     @PUT
     @Path("/data-sink")
     public void setDataSinkValue(String incomingData) {
-        stringValue.set(incomingData);
+        setDataSinkValue("default", incomingData);
     }
 
     @GET
@@ -53,5 +55,18 @@ public class TestBackendController {
     @Produces(MediaType.APPLICATION_JSON)
     public String echoDataSourceQueryParams(@Context UriInfo uriInfo) {
         return uriInfo.getRequestUri().getQuery();
+    }
+
+    @GET
+    @Path("/{testId}/data-sink/spy")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getDataSinkValue(@PathParam("testId") String testId) {
+        return dataSink.getOrDefault(testId, "");
+    }
+
+    @PUT
+    @Path("/{testId}/data-sink")
+    public void setDataSinkValue(@PathParam("testId") String testId, String incomingData) {
+        dataSink.put(testId, incomingData);
     }
 }
