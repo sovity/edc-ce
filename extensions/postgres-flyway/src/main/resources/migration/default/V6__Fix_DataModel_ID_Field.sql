@@ -16,21 +16,45 @@ create
     or replace function pg_temp.migrate_distribution(distribution jsonb) returns jsonb as
 $$
 declare
-    id  text;
-    tmp jsonb;
+    data_standard    jsonb;
+    data_standard_path text[];
 begin
-    id := distribution -> 'https://w3id.org/mobilitydcat-ap/mobilityDataStandard' ->> '@id';
-    tmp := distribution #- '{https://w3id.org/mobilitydcat-ap/mobilityDataStandard,@id}';
-    tmp := case
-               when id = '' or id is null then tmp
-               else jsonb_set(tmp,
-                              '{https://w3id.org/mobilitydcat-ap/mobilityDataStandard,https://w3id.org/mobilitydcat-ap/mobility-data-standard}',
-                              to_jsonb(id),
-                              true)
-        end;
-    return tmp;
+    data_standard_path := '{https://w3id.org/mobilitydcat-ap/mobilityDataStandard}';
+    data_standard := distribution #> data_standard_path;
+
+    if jsonb_typeof(data_standard) = 'object' then
+        data_standard := pg_temp.migrate_mobility_data_standard(data_standard);
+    elsif jsonb_typeof(data_standard) = 'array' then
+        data_standard := (select jsonb_agg(pg_temp.migrate_mobility_data_standard(it))
+                          from jsonb_array_elements(data_standard) as it);
+    end if;
+
+    return jsonb_set(distribution, data_standard_path, data_standard, true);
 end;
 $$ language plpgsql;
+
+
+create
+    or replace function pg_temp.migrate_mobility_data_standard(data_standard jsonb) returns jsonb as $$
+begin
+    return pg_temp.jsonb_rename_key(data_standard, '{@id}', '{https://w3id.org/mobilitydcat-ap/mobility-data-standard}');
+end;
+$$ language plpgsql;
+
+
+create
+    or replace function pg_temp.jsonb_rename_key(obj jsonb, path text[], new_path text[]) returns jsonb as
+$$
+declare
+    value jsonb;
+begin
+    value := obj #> path;
+    obj := obj #- path;
+    obj := jsonb_set(obj, new_path, value, true);
+    return obj;
+end;
+$$ language plpgsql;
+
 
 -- for an unknown reason setting a Data Model in 7.4.0 resulted in the @id field being wrapped in an array
 -- because of that we migrate the @id to a normal field
