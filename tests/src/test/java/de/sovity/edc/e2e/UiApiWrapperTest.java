@@ -341,7 +341,7 @@ class UiApiWrapperTest {
                         {
                             "http://purl.org/dc/terms/title": "The real title",
                             "http://purl.org/dc/terms/spatial": {
-                              "http://purl.org/dc/terms#identifier": ["a", "b", "c"]
+                              "http://purl.org/dc/terms/identifier": ["a", "b", "c"]
                             },
                             "http://example.com/an-actual-custom-property": "custom value"
                         }
