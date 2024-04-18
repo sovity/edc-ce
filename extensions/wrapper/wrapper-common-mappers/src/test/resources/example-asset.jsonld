@@ -56,7 +56,7 @@
     "http://purl.org/dc/terms/rightsHolder": "my-sovereign",
     "http://purl.org/dc/terms/spatial": {
         "http://www.w3.org/2004/02/skos/core#prefLabel": "my-geolocation",
-        "http://purl.org/dc/terms/identifier": [
+        "http://purl.org/dc/terms#identifier": [
           "my-nuts-location1",
           "my-nuts-location2"
         ]
