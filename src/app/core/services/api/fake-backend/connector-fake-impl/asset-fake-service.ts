@@ -91,7 +91,7 @@ function createAssetMetadata(
     privateCustomJsonAsString: request.privateCustomJsonAsString,
     sovereignLegalName: request.sovereignLegalName,
     geoLocation: request.geoLocation,
-    nutsLocation: request.nutsLocation,
+    nutsLocations: request.nutsLocations,
     dataSampleUrls: request.dataSampleUrls,
     referenceFileUrls: request.referenceFileUrls,
     referenceFilesDescription: request.referenceFilesDescription,

@@ -94,7 +94,7 @@ export class AssetCreateRequestBuilder {
       transportMode,
       sovereignLegalName,
       geoLocation,
-      nutsLocation: nutsLocations,
+      nutsLocations,
       dataSampleUrls,
       referenceFileUrls,
       referenceFilesDescription,

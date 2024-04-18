@@ -78,7 +78,7 @@ export class AssetEditDialogFormMapper {
         geoReferenceMethod: asset.geoReferenceMethod,
         sovereignLegalName: asset.sovereignLegalName,
         geoLocation: asset.geoLocation,
-        nutsLocations: asset.nutsLocation,
+        nutsLocations: asset.nutsLocations,
         dataSampleUrls: asset.dataSampleUrls,
         referenceFileUrls: asset.referenceFileUrls,
         referenceFilesDescription: asset.referenceFilesDescription,

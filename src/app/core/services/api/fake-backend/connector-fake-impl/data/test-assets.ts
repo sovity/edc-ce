@@ -124,7 +124,7 @@ This is a short description text that should be fully rendered without being **c
     transportMode: 'Rail',
     sovereignLegalName: 'Data Owning Company GmbH',
     geoLocation: '40.741895,-73.989308',
-    nutsLocation: ['DE', 'DE9', 'DE92', 'DE929'],
+    nutsLocations: ['DE', 'DE9', 'DE92', 'DE929'],
     dataSampleUrls: [
       'https://teamabc.departmentxyz.sample/a',
       'https://teamabc.departmentxyz.sample/b',

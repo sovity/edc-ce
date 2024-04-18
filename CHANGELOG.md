@@ -18,11 +18,29 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
-- Set security headers in NGINX Docker image
-
 #### Patch
 
 #### Deployment Migration Notes
+
+## [v3.2.0] - 2024-04-18
+
+MDS Bufix Release
+
+### Overview
+
+### Detailed Changes
+
+#### Minor
+
+- Security headers added to NGINX Docker Image
+
+#### Patch
+
+- Fix `nutsLocations` field
+
+#### Deployment Migration Notes
+
+_No special deployment migration steps required_
 
 ## [v3.1.0] - 2024-04-11
 

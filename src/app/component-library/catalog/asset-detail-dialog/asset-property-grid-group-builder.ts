@@ -192,8 +192,8 @@ export class AssetPropertyGridGroupBuilder {
         ...this.propertyGridUtils.guessValue(asset.geoLocation),
       });
     }
-    if (asset.nutsLocation?.length) {
-      fields.push(this.buildNutsLocationsField(asset.nutsLocation));
+    if (asset.nutsLocations?.length) {
+      fields.push(this.buildNutsLocationsField(asset.nutsLocations));
     }
     if (asset.sovereignLegalName) {
       fields.push({
