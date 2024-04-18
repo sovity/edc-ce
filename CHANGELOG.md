@@ -35,6 +35,9 @@ https://github.com/sovity/edc-ui/releases/tag/v3.2.1
 
 - Add data migration for data model MDS field
 - Fix `nutsLocations` field
+- Fixed catalog fetching errors
+- Docs: Updated image to explain data-transfer-methods
+- Test Backend: Support parallel test by optional "testId" path parameter
 
 ### Deployment Migration Notes
 
@@ -47,33 +50,6 @@ Contains DB migrations, DB backups advised.
     - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.4.2`
     - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.4.2`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.1`
-
-
-## [7.4.1] - 2024-04-17
-
-### Overview
-
-MDS Bugfix Release
-
-### EDC Extensions
-
-#### Patch Changes
-
-- Fixed catalog fetching errors
-- Docs: Updated image to explain data-transfer-methods
-- Test Backend: Support parallel test by optional "testId" path parameter
-
-### Deployment Migration Notes
-
-_No special deployment migration steps required_
-
-#### Compatible Versions
-
-- Connector Backend Docker Images:
-  - Dev EDC: `ghcr.io/sovity/edc-dev:7.4.1`
-  - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.4.1`
-  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.4.1`
-- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.1.0`
 
 ## [7.4.0] - 2024-04-11
 
