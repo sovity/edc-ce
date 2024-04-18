@@ -51,21 +51,12 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": true,
-                  "inlineCritical": false
-                },
-                "fonts": true
-              },
               "outputHashing": "all",
               "sourceMap": {
                 "hidden": false,
                 "scripts": true,
                 "styles": true
-              },
-              "subresourceIntegrity": true
+              }
             },
             "development": {
               "buildOptimizer": false,

@@ -22,6 +22,22 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Deployment Migration Notes
 
+## [v3.2.1] - 2024-04-18
+
+### Overview
+
+NGINX Config Fix
+
+### Detailed Changes
+
+#### Patch
+
+- Revert NGINX header changes because they disallow E2E testing of edc-ce
+
+#### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
 ## [v3.2.0] - 2024-04-18
 
 MDS Bufix Release

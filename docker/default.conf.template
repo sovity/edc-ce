@@ -10,16 +10,12 @@ server {
     root /usr/share/nginx/html;
 
     location / {
-        add_header Cache-Control "public, immutable, max-age=604800";
-        include headers.include;
-
         index do-not-use-me.html;
         try_files $uri @index;
     }
 
     location @index {
-        add_header Cache-Control "no-cache";
-        include headers.include;
+        add_header Cache-Control no-cache;
         expires 0;
         index index.html;
         try_files /index.html =404;
