@@ -16,7 +16,7 @@ create
     or replace function pg_temp.migrate_distribution(distribution jsonb) returns jsonb as
 $$
 declare
-    data_standard    jsonb;
+    data_standard      jsonb;
     data_standard_path text[];
 begin
     data_standard_path := '{https://w3id.org/mobilitydcat-ap/mobilityDataStandard}';
@@ -35,9 +35,11 @@ $$ language plpgsql;
 
 
 create
-    or replace function pg_temp.migrate_mobility_data_standard(data_standard jsonb) returns jsonb as $$
+    or replace function pg_temp.migrate_mobility_data_standard(data_standard jsonb) returns jsonb as
+$$
 begin
-    return pg_temp.jsonb_rename_key(data_standard, '{@id}', '{https://w3id.org/mobilitydcat-ap/mobility-data-standard}');
+    return pg_temp.jsonb_rename_key(data_standard, '{@id}',
+                                    '{https://w3id.org/mobilitydcat-ap/mobility-data-standard}');
 end;
 $$ language plpgsql;
 
