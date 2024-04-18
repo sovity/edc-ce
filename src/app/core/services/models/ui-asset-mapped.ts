@@ -23,7 +23,10 @@ export type UiAssetMapped = Omit<
   transportMode: TransportModeSelectItem | null;
 
   // Unhandled Additional Properties
-  mergedAdditionalProperties: AdditionalAssetProperty[];
+  customJsonProperties: AdditionalAssetProperty[];
+  customJsonLdProperties: AdditionalAssetProperty[];
+  privateCustomJsonProperties: AdditionalAssetProperty[];
+  privateCustomJsonLdProperties: AdditionalAssetProperty[];
 };
 
 export interface AdditionalAssetProperty {

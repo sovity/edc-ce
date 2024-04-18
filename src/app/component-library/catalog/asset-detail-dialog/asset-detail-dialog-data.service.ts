@@ -18,7 +18,9 @@ export class AssetDetailDialogDataService {
   assetDetailsReadonly(asset: UiAssetMapped): AssetDetailDialogData {
     const propertyGridGroups = [
       this.assetPropertyGridGroupBuilder.buildAssetPropertiesGroup(asset, null),
-      this.assetPropertyGridGroupBuilder.buildAdditionalPropertiesGroup(asset),
+      ...this.assetPropertyGridGroupBuilder.buildAdditionalPropertiesGroups(
+        asset,
+      ),
     ].filter((it) => it.properties.length);
 
     return {
@@ -44,7 +46,9 @@ export class AssetDetailDialogDataService {
     const asset = dataOffer.asset;
     const propertyGridGroups = [
       this.assetPropertyGridGroupBuilder.buildAssetPropertiesGroup(asset, null),
-      this.assetPropertyGridGroupBuilder.buildAdditionalPropertiesGroup(asset),
+      ...this.assetPropertyGridGroupBuilder.buildAdditionalPropertiesGroups(
+        asset,
+      ),
     ].filter((it) => it.properties.length);
 
     return {
@@ -72,7 +76,9 @@ export class AssetDetailDialogDataService {
         asset,
         'Asset',
       ),
-      this.assetPropertyGridGroupBuilder.buildAdditionalPropertiesGroup(asset),
+      ...this.assetPropertyGridGroupBuilder.buildAdditionalPropertiesGroups(
+        asset,
+      ),
     ].filter((it) => it.properties.length);
 
     return {
@@ -94,7 +100,9 @@ export class AssetDetailDialogDataService {
         asset,
         'Asset',
       ),
-      this.assetPropertyGridGroupBuilder.buildAdditionalPropertiesGroup(asset),
+      ...this.assetPropertyGridGroupBuilder.buildAdditionalPropertiesGroups(
+        asset,
+      ),
       ...dataOffer.contractOffers.map((contractOffer, i) =>
         this.assetPropertyGridGroupBuilder.buildBrokerContractOfferGroup(
           asset,

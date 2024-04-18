@@ -42,7 +42,15 @@ export class AssetBuilder {
       dataCategory: this.getDataCategoryItem(dataCategory),
       dataSubcategory: this.getDataSubcategoryItem(dataSubcategory),
       transportMode: this.getTransportModeItem(transportMode),
-      mergedAdditionalProperties: this.buildAdditionalProperties(asset),
+      customJsonProperties: this.buildAdditionalProperties(customJsonAsString),
+      customJsonLdProperties:
+        this.buildAdditionalProperties(customJsonLdAsString),
+      privateCustomJsonProperties: this.buildAdditionalProperties(
+        privateCustomJsonAsString,
+      ),
+      privateCustomJsonLdProperties: this.buildAdditionalProperties(
+        privateCustomJsonLdAsString,
+      ),
     };
   }
 
@@ -78,35 +86,33 @@ export class AssetBuilder {
       : this.languageSelectItemService.findById(language);
   }
 
-  private buildAdditionalProperties(asset: UiAsset): AdditionalAssetProperty[] {
-    const result: AdditionalAssetProperty[] = [];
-    type AssetKey =
-      | 'customJsonAsString'
-      | 'customJsonLdAsString'
-      | 'privateCustomJsonAsString'
-      | 'privateCustomJsonLdAsString';
+  private buildAdditionalProperties(
+    json: string | undefined,
+  ): AdditionalAssetProperty[] {
+    const obj = this.tryParseJsonObj(json || '{}');
+    return Object.entries(obj).map(
+      ([key, value]): AdditionalAssetProperty => ({
+        key: `${key}`,
+        value:
+          typeof value === 'object'
+            ? JSON.stringify(value, null, 2)
+            : `${value}`,
+      }),
+    );
+  }
 
-    const propertiesToConvert: AssetKey[] = [
-      'customJsonAsString',
-      'customJsonLdAsString',
-      'privateCustomJsonAsString',
-      'privateCustomJsonLdAsString',
-    ];
+  private tryParseJsonObj(json: string): any {
+    const bad = {'Conversion Failure': `Bad JSON: ${json}`};
 
-    for (let propName of propertiesToConvert) {
-      if (!asset[propName]) {
-        continue;
+    try {
+      const parsed = JSON.parse(json);
+      if (parsed == null) {
+        return {};
+      } else if (typeof parsed === 'object') {
+        return parsed;
       }
+    } catch (e) {}
 
-      try {
-        const propJson = JSON.parse(asset[propName]!);
-        for (let key in propJson) {
-          result.push({key: key, value: propJson[key]});
-        }
-      } catch (e) {
-        console.error('Error parsing additional properties', e);
-      }
-    }
-    return result;
+    return bad;
   }
 }

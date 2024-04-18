@@ -87,8 +87,6 @@ function createAssetMetadata(
     dataModel: request.dataModel,
     geoReferenceMethod: request.geoReferenceMethod,
     transportMode: request.transportMode,
-    customJsonAsString: request.customJsonAsString,
-    privateCustomJsonAsString: request.privateCustomJsonAsString,
     sovereignLegalName: request.sovereignLegalName,
     geoLocation: request.geoLocation,
     nutsLocations: request.nutsLocations,
@@ -99,6 +97,10 @@ function createAssetMetadata(
     dataUpdateFrequency: request.dataUpdateFrequency,
     temporalCoverageFrom: request.temporalCoverageFrom,
     temporalCoverageToInclusive: request.temporalCoverageToInclusive,
+    customJsonAsString: '{}',
+    customJsonLdAsString: '{}',
+    privateCustomJsonAsString: '{}',
+    privateCustomJsonLdAsString: '{}',
   };
 }
 

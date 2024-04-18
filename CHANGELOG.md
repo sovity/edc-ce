@@ -22,6 +22,21 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Deployment Migration Notes
 
+## [v3.2.2] - 2024-04-18
+
+### Overview
+
+Bugfix for custom properties
+
+### Detailed Changes
+
+#### Patch
+
+- Fixed an issue causing pages using asset cards to crash if object custom
+  properties were used.
+
+#### Deployment Migration Notes
+
 ## [v3.2.1] - 2024-04-18
 
 ### Overview

@@ -124,28 +124,54 @@ export class AssetPropertyGridGroupBuilder {
     return fields;
   }
 
-  buildAdditionalPropertiesGroup(asset: UiAssetMapped): PropertyGridGroup {
-    const fields: PropertyGridField[] = [];
-
+  buildAdditionalPropertiesGroups(asset: UiAssetMapped): PropertyGridGroup[] {
+    const additionalProperties: PropertyGridField[] = [];
     if (!this.activeFeatureSet.hasMdsFields()) {
-      fields.push(...this.buildMdsProperties(asset));
+      additionalProperties.push(...this.buildMdsProperties(asset));
     }
 
-    fields.push(
-      ...asset.mergedAdditionalProperties.map((prop) => {
+    const customProperties: PropertyGridField[] = [
+      asset.customJsonProperties,
+      asset.customJsonLdProperties,
+    ]
+      .flat()
+      .map((prop) => {
         return {
           icon: 'category ',
           label: prop.key,
           labelTitle: prop.key,
           ...this.propertyGridUtils.guessValue(prop.value),
         };
-      }),
-    );
+      });
 
-    return {
-      groupLabel: 'Additional Properties',
-      properties: fields,
-    };
+    const privateCustomProperties: PropertyGridField[] = [
+      asset.privateCustomJsonProperties,
+      asset.privateCustomJsonLdProperties,
+    ]
+      .flat()
+      .map((prop) => {
+        return {
+          icon: 'category ',
+          label: prop.key,
+          labelTitle: prop.key,
+          ...this.propertyGridUtils.guessValue(prop.value),
+        };
+      });
+
+    return [
+      {
+        groupLabel: 'Additional Properties',
+        properties: additionalProperties,
+      },
+      {
+        groupLabel: 'Custom Properties',
+        properties: customProperties,
+      },
+      {
+        groupLabel: 'Private Properties',
+        properties: privateCustomProperties,
+      },
+    ];
   }
 
   buildMdsProperties(asset: UiAssetMapped): PropertyGridField[] {
