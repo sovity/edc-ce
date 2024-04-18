@@ -35,5 +35,5 @@ $$ language plpgsql;
 -- for an unknown reason setting a Data Model in 7.4.0 resulted in the @id field being wrapped in an array
 -- because of that we migrate the @id to a normal field
 update edc_asset_property
-set property_value = pg_temp.migrate_distribution_value(property_value::jsonb)::text
+set property_value = pg_temp.migrate_distribution(property_value::jsonb)::text
 where property_name = 'http://www.w3.org/ns/dcat#distribution';
