@@ -95,7 +95,9 @@ public class Prop {
     @UtilityClass
     public class Dcterms {
         public final String CTX = "http://purl.org/dc/terms/";
+        public final String OTHER_CTX = "http://purl.org/dc/terms#";
         public final String IDENTIFIER = CTX + "identifier";
+        public final String OTHER_IDENTIFIER = OTHER_CTX + "identifier";
         public final String TITLE = CTX + "title";
         public final String DESCRIPTION = CTX + "description";
         public final String LANGUAGE = CTX + "language";
