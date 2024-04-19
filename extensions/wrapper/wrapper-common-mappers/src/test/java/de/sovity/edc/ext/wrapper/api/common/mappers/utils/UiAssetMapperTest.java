@@ -19,8 +19,8 @@ class UiAssetMapperTest {
     UiAssetMapper uiAssetMapper;
     EdcPropertyUtils edcPropertyUtils;
 
-    String assetId = "asset-id";
-    String orgName = "org-name";
+    private static final String ASSET_ID = "asset-id";
+    private static final String ORG_NAME = "org-name";
 
     @BeforeEach
     void setup() {
@@ -37,26 +37,26 @@ class UiAssetMapperTest {
     void test_buildAssetJsonLd_only_id() {
         // arrange
         var uiAssetCreateRequest = new UiAssetCreateRequest();
-        uiAssetCreateRequest.setId(assetId);
+        uiAssetCreateRequest.setId(ASSET_ID);
 
         // act
-        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, orgName);
+        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
 
         // assert
         assertThat(actual).isNotNull();
         assertThat(actual.getJsonObject(Prop.Edc.PROPERTIES)).hasSize(2);
-        assertThat(actual.getString(Prop.ID)).isEqualTo(assetId);
+        assertThat(actual.getString(Prop.ID)).isEqualTo(ASSET_ID);
     }
 
     @Test
     void test_buildAssetJsonLd_empty_nuts() {
         // arrange
         var uiAssetCreateRequest = new UiAssetCreateRequest();
-        uiAssetCreateRequest.setId(assetId);
+        uiAssetCreateRequest.setId(ASSET_ID);
         uiAssetCreateRequest.setNutsLocations(List.of());
 
         // act
-        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, orgName);
+        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
 
         // assert
         assertThat(actual).isNotNull();
@@ -67,11 +67,11 @@ class UiAssetMapperTest {
     void test_buildAssetJsonLd_empty_reference_file_urls() {
         // arrange
         var uiAssetCreateRequest = new UiAssetCreateRequest();
-        uiAssetCreateRequest.setId(assetId);
+        uiAssetCreateRequest.setId(ASSET_ID);
         uiAssetCreateRequest.setReferenceFileUrls(List.of());
 
         // act
-        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, orgName);
+        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
 
         // assert
         assertThat(actual).isNotNull();
@@ -82,11 +82,11 @@ class UiAssetMapperTest {
     void test_buildAssetJsonLd_empty_data_sample_urls() {
         // arrange
         var uiAssetCreateRequest = new UiAssetCreateRequest();
-        uiAssetCreateRequest.setId(assetId);
+        uiAssetCreateRequest.setId(ASSET_ID);
         uiAssetCreateRequest.setDataSampleUrls(List.of());
 
         // act
-        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, orgName);
+        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
 
         // assert
         assertThat(actual).isNotNull();
@@ -98,15 +98,15 @@ class UiAssetMapperTest {
     void test_buildAssetJsonLd_distribution1() {
         // arrange
         var uiAssetCreateRequest = new UiAssetCreateRequest();
-        uiAssetCreateRequest.setId(assetId);
+        uiAssetCreateRequest.setId(ASSET_ID);
         uiAssetCreateRequest.setMediaType("B");
 
         // act
-        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, orgName);
+        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
 
         // assert
         assertThat(actual).isNotNull();
-        assertThat(actual.getString(Prop.ID)).isEqualTo(assetId);
+        assertThat(actual.getString(Prop.ID)).isEqualTo(ASSET_ID);
         var properties = actual.getJsonObject(Prop.Edc.PROPERTIES);
         assertThat(properties).hasSize(3);
         var distribution = properties.getJsonObject(Prop.Dcat.DISTRIBUTION);
@@ -118,15 +118,15 @@ class UiAssetMapperTest {
     void test_buildAssetJsonLd_distribution2() {
         // arrange
         var uiAssetCreateRequest = new UiAssetCreateRequest();
-        uiAssetCreateRequest.setId(assetId);
+        uiAssetCreateRequest.setId(ASSET_ID);
         uiAssetCreateRequest.setConditionsForUse("B");
 
         // act
-        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, orgName);
+        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
 
         // assert
         assertThat(actual).isNotNull();
-        assertThat(actual.getString(Prop.ID)).isEqualTo(assetId);
+        assertThat(actual.getString(Prop.ID)).isEqualTo(ASSET_ID);
         var properties = actual.getJsonObject(Prop.Edc.PROPERTIES);
         assertThat(properties).hasSize(3);
         var distribution = properties.getJsonObject(Prop.Dcat.DISTRIBUTION);
@@ -140,15 +140,15 @@ class UiAssetMapperTest {
     void test_buildAssetJsonLd_distribution3() {
         // arrange
         var uiAssetCreateRequest = new UiAssetCreateRequest();
-        uiAssetCreateRequest.setId(assetId);
+        uiAssetCreateRequest.setId(ASSET_ID);
         uiAssetCreateRequest.setDataModel("B");
 
         // act
-        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, orgName);
+        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
 
         // assert
         assertThat(actual).isNotNull();
-        assertThat(actual.getString(Prop.ID)).isEqualTo(assetId);
+        assertThat(actual.getString(Prop.ID)).isEqualTo(ASSET_ID);
         var properties = actual.getJsonObject(Prop.Edc.PROPERTIES);
         assertThat(properties).hasSize(3);
         var distribution = properties.getJsonObject(Prop.Dcat.DISTRIBUTION);
@@ -162,15 +162,15 @@ class UiAssetMapperTest {
     void test_buildAssetJsonLd_distribution4() {
         // arrange
         var uiAssetCreateRequest = new UiAssetCreateRequest();
-        uiAssetCreateRequest.setId(assetId);
+        uiAssetCreateRequest.setId(ASSET_ID);
         uiAssetCreateRequest.setReferenceFilesDescription("B");
 
         // act
-        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, orgName);
+        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
 
         // assert
         assertThat(actual).isNotNull();
-        assertThat(actual.getString(Prop.ID)).isEqualTo(assetId);
+        assertThat(actual.getString(Prop.ID)).isEqualTo(ASSET_ID);
         var properties = actual.getJsonObject(Prop.Edc.PROPERTIES);
         assertThat(properties).hasSize(3);
         var distribution = properties.getJsonObject(Prop.Dcat.DISTRIBUTION);
@@ -186,7 +186,7 @@ class UiAssetMapperTest {
     void test_buildAssetJsonLd_data_model_nonNull() {
         // arrange
         var uiAssetCreateRequest = new UiAssetCreateRequest();
-        uiAssetCreateRequest.setId(assetId);
+        uiAssetCreateRequest.setId(ASSET_ID);
         uiAssetCreateRequest.setDataModel("B");
 
         var expected = Json.createObjectBuilder()
@@ -195,7 +195,7 @@ class UiAssetMapperTest {
                                 .add(Prop.ID, "B")));
 
         // act
-        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, orgName);
+        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
 
         // assert
         assertThatJson(JsonUtils.toJson(actual))
@@ -206,13 +206,13 @@ class UiAssetMapperTest {
     void test_buildAssetJsonLd_data_model_null() {
         // arrange
         var uiAssetCreateRequest = new UiAssetCreateRequest();
-        uiAssetCreateRequest.setId(assetId);
+        uiAssetCreateRequest.setId(ASSET_ID);
         uiAssetCreateRequest.setDataModel(null);
 
         var expected = Json.createObjectBuilder();
 
         // act
-        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, orgName);
+        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
 
         // assert
         assertThatJson(JsonUtils.toJson(actual))
@@ -223,13 +223,13 @@ class UiAssetMapperTest {
     void test_buildAssetJsonLd_data_model_blank() {
         // arrange
         var uiAssetCreateRequest = new UiAssetCreateRequest();
-        uiAssetCreateRequest.setId(assetId);
+        uiAssetCreateRequest.setId(ASSET_ID);
         uiAssetCreateRequest.setDataModel(" ");
 
         var expected = Json.createObjectBuilder();
 
         // act
-        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, orgName);
+        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
 
         // assert
         assertThatJson(JsonUtils.toJson(actual))
@@ -240,7 +240,7 @@ class UiAssetMapperTest {
     void test_buildAssetJsonLd_data_model_blank_but_also_reference_files_desc() {
         // arrange
         var uiAssetCreateRequest = new UiAssetCreateRequest();
-        uiAssetCreateRequest.setId(assetId);
+        uiAssetCreateRequest.setId(ASSET_ID);
         uiAssetCreateRequest.setDataModel(" ");
         uiAssetCreateRequest.setReferenceFilesDescription("test");
 
@@ -251,7 +251,7 @@ class UiAssetMapperTest {
                                         .add(Prop.Rdfs.LITERAL, "test"))));
 
         // act
-        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, orgName);
+        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
 
         // assert
         assertThatJson(JsonUtils.toJson(actual))
@@ -262,7 +262,7 @@ class UiAssetMapperTest {
     void test_buildAssetJsonLd_data_model_blank_but_also_reference_file_urls() {
         // arrange
         var uiAssetCreateRequest = new UiAssetCreateRequest();
-        uiAssetCreateRequest.setId(assetId);
+        uiAssetCreateRequest.setId(ASSET_ID);
         uiAssetCreateRequest.setDataModel(" ");
         uiAssetCreateRequest.setReferenceFileUrls(List.of("http://test"));
 
@@ -273,7 +273,7 @@ class UiAssetMapperTest {
                                         .add(Prop.Dcat.DOWNLOAD_URL, Json.createArrayBuilder().add("http://test")))));
 
         // act
-        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, orgName);
+        var actual = uiAssetMapper.buildAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
 
         // assert
         assertThatJson(JsonUtils.toJson(actual))
@@ -291,14 +291,14 @@ class UiAssetMapperTest {
     private JsonObject buildAssetJsonLd(JsonObjectBuilder properties) {
         return Json.createObjectBuilder()
                 .add(Prop.TYPE, Prop.Edc.TYPE_ASSET)
-                .add(Prop.ID, assetId)
+                .add(Prop.ID, ASSET_ID)
                 .add(Prop.Edc.DATA_ADDRESS, Json.createObjectBuilder()
                         .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
                         .add(Prop.Edc.PROPERTIES, Json.createObjectBuilder()))
                 .add(Prop.Edc.PROPERTIES, properties
-                        .add(Prop.Edc.ID, assetId)
+                        .add(Prop.Edc.ID, ASSET_ID)
                         .add(Prop.Dcterms.CREATOR, Json.createObjectBuilder()
-                                .add(Prop.Foaf.NAME, orgName))
+                                .add(Prop.Foaf.NAME, ORG_NAME))
                 )
                 .add(Prop.Edc.PRIVATE_PROPERTIES, Json.createObjectBuilder())
                 .build();
