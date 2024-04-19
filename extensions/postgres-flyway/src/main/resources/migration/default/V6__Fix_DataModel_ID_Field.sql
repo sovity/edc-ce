@@ -47,7 +47,7 @@ create
     or replace function pg_temp.remove_if_blank(obj jsonb, path text[]) returns jsonb as
 $$
 declare
-    value jsonb;
+    value text;
 begin
     value := obj #> path;
     if value is null or trim(value) = '' then
