@@ -31,9 +31,12 @@ When "Request Body Overridability" is enabled, you can alter the data you're sen
 
 #### Rules to Follow
 
-- For methods like GET, HEAD, DELETE, OPTIONS, and others, you can't have a request body.
-- For methods like POST, PUT, PATCH, you must have a request body.
+- `GET` **can't** have a request body.
+- `POST`, `PUT`, `PATCH`, (and WebDAV's `PROPPATCH`, `REPORT`),  **must** have a request body.
+  - When sending a body, the *Custom request body content type* **must** also be set, otherwise nothing will be sent.
+- The other methods may or may not have a body.
 - If you break these rules or forget to choose a method, the process will finish, but no data will be sent.
+- `HEAD` is not supported.
 
 # Understanding Parameter Validation and Its Limitations
 
