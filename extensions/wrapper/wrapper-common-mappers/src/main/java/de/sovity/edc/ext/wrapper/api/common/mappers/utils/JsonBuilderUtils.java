@@ -34,6 +34,13 @@ public class JsonBuilderUtils {
         return builder;
     }
 
+    protected static JsonObjectBuilder addNotBlank(JsonObjectBuilder builder, String key, String value) {
+        if (value != null && !value.trim().isBlank()) {
+            builder.add(key, value);
+        }
+        return builder;
+    }
+
     protected static JsonObjectBuilder addNonNull(JsonObjectBuilder builder, String key, LocalDate value) {
         if (value != null) {
             builder.add(key, value.toString());

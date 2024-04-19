@@ -38,21 +38,21 @@ create
     or replace function pg_temp.migrate_mobility_data_standard(data_standard jsonb) returns jsonb as
 $$
 begin
-    return pg_temp.jsonb_rename_key(data_standard, '{@id}',
-                                    '{https://w3id.org/mobilitydcat-ap/mobility-data-standard}');
+    return pg_temp.remove_if_blank(data_standard, '{@id}');
 end;
 $$ language plpgsql;
 
 
 create
-    or replace function pg_temp.jsonb_rename_key(obj jsonb, path text[], new_path text[]) returns jsonb as
+    or replace function pg_temp.remove_if_blank(obj jsonb, path text[]) returns jsonb as
 $$
 declare
     value jsonb;
 begin
     value := obj #> path;
-    obj := obj #- path;
-    obj := jsonb_set(obj, new_path, value, true);
+    if value is null or trim(value) = '' then
+        obj := obj #- path;
+    end if;
     return obj;
 end;
 $$ language plpgsql;

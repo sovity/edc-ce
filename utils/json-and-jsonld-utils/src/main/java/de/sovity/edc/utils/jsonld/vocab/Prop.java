@@ -158,7 +158,6 @@ public class Prop {
         public final String TRANSPORT_MODE = CTX + "transportMode";
         public final String GEO_REFERENCE_METHOD = CTX + "georeferencingMethod";
         public final String MOBILITY_DATA_STANDARD = CTX + "mobilityDataStandard";
-        public final String DATA_MODEL = CTX + "mobility-data-standard";
 
         // Optional property of mobilitydcatap:mobilityDataStandard
         public final String SCHEMA = CTX + "schema";
