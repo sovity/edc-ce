@@ -49,7 +49,7 @@ $$
 declare
     value text;
 begin
-    value := obj #> path;
+    value := obj #>> path;
     if value is null or trim(value) = '' then
         obj := obj #- path;
     end if;
