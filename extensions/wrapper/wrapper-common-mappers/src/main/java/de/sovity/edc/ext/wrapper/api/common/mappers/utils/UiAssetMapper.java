@@ -121,6 +121,7 @@ public class UiAssetMapper {
                 Prop.TYPE,
                 Prop.CONTEXT,
                 Prop.Edc.ID,
+                Prop.Dcterms.IDENTIFIER,
 
                 // Explicitly handled
                 Prop.Dcat.DISTRIBUTION,
