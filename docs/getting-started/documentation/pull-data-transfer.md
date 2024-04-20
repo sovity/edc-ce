@@ -82,7 +82,7 @@ Your backend receives the EDR from the EDC by the EDC calling the `{{target-pull
 
 ## Getting the Data
 
-Using that EDR, requesting `GET` on the EDR's `{{ endpoint }}` using the header `{{ authKey }}: {{ authCode }}`
+Using that EDR, requesting `GET` on the EDR's `{{endpoint}}` using the header `{{authKey}}: {{authCode}}`
 will return the data.
 
 ### Accessing the Contract ID
