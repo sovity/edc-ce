@@ -25,6 +25,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Broker UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI_VERSION }}`
 - Sovity EDC CE: {{ CE Release Link }}
 
+## [v4.2.0] - 2024-04-11
+
+### Overview
+
+Bumped EDC CE version to 7.4.2.
+
+### Detailed Changes
+
+#### Minor
+
+- Bumped EDC CE version to 7.4.2.
+- Bumped EDC UI version to {{x.y.z}}.
+  - Better handling of custom properties. 
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:{{x.y.z}}`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:{{x.y.z}}`
+- Sovity EDC CE: [`7.4.2`](https://github.com/sovity/edc-extensions/releases/tag/v{{x.y.z}})
+
 ## [v4.1.1] - 2024-04-11
 
 ### Overview

@@ -22,7 +22,7 @@ import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorContractOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorDataOffersExceeded;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
-import de.sovity.edc.utils.jsonld.vocab.Prop;
+import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import jakarta.json.JsonObject;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -62,15 +62,21 @@ class DataOfferDetailApiTest {
         TEST_DATABASE.testTransaction(dsl -> {
             var today = OffsetDateTime.now().withNano(0);
 
-            var assetJsonLd1 = getAssetJsonLd("my-asset-1", Map.of(
-                Prop.Mds.DATA_CATEGORY, "my-category",
-                Prop.Dcterms.TITLE, "My Asset 1"
-            ));
+            var assetJsonLd1 = getAssetJsonLd(
+                UiAssetCreateRequest.builder()
+                    .id("my-asset-1")
+                    .title("My Asset 1")
+                    .dataCategory("my-category")
+                    .build()
+            );
 
-            var assetJsonLd2 = getAssetJsonLd("my-asset-2", Map.of(
-                Prop.Mds.DATA_CATEGORY, "my-category-2",
-                Prop.Dcterms.TITLE, "My Asset 2"
-            ));
+            var assetJsonLd2 = getAssetJsonLd(
+                UiAssetCreateRequest.builder()
+                    .id("my-asset-2")
+                    .title("My Asset 2")
+                    .dataCategory("my-category-2")
+                    .build()
+            );
 
             createConnector(dsl, today, "https://my-connector/api/dsp");
             createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd1);

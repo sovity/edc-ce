@@ -26,7 +26,7 @@ import de.sovity.edc.ext.brokerserver.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.MeasurementErrorStatus;
 import de.sovity.edc.ext.brokerserver.db.jooq.enums.MeasurementType;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ConnectorRecord;
-import de.sovity.edc.utils.jsonld.vocab.Prop;
+import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import jakarta.json.JsonObject;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -62,10 +62,13 @@ class ConnectorApiTest {
         TEST_DATABASE.testTransaction(dsl -> {
             var today = OffsetDateTime.now().withNano(0);
 
-            var assetJsonLd = getAssetJsonLd("my-asset-1", Map.of(
-                Prop.Mds.DATA_CATEGORY, "my-category",
-                Prop.Dcterms.TITLE, "My Asset 1"
-            ));
+            var assetJsonLd = getAssetJsonLd(
+                UiAssetCreateRequest.builder()
+                    .id("my-asset-1")
+                    .title("My Asset 1")
+                    .dataCategory("my-category")
+                    .build()
+            );
 
             createConnector(dsl, today, "https://my-connector/api/dsp");
             createDataOffer(dsl, today, "https://my-connector/api/dsp", assetJsonLd);
@@ -88,10 +91,13 @@ class ConnectorApiTest {
         TEST_DATABASE.testTransaction(dsl -> {
             var today = OffsetDateTime.now().withNano(0);
 
-            var assetJsonLd = getAssetJsonLd("my-asset-1", Map.of(
-                Prop.Mds.DATA_CATEGORY, "my-category",
-                Prop.Dcterms.TITLE, "My Asset 1"
-            ));
+            var assetJsonLd = getAssetJsonLd(
+                UiAssetCreateRequest.builder()
+                    .id("my-asset-1")
+                    .title("My Asset 1")
+                    .dataCategory("my-category")
+                    .build()
+            );
 
             createConnector(dsl, today, "https://my-connector/api/dsp");
             createConnector(dsl, today, "https://my-connector2/api/dsp");

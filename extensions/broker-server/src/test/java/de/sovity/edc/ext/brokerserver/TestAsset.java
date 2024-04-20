@@ -16,8 +16,13 @@ package de.sovity.edc.ext.brokerserver;
 
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferRecord;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOffer;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AssetJsonLdUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MarkdownToTextConverter;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.TextUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
+import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
-import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -26,17 +31,25 @@ import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TestAsset {
+
     public static JsonObject getAssetJsonLd(String assetId) {
-        return getAssetJsonLd(assetId, Map.of());
+        return getAssetJsonLd(
+            UiAssetCreateRequest.builder()
+                .id(assetId)
+                .build()
+        );
     }
 
-    public static JsonObject getAssetJsonLd(String assetId, Map<String, Object> properties) {
-        return Json.createObjectBuilder()
-            .add(Prop.ID, assetId)
-            .add(Prop.Edc.PROPERTIES, Json.createObjectBuilder()
-                .add(Prop.Edc.ASSET_ID, assetId)
-                .addAll(Json.createObjectBuilder(properties)))
-            .build();
+    public static JsonObject getAssetJsonLd(UiAssetCreateRequest request) {
+        return getUiAssetMapper().buildAssetJsonLd(
+            request.toBuilder()
+                .dataAddressProperties(Map.of(
+                    Prop.Edc.TYPE, "HttpData",
+                    Prop.Edc.BASE_URL, "https://example.com"
+                ))
+                .build(),
+            "orgName"
+        );
     }
 
     /**
@@ -58,5 +71,15 @@ public class TestAsset {
 
         dataOfferRecord.setAssetId(fetchedDataOffer.getAssetId());
         dataOfferRecordUpdater.updateDataOffer(dataOfferRecord, fetchedDataOffer, false);
+    }
+
+    public static UiAssetMapper getUiAssetMapper() {
+        return new UiAssetMapper(
+                new EdcPropertyUtils(),
+                new AssetJsonLdUtils(),
+                new MarkdownToTextConverter(),
+                new TextUtils(),
+                "http://own-connector-endpoint"::equals
+        );
     }
 }
