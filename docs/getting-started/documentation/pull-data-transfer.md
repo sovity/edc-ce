@@ -70,10 +70,7 @@ When initiating the transfer, select `Custom Transfer Process Request (JSON)`, a
 
 ## Receiving an Endpoint Data Reference (EDR)
 
-Your backend receives the EDR from the EDC by the EDC calling the `{{target-pull-backend-url}}` endpoint.
-
-The EDC will `POST` on `{{target-pull-backend-url}}`:
-
+Your backend receives the EDR from the EDC by the EDC calling the `{{target-pull-backend-url}}` endpoint via `POST` method:
 ```json
 {
   "id": "2d5348ea-b1e0-4b69-a625-07e7b093944a",
