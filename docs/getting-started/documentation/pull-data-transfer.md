@@ -29,7 +29,7 @@ transfers as it wants, using the EDR it has received.
 
 ### Initiating the Transfer via the UI
 
-When initiating the transfer, select "Custom Transfer Process JSON", and provide:
+When initiating the transfer, select `Custom Transfer Process Request (JSON)`, and provide:
 
 ```json
 {
