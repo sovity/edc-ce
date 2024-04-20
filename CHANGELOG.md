@@ -28,11 +28,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 MDS Bugfix Release
 
-### EDC UI
-
-https://github.com/sovity/edc-ui/releases/tag/v3.2.1
-
-### EDC Extensions
+### Detailed Changes
 
 #### Patch Changes
 
@@ -53,6 +49,7 @@ Contains DB migrations, DB backups advised.
     - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.4.2`
     - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.4.2`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.1`
+- Connector UI Release: https://github.com/sovity/edc-ui/releases/tag/v3.2.1
 
 ## [7.4.0] - 2024-04-11
 
