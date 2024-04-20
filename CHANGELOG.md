@@ -17,13 +17,10 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
-- Docs: Updated documentation for parameterization using [only the UI](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/parameterized_assets_via_ui.md) or the [Management-API](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/parameterized_assets.md)
-- Docs: Updated [OAuth2 documentation](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/oauth-data-address.md) about necessary parameters that need to use the vault key instead of providing a secret directly
-- Docs: Updated documentation for the [pull-data-transfer](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/pull-data-transfer.md)
 
 ### Deployment Migration Notes
 
-## [7.4.2] - 2024-04-18
+## [7.4.2] - 2024-04-20
 
 ### Overview
 
@@ -33,11 +30,14 @@ MDS Bugfix Release
 
 #### Patch Changes
 
-- Add data migration for data model MDS field
-- Fix `nutsLocations` field
-- Fixed catalog fetching errors
+- Fixed a bug causing Catalog fetches to fail if a data offer with an empty DataModel value existed.
+- Fixed naming of the `nutsLocations` field for MDS assets.
+- UI: Removed HTTP Verb "HEAD" as it was not supported by the backend
 - Docs: Updated image to explain data-transfer-methods
-- Test Backend: Support parallel test by optional "testId" path parameter
+- Docs: Updated documentation for parameterization using [only the UI](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/parameterized_assets_via_ui.md) or the [Management-API](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/parameterized_assets.md)
+- Docs: Updated [OAuth2 documentation](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/oauth-data-address.md) about necessary parameters that need to use the vault key instead of providing a secret directly
+- Docs: Updated documentation for the [pull-data-transfer](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/pull-data-transfer.md)
+- Dev Utils: Parallel test support for our Test Backend for some requests.
 
 ### Deployment Migration Notes
 
@@ -49,8 +49,8 @@ Contains DB migrations, DB backups advised.
     - Dev EDC: `ghcr.io/sovity/edc-dev:7.4.2`
     - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.4.2`
     - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.4.2`
-- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.1`
-- Connector UI Release: https://github.com/sovity/edc-ui/releases/tag/v3.2.1
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.2`
+- Connector UI Release: https://github.com/sovity/edc-ui/releases/tag/v3.2.2
 
 ## [7.4.0] - 2024-04-11
 
