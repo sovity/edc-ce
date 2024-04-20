@@ -18,6 +18,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Patch Changes
 
 - Docs: Updated documentation for parameterization using [only the UI](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/parameterized_assets_via_ui.md) or the [Management-API](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/parameterized_assets.md)
+- Docs: Updated [OAuth2 documentation](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/oauth-data-address.md) about necessary parameters that need to use the vault key instead of providing a secret directly
 - Docs: Updated documentation for the [pull-data-transfer](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/pull-data-transfer.md)
 
 ### Deployment Migration Notes

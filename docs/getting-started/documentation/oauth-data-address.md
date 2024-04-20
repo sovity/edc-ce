@@ -2,18 +2,18 @@ Data Sources and Data Sinks protected by OAuth2
 ========
 
 > [!NOTE]
-> This feature is only available in our sovity EDC Enterprise Edition.
+> This feature is only available in our sovity EDC Enterprise Edition. If you want to use the feature, please create a service request at sovity's service desk.
 
 ## Overview
 
 OAuth2 protected APIs can be used for both Http-Data-Sources and Http-Data-Sinks. For both the
 following properties can be used:
 
-| Property            | Description                                                  |
-|---------------------|--------------------------------------------------------------|
-| oauth2:tokenUrl     | Token-Url where the Access-Token can be fetched from         |
-| oauth2:clientId     | The client id                                                |
-| oauth2:clientSecret | The secret of the client authenticating to the OAuth2-Server |
+| Property               | Description                                                  |
+|------------------------|--------------------------------------------------------------|
+| oauth2:tokenUrl        | Token-Url where the Access-Token can be fetched from         |
+| oauth2:clientId        | The client id                                                |
+| oauth2:clientSecretKey | The vault key holding the client secret                      |
 
 > [!NOTE]
 > The only supported flow right now is the "Client Credentials" flow.
@@ -22,7 +22,7 @@ following properties can be used:
 
 ### Providing the Asset via the UI
 
-To provide data from an oauth2 protected API using the EDC-Ui an asset with the
+To provide data from an OAuth2 protected API using the EDC-UI an asset with the
 following `Custom Datasource Config (JSON)` can be created:
 
 ```json
@@ -31,16 +31,19 @@ following `Custom Datasource Config (JSON)` can be created:
   "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{target-url}}",
   "oauth2:tokenUrl": "{{token-url}}",
   "oauth2:clientId": "{{client-id}}",
-  "oauth2:clientSecret": "{{client-secret}}"
+  "oauth2:clientSecretKey": "{{client-secret-key}}"
 }
 ```
 
 ### Providing the Asset via the Management API
 
-To create an asset providing oauth2 protected data the management-API of the EDC can be used to send the
+To create an asset providing OAuth2 protected data the management-API of the EDC can be used to send the
 following request:
 
-`POST` to `https://{{FQDN}}/api/management/v2/assets`
+`POST` to `https://{{FQDN}}/api/management/v3/assets`
+
+> [!IMPORTANT]
+> Be aware that while all other API examples work with API `v2` this example requires API `v3` 
 
 ```json
 {
@@ -75,7 +78,7 @@ following request:
     "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{target-url}}",
     "oauth2:tokenUrl": "{{token-url}}",
     "oauth2:clientId": "{{client-id}}",
-    "oauth2:clientSecret": "{{client-secret}}"
+    "oauth2:clientSecretKey": "{{client-secret-key}}"
   }
 }
 ```
@@ -84,7 +87,7 @@ following request:
 
 ### Initiating the Transfer via the UI
 
-To start a transfer to an oauth2 protected API using the EDC-Ui a transfer with the
+To start a transfer to an OAuth2 protected API using the EDC-UI a transfer with the
 following `Custom Datasink Config (JSON)` type can be started:
 
 ```json
@@ -93,13 +96,13 @@ following `Custom Datasink Config (JSON)` type can be started:
   "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{target-url}}",
   "oauth2:tokenUrl": "{{token-url}}",
   "oauth2:clientId": "{{client-id}}",
-  "oauth2:clientSecret": "{{client-secret}}"
+  "oauth2:clientSecretKey": "{{client-secret-key}}"
 }
 ```
 
 ### Initiating the Transfer via the Management API
 
-To start a transfer to an oauth2 protected API the management-API of the EDC can be used to send the
+To start a transfer to an OAuth2 protected API the management-API of the EDC can be used to send the
 following request:
 
 `POST` to `https://{{FQDN}}/api/management/v2/transferprocesses`
@@ -116,7 +119,7 @@ following request:
     "https://w3id.org/edc/v0.0.1/ns/baseUrl": "{{target-url}}",
     "oauth2:tokenUrl": "{{token-url}}",
     "oauth2:clientId": "{{client-id}}",
-    "oauth2:clientSecret": "{{client-secret}}"
+    "oauth2:clientSecretKey": "{{client-secret-key}}"
   },
   "https://w3id.org/edc/v0.0.1/ns/properties": {},
   "https://w3id.org/edc/v0.0.1/ns/privateProperties": {},
