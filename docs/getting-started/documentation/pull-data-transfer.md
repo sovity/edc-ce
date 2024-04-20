@@ -6,7 +6,7 @@ Consuming Data via HttpProxy / HTTP Pull
 
 ## Data-Transfer Architecture
 
-The following documentation describes the different data transfer architectures supported:  
+The following documentation describes the various supported data transfer architectures.
 [Data Transfer Methods](./data-transfer-methods.md)
 
 ## Requirements
