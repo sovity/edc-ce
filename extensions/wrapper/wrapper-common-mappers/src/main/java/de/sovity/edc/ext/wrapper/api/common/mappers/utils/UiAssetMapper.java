@@ -34,6 +34,7 @@ import java.util.Map;
 import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNull;
 import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNullArray;
 import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNonNullJsonValue;
+import static de.sovity.edc.ext.wrapper.api.common.mappers.utils.JsonBuilderUtils.addNotBlank;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @RequiredArgsConstructor
@@ -59,7 +60,7 @@ public class UiAssetMapper {
         var rights = JsonLdUtils.object(distribution, Prop.Dcterms.RIGHTS);
         uiAsset.setConditionsForUse(JsonLdUtils.string(rights, Prop.Rdfs.LABEL));
         var mobilityDataStandard = JsonLdUtils.object(distribution, Prop.MobilityDcatAp.MOBILITY_DATA_STANDARD);
-        uiAsset.setDataModel(JsonLdUtils.string(mobilityDataStandard, Prop.MobilityDcatAp.DATA_MODEL));
+        uiAsset.setDataModel(JsonLdUtils.string(mobilityDataStandard, Prop.ID));
         var referenceFiles = JsonLdUtils.object(mobilityDataStandard, Prop.MobilityDcatAp.SCHEMA);
         uiAsset.setReferenceFileUrls(JsonLdUtils.stringList(referenceFiles, Prop.Dcat.DOWNLOAD_URL));
         uiAsset.setReferenceFilesDescription(JsonLdUtils.string(referenceFiles, Prop.Rdfs.LITERAL));
@@ -260,7 +261,6 @@ public class UiAssetMapper {
         }
 
         addNonNull(properties, Prop.SovityDcatExt.CUSTOM_JSON, uiAssetCreateRequest.getCustomJsonAsString());
-
         val jsonLdStr = uiAssetCreateRequest.getCustomJsonLdAsString();
         if (jsonLdStr != null) {
             val jsonLd = JsonUtils.parseJsonObj(jsonLdStr);
@@ -280,7 +280,8 @@ public class UiAssetMapper {
             addNonNull(
                     privateProperties,
                     Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON,
-                    privateJsonStr);
+                    privateJsonStr
+            );
         }
 
         val privateJsonLdStr = uiAssetCreateRequest.getPrivateCustomJsonLdAsString();
@@ -335,7 +336,8 @@ public class UiAssetMapper {
         var hasRootLevelFields = uiAssetCreateRequest.getMediaType() != null
                 || (dataSampleUrls != null && !dataSampleUrls.isEmpty());
         var hasRightsFields = uiAssetCreateRequest.getConditionsForUse() != null;
-        var hasDataModelFields = uiAssetCreateRequest.getDataModel() != null;
+        var hasDataModelFields = uiAssetCreateRequest.getDataModel() != null
+                && !uiAssetCreateRequest.getDataModel().isBlank();
         var hasReferenceFilesFields = (referenceFileUrls != null && !referenceFileUrls.isEmpty())
                 || uiAssetCreateRequest.getReferenceFilesDescription() != null;
 
@@ -356,16 +358,16 @@ public class UiAssetMapper {
         if (!hasDataModelFields && !hasReferenceFilesFields) {
             return distribution;
         }
-        var dataModel = Json.createObjectBuilder();
-        addNonNull(dataModel, Prop.MobilityDcatAp.DATA_MODEL, uiAssetCreateRequest.getDataModel());
+        var mobilityDataStandard = Json.createObjectBuilder();
+        addNotBlank(mobilityDataStandard, Prop.ID, uiAssetCreateRequest.getDataModel());
 
         if (hasReferenceFilesFields) {
             var referenceFiles = Json.createObjectBuilder();
             addNonNullArray(referenceFiles, Prop.Dcat.DOWNLOAD_URL, uiAssetCreateRequest.getReferenceFileUrls());
             addNonNull(referenceFiles, Prop.Rdfs.LITERAL, uiAssetCreateRequest.getReferenceFilesDescription());
-            dataModel.add(Prop.MobilityDcatAp.SCHEMA, referenceFiles);
+            mobilityDataStandard.add(Prop.MobilityDcatAp.SCHEMA, referenceFiles);
         }
-        distribution.add(Prop.MobilityDcatAp.MOBILITY_DATA_STANDARD, dataModel);
+        distribution.add(Prop.MobilityDcatAp.MOBILITY_DATA_STANDARD, mobilityDataStandard);
         return distribution;
     }
 }
