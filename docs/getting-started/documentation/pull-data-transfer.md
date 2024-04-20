@@ -4,15 +4,10 @@ Consuming Data via HttpProxy / HTTP Pull
 > [!WARNING]
 > This feature is only available for our sovity EDC Enterprise Edition.
 
-## Overview
+## Data-Transfer Architecture
 
-The following diagram describes the sequence of actions involved in a Pull-Data-Transfer:
-
-![pull-data-transfer.png](images/pull-data-transfer.png)
-
-The Use Case Application is involved in steps 3, 4 and 11 of the diagram. It should provide an endpoint for receiving
-the EDR (3). These information can then be used to start the tranfser request (4). The result of the transfer request
-will contain the data (11).
+The following documentation describes the various supported data transfer architectures.
+[Data Transfer Methods](./data-transfer-methods.md)
 
 ## Requirements
 
@@ -29,7 +24,7 @@ transfers as it wants, using the EDR it has received.
 
 ### Initiating the Transfer via the UI
 
-When initiating the transfer, select "Custom Transfer Process JSON", and provide:
+When initiating the transfer, select `Custom Transfer Process Request (JSON)`, and provide:
 
 ```json
 {
@@ -70,10 +65,7 @@ When initiating the transfer, select "Custom Transfer Process JSON", and provide
 
 ## Receiving an Endpoint Data Reference (EDR)
 
-Your backend receives the EDR from the EDC by the EDC calling the `{{target-pull-backend-url}}` endpoint.
-
-The EDC will `POST` on `{{target-pull-backend-url}}`:
-
+Your backend receives the EDR from the EDC by the EDC calling the `{{target-pull-backend-url}}` endpoint via `POST` method:
 ```json
 {
   "id": "2d5348ea-b1e0-4b69-a625-07e7b093944a",
@@ -85,7 +77,7 @@ The EDC will `POST` on `{{target-pull-backend-url}}`:
 
 ## Getting the Data
 
-Using that EDR, requesting `GET` on the EDR's `{{ endpoint }}` using the header `{{ authKey }}: {{ authCode }}`
+Using that EDR, requesting `GET` on the EDR's `{{endpoint}}` using the header `{{authKey}}: {{authCode}}`
 will return the data.
 
 ### Accessing the Contract ID
