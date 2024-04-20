@@ -17,6 +17,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
+- Docs: Updated documentation for parameterization using [only the UI](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/parameterized_assets_via_ui.md) or the [Management-API](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/parameterized_assets.md)
+
 ### Deployment Migration Notes
 
 ## [7.4.2] - 2024-04-18
