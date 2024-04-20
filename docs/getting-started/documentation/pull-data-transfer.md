@@ -6,13 +6,13 @@ Consuming Data via HttpProxy / HTTP Pull
 
 ## Overview
 
-The following diagram describes the sequence of actions involved in a Pull-Data-Transfer:
+The following diagram describes the sequence of actions involved in a Pull-Data-Transfer (blue lines):
 
-![pull-data-transfer.png](images/pull-data-transfer.png)
+![data-transfer-methods](images/data-transfer-methods.png)
 
-The Use Case Application is involved in steps 3, 4 and 11 of the diagram. It should provide an endpoint for receiving
-the EDR (3). These information can then be used to start the tranfser request (4). The result of the transfer request
-will contain the data (11).
+The Use Case Application is involved in steps b1, b4, b5 and b8 of the diagram. It should provide an endpoint for receiving
+the EDR (b4). These information can then be used to start the tranfser request (b5). The result of the transfer request
+will contain the data (b8).
 
 ## Requirements
 
