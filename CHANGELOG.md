@@ -22,20 +22,23 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Deployment Migration Notes
 
-## [v3.2.2] - 2024-04-18
+## [v3.2.2] - 2024-04-20
 
 ### Overview
 
-Bugfix for custom properties
+MDS Bufix Release
 
 ### Detailed Changes
 
 #### Patch
 
-- Fixed an issue causing pages using asset cards to crash if object custom
-  properties were used.
+- Connector UI & Broker UI: Fixed an issue causing pages using asset cards to
+  crash if object custom properties were used.
+- Removed HTTP Option "HEAD" as it is not supported by the backend.
 
 #### Deployment Migration Notes
+
+_No special deployment migration steps required_
 
 ## [v3.2.1] - 2024-04-18
 

@@ -35,65 +35,44 @@ export class ConnectorInfoPropertyGridGroupBuilder {
   getBackendVersionFields(
     lastCommitInfo: Fetched<LastCommitInfo>,
   ): PropertyGridField[] {
-    return lastCommitInfo.match({
-      ifOk: (lastCommitInfo) => [
-        {
+    const buildProp = (
+      label: string,
+      dateProp: keyof LastCommitInfo,
+      detailsProp: keyof LastCommitInfo,
+    ) =>
+      lastCommitInfo.match({
+        ifOk: (lastCommitInfo) => ({
           icon: 'link',
-          label: 'Jar Version',
-          text: lastCommitInfo.jarBuildDate
-            ? this.asDate(lastCommitInfo.jarBuildDate)
+          label,
+          text: lastCommitInfo[dateProp]
+            ? this.asDate(lastCommitInfo[dateProp] ?? undefined)
             : 'Show Details',
           onclick: () =>
             this.onShowConnectorVersionClick('Version Information', {
-              'Jar Last Commit Information': lastCommitInfo.jarLastCommitInfo,
+              [`${label} Last Commit Information"`]:
+                lastCommitInfo[detailsProp],
             }),
-        },
-        {
+        }),
+        ifError: (error) => ({
           icon: 'link',
-          label: 'Environment Version',
-          text: lastCommitInfo.envBuildDate
-            ? this.asDate(lastCommitInfo.envBuildDate)
-            : 'Show Details',
-          onclick: () =>
-            this.onShowConnectorVersionClick('Version Information', {
-              'Environment Last Commit Information':
-                lastCommitInfo.envLastCommitInfo,
-            }),
-        },
-      ],
-      ifError: (error) => [
-        {
-          icon: 'link',
-          label: 'Jar Version',
+          label,
           text: 'Show Details',
           onclick: () =>
             this.onShowConnectorVersionClick('Version Information', {
               Error: error.failureMessage,
             }),
-        },
-        {
+        }),
+        ifLoading: () => ({
           icon: 'link',
-          label: 'Environment Version',
-          text: 'Show Details',
-          onclick: () =>
-            this.onShowConnectorVersionClick('Version Information', {
-              Error: error.failureMessage,
-            }),
-        },
-      ],
-      ifLoading: () => [
-        {
-          icon: 'link',
-          label: 'Jar Version',
+          label,
           text: 'Loading...',
-        },
-        {
-          icon: 'link',
-          label: 'Environment Version',
-          text: 'Loading...',
-        },
-      ],
-    });
+        }),
+      });
+
+    return [
+      buildProp('CE Extensions', 'jarBuildDate', 'jarLastCommitInfo'),
+      buildProp('Connector', 'envBuildDate', 'envLastCommitInfo'),
+    ];
   }
 
   getUiVersionField(
