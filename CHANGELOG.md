@@ -36,16 +36,16 @@ Bumped EDC CE version to 7.4.2.
 #### Minor
 
 - Bumped EDC CE version to 7.4.2.
-- Bumped EDC UI version to {{x.y.z}}.
-  - Better handling of custom properties. 
+- Bumped EDC UI version to 3.2.2.
+- Better handling of custom properties.
 
 ### Deployment Migration Notes
 
 #### Compatible Versions
 
-- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:{{x.y.z}}`
-- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:{{x.y.z}}`
-- Sovity EDC CE: [`7.4.2`](https://github.com/sovity/edc-extensions/releases/tag/v{{x.y.z}})
+- Broker Backend Docker Image: `ghcr.io/sovity/broker-server-ce:4.2.0`
+- Broker UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.2`
+- Sovity EDC CE: [`7.4.2`](https://github.com/sovity/edc-extensions/releases/tag/v7.4.2)
 
 ## [v4.1.1] - 2024-04-11
 
@@ -62,6 +62,8 @@ Pull changes from EDC UI 3.1.0 into the broker.
   - Fix status icon for data offers
 
 ### Deployment Migration Notes
+
+_No special deployment migration steps required_
 
 #### Compatible Versions
 
