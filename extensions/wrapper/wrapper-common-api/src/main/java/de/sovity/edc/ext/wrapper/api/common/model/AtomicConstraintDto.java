@@ -15,6 +15,7 @@ package de.sovity.edc.ext.wrapper.api.common.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,7 @@ import lombok.ToString;
  */
 @Getter
 @Setter
+@Builder(toBuilder = true)
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
