@@ -4,15 +4,10 @@ Consuming Data via HttpProxy / HTTP Pull
 > [!WARNING]
 > This feature is only available for our sovity EDC Enterprise Edition.
 
-## Overview
+## Data-Transfer Architecture
 
-The following diagram describes the sequence of actions involved in a Pull-Data-Transfer (blue lines):
-
-![data-transfer-methods](images/data-transfer-methods.png)
-
-The Use Case Application is involved in steps b1, b4, b5 and b8 of the diagram. It should provide an endpoint for receiving
-the EDR (b4). These information can then be used to start the tranfser request (b5). The result of the transfer request
-will contain the data (b8).
+The following documentation describes the different data transfer architectures supported:  
+[Data Transfer Methods](./data-transfer-methods.md)
 
 ## Requirements
 
