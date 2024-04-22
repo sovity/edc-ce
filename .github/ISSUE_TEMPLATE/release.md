@@ -57,8 +57,8 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
   - [ ] Pull the latest latest edc-dev image: `docker image pull ghcr.io/sovity/edc-dev:latest`.
   - [ ] Check that your image was built recently `docker image ls | grep ghcr.io/sovity/edc-dev`.
   - [ ] Test the release `docker-compose.yaml` with `EDC_IMAGE=ghcr.io/sovity/edc-dev:latest` (at minimum execute a transfer between the two connectors).
-    - [ ] Test `EDC_UI_ACTIVE_PROFILE=sovity-open-source`
-    - [ ] Test `EDC_UI_ACTIVE_PROFILE=mds-open-source`
+    - [ ] Test with `EDC_UI_ACTIVE_PROFILE=sovity-open-source`
+    - [ ] Test with `EDC_UI_ACTIVE_PROFILE=mds-open-source`
   - [ ] Ensure with a `docker ps -a` that all containers are healthy, and not `healthy: starting` or `healthy: unhealthy`.
 - [ ] Test the postman collection against that running docker-compose.
 - [ ] [Create a release](https://github.com/sovity/edc-extensions/releases/new)
