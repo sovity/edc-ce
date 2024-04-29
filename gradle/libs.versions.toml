@@ -15,6 +15,8 @@ restAssured = "4.5.0"
 
 [libraries]
 edc-apiCore = { module = "org.eclipse.edc:api-core", version.ref = "edcVersion" }
+edc-authSpi = { module = "org.eclipse.edc:auth-spi", version.ref = "edcVersion" }
+edc-contractSpi = { module = "org.eclipse.edc:contract-spi", version.ref = "edcVersion" }
 edc-controlPlaneCore = { module = "org.eclipse.edc:control-plane-core", version.ref = "edcVersion" }
 edc-controlPlaneSpi = { module = "org.eclipse.edc:control-plane-spi", version.ref = "edcVersion" }
 edc-coreSpi = { module = "org.eclipse.edc:core-spi", version.ref = "edcVersion" }
@@ -22,6 +24,7 @@ edc-dataPlaneSelectorCore = { module = "org.eclipse.edc:data-plane-selector-core
 edc-http = { module = "org.eclipse.edc:http", version.ref = "edcVersion" }
 edc-junit = { module = "org.eclipse.edc:junit", version.ref = "edcVersion" }
 edc-managementApiConfiguration = { module = "org.eclipse.edc:management-api-configuration", version.ref = "edcVersion" }
+edc-policyEngineSpi = { module = "org.eclipse.edc:policy-engine-spi", version.ref = "edcVersion" }
 
 jakarta-rsApi = { module = "jakarta.ws.rs:jakarta.ws.rs-api", version.ref = "jakartaRsVersion" }
 jakarta-validationApi = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakartaValidationVersion" }
@@ -35,6 +38,7 @@ jetty-jettyWebapp = { module = "org.eclipse.jetty:jetty-webapp", version.ref = "
 
 junit-jupiterApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitVersion" }
 junit-jupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitVersion" }
+junit-jupiterParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junitVersion" }
 
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombokVersion" }
 

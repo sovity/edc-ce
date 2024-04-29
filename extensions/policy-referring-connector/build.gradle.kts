@@ -9,14 +9,14 @@ plugins {
 }
 
 dependencies {
-    api("${edcGroup}:auth-spi:${edcVersion}")
-    api("${edcGroup}:policy-engine-spi:${edcVersion}")
-    api("${edcGroup}:contract-spi:${edcVersion}")
+    api(libs.edc.authSpi)
+    api(libs.edc.policyEngineSpi)
+    api(libs.edc.contractSpi)
     testImplementation(libs.edc.junit)
 
     testImplementation(libs.mockito.mockitoCore)
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiterVersion}")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:${jupiterVersion}")
+    testImplementation(libs.junit.jupiterApi)
+    testImplementation(libs.junit.jupiterParams)
 }
 
 tasks.withType<Test> {

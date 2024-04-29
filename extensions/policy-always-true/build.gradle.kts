@@ -9,7 +9,7 @@ plugins {
 
 dependencies {
     api(libs.edc.coreSpi)
-    api("${edcGroup}:policy-engine-spi:${edcVersion}")
+    api(libs.edc.policyEngineSpi)
     api(libs.edc.controlPlaneSpi)
     implementation(libs.edc.apiCore)
 

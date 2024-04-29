@@ -25,8 +25,8 @@ dependencies {
     testImplementation("net.javacrumbs.json-unit:json-unit-assertj:${jsonUnit}")
     testImplementation(libs.mockito.mockitoCore)
     testImplementation("org.assertj:assertj-core:${assertj}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiterVersion}")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:${jupiterVersion}")
+    testImplementation(libs.junit.jupiterApi)
+    testImplementation(libs.junit.jupiterParams)
     testImplementation("org.mock-server:mockserver-netty:${httpMockServerVersion}") {
         // TODO: increase minimum guava version
     }
