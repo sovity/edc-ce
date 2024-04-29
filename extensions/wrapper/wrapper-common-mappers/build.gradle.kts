@@ -16,7 +16,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
     api("${edcGroup}:policy-model:${edcVersion}")
-    api("${edcGroup}:core-spi:${edcVersion}")
+    api(libs.edc.coreSpi)
     api("${edcGroup}:transform-core:${edcVersion}")
     api("${edcGroup}:transform-spi:${edcVersion}")
     api(project(":extensions:wrapper:wrapper-common-api"))

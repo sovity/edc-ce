@@ -26,7 +26,7 @@ dependencies {
     api(project(":utils:json-and-jsonld-utils"))
     api("${edcGroup}:contract-definition-api:${edcVersion}")
     api("${edcGroup}:control-plane-spi:${edcVersion}")
-    api("${edcGroup}:core-spi:${edcVersion}")
+    api(libs.edc.coreSpi)
     api("${edcGroup}:policy-definition-api:${edcVersion}")
     api("${edcGroup}:transfer-process-api:${edcVersion}")
     implementation("org.apache.commons:commons-lang3:3.13.0")

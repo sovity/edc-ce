@@ -16,7 +16,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
     api("org.glassfish:jakarta.json:${jakartaJsonVersion}")
-    api("${edcGroup}:core-spi:${edcVersion}")
+    api(libs.edc.coreSpi)
     api("${edcGroup}:control-plane-spi:${edcVersion}")
     api("${edcGroup}:json-ld:${edcVersion}")
 

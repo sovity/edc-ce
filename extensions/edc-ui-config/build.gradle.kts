@@ -11,7 +11,7 @@ plugins {
 }
 
 dependencies {
-    api("${edcGroup}:core-spi:${edcVersion}")
+    api(libs.edc.coreSpi)
     api("${edcGroup}:control-plane-spi:${edcVersion}")
     implementation("${edcGroup}:api-core:${edcVersion}")
     implementation("${edcGroup}:management-api-configuration:${edcVersion}")

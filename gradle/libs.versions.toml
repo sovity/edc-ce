@@ -3,9 +3,10 @@ java = "17"
 # TODO
 #kotlin = "1.9.22"
 #npmVersion = "8.15.0"
+edcVersion="0.2.1.2"
 
 [libraries]
-
+edc-coreSpi = { module = "org.eclipse.edc:core-spi", version.ref = "edcVersion" }
 
 [bundles]
 

@@ -7,7 +7,7 @@ plugins {
 
 dependencies {
     api("${edcGroup}:api-core:${edcVersion}")
-    api("${edcGroup}:core-spi:${edcVersion}")
+    api(libs.edc.coreSpi)
     api("${edcGroup}:http:${edcVersion}")
 }
 
