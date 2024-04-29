@@ -22,19 +22,17 @@ jersey = "3.1.3"
 jetty = "11.0.15"
 jsonUnit = "3.2.7"
 junit = "5.10.0"
-# TODO
-#kotlin = "1.9.22"
 loggingHouse = "0.2.10"
 lombok = "1.18.28"
 mockito = "4.8.0"
 mockserver = "5.15.0"
-#npm = "8.15.0"
 okhttp = "4.11.0"
 okio = "3.9.0"
 openapiJackson = "0.2.6"
 postgres = "42.4.0"
 quarkus = "2.16.6.Final"
 restAssured = "4.5.0"
+shadow = "7.1.2"
 swagger = "1.6.11"
 swaggerCore = "2.2.15"
 testcontainers = "1.17.6"
@@ -52,7 +50,7 @@ apicatalog-titaniumJsonLd = { module = "com.apicatalog:titanium-json-ld", versio
 
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 
-awaitility = { module = "org.awaitility:awaitility", version.ref = "awaitility" }
+awaitility-java = { module = "org.awaitility:awaitility", version.ref = "awaitility" }
 
 edc-apiCore = { module = "org.eclipse.edc:api-core", version.ref = "edc" }
 edc-apiObservability = { module = "org.eclipse.edc:api-observability", version.ref = "edc" }
@@ -101,7 +99,7 @@ findbugs-jsr305 = { module = "com.google.code.findbugs:jsr305", version.ref = "f
 
 flexmark-all = { module = "com.vladsch.flexmark:flexmark-all", version.ref = "flexmark" }
 
-flyway = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
+flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
 
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 
@@ -117,24 +115,24 @@ jakarta-validationApi = { module = "jakarta.validation:jakarta.validation-api", 
 
 jersey-mediaMultipart = { module = "org.glassfish.jersey.media:jersey-media-multipart", version.ref = "jersey" }
 
-jetty-jettyClient = { module = "org.eclipse.jetty:jetty-client", version.ref = "jetty" }
-jetty-jettyHttp = { module = "org.eclipse.jetty:jetty-http", version.ref = "jetty" }
-jetty-jettyIo = { module = "org.eclipse.jetty:jetty-io", version.ref = "jetty" }
-jetty-jettyServer = { module = "org.eclipse.jetty:jetty-server", version.ref = "jetty" }
-jetty-jettyUtil = { module = "org.eclipse.jetty:jetty-util", version.ref = "jetty" }
-jetty-jettyWebapp = { module = "org.eclipse.jetty:jetty-webapp", version.ref = "jetty" }
+jetty-client = { module = "org.eclipse.jetty:jetty-client", version.ref = "jetty" }
+jetty-http = { module = "org.eclipse.jetty:jetty-http", version.ref = "jetty" }
+jetty-io = { module = "org.eclipse.jetty:jetty-io", version.ref = "jetty" }
+jetty-server = { module = "org.eclipse.jetty:jetty-server", version.ref = "jetty" }
+jetty-util = { module = "org.eclipse.jetty:jetty-util", version.ref = "jetty" }
+jetty-webapp = { module = "org.eclipse.jetty:jetty-webapp", version.ref = "jetty" }
 
-jsonUnit = { module = "net.javacrumbs.json-unit:json-unit-assertj", version.ref = "jsonUnit" }
+jsonUnit-assertj = { module = "net.javacrumbs.json-unit:json-unit-assertj", version.ref = "jsonUnit" }
 
-junit-jupiterApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
-junit-jupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
-junit-jupiterParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
+junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+junit-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
 
 loggingHouse-client = { module = "logging-house:logging-house-client", version.ref = "loggingHouse" }
 
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 
-mockito-mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
 mockito-junitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 
@@ -149,7 +147,7 @@ openapi-jacksonDatabindNullable = { module = "org.openapitools:jackson-databind-
 
 postgres = { module = "org.postgresql:postgresql", version.ref = "postgres" }
 
-quarkus-universeBom = { module = "io.quarkus.platform:quarkus-bom", version.ref = "quarkus" }
+quarkus-bom = { module = "io.quarkus.platform:quarkus-bom", version.ref = "quarkus" }
 
 restAssured-restAssured = { module = "io.rest-assured:rest-assured", version.ref = "restAssured" }
 
@@ -165,12 +163,14 @@ tractus-sqlPool = { module = "org.eclipse.tractusx.edc:sql-pool", version.ref = 
 
 [bundles]
 jetty-cve2023 = [
-    "jetty-jettyClient",
-    "jetty-jettyHttp",
-    "jetty-jettyIo",
-    "jetty-jettyServer",
-    "jetty-jettyUtil",
-    "jetty-jettyWebapp",
+    "jetty-client",
+    "jetty-http",
+    "jetty-io",
+    "jetty-server",
+    "jetty-util",
+    "jetty-webapp",
 ]
 
 [plugins]
+quarkus = { id = "io.quarkus", version.ref = "quarkus" }
+shadow = { id = "com.github.johnrengelman.shadow", version = "shadow" }

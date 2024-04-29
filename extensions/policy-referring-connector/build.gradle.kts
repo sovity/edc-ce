@@ -14,9 +14,9 @@ dependencies {
     api(libs.edc.contractSpi)
     testImplementation(libs.edc.junit)
 
-    testImplementation(libs.mockito.mockitoCore)
-    testImplementation(libs.junit.jupiterApi)
-    testImplementation(libs.junit.jupiterParams)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.junit.api)
+    testImplementation(libs.junit.params)
 }
 
 tasks.withType<Test> {

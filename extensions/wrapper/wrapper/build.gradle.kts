@@ -59,12 +59,12 @@ dependencies {
     testImplementation(libs.edc.dspApiConfiguration)
     testImplementation(libs.edc.dataPlaneSelectorCore)
 
-    testImplementation(libs.jsonUnit)
+    testImplementation(libs.jsonUnit.assertj)
     testImplementation(libs.restAssured.restAssured)
-    testImplementation(libs.mockito.mockitoCore)
+    testImplementation(libs.mockito.core)
     testImplementation(libs.assertj.core)
-    testImplementation(libs.junit.jupiterApi)
-    testRuntimeOnly(libs.junit.jupiterEngine)
+    testImplementation(libs.junit.api)
+    testRuntimeOnly(libs.junit.engine)
 }
 
 tasks.withType<Test> {

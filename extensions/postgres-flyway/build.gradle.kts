@@ -25,7 +25,7 @@ dependencies {
 
     implementation(libs.postgres)
 
-    implementation(libs.flyway)
+    implementation(libs.flyway.core)
 
     testImplementation(libs.edc.junit)
 }

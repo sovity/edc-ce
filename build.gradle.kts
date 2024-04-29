@@ -9,8 +9,8 @@ plugins {
 }
 
 dependencies {
-    testImplementation(libs.junit.jupiterApi)
-    testRuntimeOnly(libs.junit.jupiterEngine)
+    testImplementation(libs.junit.api)
+    testRuntimeOnly(libs.junit.engine)
 }
 
 val downloadArtifact: Configuration by configurations.creating {

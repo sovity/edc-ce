@@ -29,13 +29,13 @@ dependencies {
     testCompileOnly(libs.lombok)
     testImplementation(project(":utils:test-utils"))
     testImplementation(libs.edc.jsonLd)
-    testImplementation(libs.jsonUnit)
+    testImplementation(libs.jsonUnit.assertj)
     testImplementation(libs.assertj.core)
-    testImplementation(libs.junit.jupiterApi)
-    testImplementation(libs.mockito.mockitoCore)
+    testImplementation(libs.junit.api)
+    testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.inline)
     testImplementation(libs.mockito.junitJupiter)
-    testRuntimeOnly(libs.junit.jupiterEngine)
+    testRuntimeOnly(libs.junit.engine)
 }
 
 val sovityEdcGroup: String by project

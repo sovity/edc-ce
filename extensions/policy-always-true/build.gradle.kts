@@ -16,9 +16,9 @@ dependencies {
     testImplementation(libs.edc.controlPlaneCore)
     testImplementation(libs.edc.junit)
     testImplementation(libs.edc.dataPlaneSelectorCore)
-    testImplementation(libs.mockito.mockitoCore)
-    testImplementation(libs.junit.jupiterApi)
-    testRuntimeOnly(libs.junit.jupiterEngine)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.junit.api)
+    testRuntimeOnly(libs.junit.engine)
 }
 
 val sovityEdcExtensionGroup: String by project

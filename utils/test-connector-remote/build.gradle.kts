@@ -14,11 +14,11 @@ dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
 
-    api(libs.junit.jupiterApi)
+    api(libs.junit.api)
     implementation(libs.apache.commonsLang)
 
     api(libs.edc.junit)
-    api(libs.awaitility)
+    api(libs.awaitility.java)
     api(project(":utils:json-and-jsonld-utils"))
     implementation(libs.edc.sqlCore)
     implementation(libs.edc.jsonLdSpi)

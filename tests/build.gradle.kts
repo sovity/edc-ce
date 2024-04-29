@@ -22,13 +22,13 @@ dependencies {
     testImplementation(project(":extensions:test-backend-controller"))
     testImplementation(project(":utils:test-connector-remote"))
     testImplementation(project(":extensions:wrapper:clients:java-client"))
-    testImplementation(libs.jsonUnit)
-    testImplementation(libs.mockito.mockitoCore)
+    testImplementation(libs.jsonUnit.assertj)
+    testImplementation(libs.mockito.core)
     testImplementation(libs.assertj.core)
-    testImplementation(libs.junit.jupiterApi)
-    testImplementation(libs.junit.jupiterParams)
+    testImplementation(libs.junit.api)
+    testImplementation(libs.junit.params)
     testImplementation(libs.mockserver.netty)
-    testRuntimeOnly(libs.junit.jupiterEngine)
+    testRuntimeOnly(libs.junit.engine)
 }
 
 tasks.withType<Test> {
