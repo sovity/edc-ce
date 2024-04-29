@@ -1,5 +1,6 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.gradle.internal.impldep.org.jsoup.safety.Safelist.basic
 
 plugins {
     id("java")
@@ -97,11 +98,8 @@ allprojects {
             }
         }
         maven {
-            url = uri("https://maven.pkg.github.com/sovity/core-edc")
-            credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
-            }
+            url = uri("https://pkgs.dev.azure.com/sovity/41799556-91c8-4df6-8ddb-4471d6f15953/_packaging/core-edc/maven/v1")
+            name = "AzureRepo"
         }
     }
 }
