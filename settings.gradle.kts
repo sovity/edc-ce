@@ -3,7 +3,7 @@ rootProject.name = "edc-extensions"
 //include(":extensions:broker-server")
 include(":extensions:broker-server-api:api")
 include(":extensions:broker-server-api:client")
-//include(":extensions:broker-server-postgres-flyway-jooq")
+include(":extensions:broker-server-postgres-flyway-jooq")
 include(":extensions:edc-ui-config")
 include(":extensions:last-commit-info")
 include(":extensions:policy-always-true")
