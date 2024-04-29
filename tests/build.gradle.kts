@@ -1,6 +1,6 @@
 plugins {
     `java-library`
-    id("org.gradle.test-retry") version "1.5.7"
+    alias(libs.plugins.retry)
 }
 
 val assertj: String by project
