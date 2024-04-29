@@ -16,9 +16,9 @@ dependencies {
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
 
     api(libs.edc.coreSpi)
-    api("${edcGroup}:control-plane-spi:${edcVersion}")
-    implementation("${edcGroup}:api-core:${edcVersion}")
-    implementation("${edcGroup}:management-api-configuration:${edcVersion}")
+    api(libs.edc.controlPlaneSpi)
+    implementation(libs.edc.apiCore)
+    implementation(libs.edc.managementApiConfiguration)
 
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")

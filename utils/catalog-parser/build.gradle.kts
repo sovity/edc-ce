@@ -17,7 +17,7 @@ dependencies {
 
     api("org.glassfish:jakarta.json:${jakartaJsonVersion}")
     api(libs.edc.coreSpi)
-    api("${edcGroup}:control-plane-spi:${edcVersion}")
+    api(libs.edc.controlPlaneSpi)
     api("${edcGroup}:json-ld:${edcVersion}")
 
     implementation(project(":utils:json-and-jsonld-utils"))

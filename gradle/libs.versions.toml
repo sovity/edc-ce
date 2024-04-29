@@ -7,6 +7,9 @@ edcVersion="0.2.1.2"
 
 [libraries]
 edc-coreSpi = { module = "org.eclipse.edc:core-spi", version.ref = "edcVersion" }
+edc-controlPlaneSpi = { module = "org.eclipse.edc:control-plane-spi", version.ref = "edcVersion" }
+edc-apiCore = { module = "org.eclipse.edc:api-core", version.ref = "edcVersion" }
+edc-managementApiConfiguration = { module = "org.eclipse.edc:management-api-configuration", version.ref = "edcVersion" }
 
 [bundles]
 

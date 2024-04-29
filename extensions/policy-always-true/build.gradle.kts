@@ -10,8 +10,8 @@ plugins {
 dependencies {
     api(libs.edc.coreSpi)
     api("${edcGroup}:policy-engine-spi:${edcVersion}")
-    api("${edcGroup}:control-plane-spi:${edcVersion}")
-    implementation("${edcGroup}:api-core:${edcVersion}")
+    api(libs.edc.controlPlaneSpi)
+    implementation(libs.edc.apiCore)
 
     testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
     testImplementation("${edcGroup}:junit:${edcVersion}")
