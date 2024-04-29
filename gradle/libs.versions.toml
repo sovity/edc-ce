@@ -1,0 +1,12 @@
+[versions]
+java = "17"
+# TODO
+#kotlin = "1.9.22"
+#npmVersion = "8.15.0"
+
+[libraries]
+
+
+[bundles]
+
+[plugins]
