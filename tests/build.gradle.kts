@@ -22,14 +22,12 @@ dependencies {
     testImplementation(project(":extensions:test-backend-controller"))
     testImplementation(project(":utils:test-connector-remote"))
     testImplementation(project(":extensions:wrapper:clients:java-client"))
-    testImplementation("net.javacrumbs.json-unit:json-unit-assertj:${jsonUnit}")
+    testImplementation(libs.jsonUnit)
     testImplementation(libs.mockito.mockitoCore)
-    testImplementation("org.assertj:assertj-core:${assertj}")
+    testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiterApi)
     testImplementation(libs.junit.jupiterParams)
-    testImplementation("org.mock-server:mockserver-netty:${httpMockServerVersion}") {
-        // TODO: increase minimum guava version
-    }
+    testImplementation(libs.mockserver.netty)
     testRuntimeOnly(libs.junit.jupiterEngine)
 }
 

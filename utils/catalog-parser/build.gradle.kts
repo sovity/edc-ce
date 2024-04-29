@@ -15,24 +15,24 @@ dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
 
-    api("org.glassfish:jakarta.json:${jakartaJsonVersion}")
+    api(libs.jakarta.json)
     api(libs.edc.coreSpi)
     api(libs.edc.controlPlaneSpi)
-    api("${edcGroup}:json-ld:${edcVersion}")
+    api(libs.edc.jsonLd)
 
     implementation(project(":utils:json-and-jsonld-utils"))
 
     implementation(libs.apache.commonsLang)
-    implementation("org.apache.commons:commons-collections4:4.4")
-    implementation("commons-io:commons-io:2.13.0")
+    implementation(libs.apache.commonsCollections)
+    implementation(libs.apache.commonsIo)
 
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
     testImplementation(project(":utils:test-utils"))
     testImplementation(libs.mockito.mockitoCore)
-    testImplementation("org.mockito:mockito-inline:${mockitoVersion}")
-    testImplementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}")
-    testImplementation("org.assertj:assertj-core:${assertj}")
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockito.junitJupiter)
+    testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiterApi)
     testRuntimeOnly(libs.junit.jupiterEngine)
 }
