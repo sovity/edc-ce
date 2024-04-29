@@ -12,8 +12,8 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
 
     implementation("${edcGroup}:core-spi:${edcVersion}")
     implementation("${edcGroup}:sql-core:${edcVersion}")

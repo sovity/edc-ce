@@ -6,8 +6,8 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
 
     api("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
     api("jakarta.validation:jakarta.validation-api:3.0.2")

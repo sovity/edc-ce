@@ -8,6 +8,7 @@ jettyVersion = "11.0.15"
 junitVersion = "5.10.0"
 # TODO
 #kotlin = "1.9.22"
+lombokVersion="1.18.28"
 mockitoVersion = "4.8.0"
 #npmVersion = "8.15.0"
 restAssured = "4.5.0"
@@ -34,6 +35,8 @@ jetty-jettyWebapp = { module = "org.eclipse.jetty:jetty-webapp", version.ref = "
 
 junit-jupiterApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitVersion" }
 junit-jupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitVersion" }
+
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombokVersion" }
 
 mockito-mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockitoVersion" }
 

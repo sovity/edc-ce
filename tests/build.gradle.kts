@@ -16,8 +16,8 @@ dependencies {
     api(project(":launchers:common:base"))
     api(project(":launchers:common:auth-mock"))
 
-    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testAnnotationProcessor(libs.lombok)
+    testCompileOnly(libs.lombok)
     testImplementation(project(":utils:test-utils"))
     testImplementation(project(":extensions:test-backend-controller"))
     testImplementation(project(":utils:test-connector-remote"))

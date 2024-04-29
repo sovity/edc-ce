@@ -14,8 +14,8 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
 
     implementation(libs.edc.apiCore)
     implementation(libs.edc.managementApiConfiguration)
@@ -31,8 +31,8 @@ dependencies {
     api("${edcGroup}:transfer-process-api:${edcVersion}")
     implementation("org.apache.commons:commons-lang3:3.13.0")
 
-    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testAnnotationProcessor(libs.lombok)
+    testCompileOnly(libs.lombok)
 
     testImplementation(project(":extensions:wrapper:clients:java-client"))
     testImplementation(project(":extensions:policy-always-true"))

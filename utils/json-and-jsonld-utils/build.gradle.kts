@@ -12,8 +12,8 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
 
     api("org.glassfish:jakarta.json:${jakartaJsonVersion}")
     api("com.apicatalog:titanium-json-ld:1.3.2")
@@ -22,8 +22,8 @@ dependencies {
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("commons-io:commons-io:2.13.0")
 
-    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testAnnotationProcessor(libs.lombok)
+    testCompileOnly(libs.lombok)
     testImplementation(libs.mockito.mockitoCore)
     testImplementation("org.mockito:mockito-inline:${mockitoVersion}")
     testImplementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}")

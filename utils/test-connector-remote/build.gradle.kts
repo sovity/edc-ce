@@ -11,8 +11,8 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
 
     api("org.junit.jupiter:junit-jupiter-api:5.10.0")
     implementation("org.apache.commons:commons-lang3:3.13.0")

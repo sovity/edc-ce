@@ -12,8 +12,8 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
 
     api(libs.edc.coreSpi)
     api(libs.edc.controlPlaneSpi)
@@ -23,8 +23,8 @@ dependencies {
     implementation(libs.jakarta.rsApi)
     implementation(libs.jakarta.validationApi)
 
-    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testAnnotationProcessor(libs.lombok)
+    testCompileOnly(libs.lombok)
 
     testImplementation(libs.edc.controlPlaneCore)
     testImplementation(libs.edc.junit)

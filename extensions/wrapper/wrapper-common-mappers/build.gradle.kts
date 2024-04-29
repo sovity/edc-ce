@@ -12,8 +12,8 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
 
     api("${edcGroup}:policy-model:${edcVersion}")
     api(libs.edc.coreSpi)
@@ -25,8 +25,8 @@ dependencies {
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("com.vladsch.flexmark:flexmark-all:0.64.8")
 
-    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testAnnotationProcessor(libs.lombok)
+    testCompileOnly(libs.lombok)
     testImplementation(project(":utils:test-utils"))
     testImplementation("${edcGroup}:json-ld:${edcVersion}")
     testImplementation("net.javacrumbs.json-unit:json-unit-assertj:${jsonUnit}")

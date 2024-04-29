@@ -16,8 +16,8 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
 
     api(project(":extensions:wrapper:wrapper-common-api"))
     api(project(":extensions:wrapper:wrapper-common-mappers"))
