@@ -1,4 +1,5 @@
 [versions]
+assertj = "3.23.1"
 commonsLang = "3.13.0"
 edc = "0.2.1.2"
 findbugs = "3.0.2"
@@ -7,9 +8,11 @@ gson = "2.10.1"
 gsonFire = "1.8.5"
 jakartaAnnotation = "1.3.5"
 jakartaRs = "3.1.0"
+jakartaServlet = "5.0.0"
 jakartaValidation = "3.0.2"
 java = "17"
 jetty = "11.0.15"
+jsonUnit = "3.2.7"
 junit = "5.10.0"
 # TODO
 #kotlin = "1.9.22"
@@ -19,6 +22,7 @@ mockito = "4.8.0"
 okhttp = "4.11.0"
 openapiJackson = "0.2.6"
 postgres = "42.4.0"
+quarkus = "2.16.6.Final"
 restAssured = "4.5.0"
 swagger = "1.6.11"
 tractus = "0.5.3"
@@ -27,20 +31,30 @@ tractus = "0.5.3"
 
 apache-commons-lang = { module = "org.apache.commons:commons-lang3", version.ref = "commonsLang" }
 
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+
 edc-apiCore = { module = "org.eclipse.edc:api-core", version.ref = "edc" }
 edc-authSpi = { module = "org.eclipse.edc:auth-spi", version.ref = "edc" }
+edc-contractDefinitionApi = { module = "org.eclipse.edc:contract-definition-api", version.ref = "edc" }
 edc-contractSpi = { module = "org.eclipse.edc:contract-spi", version.ref = "edc" }
 edc-controlPlaneCore = { module = "org.eclipse.edc:control-plane-core", version.ref = "edc" }
 edc-controlPlaneSpi = { module = "org.eclipse.edc:control-plane-spi", version.ref = "edc" }
 edc-controlPlaneSql = { module = "org.eclipse.edc:control-plane-sql", version.ref = "edc" }
 edc-coreSpi = { module = "org.eclipse.edc:core-spi", version.ref = "edc" }
 edc-dataPlaneSelectorCore = { module = "org.eclipse.edc:data-plane-selector-core", version.ref = "edc" }
+edc-dsp = { module = "org.eclipse.edc:dsp", version.ref = "edc" }
+edc-dspApiConfiguration = { module = "org.eclipse.edc:dsp-api-configuration", version.ref = "edc" }
+edc-dspHttpSpi = { module = "org.eclipse.edc:dsp-http-spi", version.ref = "edc" }
 edc-http = { module = "org.eclipse.edc:http", version.ref = "edc" }
+edc-iamMock = { module = "org.eclipse.edc:iam-mock", version.ref = "edc" }
+edc-jsonLd = { module = "org.eclipse.edc:json-ld", version.ref = "edc" }
 edc-junit = { module = "org.eclipse.edc:junit", version.ref = "edc" }
 edc-managementApiConfiguration = { module = "org.eclipse.edc:management-api-configuration", version.ref = "edc" }
+edc-policyDefinitionApi = { module = "org.eclipse.edc:policy-definition-api", version.ref = "edc" }
 edc-policyEngineSpi = { module = "org.eclipse.edc:policy-engine-spi", version.ref = "edc" }
 edc-sqlCore = { module = "org.eclipse.edc:sql-core", version.ref = "edc" }
 edc-transactionLocal = { module = "org.eclipse.edc:transaction-local", version.ref = "edc" }
+edc-transferProcessApi = { module = "org.eclipse.edc:transfer-process-api", version.ref = "edc" }
 edc-transferSpi = { module = "org.eclipse.edc:transfer-spi", version.ref = "edc" }
 
 findbugs-jsr305 = { module = "com.google.code.findbugs:jsr305", version.ref = "findbugs" }
@@ -53,6 +67,7 @@ gsonFire = { module = "io.gsonfire:gson-fire", version.ref = "gsonFire" }
 
 jakarta-annotation = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jakartaAnnotation" }
 jakarta-rsApi = { module = "jakarta.ws.rs:jakarta.ws.rs-api", version.ref = "jakartaRs" }
+jakarta-servlet = { module = "jakarta.servlet:jakarta.servlet-api", version.ref = "jakartaServlet" }
 jakarta-validationApi = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakartaValidation" }
 
 jetty-jettyClient = { module = "org.eclipse.jetty:jetty-client", version.ref = "jetty" }
@@ -61,6 +76,8 @@ jetty-jettyIo = { module = "org.eclipse.jetty:jetty-io", version.ref = "jetty" }
 jetty-jettyServer = { module = "org.eclipse.jetty:jetty-server", version.ref = "jetty" }
 jetty-jettyUtil = { module = "org.eclipse.jetty:jetty-util", version.ref = "jetty" }
 jetty-jettyWebapp = { module = "org.eclipse.jetty:jetty-webapp", version.ref = "jetty" }
+
+jsonUnit = { module = "net.javacrumbs.json-unit:json-unit-assertj", version.ref = "jsonUnit" }
 
 junit-jupiterApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-jupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
@@ -77,9 +94,13 @@ openapi-jacksonDatabindNullable = { module = "org.openapitools:jackson-databind-
 
 postgres = { module = "org.postgresql:postgresql", version.ref = "postgres" }
 
+quarkus-universeBom = { module = "io.quarkus.platform:quarkus-bom", version.ref = "quarkus" }
+
 restAssured-restAssured = { module = "io.rest-assured:rest-assured", version.ref = "restAssured" }
 
 swagger-annotations = { module = "io.swagger:swagger-annotations", version.ref = "swagger" }
+swagger-annotationsJakarta = { module = "io.swagger.core.v3:swagger-annotations-jakarta", version.ref = "swagger" }
+swagger-jaxrs2Jakarta = { module = "io.swagger.core.v3:swagger-jaxrs2-jakarta", version.ref = "swagger" }
 
 tractus-sqlPool = { module = "org.eclipse.tractusx.edc:sql-pool", version.ref = "tractus" }
 

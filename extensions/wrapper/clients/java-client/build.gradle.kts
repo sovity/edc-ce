@@ -120,7 +120,6 @@ tasks.withType<Javadoc> {
 val sovityEdcGroup: String by project
 group = sovityEdcGroup
 
-
 publishing {
     publications {
         create<MavenPublication>(project.name) {

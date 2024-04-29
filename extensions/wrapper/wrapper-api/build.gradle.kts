@@ -25,12 +25,12 @@ dependencies {
 
     implementation(libs.jakarta.validationApi)
     implementation(libs.jakarta.rsApi)
-    implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.15")
-    implementation("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.15")
-    implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
+    implementation(libs.swagger.annotationsJakarta)
+    implementation(libs.swagger.jaxrs2Jakarta)
+    implementation(libs.jakarta.servlet)
     implementation(libs.jakarta.validationApi)
     implementation(libs.jakarta.rsApi)
-    implementation("org.apache.commons:commons-lang3:3.13.0")
+    implementation(libs.apache.commons.lang)
 }
 
 val openapiFileDir = "${project.buildDir}/swagger"

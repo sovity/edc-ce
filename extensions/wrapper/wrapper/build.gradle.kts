@@ -19,17 +19,17 @@ dependencies {
 
     implementation(libs.edc.apiCore)
     implementation(libs.edc.managementApiConfiguration)
-    implementation("${edcGroup}:dsp-http-spi:${edcVersion}")
+    implementation(libs.edc.dspHttpSpi)
     api(project(":extensions:wrapper:wrapper-api"))
     api(project(":extensions:wrapper:wrapper-common-mappers"))
     api(project(":utils:catalog-parser"))
     api(project(":utils:json-and-jsonld-utils"))
-    api("${edcGroup}:contract-definition-api:${edcVersion}")
+    api(libs.edc.contractDefinitionApi)
     api(libs.edc.controlPlaneSpi)
     api(libs.edc.coreSpi)
-    api("${edcGroup}:policy-definition-api:${edcVersion}")
-    api("${edcGroup}:transfer-process-api:${edcVersion}")
-    implementation("org.apache.commons:commons-lang3:3.13.0")
+    api(libs.edc.policyDefinitionApi)
+    api(libs.edc.transferProcessApi)
+    implementation(libs.apache.commons.lang)
 
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
@@ -38,8 +38,8 @@ dependencies {
     testImplementation(project(":extensions:policy-always-true"))
     testImplementation(project(":utils:test-utils"))
     testImplementation(libs.edc.controlPlaneCore)
-    testImplementation("${edcGroup}:dsp:${edcVersion}")
-    testImplementation("${edcGroup}:iam-mock:${edcVersion}")
+    testImplementation(libs.edc.dsp)
+    testImplementation(libs.edc.iamMock)
     testImplementation(libs.edc.junit)
     testImplementation(libs.edc.http) {
         // TODO: group
@@ -54,15 +54,15 @@ dependencies {
     // Updated jetty versions for e.g. CVE-2023-26048
     testImplementation(libs.bundles.jetty.cve2023)
 
-    testImplementation("${edcGroup}:json-ld:${edcVersion}")
-    testImplementation("${edcGroup}:dsp-http-spi:${edcVersion}")
-    testImplementation("${edcGroup}:dsp-api-configuration:${edcVersion}")
+    testImplementation(libs.edc.jsonLd)
+    testImplementation(libs.edc.dspHttpSpi)
+    testImplementation(libs.edc.dspApiConfiguration)
     testImplementation(libs.edc.dataPlaneSelectorCore)
 
-    testImplementation("net.javacrumbs.json-unit:json-unit-assertj:${jsonUnit}")
+    testImplementation(libs.jsonUnit)
     testImplementation(libs.restAssured.restAssured)
     testImplementation(libs.mockito.mockitoCore)
-    testImplementation("org.assertj:assertj-core:${assertj}")
+    testImplementation(libs.assertj.core)
     testImplementation(libs.junit.jupiterApi)
     testRuntimeOnly(libs.junit.jupiterEngine)
 }

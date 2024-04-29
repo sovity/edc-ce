@@ -21,7 +21,7 @@ dependencies {
     api("${edcGroup}:transform-spi:${edcVersion}")
     api(project(":extensions:wrapper:wrapper-common-api"))
     api(project(":utils:json-and-jsonld-utils"))
-    implementation("org.apache.commons:commons-lang3:3.13.0")
+    implementation(libs.apache.commons.lang)
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("com.vladsch.flexmark:flexmark-all:0.64.8")
 
