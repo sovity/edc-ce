@@ -57,14 +57,14 @@ dependencies {
     testImplementation("${edcGroup}:json-ld:${edcVersion}")
     testImplementation("${edcGroup}:dsp-http-spi:${edcVersion}")
     testImplementation("${edcGroup}:dsp-api-configuration:${edcVersion}")
-    testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
+    testImplementation(libs.edc.dataPlaneSelectorCore)
 
     testImplementation("net.javacrumbs.json-unit:json-unit-assertj:${jsonUnit}")
-    testImplementation("io.rest-assured:rest-assured:${restAssured}")
-    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
+    testImplementation(libs.restAssured.restAssured)
+    testImplementation(libs.mockito.mockitoCore)
     testImplementation("org.assertj:assertj-core:${assertj}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testImplementation(libs.junit.jupiterApi)
+    testRuntimeOnly(libs.junit.jupiterEngine)
 }
 
 tasks.withType<Test> {

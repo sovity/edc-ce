@@ -24,12 +24,12 @@ dependencies {
 
     testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
-    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
+    testImplementation(libs.mockito.mockitoCore)
     testImplementation("org.mockito:mockito-inline:${mockitoVersion}")
     testImplementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}")
     testImplementation("org.assertj:assertj-core:${assertj}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testImplementation(libs.junit.jupiterApi)
+    testRuntimeOnly(libs.junit.jupiterEngine)
 }
 
 val sovityEdcGroup: String by project

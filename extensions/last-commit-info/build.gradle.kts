@@ -41,11 +41,11 @@ dependencies {
     // Updated jetty versions for e.g. CVE-2023-26048
     testImplementation(libs.bundles.jetty.cve2023)
 
-    testImplementation("io.rest-assured:rest-assured:${restAssured}")
-    testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
-    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testImplementation(libs.restAssured.restAssured)
+    testImplementation(libs.edc.dataPlaneSelectorCore)
+    testImplementation(libs.mockito.mockitoCore)
+    testImplementation(libs.junit.jupiterApi)
+    testRuntimeOnly(libs.junit.jupiterEngine)
 }
 
 val sovityEdcExtensionGroup: String by project

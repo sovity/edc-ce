@@ -14,7 +14,7 @@ dependencies {
     api("${edcGroup}:contract-spi:${edcVersion}")
     testImplementation(libs.edc.junit)
 
-    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
+    testImplementation(libs.mockito.mockitoCore)
     testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiterVersion}")
     testImplementation("org.junit.jupiter:junit-jupiter-params:${jupiterVersion}")
 }

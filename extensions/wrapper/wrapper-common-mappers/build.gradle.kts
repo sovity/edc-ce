@@ -31,11 +31,11 @@ dependencies {
     testImplementation("${edcGroup}:json-ld:${edcVersion}")
     testImplementation("net.javacrumbs.json-unit:json-unit-assertj:${jsonUnit}")
     testImplementation("org.assertj:assertj-core:${assertj}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
+    testImplementation(libs.junit.jupiterApi)
+    testImplementation(libs.mockito.mockitoCore)
     testImplementation("org.mockito:mockito-inline:${mockitoVersion}")
     testImplementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testRuntimeOnly(libs.junit.jupiterEngine)
 }
 
 val sovityEdcGroup: String by project

@@ -15,10 +15,10 @@ dependencies {
 
     testImplementation(libs.edc.controlPlaneCore)
     testImplementation(libs.edc.junit)
-    testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
-    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testImplementation(libs.edc.dataPlaneSelectorCore)
+    testImplementation(libs.mockito.mockitoCore)
+    testImplementation(libs.junit.jupiterApi)
+    testRuntimeOnly(libs.junit.jupiterEngine)
 }
 
 val sovityEdcExtensionGroup: String by project
