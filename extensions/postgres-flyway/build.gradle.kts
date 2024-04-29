@@ -27,7 +27,7 @@ dependencies {
 
     implementation("org.flywaydb:flyway-core:${flywayVersion}")
 
-    testImplementation("${edcGroup}:junit:${edcVersion}")
+    testImplementation(libs.edc.junit)
 }
 
 val sovityEdcExtensionGroup: String by project

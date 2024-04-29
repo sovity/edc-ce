@@ -1,16 +1,41 @@
 [versions]
+edcVersion = "0.2.1.2"
+# TODO: can use jakarta.something ?
+jakartaRsVersion = "3.1.0"
+jakartaValidationVersion = "3.0.2"
 java = "17"
+jettyVersion = "11.0.15"
 # TODO
 #kotlin = "1.9.22"
 #npmVersion = "8.15.0"
-edcVersion="0.2.1.2"
 
 [libraries]
-edc-coreSpi = { module = "org.eclipse.edc:core-spi", version.ref = "edcVersion" }
-edc-controlPlaneSpi = { module = "org.eclipse.edc:control-plane-spi", version.ref = "edcVersion" }
 edc-apiCore = { module = "org.eclipse.edc:api-core", version.ref = "edcVersion" }
+edc-controlPlaneCore = { module = "org.eclipse.edc:control-plane-core", version.ref = "edcVersion" }
+edc-controlPlaneSpi = { module = "org.eclipse.edc:control-plane-spi", version.ref = "edcVersion" }
+edc-coreSpi = { module = "org.eclipse.edc:core-spi", version.ref = "edcVersion" }
+edc-http = { module = "org.eclipse.edc:http", version.ref = "edcVersion" }
+edc-junit = { module = "org.eclipse.edc:junit", version.ref = "edcVersion" }
 edc-managementApiConfiguration = { module = "org.eclipse.edc:management-api-configuration", version.ref = "edcVersion" }
 
+jakarta-rsApi = { module = "jakarta.ws.rs:jakarta.ws.rs-api", version.ref = "jakartaRsVersion" }
+jakarta-validationApi = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakartaValidationVersion" }
+
+jetty-jettyClient = { module = "org.eclipse.jetty:jetty-client", version.ref = "jettyVersion" }
+jetty-jettyHttp = { module = "org.eclipse.jetty:jetty-http", version.ref = "jettyVersion" }
+jetty-jettyIo = { module = "org.eclipse.jetty:jetty-io", version.ref = "jettyVersion" }
+jetty-jettyServer = { module = "org.eclipse.jetty:jetty-server", version.ref = "jettyVersion" }
+jetty-jettyUtil = { module = "org.eclipse.jetty:jetty-util", version.ref = "jettyVersion" }
+jetty-jettyWebapp = { module = "org.eclipse.jetty:jetty-webapp", version.ref = "jettyVersion" }
+
 [bundles]
+jetty-cve2023 = [
+    "jetty-jettyClient",
+    "jetty-jettyHttp",
+    "jetty-jettyIo",
+    "jetty-jettyServer",
+    "jetty-jettyUtil",
+    "jetty-jettyWebapp",
+]
 
 [plugins]

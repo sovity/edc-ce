@@ -12,7 +12,7 @@ dependencies {
     api("${edcGroup}:auth-spi:${edcVersion}")
     api("${edcGroup}:policy-engine-spi:${edcVersion}")
     api("${edcGroup}:contract-spi:${edcVersion}")
-    testImplementation("${edcGroup}:junit:${edcVersion}")
+    testImplementation(libs.edc.junit)
 
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiterVersion}")

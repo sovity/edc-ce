@@ -13,8 +13,8 @@ dependencies {
     api(libs.edc.controlPlaneSpi)
     implementation(libs.edc.apiCore)
 
-    testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
-    testImplementation("${edcGroup}:junit:${edcVersion}")
+    testImplementation(libs.edc.controlPlaneCore)
+    testImplementation(libs.edc.junit)
     testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
     testImplementation("org.mockito:mockito-core:${mockitoVersion}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")

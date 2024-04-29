@@ -9,7 +9,7 @@ plugins {
 dependencies {
     api("${edcGroup}:auth-spi:${edcVersion}")
     api("${edcGroup}:policy-engine-spi:${edcVersion}")
-    testImplementation("${edcGroup}:junit:${edcVersion}")
+    testImplementation(libs.edc.junit)
 }
 
 val sovityEdcExtensionGroup: String by project

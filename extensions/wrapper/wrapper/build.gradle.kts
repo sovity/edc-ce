@@ -37,11 +37,12 @@ dependencies {
     testImplementation(project(":extensions:wrapper:clients:java-client"))
     testImplementation(project(":extensions:policy-always-true"))
     testImplementation(project(":utils:test-utils"))
-    testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
+    testImplementation(libs.edc.controlPlaneCore)
     testImplementation("${edcGroup}:dsp:${edcVersion}")
     testImplementation("${edcGroup}:iam-mock:${edcVersion}")
-    testImplementation("${edcGroup}:junit:${edcVersion}")
-    testImplementation("${edcGroup}:http:${edcVersion}") {
+    testImplementation(libs.edc.junit)
+    testImplementation(libs.edc.http) {
+        // TODO: group
         exclude(group = "org.eclipse.jetty", module = "jetty-client")
         exclude(group = "org.eclipse.jetty", module = "jetty-http")
         exclude(group = "org.eclipse.jetty", module = "jetty-io")
@@ -51,12 +52,7 @@ dependencies {
     }
 
     // Updated jetty versions for e.g. CVE-2023-26048
-    testImplementation("${jettyGroup}:jetty-client:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-http:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-io:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-server:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-util:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-webapp:${jettyVersion}")
+    testImplementation(libs.bundles.jetty.cve2023)
 
     testImplementation("${edcGroup}:json-ld:${edcVersion}")
     testImplementation("${edcGroup}:dsp-http-spi:${edcVersion}")

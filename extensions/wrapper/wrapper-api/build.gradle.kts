@@ -23,13 +23,13 @@ dependencies {
     api(project(":extensions:wrapper:wrapper-common-mappers"))
     api(project(":extensions:wrapper:wrapper-ee-api"))
 
-    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
-    implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
+    implementation(libs.jakarta.validationApi)
+    implementation(libs.jakarta.rsApi)
     implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.15")
     implementation("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.15")
     implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
-    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
-    implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
+    implementation(libs.jakarta.validationApi)
+    implementation(libs.jakarta.rsApi)
     implementation("org.apache.commons:commons-lang3:3.13.0")
 }
 
