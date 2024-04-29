@@ -14,6 +14,7 @@ val quarkusPlatformVersion = "2.16.6.Final"
 
 dependencies {
     implementation(enforcedPlatform(libs.quarkus.universeBom))
+    implementation(libs.guava)
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-resteasy-reactive-jackson")
 

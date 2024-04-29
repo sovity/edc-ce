@@ -9,9 +9,9 @@ plugins {
 
 dependencies {
     api("${edcGroup}:connector-core:${edcVersion}")
-    api("${edcGroup}:boot:${edcVersion}")
-    api("${edcGroup}:http:${edcVersion}")
-    api("${edcGroup}:api-observability:${edcVersion}")
+    api(libs.edc.boot)
+    api(libs.edc.http)
+    api(libs.edc.apiObservability)
     api(project(":extensions:test-backend-controller"))
 }
 
