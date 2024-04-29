@@ -15,7 +15,7 @@ dependencies {
     compileOnly(libs.lombok)
 
     api("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    implementation(libs.apache.commons.lang)
+    implementation(libs.apache.commonsLang)
 
     api("${edcGroup}:junit:${edcVersion}")
     api("org.awaitility:awaitility:${awaitilityVersion}")

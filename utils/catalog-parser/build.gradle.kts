@@ -22,7 +22,7 @@ dependencies {
 
     implementation(project(":utils:json-and-jsonld-utils"))
 
-    implementation(libs.apache.commons.lang)
+    implementation(libs.apache.commonsLang)
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("commons-io:commons-io:2.13.0")
 

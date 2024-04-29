@@ -30,7 +30,7 @@ dependencies {
     implementation(libs.jakarta.servlet)
     implementation(libs.jakarta.validationApi)
     implementation(libs.jakarta.rsApi)
-    implementation(libs.apache.commons.lang)
+    implementation(libs.apache.commonsLang)
 }
 
 val openapiFileDir = "${project.buildDir}/swagger"

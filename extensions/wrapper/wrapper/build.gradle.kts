@@ -29,7 +29,7 @@ dependencies {
     api(libs.edc.coreSpi)
     api(libs.edc.policyDefinitionApi)
     api(libs.edc.transferProcessApi)
-    implementation(libs.apache.commons.lang)
+    implementation(libs.apache.commonsLang)
 
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
