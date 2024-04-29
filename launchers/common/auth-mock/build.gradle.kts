@@ -7,7 +7,7 @@ val edcGroup: String by project
 
 dependencies {
     // Mock IAM
-    api("${edcGroup}:iam-mock:${edcVersion}")
+    api(libs.edc.iamMock)
 }
 
 val sovityEdcGroup: String by project

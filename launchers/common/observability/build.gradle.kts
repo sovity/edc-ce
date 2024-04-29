@@ -7,7 +7,7 @@ val edcGroup: String by project
 
 dependencies {
     // Logging
-    api("${edcGroup}:monitor-jdk-logger:${edcVersion}")
+    api(libs.edc.monitorJdkLogger)
 }
 
 val sovityEdcGroup: String by project

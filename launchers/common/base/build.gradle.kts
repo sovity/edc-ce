@@ -7,17 +7,17 @@ val edcGroup: String by project
 
 dependencies {
     // Control-Plane
-    api("${edcGroup}:control-plane-core:${edcVersion}")
-    api("${edcGroup}:management-api:${edcVersion}")
-    api("${edcGroup}:api-observability:${edcVersion}")
-    api("${edcGroup}:configuration-filesystem:${edcVersion}")
-    api("${edcGroup}:control-plane-aggregate-services:${edcVersion}")
-    api("${edcGroup}:http:${edcVersion}")
-    api("${edcGroup}:dsp:${edcVersion}")
-    api("${edcGroup}:json-ld:${edcVersion}")
+    api(libs.edc.controlPlaneCore)
+    api(libs.edc.managementApi)
+    api(libs.edc.apiObservability)
+    api(libs.edc.configurationFilesystem)
+    api(libs.edc.controlPlaneAggregateServices)
+    api(libs.edc.http)
+    api(libs.edc.dsp)
+    api(libs.edc.jsonLd)
 
     // Data Management API Key
-    api("${edcGroup}:auth-tokenbased:${edcVersion}")
+    api(libs.edc.authTokenbased)
 
     // sovity Extensions Package
     api(project(":extensions:sovity-edc-extensions-package"))
@@ -25,15 +25,15 @@ dependencies {
     api(project(":extensions:transfer-process-status-checker"))
 
     // Control-plane to Data-plane
-    api("${edcGroup}:transfer-data-plane:${edcVersion}")
-    api("${edcGroup}:data-plane-selector-core:${edcVersion}")
-    api("${edcGroup}:data-plane-selector-client:${edcVersion}")
+    api(libs.edc.transferDataPlane)
+    api(libs.edc.dataPlaneSelectorCore)
+    api(libs.edc.dataPlaneSelectorClient)
 
     // Data-plane
-    api("${edcGroup}:data-plane-http:${edcVersion}")
-    api("${edcGroup}:data-plane-framework:${edcVersion}")
-    api("${edcGroup}:data-plane-core:${edcVersion}")
-    api("${edcGroup}:data-plane-util:${edcVersion}")
+    api(libs.edc.dataPlaneHttp)
+    api(libs.edc.dataPlaneFramework)
+    api(libs.edc.dataPlaneCore)
+    api(libs.edc.dataPlaneUtil)
 }
 
 val sovityEdcGroup: String by project
