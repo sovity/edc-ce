@@ -42,7 +42,6 @@ dependencies {
     testImplementation(libs.edc.iamMock)
     testImplementation(libs.edc.junit)
     testImplementation(libs.edc.http) {
-        // TODO: group
         exclude(group = "org.eclipse.jetty", module = "jetty-client")
         exclude(group = "org.eclipse.jetty", module = "jetty-http")
         exclude(group = "org.eclipse.jetty", module = "jetty-io")

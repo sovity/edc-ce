@@ -29,7 +29,6 @@ dependencies {
     testImplementation(libs.edc.controlPlaneCore)
     testImplementation(libs.edc.junit)
     testImplementation(libs.edc.http) {
-        // TODO: find how to group this with buildSrc
         exclude(group = "org.eclipse.jetty", module = "jetty-client")
         exclude(group = "org.eclipse.jetty", module = "jetty-http")
         exclude(group = "org.eclipse.jetty", module = "jetty-io")
