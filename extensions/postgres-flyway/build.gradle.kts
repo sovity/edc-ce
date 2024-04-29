@@ -15,17 +15,17 @@ dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
 
-    implementation("${edcGroup}:core-spi:${edcVersion}")
-    implementation("${edcGroup}:sql-core:${edcVersion}")
+    implementation(libs.edc.coreSpi)
+    implementation(libs.edc.sqlCore)
 
     // Adds Database-Related EDC-Extensions (EDC-SQL-Stores, JDBC-Driver, Pool and Transactions)
-    implementation("${edcGroup}:control-plane-sql:${edcVersion}")
-    implementation("${tractusGroup}:sql-pool:${tractusVersion}")
-    implementation("${edcGroup}:transaction-local:${edcVersion}")
+    implementation(libs.edc.controlPlaneSql)
+    implementation(libs.edc.transactionLocal)
+    implementation(libs.tractus.sqlPool)
 
-    implementation("org.postgresql:postgresql:${postgresVersion}")
+    implementation(libs.postgres)
 
-    implementation("org.flywaydb:flyway-core:${flywayVersion}")
+    implementation(libs.flyway)
 
     testImplementation(libs.edc.junit)
 }

@@ -20,7 +20,7 @@ dependencies {
     api("${edcGroup}:junit:${edcVersion}")
     api("org.awaitility:awaitility:${awaitilityVersion}")
     api(project(":utils:json-and-jsonld-utils"))
-    implementation("${edcGroup}:sql-core:${edcVersion}")
+    implementation(libs.edc.sqlCore)
     implementation("${edcGroup}:json-ld-spi:${edcVersion}")
     implementation("${edcGroup}:json-ld:${edcVersion}")
     implementation("org.assertj:assertj-core:${assertj}")

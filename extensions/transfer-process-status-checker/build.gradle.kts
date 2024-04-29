@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    api("${edcGroup}:transfer-spi:${edcVersion}")
+    api(libs.edc.transferSpi)
     testImplementation(libs.edc.junit)
 }
 
