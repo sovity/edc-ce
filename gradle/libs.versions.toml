@@ -33,7 +33,7 @@ loggingHouse = "0.2.10"
 lombok = "1.18.30"
 mockito = "4.8.0"
 mockserver = "5.15.0"
-okhttp = "4.11.0"
+okhttp = "4.12.0"
 okio = "3.9.0"
 openapiGenerator = "6.6.0"
 openapiJackson = "0.2.6"
@@ -43,7 +43,7 @@ quartz = "2.3.2"
 restAssured = "4.5.0"
 retry = "1.5.7"
 shadow = "7.1.2"
-swagger = "1.6.11"
+swagger = "1.6.12"
 swaggerCore = "2.2.18"
 t9tJooq = "4.0.0"
 testcontainers = "1.19.1"
@@ -121,7 +121,7 @@ guava = { module = "com.google.guava:guava", version.ref = "guava" }
 
 hikari = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
 
-jakarta-annotation = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jakartaAnnotation" }
+jakarta-annotationApi = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jakartaAnnotation" }
 jakarta-json = { module = "org.glassfish:jakarta.json", version.ref = "jakartaJson" }
 jakarta-rsApi = { module = "jakarta.ws.rs:jakarta.ws.rs-api", version.ref = "jakartaRs" }
 jakarta-servletApi = { module = "jakarta.servlet:jakarta.servlet-api", version.ref = "jakartaServletApi" }
