@@ -21,7 +21,7 @@ We provide a full type-safe and opinionated API Wrapper for better access to the
 ## Explore
 
 Create and consume Data Offers using clean type-safe JSON REST APIs:
-- [API Wrapper OpenAPI YAML](../../docs/sovity-edc-api-wrapper.yaml).
+- [API Wrapper OpenAPI YAML](../../docs/api/sovity-edc-api-wrapper.yaml).
 - [Java API Client Library](./clients/java-client)
 - [TypeScript API Client Library](./clients/typescript-client)
 

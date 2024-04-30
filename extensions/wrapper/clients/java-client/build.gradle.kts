@@ -49,7 +49,7 @@ tasks.getByName<Test>("test") {
 
 // Extract the openapi file from the JAR
 val openapiFile = "sovity-edc-api-wrapper.yaml"
-task<Copy>("extractOpenapiYaml") {
+val extractOpenapiYaml by tasks.registering(Copy::class) {
     dependsOn(openapiYaml)
     into("${project.buildDir}")
     from(zipTree(openapiYaml.singleFile)) {
@@ -58,7 +58,7 @@ task<Copy>("extractOpenapiYaml") {
 }
 
 tasks.getByName<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiGenerate") {
-    dependsOn("extractOpenapiYaml")
+    dependsOn(extractOpenapiYaml)
     generatorName.set("java")
     configOptions.set(
             mutableMapOf(
@@ -77,7 +77,7 @@ tasks.getByName<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("op
     outputDir.set("${project.buildDir}/generated/client-project")
 }
 
-task<Copy>("postprocessGeneratedClient") {
+val postprocessGeneratedClient by tasks.registering(Copy::class) {
     dependsOn("openApiGenerate")
     from("${project.buildDir}/generated/client-project/src/main/java")
 
@@ -109,6 +109,10 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
     withSourcesJar()
     withJavadocJar()
+}
+
+tasks.getByName("sourcesJar") {
+    dependsOn(postprocessGeneratedClient)
 }
 
 tasks.withType<Javadoc> {

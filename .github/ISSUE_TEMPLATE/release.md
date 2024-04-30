@@ -49,7 +49,7 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
   - [ ] Set the UI release version for `EDC_UI_IMAGE` of
         the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
   - [ ] If the Eclipse EDC version changed, update
-        the [eclipse-edc-management-api.yaml file](https://github.com/sovity/edc-extensions/blob/main/docs/eclipse-edc-management-api.yaml).
+        the [eclipse-edc-management-api.yaml file](https://github.com/sovity/edc-extensions/blob/main/docs/api/eclipse-edc-management-api.yaml).
   - [ ] Update the Postman Collection if required.
   - [ ] Merge the `release-prep` PR.
 - [ ] Wait for the main branch to be green. You can check the status in GH [actions](https://github.com/sovity/edc-extensions/actions).
@@ -60,7 +60,7 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
     - [ ] Test with `EDC_UI_ACTIVE_PROFILE=sovity-open-source`
     - [ ] Test with `EDC_UI_ACTIVE_PROFILE=mds-open-source`
   - [ ] Ensure with a `docker ps -a` that all containers are healthy, and not `healthy: starting` or `healthy: unhealthy`.
-- [ ] Test the postman collection against that running docker-compose.
+- [ ] Test the [postman collection](../../docs/api/postman_collection.json) against that running docker-compose.
 - [ ] [Create a release](https://github.com/sovity/edc-extensions/releases/new)
   - [ ] In `Choose the tag`, type your new release version in the format `vx.y.z` (for instance `v1.2.3`) then click `+Create new tag vx.y.z on release`.
   - [ ] Re-use the changelog section as release description, and the version as title.
