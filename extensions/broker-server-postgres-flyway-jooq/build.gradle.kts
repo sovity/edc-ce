@@ -43,7 +43,7 @@ dependencies {
 
     annotationProcessor("org.projectlombok:lombok:1.18.30")
     compileOnly("org.projectlombok:lombok:1.18.30")
-    implementation("org.apache.commons:commons-lang3:3.13.0")
+    implementation(libs.apache.commonsLang)
 
     implementation("${edcGroup}:core-spi:${edcVersion}")
 
