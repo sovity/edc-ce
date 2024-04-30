@@ -22,37 +22,37 @@ val postgresVersion: String by project
 
 buildscript {
     dependencies {
-        classpath("org.testcontainers:postgresql:1.19.1")
+        classpath(libs.testcontainers.postgresql)
     }
 }
 
 plugins {
-    id("org.flywaydb.flyway") version "9.21.1"
-    id("nu.studer.jooq") version "7.1.1"
+    alias(libs.plugins.flyway)
+    alias(libs.plugins.jooq)
     `java-library`
     `maven-publish`
 }
 
 dependencies {
-    api("org.jooq:jooq:3.18.7")
-    api("com.github.t9t.jooq:jooq-postgresql-json:4.0.0")
+    api(libs.jooq.jooq)
+    api(libs.t9tJooq)
 
-    jooqGenerator("org.postgresql:postgresql:42.7.2")
-    flywayMigration("org.postgresql:postgresql:42.7.2")
-    implementation("com.zaxxer:HikariCP:5.0.1")
+    jooqGenerator(libs.postgres)
+    flywayMigration(libs.postgres)
+    implementation(libs.hikari)
 
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
     implementation(libs.apache.commonsLang)
 
-    implementation("${edcGroup}:core-spi:${edcVersion}")
+    implementation(libs.edc.coreSpi)
 
     // Adds Database-Related EDC-Extensions (EDC-SQL-Stores, JDBC-Driver, Pool and Transactions)
-    implementation("org.postgresql:postgresql:${postgresVersion}")
+    implementation(libs.postgres)
 
-    api("org.flywaydb:flyway-core:${flywayVersion}")
+    api(libs.flyway.core)
 
-    testImplementation("${edcGroup}:junit:${edcVersion}")
+    testImplementation(libs.edc.junit)
 }
 
 sourceSets {
