@@ -27,7 +27,7 @@ dependencies {
     implementation(libs.jakarta.rsApi)
     implementation(libs.swagger.annotationsJakarta)
     implementation(libs.swagger.jaxrs2Jakarta)
-    implementation(libs.jakarta.servlet)
+    implementation(libs.jakarta.servletApi)
     implementation(libs.jakarta.validationApi)
     implementation(libs.jakarta.rsApi)
     implementation(libs.apache.commonsLang)
