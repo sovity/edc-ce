@@ -93,7 +93,7 @@ fun jdbcPassword(): String {
 }
 
 
-tasks.register("startTestcontainer") {
+val startTestcontainer by tasks.registering {
     doLast {
         if (isTestcontainersEnabled()) {
             container = PostgreSQLContainer<Nothing>(postgresContainer)
@@ -128,7 +128,7 @@ tasks.withType<FlywayCleanTask> {
 }
 
 tasks.withType<FlywayMigrateTask> {
-    dependsOn.add("startTestcontainer")
+    dependsOn.add(startTestcontainer)
     doFirst {
         require(this is FlywayMigrateTask)
         url = jdbcUrl()
