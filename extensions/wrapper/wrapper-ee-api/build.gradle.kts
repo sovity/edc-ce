@@ -15,7 +15,7 @@ dependencies {
     api(libs.jakarta.validationApi)
     api(libs.swagger.annotationsJakarta)
     api(libs.swagger.jaxrs2Jakarta)
-    api(libs.jakarta.servlet)
+    api(libs.jakarta.servletApi)
 
     implementation(libs.apache.commonsLang)
     implementation(libs.jersey.mediaMultipart)
