@@ -12,7 +12,7 @@ plugins {
     `maven-publish`
     alias(libs.plugins.swagger.plugin)  //./gradlew clean resolve
     alias(libs.plugins.hidetake.swaggerGenerator)  //./gradlew generateSwaggerUI
-    alias(libs.plugins.openapi.generator)  //./gradlew openApiValidate && ./gradlew openApiGenerate
+    alias(libs.plugins.openapi.generator6)  //./gradlew openApiValidate && ./gradlew openApiGenerate
 }
 
 dependencies {

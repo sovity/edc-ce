@@ -48,7 +48,7 @@ let catalog: CatalogPageResult = await edcClient.brokerServerApi.catalogPage();
 ## License
 
 Apache License 2.0 - see
-[LICENSE](https://github.com/sovity/edc-broker-server-extension/blob/main/LICENSE)
+[LICENSE](https://github.com/sovity/edc-extensions/blob/main/LICENSE)
 
 ## Contact
 

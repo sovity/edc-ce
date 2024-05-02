@@ -35,7 +35,8 @@ mockito = "4.8.0"
 mockserver = "5.15.0"
 okhttp = "4.12.0"
 okio = "3.9.0"
-openapiGenerator = "6.6.0"
+openapiGenerator6 = "6.6.0"
+openapiGenerator7 = "7.0.1"
 openapiJackson = "0.2.6"
 postgres = "42.7.2"
 quarkus = "2.16.6.Final"
@@ -195,7 +196,8 @@ jetty-cve2023 = [
 
 [plugins]
 hidetake-swaggerGenerator = { id = "org.hidetake.swagger.generator", version.ref = "hidetakeSwagger" }
-openapi-generator = { id = "org.openapi.generator", version.ref = "openapiGenerator" }
+openapi-generator6 = { id = "org.openapi.generator", version.ref = "openapiGenerator6" }
+openapi-generator7 = { id = "org.openapi.generator", version.ref = "openapiGenerator7" }
 quarkus = { id = "io.quarkus", version.ref = "quarkus" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
 swagger-plugin = { id = "io.swagger.core.v3.swagger-gradle-plugin", version.ref = "swaggerCore" }

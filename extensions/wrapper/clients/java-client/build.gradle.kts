@@ -11,7 +11,7 @@ val jettyGroup: String by project
 plugins {
     `java-library`
     `maven-publish`
-    alias(libs.plugins.openapi.generator)
+    alias(libs.plugins.openapi.generator6)
 }
 
 repositories {

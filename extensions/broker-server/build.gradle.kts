@@ -1,7 +1,6 @@
 plugins {
     `java-library`
     alias(libs.plugins.retry)
-
 }
 
 val edcVersion: String by project

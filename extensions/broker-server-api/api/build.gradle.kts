@@ -4,9 +4,9 @@ val sovityEdcExtensionsVersion: String by project
 plugins {
     `java-library`
     `maven-publish`
-    id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.18" //./gradlew clean resolve
-    id("org.hidetake.swagger.generator") version "2.19.2" //./gradlew generateSwaggerUI
-    id("org.openapi.generator") version "7.0.1" //./gradlew openApiValidate && ./gradlew openApiGenerate
+    alias(libs.plugins.swagger.plugin) //./gradlew clean resolve
+    alias(libs.plugins.hidetake.swaggerGenerator) //./gradlew generateSwaggerUI
+    alias(libs.plugins.openapi.generator7) //./gradlew openApiValidate && ./gradlew openApiGenerate
 }
 
 dependencies {
