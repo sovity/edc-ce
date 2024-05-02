@@ -19,8 +19,6 @@
 
 Java API Client Library to be imported and used in arbitrary applications like use-case backends.
 
-An example project using this client can be found [here](../client-example).
-
 ## Installation
 
 ```xml
@@ -64,7 +62,7 @@ public class BrokerServerClientExample {
 
 ## License
 
-Apache License 2.0 - see [LICENSE](../../LICENSE)
+Apache License 2.0 - see [LICENSE](../../../LICENSE)
 
 ## Contact
 
