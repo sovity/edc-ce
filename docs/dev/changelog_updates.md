@@ -12,7 +12,7 @@ For each release there will be a separate section especially with an "Overview" 
 from a product perspective.
 
 Releases will especially contain a "Compatible Versions" section with the final docker
-images and versions of our Connector Backend and Frontend.
+images and versions of other software components.
 
 ## How to categorize a change
 
@@ -27,24 +27,25 @@ Major changes include:
 
 - UX / Product overhauls.
 - Breaking changes in Connector-To-Connector communication.
-- Breaking changes to other deployment units (our UI doesn't count).
-- Breaking changes in our API Wrapper Use Case API.
+- Breaking changes to the required deployment units (our UI doesn't count).
+- Breaking changes in our APIs for third party applications.
 
 ### Minor Changes
 
 Minor changes include:
 
-- Any changes from a product perspective to our UI or API Wrapper UI API.
+- New or changed features from a customer perspective.
 - Additions to our API Wrapper Use Case API.
+- New APIs with API contracts with other deployment units (our UI doesn't count).
 - New Product Documentation
 
 ### Patch Changes
 
-Patch changes are basically everything else:
+Patch changes are basically everything else, that does not add, change or remove any product or external API features.
 
 - Product Fixes, Bugfixes, Refactorings
 - Changes to existing Product Documentation
-- New or changes to Developer Documentation
+- New documentation or changes to the existing Developer Documentation
 - Everything else
 
 ## Released Versions
