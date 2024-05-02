@@ -1,6 +1,6 @@
 plugins {
     java
-    id("io.quarkus") version "2.16.6.Final"
+    alias(libs.plugins.quarkus)
 }
 
 repositories {
@@ -13,7 +13,7 @@ val quarkusPlatformArtifactId = "quarkus-bom"
 val quarkusPlatformVersion = "2.16.6.Final"
 
 dependencies {
-    implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
+    implementation(enforcedPlatform(libs.quarkus.bom))
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-resteasy-reactive-jackson")
 

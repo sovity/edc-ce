@@ -14,34 +14,34 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
 
-    implementation("${edcGroup}:api-core:${edcVersion}")
-    implementation("${edcGroup}:management-api-configuration:${edcVersion}")
-    implementation("${edcGroup}:dsp-http-spi:${edcVersion}")
+    implementation(libs.edc.apiCore)
+    implementation(libs.edc.managementApiConfiguration)
+    implementation(libs.edc.dspHttpSpi)
     api(project(":extensions:wrapper:wrapper-api"))
     api(project(":extensions:wrapper:wrapper-common-mappers"))
     api(project(":utils:catalog-parser"))
     api(project(":utils:json-and-jsonld-utils"))
-    api("${edcGroup}:contract-definition-api:${edcVersion}")
-    api("${edcGroup}:control-plane-spi:${edcVersion}")
-    api("${edcGroup}:core-spi:${edcVersion}")
-    api("${edcGroup}:policy-definition-api:${edcVersion}")
-    api("${edcGroup}:transfer-process-api:${edcVersion}")
-    implementation("org.apache.commons:commons-lang3:3.13.0")
+    api(libs.edc.contractDefinitionApi)
+    api(libs.edc.controlPlaneSpi)
+    api(libs.edc.coreSpi)
+    api(libs.edc.policyDefinitionApi)
+    api(libs.edc.transferProcessApi)
+    implementation(libs.apache.commonsLang)
 
-    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testAnnotationProcessor(libs.lombok)
+    testCompileOnly(libs.lombok)
 
     testImplementation(project(":extensions:wrapper:clients:java-client"))
     testImplementation(project(":extensions:policy-always-true"))
     testImplementation(project(":utils:test-utils"))
-    testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
-    testImplementation("${edcGroup}:dsp:${edcVersion}")
-    testImplementation("${edcGroup}:iam-mock:${edcVersion}")
-    testImplementation("${edcGroup}:junit:${edcVersion}")
-    testImplementation("${edcGroup}:http:${edcVersion}") {
+    testImplementation(libs.edc.controlPlaneCore)
+    testImplementation(libs.edc.dsp)
+    testImplementation(libs.edc.iamMock)
+    testImplementation(libs.edc.junit)
+    testImplementation(libs.edc.http) {
         exclude(group = "org.eclipse.jetty", module = "jetty-client")
         exclude(group = "org.eclipse.jetty", module = "jetty-http")
         exclude(group = "org.eclipse.jetty", module = "jetty-io")
@@ -51,24 +51,19 @@ dependencies {
     }
 
     // Updated jetty versions for e.g. CVE-2023-26048
-    testImplementation("${jettyGroup}:jetty-client:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-http:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-io:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-server:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-util:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-webapp:${jettyVersion}")
+    testImplementation(libs.bundles.jetty.cve2023)
 
-    testImplementation("${edcGroup}:json-ld:${edcVersion}")
-    testImplementation("${edcGroup}:dsp-http-spi:${edcVersion}")
-    testImplementation("${edcGroup}:dsp-api-configuration:${edcVersion}")
-    testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
+    testImplementation(libs.edc.jsonLd)
+    testImplementation(libs.edc.dspHttpSpi)
+    testImplementation(libs.edc.dspApiConfiguration)
+    testImplementation(libs.edc.dataPlaneSelectorCore)
 
-    testImplementation("net.javacrumbs.json-unit:json-unit-assertj:${jsonUnit}")
-    testImplementation("io.rest-assured:rest-assured:${restAssured}")
-    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
-    testImplementation("org.assertj:assertj-core:${assertj}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testImplementation(libs.jsonUnit.assertj)
+    testImplementation(libs.restAssured.restAssured)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.junit.api)
+    testRuntimeOnly(libs.junit.engine)
 }
 
 tasks.withType<Test> {

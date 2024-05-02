@@ -11,17 +11,17 @@ plugins {
 }
 
 dependencies {
-    api("${edcGroup}:core-spi:${edcVersion}")
-    api("${edcGroup}:control-plane-spi:${edcVersion}")
-    implementation("${edcGroup}:api-core:${edcVersion}")
-    implementation("${edcGroup}:management-api-configuration:${edcVersion}")
+    api(libs.edc.coreSpi)
+    api(libs.edc.controlPlaneSpi)
+    implementation(libs.edc.apiCore)
+    implementation(libs.edc.managementApiConfiguration)
 
-    implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
-    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
+    implementation(libs.jakarta.rsApi)
+    implementation(libs.jakarta.validationApi)
 
-    testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
-    testImplementation("${edcGroup}:junit:${edcVersion}")
-    testImplementation("${edcGroup}:http:${edcVersion}") {
+    testImplementation(libs.edc.controlPlaneCore)
+    testImplementation(libs.edc.junit)
+    testImplementation(libs.edc.http) {
         exclude(group = "org.eclipse.jetty", module = "jetty-client")
         exclude(group = "org.eclipse.jetty", module = "jetty-http")
         exclude(group = "org.eclipse.jetty", module = "jetty-io")
@@ -31,18 +31,13 @@ dependencies {
     }
 
     // Updated jetty versions for e.g. CVE-2023-26048
-    testImplementation("${jettyGroup}:jetty-client:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-http:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-io:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-server:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-util:${jettyVersion}")
-    testImplementation("${jettyGroup}:jetty-webapp:${jettyVersion}")
+    testImplementation(libs.bundles.jetty.cve2023)
 
-    testImplementation("io.rest-assured:rest-assured:${restAssured}")
-    testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
-    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testImplementation(libs.restAssured.restAssured)
+    testImplementation(libs.edc.dataPlaneSelectorCore)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.junit.api)
+    testRuntimeOnly(libs.junit.engine)
 }
 
 val sovityEdcExtensionGroup: String by project

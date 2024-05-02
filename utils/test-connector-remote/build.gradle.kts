@@ -11,23 +11,23 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
 
-    api("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    implementation("org.apache.commons:commons-lang3:3.13.0")
+    api(libs.junit.api)
+    implementation(libs.apache.commonsLang)
 
-    api("${edcGroup}:junit:${edcVersion}")
-    api("org.awaitility:awaitility:${awaitilityVersion}")
+    api(libs.edc.junit)
+    api(libs.awaitility.java)
     api(project(":utils:json-and-jsonld-utils"))
-    implementation("${edcGroup}:sql-core:${edcVersion}")
-    implementation("${edcGroup}:json-ld-spi:${edcVersion}")
-    implementation("${edcGroup}:json-ld:${edcVersion}")
-    implementation("org.assertj:assertj-core:${assertj}")
-    implementation("org.testcontainers:testcontainers:${testcontainersVersion}")
-    implementation("org.testcontainers:junit-jupiter:${testcontainersVersion}")
-    implementation("org.testcontainers:postgresql:${testcontainersVersion}")
-    implementation("io.rest-assured:rest-assured:${restAssured}")
+    implementation(libs.edc.sqlCore)
+    implementation(libs.edc.jsonLdSpi)
+    implementation(libs.edc.jsonLd)
+    implementation(libs.assertj.core)
+    implementation(libs.testcontainers.testcontainers)
+    implementation(libs.testcontainers.junitJupiter)
+    implementation(libs.testcontainers.postgresql)
+    implementation(libs.restAssured.restAssured)
 }
 
 val sovityEdcExtensionGroup: String by project

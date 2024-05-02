@@ -4,14 +4,14 @@ val edcGroup: String by project
 plugins {
     `java-library`
     id("application")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    alias(libs.plugins.shadow)
 }
 
 dependencies {
     api("${edcGroup}:connector-core:${edcVersion}")
-    api("${edcGroup}:boot:${edcVersion}")
-    api("${edcGroup}:http:${edcVersion}")
-    api("${edcGroup}:api-observability:${edcVersion}")
+    api(libs.edc.boot)
+    api(libs.edc.http)
+    api(libs.edc.apiObservability)
     api(project(":extensions:test-backend-controller"))
 }
 

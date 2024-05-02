@@ -6,9 +6,9 @@ plugins {
 }
 
 dependencies {
-    api("${edcGroup}:api-core:${edcVersion}")
-    api("${edcGroup}:core-spi:${edcVersion}")
-    api("${edcGroup}:http:${edcVersion}")
+    api(libs.edc.apiCore)
+    api(libs.edc.coreSpi)
+    api(libs.edc.http)
 }
 
 val sovityEdcExtensionGroup: String by project

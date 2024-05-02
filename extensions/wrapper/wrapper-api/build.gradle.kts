@@ -10,34 +10,34 @@ val jettyGroup: String by project
 plugins {
     `java-library`
     `maven-publish`
-    id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.14" //./gradlew clean resolve
-    id("org.hidetake.swagger.generator") version "2.19.2" //./gradlew generateSwaggerUI
-    id("org.openapi.generator") version "6.6.0" //./gradlew openApiValidate && ./gradlew openApiGenerate
+    alias(libs.plugins.swagger.plugin)  //./gradlew clean resolve
+    alias(libs.plugins.hidetake.swaggerGenerator)  //./gradlew generateSwaggerUI
+    alias(libs.plugins.openapi.generator)  //./gradlew openApiValidate && ./gradlew openApiGenerate
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
 
     api(project(":extensions:wrapper:wrapper-common-api"))
     api(project(":extensions:wrapper:wrapper-common-mappers"))
     api(project(":extensions:wrapper:wrapper-ee-api"))
 
-    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
-    implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
-    implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.15")
-    implementation("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.15")
-    implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
-    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
-    implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
-    implementation("org.apache.commons:commons-lang3:3.13.0")
+    implementation(libs.jakarta.validationApi)
+    implementation(libs.jakarta.rsApi)
+    implementation(libs.swagger.annotationsJakarta)
+    implementation(libs.swagger.jaxrs2Jakarta)
+    implementation(libs.jakarta.servlet)
+    implementation(libs.jakarta.validationApi)
+    implementation(libs.jakarta.rsApi)
+    implementation(libs.apache.commonsLang)
 }
 
 val openapiFileDir = "${project.buildDir}/swagger"
 val openapiFileFilename = "sovity-edc-api-wrapper.yaml"
 val openapiFile = "$openapiFileDir/$openapiFileFilename"
 
-val openapiDocsDir = project.rootProject.rootDir.resolve("docs")
+val openapiDocsDir = project.rootProject.rootDir.resolve("docs").resolve("api")
 
 tasks.withType<io.swagger.v3.plugins.gradle.tasks.ResolveTask> {
     outputDir = file(openapiFileDir)
@@ -49,15 +49,15 @@ tasks.withType<io.swagger.v3.plugins.gradle.tasks.ResolveTask> {
     resourcePackages = setOf("de.sovity.edc.ext.wrapper.api")
 }
 
-tasks.register<Copy>("copyOpenapiYamlToDocs") {
+val copyOpenapiYamlToDocs by tasks.registering(Copy::class) {
     dependsOn("resolve")
     from(openapiFile)
     into(openapiDocsDir)
 }
 
-task<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiGenerateTypeScriptClient") {
+val openApiGenerateTypeScriptClient by tasks.registering(org.openapitools.generator.gradle.plugin.tasks.GenerateTask::class) {
     dependsOn("resolve")
-    dependsOn("copyOpenapiYamlToDocs")
+    dependsOn(copyOpenapiYamlToDocs)
     generatorName.set("typescript-fetch")
     configOptions.set(mutableMapOf(
             "supportsES6" to "true",
@@ -80,7 +80,7 @@ task<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiGenera
 
 tasks.withType<org.gradle.jvm.tasks.Jar> {
     dependsOn("resolve")
-    dependsOn("openApiGenerateTypeScriptClient")
+    dependsOn(openApiGenerateTypeScriptClient)
     from(openapiFileDir) {
         include(openapiFileFilename)
     }

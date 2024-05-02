@@ -7,8 +7,8 @@ val edcGroup: String by project
 
 dependencies {
     // OAuth2 IAM
-    api("${edcGroup}:oauth2-core:${edcVersion}")
-    api("${edcGroup}:vault-filesystem:${edcVersion}")
+    api(libs.edc.oauth2Core)
+    api(libs.edc.vaultFilesystem)
 }
 
 val sovityEdcGroup: String by project

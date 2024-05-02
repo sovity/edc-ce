@@ -6,19 +6,19 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
 
     api(project(":extensions:wrapper:wrapper-common-api"))
 
-    api("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
-    api("jakarta.validation:jakarta.validation-api:3.0.2")
-    api("io.swagger.core.v3:swagger-annotations-jakarta:2.2.15")
-    api("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.15")
-    api("jakarta.servlet:jakarta.servlet-api:5.0.0")
+    api(libs.jakarta.rsApi)
+    api(libs.jakarta.validationApi)
+    api(libs.swagger.annotationsJakarta)
+    api(libs.swagger.jaxrs2Jakarta)
+    api(libs.jakarta.servlet)
 
-    implementation("org.apache.commons:commons-lang3:3.13.0")
-    implementation("org.glassfish.jersey.media:jersey-media-multipart:3.1.3")
+    implementation(libs.apache.commonsLang)
+    implementation(libs.jersey.mediaMultipart)
 }
 
 val sovityEdcGroup: String by project

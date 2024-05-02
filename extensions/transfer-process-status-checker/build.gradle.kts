@@ -7,8 +7,8 @@ plugins {
 }
 
 dependencies {
-    api("${edcGroup}:transfer-spi:${edcVersion}")
-    testImplementation("${edcGroup}:junit:${edcVersion}")
+    api(libs.edc.transferSpi)
+    testImplementation(libs.edc.junit)
 }
 
 val sovityEdcExtensionGroup: String by project

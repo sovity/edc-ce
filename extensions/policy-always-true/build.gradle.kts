@@ -8,17 +8,17 @@ plugins {
 }
 
 dependencies {
-    api("${edcGroup}:core-spi:${edcVersion}")
-    api("${edcGroup}:policy-engine-spi:${edcVersion}")
-    api("${edcGroup}:control-plane-spi:${edcVersion}")
-    implementation("${edcGroup}:api-core:${edcVersion}")
+    api(libs.edc.coreSpi)
+    api(libs.edc.policyEngineSpi)
+    api(libs.edc.controlPlaneSpi)
+    implementation(libs.edc.apiCore)
 
-    testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
-    testImplementation("${edcGroup}:junit:${edcVersion}")
-    testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
-    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testImplementation(libs.edc.controlPlaneCore)
+    testImplementation(libs.edc.junit)
+    testImplementation(libs.edc.dataPlaneSelectorCore)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.junit.api)
+    testRuntimeOnly(libs.junit.engine)
 }
 
 val sovityEdcExtensionGroup: String by project
