@@ -26,14 +26,15 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
         - [ ] Write or review a release summary.
         - [ ] Remove empty sections from the patch notes.
     - [ ] Update the [gradle.properties](https://github.com/sovity/edc-broker-server-extension/blob/main/gradle.properties) to contain the released edc-extensions version.
-    - [ ] Set the broker server release version in the [docker-compose's .env file](https://github.com/sovity/edc-broker-server-extension/blob/main/.env).
-    - [ ] Set the EDC UI release version in the [docker-compose's .env file](https://github.com/sovity/edc-broker-server-extension/blob/main/.env).
-    - [ ] Set the EDC CE release version in the [docker-compose's .env file](https://github.com/sovity/edc-broker-server-extension/blob/main/.env).
+    - TODO: update links to new .env after the merge
+    - [ ] Set the broker server release version in the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
+    - [ ] Set the EDC UI release version in the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
+    - [ ] Set the EDC CE release version in the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
     - [ ] Merge the `release-prep` PR.
 - [ ] Wait for the main branch to be green.
 - [ ] Test the `docker-compose.yaml` with `BROKER_IMAGE=ghcr.io/sovity/broker-server-dev:main`.
 - [ ] Create a release and re-use the changelog section as release description, and the version as title.
-- [ ] Check if the pipeline built the release versions in the [Actions-Section](https://github.com/sovity/edc-broker-server-extension/actions?query=event%3Arelease) (or you won't see it).
+- [ ] Check if the pipeline built the release versions in the [Actions-Section](https://github.com/sovity/edc-extensions/actions?query=event%3Arelease) (or you won't see it).
 - [ ] Checkout the release tag and check test the `docker-compose.yaml`.
   - [ ] Ensure with a `docker ps -a` that all containers are healthy, and not `healthy: starting` or `healthy: unhealthy`. 
 - [ ] Check the contents of the Deployment Docs Zip from the GitHub Release.
@@ -42,10 +43,11 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
     - [ ] Attach the Deployment Docs Zip generated during the GitHub release, which should now contain the CHANGELOG, deployment migration notes, an initial deployment guide and a local demo docker compose.
 - [ ] Optional, this can be done mid-development if required:
     - [ ] Create a `release-cleanup` PR. 
-    - [ ] Revert the versions in the [docker-compose's .env file](.env) back to latest for the EDC UI.
-    - [ ] Revert the versions in the [docker-compose's .env file](.env) back to latest for the EDC CE.
-    - [ ] Revert the versions in the [docker-compose's .env file](.env) back to latest for the Broker Server.
-    - [ ] Update the [gradle.properties](https://github.com/sovity/edc-broker-server-extension/blob/main/gradle.properties) to contain the edc-extensions version `0.0.1-SNAPSHOT`.
+    - TODO: update links to new .env after the merge
+    - [ ] Revert the versions in the [docker-compose's .env file](../../../.env) back to latest for the EDC UI.
+    - [ ] Revert the versions in the [docker-compose's .env file](../../../.env) back to latest for the EDC CE.
+    - [ ] Revert the versions in the [docker-compose's .env file](../../../.env) back to latest for the Broker Server.
+    - [ ] Update the [gradle.properties](https://github.com/sovity/edc-extensions/blob/main/gradle.properties) to contain the edc-extensions version `0.0.1-SNAPSHOT`.
     - [ ] Merge the `release-cleanup` PR.
-- [ ] Revisit the changed list of tasks and compare it with [.github/ISSUE_TEMPLATE/release.md](https://github.com/sovity/edc-broker-server-extension/blob/main/.github/ISSUE_TEMPLATE/release.md). Apply changes where it makes sense.
+- [ ] Revisit the changed list of tasks and compare it with [.github/ISSUE_TEMPLATE/release.md](https://github.com/sovity/edc-extensions/blob/main/.github/ISSUE_TEMPLATE/release.md). Apply changes where it makes sense.
 - [ ] Close this issue.

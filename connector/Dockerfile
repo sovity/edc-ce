@@ -1,7 +1,7 @@
-FROM gradle:7-jdk17-alpine AS build
-
 # TODO https://github.com/sovity/edc-broker-server-extension/issues/425
 USER fixme_and_stop_using_root
+
+FROM gradle:7-jdk17-alpine AS build
 
 ARG USERNAME
 ARG TOKEN

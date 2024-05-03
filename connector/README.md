@@ -16,12 +16,12 @@
 
 ## Image Variants
 
-The Broker Server is built in differnt variants:
+The Broker Server is built in different variants:
 
-| Docker Image                                                                                                | Type              | Purpose                                                                              | Features                                                                                                         |
-|-------------------------------------------------------------------------------------------------------------|-------------------|--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
-| [broker-server-dev](https://github.com/sovity/edc-broker-server-extension/pkgs/container/broker-server-dev) | Development       | <ul><li>Local Deployment via our `docker-compose.yaml`</li><li>E2E Testing</li></ul> | <ul><li>Broker Server Extension(s)</li><li>PostgreSQL Persistence & Flyway</li><li>Mock IAM</li></ul>            |
-| [broker-server-ce](https://github.com/sovity/edc-broker-server-extension/pkgs/container/broker-server-ce)   | Community Edition | <ul><li>Productive Deployment</li></ul>                                              | <ul><li>Broker Server Extension(s)</li><li>PostgreSQL Persistence & Flyway</li><li>DAPS Authentication</li></ul> |
+| Docker Image                                                                                   | Type              | Purpose                                                                              | Features                                                                                                         |
+|------------------------------------------------------------------------------------------------|-------------------|--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| [broker-server-dev](https://github.com/sovity/edc-extensions/pkgs/container/broker-server-dev) | Development       | <ul><li>Local Deployment via our `docker-compose.yaml`</li><li>E2E Testing</li></ul> | <ul><li>Broker Server Extension(s)</li><li>PostgreSQL Persistence & Flyway</li><li>Mock IAM</li></ul>            |
+| [broker-server-ce](https://github.com/sovity/edc-extensions/pkgs/container/broker-server-ce)   | Community Edition | <ul><li>Productive Deployment</li></ul>                                              | <ul><li>Broker Server Extension(s)</li><li>PostgreSQL Persistence & Flyway</li><li>DAPS Authentication</li></ul> |
 
 ## Image Tags
 
@@ -32,7 +32,7 @@ The Broker Server is built in differnt variants:
 
 ## License
 
-Apache License 2.0 - see [LICENSE](../../LICENSE)
+Apache License 2.0 - see [LICENSE](../LICENSE)
 
 ## Contact
 

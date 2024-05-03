@@ -192,7 +192,7 @@ EDC_BROKER_SERVER_ADMIN_API_KEY: DefaultBrokerServerAdminApiKey
 ```
 
 All pre-configured config values for either the broker server or the underlying EDC can be found
-in [connector/.env](connector/.env).
+in [connector/.env](.). TODO: fix url after merge
 
 #### UI Configuration
 

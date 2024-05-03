@@ -3,12 +3,12 @@
 In order to maintain a coherent code style throughout the project we ask every contributor to adhere to a few simple
 style guidelines. We assume most developers will use at least something like `IntelliJ` and therefore have support for
 automatic code formatting, we are not going to list the guidelines here. If you absolutely want to take a look, checkout
-the [config written in XML](resources/checkstyle-config.xml).
+the [config written in XML](.) TODO: fix url after merge
 
 ## Checkstyle configuration
 
 Checkstyle is a [tool](https://checkstyle.sourceforge.io/) that can statically analyze your source code to check against
-a set of given rules. Those rules are formulated in an [XML document](resources/checkstyle-config.xml). Many modern
+a set of given rules. Those rules are formulated in an [XML document](.) <!-- TODO: fix url after merge -->. Many modern
 IDEs have a plugin available for download that runs in the background and does code analysis.
 
 This checkstyle config is based off of the [Google Style](https://checkstyle.sourceforge.io/google_style.html) with a

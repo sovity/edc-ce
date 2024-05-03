@@ -28,11 +28,11 @@ import io.swagger.v3.oas.annotations.info.License;
                 contact = @Contact(
                         name = "sovity GmbH",
                         email = "contact@sovity.de",
-                        url = "https://github.com/sovity/edc-broker-server-extension/issues/new/choose"
+                        url = "https://github.com/sovity/edc-extensions/issues/new/choose"
                 ),
                 license = @License(
                         name = "Apache 2.0",
-                        url = "https://github.com/sovity/edc-broker-server-extension/blob/main/LICENSE"
+                        url = "https://github.com/sovity/edc-extensions/blob/main/LICENSE"
                 )
         ),
         externalDocs = @ExternalDocumentation(
