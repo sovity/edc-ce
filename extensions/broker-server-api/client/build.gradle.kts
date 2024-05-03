@@ -7,7 +7,7 @@ val assertj: String by project
 plugins {
     `java-library`
     `maven-publish`
-    id("org.openapi.generator") version "7.0.1"
+    alias(libs.plugins.openapi.generator7)
 }
 
 repositories {
@@ -24,19 +24,19 @@ dependencies {
     }
 
     // Generated Client's Dependencies
-    implementation("io.swagger:swagger-annotations:1.6.12")
-    implementation("com.google.code.findbugs:jsr305:3.0.2")
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("io.gsonfire:gson-fire:1.8.5")
-    implementation("org.openapitools:jackson-databind-nullable:0.2.6")
-    implementation("org.apache.commons:commons-lang3:3.13.0")
-    implementation("jakarta.annotation:jakarta.annotation-api:1.3.5")
+    implementation(libs.swagger.annotations)
+    implementation(libs.findbugs.jsr305)
+    implementation(libs.okhttp.okhttp)
+    implementation(libs.okhttp.loggingInterceptor)
+    implementation(libs.gson)
+    implementation(libs.gsonFire)
+    implementation(libs.openapi.jacksonDatabindNullable)
+    implementation(libs.apache.commonsLang)
+    implementation(libs.jakarta.annotationApi)
 
     // Lombok
-    compileOnly("org.projectlombok:lombok:1.18.30")
-    annotationProcessor("org.projectlombok:lombok:1.18.30")
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
 }
 
 tasks.getByName<Test>("test") {
@@ -44,19 +44,21 @@ tasks.getByName<Test>("test") {
 }
 
 // Extract the openapi file from the JAR
-val openapiFile = "broker-server.yaml"
-task<Copy>("extractOpenapiYaml") {
+val openapiFileName = "broker-server.yaml"
+val targetLocation = project.buildDir.resolve("openapi")
+val extractOpenapiYaml by tasks.registering(Copy::class) {
     dependsOn(openapiYaml)
-    into("${project.buildDir}")
+    into(targetLocation)
     from(zipTree(openapiYaml.singleFile)) {
-        include("broker-server.yaml")
+        include(openapiFileName)
     }
 }
 
-tasks.getByName<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiGenerate") {
-    dependsOn("extractOpenapiYaml")
+val openApiGenerate = tasks.getByName<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiGenerate") {
+    dependsOn(extractOpenapiYaml)
     generatorName.set("java")
-    configOptions.set(mutableMapOf(
+    configOptions.set(
+        mutableMapOf(
             "invokerPackage" to "de.sovity.edc.ext.brokerserver.client.gen",
             "apiPackage" to "de.sovity.edc.ext.brokerserver.client.gen.api",
             "modelPackage" to "de.sovity.edc.ext.brokerserver.client.gen.model",
@@ -65,14 +67,15 @@ tasks.getByName<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("op
             "annotationLibrary" to "swagger1",
             "hideGenerationTimestamp" to "true",
             "useRuntimeException" to "true",
-    ))
+        )
+    )
 
-    inputSpec.set("${project.buildDir}/${openapiFile}")
+    inputSpec.set("${targetLocation.resolve(openapiFileName)}")
     outputDir.set("${project.buildDir}/generated/client-project")
 }
 
-task<Copy>("postprocessGeneratedClient") {
-    dependsOn("openApiGenerate")
+val postprocessGeneratedClient by tasks.registering(Copy::class) {
+    dependsOn(openApiGenerate)
     from("${project.buildDir}/generated/client-project/src/main/java")
 
     // @lombok.Builder clashes with the following generated model file.
@@ -95,14 +98,31 @@ checkstyle {
 
 
 tasks.getByName<JavaCompile>("compileJava") {
-    dependsOn("postprocessGeneratedClient")
+    dependsOn(postprocessGeneratedClient)
+}
+
+val sourcesJar by tasks.creating(Jar::class) {
+    dependsOn(postprocessGeneratedClient)
+    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allSource)
+}
+
+val javadocJar by tasks.creating(Jar::class) {
+    dependsOn(postprocessGeneratedClient)
+    dependsOn(JavaPlugin.JAVADOC_TASK_NAME)
+    archiveClassifier.set("javadoc")
+    from(tasks["javadoc"])
+}
+
+artifacts {
+    add("archives", sourcesJar)
+    add("archives", javadocJar)
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
-    withSourcesJar()
-    withJavadocJar()
 }
 
 tasks.withType<Javadoc> {
