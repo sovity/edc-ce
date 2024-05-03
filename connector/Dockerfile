@@ -1,5 +1,8 @@
 FROM gradle:7-jdk17-alpine AS build
 
+# TODO https://github.com/sovity/edc-broker-server-extension/issues/425
+USER fixme_and_stop_using_root
+
 ARG USERNAME
 ARG TOKEN
 ARG BUILD_ARGS
@@ -20,6 +23,9 @@ WORKDIR /home/gradle/project/
 RUN --mount=type=cache,target=/home/gradle/.gradle/caches gradle build --no-daemon $BUILD_ARGS
 
 FROM eclipse-temurin:17-jre-alpine
+
+# TODO https://github.com/sovity/edc-broker-server-extension/issues/425
+USER fixme_and_stop_using_root
 
 # Optional JVM arguments, such as memory settings
 ARG JVM_ARGS=""
