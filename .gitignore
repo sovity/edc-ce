@@ -40,6 +40,7 @@ build
 **/.env
 !.env
 !launchers/.env
+!connector/.env
 
 # Log files
 *.log
