@@ -31,6 +31,8 @@ jobs:
         run: cd extensions/wrapper/clients/typescript-client && npm install
       - name: npm install (typescript-client-example)
         run: cd extensions/wrapper/clients/typescript-client-example && npm install
+      - name: npm install (client-ts)
+        run: cd extensions/broker-server-api/client-ts && npm install
       - name: Run license scanner
         uses: aquasecurity/trivy-action@master
         with:
