@@ -1,4 +1,3 @@
-val lombokVersion: String by project
 
 plugins {
     `java-library`

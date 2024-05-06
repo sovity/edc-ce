@@ -1,7 +1,3 @@
-val edcVersion: String by project
-val edcGroup: String by project
-val mockitoVersion: String by project
-val jupiterVersion: String by project
 
 plugins {
     `java-library`

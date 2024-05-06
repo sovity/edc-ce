@@ -1,5 +1,3 @@
-val sovityEdcGroup: String by project
-val sovityEdcExtensionsVersion: String by project
 
 plugins {
     `java-library`

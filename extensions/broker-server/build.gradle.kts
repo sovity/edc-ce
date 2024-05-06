@@ -3,18 +3,6 @@ plugins {
     alias(libs.plugins.retry)
 }
 
-val edcVersion: String by project
-val edcGroup: String by project
-val jupiterVersion: String by project
-val mockitoVersion: String by project
-val assertj: String by project
-val okHttpVersion: String by project
-val restAssured: String by project
-val testcontainersVersion: String by project
-val sovityEdcGroup: String by project
-val sovityEdcExtensionGroup: String by project
-val sovityEdcExtensionsVersion: String by project
-
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
 }

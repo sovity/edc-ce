@@ -1,10 +1,3 @@
-val edcVersion: String by project
-val edcGroup: String by project
-val tractusVersion: String by project
-val tractusGroup: String by project
-val flywayVersion: String by project
-val postgresVersion: String by project
-val lombokVersion: String by project
 
 plugins {
     `java-library`

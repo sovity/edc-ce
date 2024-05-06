@@ -1,10 +1,3 @@
-val lombokVersion: String by project
-
-val assertj: String by project
-val edcGroup: String by project
-val edcVersion: String by project
-val jsonUnit: String by project
-val mockitoVersion: String by project
 
 plugins {
     `java-library`

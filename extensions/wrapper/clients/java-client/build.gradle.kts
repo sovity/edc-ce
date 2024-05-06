@@ -1,12 +1,3 @@
-val edcVersion: String by project
-val edcGroup: String by project
-val restAssured: String by project
-val assertj: String by project
-val mockitoVersion: String by project
-val lombokVersion: String by project
-val jettyVersion: String by project
-val jettyGroup: String by project
-
 
 plugins {
     `java-library`

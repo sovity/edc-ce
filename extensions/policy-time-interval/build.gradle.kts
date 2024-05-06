@@ -1,5 +1,3 @@
-val edcVersion: String by project
-val edcGroup: String by project
 
 plugins {
     `java-library`
