@@ -17,6 +17,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
+Security updates
+
 ### Deployment Migration Notes
 
 ## [7.4.2] - 2024-04-20
