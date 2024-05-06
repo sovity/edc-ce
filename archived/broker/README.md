@@ -128,8 +128,8 @@ Mid-development it might be un-pinned back to latest versions.
 |----------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
 | Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                                             |
 | Postgresql                                                     | 15 or compatible version                                                                          |
-| Broker Backend                                                 | broker-server-ce, see [CHANGELOG.md](../archived/broker/CHANGELOG.md) for compatible versions. |
-| Broker UI                                                      | edc-ui, see  [CHANGELOG.md](../archived/broker/CHANGELOG.md) for compatible versions.          |
+| Broker Backend                                                 | broker-server-ce, see [CHANGELOG.md](CHANGELOG.md) for compatible versions. |
+| Broker UI                                                      | edc-ui, see  [CHANGELOG.md](CHANGELOG.md) for compatible versions.          |
 
 ### Configuration
 
@@ -192,7 +192,7 @@ EDC_BROKER_SERVER_ADMIN_API_KEY: DefaultBrokerServerAdminApiKey
 ```
 
 All pre-configured config values for either the broker server or the underlying EDC can be found
-in [connector/.env](.). TODO: fix url after merge
+in [connector/.env](../../conflicts). TODO: fix url after merge
 
 #### UI Configuration
 
