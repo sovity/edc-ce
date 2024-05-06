@@ -1,5 +1,6 @@
 rootProject.name = "edc-extensions"
 
+include(":connector")
 include(":extensions:broker-server")
 include(":extensions:broker-server-api:api")
 include(":extensions:broker-server-api:client")
