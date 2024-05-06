@@ -70,7 +70,7 @@ val openApiGenerate = tasks.getByName<org.openapitools.generator.gradle.plugin.t
         )
     )
 
-    inputSpec.set("${targetLocation.resolve(openapiFileName)}")
+    inputSpec.set(targetLocation.resolve(openapiFileName).path)
     outputDir.set("${project.buildDir}/generated/client-project")
 }
 

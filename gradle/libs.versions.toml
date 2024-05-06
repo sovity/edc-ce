@@ -24,6 +24,7 @@ java = "17"
 jersey = "3.1.3"
 jetty = "11.0.15"
 jooq = "3.18.7"
+jooqPostgresqlJson = "4.0.0"
 jooqPlugin = "7.1.1"
 json = "20220924"
 jsonAssert = "1.5.1"
@@ -46,7 +47,6 @@ retry = "1.5.7"
 shadow = "7.1.2"
 swagger = "1.6.12"
 swaggerCore = "2.2.18"
-t9tJooq = "4.0.0"
 testcontainers = "1.19.1"
 titaniumLd = "1.3.2"
 tractus = "0.5.3"
@@ -176,7 +176,7 @@ swagger-annotations = { module = "io.swagger:swagger-annotations", version.ref =
 swagger-annotationsJakarta = { module = "io.swagger.core.v3:swagger-annotations-jakarta", version.ref = "swaggerCore" }
 swagger-jaxrs2Jakarta = { module = "io.swagger.core.v3:swagger-jaxrs2-jakarta", version.ref = "swaggerCore" }
 
-t9tJooq = { module = "com.github.t9t.jooq:jooq-postgresql-json", version.ref = "t9tJooq" }
+t9tJooq-jooqPostgresqlJson = { module = "com.github.t9t.jooq:jooq-postgresql-json", version.ref = "jooqPostgresqlJson" }
 
 testcontainers-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 testcontainers-junitJupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }

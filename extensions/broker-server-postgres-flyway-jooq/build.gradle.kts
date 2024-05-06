@@ -35,7 +35,7 @@ plugins {
 
 dependencies {
     api(libs.jooq.jooq)
-    api(libs.t9tJooq)
+    api(libs.t9tJooq.jooqPostgresqlJson)
 
     jooqGenerator(libs.postgres)
     flywayMigration(libs.postgres)
