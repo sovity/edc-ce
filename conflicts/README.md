@@ -128,8 +128,8 @@ Mid-development it might be un-pinned back to latest versions.
 |----------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
 | Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                                             |
 | Postgresql                                                     | 15 or compatible version                                                                          |
-| Broker Backend                                                 | broker-server-ce, see [CHANGELOG.md](../changelog_archive_for_broker.md) for compatible versions. |
-| Broker UI                                                      | edc-ui, see  [CHANGELOG.md](../changelog_archive_for_broker.md) for compatible versions.          |
+| Broker Backend                                                 | broker-server-ce, see [CHANGELOG.md](../archived/broker/CHANGELOG.md) for compatible versions. |
+| Broker UI                                                      | edc-ui, see  [CHANGELOG.md](../archived/broker/CHANGELOG.md) for compatible versions.          |
 
 ### Configuration
 

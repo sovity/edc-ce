@@ -9,7 +9,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 Starting from version `8`, the Broker has been merged with the Community edition.
 
-[The old changelog](changelog_archive_for_broker.md) for the broker is still available but will not be updated anymore.
+[The old changelog](archived/broker/CHANGELOG.md) for the broker is still available but will not be updated anymore.
 
 The broker therefore jumps from version 4 to versions 8.
 

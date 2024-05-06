@@ -608,7 +608,7 @@ Broker MvP using Core EDC MS8.
     EDC_BROKER_SERVER_DB_CONNECTION_TIMEOUT_IN_MS: 30000
     ```
 3. An issue prevented the keystore file from being read, preventing a successful data space log in.
-4. Added a reference to [connector/.env](.env) as source for other possible broker server configuration
+4. Added a reference to [connector/.env](../../.env) as source for other possible broker server configuration
    options, that have defaults, but might have use cases for overriding.
 
 #### Compatible Versions
