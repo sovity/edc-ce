@@ -26,6 +26,14 @@ _What problems does that user face that existing functionalities do solve?_
 
 _Describe whether this request is related to an existing workflow, feature, or otherwise something in the product today. Or, does this open us up to new innovative ideas?_
 
+## Scope check
+
+_Is this feature part of the contracted scope?_
+- [ ] It is part of the contracted scope
+- [ ] It is not part of the contracted scope
+
+If not, please add the label "mds/future-scope"
+
 ## (For sovity Team to complete) Stakeholders
 
 _Add more on who asked for this, i.e. company, person, how much they pay us, what their tier is, are they a strategic account, etc. Who needs to be kept up-to-date about this feature?_
