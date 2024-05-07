@@ -99,7 +99,7 @@ the [docker-compose.yaml](#local-demo).
 
 ### Local Demo
 
-There is a [docker-compose.yaml](docker-compose.yaml) that starts a broker and a connector.
+There is a [docker-compose.yaml](../../docker-compose.yaml) that starts a broker and a connector.
 
 At release time it is pinned down to the release versions.
 
