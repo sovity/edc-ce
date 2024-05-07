@@ -19,7 +19,7 @@ WORKDIR /app
 COPY ./launchers/connectors/$CONNECTOR_NAME/build/libs/app.jar /app
 COPY ./launchers/logging.properties /app
 COPY ./launchers/logging.dev.properties /app
-COPY ./launchers/.env /app/.env
+COPY ./launchers/.env.extensions /app/.env
 RUN touch /app/emtpy-properties-file.properties
 
 # Replaces var statements so when they are sourced as bash they don't overwrite existing env vars
