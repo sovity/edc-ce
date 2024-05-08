@@ -1,7 +1,7 @@
 plugins {
     `java-library`
     id("application")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    alias(libs.plugins.shadow)
 }
 
 val edcVersion: String by project
@@ -24,13 +24,8 @@ dependencies {
     // Broker Server + PostgreSQL + Flyway
     implementation(project(":extensions:broker-server"))
 
-    // Optional: Connector-To-Connector IAM
-    if (project.hasProperty("oauth2")) {
-        implementation("${edcGroup}:vault-filesystem:${edcVersion}")
-        implementation("${edcGroup}:oauth2-core:${edcVersion}")
-    } else {
-        implementation("${edcGroup}:iam-mock:${edcVersion}")
-    }
+    // Connector-To-Connector IAM
+    implementation("${edcGroup}:iam-mock:${edcVersion}")
 }
 
 application {

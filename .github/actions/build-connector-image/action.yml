@@ -71,5 +71,6 @@ runs:
         labels: ${{ steps.meta.outputs.labels }}
         build-args: |
           CONNECTOR_NAME=${{ inputs.connector-name }}
+          CONNECTOR_TYPE=${{ inputs.connector-type }}
           "EDC_LAST_COMMIT_INFO_ARG=${{ env.LAST_COMMIT_INFO }}"
           EDC_BUILD_DATE_ARG=${{ env.BUILD_DATE }}

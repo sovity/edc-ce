@@ -10,6 +10,7 @@ USER edc:edc
 
 # Which app.jar to include
 ARG CONNECTOR_NAME="sovity-ce"
+ARG CONNECTOR_TYPE="extensions"
 
 # For last-commit-info extension
 ARG EDC_LAST_COMMIT_INFO_ARG="The docker container was built outside of github actions and you didn't provide the build arg EDC_LAST_COMMIT_INFO_ARG, so there's no last commit info."
@@ -19,8 +20,9 @@ WORKDIR /app
 COPY ./launchers/connectors/$CONNECTOR_NAME/build/libs/app.jar /app
 COPY ./launchers/logging.properties /app
 COPY ./launchers/logging.dev.properties /app
-COPY ./launchers/.env.extensions /app/.env
-RUN touch /app/emtpy-properties-file.properties
+COPY ./launchers/.env.$CONNECTOR_TYPE /app/.env
+
+RUN touch /app/empty-properties-file.properties
 
 # Replaces var statements so when they are sourced as bash they don't overwrite existing env vars
 RUN sed -ri 's/^\s*(\S+)=(.*)$/\1=${\1:-"\2"}/' .env
@@ -35,3 +37,5 @@ CMD ["start"]
 
 # health status is determined by the availability of the /health endpoint
 HEALTHCHECK --interval=5s --timeout=5s --retries=10 CMD curl --fail http://localhost:11001/api/check/health
+# TODO: do I need the API key?
+#HEALTHCHECK --interval=5s --timeout=5s --retries=10 CMD curl -H "x-api-key: $EDC_API_AUTH_KEY" --fail http://localhost:11001/backend/api/check/health
