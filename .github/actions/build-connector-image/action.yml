@@ -19,6 +19,9 @@ inputs:
   connector-name:
     required: true
     description: "EDC Connector Name in launchers/connectors/{connector-name}"
+  connector-type:
+    required: true
+    description: "Type of connector: 'extensions' or 'broker'"
   title:
     required: true
     description: "Docker Image Title"
