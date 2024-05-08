@@ -99,7 +99,7 @@ the [docker-compose.yaml](#local-demo).
 
 ### Local Demo
 
-There is a [docker-compose.yaml](../../docker-compose.yaml) that starts a broker and a connector.
+There is a [docker-compose-broker.yaml](../../docker-compose-broker.yaml) that starts a broker and a connector.
 
 At release time it is pinned down to the release versions.
 
@@ -124,18 +124,16 @@ Mid-development it might be un-pinned back to latest versions.
 
 ### Deployment Units
 
-| Deployment Unit                                                | Version / Details                                                                                                                                                  |
-|----------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                                                                                                              |
-| Postgresql                                                     | 15 or compatible version                                                                                                                                           |
-| Broker Backend                                                 | broker-server-ce, see [CHANGELOG.md](https://github.com/sovity/edc-broker-server-extension/blob/main/CHANGELOG.md) <!-- TODO fix link --> for compatible versions. |
-| Broker UI                                                      | edc-ui, see  [CHANGELOG.md](https://github.com/sovity/edc-broker-server-extension/blob/main/CHANGELOG.md) <!-- TODO fix link --> for compatible versions.          |
+| Deployment Unit                                                | Version / Details                                                                                                                                                                                       |
+|----------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                                                                                                                                                   |
+| Postgresql                                                     | 15 or compatible version                                                                                                                                                                                |
+| Broker Backend                                                 | broker-server-ce, see [CHANGELOG.md](../../CHANGELOG.md) for version 8+ or [former CHANGELOG.md](https://github.com/sovity/edc-broker-server-extension/blob/main/CHANGELOG.md) for compatible versions. |
+| Broker UI                                                      | edc-ui, see [CHANGELOG.md](../../CHANGELOG.md) for version 8+ or [former CHANGELOG.md](https://github.com/sovity/edc-broker-server-extension/blob/main/CHANGELOG.md) for compatible versions.           |
 
 ### Configuration
 
-There is a [docker-compose-broker.yaml](../../docker-compose-broker.yaml) to try out the broker locally. However, a productive release will
-require a few more configuration options, so you should only use it to check if the released version is roughly working
-or if it's broken.
+There is a [docker-compose-broker.yaml](../../docker-compose-broker.yaml) to try out the broker locally. However, a productive release will require a few more configuration options, so you should only use it to check if the released version is roughly working or if it's broken.
 
 #### Reverse Proxy Configuration
 
@@ -192,7 +190,7 @@ EDC_BROKER_SERVER_ADMIN_API_KEY: DefaultBrokerServerAdminApiKey
 ```
 
 All pre-configured config values for either the broker server or the underlying EDC can be found
-in [connector/.env](../../conflicts). TODO: fix url after merge
+in [launchers/.env.broker](../../launchers/.env.broker).
 
 #### UI Configuration
 

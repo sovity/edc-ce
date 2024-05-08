@@ -26,7 +26,7 @@ _What problems does that user face that existing functionalities do solve?_
 
 _Describe whether this request is related to an existing workflow, feature, or otherwise something in the product today. Or, does this open us up to new innovative ideas?_
 
-## Scope check
+## MDS Scope check
 
 _Is this feature part of the contracted scope?_
 - [ ] It is part of the contracted scope
