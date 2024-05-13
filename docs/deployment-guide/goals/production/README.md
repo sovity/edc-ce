@@ -1,5 +1,4 @@
-Productive Deployment Guide
-========
+# Productive Deployment Guide
 
 > This is for our latest version. There is another guide for [4.2.0](4.2.0/README.md).
 
