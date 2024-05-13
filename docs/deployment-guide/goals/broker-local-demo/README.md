@@ -1,7 +1,7 @@
 # Deployment Goal: Broker Local Demo
 
-[//]: # (TODO link prod doc)
-> TODO: link to prod broker demo
+> On how to deploy a productive Broker with joining an existing Data Space, please refer
+> to our [Productive Deployment Guide](../broker-production/README.md).
 
 ## Quick Start
 
