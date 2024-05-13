@@ -66,7 +66,7 @@ Check out our [Getting Started Section](#getting-started) on how to run a local 
 Our sovity Community Edition EDC takes available Open Source EDC Extensions and combines them with our own
 open source EDC Extensions from this repository to build ready-to-use EDC Docker Images.
 
-See [here](launchers/README.md) for a list of our sovity Community Edition EDC Docker Images.
+See [here](launchers/README.md) for a list of our sovity Community Edition EDC Docker images.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -76,6 +76,15 @@ Feel free to explore and use our [EDC Extensions](./extensions) with your EDC se
 
 We packaged critical extensions for compatibility with our EDC UI and general usability features into
 [sovity EDC Extensions Package](./extensions/sovity-edc-extensions-package).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## sovity Community Edition Broker extension
+
+[//]: # (TODO: check if this is still the same version at releasing.)
+Our EDC Broker indexes EDCs to offer a convenient centralized search engine. It is part of this project since version 8.
+
+See [here](launchers/README.md) for a list of our sovity Community Edition Broker Docker images.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

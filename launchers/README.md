@@ -148,7 +148,7 @@ Our sovity Community Edition EDC is built as several docker image variants in di
         <li>Broker Server Extension(s)</li>
         <li>PostgreSQL Persistence & Flyway</li>
         <li>Mock IAM</li>
-      </ul>            
+      </ul>
     </td>
   </tr>
   <tr>
@@ -164,7 +164,7 @@ Our sovity Community Edition EDC is built as several docker image variants in di
         <li>Broker Server Extension(s)</li>
         <li>PostgreSQL Persistence & Flyway</li>
         <li>DAPS Authentication</li>
-      </ul>            
+      </ul>
     </td>
   </tr>
 </table>
