@@ -23,7 +23,7 @@ dependencies {
     implementation(libs.jakarta.validationApi)
 }
 
-val openapiFileDir = "${project.buildDir}/swagger"
+val openapiFileDir = project.layout.buildDirectory.get().asFile.resolve("swagger").path
 val openapiFileFilename = "broker-server.yaml"
 val openapiFile = "$openapiFileDir/$openapiFileFilename"
 

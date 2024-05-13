@@ -132,6 +132,41 @@ Our sovity Community Edition EDC is built as several docker image variants in di
       </ul>
     </td>
   </tr>
+  <tr>
+    <td>
+      <a href="https://github.com/sovity/edc-broker-server-extension/pkgs/container/broker-server-dev">broker-dev</a>
+    </td>
+    <td>Development</td>
+    <td>
+      <ul>
+        <li>Local Deployment via our `docker-compose.yaml`</li>
+        <li>E2E Testing</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>Broker Server Extension(s)</li>
+        <li>PostgreSQL Persistence & Flyway</li>
+        <li>Mock IAM</li>
+      </ul>            
+    </td>
+  </tr>
+  <tr>
+    <td>broker-ce</td>
+    <td>Community Edition</td>
+    <td>
+      <ul>
+        <li>Productive Deployment</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>Broker Server Extension(s)</li>
+        <li>PostgreSQL Persistence & Flyway</li>
+        <li>DAPS Authentication</li>
+      </ul>            
+    </td>
+  </tr>
 </table>
 
 ## Image Tags

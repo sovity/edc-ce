@@ -5,7 +5,7 @@ import org.testcontainers.containers.PostgreSQLContainer
 
 val jooqDbType = "org.jooq.meta.postgres.PostgresDatabase"
 val jdbcDriver = "org.postgresql.Driver"
-val postgresContainer = "postgres:11-alpine"
+val postgresContainer = "postgres:15-alpine"
 
 val migrationsDir = "src/main/resources/db/migration"
 val testDataDir = "src/main/resources/db/testdata"
