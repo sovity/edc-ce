@@ -14,10 +14,10 @@ public class CatalogQueryParams {
     private String targetEdc;
 
     @Schema(description = "Limit the number of results", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Integer limit = Integer.MAX_VALUE;
+    private Integer limit;
 
     @Schema(description = "Offset for returned results, e.g. start at result 2", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Integer offset = 0;
+    private Integer offset;
 
     @Schema(description = "Filter expression for catalog filtering", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private CatalogFilterExpression filterExpression;

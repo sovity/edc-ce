@@ -436,6 +436,27 @@ paths:
                 type: array
                 items:
                   type: string
+  /wrapper/use-case-api/pages/catalog-page/data-offers:
+    post:
+      tags:
+      - Use Case
+      description: Fetch a connector's data offers
+      operationId: queryCatalog
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CatalogQueryParams'
+        required: true
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UiDataOffer'
 components:
   schemas:
     ConnectorLimits:
@@ -1575,3 +1596,65 @@ components:
             format: int64
           description: States and counts of outgoing transferprocess counts
       description: Counts of incoming and outgoing TransferProcesses and status
+    CatalogFilterExpression:
+      required:
+      - operandLeft
+      - operandRight
+      - operator
+      type: object
+      properties:
+        operandLeft:
+          type: string
+          description: Left Operand
+        operator:
+          $ref: '#/components/schemas/CatalogFilterExpressionOperator'
+        operandRight:
+          $ref: '#/components/schemas/CatalogFilterExpressionLiteral'
+      description: Filter expression for catalog filtering
+    CatalogFilterExpressionLiteral:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/CatalogFilterExpressionLiteralType'
+        value:
+          type: string
+          description: Only for type VALUE. The single value representation.
+        valueList:
+          type: array
+          description: "Only for type VALUE_LIST. List of values, e.g. for the IN-Operator."
+          items:
+            type: string
+            description: "Only for type VALUE_LIST. List of values, e.g. for the IN-Operator."
+      description: FilterExpression Criterion Literal
+    CatalogFilterExpressionLiteralType:
+      type: string
+      description: Value type of an asset selector criterion right expression value
+      enum:
+      - VALUE
+      - VALUE_LIST
+    CatalogFilterExpressionOperator:
+      type: string
+      description: Operator for filter expressions
+      enum:
+      - LIKE
+      - EQ
+      - IN
+    CatalogQueryParams:
+      required:
+      - targetEdc
+      type: object
+      properties:
+        targetEdc:
+          type: string
+          description: Target EDC DSP endpoint URL
+        limit:
+          type: integer
+          description: Limit the number of results
+          format: int32
+        offset:
+          type: integer
+          description: "Offset for returned results, e.g. start at result 2"
+          format: int32
+        filterExpression:
+          $ref: '#/components/schemas/CatalogFilterExpression'
+      description: Catalog query parameters
