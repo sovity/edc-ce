@@ -15,7 +15,6 @@
 package de.sovity.edc.ext.wrapper.api.usecase;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
-import de.sovity.edc.ext.wrapper.api.usecase.model.CatalogFilterExpression;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CatalogQueryParams;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.UseCaseCatalogApiService;

@@ -1,6 +1,5 @@
 package de.sovity.edc.ext.wrapper.api.usecase.pages.catalog;
 
-import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterion;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CatalogFilterExpression;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
