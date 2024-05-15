@@ -14,7 +14,11 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase;
 
+import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
+import de.sovity.edc.ext.wrapper.api.usecase.model.CatalogFilterExpression;
+import de.sovity.edc.ext.wrapper.api.usecase.model.CatalogQueryParams;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
+import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.UseCaseCatalogApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +33,7 @@ import java.util.List;
 public class UseCaseResourceImpl implements UseCaseResource {
     private final KpiApiService kpiApiService;
     private final SupportedPolicyApiService supportedPolicyApiService;
+    private final UseCaseCatalogApiService useCaseCatalogApiService;
 
     @Override
     public KpiResult getKpis() {
@@ -38,5 +43,10 @@ public class UseCaseResourceImpl implements UseCaseResource {
     @Override
     public List<String> getSupportedFunctions() {
         return supportedPolicyApiService.getSupportedFunctions();
+    }
+
+    @Override
+    public List<UiDataOffer> queryCatalog(CatalogQueryParams catalogQueryParams) {
+        return useCaseCatalogApiService.fetchDataOffers(catalogQueryParams);
     }
 }

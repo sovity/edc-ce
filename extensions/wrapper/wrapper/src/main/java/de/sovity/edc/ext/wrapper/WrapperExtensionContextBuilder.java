@@ -33,6 +33,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetIdValidator;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.UiDataOfferBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementDataFetcher;
@@ -60,6 +61,10 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPag
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import de.sovity.edc.ext.wrapper.api.usecase.UseCaseResourceImpl;
+import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.FilterExpressionLiteralMapper;
+import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.FilterExpressionMapper;
+import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.FilterExpressionOperatorMapper;
+import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.UseCaseCatalogApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import de.sovity.edc.utils.catalog.DspCatalogService;
@@ -210,10 +215,10 @@ public class WrapperExtensionContextBuilder {
                 policyMapper
         );
         var dataOfferBuilder = new DspDataOfferBuilder(jsonLd);
+        var uiDataOfferBuilder = new UiDataOfferBuilder(assetMapper, policyMapper);
         var dspCatalogService = new DspCatalogService(catalogService, dataOfferBuilder);
         var catalogApiService = new CatalogApiService(
-                assetMapper,
-                policyMapper,
+                uiDataOfferBuilder,
                 dspCatalogService
         );
         var contractOfferMapper = new ContractOfferMapper(policyMapper);
@@ -254,6 +259,10 @@ public class WrapperExtensionContextBuilder {
         );
 
         // Use Case API
+        var filterExpressionOperatorMapper = new FilterExpressionOperatorMapper();
+        var filterExpressionLiteralMapper = new FilterExpressionLiteralMapper();
+        var filterExpressionMapper = new FilterExpressionMapper(filterExpressionOperatorMapper, filterExpressionLiteralMapper);
+
         var kpiApiService = new KpiApiService(
                 assetIndex,
                 policyDefinitionStore,
@@ -263,9 +272,11 @@ public class WrapperExtensionContextBuilder {
                 transferProcessStateService
         );
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
+        var useCaseCatalogApiService = new UseCaseCatalogApiService(uiDataOfferBuilder, dspCatalogService, filterExpressionMapper);
         var useCaseResource = new UseCaseResourceImpl(
                 kpiApiService,
-                supportedPolicyApiService
+                supportedPolicyApiService,
+                useCaseCatalogApiService
         );
 
         // Collect all JAX-RS resources
