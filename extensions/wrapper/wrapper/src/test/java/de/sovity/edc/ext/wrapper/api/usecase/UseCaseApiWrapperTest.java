@@ -1,4 +1,4 @@
-package de.sovity.edc.e2e;
+package de.sovity.edc.ext.wrapper.api.usecase;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.CatalogFilterExpression;
@@ -14,43 +14,24 @@ import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
+import de.sovity.edc.ext.wrapper.TestUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
+import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 import java.util.Map;
 
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ApiTest
+@ExtendWith(EdcExtension.class)
 public class UseCaseApiWrapperTest {
-    private static final String PROVIDER_PARTICIPANT_ID = "provider";
-    private static final String CONSUMER_PARTICIPANT_ID = "consumer";
-
-    @RegisterExtension
-    static EdcExtension providerEdcContext = new EdcExtension();
-    @RegisterExtension
-    static EdcExtension consumerEdcContext = new EdcExtension();
-
-    @RegisterExtension
-    static final TestDatabase PROVIDER_DATABASE = new TestDatabaseViaTestcontainers();
-    @RegisterExtension
-    static final TestDatabase CONSUMER_DATABASE = new TestDatabaseViaTestcontainers();
-
-    private ConnectorRemote providerConnector;
-    private ConnectorRemote consumerConnector;
-
-    private EdcClient providerClient;
-    private EdcClient consumerClient;
-    private MockDataAddressRemote dataAddress;
+    private EdcClient client;
+    private final String dataOfferId = "my-data-offer-2023-11";
 
     private String data = "expected data from data source";
 
@@ -58,52 +39,33 @@ public class UseCaseApiWrapperTest {
     private String assetId2;
     private String policyId;
 
+
     @BeforeEach
-    void setup() {
-        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 21000, PROVIDER_DATABASE);
-        providerEdcContext.setConfiguration(providerConfig.getProperties());
-        providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
+    void setup(EdcExtension extension) {
+        TestUtils.setupExtension(extension);
+        client = TestUtils.edcClient();
 
-        providerClient = EdcClient.builder()
-                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
-
-        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 23000, CONSUMER_DATABASE);
-        consumerEdcContext.setConfiguration(consumerConfig.getProperties());
-        consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
-
-        consumerClient = EdcClient.builder()
-                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
-
-        // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
-
-        // Assets, policy and contract definitions for following tests
-
-        assetId1 = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
+        assetId1 = client.uiApi().createAsset(UiAssetCreateRequest.builder()
                 .id("test-asset-1")
                 .title("Test Asset 1")
                 .dataAddressProperties(Map.of(
                         Prop.Edc.TYPE, "HttpData",
                         Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
+                        Prop.Edc.BASE_URL, TestUtils.PROTOCOL_ENDPOINT
                 ))
                 .build()).getId();
 
-        assetId2 = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
+        assetId2 = client.uiApi().createAsset(UiAssetCreateRequest.builder()
                 .id("test-asset-2")
                 .title("Test Asset 2")
                 .dataAddressProperties(Map.of(
                         Prop.Edc.TYPE, "HttpData",
                         Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
+                        Prop.Edc.BASE_URL, TestUtils.PROTOCOL_ENDPOINT
                 ))
                 .build()).getId();
 
-        policyId = providerClient.uiApi().createPolicyDefinition(PolicyDefinitionCreateRequest.builder()
+        policyId = client.uiApi().createPolicyDefinition(PolicyDefinitionCreateRequest.builder()
                 .policyDefinitionId("policy-1")
                 .policy(UiPolicyCreateRequest.builder()
                         .constraints(List.of())
@@ -119,7 +81,7 @@ public class UseCaseApiWrapperTest {
 
         // act
         var catalogQueryParamsEq = buildCatalogQueryParams(assetId1, CatalogFilterExpressionOperator.EQ);
-        var dataOffers = consumerClient.useCaseApi().queryCatalog(catalogQueryParamsEq);
+        var dataOffers = client.useCaseApi().queryCatalog(catalogQueryParamsEq);
 
         // assert
         assertThat(dataOffers).hasSize(1);
@@ -136,7 +98,7 @@ public class UseCaseApiWrapperTest {
 
         // act
         var catalogQueryParamsEq = buildCatalogQueryParams(assetId2, CatalogFilterExpressionOperator.LIKE);
-        var dataOffers = consumerClient.useCaseApi().queryCatalog(catalogQueryParamsEq);
+        var dataOffers = client.useCaseApi().queryCatalog(catalogQueryParamsEq);
 
         // assert
         assertThat(dataOffers).hasSize(1);
@@ -153,7 +115,7 @@ public class UseCaseApiWrapperTest {
 
         // act
         var catalogQueryParamsEq = buildCatalogQueryParamsWithIn(List.of(assetId1, assetId2));
-        var dataOffers = consumerClient.useCaseApi().queryCatalog(catalogQueryParamsEq);
+        var dataOffers = client.useCaseApi().queryCatalog(catalogQueryParamsEq);
 
         // assert
         assertThat(dataOffers).hasSize(2);
@@ -168,7 +130,7 @@ public class UseCaseApiWrapperTest {
 
         // act
         var catalogQueryParamsEq = buildCatalogQueryParamsWithLimit(1, 0);
-        var dataOffers = consumerClient.useCaseApi().queryCatalog(catalogQueryParamsEq);
+        var dataOffers = client.useCaseApi().queryCatalog(catalogQueryParamsEq);
 
         // assert
         assertThat(dataOffers).hasSize(1);
@@ -177,7 +139,7 @@ public class UseCaseApiWrapperTest {
 
     private CatalogQueryParams buildCatalogQueryParams(String assetId, CatalogFilterExpressionOperator operator) {
         return CatalogQueryParams.builder()
-                .targetEdc(providerConnector.getConfig().getDefaultEndpoint().getUri().toString())
+                .targetEdc(TestUtils.PROTOCOL_ENDPOINT)
                 .filterExpression(CatalogFilterExpression.builder()
                         .operandLeft(Prop.Edc.ID)
                         .operator(operator)
@@ -189,7 +151,7 @@ public class UseCaseApiWrapperTest {
 
     private CatalogQueryParams buildCatalogQueryParamsWithIn(List<String> assetIds) {
         return CatalogQueryParams.builder()
-                .targetEdc(providerConnector.getConfig().getDefaultEndpoint().getUri().toString())
+                .targetEdc(TestUtils.PROTOCOL_ENDPOINT)
                 .filterExpression(CatalogFilterExpression.builder()
                         .operandLeft(Prop.Edc.ID)
                         .operator(CatalogFilterExpressionOperator.IN)
@@ -201,14 +163,14 @@ public class UseCaseApiWrapperTest {
 
     private CatalogQueryParams buildCatalogQueryParamsWithLimit(Integer limit, Integer offset) {
         return CatalogQueryParams.builder()
-                .targetEdc(providerConnector.getConfig().getDefaultEndpoint().getUri().toString())
+                .targetEdc(TestUtils.PROTOCOL_ENDPOINT)
                 .limit(limit)
                 .offset(offset)
                 .build();
     }
 
     private void buildContractDefinition(String policyId, String assetId1, String cdId) {
-        providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
+        client.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
                 .contractDefinitionId(cdId)
                 .accessPolicyId(policyId)
                 .contractPolicyId(policyId)
