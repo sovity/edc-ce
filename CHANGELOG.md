@@ -15,6 +15,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
+- API Wrapper Use Case API: Catalog endpoint
+
 #### Patch Changes
 
 Security updates
