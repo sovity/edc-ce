@@ -19,7 +19,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 ### Deployment Migration Notes
 
-## [7.4.3] - 2024-05-16
+## [7.5.0] - 2024-05-16
 
 ### Overview
 
@@ -44,9 +44,9 @@ Security updates
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:7.4.3`
-    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.4.3`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.4.3`
+    - Dev EDC: `ghcr.io/sovity/edc-dev:7.5.0`
+    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.5.0`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.5.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.2`
 - Connector UI Release: https://github.com/sovity/edc-ui/releases/tag/v3.2.2
 
