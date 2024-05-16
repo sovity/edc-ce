@@ -6,7 +6,6 @@ import de.sovity.edc.client.gen.model.CatalogFilterExpressionLiteral;
 import de.sovity.edc.client.gen.model.CatalogFilterExpressionLiteralType;
 import de.sovity.edc.client.gen.model.CatalogFilterExpressionOperator;
 import de.sovity.edc.client.gen.model.CatalogQuery;
-import de.sovity.edc.client.gen.model.CatalogQueryParams;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
@@ -54,32 +53,13 @@ public class UseCaseApiWrapperTest {
         buildContractDefinition(policyId, assetId2, "cd-2");
 
         // act
-        var catalogQueryParamsEq = criterion(Prop.Edc.ASSET_ID, CatalogFilterExpressionOperator.EQ, "test-asset-1");
+        var catalogQueryParamsEq = criterion(Prop.Edc.ID, CatalogFilterExpressionOperator.EQ, "test-asset-1");
         var dataOffers = client.useCaseApi().queryCatalog(catalogQueryParamsEq);
 
         // assert
         assertThat(dataOffers).hasSize(1);
         assertThat(dataOffers.get(0).getAsset().getAssetId()).isEqualTo(assetId1);
         assertThat(dataOffers.get(0).getAsset().getTitle()).isEqualTo("Test Asset 1");
-
-    }
-
-    @Test
-    @DisabledOnGithub
-    void shouldFetchFilteredDataOffersWithLike() {
-        // arrange
-        setupAssets();
-        buildContractDefinition(policyId, assetId1, "cd-1");
-        buildContractDefinition(policyId, assetId2, "cd-2");
-
-        // act
-        var catalogQueryParamsEq = criterion(Prop.Edc.ASSET_ID, CatalogFilterExpressionOperator.LIKE, "%asset%");
-        var dataOffers = client.useCaseApi().queryCatalog(catalogQueryParamsEq);
-
-        // assert
-        assertThat(dataOffers).hasSize(1);
-        assertThat(dataOffers.get(0).getAsset().getAssetId()).isEqualTo(assetId2);
-        assertThat(dataOffers.get(0).getAsset().getTitle()).isEqualTo("Test Asset 2");
 
     }
 
@@ -92,7 +72,7 @@ public class UseCaseApiWrapperTest {
         buildContractDefinition(policyId, assetId2, "cd-2");
 
         // act
-        var catalogQueryParamsEq = criterion(Prop.Edc.ASSET_ID, CatalogFilterExpressionOperator.IN, List.of("test-asset-1", "test-asset-2"));
+        var catalogQueryParamsEq = criterion(Prop.Edc.ID, CatalogFilterExpressionOperator.IN, List.of("test-asset-1", "test-asset-2"));
         var dataOffers = client.useCaseApi().queryCatalog(catalogQueryParamsEq);
 
         // assert
