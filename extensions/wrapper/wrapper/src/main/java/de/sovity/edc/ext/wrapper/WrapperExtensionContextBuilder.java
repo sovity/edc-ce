@@ -142,7 +142,13 @@ public class WrapperExtensionContextBuilder {
         var textUtils = new TextUtils();
         var selfDescriptionService = new SelfDescriptionService(config, monitor);
         var ownConnectorEndpointService = new OwnConnectorEndpointServiceImpl(selfDescriptionService);
-        var uiAssetMapper = new UiAssetMapper(edcPropertyUtils, assetJsonLdUtils, markdownToTextConverter, textUtils, ownConnectorEndpointService);
+        var uiAssetMapper = new UiAssetMapper(
+                edcPropertyUtils,
+                assetJsonLdUtils,
+                markdownToTextConverter,
+                textUtils,
+                ownConnectorEndpointService
+        );
         var assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetMapper, jsonLd);
         var transferProcessStateService = new TransferProcessStateService();
         var contractNegotiationUtils = new ContractNegotiationUtils(
@@ -261,7 +267,10 @@ public class WrapperExtensionContextBuilder {
         // Use Case API
         var filterExpressionOperatorMapper = new FilterExpressionOperatorMapper();
         var filterExpressionLiteralMapper = new FilterExpressionLiteralMapper();
-        var filterExpressionMapper = new FilterExpressionMapper(filterExpressionOperatorMapper, filterExpressionLiteralMapper);
+        var filterExpressionMapper = new FilterExpressionMapper(
+                filterExpressionOperatorMapper,
+                filterExpressionLiteralMapper
+        );
 
         var kpiApiService = new KpiApiService(
                 assetIndex,
@@ -272,7 +281,11 @@ public class WrapperExtensionContextBuilder {
                 transferProcessStateService
         );
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
-        var useCaseCatalogApiService = new UseCaseCatalogApiService(uiDataOfferBuilder, dspCatalogService, filterExpressionMapper);
+        var useCaseCatalogApiService = new UseCaseCatalogApiService(
+                uiDataOfferBuilder,
+                dspCatalogService,
+                filterExpressionMapper
+        );
         var useCaseResource = new UseCaseResourceImpl(
                 kpiApiService,
                 supportedPolicyApiService,

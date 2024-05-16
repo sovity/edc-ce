@@ -15,7 +15,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
-- Use Case API Wrapper: Added catalog endpoint
+- API Wrapper Use Case API: Catalog endpoint
 
 #### Patch Changes
 

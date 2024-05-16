@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase.model;
 
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,9 +23,9 @@ import lombok.RequiredArgsConstructor;
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "Filter expression for catalog filtering", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+@Schema(description = "Generic expression for filtering the data offers in the catalog", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
 public class CatalogFilterExpression {
-    @Schema(description = "Left Operand", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Asset property name", requiredMode = Schema.RequiredMode.REQUIRED, example = Prop.Edc.ASSET_ID)
     private String operandLeft;
 
     @Schema(description = "Operator", requiredMode = Schema.RequiredMode.REQUIRED)

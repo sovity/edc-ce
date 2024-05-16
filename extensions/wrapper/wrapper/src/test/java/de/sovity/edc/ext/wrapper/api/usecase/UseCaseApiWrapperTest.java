@@ -5,6 +5,7 @@ import de.sovity.edc.client.gen.model.CatalogFilterExpression;
 import de.sovity.edc.client.gen.model.CatalogFilterExpressionLiteral;
 import de.sovity.edc.client.gen.model.CatalogFilterExpressionLiteralType;
 import de.sovity.edc.client.gen.model.CatalogFilterExpressionOperator;
+import de.sovity.edc.client.gen.model.CatalogQuery;
 import de.sovity.edc.client.gen.model.CatalogQueryParams;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
@@ -33,9 +34,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UseCaseApiWrapperTest {
     private EdcClient client;
 
-    private String assetId1;
-    private String assetId2;
-    private String policyId;
+    private String assetId1 = "test-asset-1";
+    private String assetId2 = "test-asset-2";
+    private String policyId = "policy-1";
 
 
     @BeforeEach
@@ -53,7 +54,7 @@ public class UseCaseApiWrapperTest {
         buildContractDefinition(policyId, assetId2, "cd-2");
 
         // act
-        var catalogQueryParamsEq = buildCatalogQueryParams(assetId1, CatalogFilterExpressionOperator.EQ);
+        var catalogQueryParamsEq = criterion(Prop.Edc.ASSET_ID, CatalogFilterExpressionOperator.EQ, "test-asset-1");
         var dataOffers = client.useCaseApi().queryCatalog(catalogQueryParamsEq);
 
         // assert
@@ -72,7 +73,7 @@ public class UseCaseApiWrapperTest {
         buildContractDefinition(policyId, assetId2, "cd-2");
 
         // act
-        var catalogQueryParamsEq = buildCatalogQueryParams(assetId2, CatalogFilterExpressionOperator.LIKE);
+        var catalogQueryParamsEq = criterion(Prop.Edc.ASSET_ID, CatalogFilterExpressionOperator.LIKE, "%asset%");
         var dataOffers = client.useCaseApi().queryCatalog(catalogQueryParamsEq);
 
         // assert
@@ -91,12 +92,14 @@ public class UseCaseApiWrapperTest {
         buildContractDefinition(policyId, assetId2, "cd-2");
 
         // act
-        var catalogQueryParamsEq = buildCatalogQueryParamsWithIn(List.of(assetId1, assetId2));
+        var catalogQueryParamsEq = criterion(Prop.Edc.ASSET_ID, CatalogFilterExpressionOperator.IN, List.of("test-asset-1", "test-asset-2"));
         var dataOffers = client.useCaseApi().queryCatalog(catalogQueryParamsEq);
 
         // assert
         assertThat(dataOffers).hasSize(2);
-        assertThat(dataOffers.stream().map(d -> d.getAsset().getAssetId())).containsExactlyInAnyOrder(assetId1, assetId2);
+        assertThat(dataOffers)
+                .extracting(it -> it.getAsset().getAssetId())
+                .containsExactlyInAnyOrder(assetId1, assetId2);
     }
 
     @Test
@@ -108,41 +111,49 @@ public class UseCaseApiWrapperTest {
         buildContractDefinition(policyId, assetId2, "cd-2");
 
         // act
-        var catalogQueryParamsEq = buildCatalogQueryParamsWithLimit(1, 0);
+        var catalogQueryParamsEq = criterion(1, 0);
         var dataOffers = client.useCaseApi().queryCatalog(catalogQueryParamsEq);
 
         // assert
         assertThat(dataOffers).hasSize(1);
-        assertThat(dataOffers.get(0).getAsset().getAssetId()).matches(assetId1 + "|" + assetId2);
+        assertThat(dataOffers)
+                .extracting(it -> it.getAsset().getAssetId())
+                .containsAnyOf(assetId1, assetId2);
     }
 
-    private CatalogQueryParams buildCatalogQueryParams(String assetId, CatalogFilterExpressionOperator operator) {
-        return CatalogQueryParams.builder()
-                .targetEdc(TestUtils.PROTOCOL_ENDPOINT)
-                .filterExpression(CatalogFilterExpression.builder()
-                        .operandLeft(Prop.Edc.ID)
-                        .operator(operator)
-                        .operandRight(CatalogFilterExpressionLiteral.builder().value(assetId).type(CatalogFilterExpressionLiteralType.VALUE).build())
-                        .build()
+    private CatalogQuery criterion(String leftOperand, CatalogFilterExpressionOperator operator, String rightOperand) {
+        return CatalogQuery.builder()
+                .connectorEndpoint(TestUtils.PROTOCOL_ENDPOINT)
+                .filterExpressions(
+                        List.of(
+                            CatalogFilterExpression.builder()
+                            .operandLeft(leftOperand)
+                            .operator(operator)
+                            .operandRight(CatalogFilterExpressionLiteral.builder().value(rightOperand).type(CatalogFilterExpressionLiteralType.VALUE).build())
+                            .build()
+                        )
                 )
                 .build();
     }
 
-    private CatalogQueryParams buildCatalogQueryParamsWithIn(List<String> assetIds) {
-        return CatalogQueryParams.builder()
-                .targetEdc(TestUtils.PROTOCOL_ENDPOINT)
-                .filterExpression(CatalogFilterExpression.builder()
-                        .operandLeft(Prop.Edc.ID)
-                        .operator(CatalogFilterExpressionOperator.IN)
-                        .operandRight(CatalogFilterExpressionLiteral.builder().valueList(assetIds).type(CatalogFilterExpressionLiteralType.VALUE_LIST).build())
-                        .build()
+    private CatalogQuery criterion(String leftOperand, CatalogFilterExpressionOperator operator, List<String> rightOperand) {
+        return CatalogQuery.builder()
+                .connectorEndpoint(TestUtils.PROTOCOL_ENDPOINT)
+                .filterExpressions(
+                        List.of(
+                            CatalogFilterExpression.builder()
+                            .operandLeft(leftOperand)
+                            .operator(operator)
+                            .operandRight(CatalogFilterExpressionLiteral.builder().valueList(rightOperand).type(CatalogFilterExpressionLiteralType.VALUE_LIST).build())
+                            .build()
+                        )
                 )
                 .build();
     }
 
-    private CatalogQueryParams buildCatalogQueryParamsWithLimit(Integer limit, Integer offset) {
-        return CatalogQueryParams.builder()
-                .targetEdc(TestUtils.PROTOCOL_ENDPOINT)
+    private CatalogQuery criterion(Integer limit, Integer offset) {
+        return CatalogQuery.builder()
+                .connectorEndpoint(TestUtils.PROTOCOL_ENDPOINT)
                 .limit(limit)
                 .offset(offset)
                 .build();

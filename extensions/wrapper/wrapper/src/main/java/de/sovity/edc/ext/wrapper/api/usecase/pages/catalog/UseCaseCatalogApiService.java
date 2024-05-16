@@ -32,7 +32,7 @@ public class UseCaseCatalogApiService {
     public List<UiDataOffer> fetchDataOffers(CatalogQuery catalogQuery) {
         var querySpec = buildQuerySpec(catalogQuery);
 
-        var dspCatalog = dspCatalogService.fetchDataOffersWithFilters(catalogQuery.getTargetEdc(), querySpec);
+        var dspCatalog = dspCatalogService.fetchDataOffersWithFilters(catalogQuery.getConnectorEndpoint(), querySpec);
         return uiDataOfferBuilder.buildUiDataOffers(dspCatalog);
     }
 
@@ -41,9 +41,9 @@ public class UseCaseCatalogApiService {
                 .limit(withDefault(params.getLimit(), Integer.MAX_VALUE))
                 .offset(withDefault(params.getOffset(), 0));
 
-        var filterExpression = params.getFilterExpression();
-        if (filterExpression != null) {
-            builder.filter(filterExpressionMapper.buildCriterion(filterExpression));
+        var filterExpressions = params.getFilterExpressions();
+        if (filterExpressions != null && !filterExpressions.isEmpty()) {
+            builder.filter(filterExpressionMapper.buildCriteria(filterExpressions));
         }
 
         return builder.build();
