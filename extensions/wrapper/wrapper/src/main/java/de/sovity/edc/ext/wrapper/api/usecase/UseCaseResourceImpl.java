@@ -15,7 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.usecase;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
-import de.sovity.edc.ext.wrapper.api.usecase.model.CatalogQueryParams;
+import de.sovity.edc.ext.wrapper.api.usecase.model.CatalogQuery;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.UseCaseCatalogApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
@@ -45,7 +45,7 @@ public class UseCaseResourceImpl implements UseCaseResource {
     }
 
     @Override
-    public List<UiDataOffer> queryCatalog(CatalogQueryParams catalogQueryParams) {
-        return useCaseCatalogApiService.fetchDataOffers(catalogQueryParams);
+    public List<UiDataOffer> queryCatalog(CatalogQuery catalogQuery) {
+        return useCaseCatalogApiService.fetchDataOffers(catalogQuery);
     }
 }

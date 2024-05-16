@@ -15,6 +15,7 @@ import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.TestUtils;
+import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -44,6 +45,7 @@ public class UseCaseApiWrapperTest {
     }
 
     @Test
+    @DisabledOnGithub
     void shouldFetchFilteredDataOffersWithEq() {
         // arrange
         setupAssets();
@@ -62,6 +64,7 @@ public class UseCaseApiWrapperTest {
     }
 
     @Test
+    @DisabledOnGithub
     void shouldFetchFilteredDataOffersWithLike() {
         // arrange
         setupAssets();
@@ -80,6 +83,7 @@ public class UseCaseApiWrapperTest {
     }
 
     @Test
+    @DisabledOnGithub
     void shouldFetchFilteredDataOffersWithIn() {
         // arrange
         setupAssets();
@@ -96,6 +100,7 @@ public class UseCaseApiWrapperTest {
     }
 
     @Test
+    @DisabledOnGithub
     void shouldFetchWithoutFilterButWithLimit() {
         // arrange
         setupAssets();

@@ -15,7 +15,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
-- API Wrapper: Added an use case endpoint to fetch the catalog with filter expressions
+- Use Case API Wrapper: Added catalog endpoint
 
 #### Patch Changes
 

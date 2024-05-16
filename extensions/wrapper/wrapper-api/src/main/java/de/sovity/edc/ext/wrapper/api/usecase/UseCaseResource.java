@@ -15,20 +15,17 @@
 package de.sovity.edc.ext.wrapper.api.usecase;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
-import de.sovity.edc.ext.wrapper.api.usecase.model.CatalogFilterExpression;
-import de.sovity.edc.ext.wrapper.api.usecase.model.CatalogQueryParams;
+import de.sovity.edc.ext.wrapper.api.usecase.model.CatalogQuery;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 
 import java.util.List;
@@ -54,12 +51,12 @@ public interface UseCaseResource {
     List<String> getSupportedFunctions();
 
     @POST
-    @Path("pages/catalog-page/data-offers")
+    @Path("catalog")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Fetch a connector's data offers")
     List<UiDataOffer> queryCatalog(
         @Valid @NotNull
-        CatalogQueryParams catalogQueryParams
+        CatalogQuery catalogQuery
     );
 }
