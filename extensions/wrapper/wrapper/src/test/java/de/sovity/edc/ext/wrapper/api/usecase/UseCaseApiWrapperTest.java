@@ -31,9 +31,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(EdcExtension.class)
 public class UseCaseApiWrapperTest {
     private EdcClient client;
-    private final String dataOfferId = "my-data-offer-2023-11";
-
-    private String data = "expected data from data source";
 
     private String assetId1;
     private String assetId2;
@@ -44,38 +41,12 @@ public class UseCaseApiWrapperTest {
     void setup(EdcExtension extension) {
         TestUtils.setupExtension(extension);
         client = TestUtils.edcClient();
-
-        assetId1 = client.uiApi().createAsset(UiAssetCreateRequest.builder()
-                .id("test-asset-1")
-                .title("Test Asset 1")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, TestUtils.PROTOCOL_ENDPOINT
-                ))
-                .build()).getId();
-
-        assetId2 = client.uiApi().createAsset(UiAssetCreateRequest.builder()
-                .id("test-asset-2")
-                .title("Test Asset 2")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, TestUtils.PROTOCOL_ENDPOINT
-                ))
-                .build()).getId();
-
-        policyId = client.uiApi().createPolicyDefinition(PolicyDefinitionCreateRequest.builder()
-                .policyDefinitionId("policy-1")
-                .policy(UiPolicyCreateRequest.builder()
-                        .constraints(List.of())
-                        .build())
-                .build()).getId();
     }
 
     @Test
     void shouldFetchFilteredDataOffersWithEq() {
         // arrange
+        setupAssets();
         buildContractDefinition(policyId, assetId1, "cd-1");
         buildContractDefinition(policyId, assetId2, "cd-2");
 
@@ -93,6 +64,7 @@ public class UseCaseApiWrapperTest {
     @Test
     void shouldFetchFilteredDataOffersWithLike() {
         // arrange
+        setupAssets();
         buildContractDefinition(policyId, assetId1, "cd-1");
         buildContractDefinition(policyId, assetId2, "cd-2");
 
@@ -110,6 +82,7 @@ public class UseCaseApiWrapperTest {
     @Test
     void shouldFetchFilteredDataOffersWithIn() {
         // arrange
+        setupAssets();
         buildContractDefinition(policyId, assetId1, "cd-1");
         buildContractDefinition(policyId, assetId2, "cd-2");
 
@@ -125,6 +98,7 @@ public class UseCaseApiWrapperTest {
     @Test
     void shouldFetchWithoutFilterButWithLimit() {
         // arrange
+        setupAssets();
         buildContractDefinition(policyId, assetId1, "cd-1");
         buildContractDefinition(policyId, assetId2, "cd-2");
 
@@ -183,5 +157,36 @@ public class UseCaseApiWrapperTest {
                                 .build())
                         .build()))
                 .build());
+    }
+
+    private void setupAssets() {
+        assetId1 = client.uiApi().createAsset(UiAssetCreateRequest.builder()
+                .id("test-asset-1")
+                .title("Test Asset 1")
+                .dataAddressProperties(Map.of(
+                        Prop.Edc.TYPE, "HttpData",
+                        Prop.Edc.METHOD, "GET",
+                        Prop.Edc.BASE_URL, TestUtils.PROTOCOL_ENDPOINT
+                ))
+                .mediaType("application/json")
+                .build()).getId();
+
+        assetId2 = client.uiApi().createAsset(UiAssetCreateRequest.builder()
+                .id("test-asset-2")
+                .title("Test Asset 2")
+                .dataAddressProperties(Map.of(
+                        Prop.Edc.TYPE, "HttpData",
+                        Prop.Edc.METHOD, "GET",
+                        Prop.Edc.BASE_URL, TestUtils.PROTOCOL_ENDPOINT
+                ))
+                .mediaType("application/json")
+                .build()).getId();
+
+        policyId = client.uiApi().createPolicyDefinition(PolicyDefinitionCreateRequest.builder()
+                .policyDefinitionId("policy-1")
+                .policy(UiPolicyCreateRequest.builder()
+                        .constraints(List.of())
+                        .build())
+                .build()).getId();
     }
 }

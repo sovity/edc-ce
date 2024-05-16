@@ -444,7 +444,7 @@ paths:
       operationId: queryCatalog
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/CatalogQueryParams'
         required: true
