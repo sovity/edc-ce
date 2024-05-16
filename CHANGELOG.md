@@ -15,6 +15,24 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
+#### Patch Changes
+
+### Deployment Migration Notes
+
+## [7.4.3] - 2024-05-16
+
+### Overview
+
+Additional Wrapper API features
+
+### EDC UI
+
+- https://github.com/sovity/edc-ui/releases/tag/v3.2.2
+
+### EDC Extensions
+
+#### Minor Changes
+
 - API Wrapper Use Case API: Catalog endpoint
 
 #### Patch Changes
@@ -22,6 +40,15 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 Security updates
 
 ### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+    - Dev EDC: `ghcr.io/sovity/edc-dev:7.4.3`
+    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.4.3`
+    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.4.3`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.2`
+- Connector UI Release: https://github.com/sovity/edc-ui/releases/tag/v3.2.2
 
 ## [7.4.2] - 2024-04-20
 
