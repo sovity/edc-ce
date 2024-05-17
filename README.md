@@ -79,15 +79,6 @@ We packaged critical extensions for compatibility with our EDC UI and general us
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## sovity Community Edition Broker extension
-
-[//]: # (TODO: check if this is still the same version at releasing.)
-Our EDC Broker indexes EDCs to offer a convenient centralized search engine. It is part of this project since version 8.
-
-See [here](launchers/README.md) for a list of our sovity Community Edition Broker Docker images.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ## Compatibility
 
 Our sovity Community Edition EDC and sovity Community Edition EDC Extensions are targeted to run with
