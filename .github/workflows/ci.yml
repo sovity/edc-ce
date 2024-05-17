@@ -65,7 +65,7 @@ jobs:
           image-base-name: ${{ env.IMAGE_BASE_NAME }}
           image-name: "edc-dev"
           connector-name: "sovity-dev"
-          connector-type: "extensions"
+          connector-type: "connector"
           title: "sovity Dev EDC Connector"
           description: "Extended EDC Connector built by sovity. This dev version contains no dataspace auth and can be used to quickly start a locally running EDC + EDC UI."
       - name: "Docker Image: edc-ce"
@@ -77,7 +77,7 @@ jobs:
           image-base-name: ${{ env.IMAGE_BASE_NAME }}
           image-name: "edc-ce"
           connector-name: "sovity-ce"
-          connector-type: "extensions"
+          connector-type: "connector"
           title: "sovity Community Edition EDC Connector"
           description: "EDC Connector built by sovity. Contains sovity's Community Edition EDC extensions and requires dataspace credentials to join an existing dataspace."
       - name: "Docker Image: edc-ce-mds"
@@ -89,7 +89,7 @@ jobs:
           image-base-name: ${{ env.IMAGE_BASE_NAME }}
           image-name: "edc-ce-mds"
           connector-name: "mds-ce"
-          connector-type: "extensions"
+          connector-type: "connector"
           title: "MDS Community Edition EDC Connector"
           description: "EDC Connector built by sovity and configured for compatibility with the Mobility Data Space (MDS). This EDC requires dataspace credentials, and additional MDS Services such as a Clearing House."
       - name: "Docker Image: test-backend"
@@ -101,7 +101,7 @@ jobs:
           image-base-name: ${{ env.IMAGE_BASE_NAME }}
           image-name: "test-backend"
           connector-name: "test-backend"
-          connector-type: "extensions"
+          connector-type: "connector"
           title: "Test Data Source / Data Sink"
           description: "Provides a minimal data source / data sink for E2E tests."
       - name: "Docker Image: broker-server-dev"

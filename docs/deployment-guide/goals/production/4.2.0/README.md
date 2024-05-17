@@ -93,7 +93,7 @@ A sovity EDC CE or MDS EDC CE Backend deployment requires:
 - The following configuration properties
 
 > [!WARNING]
-> Please be careful with overriding any of the ENV Vars set in our [launchers/.env.extensions](../../../../../launchers/.env.extensions). 
+> Please be careful with overriding any of the ENV Vars set in our [launchers/.env.connector](../../../../../launchers/.env.connector). 
 > Our defaults will respect overrides, and the Core EDC ENV Vars can be in some cases sensitive to edge cases such as 
 > trailing slashes.
 
@@ -169,7 +169,7 @@ You can use a script (if you're on WSL or Linux) to generate the SKI, AKI and jk
 ### Can I run a connector locally and consume data from an online connector?
 
 No, locally run connectors cannot exchange data with online connectors. A connector must have a proper URL +
-configuration and be accesible from the data provider via REST calls.
+configuration and be accessible from the data provider via REST calls.
 
 ### (MDS Only) Can I disable the Broker- and/or ClearingHouse-Client-Extensions dynamically?
 

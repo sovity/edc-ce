@@ -38,7 +38,7 @@ build
 *.hprof
 
 .env
-!launchers/.env.extensions
+!launchers/.env.connector
 !launchers/.env.broker
 
 # Log files

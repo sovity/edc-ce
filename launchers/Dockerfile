@@ -10,7 +10,7 @@ USER edc:edc
 
 # Which app.jar to include
 ARG CONNECTOR_NAME="sovity-ce"
-ARG CONNECTOR_TYPE="extensions"
+ARG CONNECTOR_TYPE="connector"
 
 # For last-commit-info extension
 ARG EDC_LAST_COMMIT_INFO_ARG="The docker container was built outside of github actions and you didn't provide the build arg EDC_LAST_COMMIT_INFO_ARG, so there's no last commit info."
