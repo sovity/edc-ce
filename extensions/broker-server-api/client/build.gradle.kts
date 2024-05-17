@@ -120,8 +120,7 @@ tasks.withType<Javadoc> {
     fullOptions.addStringOption("Xdoclint:none", "-quiet")
 }
 
-val sovityBrokerServerGroup: String by project
-group = sovityBrokerServerGroup
+group = libs.versions.sovityBrokerServerGroup.get()
 
 publishing {
     publications {
