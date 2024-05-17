@@ -127,7 +127,7 @@ jobs:
           connector-name: "broker-server-ce"
           deployment-type: "broker"
           title: "Broker Server (Community Edition)"
-          description: "sovity EDC Broker Server. Contains DB extensions and requires dataspace credentials to join an existing dataspace."
+          description: "sovity EDC Broker Server. Requires dataspace credentials to join an existing dataspace."
   ts-api-client-library:
     name: TS API Client Library
     runs-on: ubuntu-latest
