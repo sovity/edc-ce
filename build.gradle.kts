@@ -121,4 +121,9 @@ subprojects {
             }
         }
     }
+
+    java {
+        withSourcesJar()
+        withJavadocJar()
+    }
 }

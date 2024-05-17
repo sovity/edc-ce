@@ -96,18 +96,12 @@ tasks.getByName<JavaCompile>("compileJava") {
     dependsOn(postprocessGeneratedClient)
 }
 
-val sourcesJar by tasks.creating(Jar::class) {
+val sourcesJar = tasks.getByName<Jar>("sourcesJar") {
     dependsOn(postprocessGeneratedClient)
-    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
-    archiveClassifier.set("sources")
-    from(sourceSets["main"].allSource)
 }
 
-val javadocJar by tasks.creating(Jar::class) {
+val javadocJar = tasks.getByName<Jar>("javadocJar") {
     dependsOn(postprocessGeneratedClient)
-    dependsOn(JavaPlugin.JAVADOC_TASK_NAME)
-    archiveClassifier.set("javadoc")
-    from(tasks["javadoc"])
 }
 
 artifacts {

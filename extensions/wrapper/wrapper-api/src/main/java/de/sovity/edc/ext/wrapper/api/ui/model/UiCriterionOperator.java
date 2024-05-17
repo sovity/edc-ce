@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * Contract Definition Criterion
  *
- * @see org.eclipse.edc.connector.defaults.storage.CriterionToPredicateConverterImpl
+ * @see <pre>org.eclipse.edc.connector.defaults.storage.CriterionToPredicateConverterImpl</pre>
  */
 @Getter
 @RequiredArgsConstructor

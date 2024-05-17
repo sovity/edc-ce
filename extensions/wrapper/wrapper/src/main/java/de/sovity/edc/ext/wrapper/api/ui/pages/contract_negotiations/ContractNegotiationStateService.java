@@ -43,7 +43,7 @@ public class ContractNegotiationStateService {
     /**
      * Which Transfer Process do we want to show as 'running' in our UI?
      *
-     * @param code {@link ContractNegotiation#getState()}, see {@link ContractNegotiationState#code()}
+     * @param code {@link ContractNegotiation#getState()}, see {@code ContractNegotiationState#code}
      * @return if running
      */
     public boolean isRunning(int code) {
