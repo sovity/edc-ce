@@ -10,6 +10,50 @@
 			"name": "API-Wrapper",
 			"item": [
 				{
+					"name": "UI Dashboard",
+					"item": [
+						{
+							"name": "Get UI Dashboard Data",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/dashboard-page",
+									"host": [
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"dashboard-page"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get KPIs about the Connector",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/use-case-api/kpis",
+									"host": [
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"use-case-api",
+										"kpis"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Assets",
 					"item": [
 						{
@@ -121,6 +165,60 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Edit Asset",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"testname-v1.0\",\r\n    \"title\": \"TestName\",\r\n    \"language\": \"https://w3id.org/idsa/code/EN\",\r\n    \"description\": \"Testdescription\",\r\n    \"publisherHomepage\": \"https://www.sovity.de\",\r\n    \"licenseUrl\": \"https://www.apache.org/licenses/LICENSE-2.0\",\r\n    \"version\": \"v1.0\",\r\n    \"keywords\": [\r\n        \"keyword1\",\r\n        \"keyword2\"\r\n    ],\r\n    \"mediaType\": \"application/json\",\r\n    \"landingPageUrl\": \"https://www.google.com\",\r\n    \"dataAddressProperties\": {\r\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"https://www.google.com\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/method\": \"GET\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/queryParams\": \"\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/asset-page/assets/{{ASSET_ID}}/metadata",
+									"host": [
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"asset-page",
+										"assets",
+										"{{ASSET_ID}}",
+										"metadata"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Assets",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/asset-page/assets/{{ASSET_ID}}",
+									"host": [
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"asset-page",
+										"assets",
+										"{{ASSET_ID}}"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -142,6 +240,25 @@
 										"ui",
 										"pages",
 										"policy-page"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Available Policiy Functions",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Management-API}}/wrapper/use-case-api/supported-policy-functions",
+									"host": [
+										"{{Management-API}}"
+									],
+									"path": [
+										"wrapper",
+										"use-case-api",
+										"supported-policy-functions"
 									]
 								}
 							},
@@ -206,6 +323,28 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Delete Policy",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{Management-API}}/wrapper/ui/pages/policy-page/policy-definitions/{{POLICY_ID}}",
+									"host": [
+										"{{Management-API}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"policy-page",
+										"policy-definitions",
+										"{{POLICY_ID}}"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -257,6 +396,28 @@
 										"pages",
 										"contract-definition-page",
 										"contract-definitions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Contract Definitions Copy",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{Management-API}}/wrapper/ui/pages/contract-definition-page/contract-definitions/{{CONTRACT_DEFINITION_ID}}",
+									"host": [
+										"{{Management-API}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"contract-definition-page",
+										"contract-definitions",
+										"{{CONTRACT_DEFINITION_ID}}"
 									]
 								}
 							},
@@ -328,6 +489,28 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Get Negotiation",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/catalog-page/contract-negotiations/{{NEGOTIATION_ID}}",
+									"host": [
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"catalog-page",
+										"contract-negotiations",
+										"{{NEGOTIATION_ID}}"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -374,6 +557,29 @@
 										"ui",
 										"pages",
 										"transfer-history-page"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Asset of Transfer Process",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/transfer-history-page/transfer-processes/{{TRANSFERPROCESS_ID}}/asset",
+									"host": [
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"transfer-history-page",
+										"transfer-processes",
+										"{{TRANSFERPROCESS_ID}}",
+										"asset"
 									]
 								}
 							},
