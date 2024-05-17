@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "ee1e6d02-afbb-4c45-a79c-475565cc0d7a",
 		"name": "sovity EDC Community Edition",
+		"description": "This is the official postman collection for the sovity EDC Community Edition.\n\nThe Management-API is based on core-edc v0.2.1.\n\nsovity EDC Community Edition: [https://github.com/sovity/edc-extensions](https://github.com/sovity/edc-extensions)\n\nLicense: [https://github.com/sovity/edc-extensions/blob/main/LICENSE](https://github.com/sovity/edc-extensions/blob/main/LICENSE)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "31514741"
 	},
