@@ -139,7 +139,9 @@ Our sovity Community Edition EDC is built as several docker image variants in di
     <td>Development</td>
     <td>
       <ul>
-        <li>Local Deployment via our `docker-compose.yaml`</li>
+        <li>Local Demo via our
+          <span style="white-space: pre; font-family: monospace;">docker-compose.yaml</span>
+        </li>
         <li>E2E Testing</li>
       </ul>
     </td>
