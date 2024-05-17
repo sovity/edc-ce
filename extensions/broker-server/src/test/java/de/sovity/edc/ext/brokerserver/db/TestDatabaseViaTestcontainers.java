@@ -14,11 +14,12 @@
 
 package de.sovity.edc.ext.brokerserver.db;
 
+import de.sovity.edc.utils.versions.GradleVersions;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 public class TestDatabaseViaTestcontainers implements TestDatabase {
-    private PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:15-alpine")
+    private PostgreSQLContainer<?> container = new PostgreSQLContainer<>(GradleVersions.POSTGRES_IMAGE_TAG)
         .withUsername("edc")
         .withPassword("edc");
 

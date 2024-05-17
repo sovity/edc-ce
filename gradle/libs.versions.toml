@@ -21,6 +21,7 @@ jakartaRs = "3.1.0"
 jakartaServletApi = "5.0.0"
 jakartaValidation = "3.0.2"
 java = "17"
+javapoet = "1.13.0"
 jersey = "3.1.3"
 jetty = "11.0.15"
 jooq = "3.18.7"
@@ -40,6 +41,7 @@ openapiGenerator6 = "6.6.0"
 openapiGenerator7 = "7.0.1"
 openapiJackson = "0.2.6"
 postgres = "42.7.2"
+postgresDbImage = "postgres:15-alpine"
 quarkus = "2.16.6.Final"
 quartz = "2.3.2"
 restAssured = "4.5.0"
@@ -171,6 +173,8 @@ quarkus-bom = { module = "io.quarkus.platform:quarkus-bom", version.ref = "quark
 quartz-quartz = { module = "org.quartz-scheduler:quartz", version.ref = "quartz" }
 
 restAssured-restAssured = { module = "io.rest-assured:rest-assured", version.ref = "restAssured" }
+
+squareup-javapoet = { module = "com.squareup:javapoet", version.ref = "javapoet" }
 
 swagger-annotations = { module = "io.swagger:swagger-annotations", version.ref = "swagger" }
 swagger-annotationsJakarta = { module = "io.swagger.core.v3:swagger-annotations-jakarta", version.ref = "swaggerCore" }

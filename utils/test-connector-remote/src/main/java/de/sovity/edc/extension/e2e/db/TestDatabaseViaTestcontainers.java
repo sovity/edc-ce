@@ -14,6 +14,7 @@
 
 package de.sovity.edc.extension.e2e.db;
 
+import de.sovity.edc.utils.versions.GradleVersions;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 
@@ -25,7 +26,7 @@ public class TestDatabaseViaTestcontainers implements TestDatabase {
     private final PostgreSQLContainer<?> container;
 
     public TestDatabaseViaTestcontainers() {
-        container = new PostgreSQLContainer<>("postgres:15-alpine")
+        container = new PostgreSQLContainer<>(GradleVersions.POSTGRES_IMAGE_TAG)
                 .withUsername(POSTGRES_USER)
                 .withPassword(POSTGRES_PASSWORD)
                 .withDatabaseName(POSTGRES_DB);

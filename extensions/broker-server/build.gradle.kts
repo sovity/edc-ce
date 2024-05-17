@@ -22,6 +22,7 @@ dependencies {
 
     api(project(":extensions:broker-server-postgres-flyway-jooq"))
     implementation(project(":extensions:broker-server-api:api"))
+    implementation(project(":utils:versions"))
 
     implementation(libs.okhttp.okhttp)
 

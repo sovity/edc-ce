@@ -13,6 +13,7 @@ dependencies {
     api(libs.edc.junit)
     api(libs.awaitility.java)
     api(project(":utils:json-and-jsonld-utils"))
+    implementation(project(":utils:versions"))
     implementation(libs.edc.sqlCore)
     implementation(libs.edc.jsonLdSpi)
     implementation(libs.edc.jsonLd)
