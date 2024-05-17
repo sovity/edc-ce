@@ -26,5 +26,4 @@ tasks.withType<Test> {
     maxParallelForks = 1
 }
 
-val sovityEdcGroup: String by project
-group = sovityEdcGroup
+group = libs.versions.sovityEdcGroup.get()

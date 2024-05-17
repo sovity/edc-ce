@@ -78,8 +78,7 @@ tasks.withType<org.gradle.jvm.tasks.Jar> {
     }
 }
 
-val sovityEdcExtensionGroup: String by project
-group = sovityEdcExtensionGroup
+group = libs.versions.sovityEdcExtensionGroup.get()
 
 publishing {
     publications {

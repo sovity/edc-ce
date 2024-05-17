@@ -31,8 +31,7 @@ dependencies {
     testRuntimeOnly(libs.junit.engine)
 }
 
-val sovityEdcGroup: String by project
-group = sovityEdcGroup
+group = libs.versions.sovityEdcGroup.get()
 
 publishing {
     publications {

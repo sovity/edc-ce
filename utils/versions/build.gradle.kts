@@ -11,8 +11,7 @@ plugins {
     `java-library`
 }
 
-val sovityEdcExtensionGroup: String by project
-group = sovityEdcExtensionGroup
+group = libs.versions.sovityEdcExtensionGroup.get()
 
 buildscript {
     dependencies {

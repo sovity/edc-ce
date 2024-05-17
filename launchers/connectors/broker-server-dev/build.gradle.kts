@@ -4,28 +4,25 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-val edcVersion: String by project
-val edcGroup: String by project
-
 dependencies {
     // Control-Plane
-    implementation("${edcGroup}:control-plane-core:${edcVersion}")
-    implementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
-    implementation("${edcGroup}:api-observability:${edcVersion}")
-    implementation("${edcGroup}:configuration-filesystem:${edcVersion}")
-    implementation("${edcGroup}:control-plane-aggregate-services:${edcVersion}")
-    implementation("${edcGroup}:http:${edcVersion}")
-    implementation("${edcGroup}:dsp:${edcVersion}")
-    implementation("${edcGroup}:json-ld:${edcVersion}")
+    implementation(libs.edc.controlPlaneCore)
+    implementation(libs.edc.dataPlaneSelectorCore)
+    implementation(libs.edc.apiObservability)
+    implementation(libs.edc.configurationFilesystem)
+    implementation(libs.edc.controlPlaneAggregateServices)
+    implementation(libs.edc.http)
+    implementation(libs.edc.dsp)
+    implementation(libs.edc.jsonLd)
 
     // JDK Logger
-    implementation("${edcGroup}:monitor-jdk-logger:${edcVersion}")
+    implementation(libs.edc.monitorJdkLogger)
 
     // Broker Server + PostgreSQL + Flyway
     implementation(project(":extensions:broker-server"))
 
     // Connector-To-Connector IAM
-    implementation("${edcGroup}:iam-mock:${edcVersion}")
+    implementation(libs.edc.iamMock)
 }
 
 application {

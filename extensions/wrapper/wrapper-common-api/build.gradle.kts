@@ -17,8 +17,7 @@ dependencies {
     implementation(libs.apache.commonsLang)
 }
 
-val sovityEdcGroup: String by project
-group = sovityEdcGroup
+group = libs.versions.sovityEdcGroup.get()
 
 publishing {
     publications {

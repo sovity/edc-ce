@@ -1,4 +1,14 @@
 [versions]
+# groups
+edcGroup="org.eclipse.edc"
+sovityBrokerServerGroup = "de.sovity.broker"
+sovityEdcExtensionGroup = "de.sovity.edc.ext"
+sovityEdcGroup = "de.sovity.edc"
+
+# images
+postgresDbImage = "postgres:15-alpine"
+
+# versions
 assertj = "3.23.1"
 awaitility = "4.2.0"
 commonsCompress = "1.26.1"
@@ -41,13 +51,11 @@ openapiGenerator6 = "6.6.0"
 openapiGenerator7 = "7.0.1"
 openapiJackson = "0.2.6"
 postgres = "42.7.2"
-postgresDbImage = "postgres:15-alpine"
 quarkus = "2.16.6.Final"
 quartz = "2.3.2"
 restAssured = "4.5.0"
 retry = "1.5.7"
 shadow = "7.1.2"
-sovityBrokerServerGroup = "de.sovity.broker"
 swagger = "1.6.12"
 swaggerCore = "2.2.18"
 testcontainers = "1.19.1"
@@ -74,6 +82,7 @@ edc-authSpi = { module = "org.eclipse.edc:auth-spi", version.ref = "edc" }
 edc-authTokenbased = { module = "org.eclipse.edc:auth-tokenbased", version.ref = "edc" }
 edc-boot = { module = "org.eclipse.edc:boot", version.ref = "edc" }
 edc-configurationFilesystem = { module = "org.eclipse.edc:configuration-filesystem", version.ref = "edc" }
+edc-connectorCore = { module = "org.eclipse.edc:connector-core", version.ref = "edc" }
 edc-contractDefinitionApi = { module = "org.eclipse.edc:contract-definition-api", version.ref = "edc" }
 edc-contractSpi = { module = "org.eclipse.edc:contract-spi", version.ref = "edc" }
 edc-controlPlaneAggregateServices = { module = "org.eclipse.edc:control-plane-aggregate-services", version.ref = "edc" }

@@ -61,8 +61,7 @@ tasks.withType<Test> {
     maxParallelForks = 1
 }
 
-val sovityEdcExtensionGroup: String by project
-group = sovityEdcExtensionGroup
+group = libs.versions.sovityEdcExtensionGroup.get()
 
 publishing {
     publications {

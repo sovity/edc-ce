@@ -24,8 +24,7 @@ dependencies {
     implementation(libs.restAssured.restAssured)
 }
 
-val sovityEdcExtensionGroup: String by project
-group = sovityEdcExtensionGroup
+group = libs.versions.sovityEdcExtensionGroup.get()
 
 publishing {
     publications {
