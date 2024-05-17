@@ -300,27 +300,7 @@
 					"name": "Contract Negotiations",
 					"item": [
 						{
-							"name": "Get Contract Agreements",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/contract-agreement-page",
-									"host": [
-										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
-									],
-									"path": [
-										"wrapper",
-										"ui",
-										"pages",
-										"contract-agreement-page"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Negotiate Contract",
+							"name": "Start Negotiation",
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -344,6 +324,26 @@
 										"pages",
 										"catalog-page",
 										"contract-negotiations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Contract Agreements",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/contract-agreement-page",
+									"host": [
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"contract-agreement-page"
 									]
 								}
 							},
@@ -445,7 +445,7 @@
 					"name": "Assets",
 					"item": [
 						{
-							"name": "1 Create Asset",
+							"name": "Create Asset",
 							"event": [
 								{
 									"listen": "test",
@@ -484,7 +484,7 @@
 							"response": []
 						},
 						{
-							"name": "1 Create Asset MDS",
+							"name": "Create Asset (CE MDS)",
 							"event": [
 								{
 									"listen": "test",
@@ -527,7 +527,7 @@
 							"response": []
 						},
 						{
-							"name": "1 Delete Asset",
+							"name": "Delete Asset",
 							"event": [
 								{
 									"listen": "test",
@@ -557,7 +557,7 @@
 							"response": []
 						},
 						{
-							"name": "1 Request Assets",
+							"name": "Get Assets (QuerySpec-Body)",
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -590,7 +590,7 @@
 					"name": "Policies",
 					"item": [
 						{
-							"name": "2 Create Simple Policy",
+							"name": "Create Policy (Template)",
 							"event": [
 								{
 									"listen": "test",
@@ -633,50 +633,7 @@
 							"response": []
 						},
 						{
-							"name": "2 Create Time Policy",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											""
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "X-Api-Key",
-										"value": "ApiKeyDefaultValue"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": [\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/gteq\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2022-05-31T22:00:00.000Z\"\n                    },\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/lt\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2030-06-30T22:00:00.000Z\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions",
-									"host": [
-										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
-									],
-									"path": [
-										"v2",
-										"policydefinitions"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "2 Create Participant Policy",
+							"name": "Create Policy (Connector-Restricted-Usage)",
 							"event": [
 								{
 									"listen": "test",
@@ -719,7 +676,50 @@
 							"response": []
 						},
 						{
-							"name": "2 Delete Policy",
+							"name": "Create Policy (Time-Period-Restricted)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Api-Key",
+										"value": "ApiKeyDefaultValue"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": [\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/gteq\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2022-05-31T22:00:00.000Z\"\n                    },\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/lt\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2030-06-30T22:00:00.000Z\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions",
+									"host": [
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"v2",
+										"policydefinitions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Policy",
 							"request": {
 								"method": "DELETE",
 								"header": [
@@ -752,7 +752,7 @@
 							"response": []
 						},
 						{
-							"name": "2 Request Policies",
+							"name": "Get Policies (QuerySpec-Body)",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -790,7 +790,7 @@
 					"name": "Contract Definitions",
 					"item": [
 						{
-							"name": "3 Create ContractDefinition",
+							"name": "Create Contract Definition",
 							"event": [
 								{
 									"listen": "test",
@@ -833,7 +833,7 @@
 							"response": []
 						},
 						{
-							"name": "3 Delete ContractDefinition",
+							"name": "Delete Contract Definition",
 							"event": [
 								{
 									"listen": "test",
@@ -863,7 +863,7 @@
 							"response": []
 						},
 						{
-							"name": "3 Request ContractDefinitions",
+							"name": "Get Contract Definitions (QuerySpec-Body)",
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -896,7 +896,7 @@
 					"name": "Catalog",
 					"item": [
 						{
-							"name": "4 Request Catalog",
+							"name": "Request Catalog (QuerySpec-Body)",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -934,7 +934,7 @@
 					"name": "Contract Negotiations",
 					"item": [
 						{
-							"name": "5 Start Negotiation",
+							"name": "Start Negotiation",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -966,7 +966,57 @@
 							"response": []
 						},
 						{
-							"name": "5 Request Contract Negotiations",
+							"name": "Cancel Negotiation",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Api-Key",
+										"value": "pass"
+									}
+								],
+								"url": {
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractnegotiations/3f009db0-775d-4dfc-a965-decdf5a76aea/cancel",
+									"host": [
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"v2",
+										"contractnegotiations",
+										"3f009db0-775d-4dfc-a965-decdf5a76aea",
+										"cancel"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Decline Negotiation",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-Api-Key",
+										"value": "pass"
+									}
+								],
+								"url": {
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractnegotiations/88687cb0-1d97-40c5-86c2-ad744afed538/decline",
+									"host": [
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"v2",
+										"contractnegotiations",
+										"88687cb0-1d97-40c5-86c2-ad744afed538",
+										"decline"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Negotiations (QuerySpec-Body)",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -1006,57 +1056,7 @@
 							"response": []
 						},
 						{
-							"name": "5 Cancel Negotiation",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "X-Api-Key",
-										"value": "pass"
-									}
-								],
-								"url": {
-									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractnegotiations/3f009db0-775d-4dfc-a965-decdf5a76aea/cancel",
-									"host": [
-										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
-									],
-									"path": [
-										"v2",
-										"contractnegotiations",
-										"3f009db0-775d-4dfc-a965-decdf5a76aea",
-										"cancel"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "5 Decline Negotiation",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "X-Api-Key",
-										"value": "pass"
-									}
-								],
-								"url": {
-									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/contractnegotiations/88687cb0-1d97-40c5-86c2-ad744afed538/decline",
-									"host": [
-										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
-									],
-									"path": [
-										"v2",
-										"contractnegotiations",
-										"88687cb0-1d97-40c5-86c2-ad744afed538",
-										"decline"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "5 Get Negotiation",
+							"name": "Get Negotiation",
 							"request": {
 								"method": "GET",
 								"header": [
@@ -1078,14 +1078,9 @@
 								}
 							},
 							"response": []
-						}
-					]
-				},
-				{
-					"name": "Contract Agreements",
-					"item": [
+						},
 						{
-							"name": "6 Request Contract Agreements",
+							"name": "Get Contract Agreements (QuerySpec-Body)",
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -1118,7 +1113,7 @@
 					"name": "Data Transfer",
 					"item": [
 						{
-							"name": "7 Start Data Push",
+							"name": "Start Data Push",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -1150,7 +1145,7 @@
 							"response": []
 						},
 						{
-							"name": "8 Request Transfer Processes",
+							"name": "Get Transfer Processes (QuerySpec-Body)",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -1183,7 +1178,7 @@
 							"response": []
 						},
 						{
-							"name": "8 Cancel Transfer Process",
+							"name": "Terminate Transfer Process",
 							"request": {
 								"method": "POST",
 								"header": [
