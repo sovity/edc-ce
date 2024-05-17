@@ -66,6 +66,8 @@ tasks.getByName<Test>("test") {
 
 tasks.register("prepareKotlinBuildScriptModel") {}
 
+group = libs.versions.sovityBrokerServerGroup.get()
+
 publishing {
     publications {
         create<MavenPublication>(project.name) {
