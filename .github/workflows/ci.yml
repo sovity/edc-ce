@@ -115,7 +115,7 @@ jobs:
           connector-name: "broker-server-dev"
           connector-type: "broker"
           title: "Broker Server (Dev)"
-          description: "EDC IDS Broker Server. This dev version contains no persistence or auth and can be used to quickly start a locally running Broker Server + Broker UI."
+          description: "sovity EDC Broker Server. This dev version contains no auth and can be used to quickly start a locally running Broker Server + Broker UI."
       - name: "Docker Image: broker-server-ce"
         uses: ./.github/actions/build-connector-image
         with:
@@ -127,7 +127,7 @@ jobs:
           connector-name: "broker-server-ce"
           connector-type: "broker"
           title: "Broker Server (Community Edition)"
-          description: "EDC IDS Broker Server. Contains DB extensions and requires dataspace credentials to join an existing dataspace."
+          description: "sovity EDC Broker Server. Contains DB extensions and requires dataspace credentials to join an existing dataspace."
   ts-api-client-library:
     name: TS API Client Library
     runs-on: ubuntu-latest
