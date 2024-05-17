@@ -19,9 +19,9 @@ inputs:
   connector-name:
     required: true
     description: "EDC Connector Name in launchers/connectors/{connector-name}"
-  connector-type:
+  deployment-type:
     required: true
-    description: "Type of connector: 'connector' or 'broker'"
+    description: "Type of deployment: 'connector' or 'broker'"
   title:
     required: true
     description: "Docker Image Title"
@@ -74,6 +74,6 @@ runs:
         labels: ${{ steps.meta.outputs.labels }}
         build-args: |
           CONNECTOR_NAME=${{ inputs.connector-name }}
-          CONNECTOR_TYPE=${{ inputs.connector-type }}
+          CONNECTOR_TYPE=${{ inputs.deployment-type }}
           "EDC_LAST_COMMIT_INFO_ARG=${{ env.LAST_COMMIT_INFO }}"
           EDC_BUILD_DATE_ARG=${{ env.BUILD_DATE }}
