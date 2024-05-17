@@ -50,7 +50,6 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
         the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
   - [ ] If the Eclipse EDC version changed, update
         the [eclipse-edc-management-api.yaml file](https://github.com/sovity/edc-extensions/blob/main/docs/api/eclipse-edc-management-api.yaml).
-  - [ ] Update the Postman Collection if required.
   - [ ] Run all tests locally as long as the [GH flaky tests](https://github.com/sovity/edc-extensions/issues/870) are a problem.
   - [ ] Merge the `release-prep` PR.
 - [ ] Wait for the main branch to be green. You can check the status in GH [actions](https://github.com/sovity/edc-extensions/actions).
