@@ -9,8 +9,8 @@ on:
     branches: [ main ]
     paths-ignore:
       - '**.md'
-      - 'docs/**'
-      - 'CODEOWNERS'
+      - '**.png'
+      - 'docs/api/**'
       - 'LICENSE'
 
 env:
