@@ -246,7 +246,7 @@
 							"response": []
 						},
 						{
-							"name": "Get Available Policiy Functions",
+							"name": "Get Available Policy Functions",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -402,7 +402,7 @@
 							"response": []
 						},
 						{
-							"name": "Get Contract Definitions Copy",
+							"name": "Delete Contract Definition",
 							"request": {
 								"method": "DELETE",
 								"header": [],
