@@ -17,10 +17,6 @@ package de.sovity.edc.ext.brokerserver.db;
 import org.apache.commons.lang3.Validate;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-/**
- * @deprecated Use test containers wherever possible
- */
-@Deprecated
 public class TestDatabaseViaEnv implements TestDatabase {
     public static final String SKIP_TESTCONTAINERS = "SKIP_TESTCONTAINERS";
     public static final String TEST_POSTGRES_JDBC_URL = "TEST_POSTGRES_JDBC_URL";
