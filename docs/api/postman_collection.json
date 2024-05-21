@@ -798,7 +798,7 @@
 							"response": []
 						},
 						{
-							"name": "Edit Asset",
+							"name": "Edit Asset Meta-Data (without DataAdress)",
 							"event": [
 								{
 									"listen": "test",
@@ -831,6 +831,46 @@
 									"path": [
 										"v2",
 										"assets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Asset DataAddress",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"@type\": \"edc:DataAddress\",\n    \"edc:type\": \"HttpData\",\n    \"edc:authKey\": \"{{AUTH_KEY}}\",\n    \"edc:authCode\": \"{{AUTH_CODE}}\",\n    \"edc:proxyMethod\": \"false\",\n    \"edc:proxyBody\": \"false\",\n    \"edc:proxyPath\": \"false\",\n    \"edc:baseUrl\": \"{{DATASOURCE_URL}}\",\n    \"@context\": {\n        \"dct\": \"https://purl.org/dc/terms/\",\n        \"tx\": \"https://w3id.org/tractusx/v0.0.1/ns/\",\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\",\n        \"dcat\": \"https://www.w3.org/ns/dcat/\",\n        \"odrl\": \"http://www.w3.org/ns/odrl/2/\",\n        \"dspace\": \"https://w3id.org/dspace/v0.8/\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/assets/{{ASSET_ID}}/dataaddress",
+									"host": [
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"assets",
+										"{{ASSET_ID}}",
+										"dataaddress"
 									]
 								}
 							},
