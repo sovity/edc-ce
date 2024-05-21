@@ -1,4 +1,4 @@
-eployment Goal: Production
+Deployment Goal: Production
 ========
 
 > This is for an old major version sovity EDC CE 4.2.0. [Go back](../README.md)
