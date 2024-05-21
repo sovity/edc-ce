@@ -144,7 +144,7 @@ services:
       - '44005:5005'
 
   postgresql:
-    image: docker.io/bitnami/postgresql:11
+    image: docker.io/bitnami/postgresql:15
     restart: always
     environment:
       POSTGRESQL_USERNAME: edc
@@ -156,7 +156,7 @@ services:
       - 'postgresql:/bitnami/postgresql'
 
   postgresql2:
-    image: docker.io/bitnami/postgresql:11
+    image: docker.io/bitnami/postgresql:15
     restart: always
     environment:
       POSTGRESQL_USERNAME: edc
