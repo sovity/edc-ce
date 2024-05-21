@@ -99,7 +99,7 @@ the [docker-compose.yaml](#local-demo).
 
 ### Local Demo
 
-There is a [docker-compose-broker.yaml](../../docker-compose-broker.yaml) that starts a broker and a connector.
+There is a [docker-compose.yaml](../../docker-compose.yaml) that starts a broker and a connector.
 
 At release time it is pinned down to the release versions.
 
@@ -133,7 +133,7 @@ Mid-development it might be un-pinned back to latest versions.
 
 ### Configuration
 
-There is a [docker-compose-broker.yaml](../../docker-compose-broker.yaml) to try out the broker locally. However, a productive release will require a few more configuration options, so you should only use it to check if the released version is roughly working or if it's broken.
+There is a [docker-compose.yaml](../../docker-compose.yaml) to try out the broker locally. However, a productive release will require a few more configuration options, so you should only use it to check if the released version is roughly working or if it's broken.
 
 #### Reverse Proxy Configuration
 

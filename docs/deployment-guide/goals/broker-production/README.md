@@ -15,7 +15,7 @@ This is a productive deployment guide for self-hosting a functional sovity Broke
 
 ### Configuration
 
-There is a [docker-compose-broker.yaml](../../../../docker-compose-broker.yaml) to try out the broker locally. 
+There is a [docker-compose.yaml](../../../../docker-compose.yaml) to try out the broker locally. 
 However, a productive release will require a few more configuration options,
 so you should only use it to check if the released version is roughly working or if it's broken.
 
