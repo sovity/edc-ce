@@ -17,7 +17,8 @@ services:
   edc:
     image: ${EDC_IMAGE}
     depends_on:
-      - postgresql
+      postgresql:
+        condition: service_healthy
     environment:
       MY_EDC_PARTICIPANT_ID: "my-edc"
       MY_EDC_TITLE: "EDC Connector"
@@ -63,7 +64,8 @@ services:
   edc2:
     image: ${EDC_IMAGE}
     depends_on:
-      - postgresql2
+      postgresql2:
+        condition: service_healthy
     environment:
       MY_EDC_PARTICIPANT_ID: "my-edc2"
       MY_EDC_TITLE: "EDC Connector 2"
@@ -112,9 +114,12 @@ services:
   broker:
     image: ${BROKER_IMAGE}
     depends_on:
-      - broker-postgresql
-      - edc
-      - edc2
+      broker-postgresql:
+        condition: service_healthy
+      edc:
+        condition: service_started
+      edc2:
+        condition: service_started
     environment:
       EDC_BROKER_SERVER_KNOWN_CONNECTORS: "http://edc:11003/api/dsp,http://edc2:11003/api/dsp"
       EDC_BROKER_SERVER_KNOWN_DATASPACE_CONNECTORS: "Mobilithek=https://some-other-connector/api/dsp"
