@@ -2,8 +2,9 @@ import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
-import javax.lang.model.element.Modifier.*
-import kotlin.String
+import javax.lang.model.element.Modifier.FINAL
+import javax.lang.model.element.Modifier.PUBLIC
+import javax.lang.model.element.Modifier.STATIC
 import java.lang.String as JavaString
 
 
