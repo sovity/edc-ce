@@ -675,7 +675,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/Asset\",\n    \"https://w3id.org/edc/v0.0.1/ns/properties\": {\n        \"https://w3id.org/edc/v0.0.1/ns/id\": \"{{ASSET_ID}}\",\n        \"http://www.w3.org/ns/dcat#version\": \"1.0\",\n        \"http://purl.org/dc/terms/language\": \"https://w3id.org/idsa/code/EN\",\n        \"http://purl.org/dc/terms/title\": \"test-document\",\n        \"http://purl.org/dc/terms/description\": \"my test document\",\n        \"http://www.w3.org/ns/dcat#keyword\": [\n            \"keyword1\", \n            \"keyword2\"\n        ],\n        \"http://purl.org/dc/terms/creator\": {\n            \"http://xmlns.com/foaf/0.1/name\": \"My Org\"\n        },\n        \"http://purl.org/dc/terms/license\": \"https://creativecommons.org/licenses/by/4.0/\",\n        \"http://www.w3.org/ns/dcat#landingPage\": \"https://mydepartment.myorg.com/my-offer\",\n        \"http://www.w3.org/ns/dcat#mediaType\": \"text/plain\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody\": \"false\",\n        \"http://purl.org/dc/terms/publisher\": {\n            \"http://xmlns.com/foaf/0.1/homepage\": \"https://myorg.com/\"\n        }\n    },\n    \"https://w3id.org/edc/v0.0.1/ns/privateProperties\": {},\n    \"https://w3id.org/edc/v0.0.1/ns/dataAddress\": {\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"{{PROVIDER_EDC_SOURCE_URL}}\"\n    }\n}",
+									"raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/Asset\",\n    \"https://w3id.org/edc/v0.0.1/ns/properties\": {\n        \"https://w3id.org/edc/v0.0.1/ns/id\": \"12345\",\n        \"http://www.w3.org/ns/dcat#version\": \"1.0\",\n        \"http://purl.org/dc/terms/language\": \"https://w3id.org/idsa/code/EN\",\n        \"http://purl.org/dc/terms/title\": \"test-document\",\n        \"http://purl.org/dc/terms/description\": \"my test document\",\n        \"http://www.w3.org/ns/dcat#keyword\": [\n            \"keyword1\", \n            \"keyword2\"\n        ],\n        \"http://purl.org/dc/terms/creator\": {\n            \"http://xmlns.com/foaf/0.1/name\": \"My Org\"\n        },\n        \"http://purl.org/dc/terms/license\": \"https://creativecommons.org/licenses/by/4.0/\",\n        \"http://www.w3.org/ns/dcat#landingPage\": \"https://mydepartment.myorg.com/my-offer\",\n        \"http://www.w3.org/ns/dcat#mediaType\": \"text/plain\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody\": \"false\",\n        \"http://purl.org/dc/terms/publisher\": {\n            \"http://xmlns.com/foaf/0.1/homepage\": \"https://myorg.com/\"\n        }\n    },\n    \"https://w3id.org/edc/v0.0.1/ns/privateProperties\": {},\n    \"https://w3id.org/edc/v0.0.1/ns/dataAddress\": {\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"https://www.sovity.de\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -704,7 +704,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -718,7 +719,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/Asset\",\n    \"https://w3id.org/edc/v0.0.1/ns/properties\": {\n        \"https://w3id.org/edc/v0.0.1/ns/id\": \"{{ASSET_ID}}\",\n        \"http://www.w3.org/ns/dcat#version\": \"1.0\",\n        \"http://purl.org/dc/terms/language\": \"https://w3id.org/idsa/code/EN\",\n        \"http://purl.org/dc/terms/title\": \"test-document\",\n        \"http://purl.org/dc/terms/description\": \"my test document\",\n        \"http://www.w3.org/ns/dcat#keyword\": [\n            \"keyword1\",\n            \"keyword2\"\n        ],\n        \"http://purl.org/dc/terms/creator\": {\n            \"http://xmlns.com/foaf/0.1/name\": \"My Org\"\n        },\n        \"http://purl.org/dc/terms/license\": \"https://creativecommons.org/licenses/by/4.0/\",\n        \"http://www.w3.org/ns/dcat#landingPage\": \"https://mydepartment.myorg.com/my-offer\",\n        \"http://www.w3.org/ns/dcat#mediaType\": \"text/plain\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody\": \"false\",\n        \"http://purl.org/dc/terms/publisher\": {\n            \"http://xmlns.com/foaf/0.1/homepage\": \"https://myorg.com/\"\n        },\n        \"https://w3id.org/mobilitydcat-ap/transport-mode\": \"Road\",\n        \"https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category\": \"Traffic Information\",\n        \"https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category\": \"Hazard Warnings\",\n        \"https://w3id.org/mobilitydcat-ap/mobility-data-standard\": \"CSV\",\n        \"https://w3id.org/mobilitydcat-ap/georeferencing-method\": \"Geo Ref Method Test\"\n    },\n    \"https://w3id.org/edc/v0.0.1/ns/privateProperties\": {},\n    \"https://w3id.org/edc/v0.0.1/ns/dataAddress\": {\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"{{PROVIDER_EDC_SOURCE_URL}}\"\n    }\n}",
+									"raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/Asset\",\n    \"https://w3id.org/edc/v0.0.1/ns/properties\": {\n        \"https://w3id.org/edc/v0.0.1/ns/id\": \"12345\",\n        \"http://www.w3.org/ns/dcat#version\": \"1.0\",\n        \"http://purl.org/dc/terms/language\": \"https://w3id.org/idsa/code/EN\",\n        \"http://purl.org/dc/terms/title\": \"test-document\",\n        \"http://purl.org/dc/terms/description\": \"my test document\",\n        \"http://www.w3.org/ns/dcat#keyword\": [\n            \"keyword1\",\n            \"keyword2\"\n        ],\n        \"http://purl.org/dc/terms/creator\": {\n            \"http://xmlns.com/foaf/0.1/name\": \"My Org\"\n        },\n        \"http://purl.org/dc/terms/license\": \"https://creativecommons.org/licenses/by/4.0/\",\n        \"http://www.w3.org/ns/dcat#landingPage\": \"https://mydepartment.myorg.com/my-offer\",\n        \"http://www.w3.org/ns/dcat#mediaType\": \"text/plain\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody\": \"false\",\n        \"http://purl.org/dc/terms/publisher\": {\n            \"http://xmlns.com/foaf/0.1/homepage\": \"https://myorg.com/\"\n        },\n        \"https://w3id.org/mobilitydcat-ap/transport-mode\": \"Road\",\n        \"https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category\": \"Traffic Information\",\n        \"https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category\": \"Hazard Warnings\",\n        \"https://w3id.org/mobilitydcat-ap/mobility-data-standard\": \"CSV\",\n        \"https://w3id.org/mobilitydcat-ap/georeferencing-method\": \"Geo Ref Method Test\"\n    },\n    \"https://w3id.org/edc/v0.0.1/ns/privateProperties\": {},\n    \"https://w3id.org/edc/v0.0.1/ns/dataAddress\": {\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"https://www.sovity.de\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -745,7 +746,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
+									"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 1000\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -816,7 +817,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/Asset\",\n    \"https://w3id.org/edc/v0.0.1/ns/properties\": {\n        \"https://w3id.org/edc/v0.0.1/ns/id\": \"{{ASSET_ID}}\",\n        \"http://www.w3.org/ns/dcat#version\": \"1.0\",\n        \"http://purl.org/dc/terms/language\": \"https://w3id.org/idsa/code/EN\",\n        \"http://purl.org/dc/terms/title\": \"test-document\",\n        \"http://purl.org/dc/terms/description\": \"my test document\",\n        \"http://www.w3.org/ns/dcat#keyword\": [\n            \"keyword1\", \n            \"keyword2\"\n        ],\n        \"http://purl.org/dc/terms/creator\": {\n            \"http://xmlns.com/foaf/0.1/name\": \"My Org\"\n        },\n        \"http://purl.org/dc/terms/license\": \"https://creativecommons.org/licenses/by/4.0/\",\n        \"http://www.w3.org/ns/dcat#landingPage\": \"https://mydepartment.myorg.com/my-offer\",\n        \"http://www.w3.org/ns/dcat#mediaType\": \"text/plain\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody\": \"false\",\n        \"http://purl.org/dc/terms/publisher\": {\n            \"http://xmlns.com/foaf/0.1/homepage\": \"https://myorg.com/\"\n        }\n    },\n    \"https://w3id.org/edc/v0.0.1/ns/privateProperties\": {},\n    \"https://w3id.org/edc/v0.0.1/ns/dataAddress\": {\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"{{PROVIDER_EDC_SOURCE_URL}}\"\n    }\n}",
+									"raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/Asset\",\n    \"https://w3id.org/edc/v0.0.1/ns/properties\": {\n        \"https://w3id.org/edc/v0.0.1/ns/id\": \"12345\",\n        \"http://www.w3.org/ns/dcat#version\": \"1.0\",\n        \"http://purl.org/dc/terms/language\": \"https://w3id.org/idsa/code/EN\",\n        \"http://purl.org/dc/terms/title\": \"test-document-edited\",\n        \"http://purl.org/dc/terms/description\": \"my test document\",\n        \"http://www.w3.org/ns/dcat#keyword\": [\n            \"keyword1\", \n            \"keyword2\"\n        ],\n        \"http://purl.org/dc/terms/creator\": {\n            \"http://xmlns.com/foaf/0.1/name\": \"My Org\"\n        },\n        \"http://purl.org/dc/terms/license\": \"https://creativecommons.org/licenses/by/4.0/\",\n        \"http://www.w3.org/ns/dcat#landingPage\": \"https://mydepartment.myorg.com/my-offer\",\n        \"http://www.w3.org/ns/dcat#mediaType\": \"text/plain\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody\": \"false\",\n        \"http://purl.org/dc/terms/publisher\": {\n            \"http://xmlns.com/foaf/0.1/homepage\": \"https://myorg.com/\"\n        }\n    },\n    \"https://w3id.org/edc/v0.0.1/ns/privateProperties\": {},\n    \"https://w3id.org/edc/v0.0.1/ns/dataAddress\": {\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"https://www.sovity.de\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -855,7 +856,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"@type\": \"edc:DataAddress\",\n    \"edc:type\": \"HttpData\",\n    \"edc:authKey\": \"{{AUTH_KEY}}\",\n    \"edc:authCode\": \"{{AUTH_CODE}}\",\n    \"edc:proxyMethod\": \"false\",\n    \"edc:proxyBody\": \"false\",\n    \"edc:proxyPath\": \"false\",\n    \"edc:baseUrl\": \"{{DATASOURCE_URL}}\",\n    \"@context\": {\n        \"dct\": \"https://purl.org/dc/terms/\",\n        \"tx\": \"https://w3id.org/tractusx/v0.0.1/ns/\",\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\",\n        \"dcat\": \"https://www.w3.org/ns/dcat/\",\n        \"odrl\": \"http://www.w3.org/ns/odrl/2/\",\n        \"dspace\": \"https://w3id.org/dspace/v0.8/\"\n    }\n}",
+									"raw": "{\n    \"@type\": \"edc:DataAddress\",\n    \"edc:type\": \"HttpData\",\n    \"edc:proxyMethod\": \"false\",\n    \"edc:proxyBody\": \"false\",\n    \"edc:proxyPath\": \"false\",\n    \"edc:baseUrl\": \"https://www.google.de\",\n    \"@context\": {\n        \"dct\": \"https://purl.org/dc/terms/\",\n        \"tx\": \"https://w3id.org/tractusx/v0.0.1/ns/\",\n        \"edc\": \"https://w3id.org/edc/v0.0.1/ns/\",\n        \"dcat\": \"https://www.w3.org/ns/dcat/\",\n        \"odrl\": \"http://www.w3.org/ns/odrl/2/\",\n        \"dspace\": \"https://w3id.org/dspace/v0.8/\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -863,11 +864,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/assets/{{ASSET_ID}}/dataaddress",
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/assets/{{ASSET_ID}}/dataaddress",
 									"host": [
 										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
+										"v2",
 										"assets",
 										"{{ASSET_ID}}",
 										"dataaddress"
@@ -921,7 +923,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -935,7 +938,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/PolicyDefinition\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": []\n            }\n        ]\n    }\n}",
+									"raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/PolicyDefinition\",\n    \"@id\": \"policy-1\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": []\n            }\n        ]\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -964,7 +967,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -978,7 +982,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": [\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"REFERRING_CONNECTOR\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/eq\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"{{CONSUMER_EDC_PARTICIPANT_ID}}\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
+									"raw": "{\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"policy-1\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": [\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"REFERRING_CONNECTOR\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/eq\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"{{CONSUMER_EDC_PARTICIPANT_ID}}\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1007,7 +1011,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1021,7 +1026,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": [\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/gteq\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2022-05-31T22:00:00.000Z\"\n                    },\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/lt\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2030-06-30T22:00:00.000Z\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
+									"raw": "{\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"policy-1\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": [\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/gteq\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2022-05-31T22:00:00.000Z\"\n                    },\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/lt\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2030-06-30T22:00:00.000Z\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1053,7 +1058,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
+									"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 1000\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1097,14 +1102,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions/{{POLICY_ID}}",
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions/{{POLICY_NAME}}",
 									"host": [
 										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"v2",
 										"policydefinitions",
-										"{{POLICY_ID}}"
+										"{{POLICY_NAME}}"
 									]
 								}
 							},
@@ -1134,7 +1139,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/PolicyDefinition\",\n    \"@id\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": []\n            }\n        ]\n    }\n}",
+									"raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/PolicyDefinition\",\n    \"@id\": \"policy-1\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": []\n            }\n        ]\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1142,14 +1147,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions/{{POLICY_ID}}",
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions/{{POLICY_NAME}}",
 									"host": [
 										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"v2",
 										"policydefinitions",
-										"{{POLICY_ID}}"
+										"{{POLICY_NAME}}"
 									]
 								}
 							},
@@ -1175,14 +1180,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions/{{POLICY_ID}}",
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/policydefinitions/{{POLICY_NAME}}",
 									"host": [
 										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"v2",
 										"policydefinitions",
-										"{{POLICY_ID}}"
+										"{{POLICY_NAME}}"
 									]
 								}
 							},
@@ -1202,7 +1207,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1216,7 +1222,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"@id\": \"{{CONTRACT_DEFINITION_ID}}\",\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/ContractDefinition\",\n    \"https://w3id.org/edc/v0.0.1/ns/accessPolicyId\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/contractPolicyId\": \"{{POLICY_ID}}\",\n    \"https://w3id.org/edc/v0.0.1/ns/assetsSelector\": [\n        {\n            \"@type\": \"CriterionDto\",\n            \"https://w3id.org/edc/v0.0.1/ns/operandLeft\": \"https://w3id.org/edc/v0.0.1/ns/id\",\n            \"https://w3id.org/edc/v0.0.1/ns/operator\": \"=\",\n            \"https://w3id.org/edc/v0.0.1/ns/operandRight\": \"{{ASSET_ID}}\"\n        }\n    ]\n}",
+									"raw": "{\n    \"@id\": \"contractdefinition-1\",\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/ContractDefinition\",\n    \"https://w3id.org/edc/v0.0.1/ns/accessPolicyId\": \"always-true\",\n    \"https://w3id.org/edc/v0.0.1/ns/contractPolicyId\": \"always-true\",\n    \"https://w3id.org/edc/v0.0.1/ns/assetsSelector\": [\n        {\n            \"@type\": \"CriterionDto\",\n            \"https://w3id.org/edc/v0.0.1/ns/operandLeft\": \"https://w3id.org/edc/v0.0.1/ns/id\",\n            \"https://w3id.org/edc/v0.0.1/ns/operator\": \"=\",\n            \"https://w3id.org/edc/v0.0.1/ns/operandRight\": \"12345\"\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1243,7 +1249,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
+									"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 1000\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1282,14 +1288,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/contractdefinitions/{{CONTRACT_DEFINITION_ID}}",
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/contractdefinitions/{{CONTRACT_DEFINITION_NAME}}",
 									"host": [
 										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"v2",
 										"contractdefinitions",
-										"{{CONTRACT_DEFINITION_ID}}"
+										"{{CONTRACT_DEFINITION_NAME}}"
 									]
 								}
 							},
@@ -1348,7 +1354,8 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript"
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -1356,14 +1363,14 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/contractdefinitions/{{CONTRACT_DEFINITION_ID}}",
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/v2/contractdefinitions/{{CONTRACT_DEFINITION_NAME}}",
 									"host": [
 										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"v2",
 										"contractdefinitions",
-										"{{CONTRACT_DEFINITION_ID}}"
+										"{{CONTRACT_DEFINITION_NAME}}"
 									]
 								}
 							},
@@ -1386,7 +1393,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/CatalogRequest\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/protocol\": \"dataspace-protocol-http\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/counterPartyAddress\": \"{{PROVIDER_EDC_PROTOCOL_URL}}\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/querySpec\": {\r\n        \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n        \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n    }\r\n}",
+									"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/CatalogRequest\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/protocol\": \"dataspace-protocol-http\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/counterPartyAddress\": \"{{PROVIDER_EDC_PROTOCOL_URL}}\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/querySpec\": {\r\n        \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n        \"https://w3id.org/edc/v0.0.1/ns/limit\": 1000\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1401,40 +1408,6 @@
 									"path": [
 										"v2",
 										"catalog",
-										"request"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Request Specific Dataset",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Accept",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/DatasetRequest\",\r\n    \"@id\": \"dataset-id\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/protocol\": \"dataspace-protocol-http\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/counterPartyAddress\": \"{{PROVIDER_EDC_PROTOCOL_URL}}\",\r\n\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/v2/catalog/dataset/request",
-									"host": [
-										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
-									],
-									"path": [
-										"v2",
-										"catalog",
-										"dataset",
 										"request"
 									]
 								}
@@ -1549,7 +1522,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
+									"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 1000\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1638,7 +1611,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
+									"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 1000\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1747,7 +1720,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 10\r\n}",
+									"raw": "{\r\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/QuerySpec\",\r\n    \"https://w3id.org/edc/v0.0.1/ns/offset\": 0,\r\n    \"https://w3id.org/edc/v0.0.1/ns/limit\": 1000\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
