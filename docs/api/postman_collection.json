@@ -232,9 +232,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{Management-API}}/wrapper/ui/pages/policy-page",
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/policy-page",
 									"host": [
-										"{{Management-API}}"
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"wrapper",
@@ -252,9 +252,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{Management-API}}/wrapper/use-case-api/supported-policy-functions",
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/use-case-api/supported-policy-functions",
 									"host": [
-										"{{Management-API}}"
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"wrapper",
@@ -331,9 +331,9 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{Management-API}}/wrapper/ui/pages/policy-page/policy-definitions/{{POLICY_ID}}",
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/policy-page/policy-definitions/{{POLICY_ID}}",
 									"host": [
-										"{{Management-API}}"
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"wrapper",
@@ -358,9 +358,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{Management-API}}/wrapper/ui/pages/contract-definition-page",
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/contract-definition-page",
 									"host": [
-										"{{Management-API}}"
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"wrapper",
@@ -408,9 +408,9 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{Management-API}}/wrapper/ui/pages/contract-definition-page/contract-definitions/{{CONTRACT_DEFINITION_ID}}",
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/contract-definition-page/contract-definitions/{{CONTRACT_DEFINITION_ID}}",
 									"host": [
-										"{{Management-API}}"
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"wrapper",
@@ -435,9 +435,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/catalog-page/data-offers?connectorEndpoint={{REQUESTING_DSP_ENDPOINT}}",
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/catalog-page/data-offers?connectorEndpoint={{REQUESTING_DSP_ENDPOINT}}",
 									"host": [
-										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"wrapper",
@@ -476,9 +476,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/catalog-page/contract-negotiations",
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/catalog-page/contract-negotiations",
 									"host": [
-										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"wrapper",
@@ -497,9 +497,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/catalog-page/contract-negotiations/{{NEGOTIATION_ID}}",
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/catalog-page/contract-negotiations/{{NEGOTIATION_ID}}",
 									"host": [
-										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"wrapper",
@@ -524,9 +524,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/contract-agreement-page",
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/contract-agreement-page",
 									"host": [
-										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"wrapper",
@@ -549,9 +549,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/transfer-history-page",
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/transfer-history-page",
 									"host": [
-										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"wrapper",
@@ -569,9 +569,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/transfer-history-page/transfer-processes/{{TRANSFERPROCESS_ID}}/asset",
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/transfer-history-page/transfer-processes/{{TRANSFERPROCESS_ID}}/asset",
 									"host": [
-										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"wrapper",
@@ -601,9 +601,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/contract-agreement-page/transfers",
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/contract-agreement-page/transfers",
 									"host": [
-										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"wrapper",
@@ -631,9 +631,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/contract-agreement-page/transfers",
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/contract-agreement-page/transfers",
 									"host": [
-										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
 									],
 									"path": [
 										"wrapper",
