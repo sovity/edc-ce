@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "ee1e6d02-afbb-4c45-a79c-475565cc0d7a",
+		"_postman_id": "b6575425-f8be-4166-8c3e-cc7361909b9c",
 		"name": "sovity EDC Community Edition",
 		"description": "This is the official postman collection for the sovity EDC Community Edition.\n\nThe Management-API is based on core-edc v0.2.1.\n\nsovity EDC Community Edition: [https://github.com/sovity/edc-extensions](https://github.com/sovity/edc-extensions)\n\nLicense: [https://github.com/sovity/edc-extensions/blob/main/LICENSE](https://github.com/sovity/edc-extensions/blob/main/LICENSE)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "31514741"
+		"_exporter_id": "32949497"
 	},
 	"item": [
 		{
@@ -144,7 +144,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": \"testparamterization-v1.0\",\r\n    \"title\": \"TestParamterization\",\r\n    \"language\": \"https://w3id.org/idsa/code/EN\",\r\n    \"description\": \"Testdescription\",\r\n    \"publisherHomepage\": \"https://www.sovity.de\",\r\n    \"licenseUrl\": \"https://www.apache.org/licenses/LICENSE-2.0\",\r\n    \"version\": \"v1.0\",\r\n    \"keywords\": [\r\n        \"keyword1\",\r\n        \"keyword2\"\r\n    ],\r\n    \"mediaType\": \"application/json\",\r\n    \"landingPageUrl\": \"https://www.endpoint.com\",\r\n    \"dataAddressProperties\": {\r\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"https://www.google.com\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/authKey\": \"key\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/secretName\": \"value\",\r\n    }\r\n}",
+									"raw": "{\r\n    \"id\": \"testparamterization-auth-header-v1.0\",\r\n    \"title\": \"TestParamterization\",\r\n    \"language\": \"https://w3id.org/idsa/code/EN\",\r\n    \"description\": \"Testdescription\",\r\n    \"publisherHomepage\": \"https://www.sovity.de\",\r\n    \"licenseUrl\": \"https://www.apache.org/licenses/LICENSE-2.0\",\r\n    \"version\": \"v1.0\",\r\n    \"keywords\": [\r\n        \"keyword1\",\r\n        \"keyword2\"\r\n    ],\r\n    \"mediaType\": \"application/json\",\r\n    \"landingPageUrl\": \"https://www.endpoint.com\",\r\n    \"dataAddressProperties\": {\r\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"https://www.google.com\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/authKey\": \"key\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/secretName\": \"value\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -194,6 +194,13 @@
 										"assets",
 										"{{ASSET_ID}}",
 										"metadata"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
 									]
 								}
 							},
@@ -449,7 +456,8 @@
 									"query": [
 										{
 											"key": "connectorEndpoint",
-											"value": "{{REQUESTING_DSP_ENDPOINT}}"
+											"value": "{{REQUESTING_DSP_ENDPOINT}}",
+											"description": "The full URL to the connector's DSP endpoint as seen by the connector. Example for the default docker compose setup (within the docker network): http://edc2:11003/api/dsp. You can also find this value in the dashboard's UI."
 										}
 									]
 								}
@@ -704,8 +712,7 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -719,7 +726,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/Asset\",\n    \"https://w3id.org/edc/v0.0.1/ns/properties\": {\n        \"https://w3id.org/edc/v0.0.1/ns/id\": \"12345\",\n        \"http://www.w3.org/ns/dcat#version\": \"1.0\",\n        \"http://purl.org/dc/terms/language\": \"https://w3id.org/idsa/code/EN\",\n        \"http://purl.org/dc/terms/title\": \"test-document\",\n        \"http://purl.org/dc/terms/description\": \"my test document\",\n        \"http://www.w3.org/ns/dcat#keyword\": [\n            \"keyword1\",\n            \"keyword2\"\n        ],\n        \"http://purl.org/dc/terms/creator\": {\n            \"http://xmlns.com/foaf/0.1/name\": \"My Org\"\n        },\n        \"http://purl.org/dc/terms/license\": \"https://creativecommons.org/licenses/by/4.0/\",\n        \"http://www.w3.org/ns/dcat#landingPage\": \"https://mydepartment.myorg.com/my-offer\",\n        \"http://www.w3.org/ns/dcat#mediaType\": \"text/plain\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody\": \"false\",\n        \"http://purl.org/dc/terms/publisher\": {\n            \"http://xmlns.com/foaf/0.1/homepage\": \"https://myorg.com/\"\n        },\n        \"https://w3id.org/mobilitydcat-ap/transport-mode\": \"Road\",\n        \"https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category\": \"Traffic Information\",\n        \"https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category\": \"Hazard Warnings\",\n        \"https://w3id.org/mobilitydcat-ap/mobility-data-standard\": \"CSV\",\n        \"https://w3id.org/mobilitydcat-ap/georeferencing-method\": \"Geo Ref Method Test\"\n    },\n    \"https://w3id.org/edc/v0.0.1/ns/privateProperties\": {},\n    \"https://w3id.org/edc/v0.0.1/ns/dataAddress\": {\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"https://www.sovity.de\"\n    }\n}",
+									"raw": "{\n    \"@type\": \"https://w3id.org/edc/v0.0.1/ns/Asset\",\n    \"https://w3id.org/edc/v0.0.1/ns/properties\": {\n        \"https://w3id.org/edc/v0.0.1/ns/id\": \"12345mds\",\n        \"http://www.w3.org/ns/dcat#version\": \"1.0\",\n        \"http://purl.org/dc/terms/language\": \"https://w3id.org/idsa/code/EN\",\n        \"http://purl.org/dc/terms/title\": \"test-document\",\n        \"http://purl.org/dc/terms/description\": \"my test document\",\n        \"http://www.w3.org/ns/dcat#keyword\": [\n            \"keyword1\",\n            \"keyword2\"\n        ],\n        \"http://purl.org/dc/terms/creator\": {\n            \"http://xmlns.com/foaf/0.1/name\": \"My Org\"\n        },\n        \"http://purl.org/dc/terms/license\": \"https://creativecommons.org/licenses/by/4.0/\",\n        \"http://www.w3.org/ns/dcat#landingPage\": \"https://mydepartment.myorg.com/my-offer\",\n        \"http://www.w3.org/ns/dcat#mediaType\": \"text/plain\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyMethod\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyPath\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyQueryParams\": \"false\",\n        \"https://semantic.sovity.io/dcat-ext#httpDatasourceHintsProxyBody\": \"false\",\n        \"http://purl.org/dc/terms/publisher\": {\n            \"http://xmlns.com/foaf/0.1/homepage\": \"https://myorg.com/\"\n        },\n        \"https://w3id.org/mobilitydcat-ap/transport-mode\": \"Road\",\n        \"https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-category\": \"Traffic Information\",\n        \"https://w3id.org/mobilitydcat-ap/mobility-theme/data-content-sub-category\": \"Hazard Warnings\",\n        \"https://w3id.org/mobilitydcat-ap/mobility-data-standard\": \"CSV\",\n        \"https://w3id.org/mobilitydcat-ap/georeferencing-method\": \"Geo Ref Method Test\"\n    },\n    \"https://w3id.org/edc/v0.0.1/ns/privateProperties\": {},\n    \"https://w3id.org/edc/v0.0.1/ns/dataAddress\": {\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"https://www.sovity.de\"\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -967,8 +974,7 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -982,7 +988,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"policy-1\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": [\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"REFERRING_CONNECTOR\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/eq\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"{{CONSUMER_EDC_PARTICIPANT_ID}}\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
+									"raw": "{\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"connector-restricted-policy\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": [\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"REFERRING_CONNECTOR\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/eq\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"{{CONSUMER_EDC_PARTICIPANT_ID}}\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1011,8 +1017,7 @@
 										"exec": [
 											""
 										],
-										"type": "text/javascript",
-										"packages": {}
+										"type": "text/javascript"
 									}
 								}
 							],
@@ -1026,7 +1031,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"policy-1\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": [\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/gteq\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2022-05-31T22:00:00.000Z\"\n                    },\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/lt\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2030-06-30T22:00:00.000Z\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
+									"raw": "{\n    \"@type\": \"PolicyDefinitionDto\",\n    \"@id\": \"time-period-restricted-policy\",\n    \"https://w3id.org/edc/v0.0.1/ns/policy\": {\n        \"@type\": \"http://www.w3.org/ns/odrl/2/Set\",\n        \"http://www.w3.org/ns/odrl/2/permission\": [\n            {\n                \"http://www.w3.org/ns/odrl/2/action\": {\n                    \"http://www.w3.org/ns/odrl/2/type\": \"USE\"\n                },\n                \"http://www.w3.org/ns/odrl/2/constraint\": [\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/gteq\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2022-05-31T22:00:00.000Z\"\n                    },\n                    {\n                        \"http://www.w3.org/ns/odrl/2/leftOperand\": \"POLICY_EVALUATION_TIME\",\n                        \"http://www.w3.org/ns/odrl/2/operator\": {\n                            \"@id\": \"http://www.w3.org/ns/odrl/2/lt\"\n                        },\n                        \"http://www.w3.org/ns/odrl/2/rightOperand\": \"2030-06-30T22:00:00.000Z\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
 									"options": {
 										"raw": {
 											"language": "json"
