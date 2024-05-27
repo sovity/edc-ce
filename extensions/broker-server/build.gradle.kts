@@ -1,67 +1,57 @@
 plugins {
     `java-library`
-    id("org.gradle.test-retry") version "1.5.7"
+    alias(libs.plugins.retry)
 }
-
-val edcVersion: String by project
-val edcGroup: String by project
-val jupiterVersion: String by project
-val mockitoVersion: String by project
-val assertj: String by project
-val okHttpVersion: String by project
-val restAssured: String by project
-val testcontainersVersion: String by project
-val sovityEdcGroup: String by project
-val sovityEdcExtensionGroup: String by project
-val sovityEdcExtensionsVersion: String by project
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:1.18.30")
-    compileOnly("org.projectlombok:lombok:1.18.30")
-    implementation("org.apache.commons:commons-lang3:3.13.0")
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
 
-    api("${sovityEdcGroup}:catalog-parser:${sovityEdcExtensionsVersion}") { isChanging = true }
-    api("${sovityEdcGroup}:json-and-jsonld-utils:${sovityEdcExtensionsVersion}") { isChanging = true }
-    api("${sovityEdcGroup}:wrapper-common-mappers:${sovityEdcExtensionsVersion}") { isChanging = true }
+    implementation(libs.apache.commonsLang)
 
-    implementation("${edcGroup}:control-plane-spi:${edcVersion}")
-    implementation("${edcGroup}:management-api-configuration:${edcVersion}")
+    api(project(":utils:catalog-parser"))
+    api(project(":utils:json-and-jsonld-utils"))
+    api(project(":extensions:wrapper:wrapper-common-mappers"))
+
+    implementation(libs.edc.controlPlaneSpi)
+    implementation(libs.edc.managementApiConfiguration)
 
     api(project(":extensions:broker-server-postgres-flyway-jooq"))
     implementation(project(":extensions:broker-server-api:api"))
+    implementation(project(":utils:versions"))
 
-    implementation("com.squareup.okhttp3:okhttp:${okHttpVersion}")
+    implementation(libs.okhttp.okhttp)
 
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
-    testCompileOnly("org.projectlombok:lombok:1.18.30")
-    testImplementation("${sovityEdcGroup}:client:${sovityEdcExtensionsVersion}") { isChanging = true }
-    testImplementation("${sovityEdcExtensionGroup}:sovity-edc-extensions-package:${sovityEdcExtensionsVersion}") { isChanging = true }
-    testImplementation("org.assertj:assertj-core:${assertj}")
-    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
-    testImplementation("org.mockito:mockito-inline:${mockitoVersion}")
-    testImplementation("${edcGroup}:control-plane-core:${edcVersion}")
-    testImplementation("${edcGroup}:data-plane-selector-core:${edcVersion}")
-    testImplementation("${edcGroup}:junit:${edcVersion}")
-    testImplementation("${edcGroup}:http:${edcVersion}")
-    testImplementation("${edcGroup}:iam-mock:${edcVersion}")
-    testImplementation("${edcGroup}:dsp:${edcVersion}")
-    testImplementation("${edcGroup}:json-ld:${edcVersion}")
-    testImplementation("${edcGroup}:monitor-jdk-logger:${edcVersion}")
-    testImplementation("${edcGroup}:configuration-filesystem:${edcVersion}")
+    testAnnotationProcessor(libs.lombok)
+    testCompileOnly(libs.lombok)
+    testImplementation(project(":extensions:wrapper:clients:java-client"))
+    testImplementation(project(":extensions:sovity-edc-extensions-package"))
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.edc.controlPlaneCore)
+    testImplementation(libs.edc.dataPlaneSelectorCore)
+    testImplementation(libs.edc.junit)
+    testImplementation(libs.edc.http)
+    testImplementation(libs.edc.iamMock)
+    testImplementation(libs.edc.dsp)
+    testImplementation(libs.edc.jsonLd)
+    testImplementation(libs.edc.monitorJdkLogger)
+    testImplementation(libs.edc.configurationFilesystem)
     testImplementation(project(":extensions:broker-server-api:client"))
-    testImplementation("io.rest-assured:rest-assured:${restAssured}")
-    testImplementation("org.testcontainers:testcontainers:${testcontainersVersion}")
-    testImplementation("org.testcontainers:junit-jupiter:${testcontainersVersion}")
-    testImplementation("org.testcontainers:postgresql:${testcontainersVersion}")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testImplementation("org.skyscreamer:jsonassert:1.5.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testImplementation(libs.restAssured.restAssured)
+    testImplementation(libs.testcontainers.testcontainers)
+    testImplementation(libs.testcontainers.junitJupiter)
+    testImplementation(libs.testcontainers.postgresql)
+    testImplementation(libs.junit.api)
+    testImplementation(libs.jsonAssert)
+    testRuntimeOnly(libs.junit.engine)
 
-    implementation("org.quartz-scheduler:quartz:2.3.2")
+    implementation(libs.quartz.quartz)
 }
 
 tasks.getByName<Test>("test") {
@@ -75,6 +65,8 @@ tasks.getByName<Test>("test") {
 }
 
 tasks.register("prepareKotlinBuildScriptModel") {}
+
+group = libs.versions.sovityBrokerServerGroup.get()
 
 publishing {
     publications {

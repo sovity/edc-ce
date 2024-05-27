@@ -26,7 +26,6 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
         - [ ] Write or review a release summary.
         - [ ] Remove empty sections from the patch notes.
     - [ ] Update the [gradle.properties](https://github.com/sovity/edc-broker-server-extension/blob/main/gradle.properties) to contain the released edc-extensions version.
-    - TODO: update links to new .env after the merge
     - [ ] Set the broker server release version in the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
     - [ ] Set the EDC UI release version in the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
     - [ ] Set the EDC CE release version in the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
@@ -42,8 +41,7 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
     - [ ] Check @jkbquabeck for an up-to-date mailing list, separated into "To" and "Cc".
     - [ ] Attach the Deployment Docs Zip generated during the GitHub release, which should now contain the CHANGELOG, deployment migration notes, an initial deployment guide and a local demo docker compose.
 - [ ] Optional, this can be done mid-development if required:
-    - [ ] Create a `release-cleanup` PR. 
-    - TODO: update links to new .env after the merge
+    - [ ] Create a `release-cleanup` PR.
     - [ ] Revert the versions in the [docker-compose's .env file](../../../.env) back to latest for the EDC UI.
     - [ ] Revert the versions in the [docker-compose's .env file](../../../.env) back to latest for the EDC CE.
     - [ ] Revert the versions in the [docker-compose's .env file](../../../.env) back to latest for the Broker Server.

@@ -99,7 +99,7 @@ the [docker-compose.yaml](#local-demo).
 
 ### Local Demo
 
-There is a [docker-compose.yaml](docker-compose.yaml) that starts a broker and a connector.
+There is a [docker-compose.yaml](../../docker-compose.yaml) that starts a broker and a connector.
 
 At release time it is pinned down to the release versions.
 
@@ -124,30 +124,28 @@ Mid-development it might be un-pinned back to latest versions.
 
 ### Deployment Units
 
-| Deployment Unit                                                | Version / Details                                                           |
-|----------------------------------------------------------------|-----------------------------------------------------------------------------|
-| Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                       |
-| Postgresql                                                     | 15 or compatible version                                                    |
-| Broker Backend                                                 | broker-server-ce, see [CHANGELOG.md](CHANGELOG.md) for compatible versions. |
-| Broker UI                                                      | edc-ui, see  [CHANGELOG.md](CHANGELOG.md) for compatible versions.          |
+| Deployment Unit                                                | Version / Details                                                                                                                                                                                       |
+|----------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                                                                                                                                                   |
+| Postgresql                                                     | 15 or compatible version                                                                                                                                                                                |
+| Broker Backend                                                 | broker-server-ce, see [CHANGELOG.md](../../CHANGELOG.md) for version 8+ or [former CHANGELOG.md](https://github.com/sovity/edc-broker-server-extension/blob/main/CHANGELOG.md) for compatible versions. |
+| Broker UI                                                      | edc-ui, see [CHANGELOG.md](../../CHANGELOG.md) for version 8+ or [former CHANGELOG.md](https://github.com/sovity/edc-broker-server-extension/blob/main/CHANGELOG.md) for compatible versions.           |
 
 ### Configuration
 
-There is a [docker-compose.yaml](docker-compose.yaml) to try out the broker locally. However, a productive release will
-require a few more configuration options, so you should only use it to check if the released version is roughly working
-or if it's broken.
+There is a [docker-compose.yaml](../../docker-compose.yaml) to try out the broker locally. However, a productive release will require a few more configuration options, so you should only use it to check if the released version is roughly working or if it's broken.
 
 #### Reverse Proxy Configuration
 
 - The broker is meant to be served via TLS/HTTPS.
 - The broker is meant to be deployed with a reverse proxy merging the following ports:
-    - The UI's `8080` port.
-    - The Backend's `11002` port.
-    - The Backend's `11003` port.
+  - The UI's `8080` port.
+  - The Backend's `11002` port.
+  - The Backend's `11003` port.
 - The mapping should look like this:
-    - `https://[MY_EDC_FQDN]/backend/api/dsp` -> `broker-backend:11003/backend/api/dsp`
-    - `https://[MY_EDC_FQDN]/backend/api/management` -> `broker-backend:11002/backend/api/management`
-    - All other requests -> `broker-ui:8080`
+  - `https://[MY_EDC_FQDN]/backend/api/dsp` -> `broker-backend:11003/backend/api/dsp`
+  - `https://[MY_EDC_FQDN]/backend/api/management` -> `broker-backend:11002/backend/api/management`
+  - All other requests -> `broker-ui:8080`
 
 #### Backend Configuration
 
@@ -192,7 +190,7 @@ EDC_BROKER_SERVER_ADMIN_API_KEY: DefaultBrokerServerAdminApiKey
 ```
 
 All pre-configured config values for either the broker server or the underlying EDC can be found
-in [connector/.env](.). TODO: fix url after merge
+in [launchers/.env.broker](../../launchers/.env.broker).
 
 #### UI Configuration
 

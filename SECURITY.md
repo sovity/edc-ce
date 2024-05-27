@@ -29,4 +29,5 @@ This information will help us triage your report more quickly.
 We prefer all communications to be in English.
 
 ## Attribution
-This file is adapted from [eclipse-edc](https://github.com/eclipse-edc/DataDashboard) project.
+
+This file is adapted from [eclipse-edc/DataDashboard](https://github.com/eclipse-edc/DataDashboard) project.

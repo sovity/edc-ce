@@ -16,7 +16,7 @@
 
 ## About this Extension
 
-Implementation of an IDS Broker Server as an EDC Extension.
+Implementation of an EDC Broker backend as an EDC Extension.
 
 This extension does multiple things:
 

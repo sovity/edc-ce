@@ -19,6 +19,9 @@ inputs:
   connector-name:
     required: true
     description: "EDC Connector Name in launchers/connectors/{connector-name}"
+  deployment-type:
+    required: true
+    description: "Type of deployment: 'connector' or 'broker'"
   title:
     required: true
     description: "Docker Image Title"
@@ -62,7 +65,7 @@ runs:
           type=raw,value=latest,enable={{is_default_branch}}
           type=raw,value=release,enable=${{ startsWith(github.ref, 'refs/tags/') }}
     - name: "Docker: Build and Push"
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
         file: launchers/Dockerfile
         context: .
@@ -71,5 +74,6 @@ runs:
         labels: ${{ steps.meta.outputs.labels }}
         build-args: |
           CONNECTOR_NAME=${{ inputs.connector-name }}
+          CONNECTOR_TYPE=${{ inputs.deployment-type }}
           "EDC_LAST_COMMIT_INFO_ARG=${{ env.LAST_COMMIT_INFO }}"
           EDC_BUILD_DATE_ARG=${{ env.BUILD_DATE }}

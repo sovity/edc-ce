@@ -1,18 +1,10 @@
-val edcVersion: String by project
-val edcGroup: String by project
-val restAssured: String by project
-val assertj: String by project
-val mockitoVersion: String by project
-val lombokVersion: String by project
-val jettyVersion: String by project
-val jettyGroup: String by project
 
 plugins {
     `java-library`
     `maven-publish`
     alias(libs.plugins.swagger.plugin)  //./gradlew clean resolve
     alias(libs.plugins.hidetake.swaggerGenerator)  //./gradlew generateSwaggerUI
-    alias(libs.plugins.openapi.generator)  //./gradlew openApiValidate && ./gradlew openApiGenerate
+    alias(libs.plugins.openapi.generator6)  //./gradlew openApiValidate && ./gradlew openApiGenerate
 }
 
 dependencies {
@@ -27,7 +19,7 @@ dependencies {
     implementation(libs.jakarta.rsApi)
     implementation(libs.swagger.annotationsJakarta)
     implementation(libs.swagger.jaxrs2Jakarta)
-    implementation(libs.jakarta.servlet)
+    implementation(libs.jakarta.servletApi)
     implementation(libs.jakarta.validationApi)
     implementation(libs.jakarta.rsApi)
     implementation(libs.apache.commonsLang)
@@ -86,8 +78,7 @@ tasks.withType<org.gradle.jvm.tasks.Jar> {
     }
 }
 
-val sovityEdcExtensionGroup: String by project
-group = sovityEdcExtensionGroup
+group = libs.versions.sovityEdcExtensionGroup.get()
 
 publishing {
     publications {

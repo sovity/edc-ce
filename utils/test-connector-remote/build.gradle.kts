@@ -1,10 +1,3 @@
-val edcVersion: String by project
-val edcGroup: String by project
-val testcontainersVersion: String by project
-val lombokVersion: String by project
-val restAssured: String by project
-val awaitilityVersion: String by project
-val assertj: String by project
 
 plugins {
     `java-library`
@@ -20,6 +13,7 @@ dependencies {
     api(libs.edc.junit)
     api(libs.awaitility.java)
     api(project(":utils:json-and-jsonld-utils"))
+    implementation(project(":utils:versions"))
     implementation(libs.edc.sqlCore)
     implementation(libs.edc.jsonLdSpi)
     implementation(libs.edc.jsonLd)
@@ -30,8 +24,7 @@ dependencies {
     implementation(libs.restAssured.restAssured)
 }
 
-val sovityEdcExtensionGroup: String by project
-group = sovityEdcExtensionGroup
+group = libs.versions.sovityEdcExtensionGroup.get()
 
 publishing {
     publications {

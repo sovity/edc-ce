@@ -2,9 +2,6 @@ plugins {
     `java-library`
 }
 
-val edcVersion: String by project
-val edcGroup: String by project
-
 dependencies {
     // Control-Plane
     api(libs.edc.controlPlaneCore)
@@ -36,5 +33,4 @@ dependencies {
     api(libs.edc.dataPlaneUtil)
 }
 
-val sovityEdcGroup: String by project
-group = sovityEdcGroup
+group = libs.versions.sovityEdcGroup.get()

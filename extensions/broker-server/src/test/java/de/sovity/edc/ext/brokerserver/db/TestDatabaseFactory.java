@@ -21,15 +21,11 @@ import lombok.NoArgsConstructor;
 public class TestDatabaseFactory {
 
     /**
-     * Returns a JUnit 5 Extension that either connects to a test database or launches a testcontainer.
+     * Returns a JUnit 5 Extension that launches a testcontainer.
      *
      * @return {@link TestDatabase}
      */
     public static TestDatabase getTestDatabase() {
-        if (TestDatabaseViaEnv.isSkipTestcontainers()) {
-            return new TestDatabaseViaEnv();
-        }
-
         return new TestDatabaseViaTestcontainers();
     }
 }

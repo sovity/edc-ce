@@ -1,5 +1,3 @@
-val edcVersion: String by project
-val edcGroup: String by project
 
 plugins {
     `java-library`
@@ -8,7 +6,7 @@ plugins {
 }
 
 dependencies {
-    api("${edcGroup}:connector-core:${edcVersion}")
+    api(libs.edc.connectorCore)
     api(libs.edc.boot)
     api(libs.edc.http)
     api(libs.edc.apiObservability)
@@ -24,5 +22,4 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     archiveFileName.set("app.jar")
 }
 
-val sovityEdcExtensionGroup: String by project
-group = sovityEdcExtensionGroup
+group = libs.versions.sovityEdcExtensionGroup.get()

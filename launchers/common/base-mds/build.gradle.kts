@@ -6,5 +6,4 @@ dependencies {
     implementation(libs.loggingHouse.client)
 }
 
-val sovityEdcGroup: String by project
-group = sovityEdcGroup
+group = libs.versions.sovityEdcGroup.get()

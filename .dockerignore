@@ -38,7 +38,8 @@ build
 *.hprof
 
 .env
-!launchers/.env
+!launchers/.env.connector
+!launchers/.env.broker
 
 # Log files
 *.log
@@ -48,3 +49,6 @@ build
 **/*.jks
 
 docs/secrets
+
+node_modules
+npm-debug.log

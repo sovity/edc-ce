@@ -1,38 +1,29 @@
-val sovityEdcGroup: String by project
-val sovityEdcExtensionsVersion: String by project
 
 plugins {
     `java-library`
     `maven-publish`
-    id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.18" //./gradlew clean resolve
-    id("org.hidetake.swagger.generator") version "2.19.2" //./gradlew generateSwaggerUI
-    id("org.openapi.generator") version "7.0.1" //./gradlew openApiValidate && ./gradlew openApiGenerate
+    alias(libs.plugins.swagger.plugin) //./gradlew clean resolve
+    alias(libs.plugins.hidetake.swaggerGenerator) //./gradlew generateSwaggerUI
+    alias(libs.plugins.openapi.generator7) //./gradlew openApiValidate && ./gradlew openApiGenerate
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:1.18.30")
-    compileOnly("org.projectlombok:lombok:1.18.30")
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
 
-    api("${sovityEdcGroup}:wrapper-common-api:${sovityEdcExtensionsVersion}")
+    api(project(":extensions:wrapper:wrapper-common-api"))
 
-    api("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
-    api("jakarta.validation:jakarta.validation-api:3.0.2")
-    api("io.swagger.core.v3:swagger-annotations-jakarta:2.2.18")
-    api("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.18")
-    api("jakarta.servlet:jakarta.servlet-api:5.0.0")
+    api(libs.jakarta.rsApi)
+    api(libs.jakarta.validationApi)
+    api(libs.swagger.annotationsJakarta)
+    api(libs.swagger.jaxrs2Jakarta)
+    api(libs.jakarta.servletApi)
 
-    implementation("org.apache.commons:commons-lang3:3.13.0")
-    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
-    implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
-    implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.18")
-    implementation("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.18")
-    implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
-    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
-    implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
-    implementation("org.apache.commons:commons-lang3:3.13.0")
+    implementation(libs.apache.commonsLang)
+    implementation(libs.jakarta.validationApi)
 }
 
-val openapiFileDir = "${project.buildDir}/swagger"
+val openapiFileDir = project.layout.buildDirectory.get().asFile.resolve("swagger").path
 val openapiFileFilename = "broker-server.yaml"
 val openapiFile = "$openapiFileDir/$openapiFileFilename"
 
@@ -77,8 +68,7 @@ tasks.withType<org.gradle.jvm.tasks.Jar> {
     }
 }
 
-val sovityEdcExtensionGroup: String by project
-group = sovityEdcExtensionGroup
+group = libs.versions.sovityEdcExtensionGroup.get()
 
 publishing {
     publications {
