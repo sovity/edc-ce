@@ -51,6 +51,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      - name: Clean workspace
+        run: git clean -fdx
       - name: "Gradle: Validate Gradle Wrapper"
         if: env.docs == 'false'
         uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
