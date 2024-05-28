@@ -40,6 +40,10 @@ jobs:
       - name: Success if only docs changed
         if: env.docs == 'true'
         run: echo "Only documentation files changed. Marking as successful."
+
+      - name: Continue if more than just docs have been changed
+        if: env.docs == 'false'
+        run: echo "More than just docs have been changed."
       
       - name: "Set up JDK 17"
         if: env.docs == 'false'
@@ -137,7 +141,7 @@ jobs:
       - name: Check for docs-only changes
         id: docs-check
         run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^(docs/api/.*|.*\.md|.*\.png|.*\.rst)$'; then
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^(docs/api/.*|.*\.md|.*\.png)$'; then
             echo "docs=true" >> $GITHUB_ENV
           else
             echo "docs=false" >> $GITHUB_ENV
@@ -146,6 +150,10 @@ jobs:
       - name: Success if only docs changed
         if: env.docs == 'true'
         run: echo "Only documentation files changed. Marking as successful."
+
+      - name: Continue if more than just docs have been changed
+        if: env.docs == 'false'
+        run: echo "More than just docs have been changed."
       
       - name: "Set up JDK 17"
         if: env.docs == 'false'
