@@ -69,18 +69,6 @@ allprojects {
         failFast = true
     }
 
-    // setting duplicatesStrategy to EXCLUDE to avoid build errors caused by duplicate entries in the JAR file
-    // this ensures that if a duplicate file is found, it will be excluded from the resulting JAR
-    tasks.withType<Jar> {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    }
-
-    // setting duplicatesStrategy to EXCLUDE for any copy tasks to prevent errors during the build process due to duplicate files
-    // this ensures a smooth build by excluding duplicates
-    tasks.withType<Copy> {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    }
-
     checkstyle {
         toolVersion = "10.9.3"
         configFile = rootProject.file("docs/dev/checkstyle/checkstyle-config.xml")
