@@ -17,6 +17,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
+- Overhaul of the Postman-Collection
+
 ### Deployment Migration Notes
 
 ## [7.5.0] - 2024-05-16
