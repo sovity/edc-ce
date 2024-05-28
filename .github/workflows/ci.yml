@@ -25,11 +25,13 @@ jobs:
     steps:
       - uses: FranzDiebold/github-env-vars-action@v2
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Check for docs-only changes
         id: docs-check
         run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^(docs/api/.*|.*\.md|.*\.png|.*\.rst)$'; then
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^(docs/api/.*|.*\.md|.*\.png)$'; then
             echo "docs=true" >> $GITHUB_ENV
           else
             echo "docs=false" >> $GITHUB_ENV
@@ -129,6 +131,8 @@ jobs:
     steps:
       - uses: FranzDiebold/github-env-vars-action@v2
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Check for docs-only changes
         id: docs-check
