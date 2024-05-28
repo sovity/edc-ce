@@ -27,32 +27,22 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
       - name: Check for docs-only changes
         id: docs-check
         run: |
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^(docs/api/.*|.*\.md|.*\.png)$'; then
             echo "docs=true" >> $GITHUB_ENV
+            echo "Only documentation files changed. Skipping steps."
           else
             echo "docs=false" >> $GITHUB_ENV
+            echo "More than just docs have been changed. Running next steps."
           fi
-          
-      - name: Success if only docs changed
-        if: env.docs == 'true'
-        run: echo "Only documentation files changed. Marking as successful."
-
-      - name: Continue if more than just docs have been changed
-        if: env.docs == 'false'
-        run: echo "More than just docs have been changed."
-      
       - name: "Set up JDK 17"
         if: env.docs == 'false'
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Clean workspace
-        run: git clean -fdx
       - name: "Gradle: Validate Gradle Wrapper"
         if: env.docs == 'false'
         uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
@@ -139,24 +129,16 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
       - name: Check for docs-only changes
         id: docs-check
         run: |
           if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^(docs/api/.*|.*\.md|.*\.png)$'; then
             echo "docs=true" >> $GITHUB_ENV
+            echo "Only documentation files changed. Skipping steps."
           else
             echo "docs=false" >> $GITHUB_ENV
+            echo "More than just docs have been changed. Running next steps."
           fi
-          
-      - name: Success if only docs changed
-        if: env.docs == 'true'
-        run: echo "Only documentation files changed. Marking as successful."
-
-      - name: Continue if more than just docs have been changed
-        if: env.docs == 'false'
-        run: echo "More than just docs have been changed."
-      
       - name: "Set up JDK 17"
         if: env.docs == 'false'
         uses: actions/setup-java@v3
