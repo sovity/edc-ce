@@ -25,12 +25,31 @@ jobs:
     steps:
       - uses: FranzDiebold/github-env-vars-action@v2
       - uses: actions/checkout@v3
+      - name: Set up docs filter
+        id: filter
+        uses: dorny/paths-filter@v3
         with:
-          fetch-depth: 0
+          filters: |
+            docs:
+              - 'docs/**'
+              - '**/*.md'
+              - '**/*.png'
+            code:
+              - '**/*.java'
+              - '**/*.kt'
+              - '**/*.ts'
+              - '**/*.svelte'
+              - '**/*.js'
+              - '**/*.sql'
+              - '**/*.dockerfile'
+              - '**/*.yaml'
+              - '**/*.yml'
+              - '**/*.properies'
+              - '**/*.kts'              
       - name: Check for docs-only changes
         id: docs-check
         run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^(docs/api/.*|.*\.md|.*\.png)$'; then
+          if [ "${{ steps.filter.outputs.docs }}" == "true" ] && [ "${{ steps.filter.outputs.code }}" == "false" ]; then
             echo "docs=true" >> $GITHUB_ENV
             echo "Only documentation files changed. Skipping steps."
           else
@@ -127,12 +146,31 @@ jobs:
     steps:
       - uses: FranzDiebold/github-env-vars-action@v2
       - uses: actions/checkout@v3
+      - name: Set up docs filter
+        id: filter
+        uses: dorny/paths-filter@v3
         with:
-          fetch-depth: 0
+          filters: |
+            docs:
+              - 'docs/**'
+              - '**/*.md'
+              - '**/*.png'
+            code:
+              - '**/*.java'
+              - '**/*.kt'
+              - '**/*.ts'
+              - '**/*.svelte'
+              - '**/*.js'
+              - '**/*.sql'
+              - '**/*.dockerfile'
+              - '**/*.yaml'
+              - '**/*.yml'
+              - '**/*.properies'
+              - '**/*.kts'              
       - name: Check for docs-only changes
         id: docs-check
         run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^(docs/api/.*|.*\.md|.*\.png)$'; then
+          if [ "${{ steps.filter.outputs.docs }}" == "true" ] && [ "${{ steps.filter.outputs.code }}" == "false" ]; then
             echo "docs=true" >> $GITHUB_ENV
             echo "Only documentation files changed. Skipping steps."
           else
