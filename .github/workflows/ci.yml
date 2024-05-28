@@ -1,5 +1,4 @@
 name: CI
-
 on:
   push:
     branches: [ main ]
@@ -7,13 +6,11 @@ on:
     types: [ published ]
   pull_request:
     branches: [ main ]
-
 env:
   REGISTRY_URL: ghcr.io
   REGISTRY_USER: ${{ github.actor }}
   IMAGE_BASE_NAME: ${{ github.repository_owner }}
   GITHUB_CI: true
-
 jobs:
   build-gradle-project:
     name: Build Gradle Project
@@ -25,23 +22,58 @@ jobs:
     steps:
       - uses: FranzDiebold/github-env-vars-action@v2
       - uses: actions/checkout@v3
+      - name: Set up docs filter
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            docs:
+              - 'docs/**'
+              - '**/*.md'
+              - '**/*.png'
+            code:
+              - '**/*.java'
+              - '**/*.kt'
+              - '**/*.ts'
+              - '**/*.svelte'
+              - '**/*.js'
+              - '**/*.sql'
+              - '**/*.dockerfile'
+              - '**/*.yaml'
+              - '**/*.yml'
+              - '**/*.properies'
+              - '**/*.kts'              
+      - name: Check for docs-only changes
+        id: docs-check
+        run: |
+          if [ "${{ steps.filter.outputs.docs }}" == "true" ] && [ "${{ steps.filter.outputs.code }}" == "false" ]; then
+            echo "docs=true" >> $GITHUB_ENV
+            echo "Only documentation files changed. Skipping steps."
+          else
+            echo "docs=false" >> $GITHUB_ENV
+            echo "More than just docs have been changed. Running next steps."
+          fi
       - name: "Set up JDK 17"
+        if: env.docs == 'false'
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
       - name: "Gradle: Validate Gradle Wrapper"
+        if: env.docs == 'false'
         uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
       - name: "Gradle: Include last commit info and build date for JARs"
+        if: env.docs == 'false'
         run: |
           git log -1 > extensions/last-commit-info/src/main/resources/jar-last-commit-info.txt
           echo $(date --utc +%FT%TZ) > extensions/last-commit-info/src/main/resources/jar-build-date.txt
       - name: "Gradle: Overwrite Artifact Version (Release Only)"
-        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }} && env.docs == 'false'
         run: |
           GRADLE_ARGS="-PsovityEdcExtensionsVersion=${GITHUB_REF#refs/tags/v}"
           echo "GRADLE_ARGS=$GRADLE_ARGS" >> $GITHUB_ENV
       - name: "Gradle: Build"
+        if: env.docs == 'false'
         uses: gradle/gradle-build-action@v2.10.0
         with:
           arguments: build ${{ env.GRADLE_ARGS }}
@@ -49,14 +81,15 @@ jobs:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "Gradle: Publish (Main & Release Only)"
+        if: (${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}) && env.docs == 'false'
         uses: gradle/gradle-build-action@v2.10.0
-        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
         with:
           arguments: publish ${{ env.GRADLE_ARGS }}
         env:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "Docker Image: edc-dev"
+        if: env.docs == 'false'
         uses: ./.github/actions/build-connector-image
         with:
           registry-url: ${{ env.REGISTRY_URL }}
@@ -68,6 +101,7 @@ jobs:
           title: "sovity Dev EDC Connector"
           description: "Extended EDC Connector built by sovity. This dev version contains no dataspace auth and can be used to quickly start a locally running EDC + EDC UI."
       - name: "Docker Image: edc-ce"
+        if: env.docs == 'false'
         uses: ./.github/actions/build-connector-image
         with:
           registry-url: ${{ env.REGISTRY_URL }}
@@ -79,6 +113,7 @@ jobs:
           title: "sovity Community Edition EDC Connector"
           description: "EDC Connector built by sovity. Contains sovity's Community Edition EDC extensions and requires dataspace credentials to join an existing dataspace."
       - name: "Docker Image: edc-ce-mds"
+        if: env.docs == 'false'
         uses: ./.github/actions/build-connector-image
         with:
           registry-url: ${{ env.REGISTRY_URL }}
@@ -90,6 +125,7 @@ jobs:
           title: "MDS Community Edition EDC Connector"
           description: "EDC Connector built by sovity and configured for compatibility with the Mobility Data Space (MDS). This EDC requires dataspace credentials, and additional MDS Services such as a Clearing House."
       - name: "Docker Image: test-backend"
+        if: env.docs == 'false'
         uses: ./.github/actions/build-connector-image
         with:
           registry-url: ${{ env.REGISTRY_URL }}
@@ -107,20 +143,55 @@ jobs:
     steps:
       - uses: FranzDiebold/github-env-vars-action@v2
       - uses: actions/checkout@v3
+      - name: Set up docs filter
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            docs:
+              - 'docs/**'
+              - '**/*.md'
+              - '**/*.png'
+            code:
+              - '**/*.java'
+              - '**/*.kt'
+              - '**/*.ts'
+              - '**/*.svelte'
+              - '**/*.js'
+              - '**/*.sql'
+              - '**/*.dockerfile'
+              - '**/*.yaml'
+              - '**/*.yml'
+              - '**/*.properies'
+              - '**/*.kts'              
+      - name: Check for docs-only changes
+        id: docs-check
+        run: |
+          if [ "${{ steps.filter.outputs.docs }}" == "true" ] && [ "${{ steps.filter.outputs.code }}" == "false" ]; then
+            echo "docs=true" >> $GITHUB_ENV
+            echo "Only documentation files changed. Skipping steps."
+          else
+            echo "docs=false" >> $GITHUB_ENV
+            echo "More than just docs have been changed. Running next steps."
+          fi
       - name: "Set up JDK 17"
+        if: env.docs == 'false'
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
       - name: "Set up Node 16"
+        if: env.docs == 'false'
         uses: actions/setup-node@v3
         with:
           node-version: '16'
           cache: 'npm'
           cache-dependency-path: extensions/wrapper/clients/typescript-client/package.json
       - name: "Gradle: Validate Gradle Wrapper"
+        if: env.docs == 'false'
         uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
       - name: "Gradle: Generate TS Code"
+        if: env.docs == 'false'
         uses: gradle/gradle-build-action@v2.10.0
         with:
           arguments: :extensions:wrapper:wrapper:build -x test
@@ -128,6 +199,7 @@ jobs:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "NPM: Dist Tag & Version"
+        if: env.docs == 'false'
         working-directory: ./extensions/wrapper/clients/typescript-client
         run: |
           if [[ "$GITHUB_REF" == "refs/tags/v"* ]]; then
@@ -141,10 +213,11 @@ jobs:
           npm version $VERSION
           echo "DIST_TAG=$DIST_TAG" >> $GITHUB_ENV
       - name: "NPM: Build"
+        if: env.docs == 'false'
         working-directory: extensions/wrapper/clients/typescript-client
         run: npm ci && npm run build
       - name: "NPM: Publish (Main & Releases Only)"
-        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
+        if: (${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}) && env.docs == 'false'
         working-directory: extensions/wrapper/clients/typescript-client
         run: |
           npm set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
