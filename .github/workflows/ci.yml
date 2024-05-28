@@ -59,6 +59,8 @@ jobs:
     steps:
       - uses: FranzDiebold/github-env-vars-action@v2
       - uses: actions/checkout@v3
+        with:
+          clean: true 
       - name: Succeed if only docs changed
         if: needs.docs-filter.outputs.docs == 'true'
         run: echo "Only documentation files changed. This job succeeds and skips rest."
