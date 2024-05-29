@@ -14,62 +14,19 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.catalog;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
-import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
-import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
-import de.sovity.edc.ext.wrapper.api.ui.model.UiContractOffer;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import de.sovity.edc.utils.catalog.DspCatalogService;
-import de.sovity.edc.utils.catalog.model.DspContractOffer;
-import de.sovity.edc.utils.catalog.model.DspDataOffer;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 public class CatalogApiService {
-    private final AssetMapper assetMapper;
-    private final PolicyMapper policyMapper;
+    private final UiDataOfferBuilder uiDataOfferBuilder;
     private final DspCatalogService dspCatalogService;
 
     public List<UiDataOffer> fetchDataOffers(String connectorEndpoint) {
         var dspCatalog = dspCatalogService.fetchDataOffers(connectorEndpoint);
-        var endpoint = dspCatalog.getEndpoint();
-        var participantId = dspCatalog.getParticipantId();
-
-        return dspCatalog.getDataOffers().stream()
-                .map(dataOffer -> buildDataOffer(dataOffer, endpoint, participantId))
-                .toList();
-    }
-
-    private UiDataOffer buildDataOffer(DspDataOffer dataOffer, String endpoint, String participantId) {
-        var uiDataOffer = new UiDataOffer();
-        uiDataOffer.setEndpoint(endpoint);
-        uiDataOffer.setParticipantId(participantId);
-        uiDataOffer.setAsset(buildUiAsset(dataOffer, endpoint, participantId));
-        uiDataOffer.setContractOffers(buildContractOffers(dataOffer.getContractOffers()));
-        return uiDataOffer;
-    }
-
-    private List<UiContractOffer> buildContractOffers(List<DspContractOffer> contractOffers) {
-        return contractOffers.stream().map(this::buildContractOffer).toList();
-    }
-
-    private UiContractOffer buildContractOffer(DspContractOffer contractOffer) {
-        var uiContractOffer = new UiContractOffer();
-        uiContractOffer.setContractOfferId(contractOffer.getContractOfferId());
-        uiContractOffer.setPolicy(buildUiPolicy(contractOffer));
-        return uiContractOffer;
-    }
-
-    private UiAsset buildUiAsset(DspDataOffer dataOffer, String endpoint, String participantId) {
-        var asset = assetMapper.buildAssetFromDatasetProperties(dataOffer.getAssetPropertiesJsonLd());
-        return assetMapper.buildUiAsset(asset, endpoint, participantId);
-    }
-
-    private UiPolicy buildUiPolicy(DspContractOffer contractOffer) {
-        var policy = policyMapper.buildPolicy(contractOffer.getPolicyJsonLd());
-        return policyMapper.buildUiPolicy(policy);
+        return uiDataOfferBuilder.buildUiDataOffers(dspCatalog);
     }
 }

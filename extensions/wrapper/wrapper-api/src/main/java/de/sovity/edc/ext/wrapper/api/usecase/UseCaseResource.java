@@ -14,10 +14,16 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase;
 
+import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
+import de.sovity.edc.ext.wrapper.api.usecase.model.CatalogQuery;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
@@ -43,4 +49,14 @@ public interface UseCaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "List available functions in policies, prohibitions and obligations.")
     List<String> getSupportedFunctions();
+
+    @POST
+    @Path("catalog")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Fetch a connector's data offers")
+    List<UiDataOffer> queryCatalog(
+        @Valid @NotNull
+        CatalogQuery catalogQuery
+    );
 }

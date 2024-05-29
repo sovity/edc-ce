@@ -30,20 +30,25 @@ public class DspCatalogService {
     private final DspDataOfferBuilder dspDataOfferBuilder;
 
     public DspCatalog fetchDataOffers(String endpoint) throws DspCatalogServiceException {
-        var catalogJson = fetchDcatResponse(endpoint);
+        var catalogJson = fetchDcatResponse(endpoint, QuerySpec.max());
         return dspDataOfferBuilder.buildDataOffers(endpoint, catalogJson);
     }
 
-    private JsonObject fetchDcatResponse(String connectorEndpoint) {
-        var raw = fetchDcatRaw(connectorEndpoint);
+    public DspCatalog fetchDataOffersWithFilters(String endpoint, QuerySpec querySpec) {
+        var catalogJson = fetchDcatResponse(endpoint, querySpec);
+        return dspDataOfferBuilder.buildDataOffers(endpoint, catalogJson);
+    }
+
+    private JsonObject fetchDcatResponse(String connectorEndpoint, QuerySpec querySpec) {
+        var raw = fetchDcatRaw(connectorEndpoint, querySpec);
         var string = new String(raw, StandardCharsets.UTF_8);
         return JsonUtils.parseJsonObj(string);
     }
 
     @SneakyThrows
-    private byte[] fetchDcatRaw(String connectorEndpoint) {
+    private byte[] fetchDcatRaw(String connectorEndpoint, QuerySpec querySpec) {
         return catalogService
-                .requestCatalog(connectorEndpoint, "dataspace-protocol-http", QuerySpec.max())
+                .requestCatalog(connectorEndpoint, "dataspace-protocol-http", querySpec)
                 .get()
                 .orElseThrow(DspCatalogServiceException::ofFailure);
     }
