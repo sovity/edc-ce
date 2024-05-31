@@ -1,17 +1,8 @@
-val edcVersion: String by project
-val edcGroup: String by project
-val restAssured: String by project
-val assertj: String by project
-val mockitoVersion: String by project
-val lombokVersion: String by project
-val jettyVersion: String by project
-val jettyGroup: String by project
-
 
 plugins {
     `java-library`
     `maven-publish`
-    alias(libs.plugins.openapi.generator)
+    alias(libs.plugins.openapi.generator6)
 }
 
 repositories {
@@ -36,7 +27,7 @@ dependencies {
     implementation(libs.gsonFire)
     implementation(libs.openapi.jacksonDatabindNullable)
     implementation(libs.apache.commonsLang)
-    implementation(libs.jakarta.annotation)
+    implementation(libs.jakarta.annotationApi)
 
     // Lombok
     compileOnly(libs.lombok)
@@ -121,8 +112,7 @@ tasks.withType<Javadoc> {
     fullOptions.addStringOption("Xdoclint:none", "-quiet")
 }
 
-val sovityEdcGroup: String by project
-group = sovityEdcGroup
+group = libs.versions.sovityEdcGroup.get()
 
 publishing {
     publications {

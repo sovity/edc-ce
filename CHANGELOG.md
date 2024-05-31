@@ -7,9 +7,17 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 ### Overview
 
+Starting from version `8`, the Broker has been merged with the Community edition.
+
+[The former changelog](https://github.com/sovity/edc-broker-server-extension/blob/main/CHANGELOG.md) for the Broker is still available but will not be updated anymore.
+
+The Broker's version therefore jumps from version 4 to version 8.
+
+The functionalities of each part, Broker and Extensions, on this release, is the same as before the change.
+
 ### EDC UI
 
-### EDC Extensions
+### EDC Extensions and Broker
 
 #### Major Changes
 

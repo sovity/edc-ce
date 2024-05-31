@@ -4,9 +4,6 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-val edcVersion: String by project
-val edcGroup: String by project
-
 dependencies {
     api(project(":launchers:common:base"))
     api(project(":launchers:common:auth-daps"))
@@ -22,5 +19,4 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     archiveFileName.set("app.jar")
 }
 
-val sovityEdcGroup: String by project
-group = sovityEdcGroup
+group = libs.versions.sovityEdcGroup.get()

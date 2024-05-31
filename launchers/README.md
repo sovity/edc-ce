@@ -35,12 +35,141 @@ functionalities for self-hosting purposes.
 
 Our sovity Community Edition EDC is built as several docker image variants in different configurations.
 
-| Docker Image                                                                     | Type                     | Purpose                                                                                                                                                     | Features                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-|----------------------------------------------------------------------------------|--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [edc-dev](https://github.com/sovity/edc-extensions/pkgs/container/edc-dev)       | Devevelopment            | <ul><li>Local manual testing</li><li>Local demos</li></ul>                                                                                                  | <ul><li>Control- and Data-Plane</li><li>sovity Community Edition EDC Extensions</li><li>Management API Auth via API Keys</li><li>PostgreSQL Persistence & Flyway</li><li>Mock IAM</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| [edc-ce](https://github.com/sovity/edc-extensions/pkgs/container/edc-ce)         | sovity Community Edition | <ul><li>Self-Deploy a productive sovity EDC</li></ul>                                                                                                       | <ul><li>Control- and Data-Plane</li><li>sovity Community Edition EDC Extensions</li><li>Management API Auth via API Keys</li><li>PostgreSQL Persistence & Flyway</li><li>DAPS Authentication</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| [edc-ce-mds](https://github.com/sovity/edc-extensions/pkgs/container/edc-ce-mds) | MDS Community Edition    | <ul><li>Self-Deploy a productive MDS EDC</li></ul>                                                                                                          | <ul><li>Control- and Data-Plane</li><li>sovity Community Edition EDC Extensions</li><li>Management API Auth via API Keys</li><li>PostgreSQL Persistence & Flyway</li><li>DAPS Authentication</li><li>Broker Extension</li><li>Clearing House Extension</li></ul>                                                                                                                                                                                                                                                                                                                                                                  |
-| edc-ee                                                                           | Commercial               | <ul><li>Productive use</li><li>Professional users</li><li>Our Connector-as-a-Service (CaaS) customers</li><li>[Request Demo](mailto:contact@sovity.de)</ul> | <ul><li>Managed Control- and Data Planes, individually scalable</li><li>Hosted on highly performant infrastructure</li><li>Management API Auth via Service Accounts</li><li>Managed User Auth via standalone IAM (SSO)</li><li>Automatic Dataspace Roll-In, for example to Data Spaces like Catena-X or Mobility Data Space</li><li>Managed DAPS Authentication</li><li>Support &amp; Tutorials</li><li>Automatic updates to newest version and new features</li><li>Off-the-shelf extensions for use cases available</li><li>EDC available within minutes</li><li>Can be combined with Data Space as a Service (DSaaS)</li></ul> |
+<table>
+  <tr>
+  <th>Docker Image</th>
+  <th>Type</th>
+  <th>Purpose</th>
+  <th>Features</th>
+  </tr>
+  <tr>
+    <td>
+      <a href="https://github.com/sovity/edc-extensions/pkgs/container/edc-dev">edc-dev</a>
+    </td>
+    <td>Development</td>
+    <td>
+      <ul>
+        <li>Local manual testing</li>
+        <li>Local demos</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>Control- and Data-Plane</li>
+        <li>sovity Community Edition EDC Extensions</li>
+        <li>Management API Auth via API Keys</li>
+        <li>PostgreSQL Persistence & Flyway</li>
+        <li>Mock IAM</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="https://github.com/sovity/edc-extensions/pkgs/container/edc-ce">edc-ce</a>
+    </td>
+    <td>sovity Community Edition</td>
+    <td>
+      <ul>
+        <li>Self-Deploy a productive sovity EDC</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>Control- and Data-Plane</li>
+        <li>sovity Community Edition EDC Extensions</li>
+        <li>Management API Auth via API Keys</li>
+        <li>PostgreSQL Persistence & Flyway</li>
+        <li>DAPS Authentication</li>
+      </ul>         
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="https://github.com/sovity/edc-extensions/pkgs/container/edc-ce-mds">edc-ce-mds</a>
+    </td>
+    <td>MDS Community Edition</td>
+    <td>
+      <ul>
+        <li>Self-Deploy a productive MDS EDC</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>Control- and Data-Plane</li>
+        <li>sovity Community Edition EDC Extensions</li>
+        <li>Management API Auth via API Keys</li>
+        <li>PostgreSQL Persistence & Flyway</li>
+        <li>DAPS Authentication</li>
+        <li>Broker Extension</li>
+        <li>Clearing House Extension</li>
+      </ul>  
+    </td>
+  </tr>
+  <tr>
+    <td>edc-ee</td>
+    <td>Commercial</td>
+    <td>
+      <ul>
+        <li>Productive use</li>
+        <li>Professional users</li>
+        <li>Our Connector-as-a-Service (CaaS) customers</li>
+        <li><a href="mailto:contact@sovity.de">Request Demo</a>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>Managed Control- and Data Planes, individually scalable</li>
+        <li>Hosted on highly performant infrastructure</li>
+        <li>Management API Auth via Service Accounts</li>
+        <li>Managed User Auth via standalone IAM (SSO)</li>
+        <li>Automatic Dataspace Roll-In, for example to Data Spaces like Catena-X or Mobility Data Space</li>
+        <li>Managed DAPS Authentication</li>
+        <li>Support &amp; Tutorials</li>
+        <li>Automatic updates to newest version and new features</li>
+        <li>Off-the-shelf extensions for use cases available</li>
+        <li>EDC available within minutes</li>
+        <li>Can be combined with Data Space as a Service (DSaaS)</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="https://github.com/sovity/edc-broker-server-extension/pkgs/container/broker-server-dev">broker-dev</a>
+    </td>
+    <td>Development</td>
+    <td>
+      <ul>
+        <li>Local Demo via our
+          <span style="white-space: pre; font-family: monospace;">docker-compose.yaml</span>
+        </li>
+        <li>E2E Testing</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>Broker Server Extension(s)</li>
+        <li>PostgreSQL Persistence & Flyway</li>
+        <li>Mock IAM</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>broker-ce</td>
+    <td>Community Edition</td>
+    <td>
+      <ul>
+        <li>Productive Deployment</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>Broker Server Extension(s)</li>
+        <li>PostgreSQL Persistence & Flyway</li>
+        <li>DAPS Authentication</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 
 ## Image Tags
 

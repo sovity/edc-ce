@@ -1,4 +1,3 @@
-val lombokVersion: String by project
 
 plugins {
     `java-library`
@@ -13,13 +12,12 @@ dependencies {
     api(libs.jakarta.validationApi)
     api(libs.swagger.annotationsJakarta)
     api(libs.swagger.jaxrs2Jakarta)
-    api(libs.jakarta.servlet)
+    api(libs.jakarta.servletApi)
 
     implementation(libs.apache.commonsLang)
 }
 
-val sovityEdcGroup: String by project
-group = sovityEdcGroup
+group = libs.versions.sovityEdcGroup.get()
 
 publishing {
     publications {

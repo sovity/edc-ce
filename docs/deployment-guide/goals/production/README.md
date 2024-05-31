@@ -1,5 +1,4 @@
-Productive Deployment Guide
-========
+# Productive Deployment Guide
 
 > This is for our latest version. There is another guide for [4.2.0](4.2.0/README.md).
 
@@ -100,7 +99,7 @@ EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD: https://[EDC_URL]/api/control/mana
 A sovity EDC CE or MDS EDC CE Backend deployment requires the following environment variables:
 
 > [!WARNING]
-> Please be careful with overriding any of the ENV Vars set in our [launchers/.env](../../../../launchers/.env). Our
+> Please be careful with overriding any of the ENV Vars set in our [launchers/.env.connector](../../../../launchers/.env.connector). Our
 > defaults
 > will respect overrides, and the Core EDC ENV Vars can be in some cases sensitive to edge cases such as trailing
 > slashes.

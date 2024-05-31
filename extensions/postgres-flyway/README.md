@@ -30,7 +30,7 @@ The extension includes the edc-stores for the following edc-types:
 - policy
 - transferprocess
 
-Futhermore, the `ConnectionsPool`, `transaction`-Extensions and the JDBC-Driver for the
+Furthermore, the `ConnectionsPool`, `transaction`-Extensions and the JDBC-Driver for the
 PostgreSQL-Database are provided.
 
 The tables are prepared using Flyway, which executes the .sql scripts included in

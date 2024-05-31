@@ -6,7 +6,9 @@
     {"pattern": "^https://checkstyle\\.sourceforge\\.io"},
     {"pattern": "^https://www\\.linkedin\\.com"},
     {"pattern": "https://(.*?)\\.azure\\.sovity\\.io"},
-    {"pattern": "http://edc2?:"}
+    {"pattern": "http://edc2?:"},
+    {"pattern": "^https?://broker:"},
+    {"pattern": "^https?://connector:"}
   ],
   "replacementPatterns": [
     {

@@ -43,7 +43,7 @@ public class CatalogApiTest {
      */
     @DisabledOnGithub
     @Test
-    void test_Distribution_Key() {
+    void testDistributionKey() {
         // arrange
         createAsset();
         createPolicy();

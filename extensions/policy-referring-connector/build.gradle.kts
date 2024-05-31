@@ -1,7 +1,3 @@
-val edcVersion: String by project
-val edcGroup: String by project
-val mockitoVersion: String by project
-val jupiterVersion: String by project
 
 plugins {
     `java-library`
@@ -23,8 +19,7 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-val sovityEdcExtensionGroup: String by project
-group = sovityEdcExtensionGroup
+group = libs.versions.sovityEdcExtensionGroup.get()
 
 publishing {
     publications {

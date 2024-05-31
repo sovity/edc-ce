@@ -1,6 +1,3 @@
-val edcVersion: String by project
-val edcGroup: String by project
-val restAssured: String by project
 
 plugins {
     `java-library`
@@ -19,8 +16,7 @@ dependencies {
     api(project(":extensions:wrapper:wrapper"))
 }
 
-val sovityEdcExtensionGroup: String by project
-group = sovityEdcExtensionGroup
+group = libs.versions.sovityEdcExtensionGroup.get()
 
 publishing {
     publications {

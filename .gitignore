@@ -39,7 +39,8 @@ build
 
 **/.env
 !.env
-!launchers/.env
+!launchers/.env.connector
+!launchers/.env.broker
 
 # Log files
 *.log
