@@ -36,7 +36,6 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         with:
           validate-wrappers: true
-          run: cd connector
       - name: "Gradle: Include last commit info and build date for JARs"
         run: |
           git log -1 > connector/extensions/last-commit-info/src/main/resources/jar-last-commit-info.txt
@@ -161,7 +160,6 @@ jobs:
         with:
           build-root-directory: connector
           validate-wrappers: true
-        run: cd connector
       - name: "Gradle: Generate TS Code"
         uses: gradle/gradle-build-action@v2.10.0
         with:
