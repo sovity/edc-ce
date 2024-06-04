@@ -31,7 +31,7 @@ To let the broker easily be a part of a data space we are implementing it on an 
 
 ## License
 
-Apache License 2.0 - see [LICENSE](../../LICENSE)
+Apache License 2.0 - see [LICENSE](../../../LICENSE)
 
 ## Contact
 

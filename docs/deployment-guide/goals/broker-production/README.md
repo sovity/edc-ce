@@ -74,7 +74,7 @@ EDC_BROKER_SERVER_ADMIN_API_KEY: DefaultBrokerServerAdminApiKey
 ```
 
 All pre-configured config values for either the broker server or the underlying EDC can be found
-in [launcher/.env.broker](../../../../launchers/.env.broker).
+in [launcher/.env.broker](../../../../connector/launchers/.env.broker).
 
 #### UI Configuration
 

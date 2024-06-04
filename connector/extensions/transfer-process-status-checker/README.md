@@ -24,7 +24,7 @@ We cannot directly upgrade to `Eclipse EDC >=0.3` now, but will of course do so 
 
 ## License
 
-Apache License 2.0 - see [LICENSE](../../LICENSE)
+Apache License 2.0 - see [LICENSE](../../../LICENSE)
 
 ## Contact
 

@@ -455,7 +455,7 @@ https://github.com/sovity/edc-ui/releases/tag/v2.0.0
 2. The Connector Endpoint changed to `https://[FQDN]/api/dsp` from ~~`https://[FQDN]/api/v1/ids/data`~~.
 3. The Management Endpoint changed to `https://[FQDN]/api/management` from ~~`https://[FQDN]/api/v1/management`~~.
 4. The `v1` Eclipse EDC Management API has been replaced by the Eclipse EDC `JSON-LD` `v2` Management API. Our Postman Collection shows some example requests.
-   However, a switch to our [API Wrapper](extensions/wrapper/README.md) is recommended. Despite our Use Case API Wrapper API still being in development,
+   However, a switch to our [API Wrapper](connector/extensions/wrapper/README.md) is recommended. Despite our Use Case API Wrapper API still being in development,
    the Connector UI API Wrapper is fully functional and can be used in concatenation with our type-safe generated API Client Libraries to both provide and
    consume data offers.
 5. The Connector now uses the Data Space Protocol (DSP) instead of the IDS Protocol. This requires different paths to be available from the internet.

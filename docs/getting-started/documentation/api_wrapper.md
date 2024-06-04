@@ -34,7 +34,7 @@ Configuring The Client
 ========
 
 - Configure the Client with either an API Key or OAuth2 Client
-  Credentials: https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper/clients/java-client#usage
+  Credentials: https://github.com/sovity/edc-extensions/tree/main/connector/extensions/wrapper/clients/java-client#usage
 - Your management API URL should look like https://your-connector-name.prod-sovity.azure.sovity.io/control/data
 
 Using The Client
@@ -42,4 +42,4 @@ Using The Client
 Feel free to use the endpoints of the aforementioned API groups.
 
 A full example providing and consuming a data offer using the API Wrapper Client Library can be found
-in [ApiWrapperDemoTest.java](../../../tests/src/test/java/de/sovity/edc/e2e/ApiWrapperDemoTest.java).
+in [ApiWrapperDemoTest.java](../../../connector/tests/src/test/java/de/sovity/edc/e2e/ApiWrapperDemoTest.java).

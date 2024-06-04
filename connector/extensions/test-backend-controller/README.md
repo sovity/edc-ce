@@ -23,7 +23,7 @@ An EDC extension that adds a dummy data source and a dummy data sink on the Web 
 This allows us to emulate a data address for our E2E tests.
 
 ## License
-Apache License 2.0 - see [LICENSE](../../LICENSE)
+Apache License 2.0 - see [LICENSE](../../../LICENSE)
 
 ## Contact
 sovity GmbH - contact@sovity.de

@@ -24,7 +24,7 @@ So we can easily create fill test connectors with data for E2E testing.
 
 ## License
 
-Apache License 2.0 - see [LICENSE](../../LICENSE)
+Apache License 2.0 - see [LICENSE](../../../LICENSE)
 
 ## Contact
 

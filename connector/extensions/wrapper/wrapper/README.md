@@ -33,7 +33,7 @@ providing simple and type-safe REST APIs,. materializing polymorphisms into sum 
 
 ## License
 
-Apache License 2.0 - see [LICENSE](../../../LICENSE)
+Apache License 2.0 - see [LICENSE](../../../../LICENSE)
 
 ## Contact
 

@@ -23,7 +23,7 @@ in [ApiWrapperDemoTest.java](../../../../tests/src/test/java/de/sovity/edc/e2e/A
 
 ## License
 
-Apache License 2.0 - see [LICENSE](../../../../LICENSE)
+Apache License 2.0 - see [LICENSE](../../../../../LICENSE)
 
 ## Contact
 

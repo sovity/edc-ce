@@ -20,7 +20,7 @@ All APIs to be included in our generated client libraries.
 
 ## License
 
-Apache License 2.0 - see [LICENSE](../../../LICENSE)
+Apache License 2.0 - see [LICENSE](../../../../LICENSE)
 
 ## Contact
 

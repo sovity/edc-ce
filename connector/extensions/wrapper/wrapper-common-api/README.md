@@ -31,7 +31,7 @@ because the core EDC Policy model struggles in OpenAPI Specification YAMLs due t
 
 ## License
 
-Apache License 2.0 - see [LICENSE](../../../LICENSE)
+Apache License 2.0 - see [LICENSE](../../../../LICENSE)
 
 ## Contact
 

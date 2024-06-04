@@ -1,7 +1,7 @@
 # Summary
 
 * [Start](./README.md)
-* [Connector Versions](./launchers/README.md)
+* [Connector Versions](./connector/launchers/README.md)
 * [Changelog](./CHANGELOG.md)
 
 
@@ -32,17 +32,17 @@
 
 ## Extensions
 
-* [API Wrapper](./extensions/wrapper/README.md)
-    * [Community Edition API](./extensions/wrapper/wrapper-api/README.md)
-    * [Enterprise Edition API](./extensions/wrapper/wrapper-ee-api/README.md)
-    * [Java API Client Library](./extensions/wrapper/clients/java-client/README.md)
-    * [Java API Client Library Example](./extensions/wrapper/clients/java-client-example/README.md)
-    * [TypeScript API Client Library](./extensions/wrapper/clients/typescript-client/README.md)
-    * [TypeScript API Client Library Example](./extensions/wrapper/clients/typescript-client-example/README.md)
+* [API Wrapper](./connector/extensions/wrapper/README.md)
+    * [Community Edition API](./connector/extensions/wrapper/wrapper-api/README.md)
+    * [Enterprise Edition API](./connector/extensions/wrapper/wrapper-ee-api/README.md)
+    * [Java API Client Library](./connector/extensions/wrapper/clients/java-client/README.md)
+    * [Java API Client Library Example](./connector/extensions/wrapper/clients/java-client-example/README.md)
+    * [TypeScript API Client Library](./connector/extensions/wrapper/clients/typescript-client/README.md)
+    * [TypeScript API Client Library Example](.connector//extensions/wrapper/clients/typescript-client-example/README.md)
 * Policies
-    * [Always True](./extensions/policy-always-true/README.md)
-    * [Referring Connector](./extensions/policy-referring-connector/README.md)
-    * [Time Interval](./extensions/policy-time-interval/README.md)
-* [Database Migration](./extensions/postgres-flyway/README.md)
-* [EDC UI Config](./extensions/edc-ui-config/README.md)
-* [Last Commit Info](./extensions/last-commit-info/README.md)
+    * [Always True](./connector/extensions/policy-always-true/README.md)
+    * [Referring Connector](./connector/extensions/policy-referring-connector/README.md)
+    * [Time Interval](./connector/extensions/policy-time-interval/README.md)
+* [Database Migration](./connector/extensions/postgres-flyway/README.md)
+* [EDC UI Config](./connector/extensions/edc-ui-config/README.md)
+* [Last Commit Info](./connector/extensions/last-commit-info/README.md)

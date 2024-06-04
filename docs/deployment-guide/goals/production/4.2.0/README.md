@@ -93,7 +93,7 @@ A sovity EDC CE or MDS EDC CE Backend deployment requires:
 - The following configuration properties
 
 > [!WARNING]
-> Please be careful with overriding any of the ENV Vars set in our [launchers/.env.connector](../../../../../launchers/.env.connector). 
+> Please be careful with overriding any of the ENV Vars set in our [launchers/.env.connector](../../../../../connector/launchers/.env.connector). 
 > Our defaults will respect overrides, and the Core EDC ENV Vars can be in some cases sensitive to edge cases such as 
 > trailing slashes.
 

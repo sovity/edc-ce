@@ -25,7 +25,7 @@ our UI will be ensuring non-empty access and contract policies.
 Therefore, it is of interest to have an `always-true` policy to explicitly enable full access in contract definitions.
 
 ## License
-Apache License 2.0 - see [LICENSE](../../LICENSE)
+Apache License 2.0 - see [LICENSE](../../../LICENSE)
 
 ## Contact
 sovity GmbH - contact@sovity.de

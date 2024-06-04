@@ -180,7 +180,7 @@ Our sovity Community Edition EDC is built as several docker image variants in di
 
 ## Configuration
 
-For available configurations please refer to our [Getting Started Guide](../docs/getting-started/README.md).
+For available configurations please refer to our [Getting Started Guide](../../docs/getting-started/README.md).
 
 ## License
 

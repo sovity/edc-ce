@@ -58,7 +58,7 @@ The contents of the file `src/main/resources/jar-last-commit-info.txt` will be a
 repository's GitHub pipeline to reflect the last commit info.
 
 ## License
-Apache License 2.0 - see [LICENSE](../../LICENSE)
+Apache License 2.0 - see [LICENSE](../../../LICENSE)
 
 ## Contact
 sovity GmbH - contact@sovity.de

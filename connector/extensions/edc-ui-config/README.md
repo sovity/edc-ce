@@ -29,7 +29,7 @@ By not having to repeat ourselves when configuring the EDC UI, we save time and 
 
 ## License
 
-Apache License 2.0 - see [LICENSE](../../LICENSE)
+Apache License 2.0 - see [LICENSE](../../../LICENSE)
 
 ## Contact
 

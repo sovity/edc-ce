@@ -20,7 +20,7 @@ TypeScript Client Library to be imported and used in arbitrary applications like
 frontends or NodeJS projects.
 
 You can find our API Wrapper Project
-[here](https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper).
+[here](https://github.com/sovity/edc-extensions/tree/main/connector/extensions/wrapper).
 
 ## How to install
 
@@ -46,7 +46,7 @@ let kpiData: KpiResult = await edcClient.useCaseApi.getKpis();
 ```
 
 A minimal example project using the typescript API client can be found
-[here](https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper/clients/typescript-client-example).
+[here](https://github.com/sovity/edc-extensions/tree/main/connector/extensions/wrapper/clients/typescript-client-example).
 
 ### Example Using OAuth2 Client Credentials
 

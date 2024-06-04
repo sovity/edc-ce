@@ -46,7 +46,7 @@ Our EDC API Wrapper APIs and API Clients are compatible with both our sovity EDC
 
 ## License
 
-Apache License 2.0 - see [LICENSE](../../LICENSE)
+Apache License 2.0 - see [LICENSE](../../../LICENSE)
 
 ## Contact
 

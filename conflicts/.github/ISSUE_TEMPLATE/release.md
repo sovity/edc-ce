@@ -45,7 +45,7 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
     - [ ] Revert the versions in the [docker-compose's .env file](../../../.env) back to latest for the EDC UI.
     - [ ] Revert the versions in the [docker-compose's .env file](../../../.env) back to latest for the EDC CE.
     - [ ] Revert the versions in the [docker-compose's .env file](../../../.env) back to latest for the Broker Server.
-    - [ ] Update the [gradle.properties](https://github.com/sovity/edc-extensions/blob/main/gradle.properties) to contain the edc-extensions version `0.0.1-SNAPSHOT`.
+    - [ ] Update the [gradle.properties](https://github.com/sovity/edc-extensions/blob/main/connector/gradle.properties) to contain the edc-extensions version `0.0.1-SNAPSHOT`.
     - [ ] Merge the `release-cleanup` PR.
 - [ ] Revisit the changed list of tasks and compare it with [.github/ISSUE_TEMPLATE/release.md](https://github.com/sovity/edc-extensions/blob/main/.github/ISSUE_TEMPLATE/release.md). Apply changes where it makes sense.
 - [ ] Close this issue.
