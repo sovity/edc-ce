@@ -28,11 +28,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: npm install (typescript-client)
-        run: cd extensions/wrapper/clients/typescript-client && npm clean-install
+        run: cd connector/extensions/wrapper/clients/typescript-client && npm clean-install
       - name: npm install (typescript-client-example)
-        run: cd extensions/wrapper/clients/typescript-client-example && npm clean-install
+        run: cd connector/extensions/wrapper/clients/typescript-client-example && npm clean-install
       - name: npm install (client-ts)
-        run: cd extensions/broker-server-api/client-ts && npm clean-install
+        run: cd connector/extensions/broker-server-api/client-ts && npm clean-install
       - name: Run license scanner
         uses: aquasecurity/trivy-action@master
         with:
