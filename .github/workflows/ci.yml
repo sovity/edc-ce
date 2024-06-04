@@ -135,6 +135,10 @@ jobs:
           title: "Broker Server (Community Edition)"
           description: "sovity EDC Broker Server. Requires dataspace credentials to join an existing dataspace."
   ts-api-client-library:
+    defaults:
+      run:
+        shell: bash
+        working-directory: "connector"
     name: TS API Client Library
     runs-on: ubuntu-latest
     timeout-minutes: 15
