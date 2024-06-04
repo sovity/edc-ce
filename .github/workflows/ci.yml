@@ -30,6 +30,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      - name: "Gradle: Validate Gradle Wrapper"
+        uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
@@ -163,7 +165,7 @@ jobs:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "NPM: Dist Tag & Version"
-        working-directory: ./extensions/wrapper/clients/typescript-client
+        working-directory: ./connector/extensions/wrapper/clients/typescript-client
         run: |
           if [[ "$GITHUB_REF" == "refs/tags/v"* ]]; then
             # Full Release
@@ -176,11 +178,11 @@ jobs:
           npm version $VERSION
           echo "DIST_TAG=$DIST_TAG" >> $GITHUB_ENV
       - name: "NPM: Build"
-        working-directory: extensions/wrapper/clients/typescript-client
+        working-directory: connector/extensions/wrapper/clients/typescript-client
         run: npm ci && npm run build
       - name: "NPM: Publish (Main & Releases Only)"
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
-        working-directory: extensions/wrapper/clients/typescript-client
+        working-directory: connector/extensions/wrapper/clients/typescript-client
         run: |
           npm set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
           npm set //registry.npmjs.org/:username $NODE_USER
@@ -208,15 +210,16 @@ jobs:
           node-version: 16
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
-          cache-dependency-path: ./extensions/broker-server-api/client-ts/package-lock.json
+          cache-dependency-path: ./connector/extensions/broker-server-api/client-ts/package-lock.json
       - name: Generate openapi.yaml & Client Code
         run: |
+          cd connector
           ./gradlew :extensions:broker-server-api:api:clean :extensions:broker-server-api:api:build -x test --no-daemon
         env:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: NPM Package Dist Tag & Version
-        working-directory: ./extensions/broker-server-api/client-ts
+        working-directory: ./connector/extensions/broker-server-api/client-ts
         run: |
           if [ "${{ startsWith(github.ref, 'refs/tags/') }}" == "true" ]; then
             # Full Release
@@ -229,12 +232,12 @@ jobs:
           npm version $VERSION
           echo "DIST_TAG=$DIST_TAG" >> $GITHUB_ENV
       - name: Build NPM Library
-        working-directory: ./extensions/broker-server-api/client-ts
+        working-directory: ./connector/extensions/broker-server-api/client-ts
         run: |
           npm ci && npm run build
       - name: Publish NPM Library
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/tags/v*'
-        working-directory: ./extensions/broker-server-api/client-ts
+        working-directory: ./connector/extensions/broker-server-api/client-ts
         run: |
           npm set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
           npm set //registry.npmjs.org/:username $NODE_USER
