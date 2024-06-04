@@ -38,7 +38,7 @@
     * [Java API Client Library](./connector/extensions/wrapper/clients/java-client/README.md)
     * [Java API Client Library Example](./connector/extensions/wrapper/clients/java-client-example/README.md)
     * [TypeScript API Client Library](./connector/extensions/wrapper/clients/typescript-client/README.md)
-    * [TypeScript API Client Library Example](.connector//extensions/wrapper/clients/typescript-client-example/README.md)
+    * [TypeScript API Client Library Example](.connector/extensions/wrapper/clients/typescript-client-example/README.md)
 * Policies
     * [Always True](./connector/extensions/policy-always-true/README.md)
     * [Referring Connector](./connector/extensions/policy-referring-connector/README.md)

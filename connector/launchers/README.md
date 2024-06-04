@@ -184,7 +184,7 @@ For available configurations please refer to our [Getting Started Guide](../../d
 
 ## License
 
-Apache License 2.0 - see [LICENSE](../LICENSE)
+Apache License 2.0 - see [LICENSE](../../LICENSE)
 
 ## Contact
 
