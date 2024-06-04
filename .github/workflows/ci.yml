@@ -157,7 +157,6 @@ jobs:
         with:
           build-root-directory: connector
           validate-wrappers: true
-          path: "connector"
       - name: "Gradle: Generate TS Code"
         uses: gradle/gradle-build-action@v2.10.0
         with:
