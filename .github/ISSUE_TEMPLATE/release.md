@@ -61,8 +61,15 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
   - [ ] Test the release `docker-compose.yaml` with `EDC_IMAGE=ghcr.io/sovity/edc-dev:latest` (at minimum execute a transfer between the two connectors).
     - [ ] Test with `EDC_UI_ACTIVE_PROFILE=sovity-open-source`
     - [ ] Test with `EDC_UI_ACTIVE_PROFILE=mds-open-source`
+  - [ ] Test the `docker-compose.yaml` with `BROKER_IMAGE=ghcr.io/sovity/broker-server-dev:main`.
+    - [ ] Validate that the EDC is scanned.
+    - [ ] Validate that the index is searchable.
   - [ ] Ensure with a `docker ps -a` that all containers are healthy, and not `healthy: starting` or `healthy: unhealthy`.
 - [ ] Test the [postman collection](../../docs/api/postman_collection.json) against that running docker-compose.
+- [ ] Check the contents of the Deployment Docs Zip from the GitHub Release.
+- [ ] Send out a release notification E-Mail to the MDS, the MDS integrator company and the MDS operator company.
+    - [ ] Check @jkbquabeck for an up-to-date mailing list, separated into "To" and "Cc".
+    - [ ] Attach the Deployment Docs Zip generated during the GitHub release, which should now contain the CHANGELOG, deployment migration notes, an initial deployment guide and a local demo docker compose.
 - [ ] [Create a release](https://github.com/sovity/edc-extensions/releases/new)
   - [ ] In `Choose the tag`, type your new release version in the format `vx.y.z` (for instance `v1.2.3`) then click `+Create new tag vx.y.z on release`.
   - [ ] Re-use the changelog section as release description, and the version as title.
