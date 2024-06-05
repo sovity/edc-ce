@@ -116,7 +116,7 @@ Mid-development it might be un-pinned back to latest versions.
 
 ## Releasing
 
-[Create a Release Issue](https://github.com/sovity/edc-broker-server-extension/issues/new?assignees=&labels=task%2Frelease%2Cscope%2Fmds&projects=&template=release.md&title=Release+x.x.x) and follow the instructions.
+[Create a Release Issue](https://github.com/sovity/edc-extensions/issues/new?assignees=&labels=task%2Frelease%2Cscope%2Fmds&projects=&template=release.md&title=Release+x.x.x) and follow the instructions.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
