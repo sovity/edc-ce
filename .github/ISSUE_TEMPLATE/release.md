@@ -58,12 +58,13 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
 - [ ] Validate the image
   - [ ] Pull the latest latest edc-dev image: `docker image pull ghcr.io/sovity/edc-dev:latest`.
   - [ ] Check that your image was built recently `docker image ls | grep ghcr.io/sovity/edc-dev`.
-  - [ ] Test the release `docker-compose.yaml` with `EDC_IMAGE=ghcr.io/sovity/edc-dev:latest` (at minimum execute a transfer between the two connectors).
-    - [ ] Test with `EDC_UI_ACTIVE_PROFILE=sovity-open-source`
-    - [ ] Test with `EDC_UI_ACTIVE_PROFILE=mds-open-source`
-  - [ ] Test the `docker-compose.yaml` with `BROKER_IMAGE=ghcr.io/sovity/broker-server-dev:main`.
-    - [ ] Validate that the EDC is scanned.
-    - [ ] Validate that the index is searchable.
+  - [ ] Test the release `docker-compose.yaml` with `EDC_IMAGE=ghcr.io/sovity/edc-dev:latest` and `BROKER_IMAGE=ghcr.io/sovity/broker-server-dev:latest` (at minimum execute a transfer between the two connectors).
+    - EDC
+      - [ ] Test with `EDC_UI_ACTIVE_PROFILE=sovity-open-source`
+      - [ ] Test with `EDC_UI_ACTIVE_PROFILE=mds-open-source`
+    - Broker
+      - [ ] Validate that the EDC is scanned.
+      - [ ] Validate that the index is searchable.
   - [ ] Ensure with a `docker ps -a` that all containers are healthy, and not `healthy: starting` or `healthy: unhealthy`.
 - [ ] Test the [postman collection](../../docs/api/postman_collection.json) against that running docker-compose.
 - [ ] [Create a release](https://github.com/sovity/edc-extensions/releases/new)
