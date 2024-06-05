@@ -36,4 +36,4 @@ ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["start"]
 
 # health status is determined by the availability of the /health endpoint
-HEALTHCHECK --interval=5s --timeout=5s --retries=10 CMD curl -H "x-api-key: $EDC_API_AUTH_KEY" --fail http://localhost:11001/backend/api/check/health
+HEALTHCHECK --interval=5s --timeout=5s --retries=10 CMD curl -H "x-api-key: $EDC_API_AUTH_KEY" --fail http://localhost:11001/api/check/health || curl -H "x-api-key: $EDC_API_AUTH_KEY" --fail http://localhost:11001/backend/api/check/health
