@@ -159,6 +159,11 @@ services:
       - '54321:5432'
     volumes:
       - 'postgresql:/bitnami/postgresql'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U edc" ]
+      interval: 1s
+      timeout: 5s
+      retries: 10
 
   postgresql2:
     image: docker.io/bitnami/postgresql:15
@@ -171,6 +176,11 @@ services:
       - '54322:5432'
     volumes:
       - 'postgresql2:/bitnami/postgresql'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U edc" ]
+      interval: 1s
+      timeout: 5s
+      retries: 10
 
   broker-postgresql:
     image: docker.io/bitnami/postgresql:15
@@ -183,6 +193,11 @@ services:
       - '54323:5432'
     volumes:
       - 'broker-postgresql:/bitnami/postgresql'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U edc"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
 
 volumes:
   postgresql:

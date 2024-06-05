@@ -7,14 +7,6 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 ### Overview
 
-Starting from version `8`, the Broker has been merged with the Community edition.
-
-[The former changelog](https://github.com/sovity/edc-broker-server-extension/blob/main/CHANGELOG.md) for the Broker is still available but will not be updated anymore.
-
-The Broker's version therefore jumps from version 4 to version 8.
-
-The functionalities of each part, Broker and Extensions, on this release, is the same as before the change.
-
 ### EDC UI
 
 ### EDC Extensions and Broker
@@ -25,9 +17,36 @@ The functionalities of each part, Broker and Extensions, on this release, is the
 
 #### Patch Changes
 
+### Deployment Migration Notes
+
+## [8.0.0] - 2024-06-05
+
+### Overview
+
+Starting from version `8`, the Broker has been merged with the Community edition.
+
+[The former changelog](https://github.com/sovity/edc-broker-server-extension/blob/main/CHANGELOG.md) for the Broker is still available but will not be updated anymore.
+
+The Broker's version therefore jumps from version 4 to version 8.
+
+The functionalities of each part, Broker and Extensions, on this release, is the same as before the change.
+
+### EDC UI
+
+- https://github.com/sovity/edc-ui/releases/tag/v3.2.2
+
+#### Patch Changes
+
 - Overhaul of the Postman-Collection
 
-### Deployment Migration Notes
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:8.0.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:8.0.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:8.0.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.2`
+
 
 ## [7.5.0] - 2024-05-16
 

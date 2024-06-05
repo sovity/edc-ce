@@ -46,6 +46,8 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
         the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
   - [ ] Set the version for `TEST_BACKEND_IMAGE` of
         the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
+  - [ ] Set the version for `BROKER_IMAGE` of
+    the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
   - [ ] Set the UI release version for `EDC_UI_IMAGE` of
         the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
   - [ ] If the Eclipse EDC version changed, update
