@@ -116,6 +116,10 @@ services:
     depends_on:
       broker-postgresql:
         condition: service_healthy
+      edc:
+        condition: service_started
+      edc2:
+        condition: service_started
     environment:
       EDC_BROKER_SERVER_KNOWN_CONNECTORS: "http://edc:11003/api/dsp,http://edc2:11003/api/dsp"
       EDC_BROKER_SERVER_KNOWN_DATASPACE_CONNECTORS: "Mobilithek=https://some-other-connector/api/dsp"
