@@ -56,7 +56,7 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
   - [ ] Merge the `release-prep` PR.
 - [ ] Wait for the main branch to be green. You can check the status in GH [actions](https://github.com/sovity/edc-extensions/actions).
 - [ ] Validate the image
-  - [ ] Pull the latest latest edc-dev image: `docker image pull ghcr.io/sovity/edc-dev:latest`.
+  - [ ] Pull the latest edc-dev image: `docker image pull ghcr.io/sovity/edc-dev:latest`.
   - [ ] Check that your image was built recently `docker image ls | grep ghcr.io/sovity/edc-dev`.
   - [ ] Test the release `docker-compose.yaml` with `EDC_IMAGE=ghcr.io/sovity/edc-dev:latest` and `BROKER_IMAGE=ghcr.io/sovity/broker-server-dev:latest` (at minimum execute a transfer between the two connectors).
     - EDC
@@ -66,7 +66,6 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
       - [ ] Validate that the EDC is scanned.
       - [ ] Validate that the index is searchable.
   - [ ] Ensure with a `docker ps -a` that all containers are healthy, and not `healthy: starting` or `healthy: unhealthy`.
-- [ ] Test the [postman collection](../../docs/api/postman_collection.json) against that running docker-compose.
 - [ ] [Create a release](https://github.com/sovity/edc-extensions/releases/new)
   - [ ] In `Choose the tag`, type your new release version in the format `vx.y.z` (for instance `v1.2.3`) then click `+Create new tag vx.y.z on release`.
   - [ ] Re-use the changelog section as release description, and the version as title.
