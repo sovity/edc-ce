@@ -12,10 +12,10 @@
  *
  */
 
-package de.sovity.edc.extension.postgresql.migration;
+package de.sovity.edc.extension.postgresql.legacy.migration;
 
-import de.sovity.edc.extension.postgresql.connection.DriverManagerConnectionFactory;
-import de.sovity.edc.extension.postgresql.connection.JdbcConnectionProperties;
+import de.sovity.edc.extension.postgresql.legacy.connection.DriverManagerConnectionFactory;
+import de.sovity.edc.extension.postgresql.legacy.connection.JdbcConnectionProperties;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.persistence.EdcPersistenceException;

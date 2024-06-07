@@ -12,9 +12,9 @@
  *
  */
 
-package de.sovity.edc.extension.postgresql.migration;
+package de.sovity.edc.extension.postgresql.legacy.migration;
 
-import de.sovity.edc.extension.postgresql.connection.JdbcConnectionProperties;
+import de.sovity.edc.extension.postgresql.legacy.connection.JdbcConnectionProperties;
 import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.system.configuration.Config;
 
