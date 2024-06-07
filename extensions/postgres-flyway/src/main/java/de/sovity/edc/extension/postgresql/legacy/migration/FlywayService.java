@@ -33,7 +33,7 @@ import javax.sql.DataSource;
 @RequiredArgsConstructor
 public class FlywayService {
 
-    private static final String MIGRATION_LOCATION_BASE = "classpath:migration";
+    private static final String MIGRATION_LOCATION_BASE = "classpath:db/legacy/migration";
 
     private final Monitor monitor;
     private final boolean tryRepairOnFailedMigration;

@@ -24,7 +24,6 @@ import java.util.List;
 public class DatabaseMigrationManager {
     @Setting
     public static final String EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS = "edc.flyway.additional.migration.locations";
-    private static final String EDC_DATASOURCE_PREFIX = "edc.datasource";
     private static final String DEFAULT_DATASOURCE = "default";
 
     private final Config config;
