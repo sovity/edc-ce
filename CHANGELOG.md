@@ -17,6 +17,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
+- Postman-collection: Fixed an issue where an API-call was previously wrong in the details of the POST-body.
+
 ### Deployment Migration Notes
 
 ## [8.0.0] - 2024-06-05
