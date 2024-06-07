@@ -51,7 +51,7 @@ public class FlywayFactory {
 
         return Flyway.configure()
                 .dataSource(dataSource)
-                .baselineVersion("6")
+                .baselineVersion("8")
                 .cleanDisabled(!config.flywayCleanEnabled())
                 .table("flyway_schema_history")
                 .locations(locations.toArray(new String[0]))
