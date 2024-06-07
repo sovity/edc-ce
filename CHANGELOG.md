@@ -45,6 +45,7 @@ The functionalities of each part, Broker and Extensions, on this release, is the
   - Dev EDC: `ghcr.io/sovity/edc-dev:8.0.0`
   - sovity EDC CE: `ghcr.io/sovity/edc-ce:8.0.0`
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:8.0.0`
+  - Broker CE: `ghcr.io/sovity/broker-server-ce:8.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.2`
 
 
