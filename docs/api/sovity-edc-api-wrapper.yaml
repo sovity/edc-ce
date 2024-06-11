@@ -709,7 +709,7 @@ components:
           description: Conjunction of required expressions for the policy to evaluate
             to TRUE.
           items:
-            $ref: '#/components/schemas/UiPolicyConstraintElement'
+            $ref: '#/components/schemas/PolicyElement'
       description: Type-Safe OpenAPI generator friendly Policy Create DTO that supports
         an opinionated subset of the original EDC Policy Entity.
     OperatorDto:
@@ -728,6 +728,21 @@ components:
       - IS_ALL_OF
       - IS_ANY_OF
       - IS_NONE_OF
+    PolicyElement:
+      type: object
+      properties:
+        constraintType:
+          $ref: '#/components/schemas/UiPolicyConstraintType'
+        constraintElements:
+          type: array
+          description: Recursive list of constraint elements. Required for AND and
+            OR constraints.
+          items:
+            $ref: '#/components/schemas/PolicyElement'
+        atomicConstraint:
+          $ref: '#/components/schemas/UiPolicyConstraint'
+      description: Type-Safe OpenAPI generator friendly Policy Create DTO that supports
+        an opinionated subset of the original EDC Policy Entity.
     UiPolicyConstraint:
       required:
       - left
@@ -743,21 +758,6 @@ components:
         right:
           $ref: '#/components/schemas/UiPolicyLiteral'
       description: ODRL AtomicConstraint as supported by our UI
-    UiPolicyConstraintElement:
-      type: object
-      properties:
-        constraintType:
-          $ref: '#/components/schemas/UiPolicyConstraintType'
-        constraintElements:
-          type: array
-          description: Recursive list of constraint elements. Required for AND and
-            OR constraints.
-          items:
-            $ref: '#/components/schemas/UiPolicyConstraintElement'
-        atomicConstraint:
-          $ref: '#/components/schemas/UiPolicyConstraint'
-      description: Type-Safe OpenAPI generator friendly Policy Create DTO that supports
-        an opinionated subset of the original EDC Policy Entity.
     UiPolicyConstraintType:
       type: string
       description: Supported Types of values for the right hand side of an expression

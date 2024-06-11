@@ -6,7 +6,7 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.FailedMappingException
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
-import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraintElement;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyElement;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import de.sovity.edc.utils.JsonUtils;
 import jakarta.json.JsonObject;
@@ -78,7 +78,7 @@ public class PolicyMapper {
                 .build();
     }
 
-    public Policy buildGenericPolicy(List<UiPolicyConstraintElement> constraintElements) {
+    public Policy buildGenericPolicy(List<PolicyElement> constraintElements) {
         var constraints = buildConstraints(constraintElements);
 
         var action = Action.Builder.newInstance().type(PolicyValidator.ALLOWED_ACTION).build();
@@ -95,13 +95,13 @@ public class PolicyMapper {
     }
 
     @NotNull
-    private List<Constraint> buildConstraints(List<UiPolicyConstraintElement> constraintElements) {
+    private List<Constraint> buildConstraints(List<PolicyElement> constraintElements) {
         return constraintElements.stream()
                 .map(this::buildConstraint)
                 .toList();
     }
 
-    private Constraint buildConstraint(UiPolicyConstraintElement uiPolicyConstraintElement) {
+    private Constraint buildConstraint(PolicyElement uiPolicyConstraintElement) {
         var constraintElements = uiPolicyConstraintElement.getConstraintElements();
         return switch (uiPolicyConstraintElement.getConstraintType()) {
             case ATOMIC ->

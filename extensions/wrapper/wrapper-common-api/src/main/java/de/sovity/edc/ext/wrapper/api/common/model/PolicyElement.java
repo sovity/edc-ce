@@ -32,12 +32,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @Schema(description = "Type-Safe OpenAPI generator friendly Policy Create DTO that supports an opinionated"
         + " subset of the original EDC Policy Entity.")
-public class UiPolicyConstraintElement {
+public class PolicyElement {
 
     private UiPolicyConstraintType constraintType;
 
     @Schema(description = "Recursive list of constraint elements. Required for AND and OR constraints.")
-    private List<UiPolicyConstraintElement> constraintElements;
+    private List<PolicyElement> constraintElements;
 
     @Schema(description = "Conjunction of required expressions for the policy to evaluate to TRUE.")
     private UiPolicyConstraint atomicConstraint;

@@ -4,14 +4,12 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraint;
-import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraintElement;
+import de.sovity.edc.ext.wrapper.api.common.model.PolicyElement;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraintType;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import jakarta.json.JsonObject;
 import lombok.SneakyThrows;
-import org.eclipse.edc.policy.model.AndConstraint;
 import org.eclipse.edc.policy.model.AtomicConstraint;
-import org.eclipse.edc.policy.model.Constraint;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
 import org.eclipse.edc.spi.result.Result;
@@ -105,9 +103,9 @@ class PolicyMapperTest {
         var constraintType = UiPolicyConstraintType.valueOf(constraintTypeString);
         var incomingConstraint = mock(UiPolicyConstraint.class);
         var mockAtomicConstraint = mock(AtomicConstraint.class);
-        var atomicConstraint = new UiPolicyConstraintElement(ATOMIC, List.of(), incomingConstraint);
+        var atomicConstraint = new PolicyElement(ATOMIC, List.of(), incomingConstraint);
         var atomicConstraints = List.of(atomicConstraint, atomicConstraint);
-        var baseConstraintElement = new UiPolicyConstraintElement(constraintType, atomicConstraints, null);
+        var baseConstraintElement = new PolicyElement(constraintType, atomicConstraints, null);
 
         // act
         when(atomicConstraintMapper

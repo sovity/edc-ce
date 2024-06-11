@@ -38,6 +38,6 @@ public class GenericPolicyCreateRequest {
     private String policyDefinitionId;
 
     @Schema(description = "Conjunction of required expressions for the policy to evaluate to TRUE.")
-    private List<UiPolicyConstraintElement> constraintElements;
+    private List<PolicyElement> constraintElements;
 
 }
