@@ -6,18 +6,24 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.FailedMappingException
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraintElement;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import de.sovity.edc.utils.JsonUtils;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.policy.model.Action;
+import org.eclipse.edc.policy.model.AndConstraint;
 import org.eclipse.edc.policy.model.Constraint;
+import org.eclipse.edc.policy.model.OrConstraint;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
+import org.eclipse.edc.policy.model.XoneConstraint;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static de.sovity.edc.utils.JsonUtils.toJson;
 
@@ -70,6 +76,46 @@ public class PolicyMapper {
                 .type(PolicyType.SET)
                 .permission(permission)
                 .build();
+    }
+
+    public Policy buildGenericPolicy(List<UiPolicyConstraintElement> constraintElements) {
+        var constraints = buildConstraints(constraintElements);
+
+        var action = Action.Builder.newInstance().type(PolicyValidator.ALLOWED_ACTION).build();
+
+        var permission = Permission.Builder.newInstance()
+                .action(action)
+                .constraints(constraints)
+                .build();
+
+        return Policy.Builder.newInstance()
+                .type(PolicyType.SET)
+                .permission(permission)
+                .build();
+    }
+
+    @NotNull
+    private List<Constraint> buildConstraints(List<UiPolicyConstraintElement> constraintElements) {
+        return constraintElements.stream()
+                .map(this::buildConstraint)
+                .toList();
+    }
+
+    private Constraint buildConstraint(UiPolicyConstraintElement uiPolicyConstraintElement) {
+        var constraintElements = uiPolicyConstraintElement.getConstraintElements();
+        return switch (uiPolicyConstraintElement.getConstraintType()) {
+            case ATOMIC ->
+                    atomicConstraintMapper.buildAtomicConstraint(uiPolicyConstraintElement.getAtomicConstraint());
+            case AND -> AndConstraint.Builder.newInstance()
+                    .constraints(buildConstraints(constraintElements))
+                    .build();
+            case OR -> OrConstraint.Builder.newInstance()
+                    .constraints(buildConstraints(constraintElements))
+                    .build();
+            case XOR -> XoneConstraint.Builder.newInstance()
+                    .constraints(buildConstraints(constraintElements))
+                    .build();
+        };
     }
 
     /**

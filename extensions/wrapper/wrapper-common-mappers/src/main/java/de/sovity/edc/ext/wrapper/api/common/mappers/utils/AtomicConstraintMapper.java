@@ -92,7 +92,7 @@ public class AtomicConstraintMapper {
         return Optional.of(operatorMapper.getOperatorDto(operator));
     }
 
-    private AtomicConstraint buildAtomicConstraint(UiPolicyConstraint constraint) {
+    public AtomicConstraint buildAtomicConstraint(UiPolicyConstraint constraint) {
         var left = constraint.getLeft();
         var operator = operatorMapper.getOperator(constraint.getOperator());
         var right = literalMapper.getUiLiteralValue(constraint.getRight());

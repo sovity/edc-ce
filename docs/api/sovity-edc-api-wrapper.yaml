@@ -117,6 +117,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/pages/policy-page/generic-policy-definitions:
+    post:
+      tags:
+      - UI
+      description: Create a new Generic Policy Definition
+      operationId: createGenericPolicyDefinition
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericPolicyCreateRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
   /wrapper/ui/pages/policy-page/policy-definitions:
     post:
       tags:
@@ -678,6 +696,22 @@ components:
       - EQ
       - IN
       - LIKE
+    GenericPolicyCreateRequest:
+      required:
+      - policyDefinitionId
+      type: object
+      properties:
+        policyDefinitionId:
+          type: string
+          description: Policy Definition ID
+        constraintElements:
+          type: array
+          description: Conjunction of required expressions for the policy to evaluate
+            to TRUE.
+          items:
+            $ref: '#/components/schemas/UiPolicyConstraintElement'
+      description: Type-Safe OpenAPI generator friendly Policy Create DTO that supports
+        an opinionated subset of the original EDC Policy Entity.
     OperatorDto:
       type: string
       description: Operator for policies
@@ -694,18 +728,6 @@ components:
       - IS_ALL_OF
       - IS_ANY_OF
       - IS_NONE_OF
-    PolicyDefinitionCreateRequest:
-      required:
-      - policy
-      - policyDefinitionId
-      type: object
-      properties:
-        policyDefinitionId:
-          type: string
-          description: Policy Definition ID
-        policy:
-          $ref: '#/components/schemas/UiPolicyCreateRequest'
-      description: Data for creating a Policy Definition
     UiPolicyConstraint:
       required:
       - left
@@ -721,17 +743,29 @@ components:
         right:
           $ref: '#/components/schemas/UiPolicyLiteral'
       description: ODRL AtomicConstraint as supported by our UI
-    UiPolicyCreateRequest:
+    UiPolicyConstraintElement:
       type: object
       properties:
-        constraints:
+        constraintType:
+          $ref: '#/components/schemas/UiPolicyConstraintType'
+        constraintElements:
           type: array
-          description: Conjunction of required expressions for the policy to evaluate
-            to TRUE.
+          description: Recursive list of constraint elements. Required for AND and
+            OR constraints.
           items:
-            $ref: '#/components/schemas/UiPolicyConstraint'
+            $ref: '#/components/schemas/UiPolicyConstraintElement'
+        atomicConstraint:
+          $ref: '#/components/schemas/UiPolicyConstraint'
       description: Type-Safe OpenAPI generator friendly Policy Create DTO that supports
         an opinionated subset of the original EDC Policy Entity.
+    UiPolicyConstraintType:
+      type: string
+      description: Supported Types of values for the right hand side of an expression
+      enum:
+      - ATOMIC
+      - AND
+      - OR
+      - XOR
     UiPolicyLiteral:
       required:
       - type
@@ -756,6 +790,29 @@ components:
       - STRING
       - STRING_LIST
       - JSON
+    PolicyDefinitionCreateRequest:
+      required:
+      - policy
+      - policyDefinitionId
+      type: object
+      properties:
+        policyDefinitionId:
+          type: string
+          description: Policy Definition ID
+        policy:
+          $ref: '#/components/schemas/UiPolicyCreateRequest'
+      description: Data for creating a Policy Definition
+    UiPolicyCreateRequest:
+      type: object
+      properties:
+        constraints:
+          type: array
+          description: Conjunction of required expressions for the policy to evaluate
+            to TRUE.
+          items:
+            $ref: '#/components/schemas/UiPolicyConstraint'
+      description: Type-Safe OpenAPI generator friendly Policy Create DTO that supports
+        an opinionated subset of the original EDC Policy Entity.
     UiAssetEditMetadataRequest:
       type: object
       properties:

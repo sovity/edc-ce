@@ -4,16 +4,22 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraint;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraintElement;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraintType;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import jakarta.json.JsonObject;
 import lombok.SneakyThrows;
+import org.eclipse.edc.policy.model.AndConstraint;
 import org.eclipse.edc.policy.model.AtomicConstraint;
+import org.eclipse.edc.policy.model.Constraint;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
 import org.eclipse.edc.spi.result.Result;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -21,8 +27,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+import static de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraintType.ATOMIC;
 import static de.sovity.edc.utils.JsonUtils.parseJsonObj;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
@@ -87,5 +96,33 @@ class PolicyMapperTest {
         assertThat(actual.getPermissions().get(0).getConstraints()).hasSize(1);
         assertThat(actual.getPermissions().get(0).getAction().getType()).isEqualTo("USE");
         assertThat(actual.getPermissions().get(0).getConstraints().get(0)).isSameAs(expected);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"AND", "OR", "XOR"})
+    void buildGenericPolicy(String constraintTypeString) {
+        // arrange
+        var constraintType = UiPolicyConstraintType.valueOf(constraintTypeString);
+        var incomingConstraint = mock(UiPolicyConstraint.class);
+        var mockAtomicConstraint = mock(AtomicConstraint.class);
+        var atomicConstraint = new UiPolicyConstraintElement(ATOMIC, List.of(), incomingConstraint);
+        var atomicConstraints = List.of(atomicConstraint, atomicConstraint);
+        var baseConstraintElement = new UiPolicyConstraintElement(constraintType, atomicConstraints, null);
+
+        // act
+        when(atomicConstraintMapper
+                .buildAtomicConstraint(eq(incomingConstraint)))
+                .thenReturn(mockAtomicConstraint);
+        var policy = policyMapper.buildGenericPolicy(List.of(baseConstraintElement));
+
+        // assert
+        assertThat(policy.getType()).isEqualTo(PolicyType.SET);
+        assertThat(policy.getPermissions()).hasSize(1);
+        var permission = policy.getPermissions().get(0);
+        assertThat(permission.getConstraints()).hasSize(1);
+        assertThat(permission.getAction().getType()).isEqualTo("USE");
+
+        var constraintObject = permission.getConstraints().get(0);
+        assertNotNull(constraintObject);
     }
 }

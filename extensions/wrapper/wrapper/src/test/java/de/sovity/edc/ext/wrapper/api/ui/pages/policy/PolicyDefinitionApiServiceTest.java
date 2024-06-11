@@ -16,10 +16,12 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
 
 
 import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.client.gen.model.GenericPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionDto;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
+import de.sovity.edc.client.gen.model.UiPolicyConstraintElement;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
@@ -30,12 +32,17 @@ import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.entity.Entity;
 import org.eclipse.edc.spi.query.QuerySpec;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
+import static de.sovity.edc.client.gen.model.UiPolicyConstraintType.AND;
+import static de.sovity.edc.client.gen.model.UiPolicyConstraintType.ATOMIC;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
@@ -59,7 +66,7 @@ class PolicyDefinitionApiServiceTest {
     }
 
     @Test
-    void test_create_list() {
+    void getPolicyList() {
         // arrange
         createPolicyDefinition("my-policy-def-1");
 
@@ -80,6 +87,49 @@ class PolicyDefinitionApiServiceTest {
     }
 
     @Test
+    void createTraceXPolicy() {
+        // arrange
+        var policyId = UUID.randomUUID().toString();
+        var membershipElement = buildAtomicElement("Membership", OperatorDto.EQ, "active");
+        var purposeElement = buildAtomicElement("PURPOSE", OperatorDto.EQ, "ID 3.1 Trace");
+        var andElement = new UiPolicyConstraintElement()
+                .constraintType(AND)
+                .constraintElements(List.of(membershipElement, purposeElement));
+        var createRequest = new GenericPolicyCreateRequest(policyId, List.of(andElement));
+
+        // act
+        var response = client.uiApi().createGenericPolicyDefinition(createRequest);
+
+        // assert
+        assertThat(response.getId()).isEqualTo(policyId);
+        var policyById = getPolicyById(policyId);
+        assertThat(policyById).isPresent();
+    }
+
+    private UiPolicyConstraintElement buildAtomicElement(
+            String left,
+            OperatorDto operator,
+            String right) {
+        var memberConstraint = new UiPolicyConstraint()
+                .left(left)
+                .operator(operator)
+                .right(new UiPolicyLiteral()
+                        .type(UiPolicyLiteralType.STRING)
+                        .value(right));
+        return new UiPolicyConstraintElement()
+                .constraintType(ATOMIC)
+                .atomicConstraint(memberConstraint);
+    }
+
+    @NotNull
+    private Optional<PolicyDefinitionDto> getPolicyById(String policyId) {
+        var policyDefinitionsResponse = client.uiApi().getPolicyDefinitionPage();
+        return policyDefinitionsResponse.getPolicies().stream()
+                .filter(policy -> policy.getPolicyDefinitionId().equals(policyId))
+                .findFirst();
+    }
+
+    @Test
     void test_sorting(PolicyDefinitionService policyDefinitionService) {
         // arrange
         createPolicyDefinition(policyDefinitionService, "my-policy-def-2", 1628956802000L);
@@ -92,7 +142,8 @@ class PolicyDefinitionApiServiceTest {
         // assert
         assertThat(result.getPolicies())
                 .extracting(PolicyDefinitionDto::getPolicyDefinitionId)
-                .containsExactly("always-true", "my-policy-def-2", "my-policy-def-1", "my-policy-def-0");
+                .containsExactly("always-true", "my-policy-def-2", "my-policy-def-1", "my-policy" +
+                        "-def-0");
     }
 
     @Test
@@ -118,7 +169,8 @@ class PolicyDefinitionApiServiceTest {
     }
 
     @SneakyThrows
-    private void createPolicyDefinition(PolicyDefinitionService policyDefinitionService, String policyDefinitionId, long createdAt) {
+    private void createPolicyDefinition(PolicyDefinitionService policyDefinitionService,
+                                        String policyDefinitionId, long createdAt) {
         createPolicyDefinition(policyDefinitionId);
         var policyDefinition = policyDefinitionService.findById(policyDefinitionId);
 
