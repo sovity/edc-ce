@@ -111,7 +111,7 @@ class PolicyMapperTest {
         when(atomicConstraintMapper
                 .buildAtomicConstraint(eq(incomingConstraint)))
                 .thenReturn(mockAtomicConstraint);
-        var policy = policyMapper.buildGenericPolicy(List.of(baseConstraintElement));
+        var policy = policyMapper.buildMultiplicityPolicy(List.of(baseConstraintElement));
 
         // assert
         assertThat(policy.getType()).isEqualTo(PolicyType.SET);

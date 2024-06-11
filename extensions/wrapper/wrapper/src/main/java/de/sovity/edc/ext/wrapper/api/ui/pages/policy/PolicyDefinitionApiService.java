@@ -84,7 +84,7 @@ public class PolicyDefinitionApiService {
     }
 
     private PolicyDefinition buildPolicyDefinition(GenericPolicyCreateRequest genericPolicyCreateRequest) {
-        var policy = policyMapper.buildGenericPolicy(genericPolicyCreateRequest.getConstraintElements());
+        var policy = policyMapper.buildMultiplicityPolicy(genericPolicyCreateRequest.getConstraintElements());
         return PolicyDefinition.Builder.newInstance()
                 .id(genericPolicyCreateRequest.getPolicyDefinitionId())
                 .policy(policy)

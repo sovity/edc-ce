@@ -9,6 +9,7 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyElement;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import de.sovity.edc.utils.JsonUtils;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.policy.model.Action;
@@ -78,11 +79,9 @@ public class PolicyMapper {
                 .build();
     }
 
-    public Policy buildGenericPolicy(List<PolicyElement> constraintElements) {
+    public Policy buildMultiplicityPolicy(List<PolicyElement> constraintElements) {
         var constraints = buildConstraints(constraintElements);
-
-        var action = Action.Builder.newInstance().type(PolicyValidator.ALLOWED_ACTION).build();
-
+        var action = Action.Builder.newInstance().type(Prop.Odrl.USE).build();
         var permission = Permission.Builder.newInstance()
                 .action(action)
                 .constraints(constraints)
@@ -101,11 +100,11 @@ public class PolicyMapper {
                 .toList();
     }
 
-    private Constraint buildConstraint(PolicyElement uiPolicyConstraintElement) {
-        var constraintElements = uiPolicyConstraintElement.getConstraintElements();
-        return switch (uiPolicyConstraintElement.getConstraintType()) {
+    private Constraint buildConstraint(PolicyElement policyElement) {
+        var constraintElements = policyElement.getConstraintElements();
+        return switch (policyElement.getConstraintType()) {
             case ATOMIC ->
-                    atomicConstraintMapper.buildAtomicConstraint(uiPolicyConstraintElement.getAtomicConstraint());
+                    atomicConstraintMapper.buildAtomicConstraint(policyElement.getAtomicConstraint());
             case AND -> AndConstraint.Builder.newInstance()
                     .constraints(buildConstraints(constraintElements))
                     .build();
