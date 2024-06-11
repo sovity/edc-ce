@@ -28,6 +28,7 @@ dependencies {
     implementation(libs.openapi.jacksonDatabindNullable)
     implementation(libs.apache.commonsLang)
     implementation(libs.jakarta.annotationApi)
+    api(project(":utils:json-and-jsonld-utils"))
 
     // Lombok
     compileOnly(libs.lombok)

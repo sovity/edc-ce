@@ -20,8 +20,8 @@ import de.sovity.edc.client.gen.model.GenericPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionDto;
-import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.PolicyElement;
+import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
@@ -111,13 +111,18 @@ class PolicyDefinitionApiServiceTest {
         assertThat(policyById).isPresent();
         var policyDefinitionDto = policyById.get();
         assertEquals(policyId, policyDefinitionDto.getPolicyDefinitionId());
+        assertPolicyJsonLd(policyDefinitionDto);
+    }
+
+    private void assertPolicyJsonLd(PolicyDefinitionDto policyDefinitionDto) {
         var permission = getPermissionJsonObject(policyDefinitionDto.getPolicy().getPolicyJsonLd());
         var action = permission.get(Prop.Odrl.ACTION);
         assertEquals(Prop.Odrl.USE, action.asJsonObject().getString(Prop.Odrl.TYPE));
 
         var permissionConstraints = permission.get(Prop.Odrl.CONSTRAINT).asJsonArray();
         assertThat(permissionConstraints).hasSize(1);
-        var andConstraints = permissionConstraints.get(0).asJsonObject().get(Prop.Odrl.AND).asJsonArray();
+        var andConstraints =
+                permissionConstraints.get(0).asJsonObject().get(Prop.Odrl.AND).asJsonArray();
         assertThat(andConstraints).hasSize(2);
 
         var membershipConstraint = andConstraints.get(0).asJsonObject();
@@ -176,8 +181,11 @@ class PolicyDefinitionApiServiceTest {
         // assert
         assertThat(result.getPolicies())
                 .extracting(PolicyDefinitionDto::getPolicyDefinitionId)
-                .containsExactly("always-true", "my-policy-def-2", "my-policy-def-1", "my-policy" +
-                        "-def-0");
+                .containsExactly(
+                        "always-true",
+                        "my-policy-def-2",
+                        "my-policy-def-1",
+                        "my-policy-def-0");
     }
 
     @Test
@@ -203,8 +211,10 @@ class PolicyDefinitionApiServiceTest {
     }
 
     @SneakyThrows
-    private void createPolicyDefinition(PolicyDefinitionService policyDefinitionService,
-                                        String policyDefinitionId, long createdAt) {
+    private void createPolicyDefinition(
+            PolicyDefinitionService policyDefinitionService,
+            String policyDefinitionId,
+            long createdAt) {
         createPolicyDefinition(policyDefinitionId);
         var policyDefinition = policyDefinitionService.findById(policyDefinitionId);
 
