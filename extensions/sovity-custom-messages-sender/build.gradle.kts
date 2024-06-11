@@ -41,6 +41,7 @@ dependencies {
     testImplementation(libs.jsonAssert)
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockserver.netty)
     testImplementation(libs.restAssured.restAssured)
     testImplementation(libs.testcontainers.testcontainers)
     testImplementation(libs.testcontainers.junitJupiter)

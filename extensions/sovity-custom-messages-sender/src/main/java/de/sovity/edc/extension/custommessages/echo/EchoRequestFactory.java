@@ -1,23 +1,21 @@
-package de.sovity.edc.extension.custommessages;
+package de.sovity.edc.extension.custommessages.echo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.extension.custommessages.echo.EchoMessage;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import org.eclipse.edc.protocol.dsp.spi.dispatcher.DspHttpRequestFactory;
 import org.eclipse.edc.spi.EdcException;
 
-import java.util.function.Function;
-
-public class DummyDspHttpRequestFactory implements Function<EchoMessage, Request> {
-
+public class EchoRequestFactory implements DspHttpRequestFactory<EchoMessage> {
     @Override
-    public Request apply(EchoMessage dummy) {
+    public Request createRequest(EchoMessage message) {
         try {
             return new Request.Builder()
+                .url(message.counterPartyAddress() + "/sovity/message/echo")
                 .post(RequestBody.create(
-                    new ObjectMapper().writeValueAsString(dummy),
+                    new ObjectMapper().writeValueAsString(message),
                     MediaType.get(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
                 ))
                 .build();

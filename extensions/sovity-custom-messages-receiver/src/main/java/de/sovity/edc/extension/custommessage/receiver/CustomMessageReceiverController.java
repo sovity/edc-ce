@@ -26,10 +26,10 @@ public class CustomMessageReceiverController {
         JsonObject jsonObject) {
 
         val compacted = JsonLdUtils.tryCompact(jsonObject);
-        val content = compacted.getString("http://example.com/content");
+        val content = compacted.getString("http://example.com/ping");
 
         val response = Json.createObjectBuilder()
-            .add("http://example.com/content", "echo " + content)
+            .add("http://example.com/pong", content)
             .build();
 
         val expanded = JsonLdUtils.expandKeysOnly(response);
