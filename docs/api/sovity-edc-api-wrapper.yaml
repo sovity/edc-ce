@@ -117,17 +117,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
-  /wrapper/ui/pages/policy-page/generic-policy-definitions:
+  /wrapper/ui/pages/policy-page/multiplicity-policy-definitions:
     post:
       tags:
       - UI
-      description: Create a new Generic Policy Definition
-      operationId: createGenericPolicyDefinition
+      description: Create a new Multiplicity Policy Definition
+      operationId: createMultiplicityPolicyDefinition
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GenericPolicyCreateRequest'
+              $ref: '#/components/schemas/MultiplicityPolicyCreateRequest'
       responses:
         default:
           description: default response
@@ -696,7 +696,7 @@ components:
       - EQ
       - IN
       - LIKE
-    GenericPolicyCreateRequest:
+    MultiplicityPolicyCreateRequest:
       required:
       - policyDefinitionId
       type: object
@@ -704,14 +704,13 @@ components:
         policyDefinitionId:
           type: string
           description: Policy Definition ID
-        constraintElements:
+        policyElements:
           type: array
-          description: Conjunction of required expressions for the policy to evaluate
+          description: List of required PolicyElements for the policy to evaluate
             to TRUE.
           items:
             $ref: '#/components/schemas/PolicyElement'
-      description: Type-Safe OpenAPI generator friendly Policy Create DTO that supports
-        an opinionated subset of the original EDC Policy Entity.
+      description: Policy Creation Request Supporting Multiplicity Constraints.
     OperatorDto:
       type: string
       description: Operator for policies
@@ -733,16 +732,16 @@ components:
       properties:
         constraintType:
           $ref: '#/components/schemas/UiPolicyConstraintType'
-        constraintElements:
+        policyElements:
           type: array
-          description: Recursive list of constraint elements. Required for AND and
-            OR constraints.
+          description: List of policy elements that are evaluated according the constraintType.
           items:
             $ref: '#/components/schemas/PolicyElement'
         atomicConstraint:
           $ref: '#/components/schemas/UiPolicyConstraint'
-      description: Type-Safe OpenAPI generator friendly Policy Create DTO that supports
-        an opinionated subset of the original EDC Policy Entity.
+      description: Generic Policy Element. Represents a single atomic constraint or
+        a multiplicity constraint. The atomicConstraint will be evaluated if the constraintType
+        is ATOMIC.
     UiPolicyConstraint:
       required:
       - left
@@ -760,7 +759,7 @@ components:
       description: ODRL AtomicConstraint as supported by our UI
     UiPolicyConstraintType:
       type: string
-      description: Supported Types of values for the right hand side of an expression
+      description: Supported Types of PolicyElements
       enum:
       - ATOMIC
       - AND

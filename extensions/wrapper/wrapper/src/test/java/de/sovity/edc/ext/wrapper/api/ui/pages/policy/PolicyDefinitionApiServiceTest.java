@@ -16,7 +16,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
 
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.client.gen.model.GenericPolicyCreateRequest;
+import de.sovity.edc.client.gen.model.MultiplicityPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionDto;
@@ -99,11 +99,11 @@ class PolicyDefinitionApiServiceTest {
         var purposeElement = buildAtomicElement("PURPOSE", OperatorDto.EQ, "ID 3.1 Trace");
         var andElement = new PolicyElement()
                 .constraintType(AND)
-                .constraintElements(List.of(membershipElement, purposeElement));
-        var createRequest = new GenericPolicyCreateRequest(policyId, List.of(andElement));
+                .policyElements(List.of(membershipElement, purposeElement));
+        var createRequest = new MultiplicityPolicyCreateRequest(policyId, List.of(andElement));
 
         // act
-        var response = client.uiApi().createGenericPolicyDefinition(createRequest);
+        var response = client.uiApi().createMultiplicityPolicyDefinition(createRequest);
 
         // assert
         assertThat(response.getId()).isEqualTo(policyId);
