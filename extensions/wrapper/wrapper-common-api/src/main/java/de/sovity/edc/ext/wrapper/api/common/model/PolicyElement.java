@@ -30,15 +30,20 @@ import java.util.List;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
-@Schema(description = "Type-Safe OpenAPI generator friendly Policy Create DTO that supports an opinionated"
-        + " subset of the original EDC Policy Entity.")
+@Schema(description =
+        "Generic Policy Element. Represents a single atomic constraint or a multiplicity " +
+                "constraint. The atomicConstraint will be evaluated if the constraintType is " +
+                "ATOMIC.")
 public class PolicyElement {
 
+    @Schema(description = "Either ATOMIC or one of the multiplicity constraint types.")
     private UiPolicyConstraintType constraintType;
 
-    @Schema(description = "Recursive list of constraint elements. Required for AND and OR constraints.")
-    private List<PolicyElement> constraintElements;
+    @Schema(description =
+            "List of policy elements that are evaluated according the constraintType.")
+    private List<PolicyElement> policyElements;
 
-    @Schema(description = "Conjunction of required expressions for the policy to evaluate to TRUE.")
+    @Schema(description =
+            "A single atomic constraint. Will be evaluated if the constraintType is set to ATOMIC.")
     private UiPolicyConstraint atomicConstraint;
 }

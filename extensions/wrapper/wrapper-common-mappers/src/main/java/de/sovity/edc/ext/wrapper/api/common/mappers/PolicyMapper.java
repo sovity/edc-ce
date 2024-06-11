@@ -101,7 +101,7 @@ public class PolicyMapper {
     }
 
     private Constraint buildConstraint(PolicyElement policyElement) {
-        var constraintElements = policyElement.getConstraintElements();
+        var constraintElements = policyElement.getPolicyElements();
         return switch (policyElement.getConstraintType()) {
             case ATOMIC ->
                     atomicConstraintMapper.buildAtomicConstraint(policyElement.getAtomicConstraint());

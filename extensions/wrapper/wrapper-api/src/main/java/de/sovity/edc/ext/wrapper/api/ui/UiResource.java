@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui;
 
-import de.sovity.edc.ext.wrapper.api.common.model.GenericPolicyCreateRequest;
+import de.sovity.edc.ext.wrapper.api.common.model.MultiplicityPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
@@ -97,11 +97,11 @@ interface UiResource {
     IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto);
 
     @POST
-    @Path("pages/policy-page/generic-policy-definitions")
+    @Path("pages/policy-page/multiplicity-policy-definitions")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Create a new Generic Policy Definition")
-    IdResponseDto createGenericPolicyDefinition(GenericPolicyCreateRequest genericPolicyCreateRequest);
+    @Operation(description = "Create a new Multiplicity Policy Definition")
+    IdResponseDto createMultiplicityPolicyDefinition(MultiplicityPolicyCreateRequest genericPolicyCreateRequest);
 
 
     @DELETE

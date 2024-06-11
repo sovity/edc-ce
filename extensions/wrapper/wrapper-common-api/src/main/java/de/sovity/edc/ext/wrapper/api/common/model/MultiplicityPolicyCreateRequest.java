@@ -30,14 +30,13 @@ import java.util.List;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
-@Schema(description = "Type-Safe OpenAPI generator friendly Policy Create DTO that supports an opinionated"
-        + " subset of the original EDC Policy Entity.")
-public class GenericPolicyCreateRequest {
+@Schema(description = "Policy Creation Request Supporting Multiplicity Constraints.")
+public class MultiplicityPolicyCreateRequest {
 
     @Schema(description = "Policy Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String policyDefinitionId;
 
-    @Schema(description = "Conjunction of required expressions for the policy to evaluate to TRUE.")
-    private List<PolicyElement> constraintElements;
+    @Schema(description = "List of required PolicyElements for the policy to evaluate to TRUE.")
+    private List<PolicyElement> policyElements;
 
 }
