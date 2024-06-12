@@ -54,7 +54,7 @@ public class UseCaseResourceImpl implements UseCaseResource {
     }
 
     @Override
-    public IdResponseDto createMultiplicityPolicyDefinition(PolicyCreateRequest genericPolicyCreateRequest) {
-        return policyDefinitionApiService.createGenericPolicyDefinition(genericPolicyCreateRequest);
+    public IdResponseDto createPolicyDefinitionUseCase(PolicyCreateRequest policyCreateRequest) {
+        return policyDefinitionApiService.createPolicyDefinition(policyCreateRequest);
     }
 }

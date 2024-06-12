@@ -77,17 +77,17 @@ public class PolicyDefinitionApiService {
                 .build();
     }
 
-    public IdResponseDto createGenericPolicyDefinition(PolicyCreateRequest genericPolicyCreateRequest) {
-        var policyDefinition = buildPolicyDefinition(genericPolicyCreateRequest);
+    public IdResponseDto createPolicyDefinition(PolicyCreateRequest policyCreateRequest) {
+        var policyDefinition = buildPolicyDefinition(policyCreateRequest);
         policyDefinition = policyDefinitionService.create(policyDefinition).orElseThrow(ServiceException::new);
         return new IdResponseDto(policyDefinition.getId());
     }
 
-    private PolicyDefinition buildPolicyDefinition(PolicyCreateRequest genericPolicyCreateRequest) {
-        var permissionExpression = genericPolicyCreateRequest.getPermission().getExpression();
+    private PolicyDefinition buildPolicyDefinition(PolicyCreateRequest policyCreateRequest) {
+        var permissionExpression = policyCreateRequest.getPermission().getExpression();
         var policy = policyMapper.buildPolicy(List.of(permissionExpression));
         return PolicyDefinition.Builder.newInstance()
-                .id(genericPolicyCreateRequest.getPolicyDefinitionId())
+                .id(policyCreateRequest.getPolicyDefinitionId())
                 .policy(policy)
                 .build();
     }

@@ -31,19 +31,19 @@ import java.util.List;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 @Schema(description =
-        "Generic Policy Element. Represents a single atomic constraint or a multiplicity " +
-                "constraint. The atomicConstraint will be evaluated if the constraintType is " +
-                "ATOMIC.")
+        "Represents a single atomic constraint or a multiplicity constraint. The atomicConstraint" +
+                " will be evaluated if the constraintType is ATOMIC_CONSTRAINT.")
 public class Expression {
 
-    @Schema(description = "Either ATOMIC or one of the multiplicity constraint types.")
+    @Schema(description = "Either ATOMIC_CONSTRAINT or one of the multiplicity constraint types.")
     private ExpressionType expressionType;
 
     @Schema(description =
-            "List of policy elements that are evaluated according the constraintType.")
+            "List of policy elements that are evaluated according the expressionType.")
     private List<Expression> expressions;
 
     @Schema(description =
-            "A single atomic constraint. Will be evaluated if the constraintType is set to ATOMIC.")
+            "A single atomic constraint. Will be evaluated if the expressionType is set to " +
+                    "ATOMIC_CONSTRAINT.")
     private AtomicConstraintDto atomicConstraint;
 }

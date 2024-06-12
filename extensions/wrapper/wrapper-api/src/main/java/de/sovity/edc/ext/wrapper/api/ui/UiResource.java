@@ -95,7 +95,6 @@ interface UiResource {
     @Operation(description = "Create a new Policy Definition")
     IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto);
 
-
     @DELETE
     @Path("pages/policy-page/policy-definitions/{policyId}")
     @Produces(MediaType.APPLICATION_JSON)

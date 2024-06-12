@@ -53,7 +53,7 @@ public class PolicyDefinitionApiServiceTest {
         var createRequest = new PolicyCreateRequest(policyId, permissionDto);
 
         // act
-        var response = client.useCaseApi().createMultiplicityPolicyDefinition(createRequest);
+        var response = client.useCaseApi().createPolicyDefinitionUseCase(createRequest);
 
         // assert
         assertThat(response.getId()).isEqualTo(policyId);

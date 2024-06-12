@@ -413,7 +413,7 @@ paths:
       tags:
       - Use Case
       description: Create a new Policy Definition
-      operationId: createMultiplicityPolicyDefinition
+      operationId: createPolicyDefinitionUseCase
       requestBody:
         content:
           application/json:
