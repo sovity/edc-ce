@@ -41,7 +41,7 @@ public class SovityCustomMessageReceiverExtensionTest {
             .port(dataPort)
             .body("""
                 {
-                    "http://example.com/content": "stuff"
+                    "http://example.com/ping": "stuff"
                 }
                 """)
             .contentType(ContentType.JSON)
@@ -56,6 +56,6 @@ public class SovityCustomMessageReceiverExtensionTest {
 
         // assert
         val json = Json.createReader(new StringReader(body)).readObject();
-        assertThat(json.getString("http://example.com/content")).isEqualTo("echo stuff");
+        assertThat(json.getString("http://example.com/pong")).isEqualTo("stuff");
     }
 }
