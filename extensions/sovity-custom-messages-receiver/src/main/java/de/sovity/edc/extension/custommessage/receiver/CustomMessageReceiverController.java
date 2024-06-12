@@ -12,18 +12,23 @@ import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.spi.iam.IdentityService;
+import org.eclipse.edc.spi.iam.TokenRepresentation;
 
 @RequiredArgsConstructor
 @Path("/sovity/message")
 public class CustomMessageReceiverController {
 
     private final IdentityService identityService;
+    private final String callbackAddress;
 
     @POST
     @Path("/echo")
     public Response post(
-        @HeaderParam(HttpHeaders.AUTHORIZATION) String authentication,
+        @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
         JsonObject jsonObject) {
+
+//        val token = TokenRepresentation.Builder.newInstance().token(authorization).build();
+//        identityService.verifyJwtToken(token, callbackAddress);
 
         val compacted = JsonLdUtils.tryCompact(jsonObject);
         val content = compacted.getString("http://example.com/ping");

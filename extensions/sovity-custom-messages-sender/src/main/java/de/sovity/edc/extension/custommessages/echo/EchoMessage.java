@@ -2,6 +2,7 @@ package de.sovity.edc.extension.custommessages.echo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.sovity.edc.extension.custommessages.SovityExtendedProtocol;
+import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.eclipse.edc.spi.types.domain.message.RemoteMessage;
 
 import java.net.URL;
@@ -17,6 +18,7 @@ public record EchoMessage(
     @Override
     public String getProtocol() {
         return SovityExtendedProtocol.SOVITY_EXTENDED_PROTOCOL;
+//        return HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP;
     }
 
     @Override

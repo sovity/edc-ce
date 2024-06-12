@@ -99,6 +99,7 @@ edc-dataPlaneUtil = { module = "org.eclipse.edc:data-plane-util", version.ref = 
 edc-dsp = { module = "org.eclipse.edc:dsp", version.ref = "edc" }
 edc-dspApiConfiguration = { module = "org.eclipse.edc:dsp-api-configuration", version.ref = "edc" }
 edc-dspHttpSpi = { module = "org.eclipse.edc:dsp-http-spi", version.ref = "edc" }
+edc-dspHttpCore = { module = "org.eclipse.edc:dsp-http-core", version.ref = "edc" }
 edc-http = { module = "org.eclipse.edc:http", version.ref = "edc" }
 edc-httpSpi = { module = "org.eclipse.edc:http-spi", version.ref = "edc" }
 edc-iamMock = { module = "org.eclipse.edc:iam-mock", version.ref = "edc" }

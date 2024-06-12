@@ -27,7 +27,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.stop.Stop.stopQuietly;
 
 @ExtendWith(EdcExtension.class)
-class CustomMessagesExtensionTest {
+class CustomMessagesSenderExtensionTest {
 
     private final static String managementApiPath = "/management-api";
     private final int httpPort = getFreePort();

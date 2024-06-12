@@ -40,11 +40,11 @@ import static java.util.concurrent.CompletableFuture.failedFuture;
 @RequiredArgsConstructor
 public class SovityMessageDispatcherImpl implements SovityMessageDispatcher {
 
+    private final Map<Class<? extends RemoteMessage>, Handlers<?, ?>> handlers = new HashMap<>();
+
     private final EdcHttpClient httpClient;
     private final IdentityService identityService;
     private final TokenDecorator tokenDecorator;
-
-    private final Map<Class<? extends RemoteMessage>, Handlers<?, ?>> handlers = new HashMap<>();
 
     @Override
     public String protocol() {

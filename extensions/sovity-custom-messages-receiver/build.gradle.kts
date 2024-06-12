@@ -11,6 +11,7 @@ dependencies {
     implementation(project(":utils:json-and-jsonld-utils"))
 
     implementation(libs.edc.controlPlaneCore)
+    implementation(libs.edc.dspApiConfiguration)
     implementation(libs.edc.dspHttpSpi)
     implementation(libs.edc.httpSpi)
     implementation(libs.edc.managementApiConfiguration)
@@ -29,7 +30,6 @@ dependencies {
 
     testImplementation(libs.edc.junit)
     testImplementation(libs.edc.dataPlaneSelectorCore)
-    testImplementation(libs.edc.dspApiConfiguration)
     testImplementation(libs.edc.iamMock)
     testImplementation(libs.edc.jsonLd)
 

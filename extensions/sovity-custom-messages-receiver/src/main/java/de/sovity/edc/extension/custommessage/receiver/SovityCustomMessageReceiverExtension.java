@@ -2,6 +2,7 @@ package de.sovity.edc.extension.custommessage.receiver;
 
 import lombok.val;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
+import org.eclipse.edc.protocol.dsp.api.configuration.DspApiConfiguration;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.http.EdcHttpClient;
 import org.eclipse.edc.spi.iam.IdentityService;
@@ -19,6 +20,9 @@ public class SovityCustomMessageReceiverExtension implements ServiceExtension {
 
     @Inject
     private TypeManager typeManager;
+
+    @Inject
+    private DspApiConfiguration apiConfiguration;
 
     @Inject
     private RemoteMessageDispatcherRegistry dispatcherRegistry;
@@ -40,7 +44,8 @@ public class SovityCustomMessageReceiverExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        val controller = new CustomMessageReceiverController(identityService);
+        val callbackAddress = apiConfiguration.getDspCallbackAddress();
+        val controller = new CustomMessageReceiverController(identityService, callbackAddress);
         webService.registerResource(managementApiConfiguration.getContextAlias(), controller);
     }
 }

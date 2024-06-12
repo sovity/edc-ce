@@ -3,6 +3,7 @@ package de.sovity.edc.extension.custommessages;
 import de.sovity.edc.extension.custommessages.echo.EchoDispatcherDelegate;
 import de.sovity.edc.extension.custommessages.echo.EchoMessage;
 import de.sovity.edc.extension.custommessages.echo.EchoRequestFactory;
+import org.eclipse.edc.protocol.dsp.spi.dispatcher.DspHttpRemoteMessageDispatcher;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Provides;
 import org.eclipse.edc.spi.http.EdcHttpClient;
@@ -15,7 +16,7 @@ import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.types.TypeManager;
 
 @Provides(SovityMessageDispatcher.class)
-public class CustomMessagesExtension implements ServiceExtension {
+public class CustomMessagesSenderExtension implements ServiceExtension {
 
     public static final String NAME = "SovityCustomMessages";
     private static final String TYPE_MANAGER_SERIALIZER_KEY = "sovity-custom";
@@ -38,6 +39,9 @@ public class CustomMessagesExtension implements ServiceExtension {
     @Inject
     private TokenDecorator tokenDecorator;
 
+    @Inject
+    private DspHttpRemoteMessageDispatcher dspHttpRemoteMessageDispatcher;
+
     private SovityMessageDispatcher sovityMessageDispatcher;
 
     @Override
@@ -47,5 +51,7 @@ public class CustomMessagesExtension implements ServiceExtension {
         context.registerService(SovityMessageDispatcher.class, sovityMessageDispatcher);
 
         dispatcherRegistry.register(sovityMessageDispatcher);
+
+//        dspHttpRemoteMessageDispatcher.registerMessage(EchoMessage.class, new EchoRequestFactory(), new EchoDispatcherDelegate());
     }
 }
