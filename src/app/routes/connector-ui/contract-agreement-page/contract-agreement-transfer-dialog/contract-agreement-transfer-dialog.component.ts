@@ -1,5 +1,9 @@
 import {Component, Inject, OnDestroy} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import {Observable, Subject} from 'rxjs';
 import {finalize} from 'rxjs/operators';
 import {
@@ -7,6 +11,7 @@ import {
   InitiateCustomTransferRequest,
   InitiateTransferRequest,
 } from '@sovity.de/edc-client';
+import {InitiateTransferConfirmTosDialogComponent} from 'src/app/component-library/initiate-transfer-confirm-tos-dialog/initiate-transfer-confirm-tos-dialog/initiate-transfer-confirm-tos-dialog.component';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {DataAddressMapper} from '../../../../core/services/data-address-mapper';
 import {HttpRequestParamsMapper} from '../../../../core/services/http-params-mapper.service';
@@ -77,6 +82,7 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
     public form: ContractAgreementTransferDialogForm,
     public validationMessages: ValidationMessages,
     private dialogRef: MatDialogRef<ContractAgreementTransferDialogComponent>,
+    private confirmationDialog: MatDialog,
     private edcApiService: EdcApiService,
     private notificationService: NotificationService,
     private httpRequestParamsMapper: HttpRequestParamsMapper,
@@ -88,6 +94,20 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
     if (this.loading && !this.form.all.valid) {
       return;
     }
+
+    const confirmationDialogRef = this.confirmationDialog.open(
+      InitiateTransferConfirmTosDialogComponent,
+      {maxWidth: '30rem'},
+    );
+
+    confirmationDialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.initiateTransfer();
+      }
+    });
+  }
+
+  private initiateTransfer() {
     this.loading = true;
     this.form.all.disable();
 

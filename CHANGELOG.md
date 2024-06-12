@@ -18,6 +18,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
+- Added Initiate Transfer Confirm ToS Dialog
+
 #### Patch
 
 #### Deployment Migration Notes

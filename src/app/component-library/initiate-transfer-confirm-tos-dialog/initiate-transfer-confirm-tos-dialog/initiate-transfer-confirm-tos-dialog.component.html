@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>Data Offer Terms & Conditions</h1>
+
+<div mat-dialog-content>
+  <p>
+    Hereby I agree that by pressing the 'Confirm' button, I accept the license
+    terms, policies, and additional conditions for use, including any copyright
+    notices, associated with the provider's offer.
+  </p>
+</div>
+
+<div class="w-full flex flex-col justify-center">
+  <mat-checkbox [checked]="checkboxChecked" (change)="onCheckboxChange($event)">
+    I agree to the Data Offer Terms & Conditions
+  </mat-checkbox>
+
+  <div class="w-full flex flex-row justify-end" mat-dialog-actions>
+    <button mat-button color="accent" (click)="onCancel()">Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="!checkboxChecked"
+      (click)="onConfirm()">
+      Confirm
+    </button>
+  </div>
+</div>
