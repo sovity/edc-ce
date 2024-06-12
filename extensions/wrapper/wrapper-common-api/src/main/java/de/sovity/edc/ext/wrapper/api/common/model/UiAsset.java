@@ -34,6 +34,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Schema(description = "Type-Safe Asset Metadata as needed by our UI")
 public class UiAsset {
+    @Schema(description = "'Live' vs 'On Request'", requiredMode = Schema.RequiredMode.REQUIRED)
+    private UiAssetDataSourceType dataSourceType;
 
     @Schema(description = "Asset Id", requiredMode = Schema.RequiredMode.REQUIRED)
     private String assetId;
@@ -49,6 +51,20 @@ public class UiAsset {
 
     @Schema(description = "Asset Organization Name", requiredMode = Schema.RequiredMode.REQUIRED)
     private String creatorOrganizationName;
+
+    @Schema(
+        description = "Contact E-Mail address. Only for dataSourceType ON_REQUEST.",
+        example = "contact@my-org.com",
+        requiredMode = Schema.RequiredMode.REQUIRED
+    )
+    private String onRequestContactEmail;
+
+    @Schema(
+        description = "Contact Preferred E-Mail Subject. Only for dataSourceType ON_REQUEST.",
+        example = "Department XYZ Data Offer Request - My Product, My API",
+        requiredMode = Schema.RequiredMode.REQUIRED
+    )
+    private String onRequestContactEmailSubject;
 
     @Schema(description = "Asset Language", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String language;
@@ -80,16 +96,32 @@ public class UiAsset {
     @Schema(description = "Homepage URL associated with the Asset", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String landingPageUrl;
 
-    @Schema(description = "HTTP Datasource Hints Proxy Method", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(
+        description = "HTTP Datasource Hint: Proxy Method. " +
+            "Only for dataSourceType LIVE with an underlying HTTP_DATA Data Source.",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED
+    )
     private Boolean httpDatasourceHintsProxyMethod;
 
-    @Schema(description = "HTTP Datasource Hints Proxy Path", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(
+        description = "HTTP Datasource Hint: Proxy Path. " +
+            "Only for dataSourceType LIVE with an underlying HTTP_DATA Data Source.",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED
+    )
     private Boolean httpDatasourceHintsProxyPath;
 
-    @Schema(description = "HTTP Datasource Hints Proxy Query Params", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(
+        description = "HTTP Datasource Hint: Proxy Query Params. " +
+            "Only for dataSourceType LIVE with an underlying HTTP_DATA Data Source.",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED
+    )
     private Boolean httpDatasourceHintsProxyQueryParams;
 
-    @Schema(description = "HTTP Datasource Hints Proxy Body", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(
+        description = "HTTP Datasource Hint: Proxy Body. " +
+            "Only for dataSourceType LIVE with an underlying HTTP_DATA Data Source.",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED
+    )
     private Boolean httpDatasourceHintsProxyBody;
 
     @Schema(description = "Data Category", requiredMode = Schema.RequiredMode.NOT_REQUIRED)

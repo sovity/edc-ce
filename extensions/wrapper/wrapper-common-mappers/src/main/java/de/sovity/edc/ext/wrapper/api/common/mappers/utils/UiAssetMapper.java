@@ -13,8 +13,10 @@
 
 package de.sovity.edc.ext.wrapper.api.common.mappers.utils;
 
+import de.sovity.edc.ext.wrapper.api.common.mappers.DataSourceMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
+import de.sovity.edc.ext.wrapper.api.common.model.UiAssetDataSourceType;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.JsonLdUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -26,6 +28,7 @@ import jakarta.json.JsonValue;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -44,6 +47,7 @@ public class UiAssetMapper {
     private final MarkdownToTextConverter markdownToTextConverter;
     private final TextUtils textUtils;
     private final OwnConnectorEndpointService ownConnectorEndpointService;
+    private final DataSourceMapper dataSourceMapper;
 
     public UiAsset buildUiAsset(JsonObject assetJsonLd, String connectorEndpoint, String participantId) {
         var properties = JsonLdUtils.object(assetJsonLd, Prop.Edc.PROPERTIES);
@@ -82,12 +86,16 @@ public class UiAssetMapper {
         var creatorOrganizationName = JsonLdUtils.string(creator, Prop.Foaf.NAME);
         creatorOrganizationName = isBlank(creatorOrganizationName) ? participantId : creatorOrganizationName;
 
-
         var description = JsonLdUtils.string(properties, Prop.Dcterms.DESCRIPTION);
+        uiAsset.setDataSourceType(getDataSourceType(properties));
         uiAsset.setAssetId(id);
         uiAsset.setConnectorEndpoint(connectorEndpoint);
         uiAsset.setParticipantId(participantId);
         uiAsset.setTitle(title);
+        uiAsset.setOnRequestContactEmail(JsonLdUtils.string(properties, Prop.SovityDcatExt.CONTACT_EMAIL));
+        uiAsset.setOnRequestContactEmailSubject(
+            JsonLdUtils.string(properties, Prop.SovityDcatExt.CONTACT_PREFERRED_EMAIL_SUBJECT)
+        );
         uiAsset.setLicenseUrl(JsonLdUtils.string(properties, Prop.Dcterms.LICENSE));
         uiAsset.setDescription(description);
         uiAsset.setDescriptionShortText(buildShortDescription(description));
@@ -116,38 +124,38 @@ public class UiAssetMapper {
         // Additional / Remaining Properties
         // TODO: diff nested objects
         val remaining = removeHandledProperties(properties, List.of(
-                // Implicitly handled / should be skipped if found
-                Prop.ID,
-                Prop.TYPE,
-                Prop.CONTEXT,
-                Prop.Edc.ID,
-                Prop.Dcterms.IDENTIFIER,
+            // Implicitly handled / should be skipped if found
+            Prop.ID,
+            Prop.TYPE,
+            Prop.CONTEXT,
+            Prop.Edc.ID,
+            Prop.Dcterms.IDENTIFIER,
 
-                // Explicitly handled
-                Prop.Dcat.DISTRIBUTION,
-                Prop.Dcat.KEYWORDS,
-                Prop.Dcat.LANDING_PAGE,
-                Prop.Dcat.VERSION,
-                Prop.Dcterms.CREATOR,
-                Prop.Dcterms.DESCRIPTION,
-                Prop.Dcterms.LANGUAGE,
-                Prop.Dcterms.LICENSE,
-                Prop.Dcterms.PUBLISHER,
-                Prop.Dcterms.TITLE,
-                Prop.MobilityDcatAp.GEO_REFERENCE_METHOD,
-                Prop.MobilityDcatAp.TRANSPORT_MODE,
-                Prop.Dcterms.TEMPORAL,
-                Prop.Dcterms.SPATIAL,
-                Prop.MobilityDcatAp.MOBILITY_THEME,
-                Prop.Dcterms.RIGHTS_HOLDER,
-                Prop.Dcterms.ACCRUAL_PERIODICITY,
+            // Explicitly handled
+            Prop.Dcat.DISTRIBUTION,
+            Prop.Dcat.KEYWORDS,
+            Prop.Dcat.LANDING_PAGE,
+            Prop.Dcat.VERSION,
+            Prop.Dcterms.CREATOR,
+            Prop.Dcterms.DESCRIPTION,
+            Prop.Dcterms.LANGUAGE,
+            Prop.Dcterms.LICENSE,
+            Prop.Dcterms.PUBLISHER,
+            Prop.Dcterms.TITLE,
+            Prop.MobilityDcatAp.GEO_REFERENCE_METHOD,
+            Prop.MobilityDcatAp.TRANSPORT_MODE,
+            Prop.Dcterms.TEMPORAL,
+            Prop.Dcterms.SPATIAL,
+            Prop.MobilityDcatAp.MOBILITY_THEME,
+            Prop.Dcterms.RIGHTS_HOLDER,
+            Prop.Dcterms.ACCRUAL_PERIODICITY,
 
-                HttpDatasourceHints.BODY,
-                HttpDatasourceHints.METHOD,
-                HttpDatasourceHints.PATH,
-                HttpDatasourceHints.QUERY_PARAMS,
+            HttpDatasourceHints.BODY,
+            HttpDatasourceHints.METHOD,
+            HttpDatasourceHints.PATH,
+            HttpDatasourceHints.QUERY_PARAMS,
 
-                Prop.SovityDcatExt.CUSTOM_JSON
+            Prop.SovityDcatExt.CUSTOM_JSON
         ));
 
         // custom properties
@@ -161,8 +169,8 @@ public class UiAssetMapper {
             uiAsset.setPrivateCustomJsonAsString(privateCustomJson);
 
             val privateRemaining = removeHandledProperties(
-                    privateProperties,
-                    List.of(Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON));
+                privateProperties,
+                List.of(Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON));
             val privateSerializedJsonLd = packAsJsonLdProperties(privateRemaining);
             uiAsset.setPrivateCustomJsonLdAsString(privateSerializedJsonLd);
         }
@@ -170,11 +178,21 @@ public class UiAssetMapper {
         return uiAsset;
     }
 
+    @NotNull
+    private UiAssetDataSourceType getDataSourceType(JsonObject properties) {
+        var typeValue = JsonLdUtils.string(properties, Prop.SovityDcatExt.DATA_SOURCE_TYPE);
+        if (Prop.SovityDcatExt.DATA_SOURCE_TYPE_ON_REQUEST.equalsIgnoreCase(typeValue)) {
+            return UiAssetDataSourceType.ON_REQUEST;
+        }
+
+        return UiAssetDataSourceType.LIVE;
+    }
+
     private static String packAsJsonLdProperties(JsonObject remaining) {
         val customJsonLd = Json.createObjectBuilder();
         remaining.entrySet().stream()
-                .filter(it -> !JsonLdUtils.isEmptyArray(it.getValue()) || !JsonLdUtils.isEmptyObject(it.getValue()))
-                .forEach(it -> customJsonLd.add(it.getKey(), it.getValue()));
+            .filter(it -> !JsonLdUtils.isEmptyArray(it.getValue()) || !JsonLdUtils.isEmptyObject(it.getValue()))
+            .forEach(it -> customJsonLd.add(it.getKey(), it.getValue()));
         val compacted = JsonLdUtils.tryCompact(customJsonLd.build());
         return JsonUtils.toJson(compacted);
     }
@@ -182,25 +200,26 @@ public class UiAssetMapper {
     @SneakyThrows
     @Nullable
     public JsonObject buildAssetJsonLd(
-            UiAssetCreateRequest uiAssetCreateRequest,
-            String organizationName
+        UiAssetCreateRequest createRequest,
+        String organizationName
     ) {
-        var properties = getAssetProperties(uiAssetCreateRequest, organizationName);
-        var privateProperties = getAssetPrivateProperties(uiAssetCreateRequest);
-        var dataAddress = getDataAddress(uiAssetCreateRequest);
+        var properties = getAssetProperties(createRequest, organizationName);
+        var privateProperties = getAssetPrivateProperties(createRequest);
+
+        var dataSourceJsonLd = dataSourceMapper.buildDataSourceJsonLd(createRequest.getDataSource());
 
         return Json.createObjectBuilder()
-                .add(Prop.ID, uiAssetCreateRequest.getId())
-                .add(Prop.TYPE, Prop.Edc.TYPE_ASSET)
-                .add(Prop.Edc.PROPERTIES, properties)
-                .add(Prop.Edc.PRIVATE_PROPERTIES, privateProperties)
-                .add(Prop.Edc.DATA_ADDRESS, dataAddress)
-                .build();
+            .add(Prop.ID, createRequest.getId())
+            .add(Prop.TYPE, Prop.Edc.TYPE_ASSET)
+            .add(Prop.Edc.PROPERTIES, properties)
+            .add(Prop.Edc.PRIVATE_PROPERTIES, privateProperties)
+            .add(Prop.Edc.DATA_ADDRESS, dataSourceJsonLd)
+            .build();
     }
 
     private JsonObjectBuilder getAssetProperties(
-            UiAssetCreateRequest uiAssetCreateRequest,
-            String organizationName
+        UiAssetCreateRequest uiAssetCreateRequest,
+        String organizationName
     ) {
         var properties = Json.createObjectBuilder();
 
@@ -220,11 +239,11 @@ public class UiAssetMapper {
 
         if (uiAssetCreateRequest.getPublisherHomepage() != null) {
             properties.add(Prop.Dcterms.PUBLISHER, Json.createObjectBuilder()
-                    .add(Prop.Foaf.HOMEPAGE, uiAssetCreateRequest.getPublisherHomepage()));
+                .add(Prop.Foaf.HOMEPAGE, uiAssetCreateRequest.getPublisherHomepage()));
         }
 
         properties.add(Prop.Dcterms.CREATOR, Json.createObjectBuilder()
-                .add(Prop.Foaf.NAME, organizationName));
+            .add(Prop.Foaf.NAME, organizationName));
 
         var distribution = buildDistribution(uiAssetCreateRequest);
         if (distribution != null) {
@@ -253,13 +272,7 @@ public class UiAssetMapper {
             properties.add(Prop.MobilityDcatAp.MOBILITY_THEME, mobilityTheme);
         }
 
-        var dataAddress = uiAssetCreateRequest.getDataAddressProperties();
-        if (dataAddress != null && dataAddress.get(Prop.Edc.TYPE).equals("HttpData")) {
-            addNonNull(properties, HttpDatasourceHints.BODY, trueIfTrue(dataAddress, Prop.Edc.PROXY_BODY));
-            addNonNull(properties, HttpDatasourceHints.PATH, trueIfTrue(dataAddress, Prop.Edc.PROXY_PATH));
-            addNonNull(properties, HttpDatasourceHints.QUERY_PARAMS, trueIfTrue(dataAddress, Prop.Edc.PROXY_QUERY_PARAMS));
-            addNonNull(properties, HttpDatasourceHints.METHOD, trueIfTrue(dataAddress, Prop.Edc.PROXY_METHOD));
-        }
+        properties.addAll(dataSourceMapper.buildAssetProps(uiAssetCreateRequest.getDataSource()));
 
         addNonNull(properties, Prop.SovityDcatExt.CUSTOM_JSON, uiAssetCreateRequest.getCustomJsonAsString());
         val jsonLdStr = uiAssetCreateRequest.getCustomJsonLdAsString();
@@ -279,9 +292,9 @@ public class UiAssetMapper {
         val privateJsonStr = uiAssetCreateRequest.getPrivateCustomJsonAsString();
         if (privateJsonStr != null) {
             addNonNull(
-                    privateProperties,
-                    Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON,
-                    privateJsonStr
+                privateProperties,
+                Prop.SovityDcatExt.PRIVATE_CUSTOM_JSON,
+                privateJsonStr
             );
         }
 
@@ -294,15 +307,11 @@ public class UiAssetMapper {
         return privateProperties;
     }
 
-    private String trueIfTrue(Map<String, String> dataAddressProperties, String key) {
-        return "true".equals(dataAddressProperties.get(key)) ? "true" : "false";
-    }
-
-    private JsonObjectBuilder getDataAddress(UiAssetCreateRequest uiAssetCreateRequest) {
-        var props = edcPropertyUtils.toMapOfObject(uiAssetCreateRequest.getDataAddressProperties());
+    private JsonObjectBuilder getDataAddressJsonLd(Map<String, String> properties) {
+        var props = edcPropertyUtils.toMapOfObject(properties);
         return Json.createObjectBuilder()
-                .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
-                .add(Prop.Edc.PROPERTIES, Json.createObjectBuilder(props));
+            .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
+            .add(Prop.Edc.PROPERTIES, Json.createObjectBuilder(props));
     }
 
     private JsonObject removeHandledProperties(JsonObject properties, List<String> handledProperties) {
@@ -335,12 +344,12 @@ public class UiAssetMapper {
         var dataSampleUrls = uiAssetCreateRequest.getDataSampleUrls();
         var referenceFileUrls = uiAssetCreateRequest.getReferenceFileUrls();
         var hasRootLevelFields = uiAssetCreateRequest.getMediaType() != null
-                || (dataSampleUrls != null && !dataSampleUrls.isEmpty());
+            || (dataSampleUrls != null && !dataSampleUrls.isEmpty());
         var hasRightsFields = uiAssetCreateRequest.getConditionsForUse() != null;
         var hasDataModelFields = uiAssetCreateRequest.getDataModel() != null
-                && !uiAssetCreateRequest.getDataModel().isBlank();
+            && !uiAssetCreateRequest.getDataModel().isBlank();
         var hasReferenceFilesFields = (referenceFileUrls != null && !referenceFileUrls.isEmpty())
-                || uiAssetCreateRequest.getReferenceFilesDescription() != null;
+            || uiAssetCreateRequest.getReferenceFilesDescription() != null;
 
         if (!hasRootLevelFields && !hasRightsFields && !hasDataModelFields && !hasReferenceFilesFields) {
             return null;

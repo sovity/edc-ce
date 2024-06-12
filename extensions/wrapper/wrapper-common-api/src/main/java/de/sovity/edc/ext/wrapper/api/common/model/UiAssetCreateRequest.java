@@ -32,6 +32,9 @@ import java.util.Map;
 @AllArgsConstructor
 @Schema(description = "Type-Safe OpenAPI generator friendly Asset Create DTO that supports an opinionated subset of the original EDC Asset Entity.")
 public class UiAssetCreateRequest {
+    @Schema(description = "Data Source", requiredMode = Schema.RequiredMode.REQUIRED)
+    private UiDataSource dataSource;
+
     @Schema(description = "Asset Id", requiredMode = Schema.RequiredMode.REQUIRED)
     private String id;
 
@@ -106,9 +109,6 @@ public class UiAssetCreateRequest {
 
     @Schema(description = "Temporal coverage end date (inclusive)", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private LocalDate temporalCoverageToInclusive;
-
-    @Schema(description = "Data Address", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Map<String, String> dataAddressProperties;
 
     @Schema(description = "Contains serialized custom properties in the JSON format.",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
