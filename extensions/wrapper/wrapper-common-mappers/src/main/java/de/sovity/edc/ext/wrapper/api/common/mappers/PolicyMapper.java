@@ -5,8 +5,8 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.FailedMappingException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
+import de.sovity.edc.ext.wrapper.api.common.model.Expression;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyElement;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -79,7 +79,7 @@ public class PolicyMapper {
                 .build();
     }
 
-    public Policy buildMultiplicityPolicy(List<PolicyElement> constraintElements) {
+    public Policy buildPolicy(List<Expression> constraintElements) {
         var constraints = buildConstraints(constraintElements);
         var action = Action.Builder.newInstance().type(Prop.Odrl.USE).build();
         var permission = Permission.Builder.newInstance()
@@ -94,25 +94,25 @@ public class PolicyMapper {
     }
 
     @NotNull
-    private List<Constraint> buildConstraints(List<PolicyElement> constraintElements) {
-        return constraintElements.stream()
+    private List<Constraint> buildConstraints(List<Expression> expressions) {
+        return expressions.stream()
                 .map(this::buildConstraint)
                 .toList();
     }
 
-    private Constraint buildConstraint(PolicyElement policyElement) {
-        var constraintElements = policyElement.getPolicyElements();
-        return switch (policyElement.getConstraintType()) {
-            case ATOMIC ->
-                    atomicConstraintMapper.buildAtomicConstraint(policyElement.getAtomicConstraint());
+    private Constraint buildConstraint(Expression expression) {
+        var subExpressions = expression.getExpressions();
+        return switch (expression.getExpressionType()) {
+            case ATOMIC_CONSTRAINT ->
+                    atomicConstraintMapper.buildAtomicConstraint(expression.getAtomicConstraint());
             case AND -> AndConstraint.Builder.newInstance()
-                    .constraints(buildConstraints(constraintElements))
+                    .constraints(buildConstraints(subExpressions))
                     .build();
             case OR -> OrConstraint.Builder.newInstance()
-                    .constraints(buildConstraints(constraintElements))
+                    .constraints(buildConstraints(subExpressions))
                     .build();
             case XOR -> XoneConstraint.Builder.newInstance()
-                    .constraints(buildConstraints(constraintElements))
+                    .constraints(buildConstraints(subExpressions))
                     .build();
         };
     }

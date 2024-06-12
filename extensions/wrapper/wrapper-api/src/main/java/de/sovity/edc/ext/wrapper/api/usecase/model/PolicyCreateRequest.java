@@ -12,8 +12,9 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.common.model;
+package de.sovity.edc.ext.wrapper.api.usecase.model;
 
+import de.sovity.edc.ext.wrapper.api.common.model.PermissionDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,8 +23,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.List;
-
 @Getter
 @Setter
 @ToString
@@ -31,12 +30,12 @@ import java.util.List;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 @Schema(description = "Policy Creation Request Supporting Multiplicity Constraints.")
-public class MultiplicityPolicyCreateRequest {
+public class PolicyCreateRequest {
 
     @Schema(description = "Policy Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String policyDefinitionId;
 
-    @Schema(description = "List of required PolicyElements for the policy to evaluate to TRUE.")
-    private List<PolicyElement> policyElements;
+    @Schema(description = "Permission description for the policy to evaluate to TRUE.")
+    private PermissionDto permission;
 
 }

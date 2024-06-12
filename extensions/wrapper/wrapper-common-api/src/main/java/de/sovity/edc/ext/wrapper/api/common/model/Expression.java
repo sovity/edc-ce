@@ -34,16 +34,16 @@ import java.util.List;
         "Generic Policy Element. Represents a single atomic constraint or a multiplicity " +
                 "constraint. The atomicConstraint will be evaluated if the constraintType is " +
                 "ATOMIC.")
-public class PolicyElement {
+public class Expression {
 
     @Schema(description = "Either ATOMIC or one of the multiplicity constraint types.")
-    private UiPolicyConstraintType constraintType;
+    private ExpressionType expressionType;
 
     @Schema(description =
             "List of policy elements that are evaluated according the constraintType.")
-    private List<PolicyElement> policyElements;
+    private List<Expression> expressions;
 
     @Schema(description =
             "A single atomic constraint. Will be evaluated if the constraintType is set to ATOMIC.")
-    private UiPolicyConstraint atomicConstraint;
+    private AtomicConstraintDto atomicConstraint;
 }

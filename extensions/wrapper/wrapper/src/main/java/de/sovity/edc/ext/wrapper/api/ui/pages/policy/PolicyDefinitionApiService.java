@@ -17,7 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
 
 import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
-import de.sovity.edc.ext.wrapper.api.common.model.MultiplicityPolicyCreateRequest;
+import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
@@ -77,14 +77,15 @@ public class PolicyDefinitionApiService {
                 .build();
     }
 
-    public IdResponseDto createGenericPolicyDefinition(MultiplicityPolicyCreateRequest genericPolicyCreateRequest) {
+    public IdResponseDto createGenericPolicyDefinition(PolicyCreateRequest genericPolicyCreateRequest) {
         var policyDefinition = buildPolicyDefinition(genericPolicyCreateRequest);
         policyDefinition = policyDefinitionService.create(policyDefinition).orElseThrow(ServiceException::new);
         return new IdResponseDto(policyDefinition.getId());
     }
 
-    private PolicyDefinition buildPolicyDefinition(MultiplicityPolicyCreateRequest genericPolicyCreateRequest) {
-        var policy = policyMapper.buildMultiplicityPolicy(genericPolicyCreateRequest.getPolicyElements());
+    private PolicyDefinition buildPolicyDefinition(PolicyCreateRequest genericPolicyCreateRequest) {
+        var permissionExpression = genericPolicyCreateRequest.getPermission().getExpression();
+        var policy = policyMapper.buildPolicy(List.of(permissionExpression));
         return PolicyDefinition.Builder.newInstance()
                 .id(genericPolicyCreateRequest.getPolicyDefinitionId())
                 .policy(policy)
