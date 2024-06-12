@@ -15,6 +15,10 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
+- API Wrapper 
+  - Support for Multiplicity Constraints (https://github.com/sovity/edc-extensions/issues/968)
+  - Providing `Prop` class from `json-and-jsonld-utils` to the java-client to make relevant Constants available
+
 #### Patch Changes
 
 - Postman-collection: Fixed an issue where an API-call was previously wrong in the details of the POST-body.

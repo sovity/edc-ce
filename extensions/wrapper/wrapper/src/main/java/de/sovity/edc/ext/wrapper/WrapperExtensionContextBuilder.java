@@ -289,7 +289,8 @@ public class WrapperExtensionContextBuilder {
         var useCaseResource = new UseCaseResourceImpl(
                 kpiApiService,
                 supportedPolicyApiService,
-                useCaseCatalogApiService
+                useCaseCatalogApiService,
+                policyDefinitionApiService
         );
 
         // Collect all JAX-RS resources
