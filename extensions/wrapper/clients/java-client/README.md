@@ -110,7 +110,7 @@ Below are the examples of various tasks and the corresponding methods to be used
 | Task                                                 | Java-Client method                                                      |
 |------------------------------------------------------|-------------------------------------------------------------------------|
 | Create Policy - uiAPI                   | `EdcClient.uiApi().createPolicyDefinition(policyDefinition)`            |
-| Create Policy - useCaseApi (allows using policy conditions) | `EdcClient.useCaseApi().createPolicyDefinitionUseCase(createRequest)`            |
+| Create Policy - useCaseApi (allows AND/OR/XOR operators) | `EdcClient.useCaseApi().createPolicyDefinitionUseCase(createRequest)`            |
 | Create asset (Asset Creation after activate)         | `EdcClient.uiApi().createAsset(uiAssetRequest)`                         |
 | Create contract definition                           | `EdcClient.uiApi().createContractDefinition(contractDefinition)`        |
 | Create Offer on consumer dashboard (Catalog Browser) | `EdcClient.uiApi().getCatalogPageDataOffers(PROTOCOL_ENDPOINT)`         |
@@ -119,7 +119,7 @@ Below are the examples of various tasks and the corresponding methods to be used
 
 These methods facilitate various operations such as creating policies, assets, contract definitions, browsing offers, accepting contracts, and initiating data transfers.
 
-### Creating a Catena-Policy with Conditions
+### Example Creating a Catena-Policy using operators (AND/OR/XOR)
 
 The following example demonstrates how to create a Catena-Policy with linked conditions using the Java-client.
 
