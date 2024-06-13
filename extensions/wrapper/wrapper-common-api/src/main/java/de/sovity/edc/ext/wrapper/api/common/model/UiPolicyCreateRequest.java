@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.common.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Type-Safe OpenAPI generator friendly Policy Create DTO that supports an opinionated"
         + " subset of the original EDC Policy Entity.")
 public class UiPolicyCreateRequest {

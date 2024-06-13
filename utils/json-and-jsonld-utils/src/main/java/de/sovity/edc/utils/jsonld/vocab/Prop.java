@@ -129,8 +129,8 @@ public class Prop {
         public final String CTX = "https://semantic.sovity.io/dcat-ext#";
         public final String CUSTOM_JSON = CTX + "customJson";
         public final String PRIVATE_CUSTOM_JSON = CTX + "privateCustomJson";
-        public final String DATA_SOURCE_TYPE = CTX + "httpDatasourceHintsProxyMethod";
-        public final String DATA_SOURCE_TYPE_ON_REQUEST = "ON_REQUEST";
+        public final String DATA_SOURCE_AVAILABILITY = CTX + "dataSourceAvailability";
+        public final String DATA_SOURCE_AVAILABILITY_ON_REQUEST = "ON_REQUEST";
         public final String CONTACT_EMAIL = CTX + "contactEmail";
         public final String CONTACT_PREFERRED_EMAIL_SUBJECT = CTX + "contactPreferredEmailSubject";
 

@@ -15,20 +15,25 @@
 
 package de.sovity.edc.ext.wrapper.api.common.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Map;
-
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
+@Builder(toBuilder = true)
 @RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "HTTP_DATA type Data Source.")
 public class UiDataSourceHttpData {
     @Schema(
@@ -59,7 +64,8 @@ public class UiDataSourceHttpData {
     private Map<String, String> headers;
 
     @Schema(
-        description = "Enable Method Parameterization. This forces consumers to provide a method, otherwise the transfer will fail.",
+        description = "Enable Method Parameterization. This forces consumers to provide" +
+            " a method, otherwise the transfer will fail.",
         defaultValue = "false",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
@@ -73,14 +79,16 @@ public class UiDataSourceHttpData {
     private Boolean enablePathParameterization;
 
     @Schema(
-        description = "Enable Query Parameterization. Any additionally provided queryString will be merged with the existing one.",
+        description = "Enable Query Parameterization. Any additionally provided queryString" +
+            " will be merged with the existing one.",
         defaultValue = "false",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
     private Boolean enableQueryParameterization;
 
     @Schema(
-        description = "Enable Body Parameterization. Forces the provider to provide both a request body and a content type. Only Methods POST, PUT and PATCH allow request bodies.",
+        description = "Enable Body Parameterization. Forces the provider to provide both a" +
+            " request body and a content type. Only Methods POST, PUT and PATCH allow request bodies.",
         defaultValue = "false",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )

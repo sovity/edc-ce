@@ -13,13 +13,16 @@
 
 package de.sovity.edc.ext.wrapper.api.common.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Subset of the possible permissions in the EDC.
@@ -28,9 +31,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder(toBuilder = true)
+@RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PermissionDto {
 
     @Schema(description = "Possible constraints for the permission",

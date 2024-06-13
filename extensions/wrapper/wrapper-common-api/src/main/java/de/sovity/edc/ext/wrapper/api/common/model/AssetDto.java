@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.common.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,10 +28,11 @@ import java.util.Map;
 
 @Getter
 @Setter
-@Builder(toBuilder = true)
 @ToString
 @AllArgsConstructor
+@Builder(toBuilder = true)
 @RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Asset Details")
 public class AssetDto {
     @Schema(description = "ID of asset", requiredMode = Schema.RequiredMode.REQUIRED)

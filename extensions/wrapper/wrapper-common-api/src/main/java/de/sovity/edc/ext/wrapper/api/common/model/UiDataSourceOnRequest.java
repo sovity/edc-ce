@@ -15,8 +15,10 @@
 
 package de.sovity.edc.ext.wrapper.api.common.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -26,7 +28,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
+@Builder(toBuilder = true)
 @RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "ON_REQUEST type Data Source.")
 public class UiDataSourceOnRequest {
     @Schema(

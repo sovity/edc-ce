@@ -15,12 +15,15 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
 
 
 import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.UiAsset;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
-import de.sovity.edc.client.gen.model.UiAssetEditMetadataRequest;
+import de.sovity.edc.client.gen.model.UiAssetEditRequest;
+import de.sovity.edc.client.gen.model.UiDataSource;
+import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.ext.wrapper.TestUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.FailedMappingException;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.EdcPropertyUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.FailedMappingException;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.spi.asset.AssetService;
@@ -96,17 +99,17 @@ public class AssetApiServiceTest {
     @Test
     void testAssetCreation(AssetService assetService) {
         // arrange
-        var dataAddressProperties = Map.of(
-                Prop.Edc.TYPE, "HttpData",
-                Prop.Edc.BASE_URL, DATA_SINK,
-                Prop.Edc.PROXY_METHOD, "true",
-                Prop.Edc.PROXY_PATH, "true",
-                Prop.Edc.PROXY_QUERY_PARAMS, "true",
-                Prop.Edc.PROXY_BODY, "true",
-
-                // tests that a property without a context URL will survive the JSON-LD mapping
-                "oauth2:tokenUrl", "https://token-url"
-        );
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl(DATA_SINK)
+                .enableMethodParameterization(true)
+                .enablePathParameterization(true)
+                .enableQueryParameterization(true)
+                .enableBodyParameterization(true)
+                .build())
+            .customProperties(Map.of("oauth2:tokenUrl", "https://token-url"))
+            .build();
         var uiAssetRequest = UiAssetCreateRequest.builder()
                 .id("asset-1")
                 .title("AssetTitle")
@@ -132,7 +135,7 @@ public class AssetApiServiceTest {
                 .temporalCoverageToInclusive(LocalDate.of(2020, 1, 8))
                 .keywords(List.of("keyword1", "keyword2"))
                 .publisherHomepage("publisherHomepage")
-                .dataAddressProperties(dataAddressProperties)
+                .dataSource(dataSource)
                 .customJsonAsString("{\"test\":\"value\"}")
                 .customJsonLdAsString("""
                         {
@@ -219,21 +222,23 @@ public class AssetApiServiceTest {
                 """);
 
         var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
-        assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddressProperties);
+        assertThat(assetWithDataAddress.getDataAddress().getProperties()).containsEntry("oauth2:tokenUrl", "https://token-url");
     }
 
     @Test
     void testEditAssetMetadata(AssetService assetService) {
         // arrange
-        var dataAddress = Map.of(
-                Prop.Edc.TYPE, "HttpData",
-                Prop.Edc.BASE_URL, DATA_SINK,
-                Prop.Edc.PROXY_METHOD, "true",
-                Prop.Edc.PROXY_PATH, "true",
-                Prop.Edc.PROXY_QUERY_PARAMS, "true",
-                Prop.Edc.PROXY_BODY, "true",
-                "oauth2:tokenUrl", "https://token-url"
-        );
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl(DATA_SINK)
+                .enableMethodParameterization(true)
+                .enablePathParameterization(true)
+                .enableQueryParameterization(true)
+                .enableBodyParameterization(true)
+                .build())
+            .customProperties(Map.of("oauth2:tokenUrl", "https://token-url"))
+            .build();
         var createRequest = UiAssetCreateRequest.builder()
                 .id("asset-1")
                 .title("AssetTitle")
@@ -259,7 +264,7 @@ public class AssetApiServiceTest {
                 .temporalCoverageToInclusive(LocalDate.of(2020, 1, 8))
                 .keywords(List.of("keyword1", "keyword2"))
                 .publisherHomepage("publisherHomepage")
-                .dataAddressProperties(dataAddress)
+                .dataSource(dataSource)
                 .customJsonAsString("""
                         { "test": "value" }
                         """)
@@ -272,8 +277,12 @@ public class AssetApiServiceTest {
                 .build();
 
         client.uiApi().createAsset(createRequest);
+        var dataAddressBeforeEdit = assetService.query(QuerySpec.max())
+            .orElseThrow(FailedMappingException::ofFailure).toList().get(0)
+            .getDataAddress()
+            .getProperties();
 
-        var editRequest = UiAssetEditMetadataRequest.builder()
+        var editRequest = UiAssetEditRequest.builder()
                 .title("AssetTitle 2")
                 .description("AssetDescription 2")
                 .licenseUrl("https://license-url/2")
@@ -353,20 +362,25 @@ public class AssetApiServiceTest {
                 { "https://to-change": "new value LD" }
                 """);
 
-        var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
-        assertThat(assetWithDataAddress.getDataAddress().getProperties()).isEqualTo(dataAddress);
+        var dataAddressAfterEdit = assetService.query(QuerySpec.max())
+            .orElseThrow(FailedMappingException::ofFailure).toList().get(0)
+            .getDataAddress()
+            .getProperties();
+        assertThat(dataAddressAfterEdit).isEqualTo(dataAddressBeforeEdit);
     }
 
     @Test
     void testAssetCreation_noProxying() {
         // arrange
-        var dataAddressProperties = Map.of(
-                Prop.Edc.TYPE, "HttpData",
-                Prop.Edc.BASE_URL, DATA_SINK
-        );
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl(DATA_SINK)
+                .build())
+            .build();
         var uiAssetRequest = UiAssetCreateRequest.builder()
                 .id("asset-1")
-                .dataAddressProperties(dataAddressProperties)
+                .dataSource(dataSource)
                 .build();
 
         // act
@@ -377,22 +391,25 @@ public class AssetApiServiceTest {
         var assets = client.uiApi().getAssetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        assertThat(asset.getHttpDatasourceHintsProxyMethod()).isFalse();
-        assertThat(asset.getHttpDatasourceHintsProxyPath()).isFalse();
-        assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isFalse();
-        assertThat(asset.getHttpDatasourceHintsProxyBody()).isFalse();
+        assertThat(asset.getHttpDatasourceHintsProxyMethod()).isNull();
+        assertThat(asset.getHttpDatasourceHintsProxyPath()).isNull();
+        assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isNull();
+        assertThat(asset.getHttpDatasourceHintsProxyBody()).isNull();
     }
 
     @Test
     void testAssetCreation_differentDataAddressType() {
         // arrange
-        var dataAddressProperties = Map.of(
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.CUSTOM)
+            .customProperties(Map.of(
                 Prop.Edc.TYPE, "Unknown"
-        );
+            ))
+            .build();
         var uiAssetRequest = UiAssetCreateRequest.builder()
-                .id("asset-1")
-                .dataAddressProperties(dataAddressProperties)
-                .build();
+            .id("asset-1")
+            .dataSource(dataSource)
+            .build();
 
         // act
         var response = client.uiApi().createAsset(uiAssetRequest);

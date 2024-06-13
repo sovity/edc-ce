@@ -17,7 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
-import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditMetadataRequest;
+import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
@@ -74,7 +74,7 @@ interface UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Updates an Asset's metadata")
-    IdResponseDto editAssetMetadata(@PathParam("assetId") String assetId, UiAssetEditMetadataRequest uiAssetEditMetadataRequest);
+    IdResponseDto editAssetMetadata(@PathParam("assetId") String assetId, UiAssetEditRequest uiAssetEditRequest);
 
     @DELETE
     @Path("pages/asset-page/assets/{assetId}")

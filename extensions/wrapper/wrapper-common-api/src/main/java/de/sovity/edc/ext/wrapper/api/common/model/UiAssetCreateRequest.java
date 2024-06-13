@@ -14,12 +14,15 @@
 
 package de.sovity.edc.ext.wrapper.api.common.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,9 +30,11 @@ import java.util.Map;
 
 @Getter
 @Setter
-@Builder(toBuilder = true)
-@NoArgsConstructor
+@ToString
 @AllArgsConstructor
+@Builder(toBuilder = true)
+@RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Type-Safe OpenAPI generator friendly Asset Create DTO that supports an opinionated subset of the original EDC Asset Entity.")
 public class UiAssetCreateRequest {
     @Schema(description = "Data Source", requiredMode = Schema.RequiredMode.REQUIRED)

@@ -13,11 +13,15 @@
 
 package de.sovity.edc.ext.wrapper.api.common.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -27,9 +31,12 @@ import java.util.List;
  * @author tim.dahlmanns@isst.fraunhofer.de
  */
 @Getter
-@Builder(toBuilder = true)
-@NoArgsConstructor
+@Setter
+@ToString
 @AllArgsConstructor
+@Builder(toBuilder = true)
+@RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ExpressionDto {
 
     @Schema(description = """

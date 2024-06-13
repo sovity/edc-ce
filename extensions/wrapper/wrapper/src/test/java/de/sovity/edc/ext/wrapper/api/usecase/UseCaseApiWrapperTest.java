@@ -7,12 +7,15 @@ import de.sovity.edc.client.gen.model.CatalogFilterExpressionLiteralType;
 import de.sovity.edc.client.gen.model.CatalogFilterExpressionOperator;
 import de.sovity.edc.client.gen.model.CatalogQuery;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
+import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiCriterion;
 import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
+import de.sovity.edc.client.gen.model.UiDataSource;
+import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.TestUtils;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
@@ -156,25 +159,24 @@ public class UseCaseApiWrapperTest {
     }
 
     private void setupAssets() {
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl(TestUtils.PROTOCOL_ENDPOINT)
+                .build())
+            .build();
+
         assetId1 = client.uiApi().createAsset(UiAssetCreateRequest.builder()
                 .id("test-asset-1")
                 .title("Test Asset 1")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, TestUtils.PROTOCOL_ENDPOINT
-                ))
+                .dataSource(dataSource)
                 .mediaType("application/json")
                 .build()).getId();
 
         assetId2 = client.uiApi().createAsset(UiAssetCreateRequest.builder()
                 .id("test-asset-2")
                 .title("Test Asset 2")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, TestUtils.PROTOCOL_ENDPOINT
-                ))
+                .dataSource(dataSource)
                 .mediaType("application/json")
                 .build()).getId();
 

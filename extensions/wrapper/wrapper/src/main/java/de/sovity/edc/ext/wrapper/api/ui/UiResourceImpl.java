@@ -17,7 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
-import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditMetadataRequest;
+import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
@@ -76,8 +76,8 @@ public class UiResourceImpl implements UiResource {
     }
 
     @Override
-    public IdResponseDto editAssetMetadata(String assetId, UiAssetEditMetadataRequest uiAssetEditMetadataRequest) {
-        return assetApiService.editAsset(assetId, uiAssetEditMetadataRequest);
+    public IdResponseDto editAssetMetadata(String assetId, UiAssetEditRequest uiAssetEditRequest) {
+        return assetApiService.editAsset(assetId, uiAssetEditRequest);
     }
 
     @Override

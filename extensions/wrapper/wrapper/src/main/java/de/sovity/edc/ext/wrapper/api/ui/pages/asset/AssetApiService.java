@@ -18,7 +18,7 @@ import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
-import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditMetadataRequest;
+import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ import java.util.Objects;
 public class AssetApiService {
     private final AssetService assetService;
     private final AssetMapper assetMapper;
-    private final AssetBuilder assetBuilder;
+    private final AssetIdValidator assetIdValidator;
     private final SelfDescriptionService selfDescriptionService;
 
     public List<UiAsset> getAssets() {
@@ -44,21 +44,23 @@ public class AssetApiService {
         var connectorEndpoint = selfDescriptionService.getConnectorEndpoint();
         var participantId = selfDescriptionService.getParticipantId();
         return assets.stream().sorted(Comparator.comparing(Asset::getCreatedAt).reversed())
-                .map(asset -> assetMapper.buildUiAsset(asset, connectorEndpoint, participantId))
-                .toList();
+            .map(asset -> assetMapper.buildUiAsset(asset, connectorEndpoint, participantId))
+            .toList();
     }
 
     @NotNull
     public IdResponseDto createAsset(UiAssetCreateRequest request) {
-        val asset = assetBuilder.fromCreateRequest(request);
+        assetIdValidator.assertValid(request.getId());
+        var organizationName = selfDescriptionService.getCuratorName();
+        val asset = assetMapper.buildAsset(request, organizationName);
         val createdAsset = assetService.create(asset).orElseThrow(ServiceException::new);
         return new IdResponseDto(createdAsset.getId());
     }
 
-    public IdResponseDto editAsset(String assetId, UiAssetEditMetadataRequest request) {
+    public IdResponseDto editAsset(String assetId, UiAssetEditRequest request) {
         val foundAsset = assetService.findById(assetId);
         Objects.requireNonNull(foundAsset, "Asset with ID %s not found".formatted(assetId));
-        val editedAsset = assetBuilder.fromEditMetadataRequest(foundAsset, request);
+        val editedAsset = assetMapper.editAsset(foundAsset, request);
         val updatedAsset = assetService.update(editedAsset).orElseThrow(ServiceException::new);
         return new IdResponseDto(updatedAsset.getId());
     }

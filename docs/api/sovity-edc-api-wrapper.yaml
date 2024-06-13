@@ -208,7 +208,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UiAssetEditMetadataRequest'
+              $ref: '#/components/schemas/UiAssetEditRequest'
       responses:
         default:
           description: default response
@@ -474,12 +474,22 @@ components:
             of 'null' or a negative value means that there are no limit.
           format: int32
       description: Available and used resources of a connector.
+    DataSourceType:
+      type: string
+      description: Supported Data Source Types by UiDataSource
+      default: CUSTOM
+      enum:
+      - HTTP_DATA
+      - ON_REQUEST
+      - CUSTOM
     UiAssetCreateRequest:
       required:
-      - dataAddressProperties
+      - dataSource
       - id
       type: object
       properties:
+        dataSource:
+          $ref: '#/components/schemas/UiDataSource'
         id:
           type: string
           description: Asset Id
@@ -573,12 +583,6 @@ components:
           type: string
           description: Temporal coverage end date (inclusive)
           format: date
-        dataAddressProperties:
-          type: object
-          additionalProperties:
-            type: string
-            description: Data Address
-          description: Data Address
         customJsonAsString:
           type: string
           description: Contains serialized custom properties in the JSON format.
@@ -598,6 +602,95 @@ components:
             the private properties. The same limitations apply.
       description: Type-Safe OpenAPI generator friendly Asset Create DTO that supports
         an opinionated subset of the original EDC Asset Entity.
+    UiDataSource:
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/DataSourceType'
+        httpData:
+          $ref: '#/components/schemas/UiDataSourceHttpData'
+        onRequest:
+          $ref: '#/components/schemas/UiDataSourceOnRequest'
+        customProperties:
+          type: object
+          additionalProperties:
+            type: string
+            description: For all types. Custom Data Address Properties.
+          description: For all types. Custom Data Address Properties.
+      description: Data Offer Data Source Model. Supports certain Data Address types
+        but also leaves a backdoor for custom Data Address Properties.
+    UiDataSourceHttpData:
+      required:
+      - baseUrl
+      type: object
+      properties:
+        method:
+          $ref: '#/components/schemas/UiDataSourceHttpDataMethod'
+        baseUrl:
+          type: string
+          description: "HTTP Request URL. If parameterized, additional pathParams\
+            \ will be joined onto existing one."
+          example: https://my-app.my-org.com/api/edc-data-offer/v1
+        queryString:
+          type: string
+          description: HTTP Request Query Params / Query String.
+          example: search=example&limit=10
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+            description: HTTP Request Headers. HTTP Header Parameterization is not
+              available.
+          description: HTTP Request Headers. HTTP Header Parameterization is not available.
+        enableMethodParameterization:
+          type: boolean
+          description: "Enable Method Parameterization. This forces consumers to provide\
+            \ a method, otherwise the transfer will fail."
+          default: false
+        enablePathParameterization:
+          type: boolean
+          description: Enable Path Parameterization.
+          default: false
+        enableQueryParameterization:
+          type: boolean
+          description: Enable Query Parameterization. Any additionally provided queryString
+            will be merged with the existing one.
+          default: false
+        enableBodyParameterization:
+          type: boolean
+          description: "Enable Body Parameterization. Forces the provider to provide\
+            \ both a request body and a content type. Only Methods POST, PUT and PATCH\
+            \ allow request bodies."
+          default: false
+      description: HTTP_DATA type Data Source.
+    UiDataSourceHttpDataMethod:
+      type: string
+      description: Supported HTTP Methods by UiDataSource
+      default: GET
+      enum:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+    UiDataSourceOnRequest:
+      required:
+      - contactEmail
+      - contactPreferredEmailSubject
+      type: object
+      properties:
+        contactEmail:
+          type: string
+          description: Contact E-Mail address
+          example: contact@my-org.com
+        contactPreferredEmailSubject:
+          type: string
+          description: Contact Preferred E-Mail Subject
+          example: "Department XYZ Data Offer Request - My Product, My API"
+      description: ON_REQUEST type Data Source.
     IdResponseDto:
       required:
       - id
@@ -756,9 +849,11 @@ components:
       - STRING
       - STRING_LIST
       - JSON
-    UiAssetEditMetadataRequest:
+    UiAssetEditRequest:
       type: object
       properties:
+        dataSourceOverrideOrNull:
+          $ref: '#/components/schemas/UiDataSource'
         title:
           type: string
           description: Asset Title
@@ -878,16 +973,27 @@ components:
           items:
             $ref: '#/components/schemas/UiAsset'
       description: All data for the Asset Page
+    DataSourceAvailability:
+      type: string
+      description: Differentiate 'Live' Data Offers that have a real data source from
+        'On Request' Data Offers that contain only a contact email address for requesting
+        an individual data offer.
+      enum:
+      - LIVE
+      - ON_REQUEST
     UiAsset:
       required:
       - assetId
       - connectorEndpoint
       - creatorOrganizationName
+      - dataSourceAvailability
       - isOwnConnector
       - participantId
       - title
       type: object
       properties:
+        dataSourceAvailability:
+          $ref: '#/components/schemas/DataSourceAvailability'
         assetId:
           type: string
           description: Asset Id
@@ -903,6 +1009,14 @@ components:
         creatorOrganizationName:
           type: string
           description: Asset Organization Name
+        onRequestContactEmail:
+          type: string
+          description: Contact E-Mail address. Only for dataSourceType ON_REQUEST.
+          example: contact@my-org.com
+        onRequestContactEmailSubject:
+          type: string
+          description: Contact Preferred E-Mail Subject. Only for dataSourceType ON_REQUEST.
+          example: "Department XYZ Data Offer Request - My Product, My API"
         language:
           type: string
           description: Asset Language
@@ -939,16 +1053,20 @@ components:
           description: Homepage URL associated with the Asset
         httpDatasourceHintsProxyMethod:
           type: boolean
-          description: HTTP Datasource Hints Proxy Method
+          description: "HTTP Datasource Hint: Proxy Method. Only for dataSourceType\
+            \ LIVE with an underlying HTTP_DATA Data Source."
         httpDatasourceHintsProxyPath:
           type: boolean
-          description: HTTP Datasource Hints Proxy Path
+          description: "HTTP Datasource Hint: Proxy Path. Only for dataSourceType\
+            \ LIVE with an underlying HTTP_DATA Data Source."
         httpDatasourceHintsProxyQueryParams:
           type: boolean
-          description: HTTP Datasource Hints Proxy Query Params
+          description: "HTTP Datasource Hint: Proxy Query Params. Only for dataSourceType\
+            \ LIVE with an underlying HTTP_DATA Data Source."
         httpDatasourceHintsProxyBody:
           type: boolean
-          description: HTTP Datasource Hints Proxy Body
+          description: "HTTP Datasource Hint: Proxy Body. Only for dataSourceType\
+            \ LIVE with an underlying HTTP_DATA Data Source."
         dataCategory:
           type: string
           description: Data Category

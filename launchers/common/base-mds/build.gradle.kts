@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.loggingHouse.client)
+    // implementation(libs.loggingHouse.client)
 }
 
 group = libs.versions.sovityEdcGroup.get()

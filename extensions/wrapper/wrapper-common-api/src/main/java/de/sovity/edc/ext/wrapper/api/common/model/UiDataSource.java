@@ -15,8 +15,10 @@
 
 package de.sovity.edc.ext.wrapper.api.common.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -28,7 +30,9 @@ import java.util.Map;
 @Setter
 @ToString
 @AllArgsConstructor
+@Builder(toBuilder = true)
 @RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Data Offer Data Source Model. Supports certain Data Address types but also leaves a backdoor for custom Data Address Properties.")
 public class UiDataSource {
     @Schema(
@@ -37,7 +41,7 @@ public class UiDataSource {
         defaultValue = "CUSTOM",
         requiredMode = Schema.RequiredMode.REQUIRED
     )
-    private UiDataSourceType type;
+    private DataSourceType type;
 
     @Schema(
         description = "Only for type HTTP_DATA",

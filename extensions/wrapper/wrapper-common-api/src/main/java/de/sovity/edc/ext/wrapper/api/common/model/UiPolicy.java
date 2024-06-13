@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.common.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Type-Safe OpenAPI generator friendly Policy DTO as needed by our UI")
 public class UiPolicy {
     @Schema(description = "EDC Policy JSON-LD. This is required because the EDC requires the " +

@@ -20,6 +20,7 @@ import de.sovity.edc.client.gen.model.CatalogFilterExpressionLiteralType;
 import de.sovity.edc.client.gen.model.CatalogFilterExpressionOperator;
 import de.sovity.edc.client.gen.model.CatalogQuery;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
+import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
@@ -27,6 +28,8 @@ import de.sovity.edc.client.gen.model.UiCriterion;
 import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
+import de.sovity.edc.client.gen.model.UiDataSource;
+import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
@@ -44,7 +47,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Map;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
@@ -137,20 +139,23 @@ class UseCaseApiWrapperTest {
     }
 
     private void createAsset() {
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl(dataAddress.getDataSourceUrl(dataOfferData))
+                .build())
+            .build();
+
         var asset = UiAssetCreateRequest.builder()
-                .id(dataOfferId)
-                .title("My Data Offer")
-                .description("Example Data Offer.")
-                .version("2023-11")
-                .language("EN")
-                .publisherHomepage("https://my-department.my-org.com/my-data-offer")
-                .licenseUrl("https://my-department.my-org.com/my-data-offer#license")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(dataOfferData)
-                ))
-                .build();
+            .id(dataOfferId)
+            .title("My Data Offer")
+            .description("Example Data Offer.")
+            .version("2023-11")
+            .language("EN")
+            .publisherHomepage("https://my-department.my-org.com/my-data-offer")
+            .licenseUrl("https://my-department.my-org.com/my-data-offer#license")
+            .dataSource(dataSource)
+            .build();
 
         providerClient.uiApi().createAsset(asset);
     }

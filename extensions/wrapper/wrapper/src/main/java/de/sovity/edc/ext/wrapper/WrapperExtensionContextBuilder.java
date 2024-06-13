@@ -16,21 +16,24 @@ package de.sovity.edc.ext.wrapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AssetJsonLdUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.LiteralMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MarkdownToTextConverter;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ParameterizationCompatibilityUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.TextUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetEditRequestMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetJsonLdBuilder;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetJsonLdParser;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.OwnConnectorEndpointService;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.AssetJsonLdUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.EdcPropertyUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.ShortDescriptionBuilder;
+import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.DataSourceMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpDataSourceMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpHeaderMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.AtomicConstraintMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ConstraintExtractor;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.LiteralMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.OperatorMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.ui.UiResourceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
-import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetIdValidator;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.UiDataOfferBuilder;
@@ -40,6 +43,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.Contr
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementPageCardBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractNegotiationUtils;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ParameterizationCompatibilityUtils;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.TransferRequestBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionBuilder;
@@ -88,6 +92,7 @@ import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -137,19 +142,9 @@ public class WrapperExtensionContextBuilder {
                 atomicConstraintMapper,
                 typeTransformerRegistry);
         var edcPropertyUtils = new EdcPropertyUtils();
-        var assetJsonLdUtils = new AssetJsonLdUtils();
-        var markdownToTextConverter = new MarkdownToTextConverter();
-        var textUtils = new TextUtils();
         var selfDescriptionService = new SelfDescriptionService(config, monitor);
         var ownConnectorEndpointService = new OwnConnectorEndpointServiceImpl(selfDescriptionService);
-        var uiAssetMapper = new UiAssetMapper(
-                edcPropertyUtils,
-                assetJsonLdUtils,
-                markdownToTextConverter,
-                textUtils,
-                ownConnectorEndpointService
-        );
-        var assetMapper = new AssetMapper(typeTransformerRegistry, uiAssetMapper, jsonLd);
+        var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd, ownConnectorEndpointService);
         var transferProcessStateService = new TransferProcessStateService();
         var contractNegotiationUtils = new ContractNegotiationUtils(
                 contractNegotiationService,
@@ -193,16 +188,10 @@ public class WrapperExtensionContextBuilder {
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
         var parameterizationCompatibilityUtils = new ParameterizationCompatibilityUtils();
         var assetIdValidator = new AssetIdValidator();
-        var assetBuilder = new AssetBuilder(
-                assetMapper,
-                edcPropertyUtils,
-                assetIdValidator,
-                selfDescriptionService
-        );
         var assetApiService = new AssetApiService(
                 assetService,
                 assetMapper,
-                assetBuilder,
+                assetIdValidator,
                 selfDescriptionService
         );
         var transferRequestBuilder = new TransferRequestBuilder(
@@ -297,5 +286,39 @@ public class WrapperExtensionContextBuilder {
                 uiResource,
                 useCaseResource
         ), selfDescriptionService);
+    }
+
+    @NotNull
+    private static AssetMapper newAssetMapper(
+            TypeTransformerRegistry typeTransformerRegistry,
+            JsonLd jsonLd,
+            OwnConnectorEndpointService ownConnectorEndpointService
+    ) {
+        var edcPropertyUtils = new EdcPropertyUtils();
+        var assetJsonLdUtils = new AssetJsonLdUtils();
+        var assetEditRequestMapper = new AssetEditRequestMapper();
+        var shortDescriptionBuilder = new ShortDescriptionBuilder();
+        var assetJsonLdParser = new AssetJsonLdParser(
+                assetJsonLdUtils,
+                shortDescriptionBuilder,
+                ownConnectorEndpointService
+        );
+        var httpHeaderMapper = new HttpHeaderMapper();
+        var httpDataSourceMapper = new HttpDataSourceMapper(httpHeaderMapper);
+        var dataSourceMapper = new DataSourceMapper(
+                edcPropertyUtils,
+                httpDataSourceMapper
+        );
+        var assetJsonLdBuilder = new AssetJsonLdBuilder(
+                dataSourceMapper,
+                assetJsonLdParser,
+                assetEditRequestMapper
+        );
+        return new AssetMapper(
+                typeTransformerRegistry,
+                assetJsonLdBuilder,
+                assetJsonLdParser,
+                jsonLd
+        );
     }
 }

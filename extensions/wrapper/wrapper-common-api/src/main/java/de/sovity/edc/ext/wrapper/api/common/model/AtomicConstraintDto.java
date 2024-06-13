@@ -13,6 +13,7 @@
 
 package de.sovity.edc.ext.wrapper.api.common.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,10 +29,11 @@ import lombok.ToString;
  */
 @Getter
 @Setter
-@Builder(toBuilder = true)
 @ToString
 @AllArgsConstructor
+@Builder(toBuilder = true)
 @RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description =
         "Type-Safe OpenAPI generator friendly Constraint DTO that supports an opinionated"
                 + " subset of the original EDC Constraint Entity.")

@@ -14,7 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.OwnConnectorEndpointService;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.OwnConnectorEndpointService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

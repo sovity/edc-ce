@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.common.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,15 +28,15 @@ import java.util.List;
 
 @Getter
 @Setter
-
 @ToString
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Type-Safe Asset Metadata as needed by our UI")
 public class UiAsset {
     @Schema(description = "'Live' vs 'On Request'", requiredMode = Schema.RequiredMode.REQUIRED)
-    private UiAssetDataSourceType dataSourceType;
+    private DataSourceAvailability dataSourceAvailability;
 
     @Schema(description = "Asset Id", requiredMode = Schema.RequiredMode.REQUIRED)
     private String assetId;
@@ -55,14 +56,14 @@ public class UiAsset {
     @Schema(
         description = "Contact E-Mail address. Only for dataSourceType ON_REQUEST.",
         example = "contact@my-org.com",
-        requiredMode = Schema.RequiredMode.REQUIRED
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
     private String onRequestContactEmail;
 
     @Schema(
         description = "Contact Preferred E-Mail Subject. Only for dataSourceType ON_REQUEST.",
         example = "Department XYZ Data Offer Request - My Product, My API",
-        requiredMode = Schema.RequiredMode.REQUIRED
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
     private String onRequestContactEmailSubject;
 
@@ -181,7 +182,7 @@ public class UiAsset {
             "and will be affected by JSON LD compaction and expansion. " +
             "Due to a technical limitation, the properties can't be booleans.",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String customJsonLdAsString;
+    private String customJsonLdAsString = "{}";
 
     @Schema(description = "Same as customJsonAsString but the data will be stored in the private properties.",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
@@ -190,5 +191,5 @@ public class UiAsset {
     @Schema(description = "Same as customJsonLdAsString but the data will be stored in the private properties. " +
             "The same limitations apply.",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String privateCustomJsonLdAsString;
+    private String privateCustomJsonLdAsString = "{}";
 }
