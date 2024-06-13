@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     `maven-publish`
+    kotlin("jvm")
 }
 
 dependencies {
@@ -8,7 +9,7 @@ dependencies {
 
     compileOnly(libs.lombok)
 
-    implementation(project(":utils:json-and-jsonld-utils"))
+    implementation(project(":extensions:sovity-messenger"))
 
     implementation(libs.edc.controlPlaneCore)
     implementation(libs.edc.dspApiConfiguration)
