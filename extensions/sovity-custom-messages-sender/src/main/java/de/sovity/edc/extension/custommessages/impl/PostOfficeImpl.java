@@ -35,8 +35,14 @@ public class PostOfficeImpl implements PostOffice {
             val header = buildHeader(payload);
             val serialized = buildPayload(payload);
             val message = new SovityMessageRecord(url, header, serialized);
-            CompletableFuture<StatusResult<R>> result = registry.dispatch(resultType, message);
-            return result;
+            val future = registry.dispatch(SovityMessageRecord.class, message);
+            return future.thenApply(it -> it.map(content -> {
+                try {
+                    return serializer.readValue(content.body(), resultType);
+                } catch (JsonProcessingException e) {
+                    throw new EdcException(e);
+                }
+            }));
         } catch (URISyntaxException | MalformedURLException | JsonProcessingException e) {
             throw new EdcException("Failed to build a custom sovity message", e);
         }

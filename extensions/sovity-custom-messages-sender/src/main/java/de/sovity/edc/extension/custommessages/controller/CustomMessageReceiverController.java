@@ -56,12 +56,12 @@ public class CustomMessageReceiverController {
 
 //        val handler = getHandler(messageType);
 
-        val body = compacted.getString(Prop.SovityMessageExt.BODY);
+        val bodyStr = compacted.getString(Prop.SovityMessageExt.BODY);
 
         val response = new SovityMessageRecord(
-            new URL("https://example.com"), // TODO: the return type doesn'\t need any URL
+            new URL("https://example.com"), // TODO: the return type doesn't need any URL
             JsonUtils.toJson(noHandlerForMessageType(messageType)),
-            "");
+            bodyStr);
 
         return typeTransformerRegistry.transform(response, JsonObject.class)
             .map(it -> Response.ok().type(MediaType.APPLICATION_JSON).entity(it).build())

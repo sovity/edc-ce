@@ -1,13 +1,17 @@
 package de.sovity.edc.extension.custommessages;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.sovity.edc.extension.custommessages.api.PostOffice;
 import de.sovity.edc.extension.custommessages.api.SovityMessage;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.iam.TokenDecorator;
@@ -79,11 +83,17 @@ public class E2eTest {
         }
     }
 
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     static class Query implements SovityMessage {
         @Override
         public String getType() {
             return getClass().getCanonicalName();
         }
+
+        @JsonProperty("stuff")
+        private int stuff = 1;
     }
 
     @Getter
@@ -93,7 +103,8 @@ public class E2eTest {
             return getClass().getCanonicalName();
         }
 
-        int result = 0;
+        @JsonProperty("stuff")
+        private int stuff = 0;
     }
 
     @Test
@@ -104,13 +115,13 @@ public class E2eTest {
         val answer = postOffice.send(
             Answer.class,
             counterPartyAddress,
-            new UnsupportedMessage());
+            new Query(100));
 
         // assert
         Awaitility.await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
             answer.get()
                 .onFailure(it -> fail(it.getFailureDetail()))
-                .onSuccess(it -> assertThat(it.getResult()).isEqualTo(0));
+                .onSuccess(it -> assertThat(it.getStuff()).isEqualTo(100));
         });
     }
 }
