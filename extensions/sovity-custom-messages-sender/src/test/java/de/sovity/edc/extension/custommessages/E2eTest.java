@@ -1,28 +1,30 @@
 package de.sovity.edc.extension.custommessages;
 
-import de.sovity.edc.extension.custommessage.receiver.SovityCustomMessageReceiverExtension;
-import de.sovity.edc.extension.custommessages.echo.EchoMessage;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.sovity.edc.extension.custommessages.api.PostOffice;
+import de.sovity.edc.extension.custommessages.api.SovityMessage;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
+import lombok.Getter;
 import lombok.val;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.iam.TokenDecorator;
-import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
 
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class E2eTest {
     private static final String EMITTER_PARTICIPANT_ID = "emitter";
@@ -41,28 +43,25 @@ public class E2eTest {
     private ConnectorRemote emitterConnector;
     private ConnectorRemote receiverConnector;
 
-//    private EdcClient providerClient;
-//    private EdcClient consumerClient;
+    private ConnectorConfig providerConfig;
+    private ConnectorConfig consumerConfig;
 
     @BeforeEach
     void setup() {
-        var providerConfig = forTestDatabase(EMITTER_PARTICIPANT_ID, 21000, EMITTER_DATABASE);
+        providerConfig = forTestDatabase(EMITTER_PARTICIPANT_ID, 21000, EMITTER_DATABASE);
         emitterEdcContext.setConfiguration(providerConfig.getProperties());
-        emitterConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
-
         emitterEdcContext.registerServiceMock(TokenDecorator.class, (td) -> td);
+        emitterConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
 //        providerClient = EdcClient.builder()
 //            .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
 //            .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
 //            .build();
 
-        var consumerConfig = forTestDatabase(RECEIVER_PARTICIPANT_ID, 23000, RECEIVER_DATABASE);
+        consumerConfig = forTestDatabase(RECEIVER_PARTICIPANT_ID, 23000, RECEIVER_DATABASE);
         receiverEdcContext.setConfiguration(consumerConfig.getProperties());
-//        receiverEdcContext.registerSystemExtension(SovityCustomMessageReceiverExtension.class, new SovityCustomMessageReceiverExtension());
-        receiverConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
-
         receiverEdcContext.registerServiceMock(TokenDecorator.class, (td) -> td);
+        receiverConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
 
 //        consumerClient = EdcClient.builder()
 //            .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
@@ -73,20 +72,45 @@ public class E2eTest {
 //        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
 
+    static class UnsupportedMessage implements SovityMessage {
+        @Override
+        public String getType() {
+            return getClass().getCanonicalName();
+        }
+    }
+
+    static class Query implements SovityMessage {
+        @Override
+        public String getType() {
+            return getClass().getCanonicalName();
+        }
+    }
+
+    @Getter
+    static class Answer implements SovityMessage {
+        @Override
+        public String getType() {
+            return getClass().getCanonicalName();
+        }
+
+        int result = 0;
+    }
+
     @Test
     void e2eAuthTest() throws URISyntaxException, MalformedURLException {
-        val dispatcher = emitterEdcContext.getContext().getService(RemoteMessageDispatcherRegistry.class);
+        val postOffice = emitterEdcContext.getContext().getService(PostOffice.class);
 
-        val future = dispatcher.dispatch(
-            EchoMessage.Response.class,
-            new EchoMessage(
-                new URI("http://localhost:" + 23002 + "/api/management").toURL(), "Hi!"));
+        String counterPartyAddress = "http://localhost:" + consumerConfig.getManagementEndpoint().port() + consumerConfig.getManagementEndpoint().path();
+        val answer = postOffice.send(
+            Answer.class,
+            counterPartyAddress,
+            new UnsupportedMessage());
 
         // assert
         Awaitility.await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
-            future.get()
+            answer.get()
                 .onFailure(it -> fail(it.getFailureDetail()))
-                .onSuccess(it -> assertThat(it.content()).isEqualTo("Hi!"));
+                .onSuccess(it -> assertThat(it.getResult()).isEqualTo(0));
         });
     }
 }

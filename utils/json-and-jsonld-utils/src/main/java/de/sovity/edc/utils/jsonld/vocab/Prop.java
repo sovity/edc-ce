@@ -128,6 +128,15 @@ public class Prop {
         }
     }
 
+    @UtilityClass
+    public class SovityMessageExt {
+        public final String CTX = "https://semantic.sovity.io/message/generic/";
+        public final String MESSAGE = CTX + "message";
+        public final String ERROR_MESSAGE = CTX + "errorMessage";
+        public final String HEADER = CTX + "header";
+        public final String BODY = CTX + "body";
+    }
+
     /**
      * FOAF Vocabulary
      */

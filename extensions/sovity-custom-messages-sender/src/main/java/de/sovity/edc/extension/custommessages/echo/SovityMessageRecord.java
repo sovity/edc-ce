@@ -1,26 +1,31 @@
 package de.sovity.edc.extension.custommessages.echo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import de.sovity.edc.extension.custommessages.SovityExtendedProtocol;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.eclipse.edc.spi.types.domain.message.RemoteMessage;
 
 import java.net.URL;
 
-public record EchoMessage(
+public record SovityMessageRecord(
+    @JsonIgnore
     URL counterPartyAddress,
-    @JsonProperty("http://example.com/ping") String content
+
+    @JsonProperty(Prop.SovityMessageExt.HEADER)
+    String header,
+
+    @JsonProperty(Prop.SovityMessageExt.BODY)
+    String body
 ) implements RemoteMessage {
 
-    public record Response(@JsonProperty("http://example.com/pong") String content) {
-    }
-
+    @JsonIgnore
     @Override
     public String getProtocol() {
-        return SovityExtendedProtocol.SOVITY_EXTENDED_PROTOCOL;
-//        return HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP;
+        return HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP;
     }
 
+    @JsonIgnore
     @Override
     public String getCounterPartyAddress() {
         return counterPartyAddress.toString();
