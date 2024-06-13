@@ -45,7 +45,7 @@ public class SovityCustomMessageReceiverExtension implements ServiceExtension {
     @Override
     public void initialize(ServiceExtensionContext context) {
         val callbackAddress = apiConfiguration.getDspCallbackAddress();
-        val controller = new CustomMessageReceiverController(identityService, callbackAddress);
-        webService.registerResource(managementApiConfiguration.getContextAlias(), controller);
+//        val controller = new CustomMessageReceiverController(identityService, callbackAddress);
+//        webService.registerResource(managementApiConfiguration.getContextAlias(), controller);
     }
 }

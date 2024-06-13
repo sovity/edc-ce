@@ -1,13 +1,14 @@
 package de.sovity.edc.extension.custommessages;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.extension.custommessages.api.PostOffice;
 import de.sovity.edc.extension.custommessages.controller.CustomMessageReceiverController;
 import de.sovity.edc.extension.custommessages.impl.JsonObjectFromGenericSovityMessage;
-import de.sovity.edc.extension.custommessages.impl.MessageReceiver;
-import de.sovity.edc.extension.custommessages.echo.SovityMessageRecord;
 import de.sovity.edc.extension.custommessages.impl.MessageEmitter;
+import de.sovity.edc.extension.custommessages.impl.MessageReceiver;
 import de.sovity.edc.extension.custommessages.impl.ObjectMapperFactory;
 import de.sovity.edc.extension.custommessages.impl.PostOfficeImpl;
+import de.sovity.edc.extension.custommessages.impl.SovityMessageRecord;
 import lombok.val;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.protocol.dsp.api.configuration.DspApiConfiguration;
@@ -61,14 +62,21 @@ public class CustomMessagesSenderExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        setupSovityCustomMessenger(context);
-        val receiver = new CustomMessageReceiverController(identityService, dspApiConfiguration.getDspCallbackAddress(), typeTransformerRegistry, monitor);
+        val objectMapper = new ObjectMapperFactory().createObjectMapper();
+        setupSovityCustomMessenger(context, objectMapper);
+
+        val receiver = new CustomMessageReceiverController(
+            identityService,
+            dspApiConfiguration.getDspCallbackAddress(),
+            typeTransformerRegistry,
+            monitor,
+            objectMapper);
+
         webService.registerResource(managementApiConfiguration.getContextAlias(), receiver);
         typeTransformerRegistry.register(new JsonObjectFromGenericSovityMessage());
     }
 
-    private void setupSovityCustomMessenger(ServiceExtensionContext context) {
-        val objectMapper = new ObjectMapperFactory().createObjectMapper();
+    private void setupSovityCustomMessenger(ServiceExtensionContext context, ObjectMapper objectMapper) {
         val factory = new MessageEmitter(jsonLdRemoteMessageSerializer);
         val delegate = new MessageReceiver(objectMapper);
 

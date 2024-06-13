@@ -1,6 +1,5 @@
 package de.sovity.edc.extension.custommessages.impl;
 
-import de.sovity.edc.extension.custommessages.echo.SovityMessageRecord;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;

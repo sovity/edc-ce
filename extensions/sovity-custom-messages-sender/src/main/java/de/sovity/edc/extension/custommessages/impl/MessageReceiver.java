@@ -1,7 +1,6 @@
 package de.sovity.edc.extension.custommessages.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.extension.custommessages.echo.SovityMessageRecord;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import okhttp3.Response;

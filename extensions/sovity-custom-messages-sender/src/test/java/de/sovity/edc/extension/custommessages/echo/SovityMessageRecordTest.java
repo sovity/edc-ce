@@ -2,6 +2,7 @@ package de.sovity.edc.extension.custommessages.echo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import de.sovity.edc.extension.custommessages.impl.ObjectMapperFactory;
+import de.sovity.edc.extension.custommessages.impl.SovityMessageRecord;
 import lombok.val;
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;

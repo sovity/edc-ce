@@ -1,8 +1,7 @@
 package de.sovity.edc.extension.custommessages;
 
-import de.sovity.edc.extension.custommessages.api.SovityMessage;
 import de.sovity.edc.extension.custommessages.api.SovityMessageApi;
-import de.sovity.edc.extension.custommessages.echo.SovityMessageRecord;
+import de.sovity.edc.extension.custommessages.impl.SovityMessageRecord;
 import lombok.val;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.iam.TokenDecorator;

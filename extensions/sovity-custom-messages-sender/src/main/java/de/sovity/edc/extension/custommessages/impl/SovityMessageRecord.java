@@ -1,4 +1,4 @@
-package de.sovity.edc.extension.custommessages.echo;
+package de.sovity.edc.extension.custommessages.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

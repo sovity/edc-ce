@@ -1,6 +1,5 @@
 package de.sovity.edc.extension.custommessages;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.sovity.edc.extension.custommessages.api.PostOffice;
 import de.sovity.edc.extension.custommessages.api.SovityMessage;
@@ -15,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.iam.TokenDecorator;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -111,11 +109,8 @@ public class E2eTest {
     void e2eAuthTest() throws URISyntaxException, MalformedURLException {
         val postOffice = emitterEdcContext.getContext().getService(PostOffice.class);
 
-        String counterPartyAddress = "http://localhost:" + consumerConfig.getManagementEndpoint().port() + consumerConfig.getManagementEndpoint().path();
-        val answer = postOffice.send(
-            Answer.class,
-            counterPartyAddress,
-            new Query(100));
+        val counterPartyAddress = "http://localhost:" + consumerConfig.getManagementEndpoint().port() + consumerConfig.getManagementEndpoint().path();
+        val answer = postOffice.send(Answer.class, counterPartyAddress, new Query(100));
 
         // assert
         Awaitility.await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {

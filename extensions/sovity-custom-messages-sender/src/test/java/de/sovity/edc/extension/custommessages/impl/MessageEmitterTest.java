@@ -1,6 +1,5 @@
 package de.sovity.edc.extension.custommessages.impl;
 
-import de.sovity.edc.extension.custommessages.echo.SovityMessageRecord;
 import lombok.val;
 import org.eclipse.edc.core.transform.TypeTransformerRegistryImpl;
 import org.eclipse.edc.jsonld.TitaniumJsonLd;

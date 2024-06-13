@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.extension.custommessages.api.PostOffice;
 import de.sovity.edc.extension.custommessages.api.SovityMessage;
-import de.sovity.edc.extension.custommessages.echo.SovityMessageRecord;
 import de.sovity.edc.utils.JsonUtils;
 import jakarta.json.Json;
 import lombok.RequiredArgsConstructor;
