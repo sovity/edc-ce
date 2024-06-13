@@ -1,21 +1,19 @@
 package de.sovity.edc.extension.custommessages.impl;
 
-import de.sovity.edc.extension.custommessages.api.GenericMessageHandler;
-import de.sovity.edc.extension.custommessages.api.MessageHandlers;
+import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-class MessageHandlersImplTest {
+class MessageHandlerRegistryImplTest {
 
     @Test
     void canRegisterAndRetrieveHandler() {
         // arrange
-        MessageHandlers handlers = new MessageHandlersImpl();
+        MessageHandlerRegistry handlers = new MessageHandlerRegistryImpl();
         Function<Integer, String> handler = String::valueOf;
 
         // act

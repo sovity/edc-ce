@@ -2,7 +2,7 @@ package de.sovity.edc.extension.custommessages.api;
 
 import java.util.function.Function;
 
-public interface MessageHandlers {
+public interface MessageHandlerRegistry {
     @SuppressWarnings("unchecked")
     default <IN, OUT> void register(String type, Function<IN, OUT> handler, IN... reified) {
         register(getClassOf(reified), type, handler);

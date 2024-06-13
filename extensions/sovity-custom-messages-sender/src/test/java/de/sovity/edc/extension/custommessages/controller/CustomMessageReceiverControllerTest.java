@@ -3,6 +3,7 @@ package de.sovity.edc.extension.custommessages.controller;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import de.sovity.edc.extension.custommessages.impl.JsonObjectFromGenericSovityMessage;
+import de.sovity.edc.extension.custommessages.impl.MessageHandlerRegistryImpl;
 import de.sovity.edc.extension.custommessages.impl.ObjectMapperFactory;
 import de.sovity.edc.extension.custommessages.impl.SovityMessageRecord;
 import de.sovity.edc.utils.JsonUtils;
@@ -10,14 +11,12 @@ import jakarta.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.core.transform.TypeTransformerRegistryImpl;
 import org.eclipse.edc.spi.iam.ClaimToken;
 import org.eclipse.edc.spi.iam.IdentityService;
 import org.eclipse.edc.spi.monitor.ConsoleMonitor;
 import org.eclipse.edc.spi.result.Result;
-import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.junit.jupiter.api.Test;
 
 import java.net.MalformedURLException;
@@ -31,18 +30,18 @@ import static org.mockito.Mockito.when;
 
 class CustomMessageReceiverControllerTest {
 
+    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     static class Payload {
-        @Getter
         @JsonProperty("integer")
         private Integer i;
     }
 
+    @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     static class Answer {
-        @Getter
         @JsonProperty("string")
         private String s;
     }
@@ -59,16 +58,19 @@ class CustomMessageReceiverControllerTest {
         val mock = mock(IdentityService.class);
         when(mock.verifyJwtToken(any(), any())).thenReturn(Result.success(ClaimToken.Builder.newInstance().build()));
 
+        val handlers = new MessageHandlerRegistryImpl();
+
         val controller = new CustomMessageReceiverController(
             mock,
             "http://example.com/callback",
             transformers,
             monitor,
-            objectMapper
+            objectMapper,
+            handlers
         );
 
         Function<Payload, Answer> handler = payload -> new Answer(String.valueOf(payload.getI()));
-        controller.getMessageHandlers().register("foo", handler);
+        handlers.register("foo", handler);
 
         // act
         val message = new SovityMessageRecord(

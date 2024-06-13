@@ -1,12 +1,12 @@
 package de.sovity.edc.extension.custommessages.impl;
 
-import de.sovity.edc.extension.custommessages.api.MessageHandlers;
+import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class MessageHandlersImpl implements MessageHandlers {
+public class MessageHandlerRegistryImpl implements MessageHandlerRegistry {
 
     private Map<String, Handler<?, ?>> handlers = new HashMap<>();
 

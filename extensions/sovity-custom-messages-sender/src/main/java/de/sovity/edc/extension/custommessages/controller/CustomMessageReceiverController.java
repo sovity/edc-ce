@@ -1,8 +1,9 @@
 package de.sovity.edc.extension.custommessages.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.extension.custommessages.api.MessageHandlers;
-import de.sovity.edc.extension.custommessages.impl.MessageHandlersImpl;
+import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry;
+import de.sovity.edc.extension.custommessages.api.SovityMessage;
+import de.sovity.edc.extension.custommessages.api.SovityMessageApi;
 import de.sovity.edc.extension.custommessages.impl.SovityMessageRecord;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.JsonLdUtils;
@@ -29,11 +30,13 @@ import org.eclipse.edc.spi.result.Result;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
 import java.io.StringReader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@Path("/sovity/message")
+@Path(SovityMessageApi.PATH)
 public class CustomMessageReceiverController {
 
     private final IdentityService identityService;
@@ -43,11 +46,10 @@ public class CustomMessageReceiverController {
     private final ObjectMapper mapper;
 
     @Getter
-    private MessageHandlers messageHandlers = new MessageHandlersImpl();
+    private final MessageHandlerRegistry handlers;
 
     @SneakyThrows // TODO: rm after URL()) is removed
     @POST
-    @Path("/generic")
     public Response post(
         @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
         // TODO: can I use SovityMessageRecord directly instead of the JsonObject?
@@ -71,22 +73,25 @@ public class CustomMessageReceiverController {
         val messageType = header.getString("type");
 
         val handler = getHandler(messageType);
+        if (handler == null) {
+            // TODO: change status for standard message with header status and error description
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
 
         val bodyStr = compacted.getString(Prop.SovityMessageExt.BODY);
-
-        val response = new SovityMessageRecord(
-            new URL("https://example.com"), // TODO: the return type doesn't need any URL
-            JsonUtils.toJson(noHandlerForMessageType(messageType)),
-            bodyStr);
 
         // TODO: how to ensure compatibility between different version of the messenger plugin?
         //  may have different serializer?
         //  may have different options on the same serializer?
 
         val parsed = mapper.readValue(bodyStr, handler.clazz());
-        //noinspection unchecked
         val result = handler.handler().handle(parsed);
         val resultBody = mapper.writeValueAsString(result);
+
+        val response = new SovityMessageRecord(
+            new URL("https://example.com"), // TODO: the return type doesn't need any URL
+            buildOkHeader(handler.clazz()),
+            resultBody);
 
         // TODO: change the response type to somthing that has no address
         return typeTransformerRegistry.transform(response, JsonObject.class)
@@ -98,6 +103,21 @@ public class CustomMessageReceiverController {
                     .type(Prop.SovityMessageExt.MESSAGE)
                     .internalServerError();
             });
+    }
+
+    private String buildOkHeader(Class<?> clazz) {
+        try {
+            Constructor<?> constructor = clazz.getConstructor();
+            constructor.setAccessible(true);
+            String type = ((SovityMessage) constructor.newInstance()).getType();
+            JsonObject header = Json.createObjectBuilder()
+                .add("status", "ok")
+                .add("type", type)
+                .build();
+            return JsonUtils.toJson(header);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new EdcException(e);
+        }
     }
 
     private Result<ClaimToken> validateToken(String authorization) {
@@ -112,12 +132,7 @@ public class CustomMessageReceiverController {
             .build();
     }
 
-    private MessageHandlers.Handler<Object, Object> getHandler(String messageType) {
-        // TODO: fallback when not present
-        val maybeHandler = messageHandlers.getHandler(messageType);
-        if (maybeHandler == null) {
-            throw new EdcException("Can't find a handler for the message type " + messageType);
-        }
-        return maybeHandler;
+    private MessageHandlerRegistry.Handler<Object, Object> getHandler(String messageType) {
+        return handlers.getHandler(messageType);
     }
 }

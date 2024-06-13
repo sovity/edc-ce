@@ -8,4 +8,6 @@ public interface SovityMessage {
      */
     @JsonIgnore
     String getType();
+
+    // TODO: maybe for to tell the return type here
 }

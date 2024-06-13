@@ -23,7 +23,6 @@ dependencies {
     testCompileOnly(libs.lombok)
 
     testImplementation(project(":utils:test-connector-remote"))
-    testImplementation(project(":extensions:sovity-custom-messages-receiver"))
 
     testImplementation(libs.edc.junit)
     testImplementation(libs.edc.dataPlaneSelectorCore)

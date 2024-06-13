@@ -1,10 +1,12 @@
 package de.sovity.edc.extension.custommessages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry;
 import de.sovity.edc.extension.custommessages.api.PostOffice;
 import de.sovity.edc.extension.custommessages.controller.CustomMessageReceiverController;
 import de.sovity.edc.extension.custommessages.impl.JsonObjectFromGenericSovityMessage;
 import de.sovity.edc.extension.custommessages.impl.MessageEmitter;
+import de.sovity.edc.extension.custommessages.impl.MessageHandlerRegistryImpl;
 import de.sovity.edc.extension.custommessages.impl.MessageReceiver;
 import de.sovity.edc.extension.custommessages.impl.ObjectMapperFactory;
 import de.sovity.edc.extension.custommessages.impl.PostOfficeImpl;
@@ -25,7 +27,7 @@ import org.eclipse.edc.spi.types.TypeManager;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.WebService;
 
-@Provides(PostOffice.class)
+@Provides({PostOffice.class, MessageHandlerRegistry.class})
 public class CustomMessagesSenderExtension implements ServiceExtension {
 
     public static final String NAME = "SovityCustomMessages";
@@ -41,9 +43,6 @@ public class CustomMessagesSenderExtension implements ServiceExtension {
 
     @Inject
     private JsonLdRemoteMessageSerializer jsonLdRemoteMessageSerializer;
-
-    @Inject
-    private ManagementApiConfiguration managementApiConfiguration;
 
     @Inject
     private Monitor monitor;
@@ -63,20 +62,26 @@ public class CustomMessagesSenderExtension implements ServiceExtension {
     @Override
     public void initialize(ServiceExtensionContext context) {
         val objectMapper = new ObjectMapperFactory().createObjectMapper();
-        setupSovityCustomMessenger(context, objectMapper);
+        val handlers = new MessageHandlerRegistryImpl();
+        context.registerService(MessageHandlerRegistry.class, handlers);
+        setupSovityCustomEmitter(context, objectMapper);
+        setupSovityCustomReceiver(objectMapper, handlers);
+        typeTransformerRegistry.register(new JsonObjectFromGenericSovityMessage());
+    }
 
+    private void setupSovityCustomReceiver(ObjectMapper objectMapper, MessageHandlerRegistry handlers) {
         val receiver = new CustomMessageReceiverController(
             identityService,
             dspApiConfiguration.getDspCallbackAddress(),
             typeTransformerRegistry,
             monitor,
-            objectMapper);
+            objectMapper,
+            handlers);
 
-        webService.registerResource(managementApiConfiguration.getContextAlias(), receiver);
-        typeTransformerRegistry.register(new JsonObjectFromGenericSovityMessage());
+        webService.registerResource(dspApiConfiguration.getContextAlias(), receiver);
     }
 
-    private void setupSovityCustomMessenger(ServiceExtensionContext context, ObjectMapper objectMapper) {
+    private void setupSovityCustomEmitter(ServiceExtensionContext context, ObjectMapper objectMapper) {
         val factory = new MessageEmitter(jsonLdRemoteMessageSerializer);
         val delegate = new MessageReceiver(objectMapper);
 
