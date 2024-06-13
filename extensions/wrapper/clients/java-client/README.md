@@ -109,7 +109,8 @@ Below are the examples of various tasks and the corresponding methods to be used
 
 | Task                                                 | Java-Client method                                                      |
 |------------------------------------------------------|-------------------------------------------------------------------------|
-| Create Policy (Add)                                  | `EdcClient.uiApi().createPolicyDefinition(policyDefinition)`            |
+| Create Policy - uiAPI                   | `EdcClient.uiApi().createPolicyDefinition(policyDefinition)`            |
+| Create Policy - useCaseApi (allows using policy conditions) | `EdcClient.useCaseApi().createPolicyDefinitionUseCase(createRequest)`            |
 | Create asset (Asset Creation after activate)         | `EdcClient.uiApi().createAsset(uiAssetRequest)`                         |
 | Create contract definition                           | `EdcClient.uiApi().createContractDefinition(contractDefinition)`        |
 | Create Offer on consumer dashboard (Catalog Browser) | `EdcClient.uiApi().getCatalogPageDataOffers(PROTOCOL_ENDPOINT)`         |
@@ -123,7 +124,6 @@ These methods facilitate various operations such as creating policies, assets, c
 The following example demonstrates how to create a Catena-Policy with linked conditions using the Java-client.
 
 ```java
-// arrange
 var policyId = UUID.randomUUID().toString();
 var membershipElement = buildAtomicElement("Membership", OperatorDto.EQ, "active");
 var purposeElement = buildAtomicElement("PURPOSE", OperatorDto.EQ, "ID 3.1 Trace");
@@ -133,7 +133,6 @@ var andElement = new Expression()
 var permissionDto = new PermissionDto(andElement);
 var createRequest = new PolicyCreateRequest(policyId, permissionDto);
 
-// act
 var response = client.useCaseApi().createPolicyDefinitionUseCase(createRequest);
 
 private Expression buildAtomicElement(
