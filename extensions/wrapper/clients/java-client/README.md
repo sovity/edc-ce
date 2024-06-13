@@ -103,6 +103,55 @@ public class WrapperClientExample {
 }
 ```
 
+### Further Examples
+
+Below are the examples of various tasks and the corresponding methods to be used from the Java-client.
+
+| Task                                                 | Java-Client method                                                      |
+|------------------------------------------------------|-------------------------------------------------------------------------|
+| Create Policy (Add)                                  | `EdcClient.uiApi().createPolicyDefinition(policyDefinition)`            |
+| Create asset (Asset Creation after activate)         | `EdcClient.uiApi().createAsset(uiAssetRequest)`                         |
+| Create contract definition                           | `EdcClient.uiApi().createContractDefinition(contractDefinition)`        |
+| Create Offer on consumer dashboard (Catalog Browser) | `EdcClient.uiApi().getCatalogPageDataOffers(PROTOCOL_ENDPOINT)`         |
+| Accept contract (Contract Negotiation)               | `EdcClient.uiApi().initiateContractNegotiation(negotiationRequest)`     |
+| Transfer Data (Initiate Transfer)                    | `EdcClient.uiApi().initiateTransfer(negotiation)`                       |
+
+These methods facilitate various operations such as creating policies, assets, contract definitions, browsing offers, accepting contracts, and initiating data transfers.
+
+### Creating a Catena-Policy with Conditions
+
+The following example demonstrates how to create a Catena-Policy with linked conditions using the Java-client.
+
+```java
+// arrange
+var policyId = UUID.randomUUID().toString();
+var membershipElement = buildAtomicElement("Membership", OperatorDto.EQ, "active");
+var purposeElement = buildAtomicElement("PURPOSE", OperatorDto.EQ, "ID 3.1 Trace");
+var andElement = new Expression()
+        .expressionType(ExpressionTypeDto.AND)
+        .expressions(List.of(membershipElement, purposeElement));
+var permissionDto = new PermissionDto(andElement);
+var createRequest = new PolicyCreateRequest(policyId, permissionDto);
+
+// act
+var response = client.useCaseApi().createPolicyDefinitionUseCase(createRequest);
+
+private Expression buildAtomicElement(
+        String left,
+        OperatorDto operator,
+        String right) {
+    var atomicConstraint = new AtomicConstraintDto()
+            .leftExpression(left)
+            .operator(operator)
+            .rightExpression(right);
+    return new Expression()
+            .expressionType(ExpressionTypeDto.ATOMIC_CONSTRAINT)
+            .atomicConstraint(atomicConstraint);
+}
+```
+
+The complete example can be seen in [this test](https://github.com/sovity/edc-extensions/blob/main/extensions/wrapper/wrapper/src/test/java/de/sovity/edc/ext/wrapper/api/usecase/PolicyDefinitionApiServiceTest.java).
+
 ## License
 
 Apache License 2.0 - see [LICENSE](../../../../LICENSE)
