@@ -9,7 +9,6 @@ import de.sovity.edc.extension.custommessages.impl.JsonObjectFromSovityMessageRe
 import de.sovity.edc.extension.custommessages.impl.MessageHandlerRegistryImpl;
 import de.sovity.edc.extension.custommessages.impl.ObjectMapperFactory;
 import de.sovity.edc.extension.custommessages.impl.SovityMessageRequest;
-import de.sovity.edc.utils.JsonUtils;
 import jakarta.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -111,7 +110,7 @@ class CustomMessageReceiverControllerTest {
 
         // act
 
-        try (val response = controller.post("", JsonUtils.parseJsonObj(objectMapper.writeValueAsString(message)))) {
+        try (val response = controller.post("", message)) {
             // assert
             assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         }
@@ -140,7 +139,7 @@ class CustomMessageReceiverControllerTest {
             objectMapper.writeValueAsString(new Payload(1)));
 
         // act
-        try (val response = controller.post("", JsonUtils.parseJsonObj(objectMapper.writeValueAsString(message)))) {
+        try (val response = controller.post("", message)) {
             // assert
             assertThat(response.getStatus()).isEqualTo(Response.Status.UNAUTHORIZED.getStatusCode());
         }

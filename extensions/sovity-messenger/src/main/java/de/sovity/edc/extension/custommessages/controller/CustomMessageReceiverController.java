@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry;
 import de.sovity.edc.extension.custommessages.api.SovityMessage;
 import de.sovity.edc.extension.custommessages.api.SovityMessageApi;
+import de.sovity.edc.extension.custommessages.impl.SovityMessageRequest;
 import de.sovity.edc.extension.custommessages.impl.SovityMessageResponse;
 import de.sovity.edc.utils.JsonUtils;
-import de.sovity.edc.utils.jsonld.JsonLdUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -50,8 +50,7 @@ public class CustomMessageReceiverController {
     @POST
     public Response post(
         @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-        // TODO: can I use SovityMessageRecord directly instead of the JsonObject?
-        JsonObject jsonObject) {
+        SovityMessageRequest request) {
 
         val validation = validateToken(authorization);
         if (validation.failed()) {
@@ -61,11 +60,7 @@ public class CustomMessageReceiverController {
             ).build();
         }
 
-        val compacted = JsonLdUtils.tryCompact(jsonObject);
-
-        val messageType = extractMessageType(compacted);
-
-        val handler = getHandler(messageType);
+        val handler = getHandler(request);
         if (handler == null) {
             // TODO: change status for standard message with header status and error description
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -74,7 +69,7 @@ public class CustomMessageReceiverController {
         // TODO: how to ensure compatibility between different version of the messenger plugin?
         //  may have different serializer?
         //  may have different options on the same serializer?
-        val response = processMessage(compacted, handler);
+        val response = processMessage(request, handler);
 
         // TODO: change the response type to somthing that has no address
         return typeTransformerRegistry.transform(response, JsonObject.class)
@@ -88,18 +83,10 @@ public class CustomMessageReceiverController {
             });
     }
 
-    private static String extractMessageType(JsonObject compacted) {
-        val headerStr = compacted.getString(Prop.SovityMessageExt.HEADER);
-        val header = Json.createReader(new StringReader(headerStr)).readObject();
-
-        val messageType = header.getString("type");
-        return messageType;
-    }
-
-    private SovityMessageResponse processMessage(JsonObject compacted, MessageHandlerRegistry.Handler<Object, Object> handler) {
+    private SovityMessageResponse processMessage(SovityMessageRequest compacted, MessageHandlerRegistry.Handler<Object, Object> handler) {
         try {
 
-            val bodyStr = compacted.getString(Prop.SovityMessageExt.BODY);
+            val bodyStr = compacted.body();
             val parsed = mapper.readValue(bodyStr, handler.clazz());
             val result = handler.handler().apply(parsed);
             val resultBody = mapper.writeValueAsString(result);
@@ -141,7 +128,10 @@ public class CustomMessageReceiverController {
             .build();
     }
 
-    private MessageHandlerRegistry.Handler<Object, Object> getHandler(String messageType) {
+    private MessageHandlerRegistry.Handler<Object, Object> getHandler(SovityMessageRequest request) {
+        val headerStr = request.header();
+        val header = Json.createReader(new StringReader(headerStr)).readObject();
+        val messageType = header.getString("type");
         return handlers.getHandler(messageType);
     }
 }
