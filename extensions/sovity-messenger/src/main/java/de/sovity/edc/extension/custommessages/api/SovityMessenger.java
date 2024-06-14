@@ -17,9 +17,9 @@ public interface SovityMessenger {
      * @param <T>                 The outgoing message type.
      * @param <R>                 The incoming message type.
      * @return A future result.
-     * @throws SovityMessageException If a problem related to the message processing happened.
+     * @throws SovityMessengerException If a problem related to the message processing happened.
      */
     <T extends SovityMessage, R extends SovityMessage>
     CompletableFuture<StatusResult<R>> send(Class<R> resultType, String counterPartyAddress, T payload)
-        throws SovityMessageException;
+        throws SovityMessengerException;
 }

@@ -3,7 +3,7 @@ package de.sovity.edc.extension.custommessages.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.extension.custommessages.api.SovityMessage;
-import de.sovity.edc.extension.custommessages.api.SovityMessageException;
+import de.sovity.edc.extension.custommessages.api.SovityMessengerException;
 import de.sovity.edc.extension.custommessages.api.SovityMessenger;
 import de.sovity.edc.utils.JsonUtils;
 import jakarta.json.Json;
@@ -35,6 +35,7 @@ public class SovityMessengerImpl implements SovityMessenger {
             val header = buildHeader(payload);
             val serialized = buildPayload(payload);
             val message = new SovityMessageRequest(url, header, serialized);
+            // TODO: SovityMessageResponse instead of SovityMessageRequest
             val future = registry.dispatch(SovityMessageRequest.class, message);
             return future.thenApply(it -> it.map(content -> {
                 try {
@@ -44,7 +45,7 @@ public class SovityMessengerImpl implements SovityMessenger {
                         val resultBody = content.body();
                         return serializer.readValue(resultBody, resultType);
                     } else {
-                        throw new SovityMessageException(resultHeader.getString("message"));
+                        throw new SovityMessengerException(resultHeader.getString("message"));
                     }
                 } catch (JsonProcessingException e) {
                     throw new EdcException(e);

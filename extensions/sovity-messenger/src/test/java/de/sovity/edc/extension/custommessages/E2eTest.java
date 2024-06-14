@@ -1,29 +1,24 @@
 package de.sovity.edc.extension.custommessages;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry;
 import de.sovity.edc.extension.custommessages.api.SovityMessage;
-import de.sovity.edc.extension.custommessages.api.SovityMessageException;
 import de.sovity.edc.extension.custommessages.api.SovityMessenger;
+import de.sovity.edc.extension.custommessages.api.SovityMessengerException;
+import de.sovity.edc.extension.custommessages.dto.Addition;
+import de.sovity.edc.extension.custommessages.dto.Answer;
+import de.sovity.edc.extension.custommessages.dto.Multiplication;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.iam.TokenDecorator;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
@@ -31,7 +26,6 @@ import java.util.function.Function;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -76,51 +70,6 @@ public class E2eTest {
         }
     }
 
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Getter
-    static class Addition implements SovityMessage {
-        @Override
-        public String getType() {
-            return "add";
-        }
-
-        @JsonProperty("a")
-        private int a;
-        @JsonProperty("b")
-        private int b;
-    }
-
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Getter
-    static class Multiplication implements SovityMessage {
-        @Override
-        public String getType() {
-            return "mul";
-        }
-
-        @JsonProperty("a")
-        private int a;
-        @JsonProperty("b")
-        private int b;
-    }
-
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    static class Answer implements SovityMessage {
-        @Override
-        public String getType() {
-            return getClass().getCanonicalName();
-        }
-
-        @JsonProperty("answer")
-        private int answer;
-    }
-
     @Test
     void e2eTest() {
         val sovityMessenger = emitterEdcContext.getContext().getService(SovityMessenger.class);
@@ -162,7 +111,7 @@ public class E2eTest {
         // assert
         Awaitility.await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
             val exception = assertThrows(ExecutionException.class, added::get);
-            assertThat(exception.getCause()).isInstanceOf(SovityMessageException.class);
+            assertThat(exception.getCause()).isInstanceOf(SovityMessengerException.class);
         });
 
     }
