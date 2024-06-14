@@ -17,8 +17,8 @@ public class Multiplication implements SovityMessage {
         return "mul";
     }
 
-    @JsonProperty("a")
+    @JsonProperty
     private int op1;
-    @JsonProperty("b")
+    @JsonProperty
     private int op2;
 }

@@ -38,7 +38,7 @@ class CustomMessageReceiverControllerTest {
     @AllArgsConstructor
     @NoArgsConstructor
     static class Payload implements SovityMessage {
-        @JsonProperty("integer") // TODO: no name needed
+        @JsonProperty
         private Integer integer;
 
         @Override
@@ -51,7 +51,7 @@ class CustomMessageReceiverControllerTest {
     @AllArgsConstructor
     @NoArgsConstructor
     static class Answer implements SovityMessage {
-        @JsonProperty("string")
+        @JsonProperty
         private String string;
 
         @Override

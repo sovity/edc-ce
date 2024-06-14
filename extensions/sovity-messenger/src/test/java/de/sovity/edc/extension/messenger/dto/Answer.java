@@ -15,6 +15,6 @@ public class Answer implements SovityMessage {
         return getClass().getCanonicalName();
     }
 
-    @JsonProperty("answer")
+    @JsonProperty
     private int answer;
 }

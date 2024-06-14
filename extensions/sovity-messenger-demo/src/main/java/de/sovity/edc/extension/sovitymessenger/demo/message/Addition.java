@@ -18,10 +18,10 @@ public class Addition implements SovityMessage {
         return ROOT + "add";
     }
 
-    @JsonProperty("a")
+    @JsonProperty
     public int op1;
 
-    @JsonProperty("b")
+    @JsonProperty
     public int op2;
 
 }

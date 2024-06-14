@@ -21,7 +21,7 @@ public class Sqrt implements SovityMessage {
         return TYPE;
     }
 
-    @JsonProperty("value")
+    @JsonProperty
     private double value;
 
 }
