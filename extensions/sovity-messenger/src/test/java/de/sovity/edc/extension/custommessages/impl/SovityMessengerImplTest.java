@@ -1,6 +1,5 @@
 package de.sovity.edc.extension.custommessages.impl;
 
-import de.sovity.edc.extension.custommessages.api.SovityMessengerException;
 import de.sovity.edc.extension.custommessages.dto.Addition;
 import de.sovity.edc.extension.custommessages.dto.Answer;
 import lombok.val;
@@ -29,11 +28,11 @@ class SovityMessengerImplTest {
                 new SovityMessageRequest(
                     new URL("https://example.com/api/dsp"),
                     """
-                    {
-                        "status": "no_handler",
-                        "message": "No handler for foo"
-                    }
-                    """,
+                        {
+                            "status": "no_handler",
+                            "message": "No handler for foo"
+                        }
+                        """,
                     null)));
 
         when(registry.dispatch(any(), any())).thenReturn(future);
