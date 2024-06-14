@@ -63,21 +63,14 @@ public class CustomMessageReceiverController {
 
         val handler = getHandler(request);
         if (handler == null) {
-            // TODO: change status for standard message with header status and error description
-            SovityMessageResponse errorAnswer = buildErrorNoHandlerHeader(request);
+            val errorAnswer = buildErrorNoHandlerHeader(request);
             return Response.ok()
                 .type(MediaType.APPLICATION_JSON)
-                .entity(
-                    errorAnswer
-                ).build();
+                .entity(errorAnswer).build();
         }
 
-        // TODO: how to ensure compatibility between different version of the messenger plugin?
-        //  may have different serializer?
-        //  may have different options on the same serializer?
         val response = processMessage(request, handler);
 
-        // TODO: change the response type to somthing that has no address
         return typeTransformerRegistry.transform(response, JsonObject.class)
             .map(it -> Response.ok().type(MediaType.APPLICATION_JSON).entity(it).build())
             .orElse(failure -> {

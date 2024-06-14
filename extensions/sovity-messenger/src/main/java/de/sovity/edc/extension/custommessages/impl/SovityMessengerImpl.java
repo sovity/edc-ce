@@ -31,7 +31,6 @@ public class SovityMessengerImpl implements SovityMessenger {
     public <T extends SovityMessage, R extends SovityMessage>
     CompletableFuture<StatusResult<R>> send(Class<R> resultType, String counterPartyAddress, T payload) {
         try {
-            // TODO: SovityMessageResponse instead of SovityMessageRequest
             val message = buildMessage(counterPartyAddress, payload);
             val future = registry.dispatch(SovityMessageRequest.class, message);
             return future.thenApply(processResponse(resultType));
@@ -58,7 +57,7 @@ public class SovityMessengerImpl implements SovityMessenger {
             }
         });
     }
-    
+
     @NotNull
     private <T extends SovityMessage>
     SovityMessageRequest buildMessage(String counterPartyAddress, T payload)
