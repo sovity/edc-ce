@@ -10,19 +10,19 @@ import org.jetbrains.annotations.Nullable;
 
 import static org.eclipse.edc.jsonld.spi.JsonLdKeywords.TYPE;
 
-public class JsonObjectFromGenericSovityMessage extends AbstractJsonLdTransformer<SovityMessageRequest, JsonObject> {
+public class JsonObjectFromSovityMessageResponse extends AbstractJsonLdTransformer<SovityMessageResponse, JsonObject> {
 
-    public JsonObjectFromGenericSovityMessage() {
-        super(SovityMessageRequest.class, JsonObject.class);
+    public JsonObjectFromSovityMessageResponse() {
+        super(SovityMessageResponse.class, JsonObject.class);
     }
 
     @Override
     public @Nullable JsonObject transform(
-        @NotNull SovityMessageRequest message,
+        @NotNull SovityMessageResponse message,
         @NotNull TransformerContext context) {
 
         var builder = Json.createObjectBuilder();
-        builder.add(TYPE, Prop.SovityMessageExt.MESSAGE)
+        builder.add(TYPE, Prop.SovityMessageExt.RESPONSE)
             .add(Prop.SovityMessageExt.HEADER, message.header())
             .add(Prop.SovityMessageExt.BODY, message.body());
 

@@ -23,7 +23,7 @@ class MessageEmitterTest {
     void emmitValidMessage_whenEmpty_shouldSucceed() throws IOException {
         // arrange
         TypeTransformerRegistry registry = new TypeTransformerRegistryImpl();
-        registry.register(new JsonObjectFromGenericSovityMessage());
+        registry.register(new JsonObjectFromSovityMessageRequest());
         JsonLdRemoteMessageSerializer serializer = new JsonLdRemoteMessageSerializerImpl(
             registry,
             mapperFactory.createObjectMapper(),

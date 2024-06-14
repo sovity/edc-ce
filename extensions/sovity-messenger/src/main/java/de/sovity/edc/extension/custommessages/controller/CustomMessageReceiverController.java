@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry;
 import de.sovity.edc.extension.custommessages.api.SovityMessage;
 import de.sovity.edc.extension.custommessages.api.SovityMessageApi;
-import de.sovity.edc.extension.custommessages.impl.SovityMessageRequest;
+import de.sovity.edc.extension.custommessages.impl.SovityMessageResponse;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.JsonLdUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -32,8 +32,6 @@ import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -85,7 +83,7 @@ public class CustomMessageReceiverController {
                 var errorCode = UUID.randomUUID();
                 monitor.warning(String.format("Error transforming negotiation, error id %s: %s", errorCode, failure.getFailureDetail()));
                 return DspErrorResponse
-                    .type(Prop.SovityMessageExt.MESSAGE)
+                    .type(Prop.SovityMessageExt.REQUEST)
                     .internalServerError();
             });
     }
@@ -98,7 +96,7 @@ public class CustomMessageReceiverController {
         return messageType;
     }
 
-    private SovityMessageRequest processMessage(JsonObject compacted, MessageHandlerRegistry.Handler<Object, Object> handler) {
+    private SovityMessageResponse processMessage(JsonObject compacted, MessageHandlerRegistry.Handler<Object, Object> handler) {
         try {
 
             val bodyStr = compacted.getString(Prop.SovityMessageExt.BODY);
@@ -106,13 +104,12 @@ public class CustomMessageReceiverController {
             val result = handler.handler().apply(parsed);
             val resultBody = mapper.writeValueAsString(result);
 
-            val response = new SovityMessageRequest(
-                new URL("https://example.com"), // TODO: the return type doesn't need any URL
+            val response = new SovityMessageResponse(
                 buildOkHeader(handler.clazz()),
                 resultBody);
 
             return response;
-        } catch (JsonProcessingException | MalformedURLException e) {
+        } catch (JsonProcessingException e) {
             throw new EdcException("Failed to process the message", e);
         }
     }

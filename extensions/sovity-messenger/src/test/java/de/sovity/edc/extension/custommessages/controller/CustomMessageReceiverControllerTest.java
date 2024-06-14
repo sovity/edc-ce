@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.extension.custommessages.api.SovityMessage;
-import de.sovity.edc.extension.custommessages.impl.JsonObjectFromGenericSovityMessage;
+import de.sovity.edc.extension.custommessages.impl.JsonObjectFromSovityMessageRequest;
+import de.sovity.edc.extension.custommessages.impl.JsonObjectFromSovityMessageResponse;
 import de.sovity.edc.extension.custommessages.impl.MessageHandlerRegistryImpl;
 import de.sovity.edc.extension.custommessages.impl.ObjectMapperFactory;
 import de.sovity.edc.extension.custommessages.impl.SovityMessageRequest;
@@ -70,7 +71,8 @@ class CustomMessageReceiverControllerTest {
     @BeforeEach
     public void beforeEach() {
         transformers = new TypeTransformerRegistryImpl();
-        transformers.register(new JsonObjectFromGenericSovityMessage());
+        transformers.register(new JsonObjectFromSovityMessageRequest());
+        transformers.register(new JsonObjectFromSovityMessageResponse());
 
         monitor = new ConsoleMonitor();
 

@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry;
 import de.sovity.edc.extension.custommessages.api.SovityMessenger;
 import de.sovity.edc.extension.custommessages.controller.CustomMessageReceiverController;
-import de.sovity.edc.extension.custommessages.impl.JsonObjectFromGenericSovityMessage;
+import de.sovity.edc.extension.custommessages.impl.JsonObjectFromSovityMessageRequest;
+import de.sovity.edc.extension.custommessages.impl.JsonObjectFromSovityMessageResponse;
 import de.sovity.edc.extension.custommessages.impl.MessageEmitter;
 import de.sovity.edc.extension.custommessages.impl.MessageHandlerRegistryImpl;
 import de.sovity.edc.extension.custommessages.impl.MessageReceiver;
@@ -65,7 +66,6 @@ public class CustomMessagesSenderExtension implements ServiceExtension {
         context.registerService(MessageHandlerRegistry.class, handlers);
         setupSovityCustomEmitter(context, objectMapper);
         setupSovityCustomReceiver(objectMapper, handlers);
-        typeTransformerRegistry.register(new JsonObjectFromGenericSovityMessage());
     }
 
     private void setupSovityCustomReceiver(ObjectMapper objectMapper, MessageHandlerRegistry handlers) {
@@ -78,6 +78,8 @@ public class CustomMessagesSenderExtension implements ServiceExtension {
             handlers);
 
         webService.registerResource(dspApiConfiguration.getContextAlias(), receiver);
+
+        typeTransformerRegistry.register(new JsonObjectFromSovityMessageResponse());
     }
 
     private void setupSovityCustomEmitter(ServiceExtensionContext context, ObjectMapper objectMapper) {
@@ -85,6 +87,8 @@ public class CustomMessagesSenderExtension implements ServiceExtension {
         val delegate = new MessageReceiver(objectMapper);
 
         dspHttpRemoteMessageDispatcher.registerMessage(SovityMessageRequest.class, factory, delegate);
+
+        typeTransformerRegistry.register(new JsonObjectFromSovityMessageRequest());
 
         val postOffice = new SovityMessengerImpl(registry, objectMapper);
         context.registerService(SovityMessenger.class, postOffice);
