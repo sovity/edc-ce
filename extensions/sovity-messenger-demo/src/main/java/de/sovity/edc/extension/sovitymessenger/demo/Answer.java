@@ -1,5 +1,4 @@
-package de.sovity.edc.extension.custommessage.receiver.message;
-
+package de.sovity.edc.extension.sovitymessenger.demo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.sovity.edc.extension.custommessages.api.SovityMessage;
@@ -7,16 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
-public class Sqrt implements SovityMessage {
-
+public class Answer implements SovityMessage {
     @Override
     public String getType() {
-        return "sqrt";
+        return "answer";
     }
 
-    @JsonProperty("value")
-    private double a;
+    @JsonProperty
+    private double answer;
 }

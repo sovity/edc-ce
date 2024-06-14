@@ -1,7 +1,5 @@
-package de.sovity.edc.extension.custommessage.receiver
+package de.sovity.edc.extension.sovitymessenger.demo
 
-import de.sovity.edc.extension.custommessage.receiver.message.Answer
-import de.sovity.edc.extension.custommessage.receiver.message.Sqrt
 import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry
 import de.sovity.edc.extension.custommessages.api.PostOffice
 import org.eclipse.edc.runtime.metamodel.annotation.Inject
@@ -17,9 +15,12 @@ class SovityMessengerDemoKt : ServiceExtension {
     private lateinit var registry: MessageHandlerRegistry
 
     override fun initialize(context: ServiceExtensionContext) {
+
         registry.registerKt { it: Sqrt -> Answer(sqrt(it.a)) }
 
-        val answer = postOffice.send<Answer>("http://localhost/api/dsp", Sqrt(9.0))
+        val answer = postOffice.send<Answer>("http://localhost/api/dsp",
+            Sqrt(9.0)
+        )
     }
 
     companion object {

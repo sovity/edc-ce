@@ -2,6 +2,7 @@ package de.sovity.edc.extension.custommessages.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import de.sovity.edc.extension.custommessages.api.SovityMessage;
 import de.sovity.edc.extension.custommessages.impl.JsonObjectFromGenericSovityMessage;
 import de.sovity.edc.extension.custommessages.impl.MessageHandlerRegistryImpl;
 import de.sovity.edc.extension.custommessages.impl.ObjectMapperFactory;
@@ -33,17 +34,27 @@ class CustomMessageReceiverControllerTest {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    static class Payload {
+    static class Payload implements SovityMessage {
         @JsonProperty("integer")
         private Integer i;
+
+        @Override
+        public String getType() {
+            return "payload";
+        }
     }
 
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    static class Answer {
+    static class Answer implements SovityMessage {
         @JsonProperty("string")
         private String s;
+
+        @Override
+        public String getType() {
+            return "answer";
+        }
     }
 
     @Test

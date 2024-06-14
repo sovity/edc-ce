@@ -1,4 +1,4 @@
-package de.sovity.edc.extension.custommessage.receiver
+package de.sovity.edc.extension.sovitymessenger.demo
 
 import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry
 import de.sovity.edc.extension.custommessages.api.PostOffice
