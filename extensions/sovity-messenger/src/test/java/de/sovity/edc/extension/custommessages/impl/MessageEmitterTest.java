@@ -32,7 +32,7 @@ class MessageEmitterTest {
         val emitter = new MessageEmitter(serializer);
 
         // act
-        val request = emitter.createRequest(new SovityMessageRecord(
+        val request = emitter.createRequest(new SovityMessageRequest(
             new URL("https://example.com/api"),
             "header",
             "body"

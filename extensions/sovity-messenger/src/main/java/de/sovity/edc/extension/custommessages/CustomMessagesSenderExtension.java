@@ -10,7 +10,7 @@ import de.sovity.edc.extension.custommessages.impl.MessageHandlerRegistryImpl;
 import de.sovity.edc.extension.custommessages.impl.MessageReceiver;
 import de.sovity.edc.extension.custommessages.impl.ObjectMapperFactory;
 import de.sovity.edc.extension.custommessages.impl.SovityMessengerImpl;
-import de.sovity.edc.extension.custommessages.impl.SovityMessageRecord;
+import de.sovity.edc.extension.custommessages.impl.SovityMessageRequest;
 import lombok.val;
 import org.eclipse.edc.protocol.dsp.api.configuration.DspApiConfiguration;
 import org.eclipse.edc.protocol.dsp.spi.dispatcher.DspHttpRemoteMessageDispatcher;
@@ -84,7 +84,7 @@ public class CustomMessagesSenderExtension implements ServiceExtension {
         val factory = new MessageEmitter(jsonLdRemoteMessageSerializer);
         val delegate = new MessageReceiver(objectMapper);
 
-        dspHttpRemoteMessageDispatcher.registerMessage(SovityMessageRecord.class, factory, delegate);
+        dspHttpRemoteMessageDispatcher.registerMessage(SovityMessageRequest.class, factory, delegate);
 
         val postOffice = new SovityMessengerImpl(registry, objectMapper);
         context.registerService(SovityMessenger.class, postOffice);

@@ -11,12 +11,12 @@ import java.io.IOException;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
-public class MessageReceiver extends DspHttpDispatcherDelegate<SovityMessageRecord, SovityMessageRecord> {
+public class MessageReceiver extends DspHttpDispatcherDelegate<SovityMessageRequest, SovityMessageRequest> {
 
     private final ObjectMapper mapper;
 
     @Override
-    protected Function<Response, SovityMessageRecord> parseResponse() {
+    protected Function<Response, SovityMessageRequest> parseResponse() {
         return res -> {
             try {
                 val body = res.body();
@@ -24,7 +24,7 @@ public class MessageReceiver extends DspHttpDispatcherDelegate<SovityMessageReco
                     return null;
                 }
                 String content = body.string();
-                return mapper.readValue(content, SovityMessageRecord.class);
+                return mapper.readValue(content, SovityMessageRequest.class);
             } catch (IOException e) {
                 throw new EdcException(e);
             }

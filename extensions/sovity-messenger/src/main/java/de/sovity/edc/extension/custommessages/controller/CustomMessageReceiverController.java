@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry;
 import de.sovity.edc.extension.custommessages.api.SovityMessage;
 import de.sovity.edc.extension.custommessages.api.SovityMessageApi;
-import de.sovity.edc.extension.custommessages.impl.SovityMessageRecord;
+import de.sovity.edc.extension.custommessages.impl.SovityMessageRequest;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.JsonLdUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -98,7 +98,7 @@ public class CustomMessageReceiverController {
         return messageType;
     }
 
-    private SovityMessageRecord processMessage(JsonObject compacted, MessageHandlerRegistry.Handler<Object, Object> handler) {
+    private SovityMessageRequest processMessage(JsonObject compacted, MessageHandlerRegistry.Handler<Object, Object> handler) {
         try {
 
             val bodyStr = compacted.getString(Prop.SovityMessageExt.BODY);
@@ -106,7 +106,7 @@ public class CustomMessageReceiverController {
             val result = handler.handler().apply(parsed);
             val resultBody = mapper.writeValueAsString(result);
 
-            val response = new SovityMessageRecord(
+            val response = new SovityMessageRequest(
                 new URL("https://example.com"), // TODO: the return type doesn't need any URL
                 buildOkHeader(handler.clazz()),
                 resultBody);

@@ -8,7 +8,7 @@ import org.eclipse.edc.spi.types.domain.message.RemoteMessage;
 
 import java.net.URL;
 
-public record SovityMessageRecord(
+public record SovityMessageRequest(
     @JsonIgnore
     URL counterPartyAddress,
 

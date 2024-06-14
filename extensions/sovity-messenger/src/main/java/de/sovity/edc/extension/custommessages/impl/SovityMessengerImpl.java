@@ -33,8 +33,8 @@ public class SovityMessengerImpl implements SovityMessenger {
             val url = buildUrl(counterPartyAddress);
             val header = buildHeader(payload);
             val serialized = buildPayload(payload);
-            val message = new SovityMessageRecord(url, header, serialized);
-            val future = registry.dispatch(SovityMessageRecord.class, message);
+            val message = new SovityMessageRequest(url, header, serialized);
+            val future = registry.dispatch(SovityMessageRequest.class, message);
             return future.thenApply(it -> it.map(content -> {
                 try {
                     return serializer.readValue(content.body(), resultType);

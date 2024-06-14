@@ -7,7 +7,7 @@ import de.sovity.edc.extension.custommessages.api.SovityMessage;
 import de.sovity.edc.extension.custommessages.impl.JsonObjectFromGenericSovityMessage;
 import de.sovity.edc.extension.custommessages.impl.MessageHandlerRegistryImpl;
 import de.sovity.edc.extension.custommessages.impl.ObjectMapperFactory;
-import de.sovity.edc.extension.custommessages.impl.SovityMessageRecord;
+import de.sovity.edc.extension.custommessages.impl.SovityMessageRequest;
 import de.sovity.edc.utils.JsonUtils;
 import jakarta.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
@@ -101,7 +101,7 @@ class CustomMessageReceiverControllerTest {
         Function<Payload, Answer> handler = payload -> new Answer(String.valueOf(payload.getI()));
         handlers.register("foo", handler);
 
-        val message = new SovityMessageRecord(
+        val message = new SovityMessageRequest(
             new URL("https://example.com/api"), """
             { "type" : "foo" }
             """,
@@ -131,7 +131,7 @@ class CustomMessageReceiverControllerTest {
             handlers
         );
 
-        val message = new SovityMessageRecord(
+        val message = new SovityMessageRequest(
             new URL("https://example.com/api"), """
             { "type" : "foo" }
             """,
