@@ -15,6 +15,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
+- Add the SovityMessenger extension
+
 #### Patch Changes
 
 - Postman-collection: Fixed an issue where an API-call was previously wrong in the details of the POST-body.

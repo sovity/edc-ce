@@ -23,6 +23,13 @@ public class SovityMessengerDemo implements ServiceExtension {
         return NAME;
     }
 
+    /*
+     * 3 parts are needed:
+     * - the messenger
+     * - the handler registry
+     * - your handlers
+     */
+
     @Inject
     private SovityMessenger sovityMessenger;
 
@@ -31,17 +38,16 @@ public class SovityMessengerDemo implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        /*
-         * Register the various messages that you would like to process.
-         */
+        // Register the various messages that you would like to process.
         registry.register(Sqrt.class, (Function<Sqrt, Answer>) single -> new Answer(sqrt(single.getValue())));
         registry.register(Addition.class, (Function<Addition, Answer>) add -> new Answer(add.op1 + add.op2));
 
         /*
-         * In the other connector, the messages above can be sent with the code below.
+         * In the counterpart connector, messages can be sent with the code below.
          * Check out the de.sovity.edc.extension.sovitymessenger.demo.SovityMessengerDemoTest#demo()
          * for a detailed usage.
          */
+
         // val answer = sovityMessenger.send(Answer.class, "http://localhost/api/dsp", new Sqrt(9.0));
     }
 }

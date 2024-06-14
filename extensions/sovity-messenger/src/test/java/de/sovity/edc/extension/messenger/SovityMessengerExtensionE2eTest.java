@@ -10,12 +10,14 @@ import de.sovity.edc.extension.messenger.api.SovityMessengerException;
 import de.sovity.edc.extension.messenger.dto.Addition;
 import de.sovity.edc.extension.messenger.dto.Answer;
 import de.sovity.edc.extension.messenger.dto.Multiplication;
+import de.sovity.edc.extension.messenger.dto.UnsupportedMessage;
 import lombok.val;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.iam.TokenDecorator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.runner.OrderWith;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
 
 import java.time.Duration;
@@ -52,12 +54,10 @@ public class SovityMessengerExtensionE2eTest {
         providerConfig = forTestDatabase(EMITTER_PARTICIPANT_ID, EMITTER_DATABASE);
         emitterEdcContext.setConfiguration(providerConfig.getProperties());
         emitterEdcContext.registerServiceMock(TokenDecorator.class, (td) -> td);
-        new ConnectorRemote(fromConnectorConfig(providerConfig)); // TODO: needed?
 
         consumerConfig = forTestDatabase(RECEIVER_PARTICIPANT_ID, RECEIVER_DATABASE);
         receiverEdcContext.setConfiguration(consumerConfig.getProperties());
         receiverEdcContext.registerServiceMock(TokenDecorator.class, (td) -> td);
-        new ConnectorRemote(fromConnectorConfig(consumerConfig)); // TODO: needed?
 
         counterPartyAddress = "http://localhost:" + consumerConfig.getProtocolEndpoint().port() + consumerConfig.getProtocolEndpoint().path();
     }
@@ -69,7 +69,6 @@ public class SovityMessengerExtensionE2eTest {
         handlers.register("add", (Function<Addition, Answer>) in -> new Answer(in.getOp1() + in.getOp2()));
         handlers.register("mul", (Function<Addition, Answer>) in -> new Answer(in.getOp1() * in.getOp2()));
 
-        // TODO: no need to tell the destination address, it's always on the DSP port
         val counterPartyAddress = "http://localhost:" + consumerConfig.getProtocolEndpoint().port() + consumerConfig.getProtocolEndpoint().path();
         val added = sovityMessenger.send(Answer.class, counterPartyAddress, new Addition(20, 30));
         val multiplied = sovityMessenger.send(Answer.class, counterPartyAddress, new Multiplication(20, 30));
@@ -98,14 +97,14 @@ public class SovityMessengerExtensionE2eTest {
     void e2eNoHandlerTest() {
         val sovityMessenger = emitterEdcContext.getContext().getService(SovityMessenger.class);
 
-        val added = sovityMessenger.send(Answer.class, counterPartyAddress, new Addition(20, 30));
+        val added = sovityMessenger.send(Answer.class, counterPartyAddress, new UnsupportedMessage());
 
         // assert
         Awaitility.await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
             val exception = assertThrows(ExecutionException.class, added::get);
             assertThat(exception.getCause()).isInstanceOf(SovityMessengerException.class);
+            assertThat(exception.getCause().getMessage()).isEqualTo("No handler for message type unsupported");
         });
     }
 
-    // TODO: test unsupported messages
 }

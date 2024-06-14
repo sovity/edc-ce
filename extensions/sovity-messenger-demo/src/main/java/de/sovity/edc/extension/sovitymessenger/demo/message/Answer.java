@@ -2,25 +2,22 @@ package de.sovity.edc.extension.sovitymessenger.demo.message;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.sovity.edc.extension.messenger.api.SovityMessage;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import static de.sovity.edc.extension.sovitymessenger.demo.message.Common.ROOT;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class Answer implements SovityMessage {
-
-    public Answer() {
-    }
-
-    public Answer(double answer) {
-        this.answer = answer;
-    }
 
     @Override
     public String getType() {
-        return Common.ROOT + "answer";
+        return ROOT + "answer";
     }
 
     @JsonProperty
     private double answer;
-
-    public double getAnswer() {
-        return answer;
-    }
 }
