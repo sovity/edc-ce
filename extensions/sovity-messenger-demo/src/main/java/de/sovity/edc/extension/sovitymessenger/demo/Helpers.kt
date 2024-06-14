@@ -1,8 +1,8 @@
 package de.sovity.edc.extension.sovitymessenger.demo
 
-import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry
-import de.sovity.edc.extension.custommessages.api.SovityMessenger
-import de.sovity.edc.extension.custommessages.api.SovityMessage
+import de.sovity.edc.extension.messenger.api.MessageHandlerRegistry
+import de.sovity.edc.extension.messenger.api.SovityMessenger
+import de.sovity.edc.extension.messenger.api.SovityMessage
 import org.eclipse.edc.spi.response.StatusResult
 import java.util.concurrent.CompletableFuture
 import java.util.function.Function

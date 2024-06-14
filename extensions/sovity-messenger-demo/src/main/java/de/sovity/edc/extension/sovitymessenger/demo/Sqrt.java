@@ -2,7 +2,7 @@ package de.sovity.edc.extension.sovitymessenger.demo;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import de.sovity.edc.extension.custommessages.api.SovityMessage;
+import de.sovity.edc.extension.messenger.api.SovityMessage;
 
 public class Sqrt implements SovityMessage {
 

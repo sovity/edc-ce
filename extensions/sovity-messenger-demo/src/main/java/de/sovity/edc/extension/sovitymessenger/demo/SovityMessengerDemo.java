@@ -1,7 +1,7 @@
 package de.sovity.edc.extension.sovitymessenger.demo;
 
-import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry;
-import de.sovity.edc.extension.custommessages.api.SovityMessenger;
+import de.sovity.edc.extension.messenger.api.MessageHandlerRegistry;
+import de.sovity.edc.extension.messenger.api.SovityMessenger;
 import lombok.val;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.system.ServiceExtension;
