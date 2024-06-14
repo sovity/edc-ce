@@ -29,8 +29,12 @@ dependencies {
 
     testCompileOnly(libs.lombok)
 
+    testImplementation(project(":utils:test-connector-remote"))
+
     testImplementation(libs.edc.junit)
     testImplementation(libs.edc.dataPlaneSelectorCore)
+    testImplementation(libs.edc.dspApiConfiguration)
+    testImplementation(libs.edc.dspHttpCore)
     testImplementation(libs.edc.iamMock)
     testImplementation(libs.edc.jsonLd)
 

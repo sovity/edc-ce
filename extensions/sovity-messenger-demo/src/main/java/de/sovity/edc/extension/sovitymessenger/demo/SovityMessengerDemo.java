@@ -2,17 +2,26 @@ package de.sovity.edc.extension.sovitymessenger.demo;
 
 import de.sovity.edc.extension.messenger.api.MessageHandlerRegistry;
 import de.sovity.edc.extension.messenger.api.SovityMessenger;
-import lombok.val;
+import de.sovity.edc.extension.sovitymessenger.demo.message.Addition;
+import de.sovity.edc.extension.sovitymessenger.demo.message.Answer;
+import de.sovity.edc.extension.sovitymessenger.demo.message.Sqrt;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 
 import java.util.function.Function;
 
+import static java.lang.Math.sqrt;
+
 
 public class SovityMessengerDemo implements ServiceExtension {
 
     public static final String NAME = "sovityMessengerDemo";
+
+    @Override
+    public String name() {
+        return NAME;
+    }
 
     @Inject
     private SovityMessenger sovityMessenger;
@@ -22,8 +31,17 @@ public class SovityMessengerDemo implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        registry.register(Sqrt.class, (Function<Sqrt, Answer>) single -> new Answer(Math.sqrt(single.getA())));
+        /*
+         * Register the various messages that you would like to process.
+         */
+        registry.register(Sqrt.class, (Function<Sqrt, Answer>) single -> new Answer(sqrt(single.getA())));
+        registry.register(Addition.class, (Function<Addition, Answer>) add -> new Answer(add.a + add.b));
 
-        val answer = sovityMessenger.send(Answer.class, "http://localhost/api/dsp", new Sqrt(9.0));
+        /*
+         * In the other connector, the messages above can be sent with the code below.
+         * Check out the de.sovity.edc.extension.sovitymessenger.demo.SovityMessengerDemoTest#demo()
+         * for a detailed usage.
+         */
+//        val answer = sovityMessenger.send(Answer.class, "http://localhost/api/dsp", new Sqrt(9.0));
     }
 }

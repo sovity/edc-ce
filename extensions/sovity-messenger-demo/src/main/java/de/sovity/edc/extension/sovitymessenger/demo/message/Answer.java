@@ -1,4 +1,4 @@
-package de.sovity.edc.extension.sovitymessenger.demo;
+package de.sovity.edc.extension.sovitymessenger.demo.message;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.sovity.edc.extension.messenger.api.SovityMessage;
@@ -14,7 +14,7 @@ public class Answer implements SovityMessage {
 
     @Override
     public String getType() {
-        return "answer";
+        return Common.ROOT + "answer";
     }
 
     @JsonProperty

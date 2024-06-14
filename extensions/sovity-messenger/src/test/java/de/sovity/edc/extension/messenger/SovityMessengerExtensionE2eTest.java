@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class E2eTest {
+public class SovityMessengerExtensionE2eTest {
     private static final String EMITTER_PARTICIPANT_ID = "emitter";
     private static final String RECEIVER_PARTICIPANT_ID = "receiver";
 
@@ -61,13 +61,6 @@ public class E2eTest {
         new ConnectorRemote(fromConnectorConfig(consumerConfig)); // TODO: needed?
 
         counterPartyAddress = "http://localhost:" + consumerConfig.getProtocolEndpoint().port() + consumerConfig.getProtocolEndpoint().path();
-    }
-
-    static class UnsupportedMessage implements SovityMessage {
-        @Override
-        public String getType() {
-            return getClass().getCanonicalName();
-        }
     }
 
     @Test
@@ -113,7 +106,6 @@ public class E2eTest {
             val exception = assertThrows(ExecutionException.class, added::get);
             assertThat(exception.getCause()).isInstanceOf(SovityMessengerException.class);
         });
-
     }
 
     // TODO: test unsupported messages
