@@ -501,7 +501,7 @@ class DataSourceParameterizationTest {
         Map<String, String> dataSinkProperties = new HashMap<>();
         dataSinkProperties.put(EDC_NAMESPACE + "baseUrl", destinationUrl);
         dataSinkProperties.put(EDC_NAMESPACE + "method", HttpMethod.PUT);
-        dataSinkProperties.put(EDC_NAMESPACE + "type", "HttpData"); // TODO: http proxy
+        dataSinkProperties.put(EDC_NAMESPACE + "type", "HttpData");
         transferProcessProperties.put(rootKey + METHOD, testCase.method);
 
         if (testCase.body != null) {
