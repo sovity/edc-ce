@@ -7,6 +7,7 @@ on:
 
 jobs:
   add_issue_to_project:
+    if: "!(startsWith(github.event.issue.title, '[Zammad Ticket') && github.event.issue.user.login == 'sovitybot')"
     name: add_issue_to_project
     runs-on: ubuntu-latest
     steps:
