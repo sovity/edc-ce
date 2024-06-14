@@ -2,12 +2,21 @@ package de.sovity.edc.extension.custommessages.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * The interface to implement when sending a message via the {@link SovityMessenger}.
+ * <br>
+ * The classes extending this interface must annotate the private fields to be sent with Jackson's
+ * {@link com.fasterxml.jackson.annotation.JsonProperty}.
+ * {@code public} fields are serialized automatically.
+ * <br>
+ * See <a href="https://www.baeldung.com/jackson-field-serializable-deserializable-or-not">this doc</a>
+ * for more detailed info about Jackson's serialization.
+ */
 public interface SovityMessage {
     /**
-     * @return A unique string to identify the type of message.
+     * To avoid conflicts, it is recommended to use Java package-like naming convention.
+     * @return A unique string across all possible messages to identify the type of message.
      */
     @JsonIgnore
     String getType();
-
-    // TODO: maybe for to tell the return type here
 }

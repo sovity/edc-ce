@@ -2,7 +2,7 @@ package de.sovity.edc.extension.custommessages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry;
-import de.sovity.edc.extension.custommessages.api.PostOffice;
+import de.sovity.edc.extension.custommessages.api.SovityMessenger;
 import de.sovity.edc.extension.custommessages.api.SovityMessage;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
@@ -13,7 +13,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.val;
-import org.assertj.core.api.Assertions;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.iam.TokenDecorator;
 import org.junit.jupiter.api.BeforeEach;
@@ -131,7 +130,7 @@ public class E2eTest {
 
     @Test
     void e2eAuthTest() throws URISyntaxException, MalformedURLException {
-        val postOffice = emitterEdcContext.getContext().getService(PostOffice.class);
+        val postOffice = emitterEdcContext.getContext().getService(SovityMessenger.class);
         val handlers = receiverEdcContext.getContext().getService(MessageHandlerRegistry.class);
         handlers.register("add", (Function<Addition, Answer>) in -> new Answer(in.getA() + in.getB()));
         handlers.register("mul", (Function<Addition, Answer>) in -> new Answer(in.getA() * in.getB()));

@@ -1,5 +1,6 @@
 package de.sovity.edc.extension.custommessages.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry;
 import de.sovity.edc.extension.custommessages.api.SovityMessage;
@@ -18,7 +19,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.val;
 import org.eclipse.edc.protocol.dsp.api.configuration.error.DspErrorResponse;
 import org.eclipse.edc.spi.EdcException;
@@ -32,6 +32,7 @@ import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.UUID;
 
@@ -48,7 +49,6 @@ public class CustomMessageReceiverController {
     @Getter
     private final MessageHandlerRegistry handlers;
 
-    @SneakyThrows // TODO: rm after URL()) is removed
     @POST
     public Response post(
         @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
@@ -57,20 +57,15 @@ public class CustomMessageReceiverController {
 
         val validation = validateToken(authorization);
         if (validation.failed()) {
-            // TODO: add test: unauth on failed val
             return Response.status(
                 Response.Status.UNAUTHORIZED.getStatusCode(),
                 String.join(", ", validation.getFailureMessages())
             ).build();
         }
 
-        // TODO: test token is valid
-
         val compacted = JsonLdUtils.tryCompact(jsonObject);
-        val headerStr = compacted.getString(Prop.SovityMessageExt.HEADER);
-        val header = Json.createReader(new StringReader(headerStr)).readObject();
 
-        val messageType = header.getString("type");
+        val messageType = extractMessageType(compacted);
 
         val handler = getHandler(messageType);
         if (handler == null) {
@@ -78,20 +73,10 @@ public class CustomMessageReceiverController {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        val bodyStr = compacted.getString(Prop.SovityMessageExt.BODY);
-
         // TODO: how to ensure compatibility between different version of the messenger plugin?
         //  may have different serializer?
         //  may have different options on the same serializer?
-
-        val parsed = mapper.readValue(bodyStr, handler.clazz());
-        val result = handler.handler().handle(parsed);
-        val resultBody = mapper.writeValueAsString(result);
-
-        val response = new SovityMessageRecord(
-            new URL("https://example.com"), // TODO: the return type doesn't need any URL
-            buildOkHeader(handler.clazz()),
-            resultBody);
+        val response = processMessage(compacted, handler);
 
         // TODO: change the response type to somthing that has no address
         return typeTransformerRegistry.transform(response, JsonObject.class)
@@ -103,6 +88,33 @@ public class CustomMessageReceiverController {
                     .type(Prop.SovityMessageExt.MESSAGE)
                     .internalServerError();
             });
+    }
+
+    private static String extractMessageType(JsonObject compacted) {
+        val headerStr = compacted.getString(Prop.SovityMessageExt.HEADER);
+        val header = Json.createReader(new StringReader(headerStr)).readObject();
+
+        val messageType = header.getString("type");
+        return messageType;
+    }
+
+    private SovityMessageRecord processMessage(JsonObject compacted, MessageHandlerRegistry.Handler<Object, Object> handler) {
+        try {
+
+            val bodyStr = compacted.getString(Prop.SovityMessageExt.BODY);
+            val parsed = mapper.readValue(bodyStr, handler.clazz());
+            val result = handler.handler().apply(parsed);
+            val resultBody = mapper.writeValueAsString(result);
+
+            val response = new SovityMessageRecord(
+                new URL("https://example.com"), // TODO: the return type doesn't need any URL
+                buildOkHeader(handler.clazz()),
+                resultBody);
+
+            return response;
+        } catch (JsonProcessingException | MalformedURLException e) {
+            throw new EdcException("Failed to process the message", e);
+        }
     }
 
     private String buildOkHeader(Class<?> clazz) {

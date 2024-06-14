@@ -21,6 +21,6 @@ class MessageHandlerRegistryImplTest {
         val back = handlers.getHandler("itoa");
 
         // assert
-        assertThat(back.handler().handle(1)).isEqualTo("1");
+        assertThat(back.handler().apply(1)).isEqualTo("1");
     }
 }

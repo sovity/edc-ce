@@ -1,7 +1,7 @@
 package de.sovity.edc.extension.sovitymessenger.demo
 
 import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry
-import de.sovity.edc.extension.custommessages.api.PostOffice
+import de.sovity.edc.extension.custommessages.api.SovityMessenger
 import de.sovity.edc.extension.custommessages.api.SovityMessage
 import org.eclipse.edc.spi.response.StatusResult
 import java.util.concurrent.CompletableFuture
@@ -12,7 +12,7 @@ inline fun <reified IN, OUT> MessageHandlerRegistry.registerKt(crossinline actio
     this.register(IN::class.java, Function<IN, OUT> { action(it) })
 }
 
-inline fun <reified OUT> PostOffice.send(
+inline fun <reified OUT> SovityMessenger.send(
     counterPartyAddress: String,
     payload: SovityMessage
 ): CompletableFuture<StatusResult<OUT>>
