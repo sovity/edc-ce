@@ -110,7 +110,6 @@ class DataSourceParameterizationTest {
     private final String destinationPath = "/destination/some/path/";
     private final String sourceUrl = "http://localhost:" + port + sourcePath;
     private final String destinationUrl = "http://localhost:" + port + destinationPath;
-    // TODO: remove the test backend dependency?
     private ClientAndServer mockServer;
 
     private static final AtomicInteger DATA_OFFER_INDEX = new AtomicInteger(0);
