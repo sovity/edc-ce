@@ -15,6 +15,24 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
+#### Patch Changes
+
+### Deployment Migration Notes
+
+## [8.1.0] - 2024-06-14
+
+### Overview
+
+Support for Multiplicity Constraints in the API Wrapper.
+
+### EDC UI
+
+- https://github.com/sovity/edc-ui/releases/tag/v3.2.2
+
+### EDC Extensions and Broker
+
+#### Minor Changes
+
 - API Wrapper 
   - Support for Multiplicity Constraints (https://github.com/sovity/edc-extensions/issues/968)
   - Providing `Prop` class from `json-and-jsonld-utils` to the java-client to make relevant Constants available
@@ -23,7 +41,14 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 - Postman-collection: Fixed an issue where an API-call was previously wrong in the details of the POST-body.
 
-### Deployment Migration Notes
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:8.1.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:8.1.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:8.1.0`
+  - Broker CE: `ghcr.io/sovity/broker-server-ce:8.1.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.2`
 
 ## [8.0.0] - 2024-06-05
 
