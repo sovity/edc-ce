@@ -86,13 +86,7 @@ public class SovityMessengerExtension implements ServiceExtension {
     }
 
     private void setupSovityMessengerReceiver(ObjectMapper objectMapper, MessageHandlerRegistry handlers) {
-        val receiver = new CustomMessageReceiverController(
-            identityService,
-            dspApiConfiguration.getDspCallbackAddress(),
-            typeTransformerRegistry,
-            monitor,
-            objectMapper,
-            handlers);
+        val receiver = new CustomMessageReceiverController(identityService, dspApiConfiguration.getDspCallbackAddress(), typeTransformerRegistry, monitor, objectMapper, handlers);
 
         webService.registerResource(dspApiConfiguration.getContextAlias(), receiver);
 

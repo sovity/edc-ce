@@ -18,7 +18,7 @@ public class Addition implements SovityMessage {
     }
 
     @JsonProperty("a")
-    private int a;
+    private int op1;
     @JsonProperty("b")
-    private int b;
+    private int op2;
 }

@@ -38,8 +38,8 @@ class CustomMessageReceiverControllerTest {
     @AllArgsConstructor
     @NoArgsConstructor
     static class Payload implements SovityMessage {
-        @JsonProperty("integer")
-        private Integer i;
+        @JsonProperty("integer") // TODO: no name needed
+        private Integer integer;
 
         @Override
         public String getType() {
@@ -52,7 +52,7 @@ class CustomMessageReceiverControllerTest {
     @NoArgsConstructor
     static class Answer implements SovityMessage {
         @JsonProperty("string")
-        private String s;
+        private String string;
 
         @Override
         public String getType() {
@@ -99,7 +99,7 @@ class CustomMessageReceiverControllerTest {
             handlers
         );
 
-        Function<Payload, Answer> handler = payload -> new Answer(String.valueOf(payload.getI()));
+        Function<Payload, Answer> handler = payload -> new Answer(String.valueOf(payload.getInteger()));
         handlers.register("foo", handler);
 
         val message = new SovityMessageRequest(
@@ -123,14 +123,7 @@ class CustomMessageReceiverControllerTest {
         val identityService = mock(IdentityService.class);
         when(identityService.verifyJwtToken(any(), any())).thenReturn(Result.failure("Invalid token"));
 
-        val controller = new CustomMessageReceiverController(
-            identityService,
-            "http://example.com/callback",
-            transformers,
-            monitor,
-            objectMapper,
-            handlers
-        );
+        val controller = new CustomMessageReceiverController(identityService, "http://example.com/callback", transformers, monitor, objectMapper, handlers);
 
         val message = new SovityMessageRequest(
             new URL("https://example.com/api"), """

@@ -27,6 +27,7 @@ To provide a simple way to exchange messages between EDCs without complying with
 You can find a demo project in [sovity-messenger-demo](../sovity-messenger-demo).
 
 The 2 key entry points are:
+
 - The configuration of the backend, to receive messages, in [SovityMessengerDemo.java](../sovity-messenger-demo/src/main/java/de/sovity/edc/extension/sovitymessenger/demo/SovityMessengerDemo.java)
 - The usage of the custom messages, implemented as a client e2e test [SovityMessengerDemoTest.java](../sovity-messenger-demo/src/test/java/de/sovity/edc/extension/sovitymessenger/demo/SovityMessengerDemoTest.java)
 

@@ -1,16 +1,15 @@
 package de.sovity.edc.extension.messenger;
 
+import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.db.TestDatabase;
+import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import de.sovity.edc.extension.messenger.api.MessageHandlerRegistry;
-import de.sovity.edc.extension.messenger.api.SovityMessage;
 import de.sovity.edc.extension.messenger.api.SovityMessenger;
 import de.sovity.edc.extension.messenger.api.SovityMessengerException;
 import de.sovity.edc.extension.messenger.dto.Addition;
 import de.sovity.edc.extension.messenger.dto.Answer;
 import de.sovity.edc.extension.messenger.dto.Multiplication;
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import lombok.val;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.iam.TokenDecorator;
@@ -67,8 +66,8 @@ public class SovityMessengerExtensionE2eTest {
     void e2eTest() {
         val sovityMessenger = emitterEdcContext.getContext().getService(SovityMessenger.class);
         val handlers = receiverEdcContext.getContext().getService(MessageHandlerRegistry.class);
-        handlers.register("add", (Function<Addition, Answer>) in -> new Answer(in.getA() + in.getB()));
-        handlers.register("mul", (Function<Addition, Answer>) in -> new Answer(in.getA() * in.getB()));
+        handlers.register("add", (Function<Addition, Answer>) in -> new Answer(in.getOp1() + in.getOp2()));
+        handlers.register("mul", (Function<Addition, Answer>) in -> new Answer(in.getOp1() * in.getOp2()));
 
         // TODO: no need to tell the destination address, it's always on the DSP port
         val counterPartyAddress = "http://localhost:" + consumerConfig.getProtocolEndpoint().port() + consumerConfig.getProtocolEndpoint().path();

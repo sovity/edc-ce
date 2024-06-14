@@ -1,7 +1,6 @@
 plugins {
     `java-library`
     `maven-publish`
-    kotlin("jvm")
 }
 
 dependencies {

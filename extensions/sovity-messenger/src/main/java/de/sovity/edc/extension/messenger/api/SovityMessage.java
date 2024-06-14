@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public interface SovityMessage {
     /**
      * To avoid conflicts, it is recommended to use Java package-like naming convention.
+     *
      * @return A unique string across all possible messages to identify the type of message.
      */
     @JsonIgnore
