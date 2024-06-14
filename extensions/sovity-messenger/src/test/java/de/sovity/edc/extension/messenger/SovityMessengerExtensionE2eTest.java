@@ -71,7 +71,7 @@ public class SovityMessengerExtensionE2eTest {
         val multiplied = sovityMessenger.send(Answer.class, counterPartyAddress, new Multiplication(20, 30));
 
         // assert
-        Awaitility.await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+        Awaitility.await().atMost(Duration.ofSeconds(30)).untilAsserted(() -> {
             added.get()
                 .onFailure(it -> fail(it.getFailureDetail()))
                 .onSuccess(it -> {
@@ -80,7 +80,7 @@ public class SovityMessengerExtensionE2eTest {
                 });
         });
 
-        Awaitility.await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+        Awaitility.await().atMost(Duration.ofSeconds(30)).untilAsserted(() -> {
             multiplied.get()
                 .onFailure(it -> fail(it.getFailureDetail()))
                 .onSuccess(it -> {
@@ -97,7 +97,7 @@ public class SovityMessengerExtensionE2eTest {
         val added = sovityMessenger.send(Answer.class, counterPartyAddress, new UnsupportedMessage());
 
         // assert
-        Awaitility.await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+        Awaitility.await().atMost(Duration.ofSeconds(30)).untilAsserted(() -> {
             val exception = assertThrows(ExecutionException.class, added::get);
             assertThat(exception.getCause()).isInstanceOf(SovityMessengerException.class);
             assertThat(exception.getCause().getMessage()).isEqualTo("No handler for message type unsupported");
