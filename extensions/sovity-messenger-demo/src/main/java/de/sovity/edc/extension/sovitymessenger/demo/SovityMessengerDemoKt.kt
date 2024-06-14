@@ -18,9 +18,7 @@ class SovityMessengerDemoKt : ServiceExtension {
 
         registry.registerKt { it: Sqrt -> Answer(sqrt(it.a)) }
 
-        val answer = postOffice.send<Answer>("http://localhost/api/dsp",
-            Sqrt(9.0)
-        )
+        val answer = postOffice.send<Answer>("http://localhost/api/dsp", Sqrt(9.0))
     }
 
     companion object {

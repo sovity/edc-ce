@@ -33,8 +33,8 @@ class SovityMessageRecordTest {
         JSONAssert.assertEquals(
             """
                 {
-                  "https://semantic.sovity.io/message/generic#header": "{\\"type\\":\\"foo\\"}",
-                  "https://semantic.sovity.io/message/generic#body": "body content"
+                  "https://semantic.sovity.io/message/generic/header": "{\\"type\\":\\"foo\\"}",
+                  "https://semantic.sovity.io/message/generic/body": "body content"
                 }
                 """,
             serialized,
