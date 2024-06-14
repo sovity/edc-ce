@@ -7,6 +7,7 @@ import de.sovity.edc.extension.custommessages.api.SovityMessage;
 import de.sovity.edc.extension.custommessages.api.SovityMessageApi;
 import de.sovity.edc.extension.custommessages.impl.SovityMessageRequest;
 import de.sovity.edc.extension.custommessages.impl.SovityMessageResponse;
+import de.sovity.edc.extension.custommessages.impl.SovityMessengerStatus;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
@@ -63,7 +64,12 @@ public class CustomMessageReceiverController {
         val handler = getHandler(request);
         if (handler == null) {
             // TODO: change status for standard message with header status and error description
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            SovityMessageResponse errorAnswer = buildErrorNoHandlerHeader(request);
+            return Response.ok()
+                .type(MediaType.APPLICATION_JSON)
+                .entity(
+                    errorAnswer
+                ).build();
         }
 
         // TODO: how to ensure compatibility between different version of the messenger plugin?
@@ -107,7 +113,7 @@ public class CustomMessageReceiverController {
             constructor.setAccessible(true);
             String type = ((SovityMessage) constructor.newInstance()).getType();
             JsonObject header = Json.createObjectBuilder()
-                .add("status", "ok")
+                .add("status", SovityMessengerStatus.OK.getCode())
                 .add("type", type)
                 .build();
             return JsonUtils.toJson(header);
@@ -121,17 +127,26 @@ public class CustomMessageReceiverController {
         return identityService.verifyJwtToken(token, callbackAddress);
     }
 
-    private JsonObject noHandlerForMessageType(String messageType) {
-        return Json.createObjectBuilder()
-            .add("status", "error")
-            .add("message", "Not handler for message type " + messageType)
+    private SovityMessageResponse buildErrorNoHandlerHeader(SovityMessageRequest request) {
+        val messageType = getMessageType(request);
+        val json = Json.createObjectBuilder()
+            .add("status", SovityMessengerStatus.NO_HANDLER.getCode())
+            .add("message", "No handler for message type " + messageType)
             .build();
+        val headerStr = JsonUtils.toJson(json);
+
+        return new SovityMessageResponse(headerStr, "");
     }
 
     private MessageHandlerRegistry.Handler<Object, Object> getHandler(SovityMessageRequest request) {
+        final var messageType = getMessageType(request);
+        return handlers.getHandler(messageType);
+    }
+
+    private static String getMessageType(SovityMessageRequest request) {
         val headerStr = request.header();
         val header = Json.createReader(new StringReader(headerStr)).readObject();
         val messageType = header.getString("type");
-        return handlers.getHandler(messageType);
+        return messageType;
     }
 }

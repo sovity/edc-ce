@@ -144,4 +144,5 @@ class CustomMessageReceiverControllerTest {
             assertThat(response.getStatus()).isEqualTo(Response.Status.UNAUTHORIZED.getStatusCode());
         }
     }
+
 }

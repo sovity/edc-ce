@@ -90,7 +90,7 @@ public class CustomMessagesSenderExtension implements ServiceExtension {
 
         typeTransformerRegistry.register(new JsonObjectFromSovityMessageRequest());
 
-        val postOffice = new SovityMessengerImpl(registry, objectMapper);
-        context.registerService(SovityMessenger.class, postOffice);
+        val sovityMessenger = new SovityMessengerImpl(registry, objectMapper);
+        context.registerService(SovityMessenger.class, sovityMessenger);
     }
 }

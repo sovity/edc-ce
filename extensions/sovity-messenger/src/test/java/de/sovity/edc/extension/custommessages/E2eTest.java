@@ -2,8 +2,9 @@ package de.sovity.edc.extension.custommessages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.sovity.edc.extension.custommessages.api.MessageHandlerRegistry;
-import de.sovity.edc.extension.custommessages.api.SovityMessenger;
 import de.sovity.edc.extension.custommessages.api.SovityMessage;
+import de.sovity.edc.extension.custommessages.api.SovityMessageException;
+import de.sovity.edc.extension.custommessages.api.SovityMessenger;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.iam.TokenDecorator;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -23,11 +25,14 @@ import org.testcontainers.shaded.org.awaitility.Awaitility;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.time.Duration;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class E2eTest {
@@ -44,36 +49,24 @@ public class E2eTest {
     @RegisterExtension
     static final TestDatabase RECEIVER_DATABASE = new TestDatabaseViaTestcontainers();
 
-    private ConnectorRemote emitterConnector;
-    private ConnectorRemote receiverConnector;
-
     private ConnectorConfig providerConfig;
     private ConnectorConfig consumerConfig;
 
+    private String counterPartyAddress;
+
     @BeforeEach
     void setup() {
-        providerConfig = forTestDatabase(EMITTER_PARTICIPANT_ID, 21000, EMITTER_DATABASE);
+        providerConfig = forTestDatabase(EMITTER_PARTICIPANT_ID, EMITTER_DATABASE);
         emitterEdcContext.setConfiguration(providerConfig.getProperties());
         emitterEdcContext.registerServiceMock(TokenDecorator.class, (td) -> td);
-        emitterConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
+        new ConnectorRemote(fromConnectorConfig(providerConfig)); // TODO: needed?
 
-//        providerClient = EdcClient.builder()
-//            .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-//            .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-//            .build();
-
-        consumerConfig = forTestDatabase(RECEIVER_PARTICIPANT_ID, 23000, RECEIVER_DATABASE);
+        consumerConfig = forTestDatabase(RECEIVER_PARTICIPANT_ID, RECEIVER_DATABASE);
         receiverEdcContext.setConfiguration(consumerConfig.getProperties());
         receiverEdcContext.registerServiceMock(TokenDecorator.class, (td) -> td);
-        receiverConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
+        new ConnectorRemote(fromConnectorConfig(consumerConfig)); // TODO: needed?
 
-//        consumerClient = EdcClient.builder()
-//            .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-//            .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-//            .build();
-
-        // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-//        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
+        counterPartyAddress = "http://localhost:" + consumerConfig.getProtocolEndpoint().port() + consumerConfig.getProtocolEndpoint().path();
     }
 
     static class UnsupportedMessage implements SovityMessage {
@@ -129,16 +122,16 @@ public class E2eTest {
     }
 
     @Test
-    void e2eAuthTest() throws URISyntaxException, MalformedURLException {
-        val postOffice = emitterEdcContext.getContext().getService(SovityMessenger.class);
+    void e2eTest() {
+        val sovityMessenger = emitterEdcContext.getContext().getService(SovityMessenger.class);
         val handlers = receiverEdcContext.getContext().getService(MessageHandlerRegistry.class);
         handlers.register("add", (Function<Addition, Answer>) in -> new Answer(in.getA() + in.getB()));
         handlers.register("mul", (Function<Addition, Answer>) in -> new Answer(in.getA() * in.getB()));
 
         // TODO: no need to tell the destination address, it's always on the DSP port
         val counterPartyAddress = "http://localhost:" + consumerConfig.getProtocolEndpoint().port() + consumerConfig.getProtocolEndpoint().path();
-        val added = postOffice.send(Answer.class, counterPartyAddress, new Addition(20, 30));
-        val multiplied = postOffice.send(Answer.class, counterPartyAddress, new Multiplication(20, 30));
+        val added = sovityMessenger.send(Answer.class, counterPartyAddress, new Addition(20, 30));
+        val multiplied = sovityMessenger.send(Answer.class, counterPartyAddress, new Multiplication(20, 30));
 
         // assert
         Awaitility.await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
@@ -159,4 +152,20 @@ public class E2eTest {
                 });
         });
     }
+
+    @Test
+    void e2eNoHandlerTest() {
+        val sovityMessenger = emitterEdcContext.getContext().getService(SovityMessenger.class);
+
+        val added = sovityMessenger.send(Answer.class, counterPartyAddress, new Addition(20, 30));
+
+        // assert
+        Awaitility.await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
+            val exception = assertThrows(ExecutionException.class, added::get);
+            assertThat(exception.getCause()).isInstanceOf(SovityMessageException.class);
+        });
+
+    }
+
+    // TODO: test unsupported messages
 }

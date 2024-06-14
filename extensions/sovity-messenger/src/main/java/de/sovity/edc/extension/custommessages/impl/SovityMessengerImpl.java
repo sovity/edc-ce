@@ -2,8 +2,9 @@ package de.sovity.edc.extension.custommessages.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.extension.custommessages.api.SovityMessenger;
 import de.sovity.edc.extension.custommessages.api.SovityMessage;
+import de.sovity.edc.extension.custommessages.api.SovityMessageException;
+import de.sovity.edc.extension.custommessages.api.SovityMessenger;
 import de.sovity.edc.utils.JsonUtils;
 import jakarta.json.Json;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,14 @@ public class SovityMessengerImpl implements SovityMessenger {
             val future = registry.dispatch(SovityMessageRequest.class, message);
             return future.thenApply(it -> it.map(content -> {
                 try {
-                    return serializer.readValue(content.body(), resultType);
+                    String resultHeaderStr = content.header();
+                    val resultHeader = JsonUtils.parseJsonObj(resultHeaderStr);
+                    if (resultHeader.getString("status").equals(SovityMessengerStatus.OK.getCode())) {
+                        val resultBody = content.body();
+                        return serializer.readValue(resultBody, resultType);
+                    } else {
+                        throw new SovityMessageException(resultHeader.getString("message"));
+                    }
                 } catch (JsonProcessingException e) {
                     throw new EdcException(e);
                 }
