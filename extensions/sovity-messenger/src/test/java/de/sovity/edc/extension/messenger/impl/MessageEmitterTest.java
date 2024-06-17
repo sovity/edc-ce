@@ -33,7 +33,7 @@ class MessageEmitterTest {
     private final ObjectMapperFactory mapperFactory = new ObjectMapperFactory();
 
     @Test
-    void emmitValidMessage_whenEmpty_shouldSucceed() throws IOException {
+    void emitValidMessage_whenEmpty_shouldSucceed() throws IOException {
         // arrange
         TypeTransformerRegistry registry = new TypeTransformerRegistryImpl();
         registry.register(new JsonObjectFromSovityMessageRequest());

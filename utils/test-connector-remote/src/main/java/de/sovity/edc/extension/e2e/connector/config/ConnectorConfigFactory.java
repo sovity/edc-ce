@@ -32,8 +32,12 @@ import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ConnectorConfigFactory {
 
-    private static Random random = new Random();
+    private static final Random RANDOM = new Random();
 
+    /**
+     * @deprecated Use {@link ConnectorConfigFactory#forTestDatabase(String, TestDatabase)}
+     * with automatic ports allocation to prevent port allocation conflicts.
+     */
     @Deprecated
     public static ConnectorConfig forTestDatabase(String participantId, int firstPort, TestDatabase testDatabase) {
         var config = basicEdcConfig(participantId, firstPort);
@@ -50,7 +54,7 @@ public class ConnectorConfigFactory {
 
     private static synchronized int getFreePortRange(int size) {
         // pick a random in a reasonable range
-        int firstPort = getFreePort(random.nextInt(10_000, 50_000));
+        int firstPort = getFreePort(RANDOM.nextInt(10_000, 50_000));
 
         int currentPort = firstPort;
         do {

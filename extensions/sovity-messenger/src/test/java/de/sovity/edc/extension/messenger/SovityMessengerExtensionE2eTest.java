@@ -16,9 +16,6 @@ package de.sovity.edc.extension.messenger;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
-import de.sovity.edc.extension.messenger.api.MessageHandlerRegistry;
-import de.sovity.edc.extension.messenger.api.SovityMessenger;
-import de.sovity.edc.extension.messenger.api.SovityMessengerException;
 import de.sovity.edc.extension.messenger.dto.Addition;
 import de.sovity.edc.extension.messenger.dto.Answer;
 import de.sovity.edc.extension.messenger.dto.Multiplication;
@@ -29,13 +26,12 @@ import org.eclipse.edc.spi.iam.TokenDecorator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.testcontainers.shaded.org.awaitility.Awaitility;
 
-import java.time.Duration;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Function;
+import java.util.concurrent.TimeoutException;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -69,38 +65,33 @@ public class SovityMessengerExtensionE2eTest {
         receiverEdcContext.setConfiguration(consumerConfig.getProperties());
         receiverEdcContext.registerServiceMock(TokenDecorator.class, (td) -> td);
 
-        counterPartyAddress = "http://localhost:" + consumerConfig.getProtocolEndpoint().port() + consumerConfig.getProtocolEndpoint().path();
+        counterPartyAddress = consumerConfig.getProtocolEndpoint().getUri().toString();
     }
 
     @Test
-    void e2eTest() {
+    void e2eTest() throws ExecutionException, InterruptedException, TimeoutException {
         val sovityMessenger = emitterEdcContext.getContext().getService(SovityMessenger.class);
-        val handlers = receiverEdcContext.getContext().getService(MessageHandlerRegistry.class);
-        handlers.register("add", (Function<Addition, Answer>) in -> new Answer(in.getOp1() + in.getOp2()));
-        handlers.register("mul", (Function<Addition, Answer>) in -> new Answer(in.getOp1() * in.getOp2()));
+        val handlers = receiverEdcContext.getContext().getService(SovityMessengerRegistry.class);
+        handlers.register(Addition.class, in -> new Answer(in.getOp1() + in.getOp2()));
+        handlers.register(Multiplication.class, in -> new Answer(in.getOp1() * in.getOp2()));
 
-        val counterPartyAddress = "http://localhost:" + consumerConfig.getProtocolEndpoint().port() + consumerConfig.getProtocolEndpoint().path();
         val added = sovityMessenger.send(Answer.class, counterPartyAddress, new Addition(20, 30));
         val multiplied = sovityMessenger.send(Answer.class, counterPartyAddress, new Multiplication(20, 30));
 
         // assert
-        Awaitility.await().atMost(Duration.ofSeconds(30)).untilAsserted(() -> {
-            added.get()
-                .onFailure(it -> fail(it.getFailureDetail()))
-                .onSuccess(it -> {
-                    assertThat(it).isInstanceOf(Answer.class);
-                    assertThat(it.getAnswer()).isEqualTo(50);
-                });
-        });
+        added.get(30, SECONDS)
+            .onFailure(it -> fail(it.getFailureDetail()))
+            .onSuccess(it -> {
+                assertThat(it).isInstanceOf(Answer.class);
+                assertThat(it.getAnswer()).isEqualTo(50);
+            });
 
-        Awaitility.await().atMost(Duration.ofSeconds(30)).untilAsserted(() -> {
-            multiplied.get()
-                .onFailure(it -> fail(it.getFailureDetail()))
-                .onSuccess(it -> {
-                    assertThat(it).isInstanceOf(Answer.class);
-                    assertThat(it.getAnswer()).isEqualTo(600);
-                });
-        });
+        multiplied.get(30, SECONDS)
+            .onFailure(it -> fail(it.getFailureDetail()))
+            .onSuccess(it -> {
+                assertThat(it).isInstanceOf(Answer.class);
+                assertThat(it.getAnswer()).isEqualTo(600);
+            });
     }
 
     @Test
@@ -110,11 +101,9 @@ public class SovityMessengerExtensionE2eTest {
         val added = sovityMessenger.send(Answer.class, counterPartyAddress, new UnsupportedMessage());
 
         // assert
-        Awaitility.await().atMost(Duration.ofSeconds(30)).untilAsserted(() -> {
-            val exception = assertThrows(ExecutionException.class, added::get);
-            assertThat(exception.getCause()).isInstanceOf(SovityMessengerException.class);
-            assertThat(exception.getCause().getMessage()).isEqualTo("No handler for message type unsupported");
-        });
+        val exception = assertThrows(ExecutionException.class, () -> added.get(30, SECONDS));
+        assertThat(exception.getCause()).isInstanceOf(SovityMessengerException.class);
+        assertThat(exception.getCause().getMessage()).isEqualTo("No handler for message type unsupported");
     }
 
 }

@@ -14,17 +14,13 @@
 package de.sovity.edc.extension.messenger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.extension.messenger.api.MessageHandlerRegistry;
-import de.sovity.edc.extension.messenger.api.SovityMessenger;
-import de.sovity.edc.extension.messenger.controller.CustomMessageReceiverController;
+import de.sovity.edc.extension.messenger.controller.SovityMessageController;
 import de.sovity.edc.extension.messenger.impl.JsonObjectFromSovityMessageRequest;
 import de.sovity.edc.extension.messenger.impl.JsonObjectFromSovityMessageResponse;
 import de.sovity.edc.extension.messenger.impl.MessageEmitter;
-import de.sovity.edc.extension.messenger.impl.MessageHandlerRegistryImpl;
 import de.sovity.edc.extension.messenger.impl.MessageReceiver;
 import de.sovity.edc.extension.messenger.impl.ObjectMapperFactory;
 import de.sovity.edc.extension.messenger.impl.SovityMessageRequest;
-import de.sovity.edc.extension.messenger.impl.SovityMessengerImpl;
 import lombok.val;
 import org.eclipse.edc.protocol.dsp.api.configuration.DspApiConfiguration;
 import org.eclipse.edc.protocol.dsp.spi.dispatcher.DspHttpRemoteMessageDispatcher;
@@ -40,7 +36,7 @@ import org.eclipse.edc.spi.types.TypeManager;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.WebService;
 
-@Provides({SovityMessenger.class, MessageHandlerRegistry.class})
+@Provides({SovityMessenger.class, SovityMessengerRegistry.class})
 public class SovityMessengerExtension implements ServiceExtension {
 
     public static final String NAME = "SovityMessenger";
@@ -80,10 +76,9 @@ public class SovityMessengerExtension implements ServiceExtension {
     @Override
     public void initialize(ServiceExtensionContext context) {
         val objectMapper = new ObjectMapperFactory().createObjectMapper();
-        val handlers = new MessageHandlerRegistryImpl();
-        context.registerService(MessageHandlerRegistry.class, handlers);
+        val handlers = new SovityMessengerRegistry();
         setupSovityMessengerEmitter(context, objectMapper);
-        setupSovityMessengerReceiver(objectMapper, handlers);
+        setupSovityMessengerReceiver(context, objectMapper, handlers);
     }
 
     private void setupSovityMessengerEmitter(ServiceExtensionContext context, ObjectMapper objectMapper) {
@@ -94,14 +89,22 @@ public class SovityMessengerExtension implements ServiceExtension {
 
         typeTransformerRegistry.register(new JsonObjectFromSovityMessageRequest());
 
-        val sovityMessenger = new SovityMessengerImpl(registry, objectMapper);
+        val sovityMessenger = new SovityMessenger(registry, objectMapper);
         context.registerService(SovityMessenger.class, sovityMessenger);
     }
 
-    private void setupSovityMessengerReceiver(ObjectMapper objectMapper, MessageHandlerRegistry handlers) {
-        val receiver = new CustomMessageReceiverController(identityService, dspApiConfiguration.getDspCallbackAddress(), typeTransformerRegistry, monitor, objectMapper, handlers);
+    private void setupSovityMessengerReceiver(ServiceExtensionContext context, ObjectMapper objectMapper, SovityMessengerRegistry handlers) {
+        val receiver = new SovityMessageController(
+            identityService,
+            dspApiConfiguration.getDspCallbackAddress(),
+            typeTransformerRegistry,
+            monitor,
+            objectMapper,
+            handlers);
 
         webService.registerResource(dspApiConfiguration.getContextAlias(), receiver);
+
+        context.registerService(SovityMessengerRegistry.class, handlers);
 
         typeTransformerRegistry.register(new JsonObjectFromSovityMessageResponse());
     }

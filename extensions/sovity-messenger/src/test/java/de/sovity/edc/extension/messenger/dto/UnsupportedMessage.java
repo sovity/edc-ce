@@ -13,7 +13,7 @@
 
 package de.sovity.edc.extension.messenger.dto;
 
-import de.sovity.edc.extension.messenger.api.SovityMessage;
+import de.sovity.edc.extension.messenger.SovityMessage;
 
 public class UnsupportedMessage implements SovityMessage {
     @Override

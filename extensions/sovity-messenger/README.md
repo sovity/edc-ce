@@ -14,24 +14,54 @@
   </p>
 </div>
 
+
 ## About this Extension
 
-This extension provides a convenient way to exchange messages between connectors.
+To provide a simpler way to exchange messages between EDCs while re-using the Dataspace's Connector-to-Connector authentication mechanisms, we created our own extension with a much simpler API surface omitting JSON-LD.
 
 ## Why does this extension exist?
 
-To provide a simple way to exchange messages between EDCs without complying with the JsonLd conventions and with minimal setup.
+Adding custom DSP messages to a vanilla EDC is verbose and requires the handling of JSON-LD and implementing your own Transformers. Since we do not care about JSON-LD we wanted a simpler API surface.
+
+## Architecture
+
+The sovity Messenger is implemented on top of the DSP messaging protocol and re-uses its exchange and authentication.
+
+It is abstracted from the internals of the DSP protocol such that changing the underlying implementation remains an option.
+
+
+```mermaid
+---
+title: Registering a handler
+---
+sequenceDiagram
+    Caller ->> SovityMessengerRegistry: register(inputClass, intputType, handler)
+```
+
+```mermaid
+---
+title: Sending a message
+---
+sequenceDiagram
+  Caller ->>+SovityMessenger: send(resultClass, counterPartyAddress, payload)
+  SovityMessenger -->> RemoteMessageDispatcherRegistry: dispatch(genericMessage)
+  SovityMessenger -->> -Caller: Future<resultClass>
+  RemoteMessageDispatcherRegistry ->> +CustomMessageReceiverController: <<sending via DSP>>
+  CustomMessageReceiverController ->> CustomMessageReceiverController: processMessage(handler, payload)
+  CustomMessageReceiverController -->> -RemoteMessageDispatcherRegistry: <<result via DSP>>
+  RemoteMessageDispatcherRegistry -->> SovityMessenger: <<result via DSP>>
+  SovityMessenger ->> +Caller: Future<resultClass>
+  Caller ->> -Caller: future.get()
+```
 
 ## Demo
 
-You can find a demo project in [sovity-messenger-demo](../sovity-messenger-demo).
+You can find a demo project in [sovity-messenger-demo](../../demo/sovity-messenger-demo).
 
 The 2 key entry points are:
 
-- The configuration of the backend, to receive messages, in [SovityMessengerDemo.java](../sovity-messenger-demo/src/main/java/de/sovity/edc/extension/sovitymessenger/demo/SovityMessengerDemo.java)
-- The usage of the custom messages, implemented as a client e2e test [SovityMessengerDemoTest.java](../sovity-messenger-demo/src/test/java/de/sovity/edc/extension/sovitymessenger/demo/SovityMessengerDemoTest.java)
-
-For more information, check the documentation in that project and in the the Sovity Messenger's [api](src%2Fmain%2Fjava%2Fde%2Fsovity%2Fedc%2Fextension%2Fmessenger%2Fapi).
+- The backend's configuration, to receive messages, in [SovityMessengerDemo.java](../sovity-messenger-demo/src/main/java/de/sovity/edc/extension/sovitymessenger/demo/SovityMessengerDemo.java)
+- To send messages, simply call the SovityMessenger as done [here](../sovity-messenger-demo/src/test/java/de/sovity/edc/extension/sovitymessenger/demo/SovityMessengerDemoTest.java)
 
 ## License
 

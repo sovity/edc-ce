@@ -11,7 +11,7 @@
  *       sovity GmbH - initial API and implementation
  */
 
-package de.sovity.edc.extension.messenger.dto;
+package de.sovity.edc.extension.messenger.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.sovity.edc.extension.messenger.SovityMessage;
@@ -22,12 +22,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Answer implements SovityMessage {
+class Answer implements SovityMessage {
+    @JsonProperty
+    private String string;
+
     @Override
     public String getType() {
-        return getClass().getCanonicalName();
+        return "answer";
     }
-
-    @JsonProperty
-    private int answer;
 }

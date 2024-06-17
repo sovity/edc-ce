@@ -21,7 +21,6 @@ public class ObjectMapperFactory {
     public ObjectMapper createObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        // TODO: add test : can send an empty message
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         return objectMapper;
     }

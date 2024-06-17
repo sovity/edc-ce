@@ -11,17 +11,10 @@
  *       sovity GmbH - initial API and implementation
  */
 
-package de.sovity.edc.extension.messenger.impl;
+package de.sovity.edc.extension.messenger;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@AllArgsConstructor
-@Getter
-public enum SovityMessengerStatus {
-
-    NO_HANDLER("no_handler"),
-    OK("ok");
-
-    private String code;
+public class SovityMessengerException extends RuntimeException {
+    public SovityMessengerException(String message) {
+        super(message);
+    }
 }

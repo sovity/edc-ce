@@ -13,7 +13,7 @@
 
 package de.sovity.edc.extension.messenger.impl;
 
-import de.sovity.edc.extension.messenger.api.SovityMessageApi;
+import de.sovity.edc.extension.messenger.controller.SovityMessageController;
 import lombok.RequiredArgsConstructor;
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -30,7 +30,7 @@ public class MessageEmitter implements DspHttpRequestFactory<SovityMessageReques
     public Request createRequest(SovityMessageRequest message) {
         String serialized = serializer.serialize(message);
         return new Request.Builder()
-            .url(message.counterPartyAddress() + SovityMessageApi.PATH)
+            .url(message.counterPartyAddress() + SovityMessageController.PATH)
             .post(RequestBody.create(
                 serialized,
                 MediaType.get(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)
