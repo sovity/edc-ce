@@ -19,7 +19,6 @@ import de.sovity.edc.extension.messenger.impl.SovityMessageRequest;
 import de.sovity.edc.extension.messenger.impl.SovityMessengerStatus;
 import de.sovity.edc.utils.JsonUtils;
 import jakarta.json.Json;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.spi.EdcException;
@@ -55,7 +54,7 @@ public class SovityMessenger {
      * @throws SovityMessengerException If a problem related to the message processing happened.
      */
     public <T extends SovityMessage, R extends SovityMessage>
-    CompletableFuture<StatusResult<R>> send(Class<R> resultType, String counterPartyAddress, T payload) {
+        CompletableFuture<StatusResult<R>> send(Class<R> resultType, String counterPartyAddress, T payload) {
         try {
             val message = buildMessage(counterPartyAddress, payload);
             val future = registry.dispatch(SovityMessageRequest.class, message);
@@ -81,7 +80,7 @@ public class SovityMessenger {
 
     @NotNull
     private <R extends SovityMessage>
-    Function<StatusResult<SovityMessageRequest>, StatusResult<R>> processResponse(Class<R> resultType) {
+        Function<StatusResult<SovityMessageRequest>, StatusResult<R>> processResponse(Class<R> resultType) {
         return statusResult -> statusResult.map(content -> {
             try {
                 val headerStr = content.header();
@@ -100,7 +99,7 @@ public class SovityMessenger {
 
     @NotNull
     private <T extends SovityMessage>
-    SovityMessageRequest buildMessage(String counterPartyAddress, T payload)
+        SovityMessageRequest buildMessage(String counterPartyAddress, T payload)
         throws MalformedURLException, URISyntaxException, JsonProcessingException {
         val url = new URI(counterPartyAddress).toURL();
         val header1 = Json.createObjectBuilder()

@@ -29,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SovityMessengerRegistryImplTest {
 
-    // TODO: how test can build a mesasge without default constructor
     @AllArgsConstructor
     @NoArgsConstructor
     @Getter

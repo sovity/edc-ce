@@ -35,8 +35,10 @@ public class ConnectorConfigFactory {
     private static final Random RANDOM = new Random();
 
     /**
+     * Creates the default configuration to start an EDC with the given test database.
+     *
      * @deprecated Use {@link ConnectorConfigFactory#forTestDatabase(String, TestDatabase)}
-     * with automatic ports allocation to prevent port allocation conflicts.
+     *     with automatic ports allocation to prevent port allocation conflicts.
      */
     @Deprecated
     public static ConnectorConfig forTestDatabase(String participantId, int firstPort, TestDatabase testDatabase) {

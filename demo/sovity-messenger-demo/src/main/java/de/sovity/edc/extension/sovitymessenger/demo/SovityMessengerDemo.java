@@ -13,8 +13,8 @@
 
 package de.sovity.edc.extension.sovitymessenger.demo;
 
-import de.sovity.edc.extension.messenger.SovityMessengerRegistry;
 import de.sovity.edc.extension.messenger.SovityMessenger;
+import de.sovity.edc.extension.messenger.SovityMessengerRegistry;
 import de.sovity.edc.extension.sovitymessenger.demo.message.Addition;
 import de.sovity.edc.extension.sovitymessenger.demo.message.Answer;
 import de.sovity.edc.extension.sovitymessenger.demo.message.Signal;

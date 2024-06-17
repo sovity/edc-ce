@@ -15,8 +15,8 @@ package de.sovity.edc.extension.messenger.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.extension.messenger.SovityMessengerRegistry;
 import de.sovity.edc.extension.messenger.SovityMessage;
+import de.sovity.edc.extension.messenger.SovityMessengerRegistry;
 import de.sovity.edc.extension.messenger.impl.Handler;
 import de.sovity.edc.extension.messenger.impl.SovityMessageRequest;
 import de.sovity.edc.extension.messenger.impl.SovityMessageResponse;
