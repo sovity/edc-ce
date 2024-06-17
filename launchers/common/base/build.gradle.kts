@@ -31,6 +31,11 @@ dependencies {
     api(libs.edc.dataPlaneFramework)
     api(libs.edc.dataPlaneCore)
     api(libs.edc.dataPlaneUtil)
+
+    // Http Proxy Support
+    api(libs.edc.dataPlaneApi)
+    api(libs.edc.dataPlaneSelectorApi)
+    api(libs.edc.transferPullHttpDynamicReceiver)
 }
 
 group = libs.versions.sovityEdcGroup.get()

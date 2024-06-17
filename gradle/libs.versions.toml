@@ -91,10 +91,12 @@ edc-controlPlaneSpi = { module = "org.eclipse.edc:control-plane-spi", version.re
 edc-controlPlaneSql = { module = "org.eclipse.edc:control-plane-sql", version.ref = "edc" }
 edc-coreSpi = { module = "org.eclipse.edc:core-spi", version.ref = "edc" }
 edc-dataPlaneCore = { module = "org.eclipse.edc:data-plane-core", version.ref = "edc" }
+edc-dataPlaneApi = { module = "org.eclipse.edc:data-plane-api", version.ref = "edc" }
 edc-dataPlaneFramework = { module = "org.eclipse.edc:data-plane-framework", version.ref = "edc" }
 edc-dataPlaneHttp = { module = "org.eclipse.edc:data-plane-http", version.ref = "edc" }
 edc-dataPlaneSelectorClient = { module = "org.eclipse.edc:data-plane-selector-client", version.ref = "edc" }
 edc-dataPlaneSelectorCore = { module = "org.eclipse.edc:data-plane-selector-core", version.ref = "edc" }
+edc-dataPlaneSelectorApi = { module = "org.eclipse.edc:data-plane-selector-api", version.ref = "edc" }
 edc-dataPlaneUtil = { module = "org.eclipse.edc:data-plane-util", version.ref = "edc" }
 edc-dsp = { module = "org.eclipse.edc:dsp", version.ref = "edc" }
 edc-dspApiConfiguration = { module = "org.eclipse.edc:dsp-api-configuration", version.ref = "edc" }
@@ -115,6 +117,7 @@ edc-sqlCore = { module = "org.eclipse.edc:sql-core", version.ref = "edc" }
 edc-transactionLocal = { module = "org.eclipse.edc:transaction-local", version.ref = "edc" }
 edc-transferDataPlane = { module = "org.eclipse.edc:transfer-data-plane", version.ref = "edc" }
 edc-transferProcessApi = { module = "org.eclipse.edc:transfer-process-api", version.ref = "edc" }
+edc-transferPullHttpDynamicReceiver = { module = "org.eclipse.edc:transfer-pull-http-dynamic-receiver", version.ref = "edc" }
 edc-transferSpi = { module = "org.eclipse.edc:transfer-spi", version.ref = "edc" }
 edc-transformCore = { module = "org.eclipse.edc:transform-core", version.ref = "edc" }
 edc-transformSpi = { module = "org.eclipse.edc:transform-spi", version.ref = "edc" }
