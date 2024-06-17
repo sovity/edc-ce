@@ -60,8 +60,8 @@ You can find a demo project in [sovity-messenger-demo](../../demo/sovity-messeng
 
 The 2 key entry points are:
 
-- The backend's configuration, to receive messages, in [SovityMessengerDemo.java](..%2F..%2Fdemo%2Fsovity-messenger-demo%2Fsrc%2Fmain%2Fjava%2Fde%2Fsovity%2Fedc%2Fextension%2Fsovitymessenger%2Fdemo%2FSovityMessengerDemo.java)
-- To send messages, simply call the SovityMessenger as done [here](..%2F..%2Fdemo%2Fsovity-messenger-demo%2Fsrc%2Ftest%2Fjava%2Fde%2Fsovity%2Fedc%2Fextension%2Fsovitymessenger%2Fdemo%2FSovityMessengerDemoTest.java)
+- Register your message receiving by talking to the SovityMessageRegistry as demonstrated [here](..%2F..%2Fdemo%2Fsovity-messenger-demo%2Fsrc%2Fmain%2Fjava%2Fde%2Fsovity%2Fedc%2Fextension%2Fsovitymessenger%2Fdemo%2FSovityMessengerDemo.java).
+- Send messages by calling the SovityMessenger as shown [here](..%2F..%2Fdemo%2Fsovity-messenger-demo%2Fsrc%2Ftest%2Fjava%2Fde%2Fsovity%2Fedc%2Fextension%2Fsovitymessenger%2Fdemo%2FSovityMessengerDemoTest.java)
 
 ## License
 
