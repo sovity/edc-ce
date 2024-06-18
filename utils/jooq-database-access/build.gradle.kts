@@ -93,8 +93,8 @@ val jooqDbType = "org.jooq.meta.postgres.PostgresDatabase"
 val jdbcDriver = "org.postgresql.Driver"
 val postgresContainer = libs.versions.postgresDbImage.get()
 
-val migrationsDir = "src/main/resources/db/migration"
-val jooqTargetPackage = "de.sovity.edc.ext.directdb.jooq"
+val migrationsDir = "../../extensions/postgres-flyway/src/main/resources/db/migration"
+val jooqTargetPackage = "de.sovity.edc.ext.db.jooq"
 val jooqTargetSourceRoot = "build/generated/jooq"
 
 val jooqTargetDir = jooqTargetSourceRoot + "/" + jooqTargetPackage.replace(".", "/")
