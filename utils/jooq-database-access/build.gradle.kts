@@ -2,6 +2,7 @@ import org.flywaydb.gradle.task.FlywayCleanTask
 import org.flywaydb.gradle.task.FlywayMigrateTask
 import org.testcontainers.containers.JdbcDatabaseContainer
 import org.testcontainers.containers.PostgreSQLContainer
+import nu.studer.gradle.jooq.JooqGenerate
 
 plugins {
     `java-library`
@@ -48,60 +49,40 @@ dependencies {
     testImplementation(libs.edc.junit)
 }
 
-val skipTestcontainersEnvVarName = "SKIP_TESTCONTAINERS"
-val jdbcUrlEnvVarName = "TEST_POSTGRES_JDBC_URL"
-val jdbcUserEnvVarName = "TEST_POSTGRES_JDBC_USER"
-val jdbcPasswordEnvVarName = "TEST_POSTGRES_JDBC_PASSWORD"
 var container: JdbcDatabaseContainer<*>? = null
 
-fun isTestcontainersEnabled(): Boolean {
-    return System.getenv()[skipTestcontainersEnvVarName] != "true"
-}
-
 fun jdbcUrl(): String {
-    return container?.jdbcUrl
-        ?: System.getenv()[jdbcUrlEnvVarName]
-        ?: error("Need $jdbcUrlEnvVarName since $skipTestcontainersEnvVarName=true")
+    return container?.jdbcUrl ?: error("The test container didn't start!")
 }
 
 fun jdbcUser(): String {
-    return container?.username
-        ?: System.getenv()[jdbcUserEnvVarName]
-        ?: error("Need $jdbcUserEnvVarName since $skipTestcontainersEnvVarName=true")
+    return container?.username ?: error("The test container didn't start!")
 }
 
 fun jdbcPassword(): String {
-    return container?.password
-        ?: System.getenv()[jdbcPasswordEnvVarName]
-        ?: error("Need $jdbcPasswordEnvVarName since $skipTestcontainersEnvVarName=true")
+    return container?.password ?: error("The test container didn't start!")
 }
 
-
-tasks.register("startTestcontainer") {
+val startTestcontainer = tasks.register("startTestcontainer") {
     doLast {
-        if (isTestcontainersEnabled()) {
-            container = PostgreSQLContainer<Nothing>(postgresContainer)
-            container!!.start()
-            gradle.buildFinished {
-                container?.stop()
-            }
+        val postgresContainer = libs.versions.postgresDbImage.get()
+        container = PostgreSQLContainer<Nothing>(postgresContainer)
+        container!!.start()
+        gradle.buildFinished {
+            container?.stop()
         }
     }
 }
 
-val jooqDbType = "org.jooq.meta.postgres.PostgresDatabase"
-val jdbcDriver = "org.postgresql.Driver"
-val postgresContainer = libs.versions.postgresDbImage.get()
 
 val migrationsDir = "../../extensions/postgres-flyway/src/main/resources/db/migration"
 val jooqTargetPackage = "de.sovity.edc.ext.db.jooq"
-val jooqTargetSourceRoot = "build/generated/jooq"
 
-val jooqTargetDir = jooqTargetSourceRoot + "/" + jooqTargetPackage.replace(".", "/")
+val jooqTargetDir = "build/generated/jooq/" + jooqTargetPackage.replace(".", "/")
 
 
 flyway {
-    driver = jdbcDriver
+    driver = "org.postgresql.Driver"
     schemas = arrayOf("public")
 
     cleanDisabled = false
@@ -123,7 +104,7 @@ tasks.withType<FlywayCleanTask> {
 }
 
 tasks.withType<FlywayMigrateTask> {
-    dependsOn.add("startTestcontainer")
+    dependsOn.add(startTestcontainer)
     doFirst {
         require(this is FlywayMigrateTask)
         url = jdbcUrl()
@@ -138,7 +119,7 @@ jooq {
             jooqConfiguration.apply {
                 generator.apply {
                     database.apply {
-                        name = jooqDbType
+                        name = "org.jooq.meta.postgres.PostgresDatabase"
                         excludes = "(.*)flyway_schema_history(.*)"
                         inputSchema = flyway.schemas[0]
                     }
@@ -156,7 +137,7 @@ jooq {
     }
 }
 
-tasks.withType<nu.studer.gradle.jooq.JooqGenerate> {
+tasks.withType<JooqGenerate> {
     dependsOn.add("flywayMigrate")
     inputs.files(fileTree(migrationsDir))
         .withPropertyName("migrations")
@@ -164,9 +145,9 @@ tasks.withType<nu.studer.gradle.jooq.JooqGenerate> {
     allInputsDeclared.set(true)
     outputs.cacheIf { true }
     doFirst {
-        require(this is nu.studer.gradle.jooq.JooqGenerate)
+        require(this is JooqGenerate)
 
-        val jooqConfiguration = nu.studer.gradle.jooq.JooqGenerate::class.java.getDeclaredField("jooqConfiguration")
+        val jooqConfiguration = JooqGenerate::class.java.getDeclaredField("jooqConfiguration")
             .also { it.isAccessible = true }.get(this) as org.jooq.meta.jaxb.Configuration
 
         jooqConfiguration.jdbc.apply {
