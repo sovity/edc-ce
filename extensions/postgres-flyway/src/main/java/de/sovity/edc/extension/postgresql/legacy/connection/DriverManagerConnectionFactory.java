@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.extension.postgresql.connection;
+package de.sovity.edc.extension.postgresql.legacy.connection;
 
 import org.eclipse.edc.spi.persistence.EdcPersistenceException;
 import org.eclipse.edc.sql.ConnectionFactory;

@@ -17,7 +17,12 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
+- Unified database migration histories
+
 ### Deployment Migration Notes
+
+The database migration system has been moved from multiple migration history tables to a single one. Although this
+process has been extensively tested in the enterprise edition already, it should be tested once more on a copy of a productive connector.
 
 ## [8.1.0] - 2024-06-14
 
