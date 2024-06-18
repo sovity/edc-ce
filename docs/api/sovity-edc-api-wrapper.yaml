@@ -1589,14 +1589,13 @@ components:
           $ref: '#/components/schemas/ExpressionType'
         expressions:
           type: array
-          description: List of policy elements that are evaluated according the constraintType.
+          description: List of policy elements that are evaluated according the expressionType.
           items:
             $ref: '#/components/schemas/Expression'
         atomicConstraint:
           $ref: '#/components/schemas/AtomicConstraintDto'
-      description: Generic Policy Element. Represents a single atomic constraint or
-        a multiplicity constraint. The atomicConstraint will be evaluated if the constraintType
-        is ATOMIC.
+      description: Represents a single atomic constraint or a multiplicity constraint.
+        The atomicConstraint will be evaluated if the constraintType is ATOMIC_CONSTRAINT.
     ExpressionType:
       type: string
       description: |
