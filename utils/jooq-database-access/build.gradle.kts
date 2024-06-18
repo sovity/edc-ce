@@ -3,6 +3,8 @@ import org.flywaydb.gradle.task.FlywayMigrateTask
 import org.testcontainers.containers.JdbcDatabaseContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import nu.studer.gradle.jooq.JooqGenerate
+import org.jooq.meta.jaxb.ForcedType
+import org.jooq.meta.jaxb.Nullability
 
 plugins {
     `java-library`
@@ -104,6 +106,20 @@ jooq {
                         name = "org.jooq.meta.postgres.PostgresDatabase"
                         excludes = "(.*)flyway_schema_history(.*)"
                         inputSchema = flyway.schemas[0]
+
+                        withForcedTypes(
+                            // Force "List<String>" over "String[]" for PostgreSQL "text[]"
+                            ForcedType()
+                                .withUserType("java.util.List<String>")
+                                .withIncludeTypes("_text|_varchar")
+                                .withConverter("""org.jooq.Converter.ofNullable(
+                                    String[].class,
+                                    (Class<java.util.List<String>>) (Class) java.util.List.class,
+                                    array -> array == null ? null : java.util.Arrays.asList(array),
+                                    list -> list == null ? null : list.toArray(new String[0])
+                                  )""")
+                                .withNullability(Nullability.ALL)
+                        )
                     }
                     generate.apply {
                         isRecords = true
