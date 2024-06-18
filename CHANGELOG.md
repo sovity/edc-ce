@@ -17,7 +17,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
-- Unify database migrations' histories
+- Unified database migration histories
 
 ### Deployment Migration Notes
 
