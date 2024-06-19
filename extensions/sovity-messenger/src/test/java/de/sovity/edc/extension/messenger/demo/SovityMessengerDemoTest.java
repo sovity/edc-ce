@@ -108,21 +108,6 @@ class SovityMessengerDemoTest {
             System.out.println(e.getCause().getMessage());
         }
 
-//        try {
-//            val failing1 = messenger.send(Answer.class, receiverAddress, new Failing("Some content 1"));
-//            val failing2 = messenger.send(Answer.class, receiverAddress, new Failing("Some content 2"));
-//            failing1.get(10, TimeUnit.SECONDS);
-//            failing2.get(10, TimeUnit.SECONDS);
-//        } catch (ExecutionException e) {
-//            val cause = e.getCause();
-//            if (cause instanceof SovityMessengerException messengerException) {
-//                // Error when processing a message with type demo-failing
-//                System.out.println(messengerException.getMessage());
-//                // {"message":"Some content 1/2"}
-//                System.out.println(messengerException.getBody());
-//            }
-//        }
-
         System.out.println("END MARKER");
     }
 
