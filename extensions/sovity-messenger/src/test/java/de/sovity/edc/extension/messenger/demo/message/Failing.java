@@ -11,13 +11,22 @@
  *       sovity GmbH - initial API and implementation
  */
 
-package de.sovity.edc.extension.sovitymessenger.demo.message;
+package de.sovity.edc.extension.messenger.demo.message;
 
 import de.sovity.edc.extension.messenger.SovityMessage;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-public class Signal implements SovityMessage {
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+public class Failing implements SovityMessage {
+
+    private String message;
+
     @Override
     public String getType() {
-        return "signal";
+        return "demo-failing";
     }
 }

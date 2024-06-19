@@ -53,10 +53,7 @@ public class SovityMessengerRegistry {
     @SneakyThrows
     public <IN extends SovityMessage> void registerSignal(Class<IN> incomingSignal, Consumer<IN> handler) {
         val type = getTypeViaIntrospection(incomingSignal);
-        register(incomingSignal, type, in -> {
-            handler.accept(in);
-            return null;
-        });
+        registerSignal(incomingSignal, type, handler);
     }
 
     /**
@@ -67,6 +64,7 @@ public class SovityMessengerRegistry {
         if (handlers.containsKey(type)) {
             throw new IllegalStateException("A handler is already registered for " + type);
         }
+
         handlers.put(type, new Handler<>(clazz, handler));
     }
 
@@ -74,11 +72,14 @@ public class SovityMessengerRegistry {
      * Use this constructor only if your message can't have a default constructor. Otherwise, prefer using
      * {@link #registerSignal(Class, Consumer)} for type safety.
      */
-    public <IN extends SovityMessage, OUT> void registerSignal(Class<IN> clazz, String type, Function<IN, OUT> handler) {
+    public <IN extends SovityMessage> void registerSignal(Class<IN> clazz, String type, Consumer<IN> handler) {
         if (handlers.containsKey(type)) {
             throw new IllegalStateException("A handler is already registered for " + type);
         }
-        handlers.put(type, new Handler<>(clazz, handler));
+        register(clazz, type, in -> {
+            handler.accept(in);
+            return null;
+        });
     }
 
     /**

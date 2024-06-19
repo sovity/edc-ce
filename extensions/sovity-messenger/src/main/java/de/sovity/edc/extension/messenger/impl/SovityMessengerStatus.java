@@ -21,7 +21,8 @@ import lombok.Getter;
 public enum SovityMessengerStatus {
 
     NO_HANDLER("no_handler"),
+    HANDLER_EXCEPTION("handler_exception"),
     OK("ok");
 
-    private String code;
+    private final String code;
 }

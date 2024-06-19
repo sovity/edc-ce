@@ -11,30 +11,14 @@
  *       sovity GmbH - initial API and implementation
  */
 
-package de.sovity.edc.extension.sovitymessenger.demo.message;
+package de.sovity.edc.extension.messenger.demo.message;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import de.sovity.edc.extension.messenger.SovityMessage;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class Addition implements SovityMessage {
-
-    public static final String TYPE = "add";
+public class UnregisteredMessage implements SovityMessage {
 
     @Override
     public String getType() {
-        return TYPE;
+        return "demo-unregistered";
     }
-
-    @JsonProperty
-    public int op1;
-
-    @JsonProperty
-    public int op2;
-
 }

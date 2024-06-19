@@ -11,28 +11,13 @@
  *       sovity GmbH - initial API and implementation
  */
 
-package de.sovity.edc.extension.sovitymessenger.demo.message;
+package de.sovity.edc.extension.messenger.demo.message;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import de.sovity.edc.extension.messenger.SovityMessage;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-public class Sqrt implements SovityMessage {
-
-    private static final String TYPE = "sqrt";
-
+public class Signal implements SovityMessage {
     @Override
     public String getType() {
-        return TYPE;
+        return "demo-signal";
     }
-
-    @JsonProperty
-    private double value;
-
 }

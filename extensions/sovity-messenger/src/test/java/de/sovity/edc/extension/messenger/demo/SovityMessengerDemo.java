@@ -11,14 +11,15 @@
  *       sovity GmbH - initial API and implementation
  */
 
-package de.sovity.edc.extension.sovitymessenger.demo;
+package de.sovity.edc.extension.messenger.demo;
 
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.extension.messenger.SovityMessengerRegistry;
-import de.sovity.edc.extension.sovitymessenger.demo.message.Addition;
-import de.sovity.edc.extension.sovitymessenger.demo.message.Answer;
-import de.sovity.edc.extension.sovitymessenger.demo.message.Signal;
-import de.sovity.edc.extension.sovitymessenger.demo.message.Sqrt;
+import de.sovity.edc.extension.messenger.demo.message.Addition;
+import de.sovity.edc.extension.messenger.demo.message.Answer;
+import de.sovity.edc.extension.messenger.demo.message.Failing;
+import de.sovity.edc.extension.messenger.demo.message.Signal;
+import de.sovity.edc.extension.messenger.demo.message.Sqrt;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
@@ -57,6 +58,9 @@ public class SovityMessengerDemo implements ServiceExtension {
         registry.register(Addition.class, Addition.TYPE, add -> new Answer(add.op1 + add.op2));
 
         registry.registerSignal(Signal.class, signal -> System.out.println("Received signal."));
+        registry.register(Failing.class, failing -> {
+            throw new RuntimeException("Failed!");
+        });
 
         /*
          * In the counterpart connector, messages can be sent with the code below.

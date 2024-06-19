@@ -13,8 +13,19 @@
 
 package de.sovity.edc.extension.messenger;
 
+import lombok.Getter;
+
 public class SovityMessengerException extends RuntimeException {
+
+    @Getter
+    private String body;
+
     public SovityMessengerException(String message) {
         super(message);
+    }
+
+    public SovityMessengerException(String message, String body) {
+        super(message);
+        this.body = body;
     }
 }

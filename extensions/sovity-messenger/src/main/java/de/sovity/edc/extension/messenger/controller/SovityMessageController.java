@@ -86,35 +86,39 @@ public class SovityMessageController {
                 .entity(errorAnswer).build();
         }
 
-        val response = processMessage(request, handler);
+        try {
+            val response = processMessage(request, handler);
 
-        return typeTransformerRegistry.transform(response, JsonObject.class)
-            .map(it -> Response.ok().type(MediaType.APPLICATION_JSON).entity(it).build())
-            .orElse(failure -> {
-                var errorCode = UUID.randomUUID();
-                monitor.warning(String.format("Error transforming " + response.getClass().getSimpleName() + ", error id %s: %s", errorCode, failure.getFailureDetail()));
-                return DspErrorResponse
-                    .type(Prop.SovityMessageExt.REQUEST)
-                    .internalServerError();
-            });
+            return typeTransformerRegistry.transform(response, JsonObject.class)
+                .map(it -> Response.ok().type(MediaType.APPLICATION_JSON).entity(it).build())
+                .orElse(failure -> {
+                    var errorCode = UUID.randomUUID();
+                    monitor.warning(String.format("Error transforming " + response.getClass().getSimpleName() + ", error id %s: %s", errorCode, failure.getFailureDetail()));
+                    return DspErrorResponse
+                        .type(Prop.SovityMessageExt.REQUEST)
+                        .internalServerError();
+                });
+        } catch (Exception e) {
+            monitor.warning("Failed to process message with type " + getMessageType(request), e);
+            val errorAnswer = buildErrorHandlerExceptionHeader(request);
+            return Response.ok()
+                .type(MediaType.APPLICATION_JSON)
+                .entity(errorAnswer)
+                .build();
+        }
     }
 
-    private SovityMessageResponse processMessage(SovityMessageRequest compacted, Handler<Object, Object> handler) {
-        try {
+    private SovityMessageResponse processMessage(SovityMessageRequest compacted, Handler<Object, Object> handler) throws JsonProcessingException {
+        val bodyStr = compacted.body();
+        val parsed = mapper.readValue(bodyStr, handler.clazz());
+        val result = handler.handler().apply(parsed);
+        val resultBody = mapper.writeValueAsString(result);
 
-            val bodyStr = compacted.body();
-            val parsed = mapper.readValue(bodyStr, handler.clazz());
-            val result = handler.handler().apply(parsed);
-            val resultBody = mapper.writeValueAsString(result);
+        val response = new SovityMessageResponse(
+            buildOkHeader(handler.clazz()),
+            resultBody);
 
-            val response = new SovityMessageResponse(
-                buildOkHeader(handler.clazz()),
-                resultBody);
-
-            return response;
-        } catch (JsonProcessingException e) {
-            throw new EdcException("Failed to process the message", e);
-        }
+        return response;
     }
 
     private String buildOkHeader(Class<?> clazz) {
@@ -142,6 +146,19 @@ public class SovityMessageController {
         val json = Json.createObjectBuilder()
             .add("status", SovityMessengerStatus.NO_HANDLER.getCode())
             .add("message", "No handler for message type " + messageType)
+            .build();
+        val headerStr = JsonUtils.toJson(json);
+
+        return new SovityMessageResponse(headerStr, "");
+    }
+
+    private SovityMessageResponse buildErrorHandlerExceptionHeader(SovityMessageRequest request) {
+        val messageType = getMessageType(request);
+        val body = request.body();
+        val json = Json.createObjectBuilder()
+            .add("status", SovityMessengerStatus.HANDLER_EXCEPTION.getCode())
+            .add("message", "Error when processing a message with type" + messageType)
+            .add(SovityMessengerStatus.HANDLER_EXCEPTION.getCode(), body)
             .build();
         val headerStr = JsonUtils.toJson(json);
 

@@ -11,17 +11,19 @@
  *       sovity GmbH - initial API and implementation
  */
 
-package de.sovity.edc.extension.sovitymessenger.demo;
+package de.sovity.edc.extension.messenger.demo;
 
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import de.sovity.edc.extension.messenger.SovityMessenger;
-import de.sovity.edc.extension.sovitymessenger.demo.message.Addition;
-import de.sovity.edc.extension.sovitymessenger.demo.message.Answer;
-import de.sovity.edc.extension.sovitymessenger.demo.message.Signal;
-import de.sovity.edc.extension.sovitymessenger.demo.message.Sqrt;
-import de.sovity.edc.extension.sovitymessenger.demo.message.UnregisteredMessage;
+import de.sovity.edc.extension.messenger.SovityMessengerException;
+import de.sovity.edc.extension.messenger.demo.message.Addition;
+import de.sovity.edc.extension.messenger.demo.message.Answer;
+import de.sovity.edc.extension.messenger.demo.message.Failing;
+import de.sovity.edc.extension.messenger.demo.message.Signal;
+import de.sovity.edc.extension.messenger.demo.message.Sqrt;
+import de.sovity.edc.extension.messenger.demo.message.UnregisteredMessage;
 import lombok.val;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.iam.TokenDecorator;
@@ -84,7 +86,7 @@ class SovityMessengerDemoTest {
          *
          * in an extension.
          *
-         * This messenger is already configured to accept messages in de.sovity.edc.extension.sovitymessenger.demo.SovityMessengerDemo#initialize
+         * This messenger is already configured to accept messages in de.sovity.edc.extension.messenger.demo.SovityMessengerDemo#initialize
          */
         val messenger = emitterEdcContext.getContext().getService(SovityMessenger.class);
 
@@ -96,17 +98,31 @@ class SovityMessengerDemoTest {
         val unregistered = messenger.send(Answer.class, receiverAddress, new UnregisteredMessage());
         messenger.send(receiverAddress, new Signal());
 
-        // Wait for the answers
-        added.get(2, TimeUnit.SECONDS).onSuccess(it -> System.out.println(it.getAnswer()));
-        rooted.get(2, TimeUnit.SECONDS).onSuccess(it -> System.out.println(it.getAnswer()));
-
         try {
-            unregistered.get();
+            // Wait for the answers
+            added.get(2, TimeUnit.SECONDS).onSuccess(it -> System.out.println(it.getAnswer()));
+            rooted.get(2, TimeUnit.SECONDS).onSuccess(it -> System.out.println(it.getAnswer()));
+            unregistered.get(2, TimeUnit.SECONDS);
         } catch (ExecutionException e) {
             /*
              * When a problem happens, a SovityMessengerException is thrown and encapsulated in an ExecutionException.
              */
             System.out.println(e.getCause().getMessage());
+        }
+
+        try {
+            val failing1 = messenger.send(Answer.class, receiverAddress, new Failing("Some content 1"));
+            val failing2 = messenger.send(Answer.class, receiverAddress, new Failing("Some content 2"));
+            failing1.get(2, TimeUnit.SECONDS);
+            failing2.get(2, TimeUnit.SECONDS);
+        } catch (ExecutionException e) {
+            val cause = e.getCause();
+            if (cause instanceof SovityMessengerException messengerException) {
+                // Error when processing a message with typedemo-failing
+                System.out.println(messengerException.getMessage());
+                // {"message":"Some content 1/2"}
+                System.out.println(messengerException.getBody());
+            }
         }
 
         System.out.println("END MARKER");

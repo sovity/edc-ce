@@ -54,7 +54,7 @@ public class SovityMessenger {
      * @throws SovityMessengerException If a problem related to the message processing happened.
      */
     public <T extends SovityMessage, R extends SovityMessage>
-        CompletableFuture<StatusResult<R>> send(Class<R> resultType, String counterPartyAddress, T payload) {
+    CompletableFuture<StatusResult<R>> send(Class<R> resultType, String counterPartyAddress, T payload) {
         try {
             val message = buildMessage(counterPartyAddress, payload);
             val future = registry.dispatch(SovityMessageRequest.class, message);
@@ -64,23 +64,23 @@ public class SovityMessenger {
         }
     }
 
-    static class Dummy implements SovityMessage {
+    static class Discarded implements SovityMessage {
         @Override
         public String getType() {
-            return "de.sovity.edc.extension.messenger.impl.SovityMessengerImpl.Dummy";
+            return "de.sovity.edc.extension.messenger.impl.SovityMessengerImpl.Discarded";
         }
     }
 
     /**
-     * Fire-and-forget messaging where you don't care about the return type.
+     * Fire-and-forget messaging where you don't care about the response.
      */
     public <T extends SovityMessage> void send(String counterPartyAddress, T payload) {
-        send(Dummy.class, counterPartyAddress, payload);
+        send(Discarded.class, counterPartyAddress, payload);
     }
 
     @NotNull
     private <R extends SovityMessage>
-        Function<StatusResult<SovityMessageRequest>, StatusResult<R>> processResponse(Class<R> resultType) {
+    Function<StatusResult<SovityMessageRequest>, StatusResult<R>> processResponse(Class<R> resultType) {
         return statusResult -> statusResult.map(content -> {
             try {
                 val headerStr = content.header();
@@ -88,6 +88,10 @@ public class SovityMessenger {
                 if (header.getString("status").equals(SovityMessengerStatus.OK.getCode())) {
                     val resultBody = content.body();
                     return serializer.readValue(resultBody, resultType);
+                } else if (header.getString("status").equals(SovityMessengerStatus.HANDLER_EXCEPTION.getCode())) {
+                    throw new SovityMessengerException(
+                        header.getString("message"),
+                        header.getString(SovityMessengerStatus.HANDLER_EXCEPTION.getCode(), "No outgoing body."));
                 } else {
                     throw new SovityMessengerException(header.getString("message"));
                 }
@@ -99,7 +103,7 @@ public class SovityMessenger {
 
     @NotNull
     private <T extends SovityMessage>
-        SovityMessageRequest buildMessage(String counterPartyAddress, T payload)
+    SovityMessageRequest buildMessage(String counterPartyAddress, T payload)
         throws MalformedURLException, URISyntaxException, JsonProcessingException {
         val url = new URI(counterPartyAddress).toURL();
         val header1 = Json.createObjectBuilder()
