@@ -39,7 +39,7 @@ public class UiPolicy {
 
     @Schema(description = "Conjunction of required expressions for the policy to evaluate to TRUE.")
 //    private List<UiPolicyConstraint> constraints;
-    private List<UiPolicyExpression> expression; // NEW
+    private UiPolicyExpression expression; // NEW
 
     @Schema(description = "When trying to reduce the policy JSON-LD to our opinionated subset of functionalities, " +
             "many fields and functionalities are unsupported. Should any discrepancies occur during " +
