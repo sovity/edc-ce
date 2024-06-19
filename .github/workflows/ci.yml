@@ -44,7 +44,7 @@ jobs:
       - name: "Gradle: Build"
         uses: gradle/gradle-build-action@v2.10.0
         with:
-          arguments: build ${{ env.GRADLE_ARGS }}
+          arguments: --stacktrace build ${{ env.GRADLE_ARGS }}
         env:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
