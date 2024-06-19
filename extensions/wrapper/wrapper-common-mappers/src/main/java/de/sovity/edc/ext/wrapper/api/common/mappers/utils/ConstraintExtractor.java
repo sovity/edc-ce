@@ -82,7 +82,10 @@ public class ConstraintExtractor {
         return constraintsMapped;
     }
 
-    private Optional<UiPolicyConstraint> buildConstraint(Constraint constraint, MappingErrors errors) {
+    private Optional<UiPolicyConstraint> buildConstraint(Constraint constraint, MappingErrors errors) { //
+
+        //
+
         if (constraint == null) {
             errors.add("Constraint is null.");
             return Optional.empty();

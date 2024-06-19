@@ -38,10 +38,12 @@ public class UiPolicy {
     private String policyJsonLd;
 
     @Schema(description = "Conjunction of required expressions for the policy to evaluate to TRUE.")
-    private List<UiPolicyConstraint> constraints;
+//    private List<UiPolicyConstraint> constraints;
+    private List<UiPolicyExpression> expression; // NEW
 
     @Schema(description = "When trying to reduce the policy JSON-LD to our opinionated subset of functionalities, " +
             "many fields and functionalities are unsupported. Should any discrepancies occur during " +
             "the mapping process, we'll collect them here.", requiredMode = RequiredMode.REQUIRED)
     private List<String> errors;
 }
+

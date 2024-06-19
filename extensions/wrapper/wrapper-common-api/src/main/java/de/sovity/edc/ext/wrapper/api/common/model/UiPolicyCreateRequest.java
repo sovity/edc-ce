@@ -34,5 +34,6 @@ import java.util.List;
         + " subset of the original EDC Policy Entity.")
 public class UiPolicyCreateRequest {
     @Schema(description = "Conjunction of required expressions for the policy to evaluate to TRUE.")
-    private List<UiPolicyConstraint> constraints;
+//    private List<UiPolicyConstraint> constraints;
+    private List<UiPolicyExpression> expression; // NEW
 }

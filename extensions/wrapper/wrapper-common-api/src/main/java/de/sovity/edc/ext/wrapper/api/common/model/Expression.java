@@ -40,7 +40,7 @@ public class Expression {
 
     @Schema(description =
             "List of policy elements that are evaluated according the expressionType.")
-    private List<Expression> expressions;
+    private List<Expression> expressions; //
 
     @Schema(description =
             "A single atomic constraint. Will be evaluated if the expressionType is set to " +
