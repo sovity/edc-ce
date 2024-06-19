@@ -52,7 +52,7 @@ jobs:
         uses: gradle/gradle-build-action@v2.10.0
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
         with:
-          arguments: publish ${{ env.GRADLE_ARGS }}
+          arguments: --stacktrace publish ${{ env.GRADLE_ARGS }}
         env:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
