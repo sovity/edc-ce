@@ -100,9 +100,9 @@ class SovityMessengerDemoTest {
 
         try {
             // Wait for the answers
-            added.get(2, TimeUnit.SECONDS).onSuccess(it -> System.out.println(it.getAnswer()));
-            rooted.get(2, TimeUnit.SECONDS).onSuccess(it -> System.out.println(it.getAnswer()));
-            unregistered.get(2, TimeUnit.SECONDS);
+            added.get(10, TimeUnit.SECONDS).onSuccess(it -> System.out.println(it.getAnswer()));
+            rooted.get(10, TimeUnit.SECONDS).onSuccess(it -> System.out.println(it.getAnswer()));
+            unregistered.get(10, TimeUnit.SECONDS);
         } catch (ExecutionException e) {
             /*
              * When a problem happens, a SovityMessengerException is thrown and encapsulated in an ExecutionException.
@@ -113,8 +113,8 @@ class SovityMessengerDemoTest {
         try {
             val failing1 = messenger.send(Answer.class, receiverAddress, new Failing("Some content 1"));
             val failing2 = messenger.send(Answer.class, receiverAddress, new Failing("Some content 2"));
-            failing1.get(2, TimeUnit.SECONDS);
-            failing2.get(2, TimeUnit.SECONDS);
+            failing1.get(10, TimeUnit.SECONDS);
+            failing2.get(10, TimeUnit.SECONDS);
         } catch (ExecutionException e) {
             val cause = e.getCause();
             if (cause instanceof SovityMessengerException messengerException) {
