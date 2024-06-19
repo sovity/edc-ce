@@ -3,15 +3,15 @@ import {MatCheckboxChange} from '@angular/material/checkbox';
 import {MatDialogRef} from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-initiate-transfer-confirm-tos-dialog',
-  templateUrl: './initiate-transfer-confirm-tos-dialog.component.html',
-  styleUrls: ['./initiate-transfer-confirm-tos-dialog.component.scss'],
+  selector: 'app-initiate-negotiation-confirm-tos-dialog',
+  templateUrl: './initiate-negotiation-confirm-tos-dialog.component.html',
+  styleUrls: ['./initiate-negotiation-confirm-tos-dialog.component.scss'],
 })
-export class InitiateTransferConfirmTosDialogComponent {
+export class InitiateNegotiationConfirmTosDialogComponent {
   checkboxChecked = false;
 
   constructor(
-    public dialogRef: MatDialogRef<InitiateTransferConfirmTosDialogComponent>,
+    public dialogRef: MatDialogRef<InitiateNegotiationConfirmTosDialogComponent>,
   ) {}
 
   public onCheckboxChange($event: MatCheckboxChange) {

@@ -21,7 +21,6 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterModule} from '@angular/router';
 import {NgChartsModule} from 'ng2-charts';
 import {NgxJsonViewerModule} from 'ngx-json-viewer';
-import {InitiateTransferConfirmTosDialogModule} from 'src/app/component-library/initiate-transfer-confirm-tos-dialog/initiate-transfer-confirm-tos-dialog.module';
 import {CatalogModule} from '../../../component-library/catalog/catalog.module';
 import {DataAddressModule} from '../../../component-library/data-address/data-address.module';
 import {PipesAndDirectivesModule} from '../../../component-library/pipes-and-directives/pipes-and-directives.module';
@@ -64,7 +63,6 @@ import {ContractAgreementTransferDialogComponent} from './contract-agreement-tra
     // EDC UI Modules
     CatalogModule,
     DataAddressModule,
-    InitiateTransferConfirmTosDialogModule,
     PipesAndDirectivesModule,
     UiElementsModule,
   ],

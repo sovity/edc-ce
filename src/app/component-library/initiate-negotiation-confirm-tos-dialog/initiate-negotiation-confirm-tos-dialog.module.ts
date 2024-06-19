@@ -7,7 +7,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {PipesAndDirectivesModule} from '../pipes-and-directives/pipes-and-directives.module';
-import {InitiateTransferConfirmTosDialogComponent} from './initiate-transfer-confirm-tos-dialog/initiate-transfer-confirm-tos-dialog.component';
+import {InitiateNegotiationConfirmTosDialogComponent} from './initiate-negotiation-confirm-tos-dialog/initiate-negotiation-confirm-tos-dialog.component';
 
 @NgModule({
   imports: [
@@ -27,7 +27,7 @@ import {InitiateTransferConfirmTosDialogComponent} from './initiate-transfer-con
     // EDC UI Feature Modules
     PipesAndDirectivesModule,
   ],
-  declarations: [InitiateTransferConfirmTosDialogComponent],
-  exports: [InitiateTransferConfirmTosDialogComponent],
+  declarations: [InitiateNegotiationConfirmTosDialogComponent],
+  exports: [InitiateNegotiationConfirmTosDialogComponent],
 })
-export class InitiateTransferConfirmTosDialogModule {}
+export class InitiateNegotiationConfirmTosDialogModule {}

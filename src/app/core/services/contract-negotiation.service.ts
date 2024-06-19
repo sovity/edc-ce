@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import {EMPTY, Observable, interval} from 'rxjs';
 import {catchError, filter, first, switchMap, tap} from 'rxjs/operators';
 import {
@@ -6,6 +7,7 @@ import {
   UiContractNegotiation,
   UiContractOffer,
 } from '@sovity.de/edc-client';
+import {InitiateNegotiationConfirmTosDialogComponent} from 'src/app/component-library/initiate-negotiation-confirm-tos-dialog/initiate-negotiation-confirm-tos-dialog/initiate-negotiation-confirm-tos-dialog.component';
 import {environment} from '../../../environments/environment';
 import {EdcApiService} from './api/edc-api.service';
 import {DataOffer} from './models/data-offer';
@@ -19,6 +21,7 @@ export class ContractNegotiationService {
   constructor(
     private edcApiService: EdcApiService,
     private notificationService: NotificationService,
+    private confirmationDialog: MatDialog,
   ) {
     if (!environment.production) {
       // Test data on local dev
@@ -59,6 +62,19 @@ export class ContractNegotiationService {
       contractOfferId,
       policyJsonLd: contractOffer.policy.policyJsonLd,
     };
+
+    this.confirmationDialog
+      .open(InitiateNegotiationConfirmTosDialogComponent, {maxWidth: '30rem'})
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.startNegotiation(initiateRequest);
+        }
+      });
+  }
+
+  private startNegotiation(initiateRequest: ContractNegotiationRequest) {
+    const contractOfferId = initiateRequest.contractOfferId;
 
     this.initiateNegotiation(initiateRequest)
       .pipe(
