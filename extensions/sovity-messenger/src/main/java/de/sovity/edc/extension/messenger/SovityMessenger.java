@@ -87,17 +87,21 @@ public class SovityMessenger {
         Class<R> resultType, T payload) {
         return statusResult -> statusResult.map(content -> {
             try {
+                monitor.info("Processing response for request of type " + payload.getClass().getCanonicalName() + " with expected return type of " + resultType.getCanonicalName());
                 val headerStr = content.header();
                 val header = JsonUtils.parseJsonObj(headerStr);
                 if (header.getString("status").equals(SovityMessengerStatus.OK.getCode())) {
+                    monitor.info("Processing response for request of type " + payload.getClass().getCanonicalName() + " OK");
                     val resultBody = content.body();
                     return serializer.readValue(resultBody, resultType);
                 } else if (header.getString("status").equals(SovityMessengerStatus.HANDLER_EXCEPTION.getCode())) {
+                    monitor.info("Processing response for request of type " + payload.getClass().getCanonicalName() + " Exception");
                     throw new SovityMessengerException(
                         header.getString("message"),
                         header.getString(SovityMessengerStatus.HANDLER_EXCEPTION.getCode(), "No outgoing body."),
                         payload);
                 } else {
+                    monitor.info("Processing response for request of type " + payload.getClass().getCanonicalName() + " Generic");
                     throw new SovityMessengerException(header.getString("message"));
                 }
             } catch (JsonProcessingException e) {

@@ -95,7 +95,10 @@ public class SovityMessageController {
             monitor.info(request + " - Message processed, response: " + response.body());
 
             return typeTransformerRegistry.transform(response, JsonObject.class)
-                .map(it -> Response.ok().type(MediaType.APPLICATION_JSON).entity(it).build())
+                .map(it -> {
+                    monitor.info("Response.ok(): " + JsonUtils.toJson(it));
+                    return Response.ok().type(MediaType.APPLICATION_JSON).entity(it).build();
+                })
                 .orElse(failure -> {
                     var errorCode = UUID.randomUUID();
                     monitor.warning(String.format("Error transforming " + response.getClass().getSimpleName() + ", error id %s: %s", errorCode, failure.getFailureDetail()));
@@ -114,6 +117,8 @@ public class SovityMessageController {
     }
 
     private SovityMessageResponse processMessage(SovityMessageRequest compacted, Handler<Object, Object> handler) throws JsonProcessingException {
+        monitor.info("Start message processing " + handler.clazz());
+
         val bodyStr = compacted.body();
         val parsed = mapper.readValue(bodyStr, handler.clazz());
         val result = handler.handler().apply(parsed);
@@ -123,11 +128,14 @@ public class SovityMessageController {
             buildOkHeader(handler.clazz()),
             resultBody);
 
+        monitor.info("End message processing " + handler.clazz());
+
         return response;
     }
 
     private String buildOkHeader(Class<?> clazz) {
         try {
+            monitor.info("Build ok header");
             Constructor<?> constructor = clazz.getConstructor();
             constructor.setAccessible(true);
             String type = ((SovityMessage) constructor.newInstance()).getType();
@@ -147,6 +155,7 @@ public class SovityMessageController {
     }
 
     private SovityMessageResponse buildErrorNoHandlerHeader(SovityMessageRequest request) {
+        monitor.info("Build no handler header");
         val messageType = getMessageType(request);
         val json = Json.createObjectBuilder()
             .add("status", SovityMessengerStatus.NO_HANDLER.getCode())
@@ -158,6 +167,7 @@ public class SovityMessageController {
     }
 
     private SovityMessageResponse buildErrorHandlerExceptionHeader(SovityMessageRequest request) {
+        monitor.info("Build error header");
         val messageType = getMessageType(request);
         val body = request.body();
         val json = Json.createObjectBuilder()
