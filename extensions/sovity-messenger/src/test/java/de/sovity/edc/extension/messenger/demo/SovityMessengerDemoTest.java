@@ -118,7 +118,7 @@ class SovityMessengerDemoTest {
         } catch (ExecutionException e) {
             val cause = e.getCause();
             if (cause instanceof SovityMessengerException messengerException) {
-                // Error when processing a message with typedemo-failing
+                // Error when processing a message with type demo-failing
                 System.out.println(messengerException.getMessage());
                 // {"message":"Some content 1/2"}
                 System.out.println(messengerException.getBody());

@@ -157,7 +157,7 @@ public class SovityMessageController {
         val body = request.body();
         val json = Json.createObjectBuilder()
             .add("status", SovityMessengerStatus.HANDLER_EXCEPTION.getCode())
-            .add("message", "Error when processing a message with type" + messageType)
+            .add("message", "Error when processing a message with type " + messageType)
             .add(SovityMessengerStatus.HANDLER_EXCEPTION.getCode(), body)
             .build();
         val headerStr = JsonUtils.toJson(json);
