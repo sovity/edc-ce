@@ -173,7 +173,6 @@ public class SovityMessageController {
     private static String getMessageType(SovityMessageRequest request) {
         val headerStr = request.header();
         val header = Json.createReader(new StringReader(headerStr)).readObject();
-        val messageType = header.getString("type");
-        return messageType;
+        return header.getString("type");
     }
 }

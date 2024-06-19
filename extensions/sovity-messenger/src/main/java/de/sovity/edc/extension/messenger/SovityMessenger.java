@@ -53,8 +53,8 @@ public class SovityMessenger {
      * @return A future result.
      * @throws SovityMessengerException If a problem related to the message processing happened.
      */
-    public <T extends SovityMessage, R extends SovityMessage>
-    CompletableFuture<StatusResult<R>> send(Class<R> resultType, String counterPartyAddress, T payload) {
+    public <T extends SovityMessage, R extends SovityMessage> CompletableFuture<StatusResult<R>> send(
+        Class<R> resultType, String counterPartyAddress, T payload) {
         try {
             val message = buildMessage(counterPartyAddress, payload);
             val future = registry.dispatch(SovityMessageRequest.class, message);
@@ -79,8 +79,8 @@ public class SovityMessenger {
     }
 
     @NotNull
-    private <R extends SovityMessage>
-    Function<StatusResult<SovityMessageRequest>, StatusResult<R>> processResponse(Class<R> resultType) {
+    private <R extends SovityMessage> Function<StatusResult<SovityMessageRequest>, StatusResult<R>> processResponse(
+        Class<R> resultType) {
         return statusResult -> statusResult.map(content -> {
             try {
                 val headerStr = content.header();
@@ -102,8 +102,7 @@ public class SovityMessenger {
     }
 
     @NotNull
-    private <T extends SovityMessage>
-    SovityMessageRequest buildMessage(String counterPartyAddress, T payload)
+    private <T extends SovityMessage> SovityMessageRequest buildMessage(String counterPartyAddress, T payload)
         throws MalformedURLException, URISyntaxException, JsonProcessingException {
         val url = new URI(counterPartyAddress).toURL();
         val header1 = Json.createObjectBuilder()
