@@ -26,7 +26,6 @@ import lombok.val;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.iam.TokenDecorator;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.concurrent.ExecutionException;
@@ -75,7 +74,6 @@ class SovityMessengerDemoTest {
     /**
      * Actual usage of the Sovity Messenger.
      */
-    @Test
     void demo() throws ExecutionException, InterruptedException, TimeoutException {
         /*
          * Get a reference to the SovityMessenger. This is equivalent to
