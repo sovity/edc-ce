@@ -87,6 +87,14 @@ public class Prop {
     public class Odrl {
         public final String CTX = "http://www.w3.org/ns/odrl/2/";
         public final String HAS_POLICY = CTX + "hasPolicy";
+        public final String ACTION = CTX + "action";
+        public final String TYPE = CTX + "type";
+        public final String CONSTRAINT = CTX + "constraint";
+        public final String AND = CTX + "and";
+        public final String PERMISSION = CTX + "permission";
+        public final String LEFT_OPERAND = CTX + "leftOperand";
+        public final String RIGHT_OPERAND = CTX + "rightOperand";
+        public final String USE = "USE";
     }
 
     /**

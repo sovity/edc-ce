@@ -59,7 +59,7 @@ class PolicyDefinitionApiServiceTest {
     }
 
     @Test
-    void test_create_list() {
+    void getPolicyList() {
         // arrange
         createPolicyDefinition("my-policy-def-1");
 
@@ -92,7 +92,11 @@ class PolicyDefinitionApiServiceTest {
         // assert
         assertThat(result.getPolicies())
                 .extracting(PolicyDefinitionDto::getPolicyDefinitionId)
-                .containsExactly("always-true", "my-policy-def-2", "my-policy-def-1", "my-policy-def-0");
+                .containsExactly(
+                        "always-true",
+                        "my-policy-def-2",
+                        "my-policy-def-1",
+                        "my-policy-def-0");
     }
 
     @Test
@@ -118,7 +122,10 @@ class PolicyDefinitionApiServiceTest {
     }
 
     @SneakyThrows
-    private void createPolicyDefinition(PolicyDefinitionService policyDefinitionService, String policyDefinitionId, long createdAt) {
+    private void createPolicyDefinition(
+            PolicyDefinitionService policyDefinitionService,
+            String policyDefinitionId,
+            long createdAt) {
         createPolicyDefinition(policyDefinitionId);
         var policyDefinition = policyDefinitionService.findById(policyDefinitionId);
 

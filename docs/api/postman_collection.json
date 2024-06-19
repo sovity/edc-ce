@@ -655,6 +655,44 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Use Case Api",
+					"item": [
+						{
+							"name": "Policies",
+							"item": [
+								{
+									"name": "Create Policy (And)",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"policyDefinitionId\": \"testAndRestricted\",\r\n    \"permission\": {\r\n        \"expression\": {\r\n            \"expressionType\": \"AND\",\r\n            \"expressions\": [\r\n                {\r\n                    \"expressionType\": \"ATOMIC_CONSTRAINT\",\r\n                    \"atomicConstraint\": {\r\n                        \"leftExpression\": \"Membership\",\r\n                        \"operator\": \"EQ\",\r\n                        \"rightExpression\": \"active\"\r\n                    }\r\n                },\r\n                {\r\n                    \"expressionType\": \"ATOMIC_CONSTRAINT\",\r\n                    \"atomicConstraint\": {\r\n                        \"leftExpression\": \"PURPOSE\",\r\n                        \"operator\": \"EQ\",\r\n                        \"rightExpression\": \"ID 3.1 Trace\"\r\n                    }\r\n                }\r\n            ]\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/use-case-api/policy-definition",
+											"host": [
+												"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+											],
+											"path": [
+												"wrapper",
+												"use-case-api",
+												"policy-definition"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
 				}
 			]
 		},

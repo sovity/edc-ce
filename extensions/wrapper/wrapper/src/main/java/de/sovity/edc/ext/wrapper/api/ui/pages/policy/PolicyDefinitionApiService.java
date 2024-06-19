@@ -17,6 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
 
 import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
+import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
@@ -72,6 +73,21 @@ public class PolicyDefinitionApiService {
         var policy = policyMapper.buildPolicy(policyDefinitionDto.getPolicy());
         return PolicyDefinition.Builder.newInstance()
                 .id(policyDefinitionDto.getPolicyDefinitionId())
+                .policy(policy)
+                .build();
+    }
+
+    public IdResponseDto createPolicyDefinition(PolicyCreateRequest policyCreateRequest) {
+        var policyDefinition = buildPolicyDefinition(policyCreateRequest);
+        policyDefinition = policyDefinitionService.create(policyDefinition).orElseThrow(ServiceException::new);
+        return new IdResponseDto(policyDefinition.getId());
+    }
+
+    private PolicyDefinition buildPolicyDefinition(PolicyCreateRequest policyCreateRequest) {
+        var permissionExpression = policyCreateRequest.getPermission().getExpression();
+        var policy = policyMapper.buildPolicy(List.of(permissionExpression));
+        return PolicyDefinition.Builder.newInstance()
+                .id(policyCreateRequest.getPolicyDefinitionId())
                 .policy(policy)
                 .build();
     }
