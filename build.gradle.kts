@@ -5,7 +5,6 @@ plugins {
     id("java")
     id("checkstyle")
     id("maven-publish")
-    kotlin("jvm") version "2.0.0"
 }
 
 dependencies {
