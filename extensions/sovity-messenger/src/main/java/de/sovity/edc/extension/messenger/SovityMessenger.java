@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
+import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.response.StatusResult;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,6 +43,8 @@ public class SovityMessenger {
 
     private final ObjectMapper serializer;
 
+    private final Monitor monitor;
+
     /**
      * Sends a message to the counterparty address and returns a future result.
      *
@@ -56,9 +59,10 @@ public class SovityMessenger {
     public <T extends SovityMessage, R extends SovityMessage> CompletableFuture<StatusResult<R>> send(
         Class<R> resultType, String counterPartyAddress, T payload) {
         try {
+            monitor.info("Sending message of type " + payload.getClass().getCanonicalName() + " to " + counterPartyAddress + " with expected return type of " + resultType.getCanonicalName());
             val message = buildMessage(counterPartyAddress, payload);
             val future = registry.dispatch(SovityMessageRequest.class, message);
-            return future.thenApply(processResponse(resultType));
+            return future.thenApply(processResponse(resultType, payload));
         } catch (URISyntaxException | MalformedURLException | JsonProcessingException e) {
             throw new EdcException("Failed to build a custom sovity message", e);
         }
@@ -79,8 +83,8 @@ public class SovityMessenger {
     }
 
     @NotNull
-    private <R extends SovityMessage> Function<StatusResult<SovityMessageRequest>, StatusResult<R>> processResponse(
-        Class<R> resultType) {
+    private <R extends SovityMessage, T> Function<StatusResult<SovityMessageRequest>, StatusResult<R>> processResponse(
+        Class<R> resultType, T payload) {
         return statusResult -> statusResult.map(content -> {
             try {
                 val headerStr = content.header();
@@ -91,7 +95,8 @@ public class SovityMessenger {
                 } else if (header.getString("status").equals(SovityMessengerStatus.HANDLER_EXCEPTION.getCode())) {
                     throw new SovityMessengerException(
                         header.getString("message"),
-                        header.getString(SovityMessengerStatus.HANDLER_EXCEPTION.getCode(), "No outgoing body."));
+                        header.getString(SovityMessengerStatus.HANDLER_EXCEPTION.getCode(), "No outgoing body."),
+                        payload);
                 } else {
                     throw new SovityMessengerException(header.getString("message"));
                 }

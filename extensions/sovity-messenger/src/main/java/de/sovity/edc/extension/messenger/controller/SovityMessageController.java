@@ -78,6 +78,8 @@ public class SovityMessageController {
             ).build();
         }
 
+        monitor.info(request + " - Received request with message type " + getMessageType(request));
+
         val handler = getHandler(request);
         if (handler == null) {
             val errorAnswer = buildErrorNoHandlerHeader(request);
@@ -86,8 +88,11 @@ public class SovityMessageController {
                 .entity(errorAnswer).build();
         }
 
+        monitor.info(request + " - Found handler for " + request);
+
         try {
             val response = processMessage(request, handler);
+            monitor.info(request + " - Message processed, response: " + response.body());
 
             return typeTransformerRegistry.transform(response, JsonObject.class)
                 .map(it -> Response.ok().type(MediaType.APPLICATION_JSON).entity(it).build())
