@@ -58,7 +58,7 @@ public class SovityMessenger {
         try {
             val message = buildMessage(counterPartyAddress, payload);
             val future = registry.dispatch(SovityMessageRequest.class, message);
-            return future.thenApply(processResponse(resultType));
+            return future.thenApply(processResponse(resultType, payload));
         } catch (URISyntaxException | MalformedURLException | JsonProcessingException e) {
             throw new EdcException("Failed to build a custom sovity message", e);
         }
@@ -79,8 +79,8 @@ public class SovityMessenger {
     }
 
     @NotNull
-    private <R extends SovityMessage> Function<StatusResult<SovityMessageRequest>, StatusResult<R>> processResponse(
-        Class<R> resultType) {
+    private <R extends SovityMessage, T> Function<StatusResult<SovityMessageRequest>, StatusResult<R>> processResponse(
+        Class<R> resultType, T payload) {
         return statusResult -> statusResult.map(content -> {
             try {
                 val headerStr = content.header();
@@ -91,7 +91,8 @@ public class SovityMessenger {
                 } else if (header.getString("status").equals(SovityMessengerStatus.HANDLER_EXCEPTION.getCode())) {
                     throw new SovityMessengerException(
                         header.getString("message"),
-                        header.getString(SovityMessengerStatus.HANDLER_EXCEPTION.getCode(), "No outgoing body."));
+                        header.getString(SovityMessengerStatus.HANDLER_EXCEPTION.getCode(), "No outgoing body."),
+                        payload);
                 } else {
                     throw new SovityMessengerException(header.getString("message"));
                 }

@@ -19,12 +19,13 @@ public class SovityMessengerException extends RuntimeException {
 
     @Getter
     private String body;
+    private Object payload;
 
     public SovityMessengerException(String message) {
         super(message);
     }
 
-    public SovityMessengerException(String message, String body) {
+    public SovityMessengerException(String message, String body, Object payload) {
         super(message);
         this.body = body;
     }
