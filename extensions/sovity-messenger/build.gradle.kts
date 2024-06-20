@@ -23,6 +23,7 @@ dependencies {
     testCompileOnly(libs.lombok)
 
     testImplementation(project(":utils:test-connector-remote"))
+    testImplementation(project(":utils:test-utils"))
 
     testImplementation(libs.edc.junit)
     testImplementation(libs.edc.dataPlaneSelectorCore)
