@@ -40,5 +40,3 @@ include(":utils:json-and-jsonld-utils")
 include(":utils:test-connector-remote")
 include(":utils:test-utils")
 include(":utils:versions")
-include("extensions:sovity-messenger:demo-maybe-here")
-findProject(":extensions:sovity-messenger:demo-maybe-here")?.name = "demo-maybe-here"
