@@ -48,7 +48,7 @@ public class DataSourceFactory {
      * @param connectionTimeoutInMs connection timeout in ms
      * @return {@link DataSource}.
      */
-    public static HikariDataSource newDataSource(
+     public static HikariDataSource newDataSource(
             JdbcCredentials jdbcCredentials,
             int maxPoolSize,
             int connectionTimeoutInMs
