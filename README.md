@@ -13,7 +13,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-<a href="https://github.com/sovity/edc-extensions">
+<a href="https://github.com/sovity/edc-ce">
 <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
 </a>
 
@@ -21,9 +21,9 @@
 <p align="center" style="padding-bottom:16px">
 Extended EDC Connector by sovity.
 <br />
-<a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
+<a href="https://github.com/sovity/edc-ce/issues/new?template=bug_report.md">Report Bug</a>
 ·
-<a href="https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md">Request Feature</a>
+<a href="https://github.com/sovity/edc-ce/issues/new?template=feature_request.md">Request Feature</a>
 </p>
 </div>
 
@@ -53,7 +53,7 @@ for building dataspaces, exchanging data securely with ensured data sovereignty.
 enterprise-ready managed services like "Connector-as-a-Service", out-of-the-box fully configured DAPS
 and integrations to existing other dataspace technologies.
 
-This repository contains our sovity Community Edition EDCs, containing pre-configured Open Source EDC Extensions.
+This repository contains our sovity Community Edition EDCs, containing pre-configured open source EDC extensions.
 
 Check out our [Getting Started Section](#getting-started) on how to run a local sovity Community Edition EDC.
 
@@ -63,16 +63,16 @@ Check out our [Getting Started Section](#getting-started) on how to run a local 
 
 ## sovity Community Edition EDC
 
-Our sovity Community Edition EDC takes available Open Source EDC Extensions and combines them with our own
-open source EDC Extensions from this repository to build ready-to-use EDC Docker Images.
+Our sovity Community Edition EDC takes available Open Source EDC extensions and combines them with our own
+open source EDC extensions from this repository to build ready-to-use EDC Docker Images.
 
 See [here](launchers/README.md) for a list of our sovity Community Edition EDC Docker images.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## sovity Community Edition EDC Extensions
+## sovity Community Edition EDC extensions
 
-Feel free to explore and use our [EDC Extensions](./extensions) with your EDC setup.
+Feel free to explore and use our [EDC extensions](./extensions) with your EDC setup.
 
 We packaged critical extensions for compatibility with our EDC UI and general usability features into
 [sovity EDC Extensions Package](./extensions/sovity-edc-extensions-package).
@@ -81,7 +81,7 @@ We packaged critical extensions for compatibility with our EDC UI and general us
 
 ## Compatibility
 
-Our sovity Community Edition EDC and sovity Community Edition EDC Extensions are targeted to run with
+Our sovity Community Edition EDC and it's extensions are targeted to run with
 our [sovity/edc-ui](https://github.com/sovity/edc-ui).
 
 Our sovity Community Edition EDC will use the current EDC Milestone with a certain delay
@@ -111,7 +111,7 @@ appreciated**.
 
 If you have a suggestion that would improve this project, please fork the repo and
 create a pull request. You can also simply open
-a [feature request](https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md). Don't forget to
+a [feature request](https://github.com/sovity/edc-ce/issues/new?template=feature_request.md). Don't forget to
 leave the project a ⭐, if you like the effort put into this version!
 
 Our contribution guideline can be found in [CONTRIBUTING.md](CONTRIBUTING.md).
@@ -138,29 +138,29 @@ contact@sovity.de
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [contributors-shield]:
-https://img.shields.io/github/contributors/sovity/edc-extensions.svg?style=for-the-badge
+https://img.shields.io/github/contributors/sovity/edc-ce.svg?style=for-the-badge
 
-[contributors-url]: https://github.com/sovity/edc-extensions/graphs/contributors
+[contributors-url]: https://github.com/sovity/edc-ce/graphs/contributors
 
 [forks-shield]:
-https://img.shields.io/github/forks/sovity/edc-extensions.svg?style=for-the-badge
+https://img.shields.io/github/forks/sovity/edc-ce.svg?style=for-the-badge
 
-[forks-url]: https://github.com/sovity/edc-extensions/network/members
+[forks-url]: https://github.com/sovity/edc-ce/network/members
 
 [stars-shield]:
-https://img.shields.io/github/stars/sovity/edc-extensions.svg?style=for-the-badge
+https://img.shields.io/github/stars/sovity/edc-ce.svg?style=for-the-badge
 
-[stars-url]: https://github.com/sovity/edc-extensions/stargazers
+[stars-url]: https://github.com/sovity/edc-ce/stargazers
 
 [issues-shield]:
-https://img.shields.io/github/issues/sovity/edc-extensions.svg?style=for-the-badge
+https://img.shields.io/github/issues/sovity/edc-ce.svg?style=for-the-badge
 
-[issues-url]: https://github.com/sovity/edc-extensions/issues
+[issues-url]: https://github.com/sovity/edc-ce/issues
 
 [license-shield]:
-https://img.shields.io/github/license/sovity/edc-extensions.svg?style=for-the-badge
+https://img.shields.io/github/license/sovity/edc-ce.svg?style=for-the-badge
 
-[license-url]: https://github.com/sovity/edc-extensions/blob/main/LICENSE
+[license-url]: https://github.com/sovity/edc-ce/blob/main/LICENSE
 
 [linkedin-shield]:
 https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
