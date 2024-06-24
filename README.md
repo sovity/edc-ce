@@ -83,8 +83,8 @@ extensions.
 
 ## Getting Started
 
-The fastest way to get started is using our Getting Started Guide in
-[sovity EDC CE Getting Started Guide](https://github.com/sovity/edc-extensions#getting-started).
+The fastest way to get started is using our Getting Started Guide:
+[sovity EDC CE Getting Started Guide](https://github.com/sovity/edc-ce#getting-started).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
