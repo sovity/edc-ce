@@ -2,7 +2,7 @@
 name: Refine Process Request
 about: Existing processes must be adapted or new ones created
 title: ""
-labels: "task/documentation"
+labels: ["task/refine-process","task/documentation"]
 assignees: ""
 ---
 
