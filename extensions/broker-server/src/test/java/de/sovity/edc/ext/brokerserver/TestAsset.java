@@ -25,10 +25,10 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.ShortDescription
 import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.DataSourceMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpDataSourceMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpHeaderMapper;
+import de.sovity.edc.ext.wrapper.api.common.model.DataSourceType;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiDataSource;
 import de.sovity.edc.ext.wrapper.api.common.model.UiDataSourceHttpData;
-import de.sovity.edc.ext.wrapper.api.common.model.DataSourceType;
 import jakarta.json.JsonObject;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

@@ -19,8 +19,8 @@ import org.jooq.DSLContext;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 
-import javax.sql.DataSource;
 import java.util.function.Consumer;
+import javax.sql.DataSource;
 
 public interface TestDatabase extends BeforeAllCallback, AfterAllCallback {
     String getJdbcUrl();

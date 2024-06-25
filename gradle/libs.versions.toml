@@ -54,7 +54,6 @@ postgres = "42.4.5"
 quarkus = "2.16.6.Final"
 quartz = "2.3.2"
 restAssured = "5.4.0"
-retry = "1.5.7"
 shadow = "7.1.2"
 swagger = "1.6.12"
 swaggerCore = "2.2.18"
@@ -217,6 +216,5 @@ openapi-generator7 = { id = "org.openapi.generator", version.ref = "openapiGener
 quarkus = { id = "io.quarkus", version.ref = "quarkus" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
 swagger-plugin = { id = "io.swagger.core.v3.swagger-gradle-plugin", version.ref = "swaggerCore" }
-retry = { id = "org.gradle.test-retry", version.ref = "retry" }
 jooq = { id = "nu.studer.jooq", version.ref = "jooqPlugin" }
 flyway = { id = "org.flywaydb.flyway", version.ref = "flywayPlugin" }
