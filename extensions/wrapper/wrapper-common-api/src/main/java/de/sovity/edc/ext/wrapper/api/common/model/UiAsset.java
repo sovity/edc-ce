@@ -54,14 +54,14 @@ public class UiAsset {
     private String creatorOrganizationName;
 
     @Schema(
-        description = "Contact E-Mail address. Only for dataSourceType ON_REQUEST.",
+        description = "Contact E-Mail address. Only for dataSourceAvailability ON_REQUEST.",
         example = "contact@my-org.com",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
     private String onRequestContactEmail;
 
     @Schema(
-        description = "Contact Preferred E-Mail Subject. Only for dataSourceType ON_REQUEST.",
+        description = "Contact Preferred E-Mail Subject. Only for dataSourceAvailability ON_REQUEST.",
         example = "Department XYZ Data Offer Request - My Product, My API",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
@@ -99,28 +99,28 @@ public class UiAsset {
 
     @Schema(
         description = "HTTP Datasource Hint: Proxy Method. " +
-            "Only for dataSourceType LIVE with an underlying HTTP_DATA Data Source.",
+            "Only for dataSourceAvailability LIVE with an underlying HTTP_DATA Data Source.",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
     private Boolean httpDatasourceHintsProxyMethod;
 
     @Schema(
         description = "HTTP Datasource Hint: Proxy Path. " +
-            "Only for dataSourceType LIVE with an underlying HTTP_DATA Data Source.",
+            "Only for dataSourceAvailability LIVE with an underlying HTTP_DATA Data Source.",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
     private Boolean httpDatasourceHintsProxyPath;
 
     @Schema(
         description = "HTTP Datasource Hint: Proxy Query Params. " +
-            "Only for dataSourceType LIVE with an underlying HTTP_DATA Data Source.",
+            "Only for dataSourceAvailability LIVE with an underlying HTTP_DATA Data Source.",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
     private Boolean httpDatasourceHintsProxyQueryParams;
 
     @Schema(
         description = "HTTP Datasource Hint: Proxy Body. " +
-            "Only for dataSourceType LIVE with an underlying HTTP_DATA Data Source.",
+            "Only for dataSourceAvailability LIVE with an underlying HTTP_DATA Data Source.",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
     private Boolean httpDatasourceHintsProxyBody;

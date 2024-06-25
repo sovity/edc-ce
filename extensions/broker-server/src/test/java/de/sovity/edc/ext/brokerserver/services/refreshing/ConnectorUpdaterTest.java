@@ -16,12 +16,15 @@ package de.sovity.edc.ext.brokerserver.services.refreshing;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
+import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiCriterion;
 import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
+import de.sovity.edc.client.gen.model.UiDataSource;
+import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.ext.brokerserver.AssertionUtils;
 import de.sovity.edc.ext.brokerserver.BrokerServerExtensionContext;
 import de.sovity.edc.ext.brokerserver.TestUtils;
@@ -171,6 +174,13 @@ class ConnectorUpdaterTest {
     }
 
     private String createAsset() {
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl("http://some.url")
+                .build())
+            .build();
+
         return providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
             .id("asset-1")
             .title("AssetName")
@@ -186,11 +196,7 @@ class ConnectorUpdaterTest {
             .transportMode("transportMode")
             .keywords(List.of("keyword1", "keyword2"))
             .publisherHomepage("publisherHomepage")
-            .dataAddressProperties(Map.of(
-                Prop.Edc.TYPE, "HttpData",
-                Prop.Edc.METHOD, "GET",
-                Prop.Edc.BASE_URL, "http://some.url"
-            ))
+            .dataSource(dataSource)
             .customJsonAsString("{\"a\":\"x\"}")
             .customJsonLdAsString("{\"http://unknown/b\":{\"http://unknown/c\":\"y\"}}")
             .privateCustomJsonAsString("{\"a-private\":\"x-private\"}")
