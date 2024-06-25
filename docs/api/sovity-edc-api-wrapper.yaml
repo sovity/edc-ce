@@ -1011,11 +1011,12 @@ components:
           description: Asset Organization Name
         onRequestContactEmail:
           type: string
-          description: Contact E-Mail address. Only for dataSourceType ON_REQUEST.
+          description: Contact E-Mail address. Only for dataSourceAvailability ON_REQUEST.
           example: contact@my-org.com
         onRequestContactEmailSubject:
           type: string
-          description: Contact Preferred E-Mail Subject. Only for dataSourceType ON_REQUEST.
+          description: Contact Preferred E-Mail Subject. Only for dataSourceAvailability
+            ON_REQUEST.
           example: "Department XYZ Data Offer Request - My Product, My API"
         language:
           type: string
@@ -1053,19 +1054,19 @@ components:
           description: Homepage URL associated with the Asset
         httpDatasourceHintsProxyMethod:
           type: boolean
-          description: "HTTP Datasource Hint: Proxy Method. Only for dataSourceType\
+          description: "HTTP Datasource Hint: Proxy Method. Only for dataSourceAvailability\
             \ LIVE with an underlying HTTP_DATA Data Source."
         httpDatasourceHintsProxyPath:
           type: boolean
-          description: "HTTP Datasource Hint: Proxy Path. Only for dataSourceType\
+          description: "HTTP Datasource Hint: Proxy Path. Only for dataSourceAvailability\
             \ LIVE with an underlying HTTP_DATA Data Source."
         httpDatasourceHintsProxyQueryParams:
           type: boolean
-          description: "HTTP Datasource Hint: Proxy Query Params. Only for dataSourceType\
+          description: "HTTP Datasource Hint: Proxy Query Params. Only for dataSourceAvailability\
             \ LIVE with an underlying HTTP_DATA Data Source."
         httpDatasourceHintsProxyBody:
           type: boolean
-          description: "HTTP Datasource Hint: Proxy Body. Only for dataSourceType\
+          description: "HTTP Datasource Hint: Proxy Body. Only for dataSourceAvailability\
             \ LIVE with an underlying HTTP_DATA Data Source."
         dataCategory:
           type: string

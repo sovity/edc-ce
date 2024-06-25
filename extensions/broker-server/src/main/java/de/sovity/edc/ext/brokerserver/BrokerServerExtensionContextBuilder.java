@@ -369,20 +369,20 @@ public class BrokerServerExtensionContextBuilder {
         var assetEditRequestMapper = new AssetEditRequestMapper();
         var shortDescriptionBuilder = new ShortDescriptionBuilder();
         var assetJsonLdParser = new AssetJsonLdParser(
-            assetJsonLdUtils,
-            shortDescriptionBuilder,
-            endpoint -> false
+                assetJsonLdUtils,
+                shortDescriptionBuilder,
+                endpoint -> false
         );
         var httpHeaderMapper = new HttpHeaderMapper();
         var httpDataSourceMapper = new HttpDataSourceMapper(httpHeaderMapper);
         var dataSourceMapper = new DataSourceMapper(
-            edcPropertyUtils,
-            httpDataSourceMapper
+                edcPropertyUtils,
+                httpDataSourceMapper
         );
         var assetJsonLdBuilder = new AssetJsonLdBuilder(
-            dataSourceMapper,
-            assetJsonLdParser,
-            assetEditRequestMapper
+                dataSourceMapper,
+                assetJsonLdParser,
+                assetEditRequestMapper
         );
         return new AssetMapper(
             typeTransformerRegistry,
