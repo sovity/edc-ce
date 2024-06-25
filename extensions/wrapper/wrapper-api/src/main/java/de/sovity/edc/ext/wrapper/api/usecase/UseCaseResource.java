@@ -14,6 +14,8 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase;
 
+import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyCreateRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CatalogQuery;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
@@ -59,4 +61,11 @@ public interface UseCaseResource {
         @Valid @NotNull
         CatalogQuery catalogQuery
     );
+
+    @POST
+    @Path("policy-definition")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Create a new Policy Definition")
+    IdResponseDto createPolicyDefinitionUseCase(PolicyCreateRequest policyCreateRequest);
 }

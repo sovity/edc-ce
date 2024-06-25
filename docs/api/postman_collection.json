@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "c01dc51f-eb36-43db-b8db-a33ff2f5baa5",
 		"name": "sovity EDC Community Edition",
-		"description": "This is the official postman collection for the sovity EDC Community Edition.\n\nThe Management-API is based on core-edc v0.2.1.\n\nsovity EDC Community Edition: [https://github.com/sovity/edc-extensions](https://github.com/sovity/edc-extensions)\n\nLicense: [https://github.com/sovity/edc-extensions/blob/main/LICENSE](https://github.com/sovity/edc-extensions/blob/main/LICENSE)",
+		"description": "This is the official postman collection for the sovity EDC Community Edition.\n\nThe Management-API is based on core-edc v0.2.1.\n\nsovity EDC Community Edition: [https://github.com/sovity/edc-ce](https://github.com/sovity/edc-ce)\n\nLicense: [https://github.com/sovity/edc-ce/blob/main/LICENSE](https://github.com/sovity/edc-ce/blob/main/LICENSE)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "31514741"
 	},
@@ -653,6 +653,44 @@
 								}
 							},
 							"response": []
+						}
+					]
+				},
+				{
+					"name": "Use Case Api",
+					"item": [
+						{
+							"name": "Policies",
+							"item": [
+								{
+									"name": "Create Policy (And)",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"policyDefinitionId\": \"testAndRestricted\",\r\n    \"permission\": {\r\n        \"expression\": {\r\n            \"expressionType\": \"AND\",\r\n            \"expressions\": [\r\n                {\r\n                    \"expressionType\": \"ATOMIC_CONSTRAINT\",\r\n                    \"atomicConstraint\": {\r\n                        \"leftExpression\": \"Membership\",\r\n                        \"operator\": \"EQ\",\r\n                        \"rightExpression\": \"active\"\r\n                    }\r\n                },\r\n                {\r\n                    \"expressionType\": \"ATOMIC_CONSTRAINT\",\r\n                    \"atomicConstraint\": {\r\n                        \"leftExpression\": \"PURPOSE\",\r\n                        \"operator\": \"EQ\",\r\n                        \"rightExpression\": \"ID 3.1 Trace\"\r\n                    }\r\n                }\r\n            ]\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/use-case-api/policy-definition",
+											"host": [
+												"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+											],
+											"path": [
+												"wrapper",
+												"use-case-api",
+												"policy-definition"
+											]
+										}
+									},
+									"response": []
+								}
+							]
 						}
 					]
 				}
@@ -1878,7 +1916,7 @@
 		},
 		{
 			"key": "PROVIDER_EDC_SOURCE_URL",
-			"value": "https://api.github.com/repos/sovity/edc-extensions/events",
+			"value": "https://api.github.com/repos/sovity/edc-ce/events",
 			"type": "default"
 		},
 		{

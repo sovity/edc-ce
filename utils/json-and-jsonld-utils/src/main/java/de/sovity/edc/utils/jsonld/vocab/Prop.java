@@ -98,6 +98,14 @@ public class Prop {
     public class Odrl {
         public final String CTX = "http://www.w3.org/ns/odrl/2/";
         public final String HAS_POLICY = CTX + "hasPolicy";
+        public final String ACTION = CTX + "action";
+        public final String TYPE = CTX + "type";
+        public final String CONSTRAINT = CTX + "constraint";
+        public final String AND = CTX + "and";
+        public final String PERMISSION = CTX + "permission";
+        public final String LEFT_OPERAND = CTX + "leftOperand";
+        public final String RIGHT_OPERAND = CTX + "rightOperand";
+        public final String USE = "USE";
     }
 
     /**
@@ -141,6 +149,16 @@ public class Prop {
             public final String QUERY_PARAMS = CTX + "httpDatasourceHintsProxyQueryParams";
             public final String BODY = CTX + "httpDatasourceHintsProxyBody";
         }
+    }
+
+    @UtilityClass
+    public class SovityMessageExt {
+        public final String CTX = "https://semantic.sovity.io/message/generic/";
+        public final String REQUEST = CTX + "request";
+        public final String RESPONSE = CTX + "response";
+        public final String ERROR_MESSAGE = CTX + "errorMessage";
+        public final String HEADER = CTX + "header";
+        public final String BODY = CTX + "body";
     }
 
     /**

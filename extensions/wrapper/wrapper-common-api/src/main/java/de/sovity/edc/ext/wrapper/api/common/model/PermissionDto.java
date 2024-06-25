@@ -40,5 +40,5 @@ public class PermissionDto {
 
     @Schema(description = "Possible constraints for the permission",
             requiredMode = RequiredMode.REQUIRED)
-    private ExpressionDto constraints;
+    private Expression expression;
 }
