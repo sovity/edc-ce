@@ -20,6 +20,7 @@ import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
+import java.sql.SQLException;
 import javax.sql.DataSource;
 
 @ExtensionPoint
@@ -32,8 +33,12 @@ public class DirectDatabaseAccess {
 
     public synchronized DSLContext getDslContext() {
         if (dslContext == null) {
-            dslContext = DSL.using(SQLDialect.POSTGRES);
+            dslContext = newDslContext();
         }
         return dslContext;
+    }
+
+    public DSLContext newDslContext() {
+        return DSL.using(dataSource, SQLDialect.POSTGRES);
     }
 }

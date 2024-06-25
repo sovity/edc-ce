@@ -16,6 +16,9 @@ dependencies {
     implementation(libs.edc.coreSpi)
     implementation(libs.edc.managementApiConfiguration)
     implementation(libs.edc.transferSpi)
+    // TODO: why iss this only a testImpl in extensions/wrapper/wrapper/build.gradle.kts:49
+    implementation(libs.edc.dspApiConfiguration)
+    implementation(libs.edc.dspNegotiationTransform)
 
     implementation(libs.jakarta.rsApi)
 
@@ -23,6 +26,8 @@ dependencies {
     testCompileOnly(libs.lombok)
 
     testImplementation(project(":utils:test-connector-remote"))
+    testImplementation(project(":extensions:wrapper:clients:java-client"))
+    testImplementation(project(":extensions:wrapper:wrapper"))
     testImplementation(libs.edc.controlPlaneCore)
     testImplementation(libs.edc.junit)
     testImplementation(libs.edc.http) {

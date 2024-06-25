@@ -15,6 +15,7 @@ package de.sovity.edc.extension.contactcancellation.controller;
 
 import de.sovity.edc.ext.db.jooq.Tables;
 import de.sovity.edc.extension.db.directaccess.DirectDatabaseAccess;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -22,11 +23,14 @@ import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 
+import java.time.OffsetDateTime;
+
 import static de.sovity.edc.extension.contactcancellation.controller.ContractCancellationController.PATH;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @RequiredArgsConstructor
 @Produces({APPLICATION_JSON})
+@Consumes({APPLICATION_JSON})
 @Path(PATH)
 public class ContractCancellationController {
 
@@ -37,11 +41,31 @@ public class ContractCancellationController {
 
     @POST
     @Path("/cancel")
-    public Response cancel(ContractCancellationDto cancellation) {
-//        val cancellationExists = dda.getDslContext().select(Tables.SOVITY_CONTRACT_CANCELLATION)
-//            .where(Tables.SOVITY_CONTRACT_CANCELLATION.CONTRACT_ID.eq(cancellation.contractId()))
-//            .fetchOne();
+    public Response cancel(
+        ContractCancellationDto cancellation
+    ) {
 
-        return Response.ok().build();
+        try {
+            // TODO: extract to its own queries
+//            val cancellationExists = dda.getDslContext().select(Tables.SOVITY_CONTRACT_CANCELLATION)
+//                .where(Tables.SOVITY_CONTRACT_CANCELLATION.CONTRACT_ID.eq(cancellation.contractId()))
+//                .fetchOne();
+
+            // TODO: extract to its own queries
+            dda.getDslContext().insertInto(Tables.SOVITY_CONTRACT_CANCELLATION)
+                .columns(
+                    Tables.SOVITY_CONTRACT_CANCELLATION.CONTRACT_ID,
+                    Tables.SOVITY_CONTRACT_CANCELLATION.CANCELLATION_DATE,
+                    Tables.SOVITY_CONTRACT_CANCELLATION.REASON,
+                    Tables.SOVITY_CONTRACT_CANCELLATION.DETAIL)
+                .values(cancellation.contractId(), OffsetDateTime.now(), cancellation.reason(), cancellation.detail())
+                .execute();
+
+            // TODO: handle when the insertion fails
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.serverError().entity(e.getMessage()).build();
+        }
+
     }
 }

@@ -17,6 +17,7 @@ create table sovity_contract_cancellation
     contract_id varchar,
     reason varchar,
     detail varchar,
+    cancellation_date timestamp with time zone not null,
     CONSTRAINT agreement_fk FOREIGN KEY (contract_id)
     REFERENCES edc_contract_definitions(contract_definition_id)
 );
