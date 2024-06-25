@@ -15,6 +15,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
+- Add the SovityMessenger extension
+
 #### Patch Changes
 
 - Unified database migration histories

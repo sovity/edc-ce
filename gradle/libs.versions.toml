@@ -53,7 +53,7 @@ openapiJackson = "0.2.6"
 postgres = "42.4.5"
 quarkus = "2.16.6.Final"
 quartz = "2.3.2"
-restAssured = "4.5.0"
+restAssured = "5.4.0"
 retry = "1.5.7"
 shadow = "7.1.2"
 swagger = "1.6.12"
@@ -99,7 +99,9 @@ edc-dataPlaneUtil = { module = "org.eclipse.edc:data-plane-util", version.ref = 
 edc-dsp = { module = "org.eclipse.edc:dsp", version.ref = "edc" }
 edc-dspApiConfiguration = { module = "org.eclipse.edc:dsp-api-configuration", version.ref = "edc" }
 edc-dspHttpSpi = { module = "org.eclipse.edc:dsp-http-spi", version.ref = "edc" }
+edc-dspHttpCore = { module = "org.eclipse.edc:dsp-http-core", version.ref = "edc" }
 edc-http = { module = "org.eclipse.edc:http", version.ref = "edc" }
+edc-httpSpi = { module = "org.eclipse.edc:http-spi", version.ref = "edc" }
 edc-iamMock = { module = "org.eclipse.edc:iam-mock", version.ref = "edc" }
 edc-jsonLd = { module = "org.eclipse.edc:json-ld", version.ref = "edc" }
 edc-jsonLdSpi = { module = "org.eclipse.edc:json-ld-spi", version.ref = "edc" }
