@@ -182,7 +182,7 @@ public class UiAsset {
             "and will be affected by JSON LD compaction and expansion. " +
             "Due to a technical limitation, the properties can't be booleans.",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String customJsonLdAsString = "{}";
+    private String customJsonLdAsString;
 
     @Schema(description = "Same as customJsonAsString but the data will be stored in the private properties.",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
@@ -191,5 +191,5 @@ public class UiAsset {
     @Schema(description = "Same as customJsonLdAsString but the data will be stored in the private properties. " +
             "The same limitations apply.",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String privateCustomJsonLdAsString = "{}";
+    private String privateCustomJsonLdAsString;
 }
