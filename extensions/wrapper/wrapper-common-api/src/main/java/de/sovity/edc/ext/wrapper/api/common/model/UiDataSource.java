@@ -36,8 +36,7 @@ import java.util.Map;
 @Schema(description = "Data Offer Data Source Model. Supports certain Data Address types but also leaves a backdoor for custom Data Address Properties.")
 public class UiDataSource {
     @Schema(
-        description = "Data Address Type. " +
-            "Supported types are HTTP_DATA and CUSTOM.",
+        description = "Data Address Type.",
         defaultValue = "CUSTOM",
         requiredMode = Schema.RequiredMode.REQUIRED
     )

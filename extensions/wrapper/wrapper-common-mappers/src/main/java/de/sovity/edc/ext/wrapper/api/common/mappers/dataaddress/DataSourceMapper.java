@@ -3,6 +3,7 @@ package de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress;
 import com.ibm.icu.impl.Pair;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpDataSourceMapper;
+import de.sovity.edc.ext.wrapper.api.common.model.DataSourceType;
 import de.sovity.edc.ext.wrapper.api.common.model.UiDataSource;
 import de.sovity.edc.ext.wrapper.api.common.model.UiDataSourceHttpData;
 import de.sovity.edc.ext.wrapper.api.common.model.UiDataSourceOnRequest;
@@ -10,7 +11,7 @@ import de.sovity.edc.utils.jsonld.JsonLdUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
-import jakarta.json.JsonObjectBuilder;
+import jakarta.json.JsonValue;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +19,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
 
 
@@ -43,19 +43,15 @@ public class DataSourceMapper {
     }
 
     public JsonObject buildAssetPropsFromDataAddress(JsonObject dataAddressJsonLd) {
-        var assetProps = Json.createObjectBuilder();
-
-        // We purposefully do not match the DataSource type but the final Data Address properties
-        // to work with "custom data addresses" to the best of our ability.
-        var dataAddress = getDataAddressProperties(dataAddressJsonLd);
+        // We purposefully do not match the DataSource type but the properties to support the data address type "CUSTOM"
+        var dataAddress = parseDataAddressJsonLd(dataAddressJsonLd);
         var type = dataAddress.getOrDefault(Prop.Edc.TYPE, "");
 
-
         if (type.equals(Prop.Edc.DATA_ADDRESS_TYPE_HTTP_DATA)) {
-            assetProps.addAll(httpDataSourceMapper.enhanceAssetWithDataSourceHints(dataAddress));
+            return httpDataSourceMapper.enhanceAssetWithDataSourceHints(dataAddress);
         }
 
-        return assetProps.build();
+        return JsonValue.EMPTY_JSON_OBJECT;
     }
 
     private <T> T matchDataSource(
@@ -65,7 +61,10 @@ public class DataSourceMapper {
         @NonNull Supplier<T> customMapper
     ) {
         var type = dataSource.getType();
-        requireNonNull(type, "Data Source Type must not be null");
+        if (type == null) {
+            type = DataSourceType.CUSTOM;
+        }
+
         return switch (type) {
             case HTTP_DATA -> httpDataMapper.apply(dataSource.getHttpData());
             case ON_REQUEST -> onRequestMapper.apply(dataSource.getOnRequest());
@@ -81,12 +80,11 @@ public class DataSourceMapper {
             .build();
     }
 
-    private Map<String, String> getDataAddressProperties(JsonObject dataAddressJsonLd) {
+    private Map<String, String> parseDataAddressJsonLd(JsonObject dataAddressJsonLd) {
         return dataAddressJsonLd.entrySet().stream()
-            .map(entry -> {
-                var value = JsonLdUtils.string(entry.getValue());
-                return Pair.of(entry.getKey(), value == null ? "" : value);
-            })
-            .collect(toMap(it -> it.first, it -> it.second));
+            .collect(toMap(Map.Entry::getKey, it -> {
+                var value = JsonLdUtils.string(it.getValue());
+                return value == null ? "" : value;
+            }));
     }
 }

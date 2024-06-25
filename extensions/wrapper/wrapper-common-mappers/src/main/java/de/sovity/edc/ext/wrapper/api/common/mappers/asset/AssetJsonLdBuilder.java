@@ -132,7 +132,7 @@ public class AssetJsonLdBuilder {
         addMobilityTheme(properties, request);
 
         addCustomJsonLd(properties, request);
-        addDataSourceHints(dataAddressJsonLd, properties);
+        addDataSourceHints(properties, dataAddressJsonLd);
         return properties.build();
     }
 
@@ -151,7 +151,7 @@ public class AssetJsonLdBuilder {
         jsonLd.forEach((key, value) -> addNonNullJsonValue(properties, key, value));
     }
 
-    private void addDataSourceHints(JsonObject dataAddressJsonLd, JsonObjectBuilder properties) {
+    private void addDataSourceHints(JsonObjectBuilder properties, JsonObject dataAddressJsonLd) {
         var dataSourceHints = dataSourceMapper.buildAssetPropsFromDataAddress(dataAddressJsonLd);
         properties.addAll(Json.createObjectBuilder(dataSourceHints));
     }

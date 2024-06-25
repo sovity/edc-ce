@@ -4,6 +4,7 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiDataSourceHttpData;
 import de.sovity.edc.ext.wrapper.api.common.model.UiDataSourceOnRequest;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
+import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -84,7 +85,7 @@ public class HttpDataSourceMapper {
      * @param dataAddress data address
      * @return json object to be merged with asset properties
      */
-    public JsonObjectBuilder enhanceAssetWithDataSourceHints(Map<String, String> dataAddress) {
+    public JsonObject enhanceAssetWithDataSourceHints(Map<String, String> dataAddress) {
         var json = Json.createObjectBuilder();
 
         // Parameterization Hints
@@ -113,6 +114,6 @@ public class HttpDataSourceMapper {
             }
         });
 
-        return json;
+        return json.build();
     }
 }
