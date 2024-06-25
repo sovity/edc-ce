@@ -10,6 +10,7 @@ dependencies {
 
     implementation(project(":utils:jooq-database-access"))
     implementation(project(":extensions:database-direct-access"))
+    implementation(project(":extensions:postgres-flyway"))
 
     implementation(libs.edc.contractSpi)
     implementation(libs.edc.coreSpi)

@@ -16,6 +16,7 @@ package de.sovity.edc.extension.db.directaccess;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.val;
+import org.eclipse.edc.runtime.metamodel.annotation.Provides;
 import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
@@ -23,6 +24,7 @@ import org.eclipse.edc.spi.system.configuration.Config;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
+@Provides(DirectDatabaseAccess.class)
 public class DatabaseDirectAccessExtension implements ServiceExtension {
     public static final String NAME = "DirectDatabaseAccess";
 
@@ -85,7 +87,7 @@ public class DatabaseDirectAccessExtension implements ServiceExtension {
         hikariConfig.setConnectionTimeout(config.getInteger(EDC_SERVER_DB_CONNECTION_TIMEOUT_IN_MS));
 
         val datasource = new HikariDataSource(hikariConfig);
-        val dda = new DirectDatabaseAccess(datasource, DSL.using(SQLDialect.POSTGRES));
+        val dda = new DirectDatabaseAccess(datasource);
 
         context.registerService(DirectDatabaseAccess.class, dda);
     }

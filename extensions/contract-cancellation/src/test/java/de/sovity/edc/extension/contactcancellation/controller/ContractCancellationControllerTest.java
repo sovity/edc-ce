@@ -37,6 +37,7 @@ class ContractCancellationControllerTest {
     @RegisterExtension
     static EdcExtension providerEdcContext = new EdcExtension();
 
+    // TODO: use transactions to save containers boot time
     @RegisterExtension
     static final TestDatabase PROVIDER_DATABASE = new TestDatabaseViaTestcontainers();
 

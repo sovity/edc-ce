@@ -21,9 +21,11 @@ import org.eclipse.edc.connector.transfer.spi.observe.TransferProcessListener;
 import org.eclipse.edc.connector.transfer.spi.observe.TransferProcessObservable;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
+import org.eclipse.edc.runtime.metamodel.annotation.Provides;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.web.spi.WebService;
+
 
 
 public class ContractCancellationExtension implements ServiceExtension {
@@ -60,7 +62,7 @@ public class ContractCancellationExtension implements ServiceExtension {
     }
 
     private void setupController() {
-        val controller = new ContractCancellationController(directDatabaseAccess.dslContext());
+        val controller = new ContractCancellationController(directDatabaseAccess);
         webService.registerResource(managementApiConfiguration.getContextAlias(), controller);
     }
 }

@@ -17,9 +17,23 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.runtime.metamodel.annotation.ExtensionPoint;
 import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
 
 import javax.sql.DataSource;
 
 @ExtensionPoint
-public record DirectDatabaseAccess(DataSource dataSource, DSLContext dslContext) {
+@RequiredArgsConstructor
+public class DirectDatabaseAccess {
+    @Getter
+    private final DataSource dataSource;
+
+    private DSLContext dslContext;
+
+    public synchronized DSLContext getDslContext() {
+        if (dslContext == null) {
+            dslContext = DSL.using(SQLDialect.POSTGRES);
+        }
+        return dslContext;
+    }
 }

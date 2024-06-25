@@ -14,15 +14,13 @@
 package de.sovity.edc.extension.contactcancellation.controller;
 
 import de.sovity.edc.ext.db.jooq.Tables;
-import jakarta.ws.rs.GET;
+import de.sovity.edc.extension.db.directaccess.DirectDatabaseAccess;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
 
 import static de.sovity.edc.extension.contactcancellation.controller.ContractCancellationController.PATH;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -35,14 +33,14 @@ public class ContractCancellationController {
     // TODO: what would be an appropriate path?
     public static final String PATH = "/sovity/contract";
 
-    private final DSLContext dsl;
+    private final DirectDatabaseAccess dda;
 
     @POST
     @Path("/cancel")
     public Response cancel(ContractCancellationDto cancellation) {
-        val cancellationExists = dsl.select(Tables.SOVITY_CONTRACT_CANCELLATION)
-            .where(Tables.SOVITY_CONTRACT_CANCELLATION.CONTRACT_ID.eq(cancellation.contractId()))
-            .fetchOne();
+//        val cancellationExists = dda.getDslContext().select(Tables.SOVITY_CONTRACT_CANCELLATION)
+//            .where(Tables.SOVITY_CONTRACT_CANCELLATION.CONTRACT_ID.eq(cancellation.contractId()))
+//            .fetchOne();
 
         return Response.ok().build();
     }
