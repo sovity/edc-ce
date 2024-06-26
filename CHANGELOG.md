@@ -63,7 +63,7 @@ Support for Multiplicity Constraints in the API Wrapper.
 
 Starting from version `8`, the Broker has been merged with the Community edition.
 
-[The former changelog](https://github.com/sovity/edc-broker-server-extension/blob/main/CHANGELOG.md) for the Broker is still available but will not be updated anymore.
+[The former changelog](https://github.com/sovity/edc-broker-server-extension/blob/v4.2.0/CHANGELOG.md) for the Broker is still available but will not be updated anymore.
 
 The Broker's version therefore jumps from version 4 to version 8.
 

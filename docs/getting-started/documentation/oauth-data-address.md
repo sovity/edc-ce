@@ -9,11 +9,11 @@ Data Sources and Data Sinks protected by OAuth2
 OAuth2 protected APIs can be used for both Http-Data-Sources and Http-Data-Sinks. For both the
 following properties can be used:
 
-| Property               | Description                                                  |
-|------------------------|--------------------------------------------------------------|
-| oauth2:tokenUrl        | Token-Url where the Access-Token can be fetched from         |
-| oauth2:clientId        | The client id                                                |
-| oauth2:clientSecretKey | The vault key holding the client secret                      |
+| Property               | Description                                          |
+|------------------------|------------------------------------------------------|
+| oauth2:tokenUrl        | Token-Url where the Access-Token can be fetched from |
+| oauth2:clientId        | The client id                                        |
+| oauth2:clientSecretKey | The vault key holding the client secret              |
 
 > [!NOTE]
 > The only supported flow right now is the "Client Credentials" flow.
@@ -43,7 +43,7 @@ following request:
 `POST` to `https://{{FQDN}}/api/management/v3/assets`
 
 > [!IMPORTANT]
-> Be aware that while all other API examples work with API `v2` this example requires API `v3` 
+> Be aware that while all other API examples work with API `v2` this example requires API `v3`
 
 ```json
 {
