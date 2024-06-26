@@ -7,13 +7,13 @@
     "homepage": "https://sovity.de",
     "repository": {
         "type": "git",
-        "url": "https://github.com/sovity/edc-extensions/"
+        "url": "https://github.com/sovity/edc-ce/"
     },
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
     "bugs": {
-        "url": "https://github.com/sovity/edc-extensions/issues/new/choose"
+        "url": "https://github.com/sovity/edc-ce/issues/new/choose"
     },
     "keywords": [
         "sovity",

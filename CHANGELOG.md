@@ -41,7 +41,7 @@ Support for Multiplicity Constraints in the API Wrapper.
 #### Minor Changes
 
 - API Wrapper 
-  - Support for Multiplicity Constraints (https://github.com/sovity/edc-extensions/issues/968)
+  - Support for Multiplicity Constraints (https://github.com/sovity/edc-ce/issues/968)
   - Providing `Prop` class from `json-and-jsonld-utils` to the java-client to make relevant Constants available
 
 #### Patch Changes
@@ -132,9 +132,9 @@ MDS Bugfix Release
 - Fixed naming of the `nutsLocations` field for MDS assets.
 - UI: Removed HTTP Verb "HEAD" as it was not supported by the backend
 - Docs: Updated image to explain data-transfer-methods
-- Docs: Updated documentation for parameterization using [only the UI](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/parameterized_assets_via_ui.md) or the [Management-API](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/parameterized_assets.md)
-- Docs: Updated [OAuth2 documentation](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/oauth-data-address.md) about necessary parameters that need to use the vault key instead of providing a secret directly
-- Docs: Updated documentation for the [pull-data-transfer](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/pull-data-transfer.md)
+- Docs: Updated documentation for parameterization using [only the UI](https://github.com/sovity/edc-ce/blob/main/docs/getting-started/documentation/parameterized_assets_via_ui.md) or the [Management-API](https://github.com/sovity/edc-ce/blob/main/docs/getting-started/documentation/parameterized_assets.md)
+- Docs: Updated [OAuth2 documentation](https://github.com/sovity/edc-ce/blob/main/docs/getting-started/documentation/oauth-data-address.md) about necessary parameters that need to use the vault key instead of providing a secret directly
+- Docs: Updated documentation for the [pull-data-transfer](https://github.com/sovity/edc-ce/blob/main/docs/getting-started/documentation/pull-data-transfer.md)
 - Dev Utils: Parallel test support for our Test Backend for some requests.
 
 ### Deployment Migration Notes

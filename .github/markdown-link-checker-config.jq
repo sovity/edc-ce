@@ -12,12 +12,12 @@
   ],
   "replacementPatterns": [
     {
-      "pattern": "^https://github.com/sovity/edc-extensions/blob/main/",
-      "replacement": "https://github.com/sovity/edc-extensions/blob/\(env | .CI_SHA // ("CI_SHA was null" | halt_error))/"
+      "pattern": "^https://github.com/sovity/edc-ce/blob/main/",
+      "replacement": "https://github.com/sovity/edc-ce/blob/\(env | .CI_SHA // ("CI_SHA was null" | halt_error))/"
     },
     {
-      "pattern": "^https://github.com/sovity/edc-extensions/tree/main/",
-      "replacement": "https://github.com/sovity/edc-extensions/tree/\(env | .CI_SHA // ("CI_SHA was null" | halt_error))/"
+      "pattern": "^https://github.com/sovity/edc-ce/tree/main/",
+      "replacement": "https://github.com/sovity/edc-ce/tree/\(env | .CI_SHA // ("CI_SHA was null" | halt_error))/"
     },
     {
       "pattern": "^https://github.com/sovity/edc-ce/blob/main/",

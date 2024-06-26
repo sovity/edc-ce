@@ -116,7 +116,7 @@ Mid-development it might be un-pinned back to latest versions.
 
 ## Releasing
 
-[Create a Release Issue](https://github.com/sovity/edc-extensions/issues/new?assignees=&labels=task%2Frelease%2Cscope%2Fmds&projects=&template=release.md&title=Release+x.x.x) and follow the instructions.
+[Create a Release Issue](https://github.com/sovity/edc-ce/issues/new?assignees=&labels=task%2Frelease%2Cscope%2Fmds&projects=&template=release.md&title=Release+x.x.x) and follow the instructions.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -152,7 +152,7 @@ There is a [docker-compose.yaml](../../docker-compose.yaml) to try out the broke
 A productive configuration will require you to join a DAPS.
 
 For that you will need a SKI/AKI ClientID. Please refer
-to [edc-extension's Getting Started Guide](https://github.com/sovity/edc-extensions/tree/main/docs/getting-started#faq)
+to [edc-extension's Getting Started Guide](https://github.com/sovity/edc-ce/tree/main/docs/getting-started#faq)
 on how to generate one.
 
 The DAPS needs to contain the claim `referringConnector=broker` for the broker.

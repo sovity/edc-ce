@@ -1,16 +1,16 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/sovity/edc-extensions">
+  <a href="https://github.com/sovity/edc-ce">
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
 <h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Clients:<br />Java API Client</h3>
 
   <p align="center">
-    <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
+    <a href="https://github.com/sovity/edc-ce/issues/new?template=bug_report.md">Report Bug</a>
     ·
-    <a href="https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md">Request Feature</a>
+    <a href="https://github.com/sovity/edc-ce/issues/new?template=feature_request.md">Request Feature</a>
   </p>
 </div>
 
@@ -27,7 +27,7 @@ An example project using this client can be found [here](../java-client-example)
 <dependency>
   <groupId>de.sovity.edc</groupId>
   <artifactId>client</artifactId>
-  <version>${sovity-edc-extensions.version}</version>
+  <version>${sovity-edc-ce.version}</version>
 </dependency>
 ```
 
@@ -149,7 +149,7 @@ private Expression buildAtomicElement(
 }
 ```
 
-The complete example can be seen in [this test](https://github.com/sovity/edc-extensions/blob/main/extensions/wrapper/wrapper/src/test/java/de/sovity/edc/ext/wrapper/api/usecase/PolicyDefinitionApiServiceTest.java).
+The complete example can be seen in [this test](https://github.com/sovity/edc-ce/blob/main/extensions/wrapper/wrapper/src/test/java/de/sovity/edc/ext/wrapper/api/usecase/PolicyDefinitionApiServiceTest.java).
 
 ## License
 

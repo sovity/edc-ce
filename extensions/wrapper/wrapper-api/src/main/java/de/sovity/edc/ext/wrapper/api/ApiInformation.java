@@ -42,7 +42,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 @Server(url = "https://my-connector/api/management")
         },
         externalDocs = @ExternalDocumentation(
-                description = "EDC API Wrapper Project in sovity/edc-extensions",
+                description = "EDC API Wrapper Project in sovity/edc-ce",
                 url = "https://github.com/sovity/edc-ce/tree/main/extensions/wrapper"
         )
 )

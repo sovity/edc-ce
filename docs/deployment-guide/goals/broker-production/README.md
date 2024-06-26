@@ -36,7 +36,7 @@ so you should only use it to check if the released version is roughly working or
 A productive configuration will require you to join a DAPS.
 
 For that you will need a SKI/AKI ClientID. Please refer
-to [edc-extension's Getting Started Guide](https://github.com/sovity/edc-extensions/tree/main/docs/getting-started#faq)
+to [edc-extension's Getting Started Guide](https://github.com/sovity/edc-ce/tree/main/docs/getting-started#faq)
 on how to generate one.
 
 The DAPS needs to contain the claim `referringConnector=broker` for the broker.
