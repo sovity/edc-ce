@@ -45,4 +45,3 @@ public class UiPolicy {
             "the mapping process, we'll collect them here.", requiredMode = RequiredMode.REQUIRED)
     private List<String> errors;
 }
-
