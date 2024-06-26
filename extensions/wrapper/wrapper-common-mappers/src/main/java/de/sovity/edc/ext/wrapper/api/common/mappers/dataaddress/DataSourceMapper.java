@@ -1,6 +1,5 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress;
 
-import com.ibm.icu.impl.Pair;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpDataSourceMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.DataSourceType;

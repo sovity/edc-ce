@@ -1,3 +1,17 @@
+/*
+ *  Copyright (c) 2022 sovity GmbH
+ *
+ *  This program and the accompanying materials are made available under the
+ *  terms of the Apache License, Version 2.0 which is available at
+ *  https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
+ *  Contributors:
+ *       sovity GmbH - initial API and implementation
+ *
+ */
+
 package de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http;
 
 import de.sovity.edc.ext.wrapper.api.common.model.UiDataSourceHttpData;
@@ -28,7 +42,7 @@ public class HttpDataSourceMapper {
      * @return properties for {@link org.eclipse.edc.spi.types.domain.DataAddress}
      */
     public Map<String, String> buildDataAddress(@NonNull UiDataSourceHttpData httpData) {
-        var baseUrl = requireNonNull(httpData.getBaseUrl(), "Need baseUrl");
+        var baseUrl = requireNonNull(httpData.getBaseUrl(), "baseUrl must not be null");
         var props = new HashMap<>(Map.of(
             Prop.Edc.TYPE, Prop.Edc.DATA_ADDRESS_TYPE_HTTP_DATA,
             Prop.Edc.BASE_URL, baseUrl
@@ -62,7 +76,7 @@ public class HttpDataSourceMapper {
     }
 
     public Map<String, String> buildOnRequestDataAddress(@NonNull UiDataSourceOnRequest onRequest) {
-        var contactEmail = requireNonNull(onRequest.getContactEmail(), "Need contactEmail");
+        var contactEmail = requireNonNull(onRequest.getContactEmail(), "contactEmail must not be null");
         var contactEmailSubject = requireNonNull(
             onRequest.getContactPreferredEmailSubject(),
             "Need contactPreferredEmailSubject"
