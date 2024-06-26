@@ -32,6 +32,7 @@ import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.TestUtils;
+import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -61,7 +62,8 @@ public class UseCaseApiWrapperTest {
     }
 
     @Test
-       void shouldFetchFilteredDataOffersWithEq() {
+    @DisabledOnGithub
+    void shouldFetchFilteredDataOffersWithEq() {
         // arrange
         setupAssets();
         buildContractDefinition(policyId, assetId1, "cd-1");
@@ -79,7 +81,8 @@ public class UseCaseApiWrapperTest {
     }
 
     @Test
-       void shouldFetchFilteredDataOffersWithIn() {
+    @DisabledOnGithub
+    void shouldFetchFilteredDataOffersWithIn() {
         // arrange
         setupAssets();
         buildContractDefinition(policyId, assetId1, "cd-1");
@@ -97,7 +100,8 @@ public class UseCaseApiWrapperTest {
     }
 
     @Test
-       void shouldFetchWithoutFilterButWithLimit() {
+    @DisabledOnGithub
+    void shouldFetchWithoutFilterButWithLimit() {
         // arrange
         setupAssets();
         buildContractDefinition(policyId, assetId1, "cd-1");

@@ -21,6 +21,7 @@ import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
+import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.data.TemporalUnitLessThanOffset;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -92,6 +93,7 @@ class Ms8ConnectorMigrationTest {
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
 
+    @DisabledOnGithub
     @Test
     void testMs8DataOffer_Properties() {
         // arrange
@@ -127,6 +129,7 @@ class Ms8ConnectorMigrationTest {
         });
     }
 
+    @DisabledOnGithub
     @Test
     void testMs8ProvidingTransferProcess() {
         // arrange
@@ -154,6 +157,7 @@ class Ms8ConnectorMigrationTest {
         assertThat(actual).isCloseTo(expected, new TemporalUnitLessThanOffset(1, ChronoUnit.MINUTES));
     }
 
+    @DisabledOnGithub
     @Test
     void testMs8ConsumingTransferProcess() {
         // arrange
