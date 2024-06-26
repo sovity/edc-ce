@@ -24,7 +24,6 @@ import de.sovity.edc.extension.messenger.demo.message.Failing;
 import de.sovity.edc.extension.messenger.demo.message.Signal;
 import de.sovity.edc.extension.messenger.demo.message.Sqrt;
 import de.sovity.edc.extension.messenger.demo.message.UnregisteredMessage;
-import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import lombok.val;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.iam.TokenDecorator;
@@ -78,8 +77,7 @@ class SovityMessengerDemoTest {
     /**
      * Actual usage of the Sovity Messenger.
      */
-    @DisabledOnGithub
-    @Test
+       @Test
     void demo() throws ExecutionException, InterruptedException, TimeoutException {
         /*
          * Get a reference to the SovityMessenger. This is equivalent to
