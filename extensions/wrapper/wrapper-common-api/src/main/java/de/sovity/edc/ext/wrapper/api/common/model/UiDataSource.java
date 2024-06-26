@@ -19,19 +19,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import java.util.Map;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
+@Data
 @Builder(toBuilder = true)
-@RequiredArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Data Offer Data Source Model. Supports certain Data Address types but also leaves a backdoor for custom Data Address Properties.")
 public class UiDataSource {

@@ -23,12 +23,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
+@Data
 @Builder(toBuilder = true)
-@RequiredArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Policy Creation Request Supporting Multiplicity Constraints.")
 public class PolicyCreateRequest {
 

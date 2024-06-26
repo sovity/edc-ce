@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -26,12 +27,9 @@ import lombok.ToString;
 import java.time.LocalDate;
 import java.util.List;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
+@Data
 @Builder(toBuilder = true)
-@RequiredArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Type-Safe Asset Metadata as needed by our UI")
 public class UiAsset {

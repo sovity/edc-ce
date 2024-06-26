@@ -18,22 +18,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
+@Data
 @Builder(toBuilder = true)
-@RequiredArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Type-Safe OpenAPI generator friendly Asset Create DTO that supports an opinionated subset of the original EDC Asset Entity.")
 public class UiAssetCreateRequest {
@@ -116,22 +108,22 @@ public class UiAssetCreateRequest {
     private LocalDate temporalCoverageToInclusive;
 
     @Schema(description = "Contains serialized custom properties in the JSON format.",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String customJsonAsString;
 
     @Schema(description = "Contains serialized custom properties in the JSON LD format. " +
-            "Contrary to the customJsonAsString field, this string must represent a JSON LD object " +
-            "and will be affected by JSON LD compaction and expansion. " +
-            "Due to a technical limitation, the properties can't be booleans.",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+        "Contrary to the customJsonAsString field, this string must represent a JSON LD object " +
+        "and will be affected by JSON LD compaction and expansion. " +
+        "Due to a technical limitation, the properties can't be booleans.",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String customJsonLdAsString;
 
     @Schema(description = "Same as customJsonAsString but the data will be stored in the private properties.",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String privateCustomJsonAsString;
 
     @Schema(description = "Same as customJsonLdAsString but the data will be stored in the private properties. " +
-            "The same limitations apply.",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+        "The same limitations apply.",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String privateCustomJsonLdAsString;
 }

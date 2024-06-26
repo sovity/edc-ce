@@ -24,12 +24,10 @@ import lombok.ToString;
 
 import java.util.List;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
+@Data
 @Builder(toBuilder = true)
-@RequiredArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description =
         "Represents a single atomic constraint or a multiplicity constraint. The atomicConstraint" +
                 " will be evaluated if the constraintType is ATOMIC_CONSTRAINT.")
