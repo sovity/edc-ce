@@ -117,7 +117,7 @@ class UiApiWrapperTest {
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
 
-       @Test
+    @Test
     void provide_consume_assetMapping_policyMapping_agreements() {
         // arrange
         var data = "expected data 123";
@@ -379,7 +379,7 @@ class UiApiWrapperTest {
 
     // TODO throw an error if the id is overridden
 
-       @Test
+    @Test
     void customTransferRequest() {
         // arrange
         var data = "expected data 123";
@@ -440,7 +440,7 @@ class UiApiWrapperTest {
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
     }
 
-       @Test
+    @Test
     void editAssetMetadataOnLiveContract() {
         // arrange
         var data = "expected data 123";

@@ -77,7 +77,7 @@ class SovityMessengerDemoTest {
     /**
      * Actual usage of the Sovity Messenger.
      */
-       @Test
+    @Test
     void demo() throws ExecutionException, InterruptedException, TimeoutException {
         /*
          * Get a reference to the SovityMessenger. This is equivalent to

@@ -116,7 +116,7 @@ class DataSourceQueryParamsTest {
     /**
      * This test will fail as soon as the handling of query parameters is fixed in the EDC project
      */
-       @Test
+    @Test
     void testQueryParamsDoubleEncoded() {
         // arrange
         createPolicy();

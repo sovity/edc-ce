@@ -92,7 +92,7 @@ class Ms8ConnectorMigrationTest {
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
 
-       @Test
+    @Test
     void testMs8DataOffer_Properties() {
         // arrange
         var providerEndpoint = endpoint(providerConnector);
@@ -127,7 +127,7 @@ class Ms8ConnectorMigrationTest {
         });
     }
 
-       @Test
+    @Test
     void testMs8ProvidingTransferProcess() {
         // arrange
 
@@ -154,7 +154,7 @@ class Ms8ConnectorMigrationTest {
         assertThat(actual).isCloseTo(expected, new TemporalUnitLessThanOffset(1, ChronoUnit.MINUTES));
     }
 
-       @Test
+    @Test
     void testMs8ConsumingTransferProcess() {
         // arrange
 

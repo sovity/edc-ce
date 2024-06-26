@@ -102,7 +102,7 @@ class UseCaseApiWrapperTest {
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
 
-       @Test
+    @Test
     void catalog_filtering_by_like() {
         // arrange
         createPolicy();

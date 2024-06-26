@@ -1,10 +1,10 @@
+import nu.studer.gradle.jooq.JooqGenerate
 import org.flywaydb.gradle.task.FlywayCleanTask
 import org.flywaydb.gradle.task.FlywayMigrateTask
-import org.testcontainers.containers.JdbcDatabaseContainer
-import org.testcontainers.containers.PostgreSQLContainer
-import nu.studer.gradle.jooq.JooqGenerate
 import org.jooq.meta.jaxb.ForcedType
 import org.jooq.meta.jaxb.Nullability
+import org.testcontainers.containers.JdbcDatabaseContainer
+import org.testcontainers.containers.PostgreSQLContainer
 
 plugins {
     `java-library`
