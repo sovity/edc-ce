@@ -1,6 +1,5 @@
 plugins {
     `java-library`
-    alias(libs.plugins.retry)
 }
 
 configurations.all {
@@ -56,12 +55,6 @@ dependencies {
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
-    maxParallelForks = 1
-    retry {
-        maxRetries.set(2)
-        maxFailures.set(4)
-        failOnPassedAfterRetry.set(false)
-    }
 }
 
 tasks.register("prepareKotlinBuildScriptModel") {}

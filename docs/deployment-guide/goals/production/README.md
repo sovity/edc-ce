@@ -47,28 +47,28 @@ The EDC Backend opens up multiple ports with different functionalities. They are
 proxy (at least the protocol endpoint needs to be).
 
 - The sovity EDC Connector is meant to be deployed with a reverse proxy merging the following ports:
-    - The UI's `8080` port. Henceforth, called the UI.
-    - The Backend's `11002` port. Henceforth, called the Management API.
-    - The Backend's `11003` port. Henceforth, called the Protocol API.
+  - The UI's `8080` port. Henceforth, called the UI.
+  - The Backend's `11002` port. Henceforth, called the Management API.
+  - The Backend's `11003` port. Henceforth, called the Protocol API.
 - The mapping should look like this:
-    - `https://[MY_EDC_FQDN]/api/dsp` -> `edc:11003/api/dsp`
-    - `https://[MY_EDC_FQDN]/api/management` -> **Auth Proxy** -> `edc:11002/api/management`
-    - All other requests -> **Auth Proxy** -> `edc-ui:80`
+  - `https://[MY_EDC_FQDN]/api/dsp` -> `edc:11003/api/dsp`
+  - `https://[MY_EDC_FQDN]/api/management` -> **Auth Proxy** -> `edc:11002/api/management`
+  - All other requests -> **Auth Proxy** -> `edc-ui:80`
 - Regarding TLS/HTTPS:
-    - All endpoints need to be secured by TLS/HTTPS. A productive connector won't work without it.
-    - All endpoint should have HTTP to HTTPS redirects.
+  - All endpoints need to be secured by TLS/HTTPS. A productive connector won't work without it.
+  - All endpoint should have HTTP to HTTPS redirects.
 - Regarding Authentication:
-    - The UI and the Management API need to be secured by an auth proxy. Otherwise, access to either would mean full
-      control of the application.
-    - The backend's `11003` port needs to be unsecured. Authentication between connectors is done via the Data Space
-      Authority / DAPS and the configured certificates.
+  - The UI and the Management API need to be secured by an auth proxy. Otherwise, access to either would mean full
+    control of the application.
+  - The backend's `11003` port needs to be unsecured. Authentication between connectors is done via the Data Space
+    Authority / DAPS and the configured certificates.
 - Exposing to the internet:
-    - The Protocol API must be reachable via the internet. The required endpoints can be found in
-      this [public-endpoints.yaml](public-endpoints.yaml)
-    - Exposing the UI or the Management Endpoint to the internet requires an intermediate auth proxy, we recommend restricting the access to the Management Endpoint to your internal network.
+  - The Protocol API must be reachable via the internet. The required endpoints can be found in
+    this [public-endpoints.yaml](public-endpoints.yaml)
+  - Exposing the UI or the Management Endpoint to the internet requires an intermediate auth proxy, we recommend restricting the access to the Management Endpoint to your internal network.
 - Security:
-    - Limit the header size in the proxy so that only a certain number of API Keys can be tested with one API-request (e.g. limit to 8kb).
-    - Limit the access rate to the API endpoints and monitor access for attacks like brute force attacks.
+  - Limit the header size in the proxy so that only a certain number of API Keys can be tested with one API-request (e.g. limit to 8kb).
+  - Limit the access rate to the API endpoints and monitor access for attacks like brute force attacks.
 
 ## EDC UI Configuration
 
@@ -89,6 +89,7 @@ EDC_UI_CONFIG_URL: "edc-ui-config"
 ```
 
 You can also optionally set the following config properties:
+
 ```yaml
 # Override the management API URL shown to the user in the UI
 EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD: https://[EDC_URL]/api/control/management
@@ -150,6 +151,7 @@ EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
 ```
 
 A LoggingHouse extension is included in the MDS variant, which means that additional properties must be set for it:
+
 ```yaml
 # LoggingHouse Extension
 EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "true"
@@ -157,6 +159,7 @@ EDC_LOGGINGHOUSE_EXTENSION_URL: https://clearing.test.mobility-dataspace.eu
 ```
 
 You can also optionally set the following config properties:
+
 ```yaml
 # Enables DEBUG-Level logging
 DEBUG_LOGGING: true

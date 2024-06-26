@@ -26,24 +26,24 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 title = "sovity EDC API Wrapper",
                 version = "0.0.0",
                 description = "sovity's EDC API Wrapper contains a selection of APIs for multiple consumers, " +
-                        "e.g. our EDC UI API, our generic Use Case API, our Commercial APIs, etc. " +
+                        "e.g. our EDC UI API, our generic Use Case API, our Commercial Edition APIs, etc. " +
                         "We bundled these APIs, so we can have an easier time generating our API Client Libraries.",
                 contact = @Contact(
-                        name = "Sovity GmbH",
+                        name = "sovity GmbH",
                         email = "contact@sovity.de",
-                        url = "https://github.com/sovity/edc-extensions/issues/new/choose"
+                        url = "https://github.com/sovity/edc-ce/issues/new/choose"
                 ),
                 license = @License(
                         name = "Apache 2.0",
-                        url = "https://github.com/sovity/edc-extensions/blob/main/LICENSE"
+                        url = "https://github.com/sovity/edc-ce/blob/main/LICENSE"
                 )
         ),
         servers = {
                 @Server(url = "https://my-connector/api/management")
         },
         externalDocs = @ExternalDocumentation(
-                description = "EDC API Wrapper Project in sovity/edc-extensions",
-                url = "https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper"
+                description = "EDC API Wrapper Project in sovity/edc-ce",
+                url = "https://github.com/sovity/edc-ce/tree/main/extensions/wrapper"
         )
 )
 public interface ApiInformation {

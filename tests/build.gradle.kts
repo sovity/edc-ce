@@ -1,6 +1,5 @@
 plugins {
     `java-library`
-    alias(libs.plugins.retry)
 }
 
 dependencies {
@@ -20,10 +19,6 @@ dependencies {
     testImplementation(libs.junit.params)
     testImplementation(libs.mockserver.netty)
     testRuntimeOnly(libs.junit.engine)
-}
-
-tasks.withType<Test> {
-    maxParallelForks = 1
 }
 
 group = libs.versions.sovityEdcGroup.get()

@@ -57,10 +57,6 @@ dependencies {
     testRuntimeOnly(libs.junit.engine)
 }
 
-tasks.withType<Test> {
-    maxParallelForks = 1
-}
-
 group = libs.versions.sovityEdcExtensionGroup.get()
 
 publishing {

@@ -39,30 +39,30 @@ The EDC Backend opens up multiple ports with different functionalities. They are
 proxy (at least the protocol endpoint needs to be).
 
 - The sovity EDC Connector is meant to be deployed with a reverse proxy merging the following ports:
-    - The UI's `80` port. Henceforth, called the UI.
-    - The Backend's `11002` port. Henceforth, called the Management API.
-    - The Backend's `11003` port. Henceforth, called the Protocol API.
+  - The UI's `80` port. Henceforth, called the UI.
+  - The Backend's `11002` port. Henceforth, called the Management API.
+  - The Backend's `11003` port. Henceforth, called the Protocol API.
 - The mapping should look like this:
-    - `/api/v1/ids` -> `edc:11003/api/v1/ids`
-    - `/api/v1/management` -> `edc:11002/api/v1/management`
-    - All other requests should be mapped to `edc-ui:80`
+  - `/api/v1/ids` -> `edc:11003/api/v1/ids`
+  - `/api/v1/management` -> `edc:11002/api/v1/management`
+  - All other requests should be mapped to `edc-ui:80`
 - Regarding TLS/HTTPS:
-    - All endpoints need to be secured by TLS/HTTPS. A productive connector won't work without it.
-    - The UI and the Management API should have HTTP to HTTPS redirects.
-    - The Protocol API must allow HTTP traffic to pass through. This is due to some loopback requests
-      mistakenly using HTTP instead of HTTPS that would otherwise be blocked or have their credentials wiped.
+  - All endpoints need to be secured by TLS/HTTPS. A productive connector won't work without it.
+  - The UI and the Management API should have HTTP to HTTPS redirects.
+  - The Protocol API must allow HTTP traffic to pass through. This is due to some loopback requests
+    mistakenly using HTTP instead of HTTPS that would otherwise be blocked or have their credentials wiped.
 - Regarding Authentication:
-    - The UI and the Management API need to be secured by an auth proxy. Otherwise, access to either would mean full
-      control of the application.
-    - The backend's `11003` port needs to be unsecured. Authentication between connectors is done via the Data Space
-      Authority / DAPS and the configured certificates.
+  - The UI and the Management API need to be secured by an auth proxy. Otherwise, access to either would mean full
+    control of the application.
+  - The backend's `11003` port needs to be unsecured. Authentication between connectors is done via the Data Space
+    Authority / DAPS and the configured certificates.
 - Exposing to the internet:
-    - The Protocol API must be reachable via the internet. The required endpoints can be found in
-      this [public-endpoints.yaml](public-endpoints.yaml)
-    - Exposing the UI or the Management Endpoint to the internet requires an intermediate auth proxy, we recommend restricting the access to the Management Endpoint to your internal network.
+  - The Protocol API must be reachable via the internet. The required endpoints can be found in
+    this [public-endpoints.yaml](public-endpoints.yaml)
+  - Exposing the UI or the Management Endpoint to the internet requires an intermediate auth proxy, we recommend restricting the access to the Management Endpoint to your internal network.
 - Security:
-    - Limit the header size in the proxy so that only a certain number of API Keys can be tested with one API-request (e.g. limit to 8kb).
-    - Limit the access rate to the API endpoints and monitor access for attacks like brute force attacks.
+  - Limit the header size in the proxy so that only a certain number of API Keys can be tested with one API-request (e.g. limit to 8kb).
+  - Limit the access rate to the API endpoints and monitor access for attacks like brute force attacks.
 
 ## EDC UI Configuration
 
@@ -93,8 +93,8 @@ A sovity EDC CE or MDS EDC CE Backend deployment requires:
 - The following configuration properties
 
 > [!WARNING]
-> Please be careful with overriding any of the ENV Vars set in our [launchers/.env.connector](../../../../../launchers/.env.connector). 
-> Our defaults will respect overrides, and the Core EDC ENV Vars can be in some cases sensitive to edge cases such as 
+> Please be careful with overriding any of the ENV Vars set in our [launchers/.env.connector](../../../../../launchers/.env.connector).
+> Our defaults will respect overrides, and the Core EDC ENV Vars can be in some cases sensitive to edge cases such as
 > trailing slashes.
 
 ```yaml

@@ -15,6 +15,13 @@ package de.sovity.edc.utils.jsonld.vocab;
 
 import lombok.experimental.UtilityClass;
 
+/**
+ * Constants for used JSON-LD Vocabulary.
+ * <p>
+ * Please note, that due to how JSON-LD / ontologies are defined, all property names of a namespace are just
+ * mixed together on the same level. A property, e.g. type, might be used in multiple classes, which is an
+ * abstraction leak by design.
+ */
 @UtilityClass
 public class Prop {
     public final String ID = "@id";
@@ -36,8 +43,12 @@ public class Prop {
         public final String PRIVATE_PROPERTIES = CTX + "privateProperties";
         public final String DATA_ADDRESS = CTX + "dataAddress";
         public final String TYPE = CTX + "type";
+        public final String DATA_ADDRESS_TYPE_HTTP_DATA = "HttpData";
+        public final String DATA_ADDRESS_TYPE_HTTP_PROXY = "HttpData";
         public final String BASE_URL = CTX + "baseUrl";
         public final String METHOD = CTX + "method";
+        public final String CONTENT_TYPE = CTX + "contentType";
+        public final String QUERY_PARAMS = CTX + "queryParams";
         public final String PROXY_METHOD = CTX + "proxyMethod";
         public final String PROXY_PATH = CTX + "proxyPath";
         public final String PROXY_QUERY_PARAMS = CTX + "proxyQueryParams";
@@ -126,6 +137,10 @@ public class Prop {
         public final String CTX = "https://semantic.sovity.io/dcat-ext#";
         public final String CUSTOM_JSON = CTX + "customJson";
         public final String PRIVATE_CUSTOM_JSON = CTX + "privateCustomJson";
+        public final String DATA_SOURCE_AVAILABILITY = CTX + "dataSourceAvailability";
+        public final String DATA_SOURCE_AVAILABILITY_ON_REQUEST = "ON_REQUEST";
+        public final String CONTACT_EMAIL = CTX + "contactEmail";
+        public final String CONTACT_PREFERRED_EMAIL_SUBJECT = CTX + "contactPreferredEmailSubject";
 
         @UtilityClass
         public class HttpDatasourceHints {

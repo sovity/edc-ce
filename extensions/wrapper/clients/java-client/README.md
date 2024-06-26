@@ -1,16 +1,16 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/sovity/edc-extensions">
+  <a href="https://github.com/sovity/edc-ce">
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
 <h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Clients:<br />Java API Client</h3>
 
   <p align="center">
-    <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
+    <a href="https://github.com/sovity/edc-ce/issues/new?template=bug_report.md">Report Bug</a>
     ·
-    <a href="https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md">Request Feature</a>
+    <a href="https://github.com/sovity/edc-ce/issues/new?template=feature_request.md">Request Feature</a>
   </p>
 </div>
 
@@ -27,7 +27,7 @@ An example project using this client can be found [here](../java-client-example)
 <dependency>
   <groupId>de.sovity.edc</groupId>
   <artifactId>client</artifactId>
-  <version>${sovity-edc-extensions.version}</version>
+  <version>${sovity-edc-ce.version}</version>
 </dependency>
 ```
 
@@ -49,20 +49,20 @@ import de.sovity.edc.client.gen.model.KpiResult;
  */
 public class WrapperClientExample {
 
-    public static final String CONNECTOR_ENDPOINT = "http://localhost:11002/api/management/v2";
-    public static final String CONNECTOR_API_KEY = "...";
+  public static final String CONNECTOR_ENDPOINT = "http://localhost:11002/api/management/v2";
+  public static final String CONNECTOR_API_KEY = "...";
 
-    public static void main(String[] args) {
-        // Configure Client
-        EdcClient client = EdcClient.builder()
-                .managementApiUrl(CONNECTOR_ENDPOINT)
-                .managementApiKey(CONNECTOR_API_KEY)
-                .build();
+  public static void main(String[] args) {
+    // Configure Client
+    EdcClient client = EdcClient.builder()
+        .managementApiUrl(CONNECTOR_ENDPOINT)
+        .managementApiKey(CONNECTOR_API_KEY)
+        .build();
 
-        // EDC API Wrapper APIs are now available for use
-        KpiResult kpiResult = client.useCaseApi().getKpis();
-        System.out.println(kpiResult);
-    }
+    // EDC API Wrapper APIs are now available for use
+    KpiResult kpiResult = client.useCaseApi().getKpis();
+    System.out.println(kpiResult);
+  }
 }
 
 ```
@@ -80,26 +80,26 @@ import de.sovity.edc.client.oauth2.SovityKeycloakUrl;
  */
 public class WrapperClientExample {
 
-    public static final String CONNECTOR_ENDPOINT =
-            "https://{{your-connector}}.prod-sovity.azure.sovity.io/control/data";
-    public static final String CLIENT_ID = "{{your-connector}}-app";
-    public static final String CLIENT_SECRET = "...";
+  public static final String CONNECTOR_ENDPOINT =
+      "https://{{your-connector}}.prod-sovity.azure.sovity.io/control/data";
+  public static final String CLIENT_ID = "{{your-connector}}-app";
+  public static final String CLIENT_SECRET = "...";
 
-    public static void main(String[] args) {
-        // Configure Client
-        EdcClient client = EdcClient.builder()
-                .managementApiUrl(CONNECTOR_ENDPOINT)
-                .oauth2ClientCredentials(OAuth2ClientCredentials.builder()
-                        .tokenUrl(SovityKeycloakUrl.PRODUCTION)
-                        .clientId(CLIENT_ID)
-                        .clientSecret(CLIENT_SECRET)
-                        .build())
-                .build();
+  public static void main(String[] args) {
+    // Configure Client
+    EdcClient client = EdcClient.builder()
+        .managementApiUrl(CONNECTOR_ENDPOINT)
+        .oauth2ClientCredentials(OAuth2ClientCredentials.builder()
+            .tokenUrl(SovityKeycloakUrl.PRODUCTION)
+            .clientId(CLIENT_ID)
+            .clientSecret(CLIENT_SECRET)
+            .build())
+        .build();
 
-        // EDC API Wrapper APIs are now available for use
-        KpiResult kpiResult = client.useCaseApi().getKpis();
-        System.out.println(kpiResult);
-    }
+    // EDC API Wrapper APIs are now available for use
+    KpiResult kpiResult = client.useCaseApi().getKpis();
+    System.out.println(kpiResult);
+  }
 }
 ```
 
@@ -107,15 +107,15 @@ public class WrapperClientExample {
 
 Below are the examples of various tasks and the corresponding methods to be used from the Java-client.
 
-| Task                                                 | Java-Client method                                                      |
-|------------------------------------------------------|-------------------------------------------------------------------------|
-| Create Policy - uiAPI                   | `EdcClient.uiApi().createPolicyDefinition(policyDefinition)`            |
-| Create Policy - useCaseApi (allows AND/OR/XOR operators) | `EdcClient.useCaseApi().createPolicyDefinitionUseCase(createRequest)`            |
-| Create asset (Asset Creation after activate)         | `EdcClient.uiApi().createAsset(uiAssetRequest)`                         |
-| Create contract definition                           | `EdcClient.uiApi().createContractDefinition(contractDefinition)`        |
-| Create Offer on consumer dashboard (Catalog Browser) | `EdcClient.uiApi().getCatalogPageDataOffers(PROTOCOL_ENDPOINT)`         |
-| Accept contract (Contract Negotiation)               | `EdcClient.uiApi().initiateContractNegotiation(negotiationRequest)`     |
-| Transfer Data (Initiate Transfer)                    | `EdcClient.uiApi().initiateTransfer(negotiation)`                       |
+| Task                                                     | Java-Client method                                                    |
+|----------------------------------------------------------|-----------------------------------------------------------------------|
+| Create Policy - uiAPI                                    | `EdcClient.uiApi().createPolicyDefinition(policyDefinition)`          |
+| Create Policy - useCaseApi (allows AND/OR/XOR operators) | `EdcClient.useCaseApi().createPolicyDefinitionUseCase(createRequest)` |
+| Create asset (Asset Creation after activate)             | `EdcClient.uiApi().createAsset(uiAssetRequest)`                       |
+| Create contract definition                               | `EdcClient.uiApi().createContractDefinition(contractDefinition)`      |
+| Create Offer on consumer dashboard (Catalog Browser)     | `EdcClient.uiApi().getCatalogPageDataOffers(PROTOCOL_ENDPOINT)`       |
+| Accept contract (Contract Negotiation)                   | `EdcClient.uiApi().initiateContractNegotiation(negotiationRequest)`   |
+| Transfer Data (Initiate Transfer)                        | `EdcClient.uiApi().initiateTransfer(negotiation)`                     |
 
 These methods facilitate various operations such as creating policies, assets, contract definitions, browsing offers, accepting contracts, and initiating data transfers.
 
@@ -128,28 +128,28 @@ var policyId = UUID.randomUUID().toString();
 var membershipElement = buildAtomicElement("Membership", OperatorDto.EQ, "active");
 var purposeElement = buildAtomicElement("PURPOSE", OperatorDto.EQ, "ID 3.1 Trace");
 var andElement = new Expression()
-        .expressionType(ExpressionTypeDto.AND)
-        .expressions(List.of(membershipElement, purposeElement));
+    .expressionType(ExpressionTypeDto.AND)
+    .expressions(List.of(membershipElement, purposeElement));
 var permissionDto = new PermissionDto(andElement);
 var createRequest = new PolicyCreateRequest(policyId, permissionDto);
 
 var response = client.useCaseApi().createPolicyDefinitionUseCase(createRequest);
 
 private Expression buildAtomicElement(
-        String left,
-        OperatorDto operator,
-        String right) {
-    var atomicConstraint = new AtomicConstraintDto()
-            .leftExpression(left)
-            .operator(operator)
-            .rightExpression(right);
-    return new Expression()
-            .expressionType(ExpressionTypeDto.ATOMIC_CONSTRAINT)
-            .atomicConstraint(atomicConstraint);
+    String left,
+    OperatorDto operator,
+    String right) {
+  var atomicConstraint = new AtomicConstraintDto()
+      .leftExpression(left)
+      .operator(operator)
+      .rightExpression(right);
+  return new Expression()
+      .expressionType(ExpressionTypeDto.ATOMIC_CONSTRAINT)
+      .atomicConstraint(atomicConstraint);
 }
 ```
 
-The complete example can be seen in [this test](https://github.com/sovity/edc-extensions/blob/main/extensions/wrapper/wrapper/src/test/java/de/sovity/edc/ext/wrapper/api/usecase/PolicyDefinitionApiServiceTest.java).
+The complete example can be seen in [this test](https://github.com/sovity/edc-ce/blob/main/extensions/wrapper/wrapper/src/test/java/de/sovity/edc/ext/wrapper/api/usecase/PolicyDefinitionApiServiceTest.java).
 
 ## License
 

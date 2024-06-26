@@ -11,11 +11,11 @@ This is a productive deployment guide for self-hosting a functional sovity Broke
 | Reverse Proxy that merges the UI+Backend and removes the ports | (deployment specific)                                                                   |
 | Postgresql                                                     | 15 or compatible version                                                                |
 | Broker Backend                                                 | broker-server-ce, see [CHANGELOG.md](../../../../CHANGELOG.md) for compatible versions. |
-| Broker UI                                                      | edc-ui, see  [CHANGELOG.md](../../../../CHANGELOG.md) for compatible versions.                      |
+| Broker UI                                                      | edc-ui, see  [CHANGELOG.md](../../../../CHANGELOG.md) for compatible versions.          |
 
 ### Configuration
 
-There is a [docker-compose.yaml](../../../../docker-compose.yaml) to try out the broker locally. 
+There is a [docker-compose.yaml](../../../../docker-compose.yaml) to try out the broker locally.
 However, a productive release will require a few more configuration options,
 so you should only use it to check if the released version is roughly working or if it's broken.
 
@@ -36,7 +36,7 @@ so you should only use it to check if the released version is roughly working or
 A productive configuration will require you to join a DAPS.
 
 For that you will need a SKI/AKI ClientID. Please refer
-to [edc-extension's Getting Started Guide](https://github.com/sovity/edc-extensions/tree/main/docs/getting-started#faq)
+to [edc-extension's Getting Started Guide](https://github.com/sovity/edc-ce/tree/main/docs/getting-started#faq)
 on how to generate one.
 
 The DAPS needs to contain the claim `referringConnector=broker` for the broker.

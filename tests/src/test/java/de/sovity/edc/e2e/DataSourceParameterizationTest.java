@@ -17,6 +17,7 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
+import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
@@ -29,6 +30,8 @@ import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataOffer;
+import de.sovity.edc.client.gen.model.UiDataSource;
+import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
@@ -413,27 +416,30 @@ class DataSourceParameterizationTest {
     }
 
     private String createAssetWithParameterizedMethod(TestCase testCase) {
-        val proxyProperties = new HashMap<>(Map.of(
-                Prop.Edc.TYPE, "HttpData",
-                Prop.Edc.BASE_URL, sourceUrl
-        ));
+        var httpData = new UiDataSourceHttpData();
+        httpData.setBaseUrl(sourceUrl);
         if (testCase.path != null) {
-            proxyProperties.put("https://w3id.org/edc/v0.0.1/ns/proxyPath", "true");
+            httpData.setEnablePathParameterization(true);
         }
         if (testCase.body != null) {
-            proxyProperties.put("https://w3id.org/edc/v0.0.1/ns/proxyBody", "true");
+            httpData.setEnableBodyParameterization(true);
         }
         if (testCase.method != null) {
-            proxyProperties.put("https://w3id.org/edc/v0.0.1/ns/proxyMethod", "true");
+            httpData.setEnableMethodParameterization(true);
         }
         if (testCase.queryParams != null) {
-            proxyProperties.put("https://w3id.org/edc/v0.0.1/ns/proxyQueryParams", "true");
+            httpData.setEnableQueryParameterization(true);
         }
+
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(httpData)
+            .build();
 
         var asset = UiAssetCreateRequest.builder()
                 .id(testCase.id)
                 .title("My Data Offer")
-                .dataAddressProperties(proxyProperties)
+                .dataSource(dataSource)
                 .build();
 
         return providerClient.uiApi().createAsset(asset).getId();

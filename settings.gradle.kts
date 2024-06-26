@@ -1,4 +1,4 @@
-rootProject.name = "edc-extensions"
+rootProject.name = "edc-ce"
 
 include(":connector")
 include(":extensions:broker-server")

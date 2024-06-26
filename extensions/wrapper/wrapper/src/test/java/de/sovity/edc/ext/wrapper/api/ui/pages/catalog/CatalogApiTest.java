@@ -1,13 +1,30 @@
+/*
+ *  Copyright (c) 2024 sovity GmbH
+ *
+ *  This program and the accompanying materials are made available under the
+ *  terms of the Apache License, Version 2.0 which is available at
+ *  https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
+ *  Contributors:
+ *       sovity GmbH - initial API and implementation
+ *
+ */
+
 package de.sovity.edc.ext.wrapper.api.ui.pages.catalog;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
+import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiCriterion;
 import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
+import de.sovity.edc.client.gen.model.UiDataSource;
+import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.TestUtils;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
@@ -19,14 +36,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
-public class CatalogApiTest {
+class CatalogApiTest {
     private EdcClient client;
     private final String dataOfferId = "my-data-offer-2023-11";
 
@@ -58,6 +74,13 @@ public class CatalogApiTest {
     }
 
     private void createAsset() {
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl("https://a")
+                .build())
+            .build();
+
         var asset = UiAssetCreateRequest.builder()
                 .id(dataOfferId)
                 .title("My Data Offer")
@@ -67,11 +90,7 @@ public class CatalogApiTest {
                 .publisherHomepage("https://my-department.my-org.com/my-data-offer")
                 .licenseUrl("https://my-department.my-org.com/my-data-offer#license")
                 .mediaType("Media Type")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, "https://a"
-                ))
+                .dataSource(dataSource)
                 .build();
 
         client.uiApi().createAsset(asset);

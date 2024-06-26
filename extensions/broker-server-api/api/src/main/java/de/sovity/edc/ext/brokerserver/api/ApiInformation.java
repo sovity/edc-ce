@@ -22,21 +22,21 @@ import io.swagger.v3.oas.annotations.info.License;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "Broker Server API",
+                title = "Broker Server API (Deprecated)",
                 version = "0.0.0",
                 description = "Broker Server API for the Broker Server built by sovity.",
                 contact = @Contact(
                         name = "sovity GmbH",
                         email = "contact@sovity.de",
-                        url = "https://github.com/sovity/edc-extensions/issues/new/choose"
+                        url = "https://github.com/sovity/edc-ce/issues/new/choose"
                 ),
                 license = @License(
                         name = "Apache 2.0",
-                        url = "https://github.com/sovity/edc-extensions/blob/main/LICENSE"
+                        url = "https://github.com/sovity/edc-ce/blob/main/LICENSE"
                 )
         ),
         externalDocs = @ExternalDocumentation(
-                description = "Broker Server API in sovity/edc-broker-server-extension",
+                description = "Broker Server API in sovity/ce",
                 url = "https://github.com/sovity/edc-broker-server-extension/tree/main/extensions/broker-server-api"
         )
 )

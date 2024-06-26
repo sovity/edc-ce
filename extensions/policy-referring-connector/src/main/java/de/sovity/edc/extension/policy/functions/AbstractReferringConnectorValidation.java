@@ -26,6 +26,7 @@ package de.sovity.edc.extension.policy.functions;
 
 import org.eclipse.edc.policy.engine.spi.PolicyContext;
 import org.eclipse.edc.policy.model.Operator;
+import org.eclipse.edc.spi.agent.ParticipantAgent;
 import org.eclipse.edc.spi.monitor.Monitor;
 
 import java.util.Arrays;
@@ -69,7 +70,7 @@ public abstract class AbstractReferringConnectorValidation {
             return false;
         }
 
-        final var claims = policyContext.getParticipantAgent().getClaims();
+        final var claims = policyContext.getContextData(ParticipantAgent.class).getClaims();
 
         if (!claims.containsKey(REFERRING_CONNECTOR_CLAIM)) {
             return false;

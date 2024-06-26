@@ -126,4 +126,9 @@ subprojects {
         withSourcesJar()
         withJavadocJar()
     }
+
+    tasks.withType<Javadoc> {
+        val fullOptions = options as StandardJavadocDocletOptions
+        fullOptions.addStringOption("Xdoclint:none", "-quiet")
+    }
 }

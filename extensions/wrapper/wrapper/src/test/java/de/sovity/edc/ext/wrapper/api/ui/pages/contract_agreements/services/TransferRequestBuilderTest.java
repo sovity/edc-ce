@@ -14,8 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ParameterizationCompatibilityUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateTransferRequest;
 import lombok.val;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;

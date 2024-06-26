@@ -11,6 +11,7 @@ repositories {
 
 // By using a separate configuration we can skip having the Extension Jar in our runtime classpath
 val openapiYaml = configurations.create("openapiGenerator")
+val buildDir = layout.buildDirectory.get().asFile
 
 dependencies {
     // We only need the openapi.yaml file from this dependency
@@ -43,7 +44,7 @@ tasks.getByName<Test>("test") {
 val openapiFile = "sovity-edc-api-wrapper.yaml"
 val extractOpenapiYaml by tasks.registering(Copy::class) {
     dependsOn(openapiYaml)
-    into("${project.buildDir}")
+    into("$buildDir")
     from(zipTree(openapiYaml.singleFile)) {
         include(openapiFile)
     }
@@ -58,20 +59,24 @@ tasks.getByName<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("op
                     "apiPackage" to "de.sovity.edc.client.gen.api",
                     "modelPackage" to "de.sovity.edc.client.gen.model",
                     "caseInsensitiveResponseHeaders" to "true",
-                    "additionalModelTypeAnnotations" to "@lombok.AllArgsConstructor\n@lombok.Builder",
+                    "additionalModelTypeAnnotations" to listOf(
+                        "@lombok.AllArgsConstructor",
+                        "@lombok.Builder",
+                        "@SuppressWarnings(\"all\")"
+                    ).joinToString("\n"),
                     "annotationLibrary" to "swagger1",
                     "hideGenerationTimestamp" to "true",
                     "useRuntimeException" to "true",
             )
     )
 
-    inputSpec.set("${project.buildDir}/${openapiFile}")
-    outputDir.set("${project.buildDir}/generated/client-project")
+    inputSpec.set("${buildDir}/${openapiFile}")
+    outputDir.set("${buildDir}/generated/client-project")
 }
 
 val postprocessGeneratedClient by tasks.registering(Copy::class) {
     dependsOn("openApiGenerate")
-    from("${project.buildDir}/generated/client-project/src/main/java")
+    from("${buildDir}/generated/client-project/src/main/java")
 
     // @lombok.Builder clashes with the following generated model file.
     // It is the base class for OAS3 polymorphism via allOf/anyOf, which we won't use anyway.
@@ -81,9 +86,9 @@ val postprocessGeneratedClient by tasks.registering(Copy::class) {
     // It was again only required for the polymorphism, which we won't use anyway.
     filter { if (it == "import javax.ws.rs.core.GenericType;") "" else it }
 
-    into("${project.buildDir}/generated/sources/openapi/java/main")
+    into("${buildDir}/generated/sources/openapi/java/main")
 }
-sourceSets["main"].java.srcDir("${project.buildDir}/generated/sources/openapi/java/main")
+sourceSets["main"].java.srcDir("${buildDir}/generated/sources/openapi/java/main")
 
 checkstyle {
     // Checkstyle loathes the generated files
@@ -91,9 +96,9 @@ checkstyle {
     this.sourceSets = emptyList()
 }
 
-
 tasks.getByName<JavaCompile>("compileJava") {
     dependsOn("postprocessGeneratedClient")
+    options.compilerArgs = listOf("-Xlint:none")
 }
 
 java {

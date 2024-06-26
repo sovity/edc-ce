@@ -1,18 +1,19 @@
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 
-@Getter
-@Setter
-@ToString
+@Data
 @AllArgsConstructor
 @RequiredArgsConstructor
+@Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Schema(description = "Number of Transfer Processes for given direction.")
 public class DashboardTransferAmounts {
     @Schema(description = "Number of Transfer Processes", requiredMode = Schema.RequiredMode.REQUIRED)
     private long numTotal;

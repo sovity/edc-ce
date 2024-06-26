@@ -17,13 +17,14 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
+import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
-import de.sovity.edc.client.gen.model.UiAssetEditMetadataRequest;
+import de.sovity.edc.client.gen.model.UiAssetEditRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiContractOffer;
 import de.sovity.edc.client.gen.model.UiCriterion;
@@ -31,6 +32,8 @@ import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataOffer;
+import de.sovity.edc.client.gen.model.UiDataSource;
+import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
@@ -138,6 +141,13 @@ class UiApiWrapperTest {
                         .build())
                 .build()).getId();
 
+        var dataSource = UiDataSource.builder()
+                .type(DataSourceType.HTTP_DATA)
+                .httpData(UiDataSourceHttpData.builder()
+                        .baseUrl(dataAddress.getDataSourceUrl(data))
+                        .build())
+                .build();
+
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
                 .id("asset-1")
                 .title("AssetName")
@@ -163,11 +173,7 @@ class UiApiWrapperTest {
                 .temporalCoverageToInclusive(LocalDate.parse("2024-01-22"))
                 .keywords(List.of("keyword1", "keyword2"))
                 .publisherHomepage("publisherHomepage")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
-                ))
+                .dataSource(dataSource)
                 .customJsonAsString("""
                         {"test": "value"}
                         """)
@@ -329,14 +335,17 @@ class UiApiWrapperTest {
     @Test
     void canOverrideTheWellKnowPropertiesUsingTheCustomProperties() {
         // arrange
+        var dataSource = UiDataSource.builder()
+                .type(DataSourceType.HTTP_DATA)
+                .httpData(UiDataSourceHttpData.builder()
+                        .baseUrl("http://example.com/base")
+                        .build())
+                .build();
+
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
                 .id("asset-1")
                 .title("will be overridden")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, "http://example.com/base"
-                ))
+                .dataSource(dataSource)
                 .customJsonLdAsString("""
                         {
                             "http://purl.org/dc/terms/title": "The real title",
@@ -378,13 +387,16 @@ class UiApiWrapperTest {
         // arrange
         var data = "expected data 123";
 
+        var dataSource = UiDataSource.builder()
+                .type(DataSourceType.HTTP_DATA)
+                .httpData(UiDataSourceHttpData.builder()
+                        .baseUrl(dataAddress.getDataSourceUrl(data))
+                        .build())
+                .build();
+
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
                 .id("asset-1")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
-                ))
+                .dataSource(dataSource)
                 .build()).getId();
         assertThat(assetId).isEqualTo("asset-1");
 
@@ -437,14 +449,17 @@ class UiApiWrapperTest {
         // arrange
         var data = "expected data 123";
 
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl(dataAddress.getDataSourceUrl(data))
+                .build())
+            .build();
+
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
                 .id("asset-1")
                 .title("Bad Asset Title")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(data)
-                ))
+                .dataSource(dataSource)
                 .customJsonAsString("""
                         {
                             "test": "value"
@@ -493,7 +508,7 @@ class UiApiWrapperTest {
         var negotiation = negotiate(dataOffer, contractOffer);
 
         // act
-        providerClient.uiApi().editAssetMetadata(assetId, UiAssetEditMetadataRequest.builder()
+        providerClient.uiApi().editAssetMetadata(assetId, UiAssetEditRequest.builder()
                 .title("Good Asset Title")
                 .customJsonAsString("""
                         {

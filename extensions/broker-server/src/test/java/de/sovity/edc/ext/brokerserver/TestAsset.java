@@ -16,18 +16,23 @@ package de.sovity.edc.ext.brokerserver;
 
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferRecord;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOffer;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AssetJsonLdUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MarkdownToTextConverter;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.TextUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetEditRequestMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetJsonLdBuilder;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetJsonLdParser;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.AssetJsonLdUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.EdcPropertyUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.ShortDescriptionBuilder;
+import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.DataSourceMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpDataSourceMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpHeaderMapper;
+import de.sovity.edc.ext.wrapper.api.common.model.DataSourceType;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
-import de.sovity.edc.utils.jsonld.vocab.Prop;
+import de.sovity.edc.ext.wrapper.api.common.model.UiDataSource;
+import de.sovity.edc.ext.wrapper.api.common.model.UiDataSourceHttpData;
 import jakarta.json.JsonObject;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
-import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TestAsset {
@@ -41,15 +46,14 @@ public class TestAsset {
     }
 
     public static JsonObject getAssetJsonLd(UiAssetCreateRequest request) {
-        return getUiAssetMapper().buildAssetJsonLd(
-            request.toBuilder()
-                .dataAddressProperties(Map.of(
-                    Prop.Edc.TYPE, "HttpData",
-                    Prop.Edc.BASE_URL, "https://example.com"
-                ))
-                .build(),
-            "orgName"
-        );
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl("https://example.com")
+                .build())
+            .build();
+        var withDataSource = request.toBuilder().dataSource(dataSource).build();
+        return buildAssetJsonLdBuilder().createAssetJsonLd(withDataSource, "orgName");
     }
 
     /**
@@ -73,13 +77,23 @@ public class TestAsset {
         dataOfferRecordUpdater.updateDataOffer(dataOfferRecord, fetchedDataOffer, false);
     }
 
-    public static UiAssetMapper getUiAssetMapper() {
-        return new UiAssetMapper(
+    public static AssetJsonLdBuilder buildAssetJsonLdBuilder() {
+        return new AssetJsonLdBuilder(
+            new DataSourceMapper(
                 new EdcPropertyUtils(),
-                new AssetJsonLdUtils(),
-                new MarkdownToTextConverter(),
-                new TextUtils(),
-                "http://own-connector-endpoint"::equals
+                new HttpDataSourceMapper(new HttpHeaderMapper())
+            ),
+            buildAssetJsonLdParser(),
+            new AssetEditRequestMapper()
+        );
+    }
+
+    @NotNull
+    private static AssetJsonLdParser buildAssetJsonLdParser() {
+        return new AssetJsonLdParser(
+            new AssetJsonLdUtils(),
+            new ShortDescriptionBuilder(),
+            "https://my-connector"::equals
         );
     }
 }

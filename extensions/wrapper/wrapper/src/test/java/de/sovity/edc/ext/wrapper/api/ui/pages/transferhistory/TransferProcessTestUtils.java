@@ -87,10 +87,11 @@ public class TransferProcessTestUtils {
         var asset = Asset.Builder.newInstance()
                 .id(assetId)
                 .property(Prop.Dcterms.TITLE, assetName)
+                .dataAddress(dataAddress)
                 .createdAt(dateFormatterToLong("2023-06-01"))
                 .build();
 
-        assetStore.create(asset, dataAddress);
+        assetStore.create(asset);
     }
 
     private static ContractAgreement createContractAgreement(
