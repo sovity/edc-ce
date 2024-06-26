@@ -22,8 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.List;
-
 //import java.util.List;
 
 @Getter
@@ -33,8 +31,8 @@ import java.util.List;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 @Schema(description = "Type-Safe OpenAPI generator friendly Policy Create DTO that supports an opinionated"
-        + " subset of the original EDC Policy Entity.")
-public class UiPolicyCreateRequest {
+    + " subset of the original EDC Policy Entity.")
+public class UiPolicyMultiplicityCreateRequest {
     @Schema(description = "Conjunction of required expressions for the policy to evaluate to TRUE.")
-    private List<UiPolicyConstraint> constraints;
+    private UiPolicyMultiplicityExpression expression; // NEW
 }

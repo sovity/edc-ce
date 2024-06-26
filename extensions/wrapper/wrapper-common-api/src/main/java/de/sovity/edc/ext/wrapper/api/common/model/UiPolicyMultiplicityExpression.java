@@ -12,7 +12,7 @@ import lombok.*;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 @Schema(description = "Policy Expression that can include multiple constraints as supported by our UI")
-public class UiPolicyExpression {
+public class UiPolicyMultiplicityExpression {
 
     @Schema(description = "The type of expression, e.g., ATOMIC_CONSTRAINT, AND, OR, XOR.", requiredMode = Schema.RequiredMode.REQUIRED)
     private ExpressionType expressionType;
@@ -21,9 +21,9 @@ public class UiPolicyExpression {
     private AtomicConstraintDto atomicConstraint;
 
     @Schema(description = "Left expression for non atomic constraints (AND, OR, XOR)")
-    private UiPolicyExpression leftExpression;
+    private UiPolicyMultiplicityExpression leftExpression;
 
     @Schema(description = "Right expression for non atomic constraints (AND, OR, XOR)")
-    private UiPolicyExpression rightExpression;
+    private UiPolicyMultiplicityExpression rightExpression;
 
 }

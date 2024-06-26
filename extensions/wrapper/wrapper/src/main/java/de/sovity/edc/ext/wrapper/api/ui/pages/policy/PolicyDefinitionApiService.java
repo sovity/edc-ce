@@ -17,9 +17,8 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
 
 import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
+import de.sovity.edc.ext.wrapper.api.common.model.*;
 import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyCreateRequest;
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +60,7 @@ public class PolicyDefinitionApiService {
     private List<PolicyDefinition> getAllPolicyDefinitions() {
         return policyDefinitionService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
     }
+
     public PolicyDefinitionDto buildPolicyDefinitionDto(PolicyDefinition policyDefinition) {
         var policy = policyMapper.buildUiPolicy(policyDefinition.getPolicy());
         return PolicyDefinitionDto.builder()
@@ -86,6 +86,20 @@ public class PolicyDefinitionApiService {
     private PolicyDefinition buildPolicyDefinition(PolicyCreateRequest policyCreateRequest) {
         var permissionExpression = policyCreateRequest.getPermission().getExpression();
         var policy = policyMapper.buildPolicy(List.of(permissionExpression));
+        return PolicyDefinition.Builder.newInstance()
+                .id(policyCreateRequest.getPolicyDefinitionId())
+                .policy(policy)
+                .build();
+    }
+
+    public IdResponseDto createPolicyDefinition(UiPolicyMultiplicityDefinitionCreateRequest policyCreateRequest) {
+        var policyDefinition = buildPolicyDefinition(policyCreateRequest);
+        policyDefinition = policyDefinitionService.create(policyDefinition).orElseThrow(ServiceException::new);
+        return new IdResponseDto(policyDefinition.getId());
+    }
+
+    private PolicyDefinition buildPolicyDefinition(UiPolicyMultiplicityDefinitionCreateRequest policyCreateRequest) {
+        var policy = policyMapper.buildPolicy(policyCreateRequest.getPolicy());
         return PolicyDefinition.Builder.newInstance()
                 .id(policyCreateRequest.getPolicyDefinitionId())
                 .policy(policy)
