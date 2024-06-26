@@ -15,11 +15,19 @@
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@RequiredArgsConstructor
+@Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Catalog Data Offer's Contract Offer as required by the UI")
 public class UiContractOffer {
     @Schema(description = "Contract Offer ID", requiredMode = Schema.RequiredMode.REQUIRED)

@@ -19,12 +19,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Data
-@Builder(toBuilder = true)
 @AllArgsConstructor
+@RequiredArgsConstructor
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Type-Safe OpenAPI generator friendly Policy Create DTO that supports an opinionated"
         + " subset of the original EDC Policy Entity.")

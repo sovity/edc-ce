@@ -20,12 +20,14 @@ import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Data
-@Builder(toBuilder = true)
 @AllArgsConstructor
+@RequiredArgsConstructor
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Type-Safe OpenAPI generator friendly Policy DTO as needed by our UI")
 public class UiPolicy {

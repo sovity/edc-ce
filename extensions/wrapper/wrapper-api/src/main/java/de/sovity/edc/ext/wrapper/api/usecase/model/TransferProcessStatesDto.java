@@ -14,15 +14,21 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 
 @Data
 @AllArgsConstructor
+@RequiredArgsConstructor
+@Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransferProcessStatesDto {
     @Schema(description = "States and count of incoming transferprocess counts", requiredMode = Schema.RequiredMode.REQUIRED)
     private Map<TransferProcessSimplifiedState, Long> incomingTransferProcessCounts;

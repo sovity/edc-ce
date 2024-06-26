@@ -19,13 +19,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
-@Builder(toBuilder = true)
 @AllArgsConstructor
+@RequiredArgsConstructor
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Data for editing an asset.")
 public class UiAssetEditRequest {

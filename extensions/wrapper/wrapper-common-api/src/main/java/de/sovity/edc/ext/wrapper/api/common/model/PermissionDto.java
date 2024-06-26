@@ -19,15 +19,13 @@ import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
-/**
- * Subset of the possible permissions in the EDC.
- *
- * @author tim.dahlmanns@isst.fraunhofer.de
- */
+
 @Data
-@Builder(toBuilder = true)
 @AllArgsConstructor
+@RequiredArgsConstructor
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PermissionDto {
 

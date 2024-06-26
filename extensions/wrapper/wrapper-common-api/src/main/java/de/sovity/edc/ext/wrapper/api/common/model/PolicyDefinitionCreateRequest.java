@@ -19,14 +19,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @Data
-@Builder(toBuilder = true)
 @AllArgsConstructor
+@RequiredArgsConstructor
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Data for creating a Policy Definition")
 public class PolicyDefinitionCreateRequest {

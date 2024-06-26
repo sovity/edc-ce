@@ -14,12 +14,20 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.time.OffsetDateTime;
 
 @Data
+@AllArgsConstructor
+@RequiredArgsConstructor
+@Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Transfer History Entry for Transfer History Page")
 public class TransferHistoryEntry {
     @Schema(description = "Transfer Process ID", requiredMode = Schema.RequiredMode.REQUIRED)

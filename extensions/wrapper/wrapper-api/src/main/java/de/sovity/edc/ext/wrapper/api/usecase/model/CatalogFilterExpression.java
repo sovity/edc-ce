@@ -14,15 +14,19 @@
 
 package de.sovity.edc.ext.wrapper.api.usecase.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
+@Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Generic expression for filtering the data offers in the catalog", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
 public class CatalogFilterExpression {
     @Schema(description = "Asset property name", requiredMode = Schema.RequiredMode.REQUIRED, example = Prop.Edc.ASSET_ID)

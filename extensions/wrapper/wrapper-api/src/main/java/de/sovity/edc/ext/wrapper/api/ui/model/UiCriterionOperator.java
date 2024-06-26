@@ -14,16 +14,12 @@
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
  * Contract Definition Criterion
- *
- * @see <pre>org.eclipse.edc.connector.defaults.storage.CriterionToPredicateConverterImpl</pre>
+ * See <pre>org.eclipse.edc.connector.defaults.storage.CriterionToPredicateConverterImpl</pre>
  */
-@Getter
-@RequiredArgsConstructor
+
 @Schema(description = "Operator for constraints", enumAsRef = true)
 public enum UiCriterionOperator {
     EQ,
