@@ -32,6 +32,8 @@ import java.time.OffsetDateTime;
 public class IdResponseDto {
     @Schema(description = "ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String id;
+
+    @Builder.Default
     @Schema(description = "Change Date", requiredMode = Schema.RequiredMode.REQUIRED)
     private OffsetDateTime lastUpdatedDate = OffsetDateTime.now();
 }

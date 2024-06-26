@@ -2,11 +2,11 @@ openapi: 3.0.1
 info:
   title: sovity EDC API Wrapper
   description: "sovity's EDC API Wrapper contains a selection of APIs for multiple\
-    \ consumers, e.g. our EDC UI API, our generic Use Case API, our Commercial APIs,\
-    \ etc. We bundled these APIs, so we can have an easier time generating our API\
-    \ Client Libraries."
+    \ consumers, e.g. our EDC UI API, our generic Use Case API, our Commercial Edition\
+    \ APIs, etc. We bundled these APIs, so we can have an easier time generating our\
+    \ API Client Libraries."
   contact:
-    name: Sovity GmbH
+    name: sovity GmbH
     url: https://github.com/sovity/edc-ce/issues/new/choose
     email: contact@sovity.de
   license:
@@ -682,7 +682,7 @@ components:
             \ both a request body and a content type. Only Methods POST, PUT and PATCH\
             \ allow request bodies."
           default: false
-      description: HTTP_DATA type Data Source.
+      description: Only for type HTTP_DATA
     UiDataSourceHttpDataMethod:
       type: string
       description: Supported HTTP Methods by UiDataSource
@@ -1288,6 +1288,7 @@ components:
           description: Contract Agreement Cards
           items:
             $ref: '#/components/schemas/ContractAgreementCard'
+      description: Data as required by the UI's Contract Agreement Page
     ContractAgreementTransferProcess:
       required:
       - lastUpdatedDate
@@ -1366,7 +1367,6 @@ components:
           description: Contract Definition Entries
           items:
             $ref: '#/components/schemas/ContractDefinitionEntry'
-      description: All data for the Contract Definition Page
     ContractNegotiationSimplifiedState:
       type: string
       description: Simplified Contract Negotiation State to be used in UI
@@ -1513,6 +1513,7 @@ components:
           $ref: '#/components/schemas/DashboardDapsConfig'
         connectorMiwConfig:
           $ref: '#/components/schemas/DashboardMiwConfig'
+      description: Data as required by the UI's Dashboard Page
     DashboardTransferAmounts:
       required:
       - numError
@@ -1537,7 +1538,7 @@ components:
           type: integer
           description: Number of failed Transfer Processes
           format: int64
-      description: Providing Transfer Process Amounts
+      description: Number of Transfer Processes for given direction.
     PolicyDefinitionDto:
       required:
       - policy
@@ -1619,6 +1620,7 @@ components:
           description: Transfer History Page Entries
           items:
             $ref: '#/components/schemas/TransferHistoryEntry'
+      description: Data as required by the UI's Transfer History Page
     ContractNegotiationRequest:
       required:
       - assetId

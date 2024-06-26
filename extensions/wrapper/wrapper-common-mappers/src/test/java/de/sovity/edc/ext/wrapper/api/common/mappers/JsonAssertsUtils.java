@@ -19,6 +19,7 @@ import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.json.JsonValue;
+import lombok.NonNull;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jsoup.helper.Validate;
 
@@ -30,8 +31,8 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 public class JsonAssertsUtils {
 
     public static void assertEqualJson(
-        JsonValue actual,
-        JsonValue expected
+         @NonNull JsonValue actual,
+         @NonNull JsonValue expected
     ) {
 
         var actualJson = JsonUtils.toJson(actual);
@@ -54,10 +55,10 @@ public class JsonAssertsUtils {
     public static void assertIsEqualExcludingPaths(
         JsonObject actual,
         JsonObject expected,
-        List<String>... exclude
+        List<List<String>> exclude
     ) {
-        var actualModified = actual;
-        var expectedModified = expected;
+        var actualModified = JsonUtils.parseJsonObj(JsonUtils.toJson(actual));
+        var expectedModified = JsonUtils.parseJsonObj(JsonUtils.toJson(expected));
         for (var path : exclude) {
             actualModified = removePath(actualModified, path);
             expectedModified = removePath(expectedModified, path);

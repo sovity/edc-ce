@@ -250,10 +250,10 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
         assertThat(dataOffer.getAsset().getCreatorOrganizationName()).isEqualTo("Curator Name provider");
         assertThat(dataOffer.getAsset().getPublisherHomepage()).isEqualTo("publisherHomepage");
-        assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyMethod()).isNull();
-        assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyPath()).isNull();
-        assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyQueryParams()).isNull();
-        assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyBody()).isNull();
+        assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyMethod()).isFalse();
+        assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyPath()).isFalse();
+        assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyQueryParams()).isFalse();
+        assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyBody()).isFalse();
         assertThatJson(dataOffer.getAsset().getCustomJsonAsString()).isEqualTo("""
                 {"test": "value"}
                 """);

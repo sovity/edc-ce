@@ -123,10 +123,10 @@ class ConnectorUpdaterTest {
             assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
             assertThat(asset.getCreatorOrganizationName()).isEqualTo("Unknown");
             assertThat(asset.getPublisherHomepage()).isEqualTo("publisherHomepage");
-            assertThat(asset.getHttpDatasourceHintsProxyMethod()).isNull();
-            assertThat(asset.getHttpDatasourceHintsProxyPath()).isNull();
-            assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isNull();
-            assertThat(asset.getHttpDatasourceHintsProxyBody()).isNull();
+            assertThat(asset.getHttpDatasourceHintsProxyMethod()).isFalse();
+            assertThat(asset.getHttpDatasourceHintsProxyPath()).isFalse();
+            assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isFalse();
+            assertThat(asset.getHttpDatasourceHintsProxyBody()).isFalse();
             assertThat(asset.getCustomJsonAsString())
                     .isEqualTo("{\"a\":\"x\"}");
             assertThat(dataOffer.getAsset().getCustomJsonLdAsString())

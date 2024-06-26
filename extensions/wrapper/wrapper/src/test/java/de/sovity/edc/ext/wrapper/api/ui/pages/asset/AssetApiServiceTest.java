@@ -391,10 +391,10 @@ public class AssetApiServiceTest {
         var assets = client.uiApi().getAssetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        assertThat(asset.getHttpDatasourceHintsProxyMethod()).isNull();
-        assertThat(asset.getHttpDatasourceHintsProxyPath()).isNull();
-        assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isNull();
-        assertThat(asset.getHttpDatasourceHintsProxyBody()).isNull();
+        assertThat(asset.getHttpDatasourceHintsProxyMethod()).isFalse();
+        assertThat(asset.getHttpDatasourceHintsProxyPath()).isFalse();
+        assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isFalse();
+        assertThat(asset.getHttpDatasourceHintsProxyBody()).isFalse();
     }
 
     @Test

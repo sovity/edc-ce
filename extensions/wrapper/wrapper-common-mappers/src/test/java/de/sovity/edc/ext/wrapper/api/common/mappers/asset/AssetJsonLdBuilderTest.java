@@ -475,7 +475,11 @@ class AssetJsonLdBuilderTest {
         var expectedProperties = dummyAssetCommonProperties()
             .add(Prop.SovityDcatExt.DATA_SOURCE_AVAILABILITY, Prop.SovityDcatExt.DATA_SOURCE_AVAILABILITY_ON_REQUEST)
             .add(Prop.SovityDcatExt.CONTACT_EMAIL, "contact@example.com")
-            .add(Prop.SovityDcatExt.CONTACT_PREFERRED_EMAIL_SUBJECT, "Test");
+            .add(Prop.SovityDcatExt.CONTACT_PREFERRED_EMAIL_SUBJECT, "Test")
+            .remove(Prop.SovityDcatExt.HttpDatasourceHints.METHOD)
+            .remove(Prop.SovityDcatExt.HttpDatasourceHints.PATH)
+            .remove(Prop.SovityDcatExt.HttpDatasourceHints.QUERY_PARAMS)
+            .remove(Prop.SovityDcatExt.HttpDatasourceHints.BODY);
 
         // act
         var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
@@ -497,11 +501,10 @@ class AssetJsonLdBuilderTest {
             .build();
     }
 
-    private JsonObject dummyAssetJsonLd(JsonObjectBuilder properties) {
-        var dataAddress = Json.createObjectBuilder()
-            .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
-            .add(Prop.Edc.TYPE, Prop.Edc.DATA_ADDRESS_TYPE_HTTP_DATA)
-            .add(Prop.Edc.BASE_URL, "https://example.com");
+    private JsonObject dummyAssetJsonLd(
+        JsonObjectBuilder properties
+    ) {
+        var dataAddress = dummyDataAddressJsonLd();
         properties = properties.addAll(dummyAssetCommonProperties());
         return dummyAssetJsonLd(dataAddress, properties);
     }
@@ -510,7 +513,11 @@ class AssetJsonLdBuilderTest {
         return Json.createObjectBuilder()
             .add(Prop.Edc.ID, ASSET_ID)
             .add(Prop.Dcterms.CREATOR, Json.createObjectBuilder()
-                .add(Prop.Foaf.NAME, ORG_NAME));
+                .add(Prop.Foaf.NAME, ORG_NAME))
+            .add(Prop.SovityDcatExt.HttpDatasourceHints.METHOD, "false")
+            .add(Prop.SovityDcatExt.HttpDatasourceHints.PATH, "false")
+            .add(Prop.SovityDcatExt.HttpDatasourceHints.QUERY_PARAMS, "false")
+            .add(Prop.SovityDcatExt.HttpDatasourceHints.BODY, "false");
     }
 
     private UiDataSource dummyDataSource() {
@@ -520,5 +527,12 @@ class AssetJsonLdBuilderTest {
                 .baseUrl("https://example.com")
                 .build())
             .build();
+    }
+
+    private JsonObjectBuilder dummyDataAddressJsonLd() {
+        return Json.createObjectBuilder()
+            .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
+            .add(Prop.Edc.TYPE, Prop.Edc.DATA_ADDRESS_TYPE_HTTP_DATA)
+            .add(Prop.Edc.BASE_URL, "https://example.com");
     }
 }

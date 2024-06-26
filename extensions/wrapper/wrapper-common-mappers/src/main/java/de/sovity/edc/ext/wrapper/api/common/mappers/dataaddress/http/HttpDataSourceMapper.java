@@ -19,7 +19,6 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiDataSourceOnRequest;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
-import jakarta.json.JsonObjectBuilder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -83,7 +82,7 @@ public class HttpDataSourceMapper {
         );
 
         var actualDataSource = UiDataSourceHttpData.builder()
-            .baseUrl("http://0.0.0.0") // TODO replace with an internal URL with some info text
+            .baseUrl("http://0.0.0.0")
             .build();
 
         var props = buildDataAddress(actualDataSource);
@@ -103,17 +102,18 @@ public class HttpDataSourceMapper {
         var json = Json.createObjectBuilder();
 
         // Parameterization Hints
-        if ("true".equals(dataAddress.get(Prop.Edc.PROXY_METHOD))) {
-            json.add(Prop.SovityDcatExt.HttpDatasourceHints.METHOD, "true");
-        }
-        if ("true".equals(dataAddress.get(Prop.Edc.PROXY_PATH))) {
-            json.add(Prop.SovityDcatExt.HttpDatasourceHints.PATH, "true");
-        }
-        if ("true".equals(dataAddress.get(Prop.Edc.PROXY_QUERY_PARAMS))) {
-            json.add(Prop.SovityDcatExt.HttpDatasourceHints.QUERY_PARAMS, "true");
-        }
-        if ("true".equals(dataAddress.get(Prop.Edc.PROXY_BODY))) {
-            json.add(Prop.SovityDcatExt.HttpDatasourceHints.BODY, "true");
+        var isOnRequest = Prop.SovityDcatExt.DATA_SOURCE_AVAILABILITY_ON_REQUEST
+            .equals(dataAddress.get(Prop.SovityDcatExt.DATA_SOURCE_AVAILABILITY));
+        if (!isOnRequest) {
+            Map.of(
+                Prop.Edc.PROXY_METHOD, Prop.SovityDcatExt.HttpDatasourceHints.METHOD,
+                Prop.Edc.PROXY_PATH, Prop.SovityDcatExt.HttpDatasourceHints.PATH,
+                Prop.Edc.PROXY_QUERY_PARAMS, Prop.SovityDcatExt.HttpDatasourceHints.QUERY_PARAMS,
+                Prop.Edc.PROXY_BODY, Prop.SovityDcatExt.HttpDatasourceHints.BODY
+            ).forEach((prop, hint) ->
+                // Will add hints as "true" or "false"
+                json.add(hint, String.valueOf("true".equals(dataAddress.get(prop))))
+            );
         }
 
         // On Request information
