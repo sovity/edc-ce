@@ -47,6 +47,7 @@ class OfflineConnectorRemovalJobTest {
 
     BrokerServerSettings brokerServerSettings;
     OfflineConnectorKiller offlineConnectorKiller;
+    ConnectorQueries connectorQueries;
 
     @BeforeAll
     static void beforeAll() {
@@ -56,12 +57,13 @@ class OfflineConnectorRemovalJobTest {
     @BeforeEach
     void beforeEach() {
         brokerServerSettings = mock(BrokerServerSettings.class);
+        connectorQueries = new ConnectorQueries();
         offlineConnectorKiller = new OfflineConnectorKiller(
                 brokerServerSettings,
                 new ConnectorQueries(),
                 new BrokerEventLogger(),
                 new ConnectorKiller(),
-                new ConnectorCleaner()
+                new ConnectorCleaner(connectorQueries)
         );
     }
 
@@ -77,7 +79,7 @@ class OfflineConnectorRemovalJobTest {
 
             // assert
             dsl.select().from(CONNECTOR).fetch().forEach(record -> {
-                assertThat(record.get(CONNECTOR.ENDPOINT)).isEqualTo("https://my-connector/api/dsp");
+                assertThat(record.get(CONNECTOR.ENDPOINT_URL)).isEqualTo("https://my-connector/api/dsp");
                 assertThat(record.get(CONNECTOR.ONLINE_STATUS)).isEqualTo(ConnectorOnlineStatus.DEAD);
             });
         });
@@ -95,7 +97,7 @@ class OfflineConnectorRemovalJobTest {
 
             // assert
             dsl.select().from(CONNECTOR).fetch().forEach(record -> {
-                assertThat(record.get(CONNECTOR.ENDPOINT)).isEqualTo("https://my-connector/api/dsp");
+                assertThat(record.get(CONNECTOR.ENDPOINT_URL)).isEqualTo("https://my-connector/api/dsp");
                 assertThat(record.get(CONNECTOR.ONLINE_STATUS)).isNotEqualTo(ConnectorOnlineStatus.DEAD);
             });
         });
@@ -103,8 +105,8 @@ class OfflineConnectorRemovalJobTest {
 
     private static void createConnector(DSLContext dsl, int createdDaysAgo) {
         dsl.insertInto(CONNECTOR)
-            .set(CONNECTOR.ENDPOINT, "https://my-connector/api/dsp")
-            .set(CONNECTOR.PARTICIPANT_ID, "my-connector")
+            .set(CONNECTOR.ENDPOINT_URL, "https://my-connector/api/dsp")
+            .set(CONNECTOR.CONNECTOR_ID, "my-connector")
             .set(CONNECTOR.ONLINE_STATUS, ConnectorOnlineStatus.OFFLINE)
             .set(CONNECTOR.LAST_SUCCESSFUL_REFRESH_AT, OffsetDateTime.now().minusDays(createdDaysAgo))
             .set(CONNECTOR.CREATED_AT, OffsetDateTime.now().minusDays(6))

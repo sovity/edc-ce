@@ -51,11 +51,6 @@ public class PostgresFlywayExtension implements ServiceExtension {
 
         var dataSourceFactory = new DataSourceFactory(config);
         dataSource = dataSourceFactory.newDataSource();
-
-        var flywayFactory = new FlywayFactory(config);
-        var flyway = flywayFactory.setupFlyway(dataSource);
-        var flywayMigrator = new FlywayMigrator(flyway, config, monitor);
-        flywayMigrator.migrateAndRepair();
     }
 
     @Override

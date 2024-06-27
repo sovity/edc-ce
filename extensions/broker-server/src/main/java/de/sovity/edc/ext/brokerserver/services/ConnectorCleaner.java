@@ -14,17 +14,27 @@
 
 package de.sovity.edc.ext.brokerserver.services;
 
+import de.sovity.edc.ext.brokerserver.dao.ConnectorQueries;
 import de.sovity.edc.ext.brokerserver.dao.utils.PostgresqlUtils;
 import de.sovity.edc.ext.brokerserver.db.jooq.Tables;
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 
 import java.util.Collection;
+import java.util.Map;
 
+@RequiredArgsConstructor
 public class ConnectorCleaner {
+
+    private final ConnectorQueries connectorQueries;
+
     public void removeDataForDeadConnectors(DSLContext dsl, Collection<String> endpoints) {
         var doco = Tables.CONTRACT_OFFER;
         var dof = Tables.DATA_OFFER;
-        dsl.deleteFrom(doco).where(PostgresqlUtils.in(doco.CONNECTOR_ENDPOINT, endpoints)).execute();
-        dsl.deleteFrom(dof).where(PostgresqlUtils.in(dof.CONNECTOR_ENDPOINT, endpoints)).execute();
+
+        var connectorIdsByEndpointUrl = connectorQueries.getConnectorIdsByEndpointUrl(dsl, endpoints);
+
+        dsl.deleteFrom(doco).where(PostgresqlUtils.in(doco.CONNECTOR_ID, connectorIdsByEndpointUrl.values())).execute();
+        dsl.deleteFrom(dof).where(PostgresqlUtils.in(dof.CONNECTOR_ID, connectorIdsByEndpointUrl.values())).execute();
     }
 }

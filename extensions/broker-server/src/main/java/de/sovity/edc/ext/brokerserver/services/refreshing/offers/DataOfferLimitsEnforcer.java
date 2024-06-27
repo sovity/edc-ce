@@ -71,7 +71,7 @@ public class DataOfferLimitsEnforcer {
     }
 
     public void logEnforcedLimitsIfChanged(DSLContext dsl, ConnectorRecord connector, DataOfferLimitsEnforced enforcedLimits) {
-        String endpoint = connector.getEndpoint();
+        String endpoint = connector.getEndpointUrl();
 
         // DataOffer
         if (enforcedLimits.dataOfferLimitsExceeded() && connector.getDataOffersExceeded() == ConnectorDataOffersExceeded.OK) {

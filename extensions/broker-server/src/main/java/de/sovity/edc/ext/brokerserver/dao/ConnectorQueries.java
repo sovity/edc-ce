@@ -24,31 +24,38 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class ConnectorQueries {
 
     public ConnectorRecord findByEndpoint(DSLContext dsl, String endpoint) {
         var c = Tables.CONNECTOR;
-        return dsl.selectFrom(c).where(c.ENDPOINT.eq(endpoint)).fetchOne();
+        return dsl.selectFrom(c).where(c.ENDPOINT_URL.eq(endpoint)).fetchOne();
     }
 
     public Set<String> findConnectorsForScheduledRefresh(DSLContext dsl, ConnectorOnlineStatus onlineStatus) {
         var c = Tables.CONNECTOR;
-        return dsl.select(c.ENDPOINT).from(c).where(c.ONLINE_STATUS.eq(onlineStatus)).fetchSet(c.ENDPOINT);
+        return dsl.select(c.ENDPOINT_URL).from(c).where(c.ONLINE_STATUS.eq(onlineStatus)).fetchSet(c.ENDPOINT_URL);
     }
 
     public Set<String> findExistingConnectors(DSLContext dsl, Collection<String> connectorEndpoints) {
         var c = Tables.CONNECTOR;
-        return dsl.select(c.ENDPOINT).from(c)
-                .where(PostgresqlUtils.in(c.ENDPOINT, connectorEndpoints))
-                .fetchSet(c.ENDPOINT);
+        return dsl.select(c.ENDPOINT_URL).from(c)
+                .where(PostgresqlUtils.in(c.ENDPOINT_URL, connectorEndpoints))
+                .fetchSet(c.ENDPOINT_URL);
     }
 
     public List<String> findAllConnectorsForKilling(DSLContext dsl, Duration deleteOfflineConnectorsAfter) {
         var c = Tables.CONNECTOR;
-        return dsl.select(c.ENDPOINT).from(c)
+        return dsl.select(c.ENDPOINT_URL).from(c)
                 .where(c.LAST_SUCCESSFUL_REFRESH_AT.lt(OffsetDateTime.now().minus(deleteOfflineConnectorsAfter)))
-                .fetch(c.ENDPOINT);
+                .fetch(c.ENDPOINT_URL);
+    }
+
+    public Map<String, String> getConnectorIdsByEndpointUrl(DSLContext dsl, Collection<String> endpoints) {
+        return dsl.selectFrom(Tables.CONNECTOR)
+            .where(PostgresqlUtils.in(Tables.CONNECTOR.ENDPOINT_URL, endpoints))
+            .fetchMap(Tables.CONNECTOR.ENDPOINT_URL, Tables.CONNECTOR.CONNECTOR_ID);
     }
 }

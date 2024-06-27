@@ -7,7 +7,6 @@ val jooqDbType = "org.jooq.meta.postgres.PostgresDatabase"
 val jdbcDriver = "org.postgresql.Driver"
 val postgresContainer = libs.versions.postgresDbImage.get()
 
-val migrationsDir = "src/main/resources/db/migration"
 val testDataDir = "src/main/resources/db/testdata"
 val jooqTargetPackage = "de.sovity.edc.ext.brokerserver.db.jooq"
 val jooqTargetSourceRoot = "build/generated/jooq"
@@ -107,7 +106,7 @@ flyway {
     cleanDisabled = false
     cleanOnValidationError = true
     baselineOnMigrate = true
-    locations = arrayOf("filesystem:${migrationsDir}", "filesystem:${testDataDir}")
+    locations = arrayOf("filesystem:${testDataDir}")
     configurations = arrayOf("flywayMigration")
 
     mixed = true
@@ -158,7 +157,7 @@ jooq {
 
 tasks.withType<nu.studer.gradle.jooq.JooqGenerate> {
     dependsOn.add("flywayMigrate")
-    inputs.files(fileTree(migrationsDir))
+    inputs.files(fileTree(testDataDir))
             .withPropertyName("migrations")
             .withPathSensitivity(PathSensitivity.RELATIVE)
     allInputsDeclared.set(true)

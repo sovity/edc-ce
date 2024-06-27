@@ -64,7 +64,7 @@ public class DataOfferPatchBuilder {
         );
 
         diff.added().forEach(fetched -> {
-            var newRecord = dataOfferRecordUpdater.newDataOffer(connectorEndpoint, fetched);
+            var newRecord = dataOfferRecordUpdater.newDataOffer(dsl, connectorEndpoint, fetched);
             patch.insertDataOffer(newRecord);
             patchContractOffers(patch, newRecord, List.of(), fetched.getContractOffers());
         });

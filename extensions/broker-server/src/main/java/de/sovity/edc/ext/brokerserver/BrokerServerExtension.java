@@ -116,7 +116,6 @@ public class BrokerServerExtension implements ServiceExtension {
         BrokerServerExtensionContext.instance = services;
 
         var managementApiGroup = managementApiConfiguration.getContextAlias();
-        webService.registerResource(managementApiGroup, services.brokerServerResource());
     }
 
     @Override

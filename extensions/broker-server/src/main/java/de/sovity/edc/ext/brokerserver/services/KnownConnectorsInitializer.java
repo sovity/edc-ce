@@ -29,11 +29,9 @@ import java.util.List;
 public class KnownConnectorsInitializer {
     private final Config config;
     private final ConnectorQueue connectorQueue;
-    private final ConnectorCreator connectorCreator;
 
     public void addKnownConnectorsOnStartup(DSLContext dsl) {
         var connectorEndpoints = getKnownConnectorsConfigValue();
-        connectorCreator.addConnectors(dsl, connectorEndpoints);
         connectorQueue.addAll(connectorEndpoints, ConnectorRefreshPriority.ADDED_ON_STARTUP);
     }
 

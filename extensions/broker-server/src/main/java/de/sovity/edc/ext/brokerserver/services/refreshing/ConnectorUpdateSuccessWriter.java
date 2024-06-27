@@ -45,7 +45,7 @@ public class ConnectorUpdateSuccessWriter {
 
         // Log Status Change and set status to online if necessary
         if (connector.getOnlineStatus() != ConnectorOnlineStatus.ONLINE || connector.getLastRefreshAttemptAt() == null) {
-            brokerEventLogger.logConnectorOnline(dsl, connector.getEndpoint());
+            brokerEventLogger.logConnectorOnline(dsl, connector.getEndpointUrl());
             connector.setOnlineStatus(ConnectorOnlineStatus.ONLINE);
         }
 
@@ -54,11 +54,11 @@ public class ConnectorUpdateSuccessWriter {
         updateConnector(connector, catalog, changes);
 
         // Update data offers
-        dataOfferWriter.updateDataOffers(dsl, connector.getEndpoint(), limitedDataOffers.abbreviatedDataOffers(), changes);
+        dataOfferWriter.updateDataOffers(dsl, connector.getEndpointUrl(), limitedDataOffers.abbreviatedDataOffers(), changes);
 
         // Log event if changes are present
         if (!changes.isEmpty()) {
-            brokerEventLogger.logConnectorUpdated(dsl, connector.getEndpoint(), changes);
+            brokerEventLogger.logConnectorUpdated(dsl, connector.getEndpointUrl(), changes);
         }
     }
 
@@ -68,8 +68,8 @@ public class ConnectorUpdateSuccessWriter {
 
         connector.setLastSuccessfulRefreshAt(now);
         connector.setLastRefreshAttemptAt(now);
-        if (!Objects.equals(connector.getParticipantId(), participantId)) {
-            connector.setParticipantId(participantId);
+        if (!Objects.equals(connector.getConnectorId(), participantId)) {
+            connector.setConnectorId(participantId);
             connector.setMdsId(MdsIdUtils.getMdsIdFromParticipantId(participantId));
             changes.setParticipantIdChanged(participantId);
         }

@@ -14,11 +14,13 @@
 
 package de.sovity.edc.ext.brokerserver.services.refreshing.offers;
 
+import de.sovity.edc.ext.brokerserver.dao.ConnectorQueries;
 import de.sovity.edc.ext.brokerserver.dao.utils.JsonbUtils;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferRecord;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedDataOffer;
 import de.sovity.edc.ext.brokerserver.utils.JsonUtils2;
 import lombok.RequiredArgsConstructor;
+import org.jooq.DSLContext;
 import org.jooq.JSONB;
 
 import java.time.OffsetDateTime;
@@ -36,6 +38,9 @@ import java.util.function.Function;
  */
 @RequiredArgsConstructor
 public class DataOfferRecordUpdater {
+
+    private final ConnectorQueries connectorQueries;
+
     /**
      * Create a new {@link DataOfferRecord}.
      *
@@ -43,9 +48,11 @@ public class DataOfferRecordUpdater {
      * @param fetchedDataOffer  new db row data
      * @return new db row
      */
-    public DataOfferRecord newDataOffer(String connectorEndpoint, FetchedDataOffer fetchedDataOffer) {
+    public DataOfferRecord newDataOffer(DSLContext dsl, String connectorEndpoint, FetchedDataOffer fetchedDataOffer) {
         var dataOffer = new DataOfferRecord();
-        dataOffer.setConnectorEndpoint(connectorEndpoint);
+        var connectorId = connectorQueries.findByEndpoint(dsl, connectorEndpoint).getConnectorId();
+
+        dataOffer.setConnectorId(connectorId);
         dataOffer.setAssetId(fetchedDataOffer.getAssetId());
         dataOffer.setCreatedAt(OffsetDateTime.now());
         updateDataOffer(dataOffer, fetchedDataOffer, true);

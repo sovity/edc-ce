@@ -17,7 +17,9 @@ package de.sovity.edc.ext.brokerserver.services.refreshing.offers;
 import de.sovity.edc.ext.brokerserver.dao.utils.JsonbUtils;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.ContractOfferRecord;
 import de.sovity.edc.ext.brokerserver.db.jooq.tables.records.DataOfferRecord;
+import de.sovity.edc.ext.brokerserver.services.api.DataOfferMappingUtils;
 import de.sovity.edc.ext.brokerserver.services.refreshing.offers.model.FetchedContractOffer;
+import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import lombok.RequiredArgsConstructor;
 import org.jooq.JSONB;
 
@@ -32,6 +34,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ContractOfferRecordUpdater {
 
+    private final DataOfferMappingUtils dataOfferMappingUtils;
+
     /**
      * Create new {@link ContractOfferRecord} from {@link FetchedContractOffer}.
      *
@@ -41,7 +45,8 @@ public class ContractOfferRecordUpdater {
      */
     public ContractOfferRecord newContractOffer(DataOfferRecord dataOffer, FetchedContractOffer fetchedContractOffer) {
         var contractOffer = new ContractOfferRecord();
-        contractOffer.setConnectorEndpoint(dataOffer.getConnectorEndpoint());
+
+        contractOffer.setConnectorId(dataOffer.getConnectorId());
         contractOffer.setContractOfferId(fetchedContractOffer.getContractOfferId());
         contractOffer.setAssetId(dataOffer.getAssetId());
         contractOffer.setCreatedAt(OffsetDateTime.now());

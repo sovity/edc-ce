@@ -32,8 +32,8 @@ public class ConnectorUpdateFailureWriter {
     public void handleConnectorOffline(DSLContext dsl, ConnectorRecord connector, Throwable e) {
         // Log Status Change and set status to offline if necessary
         if (connector.getOnlineStatus() == ConnectorOnlineStatus.ONLINE || connector.getLastRefreshAttemptAt() == null) {
-            monitor.info("Connector is offline: " + connector.getEndpoint(), e);
-            brokerEventLogger.logConnectorOffline(dsl, connector.getEndpoint(), getFailureMessage(e));
+            monitor.info("Connector is offline: " + connector.getEndpointUrl(), e);
+            brokerEventLogger.logConnectorOffline(dsl, connector.getEndpointUrl(), getFailureMessage(e));
             connector.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
         }
 

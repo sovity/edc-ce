@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.brokerserver;
 
-import de.sovity.edc.ext.brokerserver.api.BrokerServerResource;
 import de.sovity.edc.ext.brokerserver.services.BrokerServerInitializer;
 import de.sovity.edc.ext.brokerserver.services.ConnectorCreator;
 import de.sovity.edc.ext.brokerserver.services.refreshing.ConnectorUpdater;
@@ -26,16 +25,13 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 /**
  * Manual Dependency Injection result
  *
- * @param brokerServerResource    REST Resource with API Endpoint implementations
  * @param brokerServerInitializer Startup Logic
  */
 public record BrokerServerExtensionContext(
-        BrokerServerResource brokerServerResource,
         BrokerServerInitializer brokerServerInitializer,
 
         // Required for Integration Tests
         ConnectorUpdater connectorUpdater,
-        ConnectorCreator connectorCreator,
         PolicyMapper policyMapper,
         FetchedCatalogBuilder fetchedCatalogBuilder,
         DataOfferRecordUpdater dataOfferRecordUpdater

@@ -24,6 +24,6 @@ import java.util.Collection;
 public class ConnectorKiller {
     public void killConnectors(DSLContext dsl, Collection<String> endpoints) {
         var c = Tables.CONNECTOR;
-        dsl.update(c).set(c.ONLINE_STATUS, ConnectorOnlineStatus.DEAD).where(PostgresqlUtils.in(c.ENDPOINT, endpoints)).execute();
+        dsl.update(c).set(c.ONLINE_STATUS, ConnectorOnlineStatus.DEAD).where(PostgresqlUtils.in(c.ENDPOINT_URL, endpoints)).execute();
     }
 }

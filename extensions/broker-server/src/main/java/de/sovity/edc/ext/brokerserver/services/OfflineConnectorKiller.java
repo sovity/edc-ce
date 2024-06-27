@@ -26,13 +26,13 @@ public class OfflineConnectorKiller {
     private final ConnectorQueries connectorQueries;
     private final BrokerEventLogger brokerEventLogger;
     private final ConnectorKiller connectorKiller;
-    private final ConnectorCleaner connectorClearer;
+    private final ConnectorCleaner connectorCleaner;
 
     public void killIfOfflineTooLong(DSLContext dsl) {
         var killOfflineConnectorsAfter = brokerServerSettings.getKillOfflineConnectorsAfter();
         var toKill = connectorQueries.findAllConnectorsForKilling(dsl, killOfflineConnectorsAfter);
 
-        connectorClearer.removeDataForDeadConnectors(dsl, toKill);
+        connectorCleaner.removeDataForDeadConnectors(dsl, toKill);
         connectorKiller.killConnectors(dsl, toKill);
 
         brokerEventLogger.addKilledDueToOfflineTooLongMessages(dsl, toKill);
