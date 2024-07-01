@@ -21,10 +21,10 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPageQuery;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateCustomTransferRequest;
@@ -141,17 +141,21 @@ interface UiResource {
     @Operation(description = "Get Contract Negotiation Information")
     UiContractNegotiation getContractNegotiation(@PathParam("contractNegotiationId") String contractNegotiationId);
 
+    /**
+     * @deprecated Use {@link #getContractAgreementPage(ContractAgreementPageQuery)}
+     */
+    @Deprecated(since = "8.2.0")
     @GET
     @Path("pages/contract-agreement-page")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Collect all data for the Contract Agreement Page")
+    @Operation(description = "Collect all data for the Contract Agreement Page", deprecated = true)
     ContractAgreementPage getContractAgreementPage();
 
     @POST
     @Path("pages/contract-agreement-page")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Collect filtered data for the Contract Agreement Page")
-    ContractAgreementPage getContractAgreementPageFilteredBy(ContractAgreementPageQuery contractAgreementPageQuery);
+    ContractAgreementPage getContractAgreementPage(ContractAgreementPageQuery contractAgreementPageQuery);
 
     @POST
     @Path("pages/contract-agreement-page/transfers")

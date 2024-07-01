@@ -261,11 +261,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContractAgreementPage'
+      deprecated: true
     post:
       tags:
       - UI
       description: Collect filtered data for the Contract Agreement Page
-      operationId: getContractAgreementPageFilteredBy
+      operationId: getContractAgreementPage_1
       requestBody:
         content:
           '*/*':

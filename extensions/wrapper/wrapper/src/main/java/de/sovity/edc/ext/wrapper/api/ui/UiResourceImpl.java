@@ -138,7 +138,7 @@ public class UiResourceImpl implements UiResource {
     }
 
     @Override
-    public ContractAgreementPage getContractAgreementPageFilteredBy(ContractAgreementPageQuery contractAgreementPageQuery) {
+    public ContractAgreementPage getContractAgreementPage(ContractAgreementPageQuery contractAgreementPageQuery) {
         return null;
     }
 
