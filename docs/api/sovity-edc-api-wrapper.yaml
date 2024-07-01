@@ -21,7 +21,7 @@ servers:
 tags:
 - name: Enterprise Edition
   description: sovity Enterprise Edition EDC API Endpoints. Requires our sovity Enterprise
-    Edition EDC extensions.
+    Edition EDC Extensions.
 - name: UI
   description: EDC UI API Endpoints
 - name: Use Case
@@ -265,7 +265,7 @@ paths:
       tags:
       - UI
       description: Collect filtered data for the Contract Agreement Page
-      operationId: getContractAgreementPage_1
+      operationId: getContractAgreementPageFilteredBy
       requestBody:
         content:
           '*/*':
