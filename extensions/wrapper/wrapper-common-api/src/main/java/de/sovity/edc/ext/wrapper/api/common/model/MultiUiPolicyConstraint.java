@@ -12,7 +12,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 @Schema(description = "ODRL AtomicConstraint as supported by our UI")
-public class UiPolicyMultiplicityConstraint {
+public class MultiUiPolicyConstraint {
     @Schema(description = "Left side of the expression.", requiredMode = Schema.RequiredMode.REQUIRED)
     private String left;
 

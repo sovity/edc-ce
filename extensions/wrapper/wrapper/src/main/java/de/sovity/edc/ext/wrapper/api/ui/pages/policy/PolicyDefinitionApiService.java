@@ -92,13 +92,13 @@ public class PolicyDefinitionApiService {
                 .build();
     }
 
-    public IdResponseDto createPolicyDefinition(UiPolicyMultiplicityDefinitionCreateRequest policyCreateRequest) {
+    public IdResponseDto createPolicyDefinition(MultiUiPolicyDefinitionCreateRequest policyCreateRequest) {
         var policyDefinition = buildPolicyDefinition(policyCreateRequest);
         policyDefinition = policyDefinitionService.create(policyDefinition).orElseThrow(ServiceException::new);
         return new IdResponseDto(policyDefinition.getId());
     }
 
-    private PolicyDefinition buildPolicyDefinition(UiPolicyMultiplicityDefinitionCreateRequest policyCreateRequest) {
+    private PolicyDefinition buildPolicyDefinition(MultiUiPolicyDefinitionCreateRequest policyCreateRequest) {
         var policy = policyMapper.buildPolicy(policyCreateRequest.getPolicy());
         return PolicyDefinition.Builder.newInstance()
                 .id(policyCreateRequest.getPolicyDefinitionId())

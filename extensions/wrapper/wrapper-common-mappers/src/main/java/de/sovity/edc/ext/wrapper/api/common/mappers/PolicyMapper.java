@@ -5,9 +5,7 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.FailedMappingException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
-import de.sovity.edc.ext.wrapper.api.common.model.Expression;
-import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
-import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
+import de.sovity.edc.ext.wrapper.api.common.model.*;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.JsonObject;
@@ -79,6 +77,8 @@ public class PolicyMapper {
                 .build();
     }
 
+
+    // --------------------- ERIC's PART ---------------------
     public Policy buildPolicy(List<Expression> constraintElements) {
         var constraints = buildConstraints(constraintElements);
         var action = Action.Builder.newInstance().type(Prop.Odrl.USE).build();
@@ -115,6 +115,64 @@ public class PolicyMapper {
                     .constraints(buildConstraints(subExpressions))
                     .build();
         };
+    }
+
+    // --------------------- ERIC's PART END ---------------------
+
+    public Policy buildPolicy(MultiUiPolicyCreateRequest request) {
+        // TODO: Implement this method
+
+        var expression = request.getExpression();
+
+        var constraints = new ArrayList<Constraint>();
+
+        buildConstraints(expression);
+
+
+        var action = Action.Builder.newInstance().type(PolicyValidator.ALLOWED_ACTION).build();
+
+        var permission = Permission.Builder.newInstance()
+                .action(action)
+                .constraints(constraints)
+                .build();
+
+        return Policy.Builder.newInstance().build();
+
+    }
+
+//    public Constraint buildConstraints(MultExpression expression) {
+//        return switch (expression.getExpressionType()) {
+//            case ATOMIC_CONSTRAINT -> atomicConstraintMapper.buildAtomicConstraint(expression.getAtomicConstraint());
+//            case AND -> AndConstraint.Builder.newInstance().constraints(List.of(
+//                    buildConstraints(expression.getLeftExpression()), buildConstraints(expression.getRightExpression()))).build();
+//
+//            case OR -> OrConstraint.Builder.newInstance().constraints(List.of(
+//                    buildConstraints(expression.getLeftExpression()), buildConstraints(expression.getRightExpression()))).build();
+//
+//            case XOR -> XoneConstraint.Builder.newInstance().constraints(List.of(
+//                    buildConstraints(expression.getLeftExpression()), buildConstraints(expression.getRightExpression()))).build();
+//        };
+//    }
+
+    public void buildConstraints(MultiExpression expression) {
+        switch (expression.getExpressionType()) {
+            case ATOMIC_CONSTRAINT -> {
+                System.out.println("Atomic Constraint");
+                atomicConstraintMapper.buildAtomicConstraint(expression.getAtomicConstraint());
+            }
+//            case AND -> AndConstraint.Builder.newInstance().constraints(List.of(
+//                buildConstraints(expression.getLeftExpression()), buildConstraints(expression.getRightExpression()))).build();
+//            case OR -> OrConstraint.Builder.newInstance().constraints(List.of(
+//                buildConstraints(expression.getLeftExpression()), buildConstraints(expression.getRightExpression()))).build();
+//            case XOR -> XoneConstraint.Builder.newInstance().constraints(List.of(
+//                buildConstraints(expression.getLeftExpression()), buildConstraints(expression.getRightExpression()))).build();
+            case OR, AND, XOR -> {
+                System.out.println("AND/OR/XOR Constraint");
+                buildConstraints(expression.getLeftExpression());
+                buildConstraints(expression.getRightExpression());
+            }
+        }
+
     }
 
     /**

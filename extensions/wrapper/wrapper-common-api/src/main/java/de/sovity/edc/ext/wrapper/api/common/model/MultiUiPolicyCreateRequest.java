@@ -32,7 +32,7 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @Schema(description = "Type-Safe OpenAPI generator friendly Policy Create DTO that supports an opinionated"
     + " subset of the original EDC Policy Entity.")
-public class UiPolicyMultiplicityCreateRequest {
+public class MultiUiPolicyCreateRequest {
     @Schema(description = "Conjunction of required expressions for the policy to evaluate to TRUE.")
-    private UiPolicyMultiplicityExpression expression; // NEW
+    private MultiExpression expression; // NEW
 }

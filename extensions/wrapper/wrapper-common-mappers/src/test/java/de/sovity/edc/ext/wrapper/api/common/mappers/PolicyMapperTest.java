@@ -1,18 +1,14 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
+//import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
 import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MappingErrors;
-import de.sovity.edc.ext.wrapper.api.common.model.AtomicConstraintDto;
+import de.sovity.edc.ext.wrapper.api.common.model.*;
 import de.sovity.edc.ext.wrapper.api.common.model.Expression;
-import de.sovity.edc.ext.wrapper.api.common.model.ExpressionType;
-import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraint;
-import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import jakarta.json.JsonObject;
 import lombok.SneakyThrows;
-import org.eclipse.edc.policy.model.AtomicConstraint;
-import org.eclipse.edc.policy.model.Policy;
-import org.eclipse.edc.policy.model.PolicyType;
+import org.eclipse.edc.policy.model.*;
 import org.eclipse.edc.spi.result.Result;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.junit.jupiter.api.Test;
@@ -123,4 +119,18 @@ class PolicyMapperTest {
         var constraintObject = permission.getConstraints().get(0);
         assertNotNull(constraintObject);
     }
-}
+    @Test
+    void testBuildConstraints() throws Exception {
+            // Arrange
+            //            String expressionJson = "{ \"expressionType\": \"AND\", \"leftExpression\": { \"expressionType\": \"ATOMIC_CONSTRAINT\", \"atomicConstraint\": { \"leftExpression\": \"REFERRING_CONNECTOR\", \"operator\": \"EQ\", \"rightExpression\":  \"asd\" } }, \"rightExpression\": { \"expressionType\": \"OR\", \"leftExpression\": { \"expressionType\": \"ATOMIC_CONSTRAINT\", \"atomicConstraint\": { \"leftExpression\": \"POLICY_EVALUATION_TIME\", \"operator\": \"GEQ\", \"rightExpression\": \"2024-06-15T22:00:00.000Z\" } }, \"rightExpression\": { \"expressionType\": \"ATOMIC_CONSTRAINT\", \"atomicConstraint\": { \"leftExpression\": \"POLICY_EVALUATION_TIME\", \"operator\": \"LT\", \"rightExpression\": \"2024-06-22T22:00:00.000Z\"  } } } }";
+
+            //            String expressionJson = "{ \"expressionType\": \"ATOMIC_CONSTRAINT\", \"atomicConstraint\": { \"leftExpression\": \"REFERRING_CONNECTOR\", \"operator\": \"EQ\", \"rightExpression\":  \"asd\" } }";
+            //
+            //            ObjectMapper objectMapper = new ObjectMapper();
+            //            MultiExpression expression = objectMapper.readValue(expressionJson, MultiExpression.class);
+            //
+            //            policyMapper.buildConstraints(expression);
+        }
+    }
+
+

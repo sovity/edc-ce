@@ -24,11 +24,11 @@ import lombok.*;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
 @Schema(description = "Data for creating a Policy Definition")
-public class UiPolicyMultiplicityDefinitionCreateRequest {
+public class MultiUiPolicyDefinitionCreateRequest {
     @Schema(description = "Policy Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String policyDefinitionId;
 
     @Schema(description = "Policy Contents", requiredMode = Schema.RequiredMode.REQUIRED)
-    private UiPolicyCreateRequest policy;
+    private MultiUiPolicyCreateRequest policy;
 }
 
