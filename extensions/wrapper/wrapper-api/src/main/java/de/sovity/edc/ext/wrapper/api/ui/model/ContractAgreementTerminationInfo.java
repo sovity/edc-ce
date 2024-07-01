@@ -36,7 +36,7 @@ public class ContractAgreementTerminationInfo {
     private String reason;
 
     @Schema(
-        description = "Detailed message from the terminating party on why the contract was terminated.",
+        description = "Detailed message from the terminating party about why the contract was terminated.",
         requiredMode = Schema.RequiredMode.REQUIRED
     )
     private String detail;
