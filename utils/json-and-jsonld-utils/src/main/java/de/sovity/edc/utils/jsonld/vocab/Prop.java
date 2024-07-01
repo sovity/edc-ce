@@ -44,11 +44,14 @@ public class Prop {
         public final String DATA_ADDRESS = CTX + "dataAddress";
         public final String TYPE = CTX + "type";
         public final String DATA_ADDRESS_TYPE_HTTP_DATA = "HttpData";
-        public final String DATA_ADDRESS_TYPE_HTTP_PROXY = "HttpData";
+        public final String DATA_ADDRESS_TYPE_HTTP_PROXY = "HttpProxy";
         public final String BASE_URL = CTX + "baseUrl";
         public final String METHOD = CTX + "method";
         public final String CONTENT_TYPE = CTX + "contentType";
         public final String QUERY_PARAMS = CTX + "queryParams";
+        public final String AUTH_KEY = CTX + "authKey";
+        public final String AUTH_CODE = CTX + "authCode";
+        public final String SECRET_NAME = CTX + "secretName";
         public final String PROXY_METHOD = CTX + "proxyMethod";
         public final String PROXY_PATH = CTX + "proxyPath";
         public final String PROXY_QUERY_PARAMS = CTX + "proxyQueryParams";
