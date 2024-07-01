@@ -60,6 +60,9 @@ public class ContractAgreementCard {
     @Schema(description = "Contract Agreement's Transfer Processes", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<ContractAgreementTransferProcess> transferProcesses;
 
-    @Schema(description = "Contract Agreement's state", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String state;
+    @Schema(description = "Contract Agreement's Status", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String status;
+
+    @Schema(description = "Contract Agreement's Metadata", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private ContractMetadata contractMetadata;
 }
