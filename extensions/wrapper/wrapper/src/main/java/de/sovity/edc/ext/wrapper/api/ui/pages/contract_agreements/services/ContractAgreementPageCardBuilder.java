@@ -61,6 +61,7 @@ public class ContractAgreementPageCardBuilder {
         card.setAsset(assetMapper.buildUiAsset(asset, assetConnectorEndpoint, assetParticipantId));
         card.setContractPolicy(policyMapper.buildUiPolicy(agreement.getPolicy()));
         card.setTransferProcesses(buildTransferProcesses(transferProcesses));
+        card.setState("Active");
         return card;
     }
 

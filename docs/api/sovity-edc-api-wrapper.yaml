@@ -6,16 +6,16 @@ info:
     \ APIs, etc. We bundled these APIs, so we can have an easier time generating our\
     \ API Client Libraries."
   contact:
-    name: sovity GmbH
-    url: https://github.com/sovity/edc-ce/issues/new/choose
+    name: Sovity GmbH
+    url: https://github.com/sovity/edc-extensions/issues/new/choose
     email: contact@sovity.de
   license:
     name: Apache 2.0
-    url: https://github.com/sovity/edc-ce/blob/main/LICENSE
+    url: https://github.com/sovity/edc-extensions/blob/main/LICENSE
   version: 0.0.0
 externalDocs:
-  description: EDC API Wrapper Project in sovity/edc-ce
-  url: https://github.com/sovity/edc-ce/tree/main/extensions/wrapper
+  description: EDC API Wrapper Project in sovity/edc-extensions
+  url: https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper
 servers:
 - url: https://my-connector/api/management
 tags:
@@ -81,6 +81,24 @@ paths:
             application/json:
               schema:
                 type: string
+  /wrapper/ui/pages/content-agreement-page/cancellations:
+    post:
+      tags:
+      - UI
+      description: Cancels a contract agreement by its contract agreement id.
+      operationId: cancelContractAgreement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractCancellationRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
   /wrapper/ui/pages/asset-page/assets:
     post:
       tags:
@@ -743,6 +761,25 @@ components:
           description: Change Date
           format: date-time
       description: Marks the operation as successful
+    ContractCancellationRequest:
+      required:
+      - contractAgreementId
+      - reason
+      type: object
+      properties:
+        contractAgreementId:
+          title: Contract Agreement ID
+          type: string
+        reason:
+          title: Cancellation reason
+          maxLength: 64
+          type: string
+          description: A short reason why this contract was cancelled
+        detail:
+          title: Cancellation detail
+          type: string
+          description: A user explanation to detail why the contract was cancelled.
+      description: Data for cancelling a Contract Agreement
     ContractDefinitionRequest:
       required:
       - accessPolicyId
@@ -1261,6 +1298,7 @@ components:
       - counterPartyAddress
       - counterPartyId
       - direction
+      - state
       - transferProcesses
       type: object
       properties:
@@ -1291,6 +1329,9 @@ components:
           description: Contract Agreement's Transfer Processes
           items:
             $ref: '#/components/schemas/ContractAgreementTransferProcess'
+        state:
+          type: string
+          description: Contract Agreement's state
       description: Contract Agreement for Contract Agreement Page
     ContractAgreementDirection:
       type: string

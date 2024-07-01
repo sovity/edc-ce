@@ -20,6 +20,7 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractCancellationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
@@ -143,6 +144,11 @@ public class UiResourceImpl implements UiResource {
     @Override
     public IdResponseDto initiateCustomTransfer(InitiateCustomTransferRequest request) {
         return contractAgreementTransferApiService.initiateCustomTransfer(request);
+    }
+
+    @Override
+    public IdResponseDto cancelContractAgreement(ContractCancellationRequest contractCancellationRequest) {
+        return null;
     }
 
     @Override

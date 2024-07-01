@@ -20,6 +20,7 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractCancellationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
@@ -158,6 +159,13 @@ interface UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Initiate a Transfer Process via a custom Transfer Process JSON-LD. Fields such as connectorId, assetId, providerConnectorId, providerConnectorAddress will be set automatically.")
     IdResponseDto initiateCustomTransfer(InitiateCustomTransferRequest initiateCustomTransferRequest);
+
+    @POST
+    @Path("pages/content-agreement-page/cancellations")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Cancels a contract agreement by its contract agreement id.")
+    IdResponseDto cancelContractAgreement(ContractCancellationRequest contractCancellationRequest);
 
     @GET
     @Path("pages/transfer-history-page")
