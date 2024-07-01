@@ -167,7 +167,7 @@ interface UiResource {
     IdResponseDto initiateCustomTransfer(InitiateCustomTransferRequest initiateCustomTransferRequest);
 
     @POST
-    @Path("pages/content-agreement-page/cancellations")
+    @Path("pages/content-agreement-page/{contractAgreementId}/terminate")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Cancels a contract agreement designated by its contract agreement id.")

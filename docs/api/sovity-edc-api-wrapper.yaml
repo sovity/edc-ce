@@ -6,16 +6,16 @@ info:
     \ APIs, etc. We bundled these APIs, so we can have an easier time generating our\
     \ API Client Libraries."
   contact:
-    name: Sovity GmbH
-    url: https://github.com/sovity/edc-extensions/issues/new/choose
+    name: sovity GmbH
+    url: https://github.com/sovity/edc-ce/issues/new/choose
     email: contact@sovity.de
   license:
     name: Apache 2.0
-    url: https://github.com/sovity/edc-extensions/blob/main/LICENSE
+    url: https://github.com/sovity/edc-ce/blob/main/LICENSE
   version: 0.0.0
 externalDocs:
-  description: EDC API Wrapper Project in sovity/edc-extensions
-  url: https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper
+  description: EDC API Wrapper Project in sovity/edc-ce
+  url: https://github.com/sovity/edc-ce/tree/main/extensions/wrapper
 servers:
 - url: https://my-connector/api/management
 tags:
