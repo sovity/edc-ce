@@ -171,7 +171,7 @@ interface UiResource {
     @Path("pages/content-agreement-page/{contractAgreementId}/terminate")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Cancels a contract agreement designated by its contract agreement id.")
+    @Operation(description = "Terminates a contract agreement designated by its contract agreement id.")
     IdResponseDto terminateContractAgreement(
         @PathParam("contractAgreementId") String contractAgreementId,
         ContractTerminationRequest contractTerminationRequest);
