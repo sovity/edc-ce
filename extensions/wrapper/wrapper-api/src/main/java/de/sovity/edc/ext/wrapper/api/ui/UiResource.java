@@ -151,7 +151,7 @@ interface UiResource {
     @Path("pages/contract-agreement-page")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Collect filtered data for the Contract Agreement Page")
-    ContractAgreementPage getContractAgreementPage(ContractAgreementPageQuery contractAgreementPageQuery);
+    ContractAgreementPage getContractAgreementPageFilteredBy(ContractAgreementPageQuery contractAgreementPageQuery);
 
     @POST
     @Path("pages/contract-agreement-page/transfers")
