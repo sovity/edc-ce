@@ -20,7 +20,8 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractCancellationRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPageQuery;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
@@ -146,11 +147,11 @@ interface UiResource {
     @Operation(description = "Collect all data for the Contract Agreement Page")
     ContractAgreementPage getContractAgreementPage();
 
-    @GET
-    @Path("pages/contract-agreement-page/filter/{statusFilterQuery}")
+    @POST
+    @Path("pages/contract-agreement-page")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Collect filtered data for the Contract Agreement Page")
-    ContractAgreementPage getContractAgreementPage(@PathParam("statusFilterQuery") String statusFilterQuery);
+    ContractAgreementPage getContractAgreementPage(ContractAgreementPageQuery contractAgreementPageQuery);
 
     @POST
     @Path("pages/contract-agreement-page/transfers")
@@ -171,7 +172,9 @@ interface UiResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Cancels a contract agreement designated by its contract agreement id.")
-    IdResponseDto cancelContractAgreement(ContractCancellationRequest contractCancellationRequest);
+    IdResponseDto terminateContractAgreement(
+        @PathParam("contractAgreementId") String contractAgreementId,
+        ContractTerminationRequest contractTerminationRequest);
 
     @GET
     @Path("pages/transfer-history-page")

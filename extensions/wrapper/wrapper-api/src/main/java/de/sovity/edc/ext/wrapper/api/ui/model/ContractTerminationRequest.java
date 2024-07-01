@@ -25,23 +25,19 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "Data for cancelling a Contract Agreement")
-public class ContractCancellationRequest {
-
-    @Schema(title = "Contract Agreement ID", requiredMode = Schema.RequiredMode.REQUIRED)
-    String contractAgreementId;
+@Schema(description = "Data for terminating a Contract Agreement")
+public class ContractTerminationRequest {
 
     @Schema(
-        title = "Cancellation reason",
-        description = "A short reason why this contract was cancelled",
+        title = "Termination reason",
+        description = "A short reason why this contract was terminated",
         maxLength = 64,
         requiredMode = Schema.RequiredMode.REQUIRED)
     String reason;
 
     @Schema(
-        title = "Cancellation detail",
-        description = "A user explanation to detail why the contract was cancelled.",
+        title = "Termination detail",
+        description = "A user explanation to detail why the contract was terminated.",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     String detail;
 }
-

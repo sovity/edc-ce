@@ -81,25 +81,6 @@ paths:
             application/json:
               schema:
                 type: string
-  /wrapper/ui/pages/content-agreement-page/cancellations:
-    post:
-      tags:
-      - UI
-      description: Cancels a contract agreement designated by its contract agreement
-        id.
-      operationId: cancelContractAgreement
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ContractCancellationRequest'
-      responses:
-        default:
-          description: default response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IdResponseDto'
   /wrapper/ui/pages/asset-page/assets:
     post:
       tags:
@@ -280,18 +261,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContractAgreementPage'
-  /wrapper/ui/pages/contract-agreement-page/filter/{statusFilterQuery}:
-    get:
+    post:
       tags:
       - UI
       description: Collect filtered data for the Contract Agreement Page
       operationId: getContractAgreementPage_1
-      parameters:
-      - name: statusFilterQuery
-        in: path
-        required: true
-        schema:
-          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/ContractAgreementPageQuery'
       responses:
         default:
           description: default response
@@ -445,6 +424,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/pages/content-agreement-page/{contractAgreementId}/terminate:
+    post:
+      tags:
+      - UI
+      description: Cancels a contract agreement designated by its contract agreement
+        id.
+      operationId: terminateContractAgreement
+      parameters:
+      - name: contractAgreementId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractTerminationRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
   /wrapper/use-case-api/policy-definition:
     post:
       tags:
@@ -532,11 +536,11 @@ components:
     DataSourceType:
       type: string
       description: Supported Data Source Types by UiDataSource
-      default: CUSTOM
       enum:
       - HTTP_DATA
       - ON_REQUEST
       - CUSTOM
+      default: CUSTOM
     SecretValue:
       type: object
       properties:
@@ -744,7 +748,6 @@ components:
     UiDataSourceHttpDataMethod:
       type: string
       description: Supported HTTP Methods by UiDataSource
-      default: GET
       enum:
       - GET
       - POST
@@ -752,6 +755,7 @@ components:
       - PATCH
       - DELETE
       - OPTIONS
+      default: GET
     UiDataSourceOnRequest:
       required:
       - contactEmail
@@ -781,25 +785,6 @@ components:
           description: Change Date
           format: date-time
       description: Marks the operation as successful
-    ContractCancellationRequest:
-      required:
-      - contractAgreementId
-      - reason
-      type: object
-      properties:
-        contractAgreementId:
-          title: Contract Agreement ID
-          type: string
-        reason:
-          title: Cancellation reason
-          maxLength: 64
-          type: string
-          description: A short reason why this contract was cancelled
-        detail:
-          title: Cancellation detail
-          type: string
-          description: A user explanation to detail why the contract was cancelled.
-      description: Data for cancelling a Contract Agreement
     ContractDefinitionRequest:
       required:
       - accessPolicyId
@@ -1431,6 +1416,13 @@ components:
         simplifiedState:
           $ref: '#/components/schemas/TransferProcessSimplifiedState'
       description: Transfer Process State interpreted
+    ContractAgreementPageQuery:
+      type: object
+      properties:
+        statusQuery:
+          type: string
+          description: Contract agreement status search criterion.
+      description: Data for querying a Contract Contract Agreement Page
     ContractDefinitionEntry:
       required:
       - accessPolicyId
@@ -1783,6 +1775,21 @@ components:
           description: Additional transfer process properties. These are not passed
             to the consumer EDC
       description: "For type PARAMS_ONLY: Required data for starting a Transfer Process"
+    ContractTerminationRequest:
+      required:
+      - reason
+      type: object
+      properties:
+        reason:
+          title: Termination reason
+          maxLength: 64
+          type: string
+          description: A short reason why this contract was terminated
+        detail:
+          title: Termination detail
+          type: string
+          description: A user explanation to detail why the contract was terminated.
+      description: Data for terminating a Contract Agreement
     AtomicConstraintDto:
       required:
       - leftExpression
