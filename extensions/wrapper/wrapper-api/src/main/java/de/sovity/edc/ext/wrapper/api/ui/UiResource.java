@@ -70,11 +70,11 @@ interface UiResource {
     IdResponseDto createAsset(UiAssetCreateRequest uiAssetCreateRequest);
 
     @PUT
-    @Path("pages/asset-page/assets/{assetId}/metadata")
+    @Path("pages/asset-page/assets/{assetId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Updates an Asset's metadata")
-    IdResponseDto editAssetMetadata(@PathParam("assetId") String assetId, UiAssetEditRequest uiAssetEditRequest);
+    @Operation(description = "Updates an Asset's metadata and optionally also the data source.")
+    IdResponseDto editAsset(@PathParam("assetId") String assetId, UiAssetEditRequest uiAssetEditRequest);
 
     @DELETE
     @Path("pages/asset-page/assets/{assetId}")

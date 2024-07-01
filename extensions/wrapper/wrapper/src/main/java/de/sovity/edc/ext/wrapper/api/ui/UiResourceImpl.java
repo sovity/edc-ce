@@ -76,7 +76,7 @@ public class UiResourceImpl implements UiResource {
     }
 
     @Override
-    public IdResponseDto editAssetMetadata(String assetId, UiAssetEditRequest uiAssetEditRequest) {
+    public IdResponseDto editAsset(String assetId, UiAssetEditRequest uiAssetEditRequest) {
         return assetApiService.editAsset(assetId, uiAssetEditRequest);
     }
 
