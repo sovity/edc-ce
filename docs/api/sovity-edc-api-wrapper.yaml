@@ -1336,7 +1336,7 @@ components:
             $ref: '#/components/schemas/ContractAgreementTransferProcess'
         terminationStatus:
           type: string
-          description: Contract Agreement's Status
+          description: Contract Agreement's Termination Status
           enum:
           - ONGOING
           - TERMINATED
@@ -1362,20 +1362,20 @@ components:
       description: Data as required by the UI's Contract Agreement Page
     ContractAgreementTerminationInfo:
       required:
-      - terminationDateTime
-      - terminationDetail
-      - terminationReason
+      - detail
+      - reason
+      - timestamp
       type: object
       properties:
-        terminationDateTime:
+        timestamp:
           type: string
           description: Termination's date and time
           format: date-time
-        terminationReason:
+        reason:
           title: Termination's reason
           type: string
           description: The termination's nature e.g. User Termination
-        terminationDetail:
+        detail:
           type: string
           description: Detailed message from the terminating party on why the contract
             was terminated.
@@ -1431,6 +1431,9 @@ components:
         statusQuery:
           type: string
           description: Contract agreement status search criterion.
+          enum:
+          - ONGOING
+          - TERMINATED
       description: Data for querying a Contract Contract Agreement Page
     ContractDefinitionEntry:
       required:

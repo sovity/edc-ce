@@ -27,17 +27,17 @@ import java.time.OffsetDateTime;
 public class ContractAgreementTerminationInfo {
 
     @Schema(description = "Termination's date and time", requiredMode = Schema.RequiredMode.REQUIRED)
-    private OffsetDateTime terminationDateTime;
+    private OffsetDateTime timestamp;
 
     @Schema(
         title = "Termination's reason",
         description = "The termination's nature e.g. User Termination",
         requiredMode = Schema.RequiredMode.REQUIRED)
-    private String terminationReason;
+    private String reason;
 
     @Schema(
         description = "Detailed message from the terminating party on why the contract was terminated.",
         requiredMode = Schema.RequiredMode.REQUIRED
     )
-    private String terminationDetail;
+    private String detail;
 }
