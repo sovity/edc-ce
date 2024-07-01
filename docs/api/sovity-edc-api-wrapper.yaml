@@ -1377,7 +1377,7 @@ components:
           description: The termination's nature e.g. User Termination
         detail:
           type: string
-          description: Detailed message from the terminating party on why the contract
+          description: Detailed message from the terminating party about why the contract
             was terminated.
       description: Contract's agreement metadata
     ContractAgreementTransferProcess:
