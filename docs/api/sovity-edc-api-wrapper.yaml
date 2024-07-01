@@ -21,7 +21,7 @@ servers:
 tags:
 - name: Enterprise Edition
   description: sovity Enterprise Edition EDC API Endpoints. Requires our sovity Enterprise
-    Edition EDC Extensions.
+    Edition EDC extensions.
 - name: UI
   description: EDC UI API Endpoints
 - name: Use Case

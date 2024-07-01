@@ -32,7 +32,7 @@ import jakarta.ws.rs.core.MediaType;
  * Our sovity Enterprise Edition EDC API Endpoints to be included in our generated EDC API Wrapper Clients
  */
 @Path("wrapper/ee")
-@Tag(name = "Enterprise Edition", description = "sovity Enterprise Edition EDC API Endpoints. Requires our sovity Enterprise Edition EDC Extensions.")
+@Tag(name = "Enterprise Edition", description = "sovity Enterprise Edition EDC API Endpoints. Requires our sovity Enterprise Edition EDC extensions.")
 public interface EnterpriseEditionResource {
     @GET
     @Path("connector-limits")
