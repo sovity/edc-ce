@@ -146,6 +146,12 @@ interface UiResource {
     @Operation(description = "Collect all data for the Contract Agreement Page")
     ContractAgreementPage getContractAgreementPage();
 
+    @GET
+    @Path("pages/contract-agreement-page/filter/{statusFilterQuery}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Collect filtered data for the Contract Agreement Page")
+    ContractAgreementPage getContractAgreementPage(@PathParam("statusFilterQuery") String statusFilterQuery);
+
     @POST
     @Path("pages/contract-agreement-page/transfers")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -164,7 +170,7 @@ interface UiResource {
     @Path("pages/content-agreement-page/cancellations")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Cancels a contract agreement by its contract agreement id.")
+    @Operation(description = "Cancels a contract agreement designated by its contract agreement id.")
     IdResponseDto cancelContractAgreement(ContractCancellationRequest contractCancellationRequest);
 
     @GET

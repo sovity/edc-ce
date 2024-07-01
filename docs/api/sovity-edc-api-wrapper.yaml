@@ -85,7 +85,8 @@ paths:
     post:
       tags:
       - UI
-      description: Cancels a contract agreement by its contract agreement id.
+      description: Cancels a contract agreement designated by its contract agreement
+        id.
       operationId: cancelContractAgreement
       requestBody:
         content:
@@ -272,6 +273,25 @@ paths:
       - UI
       description: Collect all data for the Contract Agreement Page
       operationId: getContractAgreementPage
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractAgreementPage'
+  /wrapper/ui/pages/contract-agreement-page/filter/{statusFilterQuery}:
+    get:
+      tags:
+      - UI
+      description: Collect filtered data for the Contract Agreement Page
+      operationId: getContractAgreementPage_1
+      parameters:
+      - name: statusFilterQuery
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         default:
           description: default response
@@ -1298,7 +1318,7 @@ components:
       - counterPartyAddress
       - counterPartyId
       - direction
-      - state
+      - status
       - transferProcesses
       type: object
       properties:
@@ -1329,9 +1349,11 @@ components:
           description: Contract Agreement's Transfer Processes
           items:
             $ref: '#/components/schemas/ContractAgreementTransferProcess'
-        state:
+        status:
           type: string
-          description: Contract Agreement's state
+          description: Contract Agreement's Status
+        contractAgreementMetadata:
+          $ref: '#/components/schemas/ContractAgreementMetadata'
       description: Contract Agreement for Contract Agreement Page
     ContractAgreementDirection:
       type: string
@@ -1339,6 +1361,20 @@ components:
       enum:
       - CONSUMING
       - PROVIDING
+    ContractAgreementMetadata:
+      type: object
+      properties:
+        cancellationDateTime:
+          type: string
+          description: Cancellation's date and time
+          format: date-time
+        cancellationReason:
+          type: string
+          description: Cancellation's reason
+        cancellationDetail:
+          type: string
+          description: Cancellation's detail
+      description: Contract's agreement metadata
     ContractAgreementPage:
       required:
       - contractAgreements

@@ -64,5 +64,5 @@ public class ContractAgreementCard {
     private String status;
 
     @Schema(description = "Contract Agreement's Metadata", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private ContractMetadata contractMetadata;
+    private ContractAgreementMetadata contractAgreementMetadata;
 }

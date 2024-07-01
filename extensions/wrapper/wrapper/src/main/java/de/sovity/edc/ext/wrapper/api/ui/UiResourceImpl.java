@@ -42,6 +42,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
+import jakarta.ws.rs.PathParam;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -134,6 +135,11 @@ public class UiResourceImpl implements UiResource {
     @Override
     public ContractAgreementPage getContractAgreementPage() {
         return contractAgreementApiService.contractAgreementPage();
+    }
+
+    @Override
+    public ContractAgreementPage getContractAgreementPage(String statusFilterQuery) {
+        return null;
     }
 
     @Override
