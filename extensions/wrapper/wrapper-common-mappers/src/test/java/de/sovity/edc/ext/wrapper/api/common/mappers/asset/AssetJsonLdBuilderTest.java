@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper.api.common.mappers.asset;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.Factory;
 import de.sovity.edc.ext.wrapper.api.common.model.DataSourceType;
+import de.sovity.edc.ext.wrapper.api.common.model.SecretValue;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiDataSource;
 import de.sovity.edc.ext.wrapper.api.common.model.UiDataSourceHttpData;
@@ -440,6 +441,72 @@ class AssetJsonLdBuilderTest {
 
         var expectedProperties = dummyAssetCommonProperties()
             .add(Prop.SovityDcatExt.HttpDatasourceHints.BODY, "true");
+
+        // act
+        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+
+        // assert
+        assertEqualJson(actual, dummyAssetJsonLd(dataAddress, expectedProperties));
+    }
+
+    @Test
+    void test_create_httpData_authHeader_secretName() {
+        // arrange
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl("https://example.com")
+                .authHeaderName("X-Test")
+                .authHeaderValue(SecretValue.builder().secretName("mySecretName").build())
+                .build())
+            .build();
+
+        var uiAssetCreateRequest = UiAssetCreateRequest.builder()
+            .dataSource(dataSource)
+            .id(ASSET_ID)
+            .build();
+
+        var dataAddress = Json.createObjectBuilder()
+            .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
+            .add(Prop.Edc.TYPE, Prop.Edc.DATA_ADDRESS_TYPE_HTTP_DATA)
+            .add(Prop.Edc.BASE_URL, "https://example.com")
+            .add(Prop.Edc.AUTH_KEY, "X-Test")
+            .add(Prop.Edc.SECRET_NAME, "mySecretName");
+
+        var expectedProperties = dummyAssetCommonProperties();
+
+        // act
+        var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);
+
+        // assert
+        assertEqualJson(actual, dummyAssetJsonLd(dataAddress, expectedProperties));
+    }
+
+    @Test
+    void test_create_httpData_authHeader_rawValue() {
+        // arrange
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl("https://example.com")
+                .authHeaderName("X-Test")
+                .authHeaderValue(SecretValue.builder().rawValue("myKey").build())
+                .build())
+            .build();
+
+        var uiAssetCreateRequest = UiAssetCreateRequest.builder()
+            .dataSource(dataSource)
+            .id(ASSET_ID)
+            .build();
+
+        var dataAddress = Json.createObjectBuilder()
+            .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
+            .add(Prop.Edc.TYPE, Prop.Edc.DATA_ADDRESS_TYPE_HTTP_DATA)
+            .add(Prop.Edc.BASE_URL, "https://example.com")
+            .add(Prop.Edc.AUTH_KEY, "X-Test")
+            .add(Prop.Edc.AUTH_CODE, "myKey");
+
+        var expectedProperties = dummyAssetCommonProperties();
 
         // act
         var actual = assetJsonLdBuilder.createAssetJsonLd(uiAssetCreateRequest, ORG_NAME);

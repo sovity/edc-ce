@@ -55,6 +55,17 @@ public class HttpDataSourceMapper {
             props.put(Prop.Edc.QUERY_PARAMS, httpData.getQueryString());
         }
 
+        if (StringUtils.isNotBlank(httpData.getAuthHeaderName())) {
+            props.put(Prop.Edc.AUTH_KEY, httpData.getAuthHeaderName());
+            if (httpData.getAuthHeaderValue() != null) {
+                if (httpData.getAuthHeaderValue().getRawValue() != null) {
+                    props.put(Prop.Edc.AUTH_CODE, httpData.getAuthHeaderValue().getRawValue());
+                } else if (httpData.getAuthHeaderValue().getSecretName() != null) {
+                    props.put(Prop.Edc.SECRET_NAME, httpData.getAuthHeaderValue().getSecretName());
+                }
+            }
+        }
+
         props.putAll(httpHeaderMapper.buildHeaderProps(httpData.getHeaders()));
 
         // Parameterization

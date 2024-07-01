@@ -445,7 +445,7 @@ class UiApiWrapperTest {
 
     @DisabledOnGithub
     @Test
-    void editAssetMetadataOnLiveContract() {
+    void editAssetOnLiveContract() {
         // arrange
         var data = "expected data 123";
 
@@ -508,7 +508,7 @@ class UiApiWrapperTest {
         var negotiation = negotiate(dataOffer, contractOffer);
 
         // act
-        providerClient.uiApi().editAssetMetadata(assetId, UiAssetEditRequest.builder()
+        providerClient.uiApi().editAsset(assetId, UiAssetEditRequest.builder()
                 .title("Good Asset Title")
                 .customJsonAsString("""
                         {

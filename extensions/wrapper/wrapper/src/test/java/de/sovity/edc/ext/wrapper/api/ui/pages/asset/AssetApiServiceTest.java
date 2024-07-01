@@ -226,7 +226,7 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void testEditAssetMetadata(AssetService assetService) {
+    void testeditAsset(AssetService assetService) {
         // arrange
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
@@ -318,7 +318,7 @@ public class AssetApiServiceTest {
                 .build();
 
         // act
-        var response = client.uiApi().editAssetMetadata("asset-1", editRequest);
+        var response = client.uiApi().editAsset("asset-1", editRequest);
 
         // assert
         assertThat(response.getId()).isEqualTo("asset-1");

@@ -13,6 +13,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Major Changes
 
+- API Wrapper UI API: Moved to well-typed data sources, breaking changes to the asset model and API.
+
 #### Minor Changes
 
 - Add the SovityMessenger extension

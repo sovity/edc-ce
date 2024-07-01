@@ -136,6 +136,29 @@ paths:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
   /wrapper/ui/pages/asset-page/assets/{assetId}:
+    put:
+      tags:
+      - UI
+      description: Updates an Asset's metadata and optionally also the data source.
+      operationId: editAsset
+      parameters:
+      - name: assetId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UiAssetEditRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
     delete:
       tags:
       - UI
@@ -185,30 +208,6 @@ paths:
         required: true
         schema:
           type: string
-      responses:
-        default:
-          description: default response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IdResponseDto'
-  /wrapper/ui/pages/asset-page/assets/{assetId}/metadata:
-    put:
-      tags:
-      - UI
-      description: Updates an Asset's metadata
-      operationId: editAssetMetadata
-      parameters:
-      - name: assetId
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UiAssetEditRequest'
       responses:
         default:
           description: default response
@@ -500,6 +499,20 @@ components:
       - HTTP_DATA
       - ON_REQUEST
       - CUSTOM
+    SecretValue:
+      type: object
+      properties:
+        secretName:
+          type: string
+          description: Secret Name / Vault Key Name.
+          example: myApiAuthKey
+        rawValue:
+          type: string
+          description: Raw inline Value.
+          example: <auth key here>
+      description: A value either inlined or to be fetched from the Vault. Raw secret
+        values will land in the database and will be retrievable via the Eclipse EDC
+        Management API.
     UiAssetCreateRequest:
       required:
       - dataSource
@@ -655,6 +668,13 @@ components:
           type: string
           description: HTTP Request Query Params / Query String.
           example: search=example&limit=10
+        authHeaderName:
+          type: string
+          description: Auth Header name. The auth header is handled specially by the
+            EDC as its value can be read from a vault.
+          example: Authorization
+        authHeaderValue:
+          $ref: '#/components/schemas/SecretValue'
         headers:
           type: object
           additionalProperties:

@@ -51,6 +51,19 @@ public class UiDataSourceHttpData {
     private String queryString;
 
     @Schema(
+        description = "Auth Header name. The auth header is handled specially by the EDC as its value can be read from a vault.",
+        example = "Authorization",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED
+    )
+    private String authHeaderName;
+
+    @Schema(
+        description = "Auth Header value.",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED
+    )
+    private SecretValue authHeaderValue;
+
+    @Schema(
         description = "HTTP Request Headers. HTTP Header Parameterization is not available.",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
