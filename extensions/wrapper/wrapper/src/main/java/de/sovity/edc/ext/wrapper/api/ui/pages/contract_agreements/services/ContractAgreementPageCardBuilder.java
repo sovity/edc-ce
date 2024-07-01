@@ -20,6 +20,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferProcess;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTerminationInfo;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationStatus;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -62,8 +63,8 @@ public class ContractAgreementPageCardBuilder {
         card.setAsset(assetMapper.buildUiAsset(asset, assetConnectorEndpoint, assetParticipantId));
         card.setContractPolicy(policyMapper.buildUiPolicy(agreement.getPolicy()));
         card.setTransferProcesses(buildTransferProcesses(transferProcesses));
-        card.setTerminationStatus("Active");
-        card.setTerminationInformation(new ContractAgreementTerminationInfo());
+        card.setTerminationStatus(ContractTerminationStatus.ONGOING);
+        card.setTerminationInformation(null);
         return card;
     }
 

@@ -25,14 +25,14 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @Schema(description = "Contract's agreement metadata")
 public class ContractAgreementTerminationInfo {
-    
-    @Schema(description = "Contract Agreement's Status", requiredMode = Schema.RequiredMode.REQUIRED)
-    private ContractTerminationStatus terminationStatus;
 
     @Schema(description = "Termination's date and time", requiredMode = Schema.RequiredMode.REQUIRED)
     private OffsetDateTime terminationDateTime;
 
-    @Schema(description = "Termination's reason", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(
+        title = "Termination's reason",
+        description = "The termination's nature e.g. User Termination",
+        requiredMode = Schema.RequiredMode.REQUIRED)
     private String terminationReason;
 
     @Schema(
