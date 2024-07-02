@@ -21,8 +21,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "Data for querying a Contract Contract Agreement Page")
+@Schema(description = "Filters for querying a Contract Contract Agreement Page")
 public class ContractAgreementPageQuery {
-    @Schema(description = "Contract agreement status search criterion.")
+    @Schema(
+        description = "Optionally filter the resulting contract agreements by their termination status.",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private ContractTerminationStatus statusQuery;
 }
