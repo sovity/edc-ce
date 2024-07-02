@@ -1,0 +1,47 @@
+name: Reference MDS issues ind MDS Org-Repo
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  mds-issues-referencing:
+    if: contains(github.event.issue.labels.*.name, 'kind/bug')
+      && (
+        contains('AdamRaven', github.event.issue.user.login) ||
+        contains('alexanderaukam', github.event.issue.user.login) ||
+        contains('cristianivanescutsystems', github.event.issue.user.login) ||
+        contains('DanielHeiderMDS', github.event.issue.user.login) ||
+        contains('dhommen', github.event.issue.user.login) ||
+        contains('DianaMDS', github.event.issue.user.login) ||
+        contains('drmVR', github.event.issue.user.login) ||
+        contains('ip312', github.event.issue.user.login) ||
+        contains('juliusmeyer', github.event.issue.user.login) ||
+        contains('MaichiNguyenMDS', github.event.issue.user.login) ||
+        contains('maxschmidMDS', github.event.issue.user.login) ||
+        contains('MoritzStober-acatech', github.event.issue.user.login) ||
+        contains('nb-mds', github.event.issue.user.login) ||
+        contains('robinidento', github.event.issue.user.login) ||
+        contains('schemetzko', github.event.issue.user.login) ||
+        contains('schoenenberg', github.event.issue.user.login) ||
+        contains('sebplorenz', github.event.issue.user.login) ||
+        contains('StraeterRainer', github.event.issue.user.login)
+      )
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Create issue in MDS Org-Repo
+      env:
+        MDS_ISSUE_CREATOR: ${{ secrets.MDS_ISSUE_CREATOR }} #PAT of the account who has permission in the MDS repo and will also be the creator of the issues as secret
+        MDS_ORG_NAME: ${{ secrets.MDS_ORG_NAME }} #The MDS GitHub Org name as secret
+        MDS_REPO_NAME: ${{ secrets.MDS_REPO_NAME }} #The MDS target repo name as secret
+      run: |
+        ISSUE_TITLE="${{ github.event.issue.title }}"
+        ISSUE_URL="${{ github.event.issue.html_url }}"
+        MDS_BODY="Automatically created issue as referece for: [${ISSUE_URL}](${ISSUE_URL})"
+        JSON_PAYLOAD=$(jq -n --arg title "$ISSUE_TITLE" --arg body "$MDS_BODY" '{title: $title, body: $body}')
+        curl -X POST \
+          -H "Authorization: token $MDS_ISSUE_CREATOR" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${MDS_ORG_NAME}/${MDS_REPO_NAME}/issues \
+          -d "$JSON_PAYLOAD"
