@@ -8,7 +8,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {InitiateNegotiationConfirmTosDialogModule} from '../initiate-negotiation-confirm-tos-dialog/initiate-negotiation-confirm-tos-dialog.module';
+import {
+  InitiateNegotiationConfirmTosDialogModule
+} from '../initiate-negotiation-confirm-tos-dialog/initiate-negotiation-confirm-tos-dialog.module';
 import {JsonDialogModule} from '../json-dialog/json-dialog.module';
 import {PipesAndDirectivesModule} from '../pipes-and-directives/pipes-and-directives.module';
 import {PropertyGridModule} from '../property-grid/property-grid.module';
@@ -24,8 +26,6 @@ import {PolicyPropertyFieldBuilder} from './asset-detail-dialog/policy-property-
 import {ContractOfferIconComponent} from './contract-offer-icon/contract-offer-icon.component';
 import {ContractOfferMiniListComponent} from './contract-offer-mini-list/contract-offer-mini-list.component';
 import {DataOfferCardsComponent} from './data-offer-cards/data-offer-cards.component';
-import {IconWithOnlineStatusComponent} from './icon-with-online-status/icon-with-online-status.component';
-import {SmallIconWithOnlineStatusText} from './small-icon-with-online-status-text/small-icon-with-online-status-text.component';
 import {TransferHistoryMiniListComponent} from './transfer-history-mini-list/transfer-history-mini-list.component';
 import {TruncatedShortDescription} from './truncated-short-description/truncated-short-description.component';
 import {ViewSelectionComponent} from './view-selection/view-selection.component';
@@ -62,11 +62,9 @@ import {ViewSelectionComponent} from './view-selection/view-selection.component'
     ContractOfferMiniListComponent,
     DataOfferCardsComponent,
     TransferHistoryMiniListComponent,
-    IconWithOnlineStatusComponent,
     MarkdownDescriptionComponent,
     TruncatedShortDescription,
     ViewSelectionComponent,
-    SmallIconWithOnlineStatusText,
     AssetCardTagListComponent,
   ],
   exports: [
@@ -75,10 +73,8 @@ import {ViewSelectionComponent} from './view-selection/view-selection.component'
     ContractOfferMiniListComponent,
     DataOfferCardsComponent,
     TransferHistoryMiniListComponent,
-    IconWithOnlineStatusComponent,
     TruncatedShortDescription,
     ViewSelectionComponent,
-    SmallIconWithOnlineStatusText,
     AssetCardTagListComponent,
   ],
   providers: [

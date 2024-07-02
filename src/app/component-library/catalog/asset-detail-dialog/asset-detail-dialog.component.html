@@ -5,11 +5,6 @@
       class="mat-card-avatar-icon">
       upload
     </mat-icon>
-    <icon-with-online-status
-      *ngIf="data.type === 'broker-data-offer'"
-      mainIcon="sim_card"
-      [onlineStatus]="data.brokerDataOffer!!.connectorOnlineStatus">
-    </icon-with-online-status>
     <mat-icon
       *ngIf="data.type === 'contract-agreement'"
       class="mat-card-avatar-icon">

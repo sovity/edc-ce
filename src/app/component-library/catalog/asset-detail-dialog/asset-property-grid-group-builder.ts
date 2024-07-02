@@ -1,21 +1,15 @@
 import {Injectable} from '@angular/core';
-import {CatalogContractOffer} from '@sovity.de/broker-server-client';
 import {UiPolicy} from '@sovity.de/edc-client';
 import {ActiveFeatureSet} from '../../../core/config/active-feature-set';
 import {UiAssetMapped} from '../../../core/services/models/ui-asset-mapped';
 import {ParticipantIdLocalization} from '../../../core/services/participant-id-localization';
-import {CatalogDataOfferMapped} from '../../../routes/broker-ui/catalog-page/catalog-page/mapping/catalog-page-result-mapped';
-import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
-import {JsonDialogService} from '../../json-dialog/json-dialog/json-dialog.service';
+import {
+  ContractAgreementCardMapped
+} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
 import {PropertyGridGroup} from '../../property-grid/property-grid-group/property-grid-group';
 import {PropertyGridField} from '../../property-grid/property-grid/property-grid-field';
 import {PropertyGridFieldService} from '../../property-grid/property-grid/property-grid-field.service';
-import {formatDateAgo} from '../../ui-elements/ago/formatDateAgo';
 import {UrlListDialogService} from '../../url-list-dialog/url-list-dialog/url-list-dialog.service';
-import {
-  getOnlineStatusColor,
-  getOnlineStatusIcon,
-} from '../icon-with-online-status/online-status-utils';
 import {PolicyPropertyFieldBuilder} from './policy-property-field-builder';
 
 @Injectable()
@@ -24,7 +18,6 @@ export class AssetPropertyGridGroupBuilder {
     private participantIdLocalization: ParticipantIdLocalization,
     private activeFeatureSet: ActiveFeatureSet,
     private propertyGridUtils: PropertyGridFieldService,
-    private jsonDialogService: JsonDialogService,
     private urlListDialogService: UrlListDialogService,
     private policyPropertyFieldBuilder: PolicyPropertyFieldBuilder,
   ) {}
@@ -271,44 +264,6 @@ export class AssetPropertyGridGroupBuilder {
     return fields;
   }
 
-  buildBrokerContractOfferGroup(
-    asset: UiAssetMapped,
-    contractOffer: CatalogContractOffer,
-    i: number,
-    total: number,
-  ) {
-    const groupLabel = `Contract Offer ${total > 1 ? i + 1 : ''}`;
-    const properties: PropertyGridField[] = [
-      {
-        icon: 'policy',
-        label: 'Contract Policy',
-        text: 'Show Policy Details',
-        onclick: () =>
-          this.jsonDialogService.showJsonDetailDialog({
-            title: `${groupLabel} Contract Policy)`,
-            subtitle: asset.title,
-            icon: 'policy',
-            objectForJson: JSON.parse(
-              contractOffer.contractPolicy.policyJsonLd,
-            ),
-          }),
-      },
-      {
-        icon: 'category',
-        label: 'Contract Offer ID',
-        ...this.propertyGridUtils.guessValue(contractOffer.contractOfferId),
-      },
-      {
-        icon: 'category',
-        label: 'Created At',
-        ...this.propertyGridUtils.guessValue(
-          this.propertyGridUtils.formatDate(contractOffer.createdAt),
-        ),
-      },
-    ];
-    return {groupLabel, properties};
-  }
-
   buildContractAgreementGroup(contractAgreement: ContractAgreementCardMapped) {
     const properties: PropertyGridField[] = [
       {
@@ -374,45 +329,6 @@ export class AssetPropertyGridGroupBuilder {
         'Contract Policy JSON-LD',
         subtitle,
       ),
-    };
-  }
-
-  buildBrokerDataOfferGroup(
-    dataOffer: CatalogDataOfferMapped,
-  ): PropertyGridGroup {
-    const lastUpdate = formatDateAgo(
-      dataOffer.connectorOfflineSinceOrLastUpdatedAt,
-    );
-    return {
-      groupLabel: null,
-      properties: [
-        {
-          icon: 'today',
-          label: 'Updated At',
-          ...this.propertyGridUtils.guessValue(
-            this.propertyGridUtils.formatDate(dataOffer.updatedAt),
-          ),
-        },
-        {
-          ...this.buildConnectorEndpointField(dataOffer.connectorEndpoint),
-          copyButton: true,
-        },
-        {
-          icon: getOnlineStatusIcon(dataOffer.connectorOnlineStatus),
-          label: 'Status',
-          labelTitle: `Last updated ${lastUpdate}`,
-          text:
-            dataOffer.connectorOnlineStatus == 'ONLINE'
-              ? `Online`
-              : `Offline since ${lastUpdate}`,
-          additionalClasses: getOnlineStatusColor(
-            dataOffer.connectorOnlineStatus,
-          ),
-          additionalIconClasses: getOnlineStatusColor(
-            dataOffer.connectorOnlineStatus,
-          ),
-        },
-      ],
     };
   }
 

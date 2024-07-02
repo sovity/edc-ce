@@ -1,14 +1,8 @@
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  NavigationEnd,
-  Router,
-} from '@angular/router';
+import {ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router,} from '@angular/router';
 import {concat, of} from 'rxjs';
 import {filter, map, shareReplay} from 'rxjs/operators';
-import {APP_CONFIG, AppConfig} from '../config/app-config';
 
 @Injectable()
 export class TitleUtilsService {
@@ -19,7 +13,6 @@ export class TitleUtilsService {
   title$ = this.routeData$.pipe(map((data) => data.title));
 
   constructor(
-    @Inject(APP_CONFIG) private config: AppConfig,
     private router: Router,
     private titleService: Title,
     private activatedRoute: ActivatedRoute,
@@ -28,9 +21,6 @@ export class TitleUtilsService {
   startUpdatingTitleFromRouteData(defaultTitle: string) {
     this.title$.subscribe((title) => {
       let fullTitle = title ?? defaultTitle;
-      if (this.config.routes === 'broker-ui') {
-        fullTitle = `MDS Broker - ${fullTitle}`;
-      }
       this.titleService.setTitle(fullTitle);
     });
   }

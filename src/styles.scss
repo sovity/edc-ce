@@ -10,18 +10,6 @@ body {
   margin: 0;
 }
 
-.broker-online-status-online {
-  color: green;
-}
-
-.broker-online-status-offline {
-  color: #cb8e1a;
-}
-
-.broker-online-status-dead {
-  color: var(--warn-color);
-}
-
 .snackbar-info-style {
   background-color: orange;
   color: black;

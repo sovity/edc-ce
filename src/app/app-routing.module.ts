@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {ROUTES, RouterModule, Routes} from '@angular/router';
+import {RouterModule, ROUTES, Routes} from '@angular/router';
 import {PageNotFoundComponent} from './component-library/error-404-component/page-not-found.component';
 import {APP_CONFIG, AppConfig} from './core/config/app-config';
 
@@ -15,15 +15,6 @@ import {APP_CONFIG, AppConfig} from './core/config/app-config';
       useFactory: (config: AppConfig): Routes => {
         const routes: Routes = [];
         switch (config.routes) {
-          case 'broker-ui':
-            routes.push({
-              path: '',
-              loadChildren: () =>
-                import('./routes/broker-ui/broker-ui.module').then(
-                  (m) => m.BrokerUiModule,
-                ),
-            });
-            break;
           case 'connector-ui':
             routes.push({
               path: '',

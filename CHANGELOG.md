@@ -16,6 +16,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Major
 
+- Removed the Broker UI, as it has been moved into the Authority Portal.
+
 #### Minor
 
 - Added Initiate Negotiation Confirm ToS Dialog

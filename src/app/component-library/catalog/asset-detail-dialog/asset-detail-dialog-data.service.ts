@@ -1,12 +1,10 @@
 import {Injectable} from '@angular/core';
 import {DataOffer} from '../../../core/services/models/data-offer';
 import {UiAssetMapped} from '../../../core/services/models/ui-asset-mapped';
-import {CatalogDataOfferMapped} from '../../../routes/broker-ui/catalog-page/catalog-page/mapping/catalog-page-result-mapped';
-import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
 import {
-  AssetDetailDialogData,
-  OnAssetEditClickFn,
-} from './asset-detail-dialog-data';
+  ContractAgreementCardMapped
+} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
+import {AssetDetailDialogData, OnAssetEditClickFn,} from './asset-detail-dialog-data';
 import {AssetPropertyGridGroupBuilder} from './asset-property-grid-group-builder';
 
 @Injectable()
@@ -85,38 +83,6 @@ export class AssetDetailDialogDataService {
       type: 'contract-agreement',
       asset: contractAgreement.asset,
       contractAgreement,
-      propertyGridGroups,
-    };
-  }
-
-  brokerDataOfferDetails(
-    dataOffer: CatalogDataOfferMapped,
-  ): AssetDetailDialogData {
-    const asset = dataOffer.asset;
-
-    const propertyGridGroups = [
-      this.assetPropertyGridGroupBuilder.buildBrokerDataOfferGroup(dataOffer),
-      this.assetPropertyGridGroupBuilder.buildAssetPropertiesGroup(
-        asset,
-        'Asset',
-      ),
-      ...this.assetPropertyGridGroupBuilder.buildAdditionalPropertiesGroups(
-        asset,
-      ),
-      ...dataOffer.contractOffers.map((contractOffer, i) =>
-        this.assetPropertyGridGroupBuilder.buildBrokerContractOfferGroup(
-          asset,
-          contractOffer,
-          i,
-          dataOffer.contractOffers.length,
-        ),
-      ),
-    ].filter((it) => it.properties.length);
-
-    return {
-      type: 'broker-data-offer',
-      asset: dataOffer.asset,
-      brokerDataOffer: dataOffer,
       propertyGridGroups,
     };
   }

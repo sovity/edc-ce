@@ -39,9 +39,4 @@ export const EDC_UI_PROFILE_DATA = inferEdcUiProfileType({
     routes: 'connector-ui',
     features: new Set([...MDS_FEATURES, ...ENTERPRISE_EDITION_FEATURES]),
   },
-  broker: {
-    ...MDS_THEME,
-    routes: 'broker-ui',
-    features: new Set(MDS_FEATURES),
-  },
 });
