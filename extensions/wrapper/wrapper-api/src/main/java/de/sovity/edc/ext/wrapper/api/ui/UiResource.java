@@ -45,6 +45,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -141,21 +142,11 @@ interface UiResource {
     @Operation(description = "Get Contract Negotiation Information")
     UiContractNegotiation getContractNegotiation(@PathParam("contractNegotiationId") String contractNegotiationId);
 
-    /**
-     * @deprecated Use {@link #getContractAgreementPage(ContractAgreementPageQuery)}
-     */
-    @Deprecated(since = "8.2.0")
-    @GET
-    @Path("pages/contract-agreement-page")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Collect all data for the Contract Agreement Page", deprecated = true)
-    ContractAgreementPage getContractAgreementPage();
-
     @POST
     @Path("pages/contract-agreement-page")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Collect filtered data for the Contract Agreement Page")
-    ContractAgreementPage getContractAgreementPage(ContractAgreementPageQuery contractAgreementPageQuery);
+    ContractAgreementPage getContractAgreementPage(@Nullable ContractAgreementPageQuery contractAgreementPageQuery);
 
     @POST
     @Path("pages/contract-agreement-page/transfers")

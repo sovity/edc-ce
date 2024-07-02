@@ -216,8 +216,8 @@ class UiApiWrapperTest {
         // act
         var negotiation = negotiate(dataOffer, contractOffer);
         initiateTransfer(negotiation);
-        var providerAgreements = providerClient.uiApi().getContractAgreementPage().getContractAgreements();
-        var consumerAgreements = consumerClient.uiApi().getContractAgreementPage().getContractAgreements();
+        var providerAgreements = providerClient.uiApi().getContractAgreementPage(null).getContractAgreements();
+        var consumerAgreements = consumerClient.uiApi().getContractAgreementPage(null).getContractAgreements();
 
         // assert
         assertThat(dataOffer.getEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
@@ -541,7 +541,7 @@ class UiApiWrapperTest {
 
         // assert
         assertThat(consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector)).get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
-        val firstAsset = providerClient.uiApi().getContractAgreementPage().getContractAgreements().get(0).getAsset();
+        val firstAsset = providerClient.uiApi().getContractAgreementPage(null).getContractAgreements().get(0).getAsset();
         assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");
         assertThat(firstAsset.getCustomJsonAsString()).isEqualTo("""
                 {

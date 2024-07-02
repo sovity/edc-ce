@@ -249,24 +249,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/UiDataOffer'
   /wrapper/ui/pages/contract-agreement-page:
-    get:
-      tags:
-      - UI
-      description: Collect all data for the Contract Agreement Page
-      operationId: getContractAgreementPage
-      responses:
-        default:
-          description: default response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ContractAgreementPage'
-      deprecated: true
     post:
       tags:
       - UI
       description: Collect filtered data for the Contract Agreement Page
-      operationId: getContractAgreementPage_1
+      operationId: getContractAgreementPage
       requestBody:
         content:
           '*/*':
@@ -1429,7 +1416,7 @@ components:
     ContractAgreementPageQuery:
       type: object
       properties:
-        statusQuery:
+        status:
           type: string
           description: Optionally filter the resulting contract agreements by their
             termination status.
