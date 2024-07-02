@@ -127,7 +127,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PolicyDefinitionCreateRequest'
+              $ref: '#/components/schemas/MultiPolicyDefinitionCreateRequest'
       responses:
         default:
           description: default response
@@ -696,6 +696,70 @@ components:
       - EQ
       - IN
       - LIKE
+    AtomicConstraintDto:
+      required:
+      - leftExpression
+      - operator
+      - rightExpression
+      type: object
+      properties:
+        leftExpression:
+          type: string
+          description: Left part of the constraint.
+        operator:
+          $ref: '#/components/schemas/OperatorDto'
+        rightExpression:
+          type: string
+          description: Right part of the constraint.
+      description: Type-Safe OpenAPI generator friendly Constraint DTO that supports
+        an opinionated subset of the original EDC Constraint Entity.
+    ExpressionType:
+      type: string
+      description: |
+        Expression types:
+        * `ATOMIC_CONSTRAINT` - A single constraint for the policy
+        * `AND` - Several constraints, all of which must be respected
+        * `OR` - Several constraints, of which at least one must be respected
+        * `XOR` - Several constraints, of which exactly one must be respected
+      enum:
+      - ATOMIC_CONSTRAINT
+      - AND
+      - OR
+      - XOR
+    MultiExpression:
+      required:
+      - expressionType
+      type: object
+      properties:
+        expressionType:
+          $ref: '#/components/schemas/ExpressionType'
+        atomicConstraint:
+          $ref: '#/components/schemas/AtomicConstraintDto'
+        leftExpression:
+          $ref: '#/components/schemas/MultiExpression'
+        rightExpression:
+          $ref: '#/components/schemas/MultiExpression'
+      description: Policy Expression that can include multiple constraints as supported
+        by our UI
+    MultiPolicyDefinitionCreateRequest:
+      required:
+      - policy
+      - policyDefinitionId
+      type: object
+      properties:
+        policyDefinitionId:
+          type: string
+          description: Policy Definition ID
+        policy:
+          $ref: '#/components/schemas/MultiUiPolicyCreateRequest'
+      description: Data for creating a Policy Definition
+    MultiUiPolicyCreateRequest:
+      type: object
+      properties:
+        expression:
+          $ref: '#/components/schemas/MultiExpression'
+      description: Type-Safe OpenAPI generator friendly Policy Create DTO that supports
+        an opinionated subset of the original EDC Policy Entity.
     OperatorDto:
       type: string
       description: Operator for policies
@@ -712,68 +776,6 @@ components:
       - IS_ALL_OF
       - IS_ANY_OF
       - IS_NONE_OF
-    PolicyDefinitionCreateRequest:
-      required:
-      - policy
-      - policyDefinitionId
-      type: object
-      properties:
-        policyDefinitionId:
-          type: string
-          description: Policy Definition ID
-        policy:
-          $ref: '#/components/schemas/UiPolicyCreateRequest'
-      description: Data for creating a Policy Definition
-    UiPolicyConstraint:
-      required:
-      - left
-      - operator
-      - right
-      type: object
-      properties:
-        left:
-          type: string
-          description: Left side of the expression.
-        operator:
-          $ref: '#/components/schemas/OperatorDto'
-        right:
-          $ref: '#/components/schemas/UiPolicyLiteral'
-      description: ODRL AtomicConstraint as supported by our UI
-    UiPolicyCreateRequest:
-      type: object
-      properties:
-        constraints:
-          type: array
-          description: Conjunction of required expressions for the policy to evaluate
-            to TRUE.
-          items:
-            $ref: '#/components/schemas/UiPolicyConstraint'
-      description: Type-Safe OpenAPI generator friendly Policy Create DTO that supports
-        an opinionated subset of the original EDC Policy Entity.
-    UiPolicyLiteral:
-      required:
-      - type
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/UiPolicyLiteralType'
-        value:
-          type: string
-          description: Only for types STRING and JSON
-        valueList:
-          type: array
-          description: Only for type STRING_LIST
-          items:
-            type: string
-            description: Only for type STRING_LIST
-      description: "Sum type: A String, a list of Strings or a generic JSON value."
-    UiPolicyLiteralType:
-      type: string
-      description: Supported Types of values for the right hand side of an expression
-      enum:
-      - STRING
-      - STRING_LIST
-      - JSON
     UiAssetEditMetadataRequest:
       type: object
       properties:
@@ -1112,6 +1114,45 @@ components:
               \ them here."
       description: Type-Safe OpenAPI generator friendly Policy DTO as needed by our
         UI
+    UiPolicyConstraint:
+      required:
+      - left
+      - operator
+      - right
+      type: object
+      properties:
+        left:
+          type: string
+          description: Left side of the expression.
+        operator:
+          $ref: '#/components/schemas/OperatorDto'
+        right:
+          $ref: '#/components/schemas/UiPolicyLiteral'
+      description: ODRL AtomicConstraint as supported by our UI
+    UiPolicyLiteral:
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/UiPolicyLiteralType'
+        value:
+          type: string
+          description: Only for types STRING and JSON
+        valueList:
+          type: array
+          description: Only for type STRING_LIST
+          items:
+            type: string
+            description: Only for type STRING_LIST
+      description: "Sum type: A String, a list of Strings or a generic JSON value."
+    UiPolicyLiteralType:
+      type: string
+      description: Supported Types of values for the right hand side of an expression
+      enum:
+      - STRING
+      - STRING_LIST
+      - JSON
     ContractAgreementCard:
       required:
       - asset
@@ -1565,23 +1606,6 @@ components:
           description: Additional transfer process properties. These are not passed
             to the consumer EDC
       description: "For type PARAMS_ONLY: Required data for starting a Transfer Process"
-    AtomicConstraintDto:
-      required:
-      - leftExpression
-      - operator
-      - rightExpression
-      type: object
-      properties:
-        leftExpression:
-          type: string
-          description: Left part of the constraint.
-        operator:
-          $ref: '#/components/schemas/OperatorDto'
-        rightExpression:
-          type: string
-          description: Right part of the constraint.
-      description: Type-Safe OpenAPI generator friendly Constraint DTO that supports
-        an opinionated subset of the original EDC Constraint Entity.
     Expression:
       type: object
       properties:
@@ -1589,27 +1613,13 @@ components:
           $ref: '#/components/schemas/ExpressionType'
         expressions:
           type: array
-          description: List of policy elements that are evaluated according the constraintType.
+          description: List of policy elements that are evaluated according the expressionType.
           items:
             $ref: '#/components/schemas/Expression'
         atomicConstraint:
           $ref: '#/components/schemas/AtomicConstraintDto'
-      description: Generic Policy Element. Represents a single atomic constraint or
-        a multiplicity constraint. The atomicConstraint will be evaluated if the constraintType
-        is ATOMIC.
-    ExpressionType:
-      type: string
-      description: |
-        Expression types:
-        * `ATOMIC_CONSTRAINT` - A single constraint for the policy
-        * `AND` - Several constraints, all of which must be respected
-        * `OR` - Several constraints, of which at least one must be respected
-        * `XOR` - Several constraints, of which exactly one must be respected
-      enum:
-      - ATOMIC_CONSTRAINT
-      - AND
-      - OR
-      - XOR
+      description: Represents a single atomic constraint or a multiplicity constraint.
+        The atomicConstraint will be evaluated if the constraintType is ATOMIC_CONSTRAINT.
     PermissionDto:
       required:
       - expression

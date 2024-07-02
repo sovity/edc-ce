@@ -17,8 +17,10 @@ public class MultiExpression {
     @Schema(description = "The type of expression, e.g., ATOMIC_CONSTRAINT, AND, OR, XOR.", requiredMode = Schema.RequiredMode.REQUIRED)
     private ExpressionType expressionType;
 
-    @Schema(description = "A single atomic constraint. Will be evaluated if the expressionType is set to ATOMIC_CONSTRAINT.")
-    private AtomicConstraintDto atomicConstraint;
+    //    @Schema(description = "A single atomic constraint. Will be evaluated if the expressionType is set to ATOMIC_CONSTRAINT.")
+    //    private AtomicConstraintDto atomicConstraint;
+    @Schema(description = "A single policy literal that can be of type STRING, STRING_LIST, JSON")
+    private MultiUiPolicyLiteral literal;
 
     @Schema(description = "Left expression for non atomic constraints (AND, OR, XOR)")
     private MultiExpression leftExpression;

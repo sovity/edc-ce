@@ -77,7 +77,6 @@ public class PolicyMapper {
                 .build();
     }
 
-
     // --------------------- ERIC's PART ---------------------
     public Policy buildPolicy(List<Expression> constraintElements) {
         var constraints = buildConstraints(constraintElements);
@@ -104,7 +103,7 @@ public class PolicyMapper {
         var subExpressions = expression.getExpressions();
         return switch (expression.getExpressionType()) {
             case ATOMIC_CONSTRAINT ->
-                    atomicConstraintMapper.buildAtomicConstraint(expression.getAtomicConstraint());
+                atomicConstraintMapper.buildAtomicConstraint(expression.getAtomicConstraint());
             case AND -> AndConstraint.Builder.newInstance()
                     .constraints(buildConstraints(subExpressions))
                     .build();
@@ -128,7 +127,6 @@ public class PolicyMapper {
 
         buildConstraints(expression);
 
-
         var action = Action.Builder.newInstance().type(PolicyValidator.ALLOWED_ACTION).build();
 
         var permission = Permission.Builder.newInstance()
@@ -140,39 +138,48 @@ public class PolicyMapper {
 
     }
 
-//    public Constraint buildConstraints(MultExpression expression) {
-//        return switch (expression.getExpressionType()) {
-//            case ATOMIC_CONSTRAINT -> atomicConstraintMapper.buildAtomicConstraint(expression.getAtomicConstraint());
-//            case AND -> AndConstraint.Builder.newInstance().constraints(List.of(
-//                    buildConstraints(expression.getLeftExpression()), buildConstraints(expression.getRightExpression()))).build();
-//
-//            case OR -> OrConstraint.Builder.newInstance().constraints(List.of(
-//                    buildConstraints(expression.getLeftExpression()), buildConstraints(expression.getRightExpression()))).build();
-//
-//            case XOR -> XoneConstraint.Builder.newInstance().constraints(List.of(
-//                    buildConstraints(expression.getLeftExpression()), buildConstraints(expression.getRightExpression()))).build();
-//        };
-//    }
+    public Policy buildMultiPolicy(MultiUiPolicyCreateRequest request) {
+        var expression = request.getExpression();
+        var constraints = new ArrayList<Constraint>();
 
-    public void buildConstraints(MultiExpression expression) {
+        convertExpressionToConstraints(expression, constraints);
+    }
+
+    private void convertExpressionToListOfConstraints(MultiExpression expression, List<Constraint> constraints) {
         switch (expression.getExpressionType()) {
             case ATOMIC_CONSTRAINT -> {
-                System.out.println("Atomic Constraint");
-                atomicConstraintMapper.buildAtomicConstraint(expression.getAtomicConstraint());
+                var atomicConstraint = atomicConstraintMapper.buildAtomicConstraint(expression.getAtomicConstraint());
+                constraints.add(atomicConstraint);
             }
-//            case AND -> AndConstraint.Builder.newInstance().constraints(List.of(
-//                buildConstraints(expression.getLeftExpression()), buildConstraints(expression.getRightExpression()))).build();
-//            case OR -> OrConstraint.Builder.newInstance().constraints(List.of(
-//                buildConstraints(expression.getLeftExpression()), buildConstraints(expression.getRightExpression()))).build();
-//            case XOR -> XoneConstraint.Builder.newInstance().constraints(List.of(
-//                buildConstraints(expression.getLeftExpression()), buildConstraints(expression.getRightExpression()))).build();
-            case OR, AND, XOR -> {
-                System.out.println("AND/OR/XOR Constraint");
-                buildConstraints(expression.getLeftExpression());
-                buildConstraints(expression.getRightExpression());
+            case AND, OR, XOR -> {
+                var leftConstraint = buildConstraintFromExpression(expression.getLeftExpression());
+                var rightConstraint = buildConstraintFromExpression(expression.getRightExpression());
             }
         }
+    }
 
+    private List<Constraint> buildConstraintFromExpression(MultiExpression expression, List<Constraint> constraints) {
+        return switch (expression.getExpressionType()) {
+            case AND -> {
+                System.out.println("AND");
+                return AndConstraint.Builder.newInstance()
+                        .constraints(buildConstraints(subExpressions))
+                        .build();
+            }
+            case OR -> {
+                System.out.println("OR");
+                return OrConstraint.Builder.newInstance()
+                        .constraints(buildConstraints(subExpressions))
+                        .build();
+            }
+            case XOR -> {
+                System.out.println("XOR");
+                return XoneConstraint.Builder.newInstance()
+                        .constraints(buildConstraints(subExpressions))
+                        .build();
+            }
+
+        };
     }
 
     /**

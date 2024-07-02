@@ -1,14 +1,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.catalog;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
-import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
-import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
-import de.sovity.edc.client.gen.model.UiCriterion;
-import de.sovity.edc.client.gen.model.UiCriterionLiteral;
-import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
-import de.sovity.edc.client.gen.model.UiCriterionOperator;
-import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.client.gen.model.*;
 import de.sovity.edc.ext.wrapper.TestUtils;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -78,10 +71,10 @@ public class CatalogApiTest {
     }
 
     private void createPolicy() {
-        var policyDefinition = PolicyDefinitionCreateRequest.builder()
+        var policyDefinition = MultiPolicyDefinitionCreateRequest.builder()
                 .policyDefinitionId(dataOfferId)
-                .policy(UiPolicyCreateRequest.builder()
-                        .constraints(List.of())
+                .policy(MultiUiPolicyCreateRequest.builder()
+                        .expression(TestUtils.createAtomicConstraint("a", OperatorDto.EQ, "b"))
                         .build())
                 .build();
 

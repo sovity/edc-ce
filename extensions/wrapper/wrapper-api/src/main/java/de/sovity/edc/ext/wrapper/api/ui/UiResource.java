@@ -14,10 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui;
 
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
-import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
-import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
-import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditMetadataRequest;
+import de.sovity.edc.ext.wrapper.api.common.model.*;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
@@ -74,7 +71,8 @@ interface UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Updates an Asset's metadata")
-    IdResponseDto editAssetMetadata(@PathParam("assetId") String assetId, UiAssetEditMetadataRequest uiAssetEditMetadataRequest);
+    IdResponseDto editAssetMetadata(@PathParam("assetId") String assetId,
+            UiAssetEditMetadataRequest uiAssetEditMetadataRequest);
 
     @DELETE
     @Path("pages/asset-page/assets/{assetId}")
@@ -94,6 +92,13 @@ interface UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Create a new Policy Definition")
     IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto);
+
+    @POST
+    @Path("pages/policy-page/multi-policy-definitions")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Create a new Policy Definition with multiplicity support")
+    IdResponseDto createMultiPolicyDefinition(MultiPolicyDefinitionCreateRequest multiPolicyDefinitionDtoDto);
 
     @DELETE
     @Path("pages/policy-page/policy-definitions/{policyId}")

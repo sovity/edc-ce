@@ -17,10 +17,10 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.OperatorDto;
-import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.client.gen.model.MultiPolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionDto;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
-import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.client.gen.model.MultiUiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.ext.wrapper.TestUtils;
@@ -116,8 +116,8 @@ class PolicyDefinitionApiServiceTest {
     }
 
     private void createPolicyDefinition(String policyDefinitionId) {
-        var policy = new UiPolicyCreateRequest(List.of(constraint));
-        var policyDefinition = new PolicyDefinitionCreateRequest(policyDefinitionId, policy);
+        var policy = new MultiUiPolicyCreateRequest();
+        var policyDefinition = new MultiPolicyDefinitionCreateRequest(policyDefinitionId, policy);
         client.uiApi().createPolicyDefinition(policyDefinition);
     }
 

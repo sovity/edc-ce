@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
 
-
 import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.*;
@@ -29,13 +28,13 @@ import org.eclipse.edc.spi.query.QuerySpec;
 import java.util.Comparator;
 import java.util.List;
 
-
 @RequiredArgsConstructor
 public class PolicyDefinitionApiService {
 
     private final PolicyDefinitionService policyDefinitionService;
     private final PolicyMapper policyMapper;
 
+    // EDC model -> API model
     public List<PolicyDefinitionDto> getPolicyDefinitions() {
         var policyDefinitions = getAllPolicyDefinitions();
         return policyDefinitions.stream()
@@ -44,6 +43,8 @@ public class PolicyDefinitionApiService {
                 .toList();
     }
 
+
+    // API model -> EDC model
     @NotNull
     public IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest request) {
         var policyDefinition = buildPolicyDefinition(request);
@@ -92,16 +93,18 @@ public class PolicyDefinitionApiService {
                 .build();
     }
 
-    public IdResponseDto createPolicyDefinition(MultiUiPolicyDefinitionCreateRequest policyCreateRequest) {
-        var policyDefinition = buildPolicyDefinition(policyCreateRequest);
+    public IdResponseDto createMultiPolicyDefinition(MultiPolicyDefinitionCreateRequest multiPolicyCreateRequest) {
+        var policyDefinition = buildMultiPolicyDefinition(multiPolicyCreateRequest);
+        // buildMultiPolicyDefinition processing ...
+
         policyDefinition = policyDefinitionService.create(policyDefinition).orElseThrow(ServiceException::new);
         return new IdResponseDto(policyDefinition.getId());
     }
 
-    private PolicyDefinition buildPolicyDefinition(MultiUiPolicyDefinitionCreateRequest policyCreateRequest) {
-        var policy = policyMapper.buildPolicy(policyCreateRequest.getPolicy());
+    private PolicyDefinition buildMultiPolicyDefinition(MultiPolicyDefinitionCreateRequest multiPolicyCreateRequest) {
+        var policy = policyMapper.buildMultiPolicy(multiPolicyCreateRequest.getPolicy());
         return PolicyDefinition.Builder.newInstance()
-                .id(policyCreateRequest.getPolicyDefinitionId())
+                .id(multiPolicyCreateRequest.getPolicyDefinitionId())
                 .policy(policy)
                 .build();
     }
