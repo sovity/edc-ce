@@ -1365,10 +1365,10 @@ components:
       required:
       - detail
       - reason
-      - timestamp
+      - terminatedAt
       type: object
       properties:
-        timestamp:
+        terminatedAt:
           type: string
           description: Termination's date and time
           format: date-time
@@ -1431,11 +1431,12 @@ components:
       properties:
         statusQuery:
           type: string
-          description: Contract agreement status search criterion.
+          description: Optionally filter the resulting contract agreements by their
+            termination status.
           enum:
           - ONGOING
           - TERMINATED
-      description: Data for querying a Contract Contract Agreement Page
+      description: Filters for querying a Contract Contract Agreement Page
     ContractDefinitionEntry:
       required:
       - accessPolicyId
@@ -1795,7 +1796,6 @@ components:
       properties:
         reason:
           title: Termination reason
-          maxLength: 64
           type: string
           description: A short reason why this contract was terminated
         detail:
