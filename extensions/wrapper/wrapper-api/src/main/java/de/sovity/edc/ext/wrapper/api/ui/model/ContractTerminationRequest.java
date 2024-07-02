@@ -31,7 +31,6 @@ public class ContractTerminationRequest {
     @Schema(
         title = "Termination reason",
         description = "A short reason why this contract was terminated",
-        maxLength = 64,
         requiredMode = Schema.RequiredMode.REQUIRED)
     String reason;
 
