@@ -45,11 +45,62 @@ public class PolicyDefinitionApiService {
 
 
     // API model -> EDC model
+
+    //
+    // the main createPolicyDefinition method
+    //
+
+    /*
+     *  PolicyDefinitionCreateRequest is
+     *  private String policyDefinitionId +
+     *  private UiPolicyCreateRequest policy
+     *
+     *  UiPolicyCreateRequest is just
+     *  private List<UiPolicyConstraint> constraints
+     */
     @NotNull
     public IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest request) {
+        // we create a policyDefinition from the request
+        // the request contains a policyDefinitionId and a policy
+        // in buildPolicyDefinition we assign this Id to the policyDefinition
         var policyDefinition = buildPolicyDefinition(request);
+        // we create the policyDefinition using the external policyDefinitionService
         policyDefinition = policyDefinitionService.create(policyDefinition).orElseThrow(ServiceException::new);
+        // we return the Id of the created policyDefinition
         return new IdResponseDto(policyDefinition.getId());
+    }
+
+    //
+    // the main buildPolicyDefinition method
+    //
+
+    /*
+     *  PolicyDefinitionCreateRequest is
+     *  private String policyDefinitionId +
+     *  private UiPolicyCreateRequest policy
+     *
+     * UiPolicyCreateRequest is just
+     * private List<UiPolicyConstraint> constraints
+     */
+
+    /**
+     * A PolicyDefinition is a container for a Policy and a unique identifier. Policies by themselves do
+     * not have and identity, they are value objects.
+     * However, most connector runtimes will need to keep a set of policies as their reference or master data, which
+     * requires them to be identifiable and addressable. In most cases this also means that they have a stable, unique
+     * identity, potentially across systems. In such cases a Policy should be enveloped in a
+     * PolicyDefinition.
+     * Many external Policy formats like ODRL also require policies to have an ID.
+     */
+    public PolicyDefinition buildPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDto) {
+        // we receive a PolicyDefinitionCreateRequest, it's just a PolicyDefinitionId and a Policy
+        // and call it policyDefinitionDto
+        // we use mapper
+        var policy = policyMapper.buildPolicy(policyDefinitionDto.getPolicy());
+        return PolicyDefinition.Builder.newInstance()
+            .id(policyDefinitionDto.getPolicyDefinitionId())
+            .policy(policy)
+            .build();
     }
 
     @NotNull
@@ -62,18 +113,26 @@ public class PolicyDefinitionApiService {
         return policyDefinitionService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
     }
 
+    /*
+        * Builds a PolicyDefinitionDto from a PolicyDefinition
+        *
+        * PolicyDefinition is a complex object
+        *
+        * PolicyDefinitionDto is
+        *    private String policyDefinitionId +
+        *    private UiPolicy policy
+        *
+        * UiPolicy is
+        *
+        * private String policyJsonLd +
+        * private List<UiPolicyConstraint> constraints +
+        * private List<String> errors
+        *
+     */
     public PolicyDefinitionDto buildPolicyDefinitionDto(PolicyDefinition policyDefinition) {
         var policy = policyMapper.buildUiPolicy(policyDefinition.getPolicy());
         return PolicyDefinitionDto.builder()
                 .policyDefinitionId(policyDefinition.getId())
-                .policy(policy)
-                .build();
-    }
-
-    public PolicyDefinition buildPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDto) {
-        var policy = policyMapper.buildPolicy(policyDefinitionDto.getPolicy());
-        return PolicyDefinition.Builder.newInstance()
-                .id(policyDefinitionDto.getPolicyDefinitionId())
                 .policy(policy)
                 .build();
     }

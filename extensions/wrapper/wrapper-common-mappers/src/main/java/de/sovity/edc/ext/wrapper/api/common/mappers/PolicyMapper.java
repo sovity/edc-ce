@@ -61,15 +61,42 @@ public class PolicyMapper {
      * @return ODRL policy
      */
     public Policy buildPolicy(UiPolicyCreateRequest policyCreateDto) {
+        // UiPolicyCreateRequest is just private List<UiPolicyConstraint> constraints
+        // we convert the List<UiPolicyConstraint> to a List<Constraint> using AtomicConstraintMapper
+        // AtomicConstraint is an extension of Constraint
         var constraints = new ArrayList<Constraint>(atomicConstraintMapper.buildAtomicConstraints(
                 policyCreateDto.getConstraints()));
 
+        /*
+        The Action object in the provided code is part of the ODRL (Open Digital Rights Language) Policy model.
+        In this model, a Policy consists of one or more Permission objects, each of which has an Action and a set of Constraint objects.
+
+        The Action represents the operation that is permitted by the Permission.
+        the Action is being created with a type specified by PolicyValidator.ALLOWED_ACTION.
+        This type determines what operation is allowed by the Permission.
+        PolicyValidator.ALLOWED_ACTION is 'use' by default.
+
+        ODRL includes multiple other allowed actions:
+        use, play, print, copy, distribute, sell, modify, transform, delete, extract, install, access etc.
+         */
+
+
+        // we build an Action object with the type 'use'
         var action = Action.Builder.newInstance().type(PolicyValidator.ALLOWED_ACTION).build();
 
+        // we build a Permission object with the action and the constraints
         var permission = Permission.Builder.newInstance()
                 .action(action)
+                // Permission in an extension of a Rule Class and includes
+                // List<Constraint> constraints
                 .constraints(constraints)
                 .build();
+
+        // we build a Policy object with the type 'set' and the permission
+
+        /*
+        SET: This corresponds to the odrl:Set policy. It represents a set of rules or permissions that need to be adhered to. For example, a SET policy might be used to define the rules for accessing a digital resource. This could include rules like "the resource can only be accessed between 9 AM and 5 PM" or "the resource can only be accessed from a specific location". An instance of this policy type must be considered by an ODRL Evaluator, which means that the evaluator must check whether these rules are being followed when access to the resource is requested.
+         */
 
         return Policy.Builder.newInstance()
                 .type(PolicyType.SET)
@@ -118,69 +145,42 @@ public class PolicyMapper {
 
     // --------------------- ERIC's PART END ---------------------
 
-    public Policy buildPolicy(MultiUiPolicyCreateRequest request) {
-        // TODO: Implement this method
-
-        var expression = request.getExpression();
-
-        var constraints = new ArrayList<Constraint>();
-
-        buildConstraints(expression);
-
-        var action = Action.Builder.newInstance().type(PolicyValidator.ALLOWED_ACTION).build();
-
-        var permission = Permission.Builder.newInstance()
-                .action(action)
-                .constraints(constraints)
-                .build();
-
-        return Policy.Builder.newInstance().build();
-
-    }
-
     public Policy buildMultiPolicy(MultiUiPolicyCreateRequest request) {
         var expression = request.getExpression();
         var constraints = new ArrayList<Constraint>();
 
-        convertExpressionToConstraints(expression, constraints);
+        convertExpressionToConstraints(expression);
+
+        return Policy.Builder.newInstance()
+                .type(PolicyType.SET)
+                .permission(Permission.Builder.newInstance()
+                        .action(Action.Builder.newInstance().type(PolicyValidator.ALLOWED_ACTION).build())
+                        .constraints(constraints)
+                        .build())
+                .build();
     }
 
-    private void convertExpressionToListOfConstraints(MultiExpression expression, List<Constraint> constraints) {
-        switch (expression.getExpressionType()) {
-            case ATOMIC_CONSTRAINT -> {
-                var atomicConstraint = atomicConstraintMapper.buildAtomicConstraint(expression.getAtomicConstraint());
-                constraints.add(atomicConstraint);
-            }
-            case AND, OR, XOR -> {
-                var leftConstraint = buildConstraintFromExpression(expression.getLeftExpression());
-                var rightConstraint = buildConstraintFromExpression(expression.getRightExpression());
-            }
-        }
-    }
-
-    private List<Constraint> buildConstraintFromExpression(MultiExpression expression, List<Constraint> constraints) {
-        return switch (expression.getExpressionType()) {
+    public List<Constraint> convertExpressionToConstraints(MultiExpression expression) {
+        return switch(expression.getExpressionType()) {
+            case ATOMIC_CONSTRAINT -> List.of(atomicConstraintMapper.buildAtomicConstraint(expression.getAtomicConstraint()));
             case AND -> {
-                System.out.println("AND");
-                return AndConstraint.Builder.newInstance()
-                        .constraints(buildConstraints(subExpressions))
-                        .build();
+                var left = convertExpressionToConstraints(expression.getLeftExpression());
+                var right = convertExpressionToConstraints(expression.getRightExpression());
+                yield List.of(AndConstraint.Builder.newInstance().constraints(left).constraints(right).build());
             }
             case OR -> {
-                System.out.println("OR");
-                return OrConstraint.Builder.newInstance()
-                        .constraints(buildConstraints(subExpressions))
-                        .build();
+                var left = convertExpressionToConstraints(expression.getLeftExpression());
+                var right = convertExpressionToConstraints(expression.getRightExpression());
+                yield List.of(OrConstraint.Builder.newInstance().constraints(left).constraints(right).build());
             }
             case XOR -> {
-                System.out.println("XOR");
-                return XoneConstraint.Builder.newInstance()
-                        .constraints(buildConstraints(subExpressions))
-                        .build();
+                var left = convertExpressionToConstraints(expression.getLeftExpression());
+                var right = convertExpressionToConstraints(expression.getRightExpression());
+                yield List.of(XoneConstraint.Builder.newInstance().constraints(left).constraints(right).build());
             }
-
         };
     }
+
 
     /**
      * Maps an ODRL Policy from JSON-LD to the Core EDC Type.

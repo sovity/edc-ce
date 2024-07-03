@@ -44,9 +44,63 @@ public class AtomicConstraintMapper {
             return List.of();
         }
 
+        // unlike this method buildAtomicConstraintS (plural),
+        // we are calling a method buildAtomicConstraint here
+        // which works with a single constraint
+
         return constraints.stream()
-                .map(this::buildAtomicConstraint)
-                .toList();
+            .map(this::buildAtomicConstraint)
+            .toList();
+    }
+
+    /*
+     * UiPolicyConstraint is
+     * private String left;
+     * private OperatorDto operator;
+     * private UiPolicyLiteral right;
+     *
+     * AtomicConstraint is
+     * private Expression leftExpression;
+     * private Expression rightExpression;
+     * private Operator operator = Operator.EQ;
+     *
+     * but we use LiteralExpression instead of Expression so:
+     *
+     * AtomicConstraint is
+     * private LiteralExpression leftExpression;
+     * private LiteralExpression rightExpression;
+     * private Operator operator = Operator.EQ;
+     *
+     * LiteralExpression is a simple class with a single field value
+     * and Expression has an interface Visitor with a single method visitLiteralExpression
+     *
+     * Visitor Pattern is a way of separating an algorithm from an object structure on which it operates.
+     *
+     * OperatorMapper is used to map the operator
+     *  getOperatorDto(String) -> OperatorDto.valueOf(operator.toUpperCase());
+     *  getOperatorDto(Operator) -> OperatorDto.valueOf(operator.name());
+     *  getOperator(OperatorDto) -> Operator.valueOf(operatorDto.name());
+     *
+     * OperatorDto is just a simple enum of
+     * EQ, NEQ, GT, GTE, LT, LTE, IN, HAS_PART, IS_A, IS_ALL_OF, IS_ANY_OF, IS_NONE_OF
+     */
+    private AtomicConstraint buildAtomicConstraint(UiPolicyConstraint constraint) {
+        var left = constraint.getLeft();
+        var operator = operatorMapper.getOperator(constraint.getOperator());
+        var right = literalMapper.getUiLiteralValue(constraint.getRight());
+
+        // basic constraint:
+        // String "left":"POLICY_EVALUATION_TIME",
+        // Operator "operator":"GEQ",
+        // the original "right" can be a string or a list of strings or a json object
+        // "right":{"type":"STRING","value":"2024-06-15T22:00:00.000Z"}
+
+        return AtomicConstraint.Builder.newInstance()
+            // leftExpression is a LiteralExpression of a string
+            .leftExpression(new LiteralExpression(left))
+            .operator(operator)
+            .rightExpression(new LiteralExpression(right))
+            .build();
     }
 
     /**
@@ -59,26 +113,26 @@ public class AtomicConstraintMapper {
      * @return ui policy constraint
      */
     public Optional<UiPolicyConstraint> buildUiConstraint(
-            @NonNull AtomicConstraint atomicConstraint,
-            MappingErrors errors
+        @NonNull AtomicConstraint atomicConstraint,
+        MappingErrors errors
     ) {
         var leftValue = literalMapper.getExpressionString(atomicConstraint.getLeftExpression(),
-                errors.forChildObject("leftExpression"));
+            errors.forChildObject("leftExpression"));
 
         var operator = getOperator(atomicConstraint, errors);
 
         var rightValue = literalMapper.getExpressionValue(atomicConstraint.getRightExpression(),
-                errors.forChildObject("rightExpression"));
+            errors.forChildObject("rightExpression"));
 
         if (leftValue.isEmpty() || rightValue.isEmpty() || operator.isEmpty()) {
             return Optional.empty();
         }
 
         UiPolicyConstraint result = UiPolicyConstraint.builder()
-                .left(leftValue.get())
-                .operator(operator.get())
-                .right(rightValue.get())
-                .build();
+            .left(leftValue.get())
+            .operator(operator.get())
+            .right(rightValue.get())
+            .build();
 
         return Optional.of(result);
     }
@@ -94,27 +148,36 @@ public class AtomicConstraintMapper {
         return Optional.of(operatorMapper.getOperatorDto(operator));
     }
 
-    private AtomicConstraint buildAtomicConstraint(UiPolicyConstraint constraint) {
-        var left = constraint.getLeft();
-        var operator = operatorMapper.getOperator(constraint.getOperator());
-        var right = literalMapper.getUiLiteralValue(constraint.getRight());
-
-        return AtomicConstraint.Builder.newInstance()
-                .leftExpression(new LiteralExpression(left))
-                .operator(operator)
-                .rightExpression(new LiteralExpression(right))
-                .build();
-    }
-
     public AtomicConstraint buildAtomicConstraint(AtomicConstraintDto atomicConstraint) {
+
+        System.err.println("AtomicConstraintMapper.buildAtomicConstraint: " + atomicConstraint);
+
         var left = atomicConstraint.getLeftExpression();
         var operator = operatorMapper.getOperator(atomicConstraint.getOperator());
         var right = atomicConstraint.getRightExpression();
 
+        System.out.println("AtomicConstraintMapper.buildAtomicConstraint: " + left + " " + operator + " " + right);
+
         return AtomicConstraint.Builder.newInstance()
-                .leftExpression(new LiteralExpression(left))
-                .operator(operator)
-                .rightExpression(new LiteralExpression(right))
-                .build();
+            .leftExpression(new LiteralExpression(left))
+            .operator(operator)
+            .rightExpression(new LiteralExpression(right))
+            .build();
     }
+
+//    public AtomicConstraint buildAtomicConstraint(AtomicConstraintDto atomicConstraint) {
+//
+//                var left = atomicConstraint.getLeftExpression();
+//                var operator = operatorMapper.getOperator(atomicConstraint.getOperator());
+//                var right = atomicConstraint.getRightExpression();
+//
+//                System.out.println("AtomicConstraintMapper.buildAtomicConstraint: " + left + " " + operator + " " + right);
+//
+//                return AtomicConstraint.Builder.newInstance()
+//                    .leftExpression(new LiteralExpression(left))
+//                    .operator(operator)
+//                    .rightExpression(new LiteralExpression(right))
+//                    .build();
+//    }
+
 }
