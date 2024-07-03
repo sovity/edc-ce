@@ -5,6 +5,11 @@ plugins {
 
 dependencies {
     api(libs.junit.api)
+
+    annotationProcessor(libs.lombok)
+    compileOnly(libs.lombok)
+
+    implementation(libs.jooq.jooq)
 }
 
 group = libs.versions.sovityEdcExtensionGroup.get()

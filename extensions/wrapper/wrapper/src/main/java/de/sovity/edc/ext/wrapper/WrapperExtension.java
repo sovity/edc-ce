@@ -17,6 +17,9 @@ package de.sovity.edc.ext.wrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import de.sovity.edc.extension.db.directaccess.DirectDatabaseAccess;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.connector.api.management.configuration.transform.ManagementApiTypeTransformerRegistry;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -33,16 +36,37 @@ import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
+import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.CoreConstants;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.spi.types.TypeManager;
 import org.eclipse.edc.web.spi.WebService;
+import org.jooq.DSLContext;
 
 public class WrapperExtension implements ServiceExtension {
 
+
     public static final String EXTENSION_NAME = "WrapperExtension";
+
+    // TODO remove duplicates of edc.* and pool in constant
+    @Setting(required = true)
+    public static final String JDBC_URL = "edc.datasource.default.url";
+
+    @Setting(required = true)
+    public static final String JDBC_USER = "edc.datasource.default.user";
+
+    @Setting(required = true)
+    public static final String JDBC_PASSWORD = "edc.datasource.default.password";
+
+    @Setting(defaultValue = "3")
+    public static final String DB_CONNECTION_POOL_SIZE = "edc.server.db.connection.pool.size";
+
+    @Setting(defaultValue = "5000")
+    public static final String DB_CONNECTION_TIMEOUT_IN_MS = "edc.server.db.connection.timeout.in.ms";
+
     @Inject
     private AssetIndex assetIndex;
     @Inject
@@ -57,6 +81,8 @@ public class WrapperExtension implements ServiceExtension {
     private ContractNegotiationService contractNegotiationService;
     @Inject
     private ContractNegotiationStore contractNegotiationStore;
+    @Inject
+    private DirectDatabaseAccess directDatabaseAccess;
     @Inject
     private ManagementApiConfiguration dataManagementApiConfiguration;
     @Inject
@@ -91,30 +117,31 @@ public class WrapperExtension implements ServiceExtension {
         fixObjectMapperDateSerialization(objectMapper);
 
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
-                assetIndex,
-                assetService,
-                catalogService,
-                context.getConfig(),
-                contractAgreementService,
-                contractDefinitionService,
-                contractDefinitionStore,
-                contractNegotiationService,
-                contractNegotiationStore,
-                jsonLd,
-                context.getMonitor(),
-                objectMapper,
-                policyDefinitionService,
-                policyDefinitionStore,
-                policyEngine,
-                transferProcessService,
-                transferProcessStore,
-                typeTransformerRegistry
+            assetIndex,
+            assetService,
+            catalogService,
+            context.getConfig(),
+            contractAgreementService,
+            contractDefinitionService,
+            contractDefinitionStore,
+            contractNegotiationService,
+            contractNegotiationStore,
+            directDatabaseAccess.newDslContext(),
+            jsonLd,
+            context.getMonitor(),
+            objectMapper,
+            policyDefinitionService,
+            policyDefinitionStore,
+            policyEngine,
+            transferProcessService,
+            transferProcessStore,
+            typeTransformerRegistry
         );
 
         wrapperExtensionContext.selfDescriptionService().validateSelfDescriptionConfig();
 
         wrapperExtensionContext.jaxRsResources().forEach(resource ->
-                webService.registerResource(dataManagementApiConfiguration.getContextAlias(), resource));
+            webService.registerResource(dataManagementApiConfiguration.getContextAlias(), resource));
     }
 
     private void fixObjectMapperDateSerialization(ObjectMapper objectMapper) {
