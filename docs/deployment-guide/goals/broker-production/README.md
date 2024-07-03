@@ -52,10 +52,10 @@ MY_EDC_JDBC_USER: edc
 MY_EDC_JDBC_PASSWORD: edc
 
 # Required: List of EDCs to fetch
-EDC_BROKER_SERVER_KNOWN_CONNECTORS: "https://connector-a/api/dsp,https://connector-b/api/dsp"
+CRAWLER_KNOWN_CONNECTORS: "https://connector-a/api/dsp,https://connector-b/api/dsp"
 
 # List of Data Space Names for special Connectors (default: '')
-EDC_BROKER_SERVER_KNOWN_DATASPACE_CONNECTORS: "Mobilithek=https://some-connector/api/dsp,OtherDataspace=https://some-other-connector/api/dsp"
+CRAWLER_KNOWN_DATASPACE_CONNECTORS: "Mobilithek=https://some-connector/api/dsp,OtherDataspace=https://some-other-connector/api/dsp"
 
 # Required: DAPS credentials
 EDC_OAUTH_TOKEN_URL: 'https://daps.test.mobility-dataspace.eu/token'
@@ -70,7 +70,7 @@ EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
 EDC_API_AUTH_KEY: "ApiKeyDefaultValue"
 
 # Required: Admin Api Key
-EDC_BROKER_SERVER_ADMIN_API_KEY: DefaultBrokerServerAdminApiKey
+CRAWLER_ADMIN_API_KEY: DefaultBrokerServerAdminApiKey
 ```
 
 All pre-configured config values for either the broker server or the underlying EDC can be found

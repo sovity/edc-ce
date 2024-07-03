@@ -121,11 +121,11 @@ services:
       edc2:
         condition: service_started
     environment:
-      EDC_BROKER_SERVER_KNOWN_CONNECTORS: "http://edc:11003/api/dsp,http://edc2:11003/api/dsp"
-      EDC_BROKER_SERVER_KNOWN_DATASPACE_CONNECTORS: "Mobilithek=https://some-other-connector/api/dsp"
+      CRAWLER_KNOWN_CONNECTORS: "http://edc:11003/api/dsp,http://edc2:11003/api/dsp"
+      CRAWLER_KNOWN_DATASPACE_CONNECTORS: "Mobilithek=https://some-other-connector/api/dsp"
 
       # Hide offline data offers after 1 minute in dev
-      EDC_BROKER_SERVER_HIDE_OFFLINE_DATA_OFFERS_AFTER: "PT1M"
+      CRAWLER_HIDE_OFFLINE_DATA_OFFERS_AFTER: "PT1M"
 
       MY_EDC_FQDN: "broker"
       EDC_API_AUTH_KEY: ApiKeyDefaultValue
