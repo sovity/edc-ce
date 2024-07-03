@@ -35,6 +35,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.UiContractNegotiation;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementCancellationService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionApiService;
@@ -54,6 +55,7 @@ public class UiResourceImpl implements UiResource {
 
     private final ContractAgreementPageApiService contractAgreementApiService;
     private final ContractAgreementTransferApiService contractAgreementTransferApiService;
+    private final ContractAgreementCancellationService contractAgreementCancellationService;
     private final TransferHistoryPageApiService transferHistoryPageApiService;
     private final TransferHistoryPageAssetFetcherService transferHistoryPageAssetFetcherService;
     private final AssetApiService assetApiService;
@@ -151,7 +153,7 @@ public class UiResourceImpl implements UiResource {
 
     @Override
     public IdResponseDto terminateContractAgreement(String contractAgreementId, ContractTerminationRequest contractTerminationRequest) {
-        return null;
+        return contractAgreementCancellationService.cancelContractAgreement(contractAgreementId);
     }
 
     @Override

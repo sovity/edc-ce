@@ -37,6 +37,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetIdValidator;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.UiDataOfferBuilder;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementCancellationService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementDataFetcher;
@@ -71,6 +72,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.FilterExpressionOpera
 import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.UseCaseCatalogApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
+import de.sovity.edc.extension.contactcancellation.query.AgreementDetailsQuery;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import lombok.NoArgsConstructor;
@@ -93,6 +95,9 @@ import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.jetbrains.annotations.NotNull;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
 
 import java.util.List;
 
@@ -109,24 +114,25 @@ import java.util.List;
 public class WrapperExtensionContextBuilder {
 
     public static WrapperExtensionContext buildContext(
-            AssetIndex assetIndex,
-            AssetService assetService,
-            CatalogService catalogService,
-            Config config,
-            ContractAgreementService contractAgreementService,
-            ContractDefinitionService contractDefinitionService,
-            ContractDefinitionStore contractDefinitionStore,
-            ContractNegotiationService contractNegotiationService,
-            ContractNegotiationStore contractNegotiationStore,
-            JsonLd jsonLd,
-            Monitor monitor,
-            ObjectMapper objectMapper,
-            PolicyDefinitionService policyDefinitionService,
-            PolicyDefinitionStore policyDefinitionStore,
-            PolicyEngine policyEngine,
-            TransferProcessService transferProcessService,
-            TransferProcessStore transferProcessStore,
-            TypeTransformerRegistry typeTransformerRegistry
+        AssetIndex assetIndex,
+        AssetService assetService,
+        CatalogService catalogService,
+        Config config,
+        ContractAgreementService contractAgreementService,
+        ContractDefinitionService contractDefinitionService,
+        ContractDefinitionStore contractDefinitionStore,
+        ContractNegotiationService contractNegotiationService,
+        ContractNegotiationStore contractNegotiationStore,
+        DSLContext dsl,
+        JsonLd jsonLd,
+        Monitor monitor,
+        ObjectMapper objectMapper,
+        PolicyDefinitionService policyDefinitionService,
+        PolicyDefinitionStore policyDefinitionStore,
+        PolicyEngine policyEngine,
+        TransferProcessService transferProcessService,
+        TransferProcessStore transferProcessStore,
+        TypeTransformerRegistry typeTransformerRegistry
     ) {
         // UI API
         var operatorMapper = new OperatorMapper();
@@ -138,188 +144,191 @@ public class WrapperExtensionContextBuilder {
         var policyValidator = new PolicyValidator();
         var constraintExtractor = new ConstraintExtractor(policyValidator, atomicConstraintMapper);
         var policyMapper = new PolicyMapper(
-                constraintExtractor,
-                atomicConstraintMapper,
-                typeTransformerRegistry);
+            constraintExtractor,
+            atomicConstraintMapper,
+            typeTransformerRegistry);
         var edcPropertyUtils = new EdcPropertyUtils();
         var selfDescriptionService = new SelfDescriptionService(config, monitor);
         var ownConnectorEndpointService = new OwnConnectorEndpointServiceImpl(selfDescriptionService);
         var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd, ownConnectorEndpointService);
         var transferProcessStateService = new TransferProcessStateService();
         var contractNegotiationUtils = new ContractNegotiationUtils(
-                contractNegotiationService,
-                selfDescriptionService
+            contractNegotiationService,
+            selfDescriptionService
         );
         var contractAgreementPageCardBuilder = new ContractAgreementPageCardBuilder(
-                policyMapper,
-                transferProcessStateService,
-                assetMapper,
-                contractNegotiationUtils
+            policyMapper,
+            transferProcessStateService,
+            assetMapper,
+            contractNegotiationUtils
         );
         var contractAgreementDataFetcher = new ContractAgreementDataFetcher(
-                contractAgreementService,
-                contractNegotiationStore,
-                transferProcessService,
-                assetIndex
+            contractAgreementService,
+            contractNegotiationStore,
+            transferProcessService,
+            assetIndex
         );
         var contractAgreementApiService = new ContractAgreementPageApiService(
-                contractAgreementDataFetcher,
-                contractAgreementPageCardBuilder
+            contractAgreementDataFetcher,
+            contractAgreementPageCardBuilder
         );
         var contactDefinitionBuilder = new ContractDefinitionBuilder(criterionMapper);
         var contractDefinitionApiService = new ContractDefinitionApiService(
-                contractDefinitionService,
-                criterionMapper,
-                contactDefinitionBuilder);
+            contractDefinitionService,
+            criterionMapper,
+            contactDefinitionBuilder);
         var transferHistoryPageApiService = new TransferHistoryPageApiService(
-                assetService,
-                contractAgreementService,
-                contractNegotiationStore,
-                transferProcessService,
-                transferProcessStateService
+            assetService,
+            contractAgreementService,
+            contractNegotiationStore,
+            transferProcessService,
+            transferProcessStateService
         );
         var transferHistoryPageAssetFetcherService = new TransferHistoryPageAssetFetcherService(
-                assetService,
-                transferProcessService,
-                assetMapper,
-                contractNegotiationStore,
-                contractNegotiationUtils
+            assetService,
+            transferProcessService,
+            assetMapper,
+            contractNegotiationStore,
+            contractNegotiationUtils
         );
         var contractAgreementUtils = new ContractAgreementUtils(contractAgreementService);
         var parameterizationCompatibilityUtils = new ParameterizationCompatibilityUtils();
         var assetIdValidator = new AssetIdValidator();
         var assetApiService = new AssetApiService(
-                assetService,
-                assetMapper,
-                assetIdValidator,
-                selfDescriptionService
+            assetService,
+            assetMapper,
+            assetIdValidator,
+            selfDescriptionService
         );
         var transferRequestBuilder = new TransferRequestBuilder(
-                contractAgreementUtils,
-                contractNegotiationUtils,
-                edcPropertyUtils,
-                typeTransformerRegistry,
-                parameterizationCompatibilityUtils
+            contractAgreementUtils,
+            contractNegotiationUtils,
+            edcPropertyUtils,
+            typeTransformerRegistry,
+            parameterizationCompatibilityUtils
         );
         var contractAgreementTransferApiService = new ContractAgreementTransferApiService(
-                transferRequestBuilder,
-                transferProcessService
+            transferRequestBuilder,
+            transferProcessService
         );
+        var agreementDetailsQuery = new AgreementDetailsQuery(dsl);
+        var contractAgreementCancellationService = new ContractAgreementCancellationService(agreementDetailsQuery);
         var policyDefinitionApiService = new PolicyDefinitionApiService(
-                policyDefinitionService,
-                policyMapper
+            policyDefinitionService,
+            policyMapper
         );
         var dataOfferBuilder = new DspDataOfferBuilder(jsonLd);
         var uiDataOfferBuilder = new UiDataOfferBuilder(assetMapper, policyMapper);
         var dspCatalogService = new DspCatalogService(catalogService, dataOfferBuilder);
         var catalogApiService = new CatalogApiService(
-                uiDataOfferBuilder,
-                dspCatalogService
+            uiDataOfferBuilder,
+            dspCatalogService
         );
         var contractOfferMapper = new ContractOfferMapper(policyMapper);
         var contractNegotiationBuilder = new ContractNegotiationBuilder(contractOfferMapper);
         var contractNegotiationStateService = new ContractNegotiationStateService();
         var contractNegotiationApiService = new ContractNegotiationApiService(
-                contractNegotiationService,
-                contractNegotiationBuilder,
-                contractNegotiationStateService
+            contractNegotiationService,
+            contractNegotiationBuilder,
+            contractNegotiationStateService
         );
         var miwConfigBuilder = new MiwConfigService(config);
         var dapsConfigBuilder = new DapsConfigService(config);
         var dashboardDataFetcher = new DashboardDataFetcher(
-                contractNegotiationStore,
-                transferProcessService,
-                assetIndex,
-                policyDefinitionService,
-                contractDefinitionService
+            contractNegotiationStore,
+            transferProcessService,
+            assetIndex,
+            policyDefinitionService,
+            contractDefinitionService
         );
         var dashboardApiService = new DashboardPageApiService(
-                dashboardDataFetcher,
-                transferProcessStateService,
-                dapsConfigBuilder,
-                miwConfigBuilder,
-                selfDescriptionService
+            dashboardDataFetcher,
+            transferProcessStateService,
+            dapsConfigBuilder,
+            miwConfigBuilder,
+            selfDescriptionService
         );
         var uiResource = new UiResourceImpl(
-                contractAgreementApiService,
-                contractAgreementTransferApiService,
-                transferHistoryPageApiService,
-                transferHistoryPageAssetFetcherService,
-                assetApiService,
-                policyDefinitionApiService,
-                catalogApiService,
-                contractDefinitionApiService,
-                contractNegotiationApiService,
-                dashboardApiService
+            contractAgreementApiService,
+            contractAgreementTransferApiService,
+            contractAgreementCancellationService,
+            transferHistoryPageApiService,
+            transferHistoryPageAssetFetcherService,
+            assetApiService,
+            policyDefinitionApiService,
+            catalogApiService,
+            contractDefinitionApiService,
+            contractNegotiationApiService,
+            dashboardApiService
         );
 
         // Use Case API
         var filterExpressionOperatorMapper = new FilterExpressionOperatorMapper();
         var filterExpressionLiteralMapper = new FilterExpressionLiteralMapper();
         var filterExpressionMapper = new FilterExpressionMapper(
-                filterExpressionOperatorMapper,
-                filterExpressionLiteralMapper
+            filterExpressionOperatorMapper,
+            filterExpressionLiteralMapper
         );
 
         var kpiApiService = new KpiApiService(
-                assetIndex,
-                policyDefinitionStore,
-                contractDefinitionStore,
-                transferProcessStore,
-                contractAgreementService,
-                transferProcessStateService
+            assetIndex,
+            policyDefinitionStore,
+            contractDefinitionStore,
+            transferProcessStore,
+            contractAgreementService,
+            transferProcessStateService
         );
         var supportedPolicyApiService = new SupportedPolicyApiService(policyEngine);
         var useCaseCatalogApiService = new UseCaseCatalogApiService(
-                uiDataOfferBuilder,
-                dspCatalogService,
-                filterExpressionMapper
+            uiDataOfferBuilder,
+            dspCatalogService,
+            filterExpressionMapper
         );
         var useCaseResource = new UseCaseResourceImpl(
-                kpiApiService,
-                supportedPolicyApiService,
-                useCaseCatalogApiService,
-                policyDefinitionApiService
+            kpiApiService,
+            supportedPolicyApiService,
+            useCaseCatalogApiService,
+            policyDefinitionApiService
         );
 
         // Collect all JAX-RS resources
         return new WrapperExtensionContext(List.of(
-                uiResource,
-                useCaseResource
+            uiResource,
+            useCaseResource
         ), selfDescriptionService);
     }
 
     @NotNull
     private static AssetMapper newAssetMapper(
-            TypeTransformerRegistry typeTransformerRegistry,
-            JsonLd jsonLd,
-            OwnConnectorEndpointService ownConnectorEndpointService
+        TypeTransformerRegistry typeTransformerRegistry,
+        JsonLd jsonLd,
+        OwnConnectorEndpointService ownConnectorEndpointService
     ) {
         var edcPropertyUtils = new EdcPropertyUtils();
         var assetJsonLdUtils = new AssetJsonLdUtils();
         var assetEditRequestMapper = new AssetEditRequestMapper();
         var shortDescriptionBuilder = new ShortDescriptionBuilder();
         var assetJsonLdParser = new AssetJsonLdParser(
-                assetJsonLdUtils,
-                shortDescriptionBuilder,
-                ownConnectorEndpointService
+            assetJsonLdUtils,
+            shortDescriptionBuilder,
+            ownConnectorEndpointService
         );
         var httpHeaderMapper = new HttpHeaderMapper();
         var httpDataSourceMapper = new HttpDataSourceMapper(httpHeaderMapper);
         var dataSourceMapper = new DataSourceMapper(
-                edcPropertyUtils,
-                httpDataSourceMapper
+            edcPropertyUtils,
+            httpDataSourceMapper
         );
         var assetJsonLdBuilder = new AssetJsonLdBuilder(
-                dataSourceMapper,
-                assetJsonLdParser,
-                assetEditRequestMapper
+            dataSourceMapper,
+            assetJsonLdParser,
+            assetEditRequestMapper
         );
         return new AssetMapper(
-                typeTransformerRegistry,
-                assetJsonLdBuilder,
-                assetJsonLdParser,
-                jsonLd
+            typeTransformerRegistry,
+            assetJsonLdBuilder,
+            assetJsonLdParser,
+            jsonLd
         );
     }
 }

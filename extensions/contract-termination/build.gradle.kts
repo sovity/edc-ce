@@ -8,34 +8,35 @@ dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
 
-    implementation(libs.edc.apiCore)
+    implementation(project(":utils:jooq-database-access"))
+    implementation(project(":extensions:database-direct-access"))
+    implementation(project(":extensions:postgres-flyway"))
+    implementation(project(":extensions:sovity-messenger"))
+
+    implementation(libs.edc.contractSpi)
+    implementation(libs.edc.coreSpi)
     implementation(libs.edc.managementApiConfiguration)
-    implementation(libs.edc.dspHttpSpi)
-    api(project(":extensions:contract-termination"))
-    api(project(":extensions:database-direct-access"))
-    api(project(":extensions:wrapper:wrapper-api"))
-    api(project(":extensions:wrapper:wrapper-common-mappers"))
-    api(project(":utils:catalog-parser"))
-    api(project(":utils:json-and-jsonld-utils"))
-    api(libs.edc.contractDefinitionApi)
-    api(libs.edc.controlPlaneSpi)
-    api(libs.edc.coreSpi)
-    api(libs.edc.policyDefinitionApi)
-    api(libs.edc.transferProcessApi)
-    implementation(libs.apache.commonsLang)
-    implementation(libs.jooq.jooq)
-    implementation(libs.hikari)
+    implementation(libs.edc.transferSpi)
+    // TODO: why iss this only a testImpl in extensions/wrapper/wrapper/build.gradle.kts:49
+    implementation(libs.edc.dspApiConfiguration)
+    implementation(libs.edc.dspNegotiationTransform)
+
+    implementation(libs.jakarta.rsApi)
 
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
 
     testImplementation(project(":extensions:wrapper:clients:java-client"))
-    testImplementation(project(":extensions:policy-always-true"))
+    testImplementation(project(":extensions:wrapper:wrapper"))
+    testImplementation(project(":utils:test-connector-remote"))
     testImplementation(project(":utils:test-utils"))
+    testImplementation(project(":utils:versions"))
+
     testImplementation(libs.edc.controlPlaneCore)
-    testImplementation(libs.edc.dsp)
-    testImplementation(libs.edc.iamMock)
+    testImplementation(libs.edc.dataPlaneSelectorCore)
+    testImplementation(libs.edc.dspHttpCore)
     testImplementation(libs.edc.junit)
+
     testImplementation(libs.edc.http) {
         exclude(group = "org.eclipse.jetty", module = "jetty-client")
         exclude(group = "org.eclipse.jetty", module = "jetty-http")
@@ -48,16 +49,14 @@ dependencies {
     // Updated jetty versions for e.g. CVE-2023-26048
     testImplementation(libs.bundles.jetty.cve2023)
 
-    testImplementation(libs.edc.jsonLd)
-    testImplementation(libs.edc.dspHttpSpi)
-    testImplementation(libs.edc.dspApiConfiguration)
-    testImplementation(libs.edc.dataPlaneSelectorCore)
-
-    testImplementation(libs.jsonUnit.assertj)
-    testImplementation(libs.restAssured.restAssured)
-    testImplementation(libs.mockito.core)
     testImplementation(libs.assertj.core)
+    testImplementation(libs.flyway.core)
     testImplementation(libs.junit.api)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.restAssured.restAssured)
+    testImplementation(libs.testcontainers.testcontainers)
+    testImplementation(libs.testcontainers.postgresql)
+
     testRuntimeOnly(libs.junit.engine)
 }
 
