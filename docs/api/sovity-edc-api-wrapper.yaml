@@ -249,11 +249,16 @@ paths:
                 items:
                   $ref: '#/components/schemas/UiDataOffer'
   /wrapper/ui/pages/contract-agreement-page:
-    get:
+    post:
       tags:
       - UI
-      description: Collect all data for the Contract Agreement Page
+      description: Collect filtered data for the Contract Agreement Page
       operationId: getContractAgreementPage
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/ContractAgreementPageQuery'
       responses:
         default:
           description: default response
@@ -407,6 +412,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/pages/content-agreement-page/{contractAgreementId}/terminate:
+    post:
+      tags:
+      - UI
+      description: Terminates a contract agreement designated by its contract agreement
+        id.
+      operationId: terminateContractAgreement
+      parameters:
+      - name: contractAgreementId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractTerminationRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
   /wrapper/use-case-api/policy-definition:
     post:
       tags:
@@ -494,11 +524,11 @@ components:
     DataSourceType:
       type: string
       description: Supported Data Source Types by UiDataSource
-      default: CUSTOM
       enum:
       - HTTP_DATA
       - ON_REQUEST
       - CUSTOM
+      default: CUSTOM
     SecretValue:
       type: object
       properties:
@@ -706,7 +736,6 @@ components:
     UiDataSourceHttpDataMethod:
       type: string
       description: Supported HTTP Methods by UiDataSource
-      default: GET
       enum:
       - GET
       - POST
@@ -714,6 +743,7 @@ components:
       - PATCH
       - DELETE
       - OPTIONS
+      default: GET
     UiDataSourceOnRequest:
       required:
       - contactEmail
@@ -1261,6 +1291,7 @@ components:
       - counterPartyAddress
       - counterPartyId
       - direction
+      - terminationStatus
       - transferProcesses
       type: object
       properties:
@@ -1291,6 +1322,14 @@ components:
           description: Contract Agreement's Transfer Processes
           items:
             $ref: '#/components/schemas/ContractAgreementTransferProcess'
+        terminationStatus:
+          type: string
+          description: Contract Agreement's Termination Status
+          enum:
+          - ONGOING
+          - TERMINATED
+        terminationInformation:
+          $ref: '#/components/schemas/ContractAgreementTerminationInfo'
       description: Contract Agreement for Contract Agreement Page
     ContractAgreementDirection:
       type: string
@@ -1309,6 +1348,26 @@ components:
           items:
             $ref: '#/components/schemas/ContractAgreementCard'
       description: Data as required by the UI's Contract Agreement Page
+    ContractAgreementTerminationInfo:
+      required:
+      - detail
+      - reason
+      - terminatedAt
+      type: object
+      properties:
+        terminatedAt:
+          type: string
+          description: Termination's date and time
+          format: date-time
+        reason:
+          title: Termination's reason
+          type: string
+          description: The termination's nature e.g. User Termination
+        detail:
+          type: string
+          description: Detailed message from the terminating party about why the contract
+            was terminated.
+      description: Contract's agreement metadata
     ContractAgreementTransferProcess:
       required:
       - lastUpdatedDate
@@ -1354,6 +1413,17 @@ components:
         simplifiedState:
           $ref: '#/components/schemas/TransferProcessSimplifiedState'
       description: Transfer Process State interpreted
+    ContractAgreementPageQuery:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Optionally filter the resulting contract agreements by their
+            termination status.
+          enum:
+          - ONGOING
+          - TERMINATED
+      description: Filters for querying a Contract Contract Agreement Page
     ContractDefinitionEntry:
       required:
       - accessPolicyId
@@ -1706,6 +1776,20 @@ components:
           description: Additional transfer process properties. These are not passed
             to the consumer EDC
       description: "For type PARAMS_ONLY: Required data for starting a Transfer Process"
+    ContractTerminationRequest:
+      required:
+      - reason
+      type: object
+      properties:
+        reason:
+          title: Termination reason
+          type: string
+          description: A short reason why this contract was terminated
+        detail:
+          title: Termination detail
+          type: string
+          description: A user explanation to detail why the contract was terminated.
+      description: Data for terminating a Contract Agreement
     AtomicConstraintDto:
       required:
       - leftExpression

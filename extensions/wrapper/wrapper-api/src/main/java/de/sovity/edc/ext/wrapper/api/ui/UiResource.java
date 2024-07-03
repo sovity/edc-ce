@@ -20,9 +20,11 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPageQuery;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateCustomTransferRequest;
@@ -43,6 +45,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -139,11 +142,11 @@ interface UiResource {
     @Operation(description = "Get Contract Negotiation Information")
     UiContractNegotiation getContractNegotiation(@PathParam("contractNegotiationId") String contractNegotiationId);
 
-    @GET
+    @POST
     @Path("pages/contract-agreement-page")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Collect all data for the Contract Agreement Page")
-    ContractAgreementPage getContractAgreementPage();
+    @Operation(description = "Collect filtered data for the Contract Agreement Page")
+    ContractAgreementPage getContractAgreementPage(@Nullable ContractAgreementPageQuery contractAgreementPageQuery);
 
     @POST
     @Path("pages/contract-agreement-page/transfers")
@@ -158,6 +161,15 @@ interface UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Initiate a Transfer Process via a custom Transfer Process JSON-LD. Fields such as connectorId, assetId, providerConnectorId, providerConnectorAddress will be set automatically.")
     IdResponseDto initiateCustomTransfer(InitiateCustomTransferRequest initiateCustomTransferRequest);
+
+    @POST
+    @Path("pages/content-agreement-page/{contractAgreementId}/terminate")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Terminates a contract agreement designated by its contract agreement id.")
+    IdResponseDto terminateContractAgreement(
+        @PathParam("contractAgreementId") String contractAgreementId,
+        ContractTerminationRequest contractTerminationRequest);
 
     @GET
     @Path("pages/transfer-history-page")

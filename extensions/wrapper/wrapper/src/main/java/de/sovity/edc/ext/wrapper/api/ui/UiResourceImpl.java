@@ -20,6 +20,8 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPageQuery;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
@@ -42,6 +44,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -131,9 +134,10 @@ public class UiResourceImpl implements UiResource {
     }
 
     @Override
-    public ContractAgreementPage getContractAgreementPage() {
+    public ContractAgreementPage getContractAgreementPage(@Nullable ContractAgreementPageQuery contractAgreementPageQuery) {
         return contractAgreementApiService.contractAgreementPage();
     }
+
 
     @Override
     public IdResponseDto initiateTransfer(InitiateTransferRequest request) {
@@ -143,6 +147,11 @@ public class UiResourceImpl implements UiResource {
     @Override
     public IdResponseDto initiateCustomTransfer(InitiateCustomTransferRequest request) {
         return contractAgreementTransferApiService.initiateCustomTransfer(request);
+    }
+
+    @Override
+    public IdResponseDto terminateContractAgreement(String contractAgreementId, ContractTerminationRequest contractTerminationRequest) {
+        return null;
     }
 
     @Override
