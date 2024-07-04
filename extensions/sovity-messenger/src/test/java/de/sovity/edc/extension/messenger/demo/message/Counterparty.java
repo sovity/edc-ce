@@ -18,6 +18,6 @@ import de.sovity.edc.extension.messenger.SovityMessage;
 public class Counterparty implements SovityMessage {
     @Override
     public String getType() {
-        return "coounterparty";
+        return "counterparty";
     }
 }

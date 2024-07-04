@@ -62,7 +62,6 @@ public class TestUtils {
         config.put("tx.ssi.miw.authority.id", "my-authority-id");
         config.put("tx.ssi.miw.url", "https://miw");
         config.put("tx.ssi.oauth.token.url", "https://token.miw");
-
         config.putAll(additionalConfigProperties);
         return config;
     }

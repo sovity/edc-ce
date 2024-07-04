@@ -20,9 +20,6 @@ import org.eclipse.edc.runtime.metamodel.annotation.Provides;
 import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
-import org.eclipse.edc.spi.system.configuration.Config;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 
 @Provides(DirectDatabaseAccess.class)
 public class DatabaseDirectAccessExtension implements ServiceExtension {
