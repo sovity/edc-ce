@@ -256,7 +256,7 @@ paths:
       operationId: getContractAgreementPage
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/ContractAgreementPageQuery'
       responses:
@@ -1781,14 +1781,14 @@ components:
       - reason
       type: object
       properties:
-        reason:
-          title: Termination reason
-          type: string
-          description: A short reason why this contract was terminated
         detail:
           title: Termination detail
           type: string
           description: A user explanation to detail why the contract was terminated.
+        reason:
+          title: Termination reason
+          type: string
+          description: A short reason why this contract was terminated
       description: Data for terminating a Contract Agreement
     AtomicConstraintDto:
       required:

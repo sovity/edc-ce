@@ -17,7 +17,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.extension.messenger.SovityMessage;
 import de.sovity.edc.extension.messenger.SovityMessengerRegistry;
-import de.sovity.edc.extension.messenger.impl.Handler;
+import de.sovity.edc.extension.messenger.impl.HandlerWithClaims;
 import de.sovity.edc.extension.messenger.impl.SovityMessageRequest;
 import de.sovity.edc.extension.messenger.impl.SovityMessageResponse;
 import de.sovity.edc.extension.messenger.impl.SovityMessengerStatus;
@@ -36,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.protocol.dsp.api.configuration.error.DspErrorResponse;
 import org.eclipse.edc.spi.EdcException;
+import org.eclipse.edc.spi.agent.ParticipantAgentService;
 import org.eclipse.edc.spi.iam.ClaimToken;
 import org.eclipse.edc.spi.iam.IdentityService;
 import org.eclipse.edc.spi.iam.TokenRepresentation;
@@ -61,6 +62,7 @@ public class SovityMessageController {
     private final TypeTransformerRegistry typeTransformerRegistry;
     private final Monitor monitor;
     private final ObjectMapper mapper;
+    private final ParticipantAgentService participant;
 
     @Getter
     private final SovityMessengerRegistry handlers;
@@ -78,6 +80,9 @@ public class SovityMessageController {
             ).build();
         }
 
+        // TODO: inject EDC identity
+        val claims = validation.getContent();
+
         val handler = getHandler(request);
         if (handler == null) {
             val errorAnswer = buildErrorNoHandlerHeader(request);
@@ -87,7 +92,7 @@ public class SovityMessageController {
         }
 
         try {
-            val response = processMessage(request, handler);
+            val response = processMessage(request, handler, claims);
 
             return typeTransformerRegistry.transform(response, JsonObject.class)
                 .map(it -> Response.ok().type(MediaType.APPLICATION_JSON).entity(it).build())
@@ -108,10 +113,10 @@ public class SovityMessageController {
         }
     }
 
-    private SovityMessageResponse processMessage(SovityMessageRequest compacted, Handler<Object, Object> handler) throws JsonProcessingException {
+    private SovityMessageResponse processMessage(SovityMessageRequest compacted, HandlerWithClaims<Object, Object> handler, ClaimToken claims) throws JsonProcessingException {
         val bodyStr = compacted.body();
         val parsed = mapper.readValue(bodyStr, handler.clazz());
-        val result = handler.handler().apply(parsed);
+        val result = handler.handler().apply(claims, parsed);
         val resultBody = mapper.writeValueAsString(result);
 
         val response = new SovityMessageResponse(
@@ -165,7 +170,7 @@ public class SovityMessageController {
         return new SovityMessageResponse(headerStr, "");
     }
 
-    private Handler<Object, Object> getHandler(SovityMessageRequest request) {
+    private HandlerWithClaims<Object, Object> getHandler(SovityMessageRequest request) {
         final var messageType = getMessageType(request);
         return handlers.getHandler(messageType);
     }

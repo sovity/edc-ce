@@ -20,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.val;
+import org.eclipse.edc.spi.iam.ClaimToken;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
@@ -54,7 +55,7 @@ class SovityMessengerRegistryImplTest {
         val back = handlers.getHandler("itoa");
 
         // assert
-        assertThat(back.handler().apply(new MyInt(1))).isEqualTo("1");
+        assertThat(back.handler().apply(ClaimToken.Builder.newInstance().build(), new MyInt(1))).isEqualTo("1");
     }
 
     @Test

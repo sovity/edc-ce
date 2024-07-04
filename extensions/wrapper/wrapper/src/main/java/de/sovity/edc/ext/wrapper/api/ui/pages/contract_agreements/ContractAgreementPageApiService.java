@@ -18,6 +18,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementPageCardBuilder;
+import de.sovity.edc.extension.contactcancellation.query.ContractAgreementTerminationDetailsQuery;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 

@@ -37,7 +37,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetIdValidator;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.UiDataOfferBuilder;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementCancellationService;
+import de.sovity.edc.extension.contactcancellation.ContractAgreementTerminationService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementDataFetcher;
@@ -72,7 +72,10 @@ import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.FilterExpressionOpera
 import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.UseCaseCatalogApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
-import de.sovity.edc.extension.contactcancellation.query.AgreementDetailsQuery;
+import de.sovity.edc.extension.contactcancellation.query.ContractAgreementTerminationDetailsQuery;
+import de.sovity.edc.extension.contactcancellation.query.TerminateContractQuery;
+import de.sovity.edc.extension.db.directaccess.DirectDatabaseAccess;
+import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import lombok.NoArgsConstructor;
@@ -96,8 +99,6 @@ import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 
 import java.util.List;
 
@@ -123,13 +124,14 @@ public class WrapperExtensionContextBuilder {
         ContractDefinitionStore contractDefinitionStore,
         ContractNegotiationService contractNegotiationService,
         ContractNegotiationStore contractNegotiationStore,
-        DSLContext dsl,
+        DirectDatabaseAccess directDatabaseAccess,
         JsonLd jsonLd,
         Monitor monitor,
         ObjectMapper objectMapper,
         PolicyDefinitionService policyDefinitionService,
         PolicyDefinitionStore policyDefinitionStore,
         PolicyEngine policyEngine,
+        SovityMessenger sovityMessenger,
         TransferProcessService transferProcessService,
         TransferProcessStore transferProcessStore,
         TypeTransformerRegistry typeTransformerRegistry
@@ -211,8 +213,9 @@ public class WrapperExtensionContextBuilder {
             transferRequestBuilder,
             transferProcessService
         );
-        var agreementDetailsQuery = new AgreementDetailsQuery(dsl);
-        var contractAgreementCancellationService = new ContractAgreementCancellationService(agreementDetailsQuery);
+        var agreementDetailsQuery = new ContractAgreementTerminationDetailsQuery(directDatabaseAccess::getDslContext);
+        var terminateContractQuery = new TerminateContractQuery(directDatabaseAccess::getDslContext);
+        var contractAgreementCancellationService = new ContractAgreementTerminationService(sovityMessenger, agreementDetailsQuery, terminateContractQuery);
         var policyDefinitionApiService = new PolicyDefinitionApiService(
             policyDefinitionService,
             policyMapper

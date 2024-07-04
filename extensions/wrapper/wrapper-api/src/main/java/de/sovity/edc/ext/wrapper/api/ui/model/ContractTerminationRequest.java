@@ -29,14 +29,14 @@ import lombok.ToString;
 public class ContractTerminationRequest {
 
     @Schema(
-        title = "Termination reason",
-        description = "A short reason why this contract was terminated",
-        requiredMode = Schema.RequiredMode.REQUIRED)
-    String reason;
-
-    @Schema(
         title = "Termination detail",
         description = "A user explanation to detail why the contract was terminated.",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     String detail;
+
+    @Schema(
+        title = "Termination reason",
+        description = "A short reason why this contract was terminated",
+        requiredMode = Schema.RequiredMode.REQUIRED)
+    String reason;
 }

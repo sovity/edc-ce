@@ -11,12 +11,12 @@
 --       sovity GmbH - initial API and implementation
 --
 
-create table sovity_contract_cancellation
+create table sovity_contract_termination
 (
     contract_agreement_id varchar primary key,
     reason                varchar                  not null,
     detail                varchar                  not null,
-    cancelled_at          timestamp with time zone not null,
+    terminated_at          timestamp with time zone not null,
     CONSTRAINT agreement_fk FOREIGN KEY (contract_agreement_id)
         REFERENCES edc_contract_agreement (agr_id)
 );

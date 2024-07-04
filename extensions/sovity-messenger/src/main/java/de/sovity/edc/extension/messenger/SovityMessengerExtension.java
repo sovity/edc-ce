@@ -27,6 +27,7 @@ import org.eclipse.edc.protocol.dsp.spi.dispatcher.DspHttpRemoteMessageDispatche
 import org.eclipse.edc.protocol.dsp.spi.serialization.JsonLdRemoteMessageSerializer;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Provides;
+import org.eclipse.edc.spi.agent.ParticipantAgentService;
 import org.eclipse.edc.spi.iam.IdentityService;
 import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
 import org.eclipse.edc.spi.monitor.Monitor;
@@ -68,6 +69,9 @@ public class SovityMessengerExtension implements ServiceExtension {
     @Inject
     private WebService webService;
 
+    @Inject
+    private ParticipantAgentService participantAgentService;
+
     @Override
     public String name() {
         return NAME;
@@ -100,6 +104,7 @@ public class SovityMessengerExtension implements ServiceExtension {
             typeTransformerRegistry,
             monitor,
             objectMapper,
+            participantAgentService,
             handlers);
 
         webService.registerResource(dspApiConfiguration.getContextAlias(), receiver);
