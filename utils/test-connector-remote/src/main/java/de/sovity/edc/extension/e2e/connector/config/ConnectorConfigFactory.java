@@ -106,6 +106,8 @@ public class ConnectorConfigFactory {
         properties.put("my.edc.maintainer.url", "http://maintainer.%s".formatted(participantId));
         properties.put("my.edc.maintainer.name", "Maintainer Name %s".formatted(participantId));
 
+        properties.put("edc.server.db.connection.timeout.in.ms", "5000");
+
         return new ConnectorConfig(
             participantId,
             apiConfig.getDefaultApiGroup(),

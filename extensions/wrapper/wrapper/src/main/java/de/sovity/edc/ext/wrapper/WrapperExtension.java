@@ -17,9 +17,8 @@ package de.sovity.edc.ext.wrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import de.sovity.edc.extension.db.directaccess.DirectDatabaseAccess;
+import de.sovity.edc.extension.messenger.SovityMessenger;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.connector.api.management.configuration.transform.ManagementApiTypeTransformerRegistry;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -41,10 +40,8 @@ import org.eclipse.edc.spi.CoreConstants;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
-import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.spi.types.TypeManager;
 import org.eclipse.edc.web.spi.WebService;
-import org.jooq.DSLContext;
 
 public class WrapperExtension implements ServiceExtension {
 
@@ -90,6 +87,8 @@ public class WrapperExtension implements ServiceExtension {
     @Inject
     private PolicyEngine policyEngine;
     @Inject
+    private SovityMessenger sovityMessenger;
+    @Inject
     private TransferProcessService transferProcessService;
     @Inject
     private TransferProcessStore transferProcessStore;
@@ -126,13 +125,14 @@ public class WrapperExtension implements ServiceExtension {
             contractDefinitionStore,
             contractNegotiationService,
             contractNegotiationStore,
-            directDatabaseAccess.newDslContext(),
+            directDatabaseAccess,
             jsonLd,
             context.getMonitor(),
             objectMapper,
             policyDefinitionService,
             policyDefinitionStore,
             policyEngine,
+            sovityMessenger,
             transferProcessService,
             transferProcessStore,
             typeTransformerRegistry

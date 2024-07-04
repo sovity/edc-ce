@@ -12,7 +12,10 @@ dependencies {
     implementation(libs.edc.managementApiConfiguration)
     implementation(libs.edc.dspHttpSpi)
     api(project(":extensions:contract-termination"))
+    // TODO: this prevents the test that don't init a DB to run because the flyway configurator wants to migrate the DB
+    //  were these tests running only with in-memory implementations of the stores?
     api(project(":extensions:database-direct-access"))
+    api(project(":extensions:sovity-messenger"))
     api(project(":extensions:wrapper:wrapper-api"))
     api(project(":extensions:wrapper:wrapper-common-mappers"))
     api(project(":utils:catalog-parser"))

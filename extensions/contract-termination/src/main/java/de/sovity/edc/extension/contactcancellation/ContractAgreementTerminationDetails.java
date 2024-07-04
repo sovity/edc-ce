@@ -11,17 +11,30 @@
  *       sovity GmbH - initial API and implementation
  */
 
-package de.sovity.edc.extension.contactcancellation.query;
+package de.sovity.edc.extension.contactcancellation;
 
+import lombok.Builder;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates;
 
-public record AgreementDetails(
+import java.time.OffsetDateTime;
+
+// TODO: this is probably duplicating elements between provider/consumer/counterparty/negotiation type
+//  remove the duplicates
+@Builder(toBuilder = true)
+public record ContractAgreementTerminationDetails(
+    String contractAgreementId,
     String counterpartyId,
     String counterpartyAddress,
     ContractNegotiationStates state,
+    ContractNegotiation.Type type,
     String providerAgentId,
     String consumerAgentId,
-    ContractNegotiation.Type type
+    String reason,
+    String detail,
+    OffsetDateTime terminatedAt
 ) {
+    public boolean isTerminated() {
+        return terminatedAt != null;
+    }
 }

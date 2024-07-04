@@ -71,23 +71,25 @@ public class DatabaseDirectAccessExtension implements ServiceExtension {
 
     private void initializeDirectDatabaseAccess(ServiceExtensionContext context) {
 
-        // TODO: use the same datasource as the flyway migrator?
-        val hikariConfig = new HikariConfig();
-        val config = context.getConfig();
-        hikariConfig.setJdbcUrl(config.getString(EDC_DATASOURCE_DEFAULT_URL));
-        hikariConfig.setUsername(config.getString(EDC_DATASOURCE_JDBC_USER));
-        hikariConfig.setPassword(config.getString(EDC_DATASOURCE_JDBC_PASSWORD));
-        hikariConfig.setMinimumIdle(1);
-        // TODO: config entry
-        hikariConfig.setMaximumPoolSize(5);
-        // TODO: find with infra what a good value could be?
-        hikariConfig.setIdleTimeout(30000);
-        hikariConfig.setPoolName("direct-database-access");
-        hikariConfig.setMaxLifetime(50000);
-        hikariConfig.setConnectionTimeout(config.getInteger(EDC_SERVER_DB_CONNECTION_TIMEOUT_IN_MS));
+        val dda = new DirectDatabaseAccess(() -> {
 
-        val datasource = new HikariDataSource(hikariConfig);
-        val dda = new DirectDatabaseAccess(datasource);
+            // TODO: use the same datasource as the flyway migrator?
+            val hikariConfig = new HikariConfig();
+            val config = context.getConfig();
+            hikariConfig.setJdbcUrl(config.getString(EDC_DATASOURCE_DEFAULT_URL));
+            hikariConfig.setUsername(config.getString(EDC_DATASOURCE_JDBC_USER));
+            hikariConfig.setPassword(config.getString(EDC_DATASOURCE_JDBC_PASSWORD));
+            hikariConfig.setMinimumIdle(1);
+            // TODO: config entry
+            hikariConfig.setMaximumPoolSize(5);
+            // TODO: find with infra what a good value could be?
+            hikariConfig.setIdleTimeout(30000);
+            hikariConfig.setPoolName("direct-database-access");
+            hikariConfig.setMaxLifetime(50000);
+            hikariConfig.setConnectionTimeout(config.getInteger(EDC_SERVER_DB_CONNECTION_TIMEOUT_IN_MS));
+
+            return new HikariDataSource(hikariConfig);
+        });
 
         context.registerService(DirectDatabaseAccess.class, dda);
     }

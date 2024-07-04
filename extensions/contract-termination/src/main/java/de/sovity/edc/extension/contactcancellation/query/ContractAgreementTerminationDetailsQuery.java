@@ -13,6 +13,7 @@
 
 package de.sovity.edc.extension.contactcancellation.query;
 
+import de.sovity.edc.extension.contactcancellation.ContractAgreementTerminationDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -20,29 +21,38 @@ import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiat
 import org.jooq.DSLContext;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static de.sovity.edc.ext.db.jooq.Tables.EDC_CONTRACT_AGREEMENT;
 import static de.sovity.edc.ext.db.jooq.Tables.EDC_CONTRACT_NEGOTIATION;
+import static de.sovity.edc.ext.db.jooq.Tables.SOVITY_CONTRACT_TERMINATION;
 
 @RequiredArgsConstructor
-public class AgreementDetailsQuery {
-    private final DSLContext dsl;
+public class ContractAgreementTerminationDetailsQuery {
+    private final Supplier<DSLContext> dsl;
 
-    public Optional<AgreementDetails> fetchAgreementDetails(String agreementId) {
+    public Optional<ContractAgreementTerminationDetails> fetchAgreementDetails(String agreementId) {
         val n = EDC_CONTRACT_NEGOTIATION;
         val a = EDC_CONTRACT_AGREEMENT;
+        val t = SOVITY_CONTRACT_TERMINATION;
 
-        val fetched = dsl.select(
+        val fetched = dsl.get().select(
+                n.AGREEMENT_ID,
                 n.COUNTERPARTY_ID,
                 n.COUNTERPARTY_ADDRESS,
                 n.STATE.convertFrom(ContractNegotiationStates::from),
+                n.TYPE.convertFrom(ContractNegotiation.Type::valueOf),
                 a.PROVIDER_AGENT_ID,
                 a.CONSUMER_AGENT_ID,
-                n.TYPE.convertFrom(ContractNegotiation.Type::valueOf))
-            .from(n.join(a).on(n.AGREEMENT_ID.eq(a.AGR_ID)))
+                t.REASON,
+                t.DETAIL,
+                t.TERMINATED_AT)
+            .from(
+                n.join(a).on(n.AGREEMENT_ID.eq(a.AGR_ID))
+                    .leftJoin(SOVITY_CONTRACT_TERMINATION).on(n.AGREEMENT_ID.eq(t.CONTRACT_AGREEMENT_ID)))
             .where(EDC_CONTRACT_AGREEMENT.AGR_ID.eq(agreementId))
             .fetchOne();
 
-        return Optional.ofNullable(fetched).map(it -> it.into(AgreementDetails.class));
+        return Optional.ofNullable(fetched).map(it -> it.into(ContractAgreementTerminationDetails.class));
     }
 }

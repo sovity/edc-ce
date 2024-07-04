@@ -18,6 +18,7 @@ dependencies {
     testImplementation(libs.junit.api)
     testImplementation(libs.junit.params)
     testImplementation(libs.mockserver.netty)
+    testImplementation(libs.restAssured.restAssured)
     testRuntimeOnly(libs.junit.engine)
 }
 

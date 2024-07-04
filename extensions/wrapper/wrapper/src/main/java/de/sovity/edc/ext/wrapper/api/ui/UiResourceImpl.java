@@ -35,7 +35,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.UiContractNegotiation;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
-import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementCancellationService;
+import de.sovity.edc.extension.contactcancellation.ContractAgreementTerminationService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionApiService;
@@ -44,7 +44,9 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
+import de.sovity.edc.extension.contactcancellation.ContractTermination;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -55,7 +57,7 @@ public class UiResourceImpl implements UiResource {
 
     private final ContractAgreementPageApiService contractAgreementApiService;
     private final ContractAgreementTransferApiService contractAgreementTransferApiService;
-    private final ContractAgreementCancellationService contractAgreementCancellationService;
+    private final ContractAgreementTerminationService contractAgreementTerminationService;
     private final TransferHistoryPageApiService transferHistoryPageApiService;
     private final TransferHistoryPageAssetFetcherService transferHistoryPageAssetFetcherService;
     private final AssetApiService assetApiService;
@@ -137,6 +139,7 @@ public class UiResourceImpl implements UiResource {
 
     @Override
     public ContractAgreementPage getContractAgreementPage(@Nullable ContractAgreementPageQuery contractAgreementPageQuery) {
+        // TODO: add test for query
         return contractAgreementApiService.contractAgreementPage();
     }
 
@@ -153,7 +156,14 @@ public class UiResourceImpl implements UiResource {
 
     @Override
     public IdResponseDto terminateContractAgreement(String contractAgreementId, ContractTerminationRequest contractTerminationRequest) {
-        return contractAgreementCancellationService.cancelContractAgreement(contractAgreementId);
+        val terminatedAt = contractAgreementTerminationService.terminateContractAgreementForConsumerAndProvider(
+            new ContractTermination(contractAgreementId, contractTerminationRequest.getDetail(),  contractTerminationRequest.getReason()));
+
+        // TODO: how do I return an HTTP 304 on result failure?
+        return IdResponseDto.builder()
+            .id(contractAgreementId)
+            .lastUpdatedDate(terminatedAt.getContent())
+            .build();
     }
 
     @Override

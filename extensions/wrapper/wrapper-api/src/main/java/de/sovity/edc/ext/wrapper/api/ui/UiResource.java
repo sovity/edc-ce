@@ -144,6 +144,7 @@ interface UiResource {
 
     @POST
     @Path("pages/contract-agreement-page")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Collect filtered data for the Contract Agreement Page")
     ContractAgreementPage getContractAgreementPage(@Nullable ContractAgreementPageQuery contractAgreementPageQuery);
