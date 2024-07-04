@@ -72,7 +72,7 @@ class ConnectorCrawlerTest {
     void testConnectorUpdate() {
         TEST_DATABASE.testTransaction(dsl -> {
             // arrange
-            var connectorUpdater = CrawlerExtensionContext.instance.connectorCrawler();
+            var connectorCrawler = CrawlerExtensionContext.instance.connectorCrawler();
             var connectorCreator = CrawlerExtensionContext.instance.connectorCreator();
             String connectorEndpoint = TestUtils.PROTOCOL_ENDPOINT;
 
@@ -82,7 +82,7 @@ class ConnectorCrawlerTest {
             connectorCreator.addConnector(dsl, connectorEndpoint);
 
             // act
-            connectorUpdater.crawlConnector(connectorEndpoint);
+            connectorCrawler.crawlConnector(connectorEndpoint);
             var connectorPage = brokerServerClient.brokerServerApi().connectorPage(new ConnectorPageQuery());
 
             // assert

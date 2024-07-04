@@ -152,8 +152,8 @@ class ConnectorUpdateCatalogWriterTest {
             DataOfferWriterTestDataModels.Co expectedCo
     ) {
         var actualContractOffer = actual.getContractOffer(expectedDo.getAssetId(), expectedCo.getId());
-        var actualPolicy = actualContractOffer.getPolicy().data();
-        var expectedPolicy = scenario.dummyPolicyJson(expectedCo.getPolicyValue());
-        assertThat(actualPolicy).isEqualTo(expectedPolicy);
+        var actualUiPolicyJson = actualContractOffer.getUiPolicyJson().data();
+        var expectedUiPolicyJson = scenario.dummyPolicyJson(expectedCo.getPolicyValue());
+        assertThat(actualUiPolicyJson).isEqualTo(expectedUiPolicyJson);
     }
 }

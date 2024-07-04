@@ -1,4 +1,4 @@
-rootProject.name = "edc-extensions"
+rootProject.name = "sovity-ce-edc"
 
 include(":connector")
 include(":extensions:data-catalog-crawler")

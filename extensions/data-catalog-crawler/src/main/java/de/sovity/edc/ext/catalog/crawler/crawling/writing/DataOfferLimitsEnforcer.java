@@ -81,7 +81,7 @@ public class DataOfferLimitsEnforcer {
         // DataOffer
         if (enforcedLimits.dataOfferLimitsExceeded() && connector.getDataOffersExceeded() == ConnectorDataOffersExceeded.OK) {
             var maxDataOffers = crawlerConfig.getMaxDataOffersPerConnector();
-            crawlerEventLogger.logConnectorUpdateDataOfferLimitExceeded(dsl, maxDataOffers, connectorRef);
+            crawlerEventLogger.logConnectorUpdateDataOfferLimitExceeded(dsl, connectorRef, maxDataOffers);
             connector.setDataOffersExceeded(ConnectorDataOffersExceeded.EXCEEDED);
         } else if (!enforcedLimits.dataOfferLimitsExceeded() && connector.getDataOffersExceeded() == ConnectorDataOffersExceeded.EXCEEDED) {
             crawlerEventLogger.logConnectorUpdateDataOfferLimitOk(dsl, connectorRef);

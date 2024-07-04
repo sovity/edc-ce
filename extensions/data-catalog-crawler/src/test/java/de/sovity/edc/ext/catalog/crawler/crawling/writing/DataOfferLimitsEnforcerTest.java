@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.catalog.crawler.crawling.writing;
 
+import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorContractOffersExceeded;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorDataOffersExceeded;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.tables.records.ConnectorRecord;
@@ -41,6 +42,8 @@ class DataOfferLimitsEnforcerTest {
     CrawlerConfig settings;
     CrawlerEventLogger crawlerEventLogger;
     DSLContext dsl;
+
+    ConnectorRef connectorRef = new DataOfferWriterTestDataHelper().connectorRef;
 
     @BeforeEach
     void setup() {
@@ -125,7 +128,6 @@ class DataOfferLimitsEnforcerTest {
     void verify_logConnectorUpdateDataOfferLimitExceeded() {
         // arrange
         var connector = new ConnectorRecord();
-        connector.setEndpoint("http://localhost:8080");
         connector.setDataOffersExceeded(ConnectorDataOffersExceeded.OK);
 
         int maxDataOffers = 1;
@@ -139,17 +141,16 @@ class DataOfferLimitsEnforcerTest {
 
         // act
         var enforcedLimits = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
-        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl, connector, enforcedLimits);
+        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl,connectorRef, connector, enforcedLimits);
 
         // assert
-        verify(crawlerEventLogger).logConnectorUpdateDataOfferLimitExceeded(dsl, 1, connector.getEndpoint());
+        verify(crawlerEventLogger).logConnectorUpdateDataOfferLimitExceeded(dsl, connectorRef, 1);
     }
 
     @Test
     void verify_logConnectorUpdateDataOfferLimitOk() {
         // arrange
         var connector = new ConnectorRecord();
-        connector.setEndpoint("http://localhost:8080");
         connector.setDataOffersExceeded(ConnectorDataOffersExceeded.EXCEEDED);
 
         int maxDataOffers = -1;
@@ -163,17 +164,16 @@ class DataOfferLimitsEnforcerTest {
 
         // act
         var enforcedLimits = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
-        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl, connector, enforcedLimits);
+        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl,connectorRef, connector, enforcedLimits);
 
         // assert
-        verify(crawlerEventLogger).logConnectorUpdateDataOfferLimitOk(dsl, connector.getEndpoint());
+        verify(crawlerEventLogger).logConnectorUpdateDataOfferLimitOk(dsl, connectorRef);
     }
 
     @Test
     void verify_logConnectorUpdateContractOfferLimitExceeded() {
         // arrange
         var connector = new ConnectorRecord();
-        connector.setEndpoint("http://localhost:8080");
         connector.setContractOffersExceeded(ConnectorContractOffersExceeded.OK);
 
         int maxDataOffers = 1;
@@ -187,17 +187,16 @@ class DataOfferLimitsEnforcerTest {
 
         // act
         var enforcedLimits = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
-        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl, connector, enforcedLimits);
+        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl,connectorRef, connector, enforcedLimits);
 
         // assert
-        verify(crawlerEventLogger).logConnectorUpdateContractOfferLimitExceeded(dsl, connector.getEndpoint(), 1);
+        verify(crawlerEventLogger).logConnectorUpdateContractOfferLimitExceeded(dsl, connectorRef, 1);
     }
 
     @Test
     void verify_logConnectorUpdateContractOfferLimitOk() {
         // arrange
         var connector = new ConnectorRecord();
-        connector.setEndpoint("http://localhost:8080");
         connector.setContractOffersExceeded(ConnectorContractOffersExceeded.EXCEEDED);
 
         int maxDataOffers = -1;
@@ -211,9 +210,9 @@ class DataOfferLimitsEnforcerTest {
 
         // act
         var enforcedLimits = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
-        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl, connector, enforcedLimits);
+        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl,connectorRef, connector, enforcedLimits);
 
         // assert
-        verify(crawlerEventLogger).logConnectorUpdateContractOfferLimitOk(dsl, connector.getEndpoint());
+        verify(crawlerEventLogger).logConnectorUpdateContractOfferLimitOk(dsl, connectorRef);
     }
 }

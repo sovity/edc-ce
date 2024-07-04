@@ -12,6 +12,7 @@ dependencies {
     compileOnly(libs.lombok)
 
     implementation(libs.apache.commonsLang)
+    implementation(libs.hikari)
 
     api(project(":utils:catalog-parser"))
     api(project(":utils:json-and-jsonld-utils"))
@@ -43,6 +44,7 @@ dependencies {
     testImplementation(libs.edc.configurationFilesystem)
     testImplementation(libs.restAssured.restAssured)
     testImplementation(libs.testcontainers.testcontainers)
+    testImplementation(libs.flyway.core)
     testImplementation(libs.testcontainers.junitJupiter)
     testImplementation(libs.testcontainers.postgresql)
     testImplementation(libs.junit.api)

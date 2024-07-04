@@ -58,8 +58,8 @@ public class CrawlerEventLogger {
 
     public void logConnectorUpdateDataOfferLimitExceeded(
             DSLContext dsl,
-            Integer maxDataOffersPerConnector,
-            ConnectorRef connectorRef
+            ConnectorRef connectorRef,
+            Integer maxDataOffersPerConnector
     ) {
         var logEntry = newLogEntry(dsl, connectorRef);
         logEntry.setEvent(CrawlerEventType.CONNECTOR_DATA_OFFER_LIMIT_EXCEEDED);

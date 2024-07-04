@@ -33,20 +33,9 @@ dependencies {
 
     jooqGenerator(libs.postgres)
     flywayMigration(libs.postgres)
-    implementation(libs.hikari)
-
-    annotationProcessor(libs.lombok)
-    compileOnly(libs.lombok)
-    implementation(libs.apache.commonsLang)
-
-    implementation(libs.edc.coreSpi)
 
     // Adds Database-Related EDC-Extensions (EDC-SQL-Stores, JDBC-Driver, Pool and Transactions)
     implementation(libs.postgres)
-
-    api(libs.flyway.core)
-
-    testImplementation(libs.edc.junit)
 }
 
 sourceSets {

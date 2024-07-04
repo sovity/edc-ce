@@ -17,9 +17,6 @@ package de.sovity.edc.ext.catalog.crawler.crawling.logging;
 import de.sovity.edc.ext.catalog.crawler.config.FlywayTestUtils;
 import de.sovity.edc.ext.catalog.crawler.config.TestDatabase;
 import de.sovity.edc.ext.catalog.crawler.config.TestDatabaseFactory;
-import de.sovity.edc.ext.catalog.crawler.crawling.logging.ConnectorChangeTracker;
-import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerEventErrorMessage;
-import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerEventLogger;
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.Tables;
 import org.jooq.DSLContext;
@@ -56,7 +53,7 @@ class CrawlerEventLoggerTest {
             crawlerEventLogger.logConnectorOffline(dsl, connectorRef, new CrawlerEventErrorMessage("Message", "Stacktrace"));
             crawlerEventLogger.logConnectorUpdateContractOfferLimitExceeded(dsl, connectorRef, 10);
             crawlerEventLogger.logConnectorUpdateContractOfferLimitOk(dsl, connectorRef);
-            crawlerEventLogger.logConnectorUpdateDataOfferLimitExceeded(dsl, 10, connectorRef);
+            crawlerEventLogger.logConnectorUpdateDataOfferLimitExceeded(dsl, connectorRef, 10);
             crawlerEventLogger.logConnectorUpdateDataOfferLimitOk(dsl, connectorRef);
 
             assertThat(numLogEntries(dsl)).isEqualTo(8);

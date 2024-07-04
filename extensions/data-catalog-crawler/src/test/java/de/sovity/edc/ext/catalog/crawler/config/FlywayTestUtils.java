@@ -18,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.eclipse.edc.spi.monitor.ConsoleMonitor;
 import org.eclipse.edc.spi.system.configuration.Config;
+import org.flywaydb.core.Flyway;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -28,15 +29,13 @@ import static org.mockito.Mockito.when;
 public class FlywayTestUtils {
 
     public static void migrate(TestDatabase testDatabase) {
-        var monitor = new ConsoleMonitor();
-        var config = mock(Config.class);
-        when(config.getBoolean(eq(PostgresFlywayExtension.FLYWAY_CLEAN_ENABLE), any())).thenReturn(true);
-        when(config.getBoolean(eq(PostgresFlywayExtension.FLYWAY_CLEAN), any())).thenReturn(true);
-
-        var flywayFactory = new FlywayFactory(config);
-        var dataSource = testDatabase.getDataSource();
-        var flyway = flywayFactory.setupFlyway(dataSource);
-        var flywayMigrator = new FlywayMigrator(flyway, config, monitor);
-        flywayMigrator.migrateAndRepair();
+        var config = Flyway.configure()
+                .dataSource(testDatabase.getDataSource())
+                .baselineOnMigrate(true)
+                .cleanDisabled(false)
+                .locations("classpath:db/migration");
+        var flyway = new Flyway(config);
+        flyway.clean();
+        flyway.migrate();
     }
 }
