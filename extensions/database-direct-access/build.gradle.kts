@@ -8,23 +8,10 @@ dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
 
-    implementation(project(":utils:jooq-database-access"))
     implementation(libs.edc.coreSpi)
 
-    // Adds Database-Related EDC-Extensions (EDC-SQL-Stores, JDBC-Driver, Pool and Transactions)
-    implementation(libs.edc.controlPlaneSql)
-    implementation(libs.edc.transactionLocal)
-    implementation(libs.tractus.sqlPool)
-
-    implementation(libs.apache.commonsLang)
-
-    implementation(libs.flyway.core)
-
-    implementation(libs.postgres)
-
+    implementation(libs.jooq.jooq)
     implementation(libs.hikari)
-
-    testImplementation(libs.edc.junit)
 }
 
 group = libs.versions.sovityEdcExtensionGroup.get()
