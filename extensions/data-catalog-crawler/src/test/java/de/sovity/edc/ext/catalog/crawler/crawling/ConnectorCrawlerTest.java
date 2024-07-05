@@ -26,16 +26,17 @@ import de.sovity.edc.ext.catalog.crawler.AssertionUtils;
 import de.sovity.edc.ext.catalog.crawler.CrawlerExtensionContext;
 import de.sovity.edc.ext.catalog.crawler.TestPolicy;
 import de.sovity.edc.ext.catalog.crawler.TestUtils;
-import de.sovity.edc.ext.catalog.crawler.client.BrokerServerClient;
 import de.sovity.edc.ext.catalog.crawler.client.gen.model.CatalogPageQuery;
-import de.sovity.edc.ext.catalog.crawler.client.gen.model.ConnectorListEntry;
-import de.sovity.edc.ext.catalog.crawler.client.gen.model.ConnectorPageQuery;
 import de.sovity.edc.ext.catalog.crawler.config.TestDatabase;
 import de.sovity.edc.ext.catalog.crawler.config.TestDatabaseFactory;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.Tables;
+import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorContractOffersExceeded;
+import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorDataOffersExceeded;
+import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
+import org.eclipse.edc.junit.extensions.EdcRuntimeExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -45,6 +46,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
 @ApiTest
@@ -54,7 +56,44 @@ class ConnectorCrawlerTest {
     private static final TestDatabase TEST_DATABASE = TestDatabaseFactory.getTestDatabase();
 
     @RegisterExtension
-    static EdcExtension consumerEdcContext = new EdcExtension();
+    static EdcExtension crawlerEdcContext = new EdcExtension();
+
+    @RegisterExtension
+    static EdcRuntimeExtension providerEdcContext = new EdcClassRuntimesExtension(
+            new EdcRuntimeExtension(
+                    ":system-tests:e2e-transfer-test:control-plane",
+                    "consumer-control-plane",
+                    CONSUMER.controlPlaneConfiguration()
+            ),
+            new EdcRuntimeExtension(
+                    ":system-tests:e2e-transfer-test:backend-service",
+                    "consumer-backend-service",
+                    new HashMap<>() {
+                        {
+                            put("web.http.port", String.valueOf(CONSUMER.backendService().getPort()));
+                        }
+                    }
+            ),
+            new EdcRuntimeExtension(
+                    ":system-tests:e2e-transfer-test:data-plane",
+                    "provider-data-plane",
+                    PROVIDER.dataPlaneConfiguration()
+            ),
+            new EdcRuntimeExtension(
+                    ":system-tests:e2e-transfer-test:control-plane",
+                    "provider-control-plane",
+                    PROVIDER.controlPlaneConfiguration()
+            ),
+            new EdcRuntimeExtension(
+                    ":system-tests:e2e-transfer-test:backend-service",
+                    "provider-backend-service",
+                    new HashMap<>() {
+                        {
+                            put("web.http.port", String.valueOf(PROVIDER.backendService().getPort()));
+                        }
+                    }
+            )
+    );
 
     private EdcClient providerClient;
 
@@ -70,20 +109,46 @@ class ConnectorCrawlerTest {
 
     @Test
     void testConnectorUpdate() {
+        var policyId = createPolicyDefinition();
+        var assetId = createAsset();
+        createContractDefinition(policyId, assetId);
         TEST_DATABASE.testTransaction(dsl -> {
             // arrange
             var connectorCrawler = CrawlerExtensionContext.instance.connectorCrawler();
-            var connectorCreator = CrawlerExtensionContext.instance.connectorCreator();
-            String connectorEndpoint = TestUtils.PROTOCOL_ENDPOINT;
-
-            var policyId = createPolicyDefinition();
-            var assetId = createAsset();
-            createContractDefinition(policyId, assetId);
-            connectorCreator.addConnector(dsl, connectorEndpoint);
+            var connectorRef = TestUtils.CONNECTOR_REF;
 
             // act
-            connectorCrawler.crawlConnector(connectorEndpoint);
-            var connectorPage = brokerServerClient.brokerServerApi().connectorPage(new ConnectorPageQuery());
+            connectorCrawler.crawlConnector(connectorRef);
+
+            var c = Tables.CONNECTOR;
+            var connector = dsl.fetchOne(c, c.MDS_ID.eq(connectorRef.getConnectorId()));
+            assertThat(connector).isNotNull();
+            assertThat(connector.getOnlineStatus()).isEqualTo(ConnectorOnlineStatus.ONLINE);
+            assertThat(connector.getLastRefreshAttemptAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.SECONDS));
+            assertThat(connector.getLastSuccessfulRefreshAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.SECONDS));
+            assertThat(connector.getDataOffersExceeded()).isEqualTo(ConnectorDataOffersExceeded.OK);
+            assertThat(connector.getContractOffersExceeded()).isEqualTo(ConnectorContractOffersExceeded.OK);
+
+            var d = Tables.DATA_OFFER;
+            var dataOffer = dsl.fetchOne(d, d.CONNECTOR_ID.eq(connector.getConnectorId()));
+            assertThat(dataOffer).isNotNull();
+            assertThat(dataOffer.getAssetId()).isEqualTo(assetId);
+            assertThat(dataOffer.getConnectorId()).isEqualTo(connector.getConnectorId());
+            assertThat(dataOffer.getCuratorOrganizationName()).isEqualTo(connectorRef.getOrganizationLegalName());
+            assertThat(dataOffer.getAssetTitle()).isEqualTo("AssetName");
+            assertThat(dataOffer.getDescription()).isEqualTo("AssetDescription");
+            assertThat(dataOffer.getDataCategory()).isEqualTo("dataCategory");
+            assertThat(dataOffer.getDataModel()).isEqualTo("dataModel");
+            assertThat(dataOffer.getDataSubcategory()).isEqualTo("dataSubcategory");
+            assertThat(dataOffer.getGeoReferenceMethod()).isEqualTo("geoReferenceMethod");
+            assertThat(dataOffer.getKeywords()).containsExactly("keyword1", "keyword2");
+            assertThat(dataOffer.getKeywordsCommaJoined()).isEqualTo("keyword1, keyword2");
+            assertThat(dataOffer.getTransportMode()).isEqualTo("transportMode");
+            assertThat(dataOffer.getVersion()).isEqualTo("");
+            assertThat(dataOffer.getUpdatedAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.SECONDS));
+            assertThat(dataOffer.getCreatedAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.SECONDS));
+            assertThat(dataOffer.getUiAssetJson()).isEqualTo("");
+
 
             // assert
             var catalog = brokerServerClient.brokerServerApi().catalogPage(new CatalogPageQuery());
@@ -125,10 +190,6 @@ class ConnectorCrawlerTest {
             AssertionUtils.assertEqualUsingJson(policy.getConstraints().get(0), TestPolicy.createAfterYesterdayConstraint());
 
             var connector = connectorPage.getConnectors().get(0);
-            assertThat(connector.getOnlineStatus()).isEqualTo(ConnectorListEntry.OnlineStatusEnum.ONLINE);
-            assertThat(connector.getParticipantId()).isEqualTo(TestUtils.PARTICIPANT_ID);
-            assertThat(connector.getOrganizationName()).isEqualTo("Unknown");
-            assertThat(connector.getLastRefreshAttemptAt()).isCloseTo(OffsetDateTime.now(), within(1, ChronoUnit.SECONDS));
 
             var connectorRecord = dsl.selectFrom(Tables.CONNECTOR).fetchOne();
             assertThat(connectorRecord.getMdsId()).isEqualTo("MDSL1234ZZ");

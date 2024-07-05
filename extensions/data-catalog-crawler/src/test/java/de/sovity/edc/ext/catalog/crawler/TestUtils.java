@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.catalog.crawler;
 
 import de.sovity.edc.ext.catalog.crawler.config.TestDatabase;
+import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -37,6 +38,14 @@ public class TestUtils {
     public static final String PROTOCOL_ENDPOINT = PROTOCOL_HOST + PROTOCOL_PATH;
     public static final String PARTICIPANT_ID = "MDSL1234ZZ.C4321AA";
     public static final String CURATOR_NAME = "My Org";
+
+    public static final ConnectorRef CONNECTOR_REF = new ConnectorRef(
+            PARTICIPANT_ID,
+            "test",
+            CURATOR_NAME,
+            PARTICIPANT_ID.split("\\.")[0],
+            PROTOCOL_ENDPOINT
+    );
 
     @NotNull
     public static Map<String, String> createConfiguration(

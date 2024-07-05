@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.catalog.crawler.crawling.writing;
 
 import de.sovity.edc.ext.catalog.crawler.dao.CatalogPatchApplier;
+import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorQueries;
 import de.sovity.edc.ext.catalog.crawler.dao.contract_offers.ContractOfferQueries;
 import de.sovity.edc.ext.catalog.crawler.dao.contract_offers.ContractOfferRecordUpdater;
 import de.sovity.edc.ext.catalog.crawler.dao.data_offers.DataOfferQueries;
@@ -32,7 +33,10 @@ class DataOfferWriterTestDydi {
     DataOfferQueries dataOfferQueries = new DataOfferQueries();
     ContractOfferQueries contractOfferQueries = new ContractOfferQueries();
     ContractOfferRecordUpdater contractOfferRecordUpdater = new ContractOfferRecordUpdater();
-    DataOfferRecordUpdater dataOfferRecordUpdater = new DataOfferRecordUpdater();
+    ConnectorQueries connectorQueries = new ConnectorQueries();
+    DataOfferRecordUpdater dataOfferRecordUpdater = new DataOfferRecordUpdater(
+            connectorQueries
+    );
     CatalogPatchBuilder catalogPatchBuilder = new CatalogPatchBuilder(
             contractOfferQueries,
             dataOfferQueries,

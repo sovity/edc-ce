@@ -33,7 +33,8 @@ public class FlywayTestUtils {
                 .dataSource(testDatabase.getDataSource())
                 .baselineOnMigrate(true)
                 .cleanDisabled(false)
-                .locations("classpath:db/migration");
+                .table("crawler_test_migration_history")
+                .locations("classpath:db/migration", "classpath:db/migration-test-utils");
         var flyway = new Flyway(config);
         flyway.clean();
         flyway.migrate();

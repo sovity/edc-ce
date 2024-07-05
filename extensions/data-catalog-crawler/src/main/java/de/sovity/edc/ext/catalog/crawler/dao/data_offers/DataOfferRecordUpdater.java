@@ -74,7 +74,7 @@ public class DataOfferRecordUpdater {
             FetchedDataOffer fetchedDataOffer,
             boolean changed
     ) {
-        var asset = fetchedDataOffer.getAsset();
+        var asset = fetchedDataOffer.getUiAsset();
         var changes = new ChangeTracker(changed);
 
         changes.setIfChanged(

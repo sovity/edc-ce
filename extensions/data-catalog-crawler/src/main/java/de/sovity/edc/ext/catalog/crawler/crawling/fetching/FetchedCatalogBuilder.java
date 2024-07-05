@@ -77,7 +77,7 @@ public class FetchedCatalogBuilder {
 
         var fetchedDataOffer = new FetchedDataOffer();
         fetchedDataOffer.setAssetId(uiAsset.getAssetId());
-        fetchedDataOffer.setAsset(uiAsset);
+        fetchedDataOffer.setUiAsset(uiAsset);
         fetchedDataOffer.setUiAssetJson(uiAssetJson);
         fetchedDataOffer.setContractOffers(buildFetchedContractOffers(dspDataOffer.getContractOffers()));
         return fetchedDataOffer;

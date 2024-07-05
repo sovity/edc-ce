@@ -30,7 +30,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FetchedDataOffer {
     String assetId;
-    UiAsset asset;
+    UiAsset uiAsset;
     String uiAssetJson;
     List<FetchedContractOffer> contractOffers;
 }
