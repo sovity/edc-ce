@@ -10,7 +10,6 @@ dependencies {
 
     implementation(project(":utils:jooq-database-access"))
     implementation(project(":extensions:database-direct-access"))
-    implementation(project(":extensions:postgres-flyway"))
     implementation(project(":extensions:sovity-messenger"))
 
     implementation(libs.edc.contractSpi)
@@ -26,6 +25,7 @@ dependencies {
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
 
+    testImplementation(project(":extensions:postgres-flyway"))
     testImplementation(project(":extensions:wrapper:clients:java-client"))
     testImplementation(project(":extensions:wrapper:wrapper"))
     testImplementation(project(":utils:test-connector-remote"))
