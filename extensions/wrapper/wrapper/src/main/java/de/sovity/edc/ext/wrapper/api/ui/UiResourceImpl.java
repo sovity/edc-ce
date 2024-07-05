@@ -140,7 +140,7 @@ public class UiResourceImpl implements UiResource {
     @Override
     public ContractAgreementPage getContractAgreementPage(@Nullable ContractAgreementPageQuery contractAgreementPageQuery) {
         // TODO: add test for query
-        return contractAgreementApiService.contractAgreementPage();
+        return contractAgreementApiService.contractAgreementPage(contractAgreementPageQuery);
     }
 
 

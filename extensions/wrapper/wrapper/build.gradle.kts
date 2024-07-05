@@ -19,6 +19,7 @@ dependencies {
     api(project(":extensions:wrapper:wrapper-api"))
     api(project(":extensions:wrapper:wrapper-common-mappers"))
     api(project(":utils:catalog-parser"))
+    api(project(":utils:jooq-database-access"))
     api(project(":utils:json-and-jsonld-utils"))
     api(libs.edc.contractDefinitionApi)
     api(libs.edc.controlPlaneSpi)

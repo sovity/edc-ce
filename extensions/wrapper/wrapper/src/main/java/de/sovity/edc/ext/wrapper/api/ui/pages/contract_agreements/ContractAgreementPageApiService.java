@@ -16,11 +16,12 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPageQuery;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementPageCardBuilder;
-import de.sovity.edc.extension.contactcancellation.query.ContractAgreementTerminationDetailsQuery;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 
@@ -30,15 +31,20 @@ public class ContractAgreementPageApiService {
     private final ContractAgreementPageCardBuilder contractAgreementPageCardBuilder;
 
     @NotNull
-    public ContractAgreementPage contractAgreementPage() {
-        var agreements = contractAgreementDataFetcher.getContractAgreements();
+    public ContractAgreementPage contractAgreementPage(@Nullable ContractAgreementPageQuery contractAgreementPageQuery) {
+        if (contractAgreementPageQuery == null || contractAgreementPageQuery.isEmpty()) {
+            var agreements = contractAgreementDataFetcher.getContractAgreements();
 
-        var cards = agreements.stream()
+            var cards = agreements.stream()
                 .map(agreement -> contractAgreementPageCardBuilder.buildContractAgreementCard(
-                        agreement.agreement(), agreement.negotiation(), agreement.asset(), agreement.transfers()))
+                    agreement.agreement(), agreement.negotiation(), agreement.asset(), agreement.transfers(), agreement.terminations()))
                 .sorted(Comparator.comparing(ContractAgreementCard::getContractSigningDate).reversed())
                 .toList();
 
-        return new ContractAgreementPage(cards);
+            return new ContractAgreementPage(cards);
+        } else {
+            // TODO: filter by contract agreement query
+            throw new UnsupportedOperationException("TODO: ");
+        }
     }
 }

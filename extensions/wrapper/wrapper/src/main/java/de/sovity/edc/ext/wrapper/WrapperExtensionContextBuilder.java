@@ -168,7 +168,8 @@ public class WrapperExtensionContextBuilder {
             contractAgreementService,
             contractNegotiationStore,
             transferProcessService,
-            assetIndex
+            assetIndex,
+            directDatabaseAccess::getDslContext // TODO: should I reuse the same all the time or create a new one for each class?
         );
         var contractAgreementApiService = new ContractAgreementPageApiService(
             contractAgreementDataFetcher,

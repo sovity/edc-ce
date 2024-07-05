@@ -14,13 +14,13 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services;
 
+import de.sovity.edc.ext.db.jooq.tables.records.SovityContractTerminationRecord;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferProcess;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTerminationInfo;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationStatus;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferProcess;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
+import static de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationStatus.ONGOING;
+import static de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationStatus.TERMINATED;
 import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcMillisToOffsetDateTime;
 import static de.sovity.edc.ext.wrapper.utils.EdcDateUtils.utcSecondsToOffsetDateTime;
 
@@ -45,11 +48,11 @@ public class ContractAgreementPageCardBuilder {
 
     @NotNull
     public ContractAgreementCard buildContractAgreementCard(
-            @NonNull ContractAgreement agreement,
-            @NonNull ContractNegotiation negotiation,
-            @NonNull Asset asset,
-            @NonNull List<TransferProcess> transferProcesses
-    ) {
+        @NonNull ContractAgreement agreement,
+        @NonNull ContractNegotiation negotiation,
+        @NonNull Asset asset,
+        @NonNull List<TransferProcess> transferProcesses,
+        @NonNull Map<String, SovityContractTerminationRecord> terminations) {
         var assetParticipantId = contractNegotiationUtils.getProviderParticipantId(negotiation);
         var assetConnectorEndpoint = contractNegotiationUtils.getProviderConnectorEndpoint(negotiation);
 
@@ -63,31 +66,44 @@ public class ContractAgreementPageCardBuilder {
         card.setAsset(assetMapper.buildUiAsset(asset, assetConnectorEndpoint, assetParticipantId));
         card.setContractPolicy(policyMapper.buildUiPolicy(agreement.getPolicy()));
         card.setTransferProcesses(buildTransferProcesses(transferProcesses));
-        card.setTerminationStatus(ContractTerminationStatus.ONGOING);
-        card.setTerminationInformation(null);
+
+        if (terminations.containsKey(agreement.getId())) {
+            card.setTerminationStatus(TERMINATED);
+            var termination = terminations.get(agreement.getId());
+            card.setTerminationInformation(ContractAgreementTerminationInfo.builder()
+                .detail(termination.getDetail())
+                .reason(termination.getReason())
+                .terminatedAt(termination.getTerminatedAt())
+                .build());
+
+        } else {
+            card.setTerminationStatus(ONGOING);
+            card.setTerminationInformation(null);
+        }
+
         return card;
     }
 
     @NotNull
     private List<ContractAgreementTransferProcess> buildTransferProcesses(
-            @NonNull List<TransferProcess> transferProcessEntities
+        @NonNull List<TransferProcess> transferProcessEntities
     ) {
         return transferProcessEntities.stream()
-                .map(this::buildContractAgreementTransfer)
-                .sorted(Comparator.comparing(ContractAgreementTransferProcess::getLastUpdatedDate)
-                        .reversed())
-                .toList();
+            .map(this::buildContractAgreementTransfer)
+            .sorted(Comparator.comparing(ContractAgreementTransferProcess::getLastUpdatedDate)
+                .reversed())
+            .toList();
     }
 
     @NotNull
     private ContractAgreementTransferProcess buildContractAgreementTransfer(
-            TransferProcess transferProcessEntity) {
+        TransferProcess transferProcessEntity) {
         var transferProcess = new ContractAgreementTransferProcess();
         transferProcess.setTransferProcessId(transferProcessEntity.getId());
         transferProcess.setLastUpdatedDate(
-                utcMillisToOffsetDateTime(transferProcessEntity.getUpdatedAt()));
+            utcMillisToOffsetDateTime(transferProcessEntity.getUpdatedAt()));
         transferProcess.setState(transferProcessStateService.buildTransferProcessState(
-                transferProcessEntity.getState()));
+            transferProcessEntity.getState()));
         transferProcess.setErrorMessage(transferProcessEntity.getErrorDetail());
         return transferProcess;
     }

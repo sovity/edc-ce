@@ -1423,6 +1423,8 @@ components:
           enum:
           - ONGOING
           - TERMINATED
+        empty:
+          type: boolean
       description: Filters for querying a Contract Contract Agreement Page
     ContractDefinitionEntry:
       required:
