@@ -5,7 +5,11 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":launchers:common:base-data-catalog-crawler"))
+    implementation(project(":extensions:catalog-crawler:catalog-crawler-launcher-base"))
+
+    api(libs.edc.monitorJdkLogger)
+    api(libs.edc.apiObservability)
+
     implementation(project(":launchers:common:auth-daps"))
 }
 
