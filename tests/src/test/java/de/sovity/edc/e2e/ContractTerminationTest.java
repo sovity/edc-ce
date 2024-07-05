@@ -53,6 +53,8 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static de.sovity.edc.client.gen.model.ContractAgreementCard.TerminationStatusEnum.ONGOING;
+import static de.sovity.edc.client.gen.model.ContractAgreementCard.TerminationStatusEnum.TERMINATED;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -129,6 +131,36 @@ public class ContractTerminationTest {
 
     @Test
     @SneakyThrows
+    void canGetContractAgreementPageForNonTerminatedContract() {
+        // arrange
+
+        val assetId = "asset-0";
+        val policyId = "policy-0";
+        createAsset(assetId);
+        createPolicyDefinition(policyId);
+        createContractDefinition(policyId, assetId);
+
+        val offers = consumerClient.uiApi().getCatalogPageDataOffers(providerConfig.getProtocolEndpoint().getUri().toString());
+        val firstOffer = offers.get(0);
+        val firstContractOffer = firstOffer.getContractOffers().get(0);
+        val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
+        awaitNegotiationDone(initialNegotiation.getContractNegotiationId()); // TODO: avoid duplicates
+
+        // act
+        // don't terminate the contract
+        val agreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
+
+        // assert
+        val contractAgreements = agreements.getContractAgreements();
+        assertThat(contractAgreements).hasSize(1);
+        // TODO: why do we have 2 different enum to represent the same kind of data. This is confusing...
+        assertThat(contractAgreements.get(0).getTerminationStatus()).isEqualTo(ONGOING);
+        val information = contractAgreements.get(0).getTerminationInformation();
+        assertThat(information).isNull();
+    }
+
+    @Test
+    @SneakyThrows
     void canTerminateContractFromConsumer() {
         // arrange
 
@@ -160,12 +192,57 @@ public class ContractTerminationTest {
         // assert
         assertThat(agreements.getContractAgreements()).hasSize(1);
         // TODO: why do we have 2 different enum to represent the same kind of data. This is confusing...
-//        assertThat(agreements.getContractAgreements().get(0).getTerminationStatus()).isEqualTo(ContractAgreementCard.TerminationStatusEnum.TERMINATED);
-//        val information = agreements.getContractAgreements().get(0).getTerminationInformation();
-//        assertThat(information).isNotNull();
-//        assertThat(information.getTerminatedAt()).isBetween(now.minusMinutes(1), now.plusMinutes(1));
-//        assertThat(information.getDetail()).isEqualTo(detail);
-//        assertThat(information.getReason()).isEqualTo(reason);
+        assertThat(agreements.getContractAgreements().get(0).getTerminationStatus()).isEqualTo(TERMINATED);
+        val information = agreements.getContractAgreements().get(0).getTerminationInformation();
+        assertThat(information).isNotNull();
+        assertThat(information.getTerminatedAt()).isBetween(now.minusMinutes(1), now.plusMinutes(1));
+        assertThat(information.getDetail()).isEqualTo(detail);
+        assertThat(information.getReason()).isEqualTo(reason);
+
+        // TODO: assert provider side
+    }
+
+    @Test
+    @SneakyThrows
+    void canTerminateContractFromProvider() {
+        // arrange
+
+        val assetId = "asset-1";
+        val policyId = "policy-1";
+        createAsset(assetId);
+        createPolicyDefinition(policyId);
+        createContractDefinition(policyId, assetId);
+
+        val offers = consumerClient.uiApi().getCatalogPageDataOffers(providerConfig.getProtocolEndpoint().getUri().toString());
+        val firstOffer = offers.get(0);
+        val firstContractOffer = firstOffer.getContractOffers().get(0);
+        val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
+        val negotiation = awaitNegotiationDone(initialNegotiation.getContractNegotiationId());
+
+        // act
+        val now = OffsetDateTime.now();
+        // TODO: max detail length
+        val detail = "Some detail";
+        val reason = "Some reason";
+        providerClient.uiApi().terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
+            .detail(detail)
+            .reason(reason)
+            .build());
+        // TODO: await instead of wait
+        Thread.sleep(1000);
+        val agreements = providerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
+
+        // assert
+        assertThat(agreements.getContractAgreements()).hasSize(1);
+        // TODO: why do we have 2 different enum to represent the same kind of data. This is confusing...
+        assertThat(agreements.getContractAgreements().get(0).getTerminationStatus()).isEqualTo(TERMINATED);
+        val information = agreements.getContractAgreements().get(0).getTerminationInformation();
+        assertThat(information).isNotNull();
+        assertThat(information.getTerminatedAt()).isBetween(now.minusMinutes(1), now.plusMinutes(1));
+        assertThat(information.getDetail()).isEqualTo(detail);
+        assertThat(information.getReason()).isEqualTo(reason);
+
+        // TODO: assert consumer side
     }
 
     // TODO: group those helpers

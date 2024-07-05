@@ -29,4 +29,8 @@ public class ContractAgreementPageQuery {
         description = "Optionally filter the resulting contract agreements by their termination status.",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private ContractTerminationStatus terminationStatus;
+
+    public boolean isEmpty() {
+        return terminationStatus == null;
+    }
 }
