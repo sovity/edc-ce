@@ -13,24 +13,20 @@
 
 package de.sovity.edc.ext.wrapper.api.common.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
-/**
- * Subset of the possible permissions in the EDC.
- *
- * @author tim.dahlmanns@isst.fraunhofer.de
- */
-@Getter
-@Setter
+
+@Data
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PermissionDto {
 
     @Schema(description = "Possible constraints for the permission",

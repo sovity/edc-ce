@@ -17,6 +17,7 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
+import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
@@ -27,6 +28,8 @@ import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataOffer;
+import de.sovity.edc.client.gen.model.UiDataSource;
+import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
@@ -42,7 +45,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
@@ -134,15 +136,18 @@ class DataSourceQueryParamsTest {
     }
 
     private void createAsset() {
+        var dataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl(dataAddress.getDataSourceQueryParamsUrl())
+                .queryString(encodedParam)
+                .build())
+            .build();
+
         var asset = UiAssetCreateRequest.builder()
                 .id(dataOfferId)
                 .title("My Data Offer")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, dataAddress.getDataSourceQueryParamsUrl(),
-                        "https://w3id.org/edc/v0.0.1/ns/queryParams", encodedParam
-                ))
+                .dataSource(dataSource)
                 .build();
 
         providerClient.uiApi().createAsset(asset);

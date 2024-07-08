@@ -14,15 +14,21 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Data
 @AllArgsConstructor
+@RequiredArgsConstructor
+@Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "All data for the policy definition page as required by the UI", requiredMode = Schema.RequiredMode.REQUIRED)
 public class PolicyDefinitionPage {
     @Schema(description = "Policy Definition Entries", requiredMode = Schema.RequiredMode.REQUIRED)

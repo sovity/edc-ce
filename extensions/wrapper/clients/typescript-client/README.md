@@ -1,16 +1,16 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/sovity/edc-extensions">
+  <a href="https://github.com/sovity/edc-ce">
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
 <h3 align="center">EDC-Connector Extension:<br />API Wrapper &amp; API Clients:<br />TypeScript API Client</h3>
 
   <p align="center">
-    <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
+    <a href="https://github.com/sovity/edc-ce/issues/new?template=bug_report.md">Report Bug</a>
     ·
-    <a href="https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md">Request Feature</a>
+    <a href="https://github.com/sovity/edc-ce/issues/new?template=feature_request.md">Request Feature</a>
   </p>
 </div>
 
@@ -20,7 +20,7 @@ TypeScript Client Library to be imported and used in arbitrary applications like
 frontends or NodeJS projects.
 
 You can find our API Wrapper Project
-[here](https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper).
+[here](https://github.com/sovity/edc-ce/tree/main/extensions/wrapper).
 
 ## How to install
 
@@ -46,7 +46,7 @@ let kpiData: KpiResult = await edcClient.useCaseApi.getKpis();
 ```
 
 A minimal example project using the typescript API client can be found
-[here](https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper/clients/typescript-client-example).
+[here](https://github.com/sovity/edc-ce/tree/main/extensions/wrapper/clients/typescript-client-example).
 
 ### Example Using OAuth2 Client Credentials
 
@@ -66,7 +66,7 @@ let kpiData: KpiResult = await edcClient.useCaseApi.getKpis();
 ## License
 
 Apache License 2.0 - see
-[LICENSE](https://github.com/sovity/edc-extensions/blob/main/LICENSE)
+[LICENSE](https://github.com/sovity/edc-ce/blob/main/LICENSE)
 
 ## Contact
 

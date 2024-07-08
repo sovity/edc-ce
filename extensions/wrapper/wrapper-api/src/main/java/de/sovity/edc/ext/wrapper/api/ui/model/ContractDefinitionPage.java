@@ -14,15 +14,20 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Data
 @AllArgsConstructor
-@Schema(description = "All data for the Contract Definition Page")
+@RequiredArgsConstructor
+@Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ContractDefinitionPage {
 
     @Schema(description = "Contract Definition Entries", requiredMode = Schema.RequiredMode.REQUIRED)

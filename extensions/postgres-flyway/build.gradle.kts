@@ -16,9 +16,13 @@ dependencies {
     implementation(libs.edc.transactionLocal)
     implementation(libs.tractus.sqlPool)
 
-    implementation(libs.postgres)
+    implementation(libs.apache.commonsLang)
 
     implementation(libs.flyway.core)
+
+    implementation(libs.postgres)
+
+    implementation(libs.hikari)
 
     testImplementation(libs.edc.junit)
 }

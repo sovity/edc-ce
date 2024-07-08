@@ -39,6 +39,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 class AbstractReferringConnectorValidationTest {
 
@@ -55,7 +56,7 @@ class AbstractReferringConnectorValidationTest {
         this.policyContext = Mockito.mock(PolicyContext.class);
         this.participantAgent = Mockito.mock(ParticipantAgent.class);
 
-        Mockito.when(policyContext.getParticipantAgent()).thenReturn(participantAgent);
+        when(policyContext.getContextData(ParticipantAgent.class)).thenReturn(participantAgent);
 
         validation = new AbstractReferringConnectorValidation(monitor) {};
     }
@@ -179,17 +180,17 @@ class AbstractReferringConnectorValidationTest {
     }
 
     private void prepareContextProblems(List<String> problems) {
-        Mockito.when(policyContext.getProblems()).thenReturn(problems);
+        when(policyContext.getProblems()).thenReturn(problems);
 
         if (problems == null || problems.isEmpty()) {
-            Mockito.when(policyContext.hasProblems()).thenReturn(false);
+            when(policyContext.hasProblems()).thenReturn(false);
         } else {
-            Mockito.when(policyContext.hasProblems()).thenReturn(true);
+            when(policyContext.hasProblems()).thenReturn(true);
         }
     }
 
     private void prepareReferringConnectorClaim(String referringConnector) {
-        Mockito.when(participantAgent.getClaims())
+        when(participantAgent.getClaims())
                 .thenReturn(Collections.singletonMap("referringConnector", referringConnector));
     }
 }

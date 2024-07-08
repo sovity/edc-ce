@@ -28,13 +28,13 @@ Maven: https://docs.github.com/en/packages/working-with-a-github-packages-regist
 -
 Gradle: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#authenticating-to-github-packages
 - This might require a Github Personal Access Token (PAT)
-  Add the Java Client Library to your Maven/Gradle project: https://github.com/sovity/edc-extensions/packages/1825774
+  Add the Java Client Library to your Maven/Gradle project: https://github.com/sovity/edc-ce/packages/1825774
 
 Configuring The Client
 ========
 
 - Configure the Client with either an API Key or OAuth2 Client
-  Credentials: https://github.com/sovity/edc-extensions/tree/main/extensions/wrapper/clients/java-client#usage
+  Credentials: https://github.com/sovity/edc-ce/tree/main/extensions/wrapper/clients/java-client#usage
 - Your management API URL should look like https://your-connector-name.prod-sovity.azure.sovity.io/control/data
 
 Using The Client

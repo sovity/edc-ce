@@ -16,20 +16,72 @@ package de.sovity.edc.extension.e2e.connector.config;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.val;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.UUID;
 
 import static de.sovity.edc.extension.e2e.connector.config.DatasourceConfigUtils.configureDatasources;
 import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiConfigFactory.configureApi;
+import static org.eclipse.edc.junit.testfixtures.TestUtils.MAX_TCP_PORT;
+import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ConnectorConfigFactory {
 
+    private static final Random RANDOM = new Random();
+
+    /**
+     * Creates the default configuration to start an EDC with the given test database.
+     *
+     * @deprecated Use {@link ConnectorConfigFactory#forTestDatabase(String, TestDatabase)}
+     *     with automatic ports allocation to prevent port allocation conflicts.
+     */
+    @Deprecated
     public static ConnectorConfig forTestDatabase(String participantId, int firstPort, TestDatabase testDatabase) {
         var config = basicEdcConfig(participantId, firstPort);
         config.setProperties(configureDatasources(testDatabase.getJdbcCredentials()));
         return config;
+    }
+
+    public static ConnectorConfig forTestDatabase(String participantId, TestDatabase testDatabase) {
+        val firstPort = getFreePortRange(5);
+        var config = basicEdcConfig(participantId, firstPort);
+        config.setProperties(configureDatasources(testDatabase.getJdbcCredentials()));
+        return config;
+    }
+
+    private static synchronized int getFreePortRange(int size) {
+        // pick a random in a reasonable range
+        int firstPort = getFreePort(RANDOM.nextInt(10_000, 50_000));
+
+        int currentPort = firstPort;
+        do {
+            if (canUsePort(currentPort + 1)) {
+                currentPort++;
+            } else {
+                firstPort = getFreePort(currentPort++);
+            }
+        } while (currentPort < firstPort + size);
+
+        return firstPort;
+    }
+
+    private static boolean canUsePort(int port) {
+
+        if (port <= 0 || port >= MAX_TCP_PORT) {
+            throw new IllegalArgumentException("Lower bound must be > 0 and < " + MAX_TCP_PORT + " and be < upperBound");
+        }
+
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            serverSocket.setReuseAddress(true);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public static ConnectorConfig basicEdcConfig(String participantId, int firstPort) {
@@ -55,11 +107,11 @@ public class ConnectorConfigFactory {
         properties.put("my.edc.maintainer.name", "Maintainer Name %s".formatted(participantId));
 
         return new ConnectorConfig(
-                participantId,
-                apiConfig.getDefaultApiGroup(),
-                apiConfig.getManagementApiGroup(),
-                apiConfig.getProtocolApiGroup(),
-                properties
+            participantId,
+            apiConfig.getDefaultApiGroup(),
+            apiConfig.getManagementApiGroup(),
+            apiConfig.getProtocolApiGroup(),
+            properties
         );
     }
 }

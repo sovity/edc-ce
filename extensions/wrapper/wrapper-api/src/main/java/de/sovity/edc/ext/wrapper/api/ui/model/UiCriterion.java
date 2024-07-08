@@ -15,14 +15,18 @@
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
+@Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Contract Definition Criterion as supported by the UI")
 public class UiCriterion {
     @Schema(description = "Left Operand", requiredMode = Schema.RequiredMode.REQUIRED)

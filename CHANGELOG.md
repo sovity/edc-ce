@@ -13,11 +13,20 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Major Changes
 
+- API Wrapper UI API: Moved to well-typed data sources, breaking changes to the asset model and API.
+
 #### Minor Changes
+
+- Add the SovityMessenger extension
 
 #### Patch Changes
 
+- Unified database migration histories
+
 ### Deployment Migration Notes
+
+The database migration system has been moved from multiple migration history tables to a single one. Although this
+process has been extensively tested in the enterprise edition already, it should be tested once more on a copy of a productive connector.
 
 ## [8.1.0] - 2024-06-14
 
@@ -34,7 +43,7 @@ Support for Multiplicity Constraints in the API Wrapper.
 #### Minor Changes
 
 - API Wrapper 
-  - Support for Multiplicity Constraints (https://github.com/sovity/edc-extensions/issues/968)
+  - Support for Multiplicity Constraints (https://github.com/sovity/edc-ce/issues/968)
   - Providing `Prop` class from `json-and-jsonld-utils` to the java-client to make relevant Constants available
 
 #### Patch Changes
@@ -56,7 +65,7 @@ Support for Multiplicity Constraints in the API Wrapper.
 
 Starting from version `8`, the Broker has been merged with the Community edition.
 
-[The former changelog](https://github.com/sovity/edc-broker-server-extension/blob/main/CHANGELOG.md) for the Broker is still available but will not be updated anymore.
+[The former changelog](https://github.com/sovity/edc-broker-server-extension/blob/v4.2.0/CHANGELOG.md) for the Broker is still available but will not be updated anymore.
 
 The Broker's version therefore jumps from version 4 to version 8.
 
@@ -125,9 +134,9 @@ MDS Bugfix Release
 - Fixed naming of the `nutsLocations` field for MDS assets.
 - UI: Removed HTTP Verb "HEAD" as it was not supported by the backend
 - Docs: Updated image to explain data-transfer-methods
-- Docs: Updated documentation for parameterization using [only the UI](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/parameterized_assets_via_ui.md) or the [Management-API](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/parameterized_assets.md)
-- Docs: Updated [OAuth2 documentation](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/oauth-data-address.md) about necessary parameters that need to use the vault key instead of providing a secret directly
-- Docs: Updated documentation for the [pull-data-transfer](https://github.com/sovity/edc-extensions/blob/main/docs/getting-started/documentation/pull-data-transfer.md)
+- Docs: Updated documentation for parameterization using [only the UI](https://github.com/sovity/edc-ce/blob/main/docs/getting-started/documentation/parameterized_assets_via_ui.md) or the [Management-API](https://github.com/sovity/edc-ce/blob/main/docs/getting-started/documentation/parameterized_assets.md)
+- Docs: Updated [OAuth2 documentation](https://github.com/sovity/edc-ce/blob/main/docs/getting-started/documentation/oauth-data-address.md) about necessary parameters that need to use the vault key instead of providing a secret directly
+- Docs: Updated documentation for the [pull-data-transfer](https://github.com/sovity/edc-ce/blob/main/docs/getting-started/documentation/pull-data-transfer.md)
 - Dev Utils: Parallel test support for our Test Backend for some requests.
 
 ### Deployment Migration Notes

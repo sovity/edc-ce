@@ -15,8 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services;
 
 import de.sovity.edc.ext.wrapper.api.ServiceException;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ParameterizationCompatibilityUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateCustomTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateTransferRequest;
 import de.sovity.edc.utils.JsonUtils;

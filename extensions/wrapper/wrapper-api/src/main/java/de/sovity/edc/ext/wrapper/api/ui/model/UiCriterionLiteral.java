@@ -3,19 +3,19 @@ package de.sovity.edc.ext.wrapper.api.ui.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NonNull;
-import lombok.ToString;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@Getter
-@ToString
-@Schema(description = "Criterion Literal")
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
+@RequiredArgsConstructor
+@Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Schema(description = "Criterion Literal")
 public class UiCriterionLiteral {
 
     private UiCriterionLiteralType type;

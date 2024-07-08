@@ -16,11 +16,13 @@ package de.sovity.edc.utils;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
+import jakarta.json.stream.JsonGenerator;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonUtils {
@@ -44,6 +46,20 @@ public class JsonUtils {
 
         var sw = new StringWriter();
         try (var writer = Json.createWriter(sw)) {
+            writer.write(json);
+            return sw.toString();
+        }
+    }
+
+    public static String toJsonPretty(JsonValue json) {
+        if (json == null) {
+            return "null";
+        }
+
+        var config = Map.of(JsonGenerator.PRETTY_PRINTING, true);
+
+        var sw = new StringWriter();
+        try (var writer = Json.createWriterFactory(config).createWriter(sw)) {
             writer.write(json);
             return sw.toString();
         }

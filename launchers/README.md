@@ -1,16 +1,16 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/sovity/edc-extensions">
+  <a href="https://github.com/sovity/edc-ce">
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
 <h3 align="center">sovity Community Edition EDC:<br />Docker Images</h3>
 
   <p align="center">
-    <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
+    <a href="https://github.com/sovity/edc-ce/issues/new?template=bug_report.md">Report Bug</a>
     ·
-    <a href="https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md">Request Feature</a>
+    <a href="https://github.com/sovity/edc-ce/issues/new?template=feature_request.md">Request Feature</a>
   </p>
 </div>
 
@@ -44,7 +44,7 @@ Our sovity Community Edition EDC is built as several docker image variants in di
   </tr>
   <tr>
     <td>
-      <a href="https://github.com/sovity/edc-extensions/pkgs/container/edc-dev">edc-dev</a>
+      <a href="https://github.com/sovity/edc-ce/pkgs/container/edc-dev">edc-dev</a>
     </td>
     <td>Development</td>
     <td>
@@ -65,7 +65,7 @@ Our sovity Community Edition EDC is built as several docker image variants in di
   </tr>
   <tr>
     <td>
-      <a href="https://github.com/sovity/edc-extensions/pkgs/container/edc-ce">edc-ce</a>
+      <a href="https://github.com/sovity/edc-ce/pkgs/container/edc-ce">edc-ce</a>
     </td>
     <td>sovity Community Edition</td>
     <td>
@@ -85,7 +85,7 @@ Our sovity Community Edition EDC is built as several docker image variants in di
   </tr>
   <tr>
     <td>
-      <a href="https://github.com/sovity/edc-extensions/pkgs/container/edc-ce-mds">edc-ce-mds</a>
+      <a href="https://github.com/sovity/edc-ce/pkgs/container/edc-ce-mds">edc-ce-mds</a>
     </td>
     <td>MDS Community Edition</td>
     <td>

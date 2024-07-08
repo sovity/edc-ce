@@ -20,15 +20,13 @@ import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
 import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
+import org.eclipse.edc.policy.engine.spi.PolicyContext;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
-import org.eclipse.edc.spi.agent.ParticipantAgent;
 import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import java.util.Map;
 
 import static de.sovity.edc.extension.policy.AlwaysTruePolicyConstants.POLICY_DEFINITION_ID;
 import static java.util.Objects.requireNonNull;
@@ -57,7 +55,7 @@ class AlwaysTruePolicyExtensionTest {
         var result = policyEngine.evaluate(
                 ContractDefinitionResolver.CATALOGING_SCOPE,
                 alwaysTrue.getPolicy(),
-                participantAgent()
+                mock(PolicyContext.class)
         );
 
         // assert
@@ -69,10 +67,5 @@ class AlwaysTruePolicyExtensionTest {
         var alwaysTrue = policyDefinitionService.findById(POLICY_DEFINITION_ID);
         requireNonNull(alwaysTrue, "Policy Definition does not exist: " + POLICY_DEFINITION_ID);
         return alwaysTrue;
-    }
-
-    @NotNull
-    private ParticipantAgent participantAgent() {
-        return new ParticipantAgent(Map.of(), Map.of());
     }
 }

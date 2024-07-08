@@ -1,16 +1,16 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/sovity/edc-extensions">
+  <a href="https://github.com/sovity/edc-ce">
     <img src="https://raw.githubusercontent.com/sovity/edc-ui/main/src/assets/images/sovity_logo.svg" alt="Logo" width="300">
   </a>
 
 <h3 align="center">EDC-Connector Extension:<br />Last Commit Info</h3>
 
   <p align="center">
-    <a href="https://github.com/sovity/edc-extensions/issues/new?template=bug_report.md">Report Bug</a>
+    <a href="https://github.com/sovity/edc-ce/issues/new?template=bug_report.md">Report Bug</a>
     ·
-    <a href="https://github.com/sovity/edc-extensions/issues/new?template=feature_request.md">Request Feature</a>
+    <a href="https://github.com/sovity/edc-ce/issues/new?template=feature_request.md">Request Feature</a>
   </p>
 </div>
 
@@ -28,7 +28,7 @@ Date: Mon Mar 13 08:09:15 2023 +0100
     chore: update to milestone-8
 
 Jar Last Commit Info:
-commit 2fe06beaf6027fb4cc06db2adb7d5b4c8ae61b05 (HEAD -> 2023-03-16-edc-extensions-cleanup, origin/2023-03-16-edc-extensions-cleanup)
+commit 2fe06beaf6027fb4cc06db2adb7d5b4c8ae61b05 (HEAD -> 2023-03-16-edc-ce-cleanup, origin/2023-03-16-edc-ce-cleanup)
 Author: First Last <mail>
 Date: Thu Mar 9 14:50:20 2023 +0100
 
@@ -45,7 +45,7 @@ We found that finding the last commit of the EDC Connector Image was the most ac
 running EDC Connector instance.
 
 Since our EDC Images use our EDC Extensions from this repository we also embed a second "jar last commit info"
-during build time of the edc-extensions, which represent all other EDC Extensions of this repository, since
+during build time of the edc-ce, which represent all other EDC Extensions of this repository, since
 they will always be used with the same version.
 
 ## Configuration

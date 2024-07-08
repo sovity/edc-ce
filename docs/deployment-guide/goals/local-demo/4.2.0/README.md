@@ -8,7 +8,7 @@ Deployment Goal: Local Demo
 ## Quick Start
 
 To quickly start using our sovity EDC CE or MDS EDC CE, we offer a quick
-start [docker-compose.yaml](https://github.com/sovity/edc-extensions/blob/v4.2.0/docker-compose.yaml) file.
+start [docker-compose.yaml](https://github.com/sovity/edc-ce/blob/v4.2.0/docker-compose.yaml) file.
 
 <table>
 <thead>
@@ -23,7 +23,7 @@ start [docker-compose.yaml](https://github.com/sovity/edc-extensions/blob/v4.2.0
 
 ```shell script
 # Run with Bash from the root directory of the project
-# Use the release tag 4.2.0: https://github.com/sovity/edc-extensions/releases/tag/v4.2.0
+# Use the release tag 4.2.0: https://github.com/sovity/edc-ce/releases/tag/v4.2.0
 
 # Log-In to the Github Container Registry
 docker login ghcr.io
@@ -37,7 +37,7 @@ docker compose up
 
 ```shell script
 # Run with Bash from the root directory of the project
-# Use the release tag 4.2.0: https://github.com/sovity/edc-extensions/releases/tag/v4.2.0
+# Use the release tag 4.2.0: https://github.com/sovity/edc-ce/releases/tag/v4.2.0
 
 # Log-In to the Github Container Registry
 docker login ghcr.io

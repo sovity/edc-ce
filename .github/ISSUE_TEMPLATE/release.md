@@ -16,9 +16,9 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
 - [ ] Decide a release version depending on major/minor/patch changes in the CHANGELOG.md.
 - [ ] Update this issue's title to the new version
 - [ ] `release-prep` PR:
-  - [ ] Write or review the current [Productive Deployment Guide](https://github.com/sovity/edc-extensions/blob/main/docs/deployment-guide/goals/production)
-  - [ ] Write or review the current [Development Deployment Guide](https://github.com/sovity/edc-extensions/blob/main/docs/deployment-guide/goals/development)
-  - [ ] Write or review the current [Local Demo Deployment Guide](https://github.com/sovity/edc-extensions/blob/main/docs/deployment-guide/goals/local-demo)
+  - [ ] Write or review the current [Productive Deployment Guide](https://github.com/sovity/edc-ce/blob/main/docs/deployment-guide/goals/production)
+  - [ ] Write or review the current [Development Deployment Guide](https://github.com/sovity/edc-ce/blob/main/docs/deployment-guide/goals/development)
+  - [ ] Write or review the current [Local Demo Deployment Guide](https://github.com/sovity/edc-ce/blob/main/docs/deployment-guide/goals/local-demo)
   - [ ] For Major version updates: If we want to continue supporting the old major version:
     - [ ] Keep the old Productive Development Guide in a separate location.
       - [ ] Add a note to the old version about its deprecation status.
@@ -43,18 +43,18 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
     - [ ] Remove empty sections from the patch notes.
   - [ ] Replace the existing `docker-compose.yaml` with `docker-compose-dev.yaml`.
   - [ ] Set the version for `EDC_IMAGE` of
-        the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
+        the [docker-compose's .env file](https://github.com/sovity/edc-ce/blob/main/.env).
   - [ ] Set the version for `TEST_BACKEND_IMAGE` of
-        the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
+        the [docker-compose's .env file](https://github.com/sovity/edc-ce/blob/main/.env).
   - [ ] Set the version for `BROKER_IMAGE` of
-    the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
+    the [docker-compose's .env file](https://github.com/sovity/edc-ce/blob/main/.env).
   - [ ] Set the UI release version for `EDC_UI_IMAGE` of
-        the [docker-compose's .env file](https://github.com/sovity/edc-extensions/blob/main/.env).
+        the [docker-compose's .env file](https://github.com/sovity/edc-ce/blob/main/.env).
   - [ ] If the Eclipse EDC version changed, update
-        the [eclipse-edc-management-api.yaml file](https://github.com/sovity/edc-extensions/blob/main/docs/api/eclipse-edc-management-api.yaml).
-  - [ ] Run all tests locally as long as the [GH flaky tests](https://github.com/sovity/edc-extensions/issues/870) are a problem.
+        the [eclipse-edc-management-api.yaml file](https://github.com/sovity/edc-ce/blob/main/docs/api/eclipse-edc-management-api.yaml).
+  - [ ] Run all tests locally as long as the [GH flaky tests](https://github.com/sovity/edc-ce/issues/870) are a problem.
   - [ ] Merge the `release-prep` PR.
-- [ ] Wait for the main branch to be green. You can check the status in GH [actions](https://github.com/sovity/edc-extensions/actions).
+- [ ] Wait for the main branch to be green. You can check the status in GH [actions](https://github.com/sovity/edc-ce/actions).
 - [ ] Validate the image
   - [ ] Pull the latest edc-dev image: `docker image pull ghcr.io/sovity/edc-dev:latest`.
   - [ ] Check that your image was built recently `docker image ls | grep ghcr.io/sovity/edc-dev`.
@@ -66,12 +66,12 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
       - [ ] Validate that the EDC is scanned.
       - [ ] Validate that the index is searchable.
   - [ ] Ensure with a `docker ps -a` that all containers are healthy, and not `healthy: starting` or `healthy: unhealthy`.
-- [ ] [Create a release](https://github.com/sovity/edc-extensions/releases/new)
+- [ ] [Create a release](https://github.com/sovity/edc-ce/releases/new)
   - [ ] In `Choose the tag`, type your new release version in the format `vx.y.z` (for instance `v1.2.3`) then click `+Create new tag vx.y.z on release`.
   - [ ] Re-use the changelog section as release description, and the version as title.
 - [ ] Check if the pipeline built the release versions in the Actions-Section (or you won't see it).
 - [ ] Revisit the changed list of tasks and compare it
-      with [.github/ISSUE_TEMPLATE/release.md](https://github.com/sovity/edc-extensions/blob/main/.github/ISSUE_TEMPLATE/release.md).
+      with [.github/ISSUE_TEMPLATE/release.md](https://github.com/sovity/edc-ce/blob/main/.github/ISSUE_TEMPLATE/release.md).
       Propose changes where it makes sense.
 - [ ] Close this issue.
 - [ ] Inform the Product Manager of this new release
