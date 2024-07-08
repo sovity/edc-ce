@@ -11,11 +11,11 @@ dependencies {
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
 
-    testImplementation(project(":catalog-crawler:catalog-crawler-db"))
+    testImplementation(project(":utils:versions"))
+    testImplementation(project(":utils:test-connector-remote"))
     testImplementation(project(":utils:json-and-jsonld-utils"))
-
+    testImplementation(project(":extensions:catalog-crawler:catalog-crawler-db"))
     testImplementation(project(":extensions:wrapper:clients:java-client"))
-    testImplementation(project(":extensions:sovity-edc-extensions-package"))
 
     testImplementation(libs.assertj.core)
     testImplementation(libs.mockito.core)

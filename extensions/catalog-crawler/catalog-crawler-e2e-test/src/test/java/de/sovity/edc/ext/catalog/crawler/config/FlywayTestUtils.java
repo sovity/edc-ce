@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.catalog.crawler.config;
 
+import de.sovity.edc.extension.e2e.db.TestDatabase;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.eclipse.edc.spi.monitor.ConsoleMonitor;
@@ -28,15 +29,15 @@ import static org.mockito.Mockito.when;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FlywayTestUtils {
 
-    public static void migrate(TestDatabase testDatabase) {
-        var config = Flyway.configure()
-                .dataSource(testDatabase.getDataSource())
-                .baselineOnMigrate(true)
-                .cleanDisabled(false)
-                .table("crawler_test_migration_history")
-                .locations("classpath:db/migration", "classpath:db/migration-test-utils");
-        var flyway = new Flyway(config);
-        flyway.clean();
-        flyway.migrate();
-    }
+    // public static void migrate(TestDatabase testDatabase) {
+    //     var config = Flyway.configure()
+    //             .dataSource(testDatabase.getDataSource())
+    //             .baselineOnMigrate(true)
+    //             .cleanDisabled(false)
+    //             .table("crawler_test_migration_history")
+    //             .locations("classpath:db/migration", "classpath:db/migration-test-utils");
+    //     var flyway = new Flyway(config);
+    //     flyway.clean();
+    //     flyway.migrate();
+    // }
 }

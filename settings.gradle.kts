@@ -2,6 +2,8 @@ rootProject.name = "sovity-ce-edc"
 
 include(":extensions:catalog-crawler:catalog-crawler")
 include(":extensions:catalog-crawler:catalog-crawler-db")
+include(":extensions:catalog-crawler:catalog-crawler-launcher-base")
+include(":extensions:catalog-crawler:catalog-crawler-e2e-test")
 include(":extensions:edc-ui-config")
 include(":extensions:last-commit-info")
 include(":extensions:policy-always-true")

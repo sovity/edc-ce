@@ -19,4 +19,5 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     archiveFileName.set("app.jar")
 }
 
+
 group = libs.versions.sovityEdcGroup.get()
