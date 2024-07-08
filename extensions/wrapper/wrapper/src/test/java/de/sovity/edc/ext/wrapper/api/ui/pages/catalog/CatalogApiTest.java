@@ -27,30 +27,56 @@ import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.TestUtils;
+import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.db.TestDatabase;
+import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.List;
 
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 @ApiTest
-@ExtendWith(EdcExtension.class)
 class CatalogApiTest {
+
+    private static final String PARTICIPANT_ID = "MyEDC";
+
+    private ConnectorConfig config;
+
+    @RegisterExtension
+    static final EdcExtension EDC_CONTEXT = new EdcExtension();
+
+    @RegisterExtension
+    static final TestDatabase DATABASE = TestDatabaseFactory.getTestDatabase(1);
+
+    private ConnectorRemote connector;
+
     private EdcClient client;
+
     private final String dataOfferId = "my-data-offer-2023-11";
 
-
     @BeforeEach
-    void setUp(EdcExtension extension) {
-        TestUtils.setupExtension(extension);
-        client = TestUtils.edcClient();
+    void setup() {
+        // set up provider EDC + Client
+        config = forTestDatabase(PARTICIPANT_ID, DATABASE);
+        EDC_CONTEXT.setConfiguration(config.getProperties());
+        connector = new ConnectorRemote(fromConnectorConfig(config));
+
+        client = EdcClient.builder()
+            .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+            .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+            .build();
+
     }
 
     /**
