@@ -14,10 +14,12 @@
 
 package de.sovity.edc.ext.catalog.crawler.dao.config;
 
-import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import de.sovity.edc.ext.catalog.crawler.CrawlerExtension;
+import de.sovity.edc.extension.postgresql.HikariDataSourceFactory;
+import de.sovity.edc.extension.postgresql.JdbcCredentials;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.Validate;
 import org.eclipse.edc.spi.system.configuration.Config;
 
 import javax.sql.DataSource;
@@ -33,38 +35,29 @@ public class DataSourceFactory {
      * @return {@link DataSource}.
      */
     public HikariDataSource newDataSource() {
-        var jdbcCredentials = JdbcCredentials.fromConfig(config);
+        var jdbcCredentials = getJdbcCredentials();
         int maxPoolSize = config.getInteger(CrawlerExtension.DB_CONNECTION_POOL_SIZE);
         int connectionTimeoutInMs = config.getInteger(CrawlerExtension.DB_CONNECTION_TIMEOUT_IN_MS);
-        return newDataSource(jdbcCredentials, maxPoolSize, connectionTimeoutInMs);
+        return HikariDataSourceFactory.newDataSource(
+                jdbcCredentials,
+                maxPoolSize,
+                connectionTimeoutInMs
+        );
     }
 
-    /**
-     * Create a new {@link DataSource}.
-     * <br>
-     * This method is static, so we can use from test code.
-     *
-     * @param jdbcCredentials jdbc credentials
-     * @param maxPoolSize max pool size
-     * @param connectionTimeoutInMs connection timeout in ms
-     * @return {@link DataSource}.
-     */
-    public static HikariDataSource newDataSource(
-            JdbcCredentials jdbcCredentials,
-            int maxPoolSize,
-            int connectionTimeoutInMs
-    ) {
-        var hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(jdbcCredentials.jdbcUrl());
-        hikariConfig.setUsername(jdbcCredentials.jdbcUser());
-        hikariConfig.setPassword(jdbcCredentials.jdbcPassword());
-        hikariConfig.setMinimumIdle(1);
-        hikariConfig.setMaximumPoolSize(maxPoolSize);
-        hikariConfig.setIdleTimeout(30000);
-        hikariConfig.setPoolName("crawler");
-        hikariConfig.setMaxLifetime(50000);
-        hikariConfig.setConnectionTimeout(connectionTimeoutInMs);
 
-        return new HikariDataSource(hikariConfig);
+    public JdbcCredentials getJdbcCredentials() {
+        return new JdbcCredentials(
+                getRequiredStringProperty(config, CrawlerExtension.JDBC_URL),
+                getRequiredStringProperty(config, CrawlerExtension.JDBC_USER),
+                getRequiredStringProperty(config, CrawlerExtension.JDBC_PASSWORD)
+        );
     }
+
+    private String getRequiredStringProperty(Config config, String name) {
+        String value = config.getString(name, "");
+        Validate.notBlank(value, "EDC Property '%s' is required".formatted(name));
+        return value;
+    }
+
 }

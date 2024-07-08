@@ -7,7 +7,7 @@ val jooqDbType = "org.jooq.meta.postgres.PostgresDatabase"
 val jdbcDriver = "org.postgresql.Driver"
 val postgresContainer = libs.versions.postgresDbImage.get()
 
-val migrationsDir = "src/main/resources/db-crawlerx/migration"
+val migrationsDir = "src/main/resources/db-crawler/migration"
 val jooqTargetPackage = "de.sovity.edc.ext.catalog.crawler.db.jooq"
 val jooqTargetSourceRoot = "build/generated/jooq"
 
@@ -97,6 +97,7 @@ flyway {
     baselineOnMigrate = true
     locations = arrayOf("filesystem:${migrationsDir}")
     configurations = arrayOf("flywayMigration")
+    failOnMissingLocations = true
 
     mixed = true
 }

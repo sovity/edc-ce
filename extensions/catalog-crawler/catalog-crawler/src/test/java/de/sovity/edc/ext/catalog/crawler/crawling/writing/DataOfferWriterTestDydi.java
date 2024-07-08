@@ -33,7 +33,7 @@ class DataOfferWriterTestDydi {
     DataOfferQueries dataOfferQueries = new DataOfferQueries();
     ContractOfferQueries contractOfferQueries = new ContractOfferQueries();
     ContractOfferRecordUpdater contractOfferRecordUpdater = new ContractOfferRecordUpdater();
-    ConnectorQueries connectorQueries = new ConnectorQueries();
+    ConnectorQueries connectorQueries = new ConnectorQueries(crawlerConfig);
     DataOfferRecordUpdater dataOfferRecordUpdater = new DataOfferRecordUpdater(
             connectorQueries
     );

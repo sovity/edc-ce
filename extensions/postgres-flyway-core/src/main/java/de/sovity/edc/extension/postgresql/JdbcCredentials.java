@@ -12,8 +12,18 @@
  *
  */
 
-package de.sovity.edc.ext.catalog.crawler.config;
+package de.sovity.edc.extension.postgresql;
 
-public class TestDatabaseCancelTransactionException extends RuntimeException {
-
+/**
+ * JDBC Credentials
+ *
+ * @param jdbcUrl      JDBC URL without credentials
+ * @param jdbcUser     JDBC User
+ * @param jdbcPassword JDBC Password
+ */
+public record JdbcCredentials(
+        String jdbcUrl,
+        String jdbcUser,
+        String jdbcPassword
+) {
 }

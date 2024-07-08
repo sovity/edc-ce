@@ -14,12 +14,12 @@
 
 package de.sovity.edc.ext.catalog.crawler.dao.data_offers;
 
+import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedDataOffer;
+import de.sovity.edc.ext.catalog.crawler.crawling.writing.utils.ChangeTracker;
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorQueries;
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
 import de.sovity.edc.ext.catalog.crawler.dao.utils.JsonbUtils;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.tables.records.DataOfferRecord;
-import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedDataOffer;
-import de.sovity.edc.ext.catalog.crawler.crawling.writing.utils.ChangeTracker;
 import de.sovity.edc.ext.catalog.crawler.utils.JsonUtils2;
 import lombok.RequiredArgsConstructor;
 import org.jooq.JSONB;

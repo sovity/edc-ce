@@ -14,8 +14,8 @@
 
 package de.sovity.edc.ext.catalog.crawler.orchestration.queue;
 
-import de.sovity.edc.ext.catalog.crawler.orchestration.config.CrawlerConfig;
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
+import de.sovity.edc.ext.catalog.crawler.orchestration.config.CrawlerConfig;
 import org.eclipse.edc.spi.monitor.Monitor;
 
 import java.util.Set;

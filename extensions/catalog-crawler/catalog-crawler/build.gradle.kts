@@ -15,30 +15,20 @@ dependencies {
 
     implementation(libs.quartz.quartz)
     implementation(libs.apache.commonsLang)
-    implementation(libs.hikari)
     implementation(project(":utils:versions"))
 
     api(project(":utils:catalog-parser"))
     api(project(":utils:json-and-jsonld-utils"))
     api(project(":extensions:wrapper:wrapper-common-mappers"))
     api(project(":extensions:catalog-crawler:catalog-crawler-db"))
+    api(project(":extensions:postgres-flyway-core"))
 
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
-    testImplementation(project(":extensions:wrapper:clients:java-client"))
-    testImplementation(project(":extensions:sovity-edc-extensions-package"))
+    testImplementation(project(":utils:test-connector-remote"))
     testImplementation(libs.assertj.core)
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.inline)
-    testImplementation(libs.edc.controlPlaneCore)
-    testImplementation(libs.edc.dataPlaneSelectorCore)
-    testImplementation(libs.edc.junit)
-    testImplementation(libs.edc.http)
-    testImplementation(libs.edc.iamMock)
-    testImplementation(libs.edc.dsp)
-    testImplementation(libs.edc.jsonLd)
-    testImplementation(libs.edc.monitorJdkLogger)
-    testImplementation(libs.edc.configurationFilesystem)
     testImplementation(libs.restAssured.restAssured)
     testImplementation(libs.testcontainers.testcontainers)
     testImplementation(libs.flyway.core)
@@ -51,6 +41,7 @@ dependencies {
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+    maxParallelForks = 1
 }
 
 publishing {

@@ -14,11 +14,11 @@
 
 package de.sovity.edc.ext.catalog.crawler.crawling;
 
+import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerEventLogger;
 import de.sovity.edc.ext.catalog.crawler.dao.CatalogCleaner;
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorQueries;
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorStatusUpdater;
 import de.sovity.edc.ext.catalog.crawler.orchestration.config.CrawlerConfig;
-import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerEventLogger;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 

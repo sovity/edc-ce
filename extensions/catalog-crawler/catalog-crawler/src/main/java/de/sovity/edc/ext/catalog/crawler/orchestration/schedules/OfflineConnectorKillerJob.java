@@ -14,8 +14,8 @@
 
 package de.sovity.edc.ext.catalog.crawler.orchestration.schedules;
 
-import de.sovity.edc.ext.catalog.crawler.dao.config.DslContextFactory;
 import de.sovity.edc.ext.catalog.crawler.crawling.OfflineConnectorCleaner;
+import de.sovity.edc.ext.catalog.crawler.dao.config.DslContextFactory;
 import lombok.RequiredArgsConstructor;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

@@ -17,33 +17,34 @@ package de.sovity.edc.ext.catalog.crawler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import de.sovity.edc.ext.catalog.crawler.dao.CatalogPatchApplier;
-import de.sovity.edc.ext.catalog.crawler.dao.config.DataSourceFactory;
-import de.sovity.edc.ext.catalog.crawler.dao.config.DslContextFactory;
-import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorQueries;
-import de.sovity.edc.ext.catalog.crawler.dao.contract_offers.ContractOfferQueries;
-import de.sovity.edc.ext.catalog.crawler.dao.contract_offers.ContractOfferRecordUpdater;
-import de.sovity.edc.ext.catalog.crawler.dao.data_offers.DataOfferQueries;
-import de.sovity.edc.ext.catalog.crawler.dao.data_offers.DataOfferRecordUpdater;
-import de.sovity.edc.ext.catalog.crawler.dao.CatalogCleaner;
-import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorStatusUpdater;
-import de.sovity.edc.ext.catalog.crawler.crawling.OfflineConnectorCleaner;
-import de.sovity.edc.ext.catalog.crawler.orchestration.config.CrawlerConfigFactory;
-import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerEventLogger;
-import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerExecutionTimeLogger;
-import de.sovity.edc.ext.catalog.crawler.orchestration.queue.ConnectorQueue;
-import de.sovity.edc.ext.catalog.crawler.orchestration.queue.ConnectorQueueFiller;
-import de.sovity.edc.ext.catalog.crawler.orchestration.queue.ThreadPool;
-import de.sovity.edc.ext.catalog.crawler.orchestration.queue.ThreadPoolTaskQueue;
 import de.sovity.edc.ext.catalog.crawler.crawling.ConnectorCrawler;
+import de.sovity.edc.ext.catalog.crawler.crawling.OfflineConnectorCleaner;
 import de.sovity.edc.ext.catalog.crawler.crawling.fetching.FetchedCatalogBuilder;
 import de.sovity.edc.ext.catalog.crawler.crawling.fetching.FetchedCatalogMappingUtils;
 import de.sovity.edc.ext.catalog.crawler.crawling.fetching.FetchedCatalogService;
+import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerEventLogger;
+import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerExecutionTimeLogger;
 import de.sovity.edc.ext.catalog.crawler.crawling.writing.CatalogPatchBuilder;
 import de.sovity.edc.ext.catalog.crawler.crawling.writing.ConnectorUpdateCatalogWriter;
 import de.sovity.edc.ext.catalog.crawler.crawling.writing.ConnectorUpdateFailureWriter;
 import de.sovity.edc.ext.catalog.crawler.crawling.writing.ConnectorUpdateSuccessWriter;
 import de.sovity.edc.ext.catalog.crawler.crawling.writing.DataOfferLimitsEnforcer;
+import de.sovity.edc.ext.catalog.crawler.dao.CatalogCleaner;
+import de.sovity.edc.ext.catalog.crawler.dao.CatalogPatchApplier;
+import de.sovity.edc.ext.catalog.crawler.dao.config.DataSourceFactory;
+import de.sovity.edc.ext.catalog.crawler.dao.config.DslContextFactory;
+import de.sovity.edc.ext.catalog.crawler.dao.config.FlywayService;
+import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorQueries;
+import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorStatusUpdater;
+import de.sovity.edc.ext.catalog.crawler.dao.contract_offers.ContractOfferQueries;
+import de.sovity.edc.ext.catalog.crawler.dao.contract_offers.ContractOfferRecordUpdater;
+import de.sovity.edc.ext.catalog.crawler.dao.data_offers.DataOfferQueries;
+import de.sovity.edc.ext.catalog.crawler.dao.data_offers.DataOfferRecordUpdater;
+import de.sovity.edc.ext.catalog.crawler.orchestration.config.CrawlerConfigFactory;
+import de.sovity.edc.ext.catalog.crawler.orchestration.queue.ConnectorQueue;
+import de.sovity.edc.ext.catalog.crawler.orchestration.queue.ConnectorQueueFiller;
+import de.sovity.edc.ext.catalog.crawler.orchestration.queue.ThreadPool;
+import de.sovity.edc.ext.catalog.crawler.orchestration.queue.ThreadPoolTaskQueue;
 import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.DeadConnectorRefreshJob;
 import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.OfflineConnectorKillerJob;
 import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.OfflineConnectorRefreshJob;
@@ -51,17 +52,21 @@ import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.OnlineConnector
 import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.QuartzScheduleInitializer;
 import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.utils.CronJobRef;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AssetJsonLdUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.AtomicConstraintMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.ConstraintExtractor;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.EdcPropertyUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.LiteralMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.MarkdownToTextConverter;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.PolicyValidator;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.TextUtils;
-import de.sovity.edc.ext.wrapper.api.common.mappers.utils.UiAssetMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetEditRequestMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetJsonLdBuilder;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetJsonLdParser;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.AssetJsonLdUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.EdcPropertyUtils;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.ShortDescriptionBuilder;
+import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.DataSourceMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpDataSourceMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpHeaderMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.AtomicConstraintMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ConstraintExtractor;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.LiteralMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.OperatorMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.PolicyValidator;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import lombok.NoArgsConstructor;
@@ -97,15 +102,20 @@ public class CrawlerExtensionContextBuilder {
             JsonLd jsonLd,
             CatalogService catalogService
     ) {
+        // Config
         var crawlerConfigFactory = new CrawlerConfigFactory(config);
         var crawlerConfig = crawlerConfigFactory.buildCrawlerConfig();
 
-        // Dao
-        var dataOfferQueries = new DataOfferQueries();
+        // DB
         var dataSourceFactory = new DataSourceFactory(config);
         var dataSource = dataSourceFactory.newDataSource();
+        var flywayService = new FlywayService(config, monitor, dataSource);
+        flywayService.validateOrMigrateInTests();
+
+        // Dao
+        var dataOfferQueries = new DataOfferQueries();
         var dslContextFactory = new DslContextFactory(dataSource);
-        var connectorQueries = new ConnectorQueries();
+        var connectorQueries = new ConnectorQueries(crawlerConfig);
 
         // Services
         var objectMapperJsonLd = getJsonLdObjectMapper(typeManager);
@@ -182,6 +192,7 @@ public class CrawlerExtensionContextBuilder {
         return new CrawlerExtensionContext(
                 crawlerInitializer,
                 dataSource,
+                dslContextFactory,
                 connectorUpdater,
                 policyMapper,
                 fetchedDataOfferBuilder,
@@ -212,21 +223,34 @@ public class CrawlerExtensionContextBuilder {
     }
 
     @NotNull
-    private static AssetMapper newAssetMapper(TypeTransformerRegistry typeTransformerRegistry, JsonLd jsonLd) {
+    private static AssetMapper newAssetMapper(
+            TypeTransformerRegistry typeTransformerRegistry,
+            JsonLd jsonLd
+    ) {
         var edcPropertyUtils = new EdcPropertyUtils();
         var assetJsonLdUtils = new AssetJsonLdUtils();
-        var markdownToTextConverter = new MarkdownToTextConverter();
-        var textUtils = new TextUtils();
-        var uiAssetMapper = new UiAssetMapper(
-                edcPropertyUtils,
+        var assetEditRequestMapper = new AssetEditRequestMapper();
+        var shortDescriptionBuilder = new ShortDescriptionBuilder();
+        var assetJsonLdParser = new AssetJsonLdParser(
                 assetJsonLdUtils,
-                markdownToTextConverter,
-                textUtils,
+                shortDescriptionBuilder,
                 endpoint -> false
+        );
+        var httpHeaderMapper = new HttpHeaderMapper();
+        var httpDataSourceMapper = new HttpDataSourceMapper(httpHeaderMapper);
+        var dataSourceMapper = new DataSourceMapper(
+                edcPropertyUtils,
+                httpDataSourceMapper
+        );
+        var assetJsonLdBuilder = new AssetJsonLdBuilder(
+                dataSourceMapper,
+                assetJsonLdParser,
+                assetEditRequestMapper
         );
         return new AssetMapper(
                 typeTransformerRegistry,
-                uiAssetMapper,
+                assetJsonLdBuilder,
+                assetJsonLdParser,
                 jsonLd
         );
     }

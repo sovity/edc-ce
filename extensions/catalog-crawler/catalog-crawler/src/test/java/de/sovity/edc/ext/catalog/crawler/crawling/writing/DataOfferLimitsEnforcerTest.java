@@ -14,14 +14,14 @@
 
 package de.sovity.edc.ext.catalog.crawler.crawling.writing;
 
+import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedContractOffer;
+import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedDataOffer;
+import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerEventLogger;
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorContractOffersExceeded;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorDataOffersExceeded;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.tables.records.ConnectorRecord;
 import de.sovity.edc.ext.catalog.crawler.orchestration.config.CrawlerConfig;
-import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerEventLogger;
-import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedContractOffer;
-import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedDataOffer;
 import org.assertj.core.api.Assertions;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -141,7 +141,7 @@ class DataOfferLimitsEnforcerTest {
 
         // act
         var enforcedLimits = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
-        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl,connectorRef, connector, enforcedLimits);
+        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl, connectorRef, connector, enforcedLimits);
 
         // assert
         verify(crawlerEventLogger).logConnectorUpdateDataOfferLimitExceeded(dsl, connectorRef, 1);
@@ -164,7 +164,7 @@ class DataOfferLimitsEnforcerTest {
 
         // act
         var enforcedLimits = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
-        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl,connectorRef, connector, enforcedLimits);
+        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl, connectorRef, connector, enforcedLimits);
 
         // assert
         verify(crawlerEventLogger).logConnectorUpdateDataOfferLimitOk(dsl, connectorRef);
@@ -187,7 +187,7 @@ class DataOfferLimitsEnforcerTest {
 
         // act
         var enforcedLimits = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
-        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl,connectorRef, connector, enforcedLimits);
+        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl, connectorRef, connector, enforcedLimits);
 
         // assert
         verify(crawlerEventLogger).logConnectorUpdateContractOfferLimitExceeded(dsl, connectorRef, 1);
@@ -210,7 +210,7 @@ class DataOfferLimitsEnforcerTest {
 
         // act
         var enforcedLimits = dataOfferLimitsEnforcer.enforceLimits(dataOffers);
-        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl,connectorRef, connector, enforcedLimits);
+        dataOfferLimitsEnforcer.logEnforcedLimitsIfChanged(dsl, connectorRef, connector, enforcedLimits);
 
         // assert
         verify(crawlerEventLogger).logConnectorUpdateContractOfferLimitOk(dsl, connectorRef);

@@ -14,14 +14,15 @@
 
 package de.sovity.edc.ext.catalog.crawler.crawling.logging;
 
+import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.Tables;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.MeasurementErrorStatus;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.MeasurementType;
-import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 /**
  * Updates a single connector.
@@ -30,6 +31,7 @@ import java.time.OffsetDateTime;
 public class CrawlerExecutionTimeLogger {
     public void logExecutionTime(DSLContext dsl, ConnectorRef connectorRef, long executionTimeInMs, MeasurementErrorStatus errorStatus) {
         var logEntry = dsl.newRecord(Tables.CRAWLER_EXECUTION_TIME_MEASUREMENT);
+        logEntry.setId(UUID.randomUUID());
         logEntry.setEnvironment(connectorRef.getEnvironmentId());
         logEntry.setConnectorId(connectorRef.getConnectorId());
         logEntry.setDurationInMs(executionTimeInMs);

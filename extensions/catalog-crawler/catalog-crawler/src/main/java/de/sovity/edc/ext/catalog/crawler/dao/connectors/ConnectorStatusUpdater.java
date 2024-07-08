@@ -20,10 +20,13 @@ import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorOnlineStatus;
 import org.jooq.DSLContext;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class ConnectorStatusUpdater {
     public void markAsDead(DSLContext dsl, Collection<ConnectorRef> connectorRefs) {
-        var connectorIds = connectorRefs.stream().map(ConnectorRef::getConnectorId).toList();
+        var connectorIds = connectorRefs.stream()
+                .map(ConnectorRef::getConnectorId)
+                .collect(Collectors.toSet());
         var c = Tables.CONNECTOR;
         dsl.update(c).set(c.ONLINE_STATUS, ConnectorOnlineStatus.DEAD)
                 .where(PostgresqlUtils.in(c.CONNECTOR_ID, connectorIds)).execute();

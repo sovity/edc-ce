@@ -17,11 +17,13 @@ package de.sovity.edc.ext.catalog.crawler.dao.connectors;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @RequiredArgsConstructor
 @EqualsAndHashCode(of = "connectorId", callSuper = false)
-public final class ConnectorRef {
+@ToString(of = "connectorId")
+public class ConnectorRef {
     private final String connectorId;
     private final String environmentId;
     private final String organizationLegalName;

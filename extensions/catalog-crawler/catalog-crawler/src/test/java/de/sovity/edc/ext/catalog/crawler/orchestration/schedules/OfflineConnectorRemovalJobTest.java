@@ -14,20 +14,16 @@
 
 package de.sovity.edc.ext.catalog.crawler.orchestration.schedules;
 
-import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorQueries;
-import de.sovity.edc.ext.catalog.crawler.config.FlywayTestUtils;
-import de.sovity.edc.ext.catalog.crawler.config.TestDatabase;
-import de.sovity.edc.ext.catalog.crawler.config.TestDatabaseFactory;
-import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorContractOffersExceeded;
-import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorDataOffersExceeded;
-import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorOnlineStatus;
-import de.sovity.edc.ext.catalog.crawler.dao.CatalogCleaner;
-import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorStatusUpdater;
+import de.sovity.edc.ext.catalog.crawler.CrawlerTestDb;
+import de.sovity.edc.ext.catalog.crawler.TestData;
 import de.sovity.edc.ext.catalog.crawler.crawling.OfflineConnectorCleaner;
-import de.sovity.edc.ext.catalog.crawler.orchestration.config.CrawlerConfig;
 import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerEventLogger;
-import org.jooq.DSLContext;
-import org.junit.jupiter.api.BeforeAll;
+import de.sovity.edc.ext.catalog.crawler.dao.CatalogCleaner;
+import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorQueries;
+import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
+import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorStatusUpdater;
+import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorOnlineStatus;
+import de.sovity.edc.ext.catalog.crawler.orchestration.config.CrawlerConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -41,30 +37,27 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class OfflineConnectorRemovalJobTest {
-
     @RegisterExtension
-    private static final TestDatabase TEST_DATABASE = TestDatabaseFactory.getTestDatabase();
+    private static final CrawlerTestDb TEST_DATABASE = new CrawlerTestDb();
+
+    ConnectorRef connectorRef = TestData.connectorRef;
 
     CrawlerConfig crawlerConfig;
     OfflineConnectorCleaner offlineConnectorCleaner;
     ConnectorQueries connectorQueries;
 
-    @BeforeAll
-    static void beforeAll() {
-        FlywayTestUtils.migrate(TEST_DATABASE);
-    }
-
     @BeforeEach
     void beforeEach() {
         crawlerConfig = mock(CrawlerConfig.class);
-        connectorQueries = new ConnectorQueries();
+        connectorQueries = new ConnectorQueries(crawlerConfig);
         offlineConnectorCleaner = new OfflineConnectorCleaner(
                 crawlerConfig,
-                new ConnectorQueries(),
+                new ConnectorQueries(crawlerConfig),
                 new CrawlerEventLogger(),
                 new ConnectorStatusUpdater(),
                 new CatalogCleaner()
         );
+        when(crawlerConfig.getEnvironmentId()).thenReturn(connectorRef.getEnvironmentId());
     }
 
     @Test
@@ -72,16 +65,17 @@ class OfflineConnectorRemovalJobTest {
         TEST_DATABASE.testTransaction(dsl -> {
             // arrange
             when(crawlerConfig.getKillOfflineConnectorsAfter()).thenReturn(Duration.ofDays(5));
-            createConnector(dsl, 6);
+            TestData.insertConnector(dsl, connectorRef, record -> {
+                record.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
+                record.setLastSuccessfulRefreshAt(OffsetDateTime.now().minusDays(6));
+            });
 
             // act
             offlineConnectorCleaner.cleanConnectorsIfOfflineTooLong(dsl);
 
             // assert
-            dsl.select().from(CONNECTOR).fetch().forEach(record -> {
-                assertThat(record.get(CONNECTOR.ENDPOINT_URL)).isEqualTo("https://my-connector/api/dsp");
-                assertThat(record.get(CONNECTOR.ONLINE_STATUS)).isEqualTo(ConnectorOnlineStatus.DEAD);
-            });
+            var connector = dsl.fetchOne(CONNECTOR, CONNECTOR.CONNECTOR_ID.eq(connectorRef.getConnectorId()));
+            assertThat(connector.getOnlineStatus()).isEqualTo(ConnectorOnlineStatus.DEAD);
         });
     }
 
@@ -90,27 +84,18 @@ class OfflineConnectorRemovalJobTest {
         TEST_DATABASE.testTransaction(dsl -> {
             // arrange
             when(crawlerConfig.getKillOfflineConnectorsAfter()).thenReturn(Duration.ofDays(5));
-            createConnector(dsl, 2);
+            TestData.insertConnector(dsl, connectorRef, record -> {
+                record.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
+                record.setLastSuccessfulRefreshAt(OffsetDateTime.now().minusDays(2));
+            });
 
             // act
             offlineConnectorCleaner.cleanConnectorsIfOfflineTooLong(dsl);
 
             // assert
-            dsl.select().from(CONNECTOR).fetch().forEach(record -> {
-                assertThat(record.get(CONNECTOR.ENDPOINT_URL)).isEqualTo("https://my-connector/api/dsp");
-                assertThat(record.get(CONNECTOR.ONLINE_STATUS)).isNotEqualTo(ConnectorOnlineStatus.DEAD);
-            });
+            var connector = dsl.fetchOne(CONNECTOR, CONNECTOR.CONNECTOR_ID.eq(connectorRef.getConnectorId()));
+            assertThat(connector.getOnlineStatus()).isEqualTo(ConnectorOnlineStatus.OFFLINE);
         });
     }
 
-    private static void createConnector(DSLContext dsl, int createdDaysAgo) {
-        dsl.insertInto(CONNECTOR)
-                .set(CONNECTOR.ENDPOINT_URL, "https://my-connector/api/dsp")
-                .set(CONNECTOR.CONNECTOR_ID, "my-connector")
-                .set(CONNECTOR.ONLINE_STATUS, ConnectorOnlineStatus.OFFLINE)
-                .set(CONNECTOR.LAST_SUCCESSFUL_REFRESH_AT, OffsetDateTime.now().minusDays(createdDaysAgo))
-                .set(CONNECTOR.CREATED_AT, OffsetDateTime.now().minusDays(6))
-                .set(CONNECTOR.DATA_OFFERS_EXCEEDED, ConnectorDataOffersExceeded.OK)
-                .set(CONNECTOR.CONTRACT_OFFERS_EXCEEDED, ConnectorContractOffersExceeded.OK).execute();
-    }
 }

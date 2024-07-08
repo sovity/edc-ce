@@ -14,9 +14,9 @@
 
 package de.sovity.edc.ext.catalog.crawler.dao;
 
+import de.sovity.edc.ext.catalog.crawler.dao.utils.RecordPatch;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.tables.records.ContractOfferRecord;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.tables.records.DataOfferRecord;
-import de.sovity.edc.ext.catalog.crawler.dao.utils.RecordPatch;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

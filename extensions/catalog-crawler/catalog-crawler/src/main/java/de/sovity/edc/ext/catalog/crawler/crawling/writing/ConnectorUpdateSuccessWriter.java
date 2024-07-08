@@ -14,12 +14,12 @@
 
 package de.sovity.edc.ext.catalog.crawler.crawling.writing;
 
+import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedCatalog;
+import de.sovity.edc.ext.catalog.crawler.crawling.logging.ConnectorChangeTracker;
+import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerEventLogger;
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.tables.records.ConnectorRecord;
-import de.sovity.edc.ext.catalog.crawler.crawling.logging.ConnectorChangeTracker;
-import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerEventLogger;
-import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedCatalog;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 

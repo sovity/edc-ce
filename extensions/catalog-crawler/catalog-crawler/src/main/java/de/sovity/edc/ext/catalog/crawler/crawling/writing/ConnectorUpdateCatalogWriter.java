@@ -14,10 +14,10 @@
 
 package de.sovity.edc.ext.catalog.crawler.crawling.writing;
 
+import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedDataOffer;
 import de.sovity.edc.ext.catalog.crawler.crawling.logging.ConnectorChangeTracker;
 import de.sovity.edc.ext.catalog.crawler.dao.CatalogPatchApplier;
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
-import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedDataOffer;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jooq.DSLContext;

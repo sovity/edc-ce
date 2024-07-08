@@ -14,10 +14,10 @@
 
 package de.sovity.edc.ext.catalog.crawler.crawling.fetching;
 
-import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
+import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedCatalog;
 import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedContractOffer;
 import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedDataOffer;
-import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedCatalog;
+import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
 import de.sovity.edc.utils.catalog.model.DspCatalog;
 import de.sovity.edc.utils.catalog.model.DspContractOffer;
 import de.sovity.edc.utils.catalog.model.DspDataOffer;

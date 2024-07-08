@@ -15,140 +15,140 @@ package de.sovity.edc.ext.catalog.crawler;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
-import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
-import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
 import de.sovity.edc.client.gen.model.DataSourceType;
-import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
-import de.sovity.edc.client.gen.model.UiContractNegotiation;
-import de.sovity.edc.client.gen.model.UiContractOffer;
 import de.sovity.edc.client.gen.model.UiCriterion;
 import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
-import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
+import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
+import de.sovity.edc.ext.catalog.crawler.db.jooq.Tables;
+import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorOnlineStatus;
+import de.sovity.edc.ext.catalog.crawler.utils.CrawlerDbAccess;
+import de.sovity.edc.ext.catalog.crawler.utils.TestData;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionDeferred;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
-import lombok.val;
 import org.awaitility.Awaitility;
-import org.junit.jupiter.api.BeforeEach;
+import org.awaitility.core.ThrowingRunnable;
+import org.jooq.DSLContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.time.OffsetDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
-import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.basicEdcConfig;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.getFreePortRange;
+import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiConfigFactory.configureApi;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CrawlerTest {
-
-    private static final String PROVIDER_PARTICIPANT_ID = "provider";
-    private static final String CONSUMER_PARTICIPANT_ID = "consumer";
-
-    private static ConnectorConfig providerConfig;
-    private static ConnectorConfig consumerConfig;
-
-    private static ConnectorRemote providerConnector;
-    private static ConnectorRemote consumerConnector;
-
-    private static EdcClient providerClient;
-    private static EdcClient consumerClient;
+    private static ConnectorConfig connectorConfig;
+    private static EdcClient connectorClient;
 
     @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase providerEdcContext = new EdcRuntimeExtensionWithTestDatabase(
+    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
             ":launchers:connectors:sovity-dev",
             "provider",
             testDatabase -> {
-                providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, testDatabase);
-                providerClient = EdcClient.builder()
-                        .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-                        .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
+                connectorConfig = forTestDatabase("MDSL1234XX", testDatabase);
+                connectorClient = EdcClient.builder()
+                        .managementApiUrl(connectorConfig.getManagementEndpoint().getUri().toString())
+                        .managementApiKey(connectorConfig.getProperties().get("edc.api.auth.key"))
                         .build();
-                providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
-                return providerConfig.getProperties();
+                return connectorConfig.getProperties();
             }
     );
 
     @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase consumerEdcContext = new EdcRuntimeExtensionWithTestDatabase(
-            ":launchers:connectors:sovity-dev",
-            "consumer",
+    static EdcRuntimeExtensionWithTestDatabase crawlerExtension = new EdcRuntimeExtensionWithTestDatabase(
+            ":launchers:connectors:catalog-crawler-dev",
+            "crawler",
             testDatabase -> {
-                consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, testDatabase);
-                consumerClient = EdcClient.builder()
-                        .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-                        .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-                        .build();
-                consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
-                return consumerConfig.getProperties();
+                var firstPort = getFreePortRange(5);
+
+                var props = new HashMap<String, String>();
+                props.put("edc.participant.id", "broker");
+                props.put(CrawlerExtension.EXTENSION_ENABLED, "true");
+                props.put(CrawlerExtension.ENVIRONMENT_ID, "test");
+                props.put(CrawlerExtension.JDBC_URL, testDatabase.getJdbcCredentials().jdbcUrl());
+                props.put(CrawlerExtension.JDBC_USER, testDatabase.getJdbcCredentials().jdbcUser());
+                props.put(CrawlerExtension.JDBC_PASSWORD, testDatabase.getJdbcCredentials().jdbcPassword());
+                props.put(CrawlerExtension.DB_CONNECTION_POOL_SIZE, "30");
+                props.put(CrawlerExtension.DB_CONNECTION_TIMEOUT_IN_MS, "1000");
+                props.put(CrawlerExtension.DB_MIGRATE, "true");
+                props.put(CrawlerExtension.DB_CLEAN, "true");
+                props.put(CrawlerExtension.DB_CLEAN_ENABLED, "true");
+                props.put(CrawlerExtension.DB_ADDITIONAL_FLYWAY_MIGRATION_LOCATIONS, "classpath:db-crawler/migration-test-utils");
+                props.put(CrawlerExtension.NUM_THREADS, "2");
+                props.put(CrawlerExtension.MAX_DATA_OFFERS_PER_CONNECTOR, "100");
+                props.put(CrawlerExtension.MAX_CONTRACT_OFFERS_PER_DATA_OFFER, "100");
+                props.putAll(configureApi(firstPort, "managementApiKey").getProperties());
+
+                var everySeconds = "* * * * * ?";
+                props.put(CrawlerExtension.CRON_ONLINE_CONNECTOR_REFRESH, everySeconds);
+                props.put(CrawlerExtension.CRON_OFFLINE_CONNECTOR_REFRESH, everySeconds);
+                props.put(CrawlerExtension.CRON_DEAD_CONNECTOR_REFRESH, everySeconds);
+                props.put(CrawlerExtension.SCHEDULED_KILL_OFFLINE_CONNECTORS, everySeconds);
+                props.put(CrawlerExtension.KILL_OFFLINE_CONNECTORS_AFTER, "P1D");
+
+                return props;
             }
     );
 
-    @RegisterExtension
-    static EdcRuntimeExtensionDeferred testBackendContext = new EdcRuntimeExtensionDeferred(
-            ":launchers:connectors:test-backend",
-            "testBackend",
-            () -> {
-                var ports = ConnectorConfigFactory.getFreePortRange(5);
-                var testBackendConfig = basicEdcConfig(CONSUMER_PARTICIPANT_ID, ports);
-                // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-                dataAddress = new MockDataAddressRemote(testBackendConfig.getDefaultEndpoint());
-                return testBackendConfig.getProperties();
-            }
-    );
-
-    private static MockDataAddressRemote dataAddress;
-    private final String dataOfferData = "expected data 123";
-
-    private final String dataOfferId = "my-data-offer-2023-11";
-
-    @BeforeEach
-    void setup() {
-    }
+    private final String dataOfferId = "my-data-offer";
 
     @Test
-    void provide_and_consume() {
-        Awaitility.await().atMost(30, TimeUnit.SECONDS).until(() -> {
-            try {
-                providerClient.uiApi().getDashboardPage();
-                consumerClient.uiApi().getDashboardPage();
-                return true;
-            } catch (Exception e) {
-                return false;
-            }
-        });
-
-        // provider: create data offer
+    void crawlSingleDataOffer() {
+        // arrange
         createPolicy();
         createAsset();
         createContractDefinition();
 
-        // consumer: negotiate contract and transfer data
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
-        var negotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
-        negotiation = awaitNegotiationDone(negotiation.getContractNegotiationId());
-        initiateTransfer(negotiation);
+        var connectorRef = new ConnectorRef(
+                "MDSL1234XX.C1234XX",
+                "test",
+                "My Org",
+                "MDSL1234XX",
+                connectorConfig.getProtocolEndpoint().getUri().toString()
+        );
 
-        // check data sink
-        validateDataTransferred(dataAddress.getDataSinkSpyUrl(), dataOfferData);
+        crawlerTransaction(dsl -> {
+            TestData.insertConnector(dsl, connectorRef, connectorRecord -> {
+                connectorRecord.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
+                connectorRecord.setCreatedAt(OffsetDateTime.now());
+            });
+        });
+
+        // act / await crawl
+        Awaitility.await().atMost(10, TimeUnit.SECONDS)
+                .untilAsserted(mapExceptionsToAssertionError(() ->
+                        crawlerTransaction(dsl -> assertDataOfferInCatalog(dsl, connectorRef))));
+    }
+
+    private void assertDataOfferInCatalog(DSLContext dsl, ConnectorRef connectorRef) {
+        var c = Tables.CONNECTOR;
+        var connector = dsl.fetchOne(c, c.CONNECTOR_ID.eq(connectorRef.getConnectorId()));
+        assertThat(connector).isNotNull();
+        assertThat(connector.getOnlineStatus()).isEqualTo(ConnectorOnlineStatus.ONLINE);
+
+        var d = Tables.DATA_OFFER;
+        var dataOffers = dsl.fetch(d, d.CONNECTOR_ID.eq(connectorRef.getConnectorId()));
+        assertThat(dataOffers).hasSize(1);
+        assertThat(dataOffers.get(0).getAssetId()).isEqualTo(dataOfferId);
+        assertThat(dataOffers.get(0).getAssetTitle()).isEqualTo("My Data Offer");
     }
 
     private void createAsset() {
@@ -163,12 +163,12 @@ class CrawlerTest {
                 .dataSource(UiDataSource.builder()
                         .type(DataSourceType.HTTP_DATA)
                         .httpData(UiDataSourceHttpData.builder()
-                                .baseUrl(dataAddress.getDataSourceUrl(dataOfferData))
+                                .baseUrl("http://0.0.0.0")
                                 .build())
                         .build())
                 .build();
 
-        providerClient.uiApi().createAsset(asset);
+        connectorClient.uiApi().createAsset(asset);
     }
 
     private void createPolicy() {
@@ -197,7 +197,7 @@ class CrawlerTest {
                         .build())
                 .build();
 
-        providerClient.uiApi().createPolicyDefinition(policyDefinition);
+        connectorClient.uiApi().createPolicyDefinition(policyDefinition);
     }
 
     private void createContractDefinition() {
@@ -215,41 +215,20 @@ class CrawlerTest {
                         .build()))
                 .build();
 
-        providerClient.uiApi().createContractDefinition(contractDefinition);
+        connectorClient.uiApi().createContractDefinition(contractDefinition);
     }
 
-    private UiContractNegotiation initiateNegotiation(UiDataOffer dataOffer, UiContractOffer contractOffer) {
-        var negotiationRequest = ContractNegotiationRequest.builder()
-                .counterPartyAddress(dataOffer.getEndpoint())
-                .counterPartyParticipantId(dataOffer.getParticipantId())
-                .assetId(dataOffer.getAsset().getAssetId())
-                .contractOfferId(contractOffer.getContractOfferId())
-                .policyJsonLd(contractOffer.getPolicy().getPolicyJsonLd())
-                .build();
-
-        return consumerClient.uiApi().initiateContractNegotiation(negotiationRequest);
+    private void crawlerTransaction(Consumer<DSLContext> withDsl) {
+        CrawlerDbAccess.transaction(crawlerExtension.getTestDatabase(), withDsl);
     }
 
-    private UiContractNegotiation awaitNegotiationDone(String negotiationId) {
-        var negotiation = Awaitility.await().atMost(consumerConnector.timeout).until(
-                () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
-                it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
-        );
-
-        assertThat(negotiation.getState().getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.AGREED);
-        return negotiation;
-    }
-
-    private void initiateTransfer(UiContractNegotiation negotiation) {
-        var contractAgreementId = negotiation.getContractAgreementId();
-        var transferRequest = InitiateTransferRequest.builder()
-                .contractAgreementId(contractAgreementId)
-                .dataSinkProperties(dataAddress.getDataSinkProperties())
-                .build();
-        consumerClient.uiApi().initiateTransfer(transferRequest);
-    }
-
-    private String getProtocolEndpoint(ConnectorRemote connector) {
-        return connector.getConfig().getProtocolEndpoint().getUri().toString();
+    private ThrowingRunnable mapExceptionsToAssertionError(ThrowingRunnable runnable) {
+        return () -> {
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                throw new AssertionError(e);
+            }
+        };
     }
 }

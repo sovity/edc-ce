@@ -17,10 +17,6 @@ package de.sovity.edc.ext.catalog.crawler.utils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.List;
-import java.util.stream.Stream;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StringUtils2 {

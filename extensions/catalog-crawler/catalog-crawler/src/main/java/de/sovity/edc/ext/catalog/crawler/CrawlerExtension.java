@@ -18,6 +18,7 @@ import org.eclipse.edc.connector.api.management.configuration.transform.Manageme
 import org.eclipse.edc.connector.spi.catalog.CatalogService;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
+import org.eclipse.edc.runtime.metamodel.annotation.Provides;
 import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
@@ -25,9 +26,13 @@ import org.eclipse.edc.spi.types.TypeManager;
 
 import static de.sovity.edc.ext.catalog.crawler.orchestration.config.EdcConfigPropertyUtils.toEdcProp;
 
+@Provides({CrawlerExtensionContext.class})
 public class CrawlerExtension implements ServiceExtension {
 
     public static final String EXTENSION_NAME = "Authority Portal Data Catalog Crawler";
+
+    @Setting(required = true)
+    public static final String EXTENSION_ENABLED = toEdcProp("CRAWLER_EXTENSION_ENABLED");
 
     @Setting(required = true)
     public static final String ENVIRONMENT_ID = toEdcProp("CRAWLER_ENVIRONMENT_ID");
@@ -46,6 +51,18 @@ public class CrawlerExtension implements ServiceExtension {
 
     @Setting
     public static final String DB_CONNECTION_TIMEOUT_IN_MS = toEdcProp("CRAWLER_DB_CONNECTION_TIMEOUT_IN_MS");
+
+    @Setting
+    public static final String DB_MIGRATE = toEdcProp("CRAWLER_DB_MIGRATE");
+
+    @Setting
+    public static final String DB_CLEAN = toEdcProp("CRAWLER_DB_CLEAN");
+
+    @Setting
+    public static final String DB_CLEAN_ENABLED = toEdcProp("CRAWLER_DB_CLEAN_ENABLED");
+
+    @Setting
+    public static final String DB_ADDITIONAL_FLYWAY_MIGRATION_LOCATIONS = toEdcProp("CRAWLER_DB_ADDITIONAL_FLYWAY_LOCATIONS");
 
     @Setting
     public static final String NUM_THREADS = toEdcProp("CRAWLER_NUM_THREADS");
@@ -94,6 +111,11 @@ public class CrawlerExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
+        if (!Boolean.TRUE.equals(context.getConfig().getBoolean(EXTENSION_ENABLED, false))) {
+            context.getMonitor().info("Crawler extension is disabled.");
+            return;
+        }
+
         services = CrawlerExtensionContextBuilder.buildContext(
                 context.getConfig(),
                 context.getMonitor(),
@@ -103,17 +125,23 @@ public class CrawlerExtension implements ServiceExtension {
                 catalogService
         );
 
-        // This is a hack for tests, so we can access the running context from tests.
-        CrawlerExtensionContext.instance = services;
+        // Provide access for the tests
+        context.registerService(CrawlerExtensionContext.class, services);
     }
 
     @Override
     public void start() {
+        if (services == null) {
+            return;
+        }
         services.crawlerInitializer().onStartup();
     }
 
     @Override
     public void shutdown() {
+        if (services == null) {
+            return;
+        }
         services.dataSource().close();
     }
 }

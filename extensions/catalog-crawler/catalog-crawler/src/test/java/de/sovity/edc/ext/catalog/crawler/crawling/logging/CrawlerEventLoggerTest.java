@@ -14,13 +14,10 @@
 
 package de.sovity.edc.ext.catalog.crawler.crawling.logging;
 
-import de.sovity.edc.ext.catalog.crawler.config.FlywayTestUtils;
-import de.sovity.edc.ext.catalog.crawler.config.TestDatabase;
-import de.sovity.edc.ext.catalog.crawler.config.TestDatabaseFactory;
+import de.sovity.edc.ext.catalog.crawler.CrawlerTestDb;
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.Tables;
 import org.jooq.DSLContext;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -28,12 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CrawlerEventLoggerTest {
     @RegisterExtension
-    private static final TestDatabase TEST_DATABASE = TestDatabaseFactory.getTestDatabase();
-
-    @BeforeAll
-    static void setup() {
-        FlywayTestUtils.migrate(TEST_DATABASE);
-    }
+    private static final CrawlerTestDb TEST_DATABASE = new CrawlerTestDb();
 
     @Test
     void testDataOfferWriter_allSortsOfUpdates() {
@@ -56,7 +48,7 @@ class CrawlerEventLoggerTest {
             crawlerEventLogger.logConnectorUpdateDataOfferLimitExceeded(dsl, connectorRef, 10);
             crawlerEventLogger.logConnectorUpdateDataOfferLimitOk(dsl, connectorRef);
 
-            assertThat(numLogEntries(dsl)).isEqualTo(8);
+            assertThat(numLogEntries(dsl)).isEqualTo(7);
         });
     }
 

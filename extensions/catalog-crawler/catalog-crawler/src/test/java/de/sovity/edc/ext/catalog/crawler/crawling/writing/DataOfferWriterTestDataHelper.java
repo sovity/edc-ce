@@ -14,14 +14,10 @@
 
 package de.sovity.edc.ext.catalog.crawler.crawling.writing;
 
+import de.sovity.edc.ext.catalog.crawler.TestData;
 import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedContractOffer;
 import de.sovity.edc.ext.catalog.crawler.crawling.fetching.model.FetchedDataOffer;
-import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorQueries;
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
-import de.sovity.edc.ext.catalog.crawler.db.jooq.Tables;
-import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorContractOffersExceeded;
-import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorDataOffersExceeded;
-import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.tables.records.ContractOfferRecord;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.tables.records.DataOfferRecord;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
@@ -39,15 +35,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 class DataOfferWriterTestDataHelper {
-    ConnectorRef connectorRef = new ConnectorRef(
-            "MDSL1234XX.C1234XX",
-            "test",
-            "My Org",
-            "MDSL1234XX",
-            "https://example.com/api/dsp"
-    );
-    ;
-    OffsetDateTime old = OffsetDateTime.now().withNano(0).withSecond(0).withMinute(0).withHour(0).minusDays(100);
+    OffsetDateTime old = TestData.old;
+    ConnectorRef connectorRef = TestData.connectorRef;
     List<ContractOfferRecord> existingContractOffers = new ArrayList<>();
     List<DataOfferRecord> existingDataOffers = new ArrayList<>();
     List<FetchedDataOffer> fetchedDataOffers = new ArrayList<>();
@@ -78,8 +67,8 @@ class DataOfferWriterTestDataHelper {
     }
 
     public void initialize(DSLContext dsl) {
-        var connectorQueries = new ConnectorQueries();
-        dummyConnector(dsl, connectorRef);
+        TestData.insertConnector(dsl, connectorRef, record -> {
+        });
         dsl.batchInsert(existingDataOffers).execute();
         dsl.batchInsert(existingContractOffers).execute();
     }
@@ -141,25 +130,6 @@ class DataOfferWriterTestDataHelper {
         return "{\"%s\": \"%s\"}".formatted(
                 "SomePolicyField", policyValue
         );
-    }
-
-    private void dummyConnector(DSLContext dsl, ConnectorRef connectorRef) {
-        var organization = dsl.newRecord(Tables.ORGANIZATION);
-        organization.setMdsId(connectorRef.getOrganizationId());
-        organization.setName(connectorRef.getOrganizationLegalName());
-        organization.insert();
-
-        var connector = dsl.newRecord(Tables.CONNECTOR);
-        connector.setEnvironment(connectorRef.getEnvironmentId());
-        connector.setMdsId(connectorRef.getOrganizationId());
-        connector.setName(connectorRef.getConnectorId() + " Name");
-        connector.setEndpointUrl(connectorRef.getEndpoint());
-        connector.setOnlineStatus(ConnectorOnlineStatus.OFFLINE);
-        connector.setLastRefreshAttemptAt(null);
-        connector.setLastSuccessfulRefreshAt(null);
-        connector.setCreatedAt(old);
-        connector.setDataOffersExceeded(ConnectorDataOffersExceeded.UNKNOWN);
-        connector.setContractOffersExceeded(ConnectorContractOffersExceeded.UNKNOWN);
     }
 
     @NotNull

@@ -15,13 +15,10 @@
 package de.sovity.edc.ext.catalog.crawler.crawling.writing;
 
 import de.sovity.edc.ext.catalog.crawler.AssertionUtils;
-import de.sovity.edc.ext.catalog.crawler.config.FlywayTestUtils;
-import de.sovity.edc.ext.catalog.crawler.config.TestDatabase;
-import de.sovity.edc.ext.catalog.crawler.config.TestDatabaseFactory;
-import de.sovity.edc.ext.catalog.crawler.db.jooq.tables.records.DataOfferRecord;
+import de.sovity.edc.ext.catalog.crawler.CrawlerTestDb;
 import de.sovity.edc.ext.catalog.crawler.crawling.logging.ConnectorChangeTracker;
+import de.sovity.edc.ext.catalog.crawler.db.jooq.tables.records.DataOfferRecord;
 import org.assertj.core.data.TemporalUnitLessThanOffset;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -30,16 +27,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 class ConnectorUpdateCatalogWriterTest {
-
     @RegisterExtension
-    private static final TestDatabase TEST_DATABASE = TestDatabaseFactory.getTestDatabase();
-
-    @BeforeAll
-    static void setup() {
-        FlywayTestUtils.migrate(TEST_DATABASE);
-    }
+    private static final CrawlerTestDb TEST_DATABASE = new CrawlerTestDb();
 
     @Test
     void testDataOfferWriter_allSortsOfUpdates() {
@@ -48,6 +40,7 @@ class ConnectorUpdateCatalogWriterTest {
             var testData = new DataOfferWriterTestDataHelper();
             var changes = new ConnectorChangeTracker();
             var dataOfferWriter = testDydi.getConnectorUpdateCatalogWriter();
+            when(testDydi.getCrawlerConfig().getEnvironmentId()).thenReturn("test");
 
             // arrange
             var unchanged = DataOfferWriterTestDataModels.Do.forName("unchanged");

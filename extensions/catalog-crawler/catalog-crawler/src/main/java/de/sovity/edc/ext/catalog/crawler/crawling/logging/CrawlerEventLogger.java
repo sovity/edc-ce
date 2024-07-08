@@ -24,6 +24,7 @@ import org.jooq.DSLContext;
 
 import java.time.OffsetDateTime;
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * Updates a single connector.
@@ -117,6 +118,7 @@ public class CrawlerEventLogger {
 
     private CrawlerEventLogRecord newLogEntry(DSLContext dsl, ConnectorRef connectorRef) {
         var logEntry = dsl.newRecord(Tables.CRAWLER_EVENT_LOG);
+        logEntry.setId(UUID.randomUUID());
         logEntry.setEnvironment(connectorRef.getEnvironmentId());
         logEntry.setConnectorId(connectorRef.getConnectorId());
         logEntry.setCreatedAt(OffsetDateTime.now());

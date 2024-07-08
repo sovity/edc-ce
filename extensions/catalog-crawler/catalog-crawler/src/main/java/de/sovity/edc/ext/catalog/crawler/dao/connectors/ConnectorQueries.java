@@ -14,25 +14,26 @@
 
 package de.sovity.edc.ext.catalog.crawler.dao.connectors;
 
-import de.sovity.edc.ext.catalog.crawler.dao.utils.PostgresqlUtils;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.Tables;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.tables.Connector;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.tables.Organization;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.tables.records.ConnectorRecord;
+import de.sovity.edc.ext.catalog.crawler.orchestration.config.CrawlerConfig;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 
+@RequiredArgsConstructor
 public class ConnectorQueries {
+    private final CrawlerConfig crawlerConfig;
 
     public ConnectorRecord findByConnectorId(DSLContext dsl, String connectorId) {
         var c = Tables.CONNECTOR;
@@ -49,22 +50,22 @@ public class ConnectorQueries {
     }
 
     @NotNull
-    private HashSet<ConnectorRef> queryConnectorRefs(
+    private Set<ConnectorRef> queryConnectorRefs(
             DSLContext dsl,
             BiFunction<Connector, Organization, Condition> condition
     ) {
         var c = Tables.CONNECTOR;
         var o = Tables.ORGANIZATION;
         var query = dsl.select(
+                        c.CONNECTOR_ID.as("connectorId"),
                         c.ENVIRONMENT.as("environmentId"),
                         o.NAME.as("organizationLegalName"),
                         o.MDS_ID.as("organizationId"),
-                        c.CONNECTOR_ID.as("connectorId"),
                         c.ENDPOINT_URL.as("endpoint")
                 )
                 .from(c)
                 .leftJoin(o).on(c.MDS_ID.eq(o.MDS_ID))
-                .where(condition.apply(c, o))
+                .where(condition.apply(c, o), c.ENVIRONMENT.eq(crawlerConfig.getEnvironmentId()))
                 .fetchInto(ConnectorRef.class);
 
         return new HashSet<>(query);

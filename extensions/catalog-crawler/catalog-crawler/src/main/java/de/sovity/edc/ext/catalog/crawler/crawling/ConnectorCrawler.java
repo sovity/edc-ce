@@ -14,14 +14,14 @@
 
 package de.sovity.edc.ext.catalog.crawler.crawling;
 
+import de.sovity.edc.ext.catalog.crawler.crawling.fetching.FetchedCatalogService;
+import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerExecutionTimeLogger;
+import de.sovity.edc.ext.catalog.crawler.crawling.writing.ConnectorUpdateFailureWriter;
+import de.sovity.edc.ext.catalog.crawler.crawling.writing.ConnectorUpdateSuccessWriter;
 import de.sovity.edc.ext.catalog.crawler.dao.config.DslContextFactory;
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorQueries;
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.MeasurementErrorStatus;
-import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerExecutionTimeLogger;
-import de.sovity.edc.ext.catalog.crawler.crawling.fetching.FetchedCatalogService;
-import de.sovity.edc.ext.catalog.crawler.crawling.writing.ConnectorUpdateFailureWriter;
-import de.sovity.edc.ext.catalog.crawler.crawling.writing.ConnectorUpdateSuccessWriter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.time.StopWatch;
 import org.eclipse.edc.spi.monitor.Monitor;

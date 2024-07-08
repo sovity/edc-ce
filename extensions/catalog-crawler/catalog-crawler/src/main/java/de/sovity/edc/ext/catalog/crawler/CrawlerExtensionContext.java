@@ -15,9 +15,10 @@
 package de.sovity.edc.ext.catalog.crawler;
 
 import com.zaxxer.hikari.HikariDataSource;
-import de.sovity.edc.ext.catalog.crawler.dao.data_offers.DataOfferRecordUpdater;
 import de.sovity.edc.ext.catalog.crawler.crawling.ConnectorCrawler;
 import de.sovity.edc.ext.catalog.crawler.crawling.fetching.FetchedCatalogBuilder;
+import de.sovity.edc.ext.catalog.crawler.dao.config.DslContextFactory;
+import de.sovity.edc.ext.catalog.crawler.dao.data_offers.DataOfferRecordUpdater;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 
 
@@ -30,6 +31,7 @@ public record CrawlerExtensionContext(
         CrawlerInitializer crawlerInitializer,
         // Required for stopping connections on closing
         HikariDataSource dataSource,
+        DslContextFactory dslContextFactory,
 
         // Required for Integration Tests
         ConnectorCrawler connectorCrawler,
@@ -37,10 +39,4 @@ public record CrawlerExtensionContext(
         FetchedCatalogBuilder catalogPatchBuilder,
         DataOfferRecordUpdater dataOfferRecordUpdater
 ) {
-    /**
-     * This is a hack for our tests.
-     * <p>
-     * Right now we have no good way to access the context from tests.
-     */
-    public static CrawlerExtensionContext instance;
 }

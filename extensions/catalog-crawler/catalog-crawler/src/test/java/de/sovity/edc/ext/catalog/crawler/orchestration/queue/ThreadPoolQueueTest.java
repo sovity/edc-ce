@@ -14,12 +14,13 @@
 
 package de.sovity.edc.ext.catalog.crawler.orchestration.queue;
 
-import de.sovity.edc.ext.catalog.crawler.orchestration.queue.ThreadPoolTask;
-import de.sovity.edc.ext.catalog.crawler.orchestration.queue.ThreadPoolTaskQueue;
+import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+
+import static org.mockito.Mockito.mock;
 
 class ThreadPoolQueueTest {
 
@@ -32,17 +33,23 @@ class ThreadPoolQueueTest {
         Runnable noop = () -> {
         };
 
+        var c10 = mock(ConnectorRef.class);
+        var c20 = mock(ConnectorRef.class);
+        var c11 = mock(ConnectorRef.class);
+        var c21 = mock(ConnectorRef.class);
+        var c00 = mock(ConnectorRef.class);
+
         var queue = new ThreadPoolTaskQueue();
-        queue.add(new ThreadPoolTask(1, noop, "1.0"));
-        queue.add(new ThreadPoolTask(2, noop, "2.0"));
-        queue.add(new ThreadPoolTask(1, noop, "1.1"));
-        queue.add(new ThreadPoolTask(2, noop, "2.1"));
-        queue.add(new ThreadPoolTask(0, noop, "0.0"));
+        queue.add(new ThreadPoolTask(1, noop, c10));
+        queue.add(new ThreadPoolTask(2, noop, c20));
+        queue.add(new ThreadPoolTask(1, noop, c11));
+        queue.add(new ThreadPoolTask(2, noop, c21));
+        queue.add(new ThreadPoolTask(0, noop, c00));
 
         var result = new ArrayList<ThreadPoolTask>();
         queue.getQueue().drainTo(result);
 
         Assertions.assertThat(result).extracting(ThreadPoolTask::getConnectorRef)
-                .containsExactly("0.0", "1.0", "1.1", "2.0", "2.1");
+                .containsExactly(c00, c10, c11, c20, c21);
     }
 }

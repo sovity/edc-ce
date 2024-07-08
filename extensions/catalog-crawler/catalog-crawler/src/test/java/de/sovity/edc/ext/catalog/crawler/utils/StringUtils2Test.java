@@ -16,8 +16,6 @@ package de.sovity.edc.ext.catalog.crawler.utils;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class StringUtils2Test {

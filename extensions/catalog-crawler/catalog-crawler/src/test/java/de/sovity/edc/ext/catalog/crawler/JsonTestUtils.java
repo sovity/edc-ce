@@ -5,16 +5,16 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonTestUtils {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @SneakyThrows
     public static String serialize(Object obj) {
-        return objectMapper.writeValueAsString(obj);
+        return OBJECT_MAPPER.writeValueAsString(obj);
     }
 
     @SneakyThrows
     public static <T> T deserialize(String json, Class<T> clazz) {
-        return objectMapper.readValue(json, clazz);
+        return OBJECT_MAPPER.readValue(json, clazz);
     }
 
     public static <T> T jsonCast(Object obj, Class<T> clazz) {
