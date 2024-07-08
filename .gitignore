@@ -40,7 +40,7 @@ build
 **/.env
 !.env
 !launchers/.env.connector
-!launchers/.env.broker
+!launchers/.env.catalog-crawler
 
 # Log files
 *.log

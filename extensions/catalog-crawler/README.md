@@ -16,17 +16,19 @@
 
 ## About this Extension
 
-Catalog crawler for the Authority Portal.
+The catalog crawler is a deployment unit depending on an existing Authority Portal's database:
 
-Authority Portal catalog crawlers are deployed as separate deployment units, one for each environment / daps.
+- It periodically checks the Authority Portal's connector list for its environment.
+- It crawls the given connectors in regular intervals.
+- It writes the data offers and connector statuses back into the Authority Portal DB.
+- Each Environment configured in the Authority Portal requires its own Catalog Crawler with credentials for that environment's DAPS.
 
 ## Why does this component exist?
 
-The Authority Portal uses a non-EDC stack, and the EDC stack cannot handle multiple data spaces at once.
+The Authority Portal uses a non-EDC stack, and the EDC stack cannot handle multiple sources of authority at once.
 
-To still be able to display the data catalogs in the authority portal, these separately deployed catalog
-crawlers will connect to the existing Authority Portal database and crawl data offers for their configured
-environment.
+With the `DB -> UI` part of the broker having been moved to the Authority Portal, only the `Catalog -> DB` part remains as the Catalog Crawler, 
+as it requires Connector-to-Connector IAM within the given Dataspace.
 
 ## License
 

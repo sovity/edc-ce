@@ -100,7 +100,6 @@ Our sovity Community Edition EDC is built as several docker image variants in di
         <li>Management API Auth via API Keys</li>
         <li>PostgreSQL Persistence & Flyway</li>
         <li>DAPS Authentication</li>
-        <li>Broker Extension</li>
         <li>Clearing House Extension</li>
       </ul>  
     </td>
@@ -134,27 +133,24 @@ Our sovity Community Edition EDC is built as several docker image variants in di
   </tr>
   <tr>
     <td>
-      <a href="https://github.com/sovity/edc-broker-server-extension/pkgs/container/broker-server-dev">broker-dev</a>
+      <a href="https://github.com/sovity/edc-ce/pkgs/container/catalog-crawler-dev">catalog-crawler-dev</a>
     </td>
     <td>Development</td>
     <td>
       <ul>
-        <li>Local Demo via our
-          <span style="white-space: pre; font-family: monospace;">docker-compose.yaml</span>
-        </li>
+        <li>Local Demo</li>
         <li>E2E Testing</li>
       </ul>
     </td>
     <td>
       <ul>
-        <li>Broker Server Extension(s)</li>
-        <li>PostgreSQL Persistence & Flyway</li>
+        <li>Catalog Crawler for one environment</li>
         <li>Mock IAM</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td>broker-ce</td>
+    <td>catalog-crawler-ce</td>
     <td>Community Edition</td>
     <td>
       <ul>
@@ -163,8 +159,7 @@ Our sovity Community Edition EDC is built as several docker image variants in di
     </td>
     <td>
       <ul>
-        <li>Broker Server Extension(s)</li>
-        <li>PostgreSQL Persistence & Flyway</li>
+        <li>Catalog Crawler for one environment</li>
         <li>DAPS Authentication</li>
       </ul>
     </td>

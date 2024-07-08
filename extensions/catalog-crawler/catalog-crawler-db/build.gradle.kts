@@ -169,7 +169,7 @@ tasks.withType<nu.studer.gradle.jooq.JooqGenerate> {
     }
 }
 
-group = libs.versions.sovityBrokerServerGroup.get()
+group = libs.versions.sovityCatalogCrawlerGroup.get()
 
 publishing {
     publications {

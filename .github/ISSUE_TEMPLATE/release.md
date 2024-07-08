@@ -46,8 +46,6 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
         the [docker-compose's .env file](https://github.com/sovity/edc-ce/blob/main/.env).
   - [ ] Set the version for `TEST_BACKEND_IMAGE` of
         the [docker-compose's .env file](https://github.com/sovity/edc-ce/blob/main/.env).
-  - [ ] Set the version for `BROKER_IMAGE` of
-    the [docker-compose's .env file](https://github.com/sovity/edc-ce/blob/main/.env).
   - [ ] Set the UI release version for `EDC_UI_IMAGE` of
         the [docker-compose's .env file](https://github.com/sovity/edc-ce/blob/main/.env).
   - [ ] If the Eclipse EDC version changed, update
@@ -58,13 +56,10 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
 - [ ] Validate the image
   - [ ] Pull the latest edc-dev image: `docker image pull ghcr.io/sovity/edc-dev:latest`.
   - [ ] Check that your image was built recently `docker image ls | grep ghcr.io/sovity/edc-dev`.
-  - [ ] Test the release `docker-compose.yaml` with `EDC_IMAGE=ghcr.io/sovity/edc-dev:latest` and `BROKER_IMAGE=ghcr.io/sovity/broker-server-dev:latest` (at minimum execute a transfer between the two connectors).
+  - [ ] Test the release `docker-compose.yaml` with `EDC_IMAGE=ghcr.io/sovity/edc-dev:latest` (at minimum execute a transfer between the two connectors).
     - EDC
       - [ ] Test with `EDC_UI_ACTIVE_PROFILE=sovity-open-source`
       - [ ] Test with `EDC_UI_ACTIVE_PROFILE=mds-open-source`
-    - Broker
-      - [ ] Validate that the EDC is scanned.
-      - [ ] Validate that the index is searchable.
   - [ ] Ensure with a `docker ps -a` that all containers are healthy, and not `healthy: starting` or `healthy: unhealthy`.
 - [ ] [Create a release](https://github.com/sovity/edc-ce/releases/new)
   - [ ] In `Choose the tag`, type your new release version in the format `vx.y.z` (for instance `v1.2.3`) then click `+Create new tag vx.y.z on release`.

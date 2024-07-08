@@ -7,12 +7,14 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 ### Overview
 
-### EDC UI
-
-### EDC Extensions and Broker
+### Detailed Changes
 
 #### Major Changes
 
+- The Broker has been removed in favor of the Authority Portal and the new Deployment Unit, the "Data Catalog Crawler":
+  - Each "Data Catalog Crawler" connects to an existing Authority Portal Deployment's DB.
+  - Each "Data Catalog Crawler" is responsible for crawling exactly one environment.
+  - The Data Catalog functionality of the Broker has been integrated into the Authority Portal.
 - API Wrapper UI API: Moved to well-typed data sources, breaking changes to the asset model and API.
 
 #### Minor Changes
@@ -25,8 +27,14 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 ### Deployment Migration Notes
 
-The database migration system has been moved from multiple migration history tables to a single one. Although this
-process has been extensively tested in the enterprise edition already, it should be tested once more on a copy of a productive connector.
+- Connector:
+  - The database migration system has been moved from multiple migration history tables to a single one. Although this
+    process has been extensively tested in the enterprise edition already, it should be tested once more on a copy of a productive connector.
+- Broker:
+  - The broker has been removed. For Authority Portal users, please check out the new 
+    [Data Catalog Crawler Productive Deployment Guide](docs/deployment-guide/goals/catalog-crawler-production/README.md). 
+  - Any previous broker deployment's database is not required anymore.
+  - Please care that only some environment variables look similar. It is recommended to create fresh deployments.
 
 ## [8.1.0] - 2024-06-14
 
@@ -42,7 +50,7 @@ Support for Multiplicity Constraints in the API Wrapper.
 
 #### Minor Changes
 
-- API Wrapper 
+- API Wrapper
   - Support for Multiplicity Constraints (https://github.com/sovity/edc-ce/issues/968)
   - Providing `Prop` class from `json-and-jsonld-utils` to the java-client to make relevant Constants available
 
@@ -88,7 +96,6 @@ The functionalities of each part, Broker and Extensions, on this release, is the
   - Broker CE: `ghcr.io/sovity/broker-server-ce:8.0.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.2`
 
-
 ## [7.5.0] - 2024-05-16
 
 ### Overview
@@ -114,9 +121,9 @@ Security updates
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:7.5.0`
-    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.5.0`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.5.0`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:7.5.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.5.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.5.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.2`
 - Connector UI Release: https://github.com/sovity/edc-ui/releases/tag/v3.2.2
 
@@ -146,9 +153,9 @@ Contains DB migrations, DB backups advised.
 #### Compatible Versions
 
 - Connector Backend Docker Images:
-    - Dev EDC: `ghcr.io/sovity/edc-dev:7.4.2`
-    - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.4.2`
-    - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.4.2`
+  - Dev EDC: `ghcr.io/sovity/edc-dev:7.4.2`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:7.4.2`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:7.4.2`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:3.2.2`
 - Connector UI Release: https://github.com/sovity/edc-ui/releases/tag/v3.2.2
 

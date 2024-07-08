@@ -20,7 +20,7 @@ create type crawler_event_type as enum (
     'CONNECTOR_DELETED'
     );
 
--- Adding missing columns from the Broker to the connector table
+-- Adding missing columns from the crawler to the connector table
 alter table connector
     add column last_refresh_attempt_at    timestamp with time zone,
     add column last_successful_refresh_at timestamp with time zone,
@@ -88,7 +88,7 @@ create table crawler_event_log
     error_stack  text
 );
 
--- Broker exec time measurements
+-- Crawling exec time measurements
 create table crawler_execution_time_measurement
 (
     id             uuid                     not null primary key,
