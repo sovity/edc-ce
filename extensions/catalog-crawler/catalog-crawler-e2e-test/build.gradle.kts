@@ -1,6 +1,5 @@
 plugins {
     `java-library`
-    alias(libs.plugins.retry)
 }
 
 configurations.all {
@@ -11,6 +10,8 @@ dependencies {
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
 
+    // testImplementation(project(":launchers:connectors:sovity-dev"))
+    // testImplementation(project(":launchers:connectors:test-backend"))
     testImplementation(project(":utils:versions"))
     testImplementation(project(":utils:test-connector-remote"))
     testImplementation(project(":utils:json-and-jsonld-utils"))
@@ -34,11 +35,6 @@ dependencies {
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
     maxParallelForks = 1
-    retry {
-        maxRetries.set(2)
-        maxFailures.set(4)
-        failOnPassedAfterRetry.set(false)
-    }
 }
 
 publishing {

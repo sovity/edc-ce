@@ -3,8 +3,6 @@ package de.sovity.edc.extension.e2e.db;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
-import org.eclipse.edc.junit.extensions.EdcRuntimeExtension;
-import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
@@ -12,20 +10,16 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 @RequiredArgsConstructor
-public class EdcRuntimeExtensionWithTestDatabase
-        implements BeforeAllCallback, AfterAllCallback, BeforeTestExecutionCallback, AfterTestExecutionCallback, ParameterResolver {
+public class EdcRuntimeExtensionDeferred
+        implements BeforeAllCallback, BeforeTestExecutionCallback, AfterTestExecutionCallback, ParameterResolver {
 
     private final String moduleName;
     private final String logPrefix;
 
-    @Getter
-    @Delegate(types = {AfterAllCallback.class})
-    private final TestDatabase testDatabase = new TestDatabaseViaTestcontainers();
-
-    private final Function<TestDatabase, Map<String, String>> propertyFactory;
+    private final Supplier<Map<String, String>> propertyFactory;
 
     @Delegate(types = {
             BeforeTestExecutionCallback.class,
@@ -33,11 +27,10 @@ public class EdcRuntimeExtensionWithTestDatabase
             ParameterResolver.class
     })
     @Getter
-    private EdcRuntimeExtensionFixed edcRuntimeExtension = null;
+    private EdcRuntimeExtensionFixed edcRuntimeExtensionFixed = null;
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
-        testDatabase.beforeAll(extensionContext);
-        edcRuntimeExtension = new EdcRuntimeExtensionFixed(moduleName, logPrefix, propertyFactory.apply(testDatabase));
+        edcRuntimeExtensionFixed = new EdcRuntimeExtensionFixed(moduleName, logPrefix, propertyFactory.get());
     }
 }

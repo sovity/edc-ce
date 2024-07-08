@@ -54,7 +54,7 @@ public class ConnectorConfigFactory {
         return config;
     }
 
-    private static synchronized int getFreePortRange(int size) {
+    public static synchronized int getFreePortRange(int size) {
         // pick a random in a reasonable range
         int firstPort = getFreePort(RANDOM.nextInt(10_000, 50_000));
 

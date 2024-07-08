@@ -17,6 +17,7 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
+import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
@@ -28,6 +29,8 @@ import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataOffer;
+import de.sovity.edc.client.gen.model.UiDataSource;
+import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
@@ -35,21 +38,22 @@ import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionDeferred;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
+import lombok.val;
 import org.awaitility.Awaitility;
-import org.eclipse.edc.junit.extensions.EdcRuntimeExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.basicEdcConfig;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -73,13 +77,13 @@ class CrawlerTest {
             ":launchers:connectors:sovity-dev",
             "provider",
             testDatabase -> {
-                providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 21000, testDatabase);
+                providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, testDatabase);
                 providerClient = EdcClient.builder()
                         .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
                         .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
                         .build();
                 providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
-                return  providerConfig.getProperties();
+                return providerConfig.getProperties();
             }
     );
 
@@ -88,7 +92,7 @@ class CrawlerTest {
             ":launchers:connectors:sovity-dev",
             "consumer",
             testDatabase -> {
-                consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 22000, testDatabase);
+                consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, testDatabase);
                 consumerClient = EdcClient.builder()
                         .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
                         .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
@@ -98,19 +102,40 @@ class CrawlerTest {
             }
     );
 
-    private MockDataAddressRemote dataAddress;
+    @RegisterExtension
+    static EdcRuntimeExtensionDeferred testBackendContext = new EdcRuntimeExtensionDeferred(
+            ":launchers:connectors:test-backend",
+            "testBackend",
+            () -> {
+                var ports = ConnectorConfigFactory.getFreePortRange(5);
+                var testBackendConfig = basicEdcConfig(CONSUMER_PARTICIPANT_ID, ports);
+                // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
+                dataAddress = new MockDataAddressRemote(testBackendConfig.getDefaultEndpoint());
+                return testBackendConfig.getProperties();
+            }
+    );
+
+    private static MockDataAddressRemote dataAddress;
     private final String dataOfferData = "expected data 123";
 
     private final String dataOfferId = "my-data-offer-2023-11";
 
     @BeforeEach
     void setup() {
-        // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
 
     @Test
     void provide_and_consume() {
+        Awaitility.await().atMost(30, TimeUnit.SECONDS).until(() -> {
+            try {
+                providerClient.uiApi().getDashboardPage();
+                consumerClient.uiApi().getDashboardPage();
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        });
+
         // provider: create data offer
         createPolicy();
         createAsset();
@@ -135,11 +160,12 @@ class CrawlerTest {
                 .language("EN")
                 .publisherHomepage("https://my-department.my-org.com/my-data-offer")
                 .licenseUrl("https://my-department.my-org.com/my-data-offer#license")
-                .dataAddressProperties(Map.of(
-                        Prop.Edc.TYPE, "HttpData",
-                        Prop.Edc.METHOD, "GET",
-                        Prop.Edc.BASE_URL, dataAddress.getDataSourceUrl(dataOfferData)
-                ))
+                .dataSource(UiDataSource.builder()
+                        .type(DataSourceType.HTTP_DATA)
+                        .httpData(UiDataSourceHttpData.builder()
+                                .baseUrl(dataAddress.getDataSourceUrl(dataOfferData))
+                                .build())
+                        .build())
                 .build();
 
         providerClient.uiApi().createAsset(asset);
