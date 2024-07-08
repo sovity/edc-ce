@@ -72,16 +72,6 @@ public class AssetApiServiceTest {
 
     private EdcClient client;
 
-    private final int port = getFreePort();
-    private final String sourcePath = "/source/some/path/";
-    private final String destinationPath = "/destination/some/path/";
-    private final String sourceUrl = "http://localhost:" + port + sourcePath;
-    private final String destinationUrl = "http://localhost:" + port + destinationPath;
-
-    private static final AtomicInteger DATA_OFFER_INDEX = new AtomicInteger(0);
-
-    private final IdentityService identityService = mock(IdentityService.class);
-
     private ConnectorConfig config;
 
     @BeforeEach
