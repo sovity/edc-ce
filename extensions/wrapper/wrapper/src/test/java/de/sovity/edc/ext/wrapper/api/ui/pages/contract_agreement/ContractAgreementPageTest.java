@@ -18,7 +18,10 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractAgreementDirection;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
-import de.sovity.edc.ext.wrapper.TestUtils;
+import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.db.TestDatabase;
+import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
@@ -41,7 +44,7 @@ import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -51,33 +54,48 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
-@ExtendWith(EdcExtension.class)
 class ContractAgreementPageTest {
+
+    @RegisterExtension
+    static final TestDatabase DATABASE = TestDatabaseFactory.getTestDatabase(1);
+
+    @RegisterExtension
+    static final EdcExtension EDC_CONTEXT = new EdcExtension();
 
     private static final int CONTRACT_DEFINITION_ID = 1;
     private static final String ASSET_ID = UUID.randomUUID().toString();
 
-    EdcClient client;
+    private static final String PARTICIPANT_ID = "provider";
+    private ConnectorConfig config;
+    private ConnectorRemote connector;
+    private EdcClient client;
+
     LocalDate today = LocalDate.parse("2019-04-01");
     ZonedDateTime todayAsZonedDateTime = today.atStartOfDay(ZoneId.systemDefault());
     long todayEpochMillis = todayAsZonedDateTime.toInstant().toEpochMilli();
     long todayEpochSeconds = todayAsZonedDateTime.toInstant().getEpochSecond();
 
     @BeforeEach
-    void setUp(EdcExtension extension) {
-        TestUtils.setupExtension(extension);
-        client = TestUtils.edcClient();
+    void setUp() {
+        config = forTestDatabase(PARTICIPANT_ID, DATABASE);
+        EDC_CONTEXT.setConfiguration(config.getProperties());
+        connector = new ConnectorRemote(fromConnectorConfig(config));
+        client = EdcClient.builder()
+            .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+            .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+            .build();
     }
 
     @Test
-    void testContractAgreementPage(
-            ContractNegotiationStore contractNegotiationStore,
-            TransferProcessStore transferProcessStore,
-            AssetIndex assetIndex
-    ) {
+    void testContractAgreementPage() {
+        ContractNegotiationStore contractNegotiationStore = EDC_CONTEXT.getContext().getService(ContractNegotiationStore.class);
+        TransferProcessStore transferProcessStore = EDC_CONTEXT.getContext().getService(TransferProcessStore.class);
+        AssetIndex assetIndex = EDC_CONTEXT.getContext().getService(AssetIndex.class);
 
         // arrange
         assetIndex.create(asset(ASSET_ID)).orElseThrow(storeFailure -> new RuntimeException("Failed to create asset"));
@@ -130,6 +148,7 @@ class ContractAgreementPageTest {
                 .processId("my-transfer-" + contract + "-" + transfer)
                 .connectorAddress("http://other-connector")
                 .connectorId("urn:connector:other-connector")
+                .protocol("dataspace-protocol-http")
                 .dataDestination(DataAddress.Builder.newInstance().type("HttpData").build())
                 .build();
         return TransferProcess.Builder.newInstance()
