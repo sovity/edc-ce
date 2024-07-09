@@ -47,10 +47,10 @@ public class FetchedCatalogBuilder {
 
     private void assertEqualParticipantId(DspCatalog catalog, ConnectorRef connectorRef) {
         Validate.isTrue(
-                connectorRef.getOrganizationId().equals(catalog.getParticipantId()),
+                connectorRef.getConnectorId().equals(catalog.getParticipantId()),
                 String.format(
-                        "Connector organizationId mismatch: expected %s, got %s",
-                        connectorRef.getOrganizationId(),
+                        "Connector connectorId does not match the participantId: connectorId %s, participantId %s",
+                        connectorRef.getConnectorId(),
                         catalog.getParticipantId()
                 )
         );

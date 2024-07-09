@@ -54,7 +54,7 @@ import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactor
 import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiConfigFactory.configureApi;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CrawlerTest {
+class CrawlerE2eTest {
     private static ConnectorConfig connectorConfig;
     private static EdcClient connectorClient;
 
@@ -63,7 +63,7 @@ class CrawlerTest {
             ":launchers:connectors:sovity-dev",
             "provider",
             testDatabase -> {
-                connectorConfig = forTestDatabase("MDSL1234XX", testDatabase);
+                connectorConfig = forTestDatabase("MDSL1234XX.C1234XX", testDatabase);
                 connectorClient = EdcClient.builder()
                         .managementApiUrl(connectorConfig.getManagementEndpoint().getUri().toString())
                         .managementApiKey(connectorConfig.getProperties().get("edc.api.auth.key"))
