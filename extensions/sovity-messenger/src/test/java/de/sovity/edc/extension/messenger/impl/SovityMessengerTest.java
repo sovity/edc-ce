@@ -18,7 +18,6 @@ import de.sovity.edc.extension.messenger.dto.Answer;
 import de.sovity.edc.extension.messenger.dto.UnsupportedMessage;
 import lombok.val;
 import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
-import org.eclipse.edc.spi.monitor.ConsoleMonitor;
 import org.eclipse.edc.spi.response.StatusResult;
 import org.junit.jupiter.api.Test;
 
