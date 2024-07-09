@@ -40,4 +40,10 @@ public class ContractAgreementTerminationInfo {
         requiredMode = Schema.RequiredMode.REQUIRED
     )
     private String detail;
+
+    @Schema(
+        description = "Indicates whether the termination comes from this EDC or the counterparty EDC.",
+        requiredMode = Schema.RequiredMode.REQUIRED
+    )
+    private ContractTerminatedBy terminatedBy;
 }

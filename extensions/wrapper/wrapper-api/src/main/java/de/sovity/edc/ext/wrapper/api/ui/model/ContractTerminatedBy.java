@@ -15,8 +15,8 @@ package de.sovity.edc.ext.wrapper.api.ui.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "The contract termination status", enumAsRef = true)
-public enum ContractTerminationStatus {
-    ONGOING,
-    TERMINATED
+@Schema(description = "Whether the contract termination was initiated by this EDC or a counterparty EDC.", enumAsRef = true)
+public enum ContractTerminatedBy {
+    SELF,
+    COUNTERPARTY
 }

@@ -1323,11 +1323,7 @@ components:
           items:
             $ref: '#/components/schemas/ContractAgreementTransferProcess'
         terminationStatus:
-          type: string
-          description: Contract Agreement's Termination Status
-          enum:
-          - ONGOING
-          - TERMINATED
+          $ref: '#/components/schemas/ContractTerminationStatus'
         terminationInformation:
           $ref: '#/components/schemas/ContractAgreementTerminationInfo'
       description: Contract Agreement for Contract Agreement Page
@@ -1353,6 +1349,7 @@ components:
       - detail
       - reason
       - terminatedAt
+      - terminatedBy
       type: object
       properties:
         terminatedAt:
@@ -1367,6 +1364,8 @@ components:
           type: string
           description: Detailed message from the terminating party about why the contract
             was terminated.
+        terminatedBy:
+          $ref: '#/components/schemas/ContractTerminatedBy'
       description: Contract's agreement metadata
     ContractAgreementTransferProcess:
       required:
@@ -1388,6 +1387,19 @@ components:
           type: string
           description: Error Message
       description: A Contract Agreement's Transfer Process
+    ContractTerminatedBy:
+      type: string
+      description: Whether the contract termination was initiated by this EDC or a
+        counterparty EDC.
+      enum:
+      - SELF
+      - COUNTERPARTY
+    ContractTerminationStatus:
+      type: string
+      description: The contract termination status
+      enum:
+      - ONGOING
+      - TERMINATED
     TransferProcessSimplifiedState:
       type: string
       description: Simplified Transfer Process State to be used in UI
@@ -1417,12 +1429,7 @@ components:
       type: object
       properties:
         terminationStatus:
-          type: string
-          description: Optionally filter the resulting contract agreements by their
-            termination status.
-          enum:
-          - ONGOING
-          - TERMINATED
+          $ref: '#/components/schemas/ContractTerminationStatus'
       description: Filters for querying a Contract Contract Agreement Page
     ContractDefinitionEntry:
       required:
