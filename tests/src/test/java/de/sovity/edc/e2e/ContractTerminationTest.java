@@ -232,10 +232,12 @@ public class ContractTerminationTest {
         val detail = "Some detail";
         val reason = "Some reason";
 
-        providerClient.uiApi().terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
-            .detail(detail)
-            .reason(reason)
-            .build());
+        providerClient.uiApi().terminateContractAgreement(
+            negotiation.getContractAgreementId(),
+            ContractTerminationRequest.builder()
+                .detail(detail)
+                .reason(reason)
+                .build());
 
         // TODO: await instead of wait
         Thread.sleep(1000);
