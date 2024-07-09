@@ -199,7 +199,16 @@ public class ContractTerminationTest {
         assertThat(information.getDetail()).isEqualTo(detail);
         assertThat(information.getReason()).isEqualTo(reason);
 
+        // TODO: it is not mentioned which side terminated the contract. Should it be added?
         // TODO: assert provider side
+        val providerAgreements = providerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
+
+//        assertThat(providerAgreements.getContractAgreements().get(0).getTerminationStatus()).isEqualTo(TERMINATED);
+//        val providerInformation = agreements.getContractAgreements().get(0).getTerminationInformation();
+//        assertThat(providerInformation).isNotNull();
+//        assertThat(providerInformation.getTerminatedAt()).isBetween(now.minusMinutes(1), now.plusMinutes(1));
+//        assertThat(providerInformation.getDetail()).isEqualTo(detail);
+//        assertThat(providerInformation.getReason()).isEqualTo(reason);
     }
 
     @Test

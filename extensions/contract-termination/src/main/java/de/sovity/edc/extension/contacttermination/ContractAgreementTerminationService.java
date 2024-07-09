@@ -11,10 +11,10 @@
  *       sovity GmbH - initial API and implementation
  */
 
-package de.sovity.edc.extension.contactcancellation;
+package de.sovity.edc.extension.contacttermination;
 
-import de.sovity.edc.extension.contactcancellation.query.ContractAgreementTerminationDetailsQuery;
-import de.sovity.edc.extension.contactcancellation.query.TerminateContractQuery;
+import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
+import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import lombok.RequiredArgsConstructor;
 import lombok.val;

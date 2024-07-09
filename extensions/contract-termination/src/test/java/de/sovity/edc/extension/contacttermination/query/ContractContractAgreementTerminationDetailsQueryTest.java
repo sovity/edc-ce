@@ -11,9 +11,9 @@
  *       sovity GmbH - initial API and implementation
  */
 
-package de.sovity.edc.extension.contactcancellation.query;
+package de.sovity.edc.extension.contacttermination.query;
 
-import de.sovity.edc.extension.contactcancellation.ContractAgreementTerminationDetails;
+import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationDetails;
 import de.sovity.edc.utils.versions.GradleVersions;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -138,7 +138,7 @@ class ContractContractAgreementTerminationDetailsQueryTest {
                 assertThat(details.providerAgentId()).isEqualTo("my-edc");
                 assertThat(details.consumerAgentId()).isEqualTo("my-edc2");
                 assertThat(details.reason()).isEqualTo("User Termination");
-                assertThat(details.detail()).isEqualTo("Cancelled because of good reasons");
+                assertThat(details.detail()).isEqualTo("Terminated because of good reasons");
                 assertThat(details.terminatedAt()).isEqualTo(OffsetDateTime.of(2024, 7, 3, 16, 59, 1, 518000000, ZoneOffset.UTC));
             }
         );

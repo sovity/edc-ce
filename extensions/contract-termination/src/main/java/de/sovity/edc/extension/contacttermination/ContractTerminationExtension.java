@@ -11,10 +11,10 @@
  *       sovity GmbH - initial API and implementation
  */
 
-package de.sovity.edc.extension.contactcancellation;
+package de.sovity.edc.extension.contacttermination;
 
-import de.sovity.edc.extension.contactcancellation.query.ContractAgreementTerminationDetailsQuery;
-import de.sovity.edc.extension.contactcancellation.query.TerminateContractQuery;
+import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
+import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
 import de.sovity.edc.extension.db.directaccess.DirectDatabaseAccess;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.extension.messenger.SovityMessengerRegistry;
@@ -30,7 +30,7 @@ import org.eclipse.edc.spi.iam.IdentityService;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 
-import static de.sovity.edc.extension.contactcancellation.MapperUtils.toModel;
+import static de.sovity.edc.extension.contacttermination.MapperUtils.toModel;
 
 // TODO "contract cancellation" is more used than "contract termination"
 //  https://trends.google.com/trends/explore?date=today%205-y&q=cancel%20contract,terminate%20contract,abrogate%20contract,annul%20contract&hl=en-US
@@ -94,7 +94,7 @@ public class ContractTerminationExtension implements ServiceExtension {
 
         messengerRegistry.registerSignal(
             ContractTerminationOutgoingMessage.class,
-            (claims, cancellation) -> terminator.secureTerminateContractAgreement(participantAgentService.createFor(claims).getIdentity(), toModel(cancellation)));
+            (claims, termination) -> terminator.secureTerminateContractAgreement(participantAgentService.createFor(claims).getIdentity(), toModel(termination)));
     }
 
 }

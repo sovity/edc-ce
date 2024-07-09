@@ -37,7 +37,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetIdValidator;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.UiDataOfferBuilder;
-import de.sovity.edc.extension.contactcancellation.ContractAgreementTerminationService;
+import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementDataFetcher;
@@ -72,8 +72,8 @@ import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.FilterExpressionOpera
 import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.UseCaseCatalogApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
-import de.sovity.edc.extension.contactcancellation.query.ContractAgreementTerminationDetailsQuery;
-import de.sovity.edc.extension.contactcancellation.query.TerminateContractQuery;
+import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
+import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
 import de.sovity.edc.extension.db.directaccess.DirectDatabaseAccess;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.utils.catalog.DspCatalogService;
@@ -98,7 +98,6 @@ import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.jetbrains.annotations.NotNull;
-import org.jooq.DSLContext;
 
 import java.util.List;
 
@@ -216,7 +215,7 @@ public class WrapperExtensionContextBuilder {
         );
         var agreementDetailsQuery = new ContractAgreementTerminationDetailsQuery(directDatabaseAccess::getDslContext);
         var terminateContractQuery = new TerminateContractQuery(directDatabaseAccess::getDslContext);
-        var contractAgreementCancellationService = new ContractAgreementTerminationService(sovityMessenger, agreementDetailsQuery, terminateContractQuery);
+        var contractAgreementTerminationService = new ContractAgreementTerminationService(sovityMessenger, agreementDetailsQuery, terminateContractQuery);
         var policyDefinitionApiService = new PolicyDefinitionApiService(
             policyDefinitionService,
             policyMapper
@@ -255,7 +254,7 @@ public class WrapperExtensionContextBuilder {
         var uiResource = new UiResourceImpl(
             contractAgreementApiService,
             contractAgreementTransferApiService,
-            contractAgreementCancellationService,
+            contractAgreementTerminationService,
             transferHistoryPageApiService,
             transferHistoryPageAssetFetcherService,
             assetApiService,

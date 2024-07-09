@@ -11,7 +11,7 @@
  *       sovity GmbH - initial API and implementation
  */
 
-package de.sovity.edc.extension.contactcancellation;
+package de.sovity.edc.extension.contacttermination;
 
 import lombok.experimental.UtilityClass;
 
