@@ -7,7 +7,10 @@ import de.sovity.edc.client.gen.model.UiCriterion;
 import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
-import de.sovity.edc.ext.wrapper.TestUtils;
+import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.db.TestDatabase;
+import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -16,27 +19,50 @@ import org.eclipse.edc.spi.query.Criterion;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.List;
 
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
-@ExtendWith(EdcExtension.class)
 class ContractDefinitionPageApiServiceTest {
 
-    // arrange
+    private static final String PARTICIPANT_ID = "someid";
+
+    private ConnectorConfig config;
+
+    @RegisterExtension
+    static final EdcExtension EDC_CONTEXT = new EdcExtension();
+
+    @RegisterExtension
+    static final TestDatabase DATABASE = TestDatabaseFactory.getTestDatabase(1);
+
+    private ConnectorRemote connector;
+
     private EdcClient client;
 
     @BeforeEach
-    void setUp(EdcExtension extension) {
-        TestUtils.setupExtension(extension);
-        client = TestUtils.edcClient();
+    void setUp() {
+        // set up provider EDC + Client
+        // TODO: try to fix again after RT's PR. The EDC uses the DSP port 34003 instead of the dynamically allocated one...
+        config = forTestDatabase(PARTICIPANT_ID, DATABASE);
+        EDC_CONTEXT.setConfiguration(config.getProperties());
+        connector = new ConnectorRemote(fromConnectorConfig(config));
+
+        client = EdcClient.builder()
+            .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+            .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+            .build();
     }
 
     @Test
-    void contractDefinitionPage(ContractDefinitionService contractDefinitionService) {
+    void contractDefinitionPage() {
+        // arrange
+        var contractDefinitionService = EDC_CONTEXT.getContext().getService(ContractDefinitionService.class);
+
         var criterion = new Criterion("exampleLeft1", "=", "abc");
         createContractDefinition(contractDefinitionService, "contractDefinition-id-1", "contractPolicy-id-1", "accessPolicy-id-1", criterion);
 
@@ -60,9 +86,10 @@ class ContractDefinitionPageApiServiceTest {
     }
 
     @Test
-    void contractDefinitionPageSorting(ContractDefinitionService contractDefinitionService) {
+    void contractDefinitionPageSorting() {
         // arrange
-        var client = TestUtils.edcClient();
+        var contractDefinitionService = EDC_CONTEXT.getContext().getService(ContractDefinitionService.class);
+
         createContractDefinition(
                 contractDefinitionService,
                 "contractDefinition-id-1",
@@ -96,9 +123,10 @@ class ContractDefinitionPageApiServiceTest {
     }
 
     @Test
-    void testContractDefinitionCreation(ContractDefinitionService contractDefinitionService) {
+    void testContractDefinitionCreation() {
         // arrange
-        var client = TestUtils.edcClient();
+        var contractDefinitionService = EDC_CONTEXT.getContext().getService(ContractDefinitionService.class);
+
         var criterion = new UiCriterion(
                 "exampleLeft1",
                 UiCriterionOperator.EQ,
@@ -131,9 +159,10 @@ class ContractDefinitionPageApiServiceTest {
     }
 
     @Test
-    void testDeleteContractDefinition(ContractDefinitionService contractDefinitionService) {
+    void testDeleteContractDefinition() {
         // arrange
-        var client = TestUtils.edcClient();
+        var contractDefinitionService = EDC_CONTEXT.getContext().getService(ContractDefinitionService.class);
+
         var criterion = new Criterion("exampleLeft1", "=", "exampleRight1");
         createContractDefinition(contractDefinitionService, "contractDefinition-id-1", "contractPolicy-id-1", "accessPolicy-id-1", criterion);
         assertThat(contractDefinitionService.query(QuerySpec.max()).getContent().toList()).hasSize(1);
