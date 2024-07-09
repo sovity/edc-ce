@@ -67,7 +67,7 @@ class ContractAgreementTransferApiServiceTest {
     private EdcClient client;
 
     @BeforeEach
-    void setUp(EdcExtension extension) {
+    void setUp() {
         // set up provider EDC + Client
         // TODO: try to fix again after RT's PR. The EDC uses the DSP port 34003 instead of the dynamically allocated one...
         config = forTestDatabase(PARTICIPANT_ID, 34000, DATABASE);

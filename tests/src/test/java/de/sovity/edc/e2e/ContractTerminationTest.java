@@ -257,6 +257,7 @@ public class ContractTerminationTest {
 
     // TODO: try to cancel a contract agreement that doesn't exist
     // TODO: test who cancelled the contract
+    // TODO: assert max length for detail to at least 500
 
     // TODO: group those helpers
 

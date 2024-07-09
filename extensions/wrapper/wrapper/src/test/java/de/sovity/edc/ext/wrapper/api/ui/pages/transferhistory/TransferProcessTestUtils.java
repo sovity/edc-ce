@@ -139,11 +139,13 @@ public class TransferProcessTestUtils {
     ) throws ParseException {
 
         var dataRequestForTransfer = DataRequest.Builder.newInstance()
+                .id(UUID.randomUUID().toString())
                 .assetId(assetId)
                 .contractId(contractId)
                 .dataDestination(dataAddress)
                 .connectorAddress(COUNTER_PARTY_ADDRESS)
                 .connectorId(COUNTER_PARTY_ID)
+                .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
                 .build();
 
         var transferProcess = TransferProcess.Builder.newInstance()
