@@ -6,9 +6,7 @@ alter table "user"
     add column invited_by      text,
     add constraint fk_invited_by foreign key (invited_by) references "user" (id);
 
-update "user"
-set onboarding_type = 'SELF_REGISTRATION'
-where onboarding_type is null;
+update "user" set onboarding_type = 'SELF_REGISTRATION' where onboarding_type is null;
 
 -- Connector
 create type connector_broker_registration_status as enum ('REGISTERED', 'UNREGISTERED');
@@ -28,27 +26,20 @@ alter table "connector"
 
 -- Fallback in case someone tries to migrate from 0.x to 1.0
 update "connector"
-set management_url = frontend_url || '/api/management'
-where management_url is null;
+set management_url = frontend_url || '/api/management' where management_url is null;
 
 update "connector"
-set endpoint_url = frontend_url || '/api/dsp'
-where endpoint_url is null;
+set endpoint_url = frontend_url || '/api/dsp' where endpoint_url is null;
 
 -- Organization id type
 create type organization_legal_id_type as enum ('TAX_ID', 'COMMERCE_REGISTER_INFO');
 alter table "organization"
     add column legal_id_type organization_legal_id_type,
-    add column description   text,
+    add column description text,
     alter column address drop not null,
     alter column url drop not null;
-update organization
-set legal_id_type = 'TAX_ID'
-where organization.tax_id is not null;
-update organization
-set legal_id_type = 'COMMERCE_REGISTER_INFO'
-where organization.commerce_register_number is not null
-  and tax_id is null;
+update organization set legal_id_type = 'TAX_ID' where organization.tax_id is not null;
+update organization set legal_id_type = 'COMMERCE_REGISTER_INFO' where organization.commerce_register_number is not null and tax_id is null;
 
 -- New registration flow
 alter type user_registration_status add value 'ONBOARDING' after 'CREATED';
