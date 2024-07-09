@@ -46,7 +46,7 @@ import de.sovity.edc.ext.catalog.crawler.orchestration.queue.ConnectorQueueFille
 import de.sovity.edc.ext.catalog.crawler.orchestration.queue.ThreadPool;
 import de.sovity.edc.ext.catalog.crawler.orchestration.queue.ThreadPoolTaskQueue;
 import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.DeadConnectorRefreshJob;
-import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.OfflineConnectorKillerJob;
+import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.OfflineConnectorCleanerJob;
 import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.OfflineConnectorRefreshJob;
 import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.OnlineConnectorRefreshJob;
 import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.QuartzScheduleInitializer;
@@ -169,7 +169,7 @@ public class CrawlerExtensionContextBuilder {
         var connectorQueueFiller = new ConnectorQueueFiller(connectorQueue, connectorQueries);
         var connectorStatusUpdater = new ConnectorStatusUpdater();
         var catalogCleaner = new CatalogCleaner();
-        var offlineConnectorKiller = new OfflineConnectorCleaner(
+        var offlineConnectorCleaner = new OfflineConnectorCleaner(
                 crawlerConfig,
                 connectorQueries,
                 crawlerEventLogger,
@@ -182,7 +182,7 @@ public class CrawlerExtensionContextBuilder {
                 getOnlineConnectorRefreshCronJob(dslContextFactory, connectorQueueFiller),
                 getOfflineConnectorRefreshCronJob(dslContextFactory, connectorQueueFiller),
                 getDeadConnectorRefreshCronJob(dslContextFactory, connectorQueueFiller),
-                getOfflineConnectorKillerCronJob(dslContextFactory, offlineConnectorKiller)
+                getOfflineConnectorCleanerCronJob(dslContextFactory, offlineConnectorCleaner)
         );
 
         // Startup
@@ -256,12 +256,12 @@ public class CrawlerExtensionContextBuilder {
     }
 
     @NotNull
-    private static CronJobRef<OfflineConnectorKillerJob> getOfflineConnectorKillerCronJob(DslContextFactory dslContextFactory,
-                                                                                          OfflineConnectorCleaner offlineConnectorCleaner) {
+    private static CronJobRef<OfflineConnectorCleanerJob> getOfflineConnectorCleanerCronJob(DslContextFactory dslContextFactory,
+                                                                                            OfflineConnectorCleaner offlineConnectorCleaner) {
         return new CronJobRef<>(
                 CrawlerExtension.SCHEDULED_KILL_OFFLINE_CONNECTORS,
-                OfflineConnectorKillerJob.class,
-                () -> new OfflineConnectorKillerJob(dslContextFactory, offlineConnectorCleaner)
+                OfflineConnectorCleanerJob.class,
+                () -> new OfflineConnectorCleanerJob(dslContextFactory, offlineConnectorCleaner)
         );
     }
 

@@ -42,7 +42,7 @@ public class DataOfferRecordUpdater {
     /**
      * Create a new {@link DataOfferRecord}.
      *
-     * @param connectorRef connector endpoint
+     * @param connectorRef connector
      * @param fetchedDataOffer new db row data
      * @return new db row
      */

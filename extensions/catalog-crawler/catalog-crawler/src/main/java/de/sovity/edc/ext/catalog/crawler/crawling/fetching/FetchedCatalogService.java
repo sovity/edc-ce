@@ -30,7 +30,7 @@ public class FetchedCatalogService {
     /**
      * Fetches {@link ContractOffer}s and de-duplicates them into {@link FetchedDataOffer}s.
      *
-     * @param connectorRef connector endpoint
+     * @param connectorRef connector
      * @return updated connector db row
      */
     @SneakyThrows

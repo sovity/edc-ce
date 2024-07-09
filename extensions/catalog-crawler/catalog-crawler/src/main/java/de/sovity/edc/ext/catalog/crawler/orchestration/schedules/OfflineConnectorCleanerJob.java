@@ -21,7 +21,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
 @RequiredArgsConstructor
-public class OfflineConnectorKillerJob implements Job {
+public class OfflineConnectorCleanerJob implements Job {
     private final DslContextFactory dslContextFactory;
     private final OfflineConnectorCleaner offlineConnectorCleaner;
 

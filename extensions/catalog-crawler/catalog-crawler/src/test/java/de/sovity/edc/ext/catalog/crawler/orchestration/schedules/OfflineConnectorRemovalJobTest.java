@@ -61,7 +61,7 @@ class OfflineConnectorRemovalJobTest {
     }
 
     @Test
-    void test_offlineConnectorKiller_should_be_dead() {
+    void test_offlineConnectorCleaner_should_be_dead() {
         TEST_DATABASE.testTransaction(dsl -> {
             // arrange
             when(crawlerConfig.getKillOfflineConnectorsAfter()).thenReturn(Duration.ofDays(5));
@@ -80,7 +80,7 @@ class OfflineConnectorRemovalJobTest {
     }
 
     @Test
-    void test_offlineConnectorKiller_should_not_be_dead() {
+    void test_offlineConnectorCleaner_should_not_be_dead() {
         TEST_DATABASE.testTransaction(dsl -> {
             // arrange
             when(crawlerConfig.getKillOfflineConnectorsAfter()).thenReturn(Duration.ofDays(5));

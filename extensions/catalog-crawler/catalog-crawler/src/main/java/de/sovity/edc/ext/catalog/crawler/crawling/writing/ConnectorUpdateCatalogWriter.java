@@ -33,7 +33,7 @@ public class ConnectorUpdateCatalogWriter {
      * Updates a connector's data offers with given {@link FetchedDataOffer}s.
      *
      * @param dsl dsl
-     * @param connectorRef connector endpoint
+     * @param connectorRef connector
      * @param fetchedDataOffers fetched data offers
      * @param changes change tracker for log message
      */

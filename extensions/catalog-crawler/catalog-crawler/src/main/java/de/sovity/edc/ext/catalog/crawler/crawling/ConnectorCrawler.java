@@ -44,7 +44,7 @@ public class ConnectorCrawler {
     /**
      * Updates single connector.
      *
-     * @param connectorRef connector endpoint
+     * @param connectorRef connector
      */
     public void crawlConnector(ConnectorRef connectorRef) {
         var executionTime = StopWatch.createStarted();

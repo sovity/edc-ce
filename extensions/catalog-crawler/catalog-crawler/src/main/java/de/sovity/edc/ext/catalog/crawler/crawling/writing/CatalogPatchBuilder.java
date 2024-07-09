@@ -45,7 +45,7 @@ public class CatalogPatchBuilder {
      * Fetches existing data offers of given connector endpoint and compares them with fetched data offers.
      *
      * @param dsl dsl
-     * @param connectorRef connector endpoint
+     * @param connectorRef connector
      * @param fetchedDataOffers fetched data offers
      * @return change list / patch
      */

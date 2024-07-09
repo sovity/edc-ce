@@ -22,7 +22,7 @@ One catalog crawler per Authority Portal Deployment Environment must be deployed
 
 A productive configuration will require you to join a DAPS.
 
-For that you will need a SKI/AKI ClientID. Please refer
+For that you will need a SKI/AKI client ID. Please refer
 to [edc-extension's Getting Started Guide](https://github.com/sovity/edc-ce/tree/main/docs/getting-started#faq)
 on how to generate one.
 

@@ -29,13 +29,13 @@ public class ConnectorQueue {
     /**
      * Enqueues connectors for update.
      *
-     * @param connectorRefs participant IDs
+     * @param connectorRefs connectors
      * @param priority priority from {@link ConnectorRefreshPriority}
      */
     public void addAll(Collection<ConnectorRef> connectorRefs, int priority) {
-        var queuedConnectorEndpoints = threadPool.getQueuedConnectorRefs();
+        var queued = threadPool.getQueuedConnectorRefs();
         connectorRefs = new ArrayList<>(connectorRefs);
-        connectorRefs.removeIf(queuedConnectorEndpoints::contains);
+        connectorRefs.removeIf(queued::contains);
 
         for (var connectorRef : connectorRefs) {
             threadPool.enqueueConnectorRefreshTask(

@@ -25,7 +25,7 @@ public class ConnectorQueueFiller {
     private final ConnectorQueries connectorQueries;
 
     public void enqueueConnectors(DSLContext dsl, ConnectorOnlineStatus status, int priority) {
-        var endpoints = connectorQueries.findConnectorsForScheduledRefresh(dsl, status);
-        connectorQueue.addAll(endpoints, priority);
+        var connectorRefs = connectorQueries.findConnectorsForScheduledRefresh(dsl, status);
+        connectorQueue.addAll(connectorRefs, priority);
     }
 }
