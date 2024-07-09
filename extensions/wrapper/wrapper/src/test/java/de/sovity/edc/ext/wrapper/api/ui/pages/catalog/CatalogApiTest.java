@@ -51,7 +51,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ApiTest
 class CatalogApiTest {
 
-    private static final String PARTICIPANT_ID = "someid";
+    private static final String PARTICIPANT_ID = "my-edc-participant-id";
 
     private ConnectorConfig config;
 

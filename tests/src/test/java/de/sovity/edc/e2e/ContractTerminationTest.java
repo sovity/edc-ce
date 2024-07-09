@@ -256,6 +256,7 @@ public class ContractTerminationTest {
     }
 
     // TODO: try to cancel a contract agreement that doesn't exist
+    // TODO: test who cancelled the contract
 
     // TODO: group those helpers
 

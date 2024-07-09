@@ -52,7 +52,7 @@ class ContractAgreementTransferApiServiceTest {
     private static final String COUNTER_PARTY_ADDRESS =
             "http://some-other-connector/api/v1/ids/data";
 
-    private static final String PARTICIPANT_ID = "someid";
+    private static final String PARTICIPANT_ID = "my-edc-participant-id";
 
     private ConnectorConfig config;
 
