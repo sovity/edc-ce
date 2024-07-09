@@ -1,7 +1,7 @@
 [versions]
 # groups
 edcGroup="org.eclipse.edc"
-sovityBrokerServerGroup = "de.sovity.broker"
+sovityCatalogCrawlerGroup = "de.sovity.edc.catalog.crawler"
 sovityEdcExtensionGroup = "de.sovity.edc.ext"
 sovityEdcGroup = "de.sovity.edc"
 

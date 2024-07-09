@@ -17,13 +17,12 @@
 ## About this module
 
 Common API models naooers between the sovity Community Edition EDC API, sovity Enterprise Edition EDC API and/or the
-Broker
-Server API.
+Authority Portal.
 
 ## Why does this module exist?
 
 Our common API models defined in [wrapper-common-api](../wrapper-common-api) need mapping to and from the core EDC
-types in both the EDC CE, EDC EE and Broker Server.
+types in both the EDC CE, EDC EE and Authority Portal.
 
 ## License
 
