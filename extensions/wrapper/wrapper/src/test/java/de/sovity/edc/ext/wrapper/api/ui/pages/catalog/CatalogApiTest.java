@@ -33,9 +33,11 @@ import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
+import lombok.SneakyThrows;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -49,7 +51,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ApiTest
 class CatalogApiTest {
 
-    private static final String PARTICIPANT_ID = "MyEDC";
+    private static final String PARTICIPANT_ID = "someid";
 
     private ConnectorConfig config;
 
@@ -68,7 +70,8 @@ class CatalogApiTest {
     @BeforeEach
     void setup() {
         // set up provider EDC + Client
-        config = forTestDatabase(PARTICIPANT_ID, DATABASE);
+        // TODO: try to fix again after RT's PR. The EDC uses the DSP port 34003 instead of the dynamically allocated one...
+        config = forTestDatabase(PARTICIPANT_ID, 34000, DATABASE);
         EDC_CONTEXT.setConfiguration(config.getProperties());
         connector = new ConnectorRemote(fromConnectorConfig(config));
 
@@ -85,6 +88,7 @@ class CatalogApiTest {
      */
     @DisabledOnGithub
     @Test
+    @SneakyThrows
     void testDistributionKey() {
         // arrange
         createAsset();
