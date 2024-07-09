@@ -14,7 +14,7 @@
 package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.client.gen.model.ContractAgreementCard;
+import de.sovity.edc.client.gen.model.ContractAgreementPage;
 import de.sovity.edc.client.gen.model.ContractAgreementPageQuery;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
@@ -109,7 +109,7 @@ public class ContractTerminationTest {
     @BeforeEach
     void setup() {
         // set up provider EDC + Client
-        providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, PROVIDER_DATABASE);
+        providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 34000, PROVIDER_DATABASE);
         PROVIDER_EDC_CONTEXT.setConfiguration(providerConfig.getProperties());
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
@@ -185,30 +185,28 @@ public class ContractTerminationTest {
             .detail(detail)
             .reason(reason)
             .build());
+
         // TODO: await instead of wait
         Thread.sleep(1000);
-        val agreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
+
+        val consumerSideAgreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
+        val providerSideAgreements = providerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
 
         // assert
-        assertThat(agreements.getContractAgreements()).hasSize(1);
-        // TODO: why do we have 2 different enum to represent the same kind of data. This is confusing...
-        assertThat(agreements.getContractAgreements().get(0).getTerminationStatus()).isEqualTo(TERMINATED);
-        val information = agreements.getContractAgreements().get(0).getTerminationInformation();
-        assertThat(information).isNotNull();
-        assertThat(information.getTerminatedAt()).isBetween(now.minusMinutes(1), now.plusMinutes(1));
-        assertThat(information.getDetail()).isEqualTo(detail);
-        assertThat(information.getReason()).isEqualTo(reason);
+        assertTermination(consumerSideAgreements, now, detail, reason);
+        assertTermination(providerSideAgreements, now, detail, reason);
+    }
 
+    private static void assertTermination(ContractAgreementPage consumerSideAgreements, OffsetDateTime now, String detail, String reason) {
         // TODO: it is not mentioned which side terminated the contract. Should it be added?
-        // TODO: assert provider side
-        val providerAgreements = providerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
-
-//        assertThat(providerAgreements.getContractAgreements().get(0).getTerminationStatus()).isEqualTo(TERMINATED);
-//        val providerInformation = agreements.getContractAgreements().get(0).getTerminationInformation();
-//        assertThat(providerInformation).isNotNull();
-//        assertThat(providerInformation.getTerminatedAt()).isBetween(now.minusMinutes(1), now.plusMinutes(1));
-//        assertThat(providerInformation.getDetail()).isEqualTo(detail);
-//        assertThat(providerInformation.getReason()).isEqualTo(reason);
+        // TODO: why do we have 2 different enum to represent the same kind of data. This is confusing...
+        assertThat(consumerSideAgreements.getContractAgreements()).hasSize(1);
+        assertThat(consumerSideAgreements.getContractAgreements().get(0).getTerminationStatus()).isEqualTo(TERMINATED);
+        val consumerInformation = consumerSideAgreements.getContractAgreements().get(0).getTerminationInformation();
+        assertThat(consumerInformation).isNotNull();
+        assertThat(consumerInformation.getTerminatedAt()).isBetween(now.minusMinutes(1), now.plusMinutes(1));
+        assertThat(consumerInformation.getDetail()).isEqualTo(detail);
+        assertThat(consumerInformation.getReason()).isEqualTo(reason);
     }
 
     @Test
@@ -233,26 +231,29 @@ public class ContractTerminationTest {
         // TODO: max detail length
         val detail = "Some detail";
         val reason = "Some reason";
+
         providerClient.uiApi().terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
             .detail(detail)
             .reason(reason)
             .build());
+
         // TODO: await instead of wait
         Thread.sleep(1000);
-        val agreements = providerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
+
+        val consumerSideAgreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
+        val providerSideAgreements = providerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
+
+        // TODO: wait for the message to be received by the other side
+        Thread.sleep(1000);
 
         // assert
-        assertThat(agreements.getContractAgreements()).hasSize(1);
-        // TODO: why do we have 2 different enum to represent the same kind of data. This is confusing...
-        assertThat(agreements.getContractAgreements().get(0).getTerminationStatus()).isEqualTo(TERMINATED);
-        val information = agreements.getContractAgreements().get(0).getTerminationInformation();
-        assertThat(information).isNotNull();
-        assertThat(information.getTerminatedAt()).isBetween(now.minusMinutes(1), now.plusMinutes(1));
-        assertThat(information.getDetail()).isEqualTo(detail);
-        assertThat(information.getReason()).isEqualTo(reason);
 
-        // TODO: assert consumer side
+        // assert
+        assertTermination(consumerSideAgreements, now, detail, reason);
+        assertTermination(providerSideAgreements, now, detail, reason);
     }
+
+    // TODO: try to cancel a contract agreement that doesn't exist
 
     // TODO: group those helpers
 

@@ -93,7 +93,7 @@ public class SovityMessengerExtension implements ServiceExtension {
 
         typeTransformerRegistry.register(new JsonObjectFromSovityMessageRequest());
 
-        val sovityMessenger = new SovityMessenger(registry, objectMapper);
+        val sovityMessenger = new SovityMessenger(registry, objectMapper, monitor);
         context.registerService(SovityMessenger.class, sovityMessenger);
     }
 
