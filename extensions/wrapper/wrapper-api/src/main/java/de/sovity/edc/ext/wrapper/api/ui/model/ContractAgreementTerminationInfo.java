@@ -45,5 +45,5 @@ public class ContractAgreementTerminationInfo {
         description = "Indicates whether the termination comes from this EDC or the counterparty EDC.",
         requiredMode = Schema.RequiredMode.REQUIRED
     )
-    private ContractTerminationInitiator initiator;
+    private ContractTerminatedBy terminatedBy;
 }

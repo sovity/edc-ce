@@ -1347,9 +1347,9 @@ components:
     ContractAgreementTerminationInfo:
       required:
       - detail
-      - initiator
       - reason
       - terminatedAt
+      - terminatedBy
       type: object
       properties:
         terminatedAt:
@@ -1364,8 +1364,8 @@ components:
           type: string
           description: Detailed message from the terminating party about why the contract
             was terminated.
-        initiator:
-          $ref: '#/components/schemas/ContractTerminationInitiator'
+        terminatedBy:
+          $ref: '#/components/schemas/ContractTerminatedBy'
       description: Contract's agreement metadata
     ContractAgreementTransferProcess:
       required:
@@ -1387,7 +1387,7 @@ components:
           type: string
           description: Error Message
       description: A Contract Agreement's Transfer Process
-    ContractTerminationInitiator:
+    ContractTerminatedBy:
       type: string
       description: Whether the contract termination was initiated by this EDC or a
         counterparty EDC.
