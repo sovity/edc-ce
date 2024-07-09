@@ -52,15 +52,13 @@ EDC_UI_ACTIVE_PROFILE=mds-open-source docker compose up
 
 ## Quick Start: Default Configuration
 
-The default configuration launches two local EDC Connectors and a Broker with the following credentials:
+The default configuration launches two local EDC Connectors with the following credentials:
 
-|                     | First Connector                                               | Second Connector                                               | Broker                                                           |
-|---------------------|---------------------------------------------------------------|:---------------------------------------------------------------|------------------------------------------------------------------|
-| Homepage            | http://localhost:11000                                        | http://localhost:22000                                         | http://localhost:44000                                           |
-| Management Endpoint | http://localhost:11002/api/management                         | http://localhost:22002/api/management                          | http://localhost:44002/api/management                            |
-| Management API Key  | `ApiKeyDefaultValue`                                          | `ApiKeyDefaultValue`                                           | `ApiKeyDefaultValue`                                             |
-| Connector Endpoint  | http://edc:11003/api/dsp <br> Requires Docker Compose Network | http://edc2:11003/api/dsp <br> Requires Docker Compose Network | http://broker:11003/api/dsp <br> Requires Docker Compose Network |
-
-The Broker is configured to scan both connectors.
+|                     | First Connector                                               | Second Connector                                               |
+|---------------------|---------------------------------------------------------------|:---------------------------------------------------------------|
+| Homepage            | http://localhost:11000                                        | http://localhost:22000                                         |
+| Management Endpoint | http://localhost:11002/api/management                         | http://localhost:22002/api/management                          |
+| Management API Key  | `ApiKeyDefaultValue`                                          | `ApiKeyDefaultValue`                                           |
+| Connector Endpoint  | http://edc:11003/api/dsp <br> Requires Docker Compose Network | http://edc2:11003/api/dsp <br> Requires Docker Compose Network |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

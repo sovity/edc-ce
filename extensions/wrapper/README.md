@@ -41,8 +41,8 @@ Our EDC API Wrapper APIs and API Clients are compatible with both our sovity EDC
   - [TypeScript API Client Library](./clients/typescript-client)
   - [TypeScript API Client Library Example](./clients/typescript-client-example)
 - Utilities:
-  - Broker UI / Connector UI [Common Models](./wrapper-common-api)
-  - Broker / Connector [Common Services](./wrapper-common-mappers)
+  - Opinionated and simplified Asset and Policy [Models](./wrapper-common-api)
+  - Opinionated and simplified Asset and Policy [Mappers](./wrapper-common-mappers)
 
 ## License
 

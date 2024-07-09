@@ -35,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -60,7 +61,7 @@ public class TransferHistoryPageApiService {
     public List<TransferHistoryEntry> getTransferHistoryEntries() {
 
         var negotiationsById = getAllContractNegotiations().stream()
-                .filter(negotiation -> negotiation != null)
+                .filter(Objects::nonNull)
                 .filter(negotiation -> negotiation.getContractAgreement() != null)
                 .collect(toMap(
                         it -> it.getContractAgreement().getId(),
@@ -98,7 +99,7 @@ public class TransferHistoryPageApiService {
             }
 
             agreement.ifPresent(it -> transferHistoryEntry.setContractAgreementId(it.getId()));
-            negotiation.ifPresent( it -> {
+            negotiation.ifPresent(it -> {
                 transferHistoryEntry.setCounterPartyConnectorEndpoint(it.getCounterPartyAddress());
                 transferHistoryEntry.setCounterPartyParticipantId(it.getCounterPartyId());
                 transferHistoryEntry.setCreatedDate(utcMillisToOffsetDateTime(it.getCreatedAt()));

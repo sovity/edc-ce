@@ -21,7 +21,7 @@ inputs:
     description: "EDC Connector Name in launchers/connectors/{connector-name}"
   deployment-type:
     required: true
-    description: "Type of deployment: 'connector' or 'broker'"
+    description: "Type of deployment: 'connector' or 'catalog-crawler'"
   title:
     required: true
     description: "Docker Image Title"

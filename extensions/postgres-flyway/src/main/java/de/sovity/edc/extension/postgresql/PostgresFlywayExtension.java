@@ -103,4 +103,10 @@ public class PostgresFlywayExtension implements ServiceExtension {
         migrator.updateDatabaseWithLegacyHandling();
     }
 
+    @Override
+    public void shutdown() {
+        if (dataSource != null) {
+            dataSource.close();
+        }
+    }
 }

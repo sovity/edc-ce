@@ -171,13 +171,12 @@ You can use a script (if you're on WSL or Linux) to generate the SKI, AKI and jk
 No, locally run connectors cannot exchange data with online connectors. A connector must have a proper URL +
 configuration and be accessible from the data provider via REST calls.
 
-### (MDS Only) Can I disable the Broker- and/or ClearingHouse-Client-Extensions dynamically?
+### (MDS Only) Can I disable the ClearingHouse-Client-Extensions dynamically?
 
 Yes, if the two extensions are included, they can still be disabled via properties.
 The default settings can be found in `docker-compose.yaml` and can be changed there.
 
 ```yaml
 # Extension Configuration
-BROKER_CLIENT_EXTENSION_ENABLED: false # disabled by default
 CLEARINGHOUSE_CLIENT_EXTENSION_ENABLED: true # enabled by default
 ```

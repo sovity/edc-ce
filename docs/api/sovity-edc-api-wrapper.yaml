@@ -524,11 +524,11 @@ components:
     DataSourceType:
       type: string
       description: Supported Data Source Types by UiDataSource
+      default: CUSTOM
       enum:
       - HTTP_DATA
       - ON_REQUEST
       - CUSTOM
-      default: CUSTOM
     SecretValue:
       type: object
       properties:
@@ -736,6 +736,7 @@ components:
     UiDataSourceHttpDataMethod:
       type: string
       description: Supported HTTP Methods by UiDataSource
+      default: GET
       enum:
       - GET
       - POST
@@ -743,7 +744,6 @@ components:
       - PATCH
       - DELETE
       - OPTIONS
-      default: GET
     UiDataSourceOnRequest:
       required:
       - contactEmail

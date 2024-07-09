@@ -16,8 +16,7 @@
 
 ## About this module
 
-Common API models between the sovity Community Edition EDC API, sovity Enterprise Edition EDC API and/or the Broker
-Server API.
+Common API models between the sovity Community Edition EDC API, sovity Enterprise Edition EDC API and/or the Authority Portal.
 
 ## Why does this module exist?
 
