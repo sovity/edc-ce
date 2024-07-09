@@ -39,6 +39,7 @@ import org.eclipse.edc.policy.model.LiteralExpression;
 import org.eclipse.edc.policy.model.Operator;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
+import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
@@ -148,7 +149,7 @@ class ContractAgreementPageTest {
                 .processId("my-transfer-" + contract + "-" + transfer)
                 .connectorAddress("http://other-connector")
                 .connectorId("urn:connector:other-connector")
-                .protocol("dataspace-protocol-http")
+                .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
                 .dataDestination(DataAddress.Builder.newInstance().type("HttpData").build())
                 .build();
         return TransferProcess.Builder.newInstance()

@@ -18,6 +18,7 @@ import de.sovity.edc.extension.messenger.dto.Answer;
 import de.sovity.edc.extension.messenger.dto.UnsupportedMessage;
 import lombok.val;
 import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
+import org.eclipse.edc.spi.monitor.ConsoleMonitor;
 import org.eclipse.edc.spi.response.StatusResult;
 import org.junit.jupiter.api.Test;
 
@@ -50,7 +51,7 @@ class SovityMessengerTest {
                     null)));
 
         when(registry.dispatch(any(), any())).thenReturn(future);
-        val messenger = new SovityMessenger(registry, new ObjectMapperFactory().createObjectMapper());
+        val messenger = new SovityMessenger(registry, new ObjectMapperFactory().createObjectMapper(), new ConsoleMonitor());
         val answer = messenger.send(Answer.class, "https://example.com/api/dsp", new UnsupportedMessage());
 
         // act

@@ -17,7 +17,10 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreement;
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
-import de.sovity.edc.ext.wrapper.TestUtils;
+import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.db.TestDatabase;
+import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
@@ -33,27 +36,49 @@ import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.Map;
 import java.util.UUID;
 
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
-@ExtendWith(EdcExtension.class)
 class ContractAgreementTransferApiServiceTest {
 
     private static final String DATA_SINK = "http://my-data-sink/api/stuff";
     private static final String COUNTER_PARTY_ADDRESS =
             "http://some-other-connector/api/v1/ids/data";
 
-    EdcClient client;
+    private static final String PARTICIPANT_ID = "someid";
+
+    private ConnectorConfig config;
+
+    @RegisterExtension
+    static final EdcExtension EDC_CONTEXT = new EdcExtension();
+
+    @RegisterExtension
+    static final TestDatabase DATABASE = TestDatabaseFactory.getTestDatabase(1);
+
+    private ConnectorRemote connector;
+
+    private EdcClient client;
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-        TestUtils.setupExtension(extension);
-        client = TestUtils.edcClient();
+        // set up provider EDC + Client
+        // TODO: try to fix again after RT's PR. The EDC uses the DSP port 34003 instead of the dynamically allocated one...
+        config = forTestDatabase(PARTICIPANT_ID, 34000, DATABASE);
+        EDC_CONTEXT.setConfiguration(config.getProperties());
+        connector = new ConnectorRemote(fromConnectorConfig(config));
+
+        client = EdcClient.builder()
+            .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+            .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+            .build();
+
     }
 
     @Test
@@ -110,6 +135,7 @@ class ContractAgreementTransferApiServiceTest {
                         .add(Prop.Edc.RECEIVER_HTTP_ENDPOINT, "http://my-pull-backend")
                         .add("this-will-disappear", "because-its-not-an-url")
                         .add("http://unknown/custom-prop", "value"))
+                .add(Prop.Edc.CTX + "protocol", HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
                 .build();
         var request = new InitiateCustomTransferRequest(
                 contractId,
