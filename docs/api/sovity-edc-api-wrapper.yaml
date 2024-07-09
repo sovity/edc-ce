@@ -1351,6 +1351,7 @@ components:
     ContractAgreementTerminationInfo:
       required:
       - detail
+      - initiator
       - reason
       - terminatedAt
       type: object
@@ -1367,6 +1368,13 @@ components:
           type: string
           description: Detailed message from the terminating party about why the contract
             was terminated.
+        initiator:
+          type: string
+          description: Indicates whether the termination comes from this EDC or the
+            counterparty EDC.
+          enum:
+          - SELF
+          - COUNTERPARTY
       description: Contract's agreement metadata
     ContractAgreementTransferProcess:
       required:
@@ -1416,7 +1424,7 @@ components:
     ContractAgreementPageQuery:
       type: object
       properties:
-        status:
+        terminationStatus:
           type: string
           description: Optionally filter the resulting contract agreements by their
             termination status.
