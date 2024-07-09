@@ -26,5 +26,5 @@ public class ContractAgreementPageQuery {
     @Schema(
         description = "Optionally filter the resulting contract agreements by their termination status.",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private ContractTerminationStatus terminationStatus;
+    private ContractTerminationStatus status;
 }

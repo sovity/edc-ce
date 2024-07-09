@@ -1424,7 +1424,7 @@ components:
     ContractAgreementPageQuery:
       type: object
       properties:
-        terminationStatus:
+        status:
           type: string
           description: Optionally filter the resulting contract agreements by their
             termination status.
