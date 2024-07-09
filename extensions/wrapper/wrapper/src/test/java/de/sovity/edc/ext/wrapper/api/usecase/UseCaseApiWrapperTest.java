@@ -32,21 +32,25 @@ import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.TestUtils;
+import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.db.TestDatabase;
+import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.List;
-import java.util.Map;
 
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
-@ExtendWith(EdcExtension.class)
 class UseCaseApiWrapperTest {
     private EdcClient client;
 
@@ -54,11 +58,32 @@ class UseCaseApiWrapperTest {
     private String assetId2 = "test-asset-2";
     private String policyId = "policy-1";
 
+    private static final String PARTICIPANT_ID = "someid";
+
+    private ConnectorConfig config;
+
+    @RegisterExtension
+    static final EdcExtension EDC_CONTEXT = new EdcExtension();
+
+    @RegisterExtension
+    static final TestDatabase DATABASE = TestDatabaseFactory.getTestDatabase(1);
+
+    private ConnectorRemote connector;
+
+    private EdcClient client;
 
     @BeforeEach
     void setup(EdcExtension extension) {
-        TestUtils.setupExtension(extension);
-        client = TestUtils.edcClient();
+        // set up provider EDC + Client
+        // TODO: try to fix again after RT's PR. The EDC uses the DSP port 34003 instead of the dynamically allocated one...
+        config = forTestDatabase(PARTICIPANT_ID, 34000, DATABASE);
+        EDC_CONTEXT.setConfiguration(config.getProperties());
+        connector = new ConnectorRemote(fromConnectorConfig(config));
+
+        client = EdcClient.builder()
+            .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+            .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+            .build();
     }
 
     @Test
