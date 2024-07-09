@@ -49,8 +49,8 @@ public class TestData {
         connector.setLastRefreshAttemptAt(null);
         connector.setLastSuccessfulRefreshAt(null);
         connector.setCreatedAt(OffsetDateTime.now());
-        connector.setDataOffersExceeded(ConnectorDataOffersExceeded.UNKNOWN);
-        connector.setContractOffersExceeded(ConnectorContractOffersExceeded.UNKNOWN);
+        connector.setDataOffersExceeded(ConnectorDataOffersExceeded.OK);
+        connector.setContractOffersExceeded(ConnectorContractOffersExceeded.OK);
         applier.accept(connector);
         connector.insert();
     }
