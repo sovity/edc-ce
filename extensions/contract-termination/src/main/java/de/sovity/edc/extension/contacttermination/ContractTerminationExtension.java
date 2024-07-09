@@ -28,6 +28,7 @@ import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.agent.ParticipantAgentService;
 import org.eclipse.edc.spi.iam.IdentityService;
+import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 
@@ -54,6 +55,9 @@ public class ContractTerminationExtension implements ServiceExtension {
 
     @Inject
     private ManagementApiConfiguration managementApiConfiguration;
+
+    @Inject
+    private Monitor monitor;
 
     @Inject
     private SovityMessenger sovityMessenger;
@@ -97,7 +101,8 @@ public class ContractTerminationExtension implements ServiceExtension {
         val terminator = new ContractAgreementTerminationService(
             sovityMessenger,
             contractAgreementTerminationDetailsQuery,
-            terminateContractQuery);
+            terminateContractQuery,
+            monitor);
 
         messengerRegistry.register(
             ContractTerminationOutgoingMessage.class,

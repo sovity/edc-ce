@@ -215,7 +215,11 @@ public class WrapperExtensionContextBuilder {
         );
         var agreementDetailsQuery = new ContractAgreementTerminationDetailsQuery(directDatabaseAccess::getDslContext);
         var terminateContractQuery = new TerminateContractQuery(directDatabaseAccess::getDslContext);
-        var contractAgreementTerminationService = new ContractAgreementTerminationService(sovityMessenger, agreementDetailsQuery, terminateContractQuery);
+        var contractAgreementTerminationService = new ContractAgreementTerminationService(
+            sovityMessenger,
+            agreementDetailsQuery,
+            terminateContractQuery,
+            monitor);
         var policyDefinitionApiService = new PolicyDefinitionApiService(
             policyDefinitionService,
             policyMapper

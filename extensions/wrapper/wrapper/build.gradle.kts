@@ -12,8 +12,6 @@ dependencies {
     implementation(libs.edc.managementApiConfiguration)
     implementation(libs.edc.dspHttpSpi)
     api(project(":extensions:contract-termination"))
-    // TODO: this prevents the test that don't init a DB to run because the flyway configurator wants to migrate the DB
-    //  were these tests running only with in-memory implementations of the stores?
     api(project(":extensions:database-direct-access"))
     api(project(":extensions:sovity-messenger"))
     api(project(":extensions:wrapper:wrapper-api"))
@@ -34,10 +32,10 @@ dependencies {
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
 
-    testImplementation(project(":extensions:database-direct-access")) // TODO: try to remove
+    testImplementation(project(":extensions:database-direct-access"))
     testImplementation(project(":extensions:wrapper:clients:java-client"))
     testImplementation(project(":extensions:policy-always-true"))
-    testImplementation(project(":utils:jooq-database-access")) // TODO: try to remove
+    testImplementation(project(":utils:jooq-database-access"))
     testImplementation(project(":utils:test-utils"))
     testImplementation(libs.edc.controlPlaneCore)
     testImplementation(libs.edc.dsp)

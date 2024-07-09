@@ -19,6 +19,7 @@ import de.sovity.edc.extension.messenger.SovityMessenger;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.result.Result;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +31,7 @@ public class ContractAgreementTerminationService {
     private final SovityMessenger sovityMessenger;
     private final ContractAgreementTerminationDetailsQuery contractAgreementTerminationDetailsQuery;
     private final TerminateContractQuery terminateContractQuery;
+    private final Monitor monitor;
 
     public Result<OffsetDateTime> terminateContractAgreementForConsumerAndProvider(ContractTermination termination) {
         val maybeDetails = contractAgreementTerminationDetailsQuery.fetchAgreementDetails(termination.contractAgreementId());
@@ -67,7 +69,7 @@ public class ContractAgreementTerminationService {
         boolean isConsumerAndSenderIsProvider = details.type().equals(ContractNegotiation.Type.CONSUMER) && details.providerAgentId().equals(identity);
         boolean isProviderAndSenderIsConsumer = details.type().equals(ContractNegotiation.Type.PROVIDER) && details.consumerAgentId().equals(identity);
         if (!(isConsumerAndSenderIsProvider || isProviderAndSenderIsConsumer)) {
-            // TODO: logging
+            monitor.warning("The EDC %s attempted an illegal operation".formatted(details.consumerAgentId()));
             return Result.failure("The requester's identity %s is neither the consumer nor the provider".formatted(identity));
         }
 
