@@ -129,7 +129,8 @@ public class CrawlerExtensionContextBuilder {
                 objectMapperJsonLd
         );
         var contractOfferRecordUpdater = new ContractOfferRecordUpdater();
-        var dataOfferRecordUpdater = new DataOfferRecordUpdater(connectorQueries);
+        var shortDescriptionBuilder = new ShortDescriptionBuilder();
+        var dataOfferRecordUpdater = new DataOfferRecordUpdater(shortDescriptionBuilder);
         var contractOfferQueries = new ContractOfferQueries();
         var dataOfferLimitsEnforcer = new DataOfferLimitsEnforcer(crawlerConfig, crawlerEventLogger);
         var dataOfferPatchBuilder = new CatalogPatchBuilder(

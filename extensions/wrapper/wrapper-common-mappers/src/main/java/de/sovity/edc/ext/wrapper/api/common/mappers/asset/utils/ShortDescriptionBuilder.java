@@ -25,11 +25,11 @@ public class ShortDescriptionBuilder {
             return null;
         }
 
-        var text = extractText(descriptionMarkdown);
+        var text = extractMarkdownText(descriptionMarkdown);
         return abbreviate(text, 300);
     }
 
-    String extractText(String markdown) {
+    public String extractMarkdownText(String markdown) {
         var options = new MutableDataSet();
         var parser = Parser.builder(options).build();
         var renderer = HtmlRenderer.builder(options).build();

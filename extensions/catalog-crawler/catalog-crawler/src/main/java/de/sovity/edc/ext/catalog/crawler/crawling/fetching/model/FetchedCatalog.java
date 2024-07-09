@@ -16,7 +16,10 @@ package de.sovity.edc.ext.catalog.crawler.crawling.fetching.model;
 
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
@@ -27,6 +30,9 @@ import java.util.List;
  */
 @Getter
 @Setter
+@Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FetchedCatalog {
     ConnectorRef connectorRef;
