@@ -92,9 +92,6 @@ public class ContractTerminationExtension implements ServiceExtension {
 
     private void setupMessenger() {
 
-        // TODO: requires to be until all the modules are initialized?
-        // TODO: some test to assert that it's available
-
         val contractAgreementTerminationDetailsQuery = new ContractAgreementTerminationDetailsQuery(directDatabaseAccess::newDslContext);
         val terminateContractQuery = new TerminateContractQuery(directDatabaseAccess::newDslContext);
 
