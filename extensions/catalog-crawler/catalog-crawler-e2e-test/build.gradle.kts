@@ -2,10 +2,6 @@ plugins {
     `java-library`
 }
 
-configurations.all {
-    resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
-}
-
 dependencies {
     compileOnly(project(":launchers:connectors:catalog-crawler-dev"))
     compileOnly(project(":launchers:connectors:sovity-dev"))

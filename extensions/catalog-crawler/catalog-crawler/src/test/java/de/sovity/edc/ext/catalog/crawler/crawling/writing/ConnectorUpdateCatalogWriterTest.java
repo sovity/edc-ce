@@ -26,6 +26,8 @@ import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import static de.sovity.edc.ext.catalog.crawler.crawling.writing.DataOfferWriterTestDataModels.Co;
+import static de.sovity.edc.ext.catalog.crawler.crawling.writing.DataOfferWriterTestDataModels.Do;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -43,36 +45,36 @@ class ConnectorUpdateCatalogWriterTest {
             when(testDydi.getCrawlerConfig().getEnvironmentId()).thenReturn("test");
 
             // arrange
-            var unchanged = DataOfferWriterTestDataModels.Do.forName("unchanged");
+            var unchanged = Do.forName("unchanged");
             testData.existing(unchanged);
             testData.fetched(unchanged);
 
-            var fieldChangedExisting = DataOfferWriterTestDataModels.Do.forName("fieldChanged");
+            var fieldChangedExisting = Do.forName("fieldChanged");
             var fieldChangedFetched = fieldChangedExisting.withAssetTitle("changed");
             testData.existing(fieldChangedExisting);
             testData.fetched(fieldChangedFetched);
 
-            var added = DataOfferWriterTestDataModels.Do.forName("added");
+            var added = Do.forName("added");
             testData.fetched(added);
 
-            var removed = DataOfferWriterTestDataModels.Do.forName("removed");
+            var removed = Do.forName("removed");
             testData.existing(removed);
 
-            var changedCoExisting = DataOfferWriterTestDataModels.Do.forName("contractOffer");
+            var changedCoExisting = Do.forName("contractOffer");
             var changedCoFetched = changedCoExisting.withContractOffers(List.of(
                     changedCoExisting.getContractOffers().get(0).withPolicyValue("changed")
             ));
             testData.existing(changedCoExisting);
             testData.fetched(changedCoFetched);
 
-            var addedCoExisting = DataOfferWriterTestDataModels.Do.forName("contractOfferAdded");
-            var addedCoFetched = addedCoExisting.withContractOffer(new DataOfferWriterTestDataModels.Co("added co", "added co"));
+            var addedCoExisting = Do.forName("contractOfferAdded");
+            var addedCoFetched = addedCoExisting.withContractOffer(new Co("added co", "added co"));
             testData.existing(addedCoExisting);
             testData.fetched(addedCoFetched);
 
-            var removedCoExisting = DataOfferWriterTestDataModels.Do.forName("contractOfferRemoved")
-                    .withContractOffer(new DataOfferWriterTestDataModels.Co("removed co", "removed co"));
-            var removedCoFetched = DataOfferWriterTestDataModels.Do.forName("contractOfferRemoved");
+            var removedCoExisting = Do.forName("contractOfferRemoved")
+                    .withContractOffer(new Co("removed co", "removed co"));
+            var removedCoFetched = Do.forName("contractOfferRemoved");
             testData.existing(removedCoExisting);
             testData.fetched(removedCoFetched);
 
@@ -132,7 +134,7 @@ class ConnectorUpdateCatalogWriterTest {
     }
 
     private void assertAssetPropertiesEqual(DataOfferWriterTestDataHelper testData, DataOfferRecord actual,
-                                            DataOfferWriterTestDataModels.Do expected) {
+                                            Do expected) {
         var actualUiAssetJson = actual.getUiAssetJson().data();
         var expectedUiAssetJson = testData.dummyAssetJson(expected);
         AssertionUtils.assertEqualJson(actualUiAssetJson, expectedUiAssetJson);
@@ -141,8 +143,8 @@ class ConnectorUpdateCatalogWriterTest {
     private void assertPolicyEquals(
             DataOfferWriterTestResultHelper actual,
             DataOfferWriterTestDataHelper scenario,
-            DataOfferWriterTestDataModels.Do expectedDo,
-            DataOfferWriterTestDataModels.Co expectedCo
+            Do expectedDo,
+            Co expectedCo
     ) {
         var actualContractOffer = actual.getContractOffer(expectedDo.getAssetId(), expectedCo.getId());
         var actualUiPolicyJson = actualContractOffer.getUiPolicyJson().data();

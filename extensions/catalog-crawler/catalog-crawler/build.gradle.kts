@@ -2,10 +2,6 @@ plugins {
     `java-library`
 }
 
-configurations.all {
-    resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
-}
-
 dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)

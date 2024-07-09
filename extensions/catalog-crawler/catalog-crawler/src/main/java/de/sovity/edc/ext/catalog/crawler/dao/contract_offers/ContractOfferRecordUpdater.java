@@ -74,6 +74,10 @@ public class ContractOfferRecordUpdater {
                 JsonUtils2::isEqualJson
         );
 
+        if (changes.isChanged()) {
+            contractOffer.setUpdatedAt(OffsetDateTime.now());
+        }
+
         return changes.isChanged();
     }
 }
