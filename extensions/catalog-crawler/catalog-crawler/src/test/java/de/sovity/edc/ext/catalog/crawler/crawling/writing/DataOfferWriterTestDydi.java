@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.catalog.crawler.crawling.writing;
 
+import de.sovity.edc.ext.catalog.crawler.crawling.logging.CrawlerEventLogger;
 import de.sovity.edc.ext.catalog.crawler.dao.CatalogPatchApplier;
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorQueries;
 import de.sovity.edc.ext.catalog.crawler.dao.contract_offers.ContractOfferQueries;
@@ -21,6 +22,7 @@ import de.sovity.edc.ext.catalog.crawler.dao.contract_offers.ContractOfferRecord
 import de.sovity.edc.ext.catalog.crawler.dao.data_offers.DataOfferQueries;
 import de.sovity.edc.ext.catalog.crawler.dao.data_offers.DataOfferRecordUpdater;
 import de.sovity.edc.ext.catalog.crawler.orchestration.config.CrawlerConfig;
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.ShortDescriptionBuilder;
 import lombok.Value;
 import org.eclipse.edc.spi.system.configuration.Config;
 
@@ -34,9 +36,8 @@ class DataOfferWriterTestDydi {
     ContractOfferQueries contractOfferQueries = new ContractOfferQueries();
     ContractOfferRecordUpdater contractOfferRecordUpdater = new ContractOfferRecordUpdater();
     ConnectorQueries connectorQueries = new ConnectorQueries(crawlerConfig);
-    DataOfferRecordUpdater dataOfferRecordUpdater = new DataOfferRecordUpdater(
-            connectorQueries
-    );
+    ShortDescriptionBuilder shortDescriptionBuilder = new ShortDescriptionBuilder();
+    DataOfferRecordUpdater dataOfferRecordUpdater = new DataOfferRecordUpdater(shortDescriptionBuilder);
     CatalogPatchBuilder catalogPatchBuilder = new CatalogPatchBuilder(
             contractOfferQueries,
             dataOfferQueries,
@@ -45,4 +46,16 @@ class DataOfferWriterTestDydi {
     );
     CatalogPatchApplier catalogPatchApplier = new CatalogPatchApplier();
     ConnectorUpdateCatalogWriter connectorUpdateCatalogWriter = new ConnectorUpdateCatalogWriter(catalogPatchBuilder, catalogPatchApplier);
+
+    // for the ConnectorUpdateSuccessWriterTest
+    CrawlerEventLogger crawlerEventLogger = new CrawlerEventLogger();
+    DataOfferLimitsEnforcer dataOfferLimitsEnforcer = new DataOfferLimitsEnforcer(
+            crawlerConfig,
+            crawlerEventLogger
+    );
+    ConnectorUpdateSuccessWriter connectorUpdateSuccessWriter = new ConnectorUpdateSuccessWriter(
+            crawlerEventLogger,
+            connectorUpdateCatalogWriter,
+            dataOfferLimitsEnforcer
+    );
 }

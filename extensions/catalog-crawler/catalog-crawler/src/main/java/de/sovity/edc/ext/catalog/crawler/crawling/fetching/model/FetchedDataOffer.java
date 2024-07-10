@@ -16,7 +16,10 @@ package de.sovity.edc.ext.catalog.crawler.crawling.fetching.model;
 
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
@@ -27,6 +30,9 @@ import java.util.List;
  */
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FetchedDataOffer {
     String assetId;

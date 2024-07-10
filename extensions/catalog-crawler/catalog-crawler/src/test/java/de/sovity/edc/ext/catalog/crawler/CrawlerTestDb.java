@@ -17,7 +17,6 @@ import java.util.function.Consumer;
 public class CrawlerTestDb implements BeforeAllCallback, AfterAllCallback {
     private final TestDatabaseViaTestcontainers db = new TestDatabaseViaTestcontainers();
 
-
     private HikariDataSource dataSource = null;
     private DslContextFactory dslContextFactory = null;
 
