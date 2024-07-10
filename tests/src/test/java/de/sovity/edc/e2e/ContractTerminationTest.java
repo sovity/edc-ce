@@ -61,6 +61,7 @@ import static de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest.
 import static de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest.MAX_REASON_SIZE;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
+import static java.time.Duration.ofSeconds;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -190,8 +191,8 @@ public class ContractTerminationTest {
             .reason(reason)
             .build());
 
-        // TODO: await instead of wait
-        Thread.sleep(1000);
+        awaitTerminationCount(consumerClient, 1);
+        awaitTerminationCount(providerClient, 1);
 
         val consumerSideAgreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
         val providerSideAgreements = providerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
@@ -227,10 +228,11 @@ public class ContractTerminationTest {
 
         assertThrows(
             ApiException.class,
-            () -> consumerClient.uiApi().terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
-                .detail(detail)
-                .reason(tooLong)
-                .build())
+            () -> consumerClient.uiApi()
+                .terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
+                    .detail(detail)
+                    .reason(tooLong)
+                    .build())
         );
 
         consumerClient.uiApi().terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
@@ -238,8 +240,8 @@ public class ContractTerminationTest {
             .reason(maxSize)
             .build());
 
-        // TODO: await instead of wait
-        Thread.sleep(1000);
+        awaitTerminationCount(consumerClient, 1);
+        awaitTerminationCount(providerClient, 1);
 
         val consumerSideAgreements = consumerClient.uiApi()
             .getContractAgreementPage(ContractAgreementPageQuery.builder().build());
@@ -278,10 +280,11 @@ public class ContractTerminationTest {
 
         assertThrows(
             ApiException.class,
-            () -> consumerClient.uiApi().terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
-                .detail(tooLong)
-                .reason(reason)
-                .build())
+            () -> consumerClient.uiApi()
+                .terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
+                    .detail(tooLong)
+                    .reason(reason)
+                    .build())
         );
 
         consumerClient.uiApi().terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
@@ -289,8 +292,8 @@ public class ContractTerminationTest {
             .reason(reason)
             .build());
 
-        // TODO: await instead of wait
-        Thread.sleep(1000);
+        awaitTerminationCount(consumerClient, 1);
+        awaitTerminationCount(providerClient, 1);
 
         val consumerSideAgreements = consumerClient.uiApi()
             .getContractAgreementPage(ContractAgreementPageQuery.builder().build());
@@ -345,8 +348,8 @@ public class ContractTerminationTest {
                 .reason(reason)
                 .build());
 
-        // TODO: await instead of wait
-        Thread.sleep(1000);
+        awaitTerminationCount(consumerClient, 1);
+        awaitTerminationCount(providerClient, 1);
 
         val consumerSideAgreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
         val providerSideAgreements = providerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
@@ -435,5 +438,14 @@ public class ContractTerminationTest {
 
         assertThat(negotiation.getState().getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.AGREED);
         return negotiation;
+    }
+
+    private void awaitTerminationCount(EdcClient client, int count) {
+        Awaitility.await().atMost(ofSeconds(5)).until(
+            () -> client.uiApi()
+                .getContractAgreementPage(ContractAgreementPageQuery.builder().build())
+                .getContractAgreements()
+                .size() >= count
+        );
     }
 }
