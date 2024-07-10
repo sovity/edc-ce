@@ -185,7 +185,6 @@ public class ContractTerminationTest {
         val negotiation = awaitNegotiationDone(initialNegotiation.getContractNegotiationId());
 
         // act
-        val now = OffsetDateTime.now();
         val detail = "Some detail";
         val reason = "Some reason";
         consumerClient.uiApi().terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
@@ -222,7 +221,6 @@ public class ContractTerminationTest {
         val negotiation = awaitNegotiationDone(initialNegotiation.getContractNegotiationId());
 
         // act
-        val now = OffsetDateTime.now();
         val detail = "Some detail";
         val max = MAX_REASON_SIZE;
         val maxSize = IntStream.range(0, max).mapToObj(it -> "M").reduce("", (acc, e) -> acc + e);
@@ -249,12 +247,6 @@ public class ContractTerminationTest {
         awaitTerminationCount(consumerClient, 1);
         awaitTerminationCount(providerClient, 1);
 
-        val consumerSideAgreements = consumerClient.uiApi()
-            .getContractAgreementPage(ContractAgreementPageQuery.builder().build());
-
-        val providerSideAgreements = providerClient.uiApi()
-            .getContractAgreementPage(ContractAgreementPageQuery.builder().build());
-
         // termination completed == success
     }
 
@@ -276,7 +268,6 @@ public class ContractTerminationTest {
         val negotiation = awaitNegotiationDone(initialNegotiation.getContractNegotiationId());
 
         // act
-        val now = OffsetDateTime.now();
         val reason = "Some reason";
         val max = MAX_DETAIL_SIZE;
         val maxSize = IntStream.range(0, max).mapToObj(it -> "M").reduce("", (acc, e) -> acc + e);

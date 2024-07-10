@@ -17,6 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -39,34 +40,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 class TransferProcessAssetApiServiceTest {
-    private static final String PARTICIPANT_ID = "someid";
-
-    private ConnectorConfig config;
-
-    @RegisterExtension
-    static final EdcExtension EDC_CONTEXT = new EdcExtension();
+    private static ConnectorConfig config;
+    private static EdcClient client;
 
     @RegisterExtension
-    static final TestDatabase DATABASE = TestDatabaseFactory.getTestDatabase(1);
-
-    private ConnectorRemote connector;
-
-    private EdcClient client;
-
-    @BeforeEach
-    void setUp() {
-        // set up provider EDC + Client
-        // TODO: try to fix again after RT's PR. The EDC uses the DSP port 34003 instead of the dynamically allocated one...
-        config = forTestDatabase(PARTICIPANT_ID, 34000, DATABASE);
-        EDC_CONTEXT.setConfiguration(config.getProperties());
-        connector = new ConnectorRemote(fromConnectorConfig(config));
-
-        client = EdcClient.builder()
-            .managementApiUrl(config.getManagementEndpoint().getUri().toString())
-            .managementApiKey(config.getProperties().get("edc.api.auth.key"))
-            .build();
-
-    }
+    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "provider",
+        testDatabase -> {
+            // TODO: find why the properties are not used for the protocol port
+            config = forTestDatabase("my-edc-participant-id", testDatabase);
+            client = EdcClient.builder()
+                .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+                .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+                .build();
+            return config.getProperties();
+        }
+    );
 
     @Test
     void testProviderTransferProcess(

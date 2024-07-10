@@ -10,6 +10,7 @@ import de.sovity.edc.client.gen.model.PolicyDefinitionDto;
 import de.sovity.edc.ext.wrapper.TestUtils;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -38,33 +39,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ApiTest
 public class PolicyDefinitionApiServiceTest {
 
-    private static final String PARTICIPANT_ID = "someid";
-
-    private ConnectorConfig config;
-
-    @RegisterExtension
-    static final EdcExtension EDC_CONTEXT = new EdcExtension();
+    private static ConnectorConfig config;
+    private static EdcClient client;
 
     @RegisterExtension
-    static final TestDatabase DATABASE = TestDatabaseFactory.getTestDatabase(1);
-
-    private ConnectorRemote connector;
-
-    private EdcClient client;
-
-    @BeforeEach
-    void setUp(EdcExtension extension) {
-        // set up provider EDC + Client
-        // TODO: try to fix again after RT's PR. The EDC uses the DSP port 34003 instead of the dynamically allocated one...
-        config = forTestDatabase(PARTICIPANT_ID, 34000, DATABASE);
-        EDC_CONTEXT.setConfiguration(config.getProperties());
-        connector = new ConnectorRemote(fromConnectorConfig(config));
-
-        client = EdcClient.builder()
-            .managementApiUrl(config.getManagementEndpoint().getUri().toString())
-            .managementApiKey(config.getProperties().get("edc.api.auth.key"))
-            .build();
-    }
+    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "provider",
+        testDatabase -> {
+            config = forTestDatabase("my-edc-participant-id", testDatabase);
+            client = EdcClient.builder()
+                .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+                .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+                .build();
+            return config.getProperties();
+        }
+    );
 
     @Test
     void createTraceXPolicy() {

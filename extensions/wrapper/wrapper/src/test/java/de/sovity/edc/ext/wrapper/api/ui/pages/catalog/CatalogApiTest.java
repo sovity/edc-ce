@@ -51,7 +51,6 @@ class CatalogApiTest {
         ":launchers:connectors:sovity-dev",
         "provider",
         testDatabase -> {
-            // TODO: find why the properties are not used for the protocol port
             config = forTestDatabase("my-edc-participant-id", testDatabase);
             client = EdcClient.builder()
                 .managementApiUrl(config.getManagementEndpoint().getUri().toString())

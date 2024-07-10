@@ -15,6 +15,8 @@
 package de.sovity.edc.ext.wrapper;
 
 import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.ext.wrapper.api.usecase.UseCaseApiWrapperTest;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 
@@ -28,10 +30,26 @@ public class TestUtils {
     private static final String MANAGEMENT_PATH = "/api/management";
     private static final String PROTOCOL_PATH = "/api/dsp";
     public static final String MANAGEMENT_API_KEY = "123456";
+
+    // TODO: stop using this
+    /**
+     * @deprecated Use the configuration's dynamically allocated URL in
+     * <br>
+     * {@link ConnectorConfig#getManagementEndpoint()}.getUri().toString()
+     */
+    @Deprecated
     public static final String MANAGEMENT_ENDPOINT = "http://localhost:" + MANAGEMENT_PORT + MANAGEMENT_PATH;
 
 
     public static final String PROTOCOL_HOST = "http://localhost:" + PROTOCOL_PORT;
+
+    // TODO: stop using this
+    /**
+     * @deprecated Use the configuration's dynamically allocated URL in
+     * <br>
+     * {@link ConnectorConfig#getProtocolEndpoint()}.getUri().toString()
+     */
+    @Deprecated
     public static final String PROTOCOL_ENDPOINT = PROTOCOL_HOST + PROTOCOL_PATH;
 
     public static Map<String, String> createConfiguration(

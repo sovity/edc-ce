@@ -37,43 +37,64 @@ import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.awaitility.Awaitility;
-import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ApiWrapperDemoTest {
 
     private static final String PROVIDER_PARTICIPANT_ID = "provider";
+
+    private static ConnectorConfig providerConfig;
+    private static EdcClient providerClient;
+
+    @RegisterExtension
+    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "provider",
+        testDatabase -> {
+            providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, testDatabase);
+            providerClient = EdcClient.builder()
+                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
+                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
+                .build();
+            return providerConfig.getProperties();
+        }
+    );
+
     private static final String CONSUMER_PARTICIPANT_ID = "consumer";
 
-    @RegisterExtension
-    static EdcExtension providerEdcContext = new EdcExtension();
-    @RegisterExtension
-    static EdcExtension consumerEdcContext = new EdcExtension();
+    private static ConnectorConfig consumerConfig;
+    private static EdcClient consumerClient;
 
     @RegisterExtension
-    static final TestDatabase PROVIDER_DATABASE = new TestDatabaseViaTestcontainers();
-    @RegisterExtension
-    static final TestDatabase CONSUMER_DATABASE = new TestDatabaseViaTestcontainers();
+    static EdcRuntimeExtensionWithTestDatabase consumerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "consumer",
+        testDatabase -> {
+            consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, testDatabase);
+            consumerClient = EdcClient.builder()
+                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
+                .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
+                .build();
+            return consumerConfig.getProperties();
+        }
+    );
 
-    private ConnectorRemote providerConnector;
-    private ConnectorRemote consumerConnector;
 
-    private EdcClient providerClient;
-    private EdcClient consumerClient;
     private MockDataAddressRemote dataAddress;
     private final String dataOfferData = "expected data 123";
 
@@ -81,28 +102,8 @@ class ApiWrapperDemoTest {
 
     @BeforeEach
     void setup() {
-        // set up provider EDC + Client
-        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 21000, PROVIDER_DATABASE);
-        providerEdcContext.setConfiguration(providerConfig.getProperties());
-        providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
-
-        providerClient = EdcClient.builder()
-                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
-
-        // set up consumer EDC + Client
-        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 23000, CONSUMER_DATABASE);
-        consumerEdcContext.setConfiguration(consumerConfig.getProperties());
-        consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
-
-        consumerClient = EdcClient.builder()
-                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
-
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
+        dataAddress = new MockDataAddressRemote(providerConfig.getDefaultEndpoint());
     }
 
     @Test
@@ -113,7 +114,7 @@ class ApiWrapperDemoTest {
         createContractDefinition();
 
         // consumer: negotiate contract and transfer data
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
+        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerConfig.getProtocolEndpoint().getUri().toString());
         var negotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
         negotiation = awaitNegotiationDone(negotiation.getContractNegotiationId());
         initiateTransfer(negotiation);
@@ -204,7 +205,7 @@ class ApiWrapperDemoTest {
     }
 
     private UiContractNegotiation awaitNegotiationDone(String negotiationId) {
-        var negotiation = Awaitility.await().atMost(consumerConnector.timeout).until(
+        var negotiation = Awaitility.await().atMost(Duration.of(60, SECONDS)).until(
                 () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
                 it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
         );
