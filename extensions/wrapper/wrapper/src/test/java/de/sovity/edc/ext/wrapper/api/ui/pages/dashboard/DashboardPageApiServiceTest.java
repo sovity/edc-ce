@@ -41,6 +41,7 @@ import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.mockito.Mockito;
 
 import java.util.Collection;
 import java.util.List;
@@ -85,8 +86,6 @@ class DashboardPageApiServiceTest {
         }
     );
 
-    private ConnectorRemote connector;
-
     AssetIndex assetIndex;
     PolicyDefinitionService policyDefinitionService;
     TransferProcessService transferProcessService;
@@ -98,38 +97,35 @@ class DashboardPageApiServiceTest {
     @BeforeEach
     void setUp(EdcExtension context) {
 
-        connector = new ConnectorRemote(fromConnectorConfig(config));
-
         client = EdcClient.builder()
             .managementApiUrl(config.getManagementEndpoint().getUri().toString())
             .managementApiKey(config.getProperties().get("edc.api.auth.key"))
             .build();
 
 
-        assetIndex = mock(AssetIndex.class);
+        assetIndex = mock();
         context.registerServiceMock(AssetIndex.class, assetIndex);
 
-        policyDefinitionService = mock(PolicyDefinitionService.class);
+        policyDefinitionService = mock();
         context.registerServiceMock(PolicyDefinitionService.class, policyDefinitionService);
 
-        transferProcessService = mock(TransferProcessService.class);
+        transferProcessService = mock();
         context.registerServiceMock(TransferProcessService.class, transferProcessService);
 
-        contractNegotiationStore = mock(ContractNegotiationStore.class);
+        contractNegotiationStore = mock();
         context.registerServiceMock(ContractNegotiationStore.class, contractNegotiationStore);
 
-        contractDefinitionService = mock(ContractDefinitionService.class);
+        contractDefinitionService = mock();
         context.registerServiceMock(ContractDefinitionService.class, contractDefinitionService);
     }
-
 
     @Test
     void testKpis() {
         // arrange
         mockAmounts(
-                repeat(7, this::mockAsset),
-                repeat(8, this::mockPolicyDefinition),
-                repeat(9, this::mockContractDefinition),
+                repeat(7, Mockito::mock),
+                repeat(8, Mockito::mock),
+                repeat(9, Mockito::mock),
                 List.of(
                         mockContractNegotiation(1, CONSUMER),
                         mockContractNegotiation(2, PROVIDER),
@@ -194,15 +190,15 @@ class DashboardPageApiServiceTest {
     }
 
     private Asset mockAsset() {
-        return mock(Asset.class);
+        return mock();
     }
 
     private PolicyDefinition mockPolicyDefinition() {
-        return mock(PolicyDefinition.class);
+        return mock();
     }
 
     private ContractDefinition mockContractDefinition() {
-        return mock(ContractDefinition.class);
+        return mock();
     }
 
     private ContractNegotiation mockContractNegotiation(int contract, ContractNegotiation.Type type) {
@@ -223,10 +219,10 @@ class DashboardPageApiServiceTest {
     }
 
     private TransferProcess mockTransferProcess(int contractId, int state) {
-        DataRequest dataRequest = mock(DataRequest.class);
+        DataRequest dataRequest = mock();
         when(dataRequest.getContractId()).thenReturn("ca-" + contractId);
 
-        TransferProcess transferProcess = mock(TransferProcess.class);
+        TransferProcess transferProcess = mock();
         when(transferProcess.getId()).thenReturn(String.valueOf(random.nextInt()));
         when(transferProcess.getDataRequest()).thenReturn(dataRequest);
         when(transferProcess.getState()).thenReturn(state);

@@ -24,7 +24,6 @@ dependencies {
     testImplementation(project(":utils:test-connector-remote"))
     testImplementation(libs.assertj.core)
     testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.inline)
     testImplementation(libs.restAssured.restAssured)
     testImplementation(libs.testcontainers.testcontainers)
     testImplementation(libs.flyway.core)

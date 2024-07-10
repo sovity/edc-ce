@@ -27,7 +27,6 @@ dependencies {
     testImplementation(libs.junit.api)
     testImplementation(libs.junit.params)
     testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.inline)
     testImplementation(libs.mockito.junitJupiter)
     testRuntimeOnly(libs.junit.engine)
 }
