@@ -174,7 +174,6 @@ public class AssetApiServiceTest {
             .customJsonAsString("""
                 { "test" : "value" }
                 """)
-            // TODO: why are null values not supported in custom json? Is this official?
             .customJsonLdAsString("""
                 {
                     "https://string": "value",
@@ -186,7 +185,6 @@ public class AssetApiServiceTest {
             .privateCustomJsonAsString("""
                 { "private test" : "private value" }
                 """)
-            // TODO: why are null values not supported in custom json ld? Is this official?
             .privateCustomJsonLdAsString("""
                 {
                     "https://private/string": "value",

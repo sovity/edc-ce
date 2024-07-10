@@ -3,7 +3,6 @@ package de.sovity.edc.extension.e2e.db;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
-import org.eclipse.edc.junit.extensions.EdcRuntimeExtension;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;

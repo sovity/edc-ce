@@ -26,61 +26,42 @@ import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
-import de.sovity.edc.ext.wrapper.TestUtils;
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
 import org.eclipse.edc.junit.annotations.ApiTest;
-import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.List;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 @ApiTest
 class CatalogApiTest {
-
-    private static final String PARTICIPANT_ID = "my-edc-participant-id";
-
-    private ConnectorConfig config;
+    private static ConnectorConfig config;
+    private static EdcClient client;
 
     @RegisterExtension
-    static final EdcExtension EDC_CONTEXT = new EdcExtension();
-
-    @RegisterExtension
-    static final TestDatabase DATABASE = TestDatabaseFactory.getTestDatabase(1);
-
-    private ConnectorRemote connector;
-
-    private EdcClient client;
+    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "provider",
+        testDatabase -> {
+            // TODO: find why the properties are not used for the protocol port
+            config = forTestDatabase("my-edc-participant-id", testDatabase);
+            client = EdcClient.builder()
+                .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+                .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+                .build();
+            return config.getProperties();
+        }
+    );
 
     private final String dataOfferId = "my-data-offer-2023-11";
-
-    @BeforeEach
-    void setup() {
-        // set up provider EDC + Client
-        // TODO: try to fix again after RT's PR. The EDC uses the DSP port 34003 instead of the dynamically allocated one...
-        config = forTestDatabase(PARTICIPANT_ID, 34000, DATABASE);
-        EDC_CONTEXT.setConfiguration(config.getProperties());
-        connector = new ConnectorRemote(fromConnectorConfig(config));
-
-        client = EdcClient.builder()
-            .managementApiUrl(config.getManagementEndpoint().getUri().toString())
-            .managementApiKey(config.getProperties().get("edc.api.auth.key"))
-            .build();
-
-    }
 
     /**
      * There used to be issues with the Prop.DISTRIBUTION field being occupied by core EDC.
@@ -95,7 +76,7 @@ class CatalogApiTest {
         createPolicy();
         createContractDefinition();
         // act
-        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers(TestUtils.PROTOCOL_ENDPOINT);
+        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers(config.getProtocolEndpoint().getUri().toString());
 
         // assert
         assertThat(catalogPageDataOffers.size()).isEqualTo(1);
