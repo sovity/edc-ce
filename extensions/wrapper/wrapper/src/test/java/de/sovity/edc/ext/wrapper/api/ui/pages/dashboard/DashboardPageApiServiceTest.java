@@ -18,6 +18,7 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.ext.wrapper.TestUtils;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -58,41 +59,45 @@ import static org.mockito.Mockito.when;
 
 @ApiTest
 class DashboardPageApiServiceTest {
-    private static final String PARTICIPANT_ID = "my-edc-participant-id";
-
-    private ConnectorConfig config;
-
-    @RegisterExtension
-    static final EdcExtension EDC_CONTEXT = new EdcExtension();
+    private static ConnectorConfig config;
+    private static EdcClient client;
 
     @RegisterExtension
-    static final TestDatabase DATABASE = TestDatabaseFactory.getTestDatabase(1);
+    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "provider",
+        testDatabase -> {
+            // TODO: find why the properties are not used for the protocol port
+            config = forTestDatabase("my-edc-participant-id", testDatabase);
+
+            config.setProperty("edc.oauth.token.url", "https://token-url.daps");
+            config.setProperty("edc.oauth.provider.jwks.url", "https://jwks-url.daps");
+
+            config.setProperty("tx.ssi.oauth.token.url", "https://token.miw");
+            config.setProperty("tx.ssi.miw.url", "https://miw");
+            config.setProperty("tx.ssi.miw.authority.id", "my-authority-id");
+
+            client = EdcClient.builder()
+                .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+                .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+                .build();
+            return config.getProperties();
+        }
+    );
 
     private ConnectorRemote connector;
-
-    private EdcClient client;
 
     AssetIndex assetIndex;
     PolicyDefinitionService policyDefinitionService;
     TransferProcessService transferProcessService;
     ContractNegotiationStore contractNegotiationStore;
     ContractDefinitionService contractDefinitionService;
-    private Random random;
+
+    private final Random random = new Random();
 
     @BeforeEach
-    void setUp() {
-        // set up provider EDC + Client
-        // TODO: try to fix again after RT's PR. The EDC uses the DSP port 34003 instead of the dynamically allocated one...
-        config = forTestDatabase(PARTICIPANT_ID, 34000, DATABASE);
+    void setUp(EdcExtension context) {
 
-        config.setProperty("edc.oauth.token.url", "https://token-url.daps");
-        config.setProperty("edc.oauth.provider.jwks.url", "https://jwks-url.daps");
-
-        config.setProperty("tx.ssi.oauth.token.url", "https://token.miw");
-        config.setProperty("tx.ssi.miw.url", "https://miw");
-        config.setProperty("tx.ssi.miw.authority.id", "my-authority-id");
-
-        EDC_CONTEXT.setConfiguration(config.getProperties());
         connector = new ConnectorRemote(fromConnectorConfig(config));
 
         client = EdcClient.builder()
@@ -102,21 +107,19 @@ class DashboardPageApiServiceTest {
 
 
         assetIndex = mock(AssetIndex.class);
-        EDC_CONTEXT.registerServiceMock(AssetIndex.class, assetIndex);
+        context.registerServiceMock(AssetIndex.class, assetIndex);
 
         policyDefinitionService = mock(PolicyDefinitionService.class);
-        EDC_CONTEXT.registerServiceMock(PolicyDefinitionService.class, policyDefinitionService);
+        context.registerServiceMock(PolicyDefinitionService.class, policyDefinitionService);
 
         transferProcessService = mock(TransferProcessService.class);
-        EDC_CONTEXT.registerServiceMock(TransferProcessService.class, transferProcessService);
+        context.registerServiceMock(TransferProcessService.class, transferProcessService);
 
         contractNegotiationStore = mock(ContractNegotiationStore.class);
-        EDC_CONTEXT.registerServiceMock(ContractNegotiationStore.class, contractNegotiationStore);
+        context.registerServiceMock(ContractNegotiationStore.class, contractNegotiationStore);
 
         contractDefinitionService = mock(ContractDefinitionService.class);
-        EDC_CONTEXT.registerServiceMock(ContractDefinitionService.class, contractDefinitionService);
-
-        random = new Random();
+        context.registerServiceMock(ContractDefinitionService.class, contractDefinitionService);
     }
 
 
@@ -173,8 +176,8 @@ class DashboardPageApiServiceTest {
         assertThat(dashboardPage.getConnectorParticipantId()).isEqualTo("my-edc-participant-id");
         assertThat(dashboardPage.getConnectorDescription()).isEqualTo("Connector Description my-edc-participant-id");
         assertThat(dashboardPage.getConnectorTitle()).isEqualTo("Connector Title my-edc-participant-id");
-        // TODO: this should be config.getProtocolEndpoint().getUri().toString()
-        assertThat(dashboardPage.getConnectorEndpoint()).isEqualTo(TestUtils.PROTOCOL_ENDPOINT);
+
+        assertThat(dashboardPage.getConnectorEndpoint()).isEqualTo(config.getProtocolEndpoint().getUri().toString());
         assertThat(dashboardPage.getConnectorCuratorName()).isEqualTo("Curator Name my-edc-participant-id");
         assertThat(dashboardPage.getConnectorCuratorUrl()).isEqualTo("http://curator.my-edc-participant-id");
         assertThat(dashboardPage.getConnectorMaintainerName()).isEqualTo("Maintainer Name my-edc-participant-id");
