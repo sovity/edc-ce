@@ -78,6 +78,7 @@ import de.sovity.edc.extension.db.directaccess.DirectDatabaseAccess;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
+import jakarta.validation.Validator;
 import lombok.NoArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
@@ -133,7 +134,8 @@ public class WrapperExtensionContextBuilder {
         SovityMessenger sovityMessenger,
         TransferProcessService transferProcessService,
         TransferProcessStore transferProcessStore,
-        TypeTransformerRegistry typeTransformerRegistry
+        TypeTransformerRegistry typeTransformerRegistry,
+        Validator validator
     ) {
         // UI API
         var operatorMapper = new OperatorMapper();
@@ -266,7 +268,8 @@ public class WrapperExtensionContextBuilder {
             catalogApiService,
             contractDefinitionApiService,
             contractNegotiationApiService,
-            dashboardApiService
+            dashboardApiService,
+            validator
         );
 
         // Use Case API

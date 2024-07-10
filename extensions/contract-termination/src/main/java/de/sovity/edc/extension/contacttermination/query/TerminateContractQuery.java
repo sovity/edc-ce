@@ -13,6 +13,7 @@
 
 package de.sovity.edc.extension.contacttermination.query;
 
+import de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy;
 import de.sovity.edc.extension.contacttermination.ContractTermination;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -28,13 +29,14 @@ public class TerminateContractQuery {
 
     private final Supplier<DSLContext> dsl;
 
-    public OffsetDateTime terminateConsumerAgreement(ContractTermination termination) {
+    public OffsetDateTime terminateConsumerAgreement(ContractTermination termination, ContractTerminatedBy terminatedBy) {
         val now = OffsetDateTime.now();
 
         val newTermination = dsl.get().newRecord(SOVITY_CONTRACT_TERMINATION);
         newTermination.setContractAgreementId(termination.contractAgreementId());
         newTermination.setDetail(termination.detail());
         newTermination.setReason(termination.reason());
+        newTermination.setTerminatedBy(terminatedBy);
         newTermination.setTerminatedAt(now);
 
         newTermination.insert();

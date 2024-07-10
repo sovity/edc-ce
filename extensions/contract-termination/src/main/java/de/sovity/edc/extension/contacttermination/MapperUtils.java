@@ -19,9 +19,9 @@ import lombok.experimental.UtilityClass;
 public class MapperUtils {
     public static ContractTermination toModel(ContractTerminationOutgoingMessage message) {
         return new ContractTermination(
-            message.getContractAgreementId(),
-            message.getDetail(),
-            message.getReason()
+                message.getContractAgreementId(),
+                message.getDetail(),
+                message.getReason()
         );
     }
 }

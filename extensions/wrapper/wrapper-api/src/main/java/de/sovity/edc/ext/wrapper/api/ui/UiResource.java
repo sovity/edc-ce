@@ -35,6 +35,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.UiContractNegotiation;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -170,7 +171,7 @@ interface UiResource {
     @Operation(description = "Terminates a contract agreement designated by its contract agreement id.")
     IdResponseDto terminateContractAgreement(
         @PathParam("contractAgreementId") String contractAgreementId,
-        ContractTerminationRequest contractTerminationRequest);
+        @Valid ContractTerminationRequest contractTerminationRequest);
 
     @GET
     @Path("pages/transfer-history-page")

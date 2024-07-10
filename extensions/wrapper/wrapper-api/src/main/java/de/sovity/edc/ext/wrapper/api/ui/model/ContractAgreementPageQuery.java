@@ -13,6 +13,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,7 @@ public class ContractAgreementPageQuery {
         requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private ContractTerminationStatus terminationStatus;
 
+    @JsonIgnore
     public boolean isEmpty() {
         return terminationStatus == null;
     }

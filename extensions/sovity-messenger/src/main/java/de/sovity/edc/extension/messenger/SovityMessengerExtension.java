@@ -14,6 +14,8 @@
 package de.sovity.edc.extension.messenger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.sovity.edc.extension.messenger.controller.SovityMessageController;
 import de.sovity.edc.extension.messenger.impl.JsonObjectFromSovityMessageRequest;
 import de.sovity.edc.extension.messenger.impl.JsonObjectFromSovityMessageResponse;
@@ -80,6 +82,7 @@ public class SovityMessengerExtension implements ServiceExtension {
     @Override
     public void initialize(ServiceExtensionContext context) {
         val objectMapper = new ObjectMapperFactory().createObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         val handlers = new SovityMessengerRegistry();
         setupSovityMessengerEmitter(context, objectMapper);
         setupSovityMessengerReceiver(context, objectMapper, handlers);

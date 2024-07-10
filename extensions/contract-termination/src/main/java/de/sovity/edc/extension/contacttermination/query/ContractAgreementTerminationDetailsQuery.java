@@ -46,7 +46,8 @@ public class ContractAgreementTerminationDetailsQuery {
                 a.CONSUMER_AGENT_ID,
                 t.REASON,
                 t.DETAIL,
-                t.TERMINATED_AT)
+                t.TERMINATED_AT,
+                t.TERMINATED_BY)
             .from(
                 n.join(a).on(n.AGREEMENT_ID.eq(a.AGR_ID))
                     .leftJoin(SOVITY_CONTRACT_TERMINATION).on(n.AGREEMENT_ID.eq(t.CONTRACT_AGREEMENT_ID)))

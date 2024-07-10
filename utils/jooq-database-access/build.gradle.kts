@@ -118,7 +118,7 @@ jooq {
                                     array -> array == null ? null : java.util.Arrays.asList(array),
                                     list -> list == null ? null : list.toArray(new String[0])
                                   )""")
-                                .withNullability(Nullability.ALL)
+                                .withNullability(Nullability.ALL),
                         )
                     }
                     generate.apply {

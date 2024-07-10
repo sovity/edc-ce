@@ -21,10 +21,10 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPageQuery;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateCustomTransferRequest;
@@ -35,7 +35,6 @@ import de.sovity.edc.ext.wrapper.api.ui.model.UiContractNegotiation;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
-import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionApiService;
@@ -44,9 +43,13 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
+import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
 import de.sovity.edc.extension.contacttermination.ContractTermination;
+import jakarta.validation.Valid;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.eclipse.edc.spi.EdcException;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -66,6 +69,7 @@ public class UiResourceImpl implements UiResource {
     private final ContractDefinitionApiService contractDefinitionApiService;
     private final ContractNegotiationApiService contractNegotiationApiService;
     private final DashboardPageApiService dashboardPageApiService;
+    private final Validator validator;
 
     @Override
     public DashboardPage getDashboardPage() {
@@ -155,9 +159,19 @@ public class UiResourceImpl implements UiResource {
     }
 
     @Override
-    public IdResponseDto terminateContractAgreement(String contractAgreementId, ContractTerminationRequest contractTerminationRequest) {
-        val terminatedAt = contractAgreementTerminationService.terminateContractAgreementForConsumerAndProvider(
-            new ContractTermination(contractAgreementId, contractTerminationRequest.getDetail(),  contractTerminationRequest.getReason()));
+    public IdResponseDto terminateContractAgreement(
+        String contractAgreementId,
+        @Valid ContractTerminationRequest contractTerminationRequest) {
+
+        // TODO: how do I enable this automatically? Is it even possible in the EDC?
+        val constraintViolations = validator.validate(contractTerminationRequest);
+        if (!constraintViolations.isEmpty()) {
+            // TODO: the returned error message is shit, how do I fix that?
+            throw new EdcException("Invalid contract termination request: " + constraintViolations);
+        }
+
+        val terminatedAt = contractAgreementTerminationService.terminateAgreement(
+            new ContractTermination(contractAgreementId, contractTerminationRequest.getDetail(), contractTerminationRequest.getReason()));
 
         // TODO: how do I return an HTTP 304 on result failure?
         return IdResponseDto.builder()

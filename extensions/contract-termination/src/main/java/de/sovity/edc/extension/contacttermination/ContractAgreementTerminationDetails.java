@@ -13,6 +13,7 @@
 
 package de.sovity.edc.extension.contacttermination;
 
+import de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy;
 import lombok.Builder;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates;
@@ -32,7 +33,8 @@ public record ContractAgreementTerminationDetails(
     String consumerAgentId,
     String reason,
     String detail,
-    OffsetDateTime terminatedAt
+    OffsetDateTime terminatedAt,
+    ContractTerminatedBy terminatedBy
 ) {
     public boolean isTerminated() {
         return terminatedAt != null;

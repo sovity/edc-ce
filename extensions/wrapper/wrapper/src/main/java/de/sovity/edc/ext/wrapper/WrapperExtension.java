@@ -19,6 +19,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.sovity.edc.extension.db.directaccess.DirectDatabaseAccess;
 import de.sovity.edc.extension.messenger.SovityMessenger;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.connector.api.management.configuration.transform.ManagementApiTypeTransformerRegistry;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -115,6 +117,8 @@ public class WrapperExtension implements ServiceExtension {
         var objectMapper = typeManager.getMapper(CoreConstants.JSON_LD);
         fixObjectMapperDateSerialization(objectMapper);
 
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
             assetIndex,
             assetService,
@@ -135,7 +139,8 @@ public class WrapperExtension implements ServiceExtension {
             sovityMessenger,
             transferProcessService,
             transferProcessStore,
-            typeTransformerRegistry
+            typeTransformerRegistry,
+            factory.getValidator()
         );
 
         wrapperExtensionContext.selfDescriptionService().validateSelfDescriptionConfig();

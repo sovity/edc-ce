@@ -217,6 +217,6 @@ VALUES ('aed211a6-498b-4ca7-9b24-c009e7268b08', 'aed211a6-498b-4ca7-9b24-c009e72
         }
     ]');
 
-insert into public.sovity_contract_termination(contract_agreement_id, reason, detail, terminated_at)
+insert into public.sovity_contract_termination(contract_agreement_id, reason, detail, terminated_at, terminated_by)
 values ('Y29udHJhY3Q=:YXNzZXQtMS4yLjM=:NWM4M2MzNTYtZGVlYi00NjFkLTg1ZTUtODQ0YzgwMGEwMmVm', 'User Termination',
-        'Terminated because of good reasons', '2024-07-03T16:59:01.518000+00:00');
+        'Terminated because of good reasons', '2024-07-03T16:59:01.518000+00:00', 'SELF');

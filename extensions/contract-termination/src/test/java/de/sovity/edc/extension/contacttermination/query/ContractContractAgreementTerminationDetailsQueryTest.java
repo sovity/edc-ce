@@ -13,6 +13,7 @@
 
 package de.sovity.edc.extension.contacttermination.query;
 
+import de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationDetails;
 import de.sovity.edc.utils.versions.GradleVersions;
 import lombok.SneakyThrows;
@@ -91,6 +92,7 @@ class ContractContractAgreementTerminationDetailsQueryTest {
                     "my-edc2",
                     null,
                     null,
+                    null,
                     null
                 ));
             }
@@ -140,6 +142,7 @@ class ContractContractAgreementTerminationDetailsQueryTest {
                 assertThat(details.reason()).isEqualTo("User Termination");
                 assertThat(details.detail()).isEqualTo("Terminated because of good reasons");
                 assertThat(details.terminatedAt()).isEqualTo(OffsetDateTime.of(2024, 7, 3, 16, 59, 1, 518000000, ZoneOffset.UTC));
+                assertThat(details.terminatedBy()).isEqualTo(ContractTerminatedBy.SELF);
             }
         );
     }
