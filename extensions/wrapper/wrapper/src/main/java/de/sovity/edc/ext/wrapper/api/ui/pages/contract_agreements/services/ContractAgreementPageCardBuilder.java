@@ -21,6 +21,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTerminationInfo;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferProcess;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminatedBy;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -74,6 +75,10 @@ public class ContractAgreementPageCardBuilder {
                 .detail(termination.getDetail())
                 .reason(termination.getReason())
                 .terminatedAt(termination.getTerminatedAt())
+                    .terminatedBy(switch(termination.getTerminatedBy()) {
+                        case SELF -> ContractTerminatedBy.SELF;
+                        case COUNTERPARTY -> ContractTerminatedBy.COUNTERPARTY;
+                    })
                 .build());
 
         } else {

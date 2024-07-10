@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import java.time.OffsetDateTime;
 
 import static de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy.COUNTERPARTY;
+import static de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy.SELF;
 
 @RequiredArgsConstructor
 public class ContractAgreementTerminationService {
@@ -53,7 +54,7 @@ public class ContractAgreementTerminationService {
             return Result.failure("The contract is already terminated");
         }
 
-        val terminatedAt = terminateContractQuery.terminateConsumerAgreement(termination, COUNTERPARTY);
+        val terminatedAt = terminateContractQuery.terminateConsumerAgreement(termination, SELF);
 
         notifyTerminationToProvider(details.counterpartyAddress(), termination);
 
@@ -86,6 +87,8 @@ public class ContractAgreementTerminationService {
             return Result.failure("The contract is already terminated");
         }
 
+        // TODO: there is a weakness here if the EDC sends this message to itself, which should no happen right now.
+        //  Should select self/counteparty based on the details
         val terminatedAt = terminateContractQuery.terminateConsumerAgreement(termination, COUNTERPARTY);
 
         return Result.success(terminatedAt);

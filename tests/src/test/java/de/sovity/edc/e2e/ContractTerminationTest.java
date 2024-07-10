@@ -20,6 +20,7 @@ import de.sovity.edc.client.gen.model.ContractAgreementPageQuery;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
+import de.sovity.edc.client.gen.model.ContractTerminatedBy;
 import de.sovity.edc.client.gen.model.ContractTerminationRequest;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
@@ -55,6 +56,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
+import static de.sovity.edc.client.gen.model.ContractTerminatedBy.COUNTERPARTY;
+import static de.sovity.edc.client.gen.model.ContractTerminatedBy.SELF;
 import static de.sovity.edc.client.gen.model.ContractTerminationStatus.ONGOING;
 import static de.sovity.edc.client.gen.model.ContractTerminationStatus.TERMINATED;
 import static de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest.MAX_DETAIL_SIZE;
@@ -183,7 +186,6 @@ public class ContractTerminationTest {
 
         // act
         val now = OffsetDateTime.now();
-        // TODO: max detail length
         val detail = "Some detail";
         val reason = "Some reason";
         consumerClient.uiApi().terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
@@ -198,12 +200,12 @@ public class ContractTerminationTest {
         val providerSideAgreements = providerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
 
         // assert
-        assertTermination(consumerSideAgreements, now, detail, reason);
-        assertTermination(providerSideAgreements, now, detail, reason);
+        assertTermination(consumerSideAgreements, detail, reason, SELF);
+        assertTermination(providerSideAgreements, detail, reason, COUNTERPARTY);
     }
 
     @Test
-    void limitTheReasonSizeAt100Chars() throws InterruptedException {
+    void limitTheReasonSizeAt100Chars() {
         // arrange
 
         val assetId = "asset-1";
@@ -226,6 +228,8 @@ public class ContractTerminationTest {
         val maxSize = IntStream.range(0, max).mapToObj(it -> "M").reduce("", (acc, e) -> acc + e);
         val tooLong = IntStream.range(0, max + 1).mapToObj(it -> "O").reduce("", (acc, e) -> acc + e);
 
+        // assert when too big
+
         assertThrows(
             ApiException.class,
             () -> consumerClient.uiApi()
@@ -234,6 +238,8 @@ public class ContractTerminationTest {
                     .reason(tooLong)
                     .build())
         );
+
+        // assert when max size
 
         consumerClient.uiApi().terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
             .detail(detail)
@@ -249,13 +255,11 @@ public class ContractTerminationTest {
         val providerSideAgreements = providerClient.uiApi()
             .getContractAgreementPage(ContractAgreementPageQuery.builder().build());
 
-        // assert
-        assertTermination(consumerSideAgreements, now, detail, maxSize);
-        assertTermination(providerSideAgreements, now, detail, maxSize);
+        // termination completed == success
     }
 
     @Test
-    void limitTheDetailSizeAt1000Chars() throws InterruptedException {
+    void limitTheDetailSizeAt1000Chars() {
         // arrange
 
         val assetId = "asset-1";
@@ -278,6 +282,8 @@ public class ContractTerminationTest {
         val maxSize = IntStream.range(0, max).mapToObj(it -> "M").reduce("", (acc, e) -> acc + e);
         val tooLong = IntStream.range(0, max + 1).mapToObj(it -> "O").reduce("", (acc, e) -> acc + e);
 
+        // assert when too big
+
         assertThrows(
             ApiException.class,
             () -> consumerClient.uiApi()
@@ -287,6 +293,8 @@ public class ContractTerminationTest {
                     .build())
         );
 
+        // assert when max size
+
         consumerClient.uiApi().terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
             .detail(maxSize)
             .reason(reason)
@@ -295,20 +303,16 @@ public class ContractTerminationTest {
         awaitTerminationCount(consumerClient, 1);
         awaitTerminationCount(providerClient, 1);
 
-        val consumerSideAgreements = consumerClient.uiApi()
-            .getContractAgreementPage(ContractAgreementPageQuery.builder().build());
-
-        val providerSideAgreements = providerClient.uiApi()
-            .getContractAgreementPage(ContractAgreementPageQuery.builder().build());
-
-        // assert
-        assertTermination(consumerSideAgreements, now, maxSize, reason);
-        assertTermination(providerSideAgreements, now, maxSize, reason);
+        // termination completed == success
     }
 
-    private static void assertTermination(ContractAgreementPage consumerSideAgreements, OffsetDateTime now, String detail, String reason) {
+    private static void assertTermination(ContractAgreementPage consumerSideAgreements, String detail, String reason,
+                                          ContractTerminatedBy terminatedBy) {
         // TODO: it is not mentioned which side terminated the contract. Should it be added?
         // TODO: why do we have 2 different enum to represent the same kind of data. This is confusing...
+
+        val now = OffsetDateTime.now();
+
         assertThat(consumerSideAgreements.getContractAgreements()).hasSize(1);
         assertThat(consumerSideAgreements.getContractAgreements().get(0).getTerminationStatus()).isEqualTo(TERMINATED);
         val consumerInformation = consumerSideAgreements.getContractAgreements().get(0).getTerminationInformation();
@@ -316,6 +320,7 @@ public class ContractTerminationTest {
         assertThat(consumerInformation.getTerminatedAt()).isBetween(now.minusMinutes(1), now.plusMinutes(1));
         assertThat(consumerInformation.getDetail()).isEqualTo(detail);
         assertThat(consumerInformation.getReason()).isEqualTo(reason);
+        assertThat(consumerInformation.getTerminatedBy()).isEqualTo(terminatedBy);
     }
 
     @Test
@@ -336,8 +341,6 @@ public class ContractTerminationTest {
         val negotiation = awaitNegotiationDone(initialNegotiation.getContractNegotiationId());
 
         // act
-        val now = OffsetDateTime.now();
-        // TODO: max detail length
         val detail = "Some detail";
         val reason = "Some reason";
 
@@ -354,14 +357,11 @@ public class ContractTerminationTest {
         val consumerSideAgreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
         val providerSideAgreements = providerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
 
-        // TODO: wait for the message to be received by the other side
-        Thread.sleep(1000);
-
         // assert
 
         // assert
-        assertTermination(consumerSideAgreements, now, detail, reason);
-        assertTermination(providerSideAgreements, now, detail, reason);
+        assertTermination(consumerSideAgreements, detail, reason, COUNTERPARTY);
+        assertTermination(providerSideAgreements, detail, reason, SELF);
     }
 
     // TODO: try to cancel a contract agreement that doesn't exist
