@@ -17,7 +17,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description =
     "Represents a single Ui Policy Literal or a List of Ui Policy Expressions. The Literal" +
-    " will be evaluated if the expressionType is LITERAL.")
+        " will be evaluated if the expressionType is LITERAL.")
 public class UiPolicyExpression {
 
     @Schema(description = "Either LITERAL or one of the constraint types.")
@@ -29,7 +29,7 @@ public class UiPolicyExpression {
 
     @Schema(description =
         "A single literal. Will be evaluated if the expressionType is set to " +
-        "LITERAL.")
+            "LITERAL.")
     private UiPolicyConstraint constraint;
 
 }

@@ -14,19 +14,21 @@
 
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.FailedMappingException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.AtomicConstraintMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ConstraintExtractor;
-import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.FailedMappingException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.PolicyValidator;
-import de.sovity.edc.ext.wrapper.api.common.model.*;
+import de.sovity.edc.ext.wrapper.api.common.model.Expression;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyExpression;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.policy.model.Action;
 import org.eclipse.edc.policy.model.AndConstraint;
-import org.eclipse.edc.policy.model.AtomicConstraint;
 import org.eclipse.edc.policy.model.Constraint;
 import org.eclipse.edc.policy.model.OrConstraint;
 import org.eclipse.edc.policy.model.Permission;
@@ -36,7 +38,6 @@ import org.eclipse.edc.policy.model.XoneConstraint;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static de.sovity.edc.utils.JsonUtils.toJson;

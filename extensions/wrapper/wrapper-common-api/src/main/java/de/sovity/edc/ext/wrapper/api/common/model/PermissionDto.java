@@ -30,6 +30,6 @@ import lombok.RequiredArgsConstructor;
 public class PermissionDto {
 
     @Schema(description = "Possible constraints for the permission",
-            requiredMode = RequiredMode.REQUIRED)
+        requiredMode = RequiredMode.REQUIRED)
     private Expression expression;
 }

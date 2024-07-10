@@ -29,19 +29,19 @@ import java.util.List;
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description =
-        "Represents a single atomic constraint or a multiplicity constraint. The atomicConstraint" +
-                " will be evaluated if the constraintType is ATOMIC_CONSTRAINT.")
+    "Represents a single atomic constraint or a multiplicity constraint. The atomicConstraint" +
+        " will be evaluated if the constraintType is ATOMIC_CONSTRAINT.")
 public class Expression {
 
     @Schema(description = "Either ATOMIC_CONSTRAINT or one of the multiplicity constraint types.")
     private ExpressionType expressionType;
 
     @Schema(description =
-            "List of policy elements that are evaluated according the expressionType.")
+        "List of policy elements that are evaluated according the expressionType.")
     private List<Expression> expressions;
 
     @Schema(description =
-            "A single atomic constraint. Will be evaluated if the expressionType is set to " +
-                    "ATOMIC_CONSTRAINT.")
+        "A single atomic constraint. Will be evaluated if the expressionType is set to " +
+            "ATOMIC_CONSTRAINT.")
     private AtomicConstraintDto atomicConstraint;
 }

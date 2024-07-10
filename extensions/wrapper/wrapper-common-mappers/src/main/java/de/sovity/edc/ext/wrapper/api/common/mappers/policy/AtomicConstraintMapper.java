@@ -19,7 +19,6 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraint;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.policy.model.AtomicConstraint;
-import org.eclipse.edc.policy.model.Constraint;
 import org.eclipse.edc.policy.model.LiteralExpression;
 
 import java.util.List;
@@ -44,8 +43,8 @@ public class AtomicConstraintMapper {
         }
 
         return constraints.stream()
-                .map(this::buildAtomicConstraint)
-                .toList();
+            .map(this::buildAtomicConstraint)
+            .toList();
     }
 
     /**
@@ -54,30 +53,30 @@ public class AtomicConstraintMapper {
      * This operation is lossy.
      *
      * @param atomicConstraint atomic contraints
-     * @param errors           errors
+     * @param errors errors
      * @return ui policy constraint
      */
     public Optional<UiPolicyConstraint> buildUiConstraint(
-            @NonNull AtomicConstraint atomicConstraint,
-            MappingErrors errors
+        @NonNull AtomicConstraint atomicConstraint,
+        MappingErrors errors
     ) {
         var leftValue = literalMapper.getExpressionString(atomicConstraint.getLeftExpression(),
-                errors.forChildObject("leftExpression"));
+            errors.forChildObject("leftExpression"));
 
         var operator = getOperator(atomicConstraint, errors);
 
         var rightValue = literalMapper.getExpressionValue(atomicConstraint.getRightExpression(),
-                errors.forChildObject("rightExpression"));
+            errors.forChildObject("rightExpression"));
 
         if (leftValue.isEmpty() || rightValue.isEmpty() || operator.isEmpty()) {
             return Optional.empty();
         }
 
         UiPolicyConstraint result = UiPolicyConstraint.builder()
-                .left(leftValue.get())
-                .operator(operator.get())
-                .right(rightValue.get())
-                .build();
+            .left(leftValue.get())
+            .operator(operator.get())
+            .right(rightValue.get())
+            .build();
 
         return Optional.of(result);
     }
@@ -99,10 +98,10 @@ public class AtomicConstraintMapper {
         var right = literalMapper.getUiLiteralValue(constraint.getRight());
 
         return AtomicConstraint.Builder.newInstance()
-                .leftExpression(new LiteralExpression(left))
-                .operator(operator)
-                .rightExpression(new LiteralExpression(right))
-                .build();
+            .leftExpression(new LiteralExpression(left))
+            .operator(operator)
+            .rightExpression(new LiteralExpression(right))
+            .build();
     }
 
     public AtomicConstraint buildAtomicConstraint(AtomicConstraintDto atomicConstraint) {
@@ -111,9 +110,9 @@ public class AtomicConstraintMapper {
         var right = atomicConstraint.getRightExpression();
 
         return AtomicConstraint.Builder.newInstance()
-                .leftExpression(new LiteralExpression(left))
-                .operator(operator)
-                .rightExpression(new LiteralExpression(right))
-                .build();
+            .leftExpression(new LiteralExpression(left))
+            .operator(operator)
+            .rightExpression(new LiteralExpression(right))
+            .build();
     }
 }

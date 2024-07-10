@@ -11,7 +11,7 @@
  *       sovity GmbH - initial API and implementation
  *
  */
- 
+
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetJsonLdBuilder;

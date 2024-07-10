@@ -27,17 +27,17 @@ import lombok.RequiredArgsConstructor;
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description =
-        "Type-Safe OpenAPI generator friendly Constraint DTO that supports an opinionated"
-                + " subset of the original EDC Constraint Entity.")
+    "Type-Safe OpenAPI generator friendly Constraint DTO that supports an opinionated"
+        + " subset of the original EDC Constraint Entity.")
 public class AtomicConstraintDto {
 
     @Schema(description = "Left part of the constraint.",
-            requiredMode = Schema.RequiredMode.REQUIRED)
+        requiredMode = Schema.RequiredMode.REQUIRED)
     private String leftExpression;
     @Schema(description = "Operator to connect both parts of the constraint.",
-            requiredMode = Schema.RequiredMode.REQUIRED)
+        requiredMode = Schema.RequiredMode.REQUIRED)
     private OperatorDto operator;
     @Schema(description = "Right part of the constraint.",
-            requiredMode = Schema.RequiredMode.REQUIRED)
+        requiredMode = Schema.RequiredMode.REQUIRED)
     private String rightExpression;
 }

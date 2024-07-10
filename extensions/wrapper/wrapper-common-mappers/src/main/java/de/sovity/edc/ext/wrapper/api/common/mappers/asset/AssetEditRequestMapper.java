@@ -14,10 +14,10 @@
 
 package de.sovity.edc.ext.wrapper.api.common.mappers.asset;
 
+import de.sovity.edc.ext.wrapper.api.common.model.DataSourceType;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiDataSource;
-import de.sovity.edc.ext.wrapper.api.common.model.DataSourceType;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
