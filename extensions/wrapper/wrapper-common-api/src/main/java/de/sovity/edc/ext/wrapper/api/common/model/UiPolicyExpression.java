@@ -15,21 +15,44 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description =
-    "Represents a single Ui Policy Literal or a List of Ui Policy Expressions. The Literal" +
-        " will be evaluated if the expressionType is LITERAL.")
+@Schema(description = "ODRL constraint as supported by the sovity product landscape")
 public class UiPolicyExpression {
 
     @Schema(description = "Either LITERAL or one of the constraint types.")
     private UiPolicyExpressionType expressionType;
 
-    @Schema(description =
-        "List of policy elements that are evaluated according the expressionType.")
+    @Schema(description = "Only for types AND, OR, XOR. List of sub-expressions " +
+        "to be evaluated according to the expressionType.")
     private List<UiPolicyExpression> expressions;
 
-    @Schema(description =
-        "A single literal. Will be evaluated if the expressionType is set to " +
-            "LITERAL.")
+    @Schema(description = "Only for type CONSTRAINT. A single constraint.")
     private UiPolicyConstraint constraint;
 
+    public static UiPolicyExpression and(List<UiPolicyExpression> expressions) {
+        return UiPolicyExpression.builder()
+            .expressionType(UiPolicyExpressionType.AND)
+            .expressions(expressions)
+            .build();
+    }
+
+    public static UiPolicyExpression or(List<UiPolicyExpression> expressions) {
+        return UiPolicyExpression.builder()
+            .expressionType(UiPolicyExpressionType.OR)
+            .expressions(expressions)
+            .build();
+    }
+
+    public static UiPolicyExpression xor(List<UiPolicyExpression> expressions) {
+        return UiPolicyExpression.builder()
+            .expressionType(UiPolicyExpressionType.XOR)
+            .expressions(expressions)
+            .build();
+    }
+
+    public static UiPolicyExpression constraint(UiPolicyConstraint constraint) {
+        return UiPolicyExpression.builder()
+            .expressionType(UiPolicyExpressionType.CONSTRAINT)
+            .constraint(constraint)
+            .build();
+    }
 }

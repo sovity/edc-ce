@@ -29,7 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Type-Safe OpenAPI generator friendly Asset Create DTO that supports an opinionated subset of the original EDC Asset Entity.")
+@Schema(description = "Type-safe data offer metadata for creating an asset as supported by the sovity product landscape. Contains extension points.")
 public class UiAssetCreateRequest {
     @Schema(description = "Data Source", requiredMode = Schema.RequiredMode.REQUIRED)
     private UiDataSource dataSource;

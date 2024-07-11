@@ -13,7 +13,6 @@
 
 package de.sovity.edc.ext.wrapper.api.common.mappers.policy;
 
-import de.sovity.edc.ext.wrapper.api.common.model.AtomicConstraintDto;
 import de.sovity.edc.ext.wrapper.api.common.model.OperatorDto;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraint;
 import lombok.NonNull;
@@ -21,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.policy.model.AtomicConstraint;
 import org.eclipse.edc.policy.model.LiteralExpression;
 
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -30,22 +28,25 @@ public class AtomicConstraintMapper {
     private final OperatorMapper operatorMapper;
 
     /**
-     * Create ODRL {@link AtomicConstraint}s from {@link UiPolicyConstraint}s
+     * Create ODRL {@link AtomicConstraint} from {@link UiPolicyConstraint}
      * <p>
      * This operation is lossless.
      *
-     * @param constraints ui constraints
-     * @return ODRL constraints
+     * @param constraint ui constraint
+     * @return ODRL constraint
      */
-    public List<AtomicConstraint> buildAtomicConstraints(List<UiPolicyConstraint> constraints) {
-        if (constraints == null) {
-            return List.of();
-        }
+    public AtomicConstraint buildAtomicConstraint(UiPolicyConstraint constraint) {
+        var left = constraint.getLeft();
+        var operator = operatorMapper.getOperator(constraint.getOperator());
+        var right = literalMapper.getUiLiteralValue(constraint.getRight());
 
-        return constraints.stream()
-            .map(this::buildAtomicConstraint)
-            .toList();
+        return AtomicConstraint.Builder.newInstance()
+            .leftExpression(new LiteralExpression(left))
+            .operator(operator)
+            .rightExpression(new LiteralExpression(right))
+            .build();
     }
+
 
     /**
      * Create {@link UiPolicyConstraint} from ODRL {@link AtomicConstraint}
@@ -90,29 +91,5 @@ public class AtomicConstraintMapper {
         }
 
         return Optional.of(operatorMapper.getOperatorDto(operator));
-    }
-
-    public AtomicConstraint buildAtomicConstraint(UiPolicyConstraint constraint) {
-        var left = constraint.getLeft();
-        var operator = operatorMapper.getOperator(constraint.getOperator());
-        var right = literalMapper.getUiLiteralValue(constraint.getRight());
-
-        return AtomicConstraint.Builder.newInstance()
-            .leftExpression(new LiteralExpression(left))
-            .operator(operator)
-            .rightExpression(new LiteralExpression(right))
-            .build();
-    }
-
-    public AtomicConstraint buildAtomicConstraint(AtomicConstraintDto atomicConstraint) {
-        var left = atomicConstraint.getLeftExpression();
-        var operator = operatorMapper.getOperator(atomicConstraint.getOperator());
-        var right = atomicConstraint.getRightExpression();
-
-        return AtomicConstraint.Builder.newInstance()
-            .leftExpression(new LiteralExpression(left))
-            .operator(operator)
-            .rightExpression(new LiteralExpression(right))
-            .build();
     }
 }

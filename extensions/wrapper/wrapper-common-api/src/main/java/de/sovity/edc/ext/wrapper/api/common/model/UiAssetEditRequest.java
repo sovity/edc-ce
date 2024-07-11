@@ -29,7 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Data for editing an asset.")
+@Schema(description = "Type-safe data offer metadata for editing an asset as supported by the sovity product landscape. Contains extension points.")
 public class UiAssetEditRequest {
     @Schema(description = "Data Source", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private UiDataSource dataSourceOverrideOrNull;

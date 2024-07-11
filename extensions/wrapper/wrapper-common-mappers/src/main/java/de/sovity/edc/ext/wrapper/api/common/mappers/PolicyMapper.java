@@ -16,15 +16,14 @@ package de.sovity.edc.ext.wrapper.api.common.mappers;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.FailedMappingException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.AtomicConstraintMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ConstraintExtractor;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionExtractor;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.PolicyValidator;
-import de.sovity.edc.ext.wrapper.api.common.model.Expression;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyExpression;
 import de.sovity.edc.utils.JsonUtils;
-import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.policy.model.Action;
@@ -36,7 +35,7 @@ import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
 import org.eclipse.edc.policy.model.XoneConstraint;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -44,8 +43,8 @@ import static de.sovity.edc.utils.JsonUtils.toJson;
 
 @RequiredArgsConstructor
 public class PolicyMapper {
-    private final ConstraintExtractor constraintExtractor;
-    private final AtomicConstraintMapper atomicConstraintMapper;
+    private final ExpressionExtractor expressionExtractor;
+    private final ExpressionMapper expressionMapper;
     private final TypeTransformerRegistry typeTransformerRegistry;
 
     /**
@@ -59,11 +58,11 @@ public class PolicyMapper {
     public UiPolicy buildUiPolicy(Policy policy) {
         MappingErrors errors = MappingErrors.root();
 
-        var constraints = constraintExtractor.getPermissionConstraints(policy, errors);
+        var expressions = expressionExtractor.getPermissionExpressions(policy, errors);
 
         return UiPolicy.builder()
             .policyJsonLd(toJson(buildPolicyJsonLd(policy)))
-            .constraints(constraints)
+            .expressions(expressions)
             .errors(errors.getErrors())
             .build();
     }
@@ -77,7 +76,7 @@ public class PolicyMapper {
      * @return ODRL policy
      */
     public Policy buildPolicy(UiPolicyCreateRequest policyCreateDto) {
-        var constraints = convertExpressionsToConstraints(policyCreateDto.getExpressions());
+        var constraints = expressionMapper.buildConstraints(policyCreateDto.getExpressions());
 
         var action = Action.Builder.newInstance().type(PolicyValidator.ALLOWED_ACTION).build();
 
@@ -90,64 +89,6 @@ public class PolicyMapper {
             .type(PolicyType.SET)
             .permission(permission)
             .build();
-    }
-
-    public Policy buildPolicy(List<Expression> constraintElements) {
-        var constraints = buildConstraints(constraintElements);
-        var action = Action.Builder.newInstance().type(Prop.Odrl.USE).build();
-        var permission = Permission.Builder.newInstance()
-            .action(action)
-            .constraints(constraints)
-            .build();
-
-        return Policy.Builder.newInstance()
-            .type(PolicyType.SET)
-            .permission(permission)
-            .build();
-    }
-
-    @NotNull
-    private List<Constraint> buildConstraints(List<Expression> expressions) {
-        return expressions.stream()
-            .map(this::buildConstraint)
-            .toList();
-    }
-
-    private Constraint buildConstraint(Expression expression) {
-        var subExpressions = expression.getExpressions();
-        return switch (expression.getExpressionType()) {
-            case ATOMIC_CONSTRAINT -> atomicConstraintMapper.buildAtomicConstraint(expression.getAtomicConstraint());
-            case AND -> AndConstraint.Builder.newInstance()
-                .constraints(buildConstraints(subExpressions))
-                .build();
-            case OR -> OrConstraint.Builder.newInstance()
-                .constraints(buildConstraints(subExpressions))
-                .build();
-            case XOR -> XoneConstraint.Builder.newInstance()
-                .constraints(buildConstraints(subExpressions))
-                .build();
-        };
-    }
-
-    private List<Constraint> convertExpressionsToConstraints(List<UiPolicyExpression> expressions) {
-        return expressions.stream()
-            .map(this::convertExpressionToConstraint)
-            .toList();
-    }
-
-    private Constraint convertExpressionToConstraint(UiPolicyExpression expression) {
-        return switch (expression.getExpressionType()) {
-            case CONSTRAINT -> atomicConstraintMapper.buildAtomicConstraint(expression.getConstraint());
-            case AND -> AndConstraint.Builder.newInstance()
-                .constraints(convertExpressionsToConstraints(expression.getExpressions()))
-                .build();
-            case OR -> OrConstraint.Builder.newInstance()
-                .constraints(convertExpressionsToConstraints(expression.getExpressions()))
-                .build();
-            case XOR -> XoneConstraint.Builder.newInstance()
-                .constraints(convertExpressionsToConstraints(expression.getExpressions()))
-                .build();
-        };
     }
 
     /**

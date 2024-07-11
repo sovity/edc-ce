@@ -29,7 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Type-Safe Asset Metadata as needed by our UI")
+@Schema(description = "Type-safe data offer metadata as supported by the sovity product landscape. Contains extension points.")
 public class UiAsset {
     @Schema(description = "'Live' vs 'On Request'", requiredMode = Schema.RequiredMode.REQUIRED)
     private DataSourceAvailability dataSourceAvailability;

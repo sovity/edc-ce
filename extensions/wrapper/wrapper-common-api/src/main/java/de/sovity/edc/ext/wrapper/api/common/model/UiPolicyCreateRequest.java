@@ -28,8 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Type-Safe OpenAPI generator friendly Policy Create DTO that supports an opinionated"
-    + " subset of the original EDC Policy Entity.")
+@Schema(description = "Type-Safe OpenAPI generator friendly ODLR policy subset as endorsed by sovity.")
 public class UiPolicyCreateRequest {
     @Schema(description = "Conjunction of required expressions for the policy to evaluate to TRUE.")
     private List<UiPolicyExpression> expressions;

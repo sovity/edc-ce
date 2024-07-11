@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "ODRL AtomicConstraint as supported by our UI")
+@Schema(description = "ODRL AtomicConstraint as supported by the sovity product landscape")
 public class UiPolicyConstraint {
     @Schema(description = "Left side of the expression.", requiredMode = RequiredMode.REQUIRED)
     private String left;

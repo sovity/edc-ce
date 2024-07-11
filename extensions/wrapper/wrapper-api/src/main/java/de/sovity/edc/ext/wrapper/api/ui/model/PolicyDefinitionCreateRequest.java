@@ -12,9 +12,10 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.common.model;
+package de.sovity.edc.ext.wrapper.api.ui.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

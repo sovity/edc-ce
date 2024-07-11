@@ -11,6 +11,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Major Changes
 
+- The `UiPolicy` model has been adjusted to support complex expressions including `AND`, `OR` and `XOR`.
+  - Removed the "Policy Definition Create" endpoint from the incomplete Use Case API in favor of the UI Endpoint with the `UiPolicy` model, which is more robust.
 - The Broker has been removed in favor of the Authority Portal and the new Deployment Unit, the "Data Catalog Crawler":
   - Each "Data Catalog Crawler" connects to an existing Authority Portal Deployment's DB.
   - Each "Data Catalog Crawler" is responsible for crawling exactly one environment.

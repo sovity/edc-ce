@@ -12,31 +12,27 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.common.model;
+package de.sovity.edc.ext.wrapper.api.ui.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.time.OffsetDateTime;
-import java.util.Map;
-
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Asset Details")
-public class AssetDto {
-    @Schema(description = "ID of asset", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String assetId;
+@Schema(description = "Policy Definition as required for the Policy Definition Page")
+public class PolicyDefinitionDto {
+    @Schema(description = "Policy Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String policyDefinitionId;
 
-    @Schema(description = "Creation Date of asset", requiredMode = Schema.RequiredMode.REQUIRED)
-    private OffsetDateTime createdAt;
-
-    @Schema(description = "Asset properties", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Map<String, String> properties;
+    @Schema(description = "Policy Contents", requiredMode = Schema.RequiredMode.REQUIRED)
+    private UiPolicy policy;
 }
+

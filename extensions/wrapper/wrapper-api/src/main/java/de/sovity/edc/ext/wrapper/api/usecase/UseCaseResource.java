@@ -61,11 +61,4 @@ public interface UseCaseResource {
         @Valid @NotNull
         CatalogQuery catalogQuery
     );
-
-    @POST
-    @Path("policy-definition")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Create a new Policy Definition")
-    IdResponseDto createPolicyDefinitionUseCase(PolicyCreateRequest policyCreateRequest);
 }

@@ -29,14 +29,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Type-Safe OpenAPI generator friendly Policy DTO as needed by our UI")
+@Schema(description = "Type-Safe OpenAPI generator friendly ODLR policy subset as endorsed by sovity.")
 public class UiPolicy {
     @Schema(description = "EDC Policy JSON-LD. This is required because the EDC requires the " +
         "full policy when initiating contract negotiations.", requiredMode = RequiredMode.REQUIRED)
     private String policyJsonLd;
 
     @Schema(description = "Conjunction of required expressions for the policy to evaluate to TRUE.")
-    private List<UiPolicyConstraint> constraints;
+    private List<UiPolicyExpression> expressions;
 
     @Schema(description = "When trying to reduce the policy JSON-LD to our opinionated subset of functionalities, " +
         "many fields and functionalities are unsupported. Should any discrepancies occur during " +

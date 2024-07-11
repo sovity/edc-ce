@@ -39,18 +39,6 @@ import static org.mockito.Mockito.when;
 class AtomicConstraintMapperTest {
 
     @Test
-    void test_buildAtomicConstraint_null() {
-        // arrange
-        var atomicConstraintMapper = newAtomicConstraintMapper();
-
-        // act
-        var actual = atomicConstraintMapper.buildAtomicConstraints(null);
-
-        // assert
-        assertThat(actual).isEmpty();
-    }
-
-    @Test
     void test_buildAtomicConstraint() {
         // arrange
         var literalMapper = mock(LiteralMapper.class);
@@ -62,16 +50,14 @@ class AtomicConstraintMapperTest {
         when(literalMapper.getUiLiteralValue(right)).thenReturn("right");
 
         // act
-        var actual = atomicConstraintMapper.buildAtomicConstraints(List.of(constraint));
+        var actual = atomicConstraintMapper.buildAtomicConstraint(constraint);
 
         // assert
-        assertThat(actual).hasSize(1);
-        var atomicConstraint = actual.get(0);
-        assertThat(atomicConstraint.getLeftExpression()).isInstanceOfSatisfying(LiteralExpression.class, literalExpression ->
+        assertThat(actual.getLeftExpression()).isInstanceOfSatisfying(LiteralExpression.class, literalExpression ->
                 assertThat(literalExpression.getValue()).isEqualTo("left"));
-        assertThat(atomicConstraint.getRightExpression()).isInstanceOfSatisfying(LiteralExpression.class, literalExpression ->
+        assertThat(actual.getRightExpression()).isInstanceOfSatisfying(LiteralExpression.class, literalExpression ->
                 assertThat(literalExpression.getValue()).isEqualTo("right"));
-        assertThat(atomicConstraint.getOperator()).isEqualTo(Operator.EQ);
+        assertThat(actual.getOperator()).isEqualTo(Operator.EQ);
     }
 
     @Test
