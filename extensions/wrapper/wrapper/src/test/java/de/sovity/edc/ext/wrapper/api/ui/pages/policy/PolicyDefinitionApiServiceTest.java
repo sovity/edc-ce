@@ -23,19 +23,13 @@ import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
-import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.eclipse.edc.junit.extensions.EdcRuntimeExtension;
 import org.eclipse.edc.spi.entity.Entity;
 import org.eclipse.edc.spi.query.QuerySpec;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -43,7 +37,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.util.List;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest

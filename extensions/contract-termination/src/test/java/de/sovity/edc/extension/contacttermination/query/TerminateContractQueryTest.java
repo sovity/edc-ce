@@ -13,7 +13,6 @@
 
 package de.sovity.edc.extension.contacttermination.query;
 
-import de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy;
 import de.sovity.edc.extension.contacttermination.ContractTermination;
 import de.sovity.edc.utils.versions.GradleVersions;
 import lombok.SneakyThrows;

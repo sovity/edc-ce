@@ -15,12 +15,8 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.ext.wrapper.TestUtils;
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -50,7 +46,6 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation.Type.CONSUMER;
 import static org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation.Type.PROVIDER;

@@ -17,11 +17,8 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreement;
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
@@ -32,10 +29,8 @@ import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiat
 import org.eclipse.edc.connector.contract.spi.types.offer.ContractOffer;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.junit.annotations.ApiTest;
-import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -43,7 +38,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest

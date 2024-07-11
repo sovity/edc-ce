@@ -15,64 +15,45 @@ package de.sovity.edc.extension.contacttermination.query;
 
 import de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationDetails;
-import de.sovity.edc.utils.versions.GradleVersions;
-import lombok.SneakyThrows;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import lombok.val;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates;
-import org.flywaydb.core.Flyway;
 import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static org.assertj.core.api.Assertions.assertThat;
 
-// TODO find a way to switch these 2 tests from DB/sql style to EDC setup style for better test accuracy in the long term
+
 class ContractContractAgreementTerminationDetailsQueryTest {
 
-    private static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>(GradleVersions.POSTGRES_IMAGE_TAG);
-    private static DSLContext dsl;
+    @RegisterExtension
+    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "edc",
+        testDatabase -> {
+            val config = forTestDatabase("my-edc-participant-id", testDatabase);
+            return config.getProperties();
+        }
+    );
 
-    @BeforeAll
-    @SneakyThrows
-    public static void beforeAll() {
-
-        POSTGRES.start();
-
-        val migrator = Flyway.configure()
-            .dataSource(POSTGRES.getJdbcUrl(), POSTGRES.getUsername(), POSTGRES.getPassword())
-            .load();
-        migrator.migrate();
-
-        // TODO: cleanup and put this in a reusable class/wrapper around the testcontainers PG DB
-        val connection = POSTGRES.createConnection("?");
-        dsl = DSL.using(connection, SQLDialect.POSTGRES);
-        dsl.execute(
-            new String(
-                ContractContractAgreementTerminationDetailsQueryTest.class
-                    .getResource("/sql/AgreementTerminationDetailsQueryTest/init.sql").openStream().readAllBytes()
-            ));
-    }
-
-    @AfterAll
-    public static void afterAll() {
-        POSTGRES.stop();
-    }
-
-    @SneakyThrows
     @Test
-    void fetchAgreementDetails_whenAgreementIsPresent_shouldReturnTheAgreementDetails() {
+    void fetchAgreementDetails_whenAgreementIsPresent_shouldReturnTheAgreementDetails(DSLContext dsl) {
         // arrange
 
         dsl.transaction(trx ->
             {
+                dsl.execute(
+                    new String(
+                        ContractContractAgreementTerminationDetailsQueryTest.class
+                            .getResource("/sql/AgreementTerminationDetailsQueryTest/init.sql").openStream().readAllBytes()
+                    ));
+
                 val query = new ContractAgreementTerminationDetailsQuery(trx::dsl);
 
                 // act
@@ -100,11 +81,17 @@ class ContractContractAgreementTerminationDetailsQueryTest {
     }
 
     @Test
-    void fetchAgreementDetails_whenAgreementIsMissing_shouldReturnEmptyOptional() {
+    void fetchAgreementDetails_whenAgreementIsMissing_shouldReturnEmptyOptional(DSLContext dsl) {
         // arrange
 
         dsl.transaction(trx ->
             {
+                dsl.execute(
+                    new String(
+                        ContractContractAgreementTerminationDetailsQueryTest.class
+                            .getResource("/sql/AgreementTerminationDetailsQueryTest/init.sql").openStream().readAllBytes()
+                    ));
+
                 val query = new ContractAgreementTerminationDetailsQuery(trx::dsl);
 
                 // act
@@ -117,11 +104,17 @@ class ContractContractAgreementTerminationDetailsQueryTest {
     }
 
     @Test
-    void fetchAgreementDetails_whenTerminationAlreadyExists_shouldReturnOptionalWithTerminationData() {
+    void fetchAgreementDetails_whenTerminationAlreadyExists_shouldReturnOptionalWithTerminationData(DSLContext dsl) {
         // arrange
 
         dsl.transaction(trx ->
             {
+                dsl.execute(
+                    new String(
+                        ContractContractAgreementTerminationDetailsQueryTest.class
+                            .getResource("/sql/AgreementTerminationDetailsQueryTest/init.sql").openStream().readAllBytes()
+                    ));
+
                 val query = new ContractAgreementTerminationDetailsQuery(trx::dsl);
 
                 // act
