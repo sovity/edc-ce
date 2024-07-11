@@ -15,6 +15,7 @@ package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.ApiException;
+import de.sovity.edc.client.gen.model.ContractAgreementCard;
 import de.sovity.edc.client.gen.model.ContractAgreementPage;
 import de.sovity.edc.client.gen.model.ContractAgreementPageQuery;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
@@ -51,6 +52,7 @@ import org.eclipse.edc.connector.contract.spi.ContractId;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.iam.IdentityService;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -156,19 +158,7 @@ public class ContractTerminationTest {
     @Test
     @SneakyThrows
     void canGetAgreementPageForNonTerminatedContract() {
-        // arrange
-
-        val assetId = "asset-0";
-        val policyId = "policy-0";
-        createAsset(assetId);
-        createPolicyDefinition(policyId);
-        createContractDefinition(policyId, assetId);
-
-        val offers = consumerClient.uiApi().getCatalogPageDataOffers(providerConfig.getProtocolEndpoint().getUri().toString());
-        val firstOffer = offers.get(0);
-        val firstContractOffer = firstOffer.getContractOffers().get(0);
-        val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
-        awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
+        arrange();
 
         // act
         // don't terminate the contract
@@ -187,19 +177,7 @@ public class ContractTerminationTest {
     @Test
     @SneakyThrows
     void canTerminateFromConsumer() {
-        // arrange
-
-        val assetId = "asset-1";
-        val policyId = "policy-1";
-        createAsset(assetId);
-        createPolicyDefinition(policyId);
-        createContractDefinition(policyId, assetId);
-
-        val offers = consumerClient.uiApi().getCatalogPageDataOffers(providerConfig.getProtocolEndpoint().getUri().toString());
-        val firstOffer = offers.get(0);
-        val firstContractOffer = firstOffer.getContractOffers().get(0);
-        val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
-        val negotiation = awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
+        val negotiation = arrange();
 
         // act
         val detail = "Some detail";
@@ -222,20 +200,7 @@ public class ContractTerminationTest {
 
     @Test
     void limitTheReasonSizeAt100Chars() {
-        // arrange
-
-        val assetId = "asset-1";
-        val policyId = "policy-1";
-        createAsset(assetId);
-        createPolicyDefinition(policyId);
-        createContractDefinition(policyId, assetId);
-
-        val connectorEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
-        val offers = consumerClient.uiApi().getCatalogPageDataOffers(connectorEndpoint);
-        val firstOffer = offers.get(0);
-        val firstContractOffer = firstOffer.getContractOffers().get(0);
-        val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
-        val negotiation = awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
+        val negotiation = arrange();
 
         // act
         val detail = "Some detail";
@@ -269,20 +234,7 @@ public class ContractTerminationTest {
 
     @Test
     void limitTheDetailSizeAt1000Chars() {
-        // arrange
-
-        val assetId = "asset-1";
-        val policyId = "policy-1";
-        createAsset(assetId);
-        createPolicyDefinition(policyId);
-        createContractDefinition(policyId, assetId);
-
-        val connectorEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
-        val offers = consumerClient.uiApi().getCatalogPageDataOffers(connectorEndpoint);
-        val firstOffer = offers.get(0);
-        val firstContractOffer = firstOffer.getContractOffers().get(0);
-        val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
-        val negotiation = awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
+        val negotiation = arrange();
 
         // act
         val reason = "Some reason";
@@ -314,40 +266,10 @@ public class ContractTerminationTest {
         // termination completed == success
     }
 
-    private static void assertTermination(
-        ContractAgreementPage consumerSideAgreements,
-        String detail,
-        String reason,
-        ContractTerminatedBy terminatedBy) {
-
-        val now = OffsetDateTime.now();
-
-        assertThat(consumerSideAgreements.getContractAgreements()).hasSize(1);
-        assertThat(consumerSideAgreements.getContractAgreements().get(0).getTerminationStatus()).isEqualTo(TERMINATED);
-        val consumerInformation = consumerSideAgreements.getContractAgreements().get(0).getTerminationInformation();
-        assertThat(consumerInformation).isNotNull();
-        assertThat(consumerInformation.getTerminatedAt()).isBetween(now.minusMinutes(1), now.plusMinutes(1));
-        assertThat(consumerInformation.getDetail()).isEqualTo(detail);
-        assertThat(consumerInformation.getReason()).isEqualTo(reason);
-        assertThat(consumerInformation.getTerminatedBy()).isEqualTo(terminatedBy);
-    }
-
     @Test
     @SneakyThrows
     void canTerminateFromProvider() {
-        // arrange
-
-        val assetId = "asset-1";
-        val policyId = "policy-1";
-        createAsset(assetId);
-        createPolicyDefinition(policyId);
-        createContractDefinition(policyId, assetId);
-
-        val offers = consumerClient.uiApi().getCatalogPageDataOffers(providerConfig.getProtocolEndpoint().getUri().toString());
-        val firstOffer = offers.get(0);
-        val firstContractOffer = firstOffer.getContractOffers().get(0);
-        val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
-        val negotiation = awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
+        val negotiation = arrange();
 
         // act
         val detail = "Some detail";
@@ -387,19 +309,7 @@ public class ContractTerminationTest {
 
     @Test
     void canTerminateOnlyOnce() {
-        // arrange
-
-        val assetId = "asset-1";
-        val policyId = "policy-1";
-        createAsset(assetId);
-        createPolicyDefinition(policyId);
-        createContractDefinition(policyId, assetId);
-
-        val offers = consumerClient.uiApi().getCatalogPageDataOffers(providerConfig.getProtocolEndpoint().getUri().toString());
-        val firstOffer = offers.get(0);
-        val firstContractOffer = firstOffer.getContractOffers().get(0);
-        val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
-        val negotiation = awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
+        val negotiation = arrange();
 
         val detail = "Some detail";
         val reason = "Some reason";
@@ -421,13 +331,8 @@ public class ContractTerminationTest {
 
     @Test
     void cantTransferDataAfterTerminated() throws InterruptedException {
-        // arrange
+        arrange();
 
-        val assetId = "asset-1";
-        val policyId = "policy-1";
-        createAsset(assetId);
-        createPolicyDefinition(policyId);
-        createContractDefinition(policyId, assetId);
         val resourceAccessed = new AtomicBoolean(false);
         mockServer.when(HttpRequest.request(sourcePath).withMethod("GET")).respond(it -> {
             resourceAccessed.set(true);
@@ -473,14 +378,35 @@ public class ContractTerminationTest {
         awaitTerminationCount(providerClient, 1);
 
         // act
-        val transferAfterAgreementTerminated = consumerClient.uiApi().initiateTransfer(transferRequest);
-        Thread.sleep(50000);
+        consumerClient.uiApi().initiateTransfer(transferRequest);
+        Thread.sleep(10_000);
         assertThat(resourceAccessed.get()).isFalse();
-        Thread.sleep(50000);
+        Thread.sleep(10_000);
         assertThat(resourceAccessed.get()).isFalse();
     }
 
-    // TODO: group these test methods
+    private static void assertTermination(
+        ContractAgreementPage consumerSideAgreements,
+        String detail,
+        String reason,
+        ContractTerminatedBy terminatedBy) {
+
+        val contractAgreements = consumerSideAgreements.getContractAgreements();
+        assertThat(contractAgreements).hasSize(1);
+        assertThat(contractAgreements.get(0).getTerminationStatus()).isEqualTo(TERMINATED);
+
+        val consumerInformation = contractAgreements.get(0).getTerminationInformation();
+
+        assertThat(consumerInformation).isNotNull();
+
+        val now = OffsetDateTime.now();
+        assertThat(consumerInformation.getTerminatedAt()).isBetween(now.minusMinutes(1), now.plusMinutes(1));
+
+        assertThat(consumerInformation.getDetail()).isEqualTo(detail);
+        assertThat(consumerInformation.getReason()).isEqualTo(reason);
+        assertThat(consumerInformation.getTerminatedBy()).isEqualTo(terminatedBy);
+    }
+
     private TransferHistoryEntry awaitTransfer(EdcClient client, String transferProcessId) {
         val historyEntry = Awaitility.await().atMost(10, SECONDS).until(() ->
                 client.uiApi()
@@ -495,9 +421,29 @@ public class ContractTerminationTest {
         return historyEntry.get();
     }
 
-    // TODO: test that transfer is impossible once a contract is cancelled
-
     // TODO: group those helpers
+
+    private @NotNull UiContractNegotiation arrange() {
+        createAssetAndContract();
+        return negotiateFirstOffer();
+    }
+
+    private @NotNull UiContractNegotiation negotiateFirstOffer() {
+        val connectorEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
+        val offers = consumerClient.uiApi().getCatalogPageDataOffers(connectorEndpoint);
+        val firstOffer = offers.get(0);
+        val firstContractOffer = firstOffer.getContractOffers().get(0);
+        val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
+        return awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
+    }
+
+    private void createAssetAndContract() {
+        val assetId = "asset-1";
+        val policyId = "policy-1";
+        createAsset(assetId);
+        createPolicyDefinition(policyId);
+        createContractDefinition(policyId, assetId);
+    }
 
     private void createAsset(String assetId) {
         var dataSource = UiDataSource.builder()
