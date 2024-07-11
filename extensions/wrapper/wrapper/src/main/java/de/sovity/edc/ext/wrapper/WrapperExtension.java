@@ -50,7 +50,6 @@ public class WrapperExtension implements ServiceExtension {
 
     public static final String EXTENSION_NAME = "WrapperExtension";
 
-    // TODO remove duplicates of edc.* and pool in constant
     @Setting(required = true)
     public static final String JDBC_URL = "edc.datasource.default.url";
 

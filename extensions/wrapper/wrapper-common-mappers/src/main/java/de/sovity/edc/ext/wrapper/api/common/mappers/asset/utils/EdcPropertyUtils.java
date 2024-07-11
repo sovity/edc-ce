@@ -19,8 +19,6 @@ import org.eclipse.edc.spi.types.domain.DataAddress;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: utils class: make static?
-@RequiredArgsConstructor
 public class EdcPropertyUtils {
 
     /**

@@ -47,7 +47,6 @@ class ContractDefinitionPageApiServiceTest {
     @BeforeEach
     void setUp() {
         // set up provider EDC + Client
-        // TODO: try to fix again after RT's PR. The EDC uses the DSP port 34003 instead of the dynamically allocated one...
         config = forTestDatabase(PARTICIPANT_ID, DATABASE);
         EDC_CONTEXT.setConfiguration(config.getProperties());
         connector = new ConnectorRemote(fromConnectorConfig(config));

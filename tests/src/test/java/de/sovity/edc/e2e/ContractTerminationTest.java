@@ -433,6 +433,7 @@ public class ContractTerminationTest {
         val contractTerminationRequest = ContractTerminationRequest.builder().detail(detail).reason(reason).build();
         val contractAgreementId = negotiation.getContractAgreementId();
         // TODO: Preventing data transfer only makes sense when the provider terminates the contract?
+        //  No need to test in the opposite direction?
         providerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest);
 
         awaitTerminationCount(consumerClient, 1);

@@ -110,7 +110,6 @@ class PolicyDefinitionApiServiceTest {
         // assert
         assertThat(result.getPolicies())
                 .extracting(PolicyDefinitionDto::getPolicyDefinitionId)
-            // TODO: this is weird: the always true policy is supposed to be the oldest, but it's created with the init time when it got inserted for the first time, which is *after* the timestamp of the other definitions
                 .containsExactly(
                         "always-true",
                         "my-policy-def-2",
