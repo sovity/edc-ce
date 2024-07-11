@@ -16,6 +16,8 @@ package de.sovity.edc.extension.contacttermination;
 import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
 import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
 import de.sovity.edc.extension.messenger.SovityMessenger;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.WebApplicationException;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -44,14 +46,13 @@ public class ContractAgreementTerminationService {
         val maybeDetails = contractAgreementTerminationDetailsQuery.fetchAgreementDetails(termination.contractAgreementId());
 
         if (maybeDetails.isEmpty()) {
-            val message = "Could not find the contract agreement with ID %s.".formatted(termination.contractAgreementId());
-            return Result.failure(message);
+            throw new BadRequestException("Could not find the contract agreement with ID %s.".formatted(termination.contractAgreementId()));
         }
 
         val details = maybeDetails.get();
 
         if (details.isTerminated()) {
-            return Result.failure("The contract is already terminated");
+            throw new WebApplicationException("The contract is already terminated", 304);
         }
 
         val terminatedAt = terminateContractQuery.terminateConsumerAgreement(termination, SELF);
@@ -62,8 +63,8 @@ public class ContractAgreementTerminationService {
     }
 
     public Result<OffsetDateTime> terminateCounterpartyAgreement(
-            @Nullable String identity,
-            ContractTermination termination) {
+        @Nullable String identity,
+        ContractTermination termination) {
 
         val maybeDetails = contractAgreementTerminationDetailsQuery.fetchAgreementDetails(termination.contractAgreementId());
 
@@ -75,9 +76,9 @@ public class ContractAgreementTerminationService {
         val details = maybeDetails.get();
 
         boolean isConsumerAndSenderIsProvider =
-                details.type().equals(ContractNegotiation.Type.CONSUMER) && details.providerAgentId().equals(identity);
+            details.type().equals(ContractNegotiation.Type.CONSUMER) && details.providerAgentId().equals(identity);
         boolean isProviderAndSenderIsConsumer =
-                details.type().equals(ContractNegotiation.Type.PROVIDER) && details.consumerAgentId().equals(identity);
+            details.type().equals(ContractNegotiation.Type.PROVIDER) && details.consumerAgentId().equals(identity);
         if (!(isConsumerAndSenderIsProvider || isProviderAndSenderIsConsumer)) {
             monitor.warning("The EDC %s attempted an illegal operation".formatted(details.consumerAgentId()));
             return Result.failure("The requester's identity %s is neither the consumer nor the provider".formatted(identity));
@@ -88,7 +89,7 @@ public class ContractAgreementTerminationService {
         }
 
         // TODO: there is a weakness here if the EDC sends this message to itself, which should no happen right now.
-        //  Should select self/counteparty based on the details
+        //  Should select self/counterparty based on the details
         val terminatedAt = terminateContractQuery.terminateConsumerAgreement(termination, COUNTERPARTY);
 
         return Result.success(terminatedAt);
@@ -96,10 +97,10 @@ public class ContractAgreementTerminationService {
 
     public void notifyTerminationToProvider(String counterPartyAddress, ContractTermination termination) {
         sovityMessenger.send(
-                counterPartyAddress,
-                new ContractTerminationOutgoingMessage(
-                        termination.contractAgreementId(),
-                        termination.detail(),
-                        termination.reason()));
+            counterPartyAddress,
+            new ContractTerminationOutgoingMessage(
+                termination.contractAgreementId(),
+                termination.detail(),
+                termination.reason()));
     }
 }

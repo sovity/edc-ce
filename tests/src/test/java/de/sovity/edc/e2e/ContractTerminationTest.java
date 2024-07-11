@@ -42,7 +42,9 @@ import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.apache.http.HttpStatus;
 import org.awaitility.Awaitility;
+import org.eclipse.edc.connector.contract.spi.ContractId;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.iam.IdentityService;
 import org.junit.jupiter.api.AfterEach;
@@ -60,8 +62,6 @@ import static de.sovity.edc.client.gen.model.ContractTerminatedBy.COUNTERPARTY;
 import static de.sovity.edc.client.gen.model.ContractTerminatedBy.SELF;
 import static de.sovity.edc.client.gen.model.ContractTerminationStatus.ONGOING;
 import static de.sovity.edc.client.gen.model.ContractTerminationStatus.TERMINATED;
-import static de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest.MAX_DETAIL_SIZE;
-import static de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest.MAX_REASON_SIZE;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static java.time.Duration.ofSeconds;
@@ -118,7 +118,7 @@ public class ContractTerminationTest {
     @BeforeEach
     void setup() {
         // set up provider EDC + Client
-        providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 34000, PROVIDER_DATABASE);
+        providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, PROVIDER_DATABASE);
         PROVIDER_EDC_CONTEXT.setConfiguration(providerConfig.getProperties());
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
@@ -140,7 +140,7 @@ public class ContractTerminationTest {
 
     @Test
     @SneakyThrows
-    void canGetContractAgreementPageForNonTerminatedContract() {
+    void canGetAgreementPageForNonTerminatedContract() {
         // arrange
 
         val assetId = "asset-0";
@@ -167,9 +167,11 @@ public class ContractTerminationTest {
         assertThat(information).isNull();
     }
 
+    // TODO canGetAgreementPage for Terminated Contracts
+
     @Test
     @SneakyThrows
-    void canTerminateContractFromConsumer() {
+    void canTerminateFromConsumer() {
         // arrange
 
         val assetId = "asset-1";
@@ -222,7 +224,7 @@ public class ContractTerminationTest {
 
         // act
         val detail = "Some detail";
-        val max = MAX_REASON_SIZE;
+        val max = 100;
         val maxSize = IntStream.range(0, max).mapToObj(it -> "M").reduce("", (acc, e) -> acc + e);
         val tooLong = IntStream.range(0, max + 1).mapToObj(it -> "O").reduce("", (acc, e) -> acc + e);
 
@@ -269,7 +271,7 @@ public class ContractTerminationTest {
 
         // act
         val reason = "Some reason";
-        val max = MAX_DETAIL_SIZE;
+        val max = 1000;
         val maxSize = IntStream.range(0, max).mapToObj(it -> "M").reduce("", (acc, e) -> acc + e);
         val tooLong = IntStream.range(0, max + 1).mapToObj(it -> "O").reduce("", (acc, e) -> acc + e);
 
@@ -297,10 +299,11 @@ public class ContractTerminationTest {
         // termination completed == success
     }
 
-    private static void assertTermination(ContractAgreementPage consumerSideAgreements, String detail, String reason,
-                                          ContractTerminatedBy terminatedBy) {
-        // TODO: it is not mentioned which side terminated the contract. Should it be added?
-        // TODO: why do we have 2 different enum to represent the same kind of data. This is confusing...
+    private static void assertTermination(
+        ContractAgreementPage consumerSideAgreements,
+        String detail,
+        String reason,
+        ContractTerminatedBy terminatedBy) {
 
         val now = OffsetDateTime.now();
 
@@ -316,7 +319,7 @@ public class ContractTerminationTest {
 
     @Test
     @SneakyThrows
-    void canTerminateContractFromProvider() {
+    void canTerminateFromProvider() {
         // arrange
 
         val assetId = "asset-1";
@@ -355,10 +358,55 @@ public class ContractTerminationTest {
         assertTermination(providerSideAgreements, detail, reason, SELF);
     }
 
-    // TODO: try to cancel a contract agreement that doesn't exist
-    // TODO: test who cancelled the contract
-    // TODO: assert max length for detail to at least 500
-    // TODO: test that the contract can't be cancelled twice
+    @Test
+    void doesntCrashWhenAgreementDoesntExist() {
+        // act
+        val exception = assertThrows(
+            ApiException.class,
+            () -> consumerClient.uiApi().terminateContractAgreement(
+                ContractId.create("definition-1", "asset-1").toString(),
+                ContractTerminationRequest.builder().detail("Some detail").reason("Some reason").build()));
+
+        assertThat(exception.getCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
+    }
+
+    @Test
+    void canTerminateOnlyOnce() {
+        // arrange
+
+        val assetId = "asset-1";
+        val policyId = "policy-1";
+        createAsset(assetId);
+        createPolicyDefinition(policyId);
+        createContractDefinition(policyId, assetId);
+
+        val offers = consumerClient.uiApi().getCatalogPageDataOffers(providerConfig.getProtocolEndpoint().getUri().toString());
+        val firstOffer = offers.get(0);
+        val firstContractOffer = firstOffer.getContractOffers().get(0);
+        val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
+        val negotiation = awaitNegotiationDone(initialNegotiation.getContractNegotiationId());
+
+        val detail = "Some detail";
+        val reason = "Some reason";
+        val contractTerminationRequest = ContractTerminationRequest.builder().detail(detail).reason(reason).build();
+        val contractAgreementId = negotiation.getContractAgreementId();
+        consumerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest);
+
+        awaitTerminationCount(consumerClient, 1);
+        awaitTerminationCount(providerClient, 1);
+
+        // act
+
+        val exception = assertThrows(
+            ApiException.class,
+            () -> consumerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest));
+
+        assertThat(exception.getCode()).isEqualTo(HttpStatus.SC_NOT_MODIFIED);
+    }
+
+    
+
+    // TODO: test that transfer is impossible once a contract is cancelled
 
     // TODO: group those helpers
 

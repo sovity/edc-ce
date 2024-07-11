@@ -158,6 +158,7 @@ public class UiResourceImpl implements UiResource {
         return contractAgreementTransferApiService.initiateCustomTransfer(request);
     }
 
+    // TODO: return an envelope
     @Override
     public IdResponseDto terminateContractAgreement(
         String contractAgreementId,
