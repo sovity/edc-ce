@@ -23,7 +23,9 @@ import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
 import de.sovity.edc.client.gen.model.ContractTerminatedBy;
 import de.sovity.edc.client.gen.model.ContractTerminationRequest;
 import de.sovity.edc.client.gen.model.DataSourceType;
+import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.client.gen.model.TransferHistoryEntry;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiContractOffer;
@@ -40,11 +42,13 @@ import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
+import jakarta.ws.rs.HttpMethod;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.apache.http.HttpStatus;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.connector.contract.spi.ContractId;
+import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.iam.IdentityService;
 import org.junit.jupiter.api.AfterEach;
@@ -52,9 +56,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockserver.integration.ClientAndServer;
+import org.mockserver.model.HttpRequest;
+import org.mockserver.model.HttpResponse;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
@@ -65,8 +73,10 @@ import static de.sovity.edc.client.gen.model.ContractTerminationStatus.TERMINATE
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static java.time.Duration.ofSeconds;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
+import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockserver.stop.Stop.stopQuietly;
@@ -117,6 +127,11 @@ public class ContractTerminationTest {
 
     @BeforeEach
     void setup() {
+        System.out.println("======================================");
+        System.out.println(PROVIDER_DATABASE.getJdbcCredentials().jdbcUrl());
+        System.out.println(PROVIDER_DATABASE.getJdbcCredentials().jdbcUser());
+        System.out.println(PROVIDER_DATABASE.getJdbcCredentials().jdbcPassword());
+        System.out.println("======================================");
         // set up provider EDC + Client
         providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, PROVIDER_DATABASE);
         PROVIDER_EDC_CONTEXT.setConfiguration(providerConfig.getProperties());
@@ -153,7 +168,7 @@ public class ContractTerminationTest {
         val firstOffer = offers.get(0);
         val firstContractOffer = firstOffer.getContractOffers().get(0);
         val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
-        awaitNegotiationDone(initialNegotiation.getContractNegotiationId());
+        awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
 
         // act
         // don't terminate the contract
@@ -184,7 +199,7 @@ public class ContractTerminationTest {
         val firstOffer = offers.get(0);
         val firstContractOffer = firstOffer.getContractOffers().get(0);
         val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
-        val negotiation = awaitNegotiationDone(initialNegotiation.getContractNegotiationId());
+        val negotiation = awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
 
         // act
         val detail = "Some detail";
@@ -220,7 +235,7 @@ public class ContractTerminationTest {
         val firstOffer = offers.get(0);
         val firstContractOffer = firstOffer.getContractOffers().get(0);
         val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
-        val negotiation = awaitNegotiationDone(initialNegotiation.getContractNegotiationId());
+        val negotiation = awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
 
         // act
         val detail = "Some detail";
@@ -267,7 +282,7 @@ public class ContractTerminationTest {
         val firstOffer = offers.get(0);
         val firstContractOffer = firstOffer.getContractOffers().get(0);
         val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
-        val negotiation = awaitNegotiationDone(initialNegotiation.getContractNegotiationId());
+        val negotiation = awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
 
         // act
         val reason = "Some reason";
@@ -332,7 +347,7 @@ public class ContractTerminationTest {
         val firstOffer = offers.get(0);
         val firstContractOffer = firstOffer.getContractOffers().get(0);
         val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
-        val negotiation = awaitNegotiationDone(initialNegotiation.getContractNegotiationId());
+        val negotiation = awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
 
         // act
         val detail = "Some detail";
@@ -384,7 +399,7 @@ public class ContractTerminationTest {
         val firstOffer = offers.get(0);
         val firstContractOffer = firstOffer.getContractOffers().get(0);
         val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
-        val negotiation = awaitNegotiationDone(initialNegotiation.getContractNegotiationId());
+        val negotiation = awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
 
         val detail = "Some detail";
         val reason = "Some reason";
@@ -404,7 +419,81 @@ public class ContractTerminationTest {
         assertThat(exception.getCode()).isEqualTo(HttpStatus.SC_NOT_MODIFIED);
     }
 
-    
+    @Test
+    void cantTransferDataAfterTerminated() throws InterruptedException {
+        // arrange
+
+        val assetId = "asset-1";
+        val policyId = "policy-1";
+        createAsset(assetId);
+        createPolicyDefinition(policyId);
+        createContractDefinition(policyId, assetId);
+        val resourceAccessed = new AtomicBoolean(false);
+        mockServer.when(HttpRequest.request(sourcePath).withMethod("GET")).respond(it -> {
+            resourceAccessed.set(true);
+            return HttpResponse.response().withStatusCode(200);
+        });
+        mockServer.when(HttpRequest.request(destinationPath).withMethod("POST")).respond(it -> HttpResponse.response().withStatusCode(200));
+
+        mockServer.when(HttpRequest.request()).respond(it -> HttpResponse.response());
+
+        val offers = consumerClient.uiApi().getCatalogPageDataOffers(providerConfig.getProtocolEndpoint().getUri().toString());
+        val firstOffer = offers.get(0);
+        val firstContractOffer = firstOffer.getContractOffers().get(0);
+        val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
+        val negotiation = awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
+
+        val transferRequest = InitiateTransferRequest.builder()
+            .contractAgreementId(negotiation.getContractAgreementId())
+            .dataSinkProperties(
+                Map.of(
+                    EDC_NAMESPACE + "baseUrl", destinationUrl,
+                    EDC_NAMESPACE + "method", HttpMethod.POST,
+                    EDC_NAMESPACE + "type", "HttpData"
+                )
+            )
+            .build();
+
+        val initTransfer = consumerClient.uiApi().initiateTransfer(transferRequest);
+        val historyEntry = awaitTransfer(consumerClient, initTransfer.getId());
+
+        assertThat(historyEntry.getState().getCode()).isEqualTo(TransferProcessStates.COMPLETED.code());
+        assertThat(resourceAccessed.get()).isTrue();
+
+        resourceAccessed.set(false);
+
+        val detail = "Some detail";
+        val reason = "Some reason";
+        val contractTerminationRequest = ContractTerminationRequest.builder().detail(detail).reason(reason).build();
+        val contractAgreementId = negotiation.getContractAgreementId();
+        // TODO: Preventing data transfer only makes sense when the provider terminates the contract?
+        providerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest);
+
+        awaitTerminationCount(consumerClient, 1);
+        awaitTerminationCount(providerClient, 1);
+
+        // act
+        val transferAfterAgreementTerminated = consumerClient.uiApi().initiateTransfer(transferRequest);
+        Thread.sleep(50000);
+        assertThat(resourceAccessed.get()).isFalse();
+        Thread.sleep(50000);
+        assertThat(resourceAccessed.get()).isFalse();
+    }
+
+    // TODO: group these test methods
+    private TransferHistoryEntry awaitTransfer(EdcClient client, String transferProcessId) {
+        val historyEntry = Awaitility.await().atMost(10, SECONDS).until(() ->
+                client.uiApi()
+                    .getTransferHistoryPage()
+                    .getTransferEntries()
+                    .stream()
+                    .filter(it -> it.getTransferProcessId().equals(transferProcessId))
+                    .findFirst(),
+            first -> first.map(it -> it.getState().getCode().equals(TransferProcessStates.COMPLETED.code()))
+                .orElse(false));
+
+        return historyEntry.get();
+    }
 
     // TODO: test that transfer is impossible once a contract is cancelled
 
@@ -414,7 +503,7 @@ public class ContractTerminationTest {
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
             .httpData(UiDataSourceHttpData.builder()
-                .baseUrl("http://example.com")
+                .baseUrl(sourceUrl)
                 .build())
             .build();
 
@@ -469,9 +558,9 @@ public class ContractTerminationTest {
         return consumerClient.uiApi().initiateContractNegotiation(negotiationRequest);
     }
 
-    private UiContractNegotiation awaitNegotiationDone(String negotiationId) {
+    private UiContractNegotiation awaitNegotiationDone(EdcClient client, String negotiationId) {
         var negotiation = Awaitility.await().atMost(consumerConnector.timeout).until(
-            () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
+            () -> client.uiApi().getContractNegotiation(negotiationId),
             it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
         );
 

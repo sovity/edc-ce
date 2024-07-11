@@ -13,6 +13,7 @@
 
 package de.sovity.edc.extension.contacttermination;
 
+import de.sovity.edc.ext.db.jooq.Tables;
 import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
 import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
 import de.sovity.edc.extension.db.directaccess.DirectDatabaseAccess;
@@ -70,15 +71,31 @@ public class ContractTerminationExtension implements ServiceExtension {
         setupMessenger();
 
         observable.registerListener(new TransferProcessListener() {
-            @Override
-            public void preStarted(TransferProcess process) {
-                // TODO: maybe cancel it here?
-                // val contract = process.transitionTerminated();
-                // find agreement
-                // check ifg cancelled
-                // deny
 
-                TransferProcessListener.super.preStarted(process);
+            @Override
+            public void preRequesting(TransferProcess process) {
+                val dsl = directDatabaseAccess.getDslContext();
+
+                val t = Tables.SOVITY_CONTRACT_TERMINATION;
+
+                val count = dsl
+                    .selectCount()
+                    .from(t)
+                    .where(t.CONTRACT_AGREEMENT_ID.eq(process.getContractId()))
+                    .fetchSingle()
+                    .value1();
+
+                if (count >= 1) {
+                    // TODO: ugly solution. Needs support on core EDC side
+                    // TODO: how does this show up on the UI
+                    // TODO: if not good, also set the state to terminated
+                    throw new IllegalStateException();
+                }
+            }
+
+            @Override
+            public void initiated(TransferProcess process) {
+
             }
         });
     }
@@ -89,16 +106,16 @@ public class ContractTerminationExtension implements ServiceExtension {
         val terminateContractQuery = new TerminateContractQuery(directDatabaseAccess::newDslContext);
 
         val terminator = new ContractAgreementTerminationService(
-                sovityMessenger,
-                contractAgreementTerminationDetailsQuery,
-                terminateContractQuery,
-                monitor);
+            sovityMessenger,
+            contractAgreementTerminationDetailsQuery,
+            terminateContractQuery,
+            monitor);
 
         messengerRegistry.register(
-                ContractTerminationOutgoingMessage.class,
-                (claims, termination) -> terminator.terminateCounterpartyAgreement(
-                        participantAgentService.createFor(claims).getIdentity(),
-                        toModel(termination)));
+            ContractTerminationOutgoingMessage.class,
+            (claims, termination) -> terminator.terminateCounterpartyAgreement(
+                participantAgentService.createFor(claims).getIdentity(),
+                toModel(termination)));
     }
 
 }

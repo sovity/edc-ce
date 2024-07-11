@@ -80,7 +80,6 @@ public class SovityMessageController {
             ).build();
         }
 
-        // TODO: inject EDC identity
         val claims = validation.getContent();
 
         val handler = getHandler(request);
