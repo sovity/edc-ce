@@ -78,7 +78,6 @@ public class DatabaseDirectAccessExtension implements ServiceExtension {
             hikariConfig.setMinimumIdle(1);
             // TODO: config entry
             hikariConfig.setMaximumPoolSize(5);
-            // TODO: find with infra what a good value could be?
             hikariConfig.setIdleTimeout(30000);
             hikariConfig.setPoolName("direct-database-access");
             hikariConfig.setMaxLifetime(50000);

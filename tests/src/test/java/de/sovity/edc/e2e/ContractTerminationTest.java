@@ -22,7 +22,6 @@ import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
 import de.sovity.edc.client.gen.model.ContractTerminatedBy;
 import de.sovity.edc.client.gen.model.ContractTerminationRequest;
-import de.sovity.edc.client.gen.model.ContractTerminationStatus;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
@@ -55,7 +54,6 @@ import org.eclipse.edc.spi.iam.IdentityService;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockserver.integration.ClientAndServer;
@@ -159,7 +157,43 @@ public class ContractTerminationTest {
     @Test
     @SneakyThrows
     void canGetAgreementPageForNonTerminatedContract() {
-        arrange();
+
+        String asset1 = "a-1";
+        String asset2 = "a-2";
+        String asset3 = "a-3";
+
+        val alwaysTrue = createPolicyDefinition("p-0");
+
+        createAssetAndContractDef(asset1, alwaysTrue);
+        createAssetAndContractDef(asset2, alwaysTrue);
+        createAssetAndContractDef(asset3, alwaysTrue);
+
+        val neg0 = initiateNegotiationForContract(asset1);
+        val neg1 = initiateNegotiationForContract(asset2);
+        val neg2 = initiateNegotiationForContract(asset3);
+
+        val agreement0 = awaitNegotiationDone(consumerClient, neg0.getContractNegotiationId());
+        val agreement1 = awaitNegotiationDone(consumerClient, neg1.getContractNegotiationId());
+        val agreement2 = awaitNegotiationDone(consumerClient, neg2.getContractNegotiationId());
+
+        consumerClient.uiApi().terminateContractAgreement(
+            agreement0.getContractAgreementId(),
+            ContractTerminationRequest.builder()
+                .detail("detail")
+                .reason("reason")
+                .build()
+        );
+
+        consumerClient.uiApi().terminateContractAgreement(
+            agreement1.getContractAgreementId(),
+            ContractTerminationRequest.builder()
+                .detail("detail")
+                .reason("reason")
+                .build()
+        );
+
+        awaitTerminationCount(consumerClient, 2);
+        awaitTerminationCount(providerClient, 2);
 
         // act
         // don't terminate the contract
@@ -167,13 +201,29 @@ public class ContractTerminationTest {
 
         // assert
         val contractAgreements = agreements.getContractAgreements();
-        assertThat(contractAgreements).hasSize(1);
-        assertThat(contractAgreements.get(0).getTerminationStatus()).isEqualTo(ONGOING);
-        val information = contractAgreements.get(0).getTerminationInformation();
-        assertThat(information).isNull();
+        assertThat(contractAgreements).hasSize(3);
+
+        // TODO: pull this into some kind of Scenario class with all the facilities to make these calls short
+
+        val terminatedAgreement0 = contractAgreements.stream()
+            .filter(it -> it.getContractAgreementId().equals(agreement0.getContractAgreementId()))
+            .findFirst()
+            .get();
+        assertThat(terminatedAgreement0.getTerminationStatus()).isEqualTo(TERMINATED);
+
+        val terminatedAgreement1 = contractAgreements.stream()
+            .filter(it -> it.getContractAgreementId().equals(agreement1.getContractAgreementId()))
+            .findFirst()
+            .get();
+        assertThat(terminatedAgreement1.getTerminationStatus()).isEqualTo(TERMINATED);
+
+        val terminatedAgreement2 = contractAgreements.stream()
+            .filter(it -> it.getContractAgreementId().equals(agreement2.getContractAgreementId()))
+            .findFirst()
+            .get();
+        assertThat(terminatedAgreement2.getTerminationStatus()).isEqualTo(ONGOING);
     }
 
-    // TODO: why doesn't put the termination line in the DB for this tests?
     @Test
     @SneakyThrows
     void canGetAgreementPageForTerminatedContract() {
@@ -450,22 +500,31 @@ public class ContractTerminationTest {
         val assetId = "asset-1";
         val policyId = "policy-1";
 
-        createAsset(assetId);
         createPolicyDefinition(policyId);
-        val contract = createContractDefinition(policyId, assetId);
+        createAssetAndContractDef(assetId, policyId);
 
-        val initialNegotiation = initiateNegotiation();
+        val initialNegotiation = initiateNegotiationForContract(assetId);
 
         return awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
     }
 
-    private UiContractNegotiation initiateNegotiation() {
+    private void createAssetAndContractDef(String assetId, String policyId) {
+        createAsset(assetId);
+        createContractDefinition(policyId, assetId);
+    }
+
+    private UiContractNegotiation initiateNegotiationForContract(String assetId) {
         val connectorEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
         val offers = consumerClient.uiApi().getCatalogPageDataOffers(connectorEndpoint);
-        val firstOffer = offers.get(0);
-        val firstContractOffer = firstOffer.getContractOffers().get(0);
-        val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
-        return initialNegotiation;
+
+        val offersContainingContract = offers.stream()
+            .filter(offer -> offer.getAsset().getAssetId().equals(assetId))
+            .toList();
+
+        assertThat(offersContainingContract).hasSize(1);
+
+        val firstContractOffer = offersContainingContract.get(0).getContractOffers().get(0);
+        return initiateNegotiation(offersContainingContract.get(0), firstContractOffer);
     }
 
     private void createAsset(String assetId) {
@@ -479,7 +538,7 @@ public class ContractTerminationTest {
         providerClient.uiApi()
             .createAsset(UiAssetCreateRequest.builder()
                 .id(assetId)
-                .title("AssetName")
+                .title("AssetName " + assetId)
                 .version("1.0.0")
                 .language("en")
                 .dataSource(dataSource)
@@ -499,9 +558,9 @@ public class ContractTerminationTest {
         return providerClient.uiApi().createPolicyDefinition(policyDefinition).getId();
     }
 
-    public String createContractDefinition(String policyId, String assetId) {
-        return providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
-            .contractDefinitionId("cd-1")
+    public void createContractDefinition(String policyId, String assetId) {
+        providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
+            .contractDefinitionId("cd-" + policyId + "-" + assetId)
             .accessPolicyId(policyId)
             .contractPolicyId(policyId)
             .assetSelector(List.of(UiCriterion.builder()
@@ -512,8 +571,7 @@ public class ContractTerminationTest {
                     .value(assetId)
                     .build())
                 .build()))
-            .build())
-            .getId();
+            .build());
     }
 
     private UiContractNegotiation initiateNegotiation(UiDataOffer dataOffer, UiContractOffer contractOffer) {
@@ -541,10 +599,11 @@ public class ContractTerminationTest {
     private void awaitTerminationCount(EdcClient client, int count) {
         Awaitility.await().atMost(ofSeconds(5)).until(
             () -> client.uiApi()
-                // TODO add .terminationStatus(TERMINATED)
                 .getContractAgreementPage(ContractAgreementPageQuery.builder().build())
                 .getContractAgreements()
-                .size() >= count
+                .stream()
+                .filter(it -> it.getTerminationStatus().equals(TERMINATED))
+                .count() >= count
         );
     }
 }

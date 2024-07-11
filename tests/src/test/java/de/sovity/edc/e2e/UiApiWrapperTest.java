@@ -379,8 +379,6 @@ class UiApiWrapperTest {
                 """);
     }
 
-    // TODO throw an error if the id is overridden
-
     @DisabledOnGithub
     @Test
     void customTransferRequest() {
