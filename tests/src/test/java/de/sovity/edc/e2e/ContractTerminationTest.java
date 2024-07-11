@@ -198,6 +198,8 @@ public class ContractTerminationTest {
         // act
         // don't terminate the contract
         val agreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
+        val terminatedAgreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().terminationStatus(TERMINATED).build());
+        val ongoingAgreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().terminationStatus(ONGOING).build());
 
         // assert
         val contractAgreements = agreements.getContractAgreements();
@@ -205,23 +207,9 @@ public class ContractTerminationTest {
 
         // TODO: pull this into some kind of Scenario class with all the facilities to make these calls short
 
-        val terminatedAgreement0 = contractAgreements.stream()
-            .filter(it -> it.getContractAgreementId().equals(agreement0.getContractAgreementId()))
-            .findFirst()
-            .get();
-        assertThat(terminatedAgreement0.getTerminationStatus()).isEqualTo(TERMINATED);
-
-        val terminatedAgreement1 = contractAgreements.stream()
-            .filter(it -> it.getContractAgreementId().equals(agreement1.getContractAgreementId()))
-            .findFirst()
-            .get();
-        assertThat(terminatedAgreement1.getTerminationStatus()).isEqualTo(TERMINATED);
-
-        val terminatedAgreement2 = contractAgreements.stream()
-            .filter(it -> it.getContractAgreementId().equals(agreement2.getContractAgreementId()))
-            .findFirst()
-            .get();
-        assertThat(terminatedAgreement2.getTerminationStatus()).isEqualTo(ONGOING);
+        assertThat(agreements.getContractAgreements()).hasSize(3);
+        assertThat(terminatedAgreements.getContractAgreements()).hasSize(2);
+        assertThat(ongoingAgreements.getContractAgreements()).hasSize(1);
     }
 
     @Test

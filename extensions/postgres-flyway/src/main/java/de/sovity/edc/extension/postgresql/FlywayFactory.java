@@ -46,7 +46,6 @@ public class FlywayFactory {
 
     public Flyway setupFlywayForUnifiedHistoryFromLegacyDatabase(DataSource dataSource) {
         val locations = new ArrayList<String>();
-        // TODO: this is repeated. Should be in a single place
         locations.add("classpath:db/migration");
         locations.addAll(getAdditionalFlywayMigrationLocations());
 

@@ -42,7 +42,7 @@ public class ContractAgreementTerminationService {
      * This is to terminate an EDC's own contract.
      * If the termination comes from an external system, use {@link #terminateCounterpartyAgreement(String, ContractTermination)} to validate the counter-party's identity.
      */
-    public Result<OffsetDateTime> terminateAgreement(ContractTermination termination) {
+    public OffsetDateTime terminateAgreement(ContractTermination termination) {
         val maybeDetails = contractAgreementTerminationDetailsQuery.fetchAgreementDetails(termination.contractAgreementId());
 
         if (maybeDetails.isEmpty()) {
@@ -59,7 +59,7 @@ public class ContractAgreementTerminationService {
 
         notifyTerminationToProvider(details.counterpartyAddress(), termination);
 
-        return Result.success(terminatedAt);
+        return terminatedAt;
     }
 
     public Result<OffsetDateTime> terminateCounterpartyAgreement(

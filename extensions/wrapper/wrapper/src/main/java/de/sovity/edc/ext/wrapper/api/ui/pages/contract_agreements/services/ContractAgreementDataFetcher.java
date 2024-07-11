@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services;
 
 import de.sovity.edc.ext.db.jooq.tables.records.SovityContractTerminationRecord;
 import de.sovity.edc.ext.wrapper.api.ServiceException;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationStatus;
 import de.sovity.edc.ext.wrapper.utils.MapUtils;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;

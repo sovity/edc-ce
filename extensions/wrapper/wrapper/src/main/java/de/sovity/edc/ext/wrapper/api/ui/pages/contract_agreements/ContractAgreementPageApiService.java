@@ -32,19 +32,18 @@ public class ContractAgreementPageApiService {
 
     @NotNull
     public ContractAgreementPage contractAgreementPage(@Nullable ContractAgreementPageQuery contractAgreementPageQuery) {
+        var agreements = contractAgreementDataFetcher.getContractAgreements();
+
+        var cards = agreements.stream()
+            .map(agreement -> contractAgreementPageCardBuilder.buildContractAgreementCard(
+                agreement.agreement(), agreement.negotiation(), agreement.asset(), agreement.transfers(), agreement.terminations()))
+            .sorted(Comparator.comparing(ContractAgreementCard::getContractSigningDate).reversed());
+
         if (contractAgreementPageQuery == null || contractAgreementPageQuery.isEmpty()) {
-            var agreements = contractAgreementDataFetcher.getContractAgreements();
-
-            var cards = agreements.stream()
-                .map(agreement -> contractAgreementPageCardBuilder.buildContractAgreementCard(
-                    agreement.agreement(), agreement.negotiation(), agreement.asset(), agreement.transfers(), agreement.terminations()))
-                .sorted(Comparator.comparing(ContractAgreementCard::getContractSigningDate).reversed())
-                .toList();
-
-            return new ContractAgreementPage(cards);
+            return new ContractAgreementPage(cards.toList());
         } else {
-            // TODO: filter by contract agreement query
-            throw new UnsupportedOperationException("TODO: ");
+            var filtered = cards.filter(it -> it.getTerminationStatus().equals(contractAgreementPageQuery.getTerminationStatus())).toList();
+            return new ContractAgreementPage(filtered);
         }
     }
 }

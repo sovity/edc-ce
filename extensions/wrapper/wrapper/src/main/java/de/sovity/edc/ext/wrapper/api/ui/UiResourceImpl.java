@@ -47,9 +47,9 @@ import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationSe
 import de.sovity.edc.extension.contacttermination.ContractTermination;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
+import jakarta.ws.rs.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.eclipse.edc.spi.EdcException;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -143,7 +143,6 @@ public class UiResourceImpl implements UiResource {
 
     @Override
     public ContractAgreementPage getContractAgreementPage(@Nullable ContractAgreementPageQuery contractAgreementPageQuery) {
-        // TODO: add test for query
         return contractAgreementApiService.contractAgreementPage(contractAgreementPageQuery);
     }
 
@@ -158,26 +157,22 @@ public class UiResourceImpl implements UiResource {
         return contractAgreementTransferApiService.initiateCustomTransfer(request);
     }
 
-    // TODO: return an envelope
     @Override
     public IdResponseDto terminateContractAgreement(
         String contractAgreementId,
         @Valid ContractTerminationRequest contractTerminationRequest) {
 
-        // TODO: how do I enable this automatically? Is it even possible in the EDC?
         val constraintViolations = validator.validate(contractTerminationRequest);
         if (!constraintViolations.isEmpty()) {
-            // TODO: the returned error message is shit, how do I fix that?
-            throw new EdcException("Invalid contract termination request: " + constraintViolations);
+            throw new BadRequestException("Invalid contract termination request: " + constraintViolations);
         }
 
         val terminatedAt = contractAgreementTerminationService.terminateAgreement(
             new ContractTermination(contractAgreementId, contractTerminationRequest.getDetail(), contractTerminationRequest.getReason()));
 
-        // TODO: how do I return an HTTP 304 on result failure?
         return IdResponseDto.builder()
             .id(contractAgreementId)
-            .lastUpdatedDate(terminatedAt.getContent())
+            .lastUpdatedDate(terminatedAt)
             .build();
     }
 
