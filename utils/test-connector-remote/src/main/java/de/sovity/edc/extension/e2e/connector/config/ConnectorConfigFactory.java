@@ -108,14 +108,14 @@ public class ConnectorConfigFactory {
         properties.put("my.edc.maintainer.url", "http://maintainer.%s".formatted(participantId));
         properties.put("my.edc.maintainer.name", "Maintainer Name %s".formatted(participantId));
 
-        properties.put("web.http.port", String.valueOf(apiConfig.getDefaultApiGroup().port()));
-        properties.put("web.http.path", String.valueOf(apiConfig.getDefaultApiGroup().path()));
-        properties.put("web.http.protocol.port", String.valueOf(apiConfig.getProtocolApiGroup().port()));
-        properties.put("web.http.protocol.path", String.valueOf(apiConfig.getProtocolApiGroup().path()));
-        properties.put("web.http.management.port", String.valueOf(apiConfig.getManagementApiGroup().port()));
-        properties.put("web.http.management.patch", String.valueOf(apiConfig.getManagementApiGroup().path()));
-        properties.put("web.http.control.port", String.valueOf(apiConfig.getControlApiGroup().port()));
-        properties.put("web.http.control.patch", String.valueOf(apiConfig.getControlApiGroup().path()));
+//         properties.put("web.http.port", String.valueOf(apiConfig.getDefaultApiGroup().port()));
+//         properties.put("web.http.path", String.valueOf(apiConfig.getDefaultApiGroup().path()));
+//         properties.put("web.http.protocol.port", String.valueOf(apiConfig.getProtocolApiGroup().port()));
+//         properties.put("web.http.protocol.path", String.valueOf(apiConfig.getProtocolApiGroup().path()));
+//         properties.put("web.http.management.port", String.valueOf(apiConfig.getManagementApiGroup().port()));
+//         properties.put("web.http.management.patch", String.valueOf(apiConfig.getManagementApiGroup().path()));
+//         properties.put("web.http.control.port", String.valueOf(apiConfig.getControlApiGroup().port()));
+//         properties.put("web.http.control.patch", String.valueOf(apiConfig.getControlApiGroup().path()));
 
         return new ConnectorConfig(
             participantId,

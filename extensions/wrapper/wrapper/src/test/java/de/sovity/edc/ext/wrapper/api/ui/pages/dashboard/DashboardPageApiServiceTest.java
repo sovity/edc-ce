@@ -68,7 +68,6 @@ class DashboardPageApiServiceTest {
         ":launchers:connectors:sovity-dev",
         "provider",
         testDatabase -> {
-            // TODO: find why the properties are not used for the protocol port
             config = forTestDatabase("my-edc-participant-id", testDatabase);
 
             config.setProperty("edc.oauth.token.url", "https://token-url.daps");

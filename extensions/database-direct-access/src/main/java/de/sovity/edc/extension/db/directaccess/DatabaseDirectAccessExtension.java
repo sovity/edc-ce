@@ -70,7 +70,6 @@ public class DatabaseDirectAccessExtension implements ServiceExtension {
 
         val dda = new DirectDatabaseAccess(() -> {
 
-            // TODO: use the same datasource as the flyway migrator?
             val hikariConfig = new HikariConfig();
             val config = context.getConfig();
             hikariConfig.setJdbcUrl(config.getString(EDC_DATASOURCE_DEFAULT_URL));

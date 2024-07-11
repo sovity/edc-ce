@@ -15,7 +15,6 @@ package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.ApiException;
-import de.sovity.edc.client.gen.model.ContractAgreementCard;
 import de.sovity.edc.client.gen.model.ContractAgreementPage;
 import de.sovity.edc.client.gen.model.ContractAgreementPageQuery;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
@@ -23,6 +22,7 @@ import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
 import de.sovity.edc.client.gen.model.ContractTerminatedBy;
 import de.sovity.edc.client.gen.model.ContractTerminationRequest;
+import de.sovity.edc.client.gen.model.ContractTerminationStatus;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
@@ -55,6 +55,7 @@ import org.eclipse.edc.spi.iam.IdentityService;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockserver.integration.ClientAndServer;
@@ -172,7 +173,29 @@ public class ContractTerminationTest {
         assertThat(information).isNull();
     }
 
-    // TODO canGetAgreementPage for Terminated Contracts
+    // TODO: why doesn't put the termination line in the DB for this tests?
+    @Test
+    @SneakyThrows
+    void canGetAgreementPageForTerminatedContract() {
+        arrange();
+
+        // act
+        val agreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
+
+        String reason = "Reason";
+        String details = "Details";
+        consumerClient.uiApi().terminateContractAgreement(
+            agreements.getContractAgreements().get(0).getContractAgreementId(),
+            ContractTerminationRequest.builder().reason(reason).detail(details).build());
+
+        awaitTerminationCount(consumerClient, 1);
+        awaitTerminationCount(providerClient, 1);
+
+        val agreementsAfterTermination = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
+
+        // assert
+        assertTermination(agreementsAfterTermination, details, reason, SELF);
+    }
 
     @Test
     @SneakyThrows
@@ -424,25 +447,25 @@ public class ContractTerminationTest {
     // TODO: group those helpers
 
     private @NotNull UiContractNegotiation arrange() {
-        createAssetAndContract();
-        return negotiateFirstOffer();
+        val assetId = "asset-1";
+        val policyId = "policy-1";
+
+        createAsset(assetId);
+        createPolicyDefinition(policyId);
+        val contract = createContractDefinition(policyId, assetId);
+
+        val initialNegotiation = initiateNegotiation();
+
+        return awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
     }
 
-    private @NotNull UiContractNegotiation negotiateFirstOffer() {
+    private UiContractNegotiation initiateNegotiation() {
         val connectorEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
         val offers = consumerClient.uiApi().getCatalogPageDataOffers(connectorEndpoint);
         val firstOffer = offers.get(0);
         val firstContractOffer = firstOffer.getContractOffers().get(0);
         val initialNegotiation = initiateNegotiation(firstOffer, firstContractOffer);
-        return awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
-    }
-
-    private void createAssetAndContract() {
-        val assetId = "asset-1";
-        val policyId = "policy-1";
-        createAsset(assetId);
-        createPolicyDefinition(policyId);
-        createContractDefinition(policyId, assetId);
+        return initialNegotiation;
     }
 
     private void createAsset(String assetId) {
@@ -476,8 +499,8 @@ public class ContractTerminationTest {
         return providerClient.uiApi().createPolicyDefinition(policyDefinition).getId();
     }
 
-    public void createContractDefinition(String policyId, String assetId) {
-        providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
+    public String createContractDefinition(String policyId, String assetId) {
+        return providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
             .contractDefinitionId("cd-1")
             .accessPolicyId(policyId)
             .contractPolicyId(policyId)
@@ -489,7 +512,8 @@ public class ContractTerminationTest {
                     .value(assetId)
                     .build())
                 .build()))
-            .build());
+            .build())
+            .getId();
     }
 
     private UiContractNegotiation initiateNegotiation(UiDataOffer dataOffer, UiContractOffer contractOffer) {
@@ -517,6 +541,7 @@ public class ContractTerminationTest {
     private void awaitTerminationCount(EdcClient client, int count) {
         Awaitility.await().atMost(ofSeconds(5)).until(
             () -> client.uiApi()
+                // TODO add .terminationStatus(TERMINATED)
                 .getContractAgreementPage(ContractAgreementPageQuery.builder().build())
                 .getContractAgreements()
                 .size() >= count
