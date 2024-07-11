@@ -21,6 +21,7 @@ the detailed section referring to by linking pull requests or issues.
 #### Minor
 
 - Added Initiate Negotiation Confirm ToS Dialog
+- Support for creating "On Request" Data Offers
 
 #### Patch
 

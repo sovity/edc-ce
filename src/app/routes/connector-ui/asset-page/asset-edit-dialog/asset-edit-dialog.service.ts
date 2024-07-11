@@ -26,8 +26,7 @@ export class AssetEditDialogService {
     asset: UiAssetMapped,
     until$: Observable<any> = NEVER,
   ): Observable<AssetEditDialogResult | undefined> {
-    const initialFormValue =
-      this.assetEditDialogFormMapper.forEditMetadata(asset);
+    const initialFormValue = this.assetEditDialogFormMapper.forEdit(asset);
     return this._open({initialFormValue}, until$);
   }
 

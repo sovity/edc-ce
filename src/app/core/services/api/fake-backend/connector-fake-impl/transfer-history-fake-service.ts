@@ -90,6 +90,7 @@ export const transferProcessAsset = (transferProcessId: string): UiAsset => {
 
   const dummyAsset: UiAsset = {
     assetId,
+    dataSourceAvailability: 'LIVE',
     title: assetId,
     participantId: 'unknown',
     connectorEndpoint: 'https://unknown/api/dsp',

@@ -113,7 +113,7 @@ export class AssetEditDialogForm {
       formGroup.addControl('advanced', advanced);
     }
 
-    if (initial.mode !== 'EDIT_METADATA') {
+    if (initial.mode !== 'EDIT') {
       const datasource: FormGroup<AssetDatasourceFormModel> =
         this.assetDatasourceFormBuilder.buildFormGroup(initial.datasource!);
       formGroup.addControl('datasource', datasource);

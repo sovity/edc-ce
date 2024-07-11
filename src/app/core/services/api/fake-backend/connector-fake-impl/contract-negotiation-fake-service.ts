@@ -67,6 +67,8 @@ export const initiateContractNegotiation = (
       asset: getAssetById(request.assetId)!,
       contractSigningDate: new Date(),
       contractPolicy: getPolicyDefinitionByJsonLd(request.policyJsonLd)!,
+      terminationInformation: undefined,
+      terminationStatus: 'ONGOING',
     });
   }, 4000);
   return negotiation;

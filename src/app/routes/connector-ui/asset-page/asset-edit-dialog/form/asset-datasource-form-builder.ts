@@ -4,6 +4,7 @@ import {validQueryParam} from 'src/app/core/validators/valid-query-param';
 import {switchDisabledControls} from '../../../../../core/utils/form-group-utils';
 import {jsonValidator} from '../../../../../core/validators/json-validator';
 import {urlValidator} from '../../../../../core/validators/url-validator';
+import {assetDatasourceFormEnabledCtrls} from './model/asset-datasource-form-enabled-ctrls';
 import {
   AssetDatasourceFormModel,
   AssetDatasourceFormValue,
@@ -30,6 +31,16 @@ export class AssetDatasourceFormBuilder {
         dataDestination: [
           initial?.dataDestination!,
           [Validators.required, jsonValidator],
+        ],
+
+        // On-Request
+        contactEmail: [
+          initial?.contactEmail!,
+          [Validators.required, Validators.email],
+        ],
+        contactPreferredEmailSubject: [
+          initial?.contactPreferredEmailSubject!,
+          Validators.required,
         ],
 
         // Http Datasource Fields
@@ -66,44 +77,10 @@ export class AssetDatasourceFormBuilder {
         ),
       });
 
-    switchDisabledControls<AssetDatasourceFormValue>(datasource, (value) => {
-      const customDataAddressJson =
-        value.dataAddressType === 'Custom-Data-Address-Json';
-
-      const http = value.dataAddressType === 'Http';
-      const httpAuth = value.httpAuthHeaderType !== 'None';
-      const httpAuthByValue = value.httpAuthHeaderType === 'Value';
-      const httpAuthByVault = value.httpAuthHeaderType === 'Vault-Secret';
-      const proxyPath = !!value.httpProxyPath;
-
-      return {
-        dataAddressType: true,
-        publisher: true,
-        standardLicense: true,
-        endpointDocumentation: true,
-
-        // Custom Datasource JSON
-        dataDestination: customDataAddressJson,
-
-        // Http Datasource Fields
-        httpUrl: http,
-        httpMethod: http,
-
-        httpAuthHeaderType: http,
-        httpAuthHeaderName: http && httpAuth,
-        httpAuthHeaderValue: http && httpAuthByValue,
-        httpAuthHeaderSecretName: http && httpAuthByVault,
-        httpQueryParams: http,
-
-        httpDefaultPath: http && proxyPath,
-        httpProxyMethod: http,
-        httpProxyPath: http,
-        httpProxyQueryParams: http,
-        httpProxyBody: http,
-
-        httpHeaders: http,
-      };
-    });
+    switchDisabledControls<AssetDatasourceFormValue>(
+      datasource,
+      assetDatasourceFormEnabledCtrls,
+    );
 
     return datasource;
   }

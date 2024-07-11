@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {UiAssetMapped} from '../../../../../core/services/models/ui-asset-mapped';
 import {LanguageSelectItemService} from '../../language-select/language-select-item.service';
+import {AssetDatasourceFormValue} from './model/asset-datasource-form-model';
 import {AssetEditorDialogFormValue} from './model/asset-editor-dialog-form-model';
 
 /**
@@ -32,32 +33,13 @@ export class AssetEditDialogFormMapper {
         transportMode: null,
         geoReferenceMethod: '',
       },
-      datasource: {
-        dataAddressType: 'Http',
-        dataDestination: '',
-
-        httpUrl: '',
-        httpMethod: 'GET',
-        httpAuthHeaderType: 'None',
-        httpAuthHeaderName: '',
-        httpAuthHeaderValue: '',
-        httpAuthHeaderSecretName: '',
-        httpQueryParams: [],
-
-        httpDefaultPath: '',
-        httpProxyMethod: false,
-        httpProxyPath: false,
-        httpProxyQueryParams: false,
-        httpProxyBody: false,
-
-        httpHeaders: [],
-      },
+      datasource: this.emptyHttpDatasource(),
     };
   }
 
-  forEditMetadata(asset: UiAssetMapped): AssetEditorDialogFormValue {
+  forEdit(asset: UiAssetMapped): AssetEditorDialogFormValue {
     return {
-      mode: 'EDIT_METADATA',
+      mode: 'EDIT',
       metadata: {
         id: asset.assetId,
         title: asset.title,
@@ -89,7 +71,37 @@ export class AssetEditDialogFormMapper {
           toInclusive: asset.temporalCoverageToInclusive,
         },
       },
-      datasource: this.forCreate().datasource,
+      datasource: this.emptyEditDatasource(),
+    };
+  }
+
+  private emptyHttpDatasource(): AssetDatasourceFormValue {
+    return {
+      dataAddressType: 'Http',
+      dataDestination: '',
+
+      httpUrl: '',
+      httpMethod: 'GET',
+      httpAuthHeaderType: 'None',
+      httpAuthHeaderName: '',
+      httpAuthHeaderValue: '',
+      httpAuthHeaderSecretName: '',
+      httpQueryParams: [],
+
+      httpDefaultPath: '',
+      httpProxyMethod: false,
+      httpProxyPath: false,
+      httpProxyQueryParams: false,
+      httpProxyBody: false,
+
+      httpHeaders: [],
+    };
+  }
+
+  private emptyEditDatasource(): AssetDatasourceFormValue {
+    return {
+      ...this.emptyHttpDatasource(),
+      dataAddressType: 'Unchanged',
     };
   }
 }

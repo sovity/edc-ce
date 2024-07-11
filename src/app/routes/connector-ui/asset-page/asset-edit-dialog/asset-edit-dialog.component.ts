@@ -4,7 +4,7 @@ import {EMPTY, Observable, Subject, switchMap} from 'rxjs';
 import {catchError, finalize, map, takeUntil, tap} from 'rxjs/operators';
 import {IdResponseDto} from '@sovity.de/edc-client';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
-import {AssetCreateRequestBuilder} from '../../../../core/services/asset-create-request-builder';
+import {AssetRequestBuilder} from '../../../../core/services/asset-request-builder';
 import {AssetService} from '../../../../core/services/asset.service';
 import {NotificationService} from '../../../../core/services/notification.service';
 import {ValidationMessages} from '../../../../core/validators/validation-messages';
@@ -24,7 +24,7 @@ import {AssetEditorDialogFormValue} from './form/model/asset-editor-dialog-form-
     AssetAdvancedFormBuilder,
     AssetDatasourceFormBuilder,
     AssetEditDialogForm,
-    AssetCreateRequestBuilder,
+    AssetRequestBuilder,
     AssetMetadataFormBuilder,
   ],
 })
@@ -38,7 +38,7 @@ export class AssetEditDialogComponent implements OnDestroy {
     private assetService: AssetService,
     public form: AssetEditDialogForm,
     public validationMessages: ValidationMessages,
-    private assetEntryBuilder: AssetCreateRequestBuilder,
+    private assetEntryBuilder: AssetRequestBuilder,
     private notificationService: NotificationService,
     private dialogRef: MatDialogRef<AssetEditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: AssetEditDialogData,
@@ -102,11 +102,11 @@ export class AssetEditDialogComponent implements OnDestroy {
       return this.edcApiService.createAsset(createRequest);
     }
 
-    if (mode === 'EDIT_METADATA') {
+    if (mode === 'EDIT') {
       const assetId = formValue.metadata?.id!;
       const editRequest =
-        this.assetEntryBuilder.buildEditMetadataRequest(formValue);
-      return this.edcApiService.editAssetMetadata(assetId, editRequest);
+        this.assetEntryBuilder.buildAssetEditRequest(formValue);
+      return this.edcApiService.editAsset(assetId, editRequest);
     }
 
     throw new Error(`Unsupported mode: ${mode}`);

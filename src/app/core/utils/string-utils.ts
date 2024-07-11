@@ -1,9 +1,5 @@
-/**
- * Trimmed string or null if blank
- */
-export function trimmedOrNull(s?: string | null): string | null {
-  const trimmed = s?.trim();
-  return trimmed ? trimmed : null;
+export function trimOrEmpty(s: string | null | undefined): string {
+  return s?.trim() ?? '';
 }
 
 export function everythingBefore(separator: string, s: string): string {

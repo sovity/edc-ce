@@ -74,6 +74,7 @@ This is a short description text that should be fully rendered without being **c
 `;
 
   export const boring: UiAsset = {
+    dataSourceAvailability: 'LIVE',
     assetId: 'data-sample-ckd-skd-demands-2023-Jan',
     title: 'data-sample-ckd-skd-demands-2023-Jan',
     description: '',
@@ -86,6 +87,7 @@ This is a short description text that should be fully rendered without being **c
   };
 
   export const short: UiAsset = {
+    dataSourceAvailability: 'LIVE',
     assetId: 'data-sample-ckd-skd-demands-2023-Feb',
     title: 'data-sample-ckd-skd-demands-2023-Feb',
     connectorEndpoint: 'https://my-other-connector/api/dsp',
@@ -98,6 +100,7 @@ This is a short description text that should be fully rendered without being **c
   };
 
   export const full: UiAsset = {
+    dataSourceAvailability: 'LIVE',
     assetId: 'ckd-skd-demands-2023-Jan',
     title: 'CKD / SKD Demands January 2023',
     connectorEndpoint: 'https://my-other-connector/api/dsp',
@@ -176,6 +179,7 @@ This is a short description text that should be fully rendered without being **c
       connectorEndpoint: entry.connectorEndpoint,
       creatorOrganizationName: entry.participantId,
       isOwnConnector: entry.isOwnConnector,
+      dataSourceAvailability: 'LIVE',
     };
   }
 

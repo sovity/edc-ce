@@ -21,7 +21,7 @@ export class DataAddressTypeSelectComponent implements OnChanges {
   cls = true;
 
   @Input()
-  mode: DataAddressTypeSelectMode = 'Datasource';
+  mode: DataAddressTypeSelectMode = 'Datasource-Create';
 
   items = dataAddressTypeSelectItems(this.mode);
   ngOnChanges(changes: SimpleChangesTyped<DataAddressTypeSelectComponent>) {

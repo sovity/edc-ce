@@ -9,8 +9,8 @@ import {
 } from '@sovity.de/edc-client';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {DataAddressMapper} from '../../../../core/services/data-address-mapper';
-import {HttpRequestParamsMapper} from '../../../../core/services/http-params-mapper.service';
 import {NotificationService} from '../../../../core/services/notification.service';
+import {TransferDataSinkMapper} from '../../../../core/services/transfer-data-sink-mapper';
 import {ValidationMessages} from '../../../../core/validators/validation-messages';
 import {
   DATA_SINK_HTTP_METHODS,
@@ -79,7 +79,7 @@ export class ContractAgreementTransferDialogComponent implements OnDestroy {
     private dialogRef: MatDialogRef<ContractAgreementTransferDialogComponent>,
     private edcApiService: EdcApiService,
     private notificationService: NotificationService,
-    private httpRequestParamsMapper: HttpRequestParamsMapper,
+    private httpRequestParamsMapper: TransferDataSinkMapper,
     private dataAddressMapper: DataAddressMapper,
     @Inject(MAT_DIALOG_DATA) public data: ContractAgreementTransferDialogData,
   ) {}

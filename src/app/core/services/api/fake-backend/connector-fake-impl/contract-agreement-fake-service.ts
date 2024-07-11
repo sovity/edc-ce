@@ -20,6 +20,8 @@ let contractAgreements: ContractAgreementCard[] = [
     contractSigningDate: new Date('2022-03-20T11:18:59.659Z'),
     asset: TestAssets.full,
     contractPolicy: TestPolicies.connectorRestricted,
+    terminationInformation: undefined,
+    terminationStatus: 'ONGOING',
     transferProcesses: [
       {
         transferProcessId: '2679d234-3340-44bf-a96b-c88b57838033',
@@ -71,6 +73,8 @@ let contractAgreements: ContractAgreementCard[] = [
     contractSigningDate: new Date('2022-03-25T11:18:59.659Z'),
     asset: TestAssets.toDummyAsset(TestAssets.boring),
     contractPolicy: TestPolicies.connectorRestricted,
+    terminationInformation: undefined,
+    terminationStatus: 'ONGOING',
     transferProcesses: [
       {
         transferProcessId: '522138de-349d-4b68-9356-7e5929f053e0',
@@ -94,6 +98,8 @@ let contractAgreements: ContractAgreementCard[] = [
     contractSigningDate: new Date('2022-03-25T11:18:59.659Z'),
     asset: TestAssets.toDummyAsset(TestAssets.boring),
     contractPolicy: TestPolicies.connectorRestricted,
+    terminationInformation: undefined,
+    terminationStatus: 'ONGOING',
     transferProcesses: [],
   },
   {
@@ -106,6 +112,8 @@ let contractAgreements: ContractAgreementCard[] = [
     contractSigningDate: new Date('2022-03-25T11:18:59.659Z'),
     asset: TestAssets.toDummyAsset(TestAssets.boring),
     contractPolicy: TestPolicies.connectorRestricted,
+    terminationInformation: undefined,
+    terminationStatus: 'ONGOING',
     transferProcesses: [
       {
         transferProcessId: '522138de-349d-4b68-9356-7e5929f053e0',

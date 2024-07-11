@@ -1,46 +1,45 @@
 import {Injectable} from '@angular/core';
-import {
-  UiAssetCreateRequest,
-  UiAssetEditMetadataRequest,
-} from '@sovity.de/edc-client';
+import {UiAssetCreateRequest, UiAssetEditRequest} from '@sovity.de/edc-client';
 import {AssetEditorDialogFormValue} from '../../routes/connector-ui/asset-page/asset-edit-dialog/form/model/asset-editor-dialog-form-model';
 import {toGmtZeroHourDate} from '../utils/date-utils';
-import {DataAddressMapper} from './data-address-mapper';
+import {AssetDataSourceMapper} from './asset-data-source-mapper';
+import {AssetRequestCommonMetadata} from './asset-request-common-metadata';
 
 @Injectable()
-export class AssetCreateRequestBuilder {
-  constructor(private dataAddressMapper: DataAddressMapper) {}
+export class AssetRequestBuilder {
+  constructor(private assetDataSourceMapper: AssetDataSourceMapper) {}
 
-  /**
-   * Build {@link UiAssetCreateRequest} from {@link AssetEditorDialogFormValue}
-   *
-   * @param formValue form value
-   * @return {@link UiAssetCreateRequest}
-   */
   buildAssetCreateRequest(
     formValue: AssetEditorDialogFormValue,
   ): UiAssetCreateRequest {
     const id = formValue.metadata?.id!;
-    const metadata = this.buildEditMetadataRequest(formValue);
-    const dataAddressProperties =
-      this.dataAddressMapper.buildDataAddressProperties(formValue.datasource);
-
+    const metadata = this.buildAssetRequestCommonMetadata(formValue);
+    const dataSource = this.assetDataSourceMapper.buildDataSource(
+      formValue.datasource!,
+    );
     return {
       id,
       ...metadata,
-      dataAddressProperties,
+      dataSource,
     };
   }
 
-  /**
-   * Build {@link UiAssetEditMetadataRequest} from {@link AssetEditorDialogFormValue}
-   *
-   * @param formValue form value
-   * @return {@link UiAssetEditMetadataRequest}
-   */
-  buildEditMetadataRequest(
+  buildAssetEditRequest(
     formValue: AssetEditorDialogFormValue,
-  ): UiAssetEditMetadataRequest {
+  ): UiAssetEditRequest {
+    const metadata = this.buildAssetRequestCommonMetadata(formValue);
+    const dataSourceOrNull = this.assetDataSourceMapper.buildDataSourceOrNull(
+      formValue.datasource!,
+    );
+    return {
+      ...metadata,
+      dataSourceOverrideOrNull: dataSourceOrNull ?? undefined,
+    };
+  }
+
+  buildAssetRequestCommonMetadata(
+    formValue: AssetEditorDialogFormValue,
+  ): AssetRequestCommonMetadata {
     const title = formValue.metadata?.title!;
     const version = formValue.metadata?.version;
     const description = formValue.metadata?.description;
@@ -102,6 +101,10 @@ export class AssetCreateRequestBuilder {
       dataUpdateFrequency,
       temporalCoverageFrom,
       temporalCoverageToInclusive,
+      customJsonAsString: undefined,
+      customJsonLdAsString: undefined,
+      privateCustomJsonAsString: undefined,
+      privateCustomJsonLdAsString: undefined,
     };
   }
 }

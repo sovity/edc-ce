@@ -316,7 +316,7 @@
 
           <!-- Reference files description -->
           <mat-form-field
-            *ngIf="this.form.advanced.controls.referenceFileUrls.length > 0">
+            *ngIf="form.advanced.controls.referenceFileUrls.length > 0">
             <mat-label>Reference files description</mat-label>
             <textarea
               class="h-28"
@@ -326,8 +326,8 @@
                 form.advanced.controls.referenceFilesDescription
               "></textarea>
             <mat-hint
-              >Additional information regarding the reference files</mat-hint
-            >
+              >Additional information regarding the reference files
+            </mat-hint>
           </mat-form-field>
 
           <!-- Temporal coverage -->
@@ -351,9 +351,9 @@
               matSuffix
               [for]="picker"></mat-datepicker-toggle>
             <mat-date-range-picker #picker></mat-date-range-picker>
-            <mat-error *ngIf="ctrl.invalid">{{
-              validationMessages.invalidDateRangeMessage
-            }}</mat-error>
+            <mat-error *ngIf="ctrl.invalid"
+              >{{ validationMessages.invalidDateRangeMessage }}
+            </mat-error>
           </mat-form-field>
 
           <!-- Conditions for use -->
@@ -368,8 +368,8 @@
               "></textarea>
             <mat-hint
               >Additional not legally relevant usage instructions (e.g. how to
-              cite the dataset)</mat-hint
-            >
+              cite the dataset)
+            </mat-hint>
           </mat-form-field>
         </div>
       </form>
@@ -383,12 +383,14 @@
           <!-- Data Address Type -->
           <data-address-type-select
             label="Type"
-            mode="Datasource"
+            [mode]="
+              form.mode === 'EDIT' ? 'Datasource-Edit' : 'Datasource-Create'
+            "
             [control]="
               form.datasource.controls.dataAddressType
             "></data-address-type-select>
 
-          <!-- Data Source Config JSON (Json) -->
+          <!-- Data Source Type CUSTOM -->
           <mat-form-field
             *ngIf="
               form.dataAddressType === 'Custom-Data-Address-Json' &&
@@ -404,6 +406,54 @@
               {{ validationMessages.invalidJsonMessage }}
             </mat-error>
           </mat-form-field>
+
+          <!-- Data Source Type ON_REQUEST -->
+          <ng-container *ngIf="form.dataAddressType === 'On-Request'">
+            <!-- Contact E-Mail -->
+            <div class="form-section-title">Contact E-Mail</div>
+
+            <div class="mb-[10px] px-[3px] text-sm">
+              This email address will be offered to potential consumers for
+              contacting you. This is done in place of having an actual data
+              source connected.
+            </div>
+
+            <mat-form-field
+              *ngIf="form.datasource.controls.contactEmail; let ctrl"
+              class="grow">
+              <mat-label>Contact E-Mail</mat-label>
+              <input
+                matInput
+                [formControl]="ctrl"
+                [placeholder]="'contact@my-org.com'" />
+              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.email">
+                {{ validationMessages.invalidEmailMessage }}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Contact E-Mail Preferred Subject -->
+            <div class="form-section-title">Preferred E-Mail Subject</div>
+
+            <div class="mb-[10px] px-[3px] text-sm">
+              Will be added to the mailto-link and displayed to potential
+              consumers to use.
+            </div>
+
+            <mat-form-field
+              *ngIf="
+                form.datasource.controls.contactPreferredEmailSubject;
+                let ctrl
+              "
+              class="grow">
+              <mat-label>Preferred E-Mail Subject</mat-label>
+              <input
+                matInput
+                [formControl]="ctrl"
+                [placeholder]="'Data Offer \'xyz\''" />
+            </mat-form-field>
+          </ng-container>
+
+          <!-- Data Source Type HTTP -->
           <ng-container *ngIf="form.dataAddressType === 'Http'">
             <div class="form-section-title">Method</div>
 
@@ -420,9 +470,9 @@
                   {{ form.proxyMethod ? 'Default' : '' }} Method
                 </mat-label>
                 <mat-select [formControl]="ctrl">
-                  <mat-option *ngFor="let method of methods" [value]="method">{{
-                    method
-                  }}</mat-option>
+                  <mat-option *ngFor="let method of methods" [value]="method"
+                    >{{ method }}
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
             </ng-container>
@@ -496,8 +546,8 @@
                     header.controls.paramName.invalid &&
                     header.controls.paramName.errors?.invalidQueryParam
                   "
-                  >{{ validationMessages.invalidQueryParam }}</mat-error
-                >
+                  >{{ validationMessages.invalidQueryParam }}
+                </mat-error>
               </mat-form-field>
 
               <!-- Query Param Value -->
@@ -513,8 +563,8 @@
                     header.controls.paramValue.invalid &&
                     header.controls.paramValue.errors?.invalidQueryParam
                   "
-                  >{{ validationMessages.invalidQueryParam }}</mat-error
-                >
+                  >{{ validationMessages.invalidQueryParam }}
+                </mat-error>
               </mat-form-field>
 
               <!-- Query Param Delete Button -->

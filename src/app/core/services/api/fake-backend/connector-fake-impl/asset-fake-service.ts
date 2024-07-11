@@ -3,7 +3,8 @@ import {
   IdResponseDto,
   UiAsset,
   UiAssetCreateRequest,
-  UiAssetEditMetadataRequest,
+  UiAssetEditRequest,
+  UiDataSource,
 } from '@sovity.de/edc-client';
 import {Patcher, patchObj} from '../../../../utils/object-utils';
 import {TestAssets} from './data/test-assets';
@@ -42,9 +43,9 @@ export const createAsset = (asset: UiAssetCreateRequest): IdResponseDto => {
   };
 };
 
-export const editAssetMetadata = (
+export const editAsset = (
   assetId: string,
-  request: UiAssetEditMetadataRequest,
+  request: UiAssetEditRequest,
 ): IdResponseDto => {
   const asset = patchAsset(assetId, () =>
     createAssetMetadata(assetId, request),
@@ -58,7 +59,7 @@ export const editAssetMetadata = (
 
 function createAssetMetadata(
   assetId: string,
-  request: UiAssetCreateRequest | UiAssetEditMetadataRequest,
+  request: UiAssetCreateRequest | UiAssetEditRequest,
 ): Omit<
   UiAsset,
   | 'assetId'
@@ -66,17 +67,22 @@ function createAssetMetadata(
   | 'connectorEndpoint'
   | 'isOwnConnector'
   | 'creatorOrganizationName'
-  | 'httpDatasourceHintsProxyBody'
-  | 'httpDatasourceHintsProxyMethod'
-  | 'httpDatasourceHintsProxyPath'
-  | 'httpDatasourceHintsProxyQueryParams'
   | 'participantId'
 > {
+  const dataSource: UiDataSource | null =
+    (request as UiAssetCreateRequest).dataSource ??
+    (request as UiAssetEditRequest).dataSourceOverrideOrNull;
   return {
     title: request.title ?? assetId,
     description: request.description,
     descriptionShortText: request.description,
     publisherHomepage: request.publisherHomepage,
+    dataSourceAvailability:
+      dataSource?.type === 'ON_REQUEST' ? 'ON_REQUEST' : 'LIVE',
+    language: request.language,
+    onRequestContactEmail: dataSource?.onRequest?.contactEmail,
+    onRequestContactEmailSubject:
+      dataSource?.onRequest?.contactPreferredEmailSubject,
     licenseUrl: request.licenseUrl,
     version: request.version,
     keywords: request.keywords,
@@ -97,6 +103,14 @@ function createAssetMetadata(
     dataUpdateFrequency: request.dataUpdateFrequency,
     temporalCoverageFrom: request.temporalCoverageFrom,
     temporalCoverageToInclusive: request.temporalCoverageToInclusive,
+    httpDatasourceHintsProxyMethod:
+      dataSource?.httpData?.enableMethodParameterization,
+    httpDatasourceHintsProxyPath:
+      dataSource?.httpData?.enablePathParameterization,
+    httpDatasourceHintsProxyQueryParams:
+      dataSource?.httpData?.enableQueryParameterization,
+    httpDatasourceHintsProxyBody:
+      dataSource?.httpData?.enableBodyParameterization,
     customJsonAsString: '{}',
     customJsonLdAsString: '{}',
     privateCustomJsonAsString: '{}',

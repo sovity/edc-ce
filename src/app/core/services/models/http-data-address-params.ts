@@ -33,8 +33,4 @@ export interface HttpDataAddressParams {
    * Query Parameters
    */
   queryParams: string | null;
-  proxyMethod: boolean;
-  proxyPath: boolean;
-  proxyQueryParams: boolean;
-  proxyBody: boolean;
 }

@@ -17,7 +17,7 @@ import {
   TransferHistoryPage,
   UiAsset,
   UiAssetCreateRequest,
-  UiAssetEditMetadataRequest,
+  UiAssetEditRequest,
   UiContractNegotiation,
   UiDataOffer,
   buildEdcClient,
@@ -53,14 +53,14 @@ export class EdcApiService {
     return from(this.edcClient.uiApi.createAsset({uiAssetCreateRequest}));
   }
 
-  editAssetMetadata(
+  editAsset(
     assetId: string,
-    uiAssetEditMetadataRequest: UiAssetEditMetadataRequest,
+    uiAssetEditRequest: UiAssetEditRequest,
   ): Observable<IdResponseDto> {
     return from(
-      this.edcClient.uiApi.editAssetMetadata({
+      this.edcClient.uiApi.editAsset({
         assetId,
-        uiAssetEditMetadataRequest,
+        uiAssetEditRequest,
       }),
     );
   }

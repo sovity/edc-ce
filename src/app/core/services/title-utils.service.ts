@@ -7,7 +7,8 @@ import {filter, map, shareReplay} from 'rxjs/operators';
 @Injectable()
 export class TitleUtilsService {
   routeData$ = this.routeDone$().pipe(
-    map(() => this.getRouteDataRecursively(), shareReplay(1)),
+    map(() => this.getRouteDataRecursively()),
+    shareReplay(1),
   );
 
   title$ = this.routeData$.pipe(map((data) => data.title));

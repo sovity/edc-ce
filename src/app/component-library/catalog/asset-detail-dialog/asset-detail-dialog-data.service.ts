@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
 import {DataOffer} from '../../../core/services/models/data-offer';
 import {UiAssetMapped} from '../../../core/services/models/ui-asset-mapped';
+import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
 import {
-  ContractAgreementCardMapped
-} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
-import {AssetDetailDialogData, OnAssetEditClickFn,} from './asset-detail-dialog-data';
+  AssetDetailDialogData,
+  OnAssetEditClickFn,
+} from './asset-detail-dialog-data';
 import {AssetPropertyGridGroupBuilder} from './asset-property-grid-group-builder';
 
 @Injectable()

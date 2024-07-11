@@ -4,6 +4,7 @@ import {
   FormGroup,
   ɵFormGroupValue,
 } from '@angular/forms';
+import {UiDataSourceHttpDataMethod} from '@sovity.de/edc-client';
 import {DataAddressType} from '../../../../../../component-library/data-address/data-address-type-select/data-address-type';
 import {HttpDatasourceAuthHeaderType} from './http-datasource-auth-header-type';
 import {HttpDatasourceHeaderFormModel} from './http-datasource-header-form-model';
@@ -18,9 +19,13 @@ export interface AssetDatasourceFormModel {
   // Custom Datasource JSON
   dataDestination: FormControl<string>;
 
+  // On-Request Datasource
+  contactEmail: FormControl<string>;
+  contactPreferredEmailSubject: FormControl<string>;
+
   // Http Datasource
   httpUrl: FormControl<string>;
-  httpMethod: FormControl<string>;
+  httpMethod: FormControl<UiDataSourceHttpDataMethod>;
 
   httpAuthHeaderType: FormControl<HttpDatasourceAuthHeaderType>;
   httpAuthHeaderName: FormControl<string>;
