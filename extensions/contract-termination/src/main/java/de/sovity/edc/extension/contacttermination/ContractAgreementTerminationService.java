@@ -89,8 +89,10 @@ public class ContractAgreementTerminationService {
             return Result.failure("The contract is already terminated");
         }
 
+        // TODO: should an EDC be able to terminate its own contracts?
         // TODO: there is a weakness here if the EDC sends this message to itself, which should no happen right now.
         //  Should select self/counterparty based on the details
+        // TODO: how can I get the EDC's identity?
         val terminatedAt = terminateContractQuery.terminateConsumerAgreement(termination, COUNTERPARTY);
 
         return Result.success(terminatedAt);

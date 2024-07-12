@@ -14,5 +14,9 @@
 
 package de.sovity.edc.e2e.utils;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class Scenario {
+    private final
 }

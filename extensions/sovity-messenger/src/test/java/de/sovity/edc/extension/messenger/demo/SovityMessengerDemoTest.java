@@ -73,7 +73,6 @@ class SovityMessengerDemoTest {
 
     @BeforeEach
     void setup() {
-        // TODO: change to .getUri().toString()
         receiverAddress = receiverConfig.getProtocolEndpoint().getUri().toString();
     }
 

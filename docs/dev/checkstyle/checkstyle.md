@@ -4,7 +4,7 @@
 
 While it's close to impossible to write a regex to validate all the possible copyright messages, the one currently configured in [checkstyle-config.xml](checkstyle-config.xml) matches almost all the files in this project.
 
-Failing to follow this format will make it progressively harder to fix the checkstyle errors as the copyright warnings will accumulate and dilute those errors, wasting precious brain time.
+Failing to use this template will make it progressively harder to fix the checkstyle errors as the copyright warnings will accumulate and dilute those errors, wasting precious brain time.
 
 IntelliJ has a feature to help maintain consistent copyright headers in
 

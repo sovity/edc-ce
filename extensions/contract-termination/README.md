@@ -21,7 +21,7 @@ To allow contracts termination and cancellation while no official specification 
 
 ## Why does this extension exist?
 
-Contracts termination is not natively supported the in the EDC. Contract in general can be terminated and this feature has been added here, waiting for an official implementation to be available.
+Contracts termination is not natively supported the in the EDC. Contracts in general can be terminated and this feature has been added here, waiting for an official implementation to be available.
 
 ## Details
 
