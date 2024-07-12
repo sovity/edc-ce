@@ -51,7 +51,6 @@ import static de.sovity.edc.client.gen.model.ContractTerminatedBy.COUNTERPARTY;
 import static de.sovity.edc.client.gen.model.ContractTerminatedBy.SELF;
 import static de.sovity.edc.client.gen.model.ContractTerminationStatus.ONGOING;
 import static de.sovity.edc.client.gen.model.ContractTerminationStatus.TERMINATED;
-import static de.sovity.edc.e2e.utils.AwaitNegotiationPolicy.AWAIT;
 import static java.time.Duration.ofSeconds;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -89,7 +88,7 @@ public class ContractTerminationTest {
 
         val agreements = assets.map(scenario::createAsset)
             .peek(scenario::createContractDefinition)
-            .map(it -> scenario.negotiateAsset(it, AWAIT))
+            .map(it -> scenario.negotiateAsset(it))
             .toList();
 
         consumerClient.uiApi().terminateContractAgreement(
@@ -139,7 +138,7 @@ public class ContractTerminationTest {
         val assetId = "asset-1";
         scenario.createAsset(assetId);
         scenario.createContractDefinition(assetId);
-        scenario.negotiateAsset(assetId, AWAIT);
+        scenario.negotiateAsset(assetId);
 
         // act
         val agreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
@@ -170,7 +169,7 @@ public class ContractTerminationTest {
 
         scenario.createAsset(assetId);
         scenario.createContractDefinition(assetId);
-        val negotiation = scenario.negotiateAsset(assetId, AWAIT);
+        val negotiation = scenario.negotiateAsset(assetId);
 
         // act
         val detail = "Some detail";
@@ -201,7 +200,7 @@ public class ContractTerminationTest {
 
         scenario.createAsset(assetId);
         scenario.createContractDefinition(assetId);
-        val negotiation = scenario.negotiateAsset(assetId, AWAIT);
+        val negotiation = scenario.negotiateAsset(assetId);
 
         // act
         val detail = "Some detail";
@@ -243,7 +242,7 @@ public class ContractTerminationTest {
 
         scenario.createAsset(assetId);
         scenario.createContractDefinition(assetId);
-        val negotiation = scenario.negotiateAsset(assetId, AWAIT);
+        val negotiation = scenario.negotiateAsset(assetId);
 
         // act
         val reason = "Some reason";
@@ -286,7 +285,7 @@ public class ContractTerminationTest {
 
         scenario.createAsset(assetId);
         scenario.createContractDefinition(assetId);
-        val negotiation = scenario.negotiateAsset(assetId, AWAIT);
+        val negotiation = scenario.negotiateAsset(assetId);
 
         // act
         val detail = "Some detail";
@@ -336,11 +335,11 @@ public class ContractTerminationTest {
         val assetId = "asset-1";
         val mockedAsset = scenario.createAssetWithMockResource(assetId, mockServer);
         scenario.createContractDefinition(assetId);
-        scenario.negotiateAsset(assetId, AWAIT);
+        scenario.negotiateAsset(assetId);
 
         mockServer.when(HttpRequest.request(destinationPath).withMethod("POST")).respond(it -> HttpResponse.response().withStatusCode(200));
 
-        val negotiation = scenario.negotiateAsset(assetId, AWAIT);
+        val negotiation = scenario.negotiateAsset(assetId);
 
         val transferRequest = InitiateTransferRequest.builder()
             .contractAgreementId(negotiation.getContractAgreementId())
@@ -390,7 +389,7 @@ public class ContractTerminationTest {
 
         scenario.createAsset(assetId);
         scenario.createContractDefinition(assetId);
-        val negotiation = scenario.negotiateAsset(assetId, AWAIT);
+        val negotiation = scenario.negotiateAsset(assetId);
 
         val detail = "Some detail";
         val reason = "Some reason";

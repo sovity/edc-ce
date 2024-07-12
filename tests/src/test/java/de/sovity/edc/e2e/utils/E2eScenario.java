@@ -50,7 +50,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static de.sovity.edc.e2e.utils.AwaitNegotiationPolicy.RETURN_IMMEDIATELY;
 import static java.time.Duration.ofSeconds;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -155,7 +154,7 @@ public class E2eScenario {
             .build());
     }
 
-    public UiContractNegotiation negotiateAsset(String assetId, AwaitNegotiationPolicy awaitResult) {
+    public UiContractNegotiation negotiateAsset(String assetId) {
         val connectorEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
         val offers = consumerClient.uiApi().getCatalogPageDataOffers(connectorEndpoint);
 
@@ -177,18 +176,14 @@ public class E2eScenario {
 
         val negotiation = consumerClient.uiApi().initiateContractNegotiation(negotiationRequest);
 
-        if (awaitResult == RETURN_IMMEDIATELY) {
-            return negotiation;
-        } else {
-            var neg = Awaitility.await().atMost(ofSeconds(5)).until(
-                () -> consumerClient.uiApi().getContractNegotiation(negotiation.getContractNegotiationId()),
-                it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
-            );
+        val neg = Awaitility.await().atMost(ofSeconds(5)).until(
+            () -> consumerClient.uiApi().getContractNegotiation(negotiation.getContractNegotiationId()),
+            it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
+        );
 
-            assertThat(neg.getState().getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.AGREED);
+        assertThat(neg.getState().getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.AGREED);
 
-            return neg;
-        }
+        return neg;
     }
 
     public void createPolicy(String id, OffsetDateTime from, OffsetDateTime until) {

@@ -72,9 +72,7 @@ class ApiWrapperDemoTest {
         scenario.createContractDefinition(dataOfferId);
 
         // consumer: negotiate contract and transfer data
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerConfig.getProtocolEndpoint().getUri().toString());
-        var negotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0), consumerClient);
-        negotiation = awaitNegotiationDone(negotiation.getContractNegotiationId(), consumerClient);
+        val negotiation = scenario.negotiateAsset(dataOfferId);
         initiateTransfer(negotiation, consumerClient);
 
         // check data sink

@@ -115,7 +115,6 @@ class DataSourceParameterizationTest {
     private static final String PROVIDER_PARTICIPANT_ID = "provider";
     private static ConnectorConfig providerConfig;
     private static EdcClient providerClient;
-    private static ConnectorRemote providerConnector;
 
     @RegisterExtension
     static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
@@ -127,7 +126,6 @@ class DataSourceParameterizationTest {
                 .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
                 .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
                 .build();
-            providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
             return providerConfig.getProperties();
         }
     );
@@ -183,7 +181,7 @@ class DataSourceParameterizationTest {
             createData(testCase, context);
 
             // act
-            val providerEndpoint = providerConnector.getConfig().getProtocolEndpoint().getUri().toString();
+            val providerEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
             val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerEndpoint);
             val startNegotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
             val negotiation = awaitNegotiationDone(startNegotiation.getContractNegotiationId());
@@ -273,7 +271,7 @@ class DataSourceParameterizationTest {
             createData(testCase, context);
 
             // act
-            val providerEndpoint = providerConnector.getConfig().getProtocolEndpoint().getUri().toString();
+            val providerEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
             val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerEndpoint);
             val startNegotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
             val negotiation = awaitNegotiationDone(startNegotiation.getContractNegotiationId());
@@ -320,7 +318,8 @@ class DataSourceParameterizationTest {
                 createData(testCase, context);
 
                 // act
-                val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
+                val connectorEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
+                val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(connectorEndpoint);
                 val dataOffer = dataOffers.stream().filter(it -> it.getAsset().getAssetId().equals(testCase.id)).findFirst().get();
                 val negotiationInit = initiateNegotiation(dataOffer, dataOffer.getContractOffers().get(0));
                 val negotiation = awaitNegotiationDone(negotiationInit.getContractNegotiationId());
@@ -570,10 +569,6 @@ class DataSourceParameterizationTest {
             .transferProcessProperties(transferProcessProperties)
             .build();
         return consumerClient.uiApi().initiateTransfer(transferRequest).getId();
-    }
-
-    private String getProtocolEndpoint(ConnectorRemote connector) {
-        return connector.getConfig().getProtocolEndpoint().getUri().toString();
     }
 
     private void awaitTransferCompletion(String transferId) {

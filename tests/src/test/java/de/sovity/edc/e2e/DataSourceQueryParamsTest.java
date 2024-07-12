@@ -18,7 +18,6 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
-import de.sovity.edc.e2e.utils.AwaitNegotiationPolicy;
 import de.sovity.edc.e2e.utils.Consumer;
 import de.sovity.edc.e2e.utils.E2eScenario;
 import de.sovity.edc.e2e.utils.E2eTestExtension;
@@ -79,7 +78,7 @@ class DataSourceQueryParamsTest {
         scenario.createContractDefinition(assetId);
 
         // act
-        val negotiation = scenario.negotiateAsset(assetId, AwaitNegotiationPolicy.AWAIT);
+        val negotiation = scenario.negotiateAsset(assetId);
         initiateTransfer(consumerClient, negotiation);
 
         // assert
