@@ -35,8 +35,8 @@ import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
@@ -45,9 +45,9 @@ import jakarta.ws.rs.core.HttpHeaders;
 import lombok.val;
 import okhttp3.HttpUrl;
 import org.awaitility.Awaitility;
-import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -90,27 +90,51 @@ import static org.mockserver.stop.Stop.stopQuietly;
 
 class DataSourceParameterizationTest {
 
-    private static final String PROVIDER_PARTICIPANT_ID = "provider";
     private static final String CONSUMER_PARTICIPANT_ID = "consumer";
+    private static ConnectorConfig consumerConfig;
+    private static EdcClient consumerClient;
+    private static ConnectorRemote consumerConnector;
 
     @RegisterExtension
-    static final EdcExtension PROVIDER_EDC_CONTEXT = new EdcExtension();
-    @RegisterExtension
-    static final EdcExtension CONSUMER_EDC_CONTEXT = new EdcExtension();
+    static EdcRuntimeExtensionWithTestDatabase consumerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "consumer",
+        testDatabase -> {
+            consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, testDatabase);
+            consumerClient = EdcClient.builder()
+                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
+                .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
+                .build();
+            consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
+            return consumerConfig.getProperties();
+        }
+    );
+
+
+    private static final String PROVIDER_PARTICIPANT_ID = "provider";
+    private static ConnectorConfig providerConfig;
+    private static EdcClient providerClient;
+    private static ConnectorRemote providerConnector;
 
     @RegisterExtension
-    static final TestDatabase PROVIDER_DATABASE = TestDatabaseFactory.getTestDatabase(1);
-    @RegisterExtension
-    static final TestDatabase CONSUMER_DATABASE = TestDatabaseFactory.getTestDatabase(2);
+    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "provider",
+        testDatabase -> {
+            providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, testDatabase);
+            providerClient = EdcClient.builder()
+                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
+                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
+                .build();
+            providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
+            return providerConfig.getProperties();
+        }
+    );
 
-    private ConnectorRemote providerConnector;
-    private ConnectorRemote consumerConnector;
-
-    private EdcClient providerClient;
-    private EdcClient consumerClient;
-
+    private final int port = getFreePort();
     private final String sourcePath = "/source/some/path/";
     private final String destinationPath = "/destination/some/path/";
+    private ClientAndServer mockServer;
 
     private static final AtomicInteger DATA_OFFER_INDEX = new AtomicInteger(0);
 
@@ -130,26 +154,13 @@ class DataSourceParameterizationTest {
     }
 
     @BeforeEach
-    void setup() {
-        // set up provider EDC + Client
-        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 21000, PROVIDER_DATABASE);
-        PROVIDER_EDC_CONTEXT.setConfiguration(providerConfig.getProperties());
-        providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
+    public void startServer() {
+        mockServer = ClientAndServer.startClientAndServer(port);
+    }
 
-        providerClient = EdcClient.builder()
-            .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-            .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-            .build();
-
-        // set up consumer EDC + Client
-        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 23000, CONSUMER_DATABASE);
-        CONSUMER_EDC_CONTEXT.setConfiguration(consumerConfig.getProperties());
-        consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
-
-        consumerClient = EdcClient.builder()
-            .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-            .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-            .build();
+    @AfterEach
+    public void stopServer() {
+        stopQuietly(mockServer);
     }
 
     @Test
@@ -171,7 +182,8 @@ class DataSourceParameterizationTest {
             createData(testCase, context);
 
             // act
-            val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
+            val providerEndpoint = providerConnector.getConfig().getProtocolEndpoint().getUri().toString();
+            val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerEndpoint);
             val startNegotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
             val negotiation = awaitNegotiationDone(startNegotiation.getContractNegotiationId());
 
@@ -260,7 +272,8 @@ class DataSourceParameterizationTest {
             createData(testCase, context);
 
             // act
-            val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
+            val providerEndpoint = providerConnector.getConfig().getProtocolEndpoint().getUri().toString();
+            val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerEndpoint);
             val startNegotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
             val negotiation = awaitNegotiationDone(startNegotiation.getContractNegotiationId());
 
@@ -269,7 +282,7 @@ class DataSourceParameterizationTest {
             val transferId = consumerConnector.initiateTransfer(
                 negotiation.getContractAgreementId(),
                 testCase.id,
-                URI.create("http://localhost:21003/api/dsp"),
+                URI.create(providerEndpoint),
                 Json.createObjectBuilder(Map.of(
                     standardBase + "type", "HttpData",
                     standardBase + "baseUrl", context.destinationUrl,
