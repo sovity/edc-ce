@@ -50,7 +50,6 @@ import org.awaitility.Awaitility;
 import org.eclipse.edc.connector.contract.spi.ContractId;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.eclipse.edc.spi.iam.IdentityService;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,7 +63,6 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 import static de.sovity.edc.client.gen.model.ContractTerminatedBy.COUNTERPARTY;
@@ -79,7 +77,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
 import static org.mockserver.stop.Stop.stopQuietly;
 
 public class ContractTerminationTest {
@@ -108,10 +105,6 @@ public class ContractTerminationTest {
     private final String sourceUrl = "http://localhost:" + port + sourcePath;
     private final String destinationUrl = "http://localhost:" + port + destinationPath;
     private ClientAndServer mockServer;
-
-    private static final AtomicInteger DATA_OFFER_INDEX = new AtomicInteger(0);
-
-    private final IdentityService identityService = mock(IdentityService.class);
 
     private ConnectorConfig providerConfig;
     private ConnectorConfig consumerConfig;
@@ -427,8 +420,8 @@ public class ContractTerminationTest {
         val reason = "Some reason";
         val contractTerminationRequest = ContractTerminationRequest.builder().detail(detail).reason(reason).build();
         val contractAgreementId = negotiation.getContractAgreementId();
-        // TODO: Preventing data transfer only makes sense when the provider terminates the contract?
-        //  No need to test in the opposite direction?
+
+        // only testing the provider's cancellation as this is the party that is concerned by data access
         providerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest);
 
         awaitTerminationCount(consumerClient, 1);
