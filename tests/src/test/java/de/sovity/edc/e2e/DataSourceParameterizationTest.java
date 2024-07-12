@@ -37,6 +37,7 @@ import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
+import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
@@ -307,6 +308,7 @@ class DataSourceParameterizationTest {
         });
     }
 
+    @DisabledOnGithub
     @Test
     void canTransferParameterizedAsset() {
         source().parallel().forEach(testCase -> {

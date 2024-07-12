@@ -35,6 +35,7 @@ dependencies {
     testImplementation(project(":extensions:database-direct-access"))
     testImplementation(project(":extensions:wrapper:clients:java-client"))
     testImplementation(project(":extensions:policy-always-true"))
+    testImplementation(project(":extensions:postgres-flyway"))
     testImplementation(project(":utils:jooq-database-access"))
     testImplementation(project(":utils:test-utils"))
     testImplementation(libs.edc.controlPlaneCore)
@@ -59,71 +60,13 @@ dependencies {
     testImplementation(libs.edc.dspApiConfiguration)
     testImplementation(libs.edc.dataPlaneSelectorCore)
     testImplementation(libs.edc.jsonLd)
-    testImplementation(libs.edc.transferProcessStoreSql) // TODO: try to reduce scope. This is needed for the transfer's store
+    testImplementation(libs.edc.transferProcessStoreSql)
 
     testImplementation(libs.jsonUnit.assertj)
     testImplementation(libs.restAssured.restAssured)
     testImplementation(libs.mockito.core)
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.api)
-    testRuntimeOnly(libs.junit.engine)
-
-
-    /// TODO rm deps after here
-
-
-    // Control-Plane
-    api(libs.edc.controlPlaneCore)
-    api(libs.edc.managementApi)
-    api(libs.edc.apiObservability)
-    api(libs.edc.configurationFilesystem)
-    api(libs.edc.controlPlaneAggregateServices)
-    api(libs.edc.http)
-    api(libs.edc.dsp)
-    api(libs.edc.jsonLd)
-
-    // Data Management API Key
-    api(libs.edc.authTokenbased)
-
-    // sovity Extensions Package
-    // Policies
-    api(project(":extensions:policy-referring-connector"))
-    api(project(":extensions:policy-time-interval"))
-    api(project(":extensions:policy-always-true"))
-
-    // API Extensions
-    api(project(":extensions:edc-ui-config"))
-    api(project(":extensions:last-commit-info"))
-
-    api(project(":extensions:postgres-flyway"))
-    api(project(":extensions:transfer-process-status-checker"))
-
-    // Control-plane to Data-plane
-    api(libs.edc.transferDataPlane)
-    api(libs.edc.dataPlaneSelectorCore)
-    api(libs.edc.dataPlaneSelectorClient)
-
-    // Data-plane
-    api(libs.edc.dataPlaneHttp)
-    api(libs.edc.dataPlaneFramework)
-    api(libs.edc.dataPlaneCore)
-    api(libs.edc.dataPlaneUtil)
-
-    api(project(":launchers:common:auth-mock"))
-
-    testAnnotationProcessor(libs.lombok)
-    testCompileOnly(libs.lombok)
-    testImplementation(project(":utils:test-utils"))
-    testImplementation(project(":extensions:test-backend-controller"))
-    testImplementation(project(":utils:test-connector-remote"))
-    testImplementation(project(":extensions:wrapper:clients:java-client"))
-    testImplementation(libs.jsonUnit.assertj)
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.assertj.core)
-    testImplementation(libs.junit.api)
-    testImplementation(libs.junit.params)
-    testImplementation(libs.mockserver.netty)
-    testImplementation(libs.restAssured.restAssured)
     testRuntimeOnly(libs.junit.engine)
 }
 
