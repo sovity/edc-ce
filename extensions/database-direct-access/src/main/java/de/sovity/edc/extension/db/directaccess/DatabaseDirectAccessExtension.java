@@ -76,8 +76,7 @@ public class DatabaseDirectAccessExtension implements ServiceExtension {
             hikariConfig.setUsername(config.getString(EDC_DATASOURCE_JDBC_USER));
             hikariConfig.setPassword(config.getString(EDC_DATASOURCE_JDBC_PASSWORD));
             hikariConfig.setMinimumIdle(1);
-            // TODO: config entry
-            hikariConfig.setMaximumPoolSize(5);
+            hikariConfig.setMaximumPoolSize(config.getInteger(EDC_SERVER_DB_CONNECTION_POOL_SIZE));
             hikariConfig.setIdleTimeout(30000);
             hikariConfig.setPoolName("direct-database-access");
             hikariConfig.setMaxLifetime(50000);

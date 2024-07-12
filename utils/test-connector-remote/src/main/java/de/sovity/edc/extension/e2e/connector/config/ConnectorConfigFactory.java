@@ -49,6 +49,7 @@ public class ConnectorConfigFactory {
 
     public static ConnectorConfig forTestDatabase(String participantId, TestDatabase testDatabase) {
         val firstPort = getFreePortRange(5);
+        System.out.println("Allocating first port " + firstPort);
         var config = basicEdcConfig(participantId, firstPort);
         config.setProperties(configureDatasources(testDatabase.getJdbcCredentials()));
         return config;
@@ -56,16 +57,16 @@ public class ConnectorConfigFactory {
 
     public static synchronized int getFreePortRange(int size) {
         // pick a random in a reasonable range
-        int firstPort = getFreePort(RANDOM.nextInt(10_000, 50_000));
+        int firstPort = RANDOM.nextInt(10_000, 50_000);
 
         int currentPort = firstPort;
         do {
-            if (canUsePort(currentPort + 1)) {
+            if (canUsePort(currentPort)) {
                 currentPort++;
             } else {
-                firstPort = getFreePort(currentPort++);
+                firstPort = currentPort++;
             }
-        } while (currentPort < firstPort + size);
+        } while (currentPort <= firstPort + size);
 
         return firstPort;
     }
@@ -107,6 +108,8 @@ public class ConnectorConfigFactory {
         properties.put("my.edc.curator.name", "Curator Name %s".formatted(participantId));
         properties.put("my.edc.maintainer.url", "http://maintainer.%s".formatted(participantId));
         properties.put("my.edc.maintainer.name", "Maintainer Name %s".formatted(participantId));
+
+        properties.put("edc.server.db.connection.pool.size", "3");
 
 //         properties.put("web.http.port", String.valueOf(apiConfig.getDefaultApiGroup().port()));
 //         properties.put("web.http.path", String.valueOf(apiConfig.getDefaultApiGroup().path()));

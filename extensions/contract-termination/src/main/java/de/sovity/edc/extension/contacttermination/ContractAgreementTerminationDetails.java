@@ -20,8 +20,6 @@ import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiat
 
 import java.time.OffsetDateTime;
 
-// TODO: this is probably duplicating elements between provider/consumer/counterparty/negotiation type
-//  remove the duplicates
 @Builder(toBuilder = true)
 public record ContractAgreementTerminationDetails(
     String contractAgreementId,

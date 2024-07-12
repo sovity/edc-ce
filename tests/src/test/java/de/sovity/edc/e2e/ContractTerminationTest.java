@@ -128,11 +128,6 @@ public class ContractTerminationTest {
 
     @BeforeEach
     void setup() {
-        System.out.println("======================================");
-        System.out.println(PROVIDER_DATABASE.getJdbcCredentials().jdbcUrl());
-        System.out.println(PROVIDER_DATABASE.getJdbcCredentials().jdbcUser());
-        System.out.println(PROVIDER_DATABASE.getJdbcCredentials().jdbcPassword());
-        System.out.println("======================================");
         // set up provider EDC + Client
         providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, PROVIDER_DATABASE);
         PROVIDER_EDC_CONTEXT.setConfiguration(providerConfig.getProperties());

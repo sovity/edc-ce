@@ -16,8 +16,6 @@ dependencies {
     implementation(libs.edc.coreSpi)
     implementation(libs.edc.managementApiConfiguration)
     implementation(libs.edc.transferSpi)
-    // TODO: why iss this only a testImpl in extensions/wrapper/wrapper/build.gradle.kts:49
-    implementation(libs.edc.dspApiConfiguration)
     implementation(libs.edc.dspNegotiationTransform)
 
     implementation(libs.jakarta.rsApi)
@@ -34,6 +32,7 @@ dependencies {
 
     testImplementation(libs.edc.controlPlaneCore)
     testImplementation(libs.edc.dataPlaneSelectorCore)
+    testImplementation(libs.edc.dspApiConfiguration)
     testImplementation(libs.edc.dspHttpCore)
     testImplementation(libs.edc.junit)
 

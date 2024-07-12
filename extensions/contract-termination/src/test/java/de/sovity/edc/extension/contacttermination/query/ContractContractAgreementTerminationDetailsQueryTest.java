@@ -62,7 +62,6 @@ class ContractContractAgreementTerminationDetailsQueryTest {
 
                 // assert
                 assertThat(details).isPresent();
-                // TODO: this is probably duplicating elements between provider/consumer/counterparty/negotiation type
                 assertThat(details.get()).isEqualTo(new ContractAgreementTerminationDetails(
                     agreementId,
                     "my-edc",

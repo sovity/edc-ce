@@ -24,7 +24,6 @@ import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfi
 import org.eclipse.edc.connector.transfer.spi.observe.TransferProcessListener;
 import org.eclipse.edc.connector.transfer.spi.observe.TransferProcessObservable;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
-import org.eclipse.edc.protocol.dsp.api.configuration.DspApiConfiguration;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.agent.ParticipantAgentService;
 import org.eclipse.edc.spi.iam.IdentityService;
@@ -34,8 +33,7 @@ import org.eclipse.edc.spi.system.ServiceExtensionContext;
 
 import static de.sovity.edc.extension.contacttermination.MapperUtils.toModel;
 
-// TODO "contract cancellation" is more used than "contract termination"
-//  https://trends.google.com/trends/explore?date=today%205-y&q=cancel%20contract,terminate%20contract,abrogate%20contract,annul%20contract&hl=en-US
+
 public class ContractTerminationExtension implements ServiceExtension {
 
     @Inject
@@ -43,9 +41,6 @@ public class ContractTerminationExtension implements ServiceExtension {
 
     @Inject
     private IdentityService identityService;
-
-    @Inject
-    private DspApiConfiguration dspApiConfiguration;
 
     @Inject
     private ManagementApiConfiguration managementApiConfiguration;
