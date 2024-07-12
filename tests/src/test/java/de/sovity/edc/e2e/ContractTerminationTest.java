@@ -38,10 +38,8 @@ import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.ws.rs.HttpMethod;
@@ -51,7 +49,6 @@ import org.apache.http.HttpStatus;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.connector.contract.spi.ContractId;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
-import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,7 +69,6 @@ import static de.sovity.edc.client.gen.model.ContractTerminatedBy.SELF;
 import static de.sovity.edc.client.gen.model.ContractTerminationStatus.ONGOING;
 import static de.sovity.edc.client.gen.model.ContractTerminationStatus.TERMINATED;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static java.time.Duration.ofSeconds;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -82,34 +78,51 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockserver.stop.Stop.stopQuietly;
 
 public class ContractTerminationTest {
-    private static final String PROVIDER_PARTICIPANT_ID = "provider";
+
     private static final String CONSUMER_PARTICIPANT_ID = "consumer";
+    private static ConnectorConfig consumerConfig;
+    private static EdcClient consumerClient;
 
     @RegisterExtension
-    static final EdcExtension PROVIDER_EDC_CONTEXT = new EdcExtension();
-    @RegisterExtension
-    static final EdcExtension CONSUMER_EDC_CONTEXT = new EdcExtension();
+    static EdcRuntimeExtensionWithTestDatabase consumerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "consumer",
+        testDatabase -> {
+            consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, testDatabase);
+            consumerClient = EdcClient.builder()
+                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
+                .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
+                .build();
+            return consumerConfig.getProperties();
+        }
+    );
+
+
+    private static final String PROVIDER_PARTICIPANT_ID = "provider";
+    private static ConnectorConfig providerConfig;
+    private static EdcClient providerClient;
 
     @RegisterExtension
-    static final TestDatabase PROVIDER_DATABASE = TestDatabaseFactory.getTestDatabase(1);
-    @RegisterExtension
-    static final TestDatabase CONSUMER_DATABASE = TestDatabaseFactory.getTestDatabase(2);
+    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "provider",
+        testDatabase -> {
+            providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, testDatabase);
+            providerClient = EdcClient.builder()
+                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
+                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
+                .build();
+            return providerConfig.getProperties();
+        }
+    );
 
-    private ConnectorRemote providerConnector;
-    private ConnectorRemote consumerConnector;
-
-    private EdcClient providerClient;
-    private EdcClient consumerClient;
-
+    private ClientAndServer mockServer;
     private final int port = getFreePort();
     private final String sourcePath = "/source/some/path/";
     private final String destinationPath = "/destination/some/path/";
     private final String sourceUrl = "http://localhost:" + port + sourcePath;
     private final String destinationUrl = "http://localhost:" + port + destinationPath;
-    private ClientAndServer mockServer;
 
-    private ConnectorConfig providerConfig;
-    private ConnectorConfig consumerConfig;
 
     @BeforeEach
     public void startServer() {
@@ -119,29 +132,6 @@ public class ContractTerminationTest {
     @AfterEach
     public void stopServer() {
         stopQuietly(mockServer);
-    }
-
-    @BeforeEach
-    void setup() {
-        // set up provider EDC + Client
-        providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, PROVIDER_DATABASE);
-        PROVIDER_EDC_CONTEXT.setConfiguration(providerConfig.getProperties());
-        providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
-
-        providerClient = EdcClient.builder()
-            .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-            .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-            .build();
-
-        // set up consumer EDC + Client
-        consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, CONSUMER_DATABASE);
-        CONSUMER_EDC_CONTEXT.setConfiguration(consumerConfig.getProperties());
-        consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
-
-        consumerClient = EdcClient.builder()
-            .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-            .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-            .build();
     }
 
     @Test
@@ -568,7 +558,7 @@ public class ContractTerminationTest {
     }
 
     private UiContractNegotiation awaitNegotiationDone(EdcClient client, String negotiationId) {
-        var negotiation = Awaitility.await().atMost(consumerConnector.timeout).until(
+        var negotiation = Awaitility.await().atMost(ofSeconds(5)).until(
             () -> client.uiApi().getContractNegotiation(negotiationId),
             it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
         );
