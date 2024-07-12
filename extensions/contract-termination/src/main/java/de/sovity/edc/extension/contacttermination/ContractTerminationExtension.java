@@ -88,11 +88,6 @@ public class ContractTerminationExtension implements ServiceExtension {
                     throw new IllegalStateException();
                 }
             }
-
-            @Override
-            public void initiated(TransferProcess process) {
-
-            }
         });
     }
 

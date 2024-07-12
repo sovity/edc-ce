@@ -92,8 +92,8 @@ public class E2eTestExtension
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
         throws ParameterResolutionException {
 
-        val isProvider = parameterContext.getParameter().getDeclaredAnnotation(Provider.class) != null;
-        val isConsumer = parameterContext.getParameter().getDeclaredAnnotation(Consumer.class) != null;
+        val isProvider = isProvider(parameterContext);
+        val isConsumer = isConsumer(parameterContext);
 
         if (isProvider && isConsumer) {
             throw new ParameterResolutionException("Either @Provider or @Consumer may be used.");
@@ -117,14 +117,16 @@ public class E2eTestExtension
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
         throws ParameterResolutionException {
 
-        val isConsumer = parameterContext.getParameter().getDeclaredAnnotation(Consumer.class) != null;
-        val isProvider = parameterContext.getParameter().getDeclaredAnnotation(Provider.class) != null;
+        val isConsumer = isConsumer(parameterContext);
+        val isProvider = isProvider(parameterContext);
 
         val type = parameterContext.getParameter().getType();
 
         if (isConsumer) {
             if (type.equals(EdcClient.class)) {
                 return newEdcClient(consumerConfig);
+            } else if (type.equals(ConnectorConfig.class)) {
+                return consumerConfig;
             } else {
                 return consumerExtension.supportsParameter(parameterContext, extensionContext);
             }
@@ -133,6 +135,8 @@ public class E2eTestExtension
         if (isProvider) {
             if (type.equals(EdcClient.class)) {
                 return newEdcClient(providerConfig);
+            } else if (type.equals(ConnectorConfig.class)) {
+                return providerConfig;
             } else {
                 return providerExtension.supportsParameter(parameterContext, extensionContext);
             }
@@ -143,6 +147,14 @@ public class E2eTestExtension
         }
 
         throw new IllegalArgumentException("The parameters must be annotated by the EDC side: @Provider or @Consumer.");
+    }
+
+    private static boolean isProvider(ParameterContext parameterContext) {
+        return parameterContext.getParameter().getDeclaredAnnotation(Provider.class) != null;
+    }
+
+    private static boolean isConsumer(ParameterContext parameterContext) {
+        return parameterContext.getParameter().getDeclaredAnnotation(Consumer.class) != null;
     }
 
     private EdcClient newEdcClient(ConnectorConfig consumerConfig) {

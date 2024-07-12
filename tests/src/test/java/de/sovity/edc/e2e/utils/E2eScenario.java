@@ -20,6 +20,7 @@ import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.IdResponseDto;
+import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
@@ -32,6 +33,8 @@ import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.client.gen.model.UiPolicyLiteral;
+import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.utils.Lazy;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -42,6 +45,7 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -185,5 +189,34 @@ public class E2eScenario {
 
             return neg;
         }
+    }
+
+    public void createPolicy(String id, OffsetDateTime from, OffsetDateTime until) {
+        val afterYesterday = UiPolicyConstraint.builder()
+            .left("POLICY_EVALUATION_TIME")
+            .operator(OperatorDto.GT)
+            .right(UiPolicyLiteral.builder()
+                .type(UiPolicyLiteralType.STRING)
+                .value(from.toString())
+                .build())
+            .build();
+
+        val beforeTomorrow = UiPolicyConstraint.builder()
+            .left("POLICY_EVALUATION_TIME")
+            .operator(OperatorDto.LT)
+            .right(UiPolicyLiteral.builder()
+                .type(UiPolicyLiteralType.STRING)
+                .value(until.toString())
+                .build())
+            .build();
+
+        var policyDefinition = PolicyDefinitionCreateRequest.builder()
+            .policyDefinitionId(id)
+            .policy(UiPolicyCreateRequest.builder()
+                .constraints(List.of(afterYesterday, beforeTomorrow))
+                .build())
+            .build();
+
+        providerClient.uiApi().createPolicyDefinition(policyDefinition);
     }
 }
