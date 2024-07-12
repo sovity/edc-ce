@@ -11,6 +11,7 @@
  *       sovity GmbH - initial API and implementation
  *
  */
+
 package de.sovity.edc.extension.utils.junit;
 
 import org.junit.jupiter.api.Tag;

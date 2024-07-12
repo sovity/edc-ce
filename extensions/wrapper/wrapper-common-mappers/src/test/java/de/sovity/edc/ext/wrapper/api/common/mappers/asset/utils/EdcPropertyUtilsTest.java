@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.EdcPropertyUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

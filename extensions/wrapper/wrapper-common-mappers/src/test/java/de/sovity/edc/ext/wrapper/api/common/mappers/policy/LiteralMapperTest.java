@@ -15,8 +15,6 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers.policy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.LiteralMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyLiteral;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyLiteralType;
 import org.eclipse.edc.policy.model.Expression;

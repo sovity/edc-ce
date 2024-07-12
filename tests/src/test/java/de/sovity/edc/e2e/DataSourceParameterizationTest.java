@@ -8,7 +8,8 @@
  *  SPDX-License-Identifier: Apache-2.0
  *
  *  Contributors:
- *      sovity GmbH - init
+ *       sovity GmbH - init
+ *
  */
 
 package de.sovity.edc.e2e;
@@ -216,7 +217,7 @@ class DataSourceParameterizationTest {
         });
     }
 
-    private static record Context(
+    private record Context(
         int port,
         String sourceUrl,
         String destinationUrl

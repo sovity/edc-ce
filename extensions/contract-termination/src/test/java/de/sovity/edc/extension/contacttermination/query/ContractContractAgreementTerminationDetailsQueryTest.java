@@ -9,6 +9,7 @@
  *
  *  Contributors:
  *       sovity GmbH - initial API and implementation
+ *
  */
 
 package de.sovity.edc.extension.contacttermination.query;
@@ -46,8 +47,7 @@ class ContractContractAgreementTerminationDetailsQueryTest {
     void fetchAgreementDetails_whenAgreementIsPresent_shouldReturnTheAgreementDetails(DSLContext dsl) {
         // arrange
 
-        dsl.transaction(trx ->
-            {
+        dsl.transaction(trx -> {
                 dsl.execute(
                     new String(
                         ContractContractAgreementTerminationDetailsQueryTest.class
@@ -83,8 +83,7 @@ class ContractContractAgreementTerminationDetailsQueryTest {
     void fetchAgreementDetails_whenAgreementIsMissing_shouldReturnEmptyOptional(DSLContext dsl) {
         // arrange
 
-        dsl.transaction(trx ->
-            {
+        dsl.transaction(trx -> {
                 dsl.execute(
                     new String(
                         ContractContractAgreementTerminationDetailsQueryTest.class
@@ -106,8 +105,7 @@ class ContractContractAgreementTerminationDetailsQueryTest {
     void fetchAgreementDetails_whenTerminationAlreadyExists_shouldReturnOptionalWithTerminationData(DSLContext dsl) {
         // arrange
 
-        dsl.transaction(trx ->
-            {
+        dsl.transaction(trx -> {
                 dsl.execute(
                     new String(
                         ContractContractAgreementTerminationDetailsQueryTest.class

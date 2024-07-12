@@ -8,7 +8,8 @@
  *  SPDX-License-Identifier: Apache-2.0
  *
  *  Contributors:
- *      sovity GmbH - init
+ *       sovity GmbH - init
+ *
  */
 
 package de.sovity.edc.ext.wrapper.api.common.mappers.policy;
@@ -19,7 +20,6 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraint;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.policy.model.AtomicConstraint;
-import org.eclipse.edc.policy.model.Constraint;
 import org.eclipse.edc.policy.model.LiteralExpression;
 
 import java.util.List;

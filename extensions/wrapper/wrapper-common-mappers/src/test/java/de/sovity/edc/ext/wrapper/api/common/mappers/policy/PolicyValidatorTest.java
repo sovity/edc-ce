@@ -28,8 +28,6 @@
 
 package de.sovity.edc.ext.wrapper.api.common.mappers.policy;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.MappingErrors;
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.PolicyValidator;
 import org.eclipse.edc.policy.model.Action;
 import org.eclipse.edc.policy.model.Constraint;
 import org.eclipse.edc.policy.model.Duty;

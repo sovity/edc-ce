@@ -8,13 +8,13 @@
  *  SPDX-License-Identifier: Apache-2.0
  *
  *  Contributors:
- *      sovity GmbH - init
+ *       sovity GmbH - init
+ *
  */
 
 package de.sovity.edc.ext.wrapper.api.common.mappers.policy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyLiteral;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

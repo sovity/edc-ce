@@ -9,6 +9,7 @@
  *
  *  Contributors:
  *       sovity GmbH - initial API and implementation
+ *
  */
 
 package de.sovity.edc.extension.contacttermination.query;
@@ -66,8 +67,7 @@ class TerminateContractQueryTest {
 
     @Test
     void terminateConsumerAgreement_shouldInsertRowInTerminationTable() {
-        dsl.transaction(trx ->
-            {
+        dsl.transaction(trx -> {
                 // arrange
                 val query = new TerminateContractQuery(trx::dsl);
                 val agreementId = "Y29udHJhY3QtMjIwMDA=:YXNzZXQtMjIwMDA=:NzYzYzkxODctZTQ3Yi00ODJjLTkxMjAtYTJkMTM1MzQ2YWVm";

@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.api.common.mappers.policy;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.MappingErrors;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
