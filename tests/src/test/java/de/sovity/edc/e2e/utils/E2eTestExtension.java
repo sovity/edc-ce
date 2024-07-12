@@ -28,7 +28,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Stream;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 
@@ -37,17 +37,12 @@ public class E2eTestExtension
 
     private final String consumerParticipantId = "consumer";
     private ConnectorConfig consumerConfig;
-    private EdcClient consumerClient;
 
     private final EdcRuntimeExtensionWithTestDatabase consumerExtension = new EdcRuntimeExtensionWithTestDatabase(
         ":launchers:connectors:sovity-dev",
         "consumer",
         testDatabase -> {
             consumerConfig = forTestDatabase(consumerParticipantId, testDatabase);
-            consumerClient = EdcClient.builder()
-                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
             return consumerConfig.getProperties();
         }
     );
@@ -55,35 +50,19 @@ public class E2eTestExtension
 
     private final String providerParticipantId = "provider";
     private ConnectorConfig providerConfig;
-    private EdcClient providerClient;
 
     private final EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
         ":launchers:connectors:sovity-dev",
         "provider",
         testDatabase -> {
             providerConfig = forTestDatabase(providerParticipantId, testDatabase);
-            providerClient = EdcClient.builder()
-                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
             return providerConfig.getProperties();
         }
     );
 
-    private final List<Class<?>> supportedTypes = List.of(ConnectorConfig.class, EdcClient.class, E2eScenario.class);
+    private final List<Class<?>> partySupportedTypes = List.of(ConnectorConfig.class, EdcClient.class);
+    private final List<Class<?>> supportedTypes = Stream.concat(partySupportedTypes.stream(), Stream.of(E2eScenario.class)).toList();
 
-    Map<Class<?>, Map<Class<?>, Object>> getRegistry() {
-        return Map.of(
-            Provider.class, Map.of(
-                ConnectorConfig.class, providerConfig,
-                EdcClient.class, providerClient
-            ),
-            Consumer.class, Map.of(
-                ConnectorConfig.class, consumerConfig,
-                EdcClient.class, consumerClient
-            )
-        );
-    }
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
@@ -117,16 +96,13 @@ public class E2eTestExtension
         val isConsumer = parameterContext.getParameter().getDeclaredAnnotation(Consumer.class) != null;
 
         if (isProvider && isConsumer) {
-            return false;
+            throw new ParameterResolutionException("Either @Provider or @Consumer may be used.");
         }
 
         val type = parameterContext.getParameter().getType();
 
-        if (isProvider) {
-            return getRegistry().getOrDefault(Provider.class, Map.of()).getOrDefault(type, null) != null;
-        }
-        if (isConsumer) {
-            return getRegistry().getOrDefault(Consumer.class, Map.of()).getOrDefault(type, null) != null;
+        if (isProvider || isConsumer) {
+            return partySupportedTypes.contains(type);
         }
 
         if (supportedTypes.contains(type)) {
@@ -147,28 +123,32 @@ public class E2eTestExtension
         val type = parameterContext.getParameter().getType();
 
         if (isConsumer) {
-            val maybe = getRegistry().getOrDefault(Consumer.class, Map.of()).getOrDefault(type, null);
-
-            if (maybe != null) {
-                return maybe;
+            if (type.equals(EdcClient.class)) {
+                return newEdcClient(consumerConfig);
             } else {
                 return consumerExtension.supportsParameter(parameterContext, extensionContext);
             }
         }
-        if (isProvider) {
-            val maybe = getRegistry().getOrDefault(Provider.class, Map.of()).getOrDefault(type, null);
 
-            if (maybe != null) {
-                return maybe;
+        if (isProvider) {
+            if (type.equals(EdcClient.class)) {
+                return newEdcClient(providerConfig);
             } else {
                 return providerExtension.supportsParameter(parameterContext, extensionContext);
             }
         }
 
         if (type.equals(E2eScenario.class)) {
-            return new E2eScenario(consumerClient, consumerConfig, providerClient, providerConfig);
+            return new E2eScenario(newEdcClient(consumerConfig), consumerConfig, newEdcClient(providerConfig), providerConfig);
         }
 
         throw new IllegalArgumentException("The parameters must be annotated by the EDC side: @Provider or @Consumer.");
+    }
+
+    private EdcClient newEdcClient(ConnectorConfig consumerConfig) {
+        return EdcClient.builder()
+            .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
+            .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
+            .build();
     }
 }

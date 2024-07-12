@@ -82,7 +82,6 @@ class DataSourceQueryParamsTest {
         val negotiation = scenario.negotiateAsset(assetId, AwaitNegotiationPolicy.AWAIT);
         initiateTransfer(consumerClient, negotiation);
 
-
         // assert
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), encodedParam);
     }
