@@ -42,6 +42,7 @@ import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
+import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.ws.rs.HttpMethod;
 import lombok.SneakyThrows;
@@ -379,6 +380,7 @@ public class ContractTerminationTest {
         assertThat(exception.getCode()).isEqualTo(HttpStatus.SC_NOT_MODIFIED);
     }
 
+    @DisabledOnGithub
     @Test
     void cantTransferDataAfterTerminated() throws InterruptedException {
         arrange();

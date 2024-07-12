@@ -13,6 +13,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
+- Added Contract Termination to allow users to stop sharing they data.
+
 #### Patch Changes
 
 ### Deployment Migration Notes
