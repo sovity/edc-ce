@@ -19,67 +19,31 @@ import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.e2e.utils.AwaitNegotiationPolicy;
-import de.sovity.edc.e2e.utils.Scenario;
+import de.sovity.edc.e2e.utils.Consumer;
+import de.sovity.edc.e2e.utils.E2eScenario;
+import de.sovity.edc.e2e.utils.E2eTestExtension;
+import de.sovity.edc.e2e.utils.Provider;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.HashMap;
 
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 
+@ExtendWith(E2eTestExtension.class)
 class DataSourceQueryParamsTest {
-
-    private static final String CONSUMER_PARTICIPANT_ID = "consumer";
-    private static ConnectorConfig consumerConfig;
-    private static EdcClient consumerClient;
-
-    @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase consumerExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "consumer",
-        testDatabase -> {
-            consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, testDatabase);
-            consumerClient = EdcClient.builder()
-                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
-            return consumerConfig.getProperties();
-        }
-    );
-
-
-    private static final String PROVIDER_PARTICIPANT_ID = "provider";
-    private static ConnectorConfig providerConfig;
-    private static EdcClient providerClient;
-
-    @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "provider",
-        testDatabase -> {
-            providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, testDatabase);
-            providerClient = EdcClient.builder()
-                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
-            return providerConfig.getProperties();
-        }
-    );
-
 
     private MockDataAddressRemote dataAddress;
     private final String encodedParam = "a=%25"; // Unencoded param "a=%"
     private final String dataOfferId = "my-data-offer-2023-11";
 
     @BeforeEach
-    void setup() {
+    void setup(@Provider ConnectorConfig providerConfig) {
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
         dataAddress = new MockDataAddressRemote(providerConfig.getDefaultEndpoint());
     }
@@ -102,9 +66,7 @@ class DataSourceQueryParamsTest {
      */
     @DisabledOnGithub
     @Test
-    void testQueryParamsDoubleEncoded() {
-
-        val scenario = new Scenario(consumerClient, consumerConfig, providerClient, providerConfig);
+    void testQueryParamsDoubleEncoded(E2eScenario scenario, @Consumer EdcClient consumerClient) {
 
         // arrange
         val assetId = "asset-1";
@@ -118,14 +80,14 @@ class DataSourceQueryParamsTest {
 
         // act
         val negotiation = scenario.negotiateAsset(assetId, AwaitNegotiationPolicy.AWAIT);
-        initiateTransfer(negotiation);
+        initiateTransfer(consumerClient, negotiation);
 
 
         // assert
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), encodedParam);
     }
 
-    private void initiateTransfer(UiContractNegotiation negotiation) {
+    private void initiateTransfer(EdcClient consumerClient, UiContractNegotiation negotiation) {
         var contractAgreementId = negotiation.getContractAgreementId();
         var transferRequest = InitiateTransferRequest.builder()
             .contractAgreementId(contractAgreementId)

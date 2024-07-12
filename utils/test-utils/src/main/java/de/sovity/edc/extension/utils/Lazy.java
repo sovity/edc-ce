@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.function.Supplier;
 
 @RequiredArgsConstructor
-public class Delegate<T> {
+public class Lazy<T> {
     private final Supplier<T> supplier;
 
     private T tt;

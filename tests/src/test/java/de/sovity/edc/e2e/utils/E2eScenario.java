@@ -33,7 +33,7 @@ import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.utils.Delegate;
+import de.sovity.edc.extension.utils.Lazy;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -51,13 +51,13 @@ import static java.time.Duration.ofSeconds;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RequiredArgsConstructor
-public class Scenario {
+public class E2eScenario {
     private final EdcClient consumerClient;
     private final ConnectorConfig consumerConfig;
     private final EdcClient providerClient;
     private final ConnectorConfig providerConfig;
 
-    private final Delegate<String> alwaysTruePolicy = new Delegate<>(
+    private final Lazy<String> alwaysTruePolicy = new Lazy<>(
         () -> createPolicyDefinition("alwaysTrue")
     );
 

@@ -18,18 +18,14 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.ApiException;
 import de.sovity.edc.client.gen.model.ContractAgreementPage;
 import de.sovity.edc.client.gen.model.ContractAgreementPageQuery;
-import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
-import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
 import de.sovity.edc.client.gen.model.ContractTerminatedBy;
 import de.sovity.edc.client.gen.model.ContractTerminationRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.TransferHistoryEntry;
-import de.sovity.edc.client.gen.model.UiContractNegotiation;
-import de.sovity.edc.client.gen.model.UiContractOffer;
-import de.sovity.edc.client.gen.model.UiDataOffer;
-import de.sovity.edc.e2e.utils.Scenario;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
+import de.sovity.edc.e2e.utils.Consumer;
+import de.sovity.edc.e2e.utils.E2eScenario;
+import de.sovity.edc.e2e.utils.E2eTestExtension;
+import de.sovity.edc.e2e.utils.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import jakarta.ws.rs.HttpMethod;
 import lombok.SneakyThrows;
@@ -41,7 +37,7 @@ import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
@@ -56,7 +52,6 @@ import static de.sovity.edc.client.gen.model.ContractTerminatedBy.SELF;
 import static de.sovity.edc.client.gen.model.ContractTerminationStatus.ONGOING;
 import static de.sovity.edc.client.gen.model.ContractTerminationStatus.TERMINATED;
 import static de.sovity.edc.e2e.utils.AwaitNegotiationPolicy.AWAIT;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static java.time.Duration.ofSeconds;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,44 +60,8 @@ import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockserver.stop.Stop.stopQuietly;
 
+@ExtendWith(E2eTestExtension.class)
 public class ContractTerminationTest {
-
-    private static final String CONSUMER_PARTICIPANT_ID = "consumer";
-    private static ConnectorConfig consumerConfig;
-    private static EdcClient consumerClient;
-
-    @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase consumerExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "consumer",
-        testDatabase -> {
-            consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, testDatabase);
-            consumerClient = EdcClient.builder()
-                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
-            return consumerConfig.getProperties();
-        }
-    );
-
-
-    private static final String PROVIDER_PARTICIPANT_ID = "provider";
-    private static ConnectorConfig providerConfig;
-    private static EdcClient providerClient;
-
-    @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "provider",
-        testDatabase -> {
-            providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, testDatabase);
-            providerClient = EdcClient.builder()
-                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
-            return providerConfig.getProperties();
-        }
-    );
 
     private ClientAndServer mockServer;
     private final int port = getFreePort();
@@ -121,9 +80,10 @@ public class ContractTerminationTest {
     }
 
     @Test
-    void canGetAgreementPageForNonTerminatedContract() {
-
-        val scenario = new Scenario(consumerClient, consumerConfig, providerClient, providerConfig);
+    void canGetAgreementPageForNonTerminatedContract(
+        E2eScenario scenario,
+        @Consumer EdcClient consumerClient,
+        @Provider EdcClient providerClient) {
 
         val assets = Stream.of("a-1", "a-2", "a-3");
 
@@ -171,9 +131,10 @@ public class ContractTerminationTest {
     @DisabledOnGithub
     @Test
     @SneakyThrows
-    void canGetAgreementPageForTerminatedContract() {
-
-        val scenario = new Scenario(consumerClient, consumerConfig, providerClient, providerConfig);
+    void canGetAgreementPageForTerminatedContract(
+        E2eScenario scenario,
+        @Consumer EdcClient consumerClient,
+        @Provider EdcClient providerClient) {
 
         val assetId = "asset-1";
         scenario.createAsset(assetId);
@@ -200,9 +161,10 @@ public class ContractTerminationTest {
 
     @Test
     @SneakyThrows
-    void canTerminateFromConsumer() {
-
-        val scenario = new Scenario(consumerClient, consumerConfig, providerClient, providerConfig);
+    void canTerminateFromConsumer(
+        E2eScenario scenario,
+        @Consumer EdcClient consumerClient,
+        @Provider EdcClient providerClient) {
 
         val assetId = "asset-1";
 
@@ -230,9 +192,10 @@ public class ContractTerminationTest {
     }
 
     @Test
-    void limitTheReasonSizeAt100Chars() {
-
-        val scenario = new Scenario(consumerClient, consumerConfig, providerClient, providerConfig);
+    void limitTheReasonSizeAt100Chars(
+        E2eScenario scenario,
+        @Consumer EdcClient consumerClient,
+        @Provider EdcClient providerClient) {
 
         val assetId = "asset-1";
 
@@ -271,9 +234,10 @@ public class ContractTerminationTest {
     }
 
     @Test
-    void limitTheDetailSizeAt1000Chars() {
-
-        val scenario = new Scenario(consumerClient, consumerConfig, providerClient, providerConfig);
+    void limitTheDetailSizeAt1000Chars(
+        E2eScenario scenario,
+        @Consumer EdcClient consumerClient,
+        @Provider EdcClient providerClient) {
 
         val assetId = "asset-1";
 
@@ -313,9 +277,10 @@ public class ContractTerminationTest {
 
     @Test
     @SneakyThrows
-    void canTerminateFromProvider() {
-
-        val scenario = new Scenario(consumerClient, consumerConfig, providerClient, providerConfig);
+    void canTerminateFromProvider(
+        E2eScenario scenario,
+        @Consumer EdcClient consumerClient,
+        @Provider EdcClient providerClient) {
 
         val assetId = "asset-1";
 
@@ -348,7 +313,8 @@ public class ContractTerminationTest {
     }
 
     @Test
-    void doesntCrashWhenAgreementDoesntExist() {
+    void doesntCrashWhenAgreementDoesntExist(
+        @Consumer EdcClient consumerClient) {
         // act
         val exception = assertThrows(
             ApiException.class,
@@ -359,40 +325,13 @@ public class ContractTerminationTest {
         assertThat(exception.getCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
     }
 
-    @Test
-    void canTerminateOnlyOnce() {
-
-        val scenario = new Scenario(consumerClient, consumerConfig, providerClient, providerConfig);
-
-        val assetId = "asset-1";
-
-        scenario.createAsset(assetId);
-        scenario.createContractDefinition(assetId);
-        val negotiation = scenario.negotiateAsset(assetId, AWAIT);
-
-        val detail = "Some detail";
-        val reason = "Some reason";
-        val contractTerminationRequest = ContractTerminationRequest.builder().detail(detail).reason(reason).build();
-        val contractAgreementId = negotiation.getContractAgreementId();
-        consumerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest);
-
-        awaitTerminationCount(consumerClient, 1);
-        awaitTerminationCount(providerClient, 1);
-
-        // act
-
-        val exception = assertThrows(
-            ApiException.class,
-            () -> consumerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest));
-
-        assertThat(exception.getCode()).isEqualTo(HttpStatus.SC_NOT_MODIFIED);
-    }
-
     @DisabledOnGithub
     @Test
-    void cantTransferDataAfterTerminated() throws InterruptedException {
-
-        val scenario = new Scenario(consumerClient, consumerConfig, providerClient, providerConfig);
+    @SneakyThrows
+    void cantTransferDataAfterTerminated(
+        E2eScenario scenario,
+        @Consumer EdcClient consumerClient,
+        @Provider EdcClient providerClient) {
 
         val assetId = "asset-1";
         val mockedAsset = scenario.createAssetWithMockResource(assetId, mockServer);
@@ -441,6 +380,36 @@ public class ContractTerminationTest {
         assertThat(mockedAsset.accessed().get()).isFalse();
     }
 
+    @Test
+    void canTerminateOnlyOnce(
+        E2eScenario scenario,
+        @Consumer EdcClient consumerClient,
+        @Provider EdcClient providerClient) {
+
+        val assetId = "asset-1";
+
+        scenario.createAsset(assetId);
+        scenario.createContractDefinition(assetId);
+        val negotiation = scenario.negotiateAsset(assetId, AWAIT);
+
+        val detail = "Some detail";
+        val reason = "Some reason";
+        val contractTerminationRequest = ContractTerminationRequest.builder().detail(detail).reason(reason).build();
+        val contractAgreementId = negotiation.getContractAgreementId();
+        consumerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest);
+
+        awaitTerminationCount(consumerClient, 1);
+        awaitTerminationCount(providerClient, 1);
+
+        // act
+
+        val exception = assertThrows(
+            ApiException.class,
+            () -> consumerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest));
+
+        assertThat(exception.getCode()).isEqualTo(HttpStatus.SC_NOT_MODIFIED);
+    }
+
     private static void assertTermination(
         ContractAgreementPage consumerSideAgreements,
         String detail,
@@ -475,29 +444,6 @@ public class ContractTerminationTest {
                 .orElse(false));
 
         return historyEntry.get();
-    }
-
-
-    public static UiContractNegotiation initiateNegotiation(UiDataOffer dataOffer, UiContractOffer contractOffer) {
-        var negotiationRequest = ContractNegotiationRequest.builder()
-            .counterPartyAddress(dataOffer.getEndpoint())
-            .counterPartyParticipantId(dataOffer.getParticipantId())
-            .assetId(dataOffer.getAsset().getAssetId())
-            .contractOfferId(contractOffer.getContractOfferId())
-            .policyJsonLd(contractOffer.getPolicy().getPolicyJsonLd())
-            .build();
-
-        return consumerClient.uiApi().initiateContractNegotiation(negotiationRequest);
-    }
-
-    private UiContractNegotiation awaitNegotiationDone(EdcClient client, String negotiationId) {
-        var negotiation = Awaitility.await().atMost(ofSeconds(5)).until(
-            () -> client.uiApi().getContractNegotiation(negotiationId),
-            it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
-        );
-
-        assertThat(negotiation.getState().getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.AGREED);
-        return negotiation;
     }
 
     private void awaitTerminationCount(EdcClient client, int count) {
