@@ -49,6 +49,7 @@ dependencies {
     testImplementation(libs.jsonAssert)
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockserver.netty)
+    testImplementation(libs.postgres)
     testImplementation(libs.restAssured.restAssured)
     testImplementation(libs.testcontainers.testcontainers)
     testImplementation(libs.testcontainers.junitJupiter)

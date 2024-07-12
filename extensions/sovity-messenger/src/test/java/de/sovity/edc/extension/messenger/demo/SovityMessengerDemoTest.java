@@ -15,8 +15,7 @@
 package de.sovity.edc.extension.messenger.demo;
 
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.extension.messenger.SovityMessengerException;
 import de.sovity.edc.extension.messenger.demo.message.Addition;
@@ -28,8 +27,6 @@ import de.sovity.edc.extension.messenger.demo.message.Sqrt;
 import de.sovity.edc.extension.messenger.demo.message.UnregisteredMessage;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import lombok.val;
-import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.eclipse.edc.spi.iam.TokenDecorator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -41,24 +38,34 @@ import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactor
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 class SovityMessengerDemoTest {
-
     // Setup, you may skip this part
 
     private static final String EMITTER_PARTICIPANT_ID = "emitter";
+    private static ConnectorConfig emitterConfig;
+
+    @RegisterExtension
+    static EdcRuntimeExtensionWithTestDatabase emitterExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "emitter",
+        testDatabase -> {
+            emitterConfig = forTestDatabase(EMITTER_PARTICIPANT_ID, testDatabase);
+            return emitterConfig.getProperties();
+        }
+    );
+
+
     private static final String RECEIVER_PARTICIPANT_ID = "receiver";
+    private static ConnectorConfig receiverConfig;
 
     @RegisterExtension
-    static EdcExtension emitterEdcContext = new EdcExtension();
-    @RegisterExtension
-    static EdcExtension receiverEdcContext = new EdcExtension();
-
-    @RegisterExtension
-    static final TestDatabase EMITTER_DATABASE = new TestDatabaseViaTestcontainers();
-    @RegisterExtension
-    static final TestDatabase RECEIVER_DATABASE = new TestDatabaseViaTestcontainers();
-
-    private ConnectorConfig providerConfig;
-    private ConnectorConfig consumerConfig;
+    static EdcRuntimeExtensionWithTestDatabase receiverExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "receiver",
+        testDatabase -> {
+            receiverConfig = forTestDatabase(RECEIVER_PARTICIPANT_ID, testDatabase);
+            return receiverConfig.getProperties();
+        }
+    );
 
     private String receiverAddress;
 
@@ -66,15 +73,8 @@ class SovityMessengerDemoTest {
 
     @BeforeEach
     void setup() {
-        providerConfig = forTestDatabase(EMITTER_PARTICIPANT_ID, EMITTER_DATABASE);
-        emitterEdcContext.setConfiguration(providerConfig.getProperties());
-        emitterEdcContext.registerServiceMock(TokenDecorator.class, (td) -> td);
-
-        consumerConfig = forTestDatabase(RECEIVER_PARTICIPANT_ID, RECEIVER_DATABASE);
-        receiverEdcContext.setConfiguration(consumerConfig.getProperties());
-        receiverEdcContext.registerServiceMock(TokenDecorator.class, (td) -> td);
-
-        receiverAddress = "http://localhost:" + consumerConfig.getProtocolEndpoint().port() + consumerConfig.getProtocolEndpoint().path();
+        // TODO: change to .getUri().toString()
+        receiverAddress = receiverConfig.getProtocolEndpoint().getUri().toString();
     }
 
     /**
@@ -92,7 +92,7 @@ class SovityMessengerDemoTest {
          *
          * This messenger is already configured to accept messages in de.sovity.edc.extension.messenger.demo.SovityMessengerDemo#initialize
          */
-        val messenger = emitterEdcContext.getContext().getService(SovityMessenger.class);
+        val messenger = emitterExtension.getEdcRuntimeExtension().getContext().getService(SovityMessenger.class);
 
         System.out.println("START MARKER");
 
