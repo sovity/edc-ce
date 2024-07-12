@@ -46,6 +46,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static de.sovity.edc.e2e.utils.AwaitNegotiationPolicy.RETURN_IMMEDIATELY;
 import static java.time.Duration.ofSeconds;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -70,6 +71,15 @@ public class Scenario {
             .build();
 
         return internalCreateAsset(id, dummyDataSource).getId();
+    }
+
+    public String createAsset(String id, UiDataSourceHttpData uiDataSourceHttpData) {
+        val uiDataSource = UiDataSource.builder()
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(uiDataSourceHttpData)
+            .build();
+
+        return internalCreateAsset(id, uiDataSource).getId();
     }
 
     public MockedAsset createAssetWithMockResource(String id, ClientAndServer clientAndServer) {
@@ -141,7 +151,7 @@ public class Scenario {
             .build());
     }
 
-    public UiContractNegotiation negotiateAssetAndAwait(String assetId) {
+    public UiContractNegotiation negotiateAsset(String assetId, AwaitNegotiationPolicy awaitResult) {
         val connectorEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
         val offers = consumerClient.uiApi().getCatalogPageDataOffers(connectorEndpoint);
 
@@ -161,15 +171,19 @@ public class Scenario {
             .policyJsonLd(firstContractOffer.getPolicy().getPolicyJsonLd())
             .build();
 
-        val negotiationId = consumerClient.uiApi().initiateContractNegotiation(negotiationRequest).getContractNegotiationId();
+        val negotiation = consumerClient.uiApi().initiateContractNegotiation(negotiationRequest);
 
-        var negotiation = Awaitility.await().atMost(ofSeconds(5)).until(
-            () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
-            it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
-        );
+        if (awaitResult == RETURN_IMMEDIATELY) {
+            return negotiation;
+        } else {
+            var neg = Awaitility.await().atMost(ofSeconds(5)).until(
+                () -> consumerClient.uiApi().getContractNegotiation(negotiation.getContractNegotiationId()),
+                it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
+            );
 
-        assertThat(negotiation.getState().getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.AGREED);
+            assertThat(neg.getState().getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.AGREED);
 
-        return negotiation;
+            return neg;
+        }
     }
 }
