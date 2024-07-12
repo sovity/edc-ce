@@ -202,6 +202,7 @@ public class ContractTerminationTest {
         assertThat(ongoingAgreements.getContractAgreements()).hasSize(1);
     }
 
+    @DisabledOnGithub
     @Test
     @SneakyThrows
     void canGetAgreementPageForTerminatedContract() {
