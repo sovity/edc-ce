@@ -46,7 +46,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 class UseCaseApiWrapperTest {
-    private EdcClient client;
 
     private static ConnectorConfig config;
     private static EdcClient client;

@@ -32,7 +32,8 @@ public class TerminateContractQuery {
     private final Supplier<DSLContext> dsl;
 
     public Result<OffsetDateTime> terminateConsumerAgreement(ContractTermination termination, ContractTerminatedBy terminatedBy) {
-        val now = OffsetDateTime.now();
+        val tooAccurate = OffsetDateTime.now();
+        val now = tooAccurate.withNano(tooAccurate.getNano() / 1000 * 1000);
 
         try {
             dsl.get().transaction(trx -> {

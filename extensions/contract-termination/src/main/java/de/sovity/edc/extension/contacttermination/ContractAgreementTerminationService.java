@@ -17,8 +17,6 @@ package de.sovity.edc.extension.contacttermination;
 import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
 import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
 import de.sovity.edc.extension.messenger.SovityMessenger;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.WebApplicationException;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.spi.EdcException;
@@ -48,13 +46,13 @@ public class ContractAgreementTerminationService {
         val maybeDetails = contractAgreementTerminationDetailsQuery.fetchAgreementDetails(termination.contractAgreementId());
 
         if (maybeDetails.isEmpty()) {
-            throw new BadRequestException("Could not find the contract agreement with ID %s.".formatted(termination.contractAgreementId()));
+            throw new EdcException("Could not find the contract agreement with ID %s.".formatted(termination.contractAgreementId()));
         }
 
         val details = maybeDetails.get();
 
         if (details.isTerminated()) {
-            throw new WebApplicationException("The contract is already terminated", 304);
+            return details.terminatedAt();
         }
 
         val terminatedAt = terminateContractQuery.terminateConsumerAgreement(termination, SELF);

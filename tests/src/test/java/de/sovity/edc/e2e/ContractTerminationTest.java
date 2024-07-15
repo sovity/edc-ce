@@ -300,13 +300,11 @@ public class ContractTerminationTest {
     void doesntCrashWhenAgreementDoesntExist(
         @Consumer EdcClient consumerClient) {
         // act
-        val exception = assertThrows(
+        assertThrows(
             ApiException.class,
             () -> consumerClient.uiApi().terminateContractAgreement(
                 ContractId.create("definition-1", "asset-1").toString(),
                 ContractTerminationRequest.builder().detail("Some detail").reason("Some reason").build()));
-
-        assertThat(exception.getCode()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
     }
 
     @DisabledOnGithub
@@ -339,8 +337,15 @@ public class ContractTerminationTest {
             )
             .build();
 
-        val initTransfer = consumerClient.uiApi().initiateTransfer(transferRequest);
-        val historyEntry = awaitTransfer(consumerClient, initTransfer.getId());
+        val transferId = scenario.transferAndAwait(transferRequest);
+
+        val historyEntry = consumerClient.uiApi()
+            .getTransferHistoryPage()
+            .getTransferEntries()
+            .stream()
+            .filter(it -> it.getTransferProcessId().equals(transferId))
+            .findFirst()
+            .get();
 
         assertThat(historyEntry.getState().getCode()).isEqualTo(TransferProcessStates.COMPLETED.code());
         assertThat(mockedAsset.accesses().get()).isGreaterThan(0);
@@ -382,18 +387,16 @@ public class ContractTerminationTest {
         val reason = "Some reason";
         val contractTerminationRequest = ContractTerminationRequest.builder().detail(detail).reason(reason).build();
         val contractAgreementId = negotiation.getContractAgreementId();
-        consumerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest);
+        val firstTermination = consumerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest);
 
         awaitTerminationCount(consumerClient, 1);
         awaitTerminationCount(providerClient, 1);
 
         // act
 
-        val exception = assertThrows(
-            ApiException.class,
-            () -> consumerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest));
+        val alreadyExists = consumerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest);
 
-        assertThat(exception.getCode()).isEqualTo(HttpStatus.SC_NOT_MODIFIED);
+        assertThat(alreadyExists.getLastUpdatedDate()).isEqualTo(firstTermination.getLastUpdatedDate());
     }
 
     private static void assertTermination(

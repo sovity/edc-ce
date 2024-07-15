@@ -21,6 +21,7 @@ import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.IdResponseDto;
 import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
+import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
@@ -216,6 +217,12 @@ public class E2eScenario {
             .build();
 
         providerClient.uiApi().createPolicyDefinition(policyDefinition);
+    }
+
+    public String transferAndAwait(InitiateTransferRequest transferRequest) {
+        val transferInit = consumerClient.uiApi().initiateTransfer(transferRequest).getId();
+        awaitTransferCompletion(transferInit);
+        return transferInit;
     }
 
     public String transferAndAwait(InitiateCustomTransferRequest transferRequest) {
