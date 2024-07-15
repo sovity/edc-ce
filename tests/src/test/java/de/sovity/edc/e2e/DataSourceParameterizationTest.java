@@ -128,8 +128,8 @@ class DataSourceParameterizationTest {
 
     @Test
     void canUseTheWorkaroundInCustomTransferRequest(
-        @Provider ConnectorConfig providerConfig,
         @Consumer EdcClient consumerClient,
+        @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -223,9 +223,9 @@ class DataSourceParameterizationTest {
     @Test
     void sendWithEdcManagementApi(
         E2eScenario scenario,
-        @Provider ConnectorConfig providerConfig,
-        @Consumer EdcClient consumerClient,
         @Consumer ConnectorRemote consumerConnector,
+        @Consumer EdcClient consumerClient,
+        @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -282,7 +282,11 @@ class DataSourceParameterizationTest {
 
     @DisabledOnGithub
     @Test
-    void canTransferParameterizedAsset(@Provider ConnectorConfig providerConfig, @Provider EdcClient providerClient, @Consumer EdcClient consumerClient) {
+    void canTransferParameterizedAsset(
+        @Consumer EdcClient consumerClient,
+        @Provider ConnectorConfig providerConfig,
+        @Provider EdcClient providerClient) {
+
         source().parallel().forEach(testCase -> {
             // arrange
             val received = new AtomicBoolean(false);

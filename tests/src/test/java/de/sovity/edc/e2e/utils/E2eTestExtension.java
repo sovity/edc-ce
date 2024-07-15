@@ -38,34 +38,42 @@ import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactor
 public class E2eTestExtension
     implements BeforeAllCallback, AfterAllCallback, BeforeTestExecutionCallback, AfterTestExecutionCallback, ParameterResolver {
 
-    private final String consumerParticipantId = "consumer";
+    private final String consumerParticipantId;
     private ConnectorConfig consumerConfig;
+    private final EdcRuntimeExtensionWithTestDatabase consumerExtension;
 
-    private final EdcRuntimeExtensionWithTestDatabase consumerExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "consumer",
-        testDatabase -> {
-            consumerConfig = forTestDatabase(consumerParticipantId, testDatabase);
-            return consumerConfig.getProperties();
-        }
-    );
-
-
-    private final String providerParticipantId = "provider";
+    private final String providerParticipantId;
     private ConnectorConfig providerConfig;
-
-    private final EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "provider",
-        testDatabase -> {
-            providerConfig = forTestDatabase(providerParticipantId, testDatabase);
-            return providerConfig.getProperties();
-        }
-    );
+    private final EdcRuntimeExtensionWithTestDatabase providerExtension;
 
     private final List<Class<?>> partySupportedTypes = List.of(ConnectorConfig.class, EdcClient.class, ConnectorRemote.class);
     private final List<Class<?>> supportedTypes = Stream.concat(partySupportedTypes.stream(), Stream.of(E2eScenario.class)).toList();
 
+    public E2eTestExtension() {
+        this("consumer", "provider");
+    }
+
+    public E2eTestExtension(String consumerParticipantId, String providerParticipantId) {
+        this.consumerParticipantId = consumerParticipantId;
+        this.providerParticipantId = providerParticipantId;
+
+        consumerExtension = new EdcRuntimeExtensionWithTestDatabase(
+            ":launchers:connectors:sovity-dev",
+            "consumer",
+            testDatabase -> {
+                consumerConfig = forTestDatabase(this.consumerParticipantId, testDatabase);
+                return consumerConfig.getProperties();
+            }
+        );
+        providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+            ":launchers:connectors:sovity-dev",
+            "provider",
+            testDatabase -> {
+                providerConfig = forTestDatabase(this.providerParticipantId, testDatabase);
+                return providerConfig.getProperties();
+            }
+        );
+    }
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {

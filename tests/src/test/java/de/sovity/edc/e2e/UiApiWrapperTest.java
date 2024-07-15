@@ -39,10 +39,12 @@ import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
+import de.sovity.edc.e2e.utils.Consumer;
+import de.sovity.edc.e2e.utils.E2eTestExtension;
+import de.sovity.edc.e2e.utils.Provider;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -50,7 +52,6 @@ import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import lombok.val;
 import org.awaitility.Awaitility;
-import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,8 +67,6 @@ import java.util.concurrent.TimeUnit;
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.CONSUMING;
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.PROVIDING;
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -79,49 +78,25 @@ class UiApiWrapperTest {
     private static final String CONSUMER_PARTICIPANT_ID = "consumer";
 
     @RegisterExtension
-    static EdcExtension providerEdcContext = new EdcExtension();
-    @RegisterExtension
-    static EdcExtension consumerEdcContext = new EdcExtension();
+    private static E2eTestExtension e2eTestExtension = new E2eTestExtension(CONSUMER_PARTICIPANT_ID, PROVIDER_PARTICIPANT_ID);
 
-    @RegisterExtension
-    static final TestDatabase PROVIDER_DATABASE = new TestDatabaseViaTestcontainers();
-    @RegisterExtension
-    static final TestDatabase CONSUMER_DATABASE = new TestDatabaseViaTestcontainers();
-
-    private ConnectorRemote providerConnector;
-    private ConnectorRemote consumerConnector;
-
-    private EdcClient providerClient;
-    private EdcClient consumerClient;
     private MockDataAddressRemote dataAddress;
 
     @BeforeEach
-    void setup() {
-        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 21000, PROVIDER_DATABASE);
-        providerEdcContext.setConfiguration(providerConfig.getProperties());
-        providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
-
-        providerClient = EdcClient.builder()
-                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
-
-        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 23000, CONSUMER_DATABASE);
-        consumerEdcContext.setConfiguration(consumerConfig.getProperties());
-        consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
-
-        consumerClient = EdcClient.builder()
-                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
-
+    void setup(@Provider ConnectorRemote providerConnector) {
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
 
     @DisabledOnGithub
     @Test
-    void provide_consume_assetMapping_policyMapping_agreements() {
+    void provide_consume_assetMapping_policyMapping_agreements(
+        @Consumer ConnectorConfig consumerConfig,
+        @Consumer EdcClient consumerClient,
+        @Consumer ConnectorRemote consumerConnector,
+        @Provider ConnectorRemote providerConnector,
+        @Provider EdcClient providerClient) {
+
         // arrange
         var data = "expected data 123";
         var yesterday = OffsetDateTime.now().minusDays(1);
@@ -215,8 +190,8 @@ class UiApiWrapperTest {
         var contractOffer = dataOffer.getContractOffers().get(0);
 
         // act
-        var negotiation = negotiate(dataOffer, contractOffer);
-        initiateTransfer(negotiation);
+        var negotiation = negotiate(consumerClient, consumerConnector, dataOffer, contractOffer);
+        initiateTransfer(consumerClient, negotiation);
         var providerAgreements = providerClient.uiApi().getContractAgreementPage(null).getContractAgreements();
         var consumerAgreements = consumerClient.uiApi().getContractAgreementPage(null).getContractAgreements();
 
@@ -295,7 +270,7 @@ class UiApiWrapperTest {
         // Provider Contract Agreement
         assertThat(providerAgreement.getContractAgreementId()).isEqualTo(negotiation.getContractAgreementId());
         assertThat(providerAgreement.getDirection()).isEqualTo(PROVIDING);
-        assertThat(providerAgreement.getCounterPartyAddress()).isEqualTo("http://localhost:23003/api/dsp");
+        assertThat(providerAgreement.getCounterPartyAddress()).isEqualTo(consumerConfig.getProtocolEndpoint().getUri().toString());
         assertThat(providerAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
 
         assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
@@ -330,11 +305,11 @@ class UiApiWrapperTest {
 
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
 
-        validateTransferProcessesOk();
+        validateTransferProcessesOk(consumerClient, providerClient);
     }
 
     @Test
-    void canOverrideTheWellKnowPropertiesUsingTheCustomProperties() {
+    void canOverrideTheWellKnowPropertiesUsingTheCustomProperties(@Provider EdcClient providerClient) {
         // arrange
         var dataSource = UiDataSource.builder()
                 .type(DataSourceType.HTTP_DATA)
@@ -382,7 +357,12 @@ class UiApiWrapperTest {
 
     @DisabledOnGithub
     @Test
-    void customTransferRequest() {
+    void customTransferRequest(
+        @Consumer ConnectorRemote consumerConnector,
+        @Consumer EdcClient consumerClient,
+        @Provider ConnectorRemote providerConnector,
+        @Provider EdcClient providerClient) {
+
         // arrange
         var data = "expected data 123";
 
@@ -420,7 +400,7 @@ class UiApiWrapperTest {
         var contractOffer = dataOffer.getContractOffers().get(0);
 
         // act
-        var negotiation = negotiate(dataOffer, contractOffer);
+        var negotiation = negotiate(consumerClient, consumerConnector, dataOffer, contractOffer);
         var transferRequestJsonLd = Json.createObjectBuilder()
                 .add(
                         Prop.Edc.DATA_DESTINATION,
@@ -444,7 +424,12 @@ class UiApiWrapperTest {
 
     @DisabledOnGithub
     @Test
-    void editAssetOnLiveContract() {
+    void editAssetOnLiveContract(
+        @Consumer ConnectorRemote consumerConnector,
+        @Consumer EdcClient consumerClient,
+        @Provider ConnectorRemote providerConnector,
+        @Provider EdcClient providerClient) {
+
         // arrange
         var data = "expected data 123";
 
@@ -504,7 +489,7 @@ class UiApiWrapperTest {
         var dataOffer = dataOffers.get(0);
         assertThat(dataOffer.getContractOffers()).hasSize(1);
         var contractOffer = dataOffer.getContractOffers().get(0);
-        var negotiation = negotiate(dataOffer, contractOffer);
+        var negotiation = negotiate(consumerClient, consumerConnector, dataOffer, contractOffer);
 
         // act
         providerClient.uiApi().editAsset(assetId, UiAssetEditRequest.builder()
@@ -536,7 +521,7 @@ class UiApiWrapperTest {
                         }
                         """)
                 .build());
-        initiateTransfer(negotiation);
+        initiateTransfer(consumerClient, negotiation);
 
         // assert
         assertThat(consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector)).get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
@@ -565,11 +550,16 @@ class UiApiWrapperTest {
                 }
                 """);
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
-        validateTransferProcessesOk();
+        validateTransferProcessesOk(consumerClient, providerClient);
         assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo("Good Asset Title");
     }
 
-    private UiContractNegotiation negotiate(UiDataOffer dataOffer, UiContractOffer contractOffer) {
+    private UiContractNegotiation negotiate(
+        EdcClient consumerClient,
+        ConnectorRemote consumerConnector,
+        UiDataOffer dataOffer,
+        UiContractOffer contractOffer) {
+
         var negotiationRequest = ContractNegotiationRequest.builder()
                 .counterPartyAddress(dataOffer.getEndpoint())
                 .counterPartyParticipantId(dataOffer.getParticipantId())
@@ -590,7 +580,7 @@ class UiApiWrapperTest {
         return negotiation;
     }
 
-    private void initiateTransfer(UiContractNegotiation negotiation) {
+    private void initiateTransfer(EdcClient consumerClient, UiContractNegotiation negotiation) {
         var contractAgreementId = negotiation.getContractAgreementId();
         var transferRequest = InitiateTransferRequest.builder()
                 .contractAgreementId(contractAgreementId)
@@ -599,7 +589,7 @@ class UiApiWrapperTest {
         consumerClient.uiApi().initiateTransfer(transferRequest);
     }
 
-    private void validateTransferProcessesOk() {
+    private void validateTransferProcessesOk(EdcClient consumerClient, EdcClient providerClient) {
         await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
             var providing = providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
             var consuming = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
