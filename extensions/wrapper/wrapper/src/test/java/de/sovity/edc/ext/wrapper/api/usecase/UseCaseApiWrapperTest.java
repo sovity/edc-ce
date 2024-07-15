@@ -47,7 +47,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
-public class UseCaseApiWrapperTest {
+class UseCaseApiWrapperTest {
     private EdcClient client;
 
     private String assetId1 = "test-asset-1";

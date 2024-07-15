@@ -51,5 +51,5 @@ EDC_OAUTH_CERTIFICATE_ALIAS: 1
 EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
 ```
 
-All pre-configured config values for either the catalog crawler can be found
+Additional available configuration options can be found
 in [launcher/.env.catalog-crawler](../../../../launchers/.env.catalog-crawler).

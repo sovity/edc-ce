@@ -32,14 +32,15 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
     - [ ] Add a clean `Unreleased` version.
     - [ ] Add the version to the old section.
     - [ ] Add the current date to the old version.
+    - [ ] Add all relevant changelog entries from the newer EDC UI release(s), merge and reword them.
+    - [ ] Add all deployment migration notes from the newer EDC UI release(s), merge and reword them.
     - [ ] Check the commit history for commits that might be product-relevant and thus should be added to the
           changelog. Maybe they were forgotten.
     - [ ] Write or review the `Deployment Migration Notes` section, check the commit history for changed / added
           configuration properties.
+    - [ ] Reorder, reword or combine changelog entries from a product perspective for consistency.
     - [ ] Write or review a release summary.
     - [ ] Write or review the compatible versions section.
-    - [ ] Add a link to the EDC UI Release to the "EDC UI" section.
-    - [ ] Add a link to the EDC UI Release Deployment Migration Notes from the Deployment Migration section if the EDC UI has Deployment Migration Notes.
     - [ ] Remove empty sections from the patch notes.
   - [ ] Replace the existing `docker-compose.yaml` with `docker-compose-dev.yaml`.
   - [ ] Set the version for `EDC_IMAGE` of

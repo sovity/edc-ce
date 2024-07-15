@@ -11,15 +11,46 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Major Changes
 
-- The Broker has been removed in favor of the Authority Portal and the new Deployment Unit, the "Data Catalog Crawler":
+#### Minor Changes
+
+#### Patch Changes
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:{{ VERSION }}`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:{{ VERSION }}`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:{{ VERSION }}`
+  - Dev Catalog Crawler: `ghcr.io/sovity/catalog-crawler-dev:{{ VERSION }}`
+  - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:{{ VERSION }}`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI VERSION }}`
+
+## [9.0.0] - 2024-07-15
+
+### Overview
+
+MDS 2.2 intermediate release
+
+### Detailed Changes
+
+#### Major Changes
+
+- API Wrapper UI API: Data sources are now well-typed.
+- The Broker has been removed in favor of the Authority Portal:
+  - A new Deployment Unit, the ["Data Catalog Crawler"](extensions/catalog-crawler/README.md), has been added. 
   - Each "Data Catalog Crawler" connects to an existing Authority Portal Deployment's DB.
   - Each "Data Catalog Crawler" is responsible for crawling exactly one environment.
   - The Data Catalog functionality of the Broker has been integrated into the Authority Portal.
-- API Wrapper UI API: Moved to well-typed data sources, breaking changes to the asset model and API.
 
 #### Minor Changes
 
-- Add the SovityMessenger extension
+- Additional ToS check during contract negotiation via the UI.
+- "On Request" Data Offers
+  - Full support in the API Wrapper UI API
+  - Create support in the Connector UI. Full support in the UI is still in progress.
+- Added the `sovity-messenger` extension for easy Connector-to-Connector messages.
 
 #### Patch Changes
 
@@ -28,13 +59,22 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 ### Deployment Migration Notes
 
 - Connector:
-  - The database migration system has been moved from multiple migration history tables to a single one. Although this
-    process has been extensively tested in the enterprise edition already, it should be tested once more on a copy of a productive connector.
+  - The database migration system has been moved from multiple migration history tables to a single one.
 - Broker:
   - The broker has been removed. For Authority Portal users, please check out the new 
     [Data Catalog Crawler Productive Deployment Guide](docs/deployment-guide/goals/catalog-crawler-production/README.md). 
   - Any previous broker deployment's database is not required anymore.
   - Please care that only some environment variables look similar. It is recommended to create fresh deployments.
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:9.0.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:9.0.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:9.0.0`
+  - Dev Catalog Crawler: `ghcr.io/sovity/catalog-crawler-dev:9.0.0`
+  - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:9.0.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.0.0`
 
 ## [8.1.0] - 2024-06-14
 

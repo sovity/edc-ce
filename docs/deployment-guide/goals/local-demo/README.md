@@ -1,8 +1,6 @@
 Deployment Goal: Local Demo
 ========
 
-> This is for our latest version. There is another guide for [4.2.0](4.2.0/README.md).
-
 > On how to deploy a productive connector with joining an existing Data Space, please refer
 > to our [Productive Deployment Guide](../production/README.md).
 
@@ -15,7 +13,7 @@ start [docker-compose.yaml](../../../../docker-compose.yaml) file.
 <thead>
 <tr>
 <th>Launch two sovity EDC CE Connectors</th>
-<th>Launch two MDS EDC CE</th>
+<th>Launch two MDS EDC CE Connectors</th>
 </tr>
 </thead>
 <tbody>

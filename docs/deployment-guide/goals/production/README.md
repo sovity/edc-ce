@@ -1,7 +1,5 @@
 # Productive Deployment Guide
 
-> This is for our latest version. There is another guide for [4.2.0](4.2.0/README.md).
-
 ## About this Guide
 
 This is a productive deployment guide for self-hosting a functional sovity CE EDC Connector or MDS CE EDC Connector.
