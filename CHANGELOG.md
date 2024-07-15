@@ -16,6 +16,22 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Major
 
+#### Minor
+
+#### Patch
+
+### Deployment Migration Notes
+
+## [v4.0.0] - 2024-07-15
+
+### Overview
+
+Broker UI removal refactoring, ToS dialog.
+
+### Detailed Changes
+
+#### Major
+
 - Removed the Broker UI, as it has been moved into the Authority Portal.
 
 #### Minor
@@ -23,9 +39,12 @@ the detailed section referring to by linking pull requests or issues.
 - Added Initiate Negotiation Confirm ToS Dialog
 - Support for creating "On Request" Data Offers
 
-#### Patch
+### Deployment Migration Notes
 
-#### Deployment Migration Notes
+- Connector UI:
+  - _No special deployment migration steps required_
+- Broker UI:
+  - Can be undeployed, the Broker no longer exists as a stand-alone component.
 
 ## [v3.2.2] - 2024-04-20
 
@@ -41,7 +60,7 @@ MDS Bufix Release
   crash if object custom properties were used.
 - Removed HTTP Option "HEAD" as it is not supported by the backend.
 
-#### Deployment Migration Notes
+### Deployment Migration Notes
 
 _No special deployment migration steps required_
 
@@ -57,7 +76,7 @@ NGINX Config Fix
 
 - Revert NGINX header changes because they disallow E2E testing of edc-ce
 
-#### Deployment Migration Notes
+### Deployment Migration Notes
 
 _No special deployment migration steps required_
 
@@ -77,7 +96,7 @@ MDS Bufix Release
 
 - Fix `nutsLocations` field
 
-#### Deployment Migration Notes
+### Deployment Migration Notes
 
 _No special deployment migration steps required_
 
@@ -98,7 +117,7 @@ Small improvements for Connector and Broker UI
 - Broker UI: "Name" column renamed to "Title"
 - Fix status icon for data offers
 
-#### Deployment Migration Notes
+### Deployment Migration Notes
 
 - New **optional** environment variable:
   - `EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD` as override for shown
@@ -129,7 +148,7 @@ Bugfixes and improvement of Broker UI integration with AP
 - Fix `Content-Type` header being ignored by backend for transfers
 - Fixed Method Parameterization always showing "GET", added unselected option.
 
-#### Deployment Migration Notes
+### Deployment Migration Notes
 
 _No special deployment migration steps required_
 
@@ -145,7 +164,7 @@ Enable better integration of Broker UI and Authority Portal
 
 - Broker UI: Added query params for the connector endpoints filter
 
-#### Deployment Migration Notes
+### Deployment Migration Notes
 
 _No special deployment migration steps required_
 
@@ -166,7 +185,7 @@ MDS feature and bugfix release for Connector UI and Broker UI
 - Ensured GDPR compliance of Fonts usage
 - Fixed auth proxy issues
 
-#### Deployment Migration Notes
+### Deployment Migration Notes
 
 _No special deployment migration steps required_
 
@@ -182,7 +201,7 @@ Bugfix release for minor UI bugs
 
 - Fixed "No Description" only showing sometimes in cards.
 
-#### Deployment Migration Notes
+### Deployment Migration Notes
 
 _No special deployment migration steps required_
 
@@ -207,7 +226,7 @@ MDS feature release for Connector UI and Broker UI
 - Improved handling of asset keywords in cards
 - EE: Fixed issues around logout page
 
-#### Deployment Migration Notes
+### Deployment Migration Notes
 
 _No special deployment migration steps required_
 
@@ -225,7 +244,7 @@ Aligned Participant ID / Connector ID and Connector Restricted Policy.
 - Connector Restricted Policy now supports entry of multiple connectors.
 - New Transfer History Page Column: Participant ID / Connector ID
 
-#### Deployment Migration Notes
+### Deployment Migration Notes
 
 _No special deployment migration steps required_
 
@@ -249,7 +268,7 @@ Broker UI EDC 0 Upgrade and some Connector UI bugfixes.
 - Broker Server API now also has a type-safe fake backend.
 - Fix Data Category not being set correctly when creating assets.
 
-#### Deployment Migration Notes
+### Deployment Migration Notes
 
 - Enterprise Edition only, MDS variants only: New optional config variable
   `EDC_UI_SHOW_EE_BASIC_MARKETING=true`. Default `false`
@@ -285,7 +304,7 @@ EDC 0 compatible version (Connector UI only).
 - Broker: Fixed popularity not logged when clicking on a data offer
 - Broker: Fixed missing name in legal notice
 
-#### Deployment Migration Notes
+### Deployment Migration Notes
 
 - The Docker Container now uses the port `8080` instead of ~~`80`~~.
 - The following ENV Vars were changed:
