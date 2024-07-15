@@ -16,7 +16,7 @@ the [docker-compose-dev.yaml](../../../../docker-compose-dev.yaml), execute:
 <thead>
 <tr>
 <th>Launch two sovity EDC CE Connectors</th>
-<th>Launch two MDS EDC CE</th>
+<th>Launch two MDS EDC CE Connectors</th>
 </tr>
 </thead>
 <tbody>

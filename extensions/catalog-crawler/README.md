@@ -18,6 +18,7 @@
 
 The catalog crawler is a deployment unit depending on an existing Authority Portal's database:
 
+- It is a modified EDC connector with the task to crawl the other connector's public data offers.
 - It periodically checks the Authority Portal's connector list for its environment.
 - It crawls the given connectors in regular intervals.
 - It writes the data offers and connector statuses back into the Authority Portal DB.
@@ -27,8 +28,12 @@ The catalog crawler is a deployment unit depending on an existing Authority Port
 
 The Authority Portal uses a non-EDC stack, and the EDC stack cannot handle multiple sources of authority at once.
 
-With the `DB -> UI` part of the broker having been moved to the Authority Portal, only the `Catalog -> DB` part remains as the Catalog Crawler, 
+With the `DB -> UI` part of the broker having been moved to the Authority Portal, only the `Catalog -> DB` part remains as the Catalog Crawler,
 as it requires Connector-to-Connector IAM within the given Dataspace.
+
+## Deployment
+
+Please see the [Catalog Crawler Productive Deployment Guide](../../docs/deployment-guide/goals/catalog-crawler-production/README.md) for more information.
 
 ## License
 
