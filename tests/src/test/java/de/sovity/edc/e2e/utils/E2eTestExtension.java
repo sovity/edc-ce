@@ -15,9 +15,12 @@
 package de.sovity.edc.e2e.utils;
 
 import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -60,7 +63,7 @@ public class E2eTestExtension
         }
     );
 
-    private final List<Class<?>> partySupportedTypes = List.of(ConnectorConfig.class, EdcClient.class);
+    private final List<Class<?>> partySupportedTypes = List.of(ConnectorConfig.class, EdcClient.class, ConnectorRemote.class);
     private final List<Class<?>> supportedTypes = Stream.concat(partySupportedTypes.stream(), Stream.of(E2eScenario.class)).toList();
 
 
@@ -127,6 +130,8 @@ public class E2eTestExtension
                 return newEdcClient(consumerConfig);
             } else if (type.equals(ConnectorConfig.class)) {
                 return consumerConfig;
+            } else if (type.equals(ConnectorRemote.class)) {
+                return newConnectorRemote(consumerParticipantId, consumerConfig);
             } else {
                 return consumerExtension.supportsParameter(parameterContext, extensionContext);
             }
@@ -137,6 +142,8 @@ public class E2eTestExtension
                 return newEdcClient(providerConfig);
             } else if (type.equals(ConnectorConfig.class)) {
                 return providerConfig;
+            } else if (type.equals(ConnectorRemote.class)) {
+                return newConnectorRemote(providerParticipantId, providerConfig);
             } else {
                 return providerExtension.supportsParameter(parameterContext, extensionContext);
             }
@@ -147,6 +154,15 @@ public class E2eTestExtension
         }
 
         throw new IllegalArgumentException("The parameters must be annotated by the EDC side: @Provider or @Consumer.");
+    }
+
+    private @NotNull ConnectorRemote newConnectorRemote(String participantId, ConnectorConfig config) {
+        return new ConnectorRemote(
+            new ConnectorRemoteConfig(
+                participantId,
+                config.getDefaultEndpoint(),
+                config.getManagementEndpoint(),
+                config.getProtocolEndpoint()));
     }
 
     private static boolean isProvider(ParameterContext parameterContext) {

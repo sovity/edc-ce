@@ -57,8 +57,8 @@ import static org.eclipse.edc.spi.CoreConstants.EDC_PREFIX;
 @SuppressWarnings("java:S5960")
 @RequiredArgsConstructor
 public class ConnectorRemote {
-    @Getter
 
+    @Getter
     private final ConnectorRemoteConfig config;
 
     private final ObjectMapper objectMapper = JacksonJsonLd.createObjectMapper();

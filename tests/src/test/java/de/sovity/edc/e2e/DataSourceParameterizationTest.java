@@ -34,9 +34,12 @@ import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.e2e.utils.Consumer;
+import de.sovity.edc.e2e.utils.E2eScenario;
+import de.sovity.edc.e2e.utils.E2eTestExtension;
+import de.sovity.edc.e2e.utils.Provider;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -51,7 +54,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
@@ -74,8 +77,7 @@ import javax.annotation.Nullable;
 
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.OK;
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.RUNNING;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
+import static java.time.Duration.ofSeconds;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
 import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.BODY;
@@ -89,46 +91,8 @@ import static org.mockserver.matchers.Times.once;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.stop.Stop.stopQuietly;
 
+@ExtendWith(E2eTestExtension.class)
 class DataSourceParameterizationTest {
-
-    private static final String CONSUMER_PARTICIPANT_ID = "consumer";
-    private static ConnectorConfig consumerConfig;
-    private static EdcClient consumerClient;
-    private static ConnectorRemote consumerConnector;
-
-    @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase consumerExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "consumer",
-        testDatabase -> {
-            consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, testDatabase);
-            consumerClient = EdcClient.builder()
-                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
-            consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
-            return consumerConfig.getProperties();
-        }
-    );
-
-
-    private static final String PROVIDER_PARTICIPANT_ID = "provider";
-    private static ConnectorConfig providerConfig;
-    private static EdcClient providerClient;
-
-    @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "provider",
-        testDatabase -> {
-            providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, testDatabase);
-            providerClient = EdcClient.builder()
-                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
-            return providerConfig.getProperties();
-        }
-    );
 
     private final int port = getFreePort();
     private final String sourcePath = "/source/some/path/";
@@ -163,7 +127,11 @@ class DataSourceParameterizationTest {
     }
 
     @Test
-    void canUseTheWorkaroundInCustomTransferRequest() {
+    void canUseTheWorkaroundInCustomTransferRequest(
+        @Provider ConnectorConfig providerConfig,
+        @Consumer EdcClient consumerClient,
+        @Provider EdcClient providerClient
+    ) {
         // arrange
         val testCase = new TestCase(
             "",
@@ -178,13 +146,13 @@ class DataSourceParameterizationTest {
         withMockServer((mockServer, context) -> {
             prepareDataTransferBackends(testCase, () -> received.set(true), mockServer);
 
-            createData(testCase, context);
+            createData(providerClient, testCase, context);
 
             // act
             val providerEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
             val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerEndpoint);
-            val startNegotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
-            val negotiation = awaitNegotiationDone(startNegotiation.getContractNegotiationId());
+            val startNegotiation = initiateNegotiation(consumerClient, dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
+            val negotiation = awaitNegotiationDone(consumerClient, startNegotiation.getContractNegotiationId());
 
             String standardBase = "https://w3id.org/edc/v0.0.1/ns/";
             String workaroundBase = "https://sovity.de/workaround/proxy/param/";
@@ -216,7 +184,7 @@ class DataSourceParameterizationTest {
 
             val transferId = consumerClient.uiApi().initiateCustomTransfer(transferRequest).getId();
 
-            awaitTransferCompletion(transferId);
+            awaitTransferCompletion(consumerClient, transferId);
 
             // assert
             TransferHistoryEntry actual = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
@@ -246,14 +214,20 @@ class DataSourceParameterizationTest {
         stopQuietly(mockServer);
     }
 
-    private void createData(TestCase testCase, Context context) {
-        createPolicy(testCase);
-        createAssetWithParameterizedMethod(testCase, context);
-        createContractDefinition(testCase);
+    private void createData(EdcClient providerClient, TestCase testCase, Context context) {
+        createPolicy(providerClient, testCase);
+        createAssetWithParameterizedMethod(providerClient, testCase, context);
+        createContractDefinition(providerClient, testCase);
     }
 
     @Test
-    void sendWithEdcManagementApi() {
+    void sendWithEdcManagementApi(
+        E2eScenario scenario,
+        @Provider ConnectorConfig providerConfig,
+        @Consumer EdcClient consumerClient,
+        @Consumer ConnectorRemote consumerConnector,
+        @Provider EdcClient providerClient
+    ) {
         // arrange
         val testCase = new TestCase(
             "",
@@ -268,13 +242,13 @@ class DataSourceParameterizationTest {
         withMockServer((mockServer, context) -> {
             prepareDataTransferBackends(testCase, () -> received.set(true), mockServer);
 
-            createData(testCase, context);
+            createData(providerClient, testCase, context);
 
             // act
             val providerEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
             val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerEndpoint);
-            val startNegotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
-            val negotiation = awaitNegotiationDone(startNegotiation.getContractNegotiationId());
+            val startNegotiation = initiateNegotiation(consumerClient, dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
+            val negotiation = awaitNegotiationDone(consumerClient, startNegotiation.getContractNegotiationId());
 
             String workaroundBase = "https://sovity.de/workaround/proxy/param/";
             String standardBase = "https://w3id.org/edc/v0.0.1/ns/";
@@ -294,7 +268,7 @@ class DataSourceParameterizationTest {
                 )).build()
             );
 
-            awaitTransferCompletion(transferId);
+            awaitTransferCompletion(consumerClient, transferId);
 
             // assert
             TransferHistoryEntry actual = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
@@ -308,24 +282,24 @@ class DataSourceParameterizationTest {
 
     @DisabledOnGithub
     @Test
-    void canTransferParameterizedAsset() {
+    void canTransferParameterizedAsset(@Provider ConnectorConfig providerConfig, @Provider EdcClient providerClient, @Consumer EdcClient consumerClient) {
         source().parallel().forEach(testCase -> {
             // arrange
             val received = new AtomicBoolean(false);
             withMockServer((mockServer, context) -> {
                 prepareDataTransferBackends(testCase, () -> received.set(true), mockServer);
 
-                createData(testCase, context);
+                createData(providerClient, testCase, context);
 
                 // act
                 val connectorEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
                 val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(connectorEndpoint);
                 val dataOffer = dataOffers.stream().filter(it -> it.getAsset().getAssetId().equals(testCase.id)).findFirst().get();
-                val negotiationInit = initiateNegotiation(dataOffer, dataOffer.getContractOffers().get(0));
-                val negotiation = awaitNegotiationDone(negotiationInit.getContractNegotiationId());
-                val transferId = initiateTransferWithParameters(negotiation, testCase, context);
+                val negotiationInit = initiateNegotiation(consumerClient, dataOffer, dataOffer.getContractOffers().get(0));
+                val negotiation = awaitNegotiationDone(consumerClient, negotiationInit.getContractNegotiationId());
+                val transferId = initiateTransferWithParameters(consumerClient, negotiation, testCase, context);
 
-                awaitTransferCompletion(transferId);
+                awaitTransferCompletion(consumerClient, transferId);
 
                 // assert
                 TransferHistoryEntry actual = consumerClient.uiApi()
@@ -440,7 +414,7 @@ class DataSourceParameterizationTest {
         return Base64.getEncoder().encodeToString(data);
     }
 
-    private String createAssetWithParameterizedMethod(TestCase testCase, Context context) {
+    private String createAssetWithParameterizedMethod(EdcClient providerClient, TestCase testCase, Context context) {
         var httpData = new UiDataSourceHttpData();
         httpData.setBaseUrl(context.sourceUrl);
         if (testCase.path != null) {
@@ -470,7 +444,7 @@ class DataSourceParameterizationTest {
         return providerClient.uiApi().createAsset(asset).getId();
     }
 
-    private void createPolicy(TestCase testCase) {
+    private void createPolicy(EdcClient providerClient, TestCase testCase) {
         var policyDefinition = PolicyDefinitionCreateRequest.builder()
             .policyDefinitionId(testCase.id)
             .policy(UiPolicyCreateRequest.builder()
@@ -481,7 +455,7 @@ class DataSourceParameterizationTest {
         providerClient.uiApi().createPolicyDefinition(policyDefinition);
     }
 
-    private String createContractDefinition(TestCase testCase) {
+    private String createContractDefinition(EdcClient providerClient, TestCase testCase) {
         var contractDefinition = ContractDefinitionRequest.builder()
             .contractDefinitionId(testCase.id)
             .accessPolicyId(testCase.id)
@@ -499,7 +473,7 @@ class DataSourceParameterizationTest {
         return providerClient.uiApi().createContractDefinition(contractDefinition).getId();
     }
 
-    private UiContractNegotiation initiateNegotiation(UiDataOffer dataOffer, UiContractOffer contractOffer) {
+    private UiContractNegotiation initiateNegotiation(EdcClient consumerClient, UiDataOffer dataOffer, UiContractOffer contractOffer) {
         var negotiationRequest = ContractNegotiationRequest.builder()
             .counterPartyAddress(dataOffer.getEndpoint())
             .counterPartyParticipantId(dataOffer.getParticipantId())
@@ -511,8 +485,8 @@ class DataSourceParameterizationTest {
         return consumerClient.uiApi().initiateContractNegotiation(negotiationRequest);
     }
 
-    private UiContractNegotiation awaitNegotiationDone(String negotiationId) {
-        var negotiation = Awaitility.await().atMost(consumerConnector.timeout).until(
+    private UiContractNegotiation awaitNegotiationDone(EdcClient consumerClient, String negotiationId) {
+        var negotiation = Awaitility.await().atMost(ofSeconds(10)).until(
             () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
             it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
         );
@@ -522,9 +496,11 @@ class DataSourceParameterizationTest {
     }
 
     private String initiateTransferWithParameters(
+        EdcClient consumerClient,
         UiContractNegotiation negotiation,
         TestCase testCase,
         Context context) {
+
         String rootKey = "https://w3id.org/edc/v0.0.1/ns/";
 
         val transferProcessProperties = new HashMap<String, String>();
@@ -571,8 +547,8 @@ class DataSourceParameterizationTest {
         return consumerClient.uiApi().initiateTransfer(transferRequest).getId();
     }
 
-    private void awaitTransferCompletion(String transferId) {
-        Awaitility.await().atMost(consumerConnector.timeout).until(
+    private void awaitTransferCompletion(EdcClient consumerClient, String transferId) {
+        Awaitility.await().atMost(ofSeconds(10)).until(
             () -> consumerClient.uiApi()
                 .getTransferHistoryPage()
                 .getTransferEntries()
