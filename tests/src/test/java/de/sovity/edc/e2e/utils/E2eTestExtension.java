@@ -134,11 +134,11 @@ public class E2eTestExtension
         val type = parameterContext.getParameter().getType();
 
         if (isConsumer) {
-            if (type.equals(EdcClient.class)) {
+            if (EdcClient.class.equals(type)) {
                 return newEdcClient(consumerConfig);
-            } else if (type.equals(ConnectorConfig.class)) {
+            } else if (ConnectorConfig.class.equals(type)) {
                 return consumerConfig;
-            } else if (type.equals(ConnectorRemote.class)) {
+            } else if (ConnectorRemote.class.equals(type)) {
                 return newConnectorRemote(consumerParticipantId, consumerConfig);
             } else {
                 return consumerExtension.supportsParameter(parameterContext, extensionContext);
@@ -146,18 +146,18 @@ public class E2eTestExtension
         }
 
         if (isProvider) {
-            if (type.equals(EdcClient.class)) {
+            if (EdcClient.class.equals(type)) {
                 return newEdcClient(providerConfig);
-            } else if (type.equals(ConnectorConfig.class)) {
+            } else if (ConnectorConfig.class.equals(type)) {
                 return providerConfig;
-            } else if (type.equals(ConnectorRemote.class)) {
+            } else if (ConnectorRemote.class.equals(type)) {
                 return newConnectorRemote(providerParticipantId, providerConfig);
             } else {
                 return providerExtension.supportsParameter(parameterContext, extensionContext);
             }
         }
 
-        if (type.equals(E2eScenario.class)) {
+        if (E2eScenario.class.equals(type)) {
             return new E2eScenario(newEdcClient(consumerConfig), consumerConfig, newEdcClient(providerConfig), providerConfig);
         }
 

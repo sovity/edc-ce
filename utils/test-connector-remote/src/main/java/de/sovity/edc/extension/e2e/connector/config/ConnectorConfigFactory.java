@@ -49,7 +49,6 @@ public class ConnectorConfigFactory {
 
     public static ConnectorConfig forTestDatabase(String participantId, TestDatabase testDatabase) {
         val firstPort = getFreePortRange(5);
-        System.out.println("Allocating first port " + firstPort);
         var config = basicEdcConfig(participantId, firstPort);
         config.setProperties(configureDatasources(testDatabase.getJdbcCredentials()));
         return config;

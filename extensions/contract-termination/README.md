@@ -25,13 +25,13 @@ Contracts termination is not natively supported the in the EDC. Contracts in gen
 
 ## Details
 
-When a User clicks "Terminate contract" on a contract agreement, a request is sent to the EDC to mark the contract agreement as terminated, both on the EDC's side and the counterparty's side.
+When a User clicks "Terminate contract" on a contract agreement, a request is sent to the EDC to mark the contract agreement as terminated, followed by a notification and registration of that same termination on the counterpart's side.
 
 The termination is saved in the EDC's database.
 Any transfer started from this contract agreement will be rejected.
 
-The implementation of contract agreements doesn't interfere with the existing EDC features besides terminating transfers that were started on terminated contract agreements.
-
+The contract agreements' implementation doesn't interfere with the existing EDC features besides forcefully preventing transfers that are started on terminated contract agreements.
+1
 ## License
 
 Apache License 2.0 - see [LICENSE](../../LICENSE)

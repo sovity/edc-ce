@@ -22,9 +22,11 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementDirection;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTerminationInfo;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferProcess;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminatedBy;
+import de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessState;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
@@ -75,10 +77,10 @@ public class ContractAgreementPageCardBuilder {
                 .detail(termination.getDetail())
                 .reason(termination.getReason())
                 .terminatedAt(termination.getTerminatedAt())
-                    .terminatedBy(switch(termination.getTerminatedBy()) {
-                        case SELF -> ContractTerminatedBy.SELF;
-                        case COUNTERPARTY -> ContractTerminatedBy.COUNTERPARTY;
-                    })
+                .terminatedBy(switch (termination.getTerminatedBy()) {
+                    case SELF -> ContractTerminatedBy.SELF;
+                    case COUNTERPARTY -> ContractTerminatedBy.COUNTERPARTY;
+                })
                 .build());
 
         } else {
@@ -101,15 +103,15 @@ public class ContractAgreementPageCardBuilder {
     }
 
     @NotNull
-    private ContractAgreementTransferProcess buildContractAgreementTransfer(
-        TransferProcess transferProcessEntity) {
+    private ContractAgreementTransferProcess buildContractAgreementTransfer(TransferProcess transferProcessEntity) {
+
         var transferProcess = new ContractAgreementTransferProcess();
+
         transferProcess.setTransferProcessId(transferProcessEntity.getId());
-        transferProcess.setLastUpdatedDate(
-            utcMillisToOffsetDateTime(transferProcessEntity.getUpdatedAt()));
-        transferProcess.setState(transferProcessStateService.buildTransferProcessState(
-            transferProcessEntity.getState()));
+        transferProcess.setLastUpdatedDate(utcMillisToOffsetDateTime(transferProcessEntity.getUpdatedAt()));
+        transferProcess.setState(transferProcessStateService.buildTransferProcessState(transferProcessEntity.getState()));
         transferProcess.setErrorMessage(transferProcessEntity.getErrorDetail());
+
         return transferProcess;
     }
 }

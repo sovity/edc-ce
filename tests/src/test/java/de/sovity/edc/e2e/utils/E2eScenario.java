@@ -20,6 +20,7 @@ import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.IdResponseDto;
+import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
@@ -48,8 +49,9 @@ import org.mockserver.model.HttpResponse;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.RUNNING;
 import static java.time.Duration.ofSeconds;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,8 +66,9 @@ public class E2eScenario {
         () -> createPolicyDefinition("alwaysTrue")
     );
 
-    public String createAsset(String id) {
+    private final AtomicInteger assetCounter = new AtomicInteger(0);
 
+    public String createAsset() {
         val dummyDataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
             .httpData(UiDataSourceHttpData.builder()
@@ -73,7 +76,7 @@ public class E2eScenario {
                 .build())
             .build();
 
-        return internalCreateAsset(id, dummyDataSource).getId();
+        return internalCreateAsset("asset-" + assetCounter.getAndIncrement(), dummyDataSource).getId();
     }
 
     public String createAsset(String id, UiDataSourceHttpData uiDataSourceHttpData) {
@@ -95,16 +98,16 @@ public class E2eScenario {
             .httpData(UiDataSourceHttpData.builder().baseUrl(url).build())
             .build();
 
-        val accessed = new AtomicBoolean(false);
+        val accesses = new AtomicInteger(0);
 
         clientAndServer.when(HttpRequest.request(path).withMethod("GET")).respond(it -> {
-            accessed.set(true);
+            accesses.incrementAndGet();
             return HttpResponse.response().withStatusCode(200);
         });
 
         internalCreateAsset(id, uiDataSource);
 
-        return new MockedAsset(id, accessed);
+        return new MockedAsset(id, accesses);
     }
 
     private IdResponseDto internalCreateAsset(String assetId, UiDataSource dataSource) {
@@ -165,7 +168,7 @@ public class E2eScenario {
         assertThat(offersContainingContract).hasSize(1);
 
         val firstContractOffer = offersContainingContract.get(0).getContractOffers().get(0);
-        UiDataOffer dataOffer = offersContainingContract.get(0);
+        val dataOffer = offersContainingContract.get(0);
         var negotiationRequest = ContractNegotiationRequest.builder()
             .counterPartyAddress(dataOffer.getEndpoint())
             .counterPartyParticipantId(dataOffer.getParticipantId())
@@ -187,7 +190,7 @@ public class E2eScenario {
     }
 
     public void createPolicy(String id, OffsetDateTime from, OffsetDateTime until) {
-        val afterYesterday = UiPolicyConstraint.builder()
+        val startConstraint = UiPolicyConstraint.builder()
             .left("POLICY_EVALUATION_TIME")
             .operator(OperatorDto.GT)
             .right(UiPolicyLiteral.builder()
@@ -196,7 +199,7 @@ public class E2eScenario {
                 .build())
             .build();
 
-        val beforeTomorrow = UiPolicyConstraint.builder()
+        val endConstraint = UiPolicyConstraint.builder()
             .left("POLICY_EVALUATION_TIME")
             .operator(OperatorDto.LT)
             .right(UiPolicyLiteral.builder()
@@ -208,10 +211,29 @@ public class E2eScenario {
         var policyDefinition = PolicyDefinitionCreateRequest.builder()
             .policyDefinitionId(id)
             .policy(UiPolicyCreateRequest.builder()
-                .constraints(List.of(afterYesterday, beforeTomorrow))
+                .constraints(List.of(startConstraint, endConstraint))
                 .build())
             .build();
 
         providerClient.uiApi().createPolicyDefinition(policyDefinition);
+    }
+
+    public String transferAndAwait(InitiateCustomTransferRequest transferRequest) {
+        val transferInit = consumerClient.uiApi().initiateCustomTransfer(transferRequest).getId();
+        awaitTransferCompletion(transferInit);
+        return transferInit;
+    }
+
+    public void awaitTransferCompletion(String transferId) {
+        Awaitility.await().atMost(ofSeconds(10)).until(
+            () -> consumerClient.uiApi()
+                .getTransferHistoryPage()
+                .getTransferEntries()
+                .stream()
+                .filter(it -> it.getTransferProcessId().equals(transferId))
+                .findFirst()
+                .map(it -> it.getState().getSimplifiedState()),
+            it -> it.orElse(RUNNING) != RUNNING
+        );
     }
 }

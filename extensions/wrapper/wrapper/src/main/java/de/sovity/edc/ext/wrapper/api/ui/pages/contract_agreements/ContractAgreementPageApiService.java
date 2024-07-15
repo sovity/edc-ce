@@ -36,13 +36,19 @@ public class ContractAgreementPageApiService {
 
         var cards = agreements.stream()
             .map(agreement -> contractAgreementPageCardBuilder.buildContractAgreementCard(
-                agreement.agreement(), agreement.negotiation(), agreement.asset(), agreement.transfers(), agreement.terminations()))
+                agreement.agreement(),
+                agreement.negotiation(),
+                agreement.asset(),
+                agreement.transfers(),
+                agreement.terminations()))
             .sorted(Comparator.comparing(ContractAgreementCard::getContractSigningDate).reversed());
 
         if (contractAgreementPageQuery == null || contractAgreementPageQuery.isEmpty()) {
             return new ContractAgreementPage(cards.toList());
         } else {
-            var filtered = cards.filter(it -> it.getTerminationStatus().equals(contractAgreementPageQuery.getTerminationStatus())).toList();
+            var filtered = cards.filter(card ->
+                card.getTerminationStatus().equals(contractAgreementPageQuery.getTerminationStatus()))
+                .toList();
             return new ContractAgreementPage(filtered);
         }
     }

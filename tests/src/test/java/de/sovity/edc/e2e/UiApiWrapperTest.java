@@ -94,7 +94,7 @@ class UiApiWrapperTest {
         @Consumer ConnectorConfig consumerConfig,
         @Consumer EdcClient consumerClient,
         @Consumer ConnectorRemote consumerConnector,
-        @Provider ConnectorRemote providerConnector,
+        @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient) {
 
         // arrange
@@ -183,7 +183,8 @@ class UiApiWrapperTest {
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
 
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
+        var providerProtocolEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
+        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint);
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
         assertThat(dataOffer.getContractOffers()).hasSize(1);
@@ -196,12 +197,12 @@ class UiApiWrapperTest {
         var consumerAgreements = consumerClient.uiApi().getContractAgreementPage(null).getContractAgreements();
 
         // assert
-        assertThat(dataOffer.getEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
+        assertThat(dataOffer.getEndpoint()).isEqualTo(providerProtocolEndpoint);
         assertThat(dataOffer.getParticipantId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
         assertThat(dataOffer.getAsset().getAssetId()).isEqualTo(assetId);
         assertThat(dataOffer.getAsset().getTitle()).isEqualTo("AssetName");
-        assertThat(dataOffer.getAsset().getConnectorEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
-        assertThat(dataOffer.getAsset().getParticipantId()).isEqualTo(providerConnector.getParticipantId());
+        assertThat(dataOffer.getAsset().getConnectorEndpoint()).isEqualTo(providerProtocolEndpoint);
+        assertThat(dataOffer.getAsset().getParticipantId()).isEqualTo(providerConfig.getProperties().get("edc.participant.id"));
         assertThat(dataOffer.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
         assertThat(dataOffer.getAsset().getDescription()).isEqualTo("AssetDescription");
         assertThat(dataOffer.getAsset().getVersion()).isEqualTo("1.0.0");
@@ -242,8 +243,8 @@ class UiApiWrapperTest {
         // while the data offer on the consumer side won't contain private properties, the asset page on the provider side should
         assertThat(asset.getAssetId()).isEqualTo(assetId);
         assertThat(asset.getTitle()).isEqualTo("AssetName");
-        assertThat(asset.getConnectorEndpoint()).isEqualTo(getProtocolEndpoint(providerConnector));
-        assertThat(asset.getParticipantId()).isEqualTo(providerConnector.getParticipantId());
+        assertThat(asset.getConnectorEndpoint()).isEqualTo(providerProtocolEndpoint);
+        assertThat(asset.getParticipantId()).isEqualTo(providerConfig.getProperties().get("edc.participant.id"));
 
         assertThatJson(asset.getCustomJsonAsString()).isEqualTo("""
                 { "test": "value" }
@@ -360,7 +361,7 @@ class UiApiWrapperTest {
     void customTransferRequest(
         @Consumer ConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
-        @Provider ConnectorRemote providerConnector,
+        @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient) {
 
         // arrange
@@ -393,7 +394,8 @@ class UiApiWrapperTest {
                 .assetSelector(List.of())
                 .build());
 
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
+        val providerProtocolEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
+        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint);
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
         assertThat(dataOffer.getContractOffers()).hasSize(1);
@@ -427,7 +429,7 @@ class UiApiWrapperTest {
     void editAssetOnLiveContract(
         @Consumer ConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
-        @Provider ConnectorRemote providerConnector,
+        @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient) {
 
         // arrange
@@ -484,7 +486,8 @@ class UiApiWrapperTest {
                         .build()))
                 .build());
 
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
+        val providerProtocolEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
+        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint);
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
         assertThat(dataOffer.getContractOffers()).hasSize(1);
@@ -524,7 +527,7 @@ class UiApiWrapperTest {
         initiateTransfer(consumerClient, negotiation);
 
         // assert
-        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector)).get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
+        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint).get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
         val firstAsset = providerClient.uiApi().getContractAgreementPage(null).getContractAgreements().get(0).getAsset();
         assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");
         assertThat(firstAsset.getCustomJsonAsString()).isEqualTo("""

@@ -38,4 +38,12 @@ public record ContractAgreementTerminationDetails(
     public boolean isTerminated() {
         return terminatedAt != null;
     }
+
+    boolean isConsumer() {
+        return type.equals(ContractNegotiation.Type.CONSUMER);
+    }
+
+    boolean isProvider() {
+        return type.equals(ContractNegotiation.Type.PROVIDER);
+    }
 }

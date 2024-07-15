@@ -36,6 +36,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementPageApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTerminationApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractNegotiationApiService;
@@ -46,6 +47,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPag
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
 import de.sovity.edc.extension.contacttermination.ContractTermination;
 import jakarta.validation.Valid;
+import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.ws.rs.BadRequestException;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +62,7 @@ public class UiResourceImpl implements UiResource {
 
     private final ContractAgreementPageApiService contractAgreementApiService;
     private final ContractAgreementTransferApiService contractAgreementTransferApiService;
-    private final ContractAgreementTerminationService contractAgreementTerminationService;
+    private final ContractAgreementTerminationApiService contractAgreementTerminationApiService;
     private final TransferHistoryPageApiService transferHistoryPageApiService;
     private final TransferHistoryPageAssetFetcherService transferHistoryPageAssetFetcherService;
     private final AssetApiService assetApiService;
@@ -69,7 +71,6 @@ public class UiResourceImpl implements UiResource {
     private final ContractDefinitionApiService contractDefinitionApiService;
     private final ContractNegotiationApiService contractNegotiationApiService;
     private final DashboardPageApiService dashboardPageApiService;
-    private final Validator validator;
 
     @Override
     public DashboardPage getDashboardPage() {
@@ -161,19 +162,7 @@ public class UiResourceImpl implements UiResource {
     public IdResponseDto terminateContractAgreement(
         String contractAgreementId,
         @Valid ContractTerminationRequest contractTerminationRequest) {
-
-        val constraintViolations = validator.validate(contractTerminationRequest);
-        if (!constraintViolations.isEmpty()) {
-            throw new BadRequestException("Invalid contract termination request: " + constraintViolations);
-        }
-
-        val terminatedAt = contractAgreementTerminationService.terminateAgreement(
-            new ContractTermination(contractAgreementId, contractTerminationRequest.getDetail(), contractTerminationRequest.getReason()));
-
-        return IdResponseDto.builder()
-            .id(contractAgreementId)
-            .lastUpdatedDate(terminatedAt)
-            .build();
+        return contractAgreementTerminationApiService.terminate(contractAgreementId, contractTerminationRequest);
     }
 
     @Override

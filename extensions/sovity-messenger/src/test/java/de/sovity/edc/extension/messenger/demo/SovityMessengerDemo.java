@@ -72,7 +72,6 @@ public class SovityMessengerDemo implements ServiceExtension {
 
         registry.register(Counterparty.class, (claims, counterparty) -> {
             val agent = participantAgentService.createFor(claims);
-            System.out.println("Message sent from " + agent.getIdentity());
             return new Answer();
         });
 

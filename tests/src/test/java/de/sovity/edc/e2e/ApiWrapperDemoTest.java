@@ -72,14 +72,16 @@ class ApiWrapperDemoTest {
         scenario.createContractDefinition(dataOfferId);
 
         // consumer: negotiate contract and transfer data
-        val negotiation = scenario.negotiateAsset(dataOfferId);
-        initiateTransfer(negotiation, consumerClient);
+        val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerConfig.getProtocolEndpoint().getUri().toString());
+        val initialNegotiation = initiateNegotiation(consumerClient, dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
+        val completedNegotiation = awaitNegotiationDone(consumerClient, initialNegotiation.getContractNegotiationId());
+        initiateTransfer(consumerClient, completedNegotiation);
 
         // check data sink
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), dataOfferData);
     }
 
-    private UiContractNegotiation initiateNegotiation(UiDataOffer dataOffer, UiContractOffer contractOffer, EdcClient consumerClient) {
+    private UiContractNegotiation initiateNegotiation(EdcClient consumerClient, UiDataOffer dataOffer, UiContractOffer contractOffer) {
         var negotiationRequest = ContractNegotiationRequest.builder()
             .counterPartyAddress(dataOffer.getEndpoint())
             .counterPartyParticipantId(dataOffer.getParticipantId())
@@ -91,7 +93,7 @@ class ApiWrapperDemoTest {
         return consumerClient.uiApi().initiateContractNegotiation(negotiationRequest);
     }
 
-    private UiContractNegotiation awaitNegotiationDone(String negotiationId, EdcClient consumerClient) {
+    private UiContractNegotiation awaitNegotiationDone(EdcClient consumerClient, String negotiationId) {
         var negotiation = Awaitility.await().atMost(Duration.of(60, SECONDS)).until(
             () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
             it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
@@ -101,7 +103,7 @@ class ApiWrapperDemoTest {
         return negotiation;
     }
 
-    private void initiateTransfer(UiContractNegotiation negotiation, EdcClient consumerClient) {
+    private void initiateTransfer(EdcClient consumerClient, UiContractNegotiation negotiation) {
         var contractAgreementId = negotiation.getContractAgreementId();
         var transferRequest = InitiateTransferRequest.builder()
             .contractAgreementId(contractAgreementId)

@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -24,8 +25,6 @@ public class EdcRuntimeExtensionWithTestDatabase
 
     private final String moduleName;
     private final String logPrefix;
-
-    private DSLContext dslContext;
 
     @Getter
     @Delegate(types = {AfterAllCallback.class})
@@ -65,11 +64,7 @@ public class EdcRuntimeExtensionWithTestDatabase
     }
 
     private synchronized DSLContext getDslContext() {
-        if (dslContext == null) {
-            val credentials = testDatabase.getJdbcCredentials();
-            dslContext = DSL.using(credentials.jdbcUrl(), credentials.jdbcUser(), credentials.jdbcPassword());
-        }
-
-        return dslContext;
+        val credentials = testDatabase.getJdbcCredentials();
+        return DSL.using(credentials.jdbcUrl(), credentials.jdbcUser(), credentials.jdbcPassword());
     }
 }

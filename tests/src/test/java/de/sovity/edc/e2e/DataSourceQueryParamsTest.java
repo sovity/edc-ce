@@ -39,7 +39,6 @@ class DataSourceQueryParamsTest {
 
     private MockDataAddressRemote dataAddress;
     private final String encodedParam = "a=%25"; // Unencoded param "a=%"
-    private final String dataOfferId = "my-data-offer-2023-11";
 
     @BeforeEach
     void setup(@Provider ConnectorConfig providerConfig) {

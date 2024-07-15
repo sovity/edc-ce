@@ -14,11 +14,11 @@
 
 package de.sovity.edc.e2e.utils;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public record MockedAsset(
     String assetId,
-    AtomicBoolean accessed
+    AtomicInteger accesses
 ) {
 
 }

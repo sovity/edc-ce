@@ -37,8 +37,4 @@ public class ConnectorConfig {
     public void setProperties(Map<String, String> properties) {
         this.properties.putAll(properties);
     }
-
-    public String getApiAuthenticationKey() {
-        return properties.get("edc.api.auth.key");
-    }
 }

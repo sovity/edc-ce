@@ -23,15 +23,12 @@ import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.FailedMappingException;
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseFactory;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
+import lombok.val;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.junit.annotations.ApiTest;
-import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
@@ -46,55 +43,46 @@ import java.util.List;
 import java.util.Map;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 public class AssetApiServiceTest {
 
+    private static EdcClient client;
+
+    @RegisterExtension
+    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "edc",
+        testDatabase -> {
+            val config = forTestDatabase("MyEDC", testDatabase);
+            client = EdcClient.builder()
+                .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+                .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+                .build();
+            return config.getProperties();
+        }
+    );
+
     public static final String DATA_SINK = "http://my-data-sink/api/stuff";
     EdcPropertyUtils edcPropertyUtils;
 
-    private static final String PARTICIPANT_ID = "MyEDC";
-
-    @RegisterExtension
-    static final EdcExtension EDC_CONTEXT = new EdcExtension();
-
-    @RegisterExtension
-    static final TestDatabase DATABASE = TestDatabaseFactory.getTestDatabase(1);
-
-    private ConnectorRemote connector;
-
-    private EdcClient client;
-
-    private ConnectorConfig config;
-
     @BeforeEach
     void setup() {
-        // set up provider EDC + Client
-        config = forTestDatabase(PARTICIPANT_ID, DATABASE);
-        EDC_CONTEXT.setConfiguration(config.getProperties());
-        connector = new ConnectorRemote(fromConnectorConfig(config));
-
-        client = EdcClient.builder()
-            .managementApiUrl(config.getManagementEndpoint().getUri().toString())
-            .managementApiKey(config.getProperties().get("edc.api.auth.key"))
-            .build();
-
         edcPropertyUtils = new EdcPropertyUtils();
     }
 
     @Test
     void assetPage() {
-        AssetService assetStore = EDC_CONTEXT.getContext().getService(AssetService.class);
+        val assetService = providerExtension.getEdcRuntimeExtension().getContext().getService(AssetService.class);
 
         // arrange
         var properties = Map.of(
             Asset.PROPERTY_ID, "asset-11",
             Prop.Dcat.LANDING_PAGE, "https://data-source.my-org/docs"
         );
-        createAsset(assetStore, "2023-06-01", properties);
+        createAsset(assetService, "2023-06-01", properties);
 
         // act
         var result = client.uiApi().getAssetPage();
@@ -109,7 +97,7 @@ public class AssetApiServiceTest {
 
     @Test
     void assetPageSorting() {
-        AssetService assetService = EDC_CONTEXT.getContext().getService(AssetService.class);
+        val assetService = providerExtension.getEdcRuntimeExtension().getContext().getService(AssetService.class);
 
         // arrange
         createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-21"));
@@ -127,7 +115,7 @@ public class AssetApiServiceTest {
 
     @Test
     void testAssetCreation() {
-        AssetService assetService = EDC_CONTEXT.getContext().getService(AssetService.class);
+        val assetService = providerExtension.getEdcRuntimeExtension().getContext().getService(AssetService.class);
 
         // arrange
         var dataSource = UiDataSource.builder()
@@ -258,7 +246,7 @@ public class AssetApiServiceTest {
 
     @Test
     void testeditAsset() {
-        AssetService assetService = EDC_CONTEXT.getContext().getService(AssetService.class);
+        val assetService = providerExtension.getEdcRuntimeExtension().getContext().getService(AssetService.class);
 
         // arrange
         var dataSource = UiDataSource.builder()
@@ -460,7 +448,7 @@ public class AssetApiServiceTest {
 
     @Test
     void testDeleteAsset() {
-        AssetService assetService = EDC_CONTEXT.getContext().getService(AssetService.class);
+        val assetService = providerExtension.getEdcRuntimeExtension().getContext().getService(AssetService.class);
 
         // arrange
         createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-71"));

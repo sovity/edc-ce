@@ -76,7 +76,8 @@ public class ContractAgreementDataFetcher {
 
         // A ContractAgreement has multiple ContractNegotiations when doing a loopback consumption
         return agreements.stream()
-            .flatMap(agreement -> negotiations.getOrDefault(agreement.getId(), List.of()).stream()
+            .flatMap(agreement -> negotiations.getOrDefault(agreement.getId(), List.of())
+                .stream()
                 .map(negotiation -> {
                     var asset = getAsset(agreement, negotiation, assets);
                     var contractTransfers = transfers.getOrDefault(agreement.getId(), List.of());

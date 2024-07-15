@@ -128,6 +128,7 @@ class DataSourceParameterizationTest {
 
     @Test
     void canUseTheWorkaroundInCustomTransferRequest(
+        E2eScenario scenario,
         @Consumer EdcClient consumerClient,
         @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient
@@ -154,8 +155,8 @@ class DataSourceParameterizationTest {
             val startNegotiation = initiateNegotiation(consumerClient, dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
             val negotiation = awaitNegotiationDone(consumerClient, startNegotiation.getContractNegotiationId());
 
-            String standardBase = "https://w3id.org/edc/v0.0.1/ns/";
-            String workaroundBase = "https://sovity.de/workaround/proxy/param/";
+            val standardBase = "https://w3id.org/edc/v0.0.1/ns/";
+            val workaroundBase = "https://sovity.de/workaround/proxy/param/";
             var transferRequestJsonLd = Json.createObjectBuilder()
                 .add(
                     Prop.Edc.DATA_DESTINATION,
@@ -182,12 +183,10 @@ class DataSourceParameterizationTest {
                 .transferProcessRequestJsonLd(JsonUtils.toJson(transferRequestJsonLd))
                 .build();
 
-            val transferId = consumerClient.uiApi().initiateCustomTransfer(transferRequest).getId();
-
-            awaitTransferCompletion(consumerClient, transferId);
+            val transferId = scenario.transferAndAwait(transferRequest);
 
             // assert
-            TransferHistoryEntry actual = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
+            val actual = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
             assertThat(actual.getAssetId()).isEqualTo(testCase.id);
             assertThat(actual.getTransferProcessId()).isEqualTo(transferId);
             assertThat(actual.getState().getSimplifiedState()).isEqualTo(OK);
@@ -207,8 +206,8 @@ class DataSourceParameterizationTest {
         int port = getFreePort();
         val mockServer = ClientAndServer.startClientAndServer(port);
 
-        String sourceUrl = "http://localhost:" + port + sourcePath;
-        String destinationUrl = "http://localhost:" + port + destinationPath;
+        val sourceUrl = "http://localhost:" + port + sourcePath;
+        val destinationUrl = "http://localhost:" + port + destinationPath;
 
         consumer.accept(mockServer, new Context(port, sourceUrl, destinationUrl));
         stopQuietly(mockServer);
@@ -268,7 +267,7 @@ class DataSourceParameterizationTest {
                 )).build()
             );
 
-            awaitTransferCompletion(consumerClient, transferId);
+            scenario.awaitTransferCompletion(transferId);
 
             // assert
             TransferHistoryEntry actual = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
@@ -283,6 +282,7 @@ class DataSourceParameterizationTest {
     @DisabledOnGithub
     @Test
     void canTransferParameterizedAsset(
+        E2eScenario scenario,
         @Consumer EdcClient consumerClient,
         @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient) {
@@ -303,7 +303,7 @@ class DataSourceParameterizationTest {
                 val negotiation = awaitNegotiationDone(consumerClient, negotiationInit.getContractNegotiationId());
                 val transferId = initiateTransferWithParameters(consumerClient, negotiation, testCase, context);
 
-                awaitTransferCompletion(consumerClient, transferId);
+                scenario.awaitTransferCompletion(transferId);
 
                 // assert
                 TransferHistoryEntry actual = consumerClient.uiApi()
@@ -549,19 +549,6 @@ class DataSourceParameterizationTest {
             .transferProcessProperties(transferProcessProperties)
             .build();
         return consumerClient.uiApi().initiateTransfer(transferRequest).getId();
-    }
-
-    private void awaitTransferCompletion(EdcClient consumerClient, String transferId) {
-        Awaitility.await().atMost(ofSeconds(10)).until(
-            () -> consumerClient.uiApi()
-                .getTransferHistoryPage()
-                .getTransferEntries()
-                .stream()
-                .filter(it -> it.getTransferProcessId().equals(transferId))
-                .findFirst()
-                .map(it -> it.getState().getSimplifiedState()),
-            it -> it.orElse(RUNNING) != RUNNING
-        );
     }
 
 }

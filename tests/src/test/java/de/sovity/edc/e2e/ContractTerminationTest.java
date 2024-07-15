@@ -45,7 +45,6 @@ import org.mockserver.model.HttpResponse;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static de.sovity.edc.client.gen.model.ContractTerminatedBy.COUNTERPARTY;
 import static de.sovity.edc.client.gen.model.ContractTerminatedBy.SELF;
@@ -63,14 +62,11 @@ import static org.mockserver.stop.Stop.stopQuietly;
 public class ContractTerminationTest {
 
     private ClientAndServer mockServer;
-    private final int port = getFreePort();
-    private final String destinationPath = "/destination/some/path/";
-    private final String destinationUrl = "http://localhost:" + port + destinationPath;
 
 
     @BeforeEach
     public void startServer() {
-        mockServer = ClientAndServer.startClientAndServer(port);
+        mockServer = ClientAndServer.startClientAndServer(getFreePort());
     }
 
     @AfterEach
@@ -84,26 +80,26 @@ public class ContractTerminationTest {
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient) {
 
-        val assets = Stream.of("a-1", "a-2", "a-3");
+        val assets = IntStream.range(0, 3).mapToObj((it) -> scenario.createAsset());
 
-        val agreements = assets.map(scenario::createAsset)
+        val agreements = assets
             .peek(scenario::createContractDefinition)
-            .map(it -> scenario.negotiateAsset(it))
+            .map(scenario::negotiateAsset)
             .toList();
 
         consumerClient.uiApi().terminateContractAgreement(
             agreements.get(0).getContractAgreementId(),
             ContractTerminationRequest.builder()
-                .detail("detail")
-                .reason("reason")
+                .detail("detail 0")
+                .reason("reason 0")
                 .build()
         );
 
         consumerClient.uiApi().terminateContractAgreement(
             agreements.get(1).getContractAgreementId(),
             ContractTerminationRequest.builder()
-                .detail("detail")
-                .reason("reason")
+                .detail("detail 1")
+                .reason("reason 1")
                 .build()
         );
 
@@ -119,9 +115,6 @@ public class ContractTerminationTest {
             consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().terminationStatus(ONGOING).build());
 
         // assert
-        val contractAgreements = allAgreements.getContractAgreements();
-        assertThat(contractAgreements).hasSize(3);
-
         assertThat(allAgreements.getContractAgreements()).hasSize(3);
         assertThat(terminatedAgreements.getContractAgreements()).hasSize(2);
         assertThat(ongoingAgreements.getContractAgreements()).hasSize(1);
@@ -135,16 +128,16 @@ public class ContractTerminationTest {
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient) {
 
-        val assetId = "asset-1";
-        scenario.createAsset(assetId);
+        val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         scenario.negotiateAsset(assetId);
 
-        // act
         val agreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
 
-        String reason = "Reason";
-        String details = "Details";
+        // act
+
+        val reason = "Reason";
+        val details = "Details";
         consumerClient.uiApi().terminateContractAgreement(
             agreements.getContractAgreements().get(0).getContractAgreementId(),
             ContractTerminationRequest.builder().reason(reason).detail(details).build());
@@ -165,9 +158,7 @@ public class ContractTerminationTest {
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient) {
 
-        val assetId = "asset-1";
-
-        scenario.createAsset(assetId);
+        val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAsset(assetId);
 
@@ -196,9 +187,7 @@ public class ContractTerminationTest {
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient) {
 
-        val assetId = "asset-1";
-
-        scenario.createAsset(assetId);
+        val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAsset(assetId);
 
@@ -238,9 +227,7 @@ public class ContractTerminationTest {
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient) {
 
-        val assetId = "asset-1";
-
-        scenario.createAsset(assetId);
+        val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAsset(assetId);
 
@@ -281,9 +268,7 @@ public class ContractTerminationTest {
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient) {
 
-        val assetId = "asset-1";
-
-        scenario.createAsset(assetId);
+        val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAsset(assetId);
 
@@ -337,6 +322,8 @@ public class ContractTerminationTest {
         scenario.createContractDefinition(assetId);
         scenario.negotiateAsset(assetId);
 
+        val destinationPath = "/destination/some/path/";
+        val destinationUrl = "http://localhost:" + mockServer.getPort() + destinationPath;
         mockServer.when(HttpRequest.request(destinationPath).withMethod("POST")).respond(it -> HttpResponse.response().withStatusCode(200));
 
         val negotiation = scenario.negotiateAsset(assetId);
@@ -356,9 +343,9 @@ public class ContractTerminationTest {
         val historyEntry = awaitTransfer(consumerClient, initTransfer.getId());
 
         assertThat(historyEntry.getState().getCode()).isEqualTo(TransferProcessStates.COMPLETED.code());
-        assertThat(mockedAsset.accessed().get()).isTrue();
+        assertThat(mockedAsset.accesses().get()).isGreaterThan(0);
 
-        mockedAsset.accessed().set(false);
+        mockedAsset.accesses().set(0);
 
         val detail = "Some detail";
         val reason = "Some reason";
@@ -373,10 +360,12 @@ public class ContractTerminationTest {
 
         // act
         consumerClient.uiApi().initiateTransfer(transferRequest);
+        // first transfer attempt
         Thread.sleep(10_000);
-        assertThat(mockedAsset.accessed().get()).isFalse();
+        assertThat(mockedAsset.accesses().get()).isEqualTo(0);
+        // second transfer attempt
         Thread.sleep(10_000);
-        assertThat(mockedAsset.accessed().get()).isFalse();
+        assertThat(mockedAsset.accesses().get()).isEqualTo(0);
     }
 
     @Test
@@ -385,9 +374,7 @@ public class ContractTerminationTest {
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient) {
 
-        val assetId = "asset-1";
-
-        scenario.createAsset(assetId);
+        val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAsset(assetId);
 

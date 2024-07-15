@@ -8,10 +8,6 @@ dependencies {
 
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
-
-    implementation(libs.assertj.core)
-    implementation(libs.edc.coreSpi)
-    implementation(libs.jooq.jooq)
 }
 
 group = libs.versions.sovityEdcExtensionGroup.get()

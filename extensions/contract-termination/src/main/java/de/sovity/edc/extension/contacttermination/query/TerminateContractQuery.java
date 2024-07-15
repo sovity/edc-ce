@@ -18,6 +18,7 @@ import de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy;
 import de.sovity.edc.extension.contacttermination.ContractTermination;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.eclipse.edc.spi.result.Result;
 import org.jooq.DSLContext;
 
 import java.time.OffsetDateTime;
@@ -30,18 +31,25 @@ public class TerminateContractQuery {
 
     private final Supplier<DSLContext> dsl;
 
-    public OffsetDateTime terminateConsumerAgreement(ContractTermination termination, ContractTerminatedBy terminatedBy) {
+    public Result<OffsetDateTime> terminateConsumerAgreement(ContractTermination termination, ContractTerminatedBy terminatedBy) {
         val now = OffsetDateTime.now();
 
-        val newTermination = dsl.get().newRecord(SOVITY_CONTRACT_TERMINATION);
-        newTermination.setContractAgreementId(termination.contractAgreementId());
-        newTermination.setDetail(termination.detail());
-        newTermination.setReason(termination.reason());
-        newTermination.setTerminatedBy(terminatedBy);
-        newTermination.setTerminatedAt(now);
+        try {
+            dsl.get().transaction(trx -> {
+                    val newTermination = dsl.get().newRecord(SOVITY_CONTRACT_TERMINATION);
+                    newTermination.setContractAgreementId(termination.contractAgreementId());
+                    newTermination.setDetail(termination.detail());
+                    newTermination.setReason(termination.reason());
+                    newTermination.setTerminatedBy(terminatedBy);
+                    newTermination.setTerminatedAt(now);
 
-        newTermination.insert();
+                    newTermination.insert();
+                }
+            );
 
-        return now;
+            return Result.success(now);
+        } catch (Exception e) {
+            return Result.failure(e.getMessage());
+        }
     }
 }

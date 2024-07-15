@@ -38,6 +38,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetIdValidator;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.UiDataOfferBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementPageApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTerminationApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementPageCardBuilder;
@@ -78,7 +79,6 @@ import de.sovity.edc.extension.db.directaccess.DirectDatabaseAccess;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
-import jakarta.validation.Validator;
 import lombok.NoArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
@@ -134,8 +134,7 @@ public class WrapperExtensionContextBuilder {
         SovityMessenger sovityMessenger,
         TransferProcessService transferProcessService,
         TransferProcessStore transferProcessStore,
-        TypeTransformerRegistry typeTransformerRegistry,
-        Validator validator
+        TypeTransformerRegistry typeTransformerRegistry
     ) {
         // UI API
         var operatorMapper = new OperatorMapper();
@@ -170,7 +169,7 @@ public class WrapperExtensionContextBuilder {
             contractNegotiationStore,
             transferProcessService,
             assetIndex,
-            directDatabaseAccess::getDslContext // TODO: should I reuse the same all the time or create a new one for each class?
+            directDatabaseAccess::newDslContext
         );
         var contractAgreementApiService = new ContractAgreementPageApiService(
             contractAgreementDataFetcher,
@@ -215,13 +214,15 @@ public class WrapperExtensionContextBuilder {
             transferRequestBuilder,
             transferProcessService
         );
-        var agreementDetailsQuery = new ContractAgreementTerminationDetailsQuery(directDatabaseAccess::getDslContext);
-        var terminateContractQuery = new TerminateContractQuery(directDatabaseAccess::getDslContext);
+        var agreementDetailsQuery = new ContractAgreementTerminationDetailsQuery(directDatabaseAccess::newDslContext);
+        var terminateContractQuery = new TerminateContractQuery(directDatabaseAccess::newDslContext);
         var contractAgreementTerminationService = new ContractAgreementTerminationService(
             sovityMessenger,
             agreementDetailsQuery,
             terminateContractQuery,
-            monitor);
+            monitor,
+            selfDescriptionService.getParticipantId());
+        var contractAgreementTerminationApiService = new ContractAgreementTerminationApiService(contractAgreementTerminationService);
         var policyDefinitionApiService = new PolicyDefinitionApiService(
             policyDefinitionService,
             policyMapper
@@ -260,7 +261,7 @@ public class WrapperExtensionContextBuilder {
         var uiResource = new UiResourceImpl(
             contractAgreementApiService,
             contractAgreementTransferApiService,
-            contractAgreementTerminationService,
+            contractAgreementTerminationApiService,
             transferHistoryPageApiService,
             transferHistoryPageAssetFetcherService,
             assetApiService,
@@ -268,8 +269,7 @@ public class WrapperExtensionContextBuilder {
             catalogApiService,
             contractDefinitionApiService,
             contractNegotiationApiService,
-            dashboardApiService,
-            validator
+            dashboardApiService
         );
 
         // Use Case API

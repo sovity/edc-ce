@@ -12,9 +12,7 @@ dependencies {
     implementation(project(":extensions:database-direct-access"))
     implementation(project(":extensions:sovity-messenger"))
 
-    implementation(libs.edc.contractSpi)
     implementation(libs.edc.coreSpi)
-    implementation(libs.edc.managementApiConfiguration)
     implementation(libs.edc.transferSpi)
     implementation(libs.edc.dspNegotiationTransform)
 
@@ -24,17 +22,9 @@ dependencies {
     testCompileOnly(libs.lombok)
 
     testImplementation(project(":extensions:postgres-flyway"))
-    testImplementation(project(":extensions:wrapper:clients:java-client"))
-    testImplementation(project(":extensions:wrapper:wrapper"))
     testImplementation(project(":utils:test-connector-remote"))
     testImplementation(project(":utils:test-utils"))
     testImplementation(project(":utils:versions"))
-
-    testImplementation(libs.edc.controlPlaneCore)
-    testImplementation(libs.edc.dataPlaneSelectorCore)
-    testImplementation(libs.edc.dspApiConfiguration)
-    testImplementation(libs.edc.dspHttpCore)
-    testImplementation(libs.edc.junit)
 
     testImplementation(libs.edc.http) {
         exclude(group = "org.eclipse.jetty", module = "jetty-client")

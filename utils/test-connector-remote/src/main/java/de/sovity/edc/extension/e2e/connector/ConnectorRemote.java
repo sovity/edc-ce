@@ -85,22 +85,6 @@ public class ConnectorRemote {
                 .contentType(JSON);
     }
 
-    public List<String> getAssetIds() {
-        var requestBody = createObjectBuilder()
-                .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
-                .add(TYPE, EDC_NAMESPACE + "QuerySpec")
-                .build();
-        return prepareManagementApiCall()
-                .contentType(JSON)
-                .body(requestBody)
-                .when()
-                .post("/v2/assets/request")
-                .then()
-                .statusCode(200)
-                .contentType(JSON)
-                .extract().jsonPath().getList("@id");
-    }
-
     public String createPolicy(JsonObject policyJsonObject) {
         var requestBody = createObjectBuilder()
                 .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))

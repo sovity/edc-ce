@@ -21,7 +21,7 @@ import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.WebApplicationException;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.result.Result;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +38,7 @@ public class ContractAgreementTerminationService {
     private final ContractAgreementTerminationDetailsQuery contractAgreementTerminationDetailsQuery;
     private final TerminateContractQuery terminateContractQuery;
     private final Monitor monitor;
+    private final String thisParticipantId;
 
     /**
      * This is to terminate an EDC's own contract.
@@ -57,10 +58,13 @@ public class ContractAgreementTerminationService {
         }
 
         val terminatedAt = terminateContractQuery.terminateConsumerAgreement(termination, SELF);
+        if (terminatedAt.failed()) {
+            throw new EdcException(terminatedAt.getFailureDetail());
+        }
 
         notifyTerminationToProvider(details.counterpartyAddress(), termination);
 
-        return terminatedAt;
+        return terminatedAt.getContent();
     }
 
     public Result<OffsetDateTime> terminateCounterpartyAgreement(
@@ -76,12 +80,11 @@ public class ContractAgreementTerminationService {
 
         val details = maybeDetails.get();
 
-        boolean isConsumerAndSenderIsProvider =
-            details.type().equals(ContractNegotiation.Type.CONSUMER) && details.providerAgentId().equals(identity);
-        boolean isProviderAndSenderIsConsumer =
-            details.type().equals(ContractNegotiation.Type.PROVIDER) && details.consumerAgentId().equals(identity);
+        boolean isConsumerAndSenderIsProvider = details.isConsumer() && details.providerAgentId().equals(identity);
+        boolean isProviderAndSenderIsConsumer = details.isProvider() && details.consumerAgentId().equals(identity);
+
         if (!(isConsumerAndSenderIsProvider || isProviderAndSenderIsConsumer)) {
-            monitor.warning("The EDC %s attempted an illegal operation".formatted(details.consumerAgentId()));
+            monitor.severe("The EDC %s attempted to terminate a contract that it was not related to!".formatted(details.consumerAgentId()));
             return Result.failure("The requester's identity %s is neither the consumer nor the provider".formatted(identity));
         }
 
@@ -89,13 +92,11 @@ public class ContractAgreementTerminationService {
             return Result.failure("The contract is already terminated");
         }
 
-        // TODO: should an EDC be able to terminate its own contracts?
-        // TODO: there is a weakness here if the EDC sends this message to itself, which should no happen right now.
-        //  Should select self/counterparty based on the details
-        // TODO: how can I get the EDC's identity?
-        val terminatedAt = terminateContractQuery.terminateConsumerAgreement(termination, COUNTERPARTY);
-
-        return Result.success(terminatedAt);
+        if (thisParticipantId.equals(details.counterpartyId())) {
+            return terminateContractQuery.terminateConsumerAgreement(termination, SELF);
+        } else {
+            return terminateContractQuery.terminateConsumerAgreement(termination, COUNTERPARTY);
+        }
     }
 
     public void notifyTerminationToProvider(String counterPartyAddress, ContractTermination termination) {

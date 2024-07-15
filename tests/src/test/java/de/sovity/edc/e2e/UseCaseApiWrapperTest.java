@@ -67,7 +67,11 @@ class UseCaseApiWrapperTest {
 
     @DisabledOnGithub
     @Test
-    void catalog_filtering_by_like(@Consumer EdcClient consumerClient, @Provider ConnectorRemote providerConnector, @Provider EdcClient providerClient) {
+    void catalog_filtering_by_like(
+        @Consumer EdcClient consumerClient,
+        @Provider ConnectorRemote providerConnector,
+        @Provider EdcClient providerClient) {
+
         // arrange
         createPolicy(providerClient);
         createAsset(providerClient);

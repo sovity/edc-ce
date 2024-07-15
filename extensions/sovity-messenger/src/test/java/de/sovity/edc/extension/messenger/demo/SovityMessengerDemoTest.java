@@ -40,21 +40,17 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 class SovityMessengerDemoTest {
     // Setup, you may skip this part
 
-    private static final String EMITTER_PARTICIPANT_ID = "emitter";
-    private static ConnectorConfig emitterConfig;
-
     @RegisterExtension
     static EdcRuntimeExtensionWithTestDatabase emitterExtension = new EdcRuntimeExtensionWithTestDatabase(
         ":launchers:connectors:sovity-dev",
         "emitter",
         testDatabase -> {
-            emitterConfig = forTestDatabase(EMITTER_PARTICIPANT_ID, testDatabase);
+            ConnectorConfig emitterConfig = forTestDatabase("emitter", testDatabase);
             return emitterConfig.getProperties();
         }
     );
 
 
-    private static final String RECEIVER_PARTICIPANT_ID = "receiver";
     private static ConnectorConfig receiverConfig;
 
     @RegisterExtension
@@ -62,7 +58,7 @@ class SovityMessengerDemoTest {
         ":launchers:connectors:sovity-dev",
         "receiver",
         testDatabase -> {
-            receiverConfig = forTestDatabase(RECEIVER_PARTICIPANT_ID, testDatabase);
+            receiverConfig = forTestDatabase("receiver", testDatabase);
             return receiverConfig.getProperties();
         }
     );
