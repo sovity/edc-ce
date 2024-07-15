@@ -76,7 +76,6 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.OK;
-import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.RUNNING;
 import static java.time.Duration.ofSeconds;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;

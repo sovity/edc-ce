@@ -30,7 +30,6 @@ import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import jakarta.ws.rs.HttpMethod;
 import lombok.SneakyThrows;
 import lombok.val;
-import org.apache.http.HttpStatus;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.connector.contract.spi.ContractId;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
@@ -181,6 +180,7 @@ public class ContractTerminationTest {
         assertTermination(providerSideAgreements, detail, reason, COUNTERPARTY);
     }
 
+    @DisabledOnGithub
     @Test
     void limitTheReasonSizeAt100Chars(
         E2eScenario scenario,

@@ -44,14 +44,8 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
-import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
-import de.sovity.edc.extension.contacttermination.ContractTermination;
 import jakarta.validation.Valid;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.ws.rs.BadRequestException;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
