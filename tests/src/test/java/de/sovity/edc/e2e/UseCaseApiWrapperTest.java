@@ -35,84 +35,45 @@ import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
+import de.sovity.edc.e2e.utils.Consumer;
+import de.sovity.edc.e2e.utils.E2eTestExtension;
+import de.sovity.edc.e2e.utils.Provider;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
-import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(E2eTestExtension.class)
 class UseCaseApiWrapperTest {
 
-    private static final String PROVIDER_PARTICIPANT_ID = "provider";
-    private static final String CONSUMER_PARTICIPANT_ID = "consumer";
-
-    @RegisterExtension
-    static EdcExtension providerEdcContext = new EdcExtension();
-    @RegisterExtension
-    static EdcExtension consumerEdcContext = new EdcExtension();
-
-    @RegisterExtension
-    static final TestDatabase PROVIDER_DATABASE = new TestDatabaseViaTestcontainers();
-    @RegisterExtension
-    static final TestDatabase CONSUMER_DATABASE = new TestDatabaseViaTestcontainers();
-
-    private ConnectorRemote providerConnector;
-    private ConnectorRemote consumerConnector;
-
-    private EdcClient providerClient;
-    private EdcClient consumerClient;
     private MockDataAddressRemote dataAddress;
     private final String dataOfferData = "expected data 123";
 
     private final String dataOfferId = "my-data-offer-2023-11";
 
     @BeforeEach
-    void setup() {
-        // set up provider EDC + Client
-        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 21000, PROVIDER_DATABASE);
-        providerEdcContext.setConfiguration(providerConfig.getProperties());
-        providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
-
-        providerClient = EdcClient.builder()
-                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
-
-        // set up consumer EDC + Client
-        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 23000, CONSUMER_DATABASE);
-        consumerEdcContext.setConfiguration(consumerConfig.getProperties());
-        consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
-
-        consumerClient = EdcClient.builder()
-                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
-
+    void setup(@Provider ConnectorRemote providerConnector) {
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
     }
 
     @DisabledOnGithub
     @Test
-    void catalog_filtering_by_like() {
+    void catalog_filtering_by_like(@Consumer EdcClient consumerClient, @Provider ConnectorRemote providerConnector, @Provider EdcClient providerClient) {
         // arrange
-        createPolicy();
-        createAsset();
-        createContractDefinition();
+        createPolicy(providerClient);
+        createAsset(providerClient);
+        createContractDefinition(providerClient);
 
-        var query = criterion(Prop.Edc.ID, CatalogFilterExpressionOperator.LIKE, "%data-offer%");
+        var query = criterion(providerConnector, Prop.Edc.ID, CatalogFilterExpressionOperator.LIKE, "%data-offer%");
 
         // act
         var dataOffers = consumerClient.useCaseApi().queryCatalog(query);
@@ -124,7 +85,12 @@ class UseCaseApiWrapperTest {
 
     }
 
-    private CatalogQuery criterion(String leftOperand, CatalogFilterExpressionOperator operator, String rightOperand) {
+    private CatalogQuery criterion(
+        ConnectorRemote providerConnector,
+        String leftOperand,
+        CatalogFilterExpressionOperator operator,
+        String rightOperand) {
+
         return CatalogQuery.builder()
                 .connectorEndpoint(getProtocolEndpoint(providerConnector))
                 .filterExpressions(
@@ -139,7 +105,7 @@ class UseCaseApiWrapperTest {
                 .build();
     }
 
-    private void createAsset() {
+    private void createAsset(EdcClient providerClient) {
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
             .httpData(UiDataSourceHttpData.builder()
@@ -161,7 +127,7 @@ class UseCaseApiWrapperTest {
         providerClient.uiApi().createAsset(asset);
     }
 
-    private void createPolicy() {
+    private void createPolicy(EdcClient providerClient) {
         var afterYesterday = UiPolicyConstraint.builder()
                 .left("POLICY_EVALUATION_TIME")
                 .operator(OperatorDto.GT)
@@ -190,7 +156,7 @@ class UseCaseApiWrapperTest {
         providerClient.uiApi().createPolicyDefinition(policyDefinition);
     }
 
-    private void createContractDefinition() {
+    private void createContractDefinition(EdcClient providerClient) {
         var contractDefinition = ContractDefinitionRequest.builder()
                 .contractDefinitionId(dataOfferId)
                 .accessPolicyId(dataOfferId)
