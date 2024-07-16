@@ -44,8 +44,11 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
-import jakarta.validation.Valid;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -65,6 +68,7 @@ public class UiResourceImpl implements UiResource {
     private final ContractDefinitionApiService contractDefinitionApiService;
     private final ContractNegotiationApiService contractNegotiationApiService;
     private final DashboardPageApiService dashboardPageApiService;
+    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 
     @Override
     public DashboardPage getDashboardPage() {
@@ -155,7 +159,9 @@ public class UiResourceImpl implements UiResource {
     @Override
     public IdResponseDto terminateContractAgreement(
         String contractAgreementId,
-        @Valid ContractTerminationRequest contractTerminationRequest) {
+        ContractTerminationRequest contractTerminationRequest) {
+
+        validate(contractTerminationRequest);
         return contractAgreementTerminationApiService.terminate(contractAgreementId, contractTerminationRequest);
     }
 
@@ -167,5 +173,13 @@ public class UiResourceImpl implements UiResource {
     @Override
     public UiAsset getTransferProcessAsset(String transferProcessId) {
         return transferHistoryPageAssetFetcherService.getAssetForTransferHistoryPage(transferProcessId);
+    }
+
+    private void validate(Object object) {
+        val validator = factory.getValidator();
+        val constraintViolations = validator.validate(object);
+        if (!constraintViolations.isEmpty()) {
+            throw new ConstraintViolationException("Failed to validate", constraintViolations);
+        }
     }
 }

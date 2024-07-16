@@ -16,9 +16,14 @@ package de.sovity.edc.e2e.utils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * An asset that uses a mocked network resource.
+ *
+ * @param assetId The related asset's ID
+ * @param networkAccesses How many times the resource was accessed via the network.
+ */
 public record MockedAsset(
     String assetId,
-    AtomicInteger accesses
+    AtomicInteger networkAccesses
 ) {
-
 }

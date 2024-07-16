@@ -11,7 +11,7 @@
 --       sovity GmbH - initial API and implementation
 --
 
-CREATE TYPE contract_terminated_by AS ENUM ('SELF', 'COUNTERPARTY');
+create type contract_terminated_by as enum ('SELF', 'COUNTERPARTY');
 
 create table sovity_contract_termination
 (
@@ -20,6 +20,6 @@ create table sovity_contract_termination
     detail                varchar                  not null,
     terminated_at         timestamp with time zone not null,
     terminated_by         contract_terminated_by   not null,
-    CONSTRAINT agreement_fk FOREIGN KEY (contract_agreement_id)
-        REFERENCES edc_contract_agreement (agr_id)
+    constraint agreement_fk foreign key (contract_agreement_id)
+        references edc_contract_agreement (agr_id)
 );

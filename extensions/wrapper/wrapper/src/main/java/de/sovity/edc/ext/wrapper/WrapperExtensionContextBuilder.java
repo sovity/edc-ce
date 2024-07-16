@@ -75,7 +75,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
 import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
 import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
-import de.sovity.edc.extension.db.directaccess.DirectDatabaseAccess;
+import de.sovity.edc.extension.db.directaccess.DslContextFactoryImpl;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
@@ -124,7 +124,7 @@ public class WrapperExtensionContextBuilder {
         ContractDefinitionStore contractDefinitionStore,
         ContractNegotiationService contractNegotiationService,
         ContractNegotiationStore contractNegotiationStore,
-        DirectDatabaseAccess directDatabaseAccess,
+        DslContextFactoryImpl dslContextFactory,
         JsonLd jsonLd,
         Monitor monitor,
         ObjectMapper objectMapper,
@@ -169,7 +169,7 @@ public class WrapperExtensionContextBuilder {
             contractNegotiationStore,
             transferProcessService,
             assetIndex,
-            directDatabaseAccess::newDslContext
+            dslContextFactory::newDslContext
         );
         var contractAgreementApiService = new ContractAgreementPageApiService(
             contractAgreementDataFetcher,
@@ -214,10 +214,11 @@ public class WrapperExtensionContextBuilder {
             transferRequestBuilder,
             transferProcessService
         );
-        var agreementDetailsQuery = new ContractAgreementTerminationDetailsQuery(directDatabaseAccess::newDslContext);
-        var terminateContractQuery = new TerminateContractQuery(directDatabaseAccess::newDslContext);
+        var agreementDetailsQuery = new ContractAgreementTerminationDetailsQuery();
+        var terminateContractQuery = new TerminateContractQuery();
         var contractAgreementTerminationService = new ContractAgreementTerminationService(
             sovityMessenger,
+            dslContextFactory,
             agreementDetailsQuery,
             terminateContractQuery,
             monitor,

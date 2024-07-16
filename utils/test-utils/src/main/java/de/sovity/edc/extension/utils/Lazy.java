@@ -31,4 +31,8 @@ public class Lazy<T> {
 
         return tt;
     }
+
+    public boolean isInitialized() {
+        return tt != null;
+    }
 }

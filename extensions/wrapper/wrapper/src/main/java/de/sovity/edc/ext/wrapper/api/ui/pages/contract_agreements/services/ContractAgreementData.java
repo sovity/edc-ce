@@ -37,7 +37,7 @@ public record ContractAgreementData(
         ContractNegotiation negotiation,
         Asset asset,
         List<TransferProcess> transfers,
-        Map<String, SovityContractTerminationRecord> terminations
+        SovityContractTerminationRecord termination
 ) {
 
 }

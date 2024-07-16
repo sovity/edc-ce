@@ -33,8 +33,6 @@ import lombok.val;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.connector.contract.spi.ContractId;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.integration.ClientAndServer;
@@ -52,26 +50,12 @@ import static de.sovity.edc.client.gen.model.ContractTerminationStatus.TERMINATE
 import static java.time.Duration.ofSeconds;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockserver.stop.Stop.stopQuietly;
 
 @ExtendWith(E2eTestExtension.class)
 public class ContractTerminationTest {
 
-    private ClientAndServer mockServer;
-
-
-    @BeforeEach
-    public void startServer() {
-        mockServer = ClientAndServer.startClientAndServer(getFreePort());
-    }
-
-    @AfterEach
-    public void stopServer() {
-        stopQuietly(mockServer);
-    }
 
     @Test
     void canGetAgreementPageForNonTerminatedContract(
@@ -312,11 +296,12 @@ public class ContractTerminationTest {
     @SneakyThrows
     void cantTransferDataAfterTerminated(
         E2eScenario scenario,
+        ClientAndServer mockServer,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient) {
 
         val assetId = "asset-1";
-        val mockedAsset = scenario.createAssetWithMockResource(assetId, mockServer);
+        val mockedAsset = scenario.createAssetWithMockResource(assetId);
         scenario.createContractDefinition(assetId);
         scenario.negotiateAsset(assetId);
 
@@ -348,9 +333,9 @@ public class ContractTerminationTest {
             .get();
 
         assertThat(historyEntry.getState().getCode()).isEqualTo(TransferProcessStates.COMPLETED.code());
-        assertThat(mockedAsset.accesses().get()).isGreaterThan(0);
+        assertThat(mockedAsset.networkAccesses().get()).isGreaterThan(0);
 
-        mockedAsset.accesses().set(0);
+        mockedAsset.networkAccesses().set(0);
 
         val detail = "Some detail";
         val reason = "Some reason";
@@ -367,10 +352,10 @@ public class ContractTerminationTest {
         consumerClient.uiApi().initiateTransfer(transferRequest);
         // first transfer attempt
         Thread.sleep(10_000);
-        assertThat(mockedAsset.accesses().get()).isEqualTo(0);
+        assertThat(mockedAsset.networkAccesses().get()).isEqualTo(0);
         // second transfer attempt
         Thread.sleep(10_000);
-        assertThat(mockedAsset.accesses().get()).isEqualTo(0);
+        assertThat(mockedAsset.networkAccesses().get()).isEqualTo(0);
     }
 
     @Test

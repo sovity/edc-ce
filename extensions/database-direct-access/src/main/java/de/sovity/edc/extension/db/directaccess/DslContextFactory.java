@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2024 sovity GmbH
+ * Copyright (c) 2024 sovity GmbH
  *
  *  This program and the accompanying materials are made available under the
  *  terms of the Apache License, Version 2.0 which is available at
@@ -12,9 +12,12 @@
  *
  */
 
-package de.sovity.edc.extension.messenger.impl;
+package de.sovity.edc.extension.db.directaccess;
 
-import java.util.function.Function;
+import org.jooq.DSLContext;
 
-public record Handler<IN, OUT>(Class<IN> clazz, Function<IN, OUT> handler) {
+public interface DslContextFactory {
+
+    DSLContext newDslContext();
+
 }

@@ -1,6 +1,6 @@
 # Checkstyle
 
-## Note about Copyrights
+## License Headers with IntelliJ
 
 While it's close to impossible to write a regex to validate all the possible copyright messages, the one currently configured in [checkstyle-config.xml](checkstyle-config.xml) matches almost all the files in this project.
 

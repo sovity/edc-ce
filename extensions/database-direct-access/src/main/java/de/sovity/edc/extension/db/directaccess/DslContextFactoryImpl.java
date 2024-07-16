@@ -20,16 +20,16 @@ import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
-import java.util.function.Supplier;
 import javax.sql.DataSource;
 
 @ExtensionPoint
 @RequiredArgsConstructor
-public class DirectDatabaseAccess {
+public class DslContextFactoryImpl implements DslContextFactory {
 
-    private final Supplier<DataSource> dataSource;
+    private final DataSource dataSource;
 
     public DSLContext newDslContext() {
-        return DSL.using(dataSource.get(), SQLDialect.POSTGRES);
+        return DSL.using(dataSource, SQLDialect.POSTGRES);
     }
+
 }

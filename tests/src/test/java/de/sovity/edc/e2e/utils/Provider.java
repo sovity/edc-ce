@@ -17,6 +17,9 @@ package de.sovity.edc.e2e.utils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/**
+ * In test code, in conjunction with {@link E2eTestExtension}, specifies that the injected instance must come from the Provider EDC
+ */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Provider {
 }

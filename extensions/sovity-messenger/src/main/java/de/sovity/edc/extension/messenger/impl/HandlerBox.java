@@ -12,14 +12,11 @@
  *
  */
 
-package de.sovity.edc.extension.contacttermination;
+package de.sovity.edc.extension.messenger.impl;
 
-import lombok.Builder;
+import org.eclipse.edc.spi.iam.ClaimToken;
 
-@Builder
-public record ContractTermination(
-    String contractAgreementId,
-    String detail,
-    String reason
-) {
+import java.util.function.BiFunction;
+
+public record HandlerBox<IN, OUT>(Class<IN> clazz, BiFunction<ClaimToken, IN, OUT> handler) {
 }

@@ -14,11 +14,10 @@
 
 package de.sovity.edc.extension.contacttermination.query;
 
-import de.sovity.edc.extension.contacttermination.ContractTermination;
+import de.sovity.edc.extension.contacttermination.ContractTerminationParam;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import lombok.val;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -42,19 +41,19 @@ class TerminateContractQueryTest {
     );
 
     @Test
-    void terminateConsumerAgreement_shouldInsertRowInTerminationTable(DSLContext dsl) {
+    void terminateConsumerAgreementOrThrow_shouldInsertRowInTerminationTable(DSLContext dsl) {
         dsl.transaction(trx -> {
             dsl.execute(
                 new String(
-                    ContractContractAgreementTerminationDetailsQueryTest.class
+                    ContractAgreementTerminationDetailsQueryTest.class
                         .getResource("/sql/TerminateContractQueryTest/init.sql").openStream().readAllBytes()
                 ));
 
                 // arrange
-                val query = new TerminateContractQuery(trx::dsl);
+                val query = new TerminateContractQuery();
                 val agreementId = "Y29udHJhY3QtMjIwMDA=:YXNzZXQtMjIwMDA=:NzYzYzkxODctZTQ3Yi00ODJjLTkxMjAtYTJkMTM1MzQ2YWVm";
 
-                val details = new ContractTermination(
+                val details = new ContractTerminationParam(
                     agreementId,
                     "Some detail",
                     "Some reason"
@@ -62,20 +61,17 @@ class TerminateContractQueryTest {
                 val now = OffsetDateTime.now();
 
                 // act
-                val terminatedAt = query.terminateConsumerAgreement(details, COUNTERPARTY);
+                val terminatedAt = query.terminateConsumerAgreementOrThrow(trx.dsl(), details, COUNTERPARTY);
 
                 // assert
                 assertThat(terminatedAt).isNotNull();
 
-                val detailsQuery = new ContractAgreementTerminationDetailsQuery(trx::dsl);
-                val maybeDetailsAfterTermination = detailsQuery.fetchAgreementDetails(agreementId);
-                assertThat(maybeDetailsAfterTermination).isPresent();
-                val detailsAfterTermination = maybeDetailsAfterTermination.get();
+                val detailsQuery = new ContractAgreementTerminationDetailsQuery();
+                val detailsAfterTermination = detailsQuery.fetchAgreementDetailsOrThrow(trx.dsl(), agreementId);
 
                 assertThat(detailsAfterTermination.contractAgreementId()).isEqualTo(agreementId);
                 assertThat(detailsAfterTermination.counterpartyId()).isEqualTo("my-edc2");
                 assertThat(detailsAfterTermination.counterpartyAddress()).isEqualTo("http://edc2:11003/api/dsp");
-                assertThat(detailsAfterTermination.state()).isEqualTo(ContractNegotiationStates.FINALIZED);
                 assertThat(detailsAfterTermination.type()).isEqualTo(ContractNegotiation.Type.CONSUMER);
                 assertThat(detailsAfterTermination.providerAgentId()).isEqualTo("my-edc2");
                 assertThat(detailsAfterTermination.consumerAgentId()).isEqualTo("my-edc");

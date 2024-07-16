@@ -17,9 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
-import de.sovity.edc.extension.contacttermination.ContractTermination;
-import jakarta.validation.Validation;
-import jakarta.ws.rs.BadRequestException;
+import de.sovity.edc.extension.contacttermination.ContractTerminationParam;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 
@@ -32,20 +30,13 @@ public class ContractAgreementTerminationApiService {
         String contractAgreementId,
         ContractTerminationRequest contractTerminationRequest) {
 
-        try(val f = Validation.buildDefaultValidatorFactory()){
-            val validator = f.getValidator();
-            val constraintViolations = validator.validate(contractTerminationRequest);
-            if (!constraintViolations.isEmpty()) {
-                throw new BadRequestException("Invalid contract termination request: " + constraintViolations);
-            }
-
             val terminatedAt = contractAgreementTerminationService.terminateAgreement(
-                new ContractTermination(contractAgreementId, contractTerminationRequest.getDetail(), contractTerminationRequest.getReason()));
+                new ContractTerminationParam(contractAgreementId, contractTerminationRequest.getDetail(),
+                    contractTerminationRequest.getReason()));
 
             return IdResponseDto.builder()
                 .id(contractAgreementId)
                 .lastUpdatedDate(terminatedAt)
                 .build();
-        }
     }
 }

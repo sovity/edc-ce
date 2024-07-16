@@ -34,6 +34,8 @@ import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiContractNegotiation;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -148,7 +150,10 @@ interface UiResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Collect filtered data for the Contract Agreement Page")
-    ContractAgreementPage getContractAgreementPage(@Nullable ContractAgreementPageQuery contractAgreementPageQuery);
+    ContractAgreementPage getContractAgreementPage(
+        @RequestBody(description = "If null, returns all the contract agreements.")
+        @Nullable ContractAgreementPageQuery contractAgreementPageQuery
+    );
 
     @POST
     @Path("pages/contract-agreement-page/transfers")
@@ -171,7 +176,7 @@ interface UiResource {
     @Operation(description = "Terminates a contract agreement designated by its contract agreement id.")
     IdResponseDto terminateContractAgreement(
         @PathParam("contractAgreementId") String contractAgreementId,
-        @Valid ContractTerminationRequest contractTerminationRequest);
+        ContractTerminationRequest contractTerminationRequest);
 
     @GET
     @Path("pages/transfer-history-page")

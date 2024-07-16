@@ -40,10 +40,10 @@ public class ContractAgreementPageApiService {
                 agreement.negotiation(),
                 agreement.asset(),
                 agreement.transfers(),
-                agreement.terminations()))
+                agreement.termination()))
             .sorted(Comparator.comparing(ContractAgreementCard::getContractSigningDate).reversed());
 
-        if (contractAgreementPageQuery == null || contractAgreementPageQuery.isEmpty()) {
+        if (contractAgreementPageQuery == null || contractAgreementPageQuery.getTerminationStatus() == null) {
             return new ContractAgreementPage(cards.toList());
         } else {
             var filtered = cards.filter(card ->

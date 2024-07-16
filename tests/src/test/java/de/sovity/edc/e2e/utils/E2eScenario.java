@@ -37,9 +37,7 @@ import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.utils.Lazy;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
-import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.awaitility.Awaitility;
 import org.mockserver.integration.ClientAndServer;
@@ -52,19 +50,35 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.RUNNING;
+import static de.sovity.edc.extension.policy.AlwaysTruePolicyConstants.POLICY_DEFINITION_ID;
 import static java.time.Duration.ofSeconds;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RequiredArgsConstructor
 public class E2eScenario {
-    private final EdcClient consumerClient;
     private final ConnectorConfig consumerConfig;
-    private final EdcClient providerClient;
     private final ConnectorConfig providerConfig;
+    private final ClientAndServer mockServer;
 
-    private final Lazy<String> alwaysTruePolicy = new Lazy<>(
-        () -> createPolicyDefinition("alwaysTrue")
-    );
+    private EdcClient consumerClient;
+    private EdcClient providerClient;
+
+    public E2eScenario(ConnectorConfig consumerConfig, ConnectorConfig providerConfig, ClientAndServer mockServer) {
+        this.consumerConfig = consumerConfig;
+        this.providerConfig = providerConfig;
+        this.mockServer = mockServer;
+
+        consumerClient = EdcClient.builder()
+            .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
+            .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
+            .build();
+
+        providerClient = EdcClient.builder()
+            .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
+            .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
+            .build();
+    }
+
+    private final String alwaysTruePolicyId = POLICY_DEFINITION_ID;
 
     private final AtomicInteger assetCounter = new AtomicInteger(0);
 
@@ -88,10 +102,10 @@ public class E2eScenario {
         return internalCreateAsset(id, uiDataSource).getId();
     }
 
-    public MockedAsset createAssetWithMockResource(String id, ClientAndServer clientAndServer) {
+    public MockedAsset createAssetWithMockResource(String id) {
 
         val path = "/assets/" + id;
-        val url = "http://localhost:" + clientAndServer.getPort() + path;
+        val url = "http://localhost:" + mockServer.getPort() + path;
 
         val uiDataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
@@ -100,7 +114,7 @@ public class E2eScenario {
 
         val accesses = new AtomicInteger(0);
 
-        clientAndServer.when(HttpRequest.request(path).withMethod("GET")).respond(it -> {
+        mockServer.when(HttpRequest.request(path).withMethod("GET")).respond(it -> {
             accesses.incrementAndGet();
             return HttpResponse.response().withStatusCode(200);
         });
@@ -138,7 +152,7 @@ public class E2eScenario {
     }
 
     public String createContractDefinition(String assetId) {
-        return createContractDefinition(alwaysTruePolicy.get(), assetId).getId();
+        return createContractDefinition(POLICY_DEFINITION_ID, assetId).getId();
     }
 
     public IdResponseDto createContractDefinition(String policyId, String assetId) {

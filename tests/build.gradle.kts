@@ -24,4 +24,8 @@ dependencies {
     testRuntimeOnly(libs.junit.engine)
 }
 
+tasks.getByName<Test>("test") {
+    maxParallelForks = Runtime.getRuntime().availableProcessors() / 2
+}
+
 group = libs.versions.sovityEdcGroup.get()

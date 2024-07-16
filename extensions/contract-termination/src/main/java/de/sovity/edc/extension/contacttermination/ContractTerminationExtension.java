@@ -14,16 +14,14 @@
 
 package de.sovity.edc.extension.contacttermination;
 
-import de.sovity.edc.ext.db.jooq.Tables;
+import de.sovity.edc.extension.contacttermination.query.ContractAgreementIsTerminatedQuery;
 import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
 import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
-import de.sovity.edc.extension.db.directaccess.DirectDatabaseAccess;
+import de.sovity.edc.extension.db.directaccess.DslContextFactoryImpl;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.extension.messenger.SovityMessengerRegistry;
 import lombok.val;
-import org.eclipse.edc.connector.transfer.spi.observe.TransferProcessListener;
 import org.eclipse.edc.connector.transfer.spi.observe.TransferProcessObservable;
-import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.agent.ParticipantAgentService;
@@ -33,7 +31,7 @@ import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.system.configuration.Config;
 
-import static de.sovity.edc.extension.contacttermination.MapperUtils.toModel;
+import static de.sovity.edc.extension.contacttermination.ContractTerminationMapper.toModel;
 
 
 public class ContractTerminationExtension implements ServiceExtension {
@@ -42,7 +40,7 @@ public class ContractTerminationExtension implements ServiceExtension {
     private static final String EDC_PARTICIPANT_ID = "edc.participant.id";
 
     @Inject
-    private DirectDatabaseAccess directDatabaseAccess;
+    private DslContextFactoryImpl dslContextFactory;
 
     @Inject
     private IdentityService identityService;
@@ -71,11 +69,12 @@ public class ContractTerminationExtension implements ServiceExtension {
 
     private void setupMessenger(Config config) {
 
-        val contractAgreementTerminationDetailsQuery = new ContractAgreementTerminationDetailsQuery(directDatabaseAccess::newDslContext);
-        val terminateContractQuery = new TerminateContractQuery(directDatabaseAccess::newDslContext);
+        val contractAgreementTerminationDetailsQuery = new ContractAgreementTerminationDetailsQuery();
+        val terminateContractQuery = new TerminateContractQuery();
 
         val terminationService = new ContractAgreementTerminationService(
             sovityMessenger,
+            dslContextFactory,
             contractAgreementTerminationDetailsQuery,
             terminateContractQuery,
             monitor,
@@ -83,34 +82,17 @@ public class ContractTerminationExtension implements ServiceExtension {
         );
 
         messengerRegistry.register(
-            ContractTerminationOutgoingMessage.class,
+            ContractTerminationMessage.class,
             (claims, termination) -> terminationService.terminateCounterpartyAgreement(
                 participantAgentService.createFor(claims).getIdentity(),
                 toModel(termination)));
     }
 
     private void setupTransferPrevention() {
-        observable.registerListener(new TransferProcessListener() {
-
-            @Override
-            public void preRequesting(TransferProcess process) {
-                val dsl = directDatabaseAccess.newDslContext();
-
-                val t = Tables.SOVITY_CONTRACT_TERMINATION;
-
-                val count = dsl
-                    .selectCount()
-                    .from(t)
-                    .where(t.CONTRACT_AGREEMENT_ID.eq(process.getContractId()))
-                    .fetchSingle()
-                    .value1();
-
-                if (count >= 1) {
-                    // ugly solution. Needs support on core EDC side https://github.com/sovity/PMO-Software/issues/1260
-                    throw new IllegalStateException();
-                }
-            }
-        });
+        observable.registerListener(
+            new TransferProcessBlocker(
+                dslContextFactory,
+                new ContractAgreementIsTerminatedQuery()));
     }
 
 }

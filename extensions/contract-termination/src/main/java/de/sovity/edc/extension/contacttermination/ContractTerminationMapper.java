@@ -17,9 +17,9 @@ package de.sovity.edc.extension.contacttermination;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class MapperUtils {
-    public static ContractTermination toModel(ContractTerminationOutgoingMessage message) {
-        return new ContractTermination(
+public class ContractTerminationMapper {
+    public static ContractTerminationParam toModel(ContractTerminationMessage message) {
+        return new ContractTerminationParam(
                 message.getContractAgreementId(),
                 message.getDetail(),
                 message.getReason()

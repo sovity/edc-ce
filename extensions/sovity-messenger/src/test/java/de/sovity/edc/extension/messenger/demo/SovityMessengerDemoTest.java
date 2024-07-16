@@ -26,58 +26,23 @@ import de.sovity.edc.extension.messenger.demo.message.Signal;
 import de.sovity.edc.extension.messenger.demo.message.Sqrt;
 import de.sovity.edc.extension.messenger.demo.message.UnregisteredMessage;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
+import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 class SovityMessengerDemoTest {
-    // Setup, you may skip this part
 
-    @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase emitterExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "emitter",
-        testDatabase -> {
-            ConnectorConfig emitterConfig = forTestDatabase("emitter", testDatabase);
-            return emitterConfig.getProperties();
-        }
-    );
-
-
-    private static ConnectorConfig receiverConfig;
-
-    @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase receiverExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "receiver",
-        testDatabase -> {
-            receiverConfig = forTestDatabase("receiver", testDatabase);
-            return receiverConfig.getProperties();
-        }
-    );
-
-    private String receiverAddress;
-
-    // still setup, skip
-
-    @BeforeEach
-    void setup() {
-        receiverAddress = receiverConfig.getProtocolEndpoint().getUri().toString();
-    }
-
-    /**
-     * Actual usage of the Sovity Messenger.
-     */
     @DisabledOnGithub
     @Test
-    void demo() throws ExecutionException, InterruptedException, TimeoutException {
+    @SneakyThrows
+    void demo() {
         /*
          * Get a reference to the SovityMessenger. This is equivalent to
          *
@@ -129,4 +94,33 @@ class SovityMessengerDemoTest {
         System.out.println("END MARKER");
     }
 
+    @RegisterExtension
+    static EdcRuntimeExtensionWithTestDatabase emitterExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "emitter",
+        testDatabase -> {
+            ConnectorConfig emitterConfig = forTestDatabase("emitter", testDatabase);
+            return emitterConfig.getProperties();
+        }
+    );
+
+
+    private static ConnectorConfig receiverConfig;
+
+    @RegisterExtension
+    static EdcRuntimeExtensionWithTestDatabase receiverExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "receiver",
+        testDatabase -> {
+            receiverConfig = forTestDatabase("receiver", testDatabase);
+            return receiverConfig.getProperties();
+        }
+    );
+
+    private String receiverAddress;
+
+    @BeforeEach
+    void setup() {
+        receiverAddress = receiverConfig.getProtocolEndpoint().getUri().toString();
+    }
 }

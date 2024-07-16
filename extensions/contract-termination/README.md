@@ -17,11 +17,11 @@
 
 ## About this Extension
 
-To allow contracts termination and cancellation while no official specification for this feature is available, we added our own extension, keeping the Core EDC intact.
+Using our [`sovity-messenger`](../sovity-messenger) extension, both providers and consumers can now terminate contracts in a transparent way. Contract termination information is persisted in its own table on both sides and terminated contracts will be prevented from being transferable.
 
 ## Why does this extension exist?
 
-Contracts termination is not natively supported the in the EDC. Contracts in general can be terminated and this feature has been added here, waiting for an official implementation to be available.
+Contracts termination is not natively supported by the Data Space Protocol (DSP) or in the Eclipse EDC. Customer Feedback and real-world Dataspace projects have proven for there to be many reasons for a party to want to terminate a contract. We want to enable contract termination in a transparent way for all participating parties, the provider, the consumer, and if necessary, the authority via the Logging House.
 
 ## Details
 
@@ -30,8 +30,6 @@ When a User clicks "Terminate contract" on a contract agreement, a request is se
 The termination is saved in the EDC's database.
 Any transfer started from this contract agreement will be rejected.
 
-The contract agreements' implementation doesn't interfere with the existing EDC features besides forcefully preventing transfers that are started on terminated contract agreements.
-1
 ## License
 
 Apache License 2.0 - see [LICENSE](../../LICENSE)

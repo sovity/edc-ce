@@ -255,6 +255,7 @@ paths:
       description: Collect filtered data for the Contract Agreement Page
       operationId: getContractAgreementPage
       requestBody:
+        description: "If null, returns all the contract agreements."
         content:
           application/json:
             schema:

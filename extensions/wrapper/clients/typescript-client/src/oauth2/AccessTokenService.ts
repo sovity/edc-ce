@@ -1,5 +1,8 @@
 import {ClientCredentials} from './model/ClientCredentials';
-import {ClientCredentialsResponse, fetchClientCredentials,} from './utils/FetchUtils';
+import {
+    ClientCredentialsResponse,
+    fetchClientCredentials,
+} from './utils/FetchUtils';
 
 export class AccessTokenService {
     private activeRequest: Promise<ClientCredentialsResponse> | null = null;

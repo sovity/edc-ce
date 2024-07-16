@@ -14,7 +14,7 @@
 
 package de.sovity.edc.extension.messenger;
 
-import de.sovity.edc.extension.messenger.impl.HandlerWithClaims;
+import de.sovity.edc.extension.messenger.impl.HandlerBox;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.eclipse.edc.spi.iam.ClaimToken;
@@ -31,7 +31,7 @@ import java.util.function.Function;
  */
 public class SovityMessengerRegistry {
 
-    private final Map<String, HandlerWithClaims<?, ?>> handlers = new HashMap<>();
+    private final Map<String, HandlerBox<?, ?>> handlers = new HashMap<>();
 
     /**
      * Register a handler to process a sovity message.
@@ -44,13 +44,13 @@ public class SovityMessengerRegistry {
     @SneakyThrows
     public <IN extends SovityMessage, OUT> void register(Class<IN> incomingMessage, Function<IN, OUT> handler) {
         val type = getTypeViaIntrospection(incomingMessage);
-        internalRegister(incomingMessage, type, (claims, in) -> handler.apply(in));
+        registerIfNotExists(incomingMessage, type, (claims, in) -> handler.apply(in));
     }
 
     @SneakyThrows
     public <IN extends SovityMessage, OUT> void register(Class<IN> incomingMessage, BiFunction<ClaimToken, IN, OUT> handler) {
         val type = getTypeViaIntrospection(incomingMessage);
-        internalRegister(incomingMessage, type, handler);
+        registerIfNotExists(incomingMessage, type, handler);
     }
 
     /**
@@ -58,11 +58,11 @@ public class SovityMessengerRegistry {
      * {@link #register(Class, Function)} for type safety.
      */
     public <IN extends SovityMessage, OUT> void register(Class<IN> clazz, String type, Function<IN, OUT> handler) {
-        internalRegister(clazz, type, (BiFunction<ClaimToken, IN, Object>) (claimToken, in) -> handler.apply(in));
+        registerIfNotExists(clazz, type, (BiFunction<ClaimToken, IN, Object>) (claimToken, in) -> handler.apply(in));
     }
 
     public <IN extends SovityMessage, OUT> void register(Class<IN> clazz, String type, BiFunction<ClaimToken, IN, OUT> handler) {
-        internalRegister(clazz, type, handler);
+        registerIfNotExists(clazz, type, handler);
     }
 
     /**
@@ -74,7 +74,7 @@ public class SovityMessengerRegistry {
     @SneakyThrows
     public <IN extends SovityMessage> void registerSignal(Class<IN> incomingSignal, Consumer<IN> handler) {
         val type = getTypeViaIntrospection(incomingSignal);
-        internalRegister(incomingSignal, type, (claims, in) -> {
+        registerIfNotExists(incomingSignal, type, (claims, in) -> {
             handler.accept(in);
             return null;
         });
@@ -83,7 +83,7 @@ public class SovityMessengerRegistry {
     @SneakyThrows
     public <IN extends SovityMessage> void registerSignal(Class<IN> incomingSignal, BiConsumer<ClaimToken, IN> handler) {
         val type = getTypeViaIntrospection(incomingSignal);
-        internalRegister(incomingSignal, type, (claims, in) -> {
+        registerIfNotExists(incomingSignal, type, (claims, in) -> {
             handler.accept(claims, in);
             return null;
         });
@@ -94,7 +94,7 @@ public class SovityMessengerRegistry {
      * {@link #registerSignal(Class, Consumer)} for type safety.
      */
     public <IN extends SovityMessage> void registerSignal(Class<IN> clazz, String type, Consumer<IN> handler) {
-        internalRegister(clazz, type, (claims, in) -> {
+        registerIfNotExists(clazz, type, (claims, in) -> {
             handler.accept(in);
             return null;
         });
@@ -104,7 +104,7 @@ public class SovityMessengerRegistry {
         if (handlers.containsKey(type)) {
             throw new IllegalStateException("A handler is already registered for " + type);
         }
-        internalRegister(clazz, type, (claims, in) -> {
+        registerIfNotExists(clazz, type, (claims, in) -> {
             handler.accept(claims, in);
             return null;
         });
@@ -117,8 +117,8 @@ public class SovityMessengerRegistry {
      * @return The function to process this message type.
      */
     @SuppressWarnings("unchecked")
-    public HandlerWithClaims<Object, Object> getHandler(String type) {
-        return (HandlerWithClaims<Object, Object>) handlers.get(type);
+    public HandlerBox<Object, Object> getHandler(String type) {
+        return (HandlerBox<Object, Object>) handlers.get(type);
     }
 
     @SneakyThrows
@@ -129,11 +129,11 @@ public class SovityMessengerRegistry {
         return type;
     }
 
-    private <IN extends SovityMessage, OUT> void internalRegister(Class<IN> clazz, String type, BiFunction<ClaimToken, IN, OUT> handler) {
+    private <IN extends SovityMessage, OUT> void registerIfNotExists(Class<IN> clazz, String type, BiFunction<ClaimToken, IN, OUT> handler) {
         if (handlers.containsKey(type)) {
             throw new IllegalStateException("A handler is already registered for " + type);
         }
 
-        handlers.put(type, new HandlerWithClaims<>(clazz, handler));
+        handlers.put(type, new HandlerBox<>(clazz, handler));
     }
 }

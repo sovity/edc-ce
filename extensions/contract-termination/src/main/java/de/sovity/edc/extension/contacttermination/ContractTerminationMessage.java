@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
-public class ContractTerminationOutgoingMessage implements SovityMessage {
+public class ContractTerminationMessage implements SovityMessage {
 
     @JsonProperty("contractAgreementId")
     private String contractAgreementId;

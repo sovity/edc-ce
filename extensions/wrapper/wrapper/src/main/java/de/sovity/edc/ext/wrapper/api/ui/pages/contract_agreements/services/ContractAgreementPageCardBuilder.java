@@ -23,6 +23,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTerminationInfo;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferProcess;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminatedBy;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
+import jakarta.validation.constraints.Null;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
@@ -53,7 +54,8 @@ public class ContractAgreementPageCardBuilder {
         @NonNull ContractNegotiation negotiation,
         @NonNull Asset asset,
         @NonNull List<TransferProcess> transferProcesses,
-        @NonNull Map<String, SovityContractTerminationRecord> terminations) {
+        SovityContractTerminationRecord termination) {
+
         var assetParticipantId = contractNegotiationUtils.getProviderParticipantId(negotiation);
         var assetConnectorEndpoint = contractNegotiationUtils.getProviderConnectorEndpoint(negotiation);
 
@@ -68,9 +70,14 @@ public class ContractAgreementPageCardBuilder {
         card.setContractPolicy(policyMapper.buildUiPolicy(agreement.getPolicy()));
         card.setTransferProcesses(buildTransferProcesses(transferProcesses));
 
-        if (terminations.containsKey(agreement.getId())) {
+        addTermination(termination, card);
+
+        return card;
+    }
+
+    private static void addTermination(SovityContractTerminationRecord termination, ContractAgreementCard card) {
+        if (termination != null) {
             card.setTerminationStatus(TERMINATED);
-            var termination = terminations.get(agreement.getId());
             card.setTerminationInformation(ContractAgreementTerminationInfo.builder()
                 .detail(termination.getDetail())
                 .reason(termination.getReason())
@@ -80,13 +87,10 @@ public class ContractAgreementPageCardBuilder {
                     case COUNTERPARTY -> ContractTerminatedBy.COUNTERPARTY;
                 })
                 .build());
-
         } else {
             card.setTerminationStatus(ONGOING);
             card.setTerminationInformation(null);
         }
-
-        return card;
     }
 
     @NotNull

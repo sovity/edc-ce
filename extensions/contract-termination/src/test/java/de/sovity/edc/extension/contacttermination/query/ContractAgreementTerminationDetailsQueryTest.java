@@ -24,6 +24,7 @@ import org.jooq.DSLContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
@@ -31,7 +32,7 @@ import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactor
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class ContractContractAgreementTerminationDetailsQueryTest {
+class ContractAgreementTerminationDetailsQueryTest {
 
     @RegisterExtension
     static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
@@ -44,88 +45,78 @@ class ContractContractAgreementTerminationDetailsQueryTest {
     );
 
     @Test
-    void fetchAgreementDetails_whenAgreementIsPresent_shouldReturnTheAgreementDetails(DSLContext dsl) {
+    void fetchAgreementDetailsOrThrow_whenAgreementIsPresent_shouldReturnTheAgreementDetails(DSLContext dsl) {
         // arrange
 
         dsl.transaction(trx -> {
-                dsl.execute(
-                    new String(
-                        ContractContractAgreementTerminationDetailsQueryTest.class
-                            .getResource("/sql/AgreementTerminationDetailsQueryTest/init.sql").openStream().readAllBytes()
-                    ));
+                setup(trx.dsl());
 
-                val query = new ContractAgreementTerminationDetailsQuery(trx::dsl);
+                val query = new ContractAgreementTerminationDetailsQuery();
 
                 // act
                 val agreementId = "ZGVmMQ==:YXNzZXQx:YTg4N2U4YmMtODBjZS00OWI2LTk2MWEtMWU3Njc0NmM5N2Fi";
-                val details = query.fetchAgreementDetails(agreementId);
+                val details = query.fetchAgreementDetailsOrThrow(trx.dsl(), agreementId);
 
                 // assert
-                assertThat(details).isPresent();
-                assertThat(details.get()).isEqualTo(new ContractAgreementTerminationDetails(
-                    agreementId,
-                    "my-edc",
-                    "http://edc:11003/api/dsp",
-                    ContractNegotiationStates.FINALIZED,
-                    ContractNegotiation.Type.CONSUMER,
-                    "my-edc",
-                    "my-edc2",
-                    null,
-                    null,
-                    null,
-                    null
-                ));
+                assertThat(details).isEqualTo(ContractAgreementTerminationDetails.builder()
+                    .contractAgreementId(agreementId)
+                    .counterpartyId("my-edc")
+                    .counterpartyAddress("http://edc:11003/api/dsp")
+                    .type(ContractNegotiation.Type.CONSUMER)
+                    .providerAgentId("my-edc")
+                    .consumerAgentId("my-edc2")
+                    .reason(null)
+                    .detail(null)
+                    .terminatedAt(null)
+                    .terminatedBy(null)
+                    .build());
             }
         );
     }
 
+    private static void setup(DSLContext dsl) throws IOException {
+        dsl.execute(
+            new String(
+                ContractAgreementTerminationDetailsQueryTest.class
+                    .getResource("/sql/AgreementTerminationDetailsQueryTest/init.sql").openStream().readAllBytes()
+            ));
+    }
+
     @Test
-    void fetchAgreementDetails_whenAgreementIsMissing_shouldReturnEmptyOptional(DSLContext dsl) {
+    void fetchAgreementDetailsOrThrow_whenAgreementIsMissing_shouldReturnEmptyOptional(DSLContext dsl) {
         // arrange
 
         dsl.transaction(trx -> {
-                dsl.execute(
-                    new String(
-                        ContractContractAgreementTerminationDetailsQueryTest.class
-                            .getResource("/sql/AgreementTerminationDetailsQueryTest/init.sql").openStream().readAllBytes()
-                    ));
+                setup(trx.dsl());
 
-                val query = new ContractAgreementTerminationDetailsQuery(trx::dsl);
+                val query = new ContractAgreementTerminationDetailsQuery();
 
                 // act
-                val details = query.fetchAgreementDetails("agreement:doesnt:exist");
+                val details = query.fetchAgreementDetailsOrThrow(trx.dsl(), "agreement:doesnt:exist");
 
                 // assert
-                assertThat(details).isEmpty();
+                assertThat(details).isNull();
             }
         );
     }
 
     @Test
-    void fetchAgreementDetails_whenTerminationAlreadyExists_shouldReturnOptionalWithTerminationData(DSLContext dsl) {
+    void fetchAgreementDetailsOrThrow_whenTerminationAlreadyExists_shouldReturnOptionalWithTerminationData(DSLContext dsl) {
         // arrange
 
         dsl.transaction(trx -> {
-                dsl.execute(
-                    new String(
-                        ContractContractAgreementTerminationDetailsQueryTest.class
-                            .getResource("/sql/AgreementTerminationDetailsQueryTest/init.sql").openStream().readAllBytes()
-                    ));
+                setup(trx.dsl());
 
-                val query = new ContractAgreementTerminationDetailsQuery(trx::dsl);
+                val query = new ContractAgreementTerminationDetailsQuery();
 
                 // act
                 val agreementId = "Y29udHJhY3Q=:YXNzZXQtMS4yLjM=:NWM4M2MzNTYtZGVlYi00NjFkLTg1ZTUtODQ0YzgwMGEwMmVm";
-                val maybeDetails = query.fetchAgreementDetails(agreementId);
+                val details = query.fetchAgreementDetailsOrThrow(trx.dsl(), agreementId);
 
                 // assert
-                assertThat(maybeDetails).isPresent();
-                val details = maybeDetails.get();
-
                 assertThat(details.contractAgreementId()).isEqualTo(agreementId);
                 assertThat(details.counterpartyId()).isEqualTo("my-edc");
                 assertThat(details.counterpartyAddress()).isEqualTo("http://edc:11003/api/dsp");
-                assertThat(details.state()).isEqualTo(ContractNegotiationStates.FINALIZED);
                 assertThat(details.type()).isEqualTo(ContractNegotiation.Type.CONSUMER);
                 assertThat(details.providerAgentId()).isEqualTo("my-edc");
                 assertThat(details.consumerAgentId()).isEqualTo("my-edc2");

@@ -17,7 +17,7 @@ package de.sovity.edc.ext.wrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import de.sovity.edc.extension.db.directaccess.DirectDatabaseAccess;
+import de.sovity.edc.extension.db.directaccess.DslContextFactoryImpl;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.connector.api.management.configuration.transform.ManagementApiTypeTransformerRegistry;
@@ -62,7 +62,7 @@ public class WrapperExtension implements ServiceExtension {
     @Inject
     private ContractNegotiationStore contractNegotiationStore;
     @Inject
-    private DirectDatabaseAccess directDatabaseAccess;
+    private DslContextFactoryImpl dslContextFactory;
     @Inject
     private ManagementApiConfiguration dataManagementApiConfiguration;
     @Inject
@@ -108,7 +108,7 @@ public class WrapperExtension implements ServiceExtension {
             contractDefinitionStore,
             contractNegotiationService,
             contractNegotiationStore,
-            directDatabaseAccess,
+            dslContextFactory,
             jsonLd,
             context.getMonitor(),
             objectMapper,

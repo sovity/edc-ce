@@ -22,7 +22,7 @@ import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 
-@Provides(DirectDatabaseAccess.class)
+@Provides(DslContextFactoryImpl.class)
 public class DatabaseDirectAccessExtension implements ServiceExtension {
     public static final String NAME = "DirectDatabaseAccess";
 
@@ -69,23 +69,20 @@ public class DatabaseDirectAccessExtension implements ServiceExtension {
 
     private void initializeDirectDatabaseAccess(ServiceExtensionContext context) {
 
-        val dda = new DirectDatabaseAccess(() -> {
+        val hikariConfig = new HikariConfig();
+        val config = context.getConfig();
+        hikariConfig.setJdbcUrl(config.getString(EDC_DATASOURCE_DEFAULT_URL));
+        hikariConfig.setUsername(config.getString(EDC_DATASOURCE_JDBC_USER));
+        hikariConfig.setPassword(config.getString(EDC_DATASOURCE_JDBC_PASSWORD));
+        hikariConfig.setMinimumIdle(1);
+        hikariConfig.setMaximumPoolSize(config.getInteger(EDC_SERVER_DB_CONNECTION_POOL_SIZE));
+        hikariConfig.setIdleTimeout(30000);
+        hikariConfig.setPoolName("direct-database-access");
+        hikariConfig.setMaxLifetime(50000);
+        hikariConfig.setConnectionTimeout(config.getInteger(EDC_SERVER_DB_CONNECTION_TIMEOUT_IN_MS));
 
-            val hikariConfig = new HikariConfig();
-            val config = context.getConfig();
-            hikariConfig.setJdbcUrl(config.getString(EDC_DATASOURCE_DEFAULT_URL));
-            hikariConfig.setUsername(config.getString(EDC_DATASOURCE_JDBC_USER));
-            hikariConfig.setPassword(config.getString(EDC_DATASOURCE_JDBC_PASSWORD));
-            hikariConfig.setMinimumIdle(1);
-            hikariConfig.setMaximumPoolSize(config.getInteger(EDC_SERVER_DB_CONNECTION_POOL_SIZE));
-            hikariConfig.setIdleTimeout(30000);
-            hikariConfig.setPoolName("direct-database-access");
-            hikariConfig.setMaxLifetime(50000);
-            hikariConfig.setConnectionTimeout(config.getInteger(EDC_SERVER_DB_CONNECTION_TIMEOUT_IN_MS));
+        val dda = new DslContextFactoryImpl(new HikariDataSource(hikariConfig));
 
-            return new HikariDataSource(hikariConfig);
-        });
-
-        context.registerService(DirectDatabaseAccess.class, dda);
+        context.registerService(DslContextFactoryImpl.class, dda);
     }
 }

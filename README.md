@@ -118,6 +118,32 @@ Our contribution guideline can be found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Development
+
+### Developer Documentation
+
+- Local Development Guide (further below)
+- [Checkstyle](docs/dev/checkstyle/checkstyle.md)
+- [Changelog Updates](docs/dev/changelog_updates.md)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Requirements
+
+- Docker Environment
+- JDK 17
+- GitHub Maven Registry Access
+
+To access the GitHub Maven Registry you need to provide the following properties, e.g. by providing
+a `~/.gradle/gradle.properties`.
+
+```properties
+gpr.user={your github username}
+gpr.key={your github pat with packages.read}
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- LICENSE -->
 
 ## License

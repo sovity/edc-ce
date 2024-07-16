@@ -19,6 +19,7 @@ import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
+import de.sovity.edc.extension.utils.Lazy;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -29,11 +30,14 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.mockserver.integration.ClientAndServer;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
+import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
+import static org.mockserver.stop.Stop.stopQuietly;
 
 public class E2eTestExtension
     implements BeforeAllCallback, AfterAllCallback, BeforeTestExecutionCallback, AfterTestExecutionCallback, ParameterResolver {
@@ -46,8 +50,10 @@ public class E2eTestExtension
     private ConnectorConfig providerConfig;
     private final EdcRuntimeExtensionWithTestDatabase providerExtension;
 
-    private final List<Class<?>> partySupportedTypes = List.of(ConnectorConfig.class, EdcClient.class, ConnectorRemote.class);
+    private final List<Class<?>> partySupportedTypes = List.of(ConnectorConfig.class, EdcClient.class, ConnectorRemote.class, ClientAndServer.class);
     private final List<Class<?>> supportedTypes = Stream.concat(partySupportedTypes.stream(), Stream.of(E2eScenario.class)).toList();
+
+    private Lazy<ClientAndServer> clientAndServer;
 
     public E2eTestExtension() {
         this("consumer", "provider");
@@ -76,18 +82,6 @@ public class E2eTestExtension
     }
 
     @Override
-    public void afterAll(ExtensionContext context) throws Exception {
-        consumerExtension.afterAll(context);
-        providerExtension.afterAll(context);
-    }
-
-    @Override
-    public void afterTestExecution(ExtensionContext context) throws Exception {
-        consumerExtension.afterTestExecution(context);
-        providerExtension.afterTestExecution(context);
-    }
-
-    @Override
     public void beforeAll(ExtensionContext context) throws Exception {
         consumerExtension.beforeAll(context);
         providerExtension.beforeAll(context);
@@ -95,8 +89,24 @@ public class E2eTestExtension
 
     @Override
     public void beforeTestExecution(ExtensionContext context) throws Exception {
+        clientAndServer = new Lazy<>(() -> ClientAndServer.startClientAndServer(getFreePort()));
         consumerExtension.beforeTestExecution(context);
         providerExtension.beforeTestExecution(context);
+    }
+
+    @Override
+    public void afterTestExecution(ExtensionContext context) throws Exception {
+        if (clientAndServer.isInitialized()) {
+            stopQuietly(clientAndServer.get());
+        }
+        consumerExtension.afterTestExecution(context);
+        providerExtension.afterTestExecution(context);
+    }
+
+    @Override
+    public void afterAll(ExtensionContext context) throws Exception {
+        consumerExtension.afterAll(context);
+        providerExtension.afterAll(context);
     }
 
     @Override
@@ -158,10 +168,13 @@ public class E2eTestExtension
         }
 
         if (E2eScenario.class.equals(type)) {
-            return new E2eScenario(newEdcClient(consumerConfig), consumerConfig, newEdcClient(providerConfig), providerConfig);
+            return new E2eScenario(consumerConfig, providerConfig, clientAndServer.get());
+        } else if (ClientAndServer.class.equals(type)) {
+            return clientAndServer.get();
         }
 
-        throw new IllegalArgumentException("The parameters must be annotated by the EDC side: @Provider or @Consumer.");
+        throw new IllegalArgumentException(
+            "The parameters must be annotated by the EDC side: @Provider or @Consumer or be one of the supported classes.");
     }
 
     private @NotNull ConnectorRemote newConnectorRemote(String participantId, ConnectorConfig config) {

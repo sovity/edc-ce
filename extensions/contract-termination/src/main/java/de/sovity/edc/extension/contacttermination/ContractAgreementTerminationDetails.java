@@ -17,7 +17,6 @@ package de.sovity.edc.extension.contacttermination;
 import de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy;
 import lombok.Builder;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates;
 
 import java.time.OffsetDateTime;
 
@@ -26,7 +25,6 @@ public record ContractAgreementTerminationDetails(
     String contractAgreementId,
     String counterpartyId,
     String counterpartyAddress,
-    ContractNegotiationStates state,
     ContractNegotiation.Type type,
     String providerAgentId,
     String consumerAgentId,
@@ -39,11 +37,11 @@ public record ContractAgreementTerminationDetails(
         return terminatedAt != null;
     }
 
-    boolean isConsumer() {
+    boolean thisEdcIsTheConsumer() {
         return type.equals(ContractNegotiation.Type.CONSUMER);
     }
 
-    boolean isProvider() {
+    boolean thisEdcIsTheProvider() {
         return type.equals(ContractNegotiation.Type.PROVIDER);
     }
 }

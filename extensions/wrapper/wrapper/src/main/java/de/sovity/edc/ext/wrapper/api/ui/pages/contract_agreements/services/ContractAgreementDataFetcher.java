@@ -32,11 +32,14 @@ import org.jooq.DSLContext;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static de.sovity.edc.ext.db.jooq.Tables.SOVITY_CONTRACT_TERMINATION;
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toMap;
 
 @RequiredArgsConstructor
 public class ContractAgreementDataFetcher {
@@ -72,7 +75,7 @@ public class ContractAgreementDataFetcher {
             .fetch()
             .into(t)
             .stream()
-            .collect(Collectors.toMap(SovityContractTerminationRecord::getContractAgreementId, it -> it));
+            .collect(toMap(SovityContractTerminationRecord::getContractAgreementId, identity()));
 
         // A ContractAgreement has multiple ContractNegotiations when doing a loopback consumption
         return agreements.stream()
@@ -81,7 +84,7 @@ public class ContractAgreementDataFetcher {
                 .map(negotiation -> {
                     var asset = getAsset(agreement, negotiation, assets);
                     var contractTransfers = transfers.getOrDefault(agreement.getId(), List.of());
-                    return new ContractAgreementData(agreement, negotiation, asset, contractTransfers, terminations);
+                    return new ContractAgreementData(agreement, negotiation, asset, contractTransfers, terminations.get(agreement.getId()));
                 }))
             .toList();
     }
