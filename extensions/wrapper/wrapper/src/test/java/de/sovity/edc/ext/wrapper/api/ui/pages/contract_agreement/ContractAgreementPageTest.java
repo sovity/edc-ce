@@ -108,7 +108,7 @@ class ContractAgreementPageTest {
         assertThat(transfer.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
         assertThat(transfer.getErrorMessage()).isEqualTo("my-error-message-1");
 
-        var constraint = agreement.getContractPolicy().getConstraints().get(0);
+        var constraint = agreement.getContractPolicy().getExpressions().get(0).getConstraint();
         assertThat(constraint.getLeft()).isEqualTo("ALWAYS_TRUE");
         assertThat(constraint.getOperator()).isEqualTo(OperatorDto.EQ);
         assertThat(constraint.getRight().getValue()).isEqualTo("true");

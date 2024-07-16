@@ -100,7 +100,7 @@ class CatalogApiTest {
         var policyDefinition = PolicyDefinitionCreateRequest.builder()
                 .policyDefinitionId(dataOfferId)
                 .policy(UiPolicyCreateRequest.builder()
-                        .constraints(List.of())
+                        .expressions(List.of())
                         .build())
                 .build();
 
