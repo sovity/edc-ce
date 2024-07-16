@@ -104,4 +104,4 @@ create table crawler_execution_time_measurement
     error_status   measurement_error_status not null
 );
 
-
+alter type component_type add value 'CATALOG_CRAWLER';
