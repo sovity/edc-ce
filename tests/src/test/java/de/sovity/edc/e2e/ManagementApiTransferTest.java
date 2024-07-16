@@ -70,10 +70,10 @@ class ManagementApiTransferTest {
 
         // act
         consumerConnector.consumeOffer(
-                providerConnector.getParticipantId(),
-                providerConnector.getConfig().getProtocolEndpoint().getUri(),
-                assetId,
-                dataAddress.getDataSinkJsonLd());
+            providerConnector.getParticipantId(),
+            providerConnector.getConfig().getProtocolEndpoint().getUri(),
+            assetId,
+            dataAddress.getDataSinkJsonLd());
 
         // assert
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), TEST_BACKEND_TEST_DATA);

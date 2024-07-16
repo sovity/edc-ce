@@ -83,9 +83,9 @@ class DataSourceQueryParamsTest {
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
         providerClient = EdcClient.builder()
-                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
+            .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
+            .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
+            .build();
 
         // set up consumer EDC + Client
         var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 23000, CONSUMER_DATABASE);
@@ -93,9 +93,9 @@ class DataSourceQueryParamsTest {
         consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
 
         consumerClient = EdcClient.builder()
-                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
+            .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
+            .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
+            .build();
 
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
@@ -145,59 +145,59 @@ class DataSourceQueryParamsTest {
             .build();
 
         var asset = UiAssetCreateRequest.builder()
-                .id(dataOfferId)
-                .title("My Data Offer")
-                .dataSource(dataSource)
-                .build();
+            .id(dataOfferId)
+            .title("My Data Offer")
+            .dataSource(dataSource)
+            .build();
 
         providerClient.uiApi().createAsset(asset);
     }
 
     private void createPolicy() {
         var policyDefinition = PolicyDefinitionCreateRequest.builder()
-                .policyDefinitionId(dataOfferId)
-                .policy(UiPolicyCreateRequest.builder()
-                        .constraints(List.of())
-                        .build())
-                .build();
+            .policyDefinitionId(dataOfferId)
+            .policy(UiPolicyCreateRequest.builder()
+                .expressions(List.of())
+                .build())
+            .build();
 
         providerClient.uiApi().createPolicyDefinition(policyDefinition);
     }
 
     private void createContractDefinition() {
         var contractDefinition = ContractDefinitionRequest.builder()
-                .contractDefinitionId(dataOfferId)
-                .accessPolicyId(dataOfferId)
-                .contractPolicyId(dataOfferId)
-                .assetSelector(List.of(UiCriterion.builder()
-                        .operandLeft(Prop.Edc.ID)
-                        .operator(UiCriterionOperator.EQ)
-                        .operandRight(UiCriterionLiteral.builder()
-                                .type(UiCriterionLiteralType.VALUE)
-                                .value(dataOfferId)
-                                .build())
-                        .build()))
-                .build();
+            .contractDefinitionId(dataOfferId)
+            .accessPolicyId(dataOfferId)
+            .contractPolicyId(dataOfferId)
+            .assetSelector(List.of(UiCriterion.builder()
+                .operandLeft(Prop.Edc.ID)
+                .operator(UiCriterionOperator.EQ)
+                .operandRight(UiCriterionLiteral.builder()
+                    .type(UiCriterionLiteralType.VALUE)
+                    .value(dataOfferId)
+                    .build())
+                .build()))
+            .build();
 
         providerClient.uiApi().createContractDefinition(contractDefinition);
     }
 
     private UiContractNegotiation initiateNegotiation(UiDataOffer dataOffer, UiContractOffer contractOffer) {
         var negotiationRequest = ContractNegotiationRequest.builder()
-                .counterPartyAddress(dataOffer.getEndpoint())
-                .counterPartyParticipantId(dataOffer.getParticipantId())
-                .assetId(dataOffer.getAsset().getAssetId())
-                .contractOfferId(contractOffer.getContractOfferId())
-                .policyJsonLd(contractOffer.getPolicy().getPolicyJsonLd())
-                .build();
+            .counterPartyAddress(dataOffer.getEndpoint())
+            .counterPartyParticipantId(dataOffer.getParticipantId())
+            .assetId(dataOffer.getAsset().getAssetId())
+            .contractOfferId(contractOffer.getContractOfferId())
+            .policyJsonLd(contractOffer.getPolicy().getPolicyJsonLd())
+            .build();
 
         return consumerClient.uiApi().initiateContractNegotiation(negotiationRequest);
     }
 
     private UiContractNegotiation awaitNegotiationDone(String negotiationId) {
         var negotiation = Awaitility.await().atMost(consumerConnector.timeout).until(
-                () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
-                it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
+            () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
+            it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
         );
 
         assertThat(negotiation.getState().getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.AGREED);
@@ -207,9 +207,9 @@ class DataSourceQueryParamsTest {
     private void initiateTransfer(UiContractNegotiation negotiation) {
         var contractAgreementId = negotiation.getContractAgreementId();
         var transferRequest = InitiateTransferRequest.builder()
-                .contractAgreementId(contractAgreementId)
-                .dataSinkProperties(dataAddress.getDataSinkProperties())
-                .build();
+            .contractAgreementId(contractAgreementId)
+            .dataSinkProperties(dataAddress.getDataSinkProperties())
+            .build();
         consumerClient.uiApi().initiateTransfer(transferRequest);
     }
 

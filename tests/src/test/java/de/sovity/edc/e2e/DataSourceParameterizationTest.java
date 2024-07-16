@@ -118,13 +118,13 @@ class DataSourceParameterizationTest {
     private static final AtomicInteger DATA_OFFER_INDEX = new AtomicInteger(0);
 
     record TestCase(
-            String name,
-            String id,
-            String method,
-            @Nullable String body,
-            @Nullable String mediaType,
-            @Nullable String path,
-            Map<String, List<String>> queryParams
+        String name,
+        String id,
+        String method,
+        @Nullable String body,
+        @Nullable String mediaType,
+        @Nullable String path,
+        Map<String, List<String>> queryParams
     ) {
         @Override
         public String toString() {
@@ -150,9 +150,9 @@ class DataSourceParameterizationTest {
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
         providerClient = EdcClient.builder()
-                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
+            .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
+            .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
+            .build();
 
         // set up consumer EDC + Client
         var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 23000, CONSUMER_DATABASE);
@@ -160,22 +160,22 @@ class DataSourceParameterizationTest {
         consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
 
         consumerClient = EdcClient.builder()
-                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
+            .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
+            .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
+            .build();
     }
 
     @Test
     void canUseTheWorkaroundInCustomTransferRequest() {
         // arrange
         val testCase = new TestCase(
-                "",
-                "data-offer-" + DATA_OFFER_INDEX.getAndIncrement(),
-                HttpMethod.PATCH,
-                "[]",
-                "application/json",
-                "my-endpoint",
-                Map.of("filter", List.of("a", "b", "c"))
+            "",
+            "data-offer-" + DATA_OFFER_INDEX.getAndIncrement(),
+            HttpMethod.PATCH,
+            "[]",
+            "application/json",
+            "my-endpoint",
+            Map.of("filter", List.of("a", "b", "c"))
         );
         val received = new AtomicBoolean(false);
         prepareDataTransferBackends(testCase, () -> received.set(true));
@@ -190,30 +190,30 @@ class DataSourceParameterizationTest {
         String standardBase = "https://w3id.org/edc/v0.0.1/ns/";
         String workaroundBase = "https://sovity.de/workaround/proxy/param/";
         var transferRequestJsonLd = Json.createObjectBuilder()
-                .add(
-                        Prop.Edc.DATA_DESTINATION,
-                        Json.createObjectBuilder(Map.of(
-                                standardBase + "type", "HttpData",
-                                standardBase + "baseUrl", destinationUrl,
-                                standardBase + "method", "PUT",
-                                workaroundBase + "pathSegments", testCase.path,
-                                workaroundBase + "method", testCase.method,
-                                workaroundBase + "queryParams", "filter=a&filter=b&filter=c",
-                                workaroundBase + "mediaType", testCase.mediaType,
-                                workaroundBase + "body", testCase.body
-                        )).build()
-                )
-                .add(Prop.Edc.CTX + "transferType", Json.createObjectBuilder()
-                        .add(Prop.Edc.CTX + "contentType", "application/octet-stream")
-                        .add(Prop.Edc.CTX + "isFinite", true)
-                )
-                .add(Prop.Edc.CTX + "protocol", HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
-                .add(Prop.Edc.CTX + "managedResources", false)
-                .build();
+            .add(
+                Prop.Edc.DATA_DESTINATION,
+                Json.createObjectBuilder(Map.of(
+                    standardBase + "type", "HttpData",
+                    standardBase + "baseUrl", destinationUrl,
+                    standardBase + "method", "PUT",
+                    workaroundBase + "pathSegments", testCase.path,
+                    workaroundBase + "method", testCase.method,
+                    workaroundBase + "queryParams", "filter=a&filter=b&filter=c",
+                    workaroundBase + "mediaType", testCase.mediaType,
+                    workaroundBase + "body", testCase.body
+                )).build()
+            )
+            .add(Prop.Edc.CTX + "transferType", Json.createObjectBuilder()
+                .add(Prop.Edc.CTX + "contentType", "application/octet-stream")
+                .add(Prop.Edc.CTX + "isFinite", true)
+            )
+            .add(Prop.Edc.CTX + "protocol", HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
+            .add(Prop.Edc.CTX + "managedResources", false)
+            .build();
         var transferRequest = InitiateCustomTransferRequest.builder()
-                .contractAgreementId(negotiation.getContractAgreementId())
-                .transferProcessRequestJsonLd(JsonUtils.toJson(transferRequestJsonLd))
-                .build();
+            .contractAgreementId(negotiation.getContractAgreementId())
+            .transferProcessRequestJsonLd(JsonUtils.toJson(transferRequestJsonLd))
+            .build();
 
         val transferId = consumerClient.uiApi().initiateCustomTransfer(transferRequest).getId();
 
@@ -238,13 +238,13 @@ class DataSourceParameterizationTest {
     void sendWithEdcManagementApi() {
         // arrange
         val testCase = new TestCase(
-                "",
-                "data-offer-" + DATA_OFFER_INDEX.getAndIncrement(),
-                HttpMethod.PATCH,
-                "[]",
-                "application/json",
-                "my-endpoint",
-                Map.of("filter", List.of("a", "b", "c"))
+            "",
+            "data-offer-" + DATA_OFFER_INDEX.getAndIncrement(),
+            HttpMethod.PATCH,
+            "[]",
+            "application/json",
+            "my-endpoint",
+            Map.of("filter", List.of("a", "b", "c"))
         );
         val received = new AtomicBoolean(false);
         prepareDataTransferBackends(testCase, () -> received.set(true));
@@ -259,19 +259,19 @@ class DataSourceParameterizationTest {
         String workaroundBase = "https://sovity.de/workaround/proxy/param/";
         String standardBase = "https://w3id.org/edc/v0.0.1/ns/";
         val transferId = consumerConnector.initiateTransfer(
-                negotiation.getContractAgreementId(),
-                testCase.id,
-                URI.create("http://localhost:21003/api/dsp"),
-                Json.createObjectBuilder(Map.of(
-                        standardBase + "type", "HttpData",
-                        standardBase + "baseUrl", destinationUrl,
-                        standardBase + "method", "PUT",
-                        workaroundBase + "pathSegments", testCase.path,
-                        workaroundBase + "method", testCase.method,
-                        workaroundBase + "queryParams", "filter=a&filter=b&filter=c",
-                        workaroundBase + "mediaType", testCase.mediaType,
-                        workaroundBase + "body", testCase.body
-                )).build()
+            negotiation.getContractAgreementId(),
+            testCase.id,
+            URI.create("http://localhost:21003/api/dsp"),
+            Json.createObjectBuilder(Map.of(
+                standardBase + "type", "HttpData",
+                standardBase + "baseUrl", destinationUrl,
+                standardBase + "method", "PUT",
+                workaroundBase + "pathSegments", testCase.path,
+                workaroundBase + "method", testCase.method,
+                workaroundBase + "queryParams", "filter=a&filter=b&filter=c",
+                workaroundBase + "mediaType", testCase.mediaType,
+                workaroundBase + "body", testCase.body
+            )).build()
         );
 
         awaitTransferCompletion(transferId);
@@ -305,12 +305,12 @@ class DataSourceParameterizationTest {
 
             // assert
             TransferHistoryEntry actual = consumerClient.uiApi()
-                    .getTransferHistoryPage()
-                    .getTransferEntries()
-                    .stream()
-                    .filter(it -> it.getAssetId().equals(testCase.id))
-                    .findFirst()
-                    .get();
+                .getTransferHistoryPage()
+                .getTransferEntries()
+                .stream()
+                .filter(it -> it.getAssetId().equals(testCase.id))
+                .findFirst()
+                .get();
             assertThat(actual.getAssetId()).isEqualTo(testCase.id);
             assertThat(actual.getTransferProcessId()).isEqualTo(transferId);
             assertThat(actual.getState().getSimplifiedState()).isEqualTo(OK);
@@ -321,38 +321,38 @@ class DataSourceParameterizationTest {
 
     private Stream<TestCase> source() {
         val httpMethods = List.of(
-                HttpMethod.POST,
-                // HttpMethod.HEAD,
-                HttpMethod.GET,
-                HttpMethod.DELETE,
-                HttpMethod.PUT,
-                HttpMethod.PATCH,
-                HttpMethod.OPTIONS
+            HttpMethod.POST,
+            // HttpMethod.HEAD,
+            HttpMethod.GET,
+            HttpMethod.DELETE,
+            HttpMethod.PUT,
+            HttpMethod.PATCH,
+            HttpMethod.OPTIONS
         );
 
         val paths = Arrays.asList(null, "different/path/segment");
         val queryParameters = List.of(
-                Map.<String, List<String>>of(),
-                Map.of(
-                        "limit", List.of("10"),
-                        "filter", List.of("a", "b", "c")
-                )
+            Map.<String, List<String>>of(),
+            Map.of(
+                "limit", List.of("10"),
+                "filter", List.of("a", "b", "c")
+            )
         );
 
         return httpMethods.stream().flatMap(method ->
-                getBodyOptionsFor(method).stream().flatMap(body ->
-                        paths.stream().flatMap(usePath ->
-                                queryParameters.stream().map(params ->
-                                        new TestCase(
-                                                method + " body:" + body + " path:" + usePath + " params=" + params,
-                                                "data-offer-" + DATA_OFFER_INDEX.getAndIncrement(),
-                                                method,
-                                                body,
-                                                body == null ? null : "application/json",
-                                                usePath,
-                                                params
-                                        )))
-                ));
+            getBodyOptionsFor(method).stream().flatMap(body ->
+                paths.stream().flatMap(usePath ->
+                    queryParameters.stream().map(params ->
+                        new TestCase(
+                            method + " body:" + body + " path:" + usePath + " params=" + params,
+                            "data-offer-" + DATA_OFFER_INDEX.getAndIncrement(),
+                            method,
+                            body,
+                            body == null ? null : "application/json",
+                            usePath,
+                            params
+                        )))
+            ));
     }
 
     @NotNull
@@ -390,23 +390,23 @@ class DataSourceParameterizationTest {
 
 
         mockServer.when(requestDefinition, once())
-                .respond((it) -> new HttpResponse()
-                        .withStatusCode(HttpStatusCode.OK_200.code())
-                        .withBody(payload, StandardCharsets.UTF_8));
+            .respond((it) -> new HttpResponse()
+                .withStatusCode(HttpStatusCode.OK_200.code())
+                .withBody(payload, StandardCharsets.UTF_8));
 
         mockServer.when(request(destinationPath).withMethod(HttpMethod.PUT))
-                .respond((HttpRequest httpRequest) -> {
-                    if (new String(httpRequest.getBodyAsRawBytes()).equals(payload)) {
-                        onRequestReceived.run();
-                    }
-                    return new HttpResponse().withStatusCode(200);
-                });
+            .respond((HttpRequest httpRequest) -> {
+                if (new String(httpRequest.getBodyAsRawBytes()).equals(payload)) {
+                    onRequestReceived.run();
+                }
+                return new HttpResponse().withStatusCode(200);
+            });
 
         mockServer.when(request("/.*"))
-                .respond((HttpRequest httpRequest) -> {
-                    fail("Unexpected network call");
-                    return new HttpResponse().withStatusCode(HttpStatusCode.GONE_410.code());
-                });
+            .respond((HttpRequest httpRequest) -> {
+                fail("Unexpected network call");
+                return new HttpResponse().withStatusCode(HttpStatusCode.GONE_410.code());
+            });
     }
 
     private static String generateRandomPayload() {
@@ -437,59 +437,59 @@ class DataSourceParameterizationTest {
             .build();
 
         var asset = UiAssetCreateRequest.builder()
-                .id(testCase.id)
-                .title("My Data Offer")
-                .dataSource(dataSource)
-                .build();
+            .id(testCase.id)
+            .title("My Data Offer")
+            .dataSource(dataSource)
+            .build();
 
         return providerClient.uiApi().createAsset(asset).getId();
     }
 
     private void createPolicy(TestCase testCase) {
         var policyDefinition = PolicyDefinitionCreateRequest.builder()
-                .policyDefinitionId(testCase.id)
-                .policy(UiPolicyCreateRequest.builder()
-                        .constraints(List.of())
-                        .build())
-                .build();
+            .policyDefinitionId(testCase.id)
+            .policy(UiPolicyCreateRequest.builder()
+                .expressions(List.of())
+                .build())
+            .build();
 
         providerClient.uiApi().createPolicyDefinition(policyDefinition);
     }
 
     private String createContractDefinition(TestCase testCase) {
         var contractDefinition = ContractDefinitionRequest.builder()
-                .contractDefinitionId(testCase.id)
-                .accessPolicyId(testCase.id)
-                .contractPolicyId(testCase.id)
-                .assetSelector(List.of(UiCriterion.builder()
-                        .operandLeft(Prop.Edc.ID)
-                        .operator(UiCriterionOperator.EQ)
-                        .operandRight(UiCriterionLiteral.builder()
-                                .type(UiCriterionLiteralType.VALUE)
-                                .value(testCase.id)
-                                .build())
-                        .build()))
-                .build();
+            .contractDefinitionId(testCase.id)
+            .accessPolicyId(testCase.id)
+            .contractPolicyId(testCase.id)
+            .assetSelector(List.of(UiCriterion.builder()
+                .operandLeft(Prop.Edc.ID)
+                .operator(UiCriterionOperator.EQ)
+                .operandRight(UiCriterionLiteral.builder()
+                    .type(UiCriterionLiteralType.VALUE)
+                    .value(testCase.id)
+                    .build())
+                .build()))
+            .build();
 
         return providerClient.uiApi().createContractDefinition(contractDefinition).getId();
     }
 
     private UiContractNegotiation initiateNegotiation(UiDataOffer dataOffer, UiContractOffer contractOffer) {
         var negotiationRequest = ContractNegotiationRequest.builder()
-                .counterPartyAddress(dataOffer.getEndpoint())
-                .counterPartyParticipantId(dataOffer.getParticipantId())
-                .assetId(dataOffer.getAsset().getAssetId())
-                .contractOfferId(contractOffer.getContractOfferId())
-                .policyJsonLd(contractOffer.getPolicy().getPolicyJsonLd())
-                .build();
+            .counterPartyAddress(dataOffer.getEndpoint())
+            .counterPartyParticipantId(dataOffer.getParticipantId())
+            .assetId(dataOffer.getAsset().getAssetId())
+            .contractOfferId(contractOffer.getContractOfferId())
+            .policyJsonLd(contractOffer.getPolicy().getPolicyJsonLd())
+            .build();
 
         return consumerClient.uiApi().initiateContractNegotiation(negotiationRequest);
     }
 
     private UiContractNegotiation awaitNegotiationDone(String negotiationId) {
         var negotiation = Awaitility.await().atMost(consumerConnector.timeout).until(
-                () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
-                it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
+            () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
+            it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
         );
 
         assertThat(negotiation.getState().getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.AGREED);
@@ -497,8 +497,8 @@ class DataSourceParameterizationTest {
     }
 
     private String initiateTransferWithParameters(
-            UiContractNegotiation negotiation,
-            TestCase testCase) {
+        UiContractNegotiation negotiation,
+        TestCase testCase) {
         String rootKey = "https://w3id.org/edc/v0.0.1/ns/";
 
         val transferProcessProperties = new HashMap<String, String>();
@@ -523,8 +523,8 @@ class DataSourceParameterizationTest {
 
         if (!testCase.queryParams.isEmpty()) {
             HttpUrl.Builder builder = new HttpUrl.Builder()
-                    .scheme("http")
-                    .host("example.com");
+                .scheme("http")
+                .host("example.com");
 
             for (val multiValueParam : testCase.queryParams.entrySet()) {
                 for (val singleValue : multiValueParam.getValue()) {
@@ -538,10 +538,10 @@ class DataSourceParameterizationTest {
         }
 
         var transferRequest = InitiateTransferRequest.builder()
-                .contractAgreementId(contractAgreementId)
-                .dataSinkProperties(dataSinkProperties)
-                .transferProcessProperties(transferProcessProperties)
-                .build();
+            .contractAgreementId(contractAgreementId)
+            .dataSinkProperties(dataSinkProperties)
+            .transferProcessProperties(transferProcessProperties)
+            .build();
         return consumerClient.uiApi().initiateTransfer(transferRequest).getId();
     }
 
@@ -551,14 +551,14 @@ class DataSourceParameterizationTest {
 
     private void awaitTransferCompletion(String transferId) {
         Awaitility.await().atMost(consumerConnector.timeout).until(
-                () -> consumerClient.uiApi()
-                        .getTransferHistoryPage()
-                        .getTransferEntries()
-                        .stream()
-                        .filter(it -> it.getTransferProcessId().equals(transferId))
-                        .findFirst()
-                        .map(it -> it.getState().getSimplifiedState()),
-                it -> it.orElse(RUNNING) != RUNNING
+            () -> consumerClient.uiApi()
+                .getTransferHistoryPage()
+                .getTransferEntries()
+                .stream()
+                .filter(it -> it.getTransferProcessId().equals(transferId))
+                .findFirst()
+                .map(it -> it.getState().getSimplifiedState()),
+            it -> it.orElse(RUNNING) != RUNNING
         );
     }
 

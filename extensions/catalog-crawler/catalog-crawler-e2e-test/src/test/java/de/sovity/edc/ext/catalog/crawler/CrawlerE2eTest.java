@@ -27,6 +27,8 @@ import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.client.gen.model.UiPolicyExpression;
+import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.ext.catalog.crawler.dao.connectors.ConnectorRef;
@@ -48,6 +50,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.getFreePortRange;
@@ -190,10 +194,17 @@ class CrawlerE2eTest {
                         .build())
                 .build();
 
+        var expressions = Stream.of(afterYesterday, beforeTomorrow)
+            .map(it -> UiPolicyExpression.builder()
+                .expressionType(UiPolicyExpressionType.CONSTRAINT)
+                .constraint(it)
+                .build())
+            .toList();
+
         var policyDefinition = PolicyDefinitionCreateRequest.builder()
                 .policyDefinitionId(dataOfferId)
                 .policy(UiPolicyCreateRequest.builder()
-                        .constraints(List.of(afterYesterday, beforeTomorrow))
+                        .expressions(expressions)
                         .build())
                 .build();
 

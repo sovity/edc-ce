@@ -36,6 +36,8 @@ import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.client.gen.model.UiPolicyExpression;
+import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
@@ -101,18 +103,18 @@ class UiApiWrapperTest {
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
         providerClient = EdcClient.builder()
-                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
+            .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
+            .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
+            .build();
 
         var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 23000, CONSUMER_DATABASE);
         consumerEdcContext.setConfiguration(consumerConfig.getProperties());
         consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
 
         consumerClient = EdcClient.builder()
-                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
+            .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
+            .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
+            .build();
 
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
@@ -125,83 +127,86 @@ class UiApiWrapperTest {
         var data = "expected data 123";
         var yesterday = OffsetDateTime.now().minusDays(1);
 
-        var constraintRequest = UiPolicyConstraint.builder()
+        var policyExpression = UiPolicyExpression.builder()
+            .expressionType(UiPolicyExpressionType.CONSTRAINT)
+            .constraint(UiPolicyConstraint.builder()
                 .left("POLICY_EVALUATION_TIME")
                 .operator(OperatorDto.GT)
                 .right(UiPolicyLiteral.builder()
-                        .type(UiPolicyLiteralType.STRING)
-                        .value(yesterday.toString())
-                        .build())
-                .build();
+                    .type(UiPolicyLiteralType.STRING)
+                    .value(yesterday.toString())
+                    .build())
+                .build())
+            .build();
 
         var policyId = providerClient.uiApi().createPolicyDefinition(PolicyDefinitionCreateRequest.builder()
-                .policyDefinitionId("policy-1")
-                .policy(UiPolicyCreateRequest.builder()
-                        .constraints(List.of(constraintRequest))
-                        .build())
-                .build()).getId();
+            .policyDefinitionId("policy-1")
+            .policy(UiPolicyCreateRequest.builder()
+                .expressions(List.of(policyExpression))
+                .build())
+            .build()).getId();
 
         var dataSource = UiDataSource.builder()
-                .type(DataSourceType.HTTP_DATA)
-                .httpData(UiDataSourceHttpData.builder()
-                        .baseUrl(dataAddress.getDataSourceUrl(data))
-                        .build())
-                .build();
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl(dataAddress.getDataSourceUrl(data))
+                .build())
+            .build();
 
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
-                .id("asset-1")
-                .title("AssetName")
-                .description("AssetDescription")
-                .licenseUrl("https://license-url")
-                .version("1.0.0")
-                .language("en")
-                .mediaType("application/json")
-                .dataCategory("dataCategory")
-                .dataSubcategory("dataSubcategory")
-                .dataModel("dataModel")
-                .geoReferenceMethod("geoReferenceMethod")
-                .transportMode("transportMode")
-                .sovereignLegalName("my-sovereign")
-                .geoLocation("my-geolocation")
-                .nutsLocations(Arrays.asList("my-nuts-location1", "my-nuts-location2"))
-                .dataSampleUrls(Arrays.asList("my-data-sample-urls1", "my-data-sample-urls2"))
-                .referenceFileUrls(Arrays.asList("my-reference-files1", "my-reference-files2"))
-                .referenceFilesDescription("my-additional-description")
-                .conditionsForUse("my-conditions-for-use")
-                .dataUpdateFrequency("my-data-update-frequency")
-                .temporalCoverageFrom(LocalDate.parse("2007-12-03"))
-                .temporalCoverageToInclusive(LocalDate.parse("2024-01-22"))
-                .keywords(List.of("keyword1", "keyword2"))
-                .publisherHomepage("publisherHomepage")
-                .dataSource(dataSource)
-                .customJsonAsString("""
-                        {"test": "value"}
-                        """)
-                .customJsonLdAsString("""
-                        {"https://public/some#key": "public LD value"}
-                        """)
-                .privateCustomJsonAsString("""
-                        {"private_test": "private value"}
-                        """)
-                .privateCustomJsonLdAsString("""
-                        {"https://private/some#key": "private LD value"}
-                        """)
-                .build()).getId();
+            .id("asset-1")
+            .title("AssetName")
+            .description("AssetDescription")
+            .licenseUrl("https://license-url")
+            .version("1.0.0")
+            .language("en")
+            .mediaType("application/json")
+            .dataCategory("dataCategory")
+            .dataSubcategory("dataSubcategory")
+            .dataModel("dataModel")
+            .geoReferenceMethod("geoReferenceMethod")
+            .transportMode("transportMode")
+            .sovereignLegalName("my-sovereign")
+            .geoLocation("my-geolocation")
+            .nutsLocations(Arrays.asList("my-nuts-location1", "my-nuts-location2"))
+            .dataSampleUrls(Arrays.asList("my-data-sample-urls1", "my-data-sample-urls2"))
+            .referenceFileUrls(Arrays.asList("my-reference-files1", "my-reference-files2"))
+            .referenceFilesDescription("my-additional-description")
+            .conditionsForUse("my-conditions-for-use")
+            .dataUpdateFrequency("my-data-update-frequency")
+            .temporalCoverageFrom(LocalDate.parse("2007-12-03"))
+            .temporalCoverageToInclusive(LocalDate.parse("2024-01-22"))
+            .keywords(List.of("keyword1", "keyword2"))
+            .publisherHomepage("publisherHomepage")
+            .dataSource(dataSource)
+            .customJsonAsString("""
+                {"test": "value"}
+                """)
+            .customJsonLdAsString("""
+                {"https://public/some#key": "public LD value"}
+                """)
+            .privateCustomJsonAsString("""
+                {"private_test": "private value"}
+                """)
+            .privateCustomJsonLdAsString("""
+                {"https://private/some#key": "private LD value"}
+                """)
+            .build()).getId();
         assertThat(assetId).isEqualTo("asset-1");
 
         providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
-                .contractDefinitionId("cd-1")
-                .accessPolicyId(policyId)
-                .contractPolicyId(policyId)
-                .assetSelector(List.of(UiCriterion.builder()
-                        .operandLeft(Prop.Edc.ID)
-                        .operator(UiCriterionOperator.EQ)
-                        .operandRight(UiCriterionLiteral.builder()
-                                .type(UiCriterionLiteralType.VALUE)
-                                .value(assetId)
-                                .build())
-                        .build()))
-                .build());
+            .contractDefinitionId("cd-1")
+            .accessPolicyId(policyId)
+            .contractPolicyId(policyId)
+            .assetSelector(List.of(UiCriterion.builder()
+                .operandLeft(Prop.Edc.ID)
+                .operator(UiCriterionOperator.EQ)
+                .operandRight(UiCriterionLiteral.builder()
+                    .type(UiCriterionLiteralType.VALUE)
+                    .value(assetId)
+                    .build())
+                .build()))
+            .build());
 
         var assets = providerClient.uiApi().getAssetPage().getAssets();
         assertThat(assets).hasSize(1);
@@ -255,11 +260,11 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyQueryParams()).isFalse();
         assertThat(dataOffer.getAsset().getHttpDatasourceHintsProxyBody()).isFalse();
         assertThatJson(dataOffer.getAsset().getCustomJsonAsString()).isEqualTo("""
-                {"test": "value"}
-                """);
+            {"test": "value"}
+            """);
         assertThatJson(dataOffer.getAsset().getCustomJsonLdAsString()).isEqualTo("""
-                {"https://public/some#key":"public LD value"}
-                """);
+            {"https://public/some#key":"public LD value"}
+            """);
         assertThat(dataOffer.getAsset().getPrivateCustomJsonAsString()).isNullOrEmpty();
         assertThatJson(dataOffer.getAsset().getPrivateCustomJsonLdAsString()).isObject().isEmpty();
 
@@ -270,17 +275,17 @@ class UiApiWrapperTest {
         assertThat(asset.getParticipantId()).isEqualTo(providerConnector.getParticipantId());
 
         assertThatJson(asset.getCustomJsonAsString()).isEqualTo("""
-                { "test": "value" }
-                """);
+            { "test": "value" }
+            """);
         assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
-                { "https://public/some#key": "public LD value" }
-                """);
+            { "https://public/some#key": "public LD value" }
+            """);
         assertThatJson(asset.getPrivateCustomJsonAsString()).isEqualTo("""
-                { "private_test": "private value" }
-                """);
+            { "private_test": "private value" }
+            """);
         assertThatJson(asset.getPrivateCustomJsonLdAsString()).isEqualTo("""
-                { "https://private/some#key": "private LD value" }
-                """);
+            { "https://private/some#key": "private LD value" }
+            """);
 
         // Contract Agreement
         assertThat(providerAgreements).hasSize(1);
@@ -298,8 +303,8 @@ class UiApiWrapperTest {
         assertThat(providerAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
 
         assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
-        var providingContractPolicyConstraint = providerAgreement.getContractPolicy().getConstraints().get(0);
-        assertThat(providingContractPolicyConstraint).usingRecursiveComparison().isEqualTo(providingContractPolicyConstraint);
+        var providingContractPolicyExpression = providerAgreement.getContractPolicy().getExpressions().get(0);
+        assertThat(providingContractPolicyExpression).usingRecursiveComparison().isEqualTo(policyExpression);
 
         assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
         assertThat(providerAgreement.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
@@ -313,15 +318,18 @@ class UiApiWrapperTest {
         assertThat(consumerAgreement.getCounterPartyId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
         assertThat(consumerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
 
-        var consumingContractPolicyConstraint = consumerAgreement.getContractPolicy().getConstraints().get(0);
-        assertThat(consumingContractPolicyConstraint).usingRecursiveComparison().isEqualTo(consumingContractPolicyConstraint);
+        var consumingContractPolicyConstraint = consumerAgreement.getContractPolicy().getExpressions().get(0);
+        assertThat(consumingContractPolicyConstraint).usingRecursiveComparison().isEqualTo(policyExpression);
 
         assertThat(consumerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
         assertThat(consumerAgreement.getAsset().getTitle()).isEqualTo(assetId);
 
         // Test Policy
-        assertThat(contractOffer.getPolicy().getConstraints()).hasSize(1);
-        var constraint = contractOffer.getPolicy().getConstraints().get(0);
+        assertThat(contractOffer.getPolicy().getExpressions()).hasSize(1);
+        var actualExpression = contractOffer.getPolicy().getExpressions().get(0);
+        assertThat(actualExpression.getExpressionType()).isEqualTo(UiPolicyExpressionType.CONSTRAINT);
+
+        var constraint = actualExpression.getConstraint();
         assertThat(constraint.getLeft()).isEqualTo("POLICY_EVALUATION_TIME");
         assertThat(constraint.getOperator()).isEqualTo(OperatorDto.GT);
         assertThat(constraint.getRight().getType()).isEqualTo(UiPolicyLiteralType.STRING);
@@ -336,26 +344,26 @@ class UiApiWrapperTest {
     void canOverrideTheWellKnowPropertiesUsingTheCustomProperties() {
         // arrange
         var dataSource = UiDataSource.builder()
-                .type(DataSourceType.HTTP_DATA)
-                .httpData(UiDataSourceHttpData.builder()
-                        .baseUrl("http://example.com/base")
-                        .build())
-                .build();
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl("http://example.com/base")
+                .build())
+            .build();
 
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
-                .id("asset-1")
-                .title("will be overridden")
-                .dataSource(dataSource)
-                .customJsonLdAsString("""
-                        {
-                            "http://purl.org/dc/terms/title": "The real title",
-                            "http://purl.org/dc/terms/spatial": {
-                              "http://purl.org/dc/terms/identifier": ["a", "b", "c"]
-                            },
-                            "http://example.com/an-actual-custom-property": "custom value"
-                        }
-                        """)
-                .build()).getId();
+            .id("asset-1")
+            .title("will be overridden")
+            .dataSource(dataSource)
+            .customJsonLdAsString("""
+                {
+                    "http://purl.org/dc/terms/title": "The real title",
+                    "http://purl.org/dc/terms/spatial": {
+                      "http://purl.org/dc/terms/identifier": ["a", "b", "c"]
+                    },
+                    "http://example.com/an-actual-custom-property": "custom value"
+                }
+                """)
+            .build()).getId();
         assertThat(assetId).isEqualTo("asset-1");
 
         // act
@@ -373,10 +381,10 @@ class UiApiWrapperTest {
         assertThat(asset.getNutsLocations()).isEqualTo(List.of("a", "b", "c"));
         // remaining custom property
         assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
-                {
-                    "http://example.com/an-actual-custom-property": "custom value"
-                }
-                """);
+            {
+                "http://example.com/an-actual-custom-property": "custom value"
+            }
+            """);
     }
 
     // TODO throw an error if the id is overridden
@@ -388,31 +396,31 @@ class UiApiWrapperTest {
         var data = "expected data 123";
 
         var dataSource = UiDataSource.builder()
-                .type(DataSourceType.HTTP_DATA)
-                .httpData(UiDataSourceHttpData.builder()
-                        .baseUrl(dataAddress.getDataSourceUrl(data))
-                        .build())
-                .build();
+            .type(DataSourceType.HTTP_DATA)
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl(dataAddress.getDataSourceUrl(data))
+                .build())
+            .build();
 
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
-                .id("asset-1")
-                .dataSource(dataSource)
-                .build()).getId();
+            .id("asset-1")
+            .dataSource(dataSource)
+            .build()).getId();
         assertThat(assetId).isEqualTo("asset-1");
 
         var policyId = providerClient.uiApi().createPolicyDefinition(PolicyDefinitionCreateRequest.builder()
-                .policyDefinitionId("policy-1")
-                .policy(UiPolicyCreateRequest.builder()
-                        .constraints(List.of())
-                        .build())
-                .build()).getId();
+            .policyDefinitionId("policy-1")
+            .policy(UiPolicyCreateRequest.builder()
+                .expressions(List.of())
+                .build())
+            .build()).getId();
 
         providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
-                .contractDefinitionId("cd-1")
-                .accessPolicyId(policyId)
-                .contractPolicyId(policyId)
-                .assetSelector(List.of())
-                .build());
+            .contractDefinitionId("cd-1")
+            .accessPolicyId(policyId)
+            .contractPolicyId(policyId)
+            .assetSelector(List.of())
+            .build());
 
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
         assertThat(dataOffers).hasSize(1);
@@ -423,21 +431,21 @@ class UiApiWrapperTest {
         // act
         var negotiation = negotiate(dataOffer, contractOffer);
         var transferRequestJsonLd = Json.createObjectBuilder()
-                .add(
-                        Prop.Edc.DATA_DESTINATION,
-                        getDatasinkPropertiesJsonObject()
-                )
-                .add(Prop.Edc.CTX + "transferType", Json.createObjectBuilder()
-                        .add(Prop.Edc.CTX + "contentType", "application/octet-stream")
-                        .add(Prop.Edc.CTX + "isFinite", true)
-                )
-                .add(Prop.Edc.CTX + "protocol", HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
-                .add(Prop.Edc.CTX + "managedResources", false)
-                .build();
+            .add(
+                Prop.Edc.DATA_DESTINATION,
+                getDatasinkPropertiesJsonObject()
+            )
+            .add(Prop.Edc.CTX + "transferType", Json.createObjectBuilder()
+                .add(Prop.Edc.CTX + "contentType", "application/octet-stream")
+                .add(Prop.Edc.CTX + "isFinite", true)
+            )
+            .add(Prop.Edc.CTX + "protocol", HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
+            .add(Prop.Edc.CTX + "managedResources", false)
+            .build();
         var transferRequest = InitiateCustomTransferRequest.builder()
-                .contractAgreementId(negotiation.getContractAgreementId())
-                .transferProcessRequestJsonLd(JsonUtils.toJson(transferRequestJsonLd))
-                .build();
+            .contractAgreementId(negotiation.getContractAgreementId())
+            .transferProcessRequestJsonLd(JsonUtils.toJson(transferRequestJsonLd))
+            .build();
         consumerClient.uiApi().initiateCustomTransfer(transferRequest);
 
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
@@ -457,48 +465,48 @@ class UiApiWrapperTest {
             .build();
 
         var assetId = providerClient.uiApi().createAsset(UiAssetCreateRequest.builder()
-                .id("asset-1")
-                .title("Bad Asset Title")
-                .dataSource(dataSource)
-                .customJsonAsString("""
-                        {
-                            "test": "value"
-                        }
-                        """)
-                .customJsonLdAsString("""
-                        {
-                            "test": "not a valid key, will be deleted",
-                            "http://example.com/key-to-delete": "with a valida key",
-                            "http://example.com/key-to-edit": "with a valida key"
-                        }
-                        """)
-                .privateCustomJsonAsString("""
-                        {
-                            "private-test": "value"
-                        }
-                        """)
-                .privateCustomJsonLdAsString("""
-                        {
-                            "private-test": "not a valid key, will be deleted",
-                            "http://example.com/private-key-to-delete": "private with a valid key",
-                            "http://example.com/private-key-to-edit": "private with a valid key"
-                        }
-                        """)
-                .build()).getId();
+            .id("asset-1")
+            .title("Bad Asset Title")
+            .dataSource(dataSource)
+            .customJsonAsString("""
+                {
+                    "test": "value"
+                }
+                """)
+            .customJsonLdAsString("""
+                {
+                    "test": "not a valid key, will be deleted",
+                    "http://example.com/key-to-delete": "with a valida key",
+                    "http://example.com/key-to-edit": "with a valida key"
+                }
+                """)
+            .privateCustomJsonAsString("""
+                {
+                    "private-test": "value"
+                }
+                """)
+            .privateCustomJsonLdAsString("""
+                {
+                    "private-test": "not a valid key, will be deleted",
+                    "http://example.com/private-key-to-delete": "private with a valid key",
+                    "http://example.com/private-key-to-edit": "private with a valid key"
+                }
+                """)
+            .build()).getId();
 
         providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
-                .contractDefinitionId("cd-1")
-                .accessPolicyId("always-true")
-                .contractPolicyId("always-true")
-                .assetSelector(List.of(UiCriterion.builder()
-                        .operandLeft(Prop.Edc.ID)
-                        .operator(UiCriterionOperator.EQ)
-                        .operandRight(UiCriterionLiteral.builder()
-                                .type(UiCriterionLiteralType.VALUE)
-                                .value(assetId)
-                                .build())
-                        .build()))
-                .build());
+            .contractDefinitionId("cd-1")
+            .accessPolicyId("always-true")
+            .contractPolicyId("always-true")
+            .assetSelector(List.of(UiCriterion.builder()
+                .operandLeft(Prop.Edc.ID)
+                .operator(UiCriterionOperator.EQ)
+                .operandRight(UiCriterionLiteral.builder()
+                    .type(UiCriterionLiteralType.VALUE)
+                    .value(assetId)
+                    .build())
+                .build()))
+            .build());
 
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
         assertThat(dataOffers).hasSize(1);
@@ -509,82 +517,85 @@ class UiApiWrapperTest {
 
         // act
         providerClient.uiApi().editAsset(assetId, UiAssetEditRequest.builder()
-                .title("Good Asset Title")
-                .customJsonAsString("""
-                        {
-                            "edited": "new value"
-                        }
-                        """)
-                .customJsonLdAsString("""
-                        {
-                            "edited": "not a valid key, will be deleted",
-                            "http://example.com/key-to-delete": null,
-                            "http://example.com/key-to-edit": "with a valid key",
-                            "http://example.com/extra": "value to add"
-                        }
-                        """)
-                .privateCustomJsonAsString("""
-                        {
-                            "private-edited": "new value"
-                        }
-                        """)
-                .privateCustomJsonLdAsString("""
-                        {
-                            "private-edited": "not a valid key, will be deleted",
-                            "http://example.com/private-key-to-delete": null,
-                            "http://example.com/private-key-to-edit": "private with a valid key",
-                            "http://example.com/private-extra": "private value to add"
-                        }
-                        """)
-                .build());
-        initiateTransfer(negotiation);
-
-        // assert
-        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector)).get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
-        val firstAsset = providerClient.uiApi().getContractAgreementPage(null).getContractAgreements().get(0).getAsset();
-        assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");
-        assertThat(firstAsset.getCustomJsonAsString()).isEqualTo("""
+            .title("Good Asset Title")
+            .customJsonAsString("""
                 {
                     "edited": "new value"
                 }
-                """);
-        assertThatJson(firstAsset.getCustomJsonLdAsString()).isEqualTo("""
+                """)
+            .customJsonLdAsString("""
                 {
+                    "edited": "not a valid key, will be deleted",
+                    "http://example.com/key-to-delete": null,
                     "http://example.com/key-to-edit": "with a valid key",
                     "http://example.com/extra": "value to add"
                 }
-                """);
-        assertThat(firstAsset.getPrivateCustomJsonAsString()).isEqualTo("""
+                """)
+            .privateCustomJsonAsString("""
                 {
                     "private-edited": "new value"
                 }
-                """);
-        assertThatJson(firstAsset.getPrivateCustomJsonLdAsString()).isEqualTo("""
+                """)
+            .privateCustomJsonLdAsString("""
                 {
+                    "private-edited": "not a valid key, will be deleted",
+                    "http://example.com/private-key-to-delete": null,
                     "http://example.com/private-key-to-edit": "private with a valid key",
                     "http://example.com/private-extra": "private value to add"
                 }
-                """);
+                """)
+            .build());
+        initiateTransfer(negotiation);
+
+        // assert
+        assertThat(
+            consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector)).get(0).getAsset().getTitle()).isEqualTo(
+            "Good Asset Title");
+        val firstAsset = providerClient.uiApi().getContractAgreementPage(null).getContractAgreements().get(0).getAsset();
+        assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");
+        assertThat(firstAsset.getCustomJsonAsString()).isEqualTo("""
+            {
+                "edited": "new value"
+            }
+            """);
+        assertThatJson(firstAsset.getCustomJsonLdAsString()).isEqualTo("""
+            {
+                "http://example.com/key-to-edit": "with a valid key",
+                "http://example.com/extra": "value to add"
+            }
+            """);
+        assertThat(firstAsset.getPrivateCustomJsonAsString()).isEqualTo("""
+            {
+                "private-edited": "new value"
+            }
+            """);
+        assertThatJson(firstAsset.getPrivateCustomJsonLdAsString()).isEqualTo("""
+            {
+                "http://example.com/private-key-to-edit": "private with a valid key",
+                "http://example.com/private-extra": "private value to add"
+            }
+            """);
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
         validateTransferProcessesOk();
-        assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo("Good Asset Title");
+        assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo(
+            "Good Asset Title");
     }
 
     private UiContractNegotiation negotiate(UiDataOffer dataOffer, UiContractOffer contractOffer) {
         var negotiationRequest = ContractNegotiationRequest.builder()
-                .counterPartyAddress(dataOffer.getEndpoint())
-                .counterPartyParticipantId(dataOffer.getParticipantId())
-                .assetId(dataOffer.getAsset().getAssetId())
-                .contractOfferId(contractOffer.getContractOfferId())
-                .policyJsonLd(contractOffer.getPolicy().getPolicyJsonLd())
-                .build();
+            .counterPartyAddress(dataOffer.getEndpoint())
+            .counterPartyParticipantId(dataOffer.getParticipantId())
+            .assetId(dataOffer.getAsset().getAssetId())
+            .contractOfferId(contractOffer.getContractOfferId())
+            .policyJsonLd(contractOffer.getPolicy().getPolicyJsonLd())
+            .build();
 
         var negotiationId = consumerClient.uiApi().initiateContractNegotiation(negotiationRequest)
-                .getContractNegotiationId();
+            .getContractNegotiationId();
 
         var negotiation = Awaitility.await().atMost(consumerConnector.timeout).until(
-                () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
-                it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
+            () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
+            it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
         );
 
         assertThat(negotiation.getState().getSimplifiedState()).isEqualTo(ContractNegotiationSimplifiedState.AGREED);
@@ -594,9 +605,9 @@ class UiApiWrapperTest {
     private void initiateTransfer(UiContractNegotiation negotiation) {
         var contractAgreementId = negotiation.getContractAgreementId();
         var transferRequest = InitiateTransferRequest.builder()
-                .contractAgreementId(contractAgreementId)
-                .dataSinkProperties(dataAddress.getDataSinkProperties())
-                .build();
+            .contractAgreementId(contractAgreementId)
+            .dataSinkProperties(dataAddress.getDataSinkProperties())
+            .build();
         consumerClient.uiApi().initiateTransfer(transferRequest);
     }
 

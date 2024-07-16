@@ -69,25 +69,25 @@ class Ms8ConnectorMigrationTest {
     void setup() {
         var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, 21000, PROVIDER_DATABASE);
         providerConfig.setProperty("edc.flyway.additional.migration.locations",
-                "filesystem:%s".formatted(getAbsoluteTestResourcePath("db/additional-test-data/provider")));
+            "filesystem:%s".formatted(getAbsoluteTestResourcePath("db/additional-test-data/provider")));
         providerEdcContext.setConfiguration(providerConfig.getProperties());
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
         providerClient = EdcClient.builder()
-                .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
+            .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
+            .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
+            .build();
 
         var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, 23000, CONSUMER_DATABASE);
         consumerConfig.setProperty("edc.flyway.additional.migration.locations",
-                "filesystem:%s".formatted(getAbsoluteTestResourcePath("db/additional-test-data/consumer")));
+            "filesystem:%s".formatted(getAbsoluteTestResourcePath("db/additional-test-data/consumer")));
         consumerEdcContext.setConfiguration(consumerConfig.getProperties());
         consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
 
         consumerClient = EdcClient.builder()
-                .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-                .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
-                .build();
+            .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
+            .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
+            .build();
 
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
         dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
@@ -142,7 +142,8 @@ class Ms8ConnectorMigrationTest {
         // assert
         assertThat(providerTransfer.getAssetId()).isEqualTo("first-asset-1.0");
         assertThat(providerTransfer.getAssetName()).isEqualTo("First Asset");
-        assertThat(providerTransfer.getContractAgreementId()).isEqualTo("Zmlyc3QtY2Q=:Zmlyc3QtYXNzZXQtMS4w:MjgzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNi");
+        assertThat(providerTransfer.getContractAgreementId()).isEqualTo(
+            "Zmlyc3QtY2Q=:Zmlyc3QtYXNzZXQtMS4w:MjgzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNi");
         assertThat(providerTransfer.getCounterPartyConnectorEndpoint()).isEqualTo(endpoint(consumerConnector));
         assertThat(providerTransfer.getCounterPartyParticipantId()).isEqualTo(consumerConnector.getParticipantId());
         assertIsEqualOffsetDateTime(providerTransfer.getCreatedDate(), EdcDateUtils.utcMillisToOffsetDateTime(1695208010855L));
@@ -170,7 +171,8 @@ class Ms8ConnectorMigrationTest {
         // assert
         assertThat(consumerTransfer.getAssetId()).isEqualTo("first-asset-1.0");
         assertThat(consumerTransfer.getAssetName()).isEqualTo("first-asset-1.0");
-        assertThat(consumerTransfer.getContractAgreementId()).isEqualTo("Zmlyc3QtY2Q=:Zmlyc3QtYXNzZXQtMS4w:MjgzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNi");
+        assertThat(consumerTransfer.getContractAgreementId()).isEqualTo(
+            "Zmlyc3QtY2Q=:Zmlyc3QtYXNzZXQtMS4w:MjgzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNi");
         assertThat(consumerTransfer.getCounterPartyConnectorEndpoint()).isEqualTo(endpoint(providerConnector));
         assertThat(consumerTransfer.getCounterPartyParticipantId()).isEqualTo(providerConnector.getParticipantId());
         assertIsEqualOffsetDateTime(consumerTransfer.getCreatedDate(), EdcDateUtils.utcMillisToOffsetDateTime(1695208008652L));
@@ -189,10 +191,10 @@ class Ms8ConnectorMigrationTest {
 
         // act
         consumerConnector.consumeOffer(
-                providerConnector.getParticipantId(),
-                providerConnector.getConfig().getProtocolEndpoint().getUri(),
-                "second-asset",
-                dataAddress.getDataSinkJsonLd());
+            providerConnector.getParticipantId(),
+            providerConnector.getConfig().getProtocolEndpoint().getUri(),
+            "second-asset",
+            dataAddress.getDataSinkJsonLd());
 
         // assert
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), "second-asset-data");
@@ -206,10 +208,10 @@ class Ms8ConnectorMigrationTest {
 
         // act
         var transferProcessId = consumerConnector.initiateTransfer(
-                "Zmlyc3QtY2Q=:Zmlyc3QtYXNzZXQtMS4w:MjgzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNi",
-                "first-asset-1.0",
-                providerConnector.getConfig().getProtocolEndpoint().getUri(),
-                dataAddress.getDataSinkJsonLd()
+            "Zmlyc3QtY2Q=:Zmlyc3QtYXNzZXQtMS4w:MjgzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNi",
+            "first-asset-1.0",
+            providerConnector.getConfig().getProtocolEndpoint().getUri(),
+            dataAddress.getDataSinkJsonLd()
         );
 
         // assert
