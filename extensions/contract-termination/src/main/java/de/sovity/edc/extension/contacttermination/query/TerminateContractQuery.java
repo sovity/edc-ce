@@ -21,6 +21,7 @@ import lombok.val;
 import org.jooq.DSLContext;
 
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 
 import static de.sovity.edc.ext.db.jooq.Tables.SOVITY_CONTRACT_TERMINATION;
 
@@ -33,7 +34,7 @@ public class TerminateContractQuery {
         ContractTerminatedBy terminatedBy) {
 
         val tooAccurate = OffsetDateTime.now();
-        val now = tooAccurate.withNano(tooAccurate.getNano() / 1000 * 1000);
+        val now = tooAccurate.truncatedTo(ChronoUnit.MICROS);
 
         val newTermination = dsl.newRecord(SOVITY_CONTRACT_TERMINATION);
         newTermination.setContractAgreementId(termination.contractAgreementId());
@@ -44,11 +45,6 @@ public class TerminateContractQuery {
 
         newTermination.insert();
 
-        val t = SOVITY_CONTRACT_TERMINATION;
-
-        return dsl.select(t.TERMINATED_AT)
-            .from(t)
-            .where(t.CONTRACT_AGREEMENT_ID.eq(termination.contractAgreementId()))
-            .fetchOneInto(OffsetDateTime.class);
+        return now;
     }
 }

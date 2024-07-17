@@ -40,6 +40,8 @@ dependencies {
     testImplementation(libs.assertj.core)
     testImplementation(libs.flyway.core)
     testImplementation(libs.junit.api)
+    testImplementation(libs.hibernate.validation)
+    testImplementation(libs.jakarta.el)
     testImplementation(libs.mockito.core)
     testImplementation(libs.restAssured.restAssured)
     testImplementation(libs.testcontainers.testcontainers)

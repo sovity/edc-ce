@@ -38,6 +38,20 @@ public class DslContextFactory {
         newDslContext().transaction((trx) -> consumer.accept(trx.dsl()));
     }
 
+    /**
+     * For test purposes: a transaction that never succeeds
+     */
+    public void rollbackTransaction(Consumer<DSLContext> consumer) {
+        try {
+            newDslContext().transaction((trx) -> {
+                consumer.accept(trx.dsl());
+                throw new RollbackException();
+            });
+        } catch (RollbackException e) {
+            // swallowed. Expected.
+        }
+    }
+
     public <T> T transactionResult(Function<DSLContext, T> f) {
         return newDslContext().transactionResult((trx) -> f.apply(trx.dsl()));
     }

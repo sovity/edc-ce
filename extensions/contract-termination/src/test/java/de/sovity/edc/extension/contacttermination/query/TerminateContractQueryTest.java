@@ -15,6 +15,7 @@
 package de.sovity.edc.extension.contacttermination.query;
 
 import de.sovity.edc.extension.contacttermination.ContractTerminationParam;
+import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.extension.Consumer;
 import de.sovity.edc.extension.e2e.extension.E2eScenario;
@@ -22,7 +23,6 @@ import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
 import de.sovity.edc.extension.e2e.extension.Provider;
 import lombok.val;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
-import org.jooq.DSLContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -37,14 +37,14 @@ class TerminateContractQueryTest {
     @Test
     void terminateConsumerAgreementOrThrow_shouldInsertRowInTerminationTable(
         E2eScenario scenario,
-        @Consumer DSLContext dsl,
+        @Consumer DslContextFactory dslContextFactory,
         @Provider ConnectorConfig providerConfig
     ) {
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAssetAndAwait(assetId);
 
-        dsl.transaction(trx -> {
+        dslContextFactory.rollbackTransaction(trx -> {
 
                 // arrange
                 val query = new TerminateContractQuery();

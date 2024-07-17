@@ -17,13 +17,13 @@ package de.sovity.edc.extension.contacttermination.query;
 import de.sovity.edc.client.gen.model.ContractTerminationRequest;
 import de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationDetails;
+import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.extension.Consumer;
 import de.sovity.edc.extension.e2e.extension.E2eScenario;
 import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
 import de.sovity.edc.extension.e2e.extension.Provider;
 import lombok.val;
-import org.jooq.DSLContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -37,7 +37,7 @@ class ContractAgreementTerminationDetailsQueryTest {
     @Test
     void fetchAgreementDetailsOrThrow_whenAgreementIsPresent_shouldReturnTheAgreementDetails(
         E2eScenario scenario,
-        @Consumer DSLContext dsl,
+        @Consumer DslContextFactory dslContextFactory,
         @Provider ConnectorConfig providerConfig
     ) {
         // arrange
@@ -46,12 +46,12 @@ class ContractAgreementTerminationDetailsQueryTest {
         scenario.createContractDefinition(assetId);
         val negotiations = scenario.negotiateAssetAndAwait(assetId);
 
-        dsl.transaction(trx -> {
+        dslContextFactory.rollbackTransaction(dsl -> {
                 val query = new ContractAgreementTerminationDetailsQuery();
 
                 // act
                 val agreementId = negotiations.getContractAgreementId();
-                val details = query.fetchAgreementDetailsOrThrow(trx.dsl(), agreementId);
+                val details = query.fetchAgreementDetailsOrThrow(dsl, agreementId);
 
                 // assert
                 assertThat(details).isEqualTo(ContractAgreementTerminationDetails.builder()
@@ -71,14 +71,14 @@ class ContractAgreementTerminationDetailsQueryTest {
     }
 
     @Test
-    void fetchAgreementDetailsOrThrow_whenAgreementIsMissing_shouldReturnEmptyOptional(@Consumer DSLContext dsl) {
+    void fetchAgreementDetailsOrThrow_whenAgreementIsMissing_shouldReturnEmptyOptional(@Consumer DslContextFactory dslContextFactory) {
         // arrange
 
-        dsl.transaction(trx -> {
+        dslContextFactory.rollbackTransaction(dsl -> {
                 val query = new ContractAgreementTerminationDetailsQuery();
 
                 // act
-                val details = query.fetchAgreementDetailsOrThrow(trx.dsl(), "agreement:doesnt:exist");
+                val details = query.fetchAgreementDetailsOrThrow(dsl, "agreement:doesnt:exist");
 
                 // assert
                 assertThat(details).isNull();
@@ -89,7 +89,7 @@ class ContractAgreementTerminationDetailsQueryTest {
     @Test
     void fetchAgreementDetailsOrThrow_whenTerminationAlreadyExists_shouldReturnOptionalWithTerminationData(
         E2eScenario scenario,
-        @Consumer DSLContext dsl,
+        @Consumer DslContextFactory dslContextFactory,
         @Provider ConnectorConfig providerConfig
     ) {
         // arrange
@@ -98,14 +98,14 @@ class ContractAgreementTerminationDetailsQueryTest {
         scenario.createContractDefinition(assetId);
         val negotiations = scenario.negotiateAssetAndAwait(assetId);
         val terminationRequest = new ContractTerminationRequest("Terminated because of good reasons", "User Termination");
-        val termination = scenario.terminateAndAwait(CONSUMER, negotiations.getContractAgreementId(), terminationRequest);
+        val termination = scenario.terminateContractAgreementAndAwait(CONSUMER, negotiations.getContractAgreementId(), terminationRequest);
 
-        dsl.transaction(trx -> {
+        dslContextFactory.rollbackTransaction(dsl -> {
                 val query = new ContractAgreementTerminationDetailsQuery();
 
                 // act
                 val agreementId = negotiations.getContractAgreementId();
-                val details = query.fetchAgreementDetailsOrThrow(trx.dsl(), agreementId);
+                val details = query.fetchAgreementDetailsOrThrow(dsl, agreementId);
 
                 // assert
                 assertThat(details.contractAgreementId()).isEqualTo(agreementId);

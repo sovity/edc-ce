@@ -24,6 +24,7 @@ import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.ext.db.jooq.Tables;
+import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import lombok.SneakyThrows;
@@ -92,25 +93,18 @@ class PolicyDefinitionApiServiceTest {
     }
 
     @Test
-    void sortPoliciesFromNewestToOldest(DSLContext dsl) {
+    void sortPoliciesFromNewestToOldest(DslContextFactory dslContextFactory) {
         // arrange
         createPolicyDefinition("my-policy-def-0");
         createPolicyDefinition("my-policy-def-1");
         createPolicyDefinition("my-policy-def-2");
 
-        val dates = Map.of(
-            "my-policy-def-0", 1628956800000L,
-            "my-policy-def-1", 1628956801000L,
-            "my-policy-def-2", 1628956803000L
-        );
-
-        val p = Tables.EDC_POLICYDEFINITIONS;
-        dates.forEach((id, time) ->
-            dsl.update(p)
-                .set(p.CREATED_AT, time)
-                .where(p.POLICY_ID.eq(id))
-                .execute()
-        );
+        dslContextFactory.transaction(dsl ->
+            Map.of(
+                "my-policy-def-0", 1628956800000L,
+                "my-policy-def-1", 1628956801000L,
+                "my-policy-def-2", 1628956802000L
+            ).forEach((id, time) -> setPolicyDefCreatedAt(dsl, id, time)));
 
         // act
         var result = client.uiApi().getPolicyDefinitionPage();
@@ -123,6 +117,14 @@ class PolicyDefinitionApiServiceTest {
                 "my-policy-def-2",
                 "my-policy-def-1",
                 "my-policy-def-0");
+    }
+
+    private static void setPolicyDefCreatedAt(DSLContext dsl, String id, Long time) {
+        val p = Tables.EDC_POLICYDEFINITIONS;
+        dsl.update(p)
+            .set(p.CREATED_AT, time)
+            .where(p.POLICY_ID.eq(id))
+            .execute();
     }
 
     @Test
@@ -147,18 +149,4 @@ class PolicyDefinitionApiServiceTest {
         client.uiApi().createPolicyDefinition(policyDefinition);
     }
 
-    @SneakyThrows
-    private void createPolicyDefinition(
-        PolicyDefinitionService policyDefinitionService,
-        String policyDefinitionId,
-        long createdAt) {
-        createPolicyDefinition(policyDefinitionId);
-        var policyDefinition = policyDefinitionService.findById(policyDefinitionId);
-
-        // Forcefully overwrite createdAt
-        var createdAtField = Entity.class.getDeclaredField("createdAt");
-        createdAtField.setAccessible(true);
-        createdAtField.set(policyDefinition, createdAt);
-        policyDefinitionService.update(policyDefinition);
-    }
 }

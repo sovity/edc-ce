@@ -54,6 +54,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static de.sovity.edc.ext.wrapper.utils.ValidatorUtils.validate;
+
 @SuppressWarnings("java:S6539") // This class is so large so the generated API Clients can have one UiApi
 @RequiredArgsConstructor
 public class UiResourceImpl implements UiResource {
@@ -69,7 +71,6 @@ public class UiResourceImpl implements UiResource {
     private final ContractDefinitionApiService contractDefinitionApiService;
     private final ContractNegotiationApiService contractNegotiationApiService;
     private final DashboardPageApiService dashboardPageApiService;
-    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private final DslContextFactory dslContextFactory;
 
     @Override
@@ -176,13 +177,5 @@ public class UiResourceImpl implements UiResource {
     @Override
     public UiAsset getTransferProcessAsset(String transferProcessId) {
         return transferHistoryPageAssetFetcherService.getAssetForTransferHistoryPage(transferProcessId);
-    }
-
-    private void validate(Object object) {
-        val validator = factory.getValidator();
-        val constraintViolations = validator.validate(object);
-        if (!constraintViolations.isEmpty()) {
-            throw new ConstraintViolationException("Failed to validate", constraintViolations);
-        }
     }
 }

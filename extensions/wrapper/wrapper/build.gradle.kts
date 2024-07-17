@@ -29,16 +29,16 @@ dependencies {
     implementation(libs.edc.managementApiConfiguration)
     implementation(libs.edc.dspHttpSpi)
     implementation(libs.jooq.jooq)
+    implementation(libs.hibernate.validation)
     implementation(libs.hikari)
+    implementation(libs.jakarta.el)
 
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
 
-    testImplementation(project(":extensions:database-direct-access"))
     testImplementation(project(":extensions:wrapper:clients:java-client"))
     testImplementation(project(":extensions:policy-always-true"))
     testImplementation(project(":extensions:postgres-flyway"))
-    testImplementation(project(":utils:jooq-database-access"))
     testImplementation(project(":utils:test-utils"))
     testImplementation(libs.edc.controlPlaneCore)
     testImplementation(libs.edc.dsp)

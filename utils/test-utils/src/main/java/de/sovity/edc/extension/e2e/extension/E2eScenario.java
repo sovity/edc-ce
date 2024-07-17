@@ -259,7 +259,7 @@ public class E2eScenario {
         );
     }
 
-    public IdResponseDto terminateAndAwait(
+    public IdResponseDto terminateContractAgreementAndAwait(
         ContractNegotiation.Type party,
         String contractAgreementId,
         ContractTerminationRequest terminationRequest

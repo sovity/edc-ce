@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2024 sovity GmbH
+ * Copyright (c) 2024 sovity GmbH
  *
  *  This program and the accompanying materials are made available under the
  *  terms of the Apache License, Version 2.0 which is available at
@@ -12,11 +12,10 @@
  *
  */
 
-package de.sovity.edc.extension.contacttermination;
+package de.sovity.edc.extension.db.directaccess;
 
-import lombok.experimental.UtilityClass;
-
-@UtilityClass
-public class ContractTerminationMapper {
-
+public class RollbackException extends RuntimeException {
+    public RollbackException() {
+        super("Rolled back.");
+    }
 }

@@ -47,7 +47,7 @@ public class ContractAgreementTerminationDetailsQuery {
                 .from(
                     n.join(a).on(n.AGREEMENT_ID.eq(a.AGR_ID))
                         .leftJoin(SOVITY_CONTRACT_TERMINATION).on(n.AGREEMENT_ID.eq(t.CONTRACT_AGREEMENT_ID)))
-                .where(EDC_CONTRACT_AGREEMENT.AGR_ID.eq(agreementId))
+                .where(a.AGR_ID.eq(agreementId))
                 .fetchOneInto(ContractAgreementTerminationDetails.class));
     }
 }
