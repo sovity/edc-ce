@@ -64,16 +64,7 @@ public class ContractAgreementDataFetcher {
         var transfers = getAllTransferProcesses().stream()
             .collect(groupingBy(it -> it.getDataRequest().getContractId()));
 
-        var agreementIds = agreements.stream().map(ContractAgreement::getId).toList();
-
-        var t = SOVITY_CONTRACT_TERMINATION;
-        var terminations = dsl.get().select()
-            .from(t)
-            .where(t.CONTRACT_AGREEMENT_ID.in(agreementIds))
-            .fetch()
-            .into(t)
-            .stream()
-            .collect(toMap(SovityContractTerminationRecord::getContractAgreementId, identity()));
+        var terminations = fetchTerminations(agreements);
 
         // A ContractAgreement has multiple ContractNegotiations when doing a loopback consumption
         return agreements.stream()
@@ -85,6 +76,23 @@ public class ContractAgreementDataFetcher {
                     return new ContractAgreementData(agreement, negotiation, asset, contractTransfers, terminations.get(agreement.getId()));
                 }))
             .toList();
+    }
+
+    private @NotNull Map<String, SovityContractTerminationRecord> fetchTerminations(List<ContractAgreement> agreements) {
+
+        var agreementIds = agreements.stream().map(ContractAgreement::getId).toList();
+
+        var t = SOVITY_CONTRACT_TERMINATION;
+
+        var terminations = dsl.get().select()
+            .from(t)
+            .where(t.CONTRACT_AGREEMENT_ID.in(agreementIds))
+            .fetch()
+            .into(t)
+            .stream()
+            .collect(toMap(SovityContractTerminationRecord::getContractAgreementId, identity()));
+
+        return terminations;
     }
 
     private Asset getAsset(ContractAgreement agreement, ContractNegotiation negotiation, Map<String, Asset> assets) {

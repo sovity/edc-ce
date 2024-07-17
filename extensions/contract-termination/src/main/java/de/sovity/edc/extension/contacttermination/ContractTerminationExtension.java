@@ -31,8 +31,6 @@ import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.system.configuration.Config;
 
-import static de.sovity.edc.extension.contacttermination.ContractTerminationMapper.toModel;
-
 
 public class ContractTerminationExtension implements ServiceExtension {
 
@@ -85,7 +83,15 @@ public class ContractTerminationExtension implements ServiceExtension {
             ContractTerminationMessage.class,
             (claims, termination) -> terminationService.terminateCounterpartyAgreement(
                 participantAgentService.createFor(claims).getIdentity(),
-                toModel(termination)));
+                buildTerminationRequest(termination)));
+    }
+
+    private static ContractTerminationParam buildTerminationRequest(ContractTerminationMessage message) {
+        return new ContractTerminationParam(
+            message.getContractAgreementId(),
+            message.getDetail(),
+            message.getReason()
+        );
     }
 
     private void setupTransferPrevention() {
@@ -94,5 +100,4 @@ public class ContractTerminationExtension implements ServiceExtension {
                 dslContextFactory,
                 new ContractAgreementIsTerminatedQuery()));
     }
-
 }

@@ -16,8 +16,8 @@ create type contract_terminated_by as enum ('SELF', 'COUNTERPARTY');
 create table sovity_contract_termination
 (
     contract_agreement_id varchar primary key,
-    reason                varchar                  not null,
-    detail                varchar                  not null,
+    reason                text                     not null,
+    detail                text                     not null,
     terminated_at         timestamp with time zone not null,
     terminated_by         contract_terminated_by   not null,
     constraint agreement_fk foreign key (contract_agreement_id)
