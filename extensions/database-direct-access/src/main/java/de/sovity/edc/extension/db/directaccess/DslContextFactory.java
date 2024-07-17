@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 sovity GmbH
+ *  Copyright (c) 2024 sovity GmbH
  *
  *  This program and the accompanying materials are made available under the
  *  terms of the Apache License, Version 2.0 which is available at
@@ -14,10 +14,31 @@
 
 package de.sovity.edc.extension.db.directaccess;
 
+import lombok.RequiredArgsConstructor;
+import org.eclipse.edc.runtime.metamodel.annotation.ExtensionPoint;
 import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
 
-public interface DslContextFactory {
+import java.util.function.Consumer;
+import java.util.function.Function;
+import javax.sql.DataSource;
 
-    DSLContext newDslContext();
+@ExtensionPoint
+@RequiredArgsConstructor
+public class DslContextFactory {
 
+    private final DataSource dataSource;
+
+    private DSLContext newDslContext() {
+        return DSL.using(dataSource, SQLDialect.POSTGRES);
+    }
+
+    public void transaction(Consumer<DSLContext> consumer) {
+        newDslContext().transaction((trx) -> consumer.accept(trx.dsl()));
+    }
+
+    public <T> T transactionResult(Function<DSLContext, T> f) {
+        return newDslContext().transactionResult((trx) -> f.apply(trx.dsl()));
+    }
 }

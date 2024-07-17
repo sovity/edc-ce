@@ -32,7 +32,6 @@ import org.jooq.DSLContext;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import static de.sovity.edc.ext.db.jooq.Tables.SOVITY_CONTRACT_TERMINATION;
 import static java.util.function.Function.identity;
@@ -45,7 +44,6 @@ public class ContractAgreementDataFetcher {
     private final ContractNegotiationStore contractNegotiationStore;
     private final TransferProcessService transferProcessService;
     private final AssetIndex assetIndex;
-    private final Supplier<DSLContext> dsl;
 
     /**
      * Fetches all contract agreements as {@link ContractAgreementData}s.
@@ -53,7 +51,7 @@ public class ContractAgreementDataFetcher {
      * @return {@link ContractAgreementData}s
      */
     @NotNull
-    public List<ContractAgreementData> getContractAgreements() {
+    public List<ContractAgreementData> getContractAgreements(DSLContext dsl) {
         var agreements = getAllContractAgreements();
         var assets = MapUtils.associateBy(getAllAssets(), Asset::getId);
 
@@ -64,7 +62,7 @@ public class ContractAgreementDataFetcher {
         var transfers = getAllTransferProcesses().stream()
             .collect(groupingBy(it -> it.getDataRequest().getContractId()));
 
-        var terminations = fetchTerminations(agreements);
+        var terminations = fetchTerminations(dsl, agreements);
 
         // A ContractAgreement has multiple ContractNegotiations when doing a loopback consumption
         return agreements.stream()
@@ -78,13 +76,13 @@ public class ContractAgreementDataFetcher {
             .toList();
     }
 
-    private @NotNull Map<String, SovityContractTerminationRecord> fetchTerminations(List<ContractAgreement> agreements) {
+    private @NotNull Map<String, SovityContractTerminationRecord> fetchTerminations(DSLContext dsl, List<ContractAgreement> agreements) {
 
         var agreementIds = agreements.stream().map(ContractAgreement::getId).toList();
 
         var t = SOVITY_CONTRACT_TERMINATION;
 
-        var terminations = dsl.get().select()
+        var terminations = dsl.select()
             .from(t)
             .where(t.CONTRACT_AGREEMENT_ID.in(agreementIds))
             .fetch()

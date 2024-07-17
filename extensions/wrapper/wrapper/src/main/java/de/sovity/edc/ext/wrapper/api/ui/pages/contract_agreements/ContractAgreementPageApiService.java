@@ -22,6 +22,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.Contr
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jooq.DSLContext;
 
 import java.util.Comparator;
 
@@ -31,8 +32,8 @@ public class ContractAgreementPageApiService {
     private final ContractAgreementPageCardBuilder contractAgreementPageCardBuilder;
 
     @NotNull
-    public ContractAgreementPage contractAgreementPage(@Nullable ContractAgreementPageQuery contractAgreementPageQuery) {
-        var agreements = contractAgreementDataFetcher.getContractAgreements();
+    public ContractAgreementPage contractAgreementPage(DSLContext dsl, @Nullable ContractAgreementPageQuery contractAgreementPageQuery) {
+        var agreements = contractAgreementDataFetcher.getContractAgreements(dsl);
 
         var cards = agreements.stream()
             .map(agreement -> contractAgreementPageCardBuilder.buildContractAgreementCard(

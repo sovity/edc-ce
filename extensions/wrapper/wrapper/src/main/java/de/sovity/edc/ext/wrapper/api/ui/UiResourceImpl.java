@@ -44,6 +44,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
+import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
@@ -69,6 +70,7 @@ public class UiResourceImpl implements UiResource {
     private final ContractNegotiationApiService contractNegotiationApiService;
     private final DashboardPageApiService dashboardPageApiService;
     private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private final DslContextFactory dslContextFactory;
 
     @Override
     public DashboardPage getDashboardPage() {
@@ -142,9 +144,9 @@ public class UiResourceImpl implements UiResource {
 
     @Override
     public ContractAgreementPage getContractAgreementPage(@Nullable ContractAgreementPageQuery contractAgreementPageQuery) {
-        return contractAgreementApiService.contractAgreementPage(contractAgreementPageQuery);
+        return dslContextFactory.transactionResult(dsl ->
+            contractAgreementApiService.contractAgreementPage(dsl, contractAgreementPageQuery));
     }
-
 
     @Override
     public IdResponseDto initiateTransfer(InitiateTransferRequest request) {
@@ -159,10 +161,11 @@ public class UiResourceImpl implements UiResource {
     @Override
     public IdResponseDto terminateContractAgreement(
         String contractAgreementId,
-        ContractTerminationRequest contractTerminationRequest) {
-
+        ContractTerminationRequest contractTerminationRequest
+    ) {
         validate(contractTerminationRequest);
-        return contractAgreementTerminationApiService.terminate(contractAgreementId, contractTerminationRequest);
+        return dslContextFactory.transactionResult(dsl ->
+            contractAgreementTerminationApiService.terminate(dsl, contractAgreementId, contractTerminationRequest));
     }
 
     @Override

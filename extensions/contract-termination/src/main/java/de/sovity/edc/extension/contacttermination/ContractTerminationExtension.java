@@ -17,7 +17,7 @@ package de.sovity.edc.extension.contacttermination;
 import de.sovity.edc.extension.contacttermination.query.ContractAgreementIsTerminatedQuery;
 import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
 import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
-import de.sovity.edc.extension.db.directaccess.DslContextFactoryImpl;
+import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.extension.messenger.SovityMessengerRegistry;
 import lombok.val;
@@ -38,7 +38,7 @@ public class ContractTerminationExtension implements ServiceExtension {
     private static final String EDC_PARTICIPANT_ID = "edc.participant.id";
 
     @Inject
-    private DslContextFactoryImpl dslContextFactory;
+    private DslContextFactory dslContextFactory;
 
     @Inject
     private IdentityService identityService;
@@ -72,7 +72,6 @@ public class ContractTerminationExtension implements ServiceExtension {
 
         val terminationService = new ContractAgreementTerminationService(
             sovityMessenger,
-            dslContextFactory,
             contractAgreementTerminationDetailsQuery,
             terminateContractQuery,
             monitor,
@@ -81,9 +80,12 @@ public class ContractTerminationExtension implements ServiceExtension {
 
         messengerRegistry.register(
             ContractTerminationMessage.class,
-            (claims, termination) -> terminationService.terminateCounterpartyAgreement(
-                participantAgentService.createFor(claims).getIdentity(),
-                buildTerminationRequest(termination)));
+            (claims, termination) ->
+                dslContextFactory.transactionResult(dsl ->
+                    terminationService.terminateCounterpartyAgreement(
+                        dsl,
+                        participantAgentService.createFor(claims).getIdentity(),
+                        buildTerminationRequest(termination))));
     }
 
     private static ContractTerminationParam buildTerminationRequest(ContractTerminationMessage message) {

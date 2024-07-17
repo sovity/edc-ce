@@ -75,7 +75,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
 import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
 import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
-import de.sovity.edc.extension.db.directaccess.DslContextFactoryImpl;
+import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
@@ -124,7 +124,7 @@ public class WrapperExtensionContextBuilder {
         ContractDefinitionStore contractDefinitionStore,
         ContractNegotiationService contractNegotiationService,
         ContractNegotiationStore contractNegotiationStore,
-        DslContextFactoryImpl dslContextFactory,
+        DslContextFactory dslContextFactory,
         JsonLd jsonLd,
         Monitor monitor,
         ObjectMapper objectMapper,
@@ -168,8 +168,7 @@ public class WrapperExtensionContextBuilder {
             contractAgreementService,
             contractNegotiationStore,
             transferProcessService,
-            assetIndex,
-            dslContextFactory::newDslContext
+            assetIndex
         );
         var contractAgreementApiService = new ContractAgreementPageApiService(
             contractAgreementDataFetcher,
@@ -218,7 +217,6 @@ public class WrapperExtensionContextBuilder {
         var terminateContractQuery = new TerminateContractQuery();
         var contractAgreementTerminationService = new ContractAgreementTerminationService(
             sovityMessenger,
-            dslContextFactory,
             agreementDetailsQuery,
             terminateContractQuery,
             monitor,
@@ -270,7 +268,8 @@ public class WrapperExtensionContextBuilder {
             catalogApiService,
             contractDefinitionApiService,
             contractNegotiationApiService,
-            dashboardApiService
+            dashboardApiService,
+            dslContextFactory
         );
 
         // Use Case API

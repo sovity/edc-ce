@@ -29,7 +29,8 @@ public class TransferProcessBlocker implements TransferProcessListener {
 
     @Override
     public void preRequesting(TransferProcess process) {
-        val terminated = contractAgreementIsTerminated.isTerminated(dslContextFactory.newDslContext(), process.getContractId());
+        val terminated = dslContextFactory.transactionResult(dsl ->
+            contractAgreementIsTerminated.isTerminated(dsl, process.getContractId()));
 
         if (terminated) {
             val message = "Interrupted: the contract agreement %s is terminated.".formatted(process.getContractId());

@@ -20,6 +20,8 @@ import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationSe
 import de.sovity.edc.extension.contacttermination.ContractTerminationParam;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.eclipse.edc.spi.EdcException;
+import org.jooq.DSLContext;
 
 @RequiredArgsConstructor
 public class ContractAgreementTerminationApiService {
@@ -27,16 +29,25 @@ public class ContractAgreementTerminationApiService {
     private final ContractAgreementTerminationService contractAgreementTerminationService;
 
     public IdResponseDto terminate(
+        DSLContext dsl,
         String contractAgreementId,
         ContractTerminationRequest contractTerminationRequest) {
 
+        try {
             val terminatedAt = contractAgreementTerminationService.terminateAgreementOrThrow(
-                new ContractTerminationParam(contractAgreementId, contractTerminationRequest.getDetail(),
+                dsl,
+                new ContractTerminationParam(
+                    contractAgreementId,
+                    contractTerminationRequest.getDetail(),
                     contractTerminationRequest.getReason()));
 
             return IdResponseDto.builder()
                 .id(contractAgreementId)
                 .lastUpdatedDate(terminatedAt)
                 .build();
+
+        } catch (RuntimeException e) {
+            throw new EdcException("Failed to terminate the agreement %s".formatted(contractAgreementId) + " : " + e.getMessage(), e);
+        }
     }
 }

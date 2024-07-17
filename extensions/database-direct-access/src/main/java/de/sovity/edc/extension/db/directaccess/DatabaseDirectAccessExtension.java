@@ -22,7 +22,7 @@ import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 
-@Provides(DslContextFactoryImpl.class)
+@Provides(DslContextFactory.class)
 public class DatabaseDirectAccessExtension implements ServiceExtension {
     public static final String NAME = "DirectDatabaseAccess";
 
@@ -81,8 +81,8 @@ public class DatabaseDirectAccessExtension implements ServiceExtension {
         hikariConfig.setMaxLifetime(50000);
         hikariConfig.setConnectionTimeout(config.getInteger(EDC_SERVER_DB_CONNECTION_TIMEOUT_IN_MS));
 
-        val dda = new DslContextFactoryImpl(new HikariDataSource(hikariConfig));
+        val dda = new DslContextFactory(new HikariDataSource(hikariConfig));
 
-        context.registerService(DslContextFactoryImpl.class, dda);
+        context.registerService(DslContextFactory.class, dda);
     }
 }

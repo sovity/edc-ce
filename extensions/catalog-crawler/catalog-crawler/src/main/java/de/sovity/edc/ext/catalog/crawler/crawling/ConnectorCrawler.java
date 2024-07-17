@@ -55,6 +55,8 @@ public class ConnectorCrawler {
 
             var catalog = fetchedCatalogService.fetchCatalog(connectorRef);
 
+            dslContextFactory.newDslContext().transaction(trx -> {});
+
             // Update connector in a single transaction
             dslContextFactory.transaction(dsl -> {
                 var connectorRecord = connectorQueries.findByConnectorId(dsl, connectorRef.getConnectorId());
