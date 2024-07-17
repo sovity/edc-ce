@@ -139,7 +139,8 @@ public class ContractTerminationTest {
     void canTerminateFromConsumer(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient) {
+        @Provider EdcClient providerClient
+    ) {
 
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);

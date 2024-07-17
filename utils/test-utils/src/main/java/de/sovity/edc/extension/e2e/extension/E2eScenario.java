@@ -46,6 +46,7 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -60,6 +61,7 @@ public class E2eScenario {
     private final ConnectorConfig consumerConfig;
     private final ConnectorConfig providerConfig;
     private final ClientAndServer mockServer;
+    private final Duration timeout = ofSeconds(10);
 
     private EdcClient consumerClient;
     private EdcClient providerClient;
@@ -195,7 +197,7 @@ public class E2eScenario {
 
         val negotiation = consumerClient.uiApi().initiateContractNegotiation(negotiationRequest);
 
-        val neg = Awaitility.await().atMost(ofSeconds(5)).until(
+        val neg = Awaitility.await().atMost(timeout).until(
             () -> consumerClient.uiApi().getContractNegotiation(negotiation.getContractNegotiationId()),
             it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
         );
@@ -247,7 +249,7 @@ public class E2eScenario {
     }
 
     public void awaitTransferCompletion(String transferId) {
-        Awaitility.await().atMost(ofSeconds(10)).until(
+        Awaitility.await().atMost(timeout).until(
             () -> consumerClient.uiApi()
                 .getTransferHistoryPage()
                 .getTransferEntries()
