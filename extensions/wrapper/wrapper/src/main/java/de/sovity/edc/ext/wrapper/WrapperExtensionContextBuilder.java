@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.LegacyPolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetEditRequestMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetJsonLdBuilder;
@@ -199,9 +200,11 @@ public class WrapperExtensionContextBuilder {
             transferRequestBuilder,
             transferProcessService
         );
+        var legacyPolicyMapper = new LegacyPolicyMapper();
         var policyDefinitionApiService = new PolicyDefinitionApiService(
             policyDefinitionService,
-            policyMapper
+            policyMapper,
+            legacyPolicyMapper
         );
         var dataOfferBuilder = new DspDataOfferBuilder(jsonLd);
         var uiDataOfferBuilder = new UiDataOfferBuilder(assetMapper, policyMapper);

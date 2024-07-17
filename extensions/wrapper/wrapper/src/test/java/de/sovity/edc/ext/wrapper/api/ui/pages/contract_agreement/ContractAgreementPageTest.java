@@ -18,6 +18,7 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractAgreementDirection;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
+import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.ext.wrapper.TestUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -108,7 +109,10 @@ class ContractAgreementPageTest {
         assertThat(transfer.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
         assertThat(transfer.getErrorMessage()).isEqualTo("my-error-message-1");
 
-        var constraint = agreement.getContractPolicy().getExpressions().get(0).getConstraint();
+        var expression = agreement.getContractPolicy().getExpression();
+        assertThat(expression.getType()).isEqualTo(UiPolicyExpressionType.CONSTRAINT);
+
+        var constraint = expression.getConstraint();
         assertThat(constraint.getLeft()).isEqualTo("ALWAYS_TRUE");
         assertThat(constraint.getOperator()).isEqualTo(OperatorDto.EQ);
         assertThat(constraint.getRight().getValue()).isEqualTo("true");

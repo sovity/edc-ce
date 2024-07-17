@@ -43,6 +43,8 @@ public class ExpressionMapper {
 
         return expressions.stream()
             .map(this::buildConstraint)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .toList();
     }
 
@@ -66,18 +68,24 @@ public class ExpressionMapper {
         return expressions;
     }
 
-    private Constraint buildConstraint(UiPolicyExpression expression) {
-        return switch (expression.getExpressionType()) {
-            case AND -> AndConstraint.Builder.newInstance()
+    public Optional<Constraint> buildConstraint(UiPolicyExpression expression) {
+        if (expression == null || expression.getType() == null) {
+            return Optional.empty();
+        }
+
+        return switch (expression.getType()) {
+            case EMPTY -> Optional.empty();
+            case AND -> Optional.of(AndConstraint.Builder.newInstance()
                 .constraints(buildConstraints(expression.getExpressions()))
-                .build();
-            case OR -> OrConstraint.Builder.newInstance()
+                .build());
+            case OR -> Optional.of(OrConstraint.Builder.newInstance()
                 .constraints(buildConstraints(expression.getExpressions()))
-                .build();
-            case XOR -> XoneConstraint.Builder.newInstance()
+                .build());
+            case XONE -> Optional.of(XoneConstraint.Builder.newInstance()
                 .constraints(buildConstraints(expression.getExpressions()))
-                .build();
-            case CONSTRAINT -> atomicConstraintMapper.buildAtomicConstraint(expression.getConstraint());
+                .build());
+            case CONSTRAINT -> Optional.of(atomicConstraintMapper
+                .buildAtomicConstraint(expression.getConstraint()));
         };
     }
 
@@ -89,7 +97,7 @@ public class ExpressionMapper {
 
         if (constraint instanceof XoneConstraint xone) {
             return buildMultiUiPolicyExpression(
-                UiPolicyExpressionType.XOR,
+                UiPolicyExpressionType.XONE,
                 xone.getConstraints(),
                 errors.forChildObject("constraints")
             );
@@ -121,7 +129,7 @@ public class ExpressionMapper {
     ) {
         var expressions = buildUiPolicyExpressions(constraints, errors);
         var expression = UiPolicyExpression.builder()
-            .expressionType(type)
+            .type(type)
             .expressions(expressions)
             .build();
         return Optional.of(expression);
@@ -129,7 +137,7 @@ public class ExpressionMapper {
 
     private UiPolicyExpression buildConstraintUiPolicyExpression(UiPolicyConstraint constraint) {
         return UiPolicyExpression.builder()
-            .expressionType(UiPolicyExpressionType.CONSTRAINT)
+            .type(UiPolicyExpressionType.CONSTRAINT)
             .constraint(constraint)
             .build();
     }

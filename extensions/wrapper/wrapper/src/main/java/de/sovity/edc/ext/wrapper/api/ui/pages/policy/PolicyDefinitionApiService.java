@@ -16,8 +16,11 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
 
 
 import de.sovity.edc.ext.wrapper.api.ServiceException;
+import de.sovity.edc.ext.wrapper.api.common.mappers.LegacyPolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyExpression;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionDto;
 import jakarta.validation.constraints.NotNull;
@@ -35,6 +38,7 @@ public class PolicyDefinitionApiService {
 
     private final PolicyDefinitionService policyDefinitionService;
     private final PolicyMapper policyMapper;
+    private final LegacyPolicyMapper legacyPolicyMapper;
 
     public List<PolicyDefinitionDto> getPolicyDefinitions() {
         var policyDefinitions = getAllPolicyDefinitions();
@@ -45,8 +49,17 @@ public class PolicyDefinitionApiService {
     }
 
     @NotNull
+    @Deprecated
     public IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest request) {
-        var policyDefinition = buildPolicyDefinition(request);
+        var uiPolicyExpression = legacyPolicyMapper.buildUiPolicyExpression(request.getPolicy());
+        var policyDefinition = buildPolicyDefinition(request.getPolicyDefinitionId(), uiPolicyExpression);
+        policyDefinition = policyDefinitionService.create(policyDefinition).orElseThrow(ServiceException::new);
+        return new IdResponseDto(policyDefinition.getId());
+    }
+
+    @NotNull
+    public IdResponseDto createPolicyDefinitionV2(PolicyDefinitionCreateDto request) {
+        var policyDefinition = buildPolicyDefinition(request.getPolicyDefinitionId(), request.getPolicy());
         policyDefinition = policyDefinitionService.create(policyDefinition).orElseThrow(ServiceException::new);
         return new IdResponseDto(policyDefinition.getId());
     }
@@ -69,10 +82,10 @@ public class PolicyDefinitionApiService {
             .build();
     }
 
-    public PolicyDefinition buildPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDto) {
-        var policy = policyMapper.buildPolicy(policyDefinitionDto.getPolicy());
+    public PolicyDefinition buildPolicyDefinition(String id, UiPolicyExpression uiPolicyExpression) {
+        var policy = policyMapper.buildPolicy(uiPolicyExpression);
         return PolicyDefinition.Builder.newInstance()
-            .id(policyDefinitionDto.getPolicyDefinitionId())
+            .id(id)
             .policy(policy)
             .build();
     }

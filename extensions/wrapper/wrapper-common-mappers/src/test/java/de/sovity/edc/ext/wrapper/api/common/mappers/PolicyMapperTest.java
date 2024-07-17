@@ -38,6 +38,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -62,10 +63,10 @@ class PolicyMapperTest {
         var policy = mock(Policy.class);
         var expression = mock(UiPolicyExpression.class);
 
-        when(expressionExtractor.getPermissionExpressions(eq(policy), any())).thenAnswer(i -> {
+        when(expressionExtractor.getPermissionExpression(eq(policy), any())).thenAnswer(i -> {
             var errors = i.getArgument(1, MappingErrors.class);
             errors.add("test");
-            return List.of(expression);
+            return expression;
         });
 
         when(typeTransformerRegistry.transform(eq(policy), eq(JsonObject.class)))
@@ -75,29 +76,44 @@ class PolicyMapperTest {
         var actual = policyMapper.buildUiPolicy(policy);
 
         // assert
-        assertThat(actual.getExpressions()).containsExactly(expression);
+        assertThat(actual.getExpression()).isEqualTo(expression);
         assertThat(actual.getErrors()).containsExactly("$: test");
         assertThat(actual.getPolicyJsonLd()).isEqualTo("{\"a\":\"b\"}");
     }
 
     @Test
-    void buildPolicy() {
+    void buildPolicy_constraintExtracted() {
         // arrange
         var uiExpression = mock(UiPolicyExpression.class);
         var constraint = mock(Constraint.class);
-        when(expressionMapper.buildConstraints(eq(List.of(uiExpression))))
-            .thenReturn(List.of(constraint));
-
-        var createRequest = new UiPolicyCreateRequest(List.of(uiExpression));
+        when(expressionMapper.buildConstraint(uiExpression))
+            .thenReturn(Optional.of(constraint));
 
         // act
-        var actual = policyMapper.buildPolicy(createRequest);
+        var actual = policyMapper.buildPolicy(uiExpression);
 
         // assert
         assertThat(actual.getType()).isEqualTo(PolicyType.SET);
         assertThat(actual.getPermissions()).hasSize(1);
-        assertThat(actual.getPermissions().get(0).getConstraints()).hasSize(1);
         assertThat(actual.getPermissions().get(0).getAction().getType()).isEqualTo("USE");
+        assertThat(actual.getPermissions().get(0).getConstraints()).hasSize(1);
         assertThat(actual.getPermissions().get(0).getConstraints()).containsExactly(constraint);
+    }
+
+    @Test
+    void buildPolicy_noConstraint() {
+        // arrange
+        var uiExpression = mock(UiPolicyExpression.class);
+        when(expressionMapper.buildConstraint(uiExpression))
+            .thenReturn(Optional.empty());
+
+        // act
+        var actual = policyMapper.buildPolicy(uiExpression);
+
+        // assert
+        assertThat(actual.getType()).isEqualTo(PolicyType.SET);
+        assertThat(actual.getPermissions()).hasSize(1);
+        assertThat(actual.getPermissions().get(0).getConstraints()).isEmpty();
+        assertThat(actual.getPermissions().get(0).getAction().getType()).isEqualTo("USE");
     }
 }

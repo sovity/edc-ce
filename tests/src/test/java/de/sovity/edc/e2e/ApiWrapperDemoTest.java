@@ -20,7 +20,7 @@ import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
-import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.client.gen.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiContractOffer;
@@ -32,7 +32,6 @@ import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
-import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
@@ -148,7 +147,7 @@ class ApiWrapperDemoTest {
 
     private void createPolicy() {
         var afterYesterday = UiPolicyExpression.builder()
-            .expressionType(UiPolicyExpressionType.CONSTRAINT)
+            .type(UiPolicyExpressionType.CONSTRAINT)
             .constraint(UiPolicyConstraint.builder()
                 .left("POLICY_EVALUATION_TIME")
                 .operator(OperatorDto.GT)
@@ -160,7 +159,7 @@ class ApiWrapperDemoTest {
             .build();
 
         var beforeTomorrow = UiPolicyExpression.builder()
-            .expressionType(UiPolicyExpressionType.CONSTRAINT)
+            .type(UiPolicyExpressionType.CONSTRAINT)
             .constraint(UiPolicyConstraint.builder()
                 .left("POLICY_EVALUATION_TIME")
                 .operator(OperatorDto.LT)
@@ -171,14 +170,17 @@ class ApiWrapperDemoTest {
                 .build())
             .build();
 
-        var policyDefinition = PolicyDefinitionCreateRequest.builder()
-            .policyDefinitionId(dataOfferId)
-            .policy(UiPolicyCreateRequest.builder()
-                .expressions(List.of(afterYesterday, beforeTomorrow))
-                .build())
+        var expression = UiPolicyExpression.builder()
+            .type(UiPolicyExpressionType.AND)
+            .expressions(List.of(afterYesterday, beforeTomorrow))
             .build();
 
-        providerClient.uiApi().createPolicyDefinition(policyDefinition);
+        var policyDefinition = PolicyDefinitionCreateDto.builder()
+            .policyDefinitionId(dataOfferId)
+            .policy(expression)
+            .build();
+
+        providerClient.uiApi().createPolicyDefinitionV2(policyDefinition);
     }
 
     private void createContractDefinition() {

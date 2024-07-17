@@ -15,29 +15,20 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.FailedMappingException;
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.AtomicConstraintMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionExtractor;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicy;
-import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyExpression;
 import de.sovity.edc.utils.JsonUtils;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.policy.model.Action;
-import org.eclipse.edc.policy.model.AndConstraint;
-import org.eclipse.edc.policy.model.Constraint;
-import org.eclipse.edc.policy.model.OrConstraint;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
-import org.eclipse.edc.policy.model.XoneConstraint;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 import static de.sovity.edc.utils.JsonUtils.toJson;
 
@@ -58,11 +49,11 @@ public class PolicyMapper {
     public UiPolicy buildUiPolicy(Policy policy) {
         MappingErrors errors = MappingErrors.root();
 
-        var expressions = expressionExtractor.getPermissionExpressions(policy, errors);
+        var expression = expressionExtractor.getPermissionExpression(policy, errors);
 
         return UiPolicy.builder()
             .policyJsonLd(toJson(buildPolicyJsonLd(policy)))
-            .expressions(expressions)
+            .expression(expression)
             .errors(errors.getErrors())
             .build();
     }
@@ -72,17 +63,17 @@ public class PolicyMapper {
      * <p>
      * This operation is lossless.
      *
-     * @param policyCreateDto policy
+     * @param expression policy
      * @return ODRL policy
      */
-    public Policy buildPolicy(UiPolicyCreateRequest policyCreateDto) {
-        var constraints = expressionMapper.buildConstraints(policyCreateDto.getExpressions());
+    public Policy buildPolicy(UiPolicyExpression expression) {
+        var constraints = expressionMapper.buildConstraint(expression);
 
         var action = Action.Builder.newInstance().type(PolicyValidator.ALLOWED_ACTION).build();
 
         var permission = Permission.Builder.newInstance()
             .action(action)
-            .constraints(constraints)
+            .constraints(constraints.stream().toList())
             .build();
 
         return Policy.Builder.newInstance()

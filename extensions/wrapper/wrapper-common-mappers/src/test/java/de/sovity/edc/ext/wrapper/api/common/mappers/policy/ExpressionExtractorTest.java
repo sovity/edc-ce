@@ -15,6 +15,7 @@
 package de.sovity.edc.ext.wrapper.api.common.mappers.policy;
 
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyExpression;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyExpressionType;
 import org.eclipse.edc.policy.model.Constraint;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
@@ -25,7 +26,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -53,10 +53,10 @@ class ExpressionExtractorTest {
         var errors = MappingErrors.root();
 
         // act
-        var actual = expressionExtractor.getPermissionExpressions(policy, errors);
+        var actual = expressionExtractor.getPermissionExpression(policy, errors);
 
         // assert
-        assertThat(actual).isEmpty();
+        assertThat(actual.getType()).isEqualTo(UiPolicyExpressionType.EMPTY);
         verify(policyValidator).validateOtherPolicyFieldsUnset(policy, errors);
     }
 
@@ -71,11 +71,38 @@ class ExpressionExtractorTest {
         var errors = MappingErrors.root();
 
         // act
-        var actual = expressionExtractor.getPermissionExpressions(policy, errors);
+        var actual = expressionExtractor.getPermissionExpression(policy, errors);
 
         // assert
-        assertThat(actual).isEmpty();
+        assertThat(actual.getType()).isEqualTo(UiPolicyExpressionType.EMPTY);
         verify(policyValidator).validateOtherPolicyFieldsUnset(policy, errors);
+    }
+
+    @Test
+    void test_getPermissionConstraints_single_constraint() {
+        // arrange
+        var constraint = mock(Constraint.class);
+        var permission = Permission.Builder.newInstance()
+            .constraint(constraint)
+            .build();
+
+        var policy = Policy.Builder.newInstance()
+            .permission(permission)
+            .build();
+        var errors = MappingErrors.root();
+
+        var uiExpression = mock(UiPolicyExpression.class);
+        when(expressionMapper.buildUiPolicyExpressions(eq(List.of(constraint)), any())).thenReturn(List.of(uiExpression));
+
+        // act
+        var actual = expressionExtractor.getPermissionExpression(policy, errors);
+
+        // assert
+        verify(policyValidator).validateOtherPermissionFieldsUnset(same(permission), any());
+        assertThat(actual)
+            .usingRecursiveComparison()
+            .isEqualTo(uiExpression);
+        assertThat(errors.getErrors()).isEmpty();
     }
 
     @Test
@@ -86,31 +113,69 @@ class ExpressionExtractorTest {
             .constraint(first)
             .build();
 
-        var other = mock(Constraint.class);
-        var otherPermission = Permission.Builder.newInstance()
-            .constraint(other)
+        var second = mock(Constraint.class);
+        var secondPermission = Permission.Builder.newInstance()
+            .constraint(second)
             .build();
 
         var policy = Policy.Builder.newInstance()
             .permission(firstPermission)
-            .permission(otherPermission)
+            .permission(secondPermission)
             .build();
         var errors = MappingErrors.root();
 
         var firstUiExpression = mock(UiPolicyExpression.class);
-        var otherUiExpression = mock(UiPolicyExpression.class);
+        var secondUiExpression = mock(UiPolicyExpression.class);
         when(expressionMapper.buildUiPolicyExpressions(eq(List.of(first)), any())).thenReturn(List.of(firstUiExpression));
-        when(expressionMapper.buildUiPolicyExpressions(eq(List.of(other)), any())).thenReturn(List.of(otherUiExpression));
+        when(expressionMapper.buildUiPolicyExpressions(eq(List.of(second)), any())).thenReturn(List.of(secondUiExpression));
 
         // act
-        var actual = expressionExtractor.getPermissionExpressions(policy, errors);
+        var actual = expressionExtractor.getPermissionExpression(policy, errors);
 
         // assert
         verify(policyValidator).validateOtherPermissionFieldsUnset(same(firstPermission), any());
-        verify(policyValidator).validateOtherPermissionFieldsUnset(same(otherPermission), any());
+        verify(policyValidator).validateOtherPermissionFieldsUnset(same(secondPermission), any());
+        var expected = UiPolicyExpression.and(List.of(firstUiExpression, secondUiExpression));
         assertThat(actual)
-            .usingRecursiveFieldByFieldElementComparator()
-            .containsExactly(firstUiExpression, otherUiExpression);
+            .usingRecursiveComparison()
+            .isEqualTo(expected);
+        assertThat(errors.getErrors()).containsExactly(
+            "$: Multiple permissions were present. Prefer using a conjunction using AND."
+        );
+    }
+
+    @Test
+    void test_getPermissionConstraints_merge_constraints2() {
+        // arrange
+        var first = mock(Constraint.class);
+        var second = mock(Constraint.class);
+        var permission = Permission.Builder.newInstance()
+            .constraints(List.of(first, second))
+            .build();
+
+        var policy = Policy.Builder.newInstance()
+            .permission(permission)
+            .build();
+
+        var errors = MappingErrors.root();
+
+        var firstUiExpression = mock(UiPolicyExpression.class);
+        var secondUiExpression = mock(UiPolicyExpression.class);
+        when(expressionMapper.buildUiPolicyExpressions(eq(List.of(first, second)), any()))
+            .thenReturn(List.of(firstUiExpression, secondUiExpression));
+
+        // act
+        var actual = expressionExtractor.getPermissionExpression(policy, errors);
+
+        // assert
+        verify(policyValidator).validateOtherPermissionFieldsUnset(same(permission), any());
+        var expected = UiPolicyExpression.and(List.of(firstUiExpression, secondUiExpression));
+        assertThat(actual)
+            .usingRecursiveComparison()
+            .isEqualTo(expected);
+        assertThat(errors.getErrors()).containsExactly(
+            "$.permissions[0].constraints: Multiple constraints were present. Prefer using a conjunction using AND."
+        );
     }
 
     @Test
@@ -132,11 +197,13 @@ class ExpressionExtractorTest {
         });
 
         // act
-        var actual = expressionExtractor.getPermissionExpressions(policy, errors);
+        var actual = expressionExtractor.getPermissionExpression(policy, errors);
 
         // assert
         verify(policyValidator).validateOtherPermissionFieldsUnset(same(permission), any());
-        assertThat(actual).isEmpty();
+        assertThat(actual)
+            .usingRecursiveComparison()
+            .isEqualTo(UiPolicyExpression.empty());
         assertThat(errors.getErrors()).containsExactlyInAnyOrder(
             "$.permissions[0].constraints: test"
         );

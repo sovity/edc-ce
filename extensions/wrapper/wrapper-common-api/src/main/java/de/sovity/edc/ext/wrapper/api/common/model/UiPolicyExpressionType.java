@@ -4,13 +4,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = """
     Ui Policy Expression types:
-    * `AND` - Several constraints, all of which must be respected
-    * `OR` - Several constraints, of which at least one must be respected
-    * `XOR` - Several constraints, of which exactly one must be respected
-    * `CONSTRAINT` - A single constraint for the policy
+    * `CONSTRAINT` - Expression 'a=b'
+    * `AND` - Conjunction of several expressions. All child expressions must be true.
+    * `OR` - Disjunction of several expressions. (At least) one child expression must be true.
+    * `XONE` - XOR operation, exactly one child expression must be true.
     """, enumAsRef = true)
 public enum UiPolicyExpressionType {
-    AND, OR, XOR, CONSTRAINT
+    EMPTY,
+    CONSTRAINT,
+    AND,
+    OR,
+    XONE
 }
 
 

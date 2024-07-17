@@ -44,7 +44,6 @@ class ExpressionMapperTest {
     @Mock
     AtomicConstraintMapper atomicConstraintMapper;
 
-
     @Test
     void buildUiConstraint_errorPropagation() {
         // arrange
@@ -144,7 +143,7 @@ class ExpressionMapperTest {
             .thenReturn(Optional.of(uiConstraint));
 
         var constraints = List.<Constraint>of(
-            OrConstraint.Builder.newInstance()
+            XoneConstraint.Builder.newInstance()
                 .constraint(atomicConstraint)
                 .build()
         );
@@ -154,7 +153,7 @@ class ExpressionMapperTest {
 
         // assert
         assertThat(actual).containsExactly(
-            UiPolicyExpression.or(List.of(
+            UiPolicyExpression.xone(List.of(
                 UiPolicyExpression.constraint(uiConstraint)
             ))
         );
@@ -230,7 +229,7 @@ class ExpressionMapperTest {
     void buildConstraint_xoneConstraint() {
         // arrange
         var uiConstraint = mock(UiPolicyConstraint.class);
-        var expression = UiPolicyExpression.xor(List.of(
+        var expression = UiPolicyExpression.xone(List.of(
             UiPolicyExpression.constraint(uiConstraint)
         ));
 

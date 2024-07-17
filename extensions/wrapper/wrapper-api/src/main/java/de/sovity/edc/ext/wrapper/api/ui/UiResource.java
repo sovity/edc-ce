@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui;
 
+import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
@@ -95,8 +96,16 @@ interface UiResource {
     @Path("pages/policy-page/policy-definitions")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Create a new Policy Definition")
+    @Deprecated
+    @Operation(description = "[Deprecated] Create a new Policy Definition from a list of constraints", deprecated = true)
     IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto);
+
+    @POST
+    @Path("v2/pages/policy-page/policy-definitions")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Create a new Policy Definition")
+    IdResponseDto createPolicyDefinitionV2(PolicyDefinitionCreateDto policyDefinitionCreateDto);
 
     @DELETE
     @Path("pages/policy-page/policy-definitions/{policyId}")

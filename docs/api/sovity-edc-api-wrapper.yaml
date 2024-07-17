@@ -121,13 +121,32 @@ paths:
     post:
       tags:
       - UI
-      description: Create a new Policy Definition
+      description: "[Deprecated] Create a new Policy Definition from a list of constraints"
       operationId: createPolicyDefinition
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PolicyDefinitionCreateRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
+      deprecated: true
+  /wrapper/ui/v2/pages/policy-page/policy-definitions:
+    post:
+      tags:
+      - UI
+      description: Create a new Policy Definition
+      operationId: createPolicyDefinitionV2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicyDefinitionCreateDto'
       responses:
         default:
           description: default response
@@ -849,7 +868,8 @@ components:
           description: Policy Definition ID
         policy:
           $ref: '#/components/schemas/UiPolicyCreateRequest'
-      description: Data for creating a Policy Definition
+      description: "[Deprecated] Create a Policy Definition. Use PolicyDefinitionCreateDto"
+      deprecated: true
     UiPolicyConstraint:
       required:
       - left
@@ -864,45 +884,18 @@ components:
           $ref: '#/components/schemas/OperatorDto'
         right:
           $ref: '#/components/schemas/UiPolicyLiteral'
-      description: ODRL AtomicConstraint as supported by the sovity product landscape
+      description: "ODRL AtomicConstraint as supported by the sovity product landscape.\
+        \ For example 'a EQ b', 'c IN [d, e, f]'"
     UiPolicyCreateRequest:
       type: object
       properties:
         expressions:
           type: array
-          description: Conjunction of required expressions for the policy to evaluate
-            to TRUE.
+          description: Conjunction of required constraints
           items:
-            $ref: '#/components/schemas/UiPolicyExpression'
-      description: Type-Safe OpenAPI generator friendly ODLR policy subset as endorsed
-        by sovity.
-    UiPolicyExpression:
-      type: object
-      properties:
-        expressionType:
-          $ref: '#/components/schemas/UiPolicyExpressionType'
-        expressions:
-          type: array
-          description: "Only for types AND, OR, XOR. List of sub-expressions to be\
-            \ evaluated according to the expressionType."
-          items:
-            $ref: '#/components/schemas/UiPolicyExpression'
-        constraint:
-          $ref: '#/components/schemas/UiPolicyConstraint'
-      description: ODRL constraint as supported by the sovity product landscape
-    UiPolicyExpressionType:
-      type: string
-      description: |
-        Ui Policy Expression types:
-        * `AND` - Several constraints, all of which must be respected
-        * `OR` - Several constraints, of which at least one must be respected
-        * `XOR` - Several constraints, of which exactly one must be respected
-        * `CONSTRAINT` - A single constraint for the policy
-      enum:
-      - AND
-      - OR
-      - XOR
-      - CONSTRAINT
+            $ref: '#/components/schemas/UiPolicyConstraint'
+      description: "[Deprecated] Conjunction of constraints (simplified UiPolicyExpression)"
+      deprecated: true
     UiPolicyLiteral:
       required:
       - type
@@ -927,6 +920,46 @@ components:
       - STRING
       - STRING_LIST
       - JSON
+    PolicyDefinitionCreateDto:
+      required:
+      - policy
+      - policyDefinitionId
+      type: object
+      properties:
+        policyDefinitionId:
+          type: string
+          description: Policy Definition ID
+        policy:
+          $ref: '#/components/schemas/UiPolicyExpression'
+      description: Create a Policy Definition
+    UiPolicyExpression:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/UiPolicyExpressionType'
+        expressions:
+          type: array
+          description: "Only for types AND, OR, XOR. List of sub-expressions to be\
+            \ evaluated according to the expressionType."
+          items:
+            $ref: '#/components/schemas/UiPolicyExpression'
+        constraint:
+          $ref: '#/components/schemas/UiPolicyConstraint'
+      description: ODRL constraint as supported by the sovity product landscape
+    UiPolicyExpressionType:
+      type: string
+      description: |
+        Ui Policy Expression types:
+        * `CONSTRAINT` - Expression 'a=b'
+        * `AND` - Conjunction of several expressions. All child expressions must be true.
+        * `OR` - Disjunction of several expressions. (At least) one child expression must be true.
+        * `XONE` - XOR operation, exactly one child expression must be true.
+      enum:
+      - EMPTY
+      - CONSTRAINT
+      - AND
+      - OR
+      - XONE
     UiAssetEditRequest:
       type: object
       properties:
@@ -1273,12 +1306,8 @@ components:
           type: string
           description: EDC Policy JSON-LD. This is required because the EDC requires
             the full policy when initiating contract negotiations.
-        expressions:
-          type: array
-          description: Conjunction of required expressions for the policy to evaluate
-            to TRUE.
-          items:
-            $ref: '#/components/schemas/UiPolicyExpression'
+        expression:
+          $ref: '#/components/schemas/UiPolicyExpression'
         errors:
           type: array
           description: "When trying to reduce the policy JSON-LD to our opinionated\

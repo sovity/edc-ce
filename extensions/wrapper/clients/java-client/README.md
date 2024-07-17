@@ -144,7 +144,7 @@ public String buildCatenaXPolicy() {
 
 private UiPolicyExpression buildAnd(UiPolicyExpression... expressions) {
   return UiPolicyExpression.builder()
-      .expressionType(UiPolicyExpressionType.AND)
+      .type(UiPolicyExpressionType.AND)
       .expressions(Arrays.asList(expressions))
       .build();
 }
@@ -155,7 +155,7 @@ private UiPolicyExpression buildConstraint(
     String right
 ) {
   return UiPolicyExpression.builder()
-      .expressionType(UiPolicyExpressionType.CONSTRAINT)
+      .type(UiPolicyExpressionType.CONSTRAINT)
       .constraint(UiPolicyConstraint.builder()
           .left(left)
           .operator(operator)

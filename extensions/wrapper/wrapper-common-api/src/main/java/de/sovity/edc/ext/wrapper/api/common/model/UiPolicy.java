@@ -35,8 +35,8 @@ public class UiPolicy {
         "full policy when initiating contract negotiations.", requiredMode = RequiredMode.REQUIRED)
     private String policyJsonLd;
 
-    @Schema(description = "Conjunction of required expressions for the policy to evaluate to TRUE.")
-    private List<UiPolicyExpression> expressions;
+    @Schema(description = "Policy expression")
+    private UiPolicyExpression expression;
 
     @Schema(description = "When trying to reduce the policy JSON-LD to our opinionated subset of functionalities, " +
         "many fields and functionalities are unsupported. Should any discrepancies occur during " +

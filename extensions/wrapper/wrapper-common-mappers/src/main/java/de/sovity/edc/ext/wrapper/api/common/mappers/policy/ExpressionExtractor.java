@@ -27,6 +27,26 @@ public class ExpressionExtractor {
     private final ExpressionMapper expressionMapper;
 
     /**
+     * Build {@link UiPolicyExpression} from an ODRL {@link Policy}.
+     * <p>
+     * This operation is lossy which is why we document warnings / errors in {@link MappingErrors}.
+     *
+     * @param policy ODRL policy
+     * @param errors mapping errors
+     * @return ui policy expression
+     */
+    public UiPolicyExpression getPermissionExpression(Policy policy, MappingErrors errors) {
+        var expressions = getPermissionExpressions(policy, errors);
+        if (expressions.isEmpty()) {
+            return UiPolicyExpression.empty();
+        } else if (expressions.size() == 1) {
+            return expressions.get(0);
+        } else {
+            return UiPolicyExpression.and(expressions);
+        }
+    }
+
+    /**
      * Build {@link UiPolicyExpression}s from an ODRL {@link Policy}.
      * <p>
      * This operation is lossy which is why we document warnings / errors in {@link MappingErrors}.
@@ -35,12 +55,16 @@ public class ExpressionExtractor {
      * @param errors mapping errors
      * @return ui policy expressions
      */
-    public List<UiPolicyExpression> getPermissionExpressions(Policy policy, MappingErrors errors) {
+    private List<UiPolicyExpression> getPermissionExpressions(Policy policy, MappingErrors errors) {
         policyValidator.validateOtherPolicyFieldsUnset(policy, errors);
 
         var permissions = policy.getPermissions();
         if (permissions == null) {
             return List.of();
+        }
+
+        if (permissions.size() > 1) {
+            errors.add("Multiple permissions were present. Prefer using a conjunction using AND.");
         }
 
         List<UiPolicyExpression> expressions = new ArrayList<>();
@@ -59,8 +83,14 @@ public class ExpressionExtractor {
             return List.of();
         }
 
+        var constraints = permission.getConstraints();
+        if (constraints != null && constraints.size() > 1) {
+            errors.forChildObject("constraints")
+                .add("Multiple constraints were present. Prefer using a conjunction using AND.");
+        }
+
         return expressionMapper.buildUiPolicyExpressions(
-            permission.getConstraints(),
+            constraints,
             errors.forChildObject("constraints")
         );
     }

@@ -17,7 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.catalog;
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.DataSourceType;
-import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.client.gen.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiCriterion;
 import de.sovity.edc.client.gen.model.UiCriterionLiteral;
@@ -25,7 +25,8 @@ import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
-import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.client.gen.model.UiPolicyExpression;
+import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.ext.wrapper.TestUtils;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -97,14 +98,12 @@ class CatalogApiTest {
     }
 
     private void createPolicy() {
-        var policyDefinition = PolicyDefinitionCreateRequest.builder()
+        var policyDefinition = PolicyDefinitionCreateDto.builder()
                 .policyDefinitionId(dataOfferId)
-                .policy(UiPolicyCreateRequest.builder()
-                        .expressions(List.of())
-                        .build())
+                .policy(UiPolicyExpression.builder().type(UiPolicyExpressionType.EMPTY).build())
                 .build();
 
-        client.uiApi().createPolicyDefinition(policyDefinition);
+        client.uiApi().createPolicyDefinitionV2(policyDefinition);
     }
 
     private void createContractDefinition() {

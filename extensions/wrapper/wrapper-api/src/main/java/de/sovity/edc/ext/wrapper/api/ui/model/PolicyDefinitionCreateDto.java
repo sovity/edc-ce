@@ -12,11 +12,11 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.common.model;
+package de.sovity.edc.ext.wrapper.api.ui.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyExpression;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,14 +27,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "ODRL AtomicConstraint as supported by the sovity product landscape. For example 'a EQ b', 'c IN [d, e, f]'")
-public class UiPolicyConstraint {
-    @Schema(description = "Left side of the expression.", requiredMode = RequiredMode.REQUIRED)
-    private String left;
+@Schema(description = "Create a Policy Definition")
+public class PolicyDefinitionCreateDto {
+    @Schema(description = "Policy Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String policyDefinitionId;
 
-    @Schema(description = "Operator, e.g. EQ", requiredMode = RequiredMode.REQUIRED)
-    private OperatorDto operator;
-
-    @Schema(description = "Right side of the expression", requiredMode = RequiredMode.REQUIRED)
-    private UiPolicyLiteral right;
+    @Schema(description = "Policy Expression", requiredMode = Schema.RequiredMode.REQUIRED)
+    private UiPolicyExpression policy;
 }
+

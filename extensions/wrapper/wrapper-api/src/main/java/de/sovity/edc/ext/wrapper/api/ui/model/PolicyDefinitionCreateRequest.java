@@ -27,12 +27,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Data for creating a Policy Definition")
+@Deprecated
+@Schema(description = "[Deprecated] Create a Policy Definition. Use PolicyDefinitionCreateDto", deprecated = true)
 public class PolicyDefinitionCreateRequest {
     @Schema(description = "Policy Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String policyDefinitionId;
 
-    @Schema(description = "Policy Contents", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "[Deprecated] Conjunction of constraints (simplified UiPolicyExpression)",
+        requiredMode = Schema.RequiredMode.REQUIRED, deprecated = true)
     private UiPolicyCreateRequest policy;
 }
 
