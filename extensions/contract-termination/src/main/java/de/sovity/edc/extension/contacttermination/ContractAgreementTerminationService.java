@@ -43,7 +43,7 @@ public class ContractAgreementTerminationService {
      * This is to terminate an EDC's own contract.
      * If the termination comes from an external system, use {@link #terminateCounterpartyAgreement(String, ContractTerminationParam)} to validate the counter-party's identity.
      */
-    public OffsetDateTime terminateAgreement(ContractTerminationParam termination) {
+    public OffsetDateTime terminateAgreementOrThrow(ContractTerminationParam termination) {
 
         val terminatedAt = dslContextFactory.newDslContext().transactionResult(trx -> {
             val details =

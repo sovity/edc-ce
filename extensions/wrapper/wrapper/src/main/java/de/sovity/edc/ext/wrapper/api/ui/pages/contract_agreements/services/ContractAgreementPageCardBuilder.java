@@ -54,7 +54,8 @@ public class ContractAgreementPageCardBuilder {
         @NonNull ContractNegotiation negotiation,
         @NonNull Asset asset,
         @NonNull List<TransferProcess> transferProcesses,
-        SovityContractTerminationRecord termination) {
+        SovityContractTerminationRecord termination
+    ) {
 
         var assetParticipantId = contractNegotiationUtils.getProviderParticipantId(negotiation);
         var assetConnectorEndpoint = contractNegotiationUtils.getProviderConnectorEndpoint(negotiation);

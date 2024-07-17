@@ -12,14 +12,18 @@
  *
  */
 
-package de.sovity.edc.e2e.utils;
+package de.sovity.edc.extension.e2e.extension;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * In test code, in conjunction with {@link E2eTestExtension}, specifies that the injected instance must come from the Provider EDC
+ * An asset that uses a mocked network resource.
+ *
+ * @param assetId The related asset's ID
+ * @param networkAccesses How many times the resource was accessed via the network.
  */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Provider {
+public record MockedAsset(
+    String assetId,
+    AtomicInteger networkAccesses
+) {
 }

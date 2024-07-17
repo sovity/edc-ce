@@ -34,19 +34,6 @@ public class ConnectorConfigFactory {
 
     private static final Random RANDOM = new Random();
 
-    /**
-     * Creates the default configuration to start an EDC with the given test database.
-     *
-     * @deprecated Use {@link ConnectorConfigFactory#forTestDatabase(String, TestDatabase)}
-     *     with automatic ports allocation to prevent port allocation conflicts.
-     */
-    @Deprecated
-    public static ConnectorConfig forTestDatabase(String participantId, int firstPort, TestDatabase testDatabase) {
-        var config = basicEdcConfig(participantId, firstPort);
-        config.setProperties(configureDatasources(testDatabase.getJdbcCredentials()));
-        return config;
-    }
-
     public static ConnectorConfig forTestDatabase(String participantId, TestDatabase testDatabase) {
         val firstPort = getFreePortRange(5);
         var config = basicEdcConfig(participantId, firstPort);
@@ -115,9 +102,9 @@ public class ConnectorConfigFactory {
         properties.put("web.http.protocol.port", String.valueOf(apiConfig.getProtocolApiGroup().port()));
         properties.put("web.http.protocol.path", String.valueOf(apiConfig.getProtocolApiGroup().path()));
         properties.put("web.http.management.port", String.valueOf(apiConfig.getManagementApiGroup().port()));
-        properties.put("web.http.management.patch", String.valueOf(apiConfig.getManagementApiGroup().path()));
+        properties.put("web.http.management.path", String.valueOf(apiConfig.getManagementApiGroup().path()));
         properties.put("web.http.control.port", String.valueOf(apiConfig.getControlApiGroup().port()));
-        properties.put("web.http.control.patch", String.valueOf(apiConfig.getControlApiGroup().path()));
+        properties.put("web.http.control.path", String.valueOf(apiConfig.getControlApiGroup().path()));
 
         return new ConnectorConfig(
             participantId,

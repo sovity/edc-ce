@@ -22,10 +22,10 @@ import de.sovity.edc.client.gen.model.ContractTerminatedBy;
 import de.sovity.edc.client.gen.model.ContractTerminationRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.TransferHistoryEntry;
-import de.sovity.edc.e2e.utils.Consumer;
-import de.sovity.edc.e2e.utils.E2eScenario;
-import de.sovity.edc.e2e.utils.E2eTestExtension;
-import de.sovity.edc.e2e.utils.Provider;
+import de.sovity.edc.extension.e2e.extension.Consumer;
+import de.sovity.edc.extension.e2e.extension.E2eScenario;
+import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
+import de.sovity.edc.extension.e2e.extension.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import jakarta.ws.rs.HttpMethod;
 import lombok.SneakyThrows;
@@ -67,7 +67,7 @@ public class ContractTerminationTest {
 
         val agreements = assets
             .peek(scenario::createContractDefinition)
-            .map(scenario::negotiateAsset)
+            .map(scenario::negotiateAssetAndAwait)
             .toList();
 
         consumerClient.uiApi().terminateContractAgreement(
@@ -113,7 +113,7 @@ public class ContractTerminationTest {
 
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
-        scenario.negotiateAsset(assetId);
+        scenario.negotiateAssetAndAwait(assetId);
 
         val agreements = consumerClient.uiApi().getContractAgreementPage(ContractAgreementPageQuery.builder().build());
 
@@ -143,7 +143,7 @@ public class ContractTerminationTest {
 
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
-        val negotiation = scenario.negotiateAsset(assetId);
+        val negotiation = scenario.negotiateAssetAndAwait(assetId);
 
         // act
         val detail = "Some detail";
@@ -173,7 +173,7 @@ public class ContractTerminationTest {
 
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
-        val negotiation = scenario.negotiateAsset(assetId);
+        val negotiation = scenario.negotiateAssetAndAwait(assetId);
 
         // act
         val detail = "Some detail";
@@ -213,7 +213,7 @@ public class ContractTerminationTest {
 
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
-        val negotiation = scenario.negotiateAsset(assetId);
+        val negotiation = scenario.negotiateAssetAndAwait(assetId);
 
         // act
         val reason = "Some reason";
@@ -254,7 +254,7 @@ public class ContractTerminationTest {
 
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
-        val negotiation = scenario.negotiateAsset(assetId);
+        val negotiation = scenario.negotiateAssetAndAwait(assetId);
 
         // act
         val detail = "Some detail";
@@ -303,13 +303,13 @@ public class ContractTerminationTest {
         val assetId = "asset-1";
         val mockedAsset = scenario.createAssetWithMockResource(assetId);
         scenario.createContractDefinition(assetId);
-        scenario.negotiateAsset(assetId);
+        scenario.negotiateAssetAndAwait(assetId);
 
         val destinationPath = "/destination/some/path/";
         val destinationUrl = "http://localhost:" + mockServer.getPort() + destinationPath;
         mockServer.when(HttpRequest.request(destinationPath).withMethod("POST")).respond(it -> HttpResponse.response().withStatusCode(200));
 
-        val negotiation = scenario.negotiateAsset(assetId);
+        val negotiation = scenario.negotiateAssetAndAwait(assetId);
 
         val transferRequest = InitiateTransferRequest.builder()
             .contractAgreementId(negotiation.getContractAgreementId())
@@ -366,7 +366,7 @@ public class ContractTerminationTest {
 
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
-        val negotiation = scenario.negotiateAsset(assetId);
+        val negotiation = scenario.negotiateAssetAndAwait(assetId);
 
         val detail = "Some detail";
         val reason = "Some reason";

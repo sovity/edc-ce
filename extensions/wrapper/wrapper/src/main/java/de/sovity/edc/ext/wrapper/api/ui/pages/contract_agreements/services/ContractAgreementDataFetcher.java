@@ -32,9 +32,7 @@ import org.jooq.DSLContext;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static de.sovity.edc.ext.db.jooq.Tables.SOVITY_CONTRACT_TERMINATION;
 import static java.util.function.Function.identity;

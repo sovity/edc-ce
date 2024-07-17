@@ -10,7 +10,7 @@ dependencies {
     testCompileOnly(libs.lombok)
 
     testImplementation(project(":utils:versions"))
-    testImplementation(project(":utils:test-connector-remote"))
+    testImplementation(project(":utils:test-utils"))
     testImplementation(project(":utils:json-and-jsonld-utils"))
     testImplementation(project(":extensions:catalog-crawler:catalog-crawler-db"))
     testImplementation(project(":extensions:wrapper:clients:java-client"))

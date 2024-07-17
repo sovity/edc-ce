@@ -23,7 +23,6 @@ dependencies {
     implementation(project(":extensions:database-direct-access"))
     implementation(project(":extensions:sovity-messenger"))
     implementation(project(":utils:jooq-database-access"))
-    implementation(project(":utils:test-connector-remote"))
 
     implementation(libs.apache.commonsLang)
     implementation(libs.edc.apiCore)

@@ -16,7 +16,11 @@
 
 ## About this Utility
 
-Connector Remote for creating simple test data via the management API.
+A toolset to ease testing.
+
+* Connector Remote for creating simple test data via the management API.
+* E2eTestExtension to bootstrap end-to-end tests using the wrapper API.
+* EdcRuntimeExtensionWithTestDatabase to test single connectors with a database.
 
 ## Why does this extension exist?
 

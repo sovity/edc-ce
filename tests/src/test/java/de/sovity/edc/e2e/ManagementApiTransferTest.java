@@ -14,11 +14,11 @@
 
 package de.sovity.edc.e2e;
 
-import de.sovity.edc.e2e.utils.Consumer;
-import de.sovity.edc.e2e.utils.E2eTestExtension;
-import de.sovity.edc.e2e.utils.Provider;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
+import de.sovity.edc.extension.e2e.extension.Consumer;
+import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
+import de.sovity.edc.extension.e2e.extension.Provider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

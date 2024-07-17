@@ -21,7 +21,7 @@ dependencies {
 
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
-    testImplementation(project(":utils:test-connector-remote"))
+    testImplementation(project(":utils:test-utils"))
     testImplementation(libs.assertj.core)
     testImplementation(libs.mockito.core)
     testImplementation(libs.restAssured.restAssured)

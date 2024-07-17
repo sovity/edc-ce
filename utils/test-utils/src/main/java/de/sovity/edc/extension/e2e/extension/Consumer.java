@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.e2e.utils;
+package de.sovity.edc.extension.e2e.extension;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

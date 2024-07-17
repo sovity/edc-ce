@@ -30,7 +30,7 @@ public class ContractAgreementTerminationApiService {
         String contractAgreementId,
         ContractTerminationRequest contractTerminationRequest) {
 
-            val terminatedAt = contractAgreementTerminationService.terminateAgreement(
+            val terminatedAt = contractAgreementTerminationService.terminateAgreementOrThrow(
                 new ContractTerminationParam(contractAgreementId, contractTerminationRequest.getDetail(),
                     contractTerminationRequest.getReason()));
 

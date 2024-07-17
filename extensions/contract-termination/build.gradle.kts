@@ -22,7 +22,6 @@ dependencies {
     testCompileOnly(libs.lombok)
 
     testImplementation(project(":extensions:postgres-flyway"))
-    testImplementation(project(":utils:test-connector-remote"))
     testImplementation(project(":utils:test-utils"))
     testImplementation(project(":utils:versions"))
 

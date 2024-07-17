@@ -18,12 +18,12 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
-import de.sovity.edc.e2e.utils.Consumer;
-import de.sovity.edc.e2e.utils.E2eScenario;
-import de.sovity.edc.e2e.utils.E2eTestExtension;
-import de.sovity.edc.e2e.utils.Provider;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.extension.Consumer;
+import de.sovity.edc.extension.e2e.extension.E2eScenario;
+import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
+import de.sovity.edc.extension.e2e.extension.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -77,7 +77,7 @@ class DataSourceQueryParamsTest {
         scenario.createContractDefinition(assetId);
 
         // act
-        val negotiation = scenario.negotiateAsset(assetId);
+        val negotiation = scenario.negotiateAssetAndAwait(assetId);
         initiateTransfer(consumerClient, negotiation);
 
         // assert

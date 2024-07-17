@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.e2e.utils;
+package de.sovity.edc.extension.e2e.extension;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
@@ -122,8 +122,12 @@ public class E2eTestExtension
 
         val type = parameterContext.getParameter().getType();
 
-        if (isProvider || isConsumer) {
-            return partySupportedTypes.contains(type);
+        if (isConsumer) {
+            return partySupportedTypes.contains(type) || consumerExtension.supportsParameter(parameterContext, extensionContext);
+        }
+
+        if (isProvider) {
+            return partySupportedTypes.contains(type) || providerExtension.supportsParameter(parameterContext, extensionContext);
         }
 
         if (supportedTypes.contains(type)) {
@@ -151,7 +155,7 @@ public class E2eTestExtension
             } else if (ConnectorRemote.class.equals(type)) {
                 return newConnectorRemote(consumerParticipantId, consumerConfig);
             } else {
-                return consumerExtension.supportsParameter(parameterContext, extensionContext);
+                return consumerExtension.resolveParameter(parameterContext, extensionContext);
             }
         }
 
@@ -163,7 +167,7 @@ public class E2eTestExtension
             } else if (ConnectorRemote.class.equals(type)) {
                 return newConnectorRemote(providerParticipantId, providerConfig);
             } else {
-                return providerExtension.supportsParameter(parameterContext, extensionContext);
+                return providerExtension.resolveParameter(parameterContext, extensionContext);
             }
         }
 

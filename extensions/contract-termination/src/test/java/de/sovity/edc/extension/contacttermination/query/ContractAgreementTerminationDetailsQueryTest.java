@@ -14,57 +14,53 @@
 
 package de.sovity.edc.extension.contacttermination.query;
 
+import de.sovity.edc.client.gen.model.ContractTerminationRequest;
 import de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationDetails;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.extension.Consumer;
+import de.sovity.edc.extension.e2e.extension.E2eScenario;
+import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
+import de.sovity.edc.extension.e2e.extension.Provider;
 import lombok.val;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.io.IOException;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation.Type.CONSUMER;
 
 
+@ExtendWith(E2eTestExtension.class)
 class ContractAgreementTerminationDetailsQueryTest {
 
-    @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "edc",
-        testDatabase -> {
-            val config = forTestDatabase("my-edc-participant-id", testDatabase);
-            return config.getProperties();
-        }
-    );
-
     @Test
-    void fetchAgreementDetailsOrThrow_whenAgreementIsPresent_shouldReturnTheAgreementDetails(DSLContext dsl) {
+    void fetchAgreementDetailsOrThrow_whenAgreementIsPresent_shouldReturnTheAgreementDetails(
+        E2eScenario scenario,
+        @Consumer DSLContext dsl,
+        @Provider ConnectorConfig providerConfig
+    ) {
         // arrange
 
-        dsl.transaction(trx -> {
-                setup(trx.dsl());
+        val assetId = scenario.createAsset();
+        scenario.createContractDefinition(assetId);
+        val negotiations = scenario.negotiateAssetAndAwait(assetId);
 
+        dsl.transaction(trx -> {
                 val query = new ContractAgreementTerminationDetailsQuery();
 
                 // act
-                val agreementId = "ZGVmMQ==:YXNzZXQx:YTg4N2U4YmMtODBjZS00OWI2LTk2MWEtMWU3Njc0NmM5N2Fi";
+                val agreementId = negotiations.getContractAgreementId();
                 val details = query.fetchAgreementDetailsOrThrow(trx.dsl(), agreementId);
 
                 // assert
                 assertThat(details).isEqualTo(ContractAgreementTerminationDetails.builder()
                     .contractAgreementId(agreementId)
-                    .counterpartyId("my-edc")
-                    .counterpartyAddress("http://edc:11003/api/dsp")
-                    .type(ContractNegotiation.Type.CONSUMER)
-                    .providerAgentId("my-edc")
-                    .consumerAgentId("my-edc2")
+                    .counterpartyId("provider")
+                    .counterpartyAddress(providerConfig.getProtocolEndpoint().getUri().toString())
+                    .type(CONSUMER)
+                    .providerAgentId("provider")
+                    .consumerAgentId("consumer")
                     .reason(null)
                     .detail(null)
                     .terminatedAt(null)
@@ -74,21 +70,11 @@ class ContractAgreementTerminationDetailsQueryTest {
         );
     }
 
-    private static void setup(DSLContext dsl) throws IOException {
-        dsl.execute(
-            new String(
-                ContractAgreementTerminationDetailsQueryTest.class
-                    .getResource("/sql/AgreementTerminationDetailsQueryTest/init.sql").openStream().readAllBytes()
-            ));
-    }
-
     @Test
-    void fetchAgreementDetailsOrThrow_whenAgreementIsMissing_shouldReturnEmptyOptional(DSLContext dsl) {
+    void fetchAgreementDetailsOrThrow_whenAgreementIsMissing_shouldReturnEmptyOptional(@Consumer DSLContext dsl) {
         // arrange
 
         dsl.transaction(trx -> {
-                setup(trx.dsl());
-
                 val query = new ContractAgreementTerminationDetailsQuery();
 
                 // act
@@ -101,28 +87,36 @@ class ContractAgreementTerminationDetailsQueryTest {
     }
 
     @Test
-    void fetchAgreementDetailsOrThrow_whenTerminationAlreadyExists_shouldReturnOptionalWithTerminationData(DSLContext dsl) {
+    void fetchAgreementDetailsOrThrow_whenTerminationAlreadyExists_shouldReturnOptionalWithTerminationData(
+        E2eScenario scenario,
+        @Consumer DSLContext dsl,
+        @Provider ConnectorConfig providerConfig
+    ) {
         // arrange
 
-        dsl.transaction(trx -> {
-                setup(trx.dsl());
+        val assetId = scenario.createAsset();
+        scenario.createContractDefinition(assetId);
+        val negotiations = scenario.negotiateAssetAndAwait(assetId);
+        val terminationRequest = new ContractTerminationRequest("Terminated because of good reasons", "User Termination");
+        val termination = scenario.terminateAndAwait(CONSUMER, negotiations.getContractAgreementId(), terminationRequest);
 
+        dsl.transaction(trx -> {
                 val query = new ContractAgreementTerminationDetailsQuery();
 
                 // act
-                val agreementId = "Y29udHJhY3Q=:YXNzZXQtMS4yLjM=:NWM4M2MzNTYtZGVlYi00NjFkLTg1ZTUtODQ0YzgwMGEwMmVm";
+                val agreementId = negotiations.getContractAgreementId();
                 val details = query.fetchAgreementDetailsOrThrow(trx.dsl(), agreementId);
 
                 // assert
                 assertThat(details.contractAgreementId()).isEqualTo(agreementId);
-                assertThat(details.counterpartyId()).isEqualTo("my-edc");
-                assertThat(details.counterpartyAddress()).isEqualTo("http://edc:11003/api/dsp");
-                assertThat(details.type()).isEqualTo(ContractNegotiation.Type.CONSUMER);
-                assertThat(details.providerAgentId()).isEqualTo("my-edc");
-                assertThat(details.consumerAgentId()).isEqualTo("my-edc2");
+                assertThat(details.counterpartyId()).isEqualTo("provider");
+                assertThat(details.counterpartyAddress()).isEqualTo(providerConfig.getProtocolEndpoint().getUri().toString());
+                assertThat(details.type()).isEqualTo(CONSUMER);
+                assertThat(details.providerAgentId()).isEqualTo("provider");
+                assertThat(details.consumerAgentId()).isEqualTo("consumer");
                 assertThat(details.reason()).isEqualTo("User Termination");
                 assertThat(details.detail()).isEqualTo("Terminated because of good reasons");
-                assertThat(details.terminatedAt()).isEqualTo(OffsetDateTime.of(2024, 7, 3, 16, 59, 1, 518000000, ZoneOffset.UTC));
+                assertThat(details.terminatedAt()).isEqualTo(termination.getLastUpdatedDate());
                 assertThat(details.terminatedBy()).isEqualTo(ContractTerminatedBy.SELF);
             }
         );

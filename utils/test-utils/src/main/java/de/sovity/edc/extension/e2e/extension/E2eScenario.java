@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2024 sovity GmbH
+ * Copyright (c) 2024 sovity GmbH
  *
  *  This program and the accompanying materials are made available under the
  *  terms of the Apache License, Version 2.0 which is available at
@@ -12,12 +12,13 @@
  *
  */
 
-package de.sovity.edc.e2e.utils;
+package de.sovity.edc.extension.e2e.extension;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
+import de.sovity.edc.client.gen.model.ContractTerminationRequest;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.IdResponseDto;
 import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
@@ -40,6 +41,7 @@ import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.val;
 import org.awaitility.Awaitility;
+import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
@@ -171,7 +173,7 @@ public class E2eScenario {
             .build());
     }
 
-    public UiContractNegotiation negotiateAsset(String assetId) {
+    public UiContractNegotiation negotiateAssetAndAwait(String assetId) {
         val connectorEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
         val offers = consumerClient.uiApi().getCatalogPageDataOffers(connectorEndpoint);
 
@@ -255,5 +257,17 @@ public class E2eScenario {
                 .map(it -> it.getState().getSimplifiedState()),
             it -> it.orElse(RUNNING) != RUNNING
         );
+    }
+
+    public IdResponseDto terminateAndAwait(
+        ContractNegotiation.Type party,
+        String contractAgreementId,
+        ContractTerminationRequest terminationRequest
+    ) {
+        if (party.equals(ContractNegotiation.Type.CONSUMER)) {
+            return consumerClient.uiApi().terminateContractAgreement(contractAgreementId, terminationRequest);
+        } else {
+            return providerClient.uiApi().terminateContractAgreement(contractAgreementId, terminationRequest);
+        }
     }
 }
