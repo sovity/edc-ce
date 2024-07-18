@@ -24,7 +24,7 @@ import de.sovity.edc.client.gen.model.IdResponseDto;
 import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
-import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.client.gen.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiCriterion;
@@ -34,7 +34,8 @@ import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
-import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.client.gen.model.UiPolicyExpression;
+import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
@@ -51,6 +52,7 @@ import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.RUNNING;
 import static de.sovity.edc.extension.policy.AlwaysTruePolicyConstants.POLICY_DEFINITION_ID;
@@ -144,15 +146,22 @@ public class E2eScenario {
     }
 
     private IdResponseDto createPolicyDefinition(String policyId, List<UiPolicyConstraint> constraints) {
-        var policyDefinition = PolicyDefinitionCreateRequest.builder()
-            .policyDefinitionId(policyId)
-            .policy(UiPolicyCreateRequest.builder()
-                .constraints(constraints)
-                .build()
-            )
+        var expression = UiPolicyExpression.builder()
+            .type(UiPolicyExpressionType.AND)
+            .expressions(constraints.stream()
+                .map(it -> UiPolicyExpression.builder()
+                    .type(UiPolicyExpressionType.CONSTRAINT)
+                    .constraint(it)
+                    .build())
+                .toList())
             .build();
 
-        return providerClient.uiApi().createPolicyDefinition(policyDefinition);
+        var policyDefinition = PolicyDefinitionCreateDto.builder()
+            .policyDefinitionId(policyId)
+            .policy(expression)
+            .build();
+
+        return providerClient.uiApi().createPolicyDefinitionV2(policyDefinition);
     }
 
     public String createContractDefinition(String assetId) {
@@ -226,14 +235,22 @@ public class E2eScenario {
                 .build())
             .build();
 
-        var policyDefinition = PolicyDefinitionCreateRequest.builder()
-            .policyDefinitionId(id)
-            .policy(UiPolicyCreateRequest.builder()
-                .constraints(List.of(startConstraint, endConstraint))
-                .build())
+        val expression = UiPolicyExpression.builder()
+            .type(UiPolicyExpressionType.AND)
+            .expressions(Stream.of(startConstraint, endConstraint)
+                .map(it -> UiPolicyExpression.builder()
+                    .type(UiPolicyExpressionType.CONSTRAINT)
+                    .constraint(it)
+                    .build())
+                .toList())
             .build();
 
-        providerClient.uiApi().createPolicyDefinition(policyDefinition);
+        var policyDefinition = PolicyDefinitionCreateDto.builder()
+            .policyDefinitionId(id)
+            .policy(expression)
+            .build();
+
+        providerClient.uiApi().createPolicyDefinitionV2(policyDefinition);
     }
 
     public String transferAndAwait(InitiateTransferRequest transferRequest) {

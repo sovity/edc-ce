@@ -18,14 +18,16 @@ import java.util.List;
 @Schema(description = "ODRL constraint as supported by the sovity product landscape")
 public class UiPolicyExpression {
 
-    @Schema(description = "Expression type")
+    @Schema(description = "Expression type", requiredMode = Schema.RequiredMode.REQUIRED)
     private UiPolicyExpressionType type;
 
     @Schema(description = "Only for types AND, OR, XOR. List of sub-expressions " +
-        "to be evaluated according to the expressionType.")
+        "to be evaluated according to the expressionType.",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private List<UiPolicyExpression> expressions;
 
-    @Schema(description = "Only for type CONSTRAINT. A single constraint.")
+    @Schema(description = "Only for type CONSTRAINT. A single constraint.",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private UiPolicyConstraint constraint;
 
     public static UiPolicyExpression empty() {

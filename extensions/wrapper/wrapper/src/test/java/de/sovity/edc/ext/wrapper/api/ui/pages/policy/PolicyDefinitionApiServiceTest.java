@@ -28,18 +28,15 @@ import de.sovity.edc.ext.db.jooq.Tables;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
-import lombok.SneakyThrows;
 import lombok.val;
 import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
-import org.eclipse.edc.junit.extensions.EdcRuntimeExtension;
 import org.eclipse.edc.spi.entity.Entity;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import java.util.List;
 import java.util.Map;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
@@ -67,13 +64,6 @@ class PolicyDefinitionApiServiceTest {
     UiPolicyExpression expression = UiPolicyExpression.builder()
         .type(UiPolicyExpressionType.CONSTRAINT)
         .constraint(UiPolicyConstraint.builder()
-            .left("a")
-            .operator(OperatorDto.EQ)
-            .right(UiPolicyLiteral.builder()
-                    .type(UiPolicyLiteralType.STRING)
-                    .value("b")
-                    .build())
-            .build();
             .left("a")
             .operator(OperatorDto.EQ)
             .right(UiPolicyLiteral.builder()

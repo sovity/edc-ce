@@ -23,6 +23,7 @@ import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateDto;
+import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetEditRequest;
@@ -36,6 +37,7 @@ import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
+import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
@@ -102,7 +104,7 @@ class UiApiWrapperTest {
         var data = "expected data 123";
         var yesterday = OffsetDateTime.now().minusDays(1);
 
-        var policyExpression = UiPolicyExpression.builder()
+        var expression = UiPolicyExpression.builder()
             .type(UiPolicyExpressionType.CONSTRAINT)
             .constraint(UiPolicyConstraint.builder()
                 .left("POLICY_EVALUATION_TIME")
@@ -116,7 +118,7 @@ class UiApiWrapperTest {
 
         var policyId = providerClient.uiApi().createPolicyDefinitionV2(PolicyDefinitionCreateDto.builder()
             .policyDefinitionId("policy-1")
-            .policy(policyExpression)
+            .policy(expression)
             .build()).getId();
 
         var dataSource = UiDataSource.builder()
@@ -277,8 +279,8 @@ class UiApiWrapperTest {
         assertThat(providerAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
 
         assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
-        var providingContractPolicyExpression = providerAgreement.getContractPolicy().getExpression();
-        assertThat(providingContractPolicyExpression).usingRecursiveComparison().isEqualTo(policyExpression);
+        var providingContractPolicyConstraint = providerAgreement.getContractPolicy().getExpression();
+        assertThat(providingContractPolicyConstraint).usingRecursiveComparison().isEqualTo(expression);
 
         assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
         assertThat(providerAgreement.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
@@ -293,16 +295,14 @@ class UiApiWrapperTest {
         assertThat(consumerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
 
         var consumingContractPolicyConstraint = consumerAgreement.getContractPolicy().getExpression();
-        assertThat(consumingContractPolicyConstraint).usingRecursiveComparison().isEqualTo(policyExpression);
+        assertThat(consumingContractPolicyConstraint).usingRecursiveComparison().isEqualTo(expression);
 
         assertThat(consumerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
         assertThat(consumerAgreement.getAsset().getTitle()).isEqualTo(assetId);
 
         // Test Policy
-        var actualExpression = contractOffer.getPolicy().getExpression();
-        assertThat(actualExpression.getType()).isEqualTo(UiPolicyExpressionType.CONSTRAINT);
-
-        var constraint = actualExpression.getConstraint();
+        assertThat(contractOffer.getPolicy().getExpression().getType()).isEqualTo(UiPolicyExpressionType.CONSTRAINT);
+        var constraint = contractOffer.getPolicy().getExpression().getConstraint();
         assertThat(constraint.getLeft()).isEqualTo("POLICY_EVALUATION_TIME");
         assertThat(constraint.getOperator()).isEqualTo(OperatorDto.GT);
         assertThat(constraint.getRight().getType()).isEqualTo(UiPolicyLiteralType.STRING);
@@ -500,41 +500,8 @@ class UiApiWrapperTest {
 
         // act
         providerClient.uiApi().editAsset(assetId, UiAssetEditRequest.builder()
-                .title("Good Asset Title")
-                .customJsonAsString("""
-                        {
-                            "edited": "new value"
-                        }
-                        """)
-                .customJsonLdAsString("""
-                        {
-                            "edited": "not a valid key, will be deleted",
-                            "http://example.com/key-to-delete": null,
-                            "http://example.com/key-to-edit": "with a valid key",
-                            "http://example.com/extra": "value to add"
-                        }
-                        """)
-                .privateCustomJsonAsString("""
-                        {
-                            "private-edited": "new value"
-                        }
-                        """)
-                .privateCustomJsonLdAsString("""
-                        {
-                            "private-edited": "not a valid key, will be deleted",
-                            "http://example.com/private-key-to-delete": null,
-                            "http://example.com/private-key-to-edit": "private with a valid key",
-                            "http://example.com/private-extra": "private value to add"
-                        }
-                        """)
-                .build());
-        initiateTransfer(consumerClient, negotiation);
-
-        // assert
-        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint).get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
-        val firstAsset = providerClient.uiApi().getContractAgreementPage(null).getContractAgreements().get(0).getAsset();
-        assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");
-        assertThat(firstAsset.getCustomJsonAsString()).isEqualTo("""
+            .title("Good Asset Title")
+            .customJsonAsString("""
                 {
                     "edited": "new value"
                 }
@@ -561,11 +528,10 @@ class UiApiWrapperTest {
                 }
                 """)
             .build());
-        initiateTransfer(negotiation);
+        initiateTransfer(consumerClient, negotiation);
 
         // assert
-        assertThat(
-            consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector)).get(0).getAsset().getTitle()).isEqualTo(
+        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint).get(0).getAsset().getTitle()).isEqualTo(
             "Good Asset Title");
         val firstAsset = providerClient.uiApi().getContractAgreementPage(null).getContractAgreements().get(0).getAsset();
         assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");
