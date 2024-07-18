@@ -14,10 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.api.common.mappers.policy;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.AtomicConstraintMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ConstraintExtractor;
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.MappingErrors;
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraint;
 import org.eclipse.edc.policy.model.AndConstraint;
 import org.eclipse.edc.policy.model.AtomicConstraint;

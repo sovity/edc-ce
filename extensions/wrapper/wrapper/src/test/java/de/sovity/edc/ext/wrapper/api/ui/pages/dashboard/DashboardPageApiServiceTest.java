@@ -15,7 +15,8 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.ext.wrapper.TestUtils;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -35,7 +36,8 @@ import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.mockito.Mockito;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,6 +45,7 @@ import java.util.Random;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation.Type.CONSUMER;
 import static org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation.Type.PROVIDER;
@@ -51,46 +54,72 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ApiTest
-@ExtendWith(EdcExtension.class)
 class DashboardPageApiServiceTest {
-    EdcClient client;
+    private static ConnectorConfig config;
+    private static EdcClient client;
+
+    @RegisterExtension
+    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "provider",
+        testDatabase -> {
+            config = forTestDatabase("my-edc-participant-id", testDatabase);
+
+            config.setProperty("edc.oauth.token.url", "https://token-url.daps");
+            config.setProperty("edc.oauth.provider.jwks.url", "https://jwks-url.daps");
+
+            config.setProperty("tx.ssi.oauth.token.url", "https://token.miw");
+            config.setProperty("tx.ssi.miw.url", "https://miw");
+            config.setProperty("tx.ssi.miw.authority.id", "my-authority-id");
+
+            client = EdcClient.builder()
+                .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+                .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+                .build();
+            return config.getProperties();
+        }
+    );
+
     AssetIndex assetIndex;
     PolicyDefinitionService policyDefinitionService;
     TransferProcessService transferProcessService;
     ContractNegotiationStore contractNegotiationStore;
     ContractDefinitionService contractDefinitionService;
-    private Random random;
+
+    private final Random random = new Random();
 
     @BeforeEach
-    void setUp(EdcExtension extension) {
-        assetIndex = mock(AssetIndex.class);
-        extension.registerServiceMock(AssetIndex.class, assetIndex);
+    void setUp(EdcExtension context) {
 
-        policyDefinitionService = mock(PolicyDefinitionService.class);
-        extension.registerServiceMock(PolicyDefinitionService.class, policyDefinitionService);
+        client = EdcClient.builder()
+            .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+            .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+            .build();
 
-        transferProcessService = mock(TransferProcessService.class);
-        extension.registerServiceMock(TransferProcessService.class, transferProcessService);
 
-        contractNegotiationStore = mock(ContractNegotiationStore.class);
-        extension.registerServiceMock(ContractNegotiationStore.class, contractNegotiationStore);
+        assetIndex = mock();
+        context.registerServiceMock(AssetIndex.class, assetIndex);
 
-        contractDefinitionService = mock(ContractDefinitionService.class);
-        extension.registerServiceMock(ContractDefinitionService.class, contractDefinitionService);
+        policyDefinitionService = mock();
+        context.registerServiceMock(PolicyDefinitionService.class, policyDefinitionService);
 
-        TestUtils.setupExtension(extension);
-        client = TestUtils.edcClient();
-        random = new Random();
+        transferProcessService = mock();
+        context.registerServiceMock(TransferProcessService.class, transferProcessService);
+
+        contractNegotiationStore = mock();
+        context.registerServiceMock(ContractNegotiationStore.class, contractNegotiationStore);
+
+        contractDefinitionService = mock();
+        context.registerServiceMock(ContractDefinitionService.class, contractDefinitionService);
     }
-
 
     @Test
     void testKpis() {
         // arrange
         mockAmounts(
-                repeat(7, this::mockAsset),
-                repeat(8, this::mockPolicyDefinition),
-                repeat(9, this::mockContractDefinition),
+                repeat(7, Mockito::mock),
+                repeat(8, Mockito::mock),
+                repeat(9, Mockito::mock),
                 List.of(
                         mockContractNegotiation(1, CONSUMER),
                         mockContractNegotiation(2, PROVIDER),
@@ -135,13 +164,14 @@ class DashboardPageApiServiceTest {
 
         // assert
         assertThat(dashboardPage.getConnectorParticipantId()).isEqualTo("my-edc-participant-id");
-        assertThat(dashboardPage.getConnectorDescription()).isEqualTo("My Connector Description");
-        assertThat(dashboardPage.getConnectorTitle()).isEqualTo("My Connector");
-        assertThat(dashboardPage.getConnectorEndpoint()).isEqualTo(TestUtils.PROTOCOL_ENDPOINT);
-        assertThat(dashboardPage.getConnectorCuratorName()).isEqualTo("My Org");
-        assertThat(dashboardPage.getConnectorCuratorUrl()).isEqualTo("https://connector.my-org");
-        assertThat(dashboardPage.getConnectorMaintainerName()).isEqualTo("Maintainer Org");
-        assertThat(dashboardPage.getConnectorMaintainerUrl()).isEqualTo("https://maintainer-org");
+        assertThat(dashboardPage.getConnectorDescription()).isEqualTo("Connector Description my-edc-participant-id");
+        assertThat(dashboardPage.getConnectorTitle()).isEqualTo("Connector Title my-edc-participant-id");
+
+        assertThat(dashboardPage.getConnectorEndpoint()).isEqualTo(config.getProtocolEndpoint().getUri().toString());
+        assertThat(dashboardPage.getConnectorCuratorName()).isEqualTo("Curator Name my-edc-participant-id");
+        assertThat(dashboardPage.getConnectorCuratorUrl()).isEqualTo("http://curator.my-edc-participant-id");
+        assertThat(dashboardPage.getConnectorMaintainerName()).isEqualTo("Maintainer Name my-edc-participant-id");
+        assertThat(dashboardPage.getConnectorMaintainerUrl()).isEqualTo("http://maintainer.my-edc-participant-id");
 
         assertThat(dashboardPage.getConnectorDapsConfig()).isNotNull();
         assertThat(dashboardPage.getConnectorDapsConfig().getTokenUrl()).isEqualTo("https://token-url.daps");
@@ -154,15 +184,15 @@ class DashboardPageApiServiceTest {
     }
 
     private Asset mockAsset() {
-        return mock(Asset.class);
+        return mock();
     }
 
     private PolicyDefinition mockPolicyDefinition() {
-        return mock(PolicyDefinition.class);
+        return mock();
     }
 
     private ContractDefinition mockContractDefinition() {
-        return mock(ContractDefinition.class);
+        return mock();
     }
 
     private ContractNegotiation mockContractNegotiation(int contract, ContractNegotiation.Type type) {
@@ -183,10 +213,10 @@ class DashboardPageApiServiceTest {
     }
 
     private TransferProcess mockTransferProcess(int contractId, int state) {
-        DataRequest dataRequest = mock(DataRequest.class);
+        DataRequest dataRequest = mock();
         when(dataRequest.getContractId()).thenReturn("ca-" + contractId);
 
-        TransferProcess transferProcess = mock(TransferProcess.class);
+        TransferProcess transferProcess = mock();
         when(transferProcess.getId()).thenReturn(String.valueOf(random.nextInt()));
         when(transferProcess.getDataRequest()).thenReturn(dataRequest);
         when(transferProcess.getState()).thenReturn(state);

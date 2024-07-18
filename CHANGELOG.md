@@ -13,6 +13,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
+- Both providers and consumers can now terminate their contracts.
+
 #### Patch Changes
 
 ### Deployment Migration Notes
@@ -548,7 +550,7 @@ https://github.com/sovity/edc-ui/releases/tag/v2.0.0
 - New modules with common UI models and mappers for the Connector UI and Broker UI: `:extensions:wrapper:wrapper-common-api` and `:extensions:wrapper:wrapper-common-mappers`.
 - New module with centralized Vocab and utilities for dealing with EDC / DCAT JSON-LD: `:utils:json-and-jsonld-utils`
 - New module with utilities for parsing DCAT Catalog responses for use in the UI API Wrapper and the Broker Server: `:utils:catalog-parser`
-- New modules with utilities for E2E Testing Connectors: `:utils:test-connector-remote` and `:extensions:test-backend-controller`
+- New modules with utilities for E2E Testing Connectors: `:utils:test-utils` and `:extensions:test-backend-controller`
 
 #### Patch Changes
 

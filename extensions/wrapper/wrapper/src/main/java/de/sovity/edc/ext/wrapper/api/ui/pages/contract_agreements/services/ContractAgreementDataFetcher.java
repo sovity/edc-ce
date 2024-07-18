@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services;
 
+import de.sovity.edc.ext.db.jooq.tables.records.SovityContractTerminationRecord;
 import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.utils.MapUtils;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +28,15 @@ import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
+import org.jooq.DSLContext;
 
 import java.util.List;
 import java.util.Map;
 
+import static de.sovity.edc.ext.db.jooq.Tables.SOVITY_CONTRACT_TERMINATION;
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toMap;
 
 @RequiredArgsConstructor
 public class ContractAgreementDataFetcher {
@@ -46,26 +51,46 @@ public class ContractAgreementDataFetcher {
      * @return {@link ContractAgreementData}s
      */
     @NotNull
-    public List<ContractAgreementData> getContractAgreements() {
+    public List<ContractAgreementData> getContractAgreements(DSLContext dsl) {
         var agreements = getAllContractAgreements();
         var assets = MapUtils.associateBy(getAllAssets(), Asset::getId);
 
         var negotiations = getAllContractNegotiations().stream()
-                .filter(it -> it.getContractAgreement() != null)
-                .collect(groupingBy(it -> it.getContractAgreement().getId()));
+            .filter(it -> it.getContractAgreement() != null)
+            .collect(groupingBy(it -> it.getContractAgreement().getId()));
 
         var transfers = getAllTransferProcesses().stream()
-                .collect(groupingBy(it -> it.getDataRequest().getContractId()));
+            .collect(groupingBy(it -> it.getDataRequest().getContractId()));
+
+        var terminations = fetchTerminations(dsl, agreements);
 
         // A ContractAgreement has multiple ContractNegotiations when doing a loopback consumption
         return agreements.stream()
-                .flatMap(agreement -> negotiations.getOrDefault(agreement.getId(), List.of()).stream()
-                        .map(negotiation -> {
-                            var asset = getAsset(agreement, negotiation, assets);
-                            var contractTransfers = transfers.getOrDefault(agreement.getId(), List.of());
-                            return new ContractAgreementData(agreement, negotiation, asset, contractTransfers);
-                        }))
-                .toList();
+            .flatMap(agreement -> negotiations.getOrDefault(agreement.getId(), List.of())
+                .stream()
+                .map(negotiation -> {
+                    var asset = getAsset(agreement, negotiation, assets);
+                    var contractTransfers = transfers.getOrDefault(agreement.getId(), List.of());
+                    return new ContractAgreementData(agreement, negotiation, asset, contractTransfers, terminations.get(agreement.getId()));
+                }))
+            .toList();
+    }
+
+    private @NotNull Map<String, SovityContractTerminationRecord> fetchTerminations(DSLContext dsl, List<ContractAgreement> agreements) {
+
+        var agreementIds = agreements.stream().map(ContractAgreement::getId).toList();
+
+        var t = SOVITY_CONTRACT_TERMINATION;
+
+        var terminations = dsl.select()
+            .from(t)
+            .where(t.CONTRACT_AGREEMENT_ID.in(agreementIds))
+            .fetch()
+            .into(t)
+            .stream()
+            .collect(toMap(SovityContractTerminationRecord::getContractAgreementId, identity()));
+
+        return terminations;
     }
 
     private Asset getAsset(ContractAgreement agreement, ContractNegotiation negotiation, Map<String, Asset> assets) {

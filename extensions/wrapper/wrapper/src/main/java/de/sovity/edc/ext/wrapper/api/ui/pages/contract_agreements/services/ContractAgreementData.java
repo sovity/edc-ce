@@ -14,12 +14,14 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services;
 
+import de.sovity.edc.ext.db.jooq.tables.records.SovityContractTerminationRecord;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,7 +36,8 @@ public record ContractAgreementData(
         ContractAgreement agreement,
         ContractNegotiation negotiation,
         Asset asset,
-        List<TransferProcess> transfers
+        List<TransferProcess> transfers,
+        SovityContractTerminationRecord termination
 ) {
 
 }

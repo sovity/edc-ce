@@ -255,8 +255,9 @@ paths:
       description: Collect filtered data for the Contract Agreement Page
       operationId: getContractAgreementPage
       requestBody:
+        description: "If null, returns all the contract agreements."
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/ContractAgreementPageQuery'
       responses:
@@ -524,11 +525,11 @@ components:
     DataSourceType:
       type: string
       description: Supported Data Source Types by UiDataSource
-      default: CUSTOM
       enum:
       - HTTP_DATA
       - ON_REQUEST
       - CUSTOM
+      default: CUSTOM
     SecretValue:
       type: object
       properties:
@@ -736,7 +737,6 @@ components:
     UiDataSourceHttpDataMethod:
       type: string
       description: Supported HTTP Methods by UiDataSource
-      default: GET
       enum:
       - GET
       - POST
@@ -744,6 +744,7 @@ components:
       - PATCH
       - DELETE
       - OPTIONS
+      default: GET
     UiDataSourceOnRequest:
       required:
       - contactEmail
@@ -1788,14 +1789,18 @@ components:
       - reason
       type: object
       properties:
-        reason:
-          title: Termination reason
-          type: string
-          description: A short reason why this contract was terminated
         detail:
           title: Termination detail
+          maxLength: 1000
+          minLength: 0
           type: string
           description: A user explanation to detail why the contract was terminated.
+        reason:
+          title: Termination reason
+          maxLength: 100
+          minLength: 0
+          type: string
+          description: A short reason why this contract was terminated
       description: Data for terminating a Contract Agreement
     AtomicConstraintDto:
       required:

@@ -14,9 +14,9 @@
 
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
+import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.FailedMappingException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.AtomicConstraintMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ConstraintExtractor;
-import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.FailedMappingException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.PolicyValidator;
 import de.sovity.edc.ext.wrapper.api.common.model.Expression;

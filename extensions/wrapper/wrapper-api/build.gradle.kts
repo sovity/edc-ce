@@ -15,14 +15,14 @@ dependencies {
     api(project(":extensions:wrapper:wrapper-common-mappers"))
     api(project(":extensions:wrapper:wrapper-ee-api"))
 
-    implementation(libs.jakarta.validationApi)
+    implementation(libs.apache.commonsLang)
+    implementation(libs.hibernate.validation)
+    implementation(libs.jakarta.el)
     implementation(libs.jakarta.rsApi)
-    implementation(libs.swagger.annotationsJakarta)
-    implementation(libs.swagger.jaxrs2Jakarta)
     implementation(libs.jakarta.servletApi)
     implementation(libs.jakarta.validationApi)
-    implementation(libs.jakarta.rsApi)
-    implementation(libs.apache.commonsLang)
+    implementation(libs.swagger.annotationsJakarta)
+    implementation(libs.swagger.jaxrs2Jakarta)
 }
 
 val openapiFileDir = "${project.buildDir}/swagger"

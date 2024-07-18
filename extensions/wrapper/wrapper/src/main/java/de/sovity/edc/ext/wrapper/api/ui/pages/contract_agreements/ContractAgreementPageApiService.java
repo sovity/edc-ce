@@ -16,10 +16,13 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPageQuery;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementPageCardBuilder;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jooq.DSLContext;
 
 import java.util.Comparator;
 
@@ -29,15 +32,25 @@ public class ContractAgreementPageApiService {
     private final ContractAgreementPageCardBuilder contractAgreementPageCardBuilder;
 
     @NotNull
-    public ContractAgreementPage contractAgreementPage() {
-        var agreements = contractAgreementDataFetcher.getContractAgreements();
+    public ContractAgreementPage contractAgreementPage(DSLContext dsl, @Nullable ContractAgreementPageQuery contractAgreementPageQuery) {
+        var agreements = contractAgreementDataFetcher.getContractAgreements(dsl);
 
         var cards = agreements.stream()
-                .map(agreement -> contractAgreementPageCardBuilder.buildContractAgreementCard(
-                        agreement.agreement(), agreement.negotiation(), agreement.asset(), agreement.transfers()))
-                .sorted(Comparator.comparing(ContractAgreementCard::getContractSigningDate).reversed())
-                .toList();
+            .map(agreement -> contractAgreementPageCardBuilder.buildContractAgreementCard(
+                agreement.agreement(),
+                agreement.negotiation(),
+                agreement.asset(),
+                agreement.transfers(),
+                agreement.termination()))
+            .sorted(Comparator.comparing(ContractAgreementCard::getContractSigningDate).reversed());
 
-        return new ContractAgreementPage(cards);
+        if (contractAgreementPageQuery == null || contractAgreementPageQuery.getTerminationStatus() == null) {
+            return new ContractAgreementPage(cards.toList());
+        } else {
+            var filtered = cards.filter(card ->
+                card.getTerminationStatus().equals(contractAgreementPageQuery.getTerminationStatus()))
+                .toList();
+            return new ContractAgreementPage(filtered);
+        }
     }
 }

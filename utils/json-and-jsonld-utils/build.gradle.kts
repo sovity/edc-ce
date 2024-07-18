@@ -18,7 +18,6 @@ dependencies {
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
     testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.inline)
     testImplementation(libs.mockito.junitJupiter)
     testImplementation(libs.assertj.core)
     testImplementation(libs.junit.api)

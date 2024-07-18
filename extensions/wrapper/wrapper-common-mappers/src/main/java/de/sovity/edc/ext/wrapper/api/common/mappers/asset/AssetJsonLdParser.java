@@ -8,15 +8,16 @@
  *  SPDX-License-Identifier: Apache-2.0
  *
  *  Contributors:
- *      sovity GmbH - init
+ *       sovity GmbH - init
+ *
  */
 
 package de.sovity.edc.ext.wrapper.api.common.mappers.asset;
 
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.AssetJsonLdUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.ShortDescriptionBuilder;
-import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.DataSourceAvailability;
+import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.JsonLdUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;

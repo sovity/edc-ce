@@ -9,11 +9,13 @@
  *
  *  Contributors:
  *       sovity GmbH - initial API and implementation
+ *
  */
 
 package de.sovity.edc.extension.messenger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.sovity.edc.extension.messenger.controller.SovityMessageController;
 import de.sovity.edc.extension.messenger.impl.JsonObjectFromSovityMessageRequest;
 import de.sovity.edc.extension.messenger.impl.JsonObjectFromSovityMessageResponse;
@@ -27,6 +29,7 @@ import org.eclipse.edc.protocol.dsp.spi.dispatcher.DspHttpRemoteMessageDispatche
 import org.eclipse.edc.protocol.dsp.spi.serialization.JsonLdRemoteMessageSerializer;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Provides;
+import org.eclipse.edc.spi.agent.ParticipantAgentService;
 import org.eclipse.edc.spi.iam.IdentityService;
 import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
 import org.eclipse.edc.spi.monitor.Monitor;
@@ -68,6 +71,9 @@ public class SovityMessengerExtension implements ServiceExtension {
     @Inject
     private WebService webService;
 
+    @Inject
+    private ParticipantAgentService participantAgentService;
+
     @Override
     public String name() {
         return NAME;
@@ -76,6 +82,7 @@ public class SovityMessengerExtension implements ServiceExtension {
     @Override
     public void initialize(ServiceExtensionContext context) {
         val objectMapper = new ObjectMapperFactory().createObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         val handlers = new SovityMessengerRegistry();
         setupSovityMessengerEmitter(context, objectMapper);
         setupSovityMessengerReceiver(context, objectMapper, handlers);
@@ -89,7 +96,7 @@ public class SovityMessengerExtension implements ServiceExtension {
 
         typeTransformerRegistry.register(new JsonObjectFromSovityMessageRequest());
 
-        val sovityMessenger = new SovityMessenger(registry, objectMapper);
+        val sovityMessenger = new SovityMessenger(registry, objectMapper, monitor);
         context.registerService(SovityMessenger.class, sovityMessenger);
     }
 
@@ -100,6 +107,7 @@ public class SovityMessengerExtension implements ServiceExtension {
             typeTransformerRegistry,
             monitor,
             objectMapper,
+            participantAgentService,
             handlers);
 
         webService.registerResource(dspApiConfiguration.getContextAlias(), receiver);

@@ -17,6 +17,9 @@ package de.sovity.edc.ext.wrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
+import de.sovity.edc.extension.db.directaccess.DslContextFactory;
+import de.sovity.edc.extension.messenger.SovityMessenger;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.connector.api.management.configuration.transform.ManagementApiTypeTransformerRegistry;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -42,7 +45,9 @@ import org.eclipse.edc.web.spi.WebService;
 
 public class WrapperExtension implements ServiceExtension {
 
+
     public static final String EXTENSION_NAME = "WrapperExtension";
+
     @Inject
     private AssetIndex assetIndex;
     @Inject
@@ -52,17 +57,23 @@ public class WrapperExtension implements ServiceExtension {
     @Inject
     private ContractAgreementService contractAgreementService;
     @Inject
+    private ContractAgreementTerminationService contractAgreementTerminationService;
+    @Inject
     private ContractDefinitionStore contractDefinitionStore;
     @Inject
     private ContractNegotiationService contractNegotiationService;
     @Inject
     private ContractNegotiationStore contractNegotiationStore;
     @Inject
+    private DslContextFactory dslContextFactory;
+    @Inject
     private ManagementApiConfiguration dataManagementApiConfiguration;
     @Inject
     private PolicyDefinitionStore policyDefinitionStore;
     @Inject
     private PolicyEngine policyEngine;
+    @Inject
+    private SovityMessenger sovityMessenger;
     @Inject
     private TransferProcessService transferProcessService;
     @Inject
@@ -91,30 +102,33 @@ public class WrapperExtension implements ServiceExtension {
         fixObjectMapperDateSerialization(objectMapper);
 
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
-                assetIndex,
-                assetService,
-                catalogService,
-                context.getConfig(),
-                contractAgreementService,
-                contractDefinitionService,
-                contractDefinitionStore,
-                contractNegotiationService,
-                contractNegotiationStore,
-                jsonLd,
-                context.getMonitor(),
-                objectMapper,
-                policyDefinitionService,
-                policyDefinitionStore,
-                policyEngine,
-                transferProcessService,
-                transferProcessStore,
-                typeTransformerRegistry
+            assetIndex,
+            assetService,
+            catalogService,
+            context.getConfig(),
+            contractAgreementService,
+            contractAgreementTerminationService,
+            contractDefinitionService,
+            contractDefinitionStore,
+            contractNegotiationService,
+            contractNegotiationStore,
+            dslContextFactory,
+            jsonLd,
+            context.getMonitor(),
+            objectMapper,
+            policyDefinitionService,
+            policyDefinitionStore,
+            policyEngine,
+            sovityMessenger,
+            transferProcessService,
+            transferProcessStore,
+            typeTransformerRegistry
         );
 
         wrapperExtensionContext.selfDescriptionService().validateSelfDescriptionConfig();
 
         wrapperExtensionContext.jaxRsResources().forEach(resource ->
-                webService.registerResource(dataManagementApiConfiguration.getContextAlias(), resource));
+            webService.registerResource(dataManagementApiConfiguration.getContextAlias(), resource));
     }
 
     private void fixObjectMapperDateSerialization(ObjectMapper objectMapper) {

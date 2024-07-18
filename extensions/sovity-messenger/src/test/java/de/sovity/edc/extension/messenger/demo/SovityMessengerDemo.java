@@ -9,6 +9,7 @@
  *
  *  Contributors:
  *       sovity GmbH - initial API and implementation
+ *
  */
 
 package de.sovity.edc.extension.messenger.demo;
@@ -17,10 +18,13 @@ import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.extension.messenger.SovityMessengerRegistry;
 import de.sovity.edc.extension.messenger.demo.message.Addition;
 import de.sovity.edc.extension.messenger.demo.message.Answer;
+import de.sovity.edc.extension.messenger.demo.message.Counterparty;
 import de.sovity.edc.extension.messenger.demo.message.Failing;
 import de.sovity.edc.extension.messenger.demo.message.Signal;
 import de.sovity.edc.extension.messenger.demo.message.Sqrt;
+import lombok.val;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
+import org.eclipse.edc.spi.agent.ParticipantAgentService;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 
@@ -28,6 +32,9 @@ import static java.lang.Math.sqrt;
 
 
 public class SovityMessengerDemo implements ServiceExtension {
+
+    @Inject
+    private ParticipantAgentService participantAgentService;
 
     public static final String NAME = "sovityMessengerDemo";
 
@@ -60,6 +67,12 @@ public class SovityMessengerDemo implements ServiceExtension {
         registry.registerSignal(Signal.class, signal -> System.out.println("Received signal."));
         registry.register(Failing.class, failing -> {
             throw new RuntimeException("Failed!");
+        });
+
+
+        registry.register(Counterparty.class, (claims, counterparty) -> {
+            val agent = participantAgentService.createFor(claims);
+            return new Answer();
         });
 
         /*
