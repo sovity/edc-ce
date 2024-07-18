@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a842e697-4b5e-4308-b802-35c446ea6135",
+		"_postman_id": "14267003-be4b-40ee-a9b6-83b5dd32ba57",
 		"name": "sovity EDC Community Edition",
 		"description": "This is the official postman collection for the sovity EDC Community Edition.\n\nThe Management-API is based on core-edc v0.2.1.\n\nsovity EDC Community Edition: [https://github.com/sovity/edc-ce](https://github.com/sovity/edc-ce)\n\nLicense: [https://github.com/sovity/edc-ce/blob/main/LICENSE](https://github.com/sovity/edc-ce/blob/main/LICENSE)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -733,6 +733,77 @@
 									"response": []
 								}
 							]
+						}
+					]
+				},
+				{
+					"name": "Data Offer",
+					"item": [
+						{
+							"name": "Check Policy ID Availability",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/data-offer-page/validate-policy-id/{{POLICY_ID}}",
+									"host": [
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"data-offer-page",
+										"validate-policy-id",
+										"{{POLICY_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check Asset ID Availability",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/data-offer-page/validate-asset-id/{{ASSET_ID}}",
+									"host": [
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"data-offer-page",
+										"validate-asset-id",
+										"{{ASSET_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check Contract Definition ID Availability",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/data-offer-page/validate-contract-definition-id/{{CONTRACT_DEFINITION_ID}}",
+									"host": [
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"data-offer-page",
+										"validate-contract-definition-id",
+										"{{CONTRACT_DEFINITION_ID}}"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
