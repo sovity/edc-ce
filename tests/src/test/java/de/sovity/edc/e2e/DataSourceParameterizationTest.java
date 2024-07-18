@@ -179,9 +179,9 @@ class DataSourceParameterizationTest {
                 .add(Prop.Edc.CTX + "managedResources", false)
                 .build();
             var transferRequest = InitiateCustomTransferRequest.builder()
-            .contractAgreementId(negotiation.getContractAgreementId())
-            .transferProcessRequestJsonLd(JsonUtils.toJson(transferRequestJsonLd))
-            .build();
+                .contractAgreementId(negotiation.getContractAgreementId())
+                .transferProcessRequestJsonLd(JsonUtils.toJson(transferRequestJsonLd))
+                .build();
 
             val transferId = scenario.transferAndAwait(transferRequest);
 
@@ -307,12 +307,12 @@ class DataSourceParameterizationTest {
 
                 // assert
                 TransferHistoryEntry actual = consumerClient.uiApi()
-                .getTransferHistoryPage()
-                .getTransferEntries()
-                .stream()
-                .filter(it -> it.getAssetId().equals(testCase.id))
-                .findFirst()
-                .get();
+                    .getTransferHistoryPage()
+                    .getTransferEntries()
+                    .stream()
+                    .filter(it -> it.getAssetId().equals(testCase.id))
+                    .findFirst()
+                    .get();
                 assertThat(actual.getAssetId()).isEqualTo(testCase.id);
                 assertThat(actual.getTransferProcessId()).isEqualTo(transferId);
                 assertThat(actual.getState().getSimplifiedState()).isEqualTo(OK);
