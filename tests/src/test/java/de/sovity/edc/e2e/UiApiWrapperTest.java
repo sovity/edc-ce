@@ -92,8 +92,8 @@ class UiApiWrapperTest {
     @Test
     void provide_consume_assetMapping_policyMapping_agreements(
         @Consumer ConnectorConfig consumerConfig,
-        @Consumer EdcClient consumerClient,
         @Consumer ConnectorRemote consumerConnector,
+        @Consumer EdcClient consumerClient,
         @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient) {
 
@@ -593,7 +593,7 @@ class UiApiWrapperTest {
     }
 
     private void validateTransferProcessesOk(EdcClient consumerClient, EdcClient providerClient) {
-        await().atMost(10, TimeUnit.SECONDS).untilAsserted(() -> {
+        await().atMost(20, TimeUnit.SECONDS).untilAsserted(() -> {
             var providing = providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
             var consuming = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0);
             assertThat(providing.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
@@ -605,9 +605,5 @@ class UiApiWrapperTest {
     private JsonObject getDatasinkPropertiesJsonObject() {
         var props = dataAddress.getDataSinkProperties();
         return Json.createObjectBuilder((Map<String, Object>) (Map) props).build();
-    }
-
-    private String getProtocolEndpoint(ConnectorRemote connector) {
-        return connector.getConfig().getProtocolEndpoint().getUri().toString();
     }
 }

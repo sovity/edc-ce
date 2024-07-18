@@ -120,6 +120,7 @@ public class WrapperExtensionContextBuilder {
         CatalogService catalogService,
         Config config,
         ContractAgreementService contractAgreementService,
+        ContractAgreementTerminationService contractAgreementTerminationService,
         ContractDefinitionService contractDefinitionService,
         ContractDefinitionStore contractDefinitionStore,
         ContractNegotiationService contractNegotiationService,
@@ -215,12 +216,6 @@ public class WrapperExtensionContextBuilder {
         );
         var agreementDetailsQuery = new ContractAgreementTerminationDetailsQuery();
         var terminateContractQuery = new TerminateContractQuery();
-        var contractAgreementTerminationService = new ContractAgreementTerminationService(
-            sovityMessenger,
-            agreementDetailsQuery,
-            terminateContractQuery,
-            monitor,
-            selfDescriptionService.getParticipantId());
         var contractAgreementTerminationApiService = new ContractAgreementTerminationApiService(contractAgreementTerminationService);
         var policyDefinitionApiService = new PolicyDefinitionApiService(
             policyDefinitionService,

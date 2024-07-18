@@ -1,8 +1,14 @@
-# Checkstyle
+# IntelliJ
 
-## License Headers with IntelliJ
+## Checkstyle
 
-While it's close to impossible to write a regex to validate all the possible copyright messages, the one currently configured in [checkstyle-config.xml](checkstyle-config.xml) matches almost all the files in this project.
+This IJ add checkstyle warnings an errors.
+
+https://plugins.jetbrains.com/plugin/1065-checkstyle-idea
+
+### License Headers with IntelliJ
+
+While it's close to impossible to write a regex to validate all the possible copyright messages, the one currently configured in [checkstyle-config.xml](../checkstyle/checkstyle-config.xml) matches almost all the files in this project.
 
 Failing to use this template will make it progressively harder to fix the checkstyle errors as the copyright warnings will accumulate and dilute those errors, wasting precious brain time.
 

@@ -23,15 +23,16 @@ import de.sovity.edc.extension.messenger.SovityMessengerRegistry;
 import lombok.val;
 import org.eclipse.edc.connector.transfer.spi.observe.TransferProcessObservable;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
+import org.eclipse.edc.runtime.metamodel.annotation.Provides;
 import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.agent.ParticipantAgentService;
 import org.eclipse.edc.spi.iam.IdentityService;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
-import org.eclipse.edc.spi.system.configuration.Config;
 
 
+@Provides(ContractAgreementTerminationService.class)
 public class ContractTerminationExtension implements ServiceExtension {
 
     @Setting(required = true)
@@ -61,12 +62,14 @@ public class ContractTerminationExtension implements ServiceExtension {
     @Override
     public void initialize(ServiceExtensionContext context) {
 
-        setupMessenger(context.getConfig());
+        val terminationService = setupTerminationService(context);
+        setupMessenger(terminationService);
         setupTransferPrevention();
     }
 
-    private void setupMessenger(Config config) {
+    private ContractAgreementTerminationService setupTerminationService(ServiceExtensionContext context) {
 
+        val config = context.getConfig();
         val contractAgreementTerminationDetailsQuery = new ContractAgreementTerminationDetailsQuery();
         val terminateContractQuery = new TerminateContractQuery();
 
@@ -78,6 +81,12 @@ public class ContractTerminationExtension implements ServiceExtension {
             config.getString(EDC_PARTICIPANT_ID)
         );
 
+        context.registerService(ContractAgreementTerminationService.class, terminationService);
+
+        return terminationService;
+    }
+
+    private void setupMessenger(ContractAgreementTerminationService terminationService) {
         messengerRegistry.register(
             ContractTerminationMessage.class,
             (claims, termination) ->

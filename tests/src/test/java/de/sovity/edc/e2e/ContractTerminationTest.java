@@ -226,8 +226,9 @@ public class ContractTerminationTest {
 
         assertThrows(
             ApiException.class,
-            () -> consumerClient.uiApi()
-                .terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
+            () -> consumerClient.uiApi().terminateContractAgreement(
+                negotiation.getContractAgreementId(),
+                ContractTerminationRequest.builder()
                     .detail(tooLong)
                     .reason(reason)
                     .build())
@@ -235,10 +236,12 @@ public class ContractTerminationTest {
 
         // assert when max size
 
-        consumerClient.uiApi().terminateContractAgreement(negotiation.getContractAgreementId(), ContractTerminationRequest.builder()
-            .detail(maxSize)
-            .reason(reason)
-            .build());
+        consumerClient.uiApi().terminateContractAgreement(
+            negotiation.getContractAgreementId(),
+            ContractTerminationRequest.builder()
+                .detail(maxSize)
+                .reason(reason)
+                .build());
 
         awaitTerminationCount(consumerClient, 1);
         awaitTerminationCount(providerClient, 1);

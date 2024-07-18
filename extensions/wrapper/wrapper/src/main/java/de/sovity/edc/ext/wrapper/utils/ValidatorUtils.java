@@ -17,6 +17,7 @@ package de.sovity.edc.ext.wrapper.utils;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
+import jakarta.ws.rs.BadRequestException;
 import lombok.val;
 
 public class ValidatorUtils {
@@ -26,7 +27,7 @@ public class ValidatorUtils {
         val validator = FACTORY.getValidator();
         val constraintViolations = validator.validate(object);
         if (!constraintViolations.isEmpty()) {
-            throw new ConstraintViolationException("Failed to validate", constraintViolations);
+            throw new BadRequestException(new ConstraintViolationException("Failed to validate", constraintViolations));
         }
     }
 }

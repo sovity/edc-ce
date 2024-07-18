@@ -123,7 +123,7 @@ Our contribution guideline can be found in [CONTRIBUTING.md](CONTRIBUTING.md).
 ### Developer Documentation
 
 - Local Development Guide (further below)
-- [Checkstyle](docs/dev/checkstyle/checkstyle.md)
+- [IntelliJ](docs/dev/intellij/intelliJ.md)
 - [Changelog Updates](docs/dev/changelog_updates.md)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
