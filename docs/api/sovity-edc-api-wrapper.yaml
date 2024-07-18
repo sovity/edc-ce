@@ -1786,6 +1786,7 @@ components:
       description: "For type PARAMS_ONLY: Required data for starting a Transfer Process"
     ContractTerminationRequest:
       required:
+      - detail
       - reason
       type: object
       properties:

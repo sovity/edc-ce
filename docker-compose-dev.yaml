@@ -34,6 +34,8 @@ services:
       MY_EDC_JDBC_URL: jdbc:postgresql://postgresql:5432/edc
       MY_EDC_JDBC_USER: edc
       MY_EDC_JDBC_PASSWORD: edc
+      EDC_SERVER_DB_CONNECTION_POOL_SIZE: 3
+      EDC_SERVER_DB_CONNECTION_TIMEOUT_IN_MS: 5000
 
       # docker compose local dev environment overrides (don't use with non-dev images)
       MY_EDC_PROTOCOL: "http://"
@@ -42,6 +44,10 @@ services:
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,X-Api-Key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
       EDC_AGENT_IDENTITY_KEY: 'client_id' # required for Mock IAM to work
+
+      REMOTE_DEBUG: y
+      REMOTE_DEBUG_BIND: 0.0.0.0:5005
+
     ports:
       - '11001:11001'
       - '11002:11002'
@@ -81,6 +87,8 @@ services:
       MY_EDC_JDBC_URL: jdbc:postgresql://postgresql2:5432/edc
       MY_EDC_JDBC_USER: edc
       MY_EDC_JDBC_PASSWORD: edc
+      EDC_SERVER_DB_CONNECTION_POOL_SIZE: 3
+      EDC_SERVER_DB_CONNECTION_TIMEOUT_IN_MS: 5000
 
       # docker compose local dev environment overrides (don't use with non-dev images)
       MY_EDC_PROTOCOL: "http://"
@@ -89,6 +97,10 @@ services:
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,X-Api-Key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
       EDC_AGENT_IDENTITY_KEY: 'client_id' # required for Mock IAM to work
+
+      REMOTE_DEBUG: y
+      REMOTE_DEBUG_BIND: 0.0.0.0:5005
+
     ports:
       - '22001:11001'
       - '22002:11002'
