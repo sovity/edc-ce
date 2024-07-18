@@ -189,19 +189,19 @@ interface UiResource {
     @Operation(description = "Queries a transfer process' asset")
     UiAsset getTransferProcessAsset(@PathParam("transferProcessId") String transferProcessId);
 
-    @POST
+    @GET
     @Path("pages/data-offer-page/validate-policy-id/{policyId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Validates if the provided policyId is already taken")
     IdAvailabilityResponse isPolicyIdAvailable(@PathParam("policyId") String policyId);
 
-    @POST
+    @GET
     @Path("pages/data-offer-page/validate-asset-id/{assetId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Validates if the provided assetId is already taken")
     IdAvailabilityResponse isAssetIdAvailable(@PathParam("assetId") String assetId);
 
-    @POST
+    @GET
     @Path("pages/data-offer-page/validate-contract-definition-id/{contractDefinitionId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Validates if the provided contractDefinitionId is already taken")
