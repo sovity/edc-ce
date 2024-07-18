@@ -40,6 +40,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetIdValidator;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.UiDataOfferBuilder;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementPageApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTerminationApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementPageCardBuilder;
@@ -73,6 +74,11 @@ import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.FilterExpressionOpera
 import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.UseCaseCatalogApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
+import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
+import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
+import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
+import de.sovity.edc.extension.db.directaccess.DslContextFactory;
+import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import lombok.NoArgsConstructor;
@@ -116,16 +122,19 @@ public class WrapperExtensionContextBuilder {
         CatalogService catalogService,
         Config config,
         ContractAgreementService contractAgreementService,
+        ContractAgreementTerminationService contractAgreementTerminationService,
         ContractDefinitionService contractDefinitionService,
         ContractDefinitionStore contractDefinitionStore,
         ContractNegotiationService contractNegotiationService,
         ContractNegotiationStore contractNegotiationStore,
+        DslContextFactory dslContextFactory,
         JsonLd jsonLd,
         Monitor monitor,
         ObjectMapper objectMapper,
         PolicyDefinitionService policyDefinitionService,
         PolicyDefinitionStore policyDefinitionStore,
         PolicyEngine policyEngine,
+        SovityMessenger sovityMessenger,
         TransferProcessService transferProcessService,
         TransferProcessStore transferProcessStore,
         TypeTransformerRegistry typeTransformerRegistry
@@ -200,6 +209,9 @@ public class WrapperExtensionContextBuilder {
             transferRequestBuilder,
             transferProcessService
         );
+        var agreementDetailsQuery = new ContractAgreementTerminationDetailsQuery();
+        var terminateContractQuery = new TerminateContractQuery();
+        var contractAgreementTerminationApiService = new ContractAgreementTerminationApiService(contractAgreementTerminationService);
         var legacyPolicyMapper = new LegacyPolicyMapper();
         var policyDefinitionApiService = new PolicyDefinitionApiService(
             policyDefinitionService,
@@ -240,6 +252,7 @@ public class WrapperExtensionContextBuilder {
         var uiResource = new UiResourceImpl(
             contractAgreementApiService,
             contractAgreementTransferApiService,
+            contractAgreementTerminationApiService,
             transferHistoryPageApiService,
             transferHistoryPageAssetFetcherService,
             assetApiService,
@@ -247,7 +260,8 @@ public class WrapperExtensionContextBuilder {
             catalogApiService,
             contractDefinitionApiService,
             contractNegotiationApiService,
-            dashboardApiService
+            dashboardApiService,
+            dslContextFactory
         );
 
         // Use Case API

@@ -11,6 +11,7 @@ dependencies {
     api(project(":extensions:policy-always-true"))
 
     // API Extensions
+    api(project(":extensions:contract-termination"))
     api(project(":extensions:edc-ui-config"))
     api(project(":extensions:last-commit-info"))
     api(project(":extensions:wrapper:wrapper"))

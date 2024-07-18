@@ -32,34 +32,42 @@ import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
-import de.sovity.edc.ext.wrapper.TestUtils;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.junit.annotations.ApiTest;
-import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.List;
 
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
-@ExtendWith(EdcExtension.class)
 class UseCaseApiWrapperTest {
-    private EdcClient client;
 
-    private String assetId1 = "test-asset-1";
-    private String assetId2 = "test-asset-2";
-    private String policyId = "policy-1";
+    private static ConnectorConfig config;
+    private static EdcClient client;
 
+    @RegisterExtension
+    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "provider",
+        testDatabase -> {
+            config = forTestDatabase("my-edc-participant-id", testDatabase);
+            client = EdcClient.builder()
+                .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+                .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+                .build();
+            return config.getProperties();
+        }
+    );
 
-    @BeforeEach
-    void setup(EdcExtension extension) {
-        TestUtils.setupExtension(extension);
-        client = TestUtils.edcClient();
-    }
+    private static String assetId1 = "test-asset-1";
+    private static String assetId2 = "test-asset-2";
+    private static String policyId = "policy-1";
 
     @Test
     @DisabledOnGithub
@@ -120,7 +128,7 @@ class UseCaseApiWrapperTest {
 
     private CatalogQuery criterion(String leftOperand, CatalogFilterExpressionOperator operator, String rightOperand) {
         return CatalogQuery.builder()
-                .connectorEndpoint(TestUtils.PROTOCOL_ENDPOINT)
+                .connectorEndpoint(config.getProtocolEndpoint().getUri().toString())
                 .filterExpressions(
                         List.of(
                             CatalogFilterExpression.builder()
@@ -135,7 +143,7 @@ class UseCaseApiWrapperTest {
 
     private CatalogQuery criterion(String leftOperand, CatalogFilterExpressionOperator operator, List<String> rightOperand) {
         return CatalogQuery.builder()
-                .connectorEndpoint(TestUtils.PROTOCOL_ENDPOINT)
+                .connectorEndpoint(config.getProtocolEndpoint().getUri().toString())
                 .filterExpressions(
                         List.of(
                             CatalogFilterExpression.builder()
@@ -150,7 +158,7 @@ class UseCaseApiWrapperTest {
 
     private CatalogQuery criterion(Integer limit, Integer offset) {
         return CatalogQuery.builder()
-                .connectorEndpoint(TestUtils.PROTOCOL_ENDPOINT)
+                .connectorEndpoint(config.getProtocolEndpoint().getUri().toString())
                 .limit(limit)
                 .offset(offset)
                 .build();
@@ -176,7 +184,7 @@ class UseCaseApiWrapperTest {
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
             .httpData(UiDataSourceHttpData.builder()
-                .baseUrl(TestUtils.PROTOCOL_ENDPOINT)
+                .baseUrl(config.getProtocolEndpoint().getUri().toString())
                 .build())
             .build();
 

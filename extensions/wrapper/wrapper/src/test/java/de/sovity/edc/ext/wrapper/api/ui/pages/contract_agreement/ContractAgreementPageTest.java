@@ -18,8 +18,10 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractAgreementDirection;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
-import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.ext.wrapper.TestUtils;
+import de.sovity.edc.client.gen.model.UiPolicyExpressionType;import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
@@ -30,19 +32,18 @@ import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
 import org.eclipse.edc.junit.annotations.ApiTest;
-import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.policy.model.Action;
 import org.eclipse.edc.policy.model.AtomicConstraint;
 import org.eclipse.edc.policy.model.LiteralExpression;
 import org.eclipse.edc.policy.model.Operator;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
+import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -52,33 +53,45 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
-@ExtendWith(EdcExtension.class)
 class ContractAgreementPageTest {
+
+    private static ConnectorConfig config;
+    private static ConnectorRemote connector;
+    private static EdcClient client;
+
+    @RegisterExtension
+    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "provider",
+        testDatabase -> {
+            config = forTestDatabase("provider", testDatabase);
+            client = EdcClient.builder()
+                .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+                .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+                .build();
+            connector = new ConnectorRemote(fromConnectorConfig(config));
+            return config.getProperties();
+        }
+    );
 
     private static final int CONTRACT_DEFINITION_ID = 1;
     private static final String ASSET_ID = UUID.randomUUID().toString();
 
-    EdcClient client;
     LocalDate today = LocalDate.parse("2019-04-01");
     ZonedDateTime todayAsZonedDateTime = today.atStartOfDay(ZoneId.systemDefault());
     long todayEpochMillis = todayAsZonedDateTime.toInstant().toEpochMilli();
     long todayEpochSeconds = todayAsZonedDateTime.toInstant().getEpochSecond();
 
-    @BeforeEach
-    void setUp(EdcExtension extension) {
-        TestUtils.setupExtension(extension);
-        client = TestUtils.edcClient();
-    }
-
     @Test
     void testContractAgreementPage(
-            ContractNegotiationStore contractNegotiationStore,
-            TransferProcessStore transferProcessStore,
-            AssetIndex assetIndex
-    ) {
+        ContractNegotiationStore contractNegotiationStore,
+        TransferProcessStore transferProcessStore,
+        AssetIndex assetIndex) {
 
         // arrange
         assetIndex.create(asset(ASSET_ID)).orElseThrow(storeFailure -> new RuntimeException("Failed to create asset"));
@@ -120,91 +133,92 @@ class ContractAgreementPageTest {
 
     private DataAddress dataAddress() {
         return DataAddress.Builder.newInstance()
-                .type("HttpData")
-                .properties(Map.of("baseUrl", "http://some-url"))
-                .build();
+            .type("HttpData")
+            .properties(Map.of("baseUrl", "http://some-url"))
+            .build();
     }
 
     private TransferProcess transferProcess(int contract, int transfer, int code) {
         var dataRequest = DataRequest.Builder.newInstance()
-                .contractId("my-contract-agreement-" + contract)
-                .assetId("my-asset-" + contract)
-                .processId("my-transfer-" + contract + "-" + transfer)
-                .id("my-data-request-" + contract + "-" + transfer)
-                .processId("my-transfer-" + contract + "-" + transfer)
-                .connectorAddress("http://other-connector")
-                .connectorId("urn:connector:other-connector")
-                .dataDestination(DataAddress.Builder.newInstance().type("HttpData").build())
-                .build();
+            .contractId("my-contract-agreement-" + contract)
+            .assetId("my-asset-" + contract)
+            .processId("my-transfer-" + contract + "-" + transfer)
+            .id("my-data-request-" + contract + "-" + transfer)
+            .processId("my-transfer-" + contract + "-" + transfer)
+            .connectorAddress("http://other-connector")
+            .connectorId("urn:connector:other-connector")
+            .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
+            .dataDestination(DataAddress.Builder.newInstance().type("HttpData").build())
+            .build();
         return TransferProcess.Builder.newInstance()
-                .id("my-transfer-" + contract + "-" + transfer)
-                .state(code)
-                .type(TransferProcess.Type.PROVIDER)
-                .dataRequest(dataRequest)
-                .contentDataAddress(DataAddress.Builder.newInstance().type("HttpData").build())
-                .errorDetail("my-error-message-" + transfer)
-                .build();
+            .id("my-transfer-" + contract + "-" + transfer)
+            .state(code)
+            .type(TransferProcess.Type.PROVIDER)
+            .dataRequest(dataRequest)
+            .contentDataAddress(DataAddress.Builder.newInstance().type("HttpData").build())
+            .errorDetail("my-error-message-" + transfer)
+            .build();
     }
 
     private ContractNegotiation contractDefinition(int contract) {
         var agreement = ContractAgreement.Builder.newInstance()
-                .id("my-contract-agreement-" + contract)
-                .assetId(ASSET_ID)
-                .contractSigningDate(todayEpochSeconds)
-                .policy(alwaysTrue())
-                .providerId(URI.create("http://other-connector").toString())
-                .consumerId(URI.create("http://my-connector").toString())
-                .build();
+            .id("my-contract-agreement-" + contract)
+            .assetId(ASSET_ID)
+            .contractSigningDate(todayEpochSeconds)
+            .policy(alwaysTrue())
+            .providerId(URI.create("http://other-connector").toString())
+            .consumerId(URI.create("http://my-connector").toString())
+            .build();
 
         // Contract Negotiations can contain multiple Contract Offers (?)
         // Test this
         var irrelevantOffer = ContractOffer.Builder.newInstance()
-                .id("my-contract-offer-" + contract + "-irrelevant")
-                .assetId(asset(contract + "-irrelevant").getId())
-                .policy(alwaysTrue())
-                .build();
+            .id("my-contract-offer-" + contract + "-irrelevant")
+            .assetId(asset(contract + "-irrelevant").getId())
+            .policy(alwaysTrue())
+            .build();
 
         var offer = ContractOffer.Builder.newInstance()
-                .id("my-contract-offer-" + contract)
-                .assetId(ASSET_ID)
-                .policy(alwaysTrue())
-                .build();
+            .id("my-contract-offer-" + contract)
+            .assetId(ASSET_ID)
+            .policy(alwaysTrue())
+            .build();
 
         return ContractNegotiation.Builder.newInstance()
-                .correlationId("my-correlation-" + contract)
-                .contractAgreement(agreement)
-                .id("my-contract-negotiation-" + contract)
-                .counterPartyAddress("http://other-connector")
-                .counterPartyId("urn:connector:other-connector")
-                .protocol("ids")
-                .type(ContractNegotiation.Type.PROVIDER)
-                .contractOffers(List.of(irrelevantOffer, offer))
-                .build();
+            .correlationId("my-correlation-" + contract)
+            .contractAgreement(agreement)
+            .id("my-contract-negotiation-" + contract)
+            .counterPartyAddress("http://other-connector")
+            .counterPartyId("urn:connector:other-connector")
+            .protocol("ids")
+            .type(ContractNegotiation.Type.PROVIDER)
+            .contractOffers(List.of(irrelevantOffer, offer))
+            .build();
     }
 
     private Asset asset(String assetId) {
         return Asset.Builder.newInstance()
-                .id(assetId)
-                .property(Prop.Dcat.LANDING_PAGE, "X")
-                .createdAt(todayEpochMillis)
-                .dataAddress(dataAddress())
-                .build();
+            .id(assetId)
+            .property(Prop.Dcat.LANDING_PAGE, "X")
+            .createdAt(todayEpochMillis)
+            .dataAddress(dataAddress())
+            .build();
     }
 
 
     private Policy alwaysTrue() {
         var alwaysTrueConstraint = AtomicConstraint.Builder.newInstance()
-                .leftExpression(new LiteralExpression("ALWAYS_TRUE"))
-                .operator(Operator.EQ)
-                .rightExpression(new LiteralExpression("true"))
-                .build();
+            .leftExpression(new LiteralExpression("ALWAYS_TRUE"))
+            .operator(Operator.EQ)
+            .rightExpression(new LiteralExpression("true"))
+            .build();
         var alwaysTruePermission = Permission.Builder.newInstance()
-                .action(Action.Builder.newInstance().type("USE").build())
-                .constraint(alwaysTrueConstraint)
-                .build();
+            .action(Action.Builder.newInstance().type("USE").build())
+            .constraint(alwaysTrueConstraint)
+            .build();
         return Policy.Builder.newInstance()
-                .permission(alwaysTruePermission)
-                .build();
+            .permission(alwaysTruePermission)
+            .build();
     }
 
     private String todayPlusDays(int i) {

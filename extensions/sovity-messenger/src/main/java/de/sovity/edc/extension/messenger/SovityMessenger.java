@@ -9,6 +9,7 @@
  *
  *  Contributors:
  *       sovity GmbH - initial API and implementation
+ *
  */
 
 package de.sovity.edc.extension.messenger;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
+import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.response.StatusResult;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,6 +43,8 @@ public class SovityMessenger {
     private final RemoteMessageDispatcherRegistry registry;
 
     private final ObjectMapper serializer;
+
+    private final Monitor monitor;
 
     /**
      * Sends a message to the counterparty address and returns a future result.
@@ -94,6 +98,7 @@ public class SovityMessenger {
                         header.getString(SovityMessengerStatus.HANDLER_EXCEPTION.getCode(), "No outgoing body."),
                         payload);
                 } else {
+                    monitor.info(header.getString("message", "No message in the response header."));
                     throw new SovityMessengerException(header.getString("message"));
                 }
             } catch (JsonProcessingException e) {

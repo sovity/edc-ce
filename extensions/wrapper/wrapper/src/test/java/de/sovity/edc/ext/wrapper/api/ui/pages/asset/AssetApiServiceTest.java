@@ -21,20 +21,20 @@ import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetEditRequest;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
-import de.sovity.edc.ext.wrapper.TestUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.FailedMappingException;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
+import lombok.val;
 import org.eclipse.edc.connector.spi.asset.AssetService;
 import org.eclipse.edc.junit.annotations.ApiTest;
-import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -42,32 +42,47 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
-@ExtendWith(EdcExtension.class)
 public class AssetApiServiceTest {
 
+    private static EdcClient client;
+
+    @RegisterExtension
+    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "edc",
+        testDatabase -> {
+            val config = forTestDatabase("MyEDC", testDatabase);
+            client = EdcClient.builder()
+                .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+                .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+                .build();
+            return config.getProperties();
+        }
+    );
+
     public static final String DATA_SINK = "http://my-data-sink/api/stuff";
-    EdcClient client;
     EdcPropertyUtils edcPropertyUtils;
 
     @BeforeEach
-    void setUp(EdcExtension extension) {
-        TestUtils.setupExtension(extension);
+    void setup() {
         edcPropertyUtils = new EdcPropertyUtils();
-        client = TestUtils.edcClient();
     }
 
     @Test
-    void assetPage(AssetService assetStore) {
+    void assetPage() {
+        val assetService = providerExtension.getEdcRuntimeExtension().getContext().getService(AssetService.class);
+
         // arrange
         var properties = Map.of(
-                Asset.PROPERTY_ID, "asset-1",
-                Prop.Dcat.LANDING_PAGE, "https://data-source.my-org/docs"
+            Asset.PROPERTY_ID, "asset-11",
+            Prop.Dcat.LANDING_PAGE, "https://data-source.my-org/docs"
         );
-        createAsset(assetStore, "2023-06-01", properties);
+        createAsset(assetService, "2023-06-01", properties);
 
         // act
         var result = client.uiApi().getAssetPage();
@@ -81,23 +96,27 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void assetPageSorting(AssetService assetService) {
+    void assetPageSorting() {
+        val assetService = providerExtension.getEdcRuntimeExtension().getContext().getService(AssetService.class);
+
         // arrange
-        createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-1"));
-        createAsset(assetService, "2023-06-03", Map.of(Asset.PROPERTY_ID, "asset-3"));
-        createAsset(assetService, "2023-06-02", Map.of(Asset.PROPERTY_ID, "asset-2"));
+        createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-21"));
+        createAsset(assetService, "2023-06-03", Map.of(Asset.PROPERTY_ID, "asset-23"));
+        createAsset(assetService, "2023-06-02", Map.of(Asset.PROPERTY_ID, "asset-22"));
 
         // act
         var result = client.uiApi().getAssetPage();
 
         // assert
         assertThat(result.getAssets())
-                .extracting(UiAsset::getAssetId)
-                .containsExactly("asset-3", "asset-2", "asset-1");
+            .extracting(UiAsset::getAssetId)
+            .containsExactly("asset-23", "asset-22", "asset-21");
     }
 
     @Test
-    void testAssetCreation(AssetService assetService) {
+    void testAssetCreation() {
+        val assetService = providerExtension.getEdcRuntimeExtension().getContext().getService(AssetService.class);
+
         // arrange
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
@@ -111,65 +130,65 @@ public class AssetApiServiceTest {
             .customProperties(Map.of("oauth2:tokenUrl", "https://token-url"))
             .build();
         var uiAssetRequest = UiAssetCreateRequest.builder()
-                .id("asset-1")
-                .title("AssetTitle")
-                .description("AssetDescription")
-                .licenseUrl("https://license-url")
-                .version("1.0.0")
-                .language("en")
-                .mediaType("application/json")
-                .dataCategory("dataCategory")
-                .dataSubcategory("dataSubcategory")
-                .dataModel("dataModel")
-                .geoReferenceMethod("geoReferenceMethod")
-                .transportMode("transportMode")
-                .sovereignLegalName("my sovereign")
-                .geoLocation("40.0, 40.0")
-                .nutsLocations(Arrays.asList("DE", "DE929"))
-                .dataSampleUrls(Arrays.asList("https://sample-a", "https://sample-b"))
-                .referenceFileUrls(Arrays.asList("https://reference-a", "https://reference-b"))
-                .referenceFilesDescription("RF Description")
-                .conditionsForUse("Conditions for use")
-                .dataUpdateFrequency("every month")
-                .temporalCoverageFrom(LocalDate.of(2020, 1, 1))
-                .temporalCoverageToInclusive(LocalDate.of(2020, 1, 8))
-                .keywords(List.of("keyword1", "keyword2"))
-                .publisherHomepage("publisherHomepage")
-                .dataSource(dataSource)
-                .customJsonAsString("{\"test\":\"value\"}")
-                .customJsonLdAsString("""
-                        {
-                            "https://string": "value",
-                            "https://number": 3.14,
-                            "https://array": [1,2,3],
-                            "https://object": { "https://key": "value" },
-                            "https://booleans/are/not/supported/by/Eclipse/EDC": true,
-                            "https://null/will/be/eliminated": null
-                        }
-                        """)
-                .privateCustomJsonAsString("{\"private test\":\"private value\"}")
-                .privateCustomJsonLdAsString("""
-                        {
-                            "https://private/string": "value",
-                            "https://private/number": 3.14,
-                            "https://private/array": [1,2,3],
-                            "https://private/object": { "https://key": "value" },
-                            "https://private/booleans/are/not/supported/by/Eclipse/EDC": true,
-                            "https://private/null/will/be/eliminated": null
-                        }
-                        """)
-                .build();
+            .id("asset-31")
+            .title("AssetTitle")
+            .description("AssetDescription")
+            .licenseUrl("https://license-url")
+            .version("1.0.0")
+            .language("en")
+            .mediaType("application/json")
+            .dataCategory("dataCategory")
+            .dataSubcategory("dataSubcategory")
+            .dataModel("dataModel")
+            .geoReferenceMethod("geoReferenceMethod")
+            .transportMode("transportMode")
+            .sovereignLegalName("my sovereign")
+            .geoLocation("40.0, 40.0")
+            .nutsLocations(Arrays.asList("DE", "DE929"))
+            .dataSampleUrls(Arrays.asList("https://sample-a", "https://sample-b"))
+            .referenceFileUrls(Arrays.asList("https://reference-a", "https://reference-b"))
+            .referenceFilesDescription("RF Description")
+            .conditionsForUse("Conditions for use")
+            .dataUpdateFrequency("every month")
+            .temporalCoverageFrom(LocalDate.of(2020, 1, 1))
+            .temporalCoverageToInclusive(LocalDate.of(2020, 1, 8))
+            .keywords(List.of("keyword1", "keyword2"))
+            .publisherHomepage("publisherHomepage")
+            .dataSource(dataSource)
+            .customJsonAsString("""
+                { "test" : "value" }
+                """)
+            .customJsonLdAsString("""
+                {
+                    "https://string": "value",
+                    "https://number": 3.14,
+                    "https://array": [1,2,3],
+                    "https://object": { "https://key": "value" }
+                }
+                """)
+            .privateCustomJsonAsString("""
+                { "private test" : "private value" }
+                """)
+            .privateCustomJsonLdAsString("""
+                {
+                    "https://private/string": "value",
+                    "https://private/number": 3.14,
+                    "https://private/array": [1,2,3],
+                    "https://private/object": { "https://key": "value" }
+                }
+                """)
+            .build();
 
         // act
         var response = client.uiApi().createAsset(uiAssetRequest);
 
         // assert
-        assertThat(response.getId()).isEqualTo("asset-1");
+        assertThat(response.getId()).isEqualTo("asset-31");
 
         var assets = client.uiApi().getAssetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        assertThat(asset.getAssetId()).isEqualTo("asset-1");
+        assertThat(asset.getAssetId()).isEqualTo("asset-31");
         assertThat(asset.getTitle()).isEqualTo("AssetTitle");
         assertThat(asset.getDescription()).isEqualTo("AssetDescription");
         assertThat(asset.getVersion()).isEqualTo("1.0.0");
@@ -192,41 +211,43 @@ public class AssetApiServiceTest {
         assertThat(asset.getTemporalCoverageToInclusive()).isEqualTo(LocalDate.of(2020, 1, 8));
         assertThat(asset.getLicenseUrl()).isEqualTo("https://license-url");
         assertThat(asset.getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
-        assertThat(asset.getCreatorOrganizationName()).isEqualTo("My Org");
+        assertThat(asset.getCreatorOrganizationName()).isEqualTo("Curator Name MyEDC");
         assertThat(asset.getPublisherHomepage()).isEqualTo("publisherHomepage");
         assertThat(asset.getHttpDatasourceHintsProxyMethod()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyPath()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyBody()).isTrue();
         assertThatJson(asset.getCustomJsonAsString()).isEqualTo("""
-                { "test": "value" }
-                """);
+            { "test": "value" }
+            """);
         assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
-                {
-                    "https://string": "value",
-                    "https://number": 3.14,
-                    "https://array": [1.0, 2.0, 3.0],
-                    "https://object": { "https://key": "value" }
-                }
-                """);
+            {
+                "https://string": "value",
+                "https://number": 3.14,
+                "https://array": [1.0, 2.0, 3.0],
+                "https://object": { "https://key": "value" }
+            }
+            """);
         assertThatJson(asset.getPrivateCustomJsonAsString()).isEqualTo("""
-                { "private test": "private value" }
-                """);
+            { "private test": "private value" }
+            """);
         assertThatJson(asset.getPrivateCustomJsonLdAsString()).isEqualTo("""
-                {
-                    "https://private/string": "value",
-                    "https://private/number": 3.14,
-                    "https://private/array": [1.0, 2.0, 3.0],
-                    "https://private/object": { "https://key": "value" }
-                }
-                """);
+            {
+                "https://private/string": "value",
+                "https://private/number": 3.14,
+                "https://private/array": [1.0, 2.0, 3.0],
+                "https://private/object": { "https://key": "value" }
+            }
+            """);
 
         var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
         assertThat(assetWithDataAddress.getDataAddress().getProperties()).containsEntry("oauth2:tokenUrl", "https://token-url");
     }
 
     @Test
-    void testeditAsset(AssetService assetService) {
+    void testeditAsset() {
+        val assetService = providerExtension.getEdcRuntimeExtension().getContext().getService(AssetService.class);
+
         // arrange
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
@@ -240,41 +261,41 @@ public class AssetApiServiceTest {
             .customProperties(Map.of("oauth2:tokenUrl", "https://token-url"))
             .build();
         var createRequest = UiAssetCreateRequest.builder()
-                .id("asset-1")
-                .title("AssetTitle")
-                .description("AssetDescription")
-                .licenseUrl("https://license-url")
-                .version("1.0.0")
-                .language("en")
-                .mediaType("application/json")
-                .dataCategory("dataCategory")
-                .dataSubcategory("dataSubcategory")
-                .dataModel("dataModel")
-                .geoReferenceMethod("geoReferenceMethod")
-                .transportMode("transportMode")
-                .sovereignLegalName("my sovereign")
-                .geoLocation("40.0, 40.0")
-                .nutsLocations(Arrays.asList("DE", "DE929"))
-                .dataSampleUrls(Arrays.asList("https://sample-a", "https://sample-b"))
-                .referenceFileUrls(Arrays.asList("https://reference-a", "https://reference-b"))
-                .referenceFilesDescription("RF Description")
-                .conditionsForUse("Conditions for use")
-                .dataUpdateFrequency("every month")
-                .temporalCoverageFrom(LocalDate.of(2020, 1, 1))
-                .temporalCoverageToInclusive(LocalDate.of(2020, 1, 8))
-                .keywords(List.of("keyword1", "keyword2"))
-                .publisherHomepage("publisherHomepage")
-                .dataSource(dataSource)
-                .customJsonAsString("""
-                        { "test": "value" }
-                        """)
-                .customJsonLdAsString("""
-                        {
-                            "https://to-change": "value1",
-                            "https://for-deletion": "value2"
-                        }
-                        """)
-                .build();
+            .id("asset-41")
+            .title("AssetTitle")
+            .description("AssetDescription")
+            .licenseUrl("https://license-url")
+            .version("1.0.0")
+            .language("en")
+            .mediaType("application/json")
+            .dataCategory("dataCategory")
+            .dataSubcategory("dataSubcategory")
+            .dataModel("dataModel")
+            .geoReferenceMethod("geoReferenceMethod")
+            .transportMode("transportMode")
+            .sovereignLegalName("my sovereign")
+            .geoLocation("40.0, 40.0")
+            .nutsLocations(Arrays.asList("DE", "DE929"))
+            .dataSampleUrls(Arrays.asList("https://sample-a", "https://sample-b"))
+            .referenceFileUrls(Arrays.asList("https://reference-a", "https://reference-b"))
+            .referenceFilesDescription("RF Description")
+            .conditionsForUse("Conditions for use")
+            .dataUpdateFrequency("every month")
+            .temporalCoverageFrom(LocalDate.of(2020, 1, 1))
+            .temporalCoverageToInclusive(LocalDate.of(2020, 1, 8))
+            .keywords(List.of("keyword1", "keyword2"))
+            .publisherHomepage("publisherHomepage")
+            .dataSource(dataSource)
+            .customJsonAsString("""
+                { "test": "value" }
+                """)
+            .customJsonLdAsString("""
+                {
+                    "https://to-change": "value1",
+                    "https://for-deletion": "value2"
+                }
+                """)
+            .build();
 
         client.uiApi().createAsset(createRequest);
         var dataAddressBeforeEdit = assetService.query(QuerySpec.max())
@@ -283,50 +304,50 @@ public class AssetApiServiceTest {
             .getProperties();
 
         var editRequest = UiAssetEditRequest.builder()
-                .title("AssetTitle 2")
-                .description("AssetDescription 2")
-                .licenseUrl("https://license-url/2")
-                .version("2.0.0")
-                .language("de")
-                .mediaType("application/json+utf8")
-                .dataCategory("dataCategory2")
-                .dataSubcategory("dataSubcategory2")
-                .dataModel("dataModel2")
-                .geoReferenceMethod("geoReferenceMethod2")
-                .sovereignLegalName("my sovereign2")
-                .geoLocation("50.0, 50.0")
-                .nutsLocations(Arrays.asList("NL", "NL929"))
-                .dataSampleUrls(Arrays.asList("https://sample-a2", "https://sample-b2"))
-                .referenceFileUrls(Arrays.asList("https://reference-a2", "https://reference-b2"))
-                .referenceFilesDescription("RF Description2")
-                .conditionsForUse("Conditions for use2")
-                .dataUpdateFrequency("every week")
-                .temporalCoverageFrom(LocalDate.of(2021, 1, 1))
-                .temporalCoverageToInclusive(LocalDate.of(2021, 1, 8))
-                .transportMode("transportMode2")
-                .keywords(List.of("keyword3"))
-                .publisherHomepage("publisherHomepage2")
-                .customJsonAsString("""
-                        { "edited": "new value" }
-                        """)
-                .customJsonLdAsString("""
-                        {
-                            "https://to-change": "new value LD",
-                            "https://for-deletion": null
-                        }
-                        """)
-                .build();
+            .title("AssetTitle 2")
+            .description("AssetDescription 2")
+            .licenseUrl("https://license-url/2")
+            .version("2.0.0")
+            .language("de")
+            .mediaType("application/json+utf8")
+            .dataCategory("dataCategory2")
+            .dataSubcategory("dataSubcategory2")
+            .dataModel("dataModel2")
+            .geoReferenceMethod("geoReferenceMethod2")
+            .sovereignLegalName("my sovereign2")
+            .geoLocation("50.0, 50.0")
+            .nutsLocations(Arrays.asList("NL", "NL929"))
+            .dataSampleUrls(Arrays.asList("https://sample-a2", "https://sample-b2"))
+            .referenceFileUrls(Arrays.asList("https://reference-a2", "https://reference-b2"))
+            .referenceFilesDescription("RF Description2")
+            .conditionsForUse("Conditions for use2")
+            .dataUpdateFrequency("every week")
+            .temporalCoverageFrom(LocalDate.of(2021, 1, 1))
+            .temporalCoverageToInclusive(LocalDate.of(2021, 1, 8))
+            .transportMode("transportMode2")
+            .keywords(List.of("keyword3"))
+            .publisherHomepage("publisherHomepage2")
+            .customJsonAsString("""
+                { "edited": "new value" }
+                """)
+            .customJsonLdAsString("""
+                {
+                    "https://to-change": "new value LD",
+                    "https://for-deletion": null
+                }
+                """)
+            .build();
 
         // act
-        var response = client.uiApi().editAsset("asset-1", editRequest);
+        var response = client.uiApi().editAsset("asset-41", editRequest);
 
         // assert
-        assertThat(response.getId()).isEqualTo("asset-1");
+        assertThat(response.getId()).isEqualTo("asset-41");
 
         var assets = client.uiApi().getAssetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
-        assertThat(asset.getAssetId()).isEqualTo("asset-1");
+        assertThat(asset.getAssetId()).isEqualTo("asset-41");
         assertThat(asset.getTitle()).isEqualTo("AssetTitle 2");
         assertThat(asset.getDescription()).isEqualTo("AssetDescription 2");
         assertThat(asset.getVersion()).isEqualTo("2.0.0");
@@ -349,18 +370,18 @@ public class AssetApiServiceTest {
         assertThat(asset.getTemporalCoverageToInclusive()).isEqualTo(LocalDate.of(2021, 1, 8));
         assertThat(asset.getLicenseUrl()).isEqualTo("https://license-url/2");
         assertThat(asset.getKeywords()).isEqualTo(List.of("keyword3"));
-        assertThat(asset.getCreatorOrganizationName()).isEqualTo("My Org");
+        assertThat(asset.getCreatorOrganizationName()).isEqualTo("Curator Name MyEDC");
         assertThat(asset.getPublisherHomepage()).isEqualTo("publisherHomepage2");
         assertThat(asset.getHttpDatasourceHintsProxyMethod()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyPath()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isTrue();
         assertThat(asset.getHttpDatasourceHintsProxyBody()).isTrue();
         assertThat(asset.getCustomJsonAsString()).isEqualTo("""
-                { "edited": "new value" }
-                """);
+            { "edited": "new value" }
+            """);
         assertThatJson(asset.getCustomJsonLdAsString()).isEqualTo("""
-                { "https://to-change": "new value LD" }
-                """);
+            { "https://to-change": "new value LD" }
+            """);
 
         var dataAddressAfterEdit = assetService.query(QuerySpec.max())
             .orElseThrow(FailedMappingException::ofFailure).toList().get(0)
@@ -379,15 +400,15 @@ public class AssetApiServiceTest {
                 .build())
             .build();
         var uiAssetRequest = UiAssetCreateRequest.builder()
-                .id("asset-1")
-                .dataSource(dataSource)
-                .build();
+            .id("asset-51")
+            .dataSource(dataSource)
+            .build();
 
         // act
         var response = client.uiApi().createAsset(uiAssetRequest);
 
         // assert
-        assertThat(response.getId()).isEqualTo("asset-1");
+        assertThat(response.getId()).isEqualTo("asset-51");
         var assets = client.uiApi().getAssetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
@@ -407,7 +428,7 @@ public class AssetApiServiceTest {
             ))
             .build();
         var uiAssetRequest = UiAssetCreateRequest.builder()
-            .id("asset-1")
+            .id("asset-61")
             .dataSource(dataSource)
             .build();
 
@@ -415,7 +436,7 @@ public class AssetApiServiceTest {
         var response = client.uiApi().createAsset(uiAssetRequest);
 
         // assert
-        assertThat(response.getId()).isEqualTo("asset-1");
+        assertThat(response.getId()).isEqualTo("asset-61");
         var assets = client.uiApi().getAssetPage().getAssets();
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
@@ -426,35 +447,37 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void testDeleteAsset(AssetService assetService) {
+    void testDeleteAsset() {
+        val assetService = providerExtension.getEdcRuntimeExtension().getContext().getService(AssetService.class);
+
         // arrange
-        createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-1"));
+        createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-71"));
         assertThat(assetService.query(QuerySpec.max()).getContent()).isNotEmpty();
 
         // act
-        var response = client.uiApi().deleteAsset("asset-1");
+        var response = client.uiApi().deleteAsset("asset-71");
 
         // assert
-        assertThat(response.getId()).isEqualTo("asset-1");
+        assertThat(response.getId()).isEqualTo("asset-71");
         assertThat(assetService.query(QuerySpec.max()).getContent()).isEmpty();
     }
 
     private void createAsset(
-            AssetService assetService,
-            String date,
-            Map<String, String> properties
+        AssetService assetService,
+        String date,
+        Map<String, String> properties
     ) {
         DataAddress dataAddress = DataAddress.Builder.newInstance()
-                .type("HttpData")
-                .property(Prop.Edc.BASE_URL, DATA_SINK)
-                .build();
+            .type("HttpData")
+            .property(Prop.Edc.BASE_URL, DATA_SINK)
+            .build();
 
         var asset = Asset.Builder.newInstance()
-                .id(properties.get(Asset.PROPERTY_ID))
-                .properties(edcPropertyUtils.toMapOfObject(properties))
-                .dataAddress(dataAddress)
-                .createdAt(dateFormatterToLong(date))
-                .build();
+            .id(properties.get(Asset.PROPERTY_ID))
+            .properties(edcPropertyUtils.toMapOfObject(properties))
+            .dataAddress(dataAddress)
+            .createdAt(dateFormatterToLong(date))
+            .build();
         assetService.create(asset);
     }
 

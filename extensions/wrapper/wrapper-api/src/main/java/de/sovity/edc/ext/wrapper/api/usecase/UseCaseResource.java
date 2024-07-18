@@ -56,7 +56,7 @@ public interface UseCaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Fetch a connector's data offers")
     List<UiDataOffer> queryCatalog(
-        @Valid @NotNull
+        @NotNull
         CatalogQuery catalogQuery
     );
 }

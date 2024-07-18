@@ -8,18 +8,17 @@
  *  SPDX-License-Identifier: Apache-2.0
  *
  *  Contributors:
- *      sovity GmbH - init
+ *       sovity GmbH - init
+ *
  */
 
 package de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils;
 
-import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiredArgsConstructor
 public class EdcPropertyUtils {
 
     /**

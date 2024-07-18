@@ -8,8 +8,9 @@
  *  SPDX-License-Identifier: Apache-2.0
  *
  *  Contributors:
- *      Fraunhofer ISST - initial implementation
- *      sovity GmbH - documentation changes
+ *       Fraunhofer ISST - initial implementation
+ *       sovity GmbH - documentation changes
+ *
  */
 
 package de.sovity.edc.ext.wrapper.api.common.model;

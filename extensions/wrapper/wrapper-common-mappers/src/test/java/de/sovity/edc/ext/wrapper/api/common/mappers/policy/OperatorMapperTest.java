@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.api.common.mappers.policy;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.OperatorDto;
 import org.assertj.core.api.Assertions;
 import org.eclipse.edc.policy.model.Operator;

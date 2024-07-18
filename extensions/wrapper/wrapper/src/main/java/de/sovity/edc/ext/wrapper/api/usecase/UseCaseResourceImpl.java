@@ -17,6 +17,7 @@ package de.sovity.edc.ext.wrapper.api.usecase;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import de.sovity.edc.ext.wrapper.api.usecase.model.CatalogQuery;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
+import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.UseCaseCatalogApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;

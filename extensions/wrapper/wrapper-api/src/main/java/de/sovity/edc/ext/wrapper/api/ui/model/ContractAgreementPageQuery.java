@@ -9,10 +9,13 @@
  *
  *  Contributors:
  *       sovity GmbH - initial API and implementation
+ *
  */
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Filters for querying a Contract Contract Agreement Page")
 public class ContractAgreementPageQuery {
     @Schema(

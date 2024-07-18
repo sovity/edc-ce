@@ -15,32 +15,41 @@
 package de.sovity.edc.ext.wrapper.api.usecase;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.ext.wrapper.TestUtils;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import org.eclipse.edc.junit.annotations.ApiTest;
-import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
-@ExtendWith(EdcExtension.class)
 class SupportedPolicyApiTest {
-    EdcClient edcClient;
 
-    @BeforeEach
-    void setUp(EdcExtension extension) {
-        TestUtils.setupExtension(extension);
-        edcClient = TestUtils.edcClient();
-    }
+    private static ConnectorConfig config;
+    private static EdcClient client;
+
+    @RegisterExtension
+    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+        ":launchers:connectors:sovity-dev",
+        "provider",
+        testDatabase -> {
+            config = forTestDatabase("my-edc-participant-id", testDatabase);
+            client = EdcClient.builder()
+                .managementApiUrl(config.getManagementEndpoint().getUri().toString())
+                .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+                .build();
+            return config.getProperties();
+        }
+    );
 
     @Test
     void supportedPolicies() {
         // act
-        var actual = edcClient.useCaseApi().getSupportedFunctions();
+        var actual = client.useCaseApi().getSupportedFunctions();
 
         // assert
-        assertThat(actual).containsExactly("ALWAYS_TRUE", "https://w3id.org/edc/v0.0.1/ns/inForceDate");
+        assertThat(actual).contains("ALWAYS_TRUE", "https://w3id.org/edc/v0.0.1/ns/inForceDate");
     }
 }

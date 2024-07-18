@@ -22,7 +22,6 @@ dependencies {
 
     testCompileOnly(libs.lombok)
 
-    testImplementation(project(":utils:test-connector-remote"))
     testImplementation(project(":utils:test-utils"))
 
     testImplementation(libs.edc.junit)
@@ -48,8 +47,8 @@ dependencies {
     testImplementation(libs.junit.api)
     testImplementation(libs.jsonAssert)
     testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.inline)
     testImplementation(libs.mockserver.netty)
+    testImplementation(libs.postgres)
     testImplementation(libs.restAssured.restAssured)
     testImplementation(libs.testcontainers.testcontainers)
     testImplementation(libs.testcontainers.junitJupiter)

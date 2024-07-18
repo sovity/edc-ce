@@ -22,10 +22,10 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPageQuery;
-import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateCustomTransferRequest;
@@ -37,6 +37,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementPageApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTerminationApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreementTransferApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractNegotiationApiService;
@@ -44,10 +45,17 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
+import de.sovity.edc.extension.db.directaccess.DslContextFactory;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+
+import static de.sovity.edc.ext.wrapper.utils.ValidatorUtils.validate;
 
 @SuppressWarnings("java:S6539") // This class is so large so the generated API Clients can have one UiApi
 @RequiredArgsConstructor
@@ -55,6 +63,7 @@ public class UiResourceImpl implements UiResource {
 
     private final ContractAgreementPageApiService contractAgreementApiService;
     private final ContractAgreementTransferApiService contractAgreementTransferApiService;
+    private final ContractAgreementTerminationApiService contractAgreementTerminationApiService;
     private final TransferHistoryPageApiService transferHistoryPageApiService;
     private final TransferHistoryPageAssetFetcherService transferHistoryPageAssetFetcherService;
     private final AssetApiService assetApiService;
@@ -63,6 +72,7 @@ public class UiResourceImpl implements UiResource {
     private final ContractDefinitionApiService contractDefinitionApiService;
     private final ContractNegotiationApiService contractNegotiationApiService;
     private final DashboardPageApiService dashboardPageApiService;
+    private final DslContextFactory dslContextFactory;
 
     @Override
     public DashboardPage getDashboardPage() {
@@ -142,9 +152,9 @@ public class UiResourceImpl implements UiResource {
 
     @Override
     public ContractAgreementPage getContractAgreementPage(@Nullable ContractAgreementPageQuery contractAgreementPageQuery) {
-        return contractAgreementApiService.contractAgreementPage();
+        return dslContextFactory.transactionResult(dsl ->
+            contractAgreementApiService.contractAgreementPage(dsl, contractAgreementPageQuery));
     }
-
 
     @Override
     public IdResponseDto initiateTransfer(InitiateTransferRequest request) {
@@ -157,8 +167,13 @@ public class UiResourceImpl implements UiResource {
     }
 
     @Override
-    public IdResponseDto terminateContractAgreement(String contractAgreementId, ContractTerminationRequest contractTerminationRequest) {
-        return null;
+    public IdResponseDto terminateContractAgreement(
+        String contractAgreementId,
+        ContractTerminationRequest contractTerminationRequest
+    ) {
+        validate(contractTerminationRequest);
+        return dslContextFactory.transactionResult(dsl ->
+            contractAgreementTerminationApiService.terminate(dsl, contractAgreementId, contractTerminationRequest));
     }
 
     @Override

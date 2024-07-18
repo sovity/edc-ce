@@ -8,7 +8,8 @@
  *  SPDX-License-Identifier: Apache-2.0
  *
  *  Contributors:
- *      sovity GmbH - init
+ *       sovity GmbH - init
+ *
  */
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;
@@ -139,11 +140,13 @@ public class TransferProcessTestUtils {
     ) throws ParseException {
 
         var dataRequestForTransfer = DataRequest.Builder.newInstance()
+                .id(UUID.randomUUID().toString())
                 .assetId(assetId)
                 .contractId(contractId)
                 .dataDestination(dataAddress)
                 .connectorAddress(COUNTER_PARTY_ADDRESS)
                 .connectorId(COUNTER_PARTY_ID)
+                .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
                 .build();
 
         var transferProcess = TransferProcess.Builder.newInstance()
