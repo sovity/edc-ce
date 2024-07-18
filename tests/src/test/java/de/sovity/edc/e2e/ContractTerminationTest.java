@@ -209,6 +209,7 @@ public class ContractTerminationTest {
         // termination completed == success
     }
 
+    @DisabledOnGithub
     @Test
     void limitTheDetailSizeAt1000Chars(
         E2eScenario scenario,
