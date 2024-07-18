@@ -11,7 +11,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Major Changes
 
-- The `UiPolicy` model has been adjusted to support complex expressions including `AND`, `OR` and `XOR`.
+- The `UiPolicy` model has been adjusted to support complex expressions including `AND`, `OR` and `XONE`.
   - The `createPolicyDefinition` has been marked as deprecated in favor of the new `createPolicyDefinitionV2` endpoint that supports complex policies.
   - Removed the recently rushed `createPolicyDefinitionUseCase` endpoint in favor of the new `createPolicyDefinitionV2` endpoint.
 
