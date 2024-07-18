@@ -1855,6 +1855,7 @@ components:
         taken or not
     ContractTerminationRequest:
       required:
+      - detail
       - reason
       type: object
       properties:
