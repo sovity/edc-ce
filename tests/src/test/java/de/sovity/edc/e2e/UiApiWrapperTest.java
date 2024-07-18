@@ -39,7 +39,6 @@ import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
-import de.sovity.edc.ext.wrapper.api.ui.model.IdAvailabilityResponse;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
@@ -65,7 +64,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.CONSUMING;
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.PROVIDING;
