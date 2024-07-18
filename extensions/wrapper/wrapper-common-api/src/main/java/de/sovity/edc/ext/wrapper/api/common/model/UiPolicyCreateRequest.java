@@ -32,6 +32,6 @@ import java.util.List;
 @Schema(description = "[Deprecated] Conjunction of constraints (simplified UiPolicyExpression)",
     deprecated = true)
 public class UiPolicyCreateRequest {
-    @Schema(description = "Conjunction of required constraints")
-    private List<UiPolicyConstraint> expressions;
+    @Schema(description = "Conjunction of required constraints", deprecated = true)
+    private List<UiPolicyConstraint> constraints;
 }

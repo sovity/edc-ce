@@ -35,7 +35,7 @@ public class LegacyPolicyMapper {
             return UiPolicyExpression.empty();
         }
 
-        return buildUiPolicyExpression(createRequest.getExpressions());
+        return buildUiPolicyExpression(createRequest.getConstraints());
     }
 
     private UiPolicyExpression buildUiPolicyExpression(List<UiPolicyConstraint> expressions) {

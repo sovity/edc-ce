@@ -166,7 +166,7 @@ class UseCaseApiWrapperTest {
 
         var policyDefinition = PolicyDefinitionCreateDto.builder()
             .policyDefinitionId(dataOfferId)
-            .policy(expression)
+            .expression(expression)
             .build();
 
         providerClient.uiApi().createPolicyDefinitionV2(policyDefinition);

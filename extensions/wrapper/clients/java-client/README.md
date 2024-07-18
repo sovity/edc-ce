@@ -109,7 +109,7 @@ Below are the examples of various tasks and the corresponding methods to be used
 
 | Task                                                 | Java-Client method                                                  |
 |------------------------------------------------------|---------------------------------------------------------------------|
-| Create Policy                                        | `EdcClient.uiApi().createPolicyDefinition(policyDefinition)`        |
+| Create Policy                                        | `EdcClient.uiApi().createPolicyDefinitionV2(policyDefinition)`      |
 | Create asset (Asset Creation after activate)         | `EdcClient.uiApi().createAsset(uiAssetRequest)`                     |
 | Create contract definition                           | `EdcClient.uiApi().createContractDefinition(contractDefinition)`    |
 | Create Offer on consumer dashboard (Catalog Browser) | `EdcClient.uiApi().getCatalogPageDataOffers(PROTOCOL_ENDPOINT)`     |
@@ -123,7 +123,7 @@ These methods facilitate various operations such as creating policies, assets, c
 The following example demonstrates how to create a Catena-Policy with linked conditions using the Java-client.
 
 ```java
-public String buildCatenaXPolicy() {
+public String createCatenaXPolicy() {
   var policyId = UUID.randomUUID().toString();
 
   var expression = buildAnd(
@@ -131,14 +131,13 @@ public String buildCatenaXPolicy() {
       buildConstraint("PURPOSE", OperatorDto.EQ, "ID 3.1 Trace")
   );
 
-  var policyCreateRequest = PolicyDefinitionCreateRequest.builder()
+  var policyCreateRequest = PolicyDefinitionCreateDto.builder()
       .policyDefinitionId(policyId)
-      .policy(UiPolicyCreateRequest.builder()
-          .expressions(List.of(expression))
-          .build())
+      .expression(expression)
       .build();
 
-  consumerClient.uiApi().createPolicyDefinition(policyCreateRequest);
+  client.uiApi().createPolicyDefinition(policyCreateRequest);
+
   return policyId;
 }
 

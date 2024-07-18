@@ -110,7 +110,7 @@ class CatalogApiTest {
     private void createPolicy() {
         var policyDefinition = PolicyDefinitionCreateDto.builder()
                 .policyDefinitionId(dataOfferId)
-                .policy(UiPolicyExpression.builder().type(UiPolicyExpressionType.EMPTY).build())
+                .expression(UiPolicyExpression.builder().type(UiPolicyExpressionType.EMPTY).build())
                 .build();
 
         client.uiApi().createPolicyDefinitionV2(policyDefinition);

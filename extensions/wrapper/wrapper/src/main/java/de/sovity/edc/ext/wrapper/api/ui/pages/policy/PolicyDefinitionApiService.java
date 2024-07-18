@@ -59,7 +59,7 @@ public class PolicyDefinitionApiService {
 
     @NotNull
     public IdResponseDto createPolicyDefinitionV2(PolicyDefinitionCreateDto request) {
-        var policyDefinition = buildPolicyDefinition(request.getPolicyDefinitionId(), request.getPolicy());
+        var policyDefinition = buildPolicyDefinition(request.getPolicyDefinitionId(), request.getExpression());
         policyDefinition = policyDefinitionService.create(policyDefinition).orElseThrow(ServiceException::new);
         return new IdResponseDto(policyDefinition.getId());
     }

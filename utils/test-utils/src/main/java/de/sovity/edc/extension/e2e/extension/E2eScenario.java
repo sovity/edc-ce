@@ -158,7 +158,7 @@ public class E2eScenario {
 
         var policyDefinition = PolicyDefinitionCreateDto.builder()
             .policyDefinitionId(policyId)
-            .policy(expression)
+            .expression(expression)
             .build();
 
         return providerClient.uiApi().createPolicyDefinitionV2(policyDefinition);
@@ -247,7 +247,7 @@ public class E2eScenario {
 
         var policyDefinition = PolicyDefinitionCreateDto.builder()
             .policyDefinitionId(id)
-            .policy(expression)
+            .expression(expression)
             .build();
 
         providerClient.uiApi().createPolicyDefinitionV2(policyDefinition);

@@ -451,7 +451,7 @@ class DataSourceParameterizationTest {
     private void createPolicy(EdcClient providerClient, TestCase testCase) {
         var policyDefinition = PolicyDefinitionCreateDto.builder()
             .policyDefinitionId(testCase.id)
-            .policy(UiPolicyExpression.builder()
+            .expression(UiPolicyExpression.builder()
                 .type(UiPolicyExpressionType.EMPTY)
                 .build())
             .build();

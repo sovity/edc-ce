@@ -890,9 +890,10 @@ components:
     UiPolicyCreateRequest:
       type: object
       properties:
-        expressions:
+        constraints:
           type: array
           description: Conjunction of required constraints
+          deprecated: true
           items:
             $ref: '#/components/schemas/UiPolicyConstraint'
       description: "[Deprecated] Conjunction of constraints (simplified UiPolicyExpression)"
@@ -923,14 +924,14 @@ components:
       - JSON
     PolicyDefinitionCreateDto:
       required:
-      - policy
+      - expression
       - policyDefinitionId
       type: object
       properties:
         policyDefinitionId:
           type: string
           description: Policy Definition ID
-        policy:
+        expression:
           $ref: '#/components/schemas/UiPolicyExpression'
       description: Create a Policy Definition
     UiPolicyExpression:

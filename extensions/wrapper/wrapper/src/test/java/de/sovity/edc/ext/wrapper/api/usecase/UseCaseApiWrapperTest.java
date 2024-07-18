@@ -204,7 +204,7 @@ class UseCaseApiWrapperTest {
 
         policyId = client.uiApi().createPolicyDefinitionV2(PolicyDefinitionCreateDto.builder()
                 .policyDefinitionId("policy-1")
-                .policy(UiPolicyExpression.builder()
+                .expression(UiPolicyExpression.builder()
                     .type(UiPolicyExpressionType.EMPTY)
                     .build())
                 .build()).getId();

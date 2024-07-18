@@ -205,7 +205,7 @@ class CrawlerE2eTest {
 
         var policyDefinition = PolicyDefinitionCreateDto.builder()
                 .policyDefinitionId(dataOfferId)
-                .policy(expression)
+                .expression(expression)
                 .build();
 
         connectorClient.uiApi().createPolicyDefinitionV2(policyDefinition);

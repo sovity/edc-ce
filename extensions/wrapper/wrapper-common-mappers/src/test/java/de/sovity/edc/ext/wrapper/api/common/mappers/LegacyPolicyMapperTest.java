@@ -49,7 +49,7 @@ public class LegacyPolicyMapperTest {
     void buildUiPolicyExpression_expressionsNull() {
         // arrange
         var request = new UiPolicyCreateRequest();
-        request.setExpressions(null);
+        request.setConstraints(null);
 
         // act
         UiPolicyExpression result = legacyPolicyMapper.buildUiPolicyExpression(request);
@@ -62,7 +62,7 @@ public class LegacyPolicyMapperTest {
     void buildUiPolicyExpression_emptyExpressions() {
         // arrange
         var request = new UiPolicyCreateRequest();
-        request.setExpressions(List.of());
+        request.setConstraints(List.of());
 
         // act
         UiPolicyExpression result = legacyPolicyMapper.buildUiPolicyExpression(request);
@@ -76,7 +76,7 @@ public class LegacyPolicyMapperTest {
         // arrange
         var request = new UiPolicyCreateRequest();
         var expression = new UiPolicyConstraint();
-        request.setExpressions(List.of(expression));
+        request.setConstraints(List.of(expression));
 
         // act
         UiPolicyExpression result = legacyPolicyMapper.buildUiPolicyExpression(request);
@@ -91,7 +91,7 @@ public class LegacyPolicyMapperTest {
         var request = new UiPolicyCreateRequest();
         var constraint1 = mock(UiPolicyConstraint.class);
         var constraint2 = mock(UiPolicyConstraint.class);
-        request.setExpressions(List.of(constraint1, constraint2));
+        request.setConstraints(List.of(constraint1, constraint2));
 
         // act
         UiPolicyExpression result = legacyPolicyMapper.buildUiPolicyExpression(request);

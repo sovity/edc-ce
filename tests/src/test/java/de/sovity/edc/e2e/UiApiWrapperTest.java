@@ -116,7 +116,7 @@ class UiApiWrapperTest {
 
         var policyId = providerClient.uiApi().createPolicyDefinitionV2(PolicyDefinitionCreateDto.builder()
             .policyDefinitionId("policy-1")
-            .policy(expression)
+            .expression(expression)
             .build()).getId();
 
         var dataSource = UiDataSource.builder()
@@ -384,7 +384,7 @@ class UiApiWrapperTest {
 
         var policyId = providerClient.uiApi().createPolicyDefinitionV2(PolicyDefinitionCreateDto.builder()
             .policyDefinitionId("policy-1")
-            .policy(UiPolicyExpression.builder()
+            .expression(UiPolicyExpression.builder()
                 .type(UiPolicyExpressionType.EMPTY)
                 .build())
             .build()).getId();
