@@ -26,6 +26,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.IdAvailabilityResponse;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateCustomTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateTransferRequest;
@@ -34,10 +35,8 @@ import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiContractNegotiation;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -189,4 +188,22 @@ interface UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Queries a transfer process' asset")
     UiAsset getTransferProcessAsset(@PathParam("transferProcessId") String transferProcessId);
+
+    @POST
+    @Path("pages/data-offer-page/validate-policy-id/{policyId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Validates if the provided policyId is already taken")
+    IdAvailabilityResponse isPolicyIdAvailable(@PathParam("policyId") String policyId);
+
+    @POST
+    @Path("pages/data-offer-page/validate-asset-id/{assetId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Validates if the provided assetId is already taken")
+    IdAvailabilityResponse isAssetIdAvailable(@PathParam("assetId") String assetId);
+
+    @POST
+    @Path("pages/data-offer-page/validate-contract-definition-id/{contractDefinitionId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Validates if the provided contractDefinitionId is already taken")
+    IdAvailabilityResponse isContractDefinitionIdAvailable(@PathParam("contractDefinitionId") String contractDefinitionId);
 }

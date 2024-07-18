@@ -61,6 +61,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.DashboardDataFe
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.MiwConfigService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.OwnConnectorEndpointServiceImpl;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.data_offer.DataOfferPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
@@ -252,6 +253,7 @@ public class WrapperExtensionContextBuilder {
             miwConfigBuilder,
             selfDescriptionService
         );
+        var dataOfferPageApiService = new DataOfferPageApiService();
         var uiResource = new UiResourceImpl(
             contractAgreementApiService,
             contractAgreementTransferApiService,
@@ -264,7 +266,8 @@ public class WrapperExtensionContextBuilder {
             contractDefinitionApiService,
             contractNegotiationApiService,
             dashboardApiService,
-            dslContextFactory
+            dslContextFactory,
+            dataOfferPageApiService
         );
 
         // Use Case API
