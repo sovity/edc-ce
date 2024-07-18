@@ -50,12 +50,6 @@ public class DatabaseDirectAccessExtension implements ServiceExtension {
     @Setting(defaultValue = "3")
     public static final String EDC_SERVER_DB_CONNECTION_POOL_SIZE = "edc.server.db.connection.pool.size";
 
-    /**
-     * Sets the connection timeout for the datasource in milliseconds.
-     */
-    @Setting(defaultValue = "5000")
-    public static final String EDC_SERVER_DB_CONNECTION_TIMEOUT_IN_MS = "edc.server.db.connection.timeout.in.ms";
-
 
     @Override
     public String name() {
@@ -75,11 +69,11 @@ public class DatabaseDirectAccessExtension implements ServiceExtension {
         hikariConfig.setUsername(config.getString(EDC_DATASOURCE_JDBC_USER));
         hikariConfig.setPassword(config.getString(EDC_DATASOURCE_JDBC_PASSWORD));
         hikariConfig.setMinimumIdle(1);
-        hikariConfig.setMaximumPoolSize(config.getInteger(EDC_SERVER_DB_CONNECTION_POOL_SIZE));
+        hikariConfig.setMaximumPoolSize(config.getInteger(EDC_SERVER_DB_CONNECTION_POOL_SIZE, 3));
         hikariConfig.setIdleTimeout(30000);
         hikariConfig.setPoolName("direct-database-access");
         hikariConfig.setMaxLifetime(50000);
-        hikariConfig.setConnectionTimeout(config.getInteger(EDC_SERVER_DB_CONNECTION_TIMEOUT_IN_MS));
+        hikariConfig.setConnectionTimeout(1000);
 
         val dda = new DslContextFactory(new HikariDataSource(hikariConfig));
 
