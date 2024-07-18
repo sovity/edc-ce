@@ -19,6 +19,12 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 ### Deployment Migration Notes
 
+New configuration to access the database:
+
+* `EDC_SERVER_DB_CONNECTION_POOL_SIZE`
+  * The property controls the maximum size that the pool is allowed to reach, including both idle and in-use connections. Basically this value will determine the maximum number of actual connections to the database backend.
+  * Defaults to 3
+
 #### Compatible Versions
 
 - Connector Backend Docker Images:
@@ -41,7 +47,7 @@ MDS 2.2 intermediate release
 
 - API Wrapper UI API: Data sources are now well-typed.
 - The Broker has been removed in favor of the Authority Portal:
-  - A new Deployment Unit, the ["Data Catalog Crawler"](extensions/catalog-crawler/README.md), has been added. 
+  - A new Deployment Unit, the ["Data Catalog Crawler"](extensions/catalog-crawler/README.md), has been added.
   - Each "Data Catalog Crawler" connects to an existing Authority Portal Deployment's DB.
   - Each "Data Catalog Crawler" is responsible for crawling exactly one environment.
   - The Data Catalog functionality of the Broker has been integrated into the Authority Portal.
@@ -63,8 +69,8 @@ MDS 2.2 intermediate release
 - Connector:
   - The database migration system has been moved from multiple migration history tables to a single one.
 - Broker:
-  - The broker has been removed. For Authority Portal users, please check out the new 
-    [Data Catalog Crawler Productive Deployment Guide](docs/deployment-guide/goals/catalog-crawler-production/README.md). 
+  - The broker has been removed. For Authority Portal users, please check out the new
+    [Data Catalog Crawler Productive Deployment Guide](docs/deployment-guide/goals/catalog-crawler-production/README.md).
   - Any previous broker deployment's database is not required anymore.
   - Please care that only some environment variables look similar. It is recommended to create fresh deployments.
 
