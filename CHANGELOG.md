@@ -21,9 +21,9 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 New configuration to access the database:
 
-* `EDC_SERVER_DB_CONNECTION_POOL_SIZE`
-  * The property controls the maximum size that the pool is allowed to reach, including both idle and in-use connections. Basically this value will determine the maximum number of actual connections to the database backend.
-  * Defaults to 3
+- `EDC_SERVER_DB_CONNECTION_POOL_SIZE`
+  - The property controls the maximum size that the pool is allowed to reach, including both idle and in-use connections. Basically this value will determine the maximum number of actual connections to the database backend.
+  - Defaults to `3`
 
 #### Compatible Versions
 
