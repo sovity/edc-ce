@@ -414,7 +414,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
   /wrapper/ui/pages/data-offer-page/validate-asset-id/{assetId}:
-    post:
+    get:
       tags:
       - UI
       description: Validates if the provided assetId is already taken
@@ -433,7 +433,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/IdAvailabilityResponse'
   /wrapper/ui/pages/data-offer-page/validate-contract-definition-id/{contractDefinitionId}:
-    post:
+    get:
       tags:
       - UI
       description: Validates if the provided contractDefinitionId is already taken
@@ -452,7 +452,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/IdAvailabilityResponse'
   /wrapper/ui/pages/data-offer-page/validate-policy-id/{policyId}:
-    post:
+    get:
       tags:
       - UI
       description: Validates if the provided policyId is already taken
@@ -582,11 +582,11 @@ components:
     DataSourceType:
       type: string
       description: Supported Data Source Types by UiDataSource
-      default: CUSTOM
       enum:
       - HTTP_DATA
       - ON_REQUEST
       - CUSTOM
+      default: CUSTOM
     SecretValue:
       type: object
       properties:
@@ -794,7 +794,6 @@ components:
     UiDataSourceHttpDataMethod:
       type: string
       description: Supported HTTP Methods by UiDataSource
-      default: GET
       enum:
       - GET
       - POST
@@ -802,6 +801,7 @@ components:
       - PATCH
       - DELETE
       - OPTIONS
+      default: GET
     UiDataSourceOnRequest:
       required:
       - contactEmail
