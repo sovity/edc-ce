@@ -2,9 +2,9 @@
 
 ## Checkstyle
 
-This IJ add checkstyle warnings an errors.
+Checkstyle errors are by default not shown in IntelliJ.
 
-https://plugins.jetbrains.com/plugin/1065-checkstyle-idea
+There is an [IntelliJ Plugin](https://plugins.jetbrains.com/plugin/1065-checkstyle-idea) to see Checkstyle errors as errors in your IDE.
 
 ### License Headers with IntelliJ
 
