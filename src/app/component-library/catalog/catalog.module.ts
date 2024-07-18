@@ -8,9 +8,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {
-  InitiateNegotiationConfirmTosDialogModule
-} from '../initiate-negotiation-confirm-tos-dialog/initiate-negotiation-confirm-tos-dialog.module';
+import {InitiateNegotiationConfirmTosDialogModule} from '../initiate-negotiation-confirm-tos-dialog/initiate-negotiation-confirm-tos-dialog.module';
 import {JsonDialogModule} from '../json-dialog/json-dialog.module';
 import {PipesAndDirectivesModule} from '../pipes-and-directives/pipes-and-directives.module';
 import {PropertyGridModule} from '../property-grid/property-grid.module';

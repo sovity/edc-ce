@@ -4,8 +4,16 @@
     trackByField="contractAgreementId"
     style="width: 400px; min-height: 120px">
     <mat-card-header>
-      <mat-icon mat-card-avatar>
-        {{ card.direction === 'PROVIDING' ? 'upload' : 'download' }}
+      <mat-icon mat-card-avatar [class.text-warn]="card.isTerminated">
+        {{
+          card.direction === 'PROVIDING'
+            ? card.isTerminated
+              ? 'file_upload_off'
+              : 'file_upload'
+            : card.isTerminated
+            ? 'file_download_off'
+            : 'file_download'
+        }}
       </mat-icon>
       <mat-card-title>
         <a
@@ -60,7 +68,7 @@
         </div>
         <!-- Status -->
         <div
-          *ngIf="card.isConsumingLimitsEnforced"
+          *ngIf="card.showStatus"
           class="flex flex-col"
           [matTooltip]="card.statusTooltipText">
           <div class="text-slate text-sm uppercase tracking-wider text-right">
@@ -68,7 +76,7 @@
           </div>
           <div class="text-right" [class.text-warn]="!card.canTransfer">
             {{ card.statusText }}
-            <mat-icon *ngIf="!card.canTransfer" class="mat-icon-[12px]">
+            <mat-icon *ngIf="card.statusTooltipText" class="mat-icon-[12px]">
               help
             </mat-icon>
           </div>

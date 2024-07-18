@@ -5,6 +5,8 @@ import {
   ConnectorLimits,
   ContractAgreementCard,
   ContractAgreementPage,
+  ContractTerminationStatus,
+  GetContractAgreementPageRequest,
 } from '@sovity.de/edc-client';
 import {ActiveFeatureSet} from '../../../../core/config/active-feature-set';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
@@ -21,11 +23,15 @@ export class ContractAgreementPageService {
     private activeFeatureSet: ActiveFeatureSet,
   ) {}
 
+  activeTerminationFilter?: ContractTerminationStatus | null;
+
   contractAgreementPageData$(
     refresh$: Observable<any>,
     silentPollingInterval: number,
     searchText$: Observable<string>,
+    terminationStatusFilter?: ContractTerminationStatus | null,
   ): Observable<Fetched<ContractAgreementPageData>> {
+    this.activeTerminationFilter = terminationStatusFilter;
     return combineLatest([
       refresh$.pipe(
         switchMap(() =>
@@ -46,8 +52,14 @@ export class ContractAgreementPageService {
   }
 
   private fetchData(): Observable<Fetched<ContractAgreementPageData>> {
+    const requestBody: GetContractAgreementPageRequest = {
+      contractAgreementPageQuery: {
+        terminationStatus: this.activeTerminationFilter ?? undefined,
+      },
+    };
+
     return combineLatest([
-      this.edcApiService.getContractAgreementPage(),
+      this.edcApiService.getContractAgreementPage(requestBody),
       this.fetchLimits(),
     ]).pipe(
       map(([contractAgreementPage, connectorLimits]) =>

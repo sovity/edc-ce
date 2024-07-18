@@ -1,5 +1,5 @@
 <div id="wrapper">
-  <div class="flex flex-row">
+  <div class="flex flex-row gap-4">
     <!-- Search -->
     <mat-form-field
       class="search-form-field"
@@ -16,6 +16,27 @@
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
+
+    <!-- Terminiation status filter -->
+    <div class="flex content-end h-[3.25rem] mt-[0.2rem]">
+      <mat-button-toggle-group
+        name="terminationFilter"
+        [formControl]="terminationFilterControl">
+        <mat-button-toggle
+          value="ONGOING"
+          (change)="onTerminationFilterChange()"
+          >Active Contracts</mat-button-toggle
+        >
+        <mat-button-toggle
+          value="TERMINATED"
+          (change)="onTerminationFilterChange()"
+          >Terminated Contracts</mat-button-toggle
+        >
+        <mat-button-toggle value="all" (change)="onTerminationFilterChange()"
+          >All Contracts</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+    </div>
 
     <!-- Spacer -->
     <div class="grow"></div>

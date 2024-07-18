@@ -3,9 +3,7 @@ import {UiPolicy} from '@sovity.de/edc-client';
 import {ActiveFeatureSet} from '../../../core/config/active-feature-set';
 import {UiAssetMapped} from '../../../core/services/models/ui-asset-mapped';
 import {ParticipantIdLocalization} from '../../../core/services/participant-id-localization';
-import {
-  ContractAgreementCardMapped
-} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
+import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
 import {PropertyGridGroup} from '../../property-grid/property-grid-group/property-grid-group';
 import {PropertyGridField} from '../../property-grid/property-grid/property-grid-field';
 import {PropertyGridFieldService} from '../../property-grid/property-grid/property-grid-field.service';

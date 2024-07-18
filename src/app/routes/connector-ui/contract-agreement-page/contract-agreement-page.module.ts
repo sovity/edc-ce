@@ -3,6 +3,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatButtonModule} from '@angular/material/button';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatChipsModule} from '@angular/material/chips';
@@ -27,6 +28,7 @@ import {PipesAndDirectivesModule} from '../../../component-library/pipes-and-dir
 import {UiElementsModule} from '../../../component-library/ui-elements/ui-elements.module';
 import {ContractAgreementCardsComponent} from './contract-agreement-cards/contract-agreement-cards.component';
 import {ContractAgreementPageComponent} from './contract-agreement-page/contract-agreement-page.component';
+import {ContractAgreementTerminationDialogComponent} from './contract-agreement-termination-dialog/contract-agreement-termination-dialog.component';
 import {ContractAgreementTransferDialogComponent} from './contract-agreement-transfer-dialog/contract-agreement-transfer-dialog.component';
 
 @NgModule({
@@ -65,10 +67,12 @@ import {ContractAgreementTransferDialogComponent} from './contract-agreement-tra
     DataAddressModule,
     PipesAndDirectivesModule,
     UiElementsModule,
+    MatButtonToggleModule,
   ],
   declarations: [
     ContractAgreementPageComponent,
     ContractAgreementCardsComponent,
+    ContractAgreementTerminationDialogComponent,
     ContractAgreementTransferDialogComponent,
   ],
   exports: [ContractAgreementPageComponent],

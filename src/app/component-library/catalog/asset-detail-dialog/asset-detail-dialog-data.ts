@@ -4,10 +4,7 @@ import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract
 import {PropertyGridGroup} from '../../property-grid/property-grid-group/property-grid-group';
 
 export interface AssetDetailDialogData {
-  type:
-    | 'asset-details'
-    | 'data-offer'
-    | 'contract-agreement'
+  type: 'asset-details' | 'data-offer' | 'contract-agreement';
   propertyGridGroups: PropertyGridGroup[];
   asset: UiAssetMapped;
   dataOffer?: DataOffer;
@@ -15,6 +12,7 @@ export interface AssetDetailDialogData {
   showDeleteButton?: boolean;
   showEditButton?: boolean;
   onAssetEditClick?: OnAssetEditClickFn;
+  refreshCallback?: () => void;
 }
 
 export type OnAssetEditClickFn = (

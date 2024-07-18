@@ -11,7 +11,11 @@ import {EdcApiService} from '../../../core/services/api/edc-api.service';
 import {ContractNegotiationService} from '../../../core/services/contract-negotiation.service';
 import {UiAssetMapped} from '../../../core/services/models/ui-asset-mapped';
 import {NotificationService} from '../../../core/services/notification.service';
+import {ContractAgreementTerminationDialogData} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-termination-dialog/contract-agreement-termination-dialog-data';
+import {ContractAgreementTerminationDialogResult} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-termination-dialog/contract-agreement-termination-dialog-result';
+import {ContractAgreementTerminationDialogComponent} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-termination-dialog/contract-agreement-termination-dialog.component';
 import {ContractAgreementTransferDialogData} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-data';
+import {ContractAgreementTransferDialogResult} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-result';
 import {ContractAgreementTransferDialogComponent} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog.component';
 import {
   ConfirmDialogModel,
@@ -108,9 +112,40 @@ export class AssetDetailDialogComponent implements OnDestroy {
       contractId: this.data.contractAgreement?.contractAgreementId!!,
       asset: this.data.asset,
     };
-    this.matDialog.open(ContractAgreementTransferDialogComponent, {
+    const ref = this.matDialog.open(ContractAgreementTransferDialogComponent, {
       data,
     });
+
+    ref
+      .afterClosed()
+      .subscribe(
+        (result: ContractAgreementTransferDialogResult | undefined) => {
+          if (result) {
+            this.data.refreshCallback?.();
+          }
+        },
+      );
+  }
+
+  onTerminateClick() {
+    const data: ContractAgreementTerminationDialogData = {
+      contractId: this.data.contractAgreement?.contractAgreementId!!,
+      asset: this.data.asset,
+    };
+    const ref = this.matDialog.open(
+      ContractAgreementTerminationDialogComponent,
+      {data},
+    );
+
+    ref
+      .afterClosed()
+      .subscribe(
+        (result: ContractAgreementTerminationDialogResult | undefined) => {
+          if (result) {
+            this.data.refreshCallback?.();
+          }
+        },
+      );
   }
 
   private confirmDelete(): Observable<boolean> {

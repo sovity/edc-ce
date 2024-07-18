@@ -1,6 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router,} from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  NavigationEnd,
+  Router,
+} from '@angular/router';
 import {concat, of} from 'rxjs';
 import {filter, map, shareReplay} from 'rxjs/operators';
 

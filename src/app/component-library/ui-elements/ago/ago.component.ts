@@ -7,9 +7,10 @@ import {Component, Input} from '@angular/core';
  */
 @Component({
   selector: 'ago',
-  template: `<span [title]="date | date : 'EEEE yyyy-MM-dd hh:mm'">{{
-    date | ago | async
-  }}</span>`,
+  template: `<span
+    [matTooltip]="(date | date : 'EEEE yyyy-MM-dd hh:mm') ?? ''"
+    >{{ date | ago | async }}</span
+  >`,
 })
 export class AgoComponent {
   @Input()

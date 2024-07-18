@@ -60,6 +60,7 @@ export class AssetDetailDialogDataService {
 
   contractAgreementDetails(
     contractAgreement: ContractAgreementCardMapped,
+    refreshCallback: () => void,
   ): AssetDetailDialogData {
     const asset = contractAgreement.asset;
 
@@ -85,6 +86,7 @@ export class AssetDetailDialogDataService {
       asset: contractAgreement.asset,
       contractAgreement,
       propertyGridGroups,
+      refreshCallback,
     };
   }
 }

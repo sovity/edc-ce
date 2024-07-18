@@ -1,5 +1,5 @@
 import {OperatorFunction} from 'rxjs';
-import {filter} from 'rxjs/operators';
+import {filter, tap} from 'rxjs/operators';
 
 /**
  * Simple not null filtering RXJS Operator.
@@ -8,4 +8,14 @@ import {filter} from 'rxjs/operators';
  */
 export function filterNotNull<T>(): OperatorFunction<T | null | undefined, T> {
   return filter((it) => it != null) as any;
+}
+
+export function throwIfNull<T>(
+  msg: string,
+): OperatorFunction<T | null | undefined, T> {
+  return tap((it) => {
+    if (it == null) {
+      throw new Error(msg);
+    }
+  }) as OperatorFunction<T | null | undefined, T>;
 }

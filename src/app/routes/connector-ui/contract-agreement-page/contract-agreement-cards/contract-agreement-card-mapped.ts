@@ -8,6 +8,8 @@ export type ContractAgreementCardMapped = Omit<
   asset: UiAssetMapped;
   isInProgress: boolean;
   isConsumingLimitsEnforced: boolean;
+  isTerminated: boolean;
+  showStatus: boolean;
   statusText: string;
   statusTooltipText: string;
   canTransfer: boolean;

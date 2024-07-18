@@ -18,6 +18,9 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
+- Both providers and consumers can now terminate contracts.
+- Contracts can be filtered by their termination status.
+
 #### Patch
 
 ### Deployment Migration Notes

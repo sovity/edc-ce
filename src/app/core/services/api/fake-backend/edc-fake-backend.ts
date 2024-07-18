@@ -1,9 +1,12 @@
 import {
   AssetPageToJSON,
+  ConnectorLimitsToJSON,
+  ContractAgreementPageQueryFromJSON,
   ContractAgreementPageToJSON,
   ContractDefinitionPageToJSON,
   ContractDefinitionRequestFromJSON,
   ContractNegotiationRequestFromJSON,
+  ContractTerminationRequestFromJSON,
   DashboardPageToJSON,
   FetchAPI,
   IdResponseDtoToJSON,
@@ -37,7 +40,9 @@ import {
   getContractNegotiation,
   initiateContractNegotiation,
 } from './connector-fake-impl/contract-negotiation-fake-service';
+import {initiateContractTermination} from './connector-fake-impl/contract-termination-fake-service';
 import {dashboardPage} from './connector-fake-impl/dashboard-fake-service';
+import {connectorLimits} from './connector-fake-impl/ee-fake-service';
 import {
   createPolicyDefinition,
   deletePolicyDefinition,
@@ -60,7 +65,7 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
   input: RequestInfo,
   init?: RequestInit,
 ): Promise<Response> => {
-  const url = getUrl(input, 'http://edc.fake-backend/wrapper/ui/');
+  const url = getUrl(input, 'http://edc.fake-backend/wrapper/');
   const method = getMethod(init);
   const body = getBody(init);
   const params = getQueryParams(input);
@@ -76,119 +81,136 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
   );
 
   return new UrlInterceptor(url, method)
-    .url('pages/dashboard-page')
+    .url('ui/pages/dashboard-page')
     .on('GET', () => {
       const page = dashboardPage();
       return ok(DashboardPageToJSON(page));
     })
 
-    .url('pages/asset-page')
+    .url('ui/pages/asset-page')
     .on('GET', () => {
       const page = assetPage();
       return ok(AssetPageToJSON(page));
     })
 
-    .url('pages/asset-page/assets')
+    .url('ui/pages/asset-page/assets')
     .on('POST', () => {
       const createRequest = UiAssetCreateRequestFromJSON(body);
       const created = createAsset(createRequest);
       return ok(IdResponseDtoToJSON(created));
     })
 
-    .url('pages/asset-page/assets/*')
+    .url('ui/pages/asset-page/assets/*')
     .on('DELETE', (assetId) => {
       const deleted = deleteAsset(assetId);
       return ok(IdResponseDtoToJSON(deleted));
     })
 
-    .url('pages/asset-page/assets/*/metadata')
+    .url('ui/pages/asset-page/assets/*/metadata')
     .on('PUT', (assetId) => {
       const editRequest = UiAssetEditRequestFromJSON(body);
       const created = editAsset(assetId, editRequest);
       return ok(IdResponseDtoToJSON(created));
     })
 
-    .url('pages/policy-page')
+    .url('ui/pages/policy-page')
     .on('GET', () => {
       const page = policyDefinitionPage();
       return ok(PolicyDefinitionPageToJSON(page));
     })
 
-    .url('pages/policy-page/policy-definitions')
+    .url('ui/pages/policy-page/policy-definitions')
     .on('POST', () => {
       const createRequest = PolicyDefinitionCreateRequestFromJSON(body);
       const created = createPolicyDefinition(createRequest);
       return ok(IdResponseDtoToJSON(created));
     })
 
-    .url('pages/policy-page/policy-definitions/*')
+    .url('ui/pages/policy-page/policy-definitions/*')
     .on('DELETE', (policyDefinitionId) => {
       const deleted = deletePolicyDefinition(policyDefinitionId);
       return ok(IdResponseDtoToJSON(deleted));
     })
 
-    .url('pages/contract-definition-page')
+    .url('ui/pages/contract-definition-page')
     .on('GET', () => {
       const page = contractDefinitionPage();
       return ok(ContractDefinitionPageToJSON(page));
     })
 
-    .url('pages/contract-definition-page/contract-definitions')
+    .url('ui/pages/contract-definition-page/contract-definitions')
     .on('POST', () => {
       const createRequest = ContractDefinitionRequestFromJSON(body);
       const created = createContractDefinition(createRequest);
       return ok(IdResponseDtoToJSON(created));
     })
 
-    .url('pages/contract-definition-page/contract-definitions/*')
+    .url('ui/pages/contract-definition-page/contract-definitions/*')
     .on('DELETE', (contractDefinitionId) => {
       const deleted = deleteContractDefinition(contractDefinitionId);
       return ok(IdResponseDtoToJSON(deleted));
     })
 
-    .url('pages/catalog-page/data-offers')
+    .url('ui/pages/catalog-page/data-offers')
     .on('GET', () => {
       const connectorEndpoint = params.get('connectorEndpoint')!;
       const dataOffers = getCatalogPageDataOffers(connectorEndpoint);
       return ok(dataOffers.map(UiDataOfferToJSON));
     })
 
-    .url('pages/catalog-page/contract-negotiations')
+    .url('ui/pages/catalog-page/contract-negotiations')
     .on('POST', () => {
       const createRequest = ContractNegotiationRequestFromJSON(body);
       const contractNegotiation = initiateContractNegotiation(createRequest);
       return ok(UiContractNegotiationToJSON(contractNegotiation));
     })
 
-    .url('pages/catalog-page/contract-negotiations/*')
+    .url('ui/pages/catalog-page/contract-negotiations/*')
     .on('GET', (contractNegotiationId) => {
       const contractNegotiation = getContractNegotiation(contractNegotiationId);
       return ok(UiContractNegotiationToJSON(contractNegotiation));
     })
 
-    .url('pages/contract-agreement-page')
-    .on('GET', () => {
-      const page = contractAgreementPage();
+    .url('ui/pages/contract-agreement-page')
+    .on('POST', () => {
+      const request = ContractAgreementPageQueryFromJSON(body);
+      const page = contractAgreementPage({contractAgreementPageQuery: request});
       return ok(ContractAgreementPageToJSON(page));
     })
 
-    .url('pages/contract-agreement-page/transfers')
+    .url('ui/pages/content-agreement-page/*/terminate')
+    .on('POST', (contractAgreementId) => {
+      const request = ContractTerminationRequestFromJSON(body);
+      const response = initiateContractTermination({
+        contractAgreementId: contractAgreementId,
+        contractTerminationRequest: request,
+      });
+      return ok(IdResponseDtoToJSON(response));
+    })
+
+    .url('ui/pages/contract-agreement-page/transfers')
     .on('POST', () => {
       const transferRequest = InitiateTransferRequestFromJSON(body);
       const created = contractAgreementInitiateTransfer(transferRequest);
       return ok(IdResponseDtoToJSON(created));
     })
 
-    .url('pages/transfer-history-page')
+    .url('ui/pages/transfer-history-page')
     .on('GET', () => {
       const page = transferHistoryPage();
       return ok(TransferHistoryPageToJSON(page));
     })
 
-    .url('pages/transfer-history-page/transfer-processes/*/asset')
+    .url('ui/pages/transfer-history-page/transfer-processes/*/asset')
     .on('GET', (transferProcessId) => {
       const asset = transferProcessAsset(transferProcessId);
       return ok(UiAssetToJSON(asset));
+    })
+
+    .url('ee/connector-limits')
+    .on('GET', () => {
+      const limits = connectorLimits();
+      return ok(ConnectorLimitsToJSON(limits));
     })
 
     .tryMatch();

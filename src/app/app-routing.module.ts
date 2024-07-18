@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {RouterModule, ROUTES, Routes} from '@angular/router';
+import {ROUTES, RouterModule, Routes} from '@angular/router';
 import {PageNotFoundComponent} from './component-library/error-404-component/page-not-found.component';
 import {APP_CONFIG, AppConfig} from './core/config/app-config';
 

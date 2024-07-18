@@ -1,0 +1,71 @@
+<h1 mat-dialog-title>Terminate Contract Agreement</h1>
+<mat-dialog-content class="w-[800px] h-fit">
+  <form [formGroup]="form.all">
+    <div class="flex flex-col gap-1">
+      <div>
+        By clicking the 'Terminate Contract' button, you will terminate the
+        contract agreement. New data transfers via this agreement will no longer
+        be possible and current transfer processes will be canceled.
+      </div>
+      <div>This action is irreversible.</div>
+    </div>
+
+    <div class="flex flex-col gap-1 mt-6">
+      <div class="form-section-title !mt-0">Termination Details</div>
+      <!-- Reason -->
+      <mat-form-field class="grow">
+        <mat-label>Reason</mat-label>
+        <input
+          matInput
+          formControlName="shortReason"
+          placeholder="Enter reason for termination"
+          required />
+      </mat-form-field>
+
+      <mat-form-field class="grow">
+        <mat-label>Detailed reason</mat-label>
+        <textarea
+          matInput
+          formControlName="detailedReason"
+          placeholder="You can enter a detailed explanation here"
+          autofocus
+          rows="10"></textarea>
+        <mat-hint align="end"
+          >{{ form.all.controls.detailedReason.value.length }}/1000
+          characters</mat-hint
+        >
+        <mat-error
+          *ngIf="form.all.controls.detailedReason.hasError('maxlength')">
+          Maximum 1000 characters allowed.
+        </mat-error>
+        <mat-error
+          *ngIf="form.all.controls.detailedReason.hasError('required')">
+          Field is required.
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+
+  <!-- Confirmation box -->
+  <div class="flex flex-col mt-[10px]">
+    <mat-checkbox
+      [checked]="checkboxChecked"
+      (change)="onCheckboxChange($event)">
+      I understand the consequences of terminating a contract.
+    </mat-checkbox>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions class="flex flex-row justify-end">
+  <button mat-stroked-button [mat-dialog-close]="null" [disabled]="loading">
+    Cancel
+  </button>
+
+  <button
+    mat-raised-button
+    color="warn"
+    [disabled]="!form.all.valid || loading || !checkboxChecked"
+    (click)="onSave()">
+    Terminate
+  </button>
+</mat-dialog-actions>
