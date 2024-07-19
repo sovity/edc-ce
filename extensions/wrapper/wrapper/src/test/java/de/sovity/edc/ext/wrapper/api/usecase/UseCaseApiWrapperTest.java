@@ -22,7 +22,7 @@ import de.sovity.edc.client.gen.model.CatalogFilterExpressionOperator;
 import de.sovity.edc.client.gen.model.CatalogQuery;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.DataSourceType;
-import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.client.gen.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiCriterion;
 import de.sovity.edc.client.gen.model.UiCriterionLiteral;
@@ -30,7 +30,8 @@ import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
-import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.client.gen.model.UiPolicyExpression;
+import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
@@ -201,11 +202,11 @@ class UseCaseApiWrapperTest {
                 .mediaType("application/json")
                 .build()).getId();
 
-        policyId = client.uiApi().createPolicyDefinition(PolicyDefinitionCreateRequest.builder()
+        policyId = client.uiApi().createPolicyDefinitionV2(PolicyDefinitionCreateDto.builder()
                 .policyDefinitionId("policy-1")
-                .policy(UiPolicyCreateRequest.builder()
-                        .constraints(List.of())
-                        .build())
+                .expression(UiPolicyExpression.builder()
+                    .type(UiPolicyExpressionType.EMPTY)
+                    .build())
                 .build()).getId();
     }
 }

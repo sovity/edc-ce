@@ -45,22 +45,22 @@ public class UiPolicyLiteral {
 
     public static UiPolicyLiteral ofString(String string) {
         return UiPolicyLiteral.builder()
-                .type(UiPolicyLiteralType.STRING)
-                .value(string)
-                .build();
+            .type(UiPolicyLiteralType.STRING)
+            .value(string)
+            .build();
     }
 
     public static UiPolicyLiteral ofJson(String jsonString) {
         return UiPolicyLiteral.builder()
-                .type(UiPolicyLiteralType.JSON)
-                .value(jsonString)
-                .build();
+            .type(UiPolicyLiteralType.JSON)
+            .value(jsonString)
+            .build();
     }
 
     public static UiPolicyLiteral ofStringList(Collection<String> strings) {
         return UiPolicyLiteral.builder()
-                .type(UiPolicyLiteralType.STRING_LIST)
-                .valueList(new ArrayList<>(strings))
-                .build();
+            .type(UiPolicyLiteralType.STRING_LIST)
+            .valueList(new ArrayList<>(strings))
+            .build();
     }
 }

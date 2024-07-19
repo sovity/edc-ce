@@ -21,7 +21,7 @@ import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
-import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.client.gen.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiContractOffer;
@@ -33,7 +33,8 @@ import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
-import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.client.gen.model.UiPolicyExpression;
+import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
@@ -146,32 +147,41 @@ class ApiWrapperDemoTest {
     }
 
     private void createPolicy() {
-        var afterYesterday = UiPolicyConstraint.builder()
-            .left("POLICY_EVALUATION_TIME")
-            .operator(OperatorDto.GT)
-            .right(UiPolicyLiteral.builder()
-                .type(UiPolicyLiteralType.STRING)
-                .value(OffsetDateTime.now().minusDays(1).toString())
+        var afterYesterday = UiPolicyExpression.builder()
+            .type(UiPolicyExpressionType.CONSTRAINT)
+            .constraint(UiPolicyConstraint.builder()
+                .left("POLICY_EVALUATION_TIME")
+                .operator(OperatorDto.GT)
+                .right(UiPolicyLiteral.builder()
+                    .type(UiPolicyLiteralType.STRING)
+                    .value(OffsetDateTime.now().minusDays(1).toString())
+                    .build())
                 .build())
             .build();
 
-        var beforeTomorrow = UiPolicyConstraint.builder()
-            .left("POLICY_EVALUATION_TIME")
-            .operator(OperatorDto.LT)
-            .right(UiPolicyLiteral.builder()
-                .type(UiPolicyLiteralType.STRING)
-                .value(OffsetDateTime.now().plusDays(1).toString())
+        var beforeTomorrow = UiPolicyExpression.builder()
+            .type(UiPolicyExpressionType.CONSTRAINT)
+            .constraint(UiPolicyConstraint.builder()
+                .left("POLICY_EVALUATION_TIME")
+                .operator(OperatorDto.LT)
+                .right(UiPolicyLiteral.builder()
+                    .type(UiPolicyLiteralType.STRING)
+                    .value(OffsetDateTime.now().plusDays(1).toString())
+                    .build())
                 .build())
             .build();
 
-        var policyDefinition = PolicyDefinitionCreateRequest.builder()
+        var expression = UiPolicyExpression.builder()
+            .type(UiPolicyExpressionType.AND)
+            .expressions(List.of(afterYesterday, beforeTomorrow))
+            .build();
+
+        var policyDefinition = PolicyDefinitionCreateDto.builder()
             .policyDefinitionId(dataOfferId)
-            .policy(UiPolicyCreateRequest.builder()
-                .constraints(List.of(afterYesterday, beforeTomorrow))
-                .build())
+            .expression(expression)
             .build();
 
-        providerClient.uiApi().createPolicyDefinition(policyDefinition);
+        providerClient.uiApi().createPolicyDefinitionV2(policyDefinition);
     }
 
     private void createContractDefinition() {

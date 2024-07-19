@@ -14,7 +14,8 @@
 
 package de.sovity.edc.ext.wrapper.api.ui;
 
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionCreateDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
@@ -103,8 +104,14 @@ public class UiResourceImpl implements UiResource {
     }
 
     @Override
+    @Deprecated
     public IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto) {
         return policyDefinitionApiService.createPolicyDefinition(policyDefinitionDtoDto);
+    }
+
+    @Override
+    public IdResponseDto createPolicyDefinitionV2(PolicyDefinitionCreateDto policyDefinitionCreateDto) {
+        return policyDefinitionApiService.createPolicyDefinitionV2(policyDefinitionCreateDto);
     }
 
     @Override

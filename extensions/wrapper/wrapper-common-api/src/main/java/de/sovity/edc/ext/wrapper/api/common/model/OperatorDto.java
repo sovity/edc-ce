@@ -8,7 +8,8 @@
  *  SPDX-License-Identifier: Apache-2.0
  *
  *  Contributors:
- *       sovity GmbH - init
+ *       Fraunhofer ISST - initial implementation
+ *       sovity GmbH - documentation changes
  *
  */
 
@@ -17,11 +18,9 @@ package de.sovity.edc.ext.wrapper.api.common.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Equivalent of ODRL Policy Operator for our API Wrapper API.
- *
  * @author tim.dahlmanns@isst.fraunhofer.de
  */
-@Schema(description = "Operator for policies", enumAsRef = true)
+@Schema(description = "Type-Safe ODRL Policy Operator as supported by the sovity product landscape", enumAsRef = true)
 public enum OperatorDto {
     EQ,
     NEQ,

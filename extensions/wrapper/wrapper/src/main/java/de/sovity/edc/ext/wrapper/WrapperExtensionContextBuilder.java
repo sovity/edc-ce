@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.LegacyPolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetEditRequestMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetJsonLdBuilder;
@@ -28,7 +29,8 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.DataSourceMapper
 import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpDataSourceMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpHeaderMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.AtomicConstraintMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ConstraintExtractor;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionExtractor;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.LiteralMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.PolicyValidator;
@@ -143,18 +145,11 @@ public class WrapperExtensionContextBuilder {
         var criterionOperatorMapper = new CriterionOperatorMapper();
         var criterionLiteralMapper = new CriterionLiteralMapper();
         var criterionMapper = new CriterionMapper(criterionOperatorMapper, criterionLiteralMapper);
-        var literalMapper = new LiteralMapper(objectMapper);
-        var atomicConstraintMapper = new AtomicConstraintMapper(literalMapper, operatorMapper);
-        var policyValidator = new PolicyValidator();
-        var constraintExtractor = new ConstraintExtractor(policyValidator, atomicConstraintMapper);
-        var policyMapper = new PolicyMapper(
-            constraintExtractor,
-            atomicConstraintMapper,
-            typeTransformerRegistry);
         var edcPropertyUtils = new EdcPropertyUtils();
         var selfDescriptionService = new SelfDescriptionService(config, monitor);
         var ownConnectorEndpointService = new OwnConnectorEndpointServiceImpl(selfDescriptionService);
         var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd, ownConnectorEndpointService);
+        var policyMapper = newPolicyMapper(objectMapper, typeTransformerRegistry, operatorMapper);
         var transferProcessStateService = new TransferProcessStateService();
         var contractNegotiationUtils = new ContractNegotiationUtils(
             contractNegotiationService,
@@ -218,9 +213,11 @@ public class WrapperExtensionContextBuilder {
         var agreementDetailsQuery = new ContractAgreementTerminationDetailsQuery();
         var terminateContractQuery = new TerminateContractQuery();
         var contractAgreementTerminationApiService = new ContractAgreementTerminationApiService(contractAgreementTerminationService);
+        var legacyPolicyMapper = new LegacyPolicyMapper();
         var policyDefinitionApiService = new PolicyDefinitionApiService(
             policyDefinitionService,
-            policyMapper
+            policyMapper,
+            legacyPolicyMapper
         );
         var dataOfferBuilder = new DspDataOfferBuilder(jsonLd);
         var uiDataOfferBuilder = new UiDataOfferBuilder(assetMapper, policyMapper);
@@ -295,8 +292,7 @@ public class WrapperExtensionContextBuilder {
         var useCaseResource = new UseCaseResourceImpl(
             kpiApiService,
             supportedPolicyApiService,
-            useCaseCatalogApiService,
-            policyDefinitionApiService
+            useCaseCatalogApiService
         );
 
         // Collect all JAX-RS resources
@@ -337,6 +333,24 @@ public class WrapperExtensionContextBuilder {
             assetJsonLdBuilder,
             assetJsonLdParser,
             jsonLd
+        );
+    }
+
+    @NotNull
+    private static PolicyMapper newPolicyMapper(
+        ObjectMapper objectMapper,
+        TypeTransformerRegistry typeTransformerRegistry,
+        OperatorMapper operatorMapper
+    ) {
+        var literalMapper = new LiteralMapper(objectMapper);
+        var atomicConstraintMapper = new AtomicConstraintMapper(literalMapper, operatorMapper);
+        var policyValidator = new PolicyValidator();
+        var expressionMapper = new ExpressionMapper(atomicConstraintMapper);
+        var constraintExtractor = new ExpressionExtractor(policyValidator, expressionMapper);
+        return new PolicyMapper(
+            constraintExtractor,
+            expressionMapper,
+            typeTransformerRegistry
         );
     }
 }

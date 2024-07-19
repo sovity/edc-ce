@@ -52,8 +52,8 @@ public class JsonBuilderUtils {
      * Adds non-null non-blank trimmed items as a JSON Array
      *
      * @param builder target object
-     * @param key     key
-     * @param values  list of values
+     * @param key key
+     * @param values list of values
      */
     public static void addNotBlankStringArray(JsonObjectBuilder builder, String key, List<String> values) {
         var filteredItems = (values == null ? Stream.<String>of() : values.stream())

@@ -28,7 +28,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Data Offer Data Source Model. Supports certain Data Address types but also leaves a backdoor for custom Data Address Properties.")
+@Schema(description = "Type-safe data source as supported by the sovity product landscape. Contains extension points for using custom data address properties.")
 public class UiDataSource {
     @Schema(
         description = "Data Address Type.",

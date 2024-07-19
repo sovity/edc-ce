@@ -12,9 +12,10 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.common.model;
+package de.sovity.edc.ext.wrapper.api.ui.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyExpression;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,12 +27,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Data for creating a Policy Definition")
-public class PolicyDefinitionCreateRequest {
+@Schema(description = "Create a Policy Definition")
+public class PolicyDefinitionCreateDto {
     @Schema(description = "Policy Definition ID", requiredMode = Schema.RequiredMode.REQUIRED)
     private String policyDefinitionId;
 
-    @Schema(description = "Policy Contents", requiredMode = Schema.RequiredMode.REQUIRED)
-    private UiPolicyCreateRequest policy;
+    @Schema(description = "Policy Expression", requiredMode = Schema.RequiredMode.REQUIRED)
+    private UiPolicyExpression expression;
 }
 

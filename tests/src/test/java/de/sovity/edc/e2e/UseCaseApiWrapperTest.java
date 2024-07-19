@@ -23,7 +23,7 @@ import de.sovity.edc.client.gen.model.CatalogQuery;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.OperatorDto;
-import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.client.gen.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiCriterion;
 import de.sovity.edc.client.gen.model.UiCriterionLiteral;
@@ -32,7 +32,8 @@ import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
-import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.client.gen.model.UiPolicyExpression;
+import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
@@ -96,17 +97,19 @@ class UseCaseApiWrapperTest {
         String rightOperand) {
 
         return CatalogQuery.builder()
-                .connectorEndpoint(getProtocolEndpoint(providerConnector))
-                .filterExpressions(
-                        List.of(
-                                CatalogFilterExpression.builder()
-                                        .operandLeft(leftOperand)
-                                        .operator(operator)
-                                        .operandRight(CatalogFilterExpressionLiteral.builder().value(rightOperand).type(CatalogFilterExpressionLiteralType.VALUE).build())
-                                        .build()
-                        )
+            .connectorEndpoint(getProtocolEndpoint(providerConnector))
+            .filterExpressions(
+                List.of(
+                    CatalogFilterExpression.builder()
+                        .operandLeft(leftOperand)
+                        .operator(operator)
+                        .operandRight(
+                            CatalogFilterExpressionLiteral.builder().value(rightOperand).type(CatalogFilterExpressionLiteralType.VALUE)
+                                .build())
+                        .build()
                 )
-                .build();
+            )
+            .build();
     }
 
     private void createAsset(EdcClient providerClient) {
@@ -132,48 +135,57 @@ class UseCaseApiWrapperTest {
     }
 
     private void createPolicy(EdcClient providerClient) {
-        var afterYesterday = UiPolicyConstraint.builder()
+        var afterYesterday = UiPolicyExpression.builder()
+            .type(UiPolicyExpressionType.CONSTRAINT)
+            .constraint(UiPolicyConstraint.builder()
                 .left("POLICY_EVALUATION_TIME")
                 .operator(OperatorDto.GT)
                 .right(UiPolicyLiteral.builder()
-                        .type(UiPolicyLiteralType.STRING)
-                        .value(OffsetDateTime.now().minusDays(1).toString())
-                        .build())
-                .build();
+                    .type(UiPolicyLiteralType.STRING)
+                    .value(OffsetDateTime.now().minusDays(1).toString())
+                    .build())
+                .build())
+            .build();
 
-        var beforeTomorrow = UiPolicyConstraint.builder()
+        var beforeTomorrow = UiPolicyExpression.builder()
+            .type(UiPolicyExpressionType.CONSTRAINT)
+            .constraint(UiPolicyConstraint.builder()
                 .left("POLICY_EVALUATION_TIME")
                 .operator(OperatorDto.LT)
                 .right(UiPolicyLiteral.builder()
-                        .type(UiPolicyLiteralType.STRING)
-                        .value(OffsetDateTime.now().plusDays(1).toString())
-                        .build())
-                .build();
+                    .type(UiPolicyLiteralType.STRING)
+                    .value(OffsetDateTime.now().plusDays(1).toString())
+                    .build())
+                .build())
+            .build();
 
-        var policyDefinition = PolicyDefinitionCreateRequest.builder()
-                .policyDefinitionId(dataOfferId)
-                .policy(UiPolicyCreateRequest.builder()
-                        .constraints(List.of(afterYesterday, beforeTomorrow))
-                        .build())
-                .build();
+        var expression = UiPolicyExpression.builder()
+            .type(UiPolicyExpressionType.AND)
+            .expressions(List.of(afterYesterday, beforeTomorrow))
+            .build();
 
-        providerClient.uiApi().createPolicyDefinition(policyDefinition);
+        var policyDefinition = PolicyDefinitionCreateDto.builder()
+            .policyDefinitionId(dataOfferId)
+            .expression(expression)
+            .build();
+
+        providerClient.uiApi().createPolicyDefinitionV2(policyDefinition);
     }
 
     private void createContractDefinition(EdcClient providerClient) {
         var contractDefinition = ContractDefinitionRequest.builder()
-                .contractDefinitionId(dataOfferId)
-                .accessPolicyId(dataOfferId)
-                .contractPolicyId(dataOfferId)
-                .assetSelector(List.of(UiCriterion.builder()
-                        .operandLeft(Prop.Edc.ID)
-                        .operator(UiCriterionOperator.EQ)
-                        .operandRight(UiCriterionLiteral.builder()
-                                .type(UiCriterionLiteralType.VALUE)
-                                .value(dataOfferId)
-                                .build())
-                        .build()))
-                .build();
+            .contractDefinitionId(dataOfferId)
+            .accessPolicyId(dataOfferId)
+            .contractPolicyId(dataOfferId)
+            .assetSelector(List.of(UiCriterion.builder()
+                .operandLeft(Prop.Edc.ID)
+                .operator(UiCriterionOperator.EQ)
+                .operandRight(UiCriterionLiteral.builder()
+                    .type(UiCriterionLiteralType.VALUE)
+                    .value(dataOfferId)
+                    .build())
+                .build()))
+            .build();
 
         providerClient.uiApi().createContractDefinition(contractDefinition);
     }

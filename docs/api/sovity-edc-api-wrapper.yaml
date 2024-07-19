@@ -121,13 +121,33 @@ paths:
     post:
       tags:
       - UI
-      description: Create a new Policy Definition
+      description: "[Deprecated] Create a new Policy Definition from a list of constraints.\
+        \ Use createPolicyDefinitionV2 instead."
       operationId: createPolicyDefinition
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PolicyDefinitionCreateRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
+      deprecated: true
+  /wrapper/ui/v2/pages/policy-page/policy-definitions:
+    post:
+      tags:
+      - UI
+      description: Create a new Policy Definition
+      operationId: createPolicyDefinitionV2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicyDefinitionCreateDto'
       responses:
         default:
           description: default response
@@ -495,24 +515,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
-  /wrapper/use-case-api/policy-definition:
-    post:
-      tags:
-      - Use Case
-      description: Create a new Policy Definition
-      operationId: createPolicyDefinitionUseCase
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PolicyCreateRequest'
-      responses:
-        default:
-          description: default response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IdResponseDto'
   /wrapper/use-case-api/kpis:
     get:
       tags:
@@ -582,11 +584,11 @@ components:
     DataSourceType:
       type: string
       description: Supported Data Source Types by UiDataSource
+      default: CUSTOM
       enum:
       - HTTP_DATA
       - ON_REQUEST
       - CUSTOM
-      default: CUSTOM
     SecretValue:
       type: object
       properties:
@@ -719,8 +721,8 @@ components:
           type: string
           description: Same as customJsonLdAsString but the data will be stored in
             the private properties. The same limitations apply.
-      description: Type-Safe OpenAPI generator friendly Asset Create DTO that supports
-        an opinionated subset of the original EDC Asset Entity.
+      description: Type-safe data offer metadata for creating an asset as supported
+        by the sovity product landscape. Contains extension points.
     UiDataSource:
       required:
       - type
@@ -738,8 +740,8 @@ components:
             type: string
             description: For all types. Custom Data Address Properties.
           description: For all types. Custom Data Address Properties.
-      description: Data Offer Data Source Model. Supports certain Data Address types
-        but also leaves a backdoor for custom Data Address Properties.
+      description: Type-safe data source as supported by the sovity product landscape.
+        Contains extension points for using custom data address properties.
     UiDataSourceHttpData:
       required:
       - baseUrl
@@ -790,10 +792,11 @@ components:
             \ both a request body and a content type. Only Methods POST, PUT and PATCH\
             \ allow request bodies."
           default: false
-      description: Only for type HTTP_DATA
+      description: HTTP_DATA type Data Source.
     UiDataSourceHttpDataMethod:
       type: string
       description: Supported HTTP Methods by UiDataSource
+      default: GET
       enum:
       - GET
       - POST
@@ -801,7 +804,6 @@ components:
       - PATCH
       - DELETE
       - OPTIONS
-      default: GET
     UiDataSourceOnRequest:
       required:
       - contactEmail
@@ -899,7 +901,8 @@ components:
       - LIKE
     OperatorDto:
       type: string
-      description: Operator for policies
+      description: Type-Safe ODRL Policy Operator as supported by the sovity product
+        landscape
       enum:
       - EQ
       - NEQ
@@ -924,7 +927,8 @@ components:
           description: Policy Definition ID
         policy:
           $ref: '#/components/schemas/UiPolicyCreateRequest'
-      description: Data for creating a Policy Definition
+      description: "[Deprecated] Create a Policy Definition. Use PolicyDefinitionCreateDto"
+      deprecated: true
     UiPolicyConstraint:
       required:
       - left
@@ -939,18 +943,19 @@ components:
           $ref: '#/components/schemas/OperatorDto'
         right:
           $ref: '#/components/schemas/UiPolicyLiteral'
-      description: ODRL AtomicConstraint as supported by our UI
+      description: "ODRL AtomicConstraint as supported by the sovity product landscape.\
+        \ For example 'a EQ b', 'c IN [d, e, f]'"
     UiPolicyCreateRequest:
       type: object
       properties:
         constraints:
           type: array
-          description: Conjunction of required expressions for the policy to evaluate
-            to TRUE.
+          description: Conjunction of required constraints
+          deprecated: true
           items:
             $ref: '#/components/schemas/UiPolicyConstraint'
-      description: Type-Safe OpenAPI generator friendly Policy Create DTO that supports
-        an opinionated subset of the original EDC Policy Entity.
+      description: "[Deprecated] Conjunction of constraints (simplified UiPolicyExpression)"
+      deprecated: true
     UiPolicyLiteral:
       required:
       - type
@@ -975,6 +980,48 @@ components:
       - STRING
       - STRING_LIST
       - JSON
+    PolicyDefinitionCreateDto:
+      required:
+      - expression
+      - policyDefinitionId
+      type: object
+      properties:
+        policyDefinitionId:
+          type: string
+          description: Policy Definition ID
+        expression:
+          $ref: '#/components/schemas/UiPolicyExpression'
+      description: Create a Policy Definition
+    UiPolicyExpression:
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/UiPolicyExpressionType'
+        expressions:
+          type: array
+          description: "Only for types AND, OR, XONE. List of sub-expressions to be\
+            \ evaluated according to the expressionType."
+          items:
+            $ref: '#/components/schemas/UiPolicyExpression'
+        constraint:
+          $ref: '#/components/schemas/UiPolicyConstraint'
+      description: ODRL constraint as supported by the sovity product landscape
+    UiPolicyExpressionType:
+      type: string
+      description: |
+        Ui Policy Expression types:
+        * `CONSTRAINT` - Expression 'a=b'
+        * `AND` - Conjunction of several expressions. Evaluates to true iff all child expressions are true.
+        * `OR` - Disjunction of several expressions. Evaluates to true iff at least one child expression is true.
+        * `XONE` - XONE operation. Evaluates to true iff exactly one child expression is true.
+      enum:
+      - EMPTY
+      - CONSTRAINT
+      - AND
+      - OR
+      - XONE
     UiAssetEditRequest:
       type: object
       properties:
@@ -1087,7 +1134,8 @@ components:
           type: string
           description: Same as customJsonLdAsString but the data will be stored in
             the private properties. The same limitations apply.
-      description: Data for editing an asset.
+      description: Type-safe data offer metadata for editing an asset as supported
+        by the sovity product landscape. Contains extension points.
     AssetPage:
       required:
       - assets
@@ -1274,7 +1322,8 @@ components:
           type: string
           description: Same as customJsonLdAsString but the data will be stored in
             the private properties. The same limitations apply.
-      description: Type-Safe Asset Metadata as needed by our UI
+      description: Type-safe data offer metadata as supported by the sovity product
+        landscape. Contains extension points.
     UiContractOffer:
       required:
       - contractOfferId
@@ -1319,12 +1368,8 @@ components:
           type: string
           description: EDC Policy JSON-LD. This is required because the EDC requires
             the full policy when initiating contract negotiations.
-        constraints:
-          type: array
-          description: Conjunction of required expressions for the policy to evaluate
-            to TRUE.
-          items:
-            $ref: '#/components/schemas/UiPolicyConstraint'
+        expression:
+          $ref: '#/components/schemas/UiPolicyExpression'
         errors:
           type: array
           description: "When trying to reduce the policy JSON-LD to our opinionated\
@@ -1337,8 +1382,8 @@ components:
               \ subset of functionalities, many fields and functionalities are unsupported.\
               \ Should any discrepancies occur during the mapping process, we'll collect\
               \ them here."
-      description: Type-Safe OpenAPI generator friendly Policy DTO as needed by our
-        UI
+      description: Type-Safe OpenAPI generator friendly ODLR policy subset as endorsed
+        by sovity.
     ContractAgreementCard:
       required:
       - asset
@@ -1872,69 +1917,6 @@ components:
           type: string
           description: A short reason why this contract was terminated
       description: Data for terminating a Contract Agreement
-    AtomicConstraintDto:
-      required:
-      - leftExpression
-      - operator
-      - rightExpression
-      type: object
-      properties:
-        leftExpression:
-          type: string
-          description: Left part of the constraint.
-        operator:
-          $ref: '#/components/schemas/OperatorDto'
-        rightExpression:
-          type: string
-          description: Right part of the constraint.
-      description: Type-Safe OpenAPI generator friendly Constraint DTO that supports
-        an opinionated subset of the original EDC Constraint Entity.
-    Expression:
-      type: object
-      properties:
-        expressionType:
-          $ref: '#/components/schemas/ExpressionType'
-        expressions:
-          type: array
-          description: List of policy elements that are evaluated according the expressionType.
-          items:
-            $ref: '#/components/schemas/Expression'
-        atomicConstraint:
-          $ref: '#/components/schemas/AtomicConstraintDto'
-      description: Represents a single atomic constraint or a multiplicity constraint.
-        The atomicConstraint will be evaluated if the constraintType is ATOMIC_CONSTRAINT.
-    ExpressionType:
-      type: string
-      description: |
-        Expression types:
-        * `ATOMIC_CONSTRAINT` - A single constraint for the policy
-        * `AND` - Several constraints, all of which must be respected
-        * `OR` - Several constraints, of which at least one must be respected
-        * `XOR` - Several constraints, of which exactly one must be respected
-      enum:
-      - ATOMIC_CONSTRAINT
-      - AND
-      - OR
-      - XOR
-    PermissionDto:
-      required:
-      - expression
-      type: object
-      properties:
-        expression:
-          $ref: '#/components/schemas/Expression'
-      description: Permission description for the policy to evaluate to TRUE.
-    PolicyCreateRequest:
-      required:
-      - policyDefinitionId
-      type: object
-      properties:
-        policyDefinitionId:
-          type: string
-          description: Policy Definition ID
-        permission:
-          $ref: '#/components/schemas/PermissionDto'
-      description: Policy Creation Request Supporting Multiplicity Constraints.
     KpiResult:
       required:
       - assetsCount

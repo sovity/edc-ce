@@ -17,17 +17,17 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.OperatorDto;
-import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.client.gen.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionDto;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
-import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.client.gen.model.UiPolicyExpression;
+import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.ext.db.jooq.Tables;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
-import lombok.SneakyThrows;
 import lombok.val;
 import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -37,7 +37,6 @@ import org.jooq.DSLContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import java.util.List;
 import java.util.Map;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
@@ -62,12 +61,15 @@ class PolicyDefinitionApiServiceTest {
         }
     );
 
-    UiPolicyConstraint constraint = UiPolicyConstraint.builder()
-        .left("a")
-        .operator(OperatorDto.EQ)
-        .right(UiPolicyLiteral.builder()
-            .type(UiPolicyLiteralType.STRING)
-            .value("b")
+    UiPolicyExpression expression = UiPolicyExpression.builder()
+        .type(UiPolicyExpressionType.CONSTRAINT)
+        .constraint(UiPolicyConstraint.builder()
+            .left("a")
+            .operator(OperatorDto.EQ)
+            .right(UiPolicyLiteral.builder()
+                .type(UiPolicyLiteralType.STRING)
+                .value("b")
+                .build())
             .build())
         .build();
 
@@ -86,10 +88,7 @@ class PolicyDefinitionApiServiceTest {
             .filter(it -> it.getPolicyDefinitionId().equals("my-policy-def-1"))
             .findFirst().get();
         assertThat(policyDefinition.getPolicyDefinitionId()).isEqualTo("my-policy-def-1");
-        assertThat(policyDefinition.getPolicy().getConstraints()).hasSize(1);
-
-        var constraintEntry = policyDefinition.getPolicy().getConstraints().get(0);
-        assertThat(constraintEntry).usingRecursiveComparison().isEqualTo(constraint);
+        assertThat(policyDefinition.getPolicy().getExpression()).usingRecursiveComparison().isEqualTo(expression);
     }
 
     @Test
@@ -144,9 +143,8 @@ class PolicyDefinitionApiServiceTest {
     }
 
     private void createPolicyDefinition(String policyDefinitionId) {
-        var policy = new UiPolicyCreateRequest(List.of(constraint));
-        var policyDefinition = new PolicyDefinitionCreateRequest(policyDefinitionId, policy);
-        client.uiApi().createPolicyDefinition(policyDefinition);
+        var policyDefinition = new PolicyDefinitionCreateDto(policyDefinitionId, expression);
+        client.uiApi().createPolicyDefinitionV2(policyDefinition);
     }
 
 }

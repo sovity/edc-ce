@@ -14,7 +14,6 @@
 
 package de.sovity.edc.ext.wrapper.api.ui;
 
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
@@ -30,6 +29,8 @@ import de.sovity.edc.ext.wrapper.api.ui.model.IdAvailabilityResponse;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateCustomTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateTransferRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionCreateDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiContractNegotiation;
@@ -97,8 +98,17 @@ interface UiResource {
     @Path("pages/policy-page/policy-definitions")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Create a new Policy Definition")
+    @Deprecated
+    @Operation(description = "[Deprecated] Create a new Policy Definition from a list of constraints. " +
+        "Use createPolicyDefinitionV2 instead.", deprecated = true)
     IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto);
+
+    @POST
+    @Path("v2/pages/policy-page/policy-definitions")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Create a new Policy Definition")
+    IdResponseDto createPolicyDefinitionV2(PolicyDefinitionCreateDto policyDefinitionCreateDto);
 
     @DELETE
     @Path("pages/policy-page/policy-definitions/{policyId}")

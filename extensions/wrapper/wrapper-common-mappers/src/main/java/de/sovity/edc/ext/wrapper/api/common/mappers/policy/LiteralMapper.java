@@ -42,23 +42,23 @@ public class LiteralMapper {
     }
 
     public Optional<String> getExpressionString(
-            Expression expression,
-            MappingErrors errors
+        Expression expression,
+        MappingErrors errors
     ) {
         return getLiteralExpression(expression, errors).flatMap(literalExpression ->
-                getLiteralExpressionString(literalExpression, errors));
+            getLiteralExpressionString(literalExpression, errors));
     }
 
     public Optional<UiPolicyLiteral> getExpressionValue(
-            Expression expression,
-            MappingErrors errors
+        Expression expression,
+        MappingErrors errors
     ) {
         return getLiteralExpression(expression, errors).flatMap(this::getLiteralExpressionValue);
     }
 
     private Optional<String> getLiteralExpressionString(
-            LiteralExpression literalExpression,
-            MappingErrors errors
+        LiteralExpression literalExpression,
+        MappingErrors errors
     ) {
         var value = literalExpression.getValue();
         if (value == null) {
@@ -84,7 +84,7 @@ public class LiteralMapper {
         }
 
         boolean isStringList = value instanceof Collection<?> && ((Collection<?>) value).stream()
-                .allMatch(it -> it == null || it instanceof String);
+            .allMatch(it -> it == null || it instanceof String);
         if (isStringList) {
             return Optional.of(UiPolicyLiteral.ofStringList((Collection<String>) value));
         }

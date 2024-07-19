@@ -63,7 +63,8 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.DataSourceMapper
 import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpDataSourceMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpHeaderMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.AtomicConstraintMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ConstraintExtractor;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionExtractor;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.LiteralMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.PolicyValidator;
@@ -95,12 +96,12 @@ import java.util.List;
 public class CrawlerExtensionContextBuilder {
 
     public static CrawlerExtensionContext buildContext(
-            Config config,
-            Monitor monitor,
-            TypeManager typeManager,
-            TypeTransformerRegistry typeTransformerRegistry,
-            JsonLd jsonLd,
-            CatalogService catalogService
+        Config config,
+        Monitor monitor,
+        TypeManager typeManager,
+        TypeTransformerRegistry typeTransformerRegistry,
+        JsonLd jsonLd,
+        CatalogService catalogService
     ) {
         // Config
         var crawlerConfigFactory = new CrawlerConfigFactory(config);
@@ -124,9 +125,9 @@ public class CrawlerExtensionContextBuilder {
         var crawlerEventLogger = new CrawlerEventLogger();
         var crawlerExecutionTimeLogger = new CrawlerExecutionTimeLogger();
         var dataOfferMappingUtils = new FetchedCatalogMappingUtils(
-                policyMapper,
-                assetMapper,
-                objectMapperJsonLd
+            policyMapper,
+            assetMapper,
+            objectMapperJsonLd
         );
         var contractOfferRecordUpdater = new ContractOfferRecordUpdater();
         var shortDescriptionBuilder = new ShortDescriptionBuilder();
@@ -134,34 +135,34 @@ public class CrawlerExtensionContextBuilder {
         var contractOfferQueries = new ContractOfferQueries();
         var dataOfferLimitsEnforcer = new DataOfferLimitsEnforcer(crawlerConfig, crawlerEventLogger);
         var dataOfferPatchBuilder = new CatalogPatchBuilder(
-                contractOfferQueries,
-                dataOfferQueries,
-                dataOfferRecordUpdater,
-                contractOfferRecordUpdater
+            contractOfferQueries,
+            dataOfferQueries,
+            dataOfferRecordUpdater,
+            contractOfferRecordUpdater
         );
         var dataOfferPatchApplier = new CatalogPatchApplier();
         var dataOfferWriter = new ConnectorUpdateCatalogWriter(dataOfferPatchBuilder, dataOfferPatchApplier);
         var connectorUpdateSuccessWriter = new ConnectorUpdateSuccessWriter(
-                crawlerEventLogger,
-                dataOfferWriter,
-                dataOfferLimitsEnforcer
+            crawlerEventLogger,
+            dataOfferWriter,
+            dataOfferLimitsEnforcer
         );
         var fetchedDataOfferBuilder = new FetchedCatalogBuilder(dataOfferMappingUtils);
         var dspDataOfferBuilder = new DspDataOfferBuilder(jsonLd);
         var dspCatalogService = new DspCatalogService(
-                catalogService,
-                dspDataOfferBuilder
+            catalogService,
+            dspDataOfferBuilder
         );
         var dataOfferFetcher = new FetchedCatalogService(dspCatalogService, fetchedDataOfferBuilder);
         var connectorUpdateFailureWriter = new ConnectorUpdateFailureWriter(crawlerEventLogger, monitor);
         var connectorUpdater = new ConnectorCrawler(
-                dataOfferFetcher,
-                connectorUpdateSuccessWriter,
-                connectorUpdateFailureWriter,
-                connectorQueries,
-                dslContextFactory,
-                monitor,
-                crawlerExecutionTimeLogger
+            dataOfferFetcher,
+            connectorUpdateSuccessWriter,
+            connectorUpdateFailureWriter,
+            connectorQueries,
+            dslContextFactory,
+            monitor,
+            crawlerExecutionTimeLogger
         );
 
         var threadPoolTaskQueue = new ThreadPoolTaskQueue();
@@ -171,19 +172,19 @@ public class CrawlerExtensionContextBuilder {
         var connectorStatusUpdater = new ConnectorStatusUpdater();
         var catalogCleaner = new CatalogCleaner();
         var offlineConnectorCleaner = new OfflineConnectorCleaner(
-                crawlerConfig,
-                connectorQueries,
-                crawlerEventLogger,
-                connectorStatusUpdater,
-                catalogCleaner
+            crawlerConfig,
+            connectorQueries,
+            crawlerEventLogger,
+            connectorStatusUpdater,
+            catalogCleaner
         );
 
         // Schedules
         List<CronJobRef<?>> jobs = List.of(
-                getOnlineConnectorRefreshCronJob(dslContextFactory, connectorQueueFiller),
-                getOfflineConnectorRefreshCronJob(dslContextFactory, connectorQueueFiller),
-                getDeadConnectorRefreshCronJob(dslContextFactory, connectorQueueFiller),
-                getOfflineConnectorCleanerCronJob(dslContextFactory, offlineConnectorCleaner)
+            getOnlineConnectorRefreshCronJob(dslContextFactory, connectorQueueFiller),
+            getOfflineConnectorRefreshCronJob(dslContextFactory, connectorQueueFiller),
+            getDeadConnectorRefreshCronJob(dslContextFactory, connectorQueueFiller),
+            getOfflineConnectorCleanerCronJob(dslContextFactory, offlineConnectorCleaner)
         );
 
         // Startup
@@ -191,68 +192,70 @@ public class CrawlerExtensionContextBuilder {
         var crawlerInitializer = new CrawlerInitializer(quartzScheduleInitializer);
 
         return new CrawlerExtensionContext(
-                crawlerInitializer,
-                dataSource,
-                dslContextFactory,
-                connectorUpdater,
-                policyMapper,
-                fetchedDataOfferBuilder,
-                dataOfferRecordUpdater
+            crawlerInitializer,
+            dataSource,
+            dslContextFactory,
+            connectorUpdater,
+            policyMapper,
+            fetchedDataOfferBuilder,
+            dataOfferRecordUpdater
         );
     }
 
     @NotNull
-    private static PolicyMapper newPolicyMapper(TypeTransformerRegistry typeTransformerRegistry, ObjectMapper objectMapperJsonLd) {
+    private static PolicyMapper newPolicyMapper(
+        TypeTransformerRegistry typeTransformerRegistry,
+        ObjectMapper objectMapperJsonLd
+    ) {
         var operatorMapper = new OperatorMapper();
-        var literalMapper = new LiteralMapper(
-                objectMapperJsonLd
-        );
+        var literalMapper = new LiteralMapper(objectMapperJsonLd);
         var atomicConstraintMapper = new AtomicConstraintMapper(
-                literalMapper,
-                operatorMapper
+            literalMapper,
+            operatorMapper
         );
         var policyValidator = new PolicyValidator();
-        var constraintExtractor = new ConstraintExtractor(
-                policyValidator,
-                atomicConstraintMapper
+        var expressionMapper = new ExpressionMapper(atomicConstraintMapper);
+        var constraintExtractor = new ExpressionExtractor(
+            policyValidator,
+            expressionMapper
         );
         return new PolicyMapper(
-                constraintExtractor,
-                atomicConstraintMapper,
-                typeTransformerRegistry
+            constraintExtractor,
+            expressionMapper,
+            typeTransformerRegistry
         );
     }
 
     @NotNull
     private static AssetMapper newAssetMapper(
-            TypeTransformerRegistry typeTransformerRegistry,
-            JsonLd jsonLd
+        TypeTransformerRegistry typeTransformerRegistry,
+        JsonLd jsonLd
     ) {
         var edcPropertyUtils = new EdcPropertyUtils();
         var assetJsonLdUtils = new AssetJsonLdUtils();
         var assetEditRequestMapper = new AssetEditRequestMapper();
         var shortDescriptionBuilder = new ShortDescriptionBuilder();
         var assetJsonLdParser = new AssetJsonLdParser(
-                assetJsonLdUtils,
-                shortDescriptionBuilder,
-                endpoint -> false
+            assetJsonLdUtils,
+            shortDescriptionBuilder,
+            endpoint -> false
         );
         var httpHeaderMapper = new HttpHeaderMapper();
         var httpDataSourceMapper = new HttpDataSourceMapper(httpHeaderMapper);
         var dataSourceMapper = new DataSourceMapper(
-                edcPropertyUtils,
-                httpDataSourceMapper
+            edcPropertyUtils,
+            httpDataSourceMapper
         );
         var assetJsonLdBuilder = new AssetJsonLdBuilder(
-                dataSourceMapper,
-                assetJsonLdParser,
-                assetEditRequestMapper
+            dataSourceMapper,
+            assetJsonLdParser,
+            assetEditRequestMapper
         );
         return new AssetMapper(
-                typeTransformerRegistry,
-                assetJsonLdBuilder,
-                assetJsonLdParser,
-                jsonLd
+            typeTransformerRegistry,
+            assetJsonLdBuilder,
+            assetJsonLdParser,
+            jsonLd
         );
     }
 
@@ -260,33 +263,33 @@ public class CrawlerExtensionContextBuilder {
     private static CronJobRef<OfflineConnectorCleanerJob> getOfflineConnectorCleanerCronJob(DslContextFactory dslContextFactory,
                                                                                             OfflineConnectorCleaner offlineConnectorCleaner) {
         return new CronJobRef<>(
-                CrawlerExtension.SCHEDULED_KILL_OFFLINE_CONNECTORS,
-                OfflineConnectorCleanerJob.class,
-                () -> new OfflineConnectorCleanerJob(dslContextFactory, offlineConnectorCleaner)
+            CrawlerExtension.SCHEDULED_KILL_OFFLINE_CONNECTORS,
+            OfflineConnectorCleanerJob.class,
+            () -> new OfflineConnectorCleanerJob(dslContextFactory, offlineConnectorCleaner)
         );
     }
 
     @NotNull
     private static CronJobRef<OnlineConnectorRefreshJob> getOnlineConnectorRefreshCronJob(
-            DslContextFactory dslContextFactory,
-            ConnectorQueueFiller connectorQueueFiller
+        DslContextFactory dslContextFactory,
+        ConnectorQueueFiller connectorQueueFiller
     ) {
         return new CronJobRef<>(
-                CrawlerExtension.CRON_ONLINE_CONNECTOR_REFRESH,
-                OnlineConnectorRefreshJob.class,
-                () -> new OnlineConnectorRefreshJob(dslContextFactory, connectorQueueFiller)
+            CrawlerExtension.CRON_ONLINE_CONNECTOR_REFRESH,
+            OnlineConnectorRefreshJob.class,
+            () -> new OnlineConnectorRefreshJob(dslContextFactory, connectorQueueFiller)
         );
     }
 
     @NotNull
     private static CronJobRef<OfflineConnectorRefreshJob> getOfflineConnectorRefreshCronJob(
-            DslContextFactory dslContextFactory,
-            ConnectorQueueFiller connectorQueueFiller
+        DslContextFactory dslContextFactory,
+        ConnectorQueueFiller connectorQueueFiller
     ) {
         return new CronJobRef<>(
-                CrawlerExtension.CRON_OFFLINE_CONNECTOR_REFRESH,
-                OfflineConnectorRefreshJob.class,
-                () -> new OfflineConnectorRefreshJob(dslContextFactory, connectorQueueFiller)
+            CrawlerExtension.CRON_OFFLINE_CONNECTOR_REFRESH,
+            OfflineConnectorRefreshJob.class,
+            () -> new OfflineConnectorRefreshJob(dslContextFactory, connectorQueueFiller)
         );
     }
 
@@ -294,9 +297,9 @@ public class CrawlerExtensionContextBuilder {
     private static CronJobRef<DeadConnectorRefreshJob> getDeadConnectorRefreshCronJob(DslContextFactory dslContextFactory,
                                                                                       ConnectorQueueFiller connectorQueueFiller) {
         return new CronJobRef<>(
-                CrawlerExtension.CRON_DEAD_CONNECTOR_REFRESH,
-                DeadConnectorRefreshJob.class,
-                () -> new DeadConnectorRefreshJob(dslContextFactory, connectorQueueFiller)
+            CrawlerExtension.CRON_DEAD_CONNECTOR_REFRESH,
+            DeadConnectorRefreshJob.class,
+            () -> new DeadConnectorRefreshJob(dslContextFactory, connectorQueueFiller)
         );
     }
 

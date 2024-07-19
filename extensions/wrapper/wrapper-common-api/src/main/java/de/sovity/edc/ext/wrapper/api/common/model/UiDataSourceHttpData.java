@@ -28,6 +28,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Schema(description = "HTTP_DATA type Data Source.")
 public class UiDataSourceHttpData {
     @Schema(
         description = "HTTP Request Method",

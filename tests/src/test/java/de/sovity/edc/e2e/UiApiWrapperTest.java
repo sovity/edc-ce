@@ -22,7 +22,7 @@ import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
-import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.client.gen.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetEditRequest;
@@ -36,7 +36,8 @@ import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
-import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.client.gen.model.UiPolicyExpression;
+import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
@@ -102,20 +103,21 @@ class UiApiWrapperTest {
         var data = "expected data 123";
         var yesterday = OffsetDateTime.now().minusDays(1);
 
-        var constraintRequest = UiPolicyConstraint.builder()
-            .left("POLICY_EVALUATION_TIME")
-            .operator(OperatorDto.GT)
-            .right(UiPolicyLiteral.builder()
-                .type(UiPolicyLiteralType.STRING)
-                .value(yesterday.toString())
+        var expression = UiPolicyExpression.builder()
+            .type(UiPolicyExpressionType.CONSTRAINT)
+            .constraint(UiPolicyConstraint.builder()
+                .left("POLICY_EVALUATION_TIME")
+                .operator(OperatorDto.GT)
+                .right(UiPolicyLiteral.builder()
+                    .type(UiPolicyLiteralType.STRING)
+                    .value(yesterday.toString())
+                    .build())
                 .build())
             .build();
 
-        var policyId = providerClient.uiApi().createPolicyDefinition(PolicyDefinitionCreateRequest.builder()
+        var policyId = providerClient.uiApi().createPolicyDefinitionV2(PolicyDefinitionCreateDto.builder()
             .policyDefinitionId("policy-1")
-            .policy(UiPolicyCreateRequest.builder()
-                .constraints(List.of(constraintRequest))
-                .build())
+            .expression(expression)
             .build()).getId();
 
         var dataSource = UiDataSource.builder()
@@ -276,8 +278,8 @@ class UiApiWrapperTest {
         assertThat(providerAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
 
         assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
-        var providingContractPolicyConstraint = providerAgreement.getContractPolicy().getConstraints().get(0);
-        assertThat(providingContractPolicyConstraint).usingRecursiveComparison().isEqualTo(providingContractPolicyConstraint);
+        var providingContractPolicyConstraint = providerAgreement.getContractPolicy().getExpression();
+        assertThat(providingContractPolicyConstraint).usingRecursiveComparison().isEqualTo(expression);
 
         assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
         assertThat(providerAgreement.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
@@ -291,15 +293,15 @@ class UiApiWrapperTest {
         assertThat(consumerAgreement.getCounterPartyId()).isEqualTo(PROVIDER_PARTICIPANT_ID);
         assertThat(consumerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
 
-        var consumingContractPolicyConstraint = consumerAgreement.getContractPolicy().getConstraints().get(0);
-        assertThat(consumingContractPolicyConstraint).usingRecursiveComparison().isEqualTo(consumingContractPolicyConstraint);
+        var consumingContractPolicyConstraint = consumerAgreement.getContractPolicy().getExpression();
+        assertThat(consumingContractPolicyConstraint).usingRecursiveComparison().isEqualTo(expression);
 
         assertThat(consumerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
         assertThat(consumerAgreement.getAsset().getTitle()).isEqualTo(assetId);
 
         // Test Policy
-        assertThat(contractOffer.getPolicy().getConstraints()).hasSize(1);
-        var constraint = contractOffer.getPolicy().getConstraints().get(0);
+        assertThat(contractOffer.getPolicy().getExpression().getType()).isEqualTo(UiPolicyExpressionType.CONSTRAINT);
+        var constraint = contractOffer.getPolicy().getExpression().getConstraint();
         assertThat(constraint.getLeft()).isEqualTo("POLICY_EVALUATION_TIME");
         assertThat(constraint.getOperator()).isEqualTo(OperatorDto.GT);
         assertThat(constraint.getRight().getType()).isEqualTo(UiPolicyLiteralType.STRING);
@@ -381,10 +383,10 @@ class UiApiWrapperTest {
             .build()).getId();
         assertThat(assetId).isEqualTo("asset-1");
 
-        var policyId = providerClient.uiApi().createPolicyDefinition(PolicyDefinitionCreateRequest.builder()
+        var policyId = providerClient.uiApi().createPolicyDefinitionV2(PolicyDefinitionCreateDto.builder()
             .policyDefinitionId("policy-1")
-            .policy(UiPolicyCreateRequest.builder()
-                .constraints(List.of())
+            .expression(UiPolicyExpression.builder()
+                .type(UiPolicyExpressionType.EMPTY)
                 .build())
             .build()).getId();
 

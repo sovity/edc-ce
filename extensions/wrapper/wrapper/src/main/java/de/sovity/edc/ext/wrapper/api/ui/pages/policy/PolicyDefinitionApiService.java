@@ -16,11 +16,13 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.policy;
 
 
 import de.sovity.edc.ext.wrapper.api.ServiceException;
+import de.sovity.edc.ext.wrapper.api.common.mappers.LegacyPolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionCreateRequest;
-import de.sovity.edc.ext.wrapper.api.common.model.PolicyDefinitionDto;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyExpression;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
-import de.sovity.edc.ext.wrapper.api.usecase.model.PolicyCreateRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionCreateDto;
+import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
@@ -36,18 +38,28 @@ public class PolicyDefinitionApiService {
 
     private final PolicyDefinitionService policyDefinitionService;
     private final PolicyMapper policyMapper;
+    private final LegacyPolicyMapper legacyPolicyMapper;
 
     public List<PolicyDefinitionDto> getPolicyDefinitions() {
         var policyDefinitions = getAllPolicyDefinitions();
         return policyDefinitions.stream()
-                .sorted(Comparator.comparing(PolicyDefinition::getCreatedAt).reversed())
-                .map(this::buildPolicyDefinitionDto)
-                .toList();
+            .sorted(Comparator.comparing(PolicyDefinition::getCreatedAt).reversed())
+            .map(this::buildPolicyDefinitionDto)
+            .toList();
     }
 
     @NotNull
+    @Deprecated
     public IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest request) {
-        var policyDefinition = buildPolicyDefinition(request);
+        var uiPolicyExpression = legacyPolicyMapper.buildUiPolicyExpression(request.getPolicy());
+        var policyDefinition = buildPolicyDefinition(request.getPolicyDefinitionId(), uiPolicyExpression);
+        policyDefinition = policyDefinitionService.create(policyDefinition).orElseThrow(ServiceException::new);
+        return new IdResponseDto(policyDefinition.getId());
+    }
+
+    @NotNull
+    public IdResponseDto createPolicyDefinitionV2(PolicyDefinitionCreateDto request) {
+        var policyDefinition = buildPolicyDefinition(request.getPolicyDefinitionId(), request.getExpression());
         policyDefinition = policyDefinitionService.create(policyDefinition).orElseThrow(ServiceException::new);
         return new IdResponseDto(policyDefinition.getId());
     }
@@ -61,34 +73,20 @@ public class PolicyDefinitionApiService {
     private List<PolicyDefinition> getAllPolicyDefinitions() {
         return policyDefinitionService.query(QuerySpec.max()).orElseThrow(ServiceException::new).toList();
     }
+
     public PolicyDefinitionDto buildPolicyDefinitionDto(PolicyDefinition policyDefinition) {
         var policy = policyMapper.buildUiPolicy(policyDefinition.getPolicy());
         return PolicyDefinitionDto.builder()
-                .policyDefinitionId(policyDefinition.getId())
-                .policy(policy)
-                .build();
+            .policyDefinitionId(policyDefinition.getId())
+            .policy(policy)
+            .build();
     }
 
-    public PolicyDefinition buildPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDto) {
-        var policy = policyMapper.buildPolicy(policyDefinitionDto.getPolicy());
+    public PolicyDefinition buildPolicyDefinition(String id, UiPolicyExpression uiPolicyExpression) {
+        var policy = policyMapper.buildPolicy(uiPolicyExpression);
         return PolicyDefinition.Builder.newInstance()
-                .id(policyDefinitionDto.getPolicyDefinitionId())
-                .policy(policy)
-                .build();
-    }
-
-    public IdResponseDto createPolicyDefinition(PolicyCreateRequest policyCreateRequest) {
-        var policyDefinition = buildPolicyDefinition(policyCreateRequest);
-        policyDefinition = policyDefinitionService.create(policyDefinition).orElseThrow(ServiceException::new);
-        return new IdResponseDto(policyDefinition.getId());
-    }
-
-    private PolicyDefinition buildPolicyDefinition(PolicyCreateRequest policyCreateRequest) {
-        var permissionExpression = policyCreateRequest.getPermission().getExpression();
-        var policy = policyMapper.buildPolicy(List.of(permissionExpression));
-        return PolicyDefinition.Builder.newInstance()
-                .id(policyCreateRequest.getPolicyDefinitionId())
-                .policy(policy)
-                .build();
+            .id(id)
+            .policy(policy)
+            .build();
     }
 }

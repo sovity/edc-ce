@@ -29,7 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Type-Safe Asset Metadata as needed by our UI")
+@Schema(description = "Type-safe data offer metadata as supported by the sovity product landscape. Contains extension points.")
 public class UiAsset {
     @Schema(description = "'Live' vs 'On Request'", requiredMode = Schema.RequiredMode.REQUIRED)
     private DataSourceAvailability dataSourceAvailability;
@@ -170,22 +170,22 @@ public class UiAsset {
     private String assetJsonLd;
 
     @Schema(description = "Contains serialized custom properties in the JSON format.",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String customJsonAsString;
 
     @Schema(description = "Contains serialized custom properties in the JSON LD format. " +
-            "Contrary to the customJsonAsString field, this string must represent a JSON LD object " +
-            "and will be affected by JSON LD compaction and expansion. " +
-            "Due to a technical limitation, the properties can't be booleans.",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+        "Contrary to the customJsonAsString field, this string must represent a JSON LD object " +
+        "and will be affected by JSON LD compaction and expansion. " +
+        "Due to a technical limitation, the properties can't be booleans.",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String customJsonLdAsString;
 
     @Schema(description = "Same as customJsonAsString but the data will be stored in the private properties.",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String privateCustomJsonAsString;
 
     @Schema(description = "Same as customJsonLdAsString but the data will be stored in the private properties. " +
-            "The same limitations apply.",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+        "The same limitations apply.",
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String privateCustomJsonLdAsString;
 }

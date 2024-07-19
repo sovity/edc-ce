@@ -21,7 +21,7 @@ import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
-import de.sovity.edc.client.gen.model.PolicyDefinitionCreateRequest;
+import de.sovity.edc.client.gen.model.PolicyDefinitionCreateDto;
 import de.sovity.edc.client.gen.model.TransferHistoryEntry;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
@@ -33,7 +33,8 @@ import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
-import de.sovity.edc.client.gen.model.UiPolicyCreateRequest;
+import de.sovity.edc.client.gen.model.UiPolicyExpression;
+import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.extension.Consumer;
@@ -448,14 +449,14 @@ class DataSourceParameterizationTest {
     }
 
     private void createPolicy(EdcClient providerClient, TestCase testCase) {
-        var policyDefinition = PolicyDefinitionCreateRequest.builder()
+        var policyDefinition = PolicyDefinitionCreateDto.builder()
             .policyDefinitionId(testCase.id)
-            .policy(UiPolicyCreateRequest.builder()
-                .constraints(List.of())
+            .expression(UiPolicyExpression.builder()
+                .type(UiPolicyExpressionType.EMPTY)
                 .build())
             .build();
 
-        providerClient.uiApi().createPolicyDefinition(policyDefinition);
+        providerClient.uiApi().createPolicyDefinitionV2(policyDefinition);
     }
 
     private String createContractDefinition(EdcClient providerClient, TestCase testCase) {
@@ -549,5 +550,6 @@ class DataSourceParameterizationTest {
             .build();
         return consumerClient.uiApi().initiateTransfer(transferRequest).getId();
     }
+
 
 }

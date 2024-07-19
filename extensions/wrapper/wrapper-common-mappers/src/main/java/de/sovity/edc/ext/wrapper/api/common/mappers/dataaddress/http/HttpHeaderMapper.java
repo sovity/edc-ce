@@ -11,7 +11,7 @@
  *       sovity GmbH - initial API and implementation
  *
  */
- 
+
 package de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http;
 
 import de.sovity.edc.utils.jsonld.vocab.Prop;

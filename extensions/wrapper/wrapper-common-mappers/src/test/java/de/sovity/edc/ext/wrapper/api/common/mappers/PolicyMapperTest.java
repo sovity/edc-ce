@@ -14,127 +14,106 @@
 
 package de.sovity.edc.ext.wrapper.api.common.mappers;
 
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.AtomicConstraintMapper;
-import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ConstraintExtractor;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionExtractor;
+import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.MappingErrors;
-import de.sovity.edc.ext.wrapper.api.common.model.AtomicConstraintDto;
-import de.sovity.edc.ext.wrapper.api.common.model.Expression;
-import de.sovity.edc.ext.wrapper.api.common.model.ExpressionType;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraint;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
+import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyExpression;
+import jakarta.json.Json;
 import jakarta.json.JsonObject;
-import lombok.SneakyThrows;
+import org.eclipse.edc.policy.model.AndConstraint;
 import org.eclipse.edc.policy.model.AtomicConstraint;
+import org.eclipse.edc.policy.model.Constraint;
+import org.eclipse.edc.policy.model.OrConstraint;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
+import org.eclipse.edc.policy.model.XoneConstraint;
 import org.eclipse.edc.spi.result.Result;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
-import static de.sovity.edc.ext.wrapper.api.common.model.ExpressionType.ATOMIC_CONSTRAINT;
-import static de.sovity.edc.utils.JsonUtils.parseJsonObj;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PolicyMapperTest {
     @InjectMocks
     PolicyMapper policyMapper;
-
     @Mock
-    TypeTransformerRegistry transformerRegistry;
-
+    ExpressionExtractor expressionExtractor;
     @Mock
-    ConstraintExtractor constraintExtractor;
-
+    ExpressionMapper expressionMapper;
     @Mock
-    AtomicConstraintMapper atomicConstraintMapper;
-
+    TypeTransformerRegistry typeTransformerRegistry;
 
     @Test
-    @SneakyThrows
-    void test_buildPolicyDto() {
-        try (MockedStatic<MappingErrors> mappingErrors = mockStatic(MappingErrors.class)) {
-            // arrange
-            var policy = mock(Policy.class);
-            var errors = mock(MappingErrors.class);
-            var constraints = List.of(mock(UiPolicyConstraint.class));
+    void buildUiPolicy() {
+        // arrange
+        var policy = mock(Policy.class);
+        var expression = mock(UiPolicyExpression.class);
 
-            when(errors.getErrors()).thenReturn(List.of("error1"));
+        when(expressionExtractor.getPermissionExpression(eq(policy), any())).thenAnswer(i -> {
+            var errors = i.getArgument(1, MappingErrors.class);
+            errors.add("test");
+            return expression;
+        });
 
-            mappingErrors.when(MappingErrors::root).thenReturn(errors);
-            when(constraintExtractor.getPermissionConstraints(policy, errors)).thenReturn(constraints);
-            when(transformerRegistry.transform(policy, JsonObject.class)).thenReturn(Result.success(parseJsonObj("{}")));
+        when(typeTransformerRegistry.transform(eq(policy), eq(JsonObject.class)))
+            .thenReturn(Result.success(Json.createObjectBuilder().add("a", "b").build()));
 
-            // act
-            var actual = policyMapper.buildUiPolicy(policy);
+        // act
+        var actual = policyMapper.buildUiPolicy(policy);
 
-            // assert
-            assertThat(actual.getPolicyJsonLd()).isEqualTo("{}");
-            assertThat(actual.getConstraints()).isEqualTo(constraints);
-            assertThat(actual.getErrors()).isEqualTo(List.of("error1"));
-        }
+        // assert
+        assertThat(actual.getExpression()).isEqualTo(expression);
+        assertThat(actual.getErrors()).containsExactly("$: test");
+        assertThat(actual.getPolicyJsonLd()).isEqualTo("{\"a\":\"b\"}");
     }
 
     @Test
-    void test_buildPolicy() {
+    void buildPolicy_constraintExtracted() {
         // arrange
-        var constraint = mock(UiPolicyConstraint.class);
-        var createRequest = new UiPolicyCreateRequest(List.of(constraint));
-
-        var expected = mock(AtomicConstraint.class);
-        when(atomicConstraintMapper.buildAtomicConstraints(eq(List.of(constraint))))
-                .thenReturn(List.of(expected));
+        var uiExpression = mock(UiPolicyExpression.class);
+        var constraint = mock(Constraint.class);
+        when(expressionMapper.buildConstraint(uiExpression))
+            .thenReturn(Optional.of(constraint));
 
         // act
-        var actual = policyMapper.buildPolicy(createRequest);
+        var actual = policyMapper.buildPolicy(uiExpression);
 
         // assert
         assertThat(actual.getType()).isEqualTo(PolicyType.SET);
         assertThat(actual.getPermissions()).hasSize(1);
-        assertThat(actual.getPermissions().get(0).getConstraints()).hasSize(1);
         assertThat(actual.getPermissions().get(0).getAction().getType()).isEqualTo("USE");
-        assertThat(actual.getPermissions().get(0).getConstraints().get(0)).isSameAs(expected);
+        assertThat(actual.getPermissions().get(0).getConstraints()).hasSize(1);
+        assertThat(actual.getPermissions().get(0).getConstraints()).containsExactly(constraint);
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"AND", "OR", "XOR"})
-    void buildGenericPolicy(String constraintTypeString) {
+    @Test
+    void buildPolicy_noConstraint() {
         // arrange
-        var expressionType = ExpressionType.valueOf(constraintTypeString);
-        var incomingConstraint = mock(AtomicConstraintDto.class);
-        var mappedAtomicConstraint = mock(AtomicConstraint.class);
-        var atomicConstraint = new Expression(ATOMIC_CONSTRAINT, List.of(), incomingConstraint);
-        var atomicConstraints = List.of(atomicConstraint, atomicConstraint);
-        var baseConstraintElement = new Expression(expressionType, atomicConstraints, null);
+        var uiExpression = mock(UiPolicyExpression.class);
+        when(expressionMapper.buildConstraint(uiExpression))
+            .thenReturn(Optional.empty());
 
         // act
-        when(atomicConstraintMapper
-                .buildAtomicConstraint(eq(incomingConstraint)))
-                .thenReturn(mappedAtomicConstraint);
-        var policy = policyMapper.buildPolicy(List.of(baseConstraintElement));
+        var actual = policyMapper.buildPolicy(uiExpression);
 
         // assert
-        assertThat(policy.getType()).isEqualTo(PolicyType.SET);
-        assertThat(policy.getPermissions()).hasSize(1);
-        var permission = policy.getPermissions().get(0);
-        assertThat(permission.getConstraints()).hasSize(1);
-        assertThat(permission.getAction().getType()).isEqualTo("USE");
-
-        var constraintObject = permission.getConstraints().get(0);
-        assertNotNull(constraintObject);
+        assertThat(actual.getType()).isEqualTo(PolicyType.SET);
+        assertThat(actual.getPermissions()).hasSize(1);
+        assertThat(actual.getPermissions().get(0).getConstraints()).isEmpty();
+        assertThat(actual.getPermissions().get(0).getAction().getType()).isEqualTo("USE");
     }
 }

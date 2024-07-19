@@ -28,9 +28,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Schema(description = "Type-Safe OpenAPI generator friendly Policy Create DTO that supports an opinionated"
-        + " subset of the original EDC Policy Entity.")
+@Deprecated
+@Schema(description = "[Deprecated] Conjunction of constraints (simplified UiPolicyExpression)",
+    deprecated = true)
 public class UiPolicyCreateRequest {
-    @Schema(description = "Conjunction of required expressions for the policy to evaluate to TRUE.")
+    @Schema(description = "Conjunction of required constraints", deprecated = true)
     private List<UiPolicyConstraint> constraints;
 }

@@ -49,14 +49,14 @@ import de.sovity.edc.client.gen.model.KpiResult;
  */
 public class WrapperClientExample {
 
-  public static final String CONNECTOR_ENDPOINT = "http://localhost:11002/api/management/v2";
-  public static final String CONNECTOR_API_KEY = "...";
+  public static final String MANAGEMENT_API_URL = "http://localhost:11002/api/management";
+  public static final String MANAGEMENT_API_KEY = "...";
 
   public static void main(String[] args) {
     // Configure Client
     EdcClient client = EdcClient.builder()
-        .managementApiUrl(CONNECTOR_ENDPOINT)
-        .managementApiKey(CONNECTOR_API_KEY)
+        .managementApiUrl(MANAGEMENT_API_URL)
+        .managementApiKey(MANAGEMENT_API_KEY)
         .build();
 
     // EDC API Wrapper APIs are now available for use
@@ -80,15 +80,15 @@ import de.sovity.edc.client.oauth2.SovityKeycloakUrl;
  */
 public class WrapperClientExample {
 
-  public static final String CONNECTOR_ENDPOINT =
-      "https://{{your-connector}}.prod-sovity.azure.sovity.io/control/data";
+  public static final String MANAGEMENT_API_URL =
+      "https://{{your-connector}}.prod-sovity.azure.sovity.io/control/api/management";
   public static final String CLIENT_ID = "{{your-connector}}-app";
   public static final String CLIENT_SECRET = "...";
 
   public static void main(String[] args) {
     // Configure Client
     EdcClient client = EdcClient.builder()
-        .managementApiUrl(CONNECTOR_ENDPOINT)
+        .managementApiUrl(MANAGEMENT_API_URL)
         .oauth2ClientCredentials(OAuth2ClientCredentials.builder()
             .tokenUrl(SovityKeycloakUrl.PRODUCTION)
             .clientId(CLIENT_ID)
@@ -107,49 +107,65 @@ public class WrapperClientExample {
 
 Below are the examples of various tasks and the corresponding methods to be used from the Java-client.
 
-| Task                                                     | Java-Client method                                                    |
-|----------------------------------------------------------|-----------------------------------------------------------------------|
-| Create Policy - uiAPI                                    | `EdcClient.uiApi().createPolicyDefinition(policyDefinition)`          |
-| Create Policy - useCaseApi (allows AND/OR/XOR operators) | `EdcClient.useCaseApi().createPolicyDefinitionUseCase(createRequest)` |
-| Create asset (Asset Creation after activate)             | `EdcClient.uiApi().createAsset(uiAssetRequest)`                       |
-| Create contract definition                               | `EdcClient.uiApi().createContractDefinition(contractDefinition)`      |
-| Create Offer on consumer dashboard (Catalog Browser)     | `EdcClient.uiApi().getCatalogPageDataOffers(PROTOCOL_ENDPOINT)`       |
-| Accept contract (Contract Negotiation)                   | `EdcClient.uiApi().initiateContractNegotiation(negotiationRequest)`   |
-| Transfer Data (Initiate Transfer)                        | `EdcClient.uiApi().initiateTransfer(negotiation)`                     |
+| Task                                                 | Java-Client method                                                  |
+|------------------------------------------------------|---------------------------------------------------------------------|
+| Create Policy                                        | `EdcClient.uiApi().createPolicyDefinitionV2(policyDefinition)`      |
+| Create asset (Asset Creation after activate)         | `EdcClient.uiApi().createAsset(uiAssetRequest)`                     |
+| Create contract definition                           | `EdcClient.uiApi().createContractDefinition(contractDefinition)`    |
+| Create Offer on consumer dashboard (Catalog Browser) | `EdcClient.uiApi().getCatalogPageDataOffers(PROTOCOL_ENDPOINT)`     |
+| Accept contract (Contract Negotiation)               | `EdcClient.uiApi().initiateContractNegotiation(negotiationRequest)` |
+| Transfer Data (Initiate Transfer)                    | `EdcClient.uiApi().initiateTransfer(negotiation)`                   |
 
 These methods facilitate various operations such as creating policies, assets, contract definitions, browsing offers, accepting contracts, and initiating data transfers.
 
-### Example Creating a Catena-Policy using operators (AND/OR/XOR)
+### Example Creating a Catena-Policy using operators (AND/OR/XONE)
 
 The following example demonstrates how to create a Catena-Policy with linked conditions using the Java-client.
 
 ```java
-var policyId = UUID.randomUUID().toString();
-var membershipElement = buildAtomicElement("Membership", OperatorDto.EQ, "active");
-var purposeElement = buildAtomicElement("PURPOSE", OperatorDto.EQ, "ID 3.1 Trace");
-var andElement = new Expression()
-    .expressionType(ExpressionTypeDto.AND)
-    .expressions(List.of(membershipElement, purposeElement));
-var permissionDto = new PermissionDto(andElement);
-var createRequest = new PolicyCreateRequest(policyId, permissionDto);
+public String createCatenaXPolicy() {
+  var policyId = UUID.randomUUID().toString();
 
-var response = client.useCaseApi().createPolicyDefinitionUseCase(createRequest);
+  var expression = buildAnd(
+      buildConstraint("Membership", OperatorDto.EQ, "active"),
+      buildConstraint("PURPOSE", OperatorDto.EQ, "ID 3.1 Trace")
+  );
 
-private Expression buildAtomicElement(
+  var policyCreateRequest = PolicyDefinitionCreateDto.builder()
+      .policyDefinitionId(policyId)
+      .expression(expression)
+      .build();
+
+  client.uiApi().createPolicyDefinition(policyCreateRequest);
+
+  return policyId;
+}
+
+private UiPolicyExpression buildAnd(UiPolicyExpression... expressions) {
+  return UiPolicyExpression.builder()
+      .type(UiPolicyExpressionType.AND)
+      .expressions(Arrays.asList(expressions))
+      .build();
+}
+
+private UiPolicyExpression buildConstraint(
     String left,
     OperatorDto operator,
-    String right) {
-  var atomicConstraint = new AtomicConstraintDto()
-      .leftExpression(left)
-      .operator(operator)
-      .rightExpression(right);
-  return new Expression()
-      .expressionType(ExpressionTypeDto.ATOMIC_CONSTRAINT)
-      .atomicConstraint(atomicConstraint);
+    String right
+) {
+  return UiPolicyExpression.builder()
+      .type(UiPolicyExpressionType.CONSTRAINT)
+      .constraint(UiPolicyConstraint.builder()
+          .left(left)
+          .operator(operator)
+          .right(UiPolicyLiteral.builder()
+              .type(UiPolicyLiteralType.STRING)
+              .value(right)
+              .build())
+          .build())
+      .build();
 }
 ```
-
-The complete example can be seen in [this test](https://github.com/sovity/edc-ce/blob/main/extensions/wrapper/wrapper/src/test/java/de/sovity/edc/ext/wrapper/api/usecase/PolicyDefinitionApiServiceTest.java).
 
 ## License
 

@@ -11,7 +11,7 @@
  *       sovity GmbH - initial API and implementation
  *
  */
- 
+
 package de.sovity.edc.ext.wrapper.api.common.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
