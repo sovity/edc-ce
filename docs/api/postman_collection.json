@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "c01dc51f-eb36-43db-b8db-a33ff2f5baa5",
+		"_postman_id": "14267003-be4b-40ee-a9b6-83b5dd32ba57",
 		"name": "sovity EDC Community Edition",
 		"description": "This is the official postman collection for the sovity EDC Community Edition.\n\nThe Management-API is based on core-edc v0.2.1.\n\nsovity EDC Community Edition: [https://github.com/sovity/edc-ce](https://github.com/sovity/edc-ce)\n\nLicense: [https://github.com/sovity/edc-ce/blob/main/LICENSE](https://github.com/sovity/edc-ce/blob/main/LICENSE)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "31514741"
+		"_exporter_id": "32949497"
 	},
 	"item": [
 		{
@@ -84,7 +84,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": \"testname-v1.0\",\r\n    \"title\": \"TestName\",\r\n    \"language\": \"https://w3id.org/idsa/code/EN\",\r\n    \"description\": \"Testdescription\",\r\n    \"publisherHomepage\": \"https://www.sovity.de\",\r\n    \"licenseUrl\": \"https://www.apache.org/licenses/LICENSE-2.0\",\r\n    \"version\": \"v1.0\",\r\n    \"keywords\": [\r\n        \"keyword1\",\r\n        \"keyword2\"\r\n    ],\r\n    \"mediaType\": \"application/json\",\r\n    \"landingPageUrl\": \"https://www.google.com\",\r\n    \"dataAddressProperties\": {\r\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"https://www.google.com\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/method\": \"GET\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/queryParams\": \"\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"id\": \"testname-v1.0\",\r\n    \"title\": \"TestName\",\r\n    \"language\": \"https://w3id.org/idsa/code/EN\",\r\n    \"description\": \"Testdescription\",\r\n    \"publisherHomepage\": \"https://www.sovity.de\",\r\n    \"licenseUrl\": \"https://www.apache.org/licenses/LICENSE-2.0\",\r\n    \"version\": \"v1.0\",\r\n    \"keywords\": [\r\n        \"keyword1\",\r\n        \"keyword2\"\r\n    ],\r\n    \"mediaType\": \"application/json\",\r\n    \"landingPageUrl\": \"https://www.google.com\",\r\n    \"dataAddressProperties\": {\r\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"https://www.google.com\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/method\": \"GET\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/queryParams\": \"\"\r\n    },\r\n    \"dataSource\": {\r\n        \"type\": \"HTTP_DATA\",\r\n        \"httpData\": {\r\n            \"baseUrl\": \"http://example.com/baseUrl/\"\r\n        }\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -386,7 +386,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"contractDefinitionId\": \"testCD\",\r\n    \"contractPolicyId\": \"always-true\",\r\n    \"accessPolicyId\": \"always-true\",\r\n    \"assetSelector\": [\r\n        {\r\n            \"operandLeft\": \"https://w3id.org/edc/v0.0.1/ns/id\",\r\n            \"operator\": \"IN\",\r\n            \"operandRight\": {\r\n                \"type\": \"VALUE_LIST\",\r\n                \"valueList\": [\r\n                    \"testparamterization-v1.0\"\r\n                ]\r\n            }\r\n        }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"contractDefinitionId\": \"testCD\",\r\n    \"contractPolicyId\": \"always-true\",\r\n    \"accessPolicyId\": \"always-true\",\r\n    \"assetSelector\": [\r\n        {\r\n            \"operandLeft\": \"https://w3id.org/edc/v0.0.1/ns/id\",\r\n            \"operator\": \"IN\",\r\n            \"operandRight\": {\r\n                \"type\": \"VALUE_LIST\",\r\n                \"valueList\": [\r\n                    \"testname-v1.0\"\r\n                ]\r\n            }\r\n        }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -476,7 +476,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"counterPartyAddress\": \"http://edc:11003/api/dsp\",\r\n    \"counterPartyParticipantId\": \"my-edc\",\r\n    \"contractOfferId\": \"dGVzdENE:dGVzdHBhcmFtdGVyaXphdGlvbi12MS4w:NTUxNjZiOGMtMzk4My00MWMzLTkxN2UtZTQ1ZGVlNzMyNTlj\",\r\n    \"policyJsonLd\": \"{\\\"@id\\\":\\\"f15e4b97-0d99-42f5-8f6a-525daf0b72c6\\\",\\\"@type\\\":\\\"http://www.w3.org/ns/odrl/2/Set\\\",\\\"http://www.w3.org/ns/odrl/2/permission\\\":[{\\\"http://www.w3.org/ns/odrl/2/target\\\":\\\"testparamterization-v1.0\\\",\\\"http://www.w3.org/ns/odrl/2/action\\\":{\\\"http://www.w3.org/ns/odrl/2/type\\\":\\\"USE\\\"},\\\"http://www.w3.org/ns/odrl/2/constraint\\\":[{\\\"http://www.w3.org/ns/odrl/2/leftOperand\\\":{\\\"@value\\\":\\\"ALWAYS_TRUE\\\"},\\\"http://www.w3.org/ns/odrl/2/operator\\\":[{\\\"@id\\\":\\\"http://www.w3.org/ns/odrl/2/eq\\\"}],\\\"http://www.w3.org/ns/odrl/2/rightOperand\\\":{\\\"@value\\\":\\\"true\\\"}}]}],\\\"http://www.w3.org/ns/odrl/2/prohibition\\\":[],\\\"http://www.w3.org/ns/odrl/2/obligation\\\":[],\\\"http://www.w3.org/ns/odrl/2/target\\\":\\\"testparamterization-v1.0\\\"}\",\r\n    \"assetId\": \"testparamterization-v1.0\"\r\n}",
+									"raw": "{\r\n    \"counterPartyAddress\": \"http://edc:11003/api/dsp\",\r\n    \"counterPartyParticipantId\": \"my-edc\",\r\n    \"contractOfferId\": \"{{CONTRACT_OFFER_ID}}\",\r\n    \"policyJsonLd\": \"{{POLICY_JSON_LD}}\",\r\n    \"assetId\": \"{{ASSET_ID}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -541,6 +541,48 @@
 										"ui",
 										"pages",
 										"contract-agreement-page"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Terminate Contract Agreement",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"detail\": \"Some detail between 1 and 1000 chars long\",\n    \"reason\": \"Some reason between 1 and 100 chars\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/content-agreement-page/{{CONTRACT_AGREEMENT_ID}}/terminate",
+									"host": [
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"content-agreement-page",
+										"{{CONTRACT_AGREEMENT_ID}}",
+										"terminate"
 									]
 								}
 							},
@@ -691,6 +733,77 @@
 									"response": []
 								}
 							]
+						}
+					]
+				},
+				{
+					"name": "Data Offer",
+					"item": [
+						{
+							"name": "Check Policy ID Availability",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/data-offer-page/validate-policy-id/{{POLICY_ID}}",
+									"host": [
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"data-offer-page",
+										"validate-policy-id",
+										"{{POLICY_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check Asset ID Availability",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/data-offer-page/validate-asset-id/{{ASSET_ID}}",
+									"host": [
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"data-offer-page",
+										"validate-asset-id",
+										"{{ASSET_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check Contract Definition ID Availability",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/data-offer-page/validate-contract-definition-id/{{CONTRACT_DEFINITION_ID}}",
+									"host": [
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"data-offer-page",
+										"validate-contract-definition-id",
+										"{{CONTRACT_DEFINITION_ID}}"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}

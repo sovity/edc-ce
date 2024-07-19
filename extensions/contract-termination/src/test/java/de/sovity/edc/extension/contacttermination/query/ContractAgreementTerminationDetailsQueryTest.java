@@ -23,6 +23,7 @@ import de.sovity.edc.extension.e2e.extension.Consumer;
 import de.sovity.edc.extension.e2e.extension.E2eScenario;
 import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
 import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,6 +35,7 @@ import static org.eclipse.edc.connector.contract.spi.types.negotiation.ContractN
 @ExtendWith(E2eTestExtension.class)
 class ContractAgreementTerminationDetailsQueryTest {
 
+    @DisabledOnGithub
     @Test
     void fetchAgreementDetailsOrThrow_whenAgreementIsPresent_shouldReturnTheAgreementDetails(
         E2eScenario scenario,

@@ -18,6 +18,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Minor Changes
 
 - Both providers and consumers can now terminate their contracts.
+- Added endpoints for checking ID availability for policies, assets and contract definitions
 
 #### Patch Changes
 

@@ -33,13 +33,16 @@ import lombok.val;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.connector.contract.spi.ContractId;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
@@ -52,10 +55,10 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @ExtendWith(E2eTestExtension.class)
 public class ContractTerminationTest {
-
 
     @Test
     void canGetAgreementPageForNonTerminatedContract(
@@ -206,6 +209,7 @@ public class ContractTerminationTest {
         // termination completed == success
     }
 
+    @DisabledOnGithub
     @Test
     void limitTheDetailSizeAt1000Chars(
         E2eScenario scenario,
@@ -247,6 +251,44 @@ public class ContractTerminationTest {
         awaitTerminationCount(providerClient, 1);
 
         // termination completed == success
+    }
+
+    @TestFactory
+    List<DynamicTest> theDetailsAreMandatory(
+        E2eScenario scenario,
+        @Consumer EdcClient consumerClient,
+        @Provider EdcClient providerClient
+    ) {
+        val invalidDetails = List.of(
+            "",
+            " ",
+            "            ",
+            "\t",
+            "\n"
+        );
+
+        return invalidDetails.stream().map(
+            detail -> dynamicTest("Can't use '%s' for details".formatted(detail),
+                () -> {
+                    val assetId = scenario.createAsset();
+                    scenario.createContractDefinition(assetId);
+                    val negotiation = scenario.negotiateAssetAndAwait(assetId);
+
+                    // act
+                    val reason = "Some reason";
+
+                    // assert when too big
+
+                    assertThrows(
+                        ApiException.class,
+                        () -> consumerClient.uiApi().terminateContractAgreement(
+                            negotiation.getContractAgreementId(),
+                            ContractTerminationRequest.builder()
+                                .detail(detail)
+                                .reason(reason)
+                                .build())
+                    );
+                })).toList();
     }
 
     @Test

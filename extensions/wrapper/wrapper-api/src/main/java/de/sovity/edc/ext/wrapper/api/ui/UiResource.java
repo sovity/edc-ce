@@ -25,6 +25,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.IdAvailabilityResponse;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateCustomTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateTransferRequest;
@@ -197,4 +198,22 @@ interface UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Queries a transfer process' asset")
     UiAsset getTransferProcessAsset(@PathParam("transferProcessId") String transferProcessId);
+
+    @GET
+    @Path("pages/data-offer-page/validate-policy-id/{policyId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Validates if the provided policyId is already taken")
+    IdAvailabilityResponse isPolicyIdAvailable(@PathParam("policyId") String policyId);
+
+    @GET
+    @Path("pages/data-offer-page/validate-asset-id/{assetId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Validates if the provided assetId is already taken")
+    IdAvailabilityResponse isAssetIdAvailable(@PathParam("assetId") String assetId);
+
+    @GET
+    @Path("pages/data-offer-page/validate-contract-definition-id/{contractDefinitionId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Validates if the provided contractDefinitionId is already taken")
+    IdAvailabilityResponse isContractDefinitionIdAvailable(@PathParam("contractDefinitionId") String contractDefinitionId);
 }

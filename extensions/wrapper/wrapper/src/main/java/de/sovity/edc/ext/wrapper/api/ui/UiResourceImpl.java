@@ -27,6 +27,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.IdAvailabilityResponse;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateCustomTransferRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateTransferRequest;
@@ -42,15 +43,12 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.ContractAgreem
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_negotiations.ContractNegotiationApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.DashboardPageApiService;
+import de.sovity.edc.ext.wrapper.api.ui.pages.data_offer.DataOfferPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validation;
-import jakarta.validation.ValidatorFactory;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -73,6 +71,7 @@ public class UiResourceImpl implements UiResource {
     private final ContractNegotiationApiService contractNegotiationApiService;
     private final DashboardPageApiService dashboardPageApiService;
     private final DslContextFactory dslContextFactory;
+    private final DataOfferPageApiService dataOfferPageApiService;
 
     @Override
     public DashboardPage getDashboardPage() {
@@ -184,5 +183,23 @@ public class UiResourceImpl implements UiResource {
     @Override
     public UiAsset getTransferProcessAsset(String transferProcessId) {
         return transferHistoryPageAssetFetcherService.getAssetForTransferHistoryPage(transferProcessId);
+    }
+
+    @Override
+    public IdAvailabilityResponse isPolicyIdAvailable(String policyId) {
+        return dslContextFactory.transactionResult(dsl ->
+            dataOfferPageApiService.checkIfPolicyIdAvailable(dsl, policyId));
+    }
+
+    @Override
+    public IdAvailabilityResponse isAssetIdAvailable(String assetId) {
+        return dslContextFactory.transactionResult(dsl ->
+            dataOfferPageApiService.checkIfAssetIdAvailable(dsl, assetId));
+    }
+
+    @Override
+    public IdAvailabilityResponse isContractDefinitionIdAvailable(String contractDefinitionId) {
+        return dslContextFactory.transactionResult(dsl ->
+            dataOfferPageApiService.checkIfContractDefinitionIdAvailable(dsl, contractDefinitionId));
     }
 }

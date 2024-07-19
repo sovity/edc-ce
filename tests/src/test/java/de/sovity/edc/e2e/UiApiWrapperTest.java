@@ -44,6 +44,7 @@ import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.extension.Consumer;
+import de.sovity.edc.extension.e2e.extension.E2eScenario;
 import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
 import de.sovity.edc.extension.e2e.extension.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
@@ -529,8 +530,7 @@ class UiApiWrapperTest {
         initiateTransfer(consumerClient, negotiation);
 
         // assert
-        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint).get(0).getAsset().getTitle()).isEqualTo(
-            "Good Asset Title");
+        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint).get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
         val firstAsset = providerClient.uiApi().getContractAgreementPage(null).getContractAgreements().get(0).getAsset();
         assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");
         assertThat(firstAsset.getCustomJsonAsString()).isEqualTo("""
@@ -557,8 +557,36 @@ class UiApiWrapperTest {
             """);
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
         validateTransferProcessesOk(consumerClient, providerClient);
-        assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo(
+        assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo("Good Asset Title");
             "Good Asset Title");
+    }
+
+    @Test
+    void checkIdAvailability(E2eScenario scenario, @Provider EdcClient providerClient) {
+        // arrange
+        var assetId = scenario.createAsset();
+        var policyId = "policy-id";
+        scenario.createPolicy(policyId, OffsetDateTime.MIN, OffsetDateTime.MAX);
+        var contractDefinitionId = scenario.createContractDefinition(policyId, assetId);
+
+        val asset = providerClient.uiApi().getAssetPage();
+
+        // act
+        val negAssetResponse = providerClient.uiApi().isAssetIdAvailable(assetId);
+        val negPolicyResponse = providerClient.uiApi().isPolicyIdAvailable(policyId);
+        val negContractDefinitionResponse = providerClient.uiApi().isContractDefinitionIdAvailable(contractDefinitionId.getId());
+        val posAssetResponse = providerClient.uiApi().isAssetIdAvailable("new-asset");
+        val posPolicyResponse = providerClient.uiApi().isPolicyIdAvailable("new-policy");
+        val posContractDefinitionResponse = providerClient.uiApi().isContractDefinitionIdAvailable("new-cd");
+
+        // assert
+        assertThat(negAssetResponse.getAvailable()).isFalse();
+        assertThat(negPolicyResponse.getAvailable()).isFalse();
+        assertThat(negContractDefinitionResponse.getAvailable()).isFalse();
+
+        assertThat(posAssetResponse.getAvailable()).isTrue();
+        assertThat(posPolicyResponse.getAvailable()).isTrue();
+        assertThat(posContractDefinitionResponse.getAvailable()).isTrue();
     }
 
     private UiContractNegotiation negotiate(
