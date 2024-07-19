@@ -19,6 +19,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.model.CatalogQuery;
 import de.sovity.edc.ext.wrapper.api.usecase.model.KpiResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
