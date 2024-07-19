@@ -13,19 +13,18 @@
  */
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Data
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "All data for the Asset Page")
