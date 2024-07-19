@@ -558,7 +558,6 @@ class UiApiWrapperTest {
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
         validateTransferProcessesOk(consumerClient, providerClient);
         assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo("Good Asset Title");
-            "Good Asset Title");
     }
 
     @Test
