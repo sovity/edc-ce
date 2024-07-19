@@ -100,7 +100,8 @@ interface UiResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Deprecated
-    @Operation(description = "[Deprecated] Create a new Policy Definition from a list of constraints", deprecated = true)
+    @Operation(description = "[Deprecated] Create a new Policy Definition from a list of constraints. " +
+        "Use createPolicyDefinitionV2 instead.", deprecated = true)
     IdResponseDto createPolicyDefinition(PolicyDefinitionCreateRequest policyDefinitionDtoDto);
 
     @POST

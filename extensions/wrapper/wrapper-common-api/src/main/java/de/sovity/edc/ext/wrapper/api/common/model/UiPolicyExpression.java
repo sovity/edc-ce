@@ -21,7 +21,7 @@ public class UiPolicyExpression {
     @Schema(description = "Expression type", requiredMode = Schema.RequiredMode.REQUIRED)
     private UiPolicyExpressionType type;
 
-    @Schema(description = "Only for types AND, OR, XOR. List of sub-expressions " +
+    @Schema(description = "Only for types AND, OR, XONE. List of sub-expressions " +
         "to be evaluated according to the expressionType.",
         requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private List<UiPolicyExpression> expressions;

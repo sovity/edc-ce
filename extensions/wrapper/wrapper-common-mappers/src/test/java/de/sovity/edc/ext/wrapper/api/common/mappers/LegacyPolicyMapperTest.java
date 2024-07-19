@@ -36,7 +36,7 @@ public class LegacyPolicyMapperTest {
     @Test
     void buildUiPolicyExpression_null() {
         // arrange
-        var request = (UiPolicyCreateRequest) null;
+        UiPolicyCreateRequest request = null;
 
         // act
         UiPolicyExpression result = legacyPolicyMapper.buildUiPolicyExpression(request);

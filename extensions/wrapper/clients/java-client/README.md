@@ -118,7 +118,7 @@ Below are the examples of various tasks and the corresponding methods to be used
 
 These methods facilitate various operations such as creating policies, assets, contract definitions, browsing offers, accepting contracts, and initiating data transfers.
 
-### Example Creating a Catena-Policy using operators (AND/OR/XOR)
+### Example Creating a Catena-Policy using operators (AND/OR/XONE)
 
 The following example demonstrates how to create a Catena-Policy with linked conditions using the Java-client.
 

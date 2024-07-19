@@ -121,7 +121,8 @@ paths:
     post:
       tags:
       - UI
-      description: "[Deprecated] Create a new Policy Definition from a list of constraints"
+      description: "[Deprecated] Create a new Policy Definition from a list of constraints.\
+        \ Use createPolicyDefinitionV2 instead."
       operationId: createPolicyDefinition
       requestBody:
         content:
@@ -943,7 +944,7 @@ components:
           $ref: '#/components/schemas/UiPolicyExpressionType'
         expressions:
           type: array
-          description: "Only for types AND, OR, XOR. List of sub-expressions to be\
+          description: "Only for types AND, OR, XONE. List of sub-expressions to be\
             \ evaluated according to the expressionType."
           items:
             $ref: '#/components/schemas/UiPolicyExpression'
@@ -955,9 +956,9 @@ components:
       description: |
         Ui Policy Expression types:
         * `CONSTRAINT` - Expression 'a=b'
-        * `AND` - Conjunction of several expressions. All child expressions must be true.
-        * `OR` - Disjunction of several expressions. (At least) one child expression must be true.
-        * `XONE` - XOR operation, exactly one child expression must be true.
+        * `AND` - Conjunction of several expressions. Evaluates to true iff all child expressions are true.
+        * `OR` - Disjunction of several expressions. Evaluates to true iff at least one child expression is true.
+        * `XONE` - XONE operation. Evaluates to true iff exactly one child expression is true.
       enum:
       - EMPTY
       - CONSTRAINT
