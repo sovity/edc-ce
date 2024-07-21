@@ -80,6 +80,7 @@ import de.sovity.edc.extension.contacttermination.query.ContractAgreementTermina
 import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.messenger.SovityMessenger;
+import de.sovity.edc.extension.placeholderdatasource.PlaceholderEndpointService;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import lombok.NoArgsConstructor;
@@ -138,7 +139,8 @@ public class WrapperExtensionContextBuilder {
         SovityMessenger sovityMessenger,
         TransferProcessService transferProcessService,
         TransferProcessStore transferProcessStore,
-        TypeTransformerRegistry typeTransformerRegistry
+        TypeTransformerRegistry typeTransformerRegistry,
+        PlaceholderEndpointService placeholderEndpointService
     ) {
         // UI API
         var operatorMapper = new OperatorMapper();
@@ -148,7 +150,7 @@ public class WrapperExtensionContextBuilder {
         var edcPropertyUtils = new EdcPropertyUtils();
         var selfDescriptionService = new SelfDescriptionService(config, monitor);
         var ownConnectorEndpointService = new OwnConnectorEndpointServiceImpl(selfDescriptionService);
-        var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd, ownConnectorEndpointService);
+        var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd, ownConnectorEndpointService, placeholderEndpointService);
         var policyMapper = newPolicyMapper(objectMapper, typeTransformerRegistry, operatorMapper);
         var transferProcessStateService = new TransferProcessStateService();
         var contractNegotiationUtils = new ContractNegotiationUtils(
@@ -306,7 +308,8 @@ public class WrapperExtensionContextBuilder {
     private static AssetMapper newAssetMapper(
         TypeTransformerRegistry typeTransformerRegistry,
         JsonLd jsonLd,
-        OwnConnectorEndpointService ownConnectorEndpointService
+        OwnConnectorEndpointService ownConnectorEndpointService,
+        PlaceholderEndpointService placeholderEndpointService
     ) {
         var edcPropertyUtils = new EdcPropertyUtils();
         var assetJsonLdUtils = new AssetJsonLdUtils();
@@ -318,7 +321,7 @@ public class WrapperExtensionContextBuilder {
             ownConnectorEndpointService
         );
         var httpHeaderMapper = new HttpHeaderMapper();
-        var httpDataSourceMapper = new HttpDataSourceMapper(httpHeaderMapper);
+        var httpDataSourceMapper = new HttpDataSourceMapper(httpHeaderMapper, placeholderEndpointService);
         var dataSourceMapper = new DataSourceMapper(
             edcPropertyUtils,
             httpDataSourceMapper

@@ -14,6 +14,7 @@
 
 package de.sovity.edc.ext.catalog.crawler;
 
+import de.sovity.edc.extension.placeholderdatasource.PlaceholderEndpointService;
 import org.eclipse.edc.connector.api.management.configuration.transform.ManagementApiTypeTransformerRegistry;
 import org.eclipse.edc.connector.spi.catalog.CatalogService;
 import org.eclipse.edc.jsonld.spi.JsonLd;
@@ -91,6 +92,9 @@ public class CrawlerExtension implements ServiceExtension {
     private TypeManager typeManager;
 
     @Inject
+    private PlaceholderEndpointService placeholderEndpointService;
+
+    @Inject
     private ManagementApiTypeTransformerRegistry typeTransformerRegistry;
 
     @Inject
@@ -117,12 +121,13 @@ public class CrawlerExtension implements ServiceExtension {
         }
 
         services = CrawlerExtensionContextBuilder.buildContext(
-                context.getConfig(),
-                context.getMonitor(),
-                typeManager,
-                typeTransformerRegistry,
-                jsonLd,
-                catalogService
+            context.getConfig(),
+            context.getMonitor(),
+            typeManager,
+            typeTransformerRegistry,
+            jsonLd,
+            catalogService,
+            placeholderEndpointService
         );
 
         // Provide access for the tests

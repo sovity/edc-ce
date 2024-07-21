@@ -43,6 +43,7 @@ import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.val;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
+import org.jetbrains.annotations.NotNull;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
@@ -96,7 +97,11 @@ public class E2eScenario {
                 .build())
             .build();
 
-        return internalCreateAsset("asset-" + assetCounter.getAndIncrement(), dummyDataSource).getId();
+        return internalCreateAsset(nextAssetId(), dummyDataSource).getId();
+    }
+
+    private @NotNull String nextAssetId() {
+        return "asset-" + assetCounter.getAndIncrement();
     }
 
     public String createAsset(String id, UiDataSourceHttpData uiDataSourceHttpData) {
@@ -105,6 +110,10 @@ public class E2eScenario {
             .httpData(uiDataSourceHttpData)
             .build();
 
+        return internalCreateAsset(id, uiDataSource).getId();
+    }
+
+    public String createAsset(String id, UiDataSource uiDataSource) {
         return internalCreateAsset(id, uiDataSource).getId();
     }
 

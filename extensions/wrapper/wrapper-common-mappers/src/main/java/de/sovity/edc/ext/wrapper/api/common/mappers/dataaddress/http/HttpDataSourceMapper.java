@@ -16,6 +16,7 @@ package de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http;
 
 import de.sovity.edc.ext.wrapper.api.common.model.UiDataSourceHttpData;
 import de.sovity.edc.ext.wrapper.api.common.model.UiDataSourceOnRequest;
+import de.sovity.edc.extension.placeholderdatasource.PlaceholderEndpointService;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -33,6 +34,7 @@ import static java.util.Objects.requireNonNull;
 @RequiredArgsConstructor
 public class HttpDataSourceMapper {
     private final HttpHeaderMapper httpHeaderMapper;
+    private final PlaceholderEndpointService placeholderEndpointService;
 
     /**
      * Data Address for type HTTP_DATA
@@ -92,8 +94,13 @@ public class HttpDataSourceMapper {
             "Need contactPreferredEmailSubject"
         );
 
+        // this seems to be in use
+        String placeholderEndpointForAsset = placeholderEndpointService.getPlaceholderEndpointForAsset(
+            onRequest.getContactEmail(),
+            onRequest.getContactPreferredEmailSubject());
+
         var actualDataSource = UiDataSourceHttpData.builder()
-            .baseUrl("http://0.0.0.0")
+            .baseUrl(placeholderEndpointForAsset)
             .build();
 
         var props = buildDataAddress(actualDataSource);
@@ -123,6 +130,7 @@ public class HttpDataSourceMapper {
                 Prop.Edc.PROXY_BODY, Prop.SovityDcatExt.HttpDatasourceHints.BODY
             ).forEach((prop, hint) ->
                 // Will add hints as "true" or "false"
+                // TODO: what are those hints for? External info about the content of those fields??
                 json.add(hint, String.valueOf("true".equals(dataAddress.get(prop))))
             );
         }

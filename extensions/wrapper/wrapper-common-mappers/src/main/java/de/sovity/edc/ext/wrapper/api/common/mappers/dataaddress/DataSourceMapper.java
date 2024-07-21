@@ -29,6 +29,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -41,6 +42,7 @@ public class DataSourceMapper {
     private final HttpDataSourceMapper httpDataSourceMapper;
 
     public JsonObject buildDataSourceJsonLd(@NonNull UiDataSource dataSource) {
+        // this datasource has the URL set in the creation request
         var props = this.matchDataSource(
             dataSource,
             httpDataSourceMapper::buildDataAddress,

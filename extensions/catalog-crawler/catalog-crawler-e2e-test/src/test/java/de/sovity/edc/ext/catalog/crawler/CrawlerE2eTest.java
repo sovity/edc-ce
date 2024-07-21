@@ -36,6 +36,7 @@ import de.sovity.edc.ext.catalog.crawler.db.jooq.Tables;
 import de.sovity.edc.ext.catalog.crawler.db.jooq.enums.ConnectorOnlineStatus;
 import de.sovity.edc.ext.catalog.crawler.utils.CrawlerDbAccess;
 import de.sovity.edc.ext.catalog.crawler.utils.TestData;
+import de.sovity.edc.extension.placeholderdatasource.PlaceholderDataSourceExtension;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -106,6 +107,7 @@ class CrawlerE2eTest {
                 props.put(CrawlerExtension.CRON_DEAD_CONNECTOR_REFRESH, everySeconds);
                 props.put(CrawlerExtension.SCHEDULED_KILL_OFFLINE_CONNECTORS, everySeconds);
                 props.put(CrawlerExtension.KILL_OFFLINE_CONNECTORS_AFTER, "P1D");
+                props.put(PlaceholderDataSourceExtension.MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL, "http://example.com/edc/backend");
 
                 return props;
             }

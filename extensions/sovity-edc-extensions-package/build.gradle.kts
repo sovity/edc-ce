@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     // Policies
+    api(project(":extensions:placeholder-data-source"))
     api(project(":extensions:policy-referring-connector"))
     api(project(":extensions:policy-time-interval"))
     api(project(":extensions:policy-always-true"))

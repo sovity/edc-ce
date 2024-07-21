@@ -63,20 +63,41 @@ public class AssetJsonLdBuilder {
         );
     }
 
-
     @SneakyThrows
     @Nullable
     public JsonObject editAssetJsonLd(
-        JsonObject assetJsonLd,
-        UiAssetEditRequest editRequest
+        JsonObject assetJsonLd, // 3
+        UiAssetEditRequest editRequest // 2
     ) {
+
+        /*
+         * Data source selection order:
+         * override?
+         * edit request
+         * jsonLd
+         * placeholder
+         */
+
+        // request base URL comes here
         var dataAddress = getDataAddressJsonLd(assetJsonLd);
+        // override is null
         if (editRequest.getDataSourceOverrideOrNull() != null) {
+            // this part of the code is not asserted
+            // what is this override used for?
+            // TODO should this part have higher or lower prio than the automatic assignment to the dummy data source?
+            // 1
+            // there is another handling of this field in de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetEditRequestMapper.buildCreateRequest
+            // TODO: this is not a clear name on the API side: is `orNull` the Java null of the JSON null?
             dataAddress = dataSourceMapper.buildDataSourceJsonLd(editRequest.getDataSourceOverrideOrNull());
         }
 
+        // the dataAddress that is used should be the one that's part of the createRequest, not a separate element
+
         var assetId = Objects.requireNonNull(JsonLdUtils.string(assetJsonLd, Prop.ID), "Asset JSON-LD had no @id");
         var organizationName = assetJsonLdParser.getCreatorOrganizationName(assetJsonLd);
+        // set dummy source to placeholder URL inside this createRequest
+        // this `createRequest` contains the correct dataSource
+        // 4: dummy
         var createRequest = assetEditRequestMapper.buildCreateRequest(editRequest, assetId);
         var properties = getAssetProperties(createRequest, dataAddress, organizationName);
         var privateProperties = getAssetPrivateProperties(createRequest);
@@ -133,6 +154,8 @@ public class AssetJsonLdBuilder {
         addMobilityTheme(properties, request);
 
         addCustomJsonLd(properties, request);
+//         request.getDataSource().
+        // TODO: replace with request.getDataSource()
         addDataSourceHints(properties, dataAddressJsonLd);
         return properties.build();
     }

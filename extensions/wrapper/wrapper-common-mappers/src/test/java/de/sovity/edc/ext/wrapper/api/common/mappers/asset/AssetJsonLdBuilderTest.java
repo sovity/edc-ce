@@ -534,7 +534,7 @@ class AssetJsonLdBuilderTest {
         var dataAddress = Json.createObjectBuilder()
             .add(Prop.TYPE, Prop.Edc.TYPE_DATA_ADDRESS)
             .add(Prop.Edc.TYPE, Prop.Edc.DATA_ADDRESS_TYPE_HTTP_DATA)
-            .add(Prop.Edc.BASE_URL, "http://0.0.0.0")
+            .add(Prop.Edc.BASE_URL, "http://example.com/dummy/baseUrl/data-source/placeholder/asset?email=contact%40example.com&subject=Test")
             .add(Prop.SovityDcatExt.DATA_SOURCE_AVAILABILITY, Prop.SovityDcatExt.DATA_SOURCE_AVAILABILITY_ON_REQUEST)
             .add(Prop.SovityDcatExt.CONTACT_EMAIL, "contact@example.com")
             .add(Prop.SovityDcatExt.CONTACT_PREFERRED_EMAIL_SUBJECT, "Test");

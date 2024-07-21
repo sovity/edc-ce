@@ -24,6 +24,7 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.ShortDescription
 import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.DataSourceMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpDataSourceMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http.HttpHeaderMapper;
+import de.sovity.edc.extension.placeholderdatasource.PlaceholderEndpointService;
 import org.eclipse.edc.jsonld.TitaniumJsonLd;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
@@ -50,7 +51,7 @@ public class Factory {
         return new AssetJsonLdBuilder(
             new DataSourceMapper(
                 new EdcPropertyUtils(),
-                new HttpDataSourceMapper(new HttpHeaderMapper())
+                new HttpDataSourceMapper(new HttpHeaderMapper(), new PlaceholderEndpointService("http://example.com/dummy/baseUrl"))
             ),
             newAssetJsonLdParser(ownConnectorEndpointService),
             new AssetEditRequestMapper()

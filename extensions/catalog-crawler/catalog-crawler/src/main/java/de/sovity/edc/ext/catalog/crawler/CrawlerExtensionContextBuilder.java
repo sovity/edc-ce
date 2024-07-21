@@ -68,6 +68,7 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.LiteralMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.PolicyValidator;
+import de.sovity.edc.extension.placeholderdatasource.PlaceholderEndpointService;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import lombok.NoArgsConstructor;
@@ -96,12 +97,13 @@ import java.util.List;
 public class CrawlerExtensionContextBuilder {
 
     public static CrawlerExtensionContext buildContext(
-        Config config,
-        Monitor monitor,
-        TypeManager typeManager,
-        TypeTransformerRegistry typeTransformerRegistry,
-        JsonLd jsonLd,
-        CatalogService catalogService
+            Config config,
+            Monitor monitor,
+            TypeManager typeManager,
+            TypeTransformerRegistry typeTransformerRegistry,
+            JsonLd jsonLd,
+            CatalogService catalogService,
+            PlaceholderEndpointService placeholderEndpointService
     ) {
         // Config
         var crawlerConfigFactory = new CrawlerConfigFactory(config);
@@ -120,7 +122,7 @@ public class CrawlerExtensionContextBuilder {
 
         // Services
         var objectMapperJsonLd = getJsonLdObjectMapper(typeManager);
-        var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd);
+        var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd, placeholderEndpointService);
         var policyMapper = newPolicyMapper(typeTransformerRegistry, objectMapperJsonLd);
         var crawlerEventLogger = new CrawlerEventLogger();
         var crawlerExecutionTimeLogger = new CrawlerExecutionTimeLogger();
@@ -229,7 +231,8 @@ public class CrawlerExtensionContextBuilder {
     @NotNull
     private static AssetMapper newAssetMapper(
         TypeTransformerRegistry typeTransformerRegistry,
-        JsonLd jsonLd
+        JsonLd jsonLd,
+            PlaceholderEndpointService placeholderEndpointService
     ) {
         var edcPropertyUtils = new EdcPropertyUtils();
         var assetJsonLdUtils = new AssetJsonLdUtils();
@@ -241,7 +244,7 @@ public class CrawlerExtensionContextBuilder {
             endpoint -> false
         );
         var httpHeaderMapper = new HttpHeaderMapper();
-        var httpDataSourceMapper = new HttpDataSourceMapper(httpHeaderMapper);
+        var httpDataSourceMapper = new HttpDataSourceMapper(httpHeaderMapper, placeholderEndpointService);
         var dataSourceMapper = new DataSourceMapper(
             edcPropertyUtils,
             httpDataSourceMapper

@@ -12,6 +12,7 @@ dependencies {
     api(libs.edc.coreSpi)
     api(libs.edc.transformCore)
     api(libs.edc.transformSpi)
+    api(project(":extensions:placeholder-data-source"))
     api(project(":extensions:wrapper:wrapper-common-api"))
     api(project(":utils:json-and-jsonld-utils"))
     implementation(libs.apache.commonsLang)

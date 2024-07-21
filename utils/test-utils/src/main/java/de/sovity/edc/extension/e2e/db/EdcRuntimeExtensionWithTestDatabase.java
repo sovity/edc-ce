@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import lombok.val;
+import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -47,16 +48,28 @@ public class EdcRuntimeExtensionWithTestDatabase
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
         throws ParameterResolutionException {
-        boolean isJooqDsl = parameterContext.getParameter().getType().equals(DSLContext.class);
-        return isJooqDsl || edcRuntimeExtension.supportsParameter(parameterContext, extensionContext);
+
+        val type = parameterContext.getParameter().getType();
+
+        if (DSLContext.class.equals(type)) {
+            return true;
+        } else if (EdcExtension.class.equals(type)) {
+            return true;
+        }
+
+        return edcRuntimeExtension.supportsParameter(parameterContext, extensionContext);
     }
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
         throws ParameterResolutionException {
-        boolean isJooqDsl = parameterContext.getParameter().getType().equals(DSLContext.class);
-        if (isJooqDsl) {
+
+        val type = parameterContext.getParameter().getType();
+
+        if (DSLContext.class.equals(type)) {
             return getDslContext().dsl();
+        } else if (EdcExtension.class.equals(type)) {
+            return edcRuntimeExtension;
         } else {
             return edcRuntimeExtension.resolveParameter(parameterContext, extensionContext);
         }

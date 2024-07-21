@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
+import de.sovity.edc.extension.placeholderdatasource.PlaceholderEndpointService;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.connector.api.management.configuration.transform.ManagementApiTypeTransformerRegistry;
@@ -68,6 +69,8 @@ public class WrapperExtension implements ServiceExtension {
     private DslContextFactory dslContextFactory;
     @Inject
     private ManagementApiConfiguration dataManagementApiConfiguration;
+    @Inject
+    private PlaceholderEndpointService placeholderEndpointService;
     @Inject
     private PolicyDefinitionStore policyDefinitionStore;
     @Inject
@@ -122,7 +125,8 @@ public class WrapperExtension implements ServiceExtension {
             sovityMessenger,
             transferProcessService,
             transferProcessStore,
-            typeTransformerRegistry
+            typeTransformerRegistry,
+            placeholderEndpointService
         );
 
         wrapperExtensionContext.selfDescriptionService().validateSelfDescriptionConfig();
