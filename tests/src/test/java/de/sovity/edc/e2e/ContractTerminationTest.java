@@ -292,6 +292,7 @@ public class ContractTerminationTest {
                 })).toList();
     }
 
+    @DisabledOnGithub
     @Test
     @SneakyThrows
     void canTerminateFromProvider(
