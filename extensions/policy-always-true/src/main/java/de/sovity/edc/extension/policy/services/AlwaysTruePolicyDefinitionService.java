@@ -50,22 +50,16 @@ public class AlwaysTruePolicyDefinitionService {
      * Creates policy definition &quot;always-true&quot;.
      */
     public void create() {
-        var alwaysTrueConstraint = AtomicConstraint.Builder.newInstance()
-                .leftExpression(new LiteralExpression(EXPRESSION_LEFT_VALUE))
-                .operator(Operator.EQ)
-                .rightExpression(new LiteralExpression(EXPRESSION_RIGHT_VALUE))
-                .build();
         var alwaysTruePermission = Permission.Builder.newInstance()
-                .action(Action.Builder.newInstance().type("USE").build())
-                .constraint(alwaysTrueConstraint)
-                .build();
+            .action(Action.Builder.newInstance().type("USE").build())
+            .build();
         var policy = Policy.Builder.newInstance()
-                .permission(alwaysTruePermission)
-                .build();
+            .permission(alwaysTruePermission)
+            .build();
         var policyDefinition = PolicyDefinition.Builder.newInstance()
-                .id(POLICY_DEFINITION_ID)
-                .policy(policy)
-                .build();
+            .id(POLICY_DEFINITION_ID)
+            .policy(policy)
+            .build();
         policyDefinitionService.create(policyDefinition);
     }
 }
