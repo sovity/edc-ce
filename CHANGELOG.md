@@ -30,7 +30,7 @@ New configuration to access the database:
   - The property controls the maximum size that the pool is allowed to reach, including both idle and in-use connections. Basically this value will determine the maximum number of actual connections to the database backend.
   - Defaults to `3`
 - `MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL`
-  - The property on which URL an asset is seen from an external source (internet, VPN, ...)
+  - Base URL of an asset as seen from an external source, from the asset's consumer (typically from the internet, ...)
   - It is documented in the asset data placeholder [README.md](extensions/placeholder-data-source/README.md)
 
 #### Compatible Versions
