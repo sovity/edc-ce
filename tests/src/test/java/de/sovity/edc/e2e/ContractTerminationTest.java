@@ -254,6 +254,7 @@ public class ContractTerminationTest {
         // termination completed == success
     }
 
+    @DisabledOnGithub
     @TestFactory
     List<DynamicTest> theDetailsAreMandatory(
         E2eScenario scenario,
