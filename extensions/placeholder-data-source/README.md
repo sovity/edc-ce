@@ -29,13 +29,13 @@ This extension exists to inform the asset's consumer upon data retrieval that th
 
 ---
 
-On a production system, the base URL it could be: 
+On a production system, the base URL it could be:
 
-`https://mycompany.com/path/to/backend` 
+`https://mycompany.com/path/to/backend`
 
 with a placeholder value:
 
-`https://mycompany.com/path/to/backend/data-source/placeholder/asset` 
+`https://mycompany.com/path/to/backend/data-source/placeholder/asset`
 
 and a full path to the asset's data:
 

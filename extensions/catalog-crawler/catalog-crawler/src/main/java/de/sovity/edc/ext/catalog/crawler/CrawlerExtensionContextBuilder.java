@@ -97,13 +97,13 @@ import java.util.List;
 public class CrawlerExtensionContextBuilder {
 
     public static CrawlerExtensionContext buildContext(
-            Config config,
-            Monitor monitor,
-            TypeManager typeManager,
-            TypeTransformerRegistry typeTransformerRegistry,
-            JsonLd jsonLd,
-            CatalogService catalogService,
-            PlaceholderEndpointService placeholderEndpointService
+        Config config,
+        Monitor monitor,
+        TypeManager typeManager,
+        TypeTransformerRegistry typeTransformerRegistry,
+        JsonLd jsonLd,
+        CatalogService catalogService,
+        PlaceholderEndpointService placeholderEndpointService
     ) {
         // Config
         var crawlerConfigFactory = new CrawlerConfigFactory(config);
@@ -232,7 +232,7 @@ public class CrawlerExtensionContextBuilder {
     private static AssetMapper newAssetMapper(
         TypeTransformerRegistry typeTransformerRegistry,
         JsonLd jsonLd,
-            PlaceholderEndpointService placeholderEndpointService
+        PlaceholderEndpointService placeholderEndpointService
     ) {
         var edcPropertyUtils = new EdcPropertyUtils();
         var assetJsonLdUtils = new AssetJsonLdUtils();
