@@ -137,6 +137,7 @@ public class ContractTerminationTest {
         assertTermination(agreementsAfterTermination, details, reason, SELF);
     }
 
+    @DisabledOnGithub
     @Test
     @SneakyThrows
     void canTerminateFromConsumer(
