@@ -53,8 +53,6 @@ public class AssetMapper {
         @NonNull UiAssetEditRequest editRequest
     ) {
         var assetJsonLd = buildAssetJsonLd(asset);
-        // edit request is all empty
-        // assetJsonLd contains the manually set baseUrl
         var editedJsonLd = assetJsonLdBuilder.editAssetJsonLd(assetJsonLd, editRequest);
         return buildAsset(editedJsonLd);
     }

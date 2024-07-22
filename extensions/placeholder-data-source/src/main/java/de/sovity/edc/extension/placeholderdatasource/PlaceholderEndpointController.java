@@ -34,9 +34,11 @@ public class PlaceholderEndpointController {
     @Consumes("*/*")
     public Response get(@QueryParam("email") String email, @QueryParam("subject") String subject) {
         return Response.ok("""
-            This is not a real data offer.
+            This is not real data.
 
-            The offer you are trying to use only has this placeholder as a dummy endpoint and requires you top take extra actions to access it.
+            This asset is accessible on request.
+
+            The offer you are trying to use only has this placeholder as a dummy endpoint and requires you to take extra steps to access it.
 
             Please contact the data provider for more information about how to access it.
             """ + "\n\n" + "Email: " + email + "\n" + "Subject: " + subject + "\n"

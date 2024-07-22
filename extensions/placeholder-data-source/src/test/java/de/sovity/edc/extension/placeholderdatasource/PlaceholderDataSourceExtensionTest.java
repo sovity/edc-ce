@@ -12,15 +12,13 @@
  *
  */
 
-package de.sovity.edc.e2e;
+package de.sovity.edc.extension.placeholderdatasource;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceOnRequest;
-import de.sovity.edc.extension.placeholderdatasource.PlaceholderDataSourceExtension;
-import de.sovity.edc.extension.placeholderdatasource.PlaceholderEndpointService;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
 import de.sovity.edc.extension.e2e.extension.Provider;
@@ -38,7 +36,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(E2eTestExtension.class)
-public class PlaceholderDataSourceTest {
+class PlaceholderDataSourceExtensionTest {
 
     @SneakyThrows
     @Test
@@ -85,7 +83,7 @@ public class PlaceholderDataSourceTest {
         val client = new OkHttpClient();
         val content = client.newCall(request).execute().body().string();
 
-        assertThat(content).contains("This is not a real data offer.");
+        assertThat(content).contains("This is not real data.");
         assertThat(content).contains(email);
         assertThat(content).contains(subject);
     }

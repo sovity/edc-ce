@@ -23,7 +23,6 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTerminationInfo;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementTransferProcess;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminatedBy;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
-import jakarta.validation.constraints.Null;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
@@ -34,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import static de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationStatus.ONGOING;
 import static de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationStatus.TERMINATED;

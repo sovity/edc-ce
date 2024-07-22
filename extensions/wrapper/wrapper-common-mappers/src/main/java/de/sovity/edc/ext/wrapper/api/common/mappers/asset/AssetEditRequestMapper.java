@@ -32,10 +32,7 @@ public class AssetEditRequestMapper {
      * @param editRequest {@link UiAssetEditRequest}
      * @return {@link UiAssetCreateRequest}
      */
-    public UiAssetCreateRequest buildCreateRequest(
-        @NonNull UiAssetEditRequest editRequest,
-        @NonNull String assetId
-    ) {
+    public UiAssetCreateRequest buildCreateRequest(@NonNull UiAssetEditRequest editRequest, @NonNull String assetId) {
         var dataSource = editRequest.getDataSourceOverrideOrNull();
         if (dataSource == null) {
             dataSource = dummyDataSource();
@@ -76,8 +73,6 @@ public class AssetEditRequestMapper {
     }
 
     private UiDataSource dummyDataSource() {
-        return UiDataSource.builder()
-            .type(DataSourceType.CUSTOM)
-            .build();
+        return UiDataSource.builder().type(DataSourceType.CUSTOM).build();
     }
 }

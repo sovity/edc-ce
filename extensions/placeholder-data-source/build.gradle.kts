@@ -8,13 +8,17 @@ dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
 
-    api(libs.edc.coreSpi)
-    api(libs.edc.controlPlaneSpi)
+    implementation(libs.edc.coreSpi)
     implementation(libs.edc.apiCore)
     implementation(libs.edc.dspApiConfiguration)
     implementation(libs.okhttp.okhttp)
 
-    testImplementation(libs.mockito.core)
+
+    testAnnotationProcessor(libs.lombok)
+    testCompileOnly(libs.lombok)
+
+    testImplementation(project(":utils:test-utils"))
+    testImplementation(libs.assertj.core)
     testImplementation(libs.junit.api)
     testRuntimeOnly(libs.junit.engine)
 }

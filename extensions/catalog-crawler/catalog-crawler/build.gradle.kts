@@ -17,6 +17,7 @@ dependencies {
     api(project(":utils:json-and-jsonld-utils"))
     api(project(":extensions:wrapper:wrapper-common-mappers"))
     api(project(":extensions:catalog-crawler:catalog-crawler-db"))
+    api(project(":extensions:placeholder-data-source"))
     api(project(":extensions:postgres-flyway-core"))
 
     testAnnotationProcessor(libs.lombok)

@@ -24,7 +24,6 @@ public class PlaceholderEndpointService {
 
     public static final String DUMMY_ENDPOINT_URL = "/data-source/placeholder/asset";
 
-    // TODO: maybe add String contactEmail, String contactPreferredEmailSubject and show them in the placeholder
     public String getPlaceholderEndpointForAsset(String email, String subject) {
         return HttpUrl.parse(baseUrl + DUMMY_ENDPOINT_URL)
             .newBuilder()

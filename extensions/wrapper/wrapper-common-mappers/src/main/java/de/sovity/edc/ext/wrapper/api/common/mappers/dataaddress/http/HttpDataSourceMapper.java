@@ -94,7 +94,6 @@ public class HttpDataSourceMapper {
             "Need contactPreferredEmailSubject"
         );
 
-        // this seems to be in use
         String placeholderEndpointForAsset = placeholderEndpointService.getPlaceholderEndpointForAsset(
             onRequest.getContactEmail(),
             onRequest.getContactPreferredEmailSubject());
@@ -130,7 +129,6 @@ public class HttpDataSourceMapper {
                 Prop.Edc.PROXY_BODY, Prop.SovityDcatExt.HttpDatasourceHints.BODY
             ).forEach((prop, hint) ->
                 // Will add hints as "true" or "false"
-                // TODO: what are those hints for? External info about the content of those fields??
                 json.add(hint, String.valueOf("true".equals(dataAddress.get(prop))))
             );
         }

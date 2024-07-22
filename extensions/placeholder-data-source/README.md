@@ -10,7 +10,7 @@
   <p align="center">
     <a href="https://github.com/sovity/edc-ce/issues/new?template=bug_report.md">Report Bug</a>
     ·
-    <a href="https://github.com/sovity/edc-ce/issues/new?template=feature_request.md">Request Feature</a>
+    <a href="https://github.com/sovity/edc-ce/issues/new?template=feature_request.md">Asset Data Source Placeholder</a>
   </p>
 </div>
 
@@ -35,7 +35,7 @@ On a production system, the base URL it could be:
 
 with a placeholder value:
 
-`https://mycompany.com/path/to/backend/data-source/placeholder/asset/` 
+`https://mycompany.com/path/to/backend/data-source/placeholder/asset` 
 
 and a full path to the asset's data:
 
@@ -47,7 +47,7 @@ On a system started with docker-compose, it will be pointing to the DSP port on 
 
 `http://edc:11003/`
 
-`http://edc:11003/data-source/placeholder/asset/`
+`http://edc:11003/data-source/placeholder/asset`
 
 `http://edc:11003/data-source/placeholder/asset?email=foo%40example.com&subject=Contact+us+now`
 
@@ -57,9 +57,9 @@ During local/dev/unit test execution, it will be pointing to the DSP port on the
 
 `http://localhost:12345/`
 
-where `12345` would be chosen at random
+where the port that is here `12345` would actually be chosen at random
 
-`http://localhost:12345/data-source/placeholder/asset/`
+`http://localhost:12345/data-source/placeholder/asset`
 
 `http://localhost:12345/data-source/placeholder/asset?email=foo%40example.com&subject=Contact+us+now`
 
