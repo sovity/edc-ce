@@ -17,14 +17,9 @@ package de.sovity.edc.extension.policy.services;
 import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
 import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.policy.model.Action;
-import org.eclipse.edc.policy.model.AtomicConstraint;
-import org.eclipse.edc.policy.model.LiteralExpression;
-import org.eclipse.edc.policy.model.Operator;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 
-import static de.sovity.edc.extension.policy.AlwaysTruePolicyConstants.EXPRESSION_LEFT_VALUE;
-import static de.sovity.edc.extension.policy.AlwaysTruePolicyConstants.EXPRESSION_RIGHT_VALUE;
 import static de.sovity.edc.extension.policy.AlwaysTruePolicyConstants.POLICY_DEFINITION_ID;
 
 /**

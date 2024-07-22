@@ -19,6 +19,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 - Both providers and consumers can now terminate their contracts.
 - Added endpoints for checking ID availability for policies, assets and contract definitions
+- The always-true policy is now created with no constraints instead of the artificial `ALWAYS_TRUE = TRUE` constraint
+  - Existing always-true policy definitions are migrated to the new format - existing contract agreements are not affected
 
 #### Patch Changes
 
