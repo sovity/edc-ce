@@ -19,6 +19,7 @@ import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
+import de.sovity.edc.extension.postgresql.PostgresFlywayExtension;
 import de.sovity.edc.extension.utils.Lazy;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
+import static de.sovity.edc.extension.postgresql.PostgresFlywayExtension.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.mockserver.stop.Stop.stopQuietly;
 
@@ -56,10 +58,19 @@ public class E2eTestExtension
     private Lazy<ClientAndServer> clientAndServer;
 
     public E2eTestExtension() {
-        this("consumer", "provider");
+        this("consumer", "provider", "", "");
     }
 
-    public E2eTestExtension(String consumerParticipantId, String providerParticipantId) {
+    public E2eTestExtension(String additionalConsumerMigrationLocation, String additionalProviderMigrationLocation) {
+        this("consumer", "provider", additionalConsumerMigrationLocation, additionalProviderMigrationLocation);
+    }
+
+    public E2eTestExtension(
+        String consumerParticipantId,
+        String providerParticipantId,
+        String additionalConsumerMigrationLocation,
+        String additionalProviderMigrationLocation
+    ) {
         this.consumerParticipantId = consumerParticipantId;
         this.providerParticipantId = providerParticipantId;
 
@@ -68,6 +79,7 @@ public class E2eTestExtension
             "consumer",
             testDatabase -> {
                 consumerConfig = forTestDatabase(this.consumerParticipantId, testDatabase);
+                consumerConfig.getProperties().put(EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS, additionalConsumerMigrationLocation);
                 return consumerConfig.getProperties();
             }
         );
@@ -76,6 +88,7 @@ public class E2eTestExtension
             "provider",
             testDatabase -> {
                 providerConfig = forTestDatabase(this.providerParticipantId, testDatabase);
+                providerConfig.getProperties().put(EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS, additionalProviderMigrationLocation);
                 return providerConfig.getProperties();
             }
         );

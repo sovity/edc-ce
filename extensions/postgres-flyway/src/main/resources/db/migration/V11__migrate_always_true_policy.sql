@@ -16,4 +16,4 @@ set permissions = jsonb_set(
     permissions::jsonb,
     '{0,constraints}',
     '[]'::jsonb)::json
-where policy_id = 'always_true';
+where policy_id = 'always-true';
