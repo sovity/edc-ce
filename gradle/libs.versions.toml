@@ -117,6 +117,7 @@ edc-policyDefinitionApi = { module = "org.eclipse.edc:policy-definition-api", ve
 edc-policyEngineSpi = { module = "org.eclipse.edc:policy-engine-spi", version.ref = "edc" }
 edc-policyModel = { module = "org.eclipse.edc:policy-model", version.ref = "edc" }
 edc-policySpi = { module = "org.eclipse.edc:policy-spi", version.ref = "edc" }
+edc-runtimeMetamodel = { module = "org.eclipse.edc:runtime-metamodel", version = "0.2.1" }
 edc-sqlCore = { module = "org.eclipse.edc:sql-core", version.ref = "edc" }
 edc-transactionLocal = { module = "org.eclipse.edc:transaction-local", version.ref = "edc" }
 edc-transferDataPlane = { module = "org.eclipse.edc:transfer-data-plane", version.ref = "edc" }

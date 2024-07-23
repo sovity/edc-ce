@@ -9,6 +9,7 @@ dependencies {
     api(libs.edc.policyEngineSpi)
     api(libs.edc.controlPlaneSpi)
     implementation(libs.edc.apiCore)
+    implementation(libs.edc.runtimeMetamodel)
 
     testImplementation(libs.edc.controlPlaneCore)
     testImplementation(libs.edc.junit)

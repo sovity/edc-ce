@@ -29,6 +29,7 @@ dependencies {
     implementation(libs.edc.apiCore)
     implementation(libs.edc.managementApiConfiguration)
     implementation(libs.edc.dspHttpSpi)
+    implementation(libs.edc.runtimeMetamodel)
     implementation(libs.jooq.jooq)
     implementation(libs.hibernate.validation)
     implementation(libs.hikari)
