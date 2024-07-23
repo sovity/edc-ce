@@ -24,6 +24,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
+- Fixed an issue that caused the auth information to get lost during asset creation.
+
 ### Deployment Migration Notes
 
 ## [v4.0.0] - 2024-07-15

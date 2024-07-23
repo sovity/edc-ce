@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpDatasourceHeaderFormValue} from '../../routes/connector-ui/asset-page/asset-edit-dialog/form/model/http-datasource-header-form-model';
 import {ContractAgreementTransferDialogFormValue} from '../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-form-model';
+import {getAuthFields} from '../utils/form-value-utils';
 import {mapKeys, removeNullValues} from '../utils/record-utils';
 import {DataAddressProperty} from './models/data-address-properties';
 import {HttpDataAddressParams} from './models/http-data-address-params';
@@ -82,7 +83,7 @@ export class TransferDataSinkMapper {
     formValue: ContractAgreementTransferDialogFormValue,
   ): HttpDataAddressParams {
     const {authHeaderName, authHeaderValue, authHeaderSecretName} =
-      this.getAuthFields(formValue);
+      getAuthFields(formValue);
 
     let method = formValue?.httpMethod?.trim().toUpperCase() || null;
 
@@ -103,31 +104,6 @@ export class TransferDataSinkMapper {
       queryParams,
       headers: this.buildHttpHeaders(formValue?.httpHeaders ?? []),
     };
-  }
-
-  private getAuthFields(
-    formValue: ContractAgreementTransferDialogFormValue | undefined,
-  ): {
-    authHeaderName: string | null;
-    authHeaderValue: string | null;
-    authHeaderSecretName: string | null;
-  } {
-    let authHeaderName: string | null = null;
-    if (formValue?.httpAuthHeaderType !== 'None') {
-      authHeaderName = formValue?.httpAuthHeaderName?.trim() || null;
-    }
-
-    let authHeaderValue: string | null = null;
-    if (authHeaderName && formValue?.httpAuthHeaderType === 'Value') {
-      authHeaderValue = formValue?.httpAuthHeaderValue?.trim() || null;
-    }
-
-    let authHeaderSecretName: string | null = null;
-    if (authHeaderName && formValue?.httpAuthHeaderType === 'Vault-Secret') {
-      authHeaderSecretName =
-        formValue?.httpAuthHeaderSecretName?.trim() || null;
-    }
-    return {authHeaderName, authHeaderValue, authHeaderSecretName};
   }
 
   private buildHttpHeaders(
