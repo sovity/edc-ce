@@ -18,10 +18,11 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
-- Both providers and consumers can now terminate contracts.
-- Contracts can be filtered by their termination status.
+- Reworked data offer creation page for easier data sharing
+- Complex policies using AND, OR and XONE
+- Both providers and consumers can now terminate contracts
+- Contracts can be filtered by their termination status
 - Adjusted data offer card/detail dialog UI to differentiate live and on request assets
-- Complex policies using AND, OR and XONE are now supported.
 
 #### Patch
 
@@ -45,7 +46,6 @@ Broker UI removal refactoring, ToS dialog.
 
 - Added Initiate Negotiation Confirm ToS Dialog
 - Support for creating "On Request" Data Offers
-- Replaced create/edit asset dialogs with full page forms with structure that enables faster asset creation
 
 ### Deployment Migration Notes
 
