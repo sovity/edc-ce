@@ -84,8 +84,6 @@ public class E2eScenario {
             .build();
     }
 
-    private final String alwaysTruePolicyId = POLICY_DEFINITION_ID;
-
     private final AtomicInteger assetCounter = new AtomicInteger(0);
 
     public String createAsset() {
