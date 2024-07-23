@@ -8,9 +8,10 @@ dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
 
-    implementation(libs.edc.coreSpi)
     implementation(libs.edc.apiCore)
+    implementation(libs.edc.coreSpi)
     implementation(libs.edc.dspApiConfiguration)
+    implementation(libs.edc.runtimeMetamodel)
     implementation(libs.okhttp.okhttp)
 
 

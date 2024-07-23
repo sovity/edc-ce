@@ -20,7 +20,7 @@ dependencies {
     implementation(libs.apache.commonsIo)
     implementation(libs.edc.runtimeMetamodel)
 
-    
+
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
     testImplementation(project(":utils:test-utils"))

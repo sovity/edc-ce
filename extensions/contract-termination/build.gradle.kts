@@ -13,8 +13,9 @@ dependencies {
     implementation(project(":extensions:sovity-messenger"))
 
     implementation(libs.edc.coreSpi)
-    implementation(libs.edc.transferSpi)
     implementation(libs.edc.dspNegotiationTransform)
+    implementation(libs.edc.runtimeMetamodel)
+    implementation(libs.edc.transferSpi)
 
     implementation(libs.jakarta.rsApi)
 

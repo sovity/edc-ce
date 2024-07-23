@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     api(libs.edc.transferSpi)
+    implementation(libs.edc.runtimeMetamodel)
     testImplementation(libs.edc.junit)
 }
 

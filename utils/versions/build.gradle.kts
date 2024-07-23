@@ -5,8 +5,6 @@ import com.squareup.javapoet.TypeSpec
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
-import java.lang.String as JavaString
-
 
 plugins {
     `java-library`
@@ -26,7 +24,7 @@ val generateGradleVersions by tasks.creating {
         val versionsClass = TypeSpec.classBuilder("GradleVersions")
             .addModifiers(PUBLIC, FINAL)
             .addField(
-                FieldSpec.builder(TypeName.get(JavaString::class.java), "POSTGRES_IMAGE_TAG")
+                FieldSpec.builder(TypeName.get(String::class.java), "POSTGRES_IMAGE_TAG")
                     .initializer("\$S", libs.versions.postgresDbImage.get())
                     .addModifiers(PUBLIC, STATIC, FINAL)
                     .build()

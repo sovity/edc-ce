@@ -8,6 +8,7 @@ dependencies {
 
     implementation(libs.edc.controlPlaneSpi)
     implementation(libs.edc.managementApiConfiguration)
+    implementation(libs.edc.runtimeMetamodel)
 
     implementation(libs.quartz.quartz)
     implementation(libs.apache.commonsLang)

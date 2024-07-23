@@ -19,6 +19,7 @@ dependencies {
     testImplementation(libs.assertj.core)
     testImplementation(libs.mockito.core)
     testImplementation(libs.edc.junit)
+    testImplementation(libs.edc.runtimeMetamodel)
     testImplementation(libs.restAssured.restAssured)
     testImplementation(libs.testcontainers.testcontainers)
     testImplementation(libs.flyway.core)

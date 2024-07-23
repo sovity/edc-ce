@@ -11,6 +11,7 @@ dependencies {
     api(libs.edc.http)
     api(libs.edc.dsp)
     api(libs.edc.jsonLd)
+    implementation(libs.edc.runtimeMetamodel)
 
     // Data Catalog Crawler
     api(project(":extensions:catalog-crawler:catalog-crawler"))

@@ -15,8 +15,8 @@ dependencies {
     implementation(libs.edc.dspHttpSpi)
     implementation(libs.edc.httpSpi)
     implementation(libs.edc.managementApiConfiguration)
+    implementation(libs.edc.runtimeMetamodel)
     implementation(libs.edc.transformCore)
-
 
     testAnnotationProcessor(libs.lombok)
 
