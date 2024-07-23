@@ -108,7 +108,7 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
       return ok(IdResponseDtoToJSON(deleted));
     })
 
-    .url('ui/pages/asset-page/assets/*/metadata')
+    .url('ui/pages/asset-page/assets/*')
     .on('PUT', (assetId) => {
       const editRequest = UiAssetEditRequestFromJSON(body);
       const created = editAsset(assetId, editRequest);

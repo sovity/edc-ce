@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {EdcUiFeature} from '../../core/config/profiles/edc-ui-feature';
+import {AssetEditPageComponent} from './asset-edit-page/asset-edit-page/asset-edit-page.component';
 import {AssetPageComponent} from './asset-page/asset-page/asset-page.component';
 import {CatalogBrowserPageComponent} from './catalog-browser-page/catalog-browser-page/catalog-browser-page.component';
 import {ConnectorUiComponent} from './connector-ui.component';
@@ -21,51 +21,57 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardPageComponent,
-    data: {title: 'Dashboard', icon: 'data_usage'},
+    data: {title: 'Dashboard'},
+  },
+  {
+    path: 'create-asset',
+    component: AssetEditPageComponent,
+    data: {title: 'Create Data Offer'},
+  },
+  {
+    path: 'edit-asset/:id',
+    component: AssetEditPageComponent,
+    data: {title: 'Edit Asset'},
   },
   {
     path: 'catalog-browser',
     component: CatalogBrowserPageComponent,
-    data: {title: 'Catalog Browser', icon: 'sim_card'},
+    data: {title: 'Catalog Browser'},
   },
   {
     path: 'contracts',
     component: ContractAgreementPageComponent,
-    data: {title: 'Contracts', icon: 'assignment_turned_in'},
+    data: {title: 'Contracts'},
   },
   {
     path: 'transfer-history',
     component: TransferHistoryPageComponent,
-    data: {title: 'Transfer History', icon: 'assignment'},
+    data: {title: 'Transfer History'},
   },
   {
     path: 'my-assets', // must not be "assets" to prevent conflict with assets directory
     component: AssetPageComponent,
-    data: {title: 'Assets', icon: 'upload'},
+    data: {title: 'Assets'},
   },
   {
     path: 'policies',
     component: PolicyDefinitionPageComponent,
-    data: {title: 'Policies', icon: 'policy'},
+    data: {title: 'Policies'},
   },
   {
     path: 'policies/create',
     component: PolicyDefinitionCreatePageComponent,
-    data: {title: 'Create Policy', icon: 'policy', skipNavItem: true},
+    data: {title: 'Create Policy'},
   },
   {
     path: 'contract-definitions',
     component: ContractDefinitionPageComponent,
-    data: {title: 'Contract Definitions', icon: 'rule'},
+    data: {title: 'Contract Definitions'},
   },
   {
     path: 'logout',
     component: LogoutPageComponent,
-    data: {
-      title: 'Logout',
-      icon: 'logout',
-      requiresFeature: 'logout-button' as EdcUiFeature,
-    },
+    data: {title: 'Logout'},
   },
 ];
 

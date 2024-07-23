@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {UiDataSource} from '@sovity.de/edc-client';
-import {AssetDatasourceFormValue} from '../../routes/connector-ui/asset-page/asset-edit-dialog/form/model/asset-datasource-form-model';
-import {HttpDatasourceHeaderFormValue} from '../../routes/connector-ui/asset-page/asset-edit-dialog/form/model/http-datasource-header-form-model';
+import {AssetDatasourceFormValue} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/asset-datasource-form-model';
+import {HttpDatasourceHeaderFormValue} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/http-datasource-header-form-model';
 import {getAuthFields} from '../utils/form-value-utils';
 import {QueryParamsMapper} from './query-params-mapper';
 
@@ -10,20 +10,22 @@ export class AssetDataSourceMapper {
   constructor(private queryParamsMapper: QueryParamsMapper) {}
 
   buildDataSourceOrNull(
-    formValue: AssetDatasourceFormValue,
+    formValue: AssetDatasourceFormValue | undefined,
   ): UiDataSource | null {
-    if (formValue.dataAddressType === 'Unchanged') {
+    if (!formValue || formValue.dataSourceAvailability === 'Unchanged') {
       return null;
     }
     return this.buildDataSource(formValue);
   }
 
   buildDataSource(formValue: AssetDatasourceFormValue): UiDataSource {
+    if (formValue.dataSourceAvailability === 'On-Request') {
+      return this.buildOnRequestDataSource(formValue);
+    }
+
     switch (formValue?.dataAddressType) {
       case 'Custom-Data-Address-Json':
         return this.buildCustomDataSource(formValue);
-      case 'On-Request':
-        return this.buildOnRequestDataSource(formValue);
       case 'Http':
         return this.buildHttpDataSource(formValue);
       default:

@@ -1,6 +1,8 @@
 <mat-card *ngFor="let asset of assets" class="asset-card">
   <mat-card-header>
-    <mat-icon mat-card-avatar>upload</mat-icon>
+    <mat-icon mat-card-avatar>{{
+      asset.dataSourceAvailability === 'LIVE' ? 'upload' : 'contact_page'
+    }}</mat-icon>
     <mat-card-title>
       <a
         class="link"

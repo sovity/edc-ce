@@ -10,6 +10,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {PipesAndDirectivesModule} from '../../component-library/pipes-and-directives/pipes-and-directives.module';
 import {UiElementsModule} from '../../component-library/ui-elements/ui-elements.module';
+import {AssetEditPageModule} from './asset-edit-page/asset-edit-page.module';
 import {AssetPageModule} from './asset-page/asset-page.module';
 import {CatalogBrowserPageModule} from './catalog-browser-page/catalog-browser-page.module';
 import {ConnectorUiRoutingModule} from './connector-ui-routing.module';
@@ -45,6 +46,7 @@ import {TransferHistoryPageModule} from './transfer-history-page/transfer-histor
 
     // Pages
     AssetPageModule,
+    AssetEditPageModule,
     CatalogBrowserPageModule,
     ContractAgreementPageModule,
     ContractDefinitionPageModule,

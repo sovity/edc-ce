@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {UiAssetCreateRequest, UiAssetEditRequest} from '@sovity.de/edc-client';
-import {AssetEditorDialogFormValue} from '../../routes/connector-ui/asset-page/asset-edit-dialog/form/model/asset-editor-dialog-form-model';
+import {EditAssetFormValue} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/edit-asset-form-model';
 import {toGmtZeroHourDate} from '../utils/date-utils';
 import {AssetDataSourceMapper} from './asset-data-source-mapper';
 import {AssetRequestCommonMetadata} from './asset-request-common-metadata';
@@ -9,10 +9,8 @@ import {AssetRequestCommonMetadata} from './asset-request-common-metadata';
 export class AssetRequestBuilder {
   constructor(private assetDataSourceMapper: AssetDataSourceMapper) {}
 
-  buildAssetCreateRequest(
-    formValue: AssetEditorDialogFormValue,
-  ): UiAssetCreateRequest {
-    const id = formValue.metadata?.id!;
+  buildAssetCreateRequest(formValue: EditAssetFormValue): UiAssetCreateRequest {
+    const id = formValue.general?.id!;
     const metadata = this.buildAssetRequestCommonMetadata(formValue);
     const dataSource = this.assetDataSourceMapper.buildDataSource(
       formValue.datasource!,
@@ -24,12 +22,10 @@ export class AssetRequestBuilder {
     };
   }
 
-  buildAssetEditRequest(
-    formValue: AssetEditorDialogFormValue,
-  ): UiAssetEditRequest {
+  buildAssetEditRequest(formValue: EditAssetFormValue): UiAssetEditRequest {
     const metadata = this.buildAssetRequestCommonMetadata(formValue);
     const dataSourceOrNull = this.assetDataSourceMapper.buildDataSourceOrNull(
-      formValue.datasource!,
+      formValue.datasource,
     );
     return {
       ...metadata,
@@ -38,24 +34,23 @@ export class AssetRequestBuilder {
   }
 
   buildAssetRequestCommonMetadata(
-    formValue: AssetEditorDialogFormValue,
+    formValue: EditAssetFormValue,
   ): AssetRequestCommonMetadata {
-    const title = formValue.metadata?.title!;
-    const version = formValue.metadata?.version;
-    const description = formValue.metadata?.description;
-    const language = formValue.metadata?.language?.id;
-    const keywords = formValue.metadata?.keywords;
-    const licenseUrl = formValue.metadata?.standardLicense;
-    const publisherHomepage = formValue.metadata?.publisher;
-    const mediaType = formValue.metadata?.contentType;
-    const landingPageUrl = formValue.metadata?.endpointDocumentation;
+    const title = formValue.general?.name!;
+    const version = formValue.general?.version;
+    const description = formValue.general?.description;
+    const language = formValue.general?.language?.id;
+    const keywords = formValue.general?.keywords;
+    const licenseUrl = formValue.general?.standardLicense;
+    const publisherHomepage = formValue.general?.publisher;
+    const mediaType = formValue.general?.contentType;
+    const landingPageUrl = formValue.general?.endpointDocumentation;
+    const dataCategory = formValue.general?.dataCategory?.id;
+    const dataSubcategory = formValue.general?.dataSubcategory?.id;
 
-    const dataCategory = formValue.advanced?.dataCategory?.id;
-    const dataSubcategory = formValue.advanced?.dataSubcategory?.id;
     const transportMode = formValue.advanced?.transportMode?.id;
     const geoReferenceMethod = formValue.advanced?.geoReferenceMethod;
     const dataModel = formValue.advanced?.dataModel;
-
     const sovereignLegalName = formValue.advanced?.sovereignLegalName;
     const geoLocation = formValue.advanced?.geoLocation;
     const nutsLocations = formValue.advanced?.nutsLocations;

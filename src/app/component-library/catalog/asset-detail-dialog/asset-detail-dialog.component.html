@@ -3,7 +3,7 @@
     <mat-icon
       *ngIf="data.type === 'asset-details'"
       class="mat-card-avatar-icon">
-      upload
+      {{ asset.dataSourceAvailability === 'LIVE' ? 'upload' : 'contact_page' }}
     </mat-icon>
     <mat-icon
       *ngIf="data.type === 'contract-agreement'"

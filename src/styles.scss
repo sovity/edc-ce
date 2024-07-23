@@ -238,7 +238,7 @@ body {
   @apply prose-th:px-[13px] prose-th:py-[6px] prose-th:border prose-th:border-[--tw-prose-td-borders] prose-th:align-middle prose-th:border-solid;
   @apply prose-td:px-[13px] prose-td:py-[6px] prose-td:border prose-td:border-[--tw-prose-td-borders] prose-td:align-middle prose-td:border-solid;
 
-  font: 400 14px / 20px Open Sans;
+  font: 400 14px / 20px Sans;
   letter-spacing: normal;
 
   h1,
@@ -303,4 +303,20 @@ body {
   mat-icon {
     margin-top: -1px;
   }
+}
+
+#edit-asset-form .mat-form-field-infix {
+  border-top: 4.8px solid transparent !important;
+}
+
+.normal-form-field .mat-form-field-infix {
+  border-top: 13.6px solid transparent !important;
+}
+
+#edit-asset-form .mat-form-field-subscript-wrapper {
+  font-size: 100%;
+}
+
+#edit-asset-form .mat-hint {
+  font-size: 0.75rem;
 }

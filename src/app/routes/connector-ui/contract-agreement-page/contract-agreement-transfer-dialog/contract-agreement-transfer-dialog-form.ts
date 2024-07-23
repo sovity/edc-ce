@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {HttpDatasourceAuthHeaderType} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/http-datasource-auth-header-type';
+import {HttpDatasourceQueryParamFormModel} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/http-datasource-query-param-form-model';
 import {DataAddressType} from '../../../../component-library/data-address/data-address-type-select/data-address-type';
 import {switchDisabledControls} from '../../../../core/utils/form-group-utils';
 import {jsonValidator} from '../../../../core/validators/json-validator';
 import {urlValidator} from '../../../../core/validators/url-validator';
-import {HttpDatasourceAuthHeaderType} from '../../asset-page/asset-edit-dialog/form/model/http-datasource-auth-header-type';
-import {HttpDatasourceQueryParamFormModel} from '../../asset-page/asset-edit-dialog/form/model/http-datasource-query-param-form-model';
 import {
   ContractAgreementTransferDialogFormModel,
   ContractAgreementTransferDialogFormValue,

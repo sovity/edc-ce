@@ -398,4 +398,29 @@ export class AssetPropertyGridGroupBuilder {
 
     return `${start.toLocaleDateString()} - ${end.toLocaleDateString()}`;
   }
+
+  buildOnRequestContactInformation(asset: UiAssetMapped): PropertyGridGroup[] {
+    if (asset.dataSourceAvailability === 'LIVE') {
+      return [];
+    }
+    return [
+      {
+        groupLabel: 'Contact Information',
+        properties: [
+          {
+            icon: 'mail',
+            label: 'Contact E-Mail Address',
+            ...this.propertyGridUtils.guessValue(asset.onRequestContactEmail),
+          },
+          {
+            icon: 'subject',
+            label: 'Preferred E-Mail Subject',
+            ...this.propertyGridUtils.guessValue(
+              asset.onRequestContactEmailSubject,
+            ),
+          },
+        ],
+      },
+    ];
+  }
 }

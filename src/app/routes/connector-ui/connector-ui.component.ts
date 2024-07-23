@@ -3,10 +3,11 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
+import {NavItemGroup} from 'src/app/core/services/models/nav-item-group';
+import {NavItemsBuilder} from 'src/app/core/services/nav-items-builder';
 import {APP_CONFIG, AppConfig} from '../../core/config/app-config';
 import {LoginPollingService} from '../../core/services/login-polling.service';
 import {TitleUtilsService} from '../../core/services/title-utils.service';
-import {routes} from './connector-ui-routing.module';
 
 @Component({
   selector: 'connector-ui-page-layout',
@@ -22,7 +23,7 @@ export class ConnectorUiComponent implements OnInit {
       shareReplay(),
     );
 
-  routes = routes.filter((it) => !it.data?.skipNavItem);
+  navItemGroups: NavItemGroup[] = [];
 
   constructor(
     @Inject(APP_CONFIG) public config: AppConfig,
@@ -30,7 +31,10 @@ export class ConnectorUiComponent implements OnInit {
     public titleService: Title,
     private breakpointObserver: BreakpointObserver,
     private loginPollingService: LoginPollingService,
-  ) {}
+    private navItemsBuilder: NavItemsBuilder,
+  ) {
+    this.navItemGroups = this.navItemsBuilder.buildNavItemGroups();
+  }
 
   ngOnInit() {
     this.titleUtilsService.startUpdatingTitleFromRouteData('EDC Connector');

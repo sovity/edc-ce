@@ -1,4 +1,1 @@
-export type DataAddressTypeSelectMode =
-  | 'Datasource-Create'
-  | 'Datasource-Edit'
-  | 'Datasink';
+export type DataAddressTypeSelectMode = 'Datasource-Create' | 'Datasink';

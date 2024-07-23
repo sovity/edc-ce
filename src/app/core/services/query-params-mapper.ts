@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpDatasourceQueryParamFormValue} from '../../routes/connector-ui/asset-page/asset-edit-dialog/form/model/http-datasource-query-param-form-model';
+import {HttpDatasourceQueryParamFormValue} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/http-datasource-query-param-form-model';
 import {
   everythingAfter,
   everythingBefore,

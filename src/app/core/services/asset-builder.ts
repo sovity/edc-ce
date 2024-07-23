@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 import {UiAsset} from '@sovity.de/edc-client';
-import {DataCategorySelectItem} from '../../routes/connector-ui/asset-page/data-category-select/data-category-select-item';
-import {DataCategorySelectItemService} from '../../routes/connector-ui/asset-page/data-category-select/data-category-select-item.service';
-import {DataSubcategorySelectItem} from '../../routes/connector-ui/asset-page/data-subcategory-select/data-subcategory-select-item';
-import {DataSubcategorySelectItemService} from '../../routes/connector-ui/asset-page/data-subcategory-select/data-subcategory-select-item.service';
-import {LanguageSelectItem} from '../../routes/connector-ui/asset-page/language-select/language-select-item';
-import {LanguageSelectItemService} from '../../routes/connector-ui/asset-page/language-select/language-select-item.service';
-import {TransportModeSelectItem} from '../../routes/connector-ui/asset-page/transport-mode-select/transport-mode-select-item';
-import {TransportModeSelectItemService} from '../../routes/connector-ui/asset-page/transport-mode-select/transport-mode-select-item.service';
+import {DataCategorySelectItem} from 'src/app/component-library/edit-asset-form/data-category-select/data-category-select-item';
+import {DataCategorySelectItemService} from 'src/app/component-library/edit-asset-form/data-category-select/data-category-select-item.service';
+import {DataSubcategorySelectItem} from 'src/app/component-library/edit-asset-form/data-subcategory-select/data-subcategory-select-item';
+import {DataSubcategorySelectItemService} from 'src/app/component-library/edit-asset-form/data-subcategory-select/data-subcategory-select-item.service';
+import {LanguageSelectItem} from 'src/app/component-library/edit-asset-form/language-select/language-select-item';
+import {LanguageSelectItemService} from 'src/app/component-library/edit-asset-form/language-select/language-select-item.service';
+import {TransportModeSelectItem} from 'src/app/component-library/edit-asset-form/transport-mode-select/transport-mode-select-item';
+import {TransportModeSelectItemService} from 'src/app/component-library/edit-asset-form/transport-mode-select/transport-mode-select-item.service';
 import {AdditionalAssetProperty, UiAssetMapped} from './models/ui-asset-mapped';
 
 /**

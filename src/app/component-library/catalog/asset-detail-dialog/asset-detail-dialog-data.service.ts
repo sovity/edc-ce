@@ -33,8 +33,15 @@ export class AssetDetailDialogDataService {
     asset: UiAssetMapped,
     opts: {onAssetEditClick: OnAssetEditClickFn},
   ): AssetDetailDialogData {
+    const assetDetailsReadonly = this.assetDetailsReadonly(asset);
     return {
-      ...this.assetDetailsReadonly(asset),
+      ...assetDetailsReadonly,
+      propertyGridGroups: [
+        ...assetDetailsReadonly.propertyGridGroups,
+        ...this.assetPropertyGridGroupBuilder.buildOnRequestContactInformation(
+          asset,
+        ),
+      ],
       showDeleteButton: true,
       showEditButton: true,
       onAssetEditClick: opts.onAssetEditClick,

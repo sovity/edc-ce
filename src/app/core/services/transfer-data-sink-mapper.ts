@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpDatasourceHeaderFormValue} from '../../routes/connector-ui/asset-page/asset-edit-dialog/form/model/http-datasource-header-form-model';
+import {HttpDatasourceHeaderFormValue} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/http-datasource-header-form-model';
 import {ContractAgreementTransferDialogFormValue} from '../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-form-model';
 import {getAuthFields} from '../utils/form-value-utils';
 import {mapKeys, removeNullValues} from '../utils/record-utils';

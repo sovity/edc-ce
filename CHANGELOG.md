@@ -45,6 +45,7 @@ Broker UI removal refactoring, ToS dialog.
 
 - Added Initiate Negotiation Confirm ToS Dialog
 - Support for creating "On Request" Data Offers
+- Replaced create/edit asset dialogs with full page forms with structure that enables faster asset creation
 
 ### Deployment Migration Notes
 

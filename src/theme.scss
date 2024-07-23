@@ -5,13 +5,44 @@
 
 // Import styles that aren't theme dependant (including typography)
 
-/* open-sans-regular - latin */
 @font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Open Sans';
+  font-display: swap;
+  font-family: 'Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: url('assets/fonts/Inter-Light.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Sans';
   font-style: normal;
   font-weight: 400;
-  src: url('assets/fonts/open-sans-v40-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url('assets/fonts/Inter-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Sans';
+  font-style: normal;
+  font-weight: 500;
+  src: url('assets/fonts/Inter-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: url('assets/fonts/Inter-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('assets/fonts/Inter-Bold.woff2') format('woff2');
 }
 
 /* material-icons-regular - latin */
@@ -41,7 +72,7 @@
 }
 
 $custom-typography: mat.define-typography-config(
-  $font-family: 'Open Sans',
+  $font-family: 'Sans',
 );
 @include mat.core($custom-typography);
 

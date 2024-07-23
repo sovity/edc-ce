@@ -9,7 +9,12 @@ import {
 import {Patcher, patchObj} from '../../../../utils/object-utils';
 import {TestAssets} from './data/test-assets';
 
-let assets: UiAsset[] = [TestAssets.full, TestAssets.boring, TestAssets.short];
+let assets: UiAsset[] = [
+  TestAssets.full,
+  TestAssets.boring,
+  TestAssets.short,
+  TestAssets.onRequestAsset,
+];
 
 export const assetPage = (): AssetPage => {
   return {

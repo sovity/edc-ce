@@ -18,15 +18,17 @@
     </mat-form-field>
 
     <!-- Create Button -->
-    <button
+    <a
       id="create-button"
       color="primary"
       mat-raised-button
       style="margin-top: 8px; height: 44px"
-      (click)="onCreate()">
-      <mat-icon>add_circle_outline</mat-icon>
-      Create asset
-    </button>
+      routerLink="/create-asset">
+      <div class="flex justify-center items-center h-full gap-1">
+        <mat-icon class="mt-[1px]">add_circle_outline</mat-icon>
+        Create asset
+      </div>
+    </a>
 
     <!-- Spacer -->
     <div class="grow"></div>

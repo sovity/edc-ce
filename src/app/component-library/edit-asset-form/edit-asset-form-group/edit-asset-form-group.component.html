@@ -1,0 +1,15 @@
+<div
+  class="grid grid-cols-1 gap-x-8 gap-y-10 !border-b !border-gray-900/10 pb-12 md:grid-cols-3">
+  <div>
+    <h2 class="!text-base !font-medium !leading-7 !text-gray-900 !m-0">
+      {{ myTitle }}
+    </h2>
+    <p class="!mt-1 !text-sm !leading-6 !text-gray-600 !font-light">
+      {{ description }}
+    </p>
+  </div>
+
+  <div class="grid gap-x-6 gap-y-6 md:col-span-2">
+    <ng-content></ng-content>
+  </div>
+</div>

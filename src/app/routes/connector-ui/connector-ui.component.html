@@ -14,24 +14,29 @@
         [attr.src]="config.brandLogoSrc"
         [style]="config.brandLogoStyle" />
     </mat-toolbar>
-    <mat-nav-list class="overflow-auto grow">
-      <a *ngFor="let route of routes" [routerLink]="[route.path]">
-        <mat-list-item
-          *ngIf="
-            route.component &&
-            (!route.data?.requiresFeature ||
-              (route.data!.requiresFeature! | isActiveFeature))
-          "
-          [routerLinkActive]="['is-active']">
-          <mat-icon mat-list-icon>{{ route.data?.icon }}</mat-icon>
-          <span matLine>{{ route.data?.title ?? route.path }}</span>
-        </mat-list-item>
-      </a>
-    </mat-nav-list>
+    <div class="flex flex-col gap-8">
+      <div *ngFor="let navItemGroup of navItemGroups">
+        <h3
+          *ngIf="navItemGroup.title"
+          class="!ml-5 !my-0 !p-0 !font-medium !text-gray-500 !uppercase !tracking-wide !text-xs">
+          {{ navItemGroup.title }}
+        </h3>
+        <mat-nav-list>
+          <a
+            *ngFor="let navItem of navItemGroup.items"
+            [routerLink]="[navItem.path]">
+            <mat-list-item [routerLinkActive]="['is-active']">
+              <mat-icon mat-list-icon>{{ navItem.icon }}</mat-icon>
+              <span matLine>{{ navItem.title }}</span>
+            </mat-list-item>
+          </a>
+        </mat-nav-list>
+      </div>
+    </div>
     <div
       *ngIf="'sovity-zammad-integration' | isActiveFeature"
       id="contact-form"
-      class="align-to-bottom shrink-0">
+      class="align-to-bottom shrink-0 mt-auto">
       <strong>Do you have feedback or need help?</strong>
       <p><em>Select &nbsp;<kbd>SAML</kbd>&nbsp; login on following page</em></p>
       <a
@@ -71,6 +76,8 @@
       </button>
       <span>{{ titleService.getTitle() }}</span>
     </mat-toolbar>
-    <router-outlet></router-outlet>
+    <main class="container">
+      <router-outlet></router-outlet>
+    </main>
   </mat-sidenav-content>
 </mat-sidenav-container>
