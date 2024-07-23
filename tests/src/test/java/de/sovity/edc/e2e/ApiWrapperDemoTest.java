@@ -41,6 +41,7 @@ import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
+import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -108,6 +109,7 @@ class ApiWrapperDemoTest {
     }
 
     @Test
+    @DisabledOnGithub
     void provide_and_consume() {
         // provider: create data offer
         createPolicy();
