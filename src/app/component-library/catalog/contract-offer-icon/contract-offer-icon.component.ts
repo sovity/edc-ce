@@ -5,7 +5,7 @@ import {DataOffer} from '../../../core/services/models/data-offer';
 @Component({
   selector: 'contract-offer-icon',
   template: `
-    <!-- Negotiation Success Indicator -->
+    <!-- Negotiation Success Overlay Icon -->
     <div *ngIf="isNegotiated()" style="position: absolute;">
       <mat-icon
         class="mat-card-avatar-icon"
@@ -19,8 +19,18 @@ import {DataOffer} from '../../../core/services/models/data-offer';
       </mat-icon>
     </div>
 
-    <!-- Icon -->
-    <mat-icon class="mat-card-avatar-icon">sim_card</mat-icon>
+    <!-- Live Icon -->
+    <mat-icon *ngIf="!isOnRequestAsset()" class="mat-card-avatar-icon"
+      >sim_card</mat-icon
+    >
+
+    <!-- On Request Icon -->
+    <mat-icon
+      *ngIf="this.isOnRequestAsset()"
+      class="mat-card-avatar-icon"
+      style="transform: scaleX(-1);"
+      >contact_page</mat-icon
+    >
   `,
 })
 export class ContractOfferIconComponent {
@@ -33,5 +43,9 @@ export class ContractOfferIconComponent {
     return this.dataOffer?.contractOffers?.some((it) =>
       this.contractNegotiationService.isNegotiated(it),
     );
+  }
+
+  isOnRequestAsset(): boolean {
+    return this.dataOffer.asset.dataSourceAvailability === 'ON_REQUEST';
   }
 }

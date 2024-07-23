@@ -2,7 +2,7 @@ import {
   ContractAgreementCard,
   ContractAgreementPage,
   ContractAgreementTransferProcess,
-  GetContractAgreementPageRequest,
+  ContractTerminationStatus,
   IdResponseDto,
   InitiateTransferRequest,
 } from '@sovity.de/edc-client';
@@ -191,14 +191,12 @@ let contractAgreements: ContractAgreementCard[] = [
   },
 ];
 export const contractAgreementPage = (
-  request: GetContractAgreementPageRequest,
+  terminationStatus?: ContractTerminationStatus,
 ): ContractAgreementPage => {
   return {
-    contractAgreements: request.contractAgreementPageQuery?.terminationStatus
+    contractAgreements: terminationStatus
       ? contractAgreements.filter(
-          (agreement) =>
-            agreement.terminationStatus ===
-            request.contractAgreementPageQuery!.terminationStatus,
+          (x) => x.terminationStatus === terminationStatus,
         )
       : contractAgreements,
   };

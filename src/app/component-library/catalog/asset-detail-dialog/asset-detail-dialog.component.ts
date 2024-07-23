@@ -7,6 +7,7 @@ import {
 import {Observable, Subject, isObservable} from 'rxjs';
 import {filter, finalize, takeUntil} from 'rxjs/operators';
 import {UiContractOffer} from '@sovity.de/edc-client';
+import {MailtoLinkBuilder} from 'src/app/core/services/mailto-link-builder';
 import {EdcApiService} from '../../../core/services/api/edc-api.service';
 import {ContractNegotiationService} from '../../../core/services/contract-negotiation.service';
 import {UiAssetMapped} from '../../../core/services/models/ui-asset-mapped';
@@ -44,7 +45,7 @@ export class AssetDetailDialogComponent implements OnDestroy {
 
   loading = false;
 
-  get showProgressBar(): boolean {
+  get isProgressBarVisible(): boolean {
     switch (this.data.type) {
       case 'data-offer':
         return (
@@ -59,6 +60,31 @@ export class AssetDetailDialogComponent implements OnDestroy {
     }
   }
 
+  get isLiveDataOffer(): boolean {
+    return (
+      this.data.type === 'data-offer' &&
+      this.data.asset.dataSourceAvailability === 'LIVE'
+    );
+  }
+
+  get isOnRequestDataOffer(): boolean {
+    return (
+      this.data.type === 'data-offer' &&
+      this.data.asset.dataSourceAvailability === 'ON_REQUEST'
+    );
+  }
+
+  get onRequestContactLink(): string {
+    if (!this.asset.onRequestContactEmail) {
+      throw new Error('On request asset must have contact email');
+    }
+    return this.mailtoLinkBuilder.buildMailtoUrl(
+      this.asset.onRequestContactEmail,
+      this.asset.onRequestContactEmailSubject ??
+        "I'm interested in your data offer",
+    );
+  }
+
   constructor(
     private edcApiService: EdcApiService,
     private notificationService: NotificationService,
@@ -67,6 +93,7 @@ export class AssetDetailDialogComponent implements OnDestroy {
     @Inject(MAT_DIALOG_DATA)
     private _data: AssetDetailDialogData | Observable<AssetDetailDialogData>,
     public contractNegotiationService: ContractNegotiationService,
+    private mailtoLinkBuilder: MailtoLinkBuilder,
   ) {
     if (isObservable(this._data)) {
       this._data

@@ -8,7 +8,9 @@
     <mat-icon
       *ngIf="data.type === 'contract-agreement'"
       class="mat-card-avatar-icon"
-      [class.text-warn]="data.contractAgreement?.terminationStatus === 'TERMINATED'">
+      [class.text-warn]="
+        data.contractAgreement?.terminationStatus === 'TERMINATED'
+      ">
       {{
         data.contractAgreement!!.direction === 'PROVIDING'
           ? data.contractAgreement!!.isTerminated
@@ -56,7 +58,7 @@
 <div class="flex flex-col space-y-[10px]" mat-dialog-content>
   <!-- Progress Bar -->
   <mat-progress-bar
-    *ngIf="showProgressBar"
+    *ngIf="isProgressBarVisible"
     color="primary"
     mode="indeterminate"></mat-progress-bar>
 
@@ -134,10 +136,22 @@
 
   <!-- Contract Offers -->
   <contract-offer-mini-list
-    *ngIf="data.type === 'data-offer'"
+    *ngIf="isLiveDataOffer"
     [data]="data.dataOffer!"
     (negotiateClick)="onNegotiateClick($event)">
   </contract-offer-mini-list>
+
+  <div *ngIf="isOnRequestDataOffer">
+    <div class="property-grid-group-title">On Request Data Offer</div>
+    <div>
+      This data offer is not available for immediate consumption. However, the
+      creator left an email address to contact them if interested.
+    </div>
+    <div>
+      Click <span class="!font-medium">Contact</span> to email the data offer
+      provider.
+    </div>
+  </div>
 </div>
 
 <mat-dialog-actions>
@@ -162,10 +176,7 @@
       </button>
 
       <ng-container
-        *ngIf="
-          data.type === 'data-offer' &&
-          data.dataOffer!.contractOffers.length === 1
-        ">
+        *ngIf="isLiveDataOffer && data.dataOffer!.contractOffers.length === 1">
         <button
           *ngIf="data.asset.isOwnConnector"
           disabled
@@ -198,6 +209,14 @@
           </ng-container>
         </button>
       </ng-container>
+
+      <a
+        *ngIf="isOnRequestDataOffer"
+        mat-raised-button
+        color="primary"
+        [href]="this.onRequestContactLink">
+        Contact
+      </a>
 
       <!-- Contact Agreement Buttons -->
       <button

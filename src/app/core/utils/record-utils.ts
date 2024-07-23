@@ -11,6 +11,18 @@ export function removeNullValues(
 }
 
 /**
+ * Remove fields with undefined values from property records
+ * @param obj object / record
+ */
+export function removeUndefinedValues(
+  obj: Record<string, string | undefined>,
+): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, v]) => v != null) as [string, string][],
+  );
+}
+
+/**
  * Maps keys of a given object
  * @param obj object
  * @param mapFn key mapper
