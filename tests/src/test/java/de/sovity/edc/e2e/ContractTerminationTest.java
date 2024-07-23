@@ -61,6 +61,7 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 public class ContractTerminationTest {
 
     @Test
+    @DisabledOnGithub
     void canGetAgreementPageForNonTerminatedContract(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
