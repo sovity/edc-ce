@@ -12,13 +12,15 @@
  *
  */
 
-package de.sovity.edc.extension.placeholderdatasource;
+package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceOnRequest;
+import de.sovity.edc.ext.wrapper.WrapperExtension;
+import de.sovity.edc.ext.wrapper.api.common.mappers.PlaceholderEndpointService;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
 import de.sovity.edc.extension.e2e.extension.Provider;
@@ -73,7 +75,7 @@ class PlaceholderDataSourceExtensionTest {
 
         // assert
         assertThat(baseUrl)
-            .startsWith(providerConfig.getProperties().get(PlaceholderDataSourceExtension.MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL))
+            .startsWith(providerConfig.getProperties().get(WrapperExtension.MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL))
             .isEqualTo(expected);
 
         val request = new Request.Builder()

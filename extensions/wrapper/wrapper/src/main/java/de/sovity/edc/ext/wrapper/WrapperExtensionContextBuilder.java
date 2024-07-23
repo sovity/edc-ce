@@ -80,7 +80,7 @@ import de.sovity.edc.extension.contacttermination.query.ContractAgreementTermina
 import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.messenger.SovityMessenger;
-import de.sovity.edc.extension.placeholderdatasource.PlaceholderEndpointService;
+import de.sovity.edc.ext.wrapper.api.common.mappers.PlaceholderEndpointService;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import lombok.NoArgsConstructor;

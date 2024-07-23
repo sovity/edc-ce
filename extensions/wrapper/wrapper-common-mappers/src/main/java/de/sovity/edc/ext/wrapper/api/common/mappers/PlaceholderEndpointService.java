@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.extension.placeholderdatasource;
+package de.sovity.edc.ext.wrapper.api.common.mappers;
 
 import lombok.RequiredArgsConstructor;
 import okhttp3.HttpUrl;

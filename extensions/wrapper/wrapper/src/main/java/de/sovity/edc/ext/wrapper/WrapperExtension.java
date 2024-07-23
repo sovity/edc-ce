@@ -17,10 +17,12 @@ package de.sovity.edc.ext.wrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import de.sovity.edc.ext.wrapper.api.common.mappers.PlaceholderEndpointService;
+import de.sovity.edc.ext.wrapper.controller.PlaceholderEndpointController;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.messenger.SovityMessenger;
-import de.sovity.edc.extension.placeholderdatasource.PlaceholderEndpointService;
+import lombok.val;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.connector.api.management.configuration.transform.ManagementApiTypeTransformerRegistry;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -36,7 +38,9 @@ import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
+import org.eclipse.edc.protocol.dsp.api.configuration.DspApiConfiguration;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
+import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.CoreConstants;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.system.ServiceExtension;
@@ -46,6 +50,8 @@ import org.eclipse.edc.web.spi.WebService;
 
 public class WrapperExtension implements ServiceExtension {
 
+    @Setting(value = "Defaults to tne env var EDC_DSP_CALLBACK_ADDRESS")
+    public static final String MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL = "my.edc.datasource.placeholder.baseurl";
 
     public static final String EXTENSION_NAME = "WrapperExtension";
 
@@ -68,9 +74,9 @@ public class WrapperExtension implements ServiceExtension {
     @Inject
     private DslContextFactory dslContextFactory;
     @Inject
-    private ManagementApiConfiguration dataManagementApiConfiguration;
+    private DspApiConfiguration dspApiConfiguration;
     @Inject
-    private PlaceholderEndpointService placeholderEndpointService;
+    private ManagementApiConfiguration dataManagementApiConfiguration;
     @Inject
     private PolicyDefinitionStore policyDefinitionStore;
     @Inject
@@ -104,6 +110,11 @@ public class WrapperExtension implements ServiceExtension {
         var objectMapper = typeManager.getMapper(CoreConstants.JSON_LD);
         fixObjectMapperDateSerialization(objectMapper);
 
+        val baseUrl = context.getConfig().getString(MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL);
+        val placeholderEndpointService = new PlaceholderEndpointService(baseUrl);
+        setupPlaceholderEndpoint();
+        context.registerService(PlaceholderEndpointService.class, placeholderEndpointService);
+
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
             assetIndex,
             assetService,
@@ -133,6 +144,11 @@ public class WrapperExtension implements ServiceExtension {
 
         wrapperExtensionContext.jaxRsResources().forEach(resource ->
             webService.registerResource(dataManagementApiConfiguration.getContextAlias(), resource));
+    }
+
+    private void setupPlaceholderEndpoint() {
+        val controller = new PlaceholderEndpointController();
+        webService.registerResource(dspApiConfiguration.getContextAlias(), controller);
     }
 
     private void fixObjectMapperDateSerialization(ObjectMapper objectMapper) {

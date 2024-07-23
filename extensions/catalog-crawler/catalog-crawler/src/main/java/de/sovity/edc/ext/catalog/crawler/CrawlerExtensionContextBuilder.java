@@ -52,6 +52,7 @@ import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.OnlineConnector
 import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.QuartzScheduleInitializer;
 import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.utils.CronJobRef;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.PlaceholderEndpointService;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetEditRequestMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetJsonLdBuilder;
@@ -68,7 +69,6 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.LiteralMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.OperatorMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.PolicyValidator;
-import de.sovity.edc.extension.placeholderdatasource.PlaceholderEndpointService;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import lombok.NoArgsConstructor;

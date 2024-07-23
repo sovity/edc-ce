@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.extension.placeholderdatasource;
+package de.sovity.edc.ext.wrapper.controller;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;

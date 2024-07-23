@@ -21,13 +21,13 @@ dependencies {
 
     implementation(project(":extensions:contract-termination"))
     implementation(project(":extensions:database-direct-access"))
-    implementation(project(":extensions:placeholder-data-source"))
     implementation(project(":extensions:sovity-messenger"))
     implementation(project(":utils:jooq-database-access"))
 
     implementation(libs.apache.commonsLang)
     implementation(libs.edc.apiCore)
     implementation(libs.edc.managementApiConfiguration)
+    implementation(libs.edc.dspApiConfiguration)
     implementation(libs.edc.dspHttpSpi)
     implementation(libs.edc.runtimeMetamodel)
     implementation(libs.jooq.jooq)

@@ -16,11 +16,11 @@ dependencies {
     api(project(":extensions:wrapper:wrapper-common-api"))
     api(project(":utils:json-and-jsonld-utils"))
 
-    implementation(project(":extensions:placeholder-data-source"))
     implementation(libs.apache.commonsLang)
     implementation(libs.apache.commonsCollections)
     implementation(libs.edc.runtimeMetamodel)
     implementation(libs.flexmark.all)
+    implementation(libs.okhttp.okhttp)
 
 
     testAnnotationProcessor(libs.lombok)

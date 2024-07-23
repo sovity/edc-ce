@@ -14,9 +14,9 @@
 
 package de.sovity.edc.ext.wrapper.api.common.mappers.dataaddress.http;
 
+import de.sovity.edc.ext.wrapper.api.common.mappers.PlaceholderEndpointService;
 import de.sovity.edc.ext.wrapper.api.common.model.UiDataSourceHttpData;
 import de.sovity.edc.ext.wrapper.api.common.model.UiDataSourceOnRequest;
-import de.sovity.edc.extension.placeholderdatasource.PlaceholderEndpointService;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
