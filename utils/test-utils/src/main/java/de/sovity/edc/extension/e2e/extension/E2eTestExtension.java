@@ -19,7 +19,6 @@ import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
-import de.sovity.edc.extension.postgresql.PostgresFlywayExtension;
 import de.sovity.edc.extension.utils.Lazy;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
