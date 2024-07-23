@@ -6,6 +6,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {PipesAndDirectivesModule} from '../pipes-and-directives/pipes-and-directives.module';
+import {PolicyEditorModule} from '../policy-editor/policy-editor.module';
 import {UiElementsModule} from '../ui-elements/ui-elements.module';
 import {PropertyGridGroupComponent} from './property-grid-group/property-grid-group.component';
 import {PropertyGridComponent} from './property-grid/property-grid.component';
@@ -27,6 +28,7 @@ import {PropertyGridComponent} from './property-grid/property-grid.component';
     // EDC UI Feature Modules
     PipesAndDirectivesModule,
     UiElementsModule,
+    PolicyEditorModule,
   ],
   declarations: [PropertyGridComponent, PropertyGridGroupComponent],
   exports: [PropertyGridComponent, PropertyGridGroupComponent],

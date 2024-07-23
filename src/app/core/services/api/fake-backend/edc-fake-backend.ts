@@ -11,6 +11,7 @@ import {
   FetchAPI,
   IdResponseDtoToJSON,
   InitiateTransferRequestFromJSON,
+  PolicyDefinitionCreateDtoFromJSON,
   PolicyDefinitionCreateRequestFromJSON,
   PolicyDefinitionPageToJSON,
   TransferHistoryPageToJSON,
@@ -45,6 +46,7 @@ import {dashboardPage} from './connector-fake-impl/dashboard-fake-service';
 import {connectorLimits} from './connector-fake-impl/ee-fake-service';
 import {
   createPolicyDefinition,
+  createPolicyDefinitionV2,
   deletePolicyDefinition,
   policyDefinitionPage,
 } from './connector-fake-impl/policy-definition-fake-service';
@@ -123,6 +125,13 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
     .on('POST', () => {
       const createRequest = PolicyDefinitionCreateRequestFromJSON(body);
       const created = createPolicyDefinition(createRequest);
+      return ok(IdResponseDtoToJSON(created));
+    })
+
+    .url('ui/v2/pages/policy-page/policy-definitions')
+    .on('POST', () => {
+      const createRequest = PolicyDefinitionCreateDtoFromJSON(body);
+      const created = createPolicyDefinitionV2(createRequest);
       return ok(IdResponseDtoToJSON(created));
     })
 

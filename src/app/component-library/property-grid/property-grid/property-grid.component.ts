@@ -11,11 +11,9 @@ export class PropertyGridComponent {
 
   @Input()
   columns: number = 3;
-  @HostBinding('class.flex')
-  @HostBinding('class.flex-row')
-  @HostBinding('class.flex-wrap')
+  @HostBinding('class.grid')
+  @HostBinding('class.grid-cols-3')
   @HostBinding('class.gap-[10px]')
-  @HostBinding('class.justify-start')
   cls = true;
 
   trackByIndex: TrackByFunction<any> = (index: number) => index;

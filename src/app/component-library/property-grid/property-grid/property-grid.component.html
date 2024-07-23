@@ -5,7 +5,7 @@
 <div
   *ngFor="let prop of props; trackBy: trackByIndex"
   class="flex flex-row space-x-[10px] overflow-hidden"
-  [style.width]="'calc(100% / ' + columns + ' - ' + (columns - 1) * 10 + 'px)'">
+  [ngClass]="prop.additionalContainerClasses">
   <!-- Property Icon -->
   <mat-icon
     style="flex-shrink: 0; margin-top: 6px"
@@ -23,9 +23,15 @@
       {{ prop.label }}
     </div>
 
+    <app-policy-renderer
+      *ngIf="prop.policy"
+      [expression]="prop.policy"
+      [errors]="prop.policyErrors">
+    </app-policy-renderer>
+
     <!-- Property Value (URL) -->
     <a
-      *ngIf="prop.url"
+      *ngIf="!prop.policy && prop.url"
       class="link break-all"
       externalLink
       [ngClass]="prop.additionalClasses"
@@ -35,7 +41,7 @@
 
     <!-- Property Value (OnClick Event) -->
     <a
-      *ngIf="!prop.url && prop.onclick"
+      *ngIf="!prop.policy && !prop.url && prop.onclick"
       class="link break-all"
       href="javascript:void(0)"
       [ngClass]="prop.additionalClasses"
@@ -45,7 +51,7 @@
 
     <!-- Property Value (Text) with tooltip -->
     <span
-      *ngIf="!(prop.url || prop.onclick)"
+      *ngIf="!(prop.policy || prop.url || prop.onclick)"
       [matTooltip]="prop.tooltip!"
       [ngClass]="prop.additionalClasses"
       >{{ prop.text }}

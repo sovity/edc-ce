@@ -48,7 +48,7 @@ export class AssetEditDialogForm {
    * Quick access to selected data category
    */
   get dataCategory(): DataCategorySelectItem | null {
-    return this.advanced!!.controls.dataCategory.value;
+    return this.advanced!.controls.dataCategory.value;
   }
 
   /**

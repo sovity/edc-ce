@@ -12,11 +12,11 @@
         data.contractAgreement?.terminationStatus === 'TERMINATED'
       ">
       {{
-        data.contractAgreement!!.direction === 'PROVIDING'
-          ? data.contractAgreement!!.isTerminated
+        data.contractAgreement!.direction === 'PROVIDING'
+          ? data.contractAgreement!.isTerminated
             ? 'file_upload_off'
             : 'file_upload'
-          : data.contractAgreement!!.isTerminated
+          : data.contractAgreement!.isTerminated
           ? 'file_download_off'
           : 'file_download'
       }}
@@ -38,7 +38,6 @@
     class="flex flex-row">
     <button
       *ngIf="data.showEditButton"
-      class="hover:!bg-[#EDEDED]"
       mat-icon-button
       matTooltip="Edit"
       (click)="onEditClick()">
@@ -46,7 +45,6 @@
     </button>
     <button
       *ngIf="data.showDeleteButton"
-      class="hover:!bg-[#EDEDED]"
       mat-icon-button
       matTooltip="Delete"
       (click)="onDeleteClick()">
@@ -81,19 +79,19 @@
       </div>
       <div class="flex flex-col ml-3 grow">
         <div class="text-base text-red-800">
-          {{ data.contractAgreement!!.terminationInformation!!.reason }}
+          {{ data.contractAgreement!.terminationInformation!.reason }}
         </div>
         <div class="text-[0.9rem] text-red-700 mt-2">
-          {{ data.contractAgreement!!.terminationInformation!!.detail }}
+          {{ data.contractAgreement!.terminationInformation!.detail }}
         </div>
         <div class="text-xs text-red-700 mt-2">
           <ago
             [date]="
-              data.contractAgreement!!.terminationInformation!!.terminatedAt
+              data.contractAgreement!.terminationInformation!.terminatedAt
             "></ago>
           · terminated by
           {{
-            data.contractAgreement!!.terminationInformation?.terminatedBy ===
+            data.contractAgreement!.terminationInformation?.terminatedBy ===
             'SELF'
               ? 'you'
               : 'the counter-party'

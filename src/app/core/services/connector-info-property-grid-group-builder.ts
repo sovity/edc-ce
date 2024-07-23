@@ -122,7 +122,9 @@ export class ConnectorInfoPropertyGridGroupBuilder {
     groupLabel: string | null,
     dashboardData: Fetched<DashboardPage>,
   ): PropertyGridGroup {
-    const fields: PropertyGridField[] = dashboardData.match({
+    const fields: PropertyGridField[] = dashboardData.match<
+      PropertyGridField[]
+    >({
       ifLoading: () => [{icon: 'info', label: 'Loading', text: 'Loading...'}],
       ifError: () => [
         {
@@ -140,7 +142,7 @@ export class ConnectorInfoPropertyGridGroupBuilder {
     };
   }
 
-  private buildConnectorMetadata(data: DashboardPage) {
+  private buildConnectorMetadata(data: DashboardPage): PropertyGridField[] {
     const fields = [
       {
         icon: 'link',

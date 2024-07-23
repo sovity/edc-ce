@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {UiContractOffer, UiDataOffer} from '@sovity.de/edc-client';
 import {PolicyPropertyFieldBuilder} from '../../../../component-library/catalog/asset-detail-dialog/policy-property-field-builder';
-import {PropertyGridFieldService} from '../../../../component-library/property-grid/property-grid/property-grid-field.service';
 import {AssetBuilder} from '../../../../core/services/asset-builder';
 import {ContractOffer} from '../../../../core/services/models/contract-offer';
 import {DataOffer} from '../../../../core/services/models/data-offer';
@@ -12,7 +11,6 @@ export class DataOfferBuilder {
   constructor(
     private assetBuilder: AssetBuilder,
     private policyPropertyFieldBuilder: PolicyPropertyFieldBuilder,
-    private propertyGridFieldService: PropertyGridFieldService,
   ) {}
   buildDataOffer(dataOffer: UiDataOffer): DataOffer {
     const asset = this.assetBuilder.buildAsset(dataOffer.asset);
@@ -44,20 +42,11 @@ export class DataOfferBuilder {
     );
     return {
       ...contractOffer,
-      properties: [
-        {
-          icon: 'category',
-          label: 'Contract Offer ID',
-          ...this.propertyGridFieldService.guessValue(
-            contractOffer.contractOfferId,
-          ),
-        },
-        ...this.policyPropertyFieldBuilder.buildPolicyPropertyFields(
-          contractOffer.policy,
-          `${groupLabel} Contract Policy JSON-LD`,
-          asset.title,
-        ),
-      ],
+      properties: this.policyPropertyFieldBuilder.buildPolicyPropertyFields(
+        contractOffer.policy,
+        `${groupLabel} Contract Policy JSON-LD`,
+        asset.title,
+      ),
     };
   }
 

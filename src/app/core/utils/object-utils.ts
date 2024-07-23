@@ -19,3 +19,15 @@ export function associateAsObj<T, K extends string | number, R>(
     array.map((it) => [keyExtractor(it), valueExtractor(it)]),
   ) as Record<K, R>;
 }
+
+export function mapObjValues<T, R, K extends string>(
+  obj: Record<K, T>,
+  mapper: (value: T, key: K) => R,
+): Record<K, R> {
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, value]) => [
+      key,
+      mapper(value as T, key as K),
+    ]),
+  ) as Record<K, R>;
+}

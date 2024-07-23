@@ -14,6 +14,11 @@ import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {
+  MAT_TOOLTIP_DEFAULT_OPTIONS,
+  MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY,
+  MatTooltipDefaultOptions,
+} from '@angular/material/tooltip';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgxsModule} from '@ngxs/store';
@@ -65,6 +70,13 @@ import {ApiKeyInterceptor} from './core/services/api/api-key.interceptor';
         appearance: 'outline',
         color: 'accent',
       } as MatFormFieldDefaultOptions,
+    },
+    {
+      provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+      useValue: <MatTooltipDefaultOptions>{
+        ...MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(),
+        disableTooltipInteractivity: true,
+      },
     },
   ],
   bootstrap: [AppComponent],

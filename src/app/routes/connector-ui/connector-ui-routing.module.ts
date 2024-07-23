@@ -8,6 +8,7 @@ import {ContractAgreementPageComponent} from './contract-agreement-page/contract
 import {ContractDefinitionPageComponent} from './contract-definition-page/contract-definition-page/contract-definition-page.component';
 import {DashboardPageComponent} from './dashboard-page/dashboard-page/dashboard-page.component';
 import {LogoutPageComponent} from './logout-page/logout-page.component';
+import {PolicyDefinitionCreatePageComponent} from './policy-definition-create-page/policy-definition-create-page/policy-definition-create-page.component';
 import {PolicyDefinitionPageComponent} from './policy-definition-page/policy-definition-page/policy-definition-page.component';
 import {TransferHistoryPageComponent} from './transfer-history-page/transfer-history-page/transfer-history-page.component';
 
@@ -46,6 +47,11 @@ export const routes: Routes = [
     path: 'policies',
     component: PolicyDefinitionPageComponent,
     data: {title: 'Policies', icon: 'policy'},
+  },
+  {
+    path: 'policies/create',
+    component: PolicyDefinitionCreatePageComponent,
+    data: {title: 'Create Policy', icon: 'policy', skipNavItem: true},
   },
   {
     path: 'contract-definitions',

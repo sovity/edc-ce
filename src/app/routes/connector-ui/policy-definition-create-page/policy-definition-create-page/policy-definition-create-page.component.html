@@ -1,0 +1,33 @@
+<div class="p-10 flex flex-col">
+  <div class="form-section-title">Policy Metadata</div>
+  <!--  ID -->
+  <mat-form-field
+    *ngIf="form.group.controls.id; let ctrl"
+    id="form-field-id"
+    color="accent">
+    <mat-label>ID</mat-label>
+    <input matInput autocomplete="newvalue" [formControl]="ctrl" />
+    <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{
+      validationMessages.invalidWhitespacesOrColonsMessage
+    }}</mat-error>
+  </mat-form-field>
+
+  <div class="form-section-title">Policy Expression</div>
+
+  <policy-form-expression
+    [treeNode]="expressionFormHandler.tree.root"></policy-form-expression>
+
+  <div class="flex justify-end gap-4 my-4">
+    <button mat-stroked-button routerLink="/policies" [disabled]="loading">
+      Cancel
+    </button>
+
+    <button
+      color="primary"
+      mat-raised-button
+      [disabled]="loading || !form.group.valid"
+      (click)="onSave()">
+      Create
+    </button>
+  </div>
+</div>

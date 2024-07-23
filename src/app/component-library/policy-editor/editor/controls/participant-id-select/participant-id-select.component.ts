@@ -2,8 +2,8 @@ import {COMMA, ENTER, SEMICOLON} from '@angular/cdk/keycodes';
 import {Component, HostBinding, Input} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatChipInputEvent} from '@angular/material/chips';
-import {ParticipantIdLocalization} from '../../../../core/services/participant-id-localization';
-import {removeOnce} from '../../../../core/utils/array-utils';
+import {ParticipantIdLocalization} from '../../../../../core/services/participant-id-localization';
+import {removeOnce} from '../../../../../core/utils/array-utils';
 
 @Component({
   selector: 'participant-id-select',

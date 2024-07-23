@@ -5,8 +5,8 @@ import {
   UiPolicyConstraint,
 } from '@sovity.de/edc-client';
 import {addDays} from 'date-fns';
+import {policyLeftExpressions} from '../../component-library/policy-editor/model/policy-left-expressions';
 import {NewPolicyDialogFormValue} from '../../routes/connector-ui/policy-definition-page/new-policy-dialog/new-policy-dialog-form-model';
-import {PolicyLeftExpressions} from './api/model/policy-type-ext';
 
 @Injectable({
   providedIn: 'root',
@@ -46,7 +46,7 @@ export class PolicyDefinitionBuilder {
     formValue: NewPolicyDialogFormValue,
   ): UiPolicyConstraint {
     return this.inOrEqIfOne(
-      PolicyLeftExpressions.ReferringConnector,
+      policyLeftExpressions.referringConnector,
       formValue.participantIds!,
     );
   }
@@ -77,12 +77,12 @@ export class PolicyDefinitionBuilder {
   private buildTimePeriodRestrictionPermissions(
     formValue: NewPolicyDialogFormValue,
   ): UiPolicyConstraint[] {
-    const start = formValue.range!!.start!!;
+    const start = formValue.range!.start!!;
     const constraints: UiPolicyConstraint[] = [
       this.evaluationTime('GEQ', start),
     ];
 
-    const end = formValue.range!!.end;
+    const end = formValue.range!.end;
     if (end) {
       constraints.push(this.evaluationTime('LT', addDays(end, 1)));
     }
@@ -94,7 +94,7 @@ export class PolicyDefinitionBuilder {
     date: Date,
   ): UiPolicyConstraint {
     return {
-      left: PolicyLeftExpressions.PolicyEvaluationTime,
+      left: policyLeftExpressions.policyEvaluationTime,
       operator,
       right: {
         type: 'STRING',

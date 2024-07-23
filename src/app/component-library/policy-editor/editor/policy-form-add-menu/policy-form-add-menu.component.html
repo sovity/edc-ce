@@ -1,0 +1,32 @@
+<button mat-icon-button [matMenuTriggerFor]="menu">
+  <mat-icon>add</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+  <button
+    *ngFor="let constraint of constraints"
+    mat-menu-item
+    [matTooltip]="constraint.operandLeftDescription"
+    (click)="onAddConstraint(constraint)">
+    <span>{{ constraint.operandLeftTitle }}</span>
+  </button>
+  <button
+    *ngFor="let recipe of policyExpressionRecipeService.recipes"
+    mat-menu-item
+    (click)="onAddRecipe(recipe)">
+    <span>{{ recipe.title }}</span>
+  </button>
+  <mat-divider class="!ml-0" [inset]="true"></mat-divider>
+  <button mat-menu-item [matMenuTriggerFor]="multi">
+    <span>Multi</span>
+  </button>
+</mat-menu>
+
+<mat-menu #multi="matMenu">
+  <button
+    *ngFor="let multi of multiExpressions"
+    mat-menu-item
+    [matTooltip]="multi.description"
+    (click)="onAddMultiExpression(multi)">
+    <span>{{ multi.title }}</span>
+  </button>
+</mat-menu>

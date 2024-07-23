@@ -15,28 +15,9 @@
       <mat-card-subtitle>Policy</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="flex flex-col space-y-[16px]">
-      <div *ngIf="!policyCard.isRegular" class="flex flex-col">
-        <div class="text-slate text-sm uppercase tracking-wider">
-          Irregular Policy
-        </div>
-        <div
-          *ngFor="let irregularity of policyCard.irregularities"
-          class="text-sm text-warn">
-          {{ irregularity }}
-        </div>
-      </div>
-      <div *ngIf="policyCard.constraints.length" class="flex flex-col">
-        <div class="text-slate text-sm uppercase tracking-wider">
-          Constraints
-        </div>
-        <div
-          *ngFor="let constraint of policyCard.constraints"
-          class="flex flex-row space-x-[5px]">
-          <div>{{ constraint.left }}</div>
-          <div>{{ constraint.operator }}</div>
-          <div>{{ constraint.right }}</div>
-        </div>
-      </div>
+      <app-policy-renderer
+        [expression]="policyCard.expression"
+        [errors]="policyCard.irregularities"></app-policy-renderer>
     </mat-card-content>
   </mat-card>
 </div>

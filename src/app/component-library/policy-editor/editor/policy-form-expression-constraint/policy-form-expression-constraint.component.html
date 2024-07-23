@@ -1,0 +1,48 @@
+<div
+  class="flex items-center h-[4rem]"
+  [matTooltip]="verb.operandLeftDescription">
+  <span>{{ verb.operandLeftTitle }}</span>
+</div>
+
+<div>
+  <policy-operator-select
+    [operators]="expr.supportedOperators!"
+    [control]="
+      expressionFormHandler.controls.getOperatorFormControl(treeNode)
+    "></policy-operator-select>
+</div>
+
+<mat-form-field *ngIf="verb.operandRightType === 'TEXT'" class="grow">
+  <mat-label>{{ verb.operandLeftTitle }}</mat-label>
+  <input
+    matInput
+    [placeholder]="verb.operandRightPlaceholder ?? '...'"
+    [formControl]="
+      expressionFormHandler.controls.getValueFormControl(treeNode)
+    " />
+  <mat-hint>{{ verb.operandRightHint }}</mat-hint>
+</mat-form-field>
+
+<mat-form-field *ngIf="verb.operandRightType === 'DATE'" class="grow">
+  <mat-label>{{ verb.operandLeftTitle }}</mat-label>
+  <input
+    matInput
+    [matDatepicker]="picker"
+    [placeholder]="verb.operandRightPlaceholder ?? '...'"
+    [formControl]="
+      expressionFormHandler.controls.getValueFormControl(treeNode)
+    " />
+  <mat-hint>{{ verb.operandRightHint }}</mat-hint>
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>
+
+<participant-id-select
+  *ngIf="verb.operandRightType === 'PARTICIPANT_ID'"
+  class="grow"
+  [control]="
+    expressionFormHandler.controls.getValueFormControl(treeNode)
+  "></participant-id-select>
+<div class="flex items-center h-[4rem]">
+  <policy-form-remove-button [treeNode]="treeNode"></policy-form-remove-button>
+</div>

@@ -1,0 +1,11 @@
+<mat-form-field class="grow form-field" color="accent">
+  <mat-label>{{ label }}</mat-label>
+  <mat-select [formControl]="control" [compareWith]="'id' | compareByField">
+    <mat-option
+      *ngFor="let operator of operators"
+      [value]="operator"
+      [matTooltip]="operator.description">
+      {{ operator.title }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

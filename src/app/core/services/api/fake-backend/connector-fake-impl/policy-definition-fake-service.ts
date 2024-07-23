@@ -1,8 +1,10 @@
 import {
   IdResponseDto,
+  PolicyDefinitionCreateDto,
   PolicyDefinitionCreateRequest,
   PolicyDefinitionDto,
   PolicyDefinitionPage,
+  UiPolicyExpression,
 } from '@sovity.de/edc-client';
 import {TestPolicies} from './data/test-policies';
 
@@ -30,10 +32,27 @@ export const getPolicyDefinitionByJsonLd = (jsonLd: string) =>
 export const createPolicyDefinition = (
   request: PolicyDefinitionCreateRequest,
 ): IdResponseDto => {
+  const expression: UiPolicyExpression = {
+    type: 'AND',
+    expressions: (request.policy.constraints ?? []).map((it) => ({
+      type: 'CONSTRAINT',
+      constraint: it,
+    })),
+  };
+
+  return createPolicyDefinitionV2({
+    policyDefinitionId: request.policyDefinitionId,
+    expression,
+  });
+};
+
+export const createPolicyDefinitionV2 = (
+  request: PolicyDefinitionCreateDto,
+): IdResponseDto => {
   const newPolicyDefinition: PolicyDefinitionDto = {
     policyDefinitionId: request.policyDefinitionId,
     policy: {
-      constraints: request.policy.constraints,
+      expression: request.expression,
       errors: [],
       policyJsonLd: '{"example-policy-jsonld": true}',
     },

@@ -22,7 +22,7 @@ export class ConnectorUiComponent implements OnInit {
       shareReplay(),
     );
 
-  routes = routes;
+  routes = routes.filter((it) => !it.data?.skipNavItem);
 
   constructor(
     @Inject(APP_CONFIG) public config: AppConfig,

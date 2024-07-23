@@ -207,6 +207,9 @@ body {
     margin-top: 0 !important;
     padding-bottom: 0 !important;
   }
+  .mat-form-field-subscript-wrapper {
+    top: unset !important;
+  }
 }
 
 .max-two-lines-list-item .mat-list-text {
@@ -281,5 +284,23 @@ body {
 
   :last-child {
     margin: 0px;
+  }
+}
+
+.mat-menu-content {
+  padding: 0 !important;
+}
+
+.mat-menu-panel {
+  min-height: 0 !important;
+}
+
+.mat-icon-button {
+  &:hover {
+    background: #ededed !important;
+  }
+
+  mat-icon {
+    margin-top: -1px;
   }
 }

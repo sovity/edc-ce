@@ -26,7 +26,6 @@ import {ContractOfferMiniListComponent} from './contract-offer-mini-list/contrac
 import {DataOfferCardsComponent} from './data-offer-cards/data-offer-cards.component';
 import {TransferHistoryMiniListComponent} from './transfer-history-mini-list/transfer-history-mini-list.component';
 import {TruncatedShortDescription} from './truncated-short-description/truncated-short-description.component';
-import {ViewSelectionComponent} from './view-selection/view-selection.component';
 
 @NgModule({
   imports: [
@@ -62,7 +61,6 @@ import {ViewSelectionComponent} from './view-selection/view-selection.component'
     TransferHistoryMiniListComponent,
     MarkdownDescriptionComponent,
     TruncatedShortDescription,
-    ViewSelectionComponent,
     AssetCardTagListComponent,
   ],
   exports: [
@@ -72,7 +70,6 @@ import {ViewSelectionComponent} from './view-selection/view-selection.component'
     DataOfferCardsComponent,
     TransferHistoryMiniListComponent,
     TruncatedShortDescription,
-    ViewSelectionComponent,
     AssetCardTagListComponent,
   ],
   providers: [

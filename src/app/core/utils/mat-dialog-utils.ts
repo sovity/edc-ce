@@ -9,6 +9,8 @@ import {Observable} from 'rxjs';
  * @param dialog ComponentType
  * @param config MatDialogConfig
  * @param until$ Observable that controls the lifetime of the dialog
+ * @template T Type of the data passed to the dialog
+ * @template R Type of the data returned by the dialog
  * @return afterClosed Observable
  */
 export function showDialogUntil<T, R>(

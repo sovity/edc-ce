@@ -1,8 +1,12 @@
+import {PolicyExpressionMapped} from '../../../../component-library/policy-editor/model/policy-expression-mapped';
+
 export interface PolicyCard {
   id: string;
   isRegular: boolean;
   irregularities: string[];
-  constraints: PolicyCardConstraint[];
+  expression: PolicyExpressionMapped;
+
+  searchText: string;
 
   objectForJson: any;
 }

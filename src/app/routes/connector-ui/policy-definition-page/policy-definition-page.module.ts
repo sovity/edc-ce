@@ -17,9 +17,8 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterModule} from '@angular/router';
 import {JsonDialogModule} from '../../../component-library/json-dialog/json-dialog.module';
+import {PolicyEditorModule} from '../../../component-library/policy-editor/policy-editor.module';
 import {UiElementsModule} from '../../../component-library/ui-elements/ui-elements.module';
-import {NewPolicyDialogComponent} from './new-policy-dialog/new-policy-dialog.component';
-import {ParticipantIdSelectComponent} from './participant-id-select/participant-id-select.component';
 import {PolicyCardsComponent} from './policy-cards/policy-cards.component';
 import {PolicyDefinitionPageComponent} from './policy-definition-page/policy-definition-page.component';
 
@@ -48,15 +47,11 @@ import {PolicyDefinitionPageComponent} from './policy-definition-page/policy-def
     MatDialogModule,
 
     // EDC UI Modules
+    PolicyEditorModule,
     UiElementsModule,
     JsonDialogModule,
   ],
-  declarations: [
-    NewPolicyDialogComponent,
-    ParticipantIdSelectComponent,
-    PolicyCardsComponent,
-    PolicyDefinitionPageComponent,
-  ],
+  declarations: [PolicyCardsComponent, PolicyDefinitionPageComponent],
   exports: [PolicyDefinitionPageComponent],
 })
 export class PolicyDefinitionPageModule {}

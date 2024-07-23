@@ -15,6 +15,7 @@ import {
   IdResponseDto,
   InitiateCustomTransferRequest,
   InitiateTransferRequest,
+  PolicyDefinitionCreateDto,
   PolicyDefinitionCreateRequest,
   PolicyDefinitionPage,
   TerminateContractAgreementRequest,
@@ -84,6 +85,16 @@ export class EdcApiService {
     return from(
       this.edcClient.uiApi.createPolicyDefinition({
         policyDefinitionCreateRequest,
+      }),
+    );
+  }
+
+  createPolicyDefinitionV2(
+    policyDefinitionCreateDto: PolicyDefinitionCreateDto,
+  ): Observable<IdResponseDto> {
+    return from(
+      this.edcClient.uiApi.createPolicyDefinitionV2({
+        policyDefinitionCreateDto,
       }),
     );
   }
