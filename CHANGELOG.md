@@ -31,7 +31,6 @@ New configuration to access the database:
   - Defaults to `3`
 - `MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL`
   - Base URL of an asset as seen from an external source, from the asset's consumer (typically from the internet, ...)
-  - It is documented in the asset data placeholder [README.md](extensions/placeholder-data-source/README.md)
 
 #### Compatible Versions
 
