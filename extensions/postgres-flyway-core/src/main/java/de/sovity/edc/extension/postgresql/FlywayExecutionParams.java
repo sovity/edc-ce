@@ -15,7 +15,6 @@
 package de.sovity.edc.extension.postgresql;
 
 import lombok.Builder;
-import lombok.Singular;
 import lombok.Value;
 import lombok.With;
 

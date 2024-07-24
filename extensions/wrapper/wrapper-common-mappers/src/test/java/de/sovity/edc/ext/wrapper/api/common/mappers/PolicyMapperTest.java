@@ -17,18 +17,12 @@ package de.sovity.edc.ext.wrapper.api.common.mappers;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionExtractor;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.MappingErrors;
-import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyConstraint;
-import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyExpression;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
-import org.eclipse.edc.policy.model.AndConstraint;
-import org.eclipse.edc.policy.model.AtomicConstraint;
 import org.eclipse.edc.policy.model.Constraint;
-import org.eclipse.edc.policy.model.OrConstraint;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
-import org.eclipse.edc.policy.model.XoneConstraint;
 import org.eclipse.edc.spi.result.Result;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.junit.jupiter.api.Test;
@@ -37,7 +31,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
