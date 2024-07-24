@@ -94,7 +94,7 @@ public class HttpDataSourceMapper {
             "Need contactPreferredEmailSubject"
         );
 
-        String placeholderEndpointForAsset = placeholderEndpointService.getPlaceholderEndpointForAsset(
+        var placeholderEndpointForAsset = placeholderEndpointService.getPlaceholderEndpointForAsset(
             onRequest.getContactEmail(),
             onRequest.getContactPreferredEmailSubject());
 
