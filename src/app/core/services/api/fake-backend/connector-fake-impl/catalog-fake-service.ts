@@ -22,6 +22,17 @@ let dataOffers: UiDataOffer[] = [
   },
   {
     endpoint: 'http://existing-other-connector/api/dsp',
+    participantId: 'MDSL1234XX.C1234XX',
+    asset: TestAssets.onRequestAsset,
+    contractOffers: [
+      {
+        contractOfferId: 'on-request-contract-offer',
+        policy: TestPolicies.failedMapping,
+      },
+    ],
+  },
+  {
+    endpoint: 'http://existing-other-connector/api/dsp',
     asset: TestAssets.boring,
     participantId: 'MDSL1234XX.C1234XX',
     contractOffers: [
@@ -38,17 +49,6 @@ let dataOffers: UiDataOffer[] = [
     contractOffers: [
       {
         contractOfferId: 'test-contract-offer-3',
-        policy: TestPolicies.failedMapping,
-      },
-    ],
-  },
-  {
-    endpoint: 'http://existing-other-connector/api/dsp',
-    participantId: 'MDSL1234XX.C1234XX',
-    asset: TestAssets.onRequestAsset,
-    contractOffers: [
-      {
-        contractOfferId: 'on-request-contract-offer',
         policy: TestPolicies.failedMapping,
       },
     ],

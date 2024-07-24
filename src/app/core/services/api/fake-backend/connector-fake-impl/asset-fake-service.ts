@@ -12,9 +12,9 @@ import {TestAssets} from './data/test-assets';
 
 let assets: UiAsset[] = [
   TestAssets.full,
+  TestAssets.onRequestAsset,
   TestAssets.boring,
   TestAssets.short,
-  TestAssets.onRequestAsset,
 ];
 
 export const assetPage = (): AssetPage => {

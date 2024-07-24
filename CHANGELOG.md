@@ -18,17 +18,33 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Minor
 
+#### Patch
+
+## [v4.1.0] - 2024-07-24
+
+### Overview
+
+MDS 2.2 release
+
+### Detailed Changes
+
+#### Minor
+
 - Reworked data offer creation page for easier data sharing
 - Complex policies using AND, OR and XONE
 - Both providers and consumers can now terminate contracts
 - Contracts can be filtered by their termination status
-- Adjusted data offer card/detail dialog UI to differentiate live and on request assets
+- Adjusted data offer card/detail dialog UI to differentiate live and on request
+  assets
 
 #### Patch
 
-- Fixed an issue that caused the auth information to get lost during asset creation.
+- Fixed an issue that caused the auth information to get lost during asset
+  creation.
 
 ### Deployment Migration Notes
+
+_No special deployment migration steps required_
 
 ## [v4.0.0] - 2024-07-15
 
