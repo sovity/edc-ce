@@ -54,7 +54,6 @@ import static de.sovity.edc.client.gen.model.ContractTerminationStatus.TERMINATE
 import static java.time.Duration.ofSeconds;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
