@@ -17,6 +17,7 @@ dependencies {
     api(project(":utils:json-and-jsonld-utils"))
 
     implementation(project(":extensions:policy-always-true"))
+    implementation(project(":extensions:postgres-flyway"))
     implementation(project(":utils:versions"))
     implementation(libs.edc.jsonLdSpi)
     implementation(libs.edc.jsonLd)

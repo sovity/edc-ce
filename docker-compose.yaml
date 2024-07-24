@@ -42,6 +42,7 @@ services:
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,X-Api-Key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
       EDC_AGENT_IDENTITY_KEY: 'client_id' # required for Mock IAM to work
+
     ports:
       - '11001:11001'
       - '11002:11002'
@@ -89,6 +90,7 @@ services:
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,X-Api-Key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
       EDC_AGENT_IDENTITY_KEY: 'client_id' # required for Mock IAM to work
+
     ports:
       - '22001:11001'
       - '22002:11002'
