@@ -85,8 +85,6 @@ public class ConnectorConfigFactory {
         properties.put("edc.last.commit.info", "test env commit message");
         properties.put("edc.build.date", "2023-05-08T15:30:00Z");
 
-        properties.put("edc.server.db.connection.timeout.in.ms", "5000");
-
         properties.put("my.edc.participant.id", participantId);
         properties.put("my.edc.title", "Connector Title %s".formatted(participantId));
         properties.put("my.edc.description", "Connector Description %s".formatted(participantId));
@@ -95,7 +93,7 @@ public class ConnectorConfigFactory {
         properties.put("my.edc.maintainer.url", "http://maintainer.%s".formatted(participantId));
         properties.put("my.edc.maintainer.name", "Maintainer Name %s".formatted(participantId));
 
-        properties.put("edc.server.db.connection.pool.size", "3");
+        properties.put("my.edc.datasource.placeholder.baseurl", apiConfig.getProtocolApiGroup().getUri().toString());
 
         properties.put("web.http.port", String.valueOf(apiConfig.getDefaultApiGroup().port()));
         properties.put("web.http.path", String.valueOf(apiConfig.getDefaultApiGroup().path()));

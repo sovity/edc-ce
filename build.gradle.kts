@@ -45,6 +45,10 @@ allprojects {
     apply(plugin = "java")
     apply(plugin = "checkstyle")
 
+    configurations.all {
+        resolutionStrategy.force("org.eclipse.edc:runtime-metamodel:0.2.1")
+    }
+
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
         sourceCompatibility = JavaVersion.VERSION_17.toString()

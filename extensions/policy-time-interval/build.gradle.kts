@@ -7,6 +7,8 @@ plugins {
 dependencies {
     api(libs.edc.authSpi)
     api(libs.edc.policyEngineSpi)
+
+
     testImplementation(libs.edc.junit)
 }
 

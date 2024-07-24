@@ -27,6 +27,7 @@ dependencies {
     implementation(libs.apache.commonsLang)
     implementation(libs.edc.apiCore)
     implementation(libs.edc.managementApiConfiguration)
+    implementation(libs.edc.dspApiConfiguration)
     implementation(libs.edc.dspHttpSpi)
     implementation(libs.jooq.jooq)
     implementation(libs.hibernate.validation)

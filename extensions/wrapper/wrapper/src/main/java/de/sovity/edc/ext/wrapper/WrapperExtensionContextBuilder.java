@@ -17,6 +17,7 @@ package de.sovity.edc.ext.wrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.LegacyPolicyMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.PlaceholderEndpointService;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetEditRequestMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetJsonLdBuilder;
@@ -75,14 +76,13 @@ import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.FilterExpressionOpera
 import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.UseCaseCatalogApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
+import de.sovity.edc.ext.wrapper.controller.PlaceholderEndpointController;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
-import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
-import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
-import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import lombok.NoArgsConstructor;
+import lombok.val;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
@@ -135,7 +135,6 @@ public class WrapperExtensionContextBuilder {
         PolicyDefinitionService policyDefinitionService,
         PolicyDefinitionStore policyDefinitionStore,
         PolicyEngine policyEngine,
-        SovityMessenger sovityMessenger,
         TransferProcessService transferProcessService,
         TransferProcessStore transferProcessStore,
         TypeTransformerRegistry typeTransformerRegistry
@@ -148,7 +147,10 @@ public class WrapperExtensionContextBuilder {
         var edcPropertyUtils = new EdcPropertyUtils();
         var selfDescriptionService = new SelfDescriptionService(config, monitor);
         var ownConnectorEndpointService = new OwnConnectorEndpointServiceImpl(selfDescriptionService);
-        var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd, ownConnectorEndpointService);
+        var placeholderEndpointService = new PlaceholderEndpointService(
+            config.getString(WrapperExtension.MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL, "http://0.0.0.0")
+        );
+        var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd, ownConnectorEndpointService, placeholderEndpointService);
         var policyMapper = newPolicyMapper(objectMapper, typeTransformerRegistry, operatorMapper);
         var transferProcessStateService = new TransferProcessStateService();
         var contractNegotiationUtils = new ContractNegotiationUtils(
@@ -210,8 +212,6 @@ public class WrapperExtensionContextBuilder {
             transferRequestBuilder,
             transferProcessService
         );
-        var agreementDetailsQuery = new ContractAgreementTerminationDetailsQuery();
-        var terminateContractQuery = new TerminateContractQuery();
         var contractAgreementTerminationApiService = new ContractAgreementTerminationApiService(contractAgreementTerminationService);
         var legacyPolicyMapper = new LegacyPolicyMapper();
         var policyDefinitionApiService = new PolicyDefinitionApiService(
@@ -294,19 +294,22 @@ public class WrapperExtensionContextBuilder {
             supportedPolicyApiService,
             useCaseCatalogApiService
         );
+        val placeholderEndpointController = new PlaceholderEndpointController();
 
         // Collect all JAX-RS resources
-        return new WrapperExtensionContext(List.of(
-            uiResource,
-            useCaseResource
-        ), selfDescriptionService);
+        return new WrapperExtensionContext(
+            List.of(uiResource, useCaseResource),
+            List.of(placeholderEndpointController),
+            selfDescriptionService
+        );
     }
 
     @NotNull
     private static AssetMapper newAssetMapper(
         TypeTransformerRegistry typeTransformerRegistry,
         JsonLd jsonLd,
-        OwnConnectorEndpointService ownConnectorEndpointService
+        OwnConnectorEndpointService ownConnectorEndpointService,
+        PlaceholderEndpointService placeholderEndpointService
     ) {
         var edcPropertyUtils = new EdcPropertyUtils();
         var assetJsonLdUtils = new AssetJsonLdUtils();
@@ -318,7 +321,7 @@ public class WrapperExtensionContextBuilder {
             ownConnectorEndpointService
         );
         var httpHeaderMapper = new HttpHeaderMapper();
-        var httpDataSourceMapper = new HttpDataSourceMapper(httpHeaderMapper);
+        var httpDataSourceMapper = new HttpDataSourceMapper(httpHeaderMapper, placeholderEndpointService);
         var dataSourceMapper = new DataSourceMapper(
             edcPropertyUtils,
             httpDataSourceMapper

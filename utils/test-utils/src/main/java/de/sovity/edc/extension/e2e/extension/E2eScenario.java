@@ -43,13 +43,13 @@ import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.val;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
+import org.jetbrains.annotations.NotNull;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
@@ -96,7 +96,11 @@ public class E2eScenario {
                 .build())
             .build();
 
-        return internalCreateAsset("asset-" + assetCounter.getAndIncrement(), dummyDataSource).getId();
+        return internalCreateAsset(nextAssetId(), dummyDataSource).getId();
+    }
+
+    private @NotNull String nextAssetId() {
+        return "asset-" + assetCounter.getAndIncrement();
     }
 
     public String createAsset(String id, UiDataSourceHttpData uiDataSourceHttpData) {
@@ -105,6 +109,10 @@ public class E2eScenario {
             .httpData(uiDataSourceHttpData)
             .build();
 
+        return internalCreateAsset(id, uiDataSource).getId();
+    }
+
+    public String createAsset(String id, UiDataSource uiDataSource) {
         return internalCreateAsset(id, uiDataSource).getId();
     }
 
@@ -141,31 +149,8 @@ public class E2eScenario {
                 .build());
     }
 
-    public String createPolicyDefinition(String policyId, UiPolicyConstraint... constraints) {
-        return createPolicyDefinition(policyId, Arrays.stream(constraints).toList()).getId();
-    }
-
-    private IdResponseDto createPolicyDefinition(String policyId, List<UiPolicyConstraint> constraints) {
-        var expression = UiPolicyExpression.builder()
-            .type(UiPolicyExpressionType.AND)
-            .expressions(constraints.stream()
-                .map(it -> UiPolicyExpression.builder()
-                    .type(UiPolicyExpressionType.CONSTRAINT)
-                    .constraint(it)
-                    .build())
-                .toList())
-            .build();
-
-        var policyDefinition = PolicyDefinitionCreateDto.builder()
-            .policyDefinitionId(policyId)
-            .expression(expression)
-            .build();
-
-        return providerClient.uiApi().createPolicyDefinitionV2(policyDefinition);
-    }
-
     public String createContractDefinition(String assetId) {
-        return createContractDefinition(POLICY_DEFINITION_ID, assetId).getId();
+        return createContractDefinition(alwaysTruePolicyId, assetId).getId();
     }
 
     public IdResponseDto createContractDefinition(String policyId, String assetId) {

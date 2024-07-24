@@ -52,6 +52,7 @@ import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.OnlineConnector
 import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.QuartzScheduleInitializer;
 import de.sovity.edc.ext.catalog.crawler.orchestration.schedules.utils.CronJobRef;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
+import de.sovity.edc.ext.wrapper.api.common.mappers.PlaceholderEndpointService;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PolicyMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetEditRequestMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.AssetJsonLdBuilder;
@@ -101,7 +102,8 @@ public class CrawlerExtensionContextBuilder {
         TypeManager typeManager,
         TypeTransformerRegistry typeTransformerRegistry,
         JsonLd jsonLd,
-        CatalogService catalogService
+        CatalogService catalogService,
+        PlaceholderEndpointService placeholderEndpointService
     ) {
         // Config
         var crawlerConfigFactory = new CrawlerConfigFactory(config);
@@ -120,7 +122,7 @@ public class CrawlerExtensionContextBuilder {
 
         // Services
         var objectMapperJsonLd = getJsonLdObjectMapper(typeManager);
-        var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd);
+        var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd, placeholderEndpointService);
         var policyMapper = newPolicyMapper(typeTransformerRegistry, objectMapperJsonLd);
         var crawlerEventLogger = new CrawlerEventLogger();
         var crawlerExecutionTimeLogger = new CrawlerExecutionTimeLogger();
@@ -229,7 +231,8 @@ public class CrawlerExtensionContextBuilder {
     @NotNull
     private static AssetMapper newAssetMapper(
         TypeTransformerRegistry typeTransformerRegistry,
-        JsonLd jsonLd
+        JsonLd jsonLd,
+        PlaceholderEndpointService placeholderEndpointService
     ) {
         var edcPropertyUtils = new EdcPropertyUtils();
         var assetJsonLdUtils = new AssetJsonLdUtils();
@@ -241,7 +244,7 @@ public class CrawlerExtensionContextBuilder {
             endpoint -> false
         );
         var httpHeaderMapper = new HttpHeaderMapper();
-        var httpDataSourceMapper = new HttpDataSourceMapper(httpHeaderMapper);
+        var httpDataSourceMapper = new HttpDataSourceMapper(httpHeaderMapper, placeholderEndpointService);
         var dataSourceMapper = new DataSourceMapper(
             edcPropertyUtils,
             httpDataSourceMapper

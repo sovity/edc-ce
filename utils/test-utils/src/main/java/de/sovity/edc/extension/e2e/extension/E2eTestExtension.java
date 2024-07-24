@@ -50,7 +50,8 @@ public class E2eTestExtension
     private ConnectorConfig providerConfig;
     private final EdcRuntimeExtensionWithTestDatabase providerExtension;
 
-    private final List<Class<?>> partySupportedTypes = List.of(ConnectorConfig.class, EdcClient.class, ConnectorRemote.class, ClientAndServer.class);
+    private final List<Class<?>> partySupportedTypes =
+        List.of(ConnectorConfig.class, EdcClient.class, ConnectorRemote.class, ClientAndServer.class);
     private final List<Class<?>> supportedTypes = Stream.concat(partySupportedTypes.stream(), Stream.of(E2eScenario.class)).toList();
 
     private Lazy<ClientAndServer> clientAndServer;
