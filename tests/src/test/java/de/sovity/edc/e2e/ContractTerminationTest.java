@@ -43,6 +43,7 @@ import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -54,6 +55,7 @@ import static de.sovity.edc.client.gen.model.ContractTerminationStatus.TERMINATE
 import static java.time.Duration.ofSeconds;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
@@ -449,7 +451,7 @@ public class ContractTerminationTest {
         assertThat(consumerInformation).isNotNull();
 
         val now = OffsetDateTime.now();
-        assertThat(consumerInformation.getTerminatedAt()).isBetween(now.minusMinutes(1), now.plusMinutes(1));
+        assertThat(consumerInformation.getTerminatedAt()).isCloseTo(now, within(1, ChronoUnit.MINUTES));
 
         assertThat(consumerInformation.getDetail()).isEqualTo(detail);
         assertThat(consumerInformation.getReason()).isEqualTo(reason);

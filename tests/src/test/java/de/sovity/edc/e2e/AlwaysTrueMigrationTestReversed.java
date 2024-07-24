@@ -11,7 +11,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockserver.integration.ClientAndServer;
 
 import static de.sovity.edc.e2e.AlwaysTrueMigrationTest.testTransfer;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class AlwaysTrueMigrationTestReversed {
 

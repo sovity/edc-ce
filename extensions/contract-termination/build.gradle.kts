@@ -25,6 +25,7 @@ dependencies {
     testImplementation(project(":utils:test-utils"))
     testImplementation(project(":utils:versions"))
 
+    testImplementation(libs.edc.monitorJdkLogger)
     testImplementation(libs.edc.http) {
         exclude(group = "org.eclipse.jetty", module = "jetty-client")
         exclude(group = "org.eclipse.jetty", module = "jetty-http")

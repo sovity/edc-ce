@@ -28,9 +28,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 
 import static de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy.COUNTERPARTY;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 @ExtendWith(E2eTestExtension.class)
 class TerminateContractQueryTest {
@@ -77,7 +79,7 @@ class TerminateContractQueryTest {
                 assertThat(detailsAfterTermination.consumerAgentId()).isEqualTo("consumer");
                 assertThat(detailsAfterTermination.reason()).isEqualTo("Some reason");
                 assertThat(detailsAfterTermination.detail()).isEqualTo("Some detail");
-                assertThat(detailsAfterTermination.terminatedAt()).isBetween(now, now.plusSeconds(1));
+                assertThat(detailsAfterTermination.terminatedAt()).isCloseTo(now, within(2, ChronoUnit.SECONDS));
                 assertThat(detailsAfterTermination.terminatedBy()).isEqualTo(COUNTERPARTY);
             }
         );

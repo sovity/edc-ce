@@ -16,12 +16,8 @@ dependencies {
     api(project(":extensions:wrapper:clients:java-client"))
     api(project(":utils:json-and-jsonld-utils"))
 
-    implementation(project(":extensions:policy-always-true"))
-    implementation(project(":extensions:postgres-flyway"))
     implementation(project(":utils:versions"))
-    implementation(libs.edc.jsonLdSpi)
     implementation(libs.edc.jsonLd)
-    implementation(libs.edc.sqlCore)
     implementation(libs.assertj.core)
     implementation(libs.jooq.jooq)
     implementation(libs.mockserver.netty)

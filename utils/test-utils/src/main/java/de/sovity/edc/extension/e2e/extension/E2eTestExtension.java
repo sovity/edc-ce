@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.postgresql.PostgresFlywayExtension.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.mockserver.stop.Stop.stopQuietly;
 
@@ -85,7 +84,7 @@ public class E2eTestExtension
             "consumer",
             testDatabase -> {
                 consumerConfig = forTestDatabase(this.consumerParticipantId, testDatabase);
-                consumerConfig.getProperties().put(EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS, this.additionalConsumerMigrationLocation);
+                consumerConfig.getProperties().put("edc.flyway.additional.migration.locations", this.additionalConsumerMigrationLocation);
                 return consumerConfig.getProperties();
             }
         );
@@ -94,7 +93,7 @@ public class E2eTestExtension
             "provider",
             testDatabase -> {
                 providerConfig = forTestDatabase(this.providerParticipantId, testDatabase);
-                providerConfig.getProperties().put(EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS, this.additionalProviderMigrationLocation);
+                providerConfig.getProperties().put("edc.flyway.additional.migration.locations", this.additionalProviderMigrationLocation);
                 return providerConfig.getProperties();
             }
         );
