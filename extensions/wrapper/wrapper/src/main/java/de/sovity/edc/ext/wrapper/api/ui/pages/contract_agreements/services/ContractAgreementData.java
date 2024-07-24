@@ -21,7 +21,6 @@ import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 
 import java.util.List;
-import java.util.Map;
 
 
 /**

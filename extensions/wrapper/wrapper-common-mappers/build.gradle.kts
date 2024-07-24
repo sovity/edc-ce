@@ -12,11 +12,15 @@ dependencies {
     api(libs.edc.coreSpi)
     api(libs.edc.transformCore)
     api(libs.edc.transformSpi)
+
     api(project(":extensions:wrapper:wrapper-common-api"))
     api(project(":utils:json-and-jsonld-utils"))
+
     implementation(libs.apache.commonsLang)
     implementation(libs.apache.commonsCollections)
     implementation(libs.flexmark.all)
+    implementation(libs.okhttp.okhttp)
+
 
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)

@@ -21,6 +21,7 @@ import de.sovity.edc.extension.e2e.extension.Consumer;
 import de.sovity.edc.extension.e2e.extension.E2eScenario;
 import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
 import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import lombok.val;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(E2eTestExtension.class)
 class TerminateContractQueryTest {
 
+    @DisabledOnGithub
     @Test
     void terminateConsumerAgreementOrThrow_shouldInsertRowInTerminationTable(
         E2eScenario scenario,

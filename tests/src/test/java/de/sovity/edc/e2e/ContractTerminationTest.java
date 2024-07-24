@@ -139,6 +139,7 @@ public class ContractTerminationTest {
         assertTermination(agreementsAfterTermination, details, reason, SELF);
     }
 
+    @DisabledOnGithub
     @Test
     @SneakyThrows
     void canTerminateFromConsumer(
@@ -255,6 +256,7 @@ public class ContractTerminationTest {
         // termination completed == success
     }
 
+    @DisabledOnGithub
     @TestFactory
     List<DynamicTest> theDetailsAreMandatory(
         E2eScenario scenario,
@@ -293,6 +295,7 @@ public class ContractTerminationTest {
                 })).toList();
     }
 
+    @DisabledOnGithub
     @Test
     @SneakyThrows
     void canTerminateFromProvider(

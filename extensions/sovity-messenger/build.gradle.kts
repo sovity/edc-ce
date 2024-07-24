@@ -17,7 +17,6 @@ dependencies {
     implementation(libs.edc.managementApiConfiguration)
     implementation(libs.edc.transformCore)
 
-
     testAnnotationProcessor(libs.lombok)
 
     testCompileOnly(libs.lombok)

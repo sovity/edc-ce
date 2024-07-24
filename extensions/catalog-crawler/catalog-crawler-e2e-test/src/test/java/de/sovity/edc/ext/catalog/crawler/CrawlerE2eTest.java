@@ -106,6 +106,7 @@ class CrawlerE2eTest {
                 props.put(CrawlerExtension.CRON_DEAD_CONNECTOR_REFRESH, everySeconds);
                 props.put(CrawlerExtension.SCHEDULED_KILL_OFFLINE_CONNECTORS, everySeconds);
                 props.put(CrawlerExtension.KILL_OFFLINE_CONNECTORS_AFTER, "P1D");
+                props.put("my.edc.datasource.placeholder.baseurl", "http://example.com/edc/backend");
 
                 return props;
             }

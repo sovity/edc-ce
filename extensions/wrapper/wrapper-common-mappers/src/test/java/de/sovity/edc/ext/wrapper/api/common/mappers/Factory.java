@@ -50,7 +50,7 @@ public class Factory {
         return new AssetJsonLdBuilder(
             new DataSourceMapper(
                 new EdcPropertyUtils(),
-                new HttpDataSourceMapper(new HttpHeaderMapper())
+                new HttpDataSourceMapper(new HttpHeaderMapper(), new PlaceholderEndpointService("http://example.com/dummy/baseUrl"))
             ),
             newAssetJsonLdParser(ownConnectorEndpointService),
             new AssetEditRequestMapper()

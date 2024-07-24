@@ -8,6 +8,8 @@ dependencies {
     api(libs.edc.authSpi)
     api(libs.edc.policyEngineSpi)
     api(libs.edc.contractSpi)
+
+
     testImplementation(libs.edc.junit)
 
     testImplementation(libs.mockito.core)
