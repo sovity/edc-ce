@@ -22,6 +22,7 @@ import de.sovity.edc.client.gen.model.UiDataSourceOnRequest;
 import de.sovity.edc.ext.wrapper.WrapperExtension;
 import de.sovity.edc.ext.wrapper.api.common.mappers.PlaceholderEndpointService;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.extension.E2eScenario;
 import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
 import de.sovity.edc.extension.e2e.extension.Provider;
 import de.sovity.edc.utils.JsonUtils;
@@ -43,6 +44,7 @@ class PlaceholderDataSourceExtensionTest {
     @SneakyThrows
     @Test
     void shouldAccessDummyEndpoint(
+        E2eScenario scenario,
         @Provider EdcExtension providerExtension,
         @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient
@@ -72,6 +74,9 @@ class PlaceholderDataSourceExtensionTest {
 
         val service = providerExtension.getContext().getService(PlaceholderEndpointService.class);
         val expected = service.getPlaceholderEndpointForAsset(email, subject);
+
+        scenario.createContractDefinition(assetId);
+        scenario.negotiateAssetAndAwait(assetId);
 
         // assert
         assertThat(baseUrl)
