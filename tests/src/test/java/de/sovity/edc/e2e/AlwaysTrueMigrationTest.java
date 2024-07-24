@@ -1,23 +1,31 @@
 package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
+import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
-import de.sovity.edc.e2e.common.AlwaysTruePolicyMigrationCommonTest;
 import de.sovity.edc.extension.e2e.extension.Consumer;
 import de.sovity.edc.extension.e2e.extension.E2eScenario;
 import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
 import de.sovity.edc.extension.e2e.extension.Provider;
 import de.sovity.edc.extension.policy.AlwaysTruePolicyConstants;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
+import jakarta.ws.rs.HttpMethod;
 import lombok.val;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockserver.integration.ClientAndServer;
+import org.mockserver.model.HttpRequest;
+import org.mockserver.model.HttpResponse;
+
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class AlwaysTrueMigrationNewConsumerTest {
+class AlwaysTrueMigrationTest {
 
     @RegisterExtension
     private static final E2eTestExtension E2E_TEST_EXTENSION = E2eTestExtension.builder()
@@ -27,7 +35,7 @@ class AlwaysTrueMigrationNewConsumerTest {
 
     @Test
     @DisabledOnGithub
-    void always_true_agreements_still_work_after_migration(
+    void test_migrated_policy_working_test_legacy_policy_working(
         E2eScenario scenario,
         ClientAndServer mockServer,
         @Provider EdcClient providerClient,
@@ -52,6 +60,38 @@ class AlwaysTrueMigrationNewConsumerTest {
         assertThat(migratedAlwaysTruePolicy.getType()).isEqualTo(UiPolicyExpressionType.EMPTY);
         assertThat(migratedAlwaysTruePolicy.getConstraint()).isNull();
 
-        AlwaysTruePolicyMigrationCommonTest.alwaysTruePolicyMigrationTest(scenario, mockServer, providerClient, consumerClient);
+        testTransfer(scenario, mockServer, providerClient, consumerClient);
+        testTransfer(scenario, mockServer, consumerClient, providerClient);
+    }
+
+    public void testTransfer(E2eScenario scenario, ClientAndServer mockServer, EdcClient providerClient, EdcClient consumerClient) {
+        // arrange
+        val destinationPath = "/destination/some/path/";
+        val destinationUrl = "http://localhost:" + mockServer.getPort() + destinationPath;
+        mockServer.when(HttpRequest.request(destinationPath).withMethod("POST")).respond(it -> HttpResponse.response().withStatusCode(200));
+
+        val asset = scenario.createAsset();
+        scenario.createContractDefinition(asset); //this automatically uses the always-true policy
+        val negotiation = scenario.negotiateAssetAndAwait(asset);
+
+        // act
+        val transfer = scenario.transferAndAwait(
+            InitiateTransferRequest.builder()
+                .contractAgreementId(negotiation.getContractAgreementId())
+                .dataSinkProperties(
+                    Map.of(
+                        Prop.Edc.BASE_URL, destinationUrl,
+                        Prop.Edc.METHOD, HttpMethod.POST,
+                        Prop.Edc.TYPE, "HttpData"
+                    )
+                )
+                .build()
+        );
+        val transferProcess = consumerClient.uiApi().getTransferHistoryPage().getTransferEntries().stream().filter(
+            process -> process.getTransferProcessId().equals(transfer)
+        ).findFirst().orElseThrow();
+
+        // assert
+        AssertionsForClassTypes.assertThat(transferProcess.getState().getSimplifiedState()).isEqualTo(TransferProcessSimplifiedState.OK);
     }
 }
