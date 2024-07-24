@@ -13,8 +13,6 @@ dependencies {
     api(libs.hikari)
 
     implementation(libs.apache.commonsLang)
-
-    implementation(libs.edc.runtimeMetamodel)
 }
 
 group = libs.versions.sovityEdcExtensionGroup.get()

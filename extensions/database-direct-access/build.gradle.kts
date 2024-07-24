@@ -9,7 +9,6 @@ dependencies {
     compileOnly(libs.lombok)
 
     implementation(libs.edc.coreSpi)
-    implementation(libs.edc.runtimeMetamodel)
 
     implementation(libs.jooq.jooq)
     implementation(libs.hikari)

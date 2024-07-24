@@ -8,7 +8,6 @@ dependencies {
     api(libs.edc.authSpi)
     api(libs.edc.policyEngineSpi)
     api(libs.edc.contractSpi)
-    implementation(libs.edc.runtimeMetamodel)
 
 
     testImplementation(libs.edc.junit)

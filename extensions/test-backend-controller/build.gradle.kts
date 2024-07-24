@@ -6,7 +6,6 @@ dependencies {
     api(libs.edc.apiCore)
     api(libs.edc.coreSpi)
     api(libs.edc.http)
-    implementation(libs.edc.runtimeMetamodel)
 }
 
 group = libs.versions.sovityEdcExtensionGroup.get()

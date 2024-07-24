@@ -18,7 +18,6 @@ dependencies {
     implementation(libs.apache.commonsLang)
     implementation(libs.apache.commonsCollections)
     implementation(libs.apache.commonsIo)
-    implementation(libs.edc.runtimeMetamodel)
 
 
     testAnnotationProcessor(libs.lombok)

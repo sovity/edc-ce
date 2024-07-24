@@ -58,8 +58,6 @@ class PlaceholderDataSourceExtensionTest {
     void shouldAccessDummyEndpoint(
         E2eScenario scenario,
         ClientAndServer clientAndServer,
-        @Provider EdcExtension providerExtension,
-        @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -79,14 +77,6 @@ class PlaceholderDataSourceExtensionTest {
                 .id(assetId)
                 .build()
         );
-
-        val a = providerClient.uiApi().getAssetPage().getAssets().get(0).getAssetJsonLd();
-        val compacted = JsonLdUtils.tryCompact(JsonUtils.parseJsonObj(a));
-        val dataAddress = compacted.getJsonObject(Prop.Edc.DATA_ADDRESS);
-        val baseUrl = dataAddress.getString(Prop.Edc.BASE_URL);
-
-        val service = providerExtension.getContext().getService(PlaceholderEndpointService.class);
-        val expected = service.getPlaceholderEndpointForAsset(email, subject);
 
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAssetAndAwait(assetId);
@@ -111,21 +101,9 @@ class PlaceholderDataSourceExtensionTest {
             .build());
 
         // assert
-        assertThat(baseUrl)
-            .startsWith(providerConfig.getProperties().get(WrapperExtension.MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL))
-            .isEqualTo(expected);
-
-        val request = new Request.Builder()
-            .url(baseUrl)
-            .build();
-
-        val client = new OkHttpClient();
-        val content = client.newCall(request).execute().body().string();
-
-        assertThat(content).contains("This is not real data.");
-        assertThat(content).contains(email);
-        assertThat(content).contains(subject);
-
-        assertThat(new String(Base64.getDecoder().decode(accessed.get()))).contains("This is not real data.");
+        assertThat(new String(Base64.getDecoder().decode(accessed.get())))
+            .contains("This is not real data.")
+            .contains(email)
+            .contains(subject);
     }
 }

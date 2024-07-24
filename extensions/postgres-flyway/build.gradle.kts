@@ -13,7 +13,6 @@ dependencies {
 
     // Adds Database-Related EDC-Extensions (EDC-SQL-Stores, JDBC-Driver, Pool and Transactions)
     implementation(libs.edc.controlPlaneSql)
-    implementation(libs.edc.runtimeMetamodel)
     implementation(libs.edc.transactionLocal)
 
     implementation(libs.tractus.sqlPool)

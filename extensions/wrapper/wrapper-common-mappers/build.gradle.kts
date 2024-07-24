@@ -18,7 +18,6 @@ dependencies {
 
     implementation(libs.apache.commonsLang)
     implementation(libs.apache.commonsCollections)
-    implementation(libs.edc.runtimeMetamodel)
     implementation(libs.flexmark.all)
     implementation(libs.okhttp.okhttp)
 

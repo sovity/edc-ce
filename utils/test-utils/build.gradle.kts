@@ -20,7 +20,6 @@ dependencies {
     implementation(project(":utils:versions"))
     implementation(libs.edc.jsonLdSpi)
     implementation(libs.edc.jsonLd)
-    implementation(libs.edc.runtimeMetamodel)
     implementation(libs.edc.sqlCore)
     implementation(libs.assertj.core)
     implementation(libs.jooq.jooq)

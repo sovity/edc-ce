@@ -16,7 +16,6 @@ dependencies {
     api(project(":extensions:wrapper:wrapper-ee-api"))
 
     implementation(libs.apache.commonsLang)
-    implementation(libs.edc.runtimeMetamodel)
     implementation(libs.hibernate.validation)
     implementation(libs.jakarta.el)
     implementation(libs.jakarta.rsApi)

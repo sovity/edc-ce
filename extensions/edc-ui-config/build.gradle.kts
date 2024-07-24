@@ -9,7 +9,6 @@ dependencies {
     api(libs.edc.controlPlaneSpi)
     implementation(libs.edc.apiCore)
     implementation(libs.edc.managementApiConfiguration)
-    implementation(libs.edc.runtimeMetamodel)
 
     implementation(libs.jakarta.rsApi)
     implementation(libs.jakarta.validationApi)
