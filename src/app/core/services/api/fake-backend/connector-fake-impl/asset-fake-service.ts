@@ -1,5 +1,6 @@
 import {
   AssetPage,
+  IdAvailabilityResponse,
   IdResponseDto,
   UiAsset,
   UiAssetCreateRequest,
@@ -19,6 +20,13 @@ let assets: UiAsset[] = [
 export const assetPage = (): AssetPage => {
   return {
     assets,
+  };
+};
+
+export const assetIdAvailable = (assetId: string): IdAvailabilityResponse => {
+  return {
+    id: assetId,
+    available: !assets.some((it) => it.assetId === assetId),
   };
 };
 

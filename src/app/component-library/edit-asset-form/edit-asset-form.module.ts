@@ -23,6 +23,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterModule} from '@angular/router';
 import {CatalogModule} from '../catalog/catalog.module';
 import {PipesAndDirectivesModule} from '../pipes-and-directives/pipes-and-directives.module';
+import {PolicyEditorModule} from '../policy-editor/policy-editor.module';
 import {UiElementsModule} from '../ui-elements/ui-elements.module';
 import {DataCategorySelectComponent} from './data-category-select/data-category-select.component';
 import {DataSubcategoryItemsPipe} from './data-subcategory-select/data-subcategory-items.pipe';
@@ -67,6 +68,7 @@ import {TransportModeSelectComponent} from './transport-mode-select/transport-mo
     // EDC UI Modules
     CatalogModule,
     PipesAndDirectivesModule,
+    PolicyEditorModule,
     UiElementsModule,
   ],
   declarations: [

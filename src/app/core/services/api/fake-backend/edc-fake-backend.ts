@@ -9,6 +9,7 @@ import {
   ContractTerminationRequestFromJSON,
   DashboardPageToJSON,
   FetchAPI,
+  IdAvailabilityResponseToJSON,
   IdResponseDtoToJSON,
   InitiateTransferRequestFromJSON,
   PolicyDefinitionCreateDtoFromJSON,
@@ -22,6 +23,7 @@ import {
   UiDataOfferToJSON,
 } from '@sovity.de/edc-client';
 import {
+  assetIdAvailable,
   assetPage,
   createAsset,
   deleteAsset,
@@ -33,6 +35,7 @@ import {
   contractAgreementPage,
 } from './connector-fake-impl/contract-agreement-fake-service';
 import {
+  contractDefinitionIdAvailable,
   contractDefinitionPage,
   createContractDefinition,
   deleteContractDefinition,
@@ -48,6 +51,7 @@ import {
   createPolicyDefinition,
   createPolicyDefinitionV2,
   deletePolicyDefinition,
+  policyDefinitionIdAvailable,
   policyDefinitionPage,
 } from './connector-fake-impl/policy-definition-fake-service';
 import {
@@ -220,6 +224,24 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
     .on('GET', () => {
       const limits = connectorLimits();
       return ok(ConnectorLimitsToJSON(limits));
+    })
+
+    .url('ui/pages/data-offer-page/validate-asset-id/*')
+    .on('GET', (assetId) => {
+      const response = assetIdAvailable(assetId);
+      return ok(IdAvailabilityResponseToJSON(response));
+    })
+
+    .url('ui/pages/data-offer-page/validate-policy-id/*')
+    .on('GET', (policyId) => {
+      const response = policyDefinitionIdAvailable(policyId);
+      return ok(IdAvailabilityResponseToJSON(response));
+    })
+
+    .url('ui/pages/data-offer-page/validate-contract-definition-id/*')
+    .on('GET', (contractDefinitionId) => {
+      const response = contractDefinitionIdAvailable(contractDefinitionId);
+      return ok(IdAvailabilityResponseToJSON(response));
     })
 
     .tryMatch();

@@ -1,4 +1,4 @@
-import {OperatorFunction} from 'rxjs';
+import {Observable, OperatorFunction, defer, from} from 'rxjs';
 import {filter, tap} from 'rxjs/operators';
 
 /**
@@ -19,3 +19,6 @@ export function throwIfNull<T>(
     }
   }) as OperatorFunction<T | null | undefined, T>;
 }
+
+export const toObservable = <T>(fn: () => Promise<T>): Observable<T> =>
+  defer(() => from(fn()));

@@ -14,6 +14,7 @@ export class EditAssetFormInitializer {
   forCreate(): EditAssetFormValue {
     return {
       mode: 'CREATE',
+      publishMode: 'PUBLISH_UNRESTRICTED',
       general: {
         id: '',
         name: '',
@@ -50,6 +51,7 @@ export class EditAssetFormInitializer {
   forEdit(asset: UiAssetMapped): EditAssetFormValue {
     return {
       mode: 'EDIT',
+      publishMode: 'DO_NOT_PUBLISH',
       general: {
         id: asset.assetId,
         name: asset.title,

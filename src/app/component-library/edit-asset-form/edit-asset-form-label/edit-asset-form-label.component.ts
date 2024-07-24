@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {AbstractControl, Validators} from '@angular/forms';
 
 @Component({
   selector: 'edit-asset-form-label',
@@ -8,7 +8,7 @@ import {FormControl, Validators} from '@angular/forms';
 export class EditAssetFormLabelComponent {
   @Input() label!: string;
   @Input() htmlFor?: string;
-  @Input() ctrl?: FormControl<any>;
+  @Input() ctrl?: AbstractControl<any>;
 
   isRequired(): boolean {
     return this.ctrl?.hasValidator(Validators.required) || false;

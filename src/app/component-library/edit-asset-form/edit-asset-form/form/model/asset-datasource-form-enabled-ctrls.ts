@@ -10,8 +10,9 @@ export const assetDatasourceFormEnabledCtrls = (
     value.dataAddressType === 'Custom-Data-Address-Json';
 
   const onRequest = value.dataSourceAvailability === 'On-Request';
+  const datasource = value.dataSourceAvailability === 'Datasource';
 
-  const http = value.dataAddressType === 'Http' && !onRequest;
+  const http = value.dataAddressType === 'Http' && datasource;
   const httpAuth = value.httpAuthHeaderType !== 'None';
   const httpAuthByValue = value.httpAuthHeaderType === 'Value';
   const httpAuthByVault = value.httpAuthHeaderType === 'Vault-Secret';
@@ -24,10 +25,10 @@ export const assetDatasourceFormEnabledCtrls = (
     contactEmail: onRequest,
     contactPreferredEmailSubject: onRequest,
 
-    dataAddressType: !onRequest,
+    dataAddressType: datasource,
 
     // Custom Datasource JSON
-    dataDestination: !onRequest && customDataAddressJson,
+    dataDestination: datasource && customDataAddressJson,
 
     // Http Datasource Fields
     httpUrl: http,

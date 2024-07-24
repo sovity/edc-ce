@@ -1,4 +1,5 @@
 import {
+  IdAvailabilityResponse,
   IdResponseDto,
   PolicyDefinitionCreateDto,
   PolicyDefinitionCreateRequest,
@@ -6,6 +7,7 @@ import {
   PolicyDefinitionPage,
   UiPolicyExpression,
 } from '@sovity.de/edc-client';
+import {ALWAYS_TRUE_POLICY_ID} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/always-true-policy-id';
 import {TestPolicies} from './data/test-policies';
 
 let policyDefinitions: PolicyDefinitionDto[] = [
@@ -21,9 +23,24 @@ let policyDefinitions: PolicyDefinitionDto[] = [
     policyDefinitionId: 'test-policy-definition-3',
     policy: TestPolicies.failedMapping,
   },
+  {
+    policyDefinitionId: ALWAYS_TRUE_POLICY_ID,
+    policy: TestPolicies.unrestricted,
+  },
 ];
 export const policyDefinitionPage = (): PolicyDefinitionPage => {
   return {policies: policyDefinitions};
+};
+
+export const policyDefinitionIdAvailable = (
+  policyDefinitionId: string,
+): IdAvailabilityResponse => {
+  return {
+    id: policyDefinitionId,
+    available: !policyDefinitions.some(
+      (it) => it.policyDefinitionId === policyDefinitionId,
+    ),
+  };
 };
 
 export const getPolicyDefinitionByJsonLd = (jsonLd: string) =>

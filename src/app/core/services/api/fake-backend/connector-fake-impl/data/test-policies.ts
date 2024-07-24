@@ -49,4 +49,8 @@ export namespace TestPolicies {
   export const failedMapping: UiPolicy = policy({
     type: 'EMPTY',
   });
+
+  export const unrestricted: UiPolicy = policy({
+    type: 'EMPTY',
+  });
 }

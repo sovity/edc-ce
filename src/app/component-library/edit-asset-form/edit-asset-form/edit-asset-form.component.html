@@ -475,14 +475,14 @@
             type="text"
             placeholder="my-asset"
             [formControl]="ctrl" />
-          <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
+          <mat-error *ngIf="ctrl.errors?.pattern">
             {{ validationMessages.invalidWhitespacesOrColonsMessage }}
           </mat-error>
-          <mat-error *ngIf="ctrl.invalid && ctrl.errors?.requiresPrefix">
+          <mat-error *ngIf="ctrl.errors?.requiresPrefix">
             {{ validationMessages.invalidPrefix('ID', 'urn:artifact') }}
           </mat-error>
-          <mat-error *ngIf="ctrl.invalid && ctrl.errors?.idAlreadyExists">
-            {{ validationMessages.idExistsErrorMessage }}
+          <mat-error *ngIf="ctrl.errors?.exists">
+            {{ ctrl.errors?.exists }}
           </mat-error>
         </mat-form-field>
       </div>
@@ -926,13 +926,56 @@
         </mat-form-field>
       </div>
     </edit-asset-form-group>
+
+    <edit-asset-form-group
+      *ngIf="form.mode === 'CREATE'"
+      myTitle="Publishing"
+      description="Publish data offer to other data space participants">
+      <!-- Publish Mode -->
+      <div *ngIf="form.all.controls.publishMode; let ctrl">
+        <edit-asset-form-label
+          label="Publishing Mode"
+          htmlFor="create-asset-form-publish-type"
+          [ctrl]="ctrl"></edit-asset-form-label>
+        <mat-radio-group
+          class="!flex !flex-col !gap-1 w-full mt-2"
+          aria-label="Select an option"
+          [formControl]="ctrl">
+          <mat-radio-button value="PUBLISH_UNRESTRICTED">
+            Publish unrestricted
+          </mat-radio-button>
+          <mat-radio-button value="PUBLISH_RESTRICTED">
+            Publish restricted
+          </mat-radio-button>
+          <mat-radio-button value="DO_NOT_PUBLISH">
+            Do not publish
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <!-- Policy Expression -->
+      <div *ngIf="form.all.controls.publishMode.value === 'PUBLISH_RESTRICTED'">
+        <edit-asset-form-label
+          label="Policy Expression"
+          [ctrl]="form.all.controls.policyControls"></edit-asset-form-label>
+        <policy-form-expression
+          [treeNode]="expressionFormHandler.tree.root"></policy-form-expression>
+      </div>
+    </edit-asset-form-group>
+
     <button
       class="w-40 h-10 self-end"
       mat-raised-button
       color="primary"
       [disabled]="!form.all.valid || isLoading"
       (click)="$event.preventDefault(); submitClicked.emit()">
-      {{ form.mode === 'CREATE' ? 'Create' : 'Update' }}
+      {{
+        form.mode === 'CREATE'
+          ? form.all.controls.publishMode.value === 'DO_NOT_PUBLISH'
+            ? 'Create'
+            : 'Publish'
+          : 'Update'
+      }}
     </button>
   </form>
 </div>

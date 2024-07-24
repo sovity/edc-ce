@@ -2,6 +2,7 @@ import {
   ContractDefinitionEntry,
   ContractDefinitionPage,
   ContractDefinitionRequest,
+  IdAvailabilityResponse,
   IdResponseDto,
 } from '@sovity.de/edc-client';
 import {AssetProperty} from '../../../models/asset-properties';
@@ -24,6 +25,17 @@ let contractDefinitions: ContractDefinitionEntry[] = [
 export const contractDefinitionPage = (): ContractDefinitionPage => {
   return {
     contractDefinitions,
+  };
+};
+
+export const contractDefinitionIdAvailable = (
+  contractDefinitionId: string,
+): IdAvailabilityResponse => {
+  return {
+    id: contractDefinitionId,
+    available: !contractDefinitions.some(
+      (it) => it.contractDefinitionId === contractDefinitionId,
+    ),
   };
 };
 
