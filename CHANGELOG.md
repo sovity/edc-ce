@@ -9,20 +9,13 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 ### Detailed Changes
 
+#### Minor
+
+#### Patch
+
 #### Major Changes
 
-- The `UiPolicy` model has been adjusted to support complex expressions including `AND`, `OR` and `XONE`.
-  - The `createPolicyDefinition` has been marked as deprecated in favor of the new `createPolicyDefinitionV2` endpoint that supports complex policies.
-  - Removed the recently rushed `createPolicyDefinitionUseCase` endpoint in favor of the new `createPolicyDefinitionV2` endpoint.
-
 #### Minor Changes
-
-- Both providers and consumers can now terminate their contracts.
-- Added endpoints for checking ID availability for policies, assets and contract definitions
-- The always-true policy is now created with no constraints instead of the artificial `ALWAYS_TRUE = TRUE` constraint
-  - Existing always-true policy definitions are migrated to the new format - existing contract agreements are not affected
-
-#### Patch Changes
 
 ### Deployment Migration Notes
 
@@ -35,6 +28,50 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
   - Dev Catalog Crawler: `ghcr.io/sovity/catalog-crawler-dev:{{ VERSION }}`
   - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:{{ VERSION }}`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI VERSION }}`
+
+## [10.0.0] - 2024-07-24
+
+### Overview
+
+MDS 2.2 release
+
+### Detailed Changes
+
+#### Major Changes
+
+- Complex policies using AND, OR and XONE:
+  - Complex policy support in the Connector UI. 
+  - The `UiPolicy` model has been adjusted to support complex expressions including `AND`, `OR` and `XONE`.
+  - The `createPolicyDefinition` has been marked as deprecated in favor of the new `createPolicyDefinitionV2` endpoint that supports complex policies.
+  - Removed the recently rushed `createPolicyDefinitionUseCase` endpoint in favor of the new `createPolicyDefinitionV2` endpoint.
+
+#### Minor Changes
+
+- Reworked data offer creation page for easier data sharing.
+- Both providers and consumers can now terminate their contracts.
+- Contracts can be filtered by their termination status.
+- Improved "On Request" data offer support in the Connector UI.
+- The always-true policy is now created with no constraints instead of the artificial `ALWAYS_TRUE = TRUE` constraint
+  - Existing always-true policy definitions are migrated to the new format - existing contract agreements are not affected
+
+#### Patch Changes
+
+- Fixed an issue that caused the auth information to get lost during asset
+  creation.
+
+### Deployment Migration Notes
+
+_No special migration notes required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:10.0.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:10.0.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:10.0.0`
+  - Dev Catalog Crawler: `ghcr.io/sovity/catalog-crawler-dev:10.0.0`
+  - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.0.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.0`
 
 ## [9.0.0] - 2024-07-15
 

@@ -14,7 +14,6 @@ import org.mockserver.model.HttpResponse;
 import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 
 public class AlwaysTruePolicyMigrationCommonTest {
 
