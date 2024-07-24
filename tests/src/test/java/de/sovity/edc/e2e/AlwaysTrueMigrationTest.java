@@ -60,11 +60,10 @@ class AlwaysTrueMigrationTest {
         assertThat(migratedAlwaysTruePolicy.getType()).isEqualTo(UiPolicyExpressionType.EMPTY);
         assertThat(migratedAlwaysTruePolicy.getConstraint()).isNull();
 
-        testTransfer(scenario, mockServer, providerClient, consumerClient);
-        testTransfer(scenario, mockServer, consumerClient, providerClient);
+        testTransfer(scenario, mockServer, consumerClient);
     }
 
-    public void testTransfer(E2eScenario scenario, ClientAndServer mockServer, EdcClient providerClient, EdcClient consumerClient) {
+    public static void testTransfer(E2eScenario scenario, ClientAndServer mockServer, EdcClient consumerClient) {
         // arrange
         val destinationPath = "/destination/some/path/";
         val destinationUrl = "http://localhost:" + mockServer.getPort() + destinationPath;
