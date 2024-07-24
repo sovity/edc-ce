@@ -17,12 +17,8 @@ package de.sovity.edc.ext.wrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import de.sovity.edc.ext.wrapper.api.common.mappers.PlaceholderEndpointService;
-import de.sovity.edc.ext.wrapper.controller.PlaceholderEndpointController;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
-import de.sovity.edc.extension.messenger.SovityMessenger;
-import lombok.val;
 import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
 import org.eclipse.edc.connector.api.management.configuration.transform.ManagementApiTypeTransformerRegistry;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -82,8 +78,6 @@ public class WrapperExtension implements ServiceExtension {
     @Inject
     private PolicyEngine policyEngine;
     @Inject
-    private SovityMessenger sovityMessenger;
-    @Inject
     private TransferProcessService transferProcessService;
     @Inject
     private TransferProcessStore transferProcessStore;
@@ -110,11 +104,6 @@ public class WrapperExtension implements ServiceExtension {
         var objectMapper = typeManager.getMapper(CoreConstants.JSON_LD);
         fixObjectMapperDateSerialization(objectMapper);
 
-        val baseUrl = context.getConfig().getString(MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL);
-        val placeholderEndpointService = new PlaceholderEndpointService(baseUrl);
-        setupPlaceholderEndpoint();
-        context.registerService(PlaceholderEndpointService.class, placeholderEndpointService);
-
         var wrapperExtensionContext = WrapperExtensionContextBuilder.buildContext(
             assetIndex,
             assetService,
@@ -133,22 +122,18 @@ public class WrapperExtension implements ServiceExtension {
             policyDefinitionService,
             policyDefinitionStore,
             policyEngine,
-            sovityMessenger,
             transferProcessService,
             transferProcessStore,
-            typeTransformerRegistry,
-            placeholderEndpointService
+            typeTransformerRegistry
         );
 
         wrapperExtensionContext.selfDescriptionService().validateSelfDescriptionConfig();
 
-        wrapperExtensionContext.jaxRsResources().forEach(resource ->
+        wrapperExtensionContext.managementApiResources().forEach(resource ->
             webService.registerResource(dataManagementApiConfiguration.getContextAlias(), resource));
-    }
 
-    private void setupPlaceholderEndpoint() {
-        val controller = new PlaceholderEndpointController();
-        webService.registerResource(dspApiConfiguration.getContextAlias(), controller);
+        wrapperExtensionContext.dspApiResources().forEach(resource ->
+            webService.registerResource(dspApiConfiguration.getContextAlias(), resource));
     }
 
     private void fixObjectMapperDateSerialization(ObjectMapper objectMapper) {

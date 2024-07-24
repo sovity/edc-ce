@@ -22,13 +22,15 @@ import java.util.List;
 /**
  * Manual Dependency Injection result
  *
- * @param jaxRsResources         Jax RS Resource implementations to register. Implementations of
+ * @param managementApiResources Jax RS Resource implementations to register. Implementations of
  *                               APIs supported by our EDC API Client that don't have their own
  *                               extension should land here.
+ * @param dspApiResources     Jax RS Resource implementations to register. Rare DSP API
  * @param selfDescriptionService Required here for validation on start-up
  */
 public record WrapperExtensionContext(
-        List<Object> jaxRsResources,
+        List<Object> managementApiResources,
+        List<Object> dspApiResources,
         SelfDescriptionService selfDescriptionService
 ) {
 }

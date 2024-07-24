@@ -76,14 +76,15 @@ import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.FilterExpressionOpera
 import de.sovity.edc.ext.wrapper.api.usecase.pages.catalog.UseCaseCatalogApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
+import de.sovity.edc.ext.wrapper.controller.PlaceholderEndpointController;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
 import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
 import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
-import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import lombok.NoArgsConstructor;
+import lombok.val;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.policy.spi.store.PolicyDefinitionStore;
@@ -136,11 +137,9 @@ public class WrapperExtensionContextBuilder {
         PolicyDefinitionService policyDefinitionService,
         PolicyDefinitionStore policyDefinitionStore,
         PolicyEngine policyEngine,
-        SovityMessenger sovityMessenger,
         TransferProcessService transferProcessService,
         TransferProcessStore transferProcessStore,
-        TypeTransformerRegistry typeTransformerRegistry,
-        PlaceholderEndpointService placeholderEndpointService
+        TypeTransformerRegistry typeTransformerRegistry
     ) {
         // UI API
         var operatorMapper = new OperatorMapper();
@@ -150,6 +149,9 @@ public class WrapperExtensionContextBuilder {
         var edcPropertyUtils = new EdcPropertyUtils();
         var selfDescriptionService = new SelfDescriptionService(config, monitor);
         var ownConnectorEndpointService = new OwnConnectorEndpointServiceImpl(selfDescriptionService);
+        var placeholderEndpointService = new PlaceholderEndpointService(
+            config.getString(WrapperExtension.MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL)
+        );
         var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd, ownConnectorEndpointService, placeholderEndpointService);
         var policyMapper = newPolicyMapper(objectMapper, typeTransformerRegistry, operatorMapper);
         var transferProcessStateService = new TransferProcessStateService();
@@ -296,12 +298,14 @@ public class WrapperExtensionContextBuilder {
             supportedPolicyApiService,
             useCaseCatalogApiService
         );
+        val placeholderEndpointController = new PlaceholderEndpointController();
 
         // Collect all JAX-RS resources
-        return new WrapperExtensionContext(List.of(
-            uiResource,
-            useCaseResource
-        ), selfDescriptionService);
+        return new WrapperExtensionContext(
+            List.of(uiResource, useCaseResource),
+            List.of(placeholderEndpointController),
+            selfDescriptionService
+        );
     }
 
     @NotNull
