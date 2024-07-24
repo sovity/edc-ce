@@ -78,8 +78,6 @@ import de.sovity.edc.ext.wrapper.api.usecase.services.KpiApiService;
 import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import de.sovity.edc.ext.wrapper.controller.PlaceholderEndpointController;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
-import de.sovity.edc.extension.contacttermination.query.ContractAgreementTerminationDetailsQuery;
-import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
@@ -214,8 +212,6 @@ public class WrapperExtensionContextBuilder {
             transferRequestBuilder,
             transferProcessService
         );
-        var agreementDetailsQuery = new ContractAgreementTerminationDetailsQuery();
-        var terminateContractQuery = new TerminateContractQuery();
         var contractAgreementTerminationApiService = new ContractAgreementTerminationApiService(contractAgreementTerminationService);
         var legacyPolicyMapper = new LegacyPolicyMapper();
         var policyDefinitionApiService = new PolicyDefinitionApiService(
