@@ -37,20 +37,20 @@ public class DataTransferTestUtil {
 
     public static JsonObject buildDataAddressJsonLd(String baseUrl, String method) {
         return createObjectBuilder()
-                .add(TYPE, EDC_NAMESPACE + "DataAddress")
-                .add(EDC_NAMESPACE + "type", "HttpData")
-                .add(EDC_NAMESPACE + "properties", createObjectBuilder()
-                        .add(EDC_NAMESPACE + "baseUrl", baseUrl)
-                        .add(EDC_NAMESPACE + "method", method)
-                        .build())
-                .build();
+            .add(TYPE, EDC_NAMESPACE + "DataAddress")
+            .add(EDC_NAMESPACE + "type", "HttpData")
+            .add(EDC_NAMESPACE + "properties", createObjectBuilder()
+                .add(EDC_NAMESPACE + "baseUrl", baseUrl)
+                .add(EDC_NAMESPACE + "method", method)
+                .build())
+            .build();
     }
 
     public static Map<String, String> buildDataAddressProperties(String baseUrl, String method) {
         return Map.of(
-                EDC_NAMESPACE + "type", "HttpData",
-                EDC_NAMESPACE + "baseUrl", baseUrl,
-                EDC_NAMESPACE + "method", method
+            EDC_NAMESPACE + "type", "HttpData",
+            EDC_NAMESPACE + "baseUrl", baseUrl,
+            EDC_NAMESPACE + "method", method
         );
     }
 
@@ -58,11 +58,11 @@ public class DataTransferTestUtil {
     public static void validateDataTransferred(String checkUrl, String expectedData) {
         await().atMost(TIMEOUT).untilAsserted(() -> {
             var actual =
-                    when()
-                            .get(checkUrl)
-                            .then()
-                            .statusCode(200)
-                            .extract().body().asString();
+                when()
+                    .get(checkUrl)
+                    .then()
+                    .statusCode(200)
+                    .extract().body().asString();
             assertThat(actual).isEqualTo(expectedData);
         });
     }
@@ -70,11 +70,11 @@ public class DataTransferTestUtil {
     public static void validateDataTransferred(String checkUrl, Map<String, String> params, String expected) {
         await().atMost(TIMEOUT).untilAsserted(() -> {
             var actual =
-                    given().params(params).when()
-                            .get(checkUrl)
-                            .then()
-                            .statusCode(200)
-                            .extract().body().asString();
+                given().params(params).when()
+                    .get(checkUrl)
+                    .then()
+                    .statusCode(200)
+                    .extract().body().asString();
             assertThat(actual).isEqualTo(expected);
         });
     }

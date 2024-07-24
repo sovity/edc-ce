@@ -27,6 +27,7 @@ import de.sovity.edc.extension.e2e.extension.E2eScenario;
 import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
 import de.sovity.edc.extension.e2e.extension.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.ws.rs.HttpMethod;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -362,9 +363,9 @@ public class ContractTerminationTest {
             .contractAgreementId(negotiation.getContractAgreementId())
             .dataSinkProperties(
                 Map.of(
-                    EDC_NAMESPACE + "baseUrl", destinationUrl,
-                    EDC_NAMESPACE + "method", HttpMethod.POST,
-                    EDC_NAMESPACE + "type", "HttpData"
+                    Prop.Edc.BASE_URL, destinationUrl,
+                    Prop.Edc.METHOD, HttpMethod.POST,
+                    Prop.Edc.TYPE, "HttpData"
                 )
             )
             .build();

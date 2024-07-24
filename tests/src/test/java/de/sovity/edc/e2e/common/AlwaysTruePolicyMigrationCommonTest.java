@@ -4,6 +4,7 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.extension.e2e.extension.E2eScenario;
+import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.ws.rs.HttpMethod;
 import lombok.val;
 import org.mockserver.integration.ClientAndServer;
@@ -33,9 +34,9 @@ public class AlwaysTruePolicyMigrationCommonTest {
                 .contractAgreementId(negotiation.getContractAgreementId())
                 .dataSinkProperties(
                     Map.of(
-                        EDC_NAMESPACE + "baseUrl", destinationUrl,
-                        EDC_NAMESPACE + "method", HttpMethod.POST,
-                        EDC_NAMESPACE + "type", "HttpData"
+                        Prop.Edc.BASE_URL, destinationUrl,
+                        Prop.Edc.METHOD, HttpMethod.POST,
+                        Prop.Edc.TYPE, "HttpData"
                     )
                 )
                 .build()

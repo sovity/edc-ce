@@ -20,10 +20,10 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class AlwaysTrueMigrationNewProviderTest {
 
     @RegisterExtension
-    private static final E2eTestExtension E2E_TEST_EXTENSION = new E2eTestExtension(
-        "classpath:db/additional-test-data/alwaysTruePolicyMigrationTest",
-        ""
-    );
+    private static final E2eTestExtension E2E_TEST_EXTENSION = E2eTestExtension.builder()
+        .additionalConsumerMigrationLocation("classpath:db/additional-test-data/alwaysTruePolicyMigrationTest")
+        .additionalProviderMigrationLocation("")
+        .build();
 
     @Test
     public void always_true_agreements_still_work_after_migration(
@@ -35,22 +35,19 @@ public class AlwaysTrueMigrationNewProviderTest {
         // assert correct policies
         val newAlwaysTruePolicyOnProvider = providerClient.uiApi().getPolicyDefinitionPage().getPolicies().stream().filter(
             policy -> policy.getPolicyDefinitionId().equals(AlwaysTruePolicyConstants.POLICY_DEFINITION_ID)
-        ).findFirst().orElseThrow();
+        ).findFirst().orElseThrow().getPolicy().getExpression();
 
         val oldAlwaysTruePolicyOnConsumer = consumerClient.uiApi().getPolicyDefinitionPage().getPolicies().stream().filter(
             policy -> policy.getPolicyDefinitionId().equals(AlwaysTruePolicyConstants.POLICY_DEFINITION_ID)
-        ).findFirst().orElseThrow();
+        ).findFirst().orElseThrow().getPolicy().getExpression();
 
-        UiPolicyExpression oldAlwaysTrueExpression = oldAlwaysTruePolicyOnConsumer.getPolicy().getExpression();
-        UiPolicyExpression newAlwaysTrueExpression = newAlwaysTruePolicyOnProvider.getPolicy().getExpression();
+        assertThat(oldAlwaysTruePolicyOnConsumer.getType()).isEqualTo(UiPolicyExpressionType.CONSTRAINT);
+        assertThat(oldAlwaysTruePolicyOnConsumer.getConstraint().getLeft()).isEqualTo(AlwaysTruePolicyConstants.EXPRESSION_LEFT_VALUE);
+        assertThat(oldAlwaysTruePolicyOnConsumer.getConstraint().getRight().getValue()).isEqualTo(AlwaysTruePolicyConstants.EXPRESSION_RIGHT_VALUE);
+        assertThat(oldAlwaysTruePolicyOnConsumer.getConstraint().getOperator()).isEqualTo(OperatorDto.EQ);
 
-        assertThat(oldAlwaysTrueExpression.getType()).isEqualTo(UiPolicyExpressionType.CONSTRAINT);
-        assertThat(oldAlwaysTrueExpression.getConstraint().getLeft()).isEqualTo(AlwaysTruePolicyConstants.EXPRESSION_LEFT_VALUE);
-        assertThat(oldAlwaysTrueExpression.getConstraint().getRight().getValue()).isEqualTo(AlwaysTruePolicyConstants.EXPRESSION_RIGHT_VALUE);
-        assertThat(oldAlwaysTrueExpression.getConstraint().getOperator()).isEqualTo(OperatorDto.EQ);
-
-        assertThat(newAlwaysTrueExpression.getType()).isEqualTo(UiPolicyExpressionType.EMPTY);
-        assertThat(newAlwaysTrueExpression.getConstraint()).isNull();
+        assertThat(newAlwaysTruePolicyOnProvider.getType()).isEqualTo(UiPolicyExpressionType.EMPTY);
+        assertThat(newAlwaysTruePolicyOnProvider.getConstraint()).isNull();
 
         AlwaysTruePolicyMigrationCommonTest.alwaysTruePolicyMigrationTest(scenario, mockServer, providerClient, consumerClient);
     }
