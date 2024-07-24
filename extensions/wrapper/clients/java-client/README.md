@@ -72,7 +72,7 @@ public class WrapperClientExample {
 ```java
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.KpiResult;
-import de.sovity.edc.client.oauth2.OAuth2ClientCredentials;
+import de.sovity.edc.client.oauth2.Oauth2ClientCredentials;
 import de.sovity.edc.client.oauth2.SovityKeycloakUrl;
 
 /**
