@@ -55,7 +55,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.RUNNING;
-import static de.sovity.edc.extension.policy.AlwaysTruePolicyConstants.POLICY_DEFINITION_ID;
 import static java.time.Duration.ofSeconds;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -148,7 +147,7 @@ public class E2eScenario {
     }
 
     public String createContractDefinition(String assetId) {
-        return createContractDefinition(alwaysTruePolicyId, assetId).getId();
+        return createContractDefinition("always-true", assetId).getId();
     }
 
     public IdResponseDto createContractDefinition(String policyId, String assetId) {

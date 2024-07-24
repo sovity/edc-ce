@@ -49,7 +49,7 @@ public class E2eTestExtension
     private ConnectorConfig consumerConfig;
     private final EdcRuntimeExtensionWithTestDatabase consumerExtension;
 
-    private String providerParticipantId = "provider";
+    private String providerParticipantId;
     private final String additionalProviderMigrationLocation;
     private ConnectorConfig providerConfig;
     private final EdcRuntimeExtensionWithTestDatabase providerExtension;
