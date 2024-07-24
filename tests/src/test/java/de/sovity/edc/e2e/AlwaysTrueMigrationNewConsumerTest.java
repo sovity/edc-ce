@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockserver.integration.ClientAndServer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 class AlwaysTrueMigrationNewConsumerTest {
 
     @RegisterExtension
