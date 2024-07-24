@@ -46,7 +46,7 @@ import org.eclipse.edc.web.spi.WebService;
 
 public class WrapperExtension implements ServiceExtension {
 
-    @Setting(value = "Defaults to tne env var EDC_DSP_CALLBACK_ADDRESS")
+    @Setting(value = "Base URL for the On Request asset datasource, as reachable by the data plane")
     public static final String MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL = "my.edc.datasource.placeholder.baseurl";
 
     public static final String EXTENSION_NAME = "WrapperExtension";

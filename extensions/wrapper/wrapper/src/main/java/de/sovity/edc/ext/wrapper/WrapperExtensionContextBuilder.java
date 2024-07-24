@@ -148,7 +148,7 @@ public class WrapperExtensionContextBuilder {
         var selfDescriptionService = new SelfDescriptionService(config, monitor);
         var ownConnectorEndpointService = new OwnConnectorEndpointServiceImpl(selfDescriptionService);
         var placeholderEndpointService = new PlaceholderEndpointService(
-            config.getString(WrapperExtension.MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL)
+            config.getString(WrapperExtension.MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL, "http://0.0.0.0")
         );
         var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd, ownConnectorEndpointService, placeholderEndpointService);
         var policyMapper = newPolicyMapper(objectMapper, typeTransformerRegistry, operatorMapper);
