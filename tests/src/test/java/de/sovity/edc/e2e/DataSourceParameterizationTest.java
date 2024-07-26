@@ -55,7 +55,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
@@ -77,6 +77,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.OK;
+import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
 import static java.time.Duration.ofSeconds;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
@@ -91,8 +92,11 @@ import static org.mockserver.matchers.Times.once;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.stop.Stop.stopQuietly;
 
-@ExtendWith(E2eTestExtension.class)
+
 class DataSourceParameterizationTest {
+
+    @RegisterExtension
+    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
 
     private final int port = getFreePort();
     private final String sourcePath = "/source/some/path/";

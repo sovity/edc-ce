@@ -69,6 +69,7 @@ import java.util.concurrent.TimeUnit;
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.CONSUMING;
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.PROVIDING;
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
+import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -80,7 +81,7 @@ class UiApiWrapperTest {
     private static final String CONSUMER_PARTICIPANT_ID = "consumer";
 
     @RegisterExtension
-    private static E2eTestExtension e2eTestExtension = new E2eTestExtension(CONSUMER_PARTICIPANT_ID, PROVIDER_PARTICIPANT_ID);
+    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
 
     private MockDataAddressRemote dataAddress;
 

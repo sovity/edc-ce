@@ -28,14 +28,17 @@ import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.HashMap;
 
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
+import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
 
-@ExtendWith(E2eTestExtension.class)
 class DataSourceQueryParamsTest {
+
+    @RegisterExtension
+    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
 
     private MockDataAddressRemote dataAddress;
     private final String encodedParam = "a=%25"; // Unencoded param "a=%"

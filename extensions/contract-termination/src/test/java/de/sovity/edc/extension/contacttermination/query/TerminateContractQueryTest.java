@@ -25,17 +25,20 @@ import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import lombok.val;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 
 import static de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy.COUNTERPARTY;
+import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
-@ExtendWith(E2eTestExtension.class)
 class TerminateContractQueryTest {
+
+    @RegisterExtension
+    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
 
     @DisabledOnGithub
     @Test

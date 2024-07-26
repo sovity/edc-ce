@@ -11,14 +11,19 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockserver.integration.ClientAndServer;
 
 import static de.sovity.edc.e2e.AlwaysTrueMigrationTest.testTransfer;
+import static de.sovity.edc.extension.e2e.extension.E2eTestExtensionConfigFactory.defaultBuilder;
 
-class AlwaysTrueMigrationTestReversed {
+class AlwaysTrueMigrationReversedTest {
 
     @RegisterExtension
-    private static final E2eTestExtension E2E_TEST_EXTENSION = E2eTestExtension.builder()
-        .additionalConsumerMigrationLocation("classpath:db/additional-test-data/always-true-policy-legacy")
-        .additionalProviderMigrationLocation("classpath:db/additional-test-data/always-true-policy-migrated")
-        .build();
+    private static final E2eTestExtension E2E_TEST_EXTENSION = new E2eTestExtension(
+        defaultBuilder()
+            .consumerConfigCustomizer(config -> config.getProperties()
+                .put("edc.flyway.additional.migration.locations", "classpath:db/additional-test-data/always-true-policy-legacy"))
+            .providerConfigCustomizer(config -> config.getProperties()
+                .put("edc.flyway.additional.migration.locations", "classpath:db/additional-test-data/always-true-policy-migrated"))
+            .build()
+    );
 
     @Test
     @DisabledOnGithub
