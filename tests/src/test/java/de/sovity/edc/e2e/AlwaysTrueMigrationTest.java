@@ -44,7 +44,7 @@ class AlwaysTrueMigrationTest {
 
     @RegisterExtension
     private static final E2eTestExtension E2E_TEST_EXTENSION = new E2eTestExtension(
-        withModule(":launchers:connectors:sovity-dev")
+        withModule(":launchers:connectors:sovity-dev").toBuilder()
             .consumerConfigCustomizer(config -> config.getProperties()
                 .put("edc.flyway.additional.migration.locations", "classpath:db/additional-test-data/always-true-policy-migrated"))
             .providerConfigCustomizer(config -> config.getProperties()

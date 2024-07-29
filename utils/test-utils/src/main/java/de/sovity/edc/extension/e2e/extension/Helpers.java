@@ -21,6 +21,6 @@ import static de.sovity.edc.extension.e2e.extension.CeE2eTestExtensionConfigFact
 @UtilityClass
 public class Helpers {
     public static E2eTestExtension defaultE2eTestExtension() {
-        return new E2eTestExtension(withModule(":launchers:connectors:sovity-dev").build());
+        return new E2eTestExtension(withModule(":launchers:connectors:sovity-dev"));
     }
 }

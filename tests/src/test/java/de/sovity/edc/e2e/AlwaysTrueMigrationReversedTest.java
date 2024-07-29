@@ -17,7 +17,7 @@ class AlwaysTrueMigrationReversedTest {
 
     @RegisterExtension
     private static final E2eTestExtension E2E_TEST_EXTENSION = new E2eTestExtension(
-        defaultBuilder()
+        defaultBuilder().toBuilder()
             .consumerConfigCustomizer(config -> config.getProperties()
                 .put("edc.flyway.additional.migration.locations", "classpath:db/additional-test-data/always-true-policy-legacy"))
             .providerConfigCustomizer(config -> config.getProperties()

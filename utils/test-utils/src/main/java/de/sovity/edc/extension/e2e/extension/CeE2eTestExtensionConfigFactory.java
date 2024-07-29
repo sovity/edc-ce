@@ -19,11 +19,11 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class CeE2eTestExtensionConfigFactory {
 
-    public static E2eTestExtensionConfig.E2eTestExtensionConfigBuilder defaultBuilder() {
-        return E2eTestExtensionConfig.builder().moduleName(":launchers:connectors:sovity-dev");
+    public static E2eTestExtensionConfig defaultBuilder() {
+        return E2eTestExtensionConfig.builder().moduleName(":launchers:connectors:sovity-dev").build();
     }
 
-    public static E2eTestExtensionConfig.E2eTestExtensionConfigBuilder withModule(String module) {
-        return defaultBuilder().moduleName(module);
+    public static E2eTestExtensionConfig withModule(String module) {
+        return defaultBuilder().toBuilder().moduleName(module).build();
     }
 }
