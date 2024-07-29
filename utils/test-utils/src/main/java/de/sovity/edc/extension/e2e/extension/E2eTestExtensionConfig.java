@@ -23,17 +23,23 @@ import java.util.function.Consumer;
 @Builder(toBuilder = true)
 @Getter
 public class E2eTestExtensionConfig {
+
     private String moduleName;
+
     @Builder.Default
     private String consumerParticipantId = "consumer";
+
     @Builder.Default
     private String providerParticipantId = "provider";
+
     @Builder.Default
     private Consumer<ConnectorConfig> configCustomizer = (it) -> {
     };
+
     @Builder.Default
     private Consumer<ConnectorConfig> consumerConfigCustomizer = (it) -> {
     };
+
     @Builder.Default
     private Consumer<ConnectorConfig> providerConfigCustomizer = (it) -> {
     };

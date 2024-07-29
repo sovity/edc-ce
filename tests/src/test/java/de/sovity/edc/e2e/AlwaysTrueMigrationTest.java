@@ -37,7 +37,7 @@ import org.mockserver.model.HttpResponse;
 
 import java.util.Map;
 
-import static de.sovity.edc.extension.e2e.extension.E2eTestExtensionConfigFactory.withModule;
+import static de.sovity.edc.extension.e2e.extension.CeE2eTestExtensionConfigFactory.withModule;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AlwaysTrueMigrationTest {

@@ -16,7 +16,7 @@ package de.sovity.edc.extension.e2e.extension;
 
 import lombok.experimental.UtilityClass;
 
-import static de.sovity.edc.extension.e2e.extension.E2eTestExtensionConfigFactory.withModule;
+import static de.sovity.edc.extension.e2e.extension.CeE2eTestExtensionConfigFactory.withModule;
 
 @UtilityClass
 public class Helpers {

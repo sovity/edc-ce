@@ -17,7 +17,8 @@ package de.sovity.edc.extension.e2e.extension;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class E2eTestExtensionConfigFactory {
+public class CeE2eTestExtensionConfigFactory {
+
     public static E2eTestExtensionConfig.E2eTestExtensionConfigBuilder defaultBuilder() {
         return E2eTestExtensionConfig.builder().moduleName(":launchers:connectors:sovity-dev");
     }

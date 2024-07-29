@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockserver.integration.ClientAndServer;
 
 import static de.sovity.edc.e2e.AlwaysTrueMigrationTest.testTransfer;
-import static de.sovity.edc.extension.e2e.extension.E2eTestExtensionConfigFactory.defaultBuilder;
+import static de.sovity.edc.extension.e2e.extension.CeE2eTestExtensionConfigFactory.defaultBuilder;
 
 class AlwaysTrueMigrationReversedTest {
 
