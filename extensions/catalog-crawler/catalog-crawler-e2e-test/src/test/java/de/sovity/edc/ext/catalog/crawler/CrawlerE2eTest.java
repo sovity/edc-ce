@@ -62,7 +62,7 @@ class CrawlerE2eTest {
     private static EdcClient connectorClient;
 
     @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+    private static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
             ":launchers:connectors:sovity-dev",
             "provider",
             testDatabase -> {

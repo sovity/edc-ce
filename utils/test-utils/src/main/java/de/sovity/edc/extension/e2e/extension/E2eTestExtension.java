@@ -20,7 +20,6 @@ import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.extension.utils.Lazy;
-import lombok.Builder;
 import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -43,13 +42,11 @@ import static org.mockserver.stop.Stop.stopQuietly;
 public class E2eTestExtension
     implements BeforeAllCallback, AfterAllCallback, BeforeTestExecutionCallback, AfterTestExecutionCallback, ParameterResolver {
 
-    private final String consumerParticipantId;
-    private final String additionalConsumerMigrationLocation;
+    private E2eTestExtensionConfig config;
+
     private ConnectorConfig consumerConfig;
     private final EdcRuntimeExtensionWithTestDatabase consumerExtension;
 
-    private String providerParticipantId;
-    private final String additionalProviderMigrationLocation;
     private ConnectorConfig providerConfig;
     private final EdcRuntimeExtensionWithTestDatabase providerExtension;
 
@@ -59,41 +56,35 @@ public class E2eTestExtension
 
     private Lazy<ClientAndServer> clientAndServer;
 
-    public E2eTestExtension() {
-        this("consumer", "provider", "", "");
-    }
-
-    @Builder
-    public E2eTestExtension(String additionalConsumerMigrationLocation, String additionalProviderMigrationLocation) {
-        this("consumer", "provider", additionalConsumerMigrationLocation, additionalProviderMigrationLocation);
+    public E2eTestExtension(String moduleName) {
+        this(E2eTestExtensionConfig.builder().moduleName(moduleName).build());
     }
 
     public E2eTestExtension(
-        String consumerParticipantId,
-        String providerParticipantId,
-        String additionalConsumerMigrationLocation,
-        String additionalProviderMigrationLocation
+        E2eTestExtensionConfig config
     ) {
-        this.consumerParticipantId = consumerParticipantId;
-        this.providerParticipantId = providerParticipantId;
-        this.additionalConsumerMigrationLocation = additionalConsumerMigrationLocation;
-        this.additionalProviderMigrationLocation = additionalProviderMigrationLocation;
+        this.config = config;
 
         consumerExtension = new EdcRuntimeExtensionWithTestDatabase(
-            ":launchers:connectors:sovity-dev",
-            "consumer",
+            config.getModuleName(),
+            config.getConsumerParticipantId(),
             testDatabase -> {
-                consumerConfig = forTestDatabase(this.consumerParticipantId, testDatabase);
-                consumerConfig.getProperties().put("edc.flyway.additional.migration.locations", this.additionalConsumerMigrationLocation);
+                consumerConfig = forTestDatabase(config.getConsumerParticipantId(), testDatabase);
+
+                config.getConfigCustomizer().accept(consumerConfig);
+                config.getConsumerConfigCustomizer().accept(consumerConfig);
                 return consumerConfig.getProperties();
             }
         );
+
         providerExtension = new EdcRuntimeExtensionWithTestDatabase(
-            ":launchers:connectors:sovity-dev",
-            "provider",
+            config.getModuleName(),
+            config.getProviderParticipantId(),
             testDatabase -> {
-                providerConfig = forTestDatabase(this.providerParticipantId, testDatabase);
-                providerConfig.getProperties().put("edc.flyway.additional.migration.locations", this.additionalProviderMigrationLocation);
+                providerConfig = forTestDatabase(config.getProviderParticipantId(), testDatabase);
+
+                config.getConfigCustomizer().accept(providerConfig);
+                config.getProviderConfigCustomizer().accept(providerConfig);
                 return providerConfig.getProperties();
             }
         );
@@ -171,7 +162,7 @@ public class E2eTestExtension
             } else if (ConnectorConfig.class.equals(type)) {
                 return consumerConfig;
             } else if (ConnectorRemote.class.equals(type)) {
-                return newConnectorRemote(consumerParticipantId, consumerConfig);
+                return newConnectorRemote(config.getConsumerParticipantId(), consumerConfig);
             } else {
                 return consumerExtension.resolveParameter(parameterContext, extensionContext);
             }
@@ -183,7 +174,7 @@ public class E2eTestExtension
             } else if (ConnectorConfig.class.equals(type)) {
                 return providerConfig;
             } else if (ConnectorRemote.class.equals(type)) {
-                return newConnectorRemote(providerParticipantId, providerConfig);
+                return newConnectorRemote(config.getProviderParticipantId(), providerConfig);
             } else {
                 return providerExtension.resolveParameter(parameterContext, extensionContext);
             }

@@ -26,14 +26,15 @@ import de.sovity.edc.extension.e2e.extension.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import lombok.val;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation.Type.CONSUMER;
 
-
-@ExtendWith(E2eTestExtension.class)
 class ContractAgreementTerminationDetailsQueryTest {
+
+    @RegisterExtension
+    private static  E2eTestExtension e2eTestExtension = new E2eTestExtension(":launchers:connectors:sovity-dev");
 
     @DisabledOnGithub
     @Test

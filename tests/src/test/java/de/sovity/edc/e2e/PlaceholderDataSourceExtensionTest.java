@@ -27,7 +27,7 @@ import jakarta.ws.rs.HttpMethod;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
@@ -37,11 +37,14 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 
-@ExtendWith(E2eTestExtension.class)
 class PlaceholderDataSourceExtensionTest {
+
+    @RegisterExtension
+    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
 
     @SneakyThrows
     @Test

@@ -45,15 +45,18 @@ import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(E2eTestExtension.class)
 class UseCaseApiWrapperTest {
+
+    @RegisterExtension
+    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
 
     private MockDataAddressRemote dataAddress;
     private final String dataOfferData = "expected data 123";

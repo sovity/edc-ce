@@ -21,14 +21,17 @@ import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
 import de.sovity.edc.extension.e2e.extension.Provider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.UUID;
 
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
+import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
 
-@ExtendWith(E2eTestExtension.class)
 class ManagementApiTransferTest {
+
+    @RegisterExtension
+    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
 
     private MockDataAddressRemote dataAddress;
     private static final String TEST_BACKEND_TEST_DATA = UUID.randomUUID().toString();
