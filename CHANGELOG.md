@@ -20,6 +20,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
+- Copyable contact email and subject fields on asset and data offer detail dialogs
+
 ## [v4.1.0] - 2024-07-24
 
 ### Overview

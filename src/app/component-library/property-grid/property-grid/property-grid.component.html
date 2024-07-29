@@ -53,15 +53,22 @@
     <span
       *ngIf="!(prop.policy || prop.url || prop.onclick)"
       [matTooltip]="prop.tooltip!"
-      [ngClass]="prop.additionalClasses"
-      >{{ prop.text }}
+      [ngClass]="prop.additionalClasses">
+      <a
+        *ngIf="prop.hideFieldValue"
+        class="link break-all"
+        href="javascript:void(0)"
+        (click)="prop.hideFieldValue = false"
+        >Show {{ prop.label }}</a
+      >
+      <ng-container *ngIf="!prop.hideFieldValue">{{ prop.text }}</ng-container>
       <mat-icon *ngIf="prop.textIconAfter" class="mat-icon-[12px]">
         {{ prop.textIconAfter }}
       </mat-icon>
     </span>
   </div>
   <button
-    *ngIf="prop.copyButton"
+    *ngIf="prop.copyButton && !prop.hideFieldValue"
     mat-icon-button
     color="accent"
     [cdkCopyToClipboard]="prop.url ?? prop.text">

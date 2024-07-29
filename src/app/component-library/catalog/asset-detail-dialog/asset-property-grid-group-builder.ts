@@ -399,7 +399,10 @@ export class AssetPropertyGridGroupBuilder {
     return `${start.toLocaleDateString()} - ${end.toLocaleDateString()}`;
   }
 
-  buildOnRequestContactInformation(asset: UiAssetMapped): PropertyGridGroup[] {
+  buildOnRequestContactInformation(
+    asset: UiAssetMapped,
+    isMailHidden = false,
+  ): PropertyGridGroup[] {
     if (asset.dataSourceAvailability === 'LIVE') {
       return [];
     }
@@ -410,11 +413,14 @@ export class AssetPropertyGridGroupBuilder {
           {
             icon: 'mail',
             label: 'Contact E-Mail Address',
+            copyButton: true,
+            hideFieldValue: isMailHidden,
             ...this.propertyGridUtils.guessValue(asset.onRequestContactEmail),
           },
           {
             icon: 'subject',
             label: 'Preferred E-Mail Subject',
+            copyButton: true,
             ...this.propertyGridUtils.guessValue(
               asset.onRequestContactEmailSubject,
             ),

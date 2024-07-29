@@ -1,3 +1,4 @@
+import {DOCUMENT} from '@angular/common';
 import {Component, Inject, OnDestroy} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
@@ -74,17 +75,6 @@ export class AssetDetailDialogComponent implements OnDestroy {
     );
   }
 
-  get onRequestContactLink(): string {
-    if (!this.asset.onRequestContactEmail) {
-      throw new Error('On request asset must have contact email');
-    }
-    return this.mailtoLinkBuilder.buildMailtoUrl(
-      this.asset.onRequestContactEmail,
-      this.asset.onRequestContactEmailSubject ??
-        "I'm interested in your data offer",
-    );
-  }
-
   constructor(
     private edcApiService: EdcApiService,
     private notificationService: NotificationService,
@@ -94,6 +84,7 @@ export class AssetDetailDialogComponent implements OnDestroy {
     private _data: AssetDetailDialogData | Observable<AssetDetailDialogData>,
     public contractNegotiationService: ContractNegotiationService,
     private mailtoLinkBuilder: MailtoLinkBuilder,
+    @Inject(DOCUMENT) private document: Document,
   ) {
     if (isObservable(this._data)) {
       this._data
@@ -108,6 +99,19 @@ export class AssetDetailDialogComponent implements OnDestroy {
     this.data = data;
     this.asset = this.data.asset;
     this.propGroups = this.data.propertyGridGroups;
+  }
+
+  onContactClick() {
+    if (!this.asset.onRequestContactEmail) {
+      throw new Error('On request asset must have contact email');
+    }
+
+    const url = this.mailtoLinkBuilder.buildMailtoUrl(
+      this.asset.onRequestContactEmail,
+      this.asset.onRequestContactEmailSubject ??
+        "I'm interested in your data offer",
+    );
+    this.document.location.href = url;
   }
 
   onEditClick() {

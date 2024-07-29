@@ -42,4 +42,9 @@ export interface PropertyGridField {
 
   policy?: PolicyExpressionMapped;
   policyErrors?: string[];
+
+  /**
+   * Hide text
+   */
+  hideFieldValue?: boolean;
 }

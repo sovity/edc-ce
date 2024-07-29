@@ -55,6 +55,10 @@ export class AssetDetailDialogDataService {
       ...this.assetPropertyGridGroupBuilder.buildAdditionalPropertiesGroups(
         asset,
       ),
+      ...this.assetPropertyGridGroupBuilder.buildOnRequestContactInformation(
+        asset,
+        true,
+      ),
     ].filter((it) => it.properties.length);
 
     return {

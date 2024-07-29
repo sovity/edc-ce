@@ -147,7 +147,8 @@
     </div>
     <div>
       Click <span class="!font-medium">Contact</span> to email the data offer
-      provider.
+      provider. Alternatively, you can also copy the contact email address from
+      the Contact Information<br />section above.
     </div>
   </div>
 </div>
@@ -208,13 +209,13 @@
         </button>
       </ng-container>
 
-      <a
+      <button
         *ngIf="isOnRequestDataOffer"
         mat-raised-button
         color="primary"
-        [href]="this.onRequestContactLink">
+        (click)="onContactClick()">
         Contact
-      </a>
+      </button>
 
       <!-- Contact Agreement Buttons -->
       <button
