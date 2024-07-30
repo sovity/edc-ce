@@ -1,0 +1,19 @@
+<edit-asset-form-label
+  [htmlFor]="fieldId"
+  [label]="label"
+  [ctrl]="ctrl"></edit-asset-form-label>
+
+<mat-form-field class="w-full mt-1">
+  <textarea
+    matInput
+    [class]="textareaClasses"
+    [id]="fieldId"
+    [formControl]="ctrl"
+    [placeholder]="placeholder"></textarea>
+  <mat-error *ngIf="ctrl.invalid && ctrl.errors?.jsonInvalid">
+    {{ validationMessages.invalidJsonMessage }}
+  </mat-error>
+  <mat-hint *ngIf="!hideHint">
+    <ng-content></ng-content>
+  </mat-hint>
+</mat-form-field>

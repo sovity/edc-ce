@@ -23,49 +23,49 @@
       {{ prop.label }}
     </div>
 
-    <app-policy-renderer
-      *ngIf="prop.policy"
-      [expression]="prop.policy"
-      [errors]="prop.policyErrors">
-    </app-policy-renderer>
-
-    <!-- Property Value (URL) -->
     <a
-      *ngIf="!prop.policy && prop.url"
-      class="link break-all"
-      externalLink
-      [ngClass]="prop.additionalClasses"
-      [attr.href]="prop.url"
-      >{{ prop.text }}</a
-    >
-
-    <!-- Property Value (OnClick Event) -->
-    <a
-      *ngIf="!prop.policy && !prop.url && prop.onclick"
+      *ngIf="prop.hideFieldValue"
       class="link break-all"
       href="javascript:void(0)"
-      [ngClass]="prop.additionalClasses"
-      (click)="prop.onclick()"
-      >{{ prop.text }}</a
+      (click)="prop.hideFieldValue = false"
+      >Show {{ prop.label }}</a
     >
 
-    <!-- Property Value (Text) with tooltip -->
-    <span
-      *ngIf="!(prop.policy || prop.url || prop.onclick)"
-      [matTooltip]="prop.tooltip!"
-      [ngClass]="prop.additionalClasses">
+    <ng-container *ngIf="!prop.hideFieldValue">
+      <app-policy-renderer
+        *ngIf="prop.policy"
+        [expression]="prop.policy"
+        [errors]="prop.policyErrors">
+      </app-policy-renderer>
+      <!-- Property Value (URL) -->
       <a
-        *ngIf="prop.hideFieldValue"
+        *ngIf="!prop.policy && prop.url"
+        class="link break-all"
+        externalLink
+        [ngClass]="prop.additionalClasses"
+        [attr.href]="prop.url"
+        >{{ prop.text }}</a
+      >
+      <!-- Property Value (OnClick Event) -->
+      <a
+        *ngIf="!prop.policy && !prop.url && prop.onclick"
         class="link break-all"
         href="javascript:void(0)"
-        (click)="prop.hideFieldValue = false"
-        >Show {{ prop.label }}</a
+        [ngClass]="prop.additionalClasses"
+        (click)="prop.onclick()"
+        >{{ prop.text }}</a
       >
-      <ng-container *ngIf="!prop.hideFieldValue">{{ prop.text }}</ng-container>
-      <mat-icon *ngIf="prop.textIconAfter" class="mat-icon-[12px]">
-        {{ prop.textIconAfter }}
-      </mat-icon>
-    </span>
+      <!-- Property Value (Text) with tooltip -->
+      <span
+        *ngIf="!(prop.policy || prop.url || prop.onclick)"
+        [matTooltip]="prop.tooltip!"
+        [ngClass]="prop.additionalClasses">
+        {{ prop.text }}
+        <mat-icon *ngIf="prop.textIconAfter" class="mat-icon-[12px]">
+          {{ prop.textIconAfter }}
+        </mat-icon>
+      </span>
+    </ng-container>
   </div>
   <button
     *ngIf="prop.copyButton && !prop.hideFieldValue"

@@ -72,7 +72,7 @@
             color="accent">
             <mat-label>URL</mat-label>
             <input matInput [formControl]="ctrl" [placeholder]="'https://'" />
-            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
+            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.url">
               {{ validationMessages.invalidUrlMessage }}
             </mat-error>
           </mat-form-field>

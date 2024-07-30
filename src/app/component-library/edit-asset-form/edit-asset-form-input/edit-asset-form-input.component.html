@@ -1,0 +1,31 @@
+<edit-asset-form-label
+  [htmlFor]="fieldId"
+  [label]="label"
+  [ctrl]="ctrl"></edit-asset-form-label>
+
+<mat-form-field class="w-full mt-1">
+  <input
+    matInput
+    type="text"
+    [id]="fieldId"
+    [formControl]="ctrl"
+    [placeholder]="placeholder" />
+  <mat-error *ngIf="ctrl.errors?.url">
+    {{ validationMessages.invalidUrlMessage }}
+  </mat-error>
+  <mat-error *ngIf="ctrl.errors?.email">
+    {{ validationMessages.invalidEmailMessage }}
+  </mat-error>
+  <mat-error *ngIf="ctrl.errors?.pattern">
+    {{ validationMessages.invalidWhitespacesOrColonsMessage }}
+  </mat-error>
+  <mat-error *ngIf="ctrl.errors?.requiresPrefix">
+    {{ validationMessages.invalidPrefix('ID', 'urn:artifact') }}
+  </mat-error>
+  <mat-error *ngIf="ctrl.errors?.exists">
+    {{ ctrl.errors?.exists }}
+  </mat-error>
+  <mat-hint *ngIf="!hideHint">
+    <ng-content></ng-content>
+  </mat-hint>
+</mat-form-field>

@@ -31,57 +31,27 @@
       <ng-container
         *ngIf="form.datasource.value.dataSourceAvailability === 'On-Request'">
         <!-- Contact E-Mail for On Request Assets -->
-        <div class="mt-2">
-          <edit-asset-form-label
-            label="Contact E-Mail"
-            htmlFor="create-asset-form-contact-email"
-            [ctrl]="
-              form.datasource.controls.contactEmail
-            "></edit-asset-form-label>
-          <mat-form-field
-            *ngIf="form.datasource.controls.contactEmail; let ctrl"
-            class="w-full mt-1">
-            <input
-              id="create-asset-form-contact-email"
-              matInput
-              [formControl]="ctrl"
-              [placeholder]="'contact@my-org.com'" />
-            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.email">
-              {{ validationMessages.invalidEmailMessage }}
-            </mat-error>
-            <mat-hint class="">
-              This email address will be offered to potential consumers for
-              contacting you. This is done in place of having an actual data
-              source connected.
-            </mat-hint>
-          </mat-form-field>
-        </div>
+        <edit-asset-form-input
+          class="mt-2"
+          fieldId="create-asset-form-contact-email"
+          label="Contact E-Mail"
+          placeholder="contact@my-org.com"
+          [ctrl]="form.datasource.controls.contactEmail"
+          >This email address will be offered to potential consumers for
+          contacting you. This is done in place of having an actual data source
+          connected.</edit-asset-form-input
+        >
 
         <!-- Contact E-Mail Subject for On Request Assets -->
-        <div class="mt-5">
-          <edit-asset-form-label
-            label="Preferred E-Mail Subject"
-            htmlFor="create-asset-form-contact-subject"
-            [ctrl]="
-              form.datasource.controls.contactPreferredEmailSubject
-            "></edit-asset-form-label>
-          <mat-form-field
-            *ngIf="
-              form.datasource.controls.contactPreferredEmailSubject;
-              let ctrl
-            "
-            class="w-full mt-1">
-            <input
-              id="create-asset-form-contact-subject"
-              matInput
-              [formControl]="ctrl"
-              [placeholder]="'Data Offer \'xyz\''" />
-            <mat-hint class="">
-              Will be added to the mailto-link and displayed to potential
-              consumers to use.
-            </mat-hint>
-          </mat-form-field>
-        </div>
+        <edit-asset-form-input
+          class="mt-5"
+          fieldId="create-asset-form-contact-subject"
+          label="Preferred E-Mail Subject"
+          placeholder="Data Offer 'xyz'"
+          [ctrl]="form.datasource.controls.contactPreferredEmailSubject"
+          >Will be added to the mailto-link and displayed to potential consumers
+          to use.</edit-asset-form-input
+        >
       </ng-container>
 
       <ng-container
@@ -98,28 +68,16 @@
         </div>
 
         <!-- Data Source Type CUSTOM -->
-        <div
+        <edit-asset-form-textarea
           *ngIf="
             form.dataAddressType === 'Custom-Data-Address-Json' &&
               form.datasource.controls.dataDestination;
             let ctrl
-          ">
-          <edit-asset-form-label
-            label="Custom Datasource Config (JSON)"
-            htmlFor="create-asset-form-custom-datasource-json"
-            [ctrl]="ctrl"></edit-asset-form-label>
-          <mat-form-field class="w-full mt-1">
-            <textarea
-              id="create-asset-form-custom-datasource-json"
-              class="h-36"
-              matInput
-              placeholder='{"https://w3id.org/edc/v0.0.1/ns/type": "HttpData", ...}'
-              [formControl]="ctrl"></textarea>
-            <mat-error *ngIf="ctrl.invalid && ctrl.errors?.jsonInvalid">
-              {{ validationMessages.invalidJsonMessage }}
-            </mat-error>
-          </mat-form-field>
-        </div>
+          "
+          label="Custom Datasource Config (JSON)"
+          fieldId="create-asset-form-custom-datasource-json"
+          placeholder='{"https://w3id.org/edc/v0.0.1/ns/type": "HttpData", ...}'
+          [ctrl]="ctrl"></edit-asset-form-textarea>
 
         <!-- Data Source Type HTTP -->
         <ng-container *ngIf="form.dataAddressType === 'Http'">
@@ -163,25 +121,17 @@
 
           <!-- Base Path (Rest-Api) -->
           <div *ngIf="form.datasource.controls.httpUrl; let ctrl" class="mt-4">
-            <edit-asset-form-label
-              htmlFor="create-asset-form-url"
+            <edit-asset-form-input
+              fieldId="create-asset-form-url"
+              placeholder="https://my-data-source.com/api"
+              [hideHint]="!form.proxyPath"
+              [ctrl]="ctrl"
               [label]="form.proxyPath ? 'Base URL' : 'URL'"
-              [ctrl]="ctrl"></edit-asset-form-label>
-            <mat-form-field class="w-full mt-1">
-              <input
-                id="create-asset-form-url"
-                matInput
-                [formControl]="ctrl"
-                [placeholder]="'https://'" />
-              <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
-                {{ validationMessages.invalidUrlMessage }}
-              </mat-error>
-              <mat-hint *ngIf="form.proxyPath">
-                The consuming side <b>must</b> provide a Custom HTTP Subpath
-                with method parameterization enabled. The Custom HTTP Subpath
-                will be appended to the base path.
-              </mat-hint>
-            </mat-form-field>
+              >The consuming side <b>must</b> provide a Custom HTTP Subpath with
+              method parameterization enabled. The Custom HTTP Subpath will be
+              appended to the base path.</edit-asset-form-input
+            >
+
             <!-- Toggle Proxy Path Button -->
             <div
               *ngIf="form.datasource.controls.httpProxyPath; let ctrl"
@@ -447,72 +397,38 @@
       myTitle="General Information"
       description="Fill out general information about the asset">
       <!-- Name -->
-      <div>
-        <edit-asset-form-label
-          label="Name"
-          htmlFor="create-asset-form-name"
-          [ctrl]="form.general.controls.name"></edit-asset-form-label>
-        <mat-form-field class="w-full">
-          <input
-            id="create-asset-form-name"
-            matInput
-            type="text"
-            placeholder="My Asset"
-            [formControl]="form.general.controls.name" />
-        </mat-form-field>
-      </div>
+      <edit-asset-form-input
+        fieldId="create-asset-form-name"
+        label="Name"
+        placeholder="My Asset"
+        [ctrl]="form.general.controls.name"></edit-asset-form-input>
 
       <!-- ID -->
-      <div *ngIf="form.general.controls.id; let ctrl">
-        <edit-asset-form-label
-          label="ID"
-          htmlFor="create-asset-form-id"
-          [ctrl]="ctrl"></edit-asset-form-label>
-        <mat-form-field class="w-full">
-          <input
-            id="create-asset-form-id"
-            matInput
-            type="text"
-            placeholder="my-asset"
-            [formControl]="ctrl" />
-          <mat-error *ngIf="ctrl.errors?.pattern">
-            {{ validationMessages.invalidWhitespacesOrColonsMessage }}
-          </mat-error>
-          <mat-error *ngIf="ctrl.errors?.requiresPrefix">
-            {{ validationMessages.invalidPrefix('ID', 'urn:artifact') }}
-          </mat-error>
-          <mat-error *ngIf="ctrl.errors?.exists">
-            {{ ctrl.errors?.exists }}
-          </mat-error>
-        </mat-form-field>
-      </div>
+      <edit-asset-form-input
+        *ngIf="form.general.controls.id; let ctrl"
+        fieldId="create-asset-form-id"
+        placeholder="my-asset"
+        label="ID"
+        [ctrl]="ctrl"></edit-asset-form-input>
 
       <!-- Description -->
-      <div>
-        <edit-asset-form-label
-          label="Description"
-          htmlFor="create-asset-form-description"
-          [ctrl]="form.general.controls.description"></edit-asset-form-label>
-        <mat-form-field class="w-full">
-          <textarea
-            id="create-asset-form-description"
-            class="h-36"
-            matInput
-            [formControl]="form.general.controls.description"
-            [placeholder]="
-              '# My Asset\n\nAt vero eos et accusam et justo duo dolores et ea rebum.\n\n## Details\n\nAt vero eos et accusam et justo duo dolores et ea **rebum**.'
-            "></textarea>
-          <mat-hint class="flex flex-row items-center gap-1 mb-1">
-            The description uses
-            <a
-              class="link"
-              externalLink
-              href="https://www.markdownguide.org/basic-syntax/"
-              >Markdown syntax</a
-            >
-          </mat-hint>
-        </mat-form-field>
-      </div>
+      <edit-asset-form-textarea
+        label="Description"
+        fieldId="create-asset-form-description"
+        [placeholder]="
+          '# My Asset\n\nAt vero eos et accusam et justo duo dolores et ea rebum.\n\n## Details\n\nAt vero eos et accusam et justo duo dolores et ea **rebum**.'
+        "
+        [ctrl]="form.general.controls.description">
+        <div class="flex flex-row items-center gap-1 mb-1">
+          The description uses
+          <a
+            class="link"
+            externalLink
+            href="https://www.markdownguide.org/basic-syntax/"
+            >Markdown syntax</a
+          >
+        </div>
+      </edit-asset-form-textarea>
 
       <!-- Keywords -->
       <div class="mt-3">
@@ -528,27 +444,17 @@
 
       <ng-container *ngIf="form.general.value.showAdvancedFields">
         <!-- Version -->
-        <div class="mt-4">
-          <edit-asset-form-label
-            label="Version"
-            htmlFor="create-asset-form-version"
-            [ctrl]="form.general.controls.version"></edit-asset-form-label>
-          <mat-form-field class="w-full">
-            <input
-              id="create-asset-form-version"
-              matInput
-              type="text"
-              placeholder="1.0.0"
-              [formControl]="form.general.controls.version" />
-          </mat-form-field>
-        </div>
+        <edit-asset-form-input
+          class="mt-4"
+          label="Version"
+          fieldId="create-asset-form-version"
+          placeholder="1.0.0"
+          [ctrl]="form.general.controls.version"></edit-asset-form-input>
 
         <!-- Language -->
-        <div>
-          <language-select
-            label="Language"
-            [control]="form.general.controls.language"></language-select>
-        </div>
+        <language-select
+          label="Language"
+          [control]="form.general.controls.language"></language-select>
       </ng-container>
     </edit-asset-form-group>
 
@@ -583,19 +489,11 @@
           "></transport-mode-select>
 
         <!-- Data Model -->
-        <div>
-          <edit-asset-form-label
-            label="Data Model"
-            htmlFor="create-asset-form-data-model"
-            [ctrl]="form.advanced.controls.dataModel"></edit-asset-form-label>
-          <mat-form-field class="w-full">
-            <input
-              id="create-asset-form-data-model"
-              matInput
-              placeholder="unspecified"
-              [formControl]="form.advanced.controls.dataModel" />
-          </mat-form-field>
-        </div>
+        <edit-asset-form-input
+          fieldId="create-asset-form-data-model"
+          label="Data Model"
+          placeholder="unspecified"
+          [ctrl]="form.advanced.controls.dataModel"></edit-asset-form-input>
       </ng-container>
     </edit-asset-form-group>
 
@@ -604,38 +502,20 @@
       myTitle="Documentation"
       description="Provide context information about the datasource">
       <!-- Endpoint Documentation -->
-      <div>
-        <edit-asset-form-label
-          label="Endpoint Documentation"
-          htmlFor="create-asset-form-endpoint-documentation"
-          [ctrl]="
-            form.general.controls.endpointDocumentation
-          "></edit-asset-form-label>
-        <mat-form-field class="w-full">
-          <input
-            id="create-asset-form-endpoint-documentation"
-            matInput
-            type="text"
-            placeholder="https://"
-            [formControl]="form.general.controls.endpointDocumentation" />
-        </mat-form-field>
-      </div>
+      <edit-asset-form-input
+        label="Endpoint Documentation"
+        fieldId="create-asset-form-endpoint-documentation"
+        placeholder="https://"
+        [ctrl]="
+          form.general.controls.endpointDocumentation
+        "></edit-asset-form-input>
 
       <!-- Content Type -->
-      <div>
-        <edit-asset-form-label
-          label="Content Type"
-          htmlFor="create-asset-form-content-type"
-          [ctrl]="form.general.controls.contentType"></edit-asset-form-label>
-        <mat-form-field class="w-full">
-          <input
-            id="create-asset-form-content-type"
-            matInput
-            type="text"
-            placeholder="application/json"
-            [formControl]="form.general.controls.contentType" />
-        </mat-form-field>
-      </div>
+      <edit-asset-form-input
+        label="Content Type"
+        fieldId="create-asset-form-content-type"
+        placeholder="application/json"
+        [ctrl]="form.general.controls.contentType"></edit-asset-form-input>
 
       <ng-container *ngIf="form.advanced">
         <!-- Data sample URLs -->
@@ -708,29 +588,16 @@
           </div>
         </div>
         <!-- Reference files description -->
-        <div
+        <edit-asset-form-textarea
           *ngIf="form.advanced.controls.referenceFileUrls.length"
-          class="mt-2">
-          <edit-asset-form-label
-            label="Reference files description"
-            htmlFor="edit-asset-form-reference-files-description"
-            [ctrl]="
-              form.advanced.controls.referenceFilesDescription
-            "></edit-asset-form-label>
-          <mat-form-field class="w-full">
-            <textarea
-              id="edit-asset-form-reference-files-description"
-              class="h-28"
-              matInput
-              placeholder="..."
-              [formControl]="
-                form.advanced.controls.referenceFilesDescription
-              "></textarea>
-            <mat-hint
-              >Additional information regarding the reference files
-            </mat-hint>
-          </mat-form-field>
-        </div>
+          class="mt-2"
+          textareaClasses="h-28"
+          label="Reference files description"
+          fieldId="edit-asset-form-reference-files-description"
+          placeholder="..."
+          [ctrl]="form.advanced.controls.referenceFilesDescription">
+          Additional information regarding the reference files
+        </edit-asset-form-textarea>
       </ng-container>
     </edit-asset-form-group>
 
@@ -767,53 +634,30 @@
       </div>
 
       <!-- Data update frequency -->
-      <div class="mt-3">
-        <edit-asset-form-label
-          label="Data update frequency"
-          htmlFor="create-asset-form-data-update-frequency"
-          [ctrl]="
-            form.advanced.controls.dataUpdateFrequency
-          "></edit-asset-form-label>
-        <mat-form-field class="w-full">
-          <input
-            id="create-asset-form-data-update-frequency"
-            matInput
-            placeholder="every month"
-            [formControl]="form.advanced.controls.dataUpdateFrequency" />
-        </mat-form-field>
-      </div>
+      <edit-asset-form-input
+        class="mt-3"
+        fieldId="create-asset-form-data-update-frequency"
+        label="Data update frequency"
+        placeholder="every month"
+        [ctrl]="
+          form.advanced.controls.dataUpdateFrequency
+        "></edit-asset-form-input>
 
       <!-- Geo reference method -->
-      <div>
-        <edit-asset-form-label
-          label="Geo reference method"
-          htmlFor="create-asset-form-geo-ref-method"
-          [ctrl]="
-            form.advanced.controls.geoReferenceMethod
-          "></edit-asset-form-label>
-        <mat-form-field class="w-full">
-          <input
-            id="create-asset-form-geo-ref-method"
-            matInput
-            placeholder="Lat/Lon"
-            [formControl]="form.advanced.controls.geoReferenceMethod" />
-        </mat-form-field>
-      </div>
+      <edit-asset-form-input
+        fieldId="create-asset-form-geo-ref-method"
+        label="Geo reference method"
+        placeholder="Lat/Lon"
+        [ctrl]="
+          form.advanced.controls.geoReferenceMethod
+        "></edit-asset-form-input>
 
       <!-- Geo location -->
-      <div>
-        <edit-asset-form-label
-          label="Geo location"
-          htmlFor="create-asset-form-geo-location"
-          [ctrl]="form.advanced.controls.geoLocation"></edit-asset-form-label>
-        <mat-form-field class="w-full">
-          <input
-            id="create-asset-form-geo-location"
-            matInput
-            placeholder="40.741895,-73.989308"
-            [formControl]="form.advanced.controls.geoLocation" />
-        </mat-form-field>
-      </div>
+      <edit-asset-form-input
+        fieldId="create-asset-form-geo-location"
+        label="Geo location"
+        placeholder="40.741895,-73.989308"
+        [ctrl]="form.advanced.controls.geoLocation"></edit-asset-form-input>
 
       <!-- NUTS locations -->
       <div>
@@ -853,78 +697,41 @@
       myTitle="Legal Information"
       description="Provide legal information and define the conditions for use">
       <!-- Sovereign legal name -->
-      <div *ngIf="form.advanced">
-        <edit-asset-form-label
-          label="Sovereign"
-          htmlFor="create-asset-form-sovereign"
-          [ctrl]="
-            form.advanced.controls.sovereignLegalName
-          "></edit-asset-form-label>
-        <mat-form-field class="w-full">
-          <input
-            id="create-asset-form-sovereign"
-            matInput
-            placeholder="Data Owning Company GMBH"
-            [formControl]="form.advanced.controls.sovereignLegalName" />
-          <mat-hint>Legal name of the data owner</mat-hint>
-        </mat-form-field>
-      </div>
+      <edit-asset-form-input
+        *ngIf="form.advanced"
+        label="Sovereign"
+        fieldId="create-asset-form-sovereign"
+        placeholder="Data Owning Company GMBH"
+        [ctrl]="form.advanced.controls.sovereignLegalName"
+        >Legal name of the data owner</edit-asset-form-input
+      >
 
       <!-- Publisher -->
-      <div class="mt-3">
-        <edit-asset-form-label
-          label="Publisher"
-          htmlFor="create-asset-form-publisher"
-          [ctrl]="form.general.controls.publisher"></edit-asset-form-label>
-        <mat-form-field class="w-full">
-          <input
-            id="create-asset-form-publisher"
-            matInput
-            type="text"
-            placeholder="https://"
-            [formControl]="form.general.controls.publisher" />
-        </mat-form-field>
-      </div>
+      <edit-asset-form-input
+        class="mt-3"
+        label="Publisher"
+        fieldId="create-asset-form-publisher"
+        placeholder="https://"
+        [ctrl]="form.general.controls.publisher"></edit-asset-form-input>
 
       <!-- Standard License -->
-      <div>
-        <edit-asset-form-label
-          label="Standard License"
-          htmlFor="create-asset-form-standard-license"
-          [ctrl]="
-            form.general.controls.standardLicense
-          "></edit-asset-form-label>
-        <mat-form-field class="w-full">
-          <input
-            id="create-asset-form-standard-license"
-            matInput
-            type="text"
-            placeholder="https://"
-            [formControl]="form.general.controls.standardLicense" />
-        </mat-form-field>
-      </div>
+      <edit-asset-form-input
+        label="Standard License"
+        fieldId="create-asset-form-standard-license"
+        placeholder="https://"
+        [ctrl]="form.general.controls.standardLicense"></edit-asset-form-input>
 
       <!-- Conditions for use -->
-      <div *ngIf="form.advanced">
-        <edit-asset-form-label
-          label="Conditions for use"
-          htmlFor="create-asset-form-conditions-for-use"
-          [ctrl]="
-            form.advanced.controls.conditionsForUse
-          "></edit-asset-form-label>
-        <mat-form-field class="w-full">
-          <textarea
-            id="create-asset-form-conditions-for-use"
-            class="h-28"
-            matInput
-            placeholder="Please cite the dataset as..."
-            [formControl]="form.advanced.controls.conditionsForUse"></textarea>
-          <mat-hint
-            >Additional not legally relevant usage instructions (e.g. how to
-            cite the dataset)
-          </mat-hint>
-        </mat-form-field>
-      </div>
+      <edit-asset-form-textarea
+        *ngIf="form.advanced"
+        textareaClasses="h-28"
+        label="Conditions for use"
+        fieldId="create-asset-form-conditions-for-use"
+        placeholder="Please cite the dataset as..."
+        [ctrl]="form.advanced.controls.conditionsForUse">
+        Additional not legally relevant usage instructions (e.g. how to cite the
+        dataset)
+      </edit-asset-form-textarea>
     </edit-asset-form-group>
 
     <edit-asset-form-group

@@ -30,7 +30,9 @@ import {DataSubcategoryItemsPipe} from './data-subcategory-select/data-subcatego
 import {DataSubcategorySelectComponent} from './data-subcategory-select/data-subcategory-select.component';
 import {EditAssetFormDataAddressTypeSelectComponent} from './edit-asset-form-data-address-type-select/edit-asset-form-data-address-type-select.component';
 import {EditAssetFormGroupComponent} from './edit-asset-form-group/edit-asset-form-group.component';
+import {EditAssetFormInputComponent} from './edit-asset-form-input/edit-asset-form-input.component';
 import {EditAssetFormLabelComponent} from './edit-asset-form-label/edit-asset-form-label.component';
+import {EditAssetFormTextareaComponent} from './edit-asset-form-textarea/edit-asset-form-textarea.component';
 import {EditAssetFormComponent} from './edit-asset-form/edit-asset-form.component';
 import {KeywordSelectComponent} from './keyword-select/keyword-select.component';
 import {LanguageSelectComponent} from './language-select/language-select.component';
@@ -75,6 +77,8 @@ import {TransportModeSelectComponent} from './transport-mode-select/transport-mo
     EditAssetFormComponent,
     EditAssetFormGroupComponent,
     EditAssetFormLabelComponent,
+    EditAssetFormInputComponent,
+    EditAssetFormTextareaComponent,
     KeywordSelectComponent,
     DataCategorySelectComponent,
     DataSubcategorySelectComponent,
