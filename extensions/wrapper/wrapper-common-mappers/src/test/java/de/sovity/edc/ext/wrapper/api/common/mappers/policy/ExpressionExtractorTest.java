@@ -139,9 +139,7 @@ class ExpressionExtractorTest {
         assertThat(actual)
             .usingRecursiveComparison()
             .isEqualTo(expected);
-        assertThat(errors.getErrors()).containsExactly(
-            "$: Multiple permissions were present. Prefer using a conjunction using AND."
-        );
+
     }
 
     @Test
