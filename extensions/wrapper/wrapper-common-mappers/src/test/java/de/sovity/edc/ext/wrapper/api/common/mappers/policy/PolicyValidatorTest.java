@@ -173,7 +173,6 @@ class PolicyValidatorTest {
 
         // assert
         assertThat(errors.getErrors()).containsExactlyInAnyOrder(
-                "$: Permission has no constraints.",
                 "$: Permission has duties, which is currently unsupported.",
                 "$: Permission has an assigner, which is currently unsupported.",
                 "$: Permission has an assignee, which is currently unsupported.",
