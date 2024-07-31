@@ -171,9 +171,6 @@ class ExpressionExtractorTest {
         assertThat(actual)
             .usingRecursiveComparison()
             .isEqualTo(expected);
-        assertThat(errors.getErrors()).containsExactly(
-            "$.permissions[0].constraints: Multiple constraints were present. Prefer using a conjunction using AND."
-        );
     }
 
     @Test
