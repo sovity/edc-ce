@@ -97,7 +97,6 @@ class PolicyValidatorTest {
 
         // assert
         assertThat(errors.getErrors()).containsExactlyInAnyOrder(
-                "$: Policy has no permissions.",
                 "$: Policy has prohibitions, which are currently unsupported.",
                 "$: Policy has obligations, which are currently unsupported.",
                 "$: Policy has inheritsFrom, which is currently unsupported.",
