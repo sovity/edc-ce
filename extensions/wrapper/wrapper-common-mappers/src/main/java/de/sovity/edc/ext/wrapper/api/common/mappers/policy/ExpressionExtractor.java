@@ -80,10 +80,6 @@ public class ExpressionExtractor {
         }
 
         var constraints = permission.getConstraints();
-        if (constraints != null && constraints.size() > 1) {
-            errors.forChildObject("constraints")
-                .add("Multiple constraints were present. Prefer using a conjunction using AND.");
-        }
 
         return expressionMapper.buildUiPolicyExpressions(
             constraints,

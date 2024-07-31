@@ -71,10 +71,6 @@ public class PolicyValidator {
             return;
         }
 
-        if (CollectionUtils.isEmpty(permission.getConstraints())) {
-            errors.add("Permission has no constraints.");
-        }
-
         if (CollectionUtils.isNotEmpty(permission.getDuties())) {
             errors.add("Permission has duties, which is currently unsupported.");
         }
