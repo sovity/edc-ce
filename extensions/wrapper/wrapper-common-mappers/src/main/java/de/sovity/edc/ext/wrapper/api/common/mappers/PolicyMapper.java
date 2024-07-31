@@ -51,6 +51,8 @@ public class PolicyMapper {
 
         var expression = expressionExtractor.getPermissionExpression(policy, errors);
 
+        System.out.println("Expression: " + expression);
+
         return UiPolicy.builder()
             .policyJsonLd(toJson(buildPolicyJsonLd(policy)))
             .expression(expression)
