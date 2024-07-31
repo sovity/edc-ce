@@ -268,6 +268,25 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UiDataOffer'
+  /wrapper/ui/pages/contract-agreement-page/{contractAgreementId}:
+    get:
+      tags:
+      - UI
+      description: Get a single contract agreement by its identifier
+      operationId: getContractAgreement
+      parameters:
+      - name: contractAgreementId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractAgreementCard'
   /wrapper/ui/pages/contract-agreement-page:
     post:
       tags:
@@ -1436,17 +1455,6 @@ components:
       enum:
       - CONSUMING
       - PROVIDING
-    ContractAgreementPage:
-      required:
-      - contractAgreements
-      type: object
-      properties:
-        contractAgreements:
-          type: array
-          description: Contract Agreement Cards
-          items:
-            $ref: '#/components/schemas/ContractAgreementCard'
-      description: Data as required by the UI's Contract Agreement Page
     ContractAgreementTerminationInfo:
       required:
       - detail
@@ -1528,6 +1536,17 @@ components:
         simplifiedState:
           $ref: '#/components/schemas/TransferProcessSimplifiedState'
       description: Transfer Process State interpreted
+    ContractAgreementPage:
+      required:
+      - contractAgreements
+      type: object
+      properties:
+        contractAgreements:
+          type: array
+          description: Contract Agreement Cards
+          items:
+            $ref: '#/components/schemas/ContractAgreementCard'
+      description: Data as required by the UI's Contract Agreement Page
     ContractAgreementPageQuery:
       type: object
       properties:

@@ -18,6 +18,7 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPageQuery;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
@@ -163,6 +164,13 @@ interface UiResource {
         @RequestBody(description = "If null, returns all the contract agreements.")
         @Nullable ContractAgreementPageQuery contractAgreementPageQuery
     );
+
+    @GET
+    @Path("pages/contract-agreement-page/{contractAgreementId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Get a single contract agreement by its identifier")
+    ContractAgreementCard getContractAgreement(@PathParam("contractAgreementId") String contractAgreementId);
 
     @POST
     @Path("pages/contract-agreement-page/transfers")

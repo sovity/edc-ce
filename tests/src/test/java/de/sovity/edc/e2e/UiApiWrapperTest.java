@@ -35,6 +35,7 @@ import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
+import de.sovity.edc.client.gen.model.UiDataSourceOnRequest;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
@@ -531,7 +532,8 @@ class UiApiWrapperTest {
         initiateTransfer(consumerClient, negotiation);
 
         // assert
-        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint).get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
+        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint).get(0).getAsset().getTitle()).isEqualTo(
+            "Good Asset Title");
         val firstAsset = providerClient.uiApi().getContractAgreementPage(null).getContractAgreements().get(0).getAsset();
         assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");
         assertThat(firstAsset.getCustomJsonAsString()).isEqualTo("""
@@ -558,7 +560,8 @@ class UiApiWrapperTest {
             """);
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
         validateTransferProcessesOk(consumerClient, providerClient);
-        assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo("Good Asset Title");
+        assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo(
+            "Good Asset Title");
     }
 
     @Test
@@ -587,6 +590,55 @@ class UiApiWrapperTest {
         assertThat(posAssetResponse.getAvailable()).isTrue();
         assertThat(posPolicyResponse.getAvailable()).isTrue();
         assertThat(posContractDefinitionResponse.getAvailable()).isTrue();
+    }
+
+    @Test
+    void retrieveSingleContractAgreement(
+        E2eScenario scenario,
+        @Provider EdcClient providerClient
+    ) {
+        // arrange
+        // TODO: also test the case with minimal fields
+        val assetId = "assetId";
+        scenario.createAsset(
+            UiAssetCreateRequest.builder()
+                .id(assetId)
+                .title("My Data Offer")
+                .description("Example Data Offer.")
+                .version("2023-11")
+                .language("EN")
+                .publisherHomepage("https://my-department.my-org.com/my-data-offer")
+                .licenseUrl("https://my-department.my-org.com/my-data-offer#license")
+                .dataSource(
+                    // TODO: also test live stuff
+                    UiDataSource.builder()
+                        .type(DataSourceType.ON_REQUEST)
+                        .onRequest(UiDataSourceOnRequest.builder()
+                            .contactEmail("contact@example.com")
+                            .contactPreferredEmailSubject("Subject for on request data source")
+                            .build())
+                        .build()
+                )
+                .build()
+        );
+
+        scenario.createContractDefinition(assetId);
+        val negotiation = scenario.negotiateAssetAndAwait(assetId);
+
+        // TODO: test with/without ON_REQUEST
+
+        // act
+        val retrieved = providerClient.uiApi().getContractAgreement(negotiation.getContractAgreementId());
+        val oldWay = providerClient.uiApi()
+            .getContractAgreementPage(null)
+            .getContractAgreements()
+            .stream()
+            .filter(it -> it.getContractAgreementId().equals(negotiation.getContractAgreementId()))
+            .findFirst()
+            .orElseThrow();
+
+        // assert
+        assertThat(retrieved).usingRecursiveAssertion().isEqualTo(oldWay);
     }
 
     private UiContractNegotiation negotiate(
