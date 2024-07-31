@@ -63,10 +63,6 @@ public class ExpressionExtractor {
             return List.of();
         }
 
-        if (permissions.size() > 1) {
-            errors.add("Multiple permissions were present. Prefer using a conjunction using AND.");
-        }
-
         List<UiPolicyExpression> expressions = new ArrayList<>();
         for (int iPermission = 0; iPermission < permissions.size(); iPermission++) {
             var permissionErrors = errors.forChildObject("permissions").forChildArrayElement(iPermission);

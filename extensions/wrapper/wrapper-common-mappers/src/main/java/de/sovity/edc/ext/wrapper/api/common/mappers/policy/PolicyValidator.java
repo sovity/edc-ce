@@ -22,7 +22,6 @@ import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
 
-import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -35,10 +34,6 @@ public class PolicyValidator {
         if (policy == null) {
             errors.add("Policy is null");
             return;
-        }
-
-        if (isEmpty(policy.getPermissions())) {
-            errors.add("Policy has no permissions.");
         }
 
         if (isNotEmpty(policy.getProhibitions())) {
