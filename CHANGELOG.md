@@ -9,15 +9,15 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 ### Detailed Changes
 
-#### Minor
-
-#### Patch
-
 #### Major Changes
 
 #### Minor Changes
 
+#### Patch Changes
+- Logginghouse-Client: Update logging-house-client extension to v1.1.0
+
 ### Deployment Migration Notes
+As the updated logging-house-client extension now also saves data locally in a database, the following additional proerties must be added and set accordingly:
 - ```EDC_DATASOURCE_LOGGINGHOUSE_URL```: "postgres://some-url"
 - ```EDC_DATASOURCE_LOGGINGHOUSE_USER```: "username"
 - ```EDC_DATASOURCE_LOGGINGHOUSE_PASSWORD```: "password"
