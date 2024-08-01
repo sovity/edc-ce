@@ -33,6 +33,7 @@ import org.jooq.DSLContext;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static de.sovity.edc.ext.db.jooq.Tables.SOVITY_CONTRACT_TERMINATION;
 import static java.util.function.Function.identity;
@@ -72,7 +73,7 @@ public class ContractAgreementDataFetcher {
             .flatMap(agreement -> negotiations.getOrDefault(agreement.getId(), List.of())
                 .stream()
                 .map(negotiation -> {
-                    var asset = getAsset(agreement, negotiation, assets);
+                    var asset = getAsset(agreement, negotiation, assets::get);
                     var contractTransfers = transfers.getOrDefault(agreement.getId(), List.of());
                     return new ContractAgreementData(agreement, negotiation, asset, contractTransfers, terminations.get(agreement.getId()));
                 }))
@@ -81,8 +82,7 @@ public class ContractAgreementDataFetcher {
 
     @NotNull
     public ContractAgreementData getContractAgreement(DSLContext dsl, String contractAgreementId) {
-
-        val agreement = getAllContractAgreement(contractAgreementId);
+        val agreement = getContractAgreementById(contractAgreementId);
 
         val negotiationQuery = QuerySpec.max();
         val negotiation = contractNegotiationStore.queryNegotiations(negotiationQuery)
@@ -95,9 +95,7 @@ public class ContractAgreementDataFetcher {
 
         val terminations = fetchTerminations(dsl, agreement.getId());
 
-        val maybeAsset = assetIndex.findById(agreement.getAssetId());
-        val isConsumer = negotiation.getType() == ContractNegotiation.Type.CONSUMER;
-        val asset = (maybeAsset == null || isConsumer) ? dummyAsset(agreement.getAssetId()) : maybeAsset;
+        val asset = getAsset(agreement, negotiation, (it) -> assetIndex.findById(agreement.getAssetId()));
 
         return new ContractAgreementData(
             agreement,
@@ -108,36 +106,36 @@ public class ContractAgreementDataFetcher {
         );
     }
 
-    private ContractAgreement getAllContractAgreement(String id) {
+    private ContractAgreement getContractAgreementById(String id) {
         return contractAgreementService.findById(id);
     }
 
-    private @NotNull Map<String, SovityContractTerminationRecord> fetchTerminations(DSLContext dsl, String agreementIds) {
+    @NotNull
+    private Map<String, SovityContractTerminationRecord> fetchTerminations(DSLContext dsl, String agreementIds) {
         return fetchTerminations(dsl, List.of(agreementIds));
     }
 
-    private @NotNull Map<String, SovityContractTerminationRecord> fetchTerminations(DSLContext dsl, List<String> agreementIds) {
+    @NotNull
+    private Map<String, SovityContractTerminationRecord> fetchTerminations(DSLContext dsl, List<String> agreementIds) {
         var t = SOVITY_CONTRACT_TERMINATION;
 
-        var terminations = dsl.select()
+        return dsl.select()
             .from(t)
             .where(t.CONTRACT_AGREEMENT_ID.in(agreementIds))
             .fetch()
             .into(t)
             .stream()
             .collect(toMap(SovityContractTerminationRecord::getContractAgreementId, identity()));
-
-        return terminations;
     }
 
-    private Asset getAsset(ContractAgreement agreement, ContractNegotiation negotiation, Map<String, Asset> assets) {
+    private Asset getAsset(ContractAgreement agreement, ContractNegotiation negotiation, Function<String, Asset> selector) {
         var assetId = agreement.getAssetId();
 
         if (negotiation.getType() == ContractNegotiation.Type.CONSUMER) {
             return dummyAsset(assetId);
         }
 
-        var asset = assets.get(assetId);
+        var asset = selector.apply(assetId);
         return asset == null ? dummyAsset(assetId) : asset;
     }
 
