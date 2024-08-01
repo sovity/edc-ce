@@ -57,6 +57,8 @@ EDC_UI_ACTIVE_PROFILE=mds-open-source docker compose --env-file .env.dev -f dock
 </tbody>
 </table>
 
+This type of start for development purposes does not activate the LoggingHouse extension, which is otherwise available in the MDS variant.
+
 ## Dev Docker Compose: Default Configuration
 
 The default configuration launches two local EDC Connectors with the following credentials:
