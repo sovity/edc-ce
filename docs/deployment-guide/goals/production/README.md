@@ -151,9 +151,14 @@ EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
 A LoggingHouse extension is included in the MDS variant, which means that additional properties must be set for it:
 
 ```yaml
-# LoggingHouse Extension
+# LoggingHouse Extension general settings
 EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "true"
 EDC_LOGGINGHOUSE_EXTENSION_URL: https://clearing.test.mobility-dataspace.eu
+
+# LoggingHouse Extension database connection
+EDC_DATASOURCE_LOGGINGHOUSE_URL: jdbc:postgresql://postgresql:5432/edc
+EDC_DATASOURCE_LOGGINGHOUSE_USER: edc
+EDC_DATASOURCE_LOGGINGHOUSE_PASSWORD: edc
 ```
 
 You can also optionally set the following config properties:
