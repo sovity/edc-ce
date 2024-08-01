@@ -39,16 +39,14 @@ docker compose up
 # Log-In to the Github Container Registry
 docker login ghcr.io
 
-# Start MDS EDC Connectors
-EDC_UI_ACTIVE_PROFILE=mds-open-source docker compose up
+# Start MDS EDC Connectors without activating the logging-house-extension
+EDC_UI_ACTIVE_PROFILE=mds-open-source EDC_LOGGINGHOUSE_EXTENSION_ENABLED=false docker compose up
 ```
 
 </td>
 </tr>
 </tbody>
 </table>
-
-This type of start for a local demo does not activate the LoggingHouse extension, which is otherwise available in the MDS variant.
 
 ## Quick Start: Default Configuration
 
