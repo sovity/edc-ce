@@ -20,6 +20,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPageQuery;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementDataFetcher;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.ContractAgreementPageCardBuilder;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jooq.DSLContext;
@@ -48,9 +49,20 @@ public class ContractAgreementPageApiService {
             return new ContractAgreementPage(cards.toList());
         } else {
             var filtered = cards.filter(card ->
-                card.getTerminationStatus().equals(contractAgreementPageQuery.getTerminationStatus()))
+                    card.getTerminationStatus().equals(contractAgreementPageQuery.getTerminationStatus()))
                 .toList();
             return new ContractAgreementPage(filtered);
         }
+    }
+
+    public ContractAgreementCard contractAgreement(DSLContext dsl, String contractAgreementId) {
+        val agreementData = contractAgreementDataFetcher.getContractAgreement(dsl, contractAgreementId);
+        return contractAgreementPageCardBuilder.buildContractAgreementCard(
+            agreementData.agreement(),
+            agreementData.negotiation(),
+            agreementData.asset(),
+            agreementData.transfers(),
+            agreementData.termination()
+        );
     }
 }

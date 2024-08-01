@@ -15,7 +15,10 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
-- Fixed unrestricted policy wrongly displaying error
+- API Wrapper:
+    - Added wrapper API endpoint to query a single contract agreement
+- EDC Backend
+    - Fixed unrestricted policy wrongly displaying error
 
 ### Deployment Migration Notes
 

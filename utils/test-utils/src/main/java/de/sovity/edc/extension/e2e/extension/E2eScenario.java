@@ -113,6 +113,10 @@ public class E2eScenario {
         return internalCreateAsset(id, uiDataSource).getId();
     }
 
+    public String createAsset(UiAssetCreateRequest uiAssetCreateRequest) {
+        return providerClient.uiApi().createAsset(uiAssetCreateRequest).getId();
+    }
+
     public MockedAsset createAssetWithMockResource(String id) {
 
         val path = "/assets/" + id;

@@ -531,7 +531,8 @@ class UiApiWrapperTest {
         initiateTransfer(consumerClient, negotiation);
 
         // assert
-        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint).get(0).getAsset().getTitle()).isEqualTo("Good Asset Title");
+        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint).get(0).getAsset().getTitle())
+            .isEqualTo("Good Asset Title");
         val firstAsset = providerClient.uiApi().getContractAgreementPage(null).getContractAgreements().get(0).getAsset();
         assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");
         assertThat(firstAsset.getCustomJsonAsString()).isEqualTo("""
@@ -558,7 +559,8 @@ class UiApiWrapperTest {
             """);
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
         validateTransferProcessesOk(consumerClient, providerClient);
-        assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo("Good Asset Title");
+        assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName())
+            .isEqualTo("Good Asset Title");
     }
 
     @Test
@@ -587,6 +589,47 @@ class UiApiWrapperTest {
         assertThat(posAssetResponse.getAvailable()).isTrue();
         assertThat(posPolicyResponse.getAvailable()).isTrue();
         assertThat(posContractDefinitionResponse.getAvailable()).isTrue();
+    }
+
+    @Test
+    void retrieveSingleContractAgreement(
+        E2eScenario scenario,
+        @Provider EdcClient providerClient
+    ) {
+        // arrange
+        val assetId = scenario.createAsset();
+
+        scenario.createContractDefinition(assetId);
+        val negotiation = scenario.negotiateAssetAndAwait(assetId);
+
+        // act
+        val retrieved = providerClient.uiApi().getContractAgreementCard(negotiation.getContractAgreementId());
+        val alternative = providerClient.uiApi()
+            .getContractAgreementPage(null)
+            .getContractAgreements()
+            .stream()
+            .filter(it -> it.getContractAgreementId().equals(negotiation.getContractAgreementId()))
+            .findFirst()
+            .orElseThrow();
+
+        val retrievedPolicy = retrieved.getContractPolicy();
+        val alternativePolicy = alternative.getContractPolicy();
+
+        retrieved.setContractPolicy(null);
+        alternative.setContractPolicy(null);
+
+        // assert
+        assertThat(retrieved).usingRecursiveAssertion().isEqualTo(alternative);
+
+        // assert separately because the policy ID is re-generated on each query
+        assertThat(retrievedPolicy)
+            .usingRecursiveComparison()
+            .ignoringFields("policyJsonLd")
+            .isEqualTo(alternativePolicy);
+
+        assertThatJson(retrievedPolicy.getPolicyJsonLd())
+            .whenIgnoringPaths("@id")
+            .isEqualTo(alternativePolicy.getPolicyJsonLd());
     }
 
     private UiContractNegotiation negotiate(
