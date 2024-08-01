@@ -43,7 +43,9 @@ export class AssetPageComponent implements OnInit, OnDestroy {
         Fetched.map(
           (assets): AssetList => ({
             filteredAssets: assets.filter((asset) =>
-              asset.title?.includes(this.searchText),
+              asset.title
+                ?.toLowerCase()
+                .includes(this.searchText.toLowerCase()),
             ),
             numTotalAssets: assets.length,
           }),
