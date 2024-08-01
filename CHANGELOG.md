@@ -11,7 +11,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor
 
-- `Added wrapper API endpoint to query a single contract agreement
+- Added wrapper API endpoint to query a single contract agreement
 
 #### Patch
 
