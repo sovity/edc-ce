@@ -13,7 +13,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
-#### Patch
+#### Patch Changes
 - New Always True policy don't cause errors
 
 ### Deployment Migration Notes
