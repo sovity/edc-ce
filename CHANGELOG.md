@@ -12,6 +12,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Major Changes
 
 #### Minor Changes
+- API Wrapper:
+    - Added wrapper API endpoint to query a single contract agreement
 
 #### Patch Changes
 - Logginghouse-Client: Update logging-house-client extension to v1.1.0
