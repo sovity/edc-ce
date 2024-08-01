@@ -18,6 +18,7 @@ import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetCreateRequest;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAssetEditRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.AssetPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementCard;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractAgreementPageQuery;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionPage;
@@ -153,6 +154,12 @@ public class UiResourceImpl implements UiResource {
     public ContractAgreementPage getContractAgreementPage(@Nullable ContractAgreementPageQuery contractAgreementPageQuery) {
         return dslContextFactory.transactionResult(dsl ->
             contractAgreementApiService.contractAgreementPage(dsl, contractAgreementPageQuery));
+    }
+
+    @Override
+    public ContractAgreementCard getContractAgreementCard(String contractAgreementId) {
+        return dslContextFactory.transactionResult(dsl ->
+            contractAgreementApiService.contractAgreement(dsl, contractAgreementId));
     }
 
     @Override
