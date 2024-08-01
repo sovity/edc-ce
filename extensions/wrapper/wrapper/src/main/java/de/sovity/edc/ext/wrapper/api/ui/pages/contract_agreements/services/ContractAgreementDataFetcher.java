@@ -26,7 +26,6 @@ import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.spi.asset.AssetIndex;
-import org.eclipse.edc.spi.query.Criterion;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
@@ -82,18 +81,21 @@ public class ContractAgreementDataFetcher {
 
     @NotNull
     public ContractAgreementData getContractAgreement(DSLContext dsl, String contractAgreementId) {
-        val agreement = getAllContractAgreement(contractAgreementId);
-        val maybeAsset = assetIndex.findById(agreement.getAssetId());
-        val negotiationQuery = QuerySpec.max();
-        // TODO: seems broken: Criterion.criterion(ContractNegotiation.CONTRACT_NEGOTIATION_AGREEMENT_ID, "=", agreement.getId())
-        val negotiation = contractNegotiationStore.queryNegotiations(negotiationQuery).filter(it -> it.getContractAgreement().getId().equals(contractAgreementId)).findFirst().orElseThrow(
-            () -> new IllegalStateException("Can't find any negotiation for contract agreement id %s".formatted(contractAgreementId)));
 
-        val transfers = getAllTransferProcesses().stream()
-            .collect(groupingBy(it -> it.getDataRequest().getContractId()));
+        val agreement = getAllContractAgreement(contractAgreementId);
+
+        val negotiationQuery = QuerySpec.max();
+        val negotiation = contractNegotiationStore.queryNegotiations(negotiationQuery)
+            .filter(it -> it.getContractAgreement().getId().equals(contractAgreementId))
+            .findFirst()
+            .orElseThrow(
+                () -> new IllegalStateException("Can't find any negotiation for contract agreement id %s".formatted(contractAgreementId)));
+
+        val transfers = getAllTransferProcesses().stream().collect(groupingBy(it -> it.getDataRequest().getContractId()));
 
         val terminations = fetchTerminations(dsl, agreement.getId());
 
+        val maybeAsset = assetIndex.findById(agreement.getAssetId());
         val isConsumer = negotiation.getType() == ContractNegotiation.Type.CONSUMER;
         val asset = (maybeAsset == null || isConsumer) ? dummyAsset(agreement.getAssetId()) : maybeAsset;
 

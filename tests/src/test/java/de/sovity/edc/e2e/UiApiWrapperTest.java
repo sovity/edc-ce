@@ -53,7 +53,6 @@ import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import lombok.val;
-import org.assertj.core.api.recursive.assertion.RecursiveAssertionConfiguration;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.junit.jupiter.api.BeforeEach;
@@ -532,8 +531,8 @@ class UiApiWrapperTest {
         initiateTransfer(consumerClient, negotiation);
 
         // assert
-        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint).get(0).getAsset().getTitle()).isEqualTo(
-            "Good Asset Title");
+        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint).get(0).getAsset().getTitle())
+            .isEqualTo("Good Asset Title");
         val firstAsset = providerClient.uiApi().getContractAgreementPage(null).getContractAgreements().get(0).getAsset();
         assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");
         assertThat(firstAsset.getCustomJsonAsString()).isEqualTo("""
@@ -560,8 +559,8 @@ class UiApiWrapperTest {
             """);
         validateDataTransferred(dataAddress.getDataSinkSpyUrl(), data);
         validateTransferProcessesOk(consumerClient, providerClient);
-        assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName()).isEqualTo(
-            "Good Asset Title");
+        assertThat(providerClient.uiApi().getTransferHistoryPage().getTransferEntries().get(0).getAssetName())
+            .isEqualTo("Good Asset Title");
     }
 
     @Test
@@ -622,7 +621,7 @@ class UiApiWrapperTest {
         // assert
         assertThat(retrieved).usingRecursiveAssertion().isEqualTo(alternative);
 
-        // assert separately because the policy ID re-generated on each query
+        // assert separately because the policy ID is re-generated on each query
         assertThat(retrievedPolicy)
             .usingRecursiveComparison()
             .ignoringFields("policyJsonLd")

@@ -157,7 +157,7 @@ public class UiResourceImpl implements UiResource {
     }
 
     @Override
-    public ContractAgreementCard getContractAgreement(String contractAgreementId) {
+    public ContractAgreementCard getContractAgreementCard(String contractAgreementId) {
         return dslContextFactory.transactionResult(dsl ->
             contractAgreementApiService.contractAgreement(dsl, contractAgreementId));
     }

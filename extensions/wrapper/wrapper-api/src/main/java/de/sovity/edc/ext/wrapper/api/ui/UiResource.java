@@ -169,8 +169,8 @@ interface UiResource {
     @Path("pages/contract-agreement-page/{contractAgreementId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Get a single contract agreement by its identifier")
-    ContractAgreementCard getContractAgreement(@PathParam("contractAgreementId") String contractAgreementId);
+    @Operation(description = "Get a single contract agreement card by its identifier")
+    ContractAgreementCard getContractAgreementCard(@PathParam("contractAgreementId") String contractAgreementId);
 
     @POST
     @Path("pages/contract-agreement-page/transfers")
