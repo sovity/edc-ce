@@ -18,6 +18,9 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Minor Changes
 
 ### Deployment Migration Notes
+- ```EDC_DATASOURCE_LOGGINGHOUSE_URL```: "postgres://some-url"
+- ```EDC_DATASOURCE_LOGGINGHOUSE_USER```: "username"
+- ```EDC_DATASOURCE_LOGGINGHOUSE_PASSWORD```: "password"
 
 #### Compatible Versions
 
