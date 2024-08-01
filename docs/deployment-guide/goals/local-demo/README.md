@@ -39,8 +39,8 @@ docker compose up
 # Log-In to the Github Container Registry
 docker login ghcr.io
 
-# Start MDS EDC Connectors
-EDC_UI_ACTIVE_PROFILE=mds-open-source docker compose up
+# Start MDS EDC Connectors without activating the logging-house-extension
+EDC_UI_ACTIVE_PROFILE=mds-open-source EDC_LOGGINGHOUSE_EXTENSION_ENABLED=false docker compose up
 ```
 
 </td>

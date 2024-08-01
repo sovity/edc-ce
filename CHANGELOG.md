@@ -9,18 +9,25 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 ### Detailed Changes
 
-#### Minor
-
-- API Wrapper:
-    - Added wrapper API endpoint to query a single contract agreement
-
-#### Patch
-
 #### Major Changes
 
 #### Minor Changes
+- API Wrapper:
+    - Added wrapper API endpoint to query a single contract agreement
+
+#### Patch Changes
+- Logginghouse-Client: Update logging-house-client extension to v1.1.0
 
 ### Deployment Migration Notes
+#### logging-house-client extension
+As the updated logging-house-client extension now also saves data locally in a database, the following additional proerties must be added and set accordingly to a second additional database since the extension has its own flyway migration:
+- ```EDC_DATASOURCE_LOGGINGHOUSE_URL```: "postgres://some-url"
+- ```EDC_DATASOURCE_LOGGINGHOUSE_USER```: "username"
+- ```EDC_DATASOURCE_LOGGINGHOUSE_PASSWORD```: "password"
+
+If the extension is to be switched off, the following must now be set, as  the extension is now activated by default when integrated:
+- ```EDC_LOGGINGHOUSE_EXTENSION_ENABLED: 'false'```
+
 
 #### Compatible Versions
 
