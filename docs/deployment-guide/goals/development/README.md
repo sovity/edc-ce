@@ -48,8 +48,8 @@ docker login ghcr.io
 # Pull the latest images
 docker compose --env-file .env.dev -f docker-compose-dev.yaml pull
 
-# Start MDS EDC Connectors
-EDC_UI_ACTIVE_PROFILE=mds-open-source docker compose --env-file .env.dev -f docker-compose-dev.yaml up
+# Start MDS EDC Connectors without activating the logging-house-extension
+EDC_UI_ACTIVE_PROFILE=mds-open-source EDC_LOGGINGHOUSE_EXTENSION_ENABLED=false docker compose --env-file .env.dev -f docker-compose-dev.yaml up
 ```
 
 </td>
