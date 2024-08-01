@@ -48,6 +48,8 @@ EDC_UI_ACTIVE_PROFILE=mds-open-source docker compose up
 </tbody>
 </table>
 
+This type of start for a local demo does not activate the LoggingHouse extension, which is otherwise available in the MDS variant.
+
 ## Quick Start: Default Configuration
 
 The default configuration launches two local EDC Connectors with the following credentials:
