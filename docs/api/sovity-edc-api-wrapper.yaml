@@ -272,8 +272,8 @@ paths:
     get:
       tags:
       - UI
-      description: Get a single contract agreement by its identifier
-      operationId: getContractAgreement
+      description: Get a single contract agreement card by its identifier
+      operationId: getContractAgreementCard
       parameters:
       - name: contractAgreementId
         in: path

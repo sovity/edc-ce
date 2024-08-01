@@ -603,7 +603,7 @@ class UiApiWrapperTest {
         val negotiation = scenario.negotiateAssetAndAwait(assetId);
 
         // act
-        val retrieved = providerClient.uiApi().getContractAgreement(negotiation.getContractAgreementId());
+        val retrieved = providerClient.uiApi().getContractAgreementCard(negotiation.getContractAgreementId());
         val alternative = providerClient.uiApi()
             .getContractAgreementPage(null)
             .getContractAgreements()
