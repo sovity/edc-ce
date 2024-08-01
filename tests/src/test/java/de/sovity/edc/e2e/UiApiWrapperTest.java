@@ -35,7 +35,6 @@ import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
-import de.sovity.edc.client.gen.model.UiDataSourceOnRequest;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
@@ -54,6 +53,7 @@ import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import lombok.val;
+import org.assertj.core.api.recursive.assertion.RecursiveAssertionConfiguration;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
 import org.junit.jupiter.api.BeforeEach;
@@ -598,38 +598,14 @@ class UiApiWrapperTest {
         @Provider EdcClient providerClient
     ) {
         // arrange
-        // TODO: also test the case with minimal fields
-        val assetId = "assetId";
-        scenario.createAsset(
-            UiAssetCreateRequest.builder()
-                .id(assetId)
-                .title("My Data Offer")
-                .description("Example Data Offer.")
-                .version("2023-11")
-                .language("EN")
-                .publisherHomepage("https://my-department.my-org.com/my-data-offer")
-                .licenseUrl("https://my-department.my-org.com/my-data-offer#license")
-                .dataSource(
-                    // TODO: also test live stuff
-                    UiDataSource.builder()
-                        .type(DataSourceType.ON_REQUEST)
-                        .onRequest(UiDataSourceOnRequest.builder()
-                            .contactEmail("contact@example.com")
-                            .contactPreferredEmailSubject("Subject for on request data source")
-                            .build())
-                        .build()
-                )
-                .build()
-        );
+        val assetId = scenario.createAsset();
 
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAssetAndAwait(assetId);
 
-        // TODO: test with/without ON_REQUEST
-
         // act
         val retrieved = providerClient.uiApi().getContractAgreement(negotiation.getContractAgreementId());
-        val oldWay = providerClient.uiApi()
+        val alternative = providerClient.uiApi()
             .getContractAgreementPage(null)
             .getContractAgreements()
             .stream()
@@ -637,8 +613,24 @@ class UiApiWrapperTest {
             .findFirst()
             .orElseThrow();
 
+        val retrievedPolicy = retrieved.getContractPolicy();
+        val alternativePolicy = alternative.getContractPolicy();
+
+        retrieved.setContractPolicy(null);
+        alternative.setContractPolicy(null);
+
         // assert
-        assertThat(retrieved).usingRecursiveAssertion().isEqualTo(oldWay);
+        assertThat(retrieved).usingRecursiveAssertion().isEqualTo(alternative);
+
+        // assert separately because the policy ID re-generated on each query
+        assertThat(retrievedPolicy)
+            .usingRecursiveComparison()
+            .ignoringFields("policyJsonLd")
+            .isEqualTo(alternativePolicy);
+
+        assertThatJson(retrievedPolicy.getPolicyJsonLd())
+            .whenIgnoringPaths("@id")
+            .isEqualTo(alternativePolicy.getPolicyJsonLd());
     }
 
     private UiContractNegotiation negotiate(

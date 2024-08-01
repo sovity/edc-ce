@@ -18,6 +18,7 @@ import de.sovity.edc.ext.db.jooq.tables.records.SovityContractTerminationRecord;
 import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.utils.MapUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -25,6 +26,7 @@ import org.eclipse.edc.connector.spi.contractagreement.ContractAgreementService;
 import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.spi.asset.AssetIndex;
+import org.eclipse.edc.spi.query.Criterion;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +64,9 @@ public class ContractAgreementDataFetcher {
         var transfers = getAllTransferProcesses().stream()
             .collect(groupingBy(it -> it.getDataRequest().getContractId()));
 
-        var terminations = fetchTerminations(dsl, agreements);
+        var agreementIds = agreements.stream().map(ContractAgreement::getId).toList();
+
+        var terminations = fetchTerminations(dsl, agreementIds);
 
         // A ContractAgreement has multiple ContractNegotiations when doing a loopback consumption
         return agreements.stream()
@@ -76,10 +80,41 @@ public class ContractAgreementDataFetcher {
             .toList();
     }
 
-    private @NotNull Map<String, SovityContractTerminationRecord> fetchTerminations(DSLContext dsl, List<ContractAgreement> agreements) {
+    @NotNull
+    public ContractAgreementData getContractAgreement(DSLContext dsl, String contractAgreementId) {
+        val agreement = getAllContractAgreement(contractAgreementId);
+        val maybeAsset = assetIndex.findById(agreement.getAssetId());
+        val negotiationQuery = QuerySpec.max();
+        // TODO: seems broken: Criterion.criterion(ContractNegotiation.CONTRACT_NEGOTIATION_AGREEMENT_ID, "=", agreement.getId())
+        val negotiation = contractNegotiationStore.queryNegotiations(negotiationQuery).filter(it -> it.getContractAgreement().getId().equals(contractAgreementId)).findFirst().orElseThrow(
+            () -> new IllegalStateException("Can't find any negotiation for contract agreement id %s".formatted(contractAgreementId)));
 
-        var agreementIds = agreements.stream().map(ContractAgreement::getId).toList();
+        val transfers = getAllTransferProcesses().stream()
+            .collect(groupingBy(it -> it.getDataRequest().getContractId()));
 
+        val terminations = fetchTerminations(dsl, agreement.getId());
+
+        val isConsumer = negotiation.getType() == ContractNegotiation.Type.CONSUMER;
+        val asset = (maybeAsset == null || isConsumer) ? dummyAsset(agreement.getAssetId()) : maybeAsset;
+
+        return new ContractAgreementData(
+            agreement,
+            negotiation,
+            asset,
+            transfers.getOrDefault(agreement.getId(), List.of()),
+            terminations.get(agreement.getId())
+        );
+    }
+
+    private ContractAgreement getAllContractAgreement(String id) {
+        return contractAgreementService.findById(id);
+    }
+
+    private @NotNull Map<String, SovityContractTerminationRecord> fetchTerminations(DSLContext dsl, String agreementIds) {
+        return fetchTerminations(dsl, List.of(agreementIds));
+    }
+
+    private @NotNull Map<String, SovityContractTerminationRecord> fetchTerminations(DSLContext dsl, List<String> agreementIds) {
         var t = SOVITY_CONTRACT_TERMINATION;
 
         var terminations = dsl.select()

@@ -171,8 +171,7 @@ public class WrapperExtensionContextBuilder {
         );
         var contractAgreementApiService = new ContractAgreementPageApiService(
             contractAgreementDataFetcher,
-            contractAgreementPageCardBuilder,
-            assetService
+            contractAgreementPageCardBuilder
         );
         var contactDefinitionBuilder = new ContractDefinitionBuilder(criterionMapper);
         var contractDefinitionApiService = new ContractDefinitionApiService(
