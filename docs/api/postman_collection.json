@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "14267003-be4b-40ee-a9b6-83b5dd32ba57",
-		"name": "sovity EDC Community Edition",
+		"_postman_id": "5f373580-db27-4daf-86e8-84bc8ed933c8",
+		"name": "sovity EDC Community Edition Copy",
 		"description": "This is the official postman collection for the sovity EDC Community Edition.\n\nThe Management-API is based on core-edc v0.2.1.\n\nsovity EDC Community Edition: [https://github.com/sovity/edc-ce](https://github.com/sovity/edc-ce)\n\nLicense: [https://github.com/sovity/edc-ce/blob/main/LICENSE](https://github.com/sovity/edc-ce/blob/main/LICENSE)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "32949497"
@@ -529,7 +529,7 @@
 						{
 							"name": "Get Contract Agreements",
 							"request": {
-								"method": "GET",
+								"method": "POST",
 								"header": [],
 								"url": {
 									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/contract-agreement-page",
@@ -541,6 +541,27 @@
 										"ui",
 										"pages",
 										"contract-agreement-page"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Contract Agreements By ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{CONSUMER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/contract-agreement-page/{{CONTRACT_AGREEMENT_ID}}",
+									"host": [
+										"{{CONSUMER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"contract-agreement-page",
+										"{{CONTRACT_AGREEMENT_ID}}"
 									]
 								}
 							},
