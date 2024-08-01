@@ -29,7 +29,7 @@ To deploy an EDC multiple deployment units must be deployed and configured.
 |-------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
 | An Auth Proxy / Auth solution of your choice.                     | (deployment specific, required to secure UI and management API)                             |
 | Reverse Proxy that merges multiple services and removes the ports | (deployment specific)                                                                       |
-| Postgresql                                                        | 13 or compatible version                                                                    |
+| Postgresql                                                        | 13 or compatible version, one for the EDC-data one for the LH-data                          |
 | EDC Backend                                                       | edc-ce or edc-ce-mds, see [CHANGELOG.md](../../../../CHANGELOG.md) for compatible versions. |
 | EDC UI                                                            | edc-ui, see  [CHANGELOG.md](../../../../CHANGELOG.md) for compatible versions.              |
 
@@ -155,8 +155,8 @@ A LoggingHouse extension is included in the MDS variant, which means that additi
 EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "true"
 EDC_LOGGINGHOUSE_EXTENSION_URL: https://clearing.test.mobility-dataspace.eu
 
-# LoggingHouse Extension database connection
-EDC_DATASOURCE_LOGGINGHOUSE_URL: jdbc:postgresql://postgresql:5432/edc
+# LoggingHouse Extension database connection for its own database
+EDC_DATASOURCE_LOGGINGHOUSE_URL: jdbc:postgresql://postgresql2:5432/edc
 EDC_DATASOURCE_LOGGINGHOUSE_USER: edc
 EDC_DATASOURCE_LOGGINGHOUSE_PASSWORD: edc
 ```
