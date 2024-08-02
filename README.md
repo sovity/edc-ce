@@ -124,6 +124,7 @@ Our contribution guideline can be found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 - Local Development Guide (further below)
 - [IntelliJ](docs/dev/intellij/intelliJ.md)
+- [Debugging](docs/dev/debugging.md)
 - [Changelog Updates](docs/dev/changelog_updates.md)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

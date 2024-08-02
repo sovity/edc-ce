@@ -71,6 +71,7 @@ import static de.sovity.edc.client.gen.model.ContractAgreementDirection.PROVIDIN
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
@@ -630,6 +631,45 @@ class UiApiWrapperTest {
         assertThatJson(retrievedPolicy.getPolicyJsonLd())
             .whenIgnoringPaths("@id")
             .isEqualTo(alternativePolicy.getPolicyJsonLd());
+    }
+
+    @Test
+    void editingAnAssetMustNotRemoveTheCustomProperties(
+        E2eScenario scenario,
+        @Provider EdcClient providerClient
+    ) {
+        val assetId = "123456789mds";
+        scenario.createAsset(
+            assetId,
+            UiDataSource.builder()
+                .type(DataSourceType.HTTP_DATA)
+                .httpData(UiDataSourceHttpData.builder()
+                    .baseUrl("https://www.sovity.de")
+                    .build())
+                .build()
+        );
+
+        val uiAsset = providerClient.uiApi().getAssetPage().getAssets().get(0);
+        assertThatJson(uiAsset.getAssetJsonLd())
+            .inPath("$.[\"https://w3id.org/edc/v0.0.1/ns/dataAddress\"][\"http://purl.org/dc/terms/test\"]")
+            .isEqualTo(json("\"https://www.google.com\""));
+
+        providerClient.uiApi().editAsset(assetId, UiAssetEditRequest.builder()
+            .keywords(List.of("foo"))
+            .description("description 2")
+            .landingPageUrl("http://example.com/updated")
+            .language("DE")
+            .licenseUrl("http://example.com/license")
+            .mediaType("application/json")
+            .publisherHomepage("http://example.com/publisher")
+            .title("New title")
+            .version("2.0.0-new")
+            .build());
+
+        val uiAsset2 = providerClient.uiApi().getAssetPage().getAssets().get(0);
+        assertThatJson(uiAsset2.getAssetJsonLd())
+            .inPath("$.[\"https://w3id.org/edc/v0.0.1/ns/dataAddress\"][\"http://purl.org/dc/terms/test\"]")
+            .isEqualTo(json("\"https://www.google.com\""));
     }
 
     private UiContractNegotiation negotiate(
