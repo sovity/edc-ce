@@ -25,6 +25,7 @@ dependencies {
     implementation(libs.testcontainers.junitJupiter)
     implementation(libs.testcontainers.postgresql)
     implementation(libs.restAssured.restAssured)
+    implementation("ch.qos.logback:logback-core:1.5.6")
 }
 
 group = libs.versions.sovityEdcExtensionGroup.get()

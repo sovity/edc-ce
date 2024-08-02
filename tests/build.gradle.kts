@@ -13,14 +13,18 @@ dependencies {
     testImplementation(project(":extensions:test-backend-controller"))
     testImplementation(project(":extensions:wrapper:clients:java-client"))
     testImplementation(project(":utils:test-utils"))
-    testImplementation(libs.jsonUnit.assertj)
-    testImplementation(libs.mockito.core)
+    testImplementation(project(":utils:jooq-database-access"))
+
     testImplementation(libs.assertj.core)
+    testImplementation(libs.jooq.jooq)
+    testImplementation(libs.jsonUnit.assertj)
     testImplementation(libs.junit.api)
     testImplementation(libs.junit.params)
+    testImplementation(libs.mockito.core)
     testImplementation(libs.mockserver.netty)
     testImplementation(libs.okhttp.okhttp)
     testImplementation(libs.restAssured.restAssured)
+
     testRuntimeOnly(libs.junit.engine)
 }
 

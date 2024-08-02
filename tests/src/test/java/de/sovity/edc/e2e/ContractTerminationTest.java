@@ -70,8 +70,8 @@ public class ContractTerminationTest {
     void canGetAgreementPageForNonTerminatedContract(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient) {
-
+        @Provider EdcClient providerClient
+    ) {
         val assets = IntStream.range(0, 3).mapToObj((it) -> scenario.createAsset());
 
         val agreements = assets
@@ -118,8 +118,8 @@ public class ContractTerminationTest {
     void canGetAgreementPageForTerminatedContract(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient) {
-
+        @Provider EdcClient providerClient
+    ) {
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         scenario.negotiateAssetAndAwait(assetId);
@@ -180,8 +180,8 @@ public class ContractTerminationTest {
     void limitTheReasonSizeAt100Chars(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient) {
-
+        @Provider EdcClient providerClient
+    ) {
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAssetAndAwait(assetId);
@@ -221,8 +221,8 @@ public class ContractTerminationTest {
     void limitTheDetailSizeAt1000Chars(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient) {
-
+        @Provider EdcClient providerClient
+    ) {
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAssetAndAwait(assetId);
@@ -305,8 +305,8 @@ public class ContractTerminationTest {
     void canTerminateFromProvider(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient) {
-
+        @Provider EdcClient providerClient
+    ) {
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAssetAndAwait(assetId);
@@ -336,8 +336,7 @@ public class ContractTerminationTest {
     }
 
     @Test
-    void doesntCrashWhenAgreementDoesntExist(
-        @Consumer EdcClient consumerClient) {
+    void doesntCrashWhenAgreementDoesntExist(@Consumer EdcClient consumerClient) {
         // act
         assertThrows(
             ApiException.class,
@@ -353,8 +352,8 @@ public class ContractTerminationTest {
         E2eScenario scenario,
         ClientAndServer mockServer,
         @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient) {
-
+        @Provider EdcClient providerClient
+    ) {
         val assetId = "asset-1";
         val mockedAsset = scenario.createAssetWithMockResource(assetId);
         scenario.createContractDefinition(assetId);

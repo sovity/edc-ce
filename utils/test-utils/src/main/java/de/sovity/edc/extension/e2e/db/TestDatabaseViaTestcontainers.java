@@ -15,8 +15,11 @@
 package de.sovity.edc.extension.e2e.db;
 
 import de.sovity.edc.utils.versions.GradleVersions;
+import lombok.SneakyThrows;
+import lombok.val;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.utility.MountableFile;
 
 public class TestDatabaseViaTestcontainers implements TestDatabase {
     private static final String POSTGRES_USER = "postgres";
@@ -25,11 +28,16 @@ public class TestDatabaseViaTestcontainers implements TestDatabase {
 
     private final PostgreSQLContainer<?> container;
 
+    @SneakyThrows
     public TestDatabaseViaTestcontainers() {
+        val postgresConf = MountableFile.forClasspathResource("/postgres.conf");
+
         container = new PostgreSQLContainer<>(GradleVersions.POSTGRES_IMAGE_TAG)
-                .withUsername(POSTGRES_USER)
-                .withPassword(POSTGRES_PASSWORD)
-                .withDatabaseName(POSTGRES_DB);
+            .withUsername(POSTGRES_USER)
+            .withPassword(POSTGRES_PASSWORD)
+            .withDatabaseName(POSTGRES_DB)
+            .withCopyFileToContainer(postgresConf, "/etc/postgresql/postgresql.conf")
+            .withCommand("postgres", "-c", "config_file=/etc/postgresql/postgresql.conf");
     }
 
     @Override
@@ -37,10 +45,18 @@ public class TestDatabaseViaTestcontainers implements TestDatabase {
         container.stop();
     }
 
+    @SneakyThrows
     @Override
     public void beforeAll(ExtensionContext context) {
         container.start();
+//         try (Connection cnx = DriverManager.getConnection(container.getJdbcUrl(), container.getUsername(), container.getPassword())) {
+//             val stmt = cnx.createStatement();
+//             stmt.execute("create extension pg_stat_statements");
+//             val result = stmt.executeQuery("show shared_preload_libraries");
+//             System.out.println(result);
+//         }
     }
+
     @Override
     public JdbcCredentials getJdbcCredentials() {
         return new JdbcCredentials(container.getJdbcUrl(), container.getUsername(), container.getPassword());
