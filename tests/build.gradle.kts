@@ -6,7 +6,6 @@ dependencies {
     api(project(":launchers:common:base"))
     api(project(":launchers:common:auth-mock"))
 
-
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
 

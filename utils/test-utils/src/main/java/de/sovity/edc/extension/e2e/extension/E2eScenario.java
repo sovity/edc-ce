@@ -40,6 +40,7 @@ import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
+import jakarta.ws.rs.HttpMethod;
 import lombok.val;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -48,29 +49,33 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.RUNNING;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.Duration.ofSeconds;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class E2eScenario {
     private final ConnectorConfig consumerConfig;
     private final ConnectorConfig providerConfig;
-    private final ClientAndServer mockServer;
+    private final ClientAndServer clientAndServer;
     private final Duration timeout = ofSeconds(10);
 
     private EdcClient consumerClient;
     private EdcClient providerClient;
 
-    public E2eScenario(ConnectorConfig consumerConfig, ConnectorConfig providerConfig, ClientAndServer mockServer) {
+    public E2eScenario(ConnectorConfig consumerConfig, ConnectorConfig providerConfig, ClientAndServer clientAndServer) {
         this.consumerConfig = consumerConfig;
         this.providerConfig = providerConfig;
-        this.mockServer = mockServer;
+        this.clientAndServer = clientAndServer;
 
         consumerClient = EdcClient.builder()
             .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
@@ -116,7 +121,7 @@ public class E2eScenario {
     public MockedAsset createAssetWithMockResource(String id) {
 
         val path = "/assets/" + id;
-        val url = "http://localhost:" + mockServer.getPort() + path;
+        val url = "http://localhost:" + clientAndServer.getPort() + path;
 
         val uiDataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
@@ -125,7 +130,7 @@ public class E2eScenario {
 
         val accesses = new AtomicInteger(0);
 
-        mockServer.when(HttpRequest.request(path).withMethod("GET")).respond(it -> {
+        clientAndServer.when(HttpRequest.request(path).withMethod("GET")).respond(it -> {
             accesses.incrementAndGet();
             return HttpResponse.response().withStatusCode(200);
         });
@@ -270,5 +275,25 @@ public class E2eScenario {
         } else {
             return providerClient.uiApi().terminateContractAgreement(contractAgreementId, terminationRequest);
         }
+    }
+
+    public void transferToMockServerAndAwait(String contractAgreementId) {
+        val path = "/destination/" + URLEncoder.encode(contractAgreementId, UTF_8);
+        val url = "http://localhost:" + clientAndServer.getPort() + path;
+        val method = HttpMethod.POST;
+
+        clientAndServer.when(HttpRequest.request(path).withMethod(method))
+            .respond(it -> HttpResponse.response().withStatusCode(200));
+
+        transferAndAwait(InitiateTransferRequest.builder()
+            .contractAgreementId(contractAgreementId)
+            .dataSinkProperties(
+                Map.of(
+                    Prop.Edc.BASE_URL, url,
+                    Prop.Edc.METHOD, method,
+                    Prop.Edc.TYPE, "HttpData"
+                )
+            )
+            .build());
     }
 }
