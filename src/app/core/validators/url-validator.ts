@@ -11,7 +11,7 @@ export const urlValidator: ValidatorFn = (
 ): ValidationErrors | null => {
   const value: string = control.value;
 
-  if (!value.length || validUrlPattern.test(value)) {
+  if (!value?.length || validUrlPattern.test(value)) {
     return null;
   }
 

@@ -20,8 +20,10 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
-- Copyable contact email and subject fields on asset and data offer detail dialogs
+- Copyable contact email and subject fields on asset and data offer detail
+  dialogs
 - Assets Page search input field is now case insensitive
+- Temporary reimplement the Edit Asset as a Dialog
 
 ## [v4.1.0] - 2024-07-24
 
