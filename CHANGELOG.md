@@ -17,6 +17,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 - Logginghouse-Client: Update logging-house-client extension to v1.1.0
+- EDC Backend
+    - Fixed unrestricted policy wrongly displaying error
 
 ### Deployment Migration Notes
 #### logging-house-client extension
