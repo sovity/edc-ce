@@ -14,23 +14,28 @@
 
 package de.sovity.edc.e2e;
 
+import de.sovity.edc.client.gen.model.ContractTerminationRequest;
+import de.sovity.edc.ext.db.jooq.Tables;
 import de.sovity.edc.extension.e2e.extension.CeE2eTestExtensionConfigFactory;
 import de.sovity.edc.extension.e2e.extension.Consumer;
 import de.sovity.edc.extension.e2e.extension.E2eScenario;
 import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
 import de.sovity.edc.extension.e2e.extension.Provider;
+import kotlin.Pair;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.awaitility.core.ConditionTimeoutException;
+import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
 import org.jooq.DSLContext;
 import org.jooq.JSONFormat;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.mockserver.integration.ClientAndServer;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Stream;
 
 import static java.time.Duration.ofMinutes;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -52,7 +57,6 @@ public class DbPerformanceTest {
     @Test
     void whatsHappeningWithAllThoseDbQueries(
         E2eScenario scenario,
-        ClientAndServer clientAndServer,
         @Consumer DSLContext consumerDsl,
         @Provider DSLContext providerDsl
     ) {
@@ -60,19 +64,46 @@ public class DbPerformanceTest {
 
         writeBoth(consumerDsl, providerDsl, output, "started.csv");
 
-        val assetId = scenario.createAsset();
-        scenario.createContractDefinition(assetId);
-        val neg = scenario.negotiateAssetAndAwait(assetId);
+        Stream.iterate(0, i -> i + 1)
+            .limit(10)
+            .map(i -> {
+                val assetId = scenario.createAsset();
+                scenario.createContractDefinition(assetId);
+                val neg = scenario.negotiateAssetAndAwait(assetId);
 
-        scenario.transferToMockServerAndAwait(neg.getContractAgreementId());
+                scenario.terminateContractAgreementAndAwait(
+                    ContractNegotiation.Type.CONSUMER,
+                    neg.getContractAgreementId(),
+                    ContractTerminationRequest.builder()
+                        .reason("test")
+                        .detail("detail")
+                        .build());
+
+                try {
+                    scenario.transferToMockServerAndAwait(neg.getContractAgreementId());
+                } catch (ConditionTimeoutException e) {
+                    // expected, ignored
+                }
+
+                return new Pair<>(assetId, neg);
+            });
+
+        val leaseCount1 = countLeases(consumerDsl);
 
         writeBoth(consumerDsl, providerDsl, output, "negotiated.csv");
 
         Thread.sleep(MILLISECONDS.convert(ofMinutes(1)));
 
+        val leaseCount3 = countLeases(consumerDsl);
+
         writeBoth(consumerDsl, providerDsl, output, "ended.csv");
 
         System.out.println("JSONs " + output.toAbsolutePath());
+        System.out.println("LEASES: " + leaseCount1 + ", " + leaseCount3);
+    }
+
+    private int countLeases(DSLContext consumerDsl) {
+        return consumerDsl.selectCount().from(Tables.EDC_LEASE).fetchSingle().get(0, Integer.class);
     }
 
     private static void writeBoth(DSLContext consumerDsl, DSLContext providerDsl, Path output, String other) throws IOException {
