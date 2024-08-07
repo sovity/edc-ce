@@ -1,6 +1,5 @@
 import {Inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
 import {
   AssetPage,
   ConnectorLimits,
@@ -29,7 +28,7 @@ import {
   buildEdcClient,
 } from '@sovity.de/edc-client';
 import {APP_CONFIG, AppConfig} from '../../config/app-config';
-import {throwIfNull, toObservable} from '../../utils/rxjs-utils';
+import {toObservable} from '../../utils/rxjs-utils';
 import {EDC_FAKE_BACKEND} from './fake-backend/edc-fake-backend';
 
 @Injectable({providedIn: 'root'})
@@ -179,17 +178,8 @@ export class EdcApiService {
   getContractAgreementById(
     contractAgreementId: string,
   ): Observable<ContractAgreementCard> {
-    return this.getContractAgreementPage({
-      contractAgreementPageQuery: {terminationStatus: undefined},
-    }).pipe(
-      map((page) =>
-        page.contractAgreements.find(
-          (it) => it.contractAgreementId === contractAgreementId,
-        ),
-      ),
-      throwIfNull(
-        `Contract Agreement with ID ${contractAgreementId} not found`,
-      ),
+    return toObservable(() =>
+      this.edcClient.uiApi.getContractAgreementCard({contractAgreementId}),
     );
   }
 

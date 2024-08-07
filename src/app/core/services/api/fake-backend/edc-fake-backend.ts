@@ -191,6 +191,14 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
       return ok(ContractAgreementPageToJSON(page));
     })
 
+    .url('ui/pages/contract-agreement-page/*')
+    .on('GET', (contractAgreementId: String) => {
+      return ok(
+        contractAgreementPage().contractAgreements
+          .find( (contractAgreement) => contractAgreement.contractAgreementId === contractAgreementId)
+      );
+    })
+
     .url('ui/pages/content-agreement-page/*/terminate')
     .on('POST', (contractAgreementId) => {
       const request = ContractTerminationRequestFromJSON(body);
