@@ -4,6 +4,7 @@ import {ActiveFeatureSet} from '../../../core/config/active-feature-set';
 import {UiAssetMapped} from '../../../core/services/models/ui-asset-mapped';
 import {ParticipantIdLocalization} from '../../../core/services/participant-id-localization';
 import {ContractAgreementCardMapped} from '../../../routes/connector-ui/contract-agreement-page/contract-agreement-cards/contract-agreement-card-mapped';
+import {ConditionsForUseDialogService} from '../../conditions-for-use-dialog/conditions-for-use-dialog/conditions-for-use-dialog.service';
 import {PropertyGridGroup} from '../../property-grid/property-grid-group/property-grid-group';
 import {PropertyGridField} from '../../property-grid/property-grid/property-grid-field';
 import {PropertyGridFieldService} from '../../property-grid/property-grid/property-grid-field.service';
@@ -17,6 +18,7 @@ export class AssetPropertyGridGroupBuilder {
     private activeFeatureSet: ActiveFeatureSet,
     private propertyGridUtils: PropertyGridFieldService,
     private urlListDialogService: UrlListDialogService,
+    private conditionsForUseDialogService: ConditionsForUseDialogService,
     private policyPropertyFieldBuilder: PolicyPropertyFieldBuilder,
   ) {}
 
@@ -234,11 +236,9 @@ export class AssetPropertyGridGroupBuilder {
       );
     }
     if (asset.conditionsForUse) {
-      fields.push({
-        icon: 'description',
-        label: 'Conditions For Use',
-        ...this.propertyGridUtils.guessValue(asset.conditionsForUse),
-      });
+      fields.push(
+        this.buildConditionsForUseField(asset.conditionsForUse, asset.title),
+      );
     }
     if (asset.dataUpdateFrequency) {
       fields.push({
@@ -360,6 +360,24 @@ export class AssetPropertyGridGroupBuilder {
           subtitle: title,
           icon: 'attachment',
           urls: dataSampleUrls,
+        }),
+    };
+  }
+
+  buildConditionsForUseField(
+    conditionsForUse: string,
+    title: string,
+  ): PropertyGridField {
+    return {
+      icon: 'description',
+      label: 'Conditions For Use',
+      text: 'Show Conditions For Use',
+      onclick: () =>
+        this.conditionsForUseDialogService.showConditionsForUseDialog({
+          title: 'Conditions For Use',
+          subtitle: title,
+          icon: 'description',
+          description: conditionsForUse,
         }),
     };
   }

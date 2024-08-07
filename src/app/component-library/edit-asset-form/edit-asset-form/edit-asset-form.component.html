@@ -593,16 +593,25 @@
             </button>
           </div>
         </div>
-        <!-- Reference files description -->
+
+        <!-- Description -->
         <edit-asset-form-textarea
           *ngIf="form.advanced.controls.referenceFileUrls.length"
-          class="mt-2"
-          textareaClasses="h-28"
           label="Reference files description"
           fieldId="edit-asset-form-reference-files-description"
-          placeholder="..."
-          [ctrl]="form.advanced.controls.referenceFilesDescription">
-          Additional information regarding the reference files
+          [ctrl]="form.advanced.controls.referenceFilesDescription"
+          [placeholder]="
+            '# My Asset\n\nAt vero eos et accusam et justo duo dolores et ea rebum.\n\n## Details\n\nAt vero eos et accusam et justo duo dolores et ea **rebum**.'
+          ">
+          <div class="flex flex-row items-center gap-1 mb-1">
+            Additional information regarding the reference files. The field uses
+            <a
+              class="link"
+              externalLink
+              href="https://www.markdownguide.org/basic-syntax/"
+              >Markdown syntax</a
+            >
+          </div>
         </edit-asset-form-textarea>
       </ng-container>
     </edit-asset-form-group>
@@ -733,10 +742,20 @@
         textareaClasses="h-28"
         label="Conditions for use"
         fieldId="create-asset-form-conditions-for-use"
-        placeholder="Please cite the dataset as..."
-        [ctrl]="form.advanced.controls.conditionsForUse">
-        Additional not legally relevant usage instructions (e.g. how to cite the
-        dataset)
+        [ctrl]="form.advanced.controls.conditionsForUse"
+        [placeholder]="
+          '# My Asset\n\nAt vero eos et accusam et justo duo dolores et ea rebum.\n\n## Details\n\nAt vero eos et accusam et justo duo dolores et ea **rebum**.'
+        ">
+        <div class="flex flex-row items-center gap-1 mb-1">
+          Additional not legally relevant usage instructions (e.g. how to cite
+          the dataset) The field uses
+          <a
+            class="link"
+            externalLink
+            href="https://www.markdownguide.org/basic-syntax/"
+            >Markdown syntax</a
+          >
+        </div>
       </edit-asset-form-textarea>
     </edit-asset-form-group>
 

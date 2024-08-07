@@ -8,8 +8,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {ConditionsForUseDialogModule} from '../conditions-for-use-dialog/conditions-for-use-dialog.module';
 import {InitiateNegotiationConfirmTosDialogModule} from '../initiate-negotiation-confirm-tos-dialog/initiate-negotiation-confirm-tos-dialog.module';
 import {JsonDialogModule} from '../json-dialog/json-dialog.module';
+import {MarkdownDescriptionModule} from '../markdown-description/markdown-description.module';
 import {PipesAndDirectivesModule} from '../pipes-and-directives/pipes-and-directives.module';
 import {PropertyGridModule} from '../property-grid/property-grid.module';
 import {UiElementsModule} from '../ui-elements/ui-elements.module';
@@ -19,7 +21,6 @@ import {AssetDetailDialogDataService} from './asset-detail-dialog/asset-detail-d
 import {AssetDetailDialogComponent} from './asset-detail-dialog/asset-detail-dialog.component';
 import {AssetDetailDialogService} from './asset-detail-dialog/asset-detail-dialog.service';
 import {AssetPropertyGridGroupBuilder} from './asset-detail-dialog/asset-property-grid-group-builder';
-import {MarkdownDescriptionComponent} from './asset-detail-dialog/markdown-description/markdown-description.component';
 import {PolicyPropertyFieldBuilder} from './asset-detail-dialog/policy-property-field-builder';
 import {ContractOfferIconComponent} from './contract-offer-icon/contract-offer-icon.component';
 import {ContractOfferMiniListComponent} from './contract-offer-mini-list/contract-offer-mini-list.component';
@@ -47,9 +48,11 @@ import {TruncatedShortDescription} from './truncated-short-description/truncated
     // Features
     JsonDialogModule,
     UrlListDialogModule,
+    ConditionsForUseDialogModule,
     PropertyGridModule,
     UiElementsModule,
     PipesAndDirectivesModule,
+    MarkdownDescriptionModule,
 
     InitiateNegotiationConfirmTosDialogModule,
   ],
@@ -59,7 +62,6 @@ import {TruncatedShortDescription} from './truncated-short-description/truncated
     ContractOfferMiniListComponent,
     DataOfferCardsComponent,
     TransferHistoryMiniListComponent,
-    MarkdownDescriptionComponent,
     TruncatedShortDescription,
     AssetCardTagListComponent,
   ],

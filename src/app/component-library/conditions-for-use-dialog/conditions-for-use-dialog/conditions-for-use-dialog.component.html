@@ -18,20 +18,8 @@
   mat-dialog-content
   style="display: block; min-width: 40rem; max-width: 40rem; max-height: 60vh">
   <div *ngIf="data.description">
-    <div class="font-medium mb-2">Description</div>
     <markdown-description
       [description]="data.description"></markdown-description>
-  </div>
-
-  <div class="overflow-x-hidden" [class.mt-6]="data.description">
-    <div class="font-medium mb-2">URLs</div>
-    <ol class="p-0 m-0 mx-6">
-      <li *ngFor="let url of data.urls">
-        <a class="link w-fit" externalLink [href]="url"
-          ><span class="text-ellipsis">{{ url }}</span></a
-        >
-      </li>
-    </ol>
   </div>
 </div>
 

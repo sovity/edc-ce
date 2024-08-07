@@ -9,8 +9,8 @@ import {NgxJsonViewerModule} from 'ngx-json-viewer';
 import {ConfirmationDialogModule} from '../confirmation-dialog/confirmation-dialog.module';
 import {MarkdownDescriptionModule} from '../markdown-description/markdown-description.module';
 import {PipesAndDirectivesModule} from '../pipes-and-directives/pipes-and-directives.module';
-import {UrlListDialogComponent} from './url-list-dialog/url-list-dialog.component';
-import {UrlListDialogService} from './url-list-dialog/url-list-dialog.service';
+import {ConditionsForUseDialogComponent} from './conditions-for-use-dialog/conditions-for-use-dialog.component';
+import {ConditionsForUseDialogService} from './conditions-for-use-dialog/conditions-for-use-dialog.service';
 
 @NgModule({
   imports: [
@@ -32,8 +32,8 @@ import {UrlListDialogService} from './url-list-dialog/url-list-dialog.service';
     ConfirmationDialogModule,
     MarkdownDescriptionModule,
   ],
-  declarations: [UrlListDialogComponent],
-  providers: [UrlListDialogService],
-  exports: [UrlListDialogComponent],
+  declarations: [ConditionsForUseDialogComponent],
+  providers: [ConditionsForUseDialogService],
+  exports: [ConditionsForUseDialogComponent],
 })
-export class UrlListDialogModule {}
+export class ConditionsForUseDialogModule {}

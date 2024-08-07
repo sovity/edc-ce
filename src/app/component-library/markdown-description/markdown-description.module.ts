@@ -3,14 +3,14 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {NgxJsonViewerModule} from 'ngx-json-viewer';
 import {ConfirmationDialogModule} from '../confirmation-dialog/confirmation-dialog.module';
-import {MarkdownDescriptionModule} from '../markdown-description/markdown-description.module';
 import {PipesAndDirectivesModule} from '../pipes-and-directives/pipes-and-directives.module';
-import {UrlListDialogComponent} from './url-list-dialog/url-list-dialog.component';
-import {UrlListDialogService} from './url-list-dialog/url-list-dialog.service';
+import {MarkdownDescriptionComponent} from './markdown-description.component';
 
 @NgModule({
   imports: [
@@ -21,8 +21,10 @@ import {UrlListDialogService} from './url-list-dialog/url-list-dialog.service';
     // Angular Material
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatDialogModule,
     MatIconModule,
+    MatTooltipModule,
 
     // Third Party
     NgxJsonViewerModule,
@@ -30,10 +32,9 @@ import {UrlListDialogService} from './url-list-dialog/url-list-dialog.service';
     // EDC UI Modules
     PipesAndDirectivesModule,
     ConfirmationDialogModule,
-    MarkdownDescriptionModule,
   ],
-  declarations: [UrlListDialogComponent],
-  providers: [UrlListDialogService],
-  exports: [UrlListDialogComponent],
+  declarations: [MarkdownDescriptionComponent],
+  providers: [],
+  exports: [MarkdownDescriptionComponent],
 })
-export class UrlListDialogModule {}
+export class MarkdownDescriptionModule {}

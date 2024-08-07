@@ -26,6 +26,7 @@ the detailed section referring to by linking pull requests or issues.
 - Enchance EDC UI terminologies
 - Performance improvement when fetching a single contract agreement
 - Temporary reimplement the Edit Asset as a Dialog
+- Markdown support for Reference files description, Conditions for use fields
 - Fixed wrong date format displayed when creating a new data offer
 
 ## [v4.1.0] - 2024-07-24
