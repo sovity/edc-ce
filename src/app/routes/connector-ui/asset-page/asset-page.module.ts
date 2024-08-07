@@ -25,16 +25,7 @@ import {DataAddressModule} from '../../../component-library/data-address/data-ad
 import {PipesAndDirectivesModule} from '../../../component-library/pipes-and-directives/pipes-and-directives.module';
 import {UiElementsModule} from '../../../component-library/ui-elements/ui-elements.module';
 import {AssetCardsComponent} from './asset-cards/asset-cards.component';
-import {AssetEditDialogComponent} from './asset-edit-dialog/asset-edit-dialog.component';
-import {AssetEditDialogService} from './asset-edit-dialog/asset-edit-dialog.service';
-import {AssetEditDialogFormMapper} from './asset-edit-dialog/form/asset-edit-dialog-form-mapper';
 import {AssetPageComponent} from './asset-page/asset-page.component';
-import {DataCategorySelectComponent} from './data-category-select/data-category-select.component';
-import {DataSubcategoryItemsPipe} from './data-subcategory-select/data-subcategory-items.pipe';
-import {DataSubcategorySelectComponent} from './data-subcategory-select/data-subcategory-select.component';
-import {KeywordSelectComponent} from './keyword-select/keyword-select.component';
-import {LanguageSelectComponent} from './language-select/language-select.component';
-import {TransportModeSelectComponent} from './transport-mode-select/transport-mode-select.component';
 
 @NgModule({
   imports: [
@@ -70,18 +61,7 @@ import {TransportModeSelectComponent} from './transport-mode-select/transport-mo
     PipesAndDirectivesModule,
     UiElementsModule,
   ],
-  declarations: [
-    AssetCardsComponent,
-    AssetPageComponent,
-    AssetEditDialogComponent,
-    DataCategorySelectComponent,
-    DataSubcategorySelectComponent,
-    DataSubcategoryItemsPipe,
-    KeywordSelectComponent,
-    LanguageSelectComponent,
-    TransportModeSelectComponent,
-  ],
-  providers: [AssetEditDialogService, AssetEditDialogFormMapper],
+  declarations: [AssetCardsComponent, AssetPageComponent],
   exports: [AssetPageComponent],
 })
 export class AssetPageModule {}

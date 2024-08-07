@@ -5,7 +5,7 @@
       myTitle="Datasource"
       description="Define the datasource of the asset">
       <!-- Datasource Type -->
-      <div>
+      <div *ngIf="multipleDataSourceOptionsAvailable()">
         <edit-asset-form-label
           label="Datasource Type"
           htmlFor="create-asset-form-datasource-type"
@@ -19,47 +19,25 @@
           <mat-radio-button *ngIf="form.mode === 'EDIT'" value="Unchanged">
             Keep the datasource unchanged.
           </mat-radio-button>
-          <mat-radio-button value="On-Request">
-            I do not have a datasource.
-          </mat-radio-button>
           <mat-radio-button value="Datasource">
-            I want to connect to a datasource.
+            Readily available with a new data source
+          </mat-radio-button>
+          <mat-radio-button
+            *ngIf="this.activeFeatureSet.hasMdsFields()"
+            value="On-Request">
+            On Request
           </mat-radio-button>
         </mat-radio-group>
       </div>
 
-      <ng-container
-        *ngIf="form.datasource.value.dataSourceAvailability === 'On-Request'">
-        <!-- Contact E-Mail for On Request Assets -->
-        <edit-asset-form-input
-          class="mt-2"
-          fieldId="create-asset-form-contact-email"
-          label="Contact E-Mail"
-          placeholder="contact@my-org.com"
-          [ctrl]="form.datasource.controls.contactEmail"
-          >This email address will be offered to potential consumers for
-          contacting you. This is done in place of having an actual data source
-          connected.</edit-asset-form-input
-        >
-
-        <!-- Contact E-Mail Subject for On Request Assets -->
-        <edit-asset-form-input
-          class="mt-5"
-          fieldId="create-asset-form-contact-subject"
-          label="Preferred E-Mail Subject"
-          placeholder="Data Offer 'xyz'"
-          [ctrl]="form.datasource.controls.contactPreferredEmailSubject"
-          >Will be added to the mailto-link and displayed to potential consumers
-          to use.</edit-asset-form-input
-        >
-      </ng-container>
+      <!-- Data Source Type -->
 
       <ng-container
         *ngIf="
           form.datasource.controls.dataSourceAvailability.value === 'Datasource'
         ">
         <!-- Data Address Type -->
-        <div class="mt-5">
+        <div [ngClass]="{'mt-5': multipleDataSourceOptionsAvailable()}">
           <edit-asset-form-data-address-type-select
             label="Type"
             mode="Datasource-Create"
@@ -390,6 +368,34 @@
             </div>
           </div>
         </ng-container>
+      </ng-container>
+
+      <!-- On Request -->
+
+      <ng-container
+        *ngIf="form.datasource.value.dataSourceAvailability === 'On-Request'">
+        <!-- Contact E-Mail for On Request Assets -->
+        <edit-asset-form-input
+          class="mt-2"
+          fieldId="create-asset-form-contact-email"
+          label="Contact E-Mail"
+          placeholder="contact@my-org.com"
+          [ctrl]="form.datasource.controls.contactEmail"
+          >This email address will be offered to potential consumers for
+          contacting you. This is done in place of having an actual data source
+          connected.</edit-asset-form-input
+        >
+
+        <!-- Contact E-Mail Subject for On Request Assets -->
+        <edit-asset-form-input
+          class="mt-5"
+          fieldId="create-asset-form-contact-subject"
+          label="Preferred E-Mail Subject"
+          placeholder="Data Offer 'xyz'"
+          [ctrl]="form.datasource.controls.contactPreferredEmailSubject"
+          >Will be added to the mailto-link and displayed to potential consumers
+          to use.</edit-asset-form-input
+        >
       </ng-container>
     </edit-asset-form-group>
 

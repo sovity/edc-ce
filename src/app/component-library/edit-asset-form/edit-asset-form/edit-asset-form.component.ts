@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ActiveFeatureSet} from 'src/app/core/config/active-feature-set';
 import {ValidationMessages} from 'src/app/core/validators/validation-messages';
 import {ExpressionFormHandler} from '../../policy-editor/editor/expression-form-handler';
 import {EditAssetForm} from './form/edit-asset-form';
@@ -18,5 +19,10 @@ export class EditAssetFormComponent {
     public form: EditAssetForm,
     public validationMessages: ValidationMessages,
     public expressionFormHandler: ExpressionFormHandler,
+    public activeFeatureSet: ActiveFeatureSet,
   ) {}
+
+  multipleDataSourceOptionsAvailable(): boolean {
+    return this.form.mode === 'EDIT' || this.activeFeatureSet.hasMdsFields();
+  }
 }

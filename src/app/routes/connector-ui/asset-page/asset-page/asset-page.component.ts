@@ -1,4 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {filter, switchMap} from 'rxjs/operators';
 import {OnAssetEditClickFn} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data';
@@ -7,7 +8,6 @@ import {AssetDetailDialogService} from '../../../../component-library/catalog/as
 import {AssetService} from '../../../../core/services/asset.service';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
-import {AssetEditDialogService} from '../asset-edit-dialog/asset-edit-dialog.service';
 
 export interface AssetList {
   filteredAssets: UiAssetMapped[];
@@ -28,7 +28,7 @@ export class AssetPageComponent implements OnInit, OnDestroy {
     private assetServiceMapped: AssetService,
     private assetDetailDialogDataService: AssetDetailDialogDataService,
     private assetDetailDialogService: AssetDetailDialogService,
-    private assetEditDialogService: AssetEditDialogService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -59,8 +59,8 @@ export class AssetPageComponent implements OnInit, OnDestroy {
   }
 
   onAssetClick(asset: UiAssetMapped) {
-    const onAssetEditClick: OnAssetEditClickFn = (asset, onAssetUpdated) => {
-      this.onEdit(asset, onAssetUpdated);
+    const onAssetEditClick: OnAssetEditClickFn = (asset) => {
+      this.router.navigate(['/edit-asset', asset.assetId]);
     };
 
     const buildDialogData = (asset: UiAssetMapped) =>
@@ -73,39 +73,6 @@ export class AssetPageComponent implements OnInit, OnDestroy {
       .open(data, this.ngOnDestroy$)
       .pipe(filter((it) => !!it?.refreshList))
       .subscribe(() => this.refresh());
-  }
-
-  onCreate() {
-    this.assetEditDialogService
-      .showCreateDialog(this.ngOnDestroy$)
-      .subscribe((result) => {
-        if (result?.refreshedList) {
-          this.refresh();
-        }
-      });
-  }
-
-  onEdit(
-    asset: UiAssetMapped,
-    onAssetUpdated: (updatedDialogData: any) => void,
-  ) {
-    this.assetEditDialogService
-      .showEditDialog(asset, this.ngOnDestroy$)
-      .subscribe((result) => {
-        if (result?.refreshedList) {
-          onAssetUpdated(
-            this.assetDetailDialogDataService.assetDetailsEditable(
-              result.asset,
-              {
-                onAssetEditClick: () => {
-                  this.onEdit(result.asset, onAssetUpdated);
-                },
-              },
-            ),
-          );
-          this.refresh();
-        }
-      });
   }
 
   private refresh() {

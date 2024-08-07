@@ -6,13 +6,6 @@ export const dataAddressTypeSelectItems = (
 ): DataAddressTypeSelectItem[] => {
   const items: DataAddressTypeSelectItem[] = [];
 
-  if (type.startsWith('Datasource')) {
-    items.push({
-      id: 'On-Request',
-      label: '"On Request" Data Offer',
-    });
-  }
-
   items.push(
     {
       id: 'Http',

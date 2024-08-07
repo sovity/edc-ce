@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {ActiveFeatureSet} from 'src/app/core/config/active-feature-set';
 import {UiAssetMapped} from 'src/app/core/services/models/ui-asset-mapped';
 import {LanguageSelectItemService} from '../../language-select/language-select-item.service';
 import {AssetDatasourceFormValue} from './model/asset-datasource-form-model';
@@ -9,7 +10,10 @@ import {EditAssetFormValue} from './model/edit-asset-form-model';
  */
 @Injectable()
 export class EditAssetFormInitializer {
-  constructor(private languageSelectItemService: LanguageSelectItemService) {}
+  constructor(
+    private languageSelectItemService: LanguageSelectItemService,
+    private activeFeatureSet: ActiveFeatureSet,
+  ) {}
 
   forCreate(): EditAssetFormValue {
     return {
@@ -90,7 +94,9 @@ export class EditAssetFormInitializer {
 
   private emptyHttpDatasource(): AssetDatasourceFormValue {
     return {
-      dataSourceAvailability: 'On-Request',
+      dataSourceAvailability: this.activeFeatureSet.hasMdsFields()
+        ? 'On-Request'
+        : 'Datasource',
       contactEmail: '',
       contactPreferredEmailSubject: '',
 
@@ -119,7 +125,11 @@ export class EditAssetFormInitializer {
     return {
       ...this.emptyHttpDatasource(),
       dataSourceAvailability:
-        asset.dataSourceAvailability === 'LIVE' ? 'Unchanged' : 'On-Request',
+        asset.dataSourceAvailability === 'LIVE'
+          ? 'Unchanged'
+          : this.activeFeatureSet.hasMdsFields()
+          ? 'On-Request'
+          : 'Datasource',
       contactEmail: asset.onRequestContactEmail ?? '',
       contactPreferredEmailSubject: asset.onRequestContactEmailSubject ?? '',
     };
