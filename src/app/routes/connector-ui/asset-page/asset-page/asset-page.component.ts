@@ -8,6 +8,7 @@ import {AssetDetailDialogService} from '../../../../component-library/catalog/as
 import {AssetService} from '../../../../core/services/asset.service';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
+import {AssetEditDialogService} from '../asset-edit-dialog/asset-edit-dialog.service';
 
 export interface AssetList {
   filteredAssets: UiAssetMapped[];
@@ -28,6 +29,7 @@ export class AssetPageComponent implements OnInit, OnDestroy {
     private assetServiceMapped: AssetService,
     private assetDetailDialogDataService: AssetDetailDialogDataService,
     private assetDetailDialogService: AssetDetailDialogService,
+    private assetEditDialogService: AssetEditDialogService,
     private router: Router,
   ) {}
 
@@ -73,6 +75,16 @@ export class AssetPageComponent implements OnInit, OnDestroy {
       .open(data, this.ngOnDestroy$)
       .pipe(filter((it) => !!it?.refreshList))
       .subscribe(() => this.refresh());
+  }
+
+  onCreate() {
+    this.assetEditDialogService
+      .showCreateDialog(this.ngOnDestroy$)
+      .subscribe((result) => {
+        if (result?.refreshedList) {
+          this.refresh();
+        }
+      });
   }
 
   private refresh() {

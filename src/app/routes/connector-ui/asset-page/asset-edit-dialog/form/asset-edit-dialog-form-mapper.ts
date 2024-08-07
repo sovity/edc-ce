@@ -1,78 +1,61 @@
 import {Injectable} from '@angular/core';
-import {ActiveFeatureSet} from 'src/app/core/config/active-feature-set';
-import {UiAssetMapped} from 'src/app/core/services/models/ui-asset-mapped';
+import {UiAssetMapped} from '../../../../../core/services/models/ui-asset-mapped';
 import {LanguageSelectItemService} from '../../language-select/language-select-item.service';
 import {AssetDatasourceFormValue} from './model/asset-datasource-form-model';
-import {EditAssetFormValue} from './model/edit-asset-form-model';
+import {AssetEditorDialogFormValue} from './model/asset-editor-dialog-form-model';
 
 /**
- * Handles AngularForms for Edit Asset Form
+ * Handles AngularForms for AssetEditorDialog
  */
 @Injectable()
-export class EditAssetFormInitializer {
-  constructor(
-    private languageSelectItemService: LanguageSelectItemService,
-    private activeFeatureSet: ActiveFeatureSet,
-  ) {}
+export class AssetEditDialogFormMapper {
+  constructor(private languageSelectItemService: LanguageSelectItemService) {}
 
-  forCreate(): EditAssetFormValue {
+  forCreate(): AssetEditorDialogFormValue {
     return {
       mode: 'CREATE',
-      publishMode: 'PUBLISH_UNRESTRICTED',
-      general: {
+      metadata: {
         id: '',
-        name: '',
-        description: '',
-        keywords: [],
-        dataCategory: null,
-        dataSubcategory: null,
+        title: '',
         version: '',
         contentType: '',
+        description: '',
+        keywords: [],
         language: this.languageSelectItemService.english(),
         publisher: '',
         standardLicense: '',
         endpointDocumentation: '',
-        showAdvancedFields: false,
       },
       advanced: {
         dataModel: '',
+        dataCategory: null,
+        dataSubcategory: null,
         transportMode: null,
         geoReferenceMethod: '',
-        conditionsForUse: '',
-        dataUpdateFrequency: '',
-        sovereignLegalName: '',
-        geoLocation: '',
-        nutsLocations: [],
-        dataSampleUrls: [],
-        referenceFileUrls: [],
-        referenceFilesDescription: '',
-        temporalCoverage: {from: null, toInclusive: null},
       },
       datasource: this.emptyHttpDatasource(),
     };
   }
 
-  forEdit(asset: UiAssetMapped): EditAssetFormValue {
+  forEdit(asset: UiAssetMapped): AssetEditorDialogFormValue {
     return {
       mode: 'EDIT',
-      publishMode: 'DO_NOT_PUBLISH',
-      general: {
+      metadata: {
         id: asset.assetId,
-        name: asset.title,
-        description: asset.description,
-        keywords: asset.keywords,
-        dataCategory: asset.dataCategory,
-        dataSubcategory: asset.dataSubcategory,
+        title: asset.title,
         version: asset.version,
         contentType: asset.mediaType,
+        description: asset.description,
+        keywords: asset.keywords,
         language: asset.language,
         publisher: asset.publisherHomepage,
         standardLicense: asset.licenseUrl,
         endpointDocumentation: asset.landingPageUrl,
-        showAdvancedFields: true,
       },
       advanced: {
         dataModel: asset.dataModel,
+        dataCategory: asset.dataCategory,
+        dataSubcategory: asset.dataSubcategory,
         transportMode: asset.transportMode,
         geoReferenceMethod: asset.geoReferenceMethod,
         sovereignLegalName: asset.sovereignLegalName,
@@ -88,18 +71,12 @@ export class EditAssetFormInitializer {
           toInclusive: asset.temporalCoverageToInclusive,
         },
       },
-      datasource: this.emptyEditDatasource(asset),
+      datasource: this.emptyEditDatasource(),
     };
   }
 
   private emptyHttpDatasource(): AssetDatasourceFormValue {
     return {
-      dataSourceAvailability: this.activeFeatureSet.hasMdsFields()
-        ? 'On-Request'
-        : 'Datasource',
-      contactEmail: '',
-      contactPreferredEmailSubject: '',
-
       dataAddressType: 'Http',
       dataDestination: '',
 
@@ -121,13 +98,10 @@ export class EditAssetFormInitializer {
     };
   }
 
-  private emptyEditDatasource(asset: UiAssetMapped): AssetDatasourceFormValue {
+  private emptyEditDatasource(): AssetDatasourceFormValue {
     return {
       ...this.emptyHttpDatasource(),
-      dataSourceAvailability:
-        asset.dataSourceAvailability === 'LIVE' ? 'Unchanged' : 'On-Request',
-      contactEmail: asset.onRequestContactEmail ?? '',
-      contactPreferredEmailSubject: asset.onRequestContactEmailSubject ?? '',
+      dataAddressType: 'Unchanged',
     };
   }
 }

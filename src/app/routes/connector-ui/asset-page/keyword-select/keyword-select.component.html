@@ -1,0 +1,22 @@
+<mat-form-field class="grow" appearance="outline" color="accent">
+  <mat-label>{{ label }}</mat-label>
+  <mat-chip-list
+    #chipList
+    aria-label="keyword selection"
+    [formControl]="control">
+    <mat-chip
+      *ngFor="let keyword of control?.value ?? []"
+      (removed)="remove(keyword)">
+      {{ keyword }}
+      <button matChipRemove>
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip>
+    <input
+      placeholder="Add keyword..."
+      [matChipInputAddOnBlur]="true"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="add($event)" />
+  </mat-chip-list>
+</mat-form-field>

@@ -1,5 +1,6 @@
 import {Component, HostBinding, Input, OnChanges} from '@angular/core';
 import {FormControl} from '@angular/forms';
+import {ActiveFeatureSet} from 'src/app/core/config/active-feature-set';
 import {SimpleChangesTyped} from '../../../core/utils/angular-utils';
 import {DataAddressType} from './data-address-type';
 import {dataAddressTypeSelectItems} from './data-address-type-select-items';
@@ -23,10 +24,12 @@ export class DataAddressTypeSelectComponent implements OnChanges {
   @Input()
   mode: DataAddressTypeSelectMode = 'Datasource-Create';
 
-  items = dataAddressTypeSelectItems(this.mode);
+  constructor(private activeFeatureSet: ActiveFeatureSet) {}
+
+  items = dataAddressTypeSelectItems(this.mode, this.activeFeatureSet);
   ngOnChanges(changes: SimpleChangesTyped<DataAddressTypeSelectComponent>) {
     if (changes.mode) {
-      this.items = dataAddressTypeSelectItems(this.mode);
+      this.items = dataAddressTypeSelectItems(this.mode, this.activeFeatureSet);
     }
   }
 }
