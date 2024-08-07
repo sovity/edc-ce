@@ -27,8 +27,8 @@ export const SUPPORTED_POLICY_VERBS: PolicyVerbConfig[] = [
       'Time at which the policy is evaluated. This can be used to restrict the data offer to certain time periods',
     supportedOperators: ['GEQ', 'LEQ', 'GT', 'LT'],
     operandRightType: 'DATE',
-    operandRightPlaceholder: 'MM/DD/YYYY',
-    operandRightHint: 'MM/DD/YYYY',
+    operandRightPlaceholder: 'DD/MM/YYYY',
+    operandRightHint: 'DD/MM/YYYY',
     adapter: localDateAdapter,
   },
   {
