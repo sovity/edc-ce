@@ -44,13 +44,13 @@ public class TestData {
             Consumer<ConnectorRecord> applier
     ) {
         var organization = dsl.newRecord(Tables.ORGANIZATION);
-        organization.setMdsId(connectorRef.getOrganizationId());
+        organization.setId(connectorRef.getOrganizationId());
         organization.setName(connectorRef.getOrganizationLegalName());
         organization.insert();
 
         var connector = dsl.newRecord(Tables.CONNECTOR);
         connector.setEnvironment(connectorRef.getEnvironmentId());
-        connector.setMdsId(connectorRef.getOrganizationId());
+        connector.setOrganizationId(connectorRef.getOrganizationId());
         connector.setConnectorId(connectorRef.getConnectorId());
         connector.setName(connectorRef.getConnectorId() + " Name");
         connector.setEndpointUrl(connectorRef.getEndpoint());

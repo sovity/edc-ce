@@ -60,11 +60,11 @@ public class ConnectorQueries {
                         c.CONNECTOR_ID.as("connectorId"),
                         c.ENVIRONMENT.as("environmentId"),
                         o.NAME.as("organizationLegalName"),
-                        o.MDS_ID.as("organizationId"),
+                        o.ID.as("organizationId"),
                         c.ENDPOINT_URL.as("endpoint")
                 )
                 .from(c)
-                .leftJoin(o).on(c.MDS_ID.eq(o.MDS_ID))
+                .leftJoin(o).on(c.ORGANIZATION_ID.eq(o.ID))
                 .where(condition.apply(c, o), c.ENVIRONMENT.eq(crawlerConfig.getEnvironmentId()))
                 .fetchInto(ConnectorRef.class);
 
