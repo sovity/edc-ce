@@ -12,24 +12,10 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Major Changes
 
 #### Minor Changes
-- API Wrapper:
-    - Added wrapper API endpoint to query a single contract agreement
 
 #### Patch Changes
-- Logginghouse-Client: Update logging-house-client extension to v1.1.0
-- EDC Backend
-    - Fixed unrestricted policy wrongly displaying error
 
 ### Deployment Migration Notes
-#### logging-house-client extension
-As the updated logging-house-client extension now also saves data locally in a database, the following additional proerties must be added and set accordingly to a second additional database since the extension has its own flyway migration:
-- ```EDC_DATASOURCE_LOGGINGHOUSE_URL```: "postgres://some-url"
-- ```EDC_DATASOURCE_LOGGINGHOUSE_USER```: "username"
-- ```EDC_DATASOURCE_LOGGINGHOUSE_PASSWORD```: "password"
-
-If the extension is to be switched off, the following must now be set, as  the extension is now activated by default when integrated:
-- ```EDC_LOGGINGHOUSE_EXTENSION_ENABLED: 'false'```
-
 
 #### Compatible Versions
 
@@ -40,6 +26,58 @@ If the extension is to be switched off, the following must now be set, as  the e
   - Dev Catalog Crawler: `ghcr.io/sovity/catalog-crawler-dev:{{ VERSION }}`
   - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:{{ VERSION }}`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI VERSION }}`
+
+
+## [10.1.0] - 2024-08-09
+
+### Overview
+
+MDS 2.2 patch release
+
+### Detailed Changes
+
+API Wrapper update and bug fixing.
+
+#### Minor Changes
+
+- API Wrapper:
+    - Added wrapper API endpoint to query a single contract agreement
+
+#### Patch Changes
+
+- Logginghouse-Client: Update logging-house-client extension to v1.1.0
+- EDC Backend
+    - Fixed unrestricted policy wrongly displaying error
+    - Performance improvement when fetching a single contract agreement
+- EDC UI
+  - Copyable contact email and subject fields on asset and data offer detail dialogs
+  - Assets Page search input field is now case-insensitive
+  - Markdown support for Reference files description, Conditions for use fields
+  - Fixed wrong date format when creating a new data offer
+  - Temporarily re-implemented the Create Asset Dialog
+
+### Deployment Migration Notes
+
+#### logging-house-client extension
+
+As the updated logging-house-client extension now also saves data locally in a database, the following additional properties must be added and set accordingly to a second additional database since the extension has its own flyway migration:
+- `EDC_DATASOURCE_LOGGINGHOUSE_URL`: "postgres://some-url"
+- `EDC_DATASOURCE_LOGGINGHOUSE_USER`: "username"
+- `EDC_DATASOURCE_LOGGINGHOUSE_PASSWORD`: "password"
+
+If the extension is to be switched off, the following must now be set, as the extension is now activated by default when integrated:
+- `EDC_LOGGINGHOUSE_EXTENSION_ENABLED: 'false'`
+
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:10.1.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:10.1.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:10.1.0`
+  - Dev Catalog Crawler: `ghcr.io/sovity/catalog-crawler-dev:10.1.0`
+  - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.1.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.1`
 
 ## [10.0.0] - 2024-07-24
 
