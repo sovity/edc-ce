@@ -1,4 +1,4 @@
-<mat-form-field class="grow" appearance="outline" color="accent">
+<mat-form-field class="grow mb-2" appearance="outline" color="accent">
   <mat-label>{{ label }}</mat-label>
   <mat-chip-list
     #chipList
@@ -19,4 +19,11 @@
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       (matChipInputTokenEnd)="add($event)" />
   </mat-chip-list>
+  <button
+    class="!scale-[0.9]"
+    mat-icon-button
+    matSuffix
+    matTooltip="Keywords make the data offer easier to find.">
+    <mat-icon>info_outline</mat-icon>
+  </button>
 </mat-form-field>

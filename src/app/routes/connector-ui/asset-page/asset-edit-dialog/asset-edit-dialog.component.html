@@ -16,6 +16,13 @@
                 matInput
                 autocomplete="new-name"
                 [formControl]="form.metadata.controls.title" />
+              <button
+                class="!scale-[0.9]"
+                mat-icon-button
+                matSuffix
+                matTooltip="The main name of your asset. It will also be the name of the data offering displayed in the catalog.">
+                <mat-icon>info_outline</mat-icon>
+              </button>
             </mat-form-field>
 
             <!-- Version -->
@@ -26,6 +33,13 @@
                 autocomplete="new-id"
                 [formControl]="form.metadata.controls.version"
                 [placeholder]="'1.0'" />
+              <button
+                class="!scale-[0.9]"
+                mat-icon-button
+                matSuffix
+                matTooltip="The version of your asset">
+                <mat-icon>info_outline</mat-icon>
+              </button>
             </mat-form-field>
           </div>
 
@@ -39,6 +53,13 @@
               matInput
               autocomplete="new-id"
               [formControl]="ctrl" />
+            <button
+              class="!scale-[0.9]"
+              mat-icon-button
+              matSuffix
+              matTooltip="Asset ID, used internally, is an auto-generated string in a URL-compatible format, combining the asset name and version with a urn:artifact: prefix. You can customize it if needed.">
+              <mat-icon>info_outline</mat-icon>
+            </button>
             <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
               {{ validationMessages.invalidWhitespacesOrColonsMessage }}
             </mat-error>
@@ -82,17 +103,26 @@
           <!-- Language -->
           <language-select
             class="grow"
-            label="Language"
+            label="Language of the content"
             [control]="form.metadata.controls.language"></language-select>
 
           <div class="flex flex-row space-x-[10px]">
             <!-- Content Type -->
-            <mat-form-field class="grow">
+            <mat-form-field class="grow mb-2">
               <mat-label>Content Type</mat-label>
               <input
                 matInput
                 [formControl]="form.metadata.controls.contentType"
                 [placeholder]="'text/plain'" />
+              <mat-hint class="flex flex-row items-center gap-1 mb-1">
+                Describes the content type of the data as a MIME type, see
+                <a
+                  class="link"
+                  externalLink
+                  href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types"
+                  >common types</a
+                >
+              </mat-hint>
             </mat-form-field>
           </div>
 
@@ -102,6 +132,13 @@
             class="grow">
             <mat-label>Endpoint Documentation</mat-label>
             <input placeholder="https://" matInput [formControl]="ctrl" />
+            <button
+              class="!scale-[0.9]"
+              mat-icon-button
+              matSuffix
+              matTooltip="URL to the technical documentation about the data to be received.">
+              <mat-icon>info_outline</mat-icon>
+            </button>
             <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
               {{ validationMessages.invalidUrlMessage }}
             </mat-error>
@@ -114,6 +151,13 @@
               class="grow">
               <mat-label>Publisher</mat-label>
               <input placeholder="https://" matInput [formControl]="ctrl" />
+              <button
+                class="!scale-[0.9]"
+                mat-icon-button
+                matSuffix
+                matTooltip="URL of the original publisher of the data.">
+                <mat-icon>info_outline</mat-icon>
+              </button>
               <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
                 {{ validationMessages.invalidUrlMessage }}
               </mat-error>
@@ -124,7 +168,17 @@
               *ngIf="form.metadata.controls.standardLicense; let ctrl"
               class="grow">
               <mat-label>Standard License</mat-label>
-              <input placeholder="https://" matInput [formControl]="ctrl" />
+              <input
+                placeholder="https://creativecommons.org/licenses/by/4.0/deed.en"
+                matInput
+                [formControl]="ctrl" />
+              <button
+                class="!scale-[0.9]"
+                mat-icon-button
+                matSuffix
+                matTooltip="URL of the license under which the data is offered">
+                <mat-icon>info_outline</mat-icon>
+              </button>
               <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
                 {{ validationMessages.invalidUrlMessage }}
               </mat-error>
