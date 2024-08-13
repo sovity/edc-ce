@@ -11,20 +11,11 @@
 --       sovity GmbH - Improve database performance by removing duplicate indices
 --
 
--- Drop the non _pk index for edc_contract_agreement if it exists.
+-- Drop the duplicate indexes if they exist for improved resource usage.
 DROP INDEX IF EXISTS contract_agreement_id_uindex;
-
--- Drop the non _pk index for edc_contract_negotiation if it exists.
 DROP INDEX IF EXISTS contract_negotiation_id_uindex;
-
--- Drop the non _pk index for edc_data_request if it exists.
 DROP INDEX IF EXISTS data_request_id_uindex;
-
--- Drop the non _pk index for edc_lease if it exists.
 DROP INDEX IF EXISTS lease_lease_id_uindex;
-
--- Drop the non _pk index for edc_policydefinitions if it exists.
 DROP INDEX IF EXISTS edc_policydefinitions_id_uindex;
-
--- Drop the non _pk index for edc_transfer_process if it exists.
 DROP INDEX IF EXISTS transfer_process_id_uindex;
+
