@@ -15,6 +15,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
+- Remove duplicate database indices if they exist
+
 ### Deployment Migration Notes
 
 #### Compatible Versions
