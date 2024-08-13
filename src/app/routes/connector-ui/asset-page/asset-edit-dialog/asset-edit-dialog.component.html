@@ -162,8 +162,15 @@
             <mat-label>Data Model</mat-label>
             <input
               matInput
-              placeholder="unspecified"
+              placeholder="proprietary"
               [formControl]="form.advanced.controls.dataModel" />
+            <button
+              class="!scale-[0.9]"
+              mat-icon-button
+              matSuffix
+              matTooltip="Model for data exchange, e.g. DATEX II, TPEG for traffic and travel information">
+              <mat-icon>info_outline</mat-icon>
+            </button>
           </mat-form-field>
 
           <div class="flex flex-row space-x-[10px]">
@@ -182,6 +189,13 @@
                 matInput
                 placeholder="Lat/Lon"
                 [formControl]="form.advanced.controls.geoReferenceMethod" />
+              <button
+                class="!scale-[0.9]"
+                mat-icon-button
+                matSuffix
+                matTooltip="The method used for representing of geographical data, e.g GeoJSON, OpenLR">
+                <mat-icon>info_outline</mat-icon>
+              </button>
             </mat-form-field>
           </div>
 
@@ -192,17 +206,30 @@
               matInput
               placeholder="Data Owning Company GMBH"
               [formControl]="form.advanced.controls.sovereignLegalName" />
-            <mat-hint>Legal name of the data owner</mat-hint>
+            <button
+              class="!scale-[0.9]"
+              mat-icon-button
+              matSuffix
+              matTooltip="Legal name of the data owner">
+              <mat-icon>info_outline</mat-icon>
+            </button>
           </mat-form-field>
 
           <!-- Data update frequency -->
-          <div class="flex flex-row space-x-[10px] mt-[15px]">
+          <div class="flex flex-row space-x-[10px]">
             <mat-form-field class="grow">
               <mat-label>Data update frequency</mat-label>
               <input
                 matInput
                 placeholder="every month"
                 [formControl]="form.advanced.controls.dataUpdateFrequency" />
+              <button
+                class="!scale-[0.9]"
+                mat-icon-button
+                matSuffix
+                matTooltip="How often is the dataset updated, e.g	'Every 5 min.'">
+                <mat-icon>info_outline</mat-icon>
+              </button>
             </mat-form-field>
 
             <!-- Geo location -->
@@ -212,11 +239,27 @@
                 matInput
                 placeholder="40.741895,-73.989308"
                 [formControl]="form.advanced.controls.geoLocation" />
+              <button
+                class="!scale-[0.9]"
+                mat-icon-button
+                matSuffix
+                matTooltip="Simple description of the relevant geolocation, e.g. Hamburg and vicinity">
+                <mat-icon>info_outline</mat-icon>
+              </button>
             </mat-form-field>
           </div>
 
           <!-- NUTS locations -->
-          <div class="form-section-title">NUTS locations</div>
+          <div class="flex flex-row justify-start items-center">
+            <div class="form-section-title">NUTS locations</div>
+            <button
+              class="!scale-[0.9]"
+              mat-icon-button
+              matSuffix
+              matTooltip="NUTS codes are regional identifiers in Germany used for statistical and administrative purposes, covering states, districts, and municipalities. (e.g DE60)">
+              <mat-icon>info_outline</mat-icon>
+            </button>
+          </div>
           <div
             *ngFor="
               let location of form.advanced.controls.nutsLocations.controls;
@@ -247,7 +290,16 @@
           </div>
 
           <!-- Data sample URLs -->
-          <div class="form-section-title">Data samples</div>
+          <div class="flex flex-row justify-start items-center">
+            <div class="form-section-title">Data samples</div>
+            <button
+              class="!scale-[0.9]"
+              mat-icon-button
+              matSuffix
+              matTooltip="URLs of Dataset samples if available">
+              <mat-icon>info_outline</mat-icon>
+            </button>
+          </div>
           <div
             *ngFor="
               let sample of form.advanced.controls.dataSampleUrls.controls;
@@ -281,7 +333,17 @@
           </div>
 
           <!-- Reference file URLs -->
-          <div class="form-section-title">Reference files</div>
+          <div class="flex flex-row justify-start items-center">
+            <div class="form-section-title">Reference files</div>
+
+            <button
+              class="!scale-[0.9]"
+              mat-icon-button
+              matSuffix
+              matTooltip="URLs of Dataset schemas or other references">
+              <mat-icon>info_outline</mat-icon>
+            </button>
+          </div>
           <div
             *ngFor="
               let file of form.advanced.controls.referenceFileUrls.controls;
@@ -326,7 +388,16 @@
                 form.advanced.controls.referenceFilesDescription
               "></textarea>
             <mat-hint
-              >Additional information regarding the reference files
+              >Additional information regarding the reference files.
+              <span class="flex flex-row items-center gap-1"
+                >Supports
+                <a
+                  class="link"
+                  externalLink
+                  href="https://www.markdownguide.org/basic-syntax/"
+                  >Markdown syntax</a
+                >
+              </span>
             </mat-hint>
           </mat-form-field>
 
@@ -346,7 +417,10 @@
                 formControlName="toInclusive"
                 placeholder="End date (inclusive)" />
             </mat-date-range-input>
-            <mat-hint>DD/MM/YYYY (optional) – DD/MM/YYYY (optional)</mat-hint>
+            <mat-hint
+              >Start and/or end date when the dataset is available for
+              consumption. DD/MM/YYYY (optional) – DD/MM/YYYY (optional)
+            </mat-hint>
             <mat-datepicker-toggle
               matSuffix
               [for]="picker"></mat-datepicker-toggle>
@@ -368,7 +442,16 @@
               "></textarea>
             <mat-hint
               >Additional not legally relevant usage instructions (e.g. how to
-              cite the dataset)
+              cite the dataset). <br />
+              <span class="flex flex-row items-center gap-1"
+                >Supports
+                <a
+                  class="link"
+                  externalLink
+                  href="https://www.markdownguide.org/basic-syntax/"
+                  >Markdown syntax</a
+                >
+              </span>
             </mat-hint>
           </mat-form-field>
         </div>

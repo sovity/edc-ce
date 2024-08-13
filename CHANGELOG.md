@@ -20,6 +20,7 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
+- Added description for fields in asset creation mask
 
 ## [v4.1.1] - 2024-08-09
 
@@ -33,7 +34,8 @@ Various UI improvements and bug fixing
 
 #### Patch
 
-- Copyable contact email and subject fields on asset and data offer detail dialogs
+- Copyable contact email and subject fields on asset and data offer detail
+  dialogs
 - Assets Page search input field is now case-insensitive
 - Markdown support for Reference files description, Conditions for use fields
 - Fixed wrong date format when creating a new data offer
