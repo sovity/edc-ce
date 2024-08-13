@@ -37,4 +37,8 @@ public class ConnectorConfig {
     public void setProperties(Map<String, String> properties) {
         this.properties.putAll(properties);
     }
+
+    public WellKnowProperties getWellKnownProperties() {
+        return new WellKnowProperties(properties);
+    }
 }

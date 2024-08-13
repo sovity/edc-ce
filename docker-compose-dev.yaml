@@ -8,9 +8,9 @@ services:
     environment:
       EDC_UI_ACTIVE_PROFILE: ${EDC_UI_ACTIVE_PROFILE}
       EDC_UI_CONFIG_URL: edc-ui-config
+      EDC_UI_CATALOG_URLS: http://edc2:11003/api/dsp
       EDC_UI_MANAGEMENT_API_URL: http://localhost:11002/api/management
       EDC_UI_MANAGEMENT_API_KEY: ApiKeyDefaultValue
-      EDC_UI_CATALOG_URLS: http://edc2:11003/api/dsp
       EDC_UI_MANAGEMENT_API_URL_SHOWN_IN_DASHBOARD: http://localhost:11002/control/api/management
       NGINX_ACCESS_LOG: off
 
@@ -20,7 +20,14 @@ services:
       postgresql:
         condition: service_healthy
     environment:
-      MY_EDC_PARTICIPANT_ID: "my-edc"
+      MY_EDC_PARTICIPANT_ID: sovity-demo-a
+      EDC_OAUTH_TOKEN_URL: https://keycloak.stage-sovity.azure.sovity.io/realms/DAPS/protocol/openid-connect/token
+      EDC_OAUTH_PROVIDER_JWKS_URL: https://keycloak.stage-sovity.azure.sovity.io/realms/DAPS/protocol/openid-connect/certs
+      EDC_OAUTH_CLIENT_ID: 74:BE:81:48:61:F9:0E:06:2D:E4:CB:96:2E:36:30:11:83:4C:32:29:keyid:EB:8E:86:7F:A2:B6:19:8A:10:58:46:CF:88:38:D6:F1:E1:E2:FC:69
+      EDC_KEYSTORE: "/keystore.jks"
+      EDC_KEYSTORE_PASSWORD: 'changeit'
+      EDC_OAUTH_CERTIFICATE_ALIAS: 1
+      EDC_OAUTH_PRIVATE_KEY_ALIAS: 1
       MY_EDC_TITLE: "EDC Connector"
       MY_EDC_DESCRIPTION: "sovity Community Edition EDC Connector"
       MY_EDC_CURATOR_URL: "https://example.com"
@@ -41,7 +48,14 @@ services:
       EDC_WEB_REST_CORS_ENABLED: 'true'
       EDC_WEB_REST_CORS_HEADERS: 'origin,content-type,accept,authorization,X-Api-Key'
       EDC_WEB_REST_CORS_ORIGINS: '*'
-      EDC_AGENT_IDENTITY_KEY: 'client_id' # required for Mock IAM to work
+#      EDC_AGENT_IDENTITY_KEY: 'client_id' # required for Mock IAM to work
+
+      # LH-Extension
+      EDC_LOGGINGHOUSE_EXTENSION_ENABLED: 'true' #Deaktivierte LH-Extension
+      EDC_LOGGINGHOUSE_EXTENSION_URL: https://webhook.site/5de03553-60fb-4654-a39f-86ab7bf98950
+      EDC_DATASOURCE_LOGGINGHOUSE_URL: jdbc:postgresql://postgresql:5432/edc
+      EDC_DATASOURCE_LOGGINGHOUSE_USER: edc
+      EDC_DATASOURCE_LOGGINGHOUSE_PASSWORD: edc
 
     ports:
       - '11001:11001'
@@ -49,6 +63,9 @@ services:
       - '11003:11003'
       - '11004:11004'
       - '11005:5005'
+
+    volumes:
+      - /home/uuh/dev/.more/daps/server.keystore:/keystore.jks
 
   edc-ui2:
     image: ${EDC_UI_IMAGE}
@@ -142,3 +159,4 @@ volumes:
     driver: local
   postgresql2:
     driver: local
+
