@@ -45,13 +45,6 @@ public interface ContractTerminationObserver {
     }
 
     /**
-     * Indicates that the second step to terminate a contract, terminating a contract on the counterparty EDC, was successful.
-     * The contract is now marked as terminated on the counterparty EDC's side.
-     */
-    default void contractTerminationCompletedOnCounterpartyInstance() {
-    }
-
-    /**
      * Indicates that a contract termination was started by a counterparty EDC terminated successfully
      */
     default void contractTerminatedByCounterpartyStarted() {

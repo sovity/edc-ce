@@ -74,10 +74,9 @@ public class ContractAgreementTerminationService implements Observable<ContractT
 
         val terminatedAt = terminateContractQuery.terminateConsumerAgreementOrThrow(dsl, termination, SELF);
 
-        notifyTerminationToProvider(details.counterpartyAddress(), termination);
-
-
         notifyObservers(it -> it.contractTerminationCompletedOnThisInstance(terminatedAt));
+
+        notifyTerminationToProvider(details.counterpartyAddress(), termination);
 
         return terminatedAt;
     }
@@ -129,10 +128,6 @@ public class ContractAgreementTerminationService implements Observable<ContractT
                 termination.contractAgreementId(),
                 termination.detail(),
                 termination.reason()));
-
-        future.thenAccept(it -> {
-            notifyObservers(ContractTerminationObserver::contractTerminationCompletedOnCounterpartyInstance);
-        });
     }
 
     @Override

@@ -484,6 +484,10 @@ public class ContractTerminationTest {
         Thread.sleep(2000);
 
         // assert
+
+        assertThat(consumerService.getListeners()).hasSize(1);
+        assertThat(providerService.getListeners()).hasSize(1);
+
         verify(consumerObserver).contractTerminationStartedFromThisInstance();
         verify(consumerObserver).contractTerminationCompletedOnThisInstance(any());
         verify(consumerObserver).contractTerminationOnCounterpartyStarted();
@@ -491,8 +495,15 @@ public class ContractTerminationTest {
         verify(providerObserver).contractTerminatedByCounterpartyStarted();
         verify(providerObserver).contractTerminatedByCounterparty();
 
-        // TODO: why is the future not recieved..?!
-//         verify(consumerObserver).contractTerminationCompletedOnCounterpartyInstance();
+        // act
+
+        consumerService.unregisterListener(consumerObserver);
+        providerService.unregisterListener(providerObserver);
+
+        // assert
+
+        assertThat(consumerService.getListeners()).hasSize(0);
+        assertThat(providerService.getListeners()).hasSize(0);
     }
 
     private static void assertTermination(
