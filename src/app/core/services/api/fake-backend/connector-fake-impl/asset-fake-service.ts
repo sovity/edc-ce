@@ -15,6 +15,7 @@ let assets: UiAsset[] = [
   TestAssets.onRequestAsset,
   TestAssets.boring,
   TestAssets.short,
+  TestAssets.assetWithCustomProperties,
 ];
 
 export const assetPage = (): AssetPage => {

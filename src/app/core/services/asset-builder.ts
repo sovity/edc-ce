@@ -26,16 +26,20 @@ export class AssetBuilder {
 
   buildAsset(asset: UiAsset): UiAssetMapped {
     const {
-      customJsonAsString,
-      customJsonLdAsString,
-      privateCustomJsonAsString,
-      privateCustomJsonLdAsString,
       language,
       dataCategory,
       dataSubcategory,
       transportMode,
       ...assetProperties
     } = asset;
+
+    const {
+      customJsonAsString,
+      customJsonLdAsString,
+      privateCustomJsonAsString,
+      privateCustomJsonLdAsString,
+    } = asset;
+
     return {
       ...assetProperties,
       language: this.getLanguageItem(language),

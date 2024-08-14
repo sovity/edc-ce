@@ -1,7 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {EMPTY, Observable, catchError, concat, finalize, tap} from 'rxjs';
-import {IdResponseDto, UiCriterionLiteralType} from '@sovity.de/edc-client';
+import {
+  IdResponseDto,
+  UiAssetEditRequest,
+  UiCriterionLiteralType,
+} from '@sovity.de/edc-client';
 import {AssetAdvancedFormBuilder} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/asset-advanced-form-builder';
 import {AssetDatasourceFormBuilder} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/asset-datasource-form-builder';
 import {AssetGeneralFormBuilder} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/asset-general-form-builder';
@@ -145,8 +149,16 @@ export class AssetEditPageComponent implements OnInit {
     }
 
     if (mode === 'EDIT') {
-      const editRequest =
-        this.assetRequestBuilder.buildAssetEditRequest(formValue);
+      const asset = this.asset.data;
+
+      const editRequest: UiAssetEditRequest = {
+        ...this.assetRequestBuilder.buildAssetEditRequest(formValue),
+        customJsonAsString: asset?.customJsonAsString,
+        customJsonLdAsString: asset?.customJsonLdAsString,
+        privateCustomJsonAsString: asset?.privateCustomJsonAsString,
+        privateCustomJsonLdAsString: asset?.privateCustomJsonLdAsString,
+      };
+
       return this.edcApiService.editAsset(assetId, editRequest);
     }
 

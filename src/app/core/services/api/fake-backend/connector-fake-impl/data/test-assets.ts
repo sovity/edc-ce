@@ -73,6 +73,23 @@ export namespace TestAssets {
 This is a short description text that should be fully rendered without being **collapsed**. No *show more* button should be visible.
 `;
 
+  export const assetWithCustomProperties: UiAsset = {
+    dataSourceAvailability: 'LIVE',
+    assetId: 'asset-with-custom-properties',
+    title: 'Asset with Custom Properties',
+    description: 'Asset with Custom Properties',
+    descriptionShortText: 'Asset with Custom Properties',
+    connectorEndpoint: 'https://my-connector/api/dsp',
+    participantId: 'MDSL1234XX.C1234XX',
+    creatorOrganizationName: 'My Org',
+    isOwnConnector: true,
+    customJsonLdAsString: '{"http://custom.json.test/LD":"https://google.com"}',
+    customJsonAsString: '{"testKey":"testValue"}',
+    privateCustomJsonLdAsString:
+      '{"http://custom.json.test/LD/private":"https://google.com/private"}',
+    privateCustomJsonAsString: '{"privateTestKey":"testValue"}',
+  };
+
   export const onRequestAsset: UiAsset = {
     dataSourceAvailability: 'ON_REQUEST',
     assetId: 'part-names-july-2024',

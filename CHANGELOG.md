@@ -21,6 +21,7 @@ the detailed section referring to by linking pull requests or issues.
 #### Patch
 
 - Added description for fields in asset creation mask
+- Added proper handling of custom JSON properties in edit asset process
 
 ## [v4.1.1] - 2024-08-09
 
