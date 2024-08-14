@@ -13,6 +13,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
+- Fix a database initialization error when starting the EDC with Logging House v1.1.0
+
 #### Patch Changes
 
 - Improve database performance by removing duplicate indexes
