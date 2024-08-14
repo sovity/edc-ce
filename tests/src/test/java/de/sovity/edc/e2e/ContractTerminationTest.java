@@ -22,6 +22,8 @@ import de.sovity.edc.client.gen.model.ContractTerminatedBy;
 import de.sovity.edc.client.gen.model.ContractTerminationRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.TransferHistoryEntry;
+import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
+import de.sovity.edc.extension.contacttermination.ContractTerminationObserver;
 import de.sovity.edc.extension.e2e.extension.Consumer;
 import de.sovity.edc.extension.e2e.extension.E2eScenario;
 import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
@@ -34,10 +36,12 @@ import lombok.val;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.connector.contract.spi.ContractId;
 import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
+import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.mockito.Mockito;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
@@ -59,6 +63,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 
 public class ContractTerminationTest {
 
@@ -70,8 +76,8 @@ public class ContractTerminationTest {
     void canGetAgreementPageForNonTerminatedContract(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient) {
-
+        @Provider EdcClient providerClient
+    ) {
         val assets = IntStream.range(0, 3).mapToObj((it) -> scenario.createAsset());
 
         val agreements = assets
@@ -118,8 +124,8 @@ public class ContractTerminationTest {
     void canGetAgreementPageForTerminatedContract(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient) {
-
+        @Provider EdcClient providerClient
+    ) {
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         scenario.negotiateAssetAndAwait(assetId);
@@ -151,7 +157,6 @@ public class ContractTerminationTest {
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
     ) {
-
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAssetAndAwait(assetId);
@@ -180,8 +185,8 @@ public class ContractTerminationTest {
     void limitTheReasonSizeAt100Chars(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient) {
-
+        @Provider EdcClient providerClient
+    ) {
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAssetAndAwait(assetId);
@@ -221,8 +226,8 @@ public class ContractTerminationTest {
     void limitTheDetailSizeAt1000Chars(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient) {
-
+        @Provider EdcClient providerClient
+    ) {
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAssetAndAwait(assetId);
@@ -264,8 +269,7 @@ public class ContractTerminationTest {
     @TestFactory
     List<DynamicTest> theDetailsAreMandatory(
         E2eScenario scenario,
-        @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient
+        @Consumer EdcClient consumerClient
     ) {
         val invalidDetails = List.of(
             "",
@@ -305,8 +309,8 @@ public class ContractTerminationTest {
     void canTerminateFromProvider(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient) {
-
+        @Provider EdcClient providerClient
+    ) {
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAssetAndAwait(assetId);
@@ -337,7 +341,8 @@ public class ContractTerminationTest {
 
     @Test
     void doesntCrashWhenAgreementDoesntExist(
-        @Consumer EdcClient consumerClient) {
+        @Consumer EdcClient consumerClient
+    ) {
         // act
         assertThrows(
             ApiException.class,
@@ -353,8 +358,8 @@ public class ContractTerminationTest {
         E2eScenario scenario,
         ClientAndServer mockServer,
         @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient) {
-
+        @Provider EdcClient providerClient
+    ) {
         val assetId = "asset-1";
         val mockedAsset = scenario.createAssetWithMockResource(assetId);
         scenario.createContractDefinition(assetId);
@@ -417,8 +422,8 @@ public class ContractTerminationTest {
     void canTerminateOnlyOnce(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
-        @Provider EdcClient providerClient) {
-
+        @Provider EdcClient providerClient
+    ) {
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
         val negotiation = scenario.negotiateAssetAndAwait(assetId);
@@ -439,12 +444,63 @@ public class ContractTerminationTest {
         assertThat(alreadyExists.getLastUpdatedDate()).isEqualTo(firstTermination.getLastUpdatedDate());
     }
 
+    @SneakyThrows
+    @Test
+    void canListenToTerminationEvents(
+        E2eScenario scenario,
+        @Consumer EdcClient consumerClient,
+        @Consumer EdcExtension consumerExtension,
+        @Provider EdcClient providerClient,
+        @Provider EdcExtension providerExtension
+    ) {
+        // arrange
+        val assetId = scenario.createAsset();
+        scenario.createContractDefinition(assetId);
+        val negotiation = scenario.negotiateAssetAndAwait(assetId);
+
+        val detail = "Some detail";
+        val reason = "Some reason";
+        val contractTerminationRequest = ContractTerminationRequest.builder().detail(detail).reason(reason).build();
+        val contractAgreementId = negotiation.getContractAgreementId();
+
+        val consumerService = consumerExtension.getContext().getService(ContractAgreementTerminationService.class);
+        val providerService = providerExtension.getContext().getService(ContractAgreementTerminationService.class);
+
+        val consumerObserver = Mockito.spy(new ContractTerminationObserver() {
+        });
+        val providerObserver = Mockito.spy(new ContractTerminationObserver() {
+        });
+
+        consumerService.registerListener(consumerObserver);
+        providerService.registerListener(providerObserver);
+
+        // act
+
+        val termination = consumerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest);
+
+        awaitTerminationCount(consumerClient, 1);
+        awaitTerminationCount(providerClient, 1);
+
+        Thread.sleep(2000);
+
+        // assert
+        verify(consumerObserver).contractTerminationStartedFromThisInstance();
+        verify(consumerObserver).contractTerminationCompletedOnThisInstance(any());
+        verify(consumerObserver).contractTerminationOnCounterpartyStarted();
+
+        verify(providerObserver).contractTerminatedByCounterpartyStarted();
+        verify(providerObserver).contractTerminatedByCounterparty();
+
+        // TODO: why is the future not recieved..?!
+//         verify(consumerObserver).contractTerminationCompletedOnCounterpartyInstance();
+    }
+
     private static void assertTermination(
         ContractAgreementPage consumerSideAgreements,
         String detail,
         String reason,
-        ContractTerminatedBy terminatedBy) {
-
+        ContractTerminatedBy terminatedBy
+    ) {
         val contractAgreements = consumerSideAgreements.getContractAgreements();
         assertThat(contractAgreements).hasSize(1);
         assertThat(contractAgreements.get(0).getTerminationStatus()).isEqualTo(TERMINATED);

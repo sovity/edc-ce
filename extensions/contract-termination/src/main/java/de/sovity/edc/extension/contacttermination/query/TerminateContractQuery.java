@@ -31,8 +31,8 @@ public class TerminateContractQuery {
     public OffsetDateTime terminateConsumerAgreementOrThrow(
         DSLContext dsl,
         ContractTerminationParam termination,
-        ContractTerminatedBy terminatedBy) {
-
+        ContractTerminatedBy terminatedBy
+    ) {
         val tooAccurate = OffsetDateTime.now();
         val now = tooAccurate.truncatedTo(ChronoUnit.MICROS);
 
