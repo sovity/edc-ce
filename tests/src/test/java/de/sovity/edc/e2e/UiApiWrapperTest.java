@@ -18,6 +18,7 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
+import de.sovity.edc.client.gen.model.DataSourceAvailability;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
@@ -35,6 +36,8 @@ import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.client.gen.model.UiDataOffer;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
+import de.sovity.edc.client.gen.model.UiDataSourceHttpDataMethod;
+import de.sovity.edc.client.gen.model.UiDataSourceOnRequest;
 import de.sovity.edc.client.gen.model.UiPolicyConstraint;
 import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
@@ -630,6 +633,46 @@ class UiApiWrapperTest {
         assertThatJson(retrievedPolicy.getPolicyJsonLd())
             .whenIgnoringPaths("@id")
             .isEqualTo(alternativePolicy.getPolicyJsonLd());
+    }
+
+    @Test
+    void canMakeAnOnDemandDataSourceAvailable(
+        E2eScenario scenario,
+        @Provider EdcClient providerClient
+    ) {
+        // arrange
+        val assetId = scenario.createAsset(UiAssetCreateRequest.builder()
+            .dataSource(UiDataSource.builder()
+                .type(DataSourceType.ON_REQUEST)
+                .onRequest(UiDataSourceOnRequest.builder()
+                    .contactEmail("whatever@example.com")
+                    .contactPreferredEmailSubject("Subject")
+                    .build())
+                .build())
+                .id("asset")
+            .title("foo")
+            .build());
+
+        // act
+
+        providerClient.uiApi().editAsset(assetId, UiAssetEditRequest.builder()
+            .dataSourceOverrideOrNull(UiDataSource.builder()
+                .type(DataSourceType.HTTP_DATA)
+                .httpData(UiDataSourceHttpData.builder()
+                    .method(UiDataSourceHttpDataMethod.GET)
+                    .baseUrl("http://example.com/baseUrl")
+                    .build())
+                .build())
+            .build());
+
+        val asset =
+            providerClient.uiApi().getAssetPage().getAssets().stream().filter(it -> it.getAssetId().equals(assetId)).findFirst().get();
+
+        // assert
+        assertThat(asset.getDataSourceAvailability()).isEqualTo(DataSourceAvailability.LIVE);
+        assertThatJson(asset.getAssetJsonLd())
+            .inPath("$.[\"https://w3id.org/edc/v0.0.1/ns/dataAddress\"][\"https://w3id.org/edc/v0.0.1/ns/baseUrl\"]")
+            .isEqualTo("\"http://example.com/baseUrl\"");
     }
 
     private UiContractNegotiation negotiate(
