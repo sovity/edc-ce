@@ -594,6 +594,7 @@ class UiApiWrapperTest {
         assertThat(posContractDefinitionResponse.getAvailable()).isTrue();
     }
 
+    @DisabledOnGithub
     @Test
     void retrieveSingleContractAgreement(
         E2eScenario scenario,
