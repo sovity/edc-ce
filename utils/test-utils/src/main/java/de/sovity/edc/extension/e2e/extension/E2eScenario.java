@@ -85,9 +85,6 @@ public class E2eScenario {
 
     private final AtomicInteger assetCounter = new AtomicInteger(0);
 
-    /**
-     * @return assetId
-     */
     public String createAsset() {
         val dummyDataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
