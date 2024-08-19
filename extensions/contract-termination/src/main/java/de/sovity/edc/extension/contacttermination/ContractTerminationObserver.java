@@ -14,8 +14,6 @@
 
 package de.sovity.edc.extension.contacttermination;
 
-import java.time.OffsetDateTime;
-
 public interface ContractTerminationObserver {
 
     /**
