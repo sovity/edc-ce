@@ -23,6 +23,7 @@ import de.sovity.edc.client.gen.model.ContractTerminationRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.TransferHistoryEntry;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
+import de.sovity.edc.extension.contacttermination.ContractTerminationEvent;
 import de.sovity.edc.extension.contacttermination.ContractTerminationObserver;
 import de.sovity.edc.extension.e2e.extension.Consumer;
 import de.sovity.edc.extension.e2e.extension.E2eScenario;
@@ -41,6 +42,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
@@ -476,7 +478,7 @@ public class ContractTerminationTest {
 
         // act
 
-        val termination = consumerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest);
+        consumerClient.uiApi().terminateContractAgreement(contractAgreementId, contractTerminationRequest);
 
         awaitTerminationCount(consumerClient, 1);
         awaitTerminationCount(providerClient, 1);
@@ -488,12 +490,22 @@ public class ContractTerminationTest {
         assertThat(consumerService.getListeners()).hasSize(1);
         assertThat(providerService.getListeners()).hasSize(1);
 
-        verify(consumerObserver).contractTerminationStartedFromThisInstance();
-        verify(consumerObserver).contractTerminationCompletedOnThisInstance(any());
-        verify(consumerObserver).contractTerminationOnCounterpartyStarted();
+        ArgumentCaptor<ContractTerminationEvent> argument = ArgumentCaptor.forClass(ContractTerminationEvent.class);
 
-        verify(providerObserver).contractTerminatedByCounterpartyStarted();
-        verify(providerObserver).contractTerminatedByCounterparty();
+        verify(consumerObserver).contractTerminationStartedFromThisInstance(argument.capture());
+        assertTerminationEvent(argument, contractAgreementId, contractTerminationRequest);
+
+        verify(consumerObserver).contractTerminationCompletedOnThisInstance(any());
+        assertTerminationEvent(argument, contractAgreementId, contractTerminationRequest);
+
+        verify(consumerObserver).contractTerminationOnCounterpartyStarted(any());
+        assertTerminationEvent(argument, contractAgreementId, contractTerminationRequest);
+
+        verify(providerObserver).contractTerminatedByCounterpartyStarted(any());
+        assertTerminationEvent(argument, contractAgreementId, contractTerminationRequest);
+
+        verify(providerObserver).contractTerminatedByCounterparty(any());
+        assertTerminationEvent(argument, contractAgreementId, contractTerminationRequest);
 
         // act
 
@@ -504,6 +516,14 @@ public class ContractTerminationTest {
 
         assertThat(consumerService.getListeners()).hasSize(0);
         assertThat(providerService.getListeners()).hasSize(0);
+    }
+
+    private static void assertTerminationEvent(ArgumentCaptor<ContractTerminationEvent> argument, String contractAgreementId,
+                                  ContractTerminationRequest contractTerminationRequest) {
+        assertThat(argument.getValue().contractAgreementId()).isEqualTo(contractAgreementId);
+        assertThat(argument.getValue().detail()).isEqualTo(contractTerminationRequest.getDetail());
+        assertThat(argument.getValue().reason()).isEqualTo(contractTerminationRequest.getReason());
+        assertThat(argument.getValue().timestamp()).isNotNull();
     }
 
     private static void assertTermination(

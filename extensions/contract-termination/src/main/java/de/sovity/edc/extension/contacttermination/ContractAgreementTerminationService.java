@@ -60,7 +60,8 @@ public class ContractAgreementTerminationService implements Observable<ContractT
      */
     public OffsetDateTime terminateAgreementOrThrow(DSLContext dsl, ContractTerminationParam termination) {
 
-        notifyObservers(ContractTerminationObserver::contractTerminationStartedFromThisInstance);
+        val starterEvent = ContractTerminationEvent.from(termination, OffsetDateTime.now());
+        notifyObservers(it -> it.contractTerminationStartedFromThisInstance(starterEvent));
 
         val details = contractAgreementTerminationDetailsQuery.fetchAgreementDetailsOrThrow(dsl, termination.contractAgreementId());
 
@@ -74,7 +75,8 @@ public class ContractAgreementTerminationService implements Observable<ContractT
 
         val terminatedAt = terminateContractQuery.terminateConsumerAgreementOrThrow(dsl, termination, SELF);
 
-        notifyObservers(it -> it.contractTerminationCompletedOnThisInstance(terminatedAt));
+        val endEvent = ContractTerminationEvent.from(termination, terminatedAt);
+        notifyObservers(it -> it.contractTerminationCompletedOnThisInstance(endEvent));
 
         notifyTerminationToProvider(details.counterpartyAddress(), termination);
 
@@ -86,7 +88,8 @@ public class ContractAgreementTerminationService implements Observable<ContractT
         @Nullable String identity,
         ContractTerminationParam termination
     ) {
-        notifyObservers(ContractTerminationObserver::contractTerminatedByCounterpartyStarted);
+        val starterEvent = ContractTerminationEvent.from(termination, OffsetDateTime.now());
+        notifyObservers(it -> it.contractTerminatedByCounterpartyStarted(starterEvent));
 
         val details = contractAgreementTerminationDetailsQuery.fetchAgreementDetailsOrThrow(dsl, termination.contractAgreementId());
 
@@ -112,14 +115,16 @@ public class ContractAgreementTerminationService implements Observable<ContractT
 
         val result = terminateContractQuery.terminateConsumerAgreementOrThrow(dsl, termination, agent);
 
-        notifyObservers(ContractTerminationObserver::contractTerminatedByCounterparty);
+        val endEvent = ContractTerminationEvent.from(termination, OffsetDateTime.now());
+        notifyObservers(it -> it.contractTerminatedByCounterparty(endEvent));
 
         return result;
     }
 
     public void notifyTerminationToProvider(String counterPartyAddress, ContractTerminationParam termination) {
 
-        notifyObservers(ContractTerminationObserver::contractTerminationOnCounterpartyStarted);
+        val notificationEvent = ContractTerminationEvent.from(termination, OffsetDateTime.now());
+        notifyObservers(it -> it.contractTerminationOnCounterpartyStarted(notificationEvent));
 
         val future = sovityMessenger.send(
             SovityMessage.class,
