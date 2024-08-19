@@ -62,6 +62,7 @@ public class AssetApiService {
         Objects.requireNonNull(foundAsset, "Asset with ID %s not found".formatted(assetId));
         val editedAsset = assetMapper.editAsset(foundAsset, request);
         val updatedAsset = assetService.update(editedAsset).orElseThrow(ServiceException::new);
+        assetService.update(editedAsset.getId(), editedAsset.getDataAddress());
         return new IdResponseDto(updatedAsset.getId());
     }
 

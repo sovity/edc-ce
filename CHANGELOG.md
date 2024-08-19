@@ -16,6 +16,7 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 #### Patch Changes
 
 - Improve database performance by removing duplicate indexes
+- The data address is now correctly updated when editing an asset.
 
 ### Deployment Migration Notes
 
