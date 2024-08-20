@@ -22,6 +22,11 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 ### Deployment Migration Notes
 
+#### logging-house-client extension
+
+If the extension is to be switched off, the following must now be set, as the extension is now activated by default when integrated:
+- `EDC_LOGGINGHOUSE_EXTENSION_ENABLED: 'false'`
+
 #### Compatible Versions
 
 - Connector Backend Docker Images:
