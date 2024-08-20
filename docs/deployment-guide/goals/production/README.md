@@ -155,7 +155,7 @@ A LoggingHouse extension is included in the MDS variant, which means that additi
 EDC_LOGGINGHOUSE_EXTENSION_ENABLED: "true"
 EDC_LOGGINGHOUSE_EXTENSION_URL: https://clearing.test.mobility-dataspace.eu
 
-# LoggingHouse Extension database connection for its own database
+# Optional: LoggingHouse Extension database connection if you don't want to share the database between the EDC and the Logging House. By default, both the LH and the EDC share the same database.
 EDC_DATASOURCE_LOGGINGHOUSE_URL: jdbc:postgresql://postgresql2:5432/edc
 EDC_DATASOURCE_LOGGINGHOUSE_USER: edc
 EDC_DATASOURCE_LOGGINGHOUSE_PASSWORD: edc
