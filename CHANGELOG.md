@@ -17,8 +17,16 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 - Improve database performance by removing duplicate indexes
 - The data address is now correctly updated when editing an asset.
+- Fix a database initialization error when starting the EDC with Logging House v1.1.0
 
 ### Deployment Migration Notes
+
+#### MDS only
+
+##### logging-house-client extension
+
+If the extension is to be switched off, the following must now be set, as the extension is now activated by default when integrated:
+- `EDC_LOGGINGHOUSE_EXTENSION_ENABLED: 'false'`
 
 #### Compatible Versions
 
