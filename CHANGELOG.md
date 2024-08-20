@@ -31,11 +31,11 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 ### Overview
 
-API Wrapper update and bug fixing, database performance improvements.
+API Wrapper update, several bug fixes and database performance improvements.
 
 ### Detailed Changes
 
-This is a replacement for redacted release `10.1.0` with a few extra bug fixes.
+This is a replacement for redacted release `10.1.0` with a few additional bug fixes.
 
 #### Minor Changes
 
@@ -88,7 +88,7 @@ MDS 2.2 patch release
 
 *Redacted*
 
-This release contained a major bug that prevented the EDc from starting when the logging house and the EDC shared the same database.
+This release contained a major bug that prevented the EDC from starting when the logging house and the EDC shared the same database.
 
 This was fixed in 10.2.0
 
