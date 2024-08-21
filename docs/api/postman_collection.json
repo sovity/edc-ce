@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "5f373580-db27-4daf-86e8-84bc8ed933c8",
+		"_postman_id": "3e0d6241-260c-42d3-81a1-3e3d4e9497e1",
 		"name": "sovity EDC Community Edition Copy",
 		"description": "This is the official postman collection for the sovity EDC Community Edition.\n\nThe Management-API is based on core-edc v0.2.1.\n\nsovity EDC Community Edition: [https://github.com/sovity/edc-ce](https://github.com/sovity/edc-ce)\n\nLicense: [https://github.com/sovity/edc-ce/blob/main/LICENSE](https://github.com/sovity/edc-ce/blob/main/LICENSE)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "32949497"
+		"_exporter_id": "31514741"
 	},
 	"item": [
 		{
@@ -85,6 +85,36 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n    \"id\": \"testname-v1.0\",\r\n    \"title\": \"TestName\",\r\n    \"language\": \"https://w3id.org/idsa/code/EN\",\r\n    \"description\": \"Testdescription\",\r\n    \"publisherHomepage\": \"https://www.sovity.de\",\r\n    \"licenseUrl\": \"https://www.apache.org/licenses/LICENSE-2.0\",\r\n    \"version\": \"v1.0\",\r\n    \"keywords\": [\r\n        \"keyword1\",\r\n        \"keyword2\"\r\n    ],\r\n    \"mediaType\": \"application/json\",\r\n    \"landingPageUrl\": \"https://www.google.com\",\r\n    \"dataAddressProperties\": {\r\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"https://www.google.com\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/method\": \"GET\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/queryParams\": \"\"\r\n    },\r\n    \"dataSource\": {\r\n        \"type\": \"HTTP_DATA\",\r\n        \"httpData\": {\r\n            \"baseUrl\": \"http://example.com/baseUrl/\"\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/asset-page/assets",
+									"host": [
+										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
+									],
+									"path": [
+										"wrapper",
+										"ui",
+										"pages",
+										"asset-page",
+										"assets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Asset (with data-source on-request)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"testname-v1.0\",\r\n    \"title\": \"TestName\",\r\n    \"language\": \"https://w3id.org/idsa/code/EN\",\r\n    \"description\": \"Testdescription\",\r\n    \"publisherHomepage\": \"https://www.sovity.de\",\r\n    \"licenseUrl\": \"https://www.apache.org/licenses/LICENSE-2.0\",\r\n    \"version\": \"v1.0\",\r\n    \"keywords\": [\r\n        \"keyword1\",\r\n        \"keyword2\"\r\n    ],\r\n    \"mediaType\": \"application/json\",\r\n    \"landingPageUrl\": \"https://www.google.com\",\r\n    \"dataAddressProperties\": {\r\n        \"https://w3id.org/edc/v0.0.1/ns/type\": \"HttpData\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/baseUrl\": \"https://www.google.com\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/method\": \"GET\",\r\n        \"https://w3id.org/edc/v0.0.1/ns/queryParams\": \"\"\r\n    },\r\n    \"dataSource\": {\r\n        \"type\": \"ON_REQUEST\",\r\n        \"onRequest\": {\r\n            \"contactEmail\": \"contact@sovity.de\",\r\n            \"contactPreferredEmailSubject\": \"This asset is created just for testing purposes\"\r\n        }\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
