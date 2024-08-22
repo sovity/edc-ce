@@ -30,7 +30,7 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @Schema(description = "Request to create a data offer")
-public class DataOfferCreateRequest {
+public class DataOfferCreationRequest {
 
     @Schema(description = "The asset to create", requiredMode = REQUIRED)
     private UiAssetCreateRequest uiAssetCreateRequest;

@@ -26,7 +26,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
-import de.sovity.edc.ext.wrapper.api.ui.model.DataOfferCreateRequest;
+import de.sovity.edc.ext.wrapper.api.ui.model.DataOfferCreationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdAvailabilityResponse;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateCustomTransferRequest;
@@ -142,7 +142,7 @@ interface UiResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Create a new asset, contract definition and optional policies. Uses the same id for the asset, the contract policy, the access policy and the contract definition")
-    IdResponseDto createDataOffer(DataOfferCreateRequest dataOfferCreateRequest);
+    IdResponseDto createDataOffer(DataOfferCreationRequest dataOfferCreationRequest);
 
     @GET
     @Path("pages/catalog-page/data-offers")

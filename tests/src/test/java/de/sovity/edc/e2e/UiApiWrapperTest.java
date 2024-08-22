@@ -664,15 +664,17 @@ class UiApiWrapperTest {
 
         // act
 
-        providerClient.uiApi().editAsset(assetId, UiAssetEditRequest.builder()
-            .dataSourceOverrideOrNull(UiDataSource.builder()
-                .type(DataSourceType.HTTP_DATA)
-                .httpData(UiDataSourceHttpData.builder()
-                    .method(UiDataSourceHttpDataMethod.GET)
-                    .baseUrl("http://example.com/baseUrl")
+        providerClient.uiApi().editAsset(
+            assetId,
+            UiAssetEditRequest.builder()
+                .dataSourceOverrideOrNull(UiDataSource.builder()
+                    .type(DataSourceType.HTTP_DATA)
+                    .httpData(UiDataSourceHttpData.builder()
+                        .method(UiDataSourceHttpDataMethod.GET)
+                        .baseUrl("http://example.com/baseUrl")
+                        .build())
                     .build())
-                .build())
-            .build());
+                .build());
 
         val asset =
             providerClient.uiApi().getAssetPage().getAssets().stream().filter(it -> it.getAssetId().equals(assetId)).findFirst().get();

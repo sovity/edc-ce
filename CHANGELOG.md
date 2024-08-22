@@ -13,6 +13,9 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
+- Extend the Wrapper API
+  - Adds `createDataOffer` endpoint to create an asset, policies and a contract definition ina single call
+
 #### Patch Changes
 
 ### Deployment Migration Notes
