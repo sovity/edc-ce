@@ -35,4 +35,3 @@ public class PolicyDefinitionCreateDto {
     @Schema(description = "Policy Expression", requiredMode = Schema.RequiredMode.REQUIRED)
     private UiPolicyExpression expression;
 }
-

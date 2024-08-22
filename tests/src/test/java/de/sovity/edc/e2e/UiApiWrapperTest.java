@@ -15,16 +15,21 @@
 package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.client.gen.ApiException;
+import de.sovity.edc.client.gen.model.ContractDefinitionEntry;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
+import de.sovity.edc.client.gen.model.DataOfferCreateRequest;
 import de.sovity.edc.client.gen.model.DataSourceAvailability;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.PolicyDefinitionCreateDto;
+import de.sovity.edc.client.gen.model.PolicyDefinitionDto;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
+import de.sovity.edc.client.gen.model.UiAsset;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiAssetEditRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
@@ -50,6 +55,7 @@ import de.sovity.edc.extension.e2e.extension.Consumer;
 import de.sovity.edc.extension.e2e.extension.E2eScenario;
 import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
 import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.policy.AlwaysTruePolicyConstants;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -58,6 +64,7 @@ import jakarta.json.JsonObject;
 import lombok.val;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -76,6 +83,7 @@ import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtens
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 class UiApiWrapperTest {
@@ -650,7 +658,7 @@ class UiApiWrapperTest {
                     .contactPreferredEmailSubject("Subject")
                     .build())
                 .build())
-                .id("asset")
+            .id("asset")
             .title("foo")
             .build());
 
@@ -674,6 +682,244 @@ class UiApiWrapperTest {
         assertThatJson(asset.getAssetJsonLd())
             .inPath("$.[\"https://w3id.org/edc/v0.0.1/ns/dataAddress\"][\"https://w3id.org/edc/v0.0.1/ns/baseUrl\"]")
             .isEqualTo("\"http://example.com/baseUrl\"");
+    }
+
+    @Test
+    void canCreateDataOfferWithoutAnyNewPolicy(
+        @Provider EdcClient providerClient
+    ) {
+        // arrange
+        val dataSource = UiDataSource.builder()
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl("http://example.com")
+                .method(UiDataSourceHttpDataMethod.GET)
+                .build())
+            .type(DataSourceType.HTTP_DATA)
+            .build();
+
+        val assetId = "asset";
+        val asset = UiAssetCreateRequest.builder()
+            .dataSource(dataSource)
+            .id(assetId)
+            .title("My asset")
+            .build();
+
+        val dataOfferCreateRequest = new DataOfferCreateRequest(
+            asset,
+            DataOfferCreateRequest.PolicyEnum.DONT_PUBLISH,
+            null
+        );
+
+        // act
+        val returnedId = providerClient.uiApi().createDataOffer(dataOfferCreateRequest).getId();
+
+        // assert
+        assertThat(returnedId).isEqualTo(assetId);
+
+        assertThat(providerClient.uiApi().getAssetPage().getAssets())
+            .extracting(UiAsset::getAssetId)
+            .first()
+            .isEqualTo(assetId);
+
+        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient)).hasSize(0);
+
+        assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
+            .extracting(ContractDefinitionEntry::getContractDefinitionId)
+            .first()
+            .isEqualTo(assetId);
+    }
+
+    @Test
+    void canCreateDataOfferWithNewPolicy(
+        @Provider EdcClient providerClient
+    ) {
+        // arrange
+        val dataSource = UiDataSource.builder()
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl("http://example.com")
+                .method(UiDataSourceHttpDataMethod.GET)
+                .build())
+            .type(DataSourceType.HTTP_DATA)
+            .build();
+
+        val assetId = "asset";
+        val asset = UiAssetCreateRequest.builder()
+            .dataSource(dataSource)
+            .id(assetId)
+            .title("My asset")
+            .build();
+
+        val dataOfferCreateRequest = new DataOfferCreateRequest(
+            asset,
+            DataOfferCreateRequest.PolicyEnum.DONT_PUBLISH,
+            UiPolicyExpression.builder()
+                .constraint(UiPolicyConstraint.builder()
+                    .left("foo")
+                    .operator(OperatorDto.EQ)
+                    .right(UiPolicyLiteral.builder()
+                        .value("bar")
+                        .build())
+                    .build())
+                .build()
+        );
+
+        // act
+        val returnedId = providerClient.uiApi().createDataOffer(dataOfferCreateRequest).getId();
+
+        // assert
+        assertThat(returnedId).isEqualTo(assetId);
+
+        assertThat(providerClient.uiApi().getAssetPage().getAssets())
+            .extracting(UiAsset::getAssetId)
+            .first()
+            .isEqualTo(assetId);
+
+        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient))
+            .hasSize(1)
+            .extracting(PolicyDefinitionDto::getPolicyDefinitionId)
+            .first()
+            .isEqualTo(assetId);
+
+        assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
+            .extracting(ContractDefinitionEntry::getContractDefinitionId)
+            .first()
+            .isEqualTo(assetId);
+    }
+
+    @Test
+    void dontCreateAnythingIfTheAssetAlreadyExists(
+        E2eScenario scenario,
+        @Provider EdcClient providerClient
+    ) {
+        // arrange
+        val assetId = scenario.createAsset();
+
+        // act
+        assertThrows(
+            ApiException.class,
+            () -> providerClient.uiApi()
+                .createDataOffer(DataOfferCreateRequest.builder()
+                    .uiAssetCreateRequest(UiAssetCreateRequest.builder()
+                        .id(assetId)
+                        .dataSource(UiDataSource.builder()
+                            .type(DataSourceType.ON_REQUEST)
+                            .onRequest(UiDataSourceOnRequest.builder()
+                                .contactEmail("foo@example.com")
+                                .contactPreferredEmailSubject("Subject")
+                                .build())
+                            .build())
+                        .build())
+                    .build()));
+
+        // assert
+        assertThat(providerClient.uiApi().getAssetPage().getAssets())
+            .hasSize(1)
+            .extracting(UiAsset::getAssetId)
+            .first()
+            .isEqualTo(assetId);
+
+        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient)).hasSize(0);
+        assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions()).hasSize(0);
+    }
+
+    @Test
+    void dontCreateAnythingIfThePolicyAlreadyExists(
+        E2eScenario scenario,
+        @Provider EdcClient providerClient
+    ) {
+        // arrange
+        val assetId = "assetId";
+        scenario.createPolicy(assetId, OffsetDateTime.now(), OffsetDateTime.now());
+
+        // act
+        assertThrows(
+            ApiException.class,
+            () -> providerClient.uiApi()
+                .createDataOffer(DataOfferCreateRequest.builder()
+                    .uiAssetCreateRequest(UiAssetCreateRequest.builder()
+                        .id(assetId)
+                        .dataSource(UiDataSource.builder()
+                            .type(DataSourceType.ON_REQUEST)
+                            .onRequest(UiDataSourceOnRequest.builder()
+                                .contactEmail("foo@example.com")
+                                .contactPreferredEmailSubject("Subject")
+                                .build())
+                            .build())
+                        .build())
+                    .build()));
+
+        // assert
+        assertThat(providerClient.uiApi().getAssetPage().getAssets()).hasSize(0);
+
+        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient)).hasSize(1)
+            .extracting(PolicyDefinitionDto::getPolicyDefinitionId)
+            .first()
+            .isEqualTo("assetId");
+
+        assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions()).hasSize(0);
+    }
+
+    @Test
+    void dontCreateAnythingIfTheContractDefinitionAlreadyExists(
+        E2eScenario scenario,
+        @Provider EdcClient providerClient
+    ) {
+        // arrange
+        val assetId = "assetId";
+        val placeholder = scenario.createAsset();
+        providerClient.uiApi().createContractDefinition(ContractDefinitionRequest.builder()
+            .contractDefinitionId(assetId)
+            .accessPolicyId("always-true")
+            .contractPolicyId("always-true")
+            .assetSelector(List.of(UiCriterion.builder()
+                .operandLeft(Prop.Edc.ID)
+                .operator(UiCriterionOperator.EQ)
+                .operandRight(UiCriterionLiteral.builder()
+                    .type(UiCriterionLiteralType.VALUE)
+                    .value(placeholder)
+                    .build())
+                .build()))
+            .build());
+
+        // act
+        assertThrows(
+            ApiException.class,
+            () -> providerClient.uiApi()
+                .createDataOffer(DataOfferCreateRequest.builder()
+                    .uiAssetCreateRequest(UiAssetCreateRequest.builder()
+                        .id(assetId)
+                        .dataSource(UiDataSource.builder()
+                            .type(DataSourceType.ON_REQUEST)
+                            .onRequest(UiDataSourceOnRequest.builder()
+                                .contactEmail("foo@example.com")
+                                .contactPreferredEmailSubject("Subject")
+                                .build())
+                            .build())
+                        .build())
+                    .build()));
+
+        // assert
+        assertThat(providerClient.uiApi().getAssetPage().getAssets())
+            // the asset used for the placeholder contract definition
+            .hasSize(1)
+            .extracting(UiAsset::getAssetId)
+            .first()
+            .isEqualTo(placeholder);
+
+        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient)).hasSize(0);
+
+        assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
+            .hasSize(1)
+            .filteredOn(it -> it.getContractDefinitionId().equals(assetId))
+            .extracting(ContractDefinitionEntry::getContractDefinitionId)
+            .first()
+            // the already existing one, before the data offer creation attempt
+            .isEqualTo(assetId);
+    }
+
+    private static @NotNull List<PolicyDefinitionDto> getAllPoliciesExceptTheAlwaysTruePolicy(EdcClient edcClient) {
+        return edcClient.uiApi().getPolicyDefinitionPage().getPolicies().stream().filter(it -> !it.getPolicyDefinitionId().equals(
+            AlwaysTruePolicyConstants.POLICY_DEFINITION_ID)).toList();
     }
 
     private UiContractNegotiation negotiate(

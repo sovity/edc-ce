@@ -26,6 +26,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.DataOfferCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdAvailabilityResponse;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateCustomTransferRequest;
@@ -35,6 +36,10 @@ import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionCreateRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.PolicyDefinitionPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferHistoryPage;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiContractNegotiation;
+import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterion;
+import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionLiteral;
+import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionLiteralType;
+import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionOperator;
 import de.sovity.edc.ext.wrapper.api.ui.model.UiDataOffer;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.catalog.CatalogApiService;
@@ -50,8 +55,13 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPag
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageAssetFetcherService;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
+import org.eclipse.edc.spi.types.domain.asset.Asset;
+import org.eclipse.edc.web.spi.exception.EdcApiException;
+import org.eclipse.edc.web.spi.exception.InvalidRequestException;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static de.sovity.edc.ext.wrapper.utils.ValidatorUtils.validate;
@@ -133,6 +143,11 @@ public class UiResourceImpl implements UiResource {
     @Override
     public IdResponseDto deleteContractDefinition(String contractDefinitionId) {
         return contractDefinitionApiService.deleteContractDefinition(contractDefinitionId);
+    }
+
+    @Override
+    public IdResponseDto createDataOffer(DataOfferCreateRequest dataOfferCreateRequest) {
+        return dslContextFactory.transactionResult(trx -> dataOfferPageApiService.createDataOffer(trx, dataOfferCreateRequest));
     }
 
     @Override
