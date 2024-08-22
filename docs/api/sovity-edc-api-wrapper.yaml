@@ -129,7 +129,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DataOfferCreateRequest'
+              $ref: '#/components/schemas/DataOfferCreationRequest'
       responses:
         default:
           description: default response
@@ -938,7 +938,7 @@ components:
       - EQ
       - IN
       - LIKE
-    DataOfferCreateRequest:
+    DataOfferCreationRequest:
       required:
       - policy
       - uiAssetCreateRequest

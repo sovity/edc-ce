@@ -20,7 +20,7 @@ import de.sovity.edc.client.gen.model.ContractDefinitionEntry;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationRequest;
 import de.sovity.edc.client.gen.model.ContractNegotiationSimplifiedState;
-import de.sovity.edc.client.gen.model.DataOfferCreateRequest;
+import de.sovity.edc.client.gen.model.DataOfferCreationRequest;
 import de.sovity.edc.client.gen.model.DataSourceAvailability;
 import de.sovity.edc.client.gen.model.DataSourceType;
 import de.sovity.edc.client.gen.model.InitiateCustomTransferRequest;
@@ -706,9 +706,9 @@ class UiApiWrapperTest {
             .title("My asset")
             .build();
 
-        val dataOfferCreateRequest = new DataOfferCreateRequest(
+        val dataOfferCreateRequest = new DataOfferCreationRequest(
             asset,
-            DataOfferCreateRequest.PolicyEnum.DONT_PUBLISH,
+            DataOfferCreationRequest.PolicyEnum.DONT_PUBLISH,
             null
         );
 
@@ -751,9 +751,9 @@ class UiApiWrapperTest {
             .title("My asset")
             .build();
 
-        val dataOfferCreateRequest = new DataOfferCreateRequest(
+        val dataOfferCreateRequest = new DataOfferCreationRequest(
             asset,
-            DataOfferCreateRequest.PolicyEnum.DONT_PUBLISH,
+            DataOfferCreationRequest.PolicyEnum.DONT_PUBLISH,
             UiPolicyExpression.builder()
                 .constraint(UiPolicyConstraint.builder()
                     .left("foo")
@@ -800,7 +800,7 @@ class UiApiWrapperTest {
         assertThrows(
             ApiException.class,
             () -> providerClient.uiApi()
-                .createDataOffer(DataOfferCreateRequest.builder()
+                .createDataOffer(DataOfferCreationRequest.builder()
                     .uiAssetCreateRequest(UiAssetCreateRequest.builder()
                         .id(assetId)
                         .dataSource(UiDataSource.builder()
@@ -837,7 +837,7 @@ class UiApiWrapperTest {
         assertThrows(
             ApiException.class,
             () -> providerClient.uiApi()
-                .createDataOffer(DataOfferCreateRequest.builder()
+                .createDataOffer(DataOfferCreationRequest.builder()
                     .uiAssetCreateRequest(UiAssetCreateRequest.builder()
                         .id(assetId)
                         .dataSource(UiDataSource.builder()
@@ -887,7 +887,7 @@ class UiApiWrapperTest {
         assertThrows(
             ApiException.class,
             () -> providerClient.uiApi()
-                .createDataOffer(DataOfferCreateRequest.builder()
+                .createDataOffer(DataOfferCreationRequest.builder()
                     .uiAssetCreateRequest(UiAssetCreateRequest.builder()
                         .id(assetId)
                         .dataSource(UiDataSource.builder()
