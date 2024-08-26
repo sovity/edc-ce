@@ -1,6 +1,5 @@
 # Table of contents
 
-* [OAuth Data Address](getting-started/documentation/oauth-data-address.md)
 * [Parameterized Assets via UI](getting-started/documentation/parameterized_assets_via_ui.md)
 * [Parameterized Assets via Managment API](getting-started/documentation/parameterized_assets.md)
 * [Pull Data Transfer](getting-started/documentation/pull-data-transfer.md)
@@ -54,6 +53,7 @@
   * [Data-Transfer](Backend/Management-API/initiate-data-transfer.md)
   * [Parameterized Data-Sources](Backend/Management-API/parameterized-data-sources.md)
   * [QuerySpec](Backend/Management-API/queryspec.md)
+  * [OAuth Data Address](getting-started/documentation/oauth-data-address.md)
 
 ## Community Edition Deployment
 * [Overview](getting-started/README.md)
