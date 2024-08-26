@@ -70,3 +70,7 @@ During the creation of the contract definition, the provider has the opportunity
 **2. Terminating an Ongoing Contract Negotiation via API Call**
 
 Within the Management-API, there is an API that can abort and terminate ongoing contract negotiations at any time, independent of policies: `POST /v2/contractnegotiations/{id}/terminate`. If this API is used while a contract negotiation is ongoing, the contract negotiation will be aborted prematurely, ending in the terminated state.
+
+### Why am I getting a 500 error when accessing the /public endpoint of the Data-Plane?
+
+This issue can be caused by the connected customer-backend. The core-edc may convert error codes, leading to this issue. For example, a customer-backend returning a 400 code could be translated to a 500 by the core-edc.
