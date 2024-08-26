@@ -26,7 +26,6 @@
 ## Connector Backend
 
 * [Postman](Backend/Postman/setting-up-postman.md)
-  * [Postman Collection](Backend/Postman/postman-collection.md)
 * [API-Wrapper](Backend/API-Wrapper/what-is-the-api-wrapper.md)
   * [OpenAPI Specification](Backend/API-Wrapper/OpenAPI)
     * [Dashboard](Backend/API-Wrapper/OpenAPI/dashboard.md)
