@@ -96,3 +96,4 @@ Note that this option requires providing the data sink and may include fields fo
 Click on ```Initiate Transfer``` to send the asset to the desired data sink.
 
 {% hint style="warning" %} It is important to know that a data transfer can fail for a variety of reasons. This may be due to a misconfiguration of the data-source as well as the data-sink or unfulfilled contract policies set by the Provider, as contract policies are also evaluated at the time a transfer is initiated. {% endhint %}
+ 
