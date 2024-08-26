@@ -1,14 +1,11 @@
 # Table of contents
 
 * [Welcome](welcome.md)
-
-* [Parameterized Assets via UI](getting-started/documentation/parameterized_assets_via_ui.md)
-* [Parameterized Assets via Managment API](getting-started/documentation/parameterized_assets.md)
-
-## General
-
 * [Data Transfer Modes](getting-started/documentation/data-transfer-methods.md)
 * [FAQ](getting-started/documentation/faq.md)
+* 
+* [Parameterized Assets via UI](getting-started/documentation/parameterized_assets_via_ui.md)
+* [Parameterized Assets via Managment API](getting-started/documentation/parameterized_assets.md)
 
 ## Frontend
 
