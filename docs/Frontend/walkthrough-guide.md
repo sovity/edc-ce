@@ -39,4 +39,3 @@ One of the consumer's first steps is to query the data catalog of another connec
 If a previous contract negotiation ends successfully, a contract is concluded. The current contracts can be viewed on the Contracts-page. In addition to static details about the contract, such as when it was concluded and how many data transfers have already been made, a data transfer can also be initiated by clicking on the existing contract and pressing the transfer button. When initiating the transfer, further information about the data sink must be specified and a decision must be made as to where the data should actually be transferred. The page is divided into consuming and providing contracts.  In addition, there are different views to see only all active contracts, all terminated contracts or simply all contracts regardless of their status.
 
 ![Contract Agreement](/docs/images/edc-ui-walkthrough-contracts.png)
-
