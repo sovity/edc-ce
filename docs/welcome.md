@@ -21,7 +21,7 @@ To begin your journey with our EDC, explore the following sections:
 
 1. **[Frontend Walkthrough](/docs/Frontend/walkthrough-guide.md)**: Understand the fundamental concepts of our EDC using our frontend.
 2. **[API-Wrapper vs Management-API](/docs/Backend/API-Wrapper/relationship.md)**: Interesting in using backend APIs?
-3. **[Overview](/docs/getting-started/README.md)**: A practical guide to get our EDC up and running quickly on your own.
+3. **[Deploy your own EDC](/docs/getting-started/README.md)**: A practical guide to get our EDC up and running quickly on your own.
 
 ## Community and Support
 
