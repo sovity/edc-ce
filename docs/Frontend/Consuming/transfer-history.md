@@ -17,3 +17,4 @@ To get more details about a specific transfer, click on ```show details```. This
 ## Using Contract Agreement ID for Further Information
 
 With the Contract Agreement ID, you can navigate to the ```Contracts``` page, use the search feature to enter the ID, and access more detailed information about the contract behind the transfer.
+ 
