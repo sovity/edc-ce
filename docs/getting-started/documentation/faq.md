@@ -56,3 +56,17 @@ No, this is neither possible via the frontend nor via the backend APIs. Contract
 ### Can a user publish third-party data assets, such as REST API endpoints?
 
 Yes, a user can publish data assets, including REST API endpoints from third parties. For example, you can use sources like https://www.google.com as a data source, which would transfer the HTML-source code of google.com. However, it is crucial to ensure the protection of your own APIs for this reason, so that no one can pass it off as their own. We recommend securing your APIs using methods such as API-keys or OAuth2 to control access and protect your data.  
+
+### Can a Contract Negotiation Fail?
+
+**1. The Consumer Does Not Comply with the Provider’s Contract Policy**
+
+During the creation of the contract definition, the provider has the opportunity to set conditions (policies) for its data offering.
+
+- The **access policy** describes under which conditions a data offer becomes visible to another connector when the provider's catalog is requested. If a potential consumer sees the data offer when the provider's catalog is requested, the consumer has the opportunity to start a contract negotiation.
+
+- The **contract policy** describes the conditions under which a potential consumer can conclude a contract when starting a contract negotiation. If the potential consumer satisfies the access policy but the conditions of the contract policy are not met, the consumer can see the offer but cannot conclude a successful contract negotiation.
+
+**2. Terminating an Ongoing Contract Negotiation via API Call**
+
+Within the Management-API, there is an API that can abort and terminate ongoing contract negotiations at any time, independent of policies: `POST /v2/contractnegotiations/{id}/terminate`. If this API is used while a contract negotiation is ongoing, the contract negotiation will be aborted prematurely, ending in the terminated state.
