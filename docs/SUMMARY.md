@@ -25,11 +25,9 @@
    
 ## Connector Backend
 
-* [Postman](Backend/Postman/Readme.md)
-  * [Setting Up Postman](Backend/Postman/setting-up-postman.md)
+* [Postman](Backend/Postman/setting-up-postman.md)
   * [Postman Collection](Backend/Postman/postman-collection.md)
-* [API-Wrapper](Backend/API-Wrapper/Readme.md)
-  * [What is the API-Wrapper?](Backend/API-Wrapper/what-is-the-api-wrapper.md)
+* [API-Wrapper](Backend/API-Wrapper/what-is-the-api-wrapper.md)
   * [OpenAPI Specification](Backend/API-Wrapper/OpenAPI)
     * [Dashboard](Backend/API-Wrapper/OpenAPI/dashboard.md)
     * [Assets](Backend/API-Wrapper/OpenAPI/assets.md)
@@ -42,8 +40,7 @@
     * [Other APIs](Backend/API-Wrapper/OpenAPI/other.md)
   * [API-Wrapper vs Management-API](Backend/API-Wrapper/relationship.md)
   * [Java Client Library](Backend/API-Wrapper/java-client-library-examples.md)
-* [Management-API](Backend/Management-API)
-  * [What is the Management-API?](Backend/Management-API/what-is-the-management-api.md)
+* [Management-API](Backend/Management-API/what-is-the-management-api.md)
   * [OpenAPI Specification](Backend/Management-API/OpenAPI)
     * [Assets](Backend/Management-API/OpenAPI/assets.md)
     * [Policy-Definitions](Backend/Management-API/OpenAPI/policydefinitions.md)
