@@ -53,7 +53,6 @@
   * [Data-Transfer](Backend/Management-API/initiate-data-transfer.md)
   * [Parameterized Data-Sources](Backend/Management-API/parameterized-data-sources.md)
   * [QuerySpec](Backend/Management-API/queryspec.md)
-  * [OAuth Data Address](getting-started/documentation/oauth-data-address.md)
 
 ## Community Edition Deployment
 * [Overview](getting-started/README.md)
