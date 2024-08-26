@@ -8,3 +8,4 @@ To familiarize yourself with the individual details of the settings and fields, 
 - Create Contract Definition
 
 ![Create Data Offer](/docs/images/edc-ui-create-data-offer.png)
+ 
