@@ -18,3 +18,4 @@ By clicking on a terminated contract in the Contracts area, you can also see wha
 ![Terminated Contracts Insights](/docs/images/edc-ui-terminate-2.png)
 
 Please note: Only sovity connectors support the functionality of terminating contracts on both sides. If the other connector does not know the functionality of terminating contracts and you nevertheless trigger a contract termination because you use a sovity Connector, the contract is terminated on your side and the other side will ignore the message to terminate the contract, which means that the status of the contract shows as still active in their Connector while being terminated on your side. 
+ 
