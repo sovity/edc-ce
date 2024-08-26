@@ -1,6 +1,5 @@
 # Table of contents
 
-* [Getting Started](getting-started/README.md)
 * [Data Transfer Modes](getting-started/documentation/data-transfer-methods.md)
 * [API Wrapper](getting-started/documentation/api_wrapper.md)
 * [OAuth Data Address](getting-started/documentation/oauth-data-address.md)
@@ -55,6 +54,7 @@
   * [QuerySpec](Backend/Management-API/queryspec.md)
 
 ## Community Edition Deployment
+* [Overview](getting-started/README.md)
 * [Local Demo](deployment-guide/goals/local-demo/README.md)
 * [Development](deployment-guide/goals/development/README.md)
 * [Production](deployment-guide/goals/production/README.md)
