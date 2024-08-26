@@ -1,4 +1,4 @@
-# Summary
+# Table of contents
 
 * [Getting Started](getting-started/README.md)
 * [Data Transfer Modes](getting-started/documentation/data-transfer-methods.md)
