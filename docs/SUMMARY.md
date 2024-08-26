@@ -6,6 +6,7 @@
 ## General
 
 * [Data Transfer Modes](getting-started/documentation/data-transfer-methods.md)
+* [FAQ](getting-started/documentation/faq.md)
 
 ## Frontend
 
