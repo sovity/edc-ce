@@ -9,6 +9,6 @@
 * [Pull Data Transfer](getting-started/documentation/pull-data-transfer.md)
 
 ## Deployment
-* [Deployment Goal: Local Demo](deployment-guide/goals/local-demo)
-* [Deployment Goal: Development](deployment-guide/goals/development)
-* [Deployment Goal: Production](deployment-guide/goals/production)
+* [Local Demo](deployment-guide/goals/local-demo/README.md)
+* [Development](deployment-guide/goals/development/README.md)
+* [Production](deployment-guide/goals/production/README.md)
