@@ -7,7 +7,7 @@ The connector supports two different data transfer modes:
 2. HTTPProxy: The provider EDC fetches the data and passes it on consumer's data transfer request synchronously back to the consumer.
 
 The following diagram illustrates the different transmission modes:
-![data-transfer-methods.png](images%2Fdata-transfer-methods.png)
+![Data Transfer Methods](./images/data-transfer-methods.png)
 
 # Consuming Data via HttpProxy / HTTP Pull
 The Use-Case Backend-Application is involved in steps b1, b4, b5 and b8 of the diagram. It should provide an endpoint for receiving
