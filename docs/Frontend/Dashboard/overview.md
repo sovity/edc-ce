@@ -41,3 +41,4 @@ Navigate through the Connector to access all other pages. You can create an asse
 
 ## Right - General Information about the Connector
 The right-hand section provides general details about the EDC UI. At the top, you can find and copy the Connector endpoint and the Management API URL. Below, you will see a general introduction to the EDC UI.
+ 
