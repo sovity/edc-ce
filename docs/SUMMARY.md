@@ -1,6 +1,5 @@
 # Table of contents
 
-* [API Wrapper](getting-started/documentation/api_wrapper.md)
 * [OAuth Data Address](getting-started/documentation/oauth-data-address.md)
 * [Parameterized Assets via UI](getting-started/documentation/parameterized_assets_via_ui.md)
 * [Parameterized Assets via Managment API](getting-started/documentation/parameterized_assets.md)
