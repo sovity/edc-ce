@@ -8,7 +8,7 @@
 * [Parameterized Assets via Managment API](getting-started/documentation/parameterized_assets.md)
 * [Pull Data Transfer](getting-started/documentation/pull-data-transfer.md)
 
-## Deployment
+## Community Edition Deployment
 * [Local Demo](deployment-guide/goals/local-demo/README.md)
 * [Development](deployment-guide/goals/development/README.md)
 * [Production](deployment-guide/goals/production/README.md)
