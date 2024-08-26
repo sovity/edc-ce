@@ -71,3 +71,4 @@ Proceed by providing metadata as explained above.
 Click on ```Create``` to create the asset.
 
 You have now connected a data source to the Connector. To share this data with other data space participants, you need to define a Policy and then create a Contract Definition.
+ 
