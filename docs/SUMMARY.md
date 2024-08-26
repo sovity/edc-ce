@@ -28,6 +28,7 @@
 ## Backend
 
 * [Postman](Backend/Postman/setting-up-postman.md)
+* [API-Wrapper vs Management-API](Backend/API-Wrapper/relationship.md)
 * [API-Wrapper](Backend/API-Wrapper/what-is-the-api-wrapper.md)
   * [OpenAPI Specification](Backend/API-Wrapper/OpenAPI)
     * [Dashboard](Backend/API-Wrapper/OpenAPI/dashboard.md)
@@ -39,7 +40,6 @@
     * [Contract-Agreements](Backend/API-Wrapper/OpenAPI/contractagreements.md)
     * [Transfer-History](Backend/API-Wrapper/OpenAPI/transferhistory.md)
     * [Other APIs](Backend/API-Wrapper/OpenAPI/other.md)
-  * [API-Wrapper vs Management-API](Backend/API-Wrapper/relationship.md)
   * [Java Client Library](Backend/API-Wrapper/java-client-library-examples.md)
 * [Management-API](Backend/Management-API/what-is-the-management-api.md)
   * [OpenAPI Specification](Backend/Management-API/OpenAPI)
