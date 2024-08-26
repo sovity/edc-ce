@@ -1,11 +1,58 @@
-# Welcome to our Frequently Asked Questions (FAQ) collection!
+---
+icon: message-question
+---
+
+## Welcome to our Frequently Asked Questions (FAQ) collection!
 
 This section is designed to provide quick and clear answers to the most common queries we receive. Whether you're looking for information on our products, services, policies, or need help with troubleshooting, you'll find the answers here. If you can't find the answer to your question, don't hesitate to open a [dicussion](https://github.com/sovity/edc-ce/discussions).
 
-## How does the EDC API-key work for backend and frontend for API-authentication?
+### How does the EDC API-key work for backend and frontend for API-authentication?
 
 **Backend (EDC):**
 The variable ```EDC_API_AUTH_KEY``` in the EDC backend is used to define the API-key for the Management-API and API-Wrapper in the first place. External requests from external services to the EDC backend and its Management-API/API-Wrapper are then authenticated against this value and the requests must contain this API-key accordingly.
  
 **Frontend (EDC UI):**
 The frontend is such an external service whose API requests to the Management-API/API-Wrapper of the EDC backend must be authenticated like any other API request, hence the variable ```EDC_UI_MANAGEMENT_API_KEY``` in the EDC UI. It therefore tells the UI which API-key it should use for its own requests to the EDC backend in order to be successfully authenticated there, so that the UI can query and display data from the EDC backend or create assets etc.
+
+### Can the EDC forward the response content of an error message from the data sink/source?
+
+It is not possible with the EDC, as this is an intended behavior. The EDC will only return the response-content if the HTTP status code is in the [200..300) range. Otherwise, the response-content will be ignored.
+
+### What authorization mechanisms are available in the EDC?
+
+There are three levels of authorization in the EDC:
+1. **Protected Management-API / API-Wrapper**: OAuth2
+2. **EDC to EDC communication**: normally DAPS/MIW 
+3. **Protected provider backends**: OAuth2, Basic Auth, API-Keys
+
+### How do I determine the correct OfferId to use when starting a contract negotiation via the Management-API?
+
+The offer-id consists of the provider's contract-definition-id, the provider's asset-id, and an additional UUID provided by the provider. These are then base64 encoded, appended to each other separated by a colon, and referred to as the offer-id. The response to the catalog request contains the hasPolicy-id, which should be used as the offer-id according to the schema:
+-> base64(contractDefinitionId):base64(assetId):base64(serverProvidedUuid)
+
+Unfortunately, when starting the contract negotiation, the policy of the provider's offer must be copied. All necessary information should be included in the provider's response to the catalog request, as it provides the provider's policies attached to his offerings.
+
+### Is there a default limit on the number of records returned for query requests if no limit is set in the QuerySpec?
+
+Yes, if no limit has been specified in the QuerySpec, the connector outputs a maximum of 50 records. To exceed this limit, you must specify the desired limit in the QuerySpec, which can be an extremely high value, such as 9999.
+
+### What are the conditions for deleting Assets, Policies, and ContractDefinitions in the EDC?
+
+Assets, Policies, and ContractDefinitions can be deleted using the details dialog of the corresponding entity in the UI or via the APIs. However, there are certain conditions that must be met; otherwise, the delete operation will fail.
+
+**Delete Conditions for Assets**
+Assets cannot be deleted once a contract has already been negotiated with another connector. If this condition is not met, the delete operation will fail.
+
+**Delete Conditions for Policies**
+Policies cannot be deleted if they are referenced in a ContractDefinition.
+
+**Delete Conditions for ContractDefinitions**
+ContractDefinitions can always be deleted. As a result, the offering will no longer appear in the catalog of other connectors. Additionally, other connectors will no longer be able to transfer data based on contracts that have been negotiated using this ContractDefinition.
+
+### Is it possible to delete an existing contract?
+
+No, this is neither possible via the frontend nor via the backend APIs. Contracts can only be viewed but not edited or deleted.
+
+### Can a user publish third-party data assets, such as REST API endpoints?
+
+Yes, a user can publish data assets, including REST API endpoints from third parties. For example, you can use sources like https://www.google.com as a data source, which would transfer the HTML-source code of google.com. However, it is crucial to ensure the protection of your own APIs for this reason, so that no one can pass it off as their own. We recommend securing your APIs using methods such as API-keys or OAuth2 to control access and protect your data.  
