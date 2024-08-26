@@ -16,3 +16,4 @@ To create a new contract definition click on ```Create Contract Definition```. T
 Different policy types can be combined here as Access- and Contract-Policy.
 
 Click on ```Create``` to offer the contract and assets with the given policies in the ecosystem.
+ 
