@@ -23,3 +23,4 @@ Click on the ```Create``` button to create the policy.
 ## Hints
 - A policy can only be deleted if it is not used in a Contract Definition.
 - Specific Catena-X policies have to be created via Management-APIs.
+ 
