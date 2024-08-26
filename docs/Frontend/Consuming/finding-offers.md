@@ -40,3 +40,4 @@ Congratulations! You’ve now started the contract negotiation process. Keep an 
 {% hint style="warning" %} Contract Negotiations can also end unsuccessfully under certain conditions, for example when contract-policies are not met. {% endhint %}
 
 After a successful negotiation, the data transfer can be started.
+ 
