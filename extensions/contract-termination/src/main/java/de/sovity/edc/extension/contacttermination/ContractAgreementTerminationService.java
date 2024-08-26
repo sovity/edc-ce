@@ -55,7 +55,7 @@ public class ContractAgreementTerminationService implements Observable<ContractT
     /**
      * This is to terminate an EDC's own contract.
      * If the termination comes from an external system, use
-     * {@link #terminateCounterpartyAgreement(DSLContext, String, ContractTerminationParam)}
+     * {@link #terminateAgreementAsCounterparty(DSLContext, String, ContractTerminationParam)}
      * to validate the counter-party's identity.
      */
     public OffsetDateTime terminateAgreementOrThrow(DSLContext dsl, ContractTerminationParam termination) {
@@ -83,7 +83,7 @@ public class ContractAgreementTerminationService implements Observable<ContractT
         return terminatedAt;
     }
 
-    public OffsetDateTime terminateCounterpartyAgreement(
+    public OffsetDateTime terminateAgreementAsCounterparty(
         DSLContext dsl,
         @Nullable String identity,
         ContractTerminationParam termination

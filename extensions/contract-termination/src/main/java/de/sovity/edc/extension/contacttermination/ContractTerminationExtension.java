@@ -91,7 +91,7 @@ public class ContractTerminationExtension implements ServiceExtension {
             ContractTerminationMessage.class,
             (claims, termination) ->
                 dslContextFactory.transactionResult(dsl ->
-                    terminationService.terminateCounterpartyAgreement(
+                    terminationService.terminateAgreementAsCounterparty(
                         dsl,
                         participantAgentService.createFor(claims).getIdentity(),
                         buildTerminationRequest(termination))));
