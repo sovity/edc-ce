@@ -8,7 +8,7 @@
 * [Parameterized Assets via Managment API](getting-started/documentation/parameterized_assets.md)
 * [Pull Data Transfer](getting-started/documentation/pull-data-transfer.md)
 
-## Connector Frontend
+## Frontend
 
 * [Walkthrough](Frontend/walkthrough-guide.md)
 * [Dashboard](Frontend/Dashboard/overview.md)
@@ -23,7 +23,7 @@
   * [2. Initiating Transfers](Frontend/Consuming/initiating-transfer.md)
   * [3. Transfer History](Frontend/Consuming/transfer-history.md)
    
-## Connector Backend
+## Backend
 
 * [Postman](Backend/Postman/setting-up-postman.md)
 * [API-Wrapper](Backend/API-Wrapper/what-is-the-api-wrapper.md)
