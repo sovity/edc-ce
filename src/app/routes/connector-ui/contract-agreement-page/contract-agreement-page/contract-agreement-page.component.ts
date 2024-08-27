@@ -102,10 +102,6 @@ export class ContractAgreementPageComponent implements OnInit, OnDestroy {
       map(([oldCard, newCard]) => ({
         ...newCard,
         isConsumingLimitsEnforced: oldCard.isConsumingLimitsEnforced,
-        statusText: oldCard.statusText,
-        showStatus: oldCard.showStatus,
-        canTransfer: oldCard.canTransfer,
-        statusTooltipText: oldCard.statusTooltipText,
       })),
     );
 

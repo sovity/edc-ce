@@ -9,9 +9,5 @@ export type ContractAgreementCardMapped = Omit<
   isInProgress: boolean;
   isConsumingLimitsEnforced: boolean;
   isTerminated: boolean;
-  showStatus: boolean;
-  statusText: string;
-  statusTooltipText: string;
-  canTransfer: boolean;
   searchTargets: (string | null)[];
 };

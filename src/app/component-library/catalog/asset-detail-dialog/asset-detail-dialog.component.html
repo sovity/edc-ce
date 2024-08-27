@@ -188,7 +188,13 @@
           *ngIf="!data.asset.isOwnConnector"
           mat-raised-button
           color="primary"
+          [matTooltip]="
+            limitsExceeded
+              ? 'You have reached the maximum number of consuming contracts. Please terminate one of the existing contracts to negotiate a new one.'
+              : ''
+          "
           [disabled]="
+            limitsExceeded ||
             contractNegotiationService.negotiationState(
               data.dataOffer!.contractOffers[0]
             ) != 'ready'
@@ -226,8 +232,7 @@
         "
         mat-raised-button
         color="primary"
-        [matTooltip]="data.contractAgreement?.statusTooltipText ?? ''"
-        [disabled]="!data.contractAgreement?.canTransfer"
+        [disabled]="data.contractAgreement?.isTerminated"
         (click)="onTransferClick()">
         Transfer
       </button>

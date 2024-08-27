@@ -301,12 +301,9 @@ export class AssetPropertyGridGroupBuilder {
 
     if (contractAgreement.isConsumingLimitsEnforced) {
       properties.push({
-        icon: contractAgreement.canTransfer ? 'sync' : 'sync_disabled',
+        icon: contractAgreement.isTerminated ? 'sync_disabled' : 'sync',
         label: 'Status',
-        tooltip: contractAgreement.statusTooltipText,
-        textIconAfter: contractAgreement.statusTooltipText ? 'help' : null,
-        text: contractAgreement.statusText,
-        additionalClasses: contractAgreement.canTransfer ? '' : 'text-warn',
+        additionalClasses: contractAgreement.isTerminated ? 'text-warn' : '',
       });
     }
 

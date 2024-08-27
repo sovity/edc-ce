@@ -29,10 +29,6 @@ export class ContractAgreementCardMappedService {
       ),
       isConsumingLimitsEnforced: false,
       isTerminated: isTerminated,
-      showStatus: isTerminated,
-      statusText: isTerminated ? 'Terminated' : '',
-      statusTooltipText: '',
-      canTransfer: !isTerminated,
       searchTargets: [
         contractAgreement.contractAgreementId,
         contractAgreement.counterPartyId,
@@ -53,8 +49,6 @@ export class ContractAgreementCardMappedService {
     maxConsumingContracts: number,
     agreements: ContractAgreementCardMapped[],
   ): ContractAgreementCardMapped[] {
-    let activeContractCounter = 0;
-
     return agreements.map((it) => {
       if (it.isTerminated) {
         return it;
@@ -63,30 +57,8 @@ export class ContractAgreementCardMappedService {
       const modifiedAgreement = {
         ...it,
         isConsumingLimitsEnforced: true,
-        showStatus: true,
-        statusText:
-          activeContractCounter < maxConsumingContracts ? 'Active' : 'Inactive',
-        statusTooltipText: this.getConsumingContractsInfoText(
-          activeContractCounter,
-          maxConsumingContracts,
-        ),
-        canTransfer: activeContractCounter < maxConsumingContracts,
       };
-      activeContractCounter++;
       return modifiedAgreement;
     });
-  }
-
-  private getConsumingContractsInfoText(
-    index: number,
-    maxConsumingContracts: number,
-  ): string {
-    if (index >= maxConsumingContracts) {
-      return `This connector is licensed for a maximum number of ${maxConsumingContracts} consuming contract${
-        maxConsumingContracts == 1 ? '' : 's'
-      }. When negotiating new contracts, older contracts will be deactivated.`;
-    } else {
-      return '';
-    }
   }
 }
