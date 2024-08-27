@@ -1,3 +1,7 @@
+---
+icon: rectangle-vertical-history
+---
+
 # Walkthrough Guide: From Dashboard to Consuming Data Offers
 
 This walkthrough guide leads you through your first usage of our variant of the Eclipse Dataspace Components Connector (EDC Connector).
