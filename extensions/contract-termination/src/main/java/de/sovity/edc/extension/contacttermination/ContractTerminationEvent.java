@@ -20,14 +20,16 @@ public record ContractTerminationEvent(
     String contractAgreementId,
     String detail,
     String reason,
-    OffsetDateTime timestamp
+    OffsetDateTime timestamp,
+    String origin
 ) {
-    public static ContractTerminationEvent from(ContractTerminationParam contractTerminationParam, OffsetDateTime dateTime) {
+    public static ContractTerminationEvent from(ContractTerminationParam contractTerminationParam, OffsetDateTime dateTime, String origin) {
         return new ContractTerminationEvent(
             contractTerminationParam.contractAgreementId(),
             contractTerminationParam.detail(),
             contractTerminationParam.reason(),
-            dateTime
+            dateTime,
+            origin
         );
     }
 }

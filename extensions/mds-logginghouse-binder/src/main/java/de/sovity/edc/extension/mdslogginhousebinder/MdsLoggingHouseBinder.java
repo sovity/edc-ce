@@ -14,12 +14,15 @@
 
 package de.sovity.edc.extension.mdslogginhousebinder;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
 import de.sovity.edc.extension.contacttermination.ContractTerminationEvent;
 import de.sovity.edc.extension.contacttermination.ContractTerminationObserver;
 import lombok.val;
-import org.eclipse.edc.connector.transfer.spi.observe.TransferProcessObservable;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
+import org.eclipse.edc.spi.event.EventEnvelope;
 import org.eclipse.edc.spi.event.EventRouter;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.ServiceExtension;
@@ -35,28 +38,60 @@ public class MdsLoggingHouseBinder implements ServiceExtension {
     private Monitor monitor;
 
     @Inject
-    private TransferProcessObservable observable;
-
-    @Inject
     private ContractAgreementTerminationService contractAgreementTerminationService;
+
+    private ObjectMapper objectMapper;
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        contractAgreementTerminationService.registerListener(new ContractTerminationObserver() {
-            @Override
-            public void contractTerminationCompletedOnThisInstance(ContractTerminationEvent contractTerminationEvent) {
-                val message = new MdsContractTerminationEvent(
-                    UuidGenerator.INSTANCE.generate().toString(),
-                    contractTerminationEvent.contractAgreementId(),
-                    "Contract termination event: terminated contract %s at %s from this EDC. Reason: %s  Detail: %s".formatted(contractTerminationEvent.contractAgreementId(), contractTerminationEvent.timestamp(), contractTerminationEvent.reason(),
-                        contractTerminationEvent.detail())
-                );
-            }
 
-            @Override
-            public void contractTerminatedByCounterparty(ContractTerminationEvent contractTerminationEvent) {
-                ContractTerminationObserver.super.contractTerminatedByCounterparty(contractTerminationEvent);
-            }
-        });
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        contractAgreementTerminationService.getContractTerminationObservable()
+            .registerListener(new ContractTerminationObserver() {
+                @Override
+                public void contractTerminationCompletedOnThisInstance(ContractTerminationEvent contractTerminationEvent) {
+                    val logEntry = LogEntry.from("contractTerminatedByThisInstance", contractTerminationEvent);
+
+                    try {
+                        val message = objectMapper.writeValueAsString(logEntry);
+                        val event = new MdsContractTerminationEvent(
+                            UuidGenerator.INSTANCE.generate().toString(),
+                            contractTerminationEvent.contractAgreementId(),
+                            message
+                        );
+
+                        @SuppressWarnings("unchecked")
+                        EventEnvelope.Builder<MdsContractTerminationEvent> builder = EventEnvelope.Builder.newInstance();
+
+                        val eventEnvelope = builder
+                            .at(System.currentTimeMillis())
+                            .payload(event)
+                            .build();
+
+                        eventRouter.publish(eventEnvelope);
+                        monitor.debug("Published event for " + logEntry);
+                    } catch (JsonProcessingException e) {
+                        monitor.warning("Failed to serialize the event for the logging house " + logEntry);
+                    }
+                }
+
+                @Override
+                public void contractTerminatedByCounterparty(ContractTerminationEvent contractTerminationEvent) {
+                    val logEntry = LogEntry.from("contractTerminatedByCounterparty", contractTerminationEvent);
+
+                    try {
+                        val message = objectMapper.writeValueAsString(logEntry);
+                        new MdsContractTerminationEvent(
+                            UuidGenerator.INSTANCE.generate().toString(),
+                            contractTerminationEvent.contractAgreementId(),
+                            message
+                        );
+                    } catch (JsonProcessingException e) {
+                        monitor.warning("Failed to serialize the event for the logging house " + logEntry);
+                    }
+                }
+            });
     }
 }

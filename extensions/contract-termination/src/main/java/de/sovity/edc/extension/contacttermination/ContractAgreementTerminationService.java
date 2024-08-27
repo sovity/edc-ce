@@ -18,39 +18,32 @@ import de.sovity.edc.extension.contacttermination.query.ContractAgreementTermina
 import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
 import de.sovity.edc.extension.messenger.SovityMessage;
 import de.sovity.edc.extension.messenger.SovityMessenger;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.observe.Observable;
-import org.jetbrains.annotations.NotNull;
+import org.eclipse.edc.spi.observe.ObservableImpl;
 import org.jetbrains.annotations.Nullable;
 import org.jooq.DSLContext;
 
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 import static de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy.COUNTERPARTY;
 import static de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy.SELF;
 
 @RequiredArgsConstructor
-public class ContractAgreementTerminationService implements Observable<ContractTerminationObserver> {
+public class ContractAgreementTerminationService {
 
     private final SovityMessenger sovityMessenger;
     private final ContractAgreementTerminationDetailsQuery contractAgreementTerminationDetailsQuery;
     private final TerminateContractQuery terminateContractQuery;
     private final Monitor monitor;
     private final String thisParticipantId;
-    private final List<WeakReference<ContractTerminationObserver>> contractTerminationObservers =
-        Collections.synchronizedList(new ArrayList<>());
-    private final ReentrantLock observersLock = new ReentrantLock();
+    @Getter
+    private final Observable<ContractTerminationObserver> contractTerminationObservable = new ObservableImpl<>();
 
     /**
      * This is to terminate an EDC's own contract.
@@ -60,7 +53,7 @@ public class ContractAgreementTerminationService implements Observable<ContractT
      */
     public OffsetDateTime terminateAgreementOrThrow(DSLContext dsl, ContractTerminationParam termination) {
 
-        val starterEvent = ContractTerminationEvent.from(termination, OffsetDateTime.now());
+        val starterEvent = ContractTerminationEvent.from(termination, OffsetDateTime.now(), thisParticipantId);
         notifyObservers(it -> it.contractTerminationStartedFromThisInstance(starterEvent));
 
         val details = contractAgreementTerminationDetailsQuery.fetchAgreementDetailsOrThrow(dsl, termination.contractAgreementId());
@@ -75,7 +68,7 @@ public class ContractAgreementTerminationService implements Observable<ContractT
 
         val terminatedAt = terminateContractQuery.terminateConsumerAgreementOrThrow(dsl, termination, SELF);
 
-        val endEvent = ContractTerminationEvent.from(termination, terminatedAt);
+        val endEvent = ContractTerminationEvent.from(termination, terminatedAt, thisParticipantId);
         notifyObservers(it -> it.contractTerminationCompletedOnThisInstance(endEvent));
 
         notifyTerminationToProvider(details.counterpartyAddress(), termination);
@@ -88,7 +81,7 @@ public class ContractAgreementTerminationService implements Observable<ContractT
         @Nullable String identity,
         ContractTerminationParam termination
     ) {
-        val starterEvent = ContractTerminationEvent.from(termination, OffsetDateTime.now());
+        val starterEvent = ContractTerminationEvent.from(termination, OffsetDateTime.now(), null);
         notifyObservers(it -> it.contractTerminatedByCounterpartyStarted(starterEvent));
 
         val details = contractAgreementTerminationDetailsQuery.fetchAgreementDetailsOrThrow(dsl, termination.contractAgreementId());
@@ -115,7 +108,7 @@ public class ContractAgreementTerminationService implements Observable<ContractT
 
         val result = terminateContractQuery.terminateConsumerAgreementOrThrow(dsl, termination, agent);
 
-        val endEvent = ContractTerminationEvent.from(termination, OffsetDateTime.now());
+        val endEvent = ContractTerminationEvent.from(termination, OffsetDateTime.now(), details.counterpartyId());
         notifyObservers(it -> it.contractTerminatedByCounterparty(endEvent));
 
         return result;
@@ -123,10 +116,10 @@ public class ContractAgreementTerminationService implements Observable<ContractT
 
     public void notifyTerminationToProvider(String counterPartyAddress, ContractTerminationParam termination) {
 
-        val notificationEvent = ContractTerminationEvent.from(termination, OffsetDateTime.now());
+        val notificationEvent = ContractTerminationEvent.from(termination, OffsetDateTime.now(), null);
         notifyObservers(it -> it.contractTerminationOnCounterpartyStarted(notificationEvent));
 
-        val future = sovityMessenger.send(
+        sovityMessenger.send(
             SovityMessage.class,
             counterPartyAddress,
             new ContractTerminationMessage(
@@ -135,59 +128,12 @@ public class ContractAgreementTerminationService implements Observable<ContractT
                 termination.reason()));
     }
 
-    @Override
-    public Collection<ContractTerminationObserver> getListeners() {
-        return contractTerminationObservers.stream().filter(it -> it.get() != null).toList().stream().map(Reference::get).toList();
-    }
-
-    @Override
-    public void registerListener(ContractTerminationObserver listener) {
-        try {
-            observersLock.lock();
-
-            final var refreshed = getFilteredWeakReferences(null);
-
-            contractTerminationObservers.clear();
-            contractTerminationObservers.addAll(refreshed);
-            contractTerminationObservers.add(new WeakReference<>(listener));
-        } finally {
-            observersLock.unlock();
-        }
-    }
-
-    @Override
-    public void unregisterListener(ContractTerminationObserver listener) {
-        try {
-            observersLock.lock();
-
-            final var refreshed = getFilteredWeakReferences(listener);
-
-            contractTerminationObservers.clear();
-            contractTerminationObservers.addAll(refreshed);
-        } finally {
-            observersLock.unlock();
-        }
-    }
-
-    private @NotNull List<WeakReference<ContractTerminationObserver>> getFilteredWeakReferences(ContractTerminationObserver listener) {
-        return contractTerminationObservers.stream().filter(it -> {
-            val obs = it.get();
-            if (obs == null) {
-                return false;
-            }
-            return obs != listener;
-        }).toList();
-    }
-
     private void notifyObservers(Consumer<ContractTerminationObserver> call) {
-        for (val weakRef : contractTerminationObservers) {
+        for (val listener : contractTerminationObservable.getListeners()) {
             try {
-                val observer = weakRef.get();
-                if (observer != null) {
-                    call.accept(observer);
-                }
+                call.accept(listener);
             } catch (Exception e) {
-                monitor.warning("Failure when notifying contract termination observer.");
+                monitor.warning("Failure when notifying the contract termination listener.");
             }
         }
     }

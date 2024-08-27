@@ -473,8 +473,8 @@ public class ContractTerminationTest {
         val providerObserver = Mockito.spy(new ContractTerminationObserver() {
         });
 
-        consumerService.registerListener(consumerObserver);
-        providerService.registerListener(providerObserver);
+        consumerService.getContractTerminationObservable().registerListener(consumerObserver);
+        providerService.getContractTerminationObservable().registerListener(providerObserver);
 
         // act
 
@@ -487,8 +487,8 @@ public class ContractTerminationTest {
 
         // assert
 
-        assertThat(consumerService.getListeners()).hasSize(1);
-        assertThat(providerService.getListeners()).hasSize(1);
+        assertThat(consumerService.getContractTerminationObservable().getListeners()).hasSize(1);
+        assertThat(providerService.getContractTerminationObservable().getListeners()).hasSize(1);
 
         ArgumentCaptor<ContractTerminationEvent> argument = ArgumentCaptor.forClass(ContractTerminationEvent.class);
 
@@ -509,13 +509,13 @@ public class ContractTerminationTest {
 
         // act
 
-        consumerService.unregisterListener(consumerObserver);
-        providerService.unregisterListener(providerObserver);
+        consumerService.getContractTerminationObservable().unregisterListener(consumerObserver);
+        providerService.getContractTerminationObservable().unregisterListener(providerObserver);
 
         // assert
 
-        assertThat(consumerService.getListeners()).hasSize(0);
-        assertThat(providerService.getListeners()).hasSize(0);
+        assertThat(consumerService.getContractTerminationObservable().getListeners()).hasSize(0);
+        assertThat(providerService.getContractTerminationObservable().getListeners()).hasSize(0);
     }
 
     private static void assertTerminationEvent(ArgumentCaptor<ContractTerminationEvent> argument, String contractAgreementId,
