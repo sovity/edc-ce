@@ -3,8 +3,6 @@
 * [Welcome](welcome.md)
 * [Data Transfer Modes](getting-started/documentation/data-transfer-methods.md)
 * [FAQ](getting-started/documentation/faq.md)
-* 
-* [Parameterized Assets via UI](getting-started/documentation/parameterized_assets_via_ui.md)
 
 ## Frontend
 
