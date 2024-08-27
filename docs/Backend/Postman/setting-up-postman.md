@@ -1,3 +1,7 @@
+---
+icon: keyboard
+---
+
 # Basics: Setting Up Postman
 
 To access the APIs and to install the API environment in Postman on Windows or Linux, please follow these steps.
