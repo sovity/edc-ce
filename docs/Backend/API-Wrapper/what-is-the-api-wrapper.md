@@ -1,3 +1,7 @@
+---
+icon: keyboard
+---
+
 ## What is the API-Wrapper?
 
 ### sovity API-Wrapper
