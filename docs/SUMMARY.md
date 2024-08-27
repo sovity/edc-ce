@@ -1,7 +1,6 @@
 # Table of contents
 
 * [Welcome](welcome.md)
-* [Data Transfer Modes](getting-started/documentation/data-transfer-methods.md)
 * [FAQ](getting-started/documentation/faq.md)
 
 ## Frontend
@@ -22,6 +21,7 @@
 ## Backend
 
 * [Postman](Backend/Postman/setting-up-postman.md)
+* [Data Transfer Modes](getting-started/documentation/data-transfer-methods.md)
 * [API-Wrapper vs Management-API](Backend/API-Wrapper/relationship.md)
 * [API-Wrapper](Backend/API-Wrapper/what-is-the-api-wrapper.md)
   * [OpenAPI Specification](Backend/API-Wrapper/OpenAPI)
