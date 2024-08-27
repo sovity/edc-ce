@@ -1,5 +1,5 @@
 ---
-icon: sitemap
+icon: keyboard
 ---
 
 Which data transfer methods are supported by the EDC-Connector?
