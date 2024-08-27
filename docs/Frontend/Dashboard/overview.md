@@ -1,3 +1,7 @@
+---
+icon: rectangle-vertical-history
+---
+
 # Dashboard Overview
 
 The start page of your connector is the Dashboard, providing a quick overview of your Connector and its current usage. You can access the Dashboard via:
