@@ -1,3 +1,7 @@
+---
+icon: hand-wave
+---
+
 # Welcome to the sovity EDC Documentation
 
 Welcome to the sovity EDC (Eclipse Dataspace Connector) documentation. This site is your one-stop resource for learning about our EDC, a powerful open-source platform designed for secure and decentralized data sharing and collaboration.
