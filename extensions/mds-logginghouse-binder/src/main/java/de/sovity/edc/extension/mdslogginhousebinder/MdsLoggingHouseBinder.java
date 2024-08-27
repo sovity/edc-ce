@@ -54,44 +54,39 @@ public class MdsLoggingHouseBinder implements ServiceExtension {
                 public void contractTerminationCompletedOnThisInstance(ContractTerminationEvent contractTerminationEvent) {
                     val logEntry = LogEntry.from("contractTerminatedByThisInstance", contractTerminationEvent);
 
-                    try {
-                        val message = objectMapper.writeValueAsString(logEntry);
-                        val event = new MdsContractTerminationEvent(
-                            UuidGenerator.INSTANCE.generate().toString(),
-                            contractTerminationEvent.contractAgreementId(),
-                            message
-                        );
-
-                        @SuppressWarnings("unchecked")
-                        EventEnvelope.Builder<MdsContractTerminationEvent> builder = EventEnvelope.Builder.newInstance();
-
-                        val eventEnvelope = builder
-                            .at(System.currentTimeMillis())
-                            .payload(event)
-                            .build();
-
-                        eventRouter.publish(eventEnvelope);
-                        monitor.debug("Published event for " + logEntry);
-                    } catch (JsonProcessingException e) {
-                        monitor.warning("Failed to serialize the event for the logging house " + logEntry);
-                    }
+                    sendMessage(contractTerminationEvent, logEntry);
                 }
 
                 @Override
                 public void contractTerminatedByCounterparty(ContractTerminationEvent contractTerminationEvent) {
                     val logEntry = LogEntry.from("contractTerminatedByCounterparty", contractTerminationEvent);
-
-                    try {
-                        val message = objectMapper.writeValueAsString(logEntry);
-                        new MdsContractTerminationEvent(
-                            UuidGenerator.INSTANCE.generate().toString(),
-                            contractTerminationEvent.contractAgreementId(),
-                            message
-                        );
-                    } catch (JsonProcessingException e) {
-                        monitor.warning("Failed to serialize the event for the logging house " + logEntry);
-                    }
+                    sendMessage(contractTerminationEvent, logEntry);
                 }
             });
+    }
+
+    private void sendMessage(ContractTerminationEvent contractTerminationEvent, LogEntry logEntry) {
+        try {
+            val message = objectMapper.writeValueAsString(logEntry);
+            val event = new MdsContractTerminationEvent(
+                UuidGenerator.INSTANCE.generate().toString(),
+                contractTerminationEvent.contractAgreementId(),
+                message
+            );
+
+            @SuppressWarnings("unchecked")
+            EventEnvelope.Builder<MdsContractTerminationEvent> builder = EventEnvelope.Builder.newInstance();
+
+            val eventEnvelope = builder
+                .at(System.currentTimeMillis())
+                .payload(event)
+                .build();
+
+            eventRouter.publish(eventEnvelope);
+
+            monitor.debug("Published event for " + logEntry);
+        } catch (JsonProcessingException e) {
+            monitor.warning("Failed to serialize the event for the logging house " + logEntry);
+        }
     }
 }
