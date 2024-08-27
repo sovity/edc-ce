@@ -1,3 +1,7 @@
+---
+icon: square-dashed-circle-plus
+---
+
 Getting Started
 ========
 
