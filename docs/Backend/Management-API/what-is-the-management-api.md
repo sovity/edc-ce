@@ -1,3 +1,7 @@
+---
+icon: keyboard
+---
+
 ## Management-API
 
 Our CaaS is mostly controlled by our users via the UI, i.e., assets are created, policies, contract definitions, and contracts are negotiated, and data transfers are initiated. In addition to the UI, there are also APIs that can be used to operate the connector.
