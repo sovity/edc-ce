@@ -5,7 +5,6 @@
 * [FAQ](getting-started/documentation/faq.md)
 * 
 * [Parameterized Assets via UI](getting-started/documentation/parameterized_assets_via_ui.md)
-* [Parameterized Assets via Managment API](getting-started/documentation/parameterized_assets.md)
 
 ## Frontend
 
