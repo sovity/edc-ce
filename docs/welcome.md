@@ -53,7 +53,7 @@ Welcome to the sovity EDC (Eclipse Dataspace Connector) documentation. This site
 				<a href="/docs/images/Card-Deployment-100.jpg">Card-Deployment-100.jpg</a>
 			</td>
 			<td>
-				<a href="https://sovity.gitbook.io/customers/ecosystems">Deployment</a>
+				<a href="https://sovity.gitbook.io/edc/community-edition-deployment">Deployment</a>
 			</td>
 		</tr>
 	</tbody>
