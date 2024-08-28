@@ -7,7 +7,6 @@
 
 * [Walkthrough](Frontend/walkthrough-guide.md)
 * [Dashboard](Frontend/Dashboard/overview.md)
-* [Contract Termination](Frontend/contract-termination.md)
 * [Providing](Frontend/Providing/Readme.md)
   * [1. Create Data Offer](Frontend/Providing/create-data-offer.md)
   * [2. Create Asset](Frontend/Providing/create-asset.md)
@@ -17,6 +16,7 @@
   * [1. Finding Offers](Frontend/Consuming/finding-offers.md)
   * [2. Initiating Transfers](Frontend/Consuming/initiating-transfer.md)
   * [3. Transfer History](Frontend/Consuming/transfer-history.md)
+* [Contract Termination](Frontend/contract-termination.md)
    
 ## Backend
 
