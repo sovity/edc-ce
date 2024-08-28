@@ -8,6 +8,7 @@ export interface AssetDetailDialogData {
   propertyGridGroups: PropertyGridGroup[];
   asset: UiAssetMapped;
   dataOffer?: DataOffer;
+  consumingLimitsExceeded?: boolean;
   contractAgreement?: ContractAgreementCardMapped;
   showDeleteButton?: boolean;
   showEditButton?: boolean;

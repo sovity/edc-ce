@@ -26,6 +26,6 @@ export class ConnectorLimitsService {
     const max = limits.maxActiveConsumingContractAgreements;
     const current = limits.numActiveConsumingContractAgreements;
 
-    return max != null && current >= max;
+    return max != null && max >= 0 && current >= max;
   };
 }

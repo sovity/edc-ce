@@ -7,10 +7,12 @@ import {
   Subject,
   distinctUntilChanged,
   sampleTime,
+  switchMap,
 } from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
 import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
+import {ConnectorLimitsService} from '../../../../core/services/connector-limits.service';
 import {DataOffer} from '../../../../core/services/models/data-offer';
 import {value$} from '../../../../core/utils/form-group-utils';
 import {CatalogBrowserFetchDetailDialogComponent} from '../catalog-browser-fetch-detail-dialog/catalog-browser-fetch-detail-dialog.component';
@@ -38,6 +40,7 @@ export class CatalogBrowserPageComponent implements OnInit, OnDestroy {
     private catalogBrowserPageService: CatalogBrowserPageService,
     private catalogApiUrlService: CatalogApiUrlService,
     private matDialog: MatDialog,
+    private connectorLimitsService: ConnectorLimitsService,
   ) {}
 
   ngOnInit(): void {
@@ -54,10 +57,18 @@ export class CatalogBrowserPageComponent implements OnInit, OnDestroy {
   }
 
   onDataOfferClick(dataOffer: DataOffer) {
-    const data = this.assetDetailDialogDataService.dataOfferDetails(dataOffer);
-    this.assetDetailDialogService
-      .open(data, this.ngOnDestroy$)
-      .pipe(filter((it) => !!it?.refreshList))
+    this.connectorLimitsService
+      .isConsumingAgreementLimitExceeded()
+      .pipe(
+        switchMap((isConsumingLimitsExceeded) => {
+          const data = this.assetDetailDialogDataService.dataOfferDetails(
+            dataOffer,
+            isConsumingLimitsExceeded,
+          );
+          return this.assetDetailDialogService.open(data, this.ngOnDestroy$);
+        }),
+        filter((it) => !!it?.refreshList),
+      )
       .subscribe(() => this.fetch$.next(null));
   }
 
