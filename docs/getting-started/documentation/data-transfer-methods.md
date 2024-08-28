@@ -2,7 +2,7 @@
 icon: keyboard
 ---
 
-Which data transfer methods are supported by the EDC-Connector?
+Supported Transfer Modes
 ========
 
 The connector supports two different data transfer modes:
