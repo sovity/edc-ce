@@ -12,20 +12,58 @@ Our EDC enables organizations to share and govern data across different systems 
 
 With this EDC, you can leverage a robust, scalable platform that supports a wide range of data exchange scenarios—from simple data sharing to complex, multi-party data spaces.
 
-## Core Features
-
-- **Decentralized Data Exchange**: Facilitate secure and policy-driven data exchange without needing centralized storage
-- **Data Sovereignty and Compliance**: Implement strict data governance and sovereignty controls to meet regulatory requirements
-- **Interoperability and Integration**: Connect with various data sources and applications using a flexible, modular architecture
-- **Community-Driven Development**: Engage with a growing community of contributors to enhance and expand capabilities
-
-## Getting Started
-
-To begin your journey with our EDC, explore the following sections:
-
-1. **[Frontend Walkthrough](/docs/Frontend/walkthrough-guide.md)**: Understand the fundamental concepts of our EDC using our frontend.
-2. **[API-Wrapper vs Management-API](/docs/Backend/API-Wrapper/relationship.md)**: Interesting in using backend APIs?
-3. **[Deploy your own EDC](/docs/getting-started/README.md)**: A practical guide to get our EDC up and running quickly on your own.
+<table data-view="cards">
+	<thead>
+		<tr>
+			<th></th>
+			<th></th>
+			<th data-type="content-ref"></th>
+			<th data-hidden data-card-cover data-type="files"></th>
+			<th data-hidden data-card-target data-type="content-ref"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<strong>Frontend</strong>
+			</td>
+			<td> nderstand the fundamental concepts of our EDC using our frontend.</td>
+			<td></td>
+			<td>
+				<a href="/docs/images/Card-Frontend-100.jpg">Card-Frontend-100.jpg</a>
+			</td>
+			<td>
+				<a href="https://sovity.gitbook.io/edc/frontend">Frontend</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<strong>Backend</strong>
+			</td>
+			<td>Interested in using backend APIs?</td>
+			<td></td>
+			<td>
+				<a href="/docs/images/Card-Backend-100.jpg">Card-Backend-100.jpg</a>
+			</td>
+			<td>
+				<a href="https://sovity.gitbook.io/edc/backend">Backend</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<strong>Deployment</strong>
+			</td>
+			<td>Practical guides to get our EDC up and running quickly on your own.</td>
+			<td></td>
+			<td>
+				<a href="/docs/images/Card-Deployment-100.jpg">Card-Deployment-100.jpg</a>
+			</td>
+			<td>
+				<a href="https://sovity.gitbook.io/customers/ecosystems">Deployment</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
 
 ## Community and Support
 
