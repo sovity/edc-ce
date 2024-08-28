@@ -6,12 +6,6 @@ icon: hand-wave
 
 Welcome to the sovity EDC (Eclipse Dataspace Connector) documentation. This site is your one-stop resource for learning about our EDC, a powerful open-source platform designed for secure and decentralized data sharing and collaboration.
 
-## About our EDC
-
-Our EDC enables organizations to share and govern data across different systems and regions while ensuring data privacy, security, and compliance.
-
-With this EDC, you can leverage a robust, scalable platform that supports a wide range of data exchange scenarios—from simple data sharing to complex, multi-party data spaces.
-
 <table data-view="cards">
 	<thead>
 		<tr>
@@ -27,7 +21,7 @@ With this EDC, you can leverage a robust, scalable platform that supports a wide
 			<td>
 				<strong>Frontend</strong>
 			</td>
-			<td> nderstand the fundamental concepts of our EDC using our frontend.</td>
+			<td>Understand the fundamental concepts of our EDC using our frontend.</td>
 			<td></td>
 			<td>
 				<a href="/docs/images/Card-Frontend-100.jpg">Card-Frontend-100.jpg</a>
