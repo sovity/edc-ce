@@ -22,6 +22,7 @@
 
 * [Postman](Backend/Postman/setting-up-postman.md)
 * [Data Transfer Modes](getting-started/documentation/data-transfer-methods.md)
+* [Health Check APIs](getting-started/documentation/health-check-api.md)
 * [API-Wrapper vs Management-API](Backend/API-Wrapper/relationship.md)
 * [API-Wrapper](Backend/API-Wrapper/what-is-the-api-wrapper.md)
   * [OpenAPI Specification](Backend/API-Wrapper/OpenAPI)
