@@ -8,7 +8,7 @@ import {Component, Input} from '@angular/core';
 @Component({
   selector: 'ago',
   template: `<span
-    [matTooltip]="(date | date : 'EEEE yyyy-MM-dd hh:mm') ?? ''"
+    [matTooltip]="(date | date : 'EEEE dd/MM/yyyy HH:mm') ?? ''"
     >{{ date | ago | async }}</span
   >`,
 })

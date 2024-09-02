@@ -21,6 +21,7 @@ the detailed section referring to by linking pull requests or issues.
 #### Patch
 
 - Check contract limits before negotiating a new one.
+- Date and time related fixes, unified date format.
 - Enhance EDC UI terminologies for create data offer tab
 
 ## [v4.1.2] - 2024-08-20

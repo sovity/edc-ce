@@ -17,11 +17,19 @@ export class PropertyGridFieldService {
     };
   }
 
+  formatDateWithTime(date: Date | null | undefined): string {
+    if (!date) {
+      return '';
+    }
+
+    return formatDate(date, 'dd/MM/yyyy HH:mm:ss', this.locale);
+  }
+
   formatDate(date: Date | null | undefined): string {
     if (!date) {
       return '';
     }
 
-    return formatDate(date, 'yyyy-MM-dd HH:mm:ss', this.locale);
+    return formatDate(date, 'dd/MM/yyyy', this.locale);
   }
 }

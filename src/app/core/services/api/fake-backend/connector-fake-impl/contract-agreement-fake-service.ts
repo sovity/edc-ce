@@ -71,7 +71,7 @@ let contractAgreements: ContractAgreementCard[] = [
     direction: 'CONSUMING',
     counterPartyAddress: 'http://edc2:11003/api/v1/ids/data',
     counterPartyId: 'MDSL1234XX.C1234XX',
-    contractSigningDate: new Date('2022-03-25T11:18:59.659Z'),
+    contractSigningDate: new Date('2022-03-25T14:18:59.659Z'),
     asset: TestAssets.toDummyAsset(TestAssets.boring),
     contractPolicy: TestPolicies.connectorRestricted,
     terminationInformation: undefined,

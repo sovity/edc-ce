@@ -268,7 +268,7 @@ export class AssetPropertyGridGroupBuilder {
         icon: 'category',
         label: 'Signed',
         ...this.propertyGridUtils.guessValue(
-          this.propertyGridUtils.formatDate(
+          this.propertyGridUtils.formatDateWithTime(
             contractAgreement.contractSigningDate,
           ),
         ),
@@ -404,14 +404,16 @@ export class AssetPropertyGridGroupBuilder {
     end: Date | undefined,
   ): string {
     if (!end) {
-      return `Start: ${start!.toLocaleDateString()}`;
+      return `Start: ${this.propertyGridUtils.formatDate(start)}`;
     }
 
     if (!start) {
-      return `End: ${end.toLocaleDateString()}`;
+      return `End: ${this.propertyGridUtils.formatDate(end)}`;
     }
 
-    return `${start.toLocaleDateString()} - ${end.toLocaleDateString()}`;
+    return `${this.propertyGridUtils.formatDate(
+      start,
+    )} - ${this.propertyGridUtils.formatDate(end)}`;
   }
 
   buildOnRequestContactInformation(

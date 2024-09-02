@@ -55,7 +55,7 @@ export const localDateAdapter: PolicyFormAdapter<Date | null> = {
       if (!value) {
         return value;
       }
-      return format(new Date(value), 'yyyy-MM-dd');
+      return format(new Date(value), 'dd/MM/yyyy');
     } catch (e) {
       return '' + value;
     }

@@ -26,12 +26,12 @@ export namespace TestPolicies {
       constraint(
         policyLeftExpressions.policyEvaluationTime,
         'GEQ',
-        '2021-01-01',
+        '2020-12-31T23:00:00.000Z',
       ),
       constraint(
         policyLeftExpressions.policyEvaluationTime,
         'LT',
-        '2025-01-01',
+        '2024-12-31T23:00:00.000Z',
       ),
       multi(
         'OR',
