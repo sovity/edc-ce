@@ -21,8 +21,19 @@ export interface PolicyVerbConfig {
 
 export const SUPPORTED_POLICY_VERBS: PolicyVerbConfig[] = [
   {
+    operandLeftId: policyLeftExpressions.referringConnector,
+    operandLeftTitle: "Consumer's Participant ID",
+    operandLeftDescription:
+      "Consumer's Participant ID, also called Connector ID, of the counter-party connector.",
+    operandRightType: 'PARTICIPANT_ID',
+    supportedOperators: ['EQ', 'IN'],
+    operandRightPlaceholder: 'MDSL1234XX.C1234YY',
+    operandRightHint: 'Multiple values can be joined by comma',
+    adapter: stringArrayOrCommaJoinedAdapter,
+  },
+  {
     operandLeftId: policyLeftExpressions.policyEvaluationTime,
-    operandLeftTitle: 'Evaluation Time',
+    operandLeftTitle: 'Time Restriction',
     operandLeftDescription:
       'Time at which the policy is evaluated. This can be used to restrict the data offer to certain time periods',
     supportedOperators: ['GEQ', 'LEQ', 'GT', 'LT'],
@@ -30,17 +41,6 @@ export const SUPPORTED_POLICY_VERBS: PolicyVerbConfig[] = [
     operandRightPlaceholder: 'DD/MM/YYYY',
     operandRightHint: 'DD/MM/YYYY',
     adapter: localDateAdapter,
-  },
-  {
-    operandLeftId: policyLeftExpressions.referringConnector,
-    operandLeftTitle: 'Participant ID',
-    operandLeftDescription:
-      'Participant ID, also called Connector ID, of the counter-party connector.',
-    operandRightType: 'PARTICIPANT_ID',
-    supportedOperators: ['EQ', 'IN'],
-    operandRightPlaceholder: 'MDSL1234XX.C1234YY',
-    operandRightHint: 'Multiple values can be joined by comma',
-    adapter: stringArrayOrCommaJoinedAdapter,
   },
 ];
 

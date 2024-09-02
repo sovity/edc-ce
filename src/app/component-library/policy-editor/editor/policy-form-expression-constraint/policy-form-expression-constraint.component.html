@@ -27,8 +27,8 @@
   <mat-label>{{ verb.operandLeftTitle }}</mat-label>
   <input
     matInput
+    placeholder="Date"
     [matDatepicker]="picker"
-    [placeholder]="verb.operandRightPlaceholder ?? '...'"
     [formControl]="
       expressionFormHandler.controls.getValueFormControl(treeNode)
     " />

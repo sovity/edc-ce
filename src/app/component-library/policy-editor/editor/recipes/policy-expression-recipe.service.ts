@@ -9,6 +9,7 @@ import {TimespanRestrictionDialogComponent} from './timespan-restriction-dialog/
 
 export interface PolicyExpressionRecipe {
   title: string;
+  tooltip: string;
   onclick: (until$: Observable<any>) => Observable<UiPolicyExpression>;
 }
 
@@ -17,6 +18,8 @@ export class PolicyExpressionRecipeService {
   recipes: PolicyExpressionRecipe[] = [
     {
       title: 'Timespan Restriction',
+      tooltip:
+        'Timespan at which the policy is evaluated. This can be used to restrict the data offer to certain time periods',
       onclick: (until$: Observable<any>) =>
         this.showRecipeDialog(TimespanRestrictionDialogComponent, until$),
     },

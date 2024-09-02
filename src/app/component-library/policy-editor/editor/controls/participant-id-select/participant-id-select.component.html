@@ -1,5 +1,5 @@
 <mat-form-field class="grow" appearance="outline" color="accent">
-  <mat-label>{{ participantIdLocalization.participantIdPlural }}</mat-label>
+  <mat-label>Consumer's Participant IDs</mat-label>
   <mat-chip-list
     #chipList
     [attr.aria-label]="'Other ' + participantIdLocalization.participantIdPlural"
@@ -22,7 +22,8 @@
       (matChipInputTokenEnd)="add($event)" />
   </mat-chip-list>
   <mat-hint>
-    The {{ participantIdLocalization.participantId }} of your Connector can be
-    found on the dashboard of your Connector.
+    You can find the connector’s Participant ID under “Connector Properties” on
+    its dashboard. Ask for it from the data consumers you want to share your
+    data offer with.
   </mat-hint>
 </mat-form-field>
