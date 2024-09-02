@@ -9,7 +9,7 @@ import {LanguageSelectItemService} from './language-select-item.service';
 })
 export class LanguageSelectComponent {
   @Input()
-  label!: string;
+  label: string = 'Language';
 
   @Input()
   control!: FormControl<LanguageSelectItem | null>;

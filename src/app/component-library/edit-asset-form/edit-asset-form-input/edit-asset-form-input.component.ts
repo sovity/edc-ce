@@ -11,7 +11,10 @@ export class EditAssetFormInputComponent {
   @Input() fieldId = 'missing-id-' + Math.random().toString(36).substring(7);
   @Input() label!: string;
   @Input() placeholder: string = '...';
+  @Input() tooltip: string = '';
+  @Input() hint: string = '';
   @Input() hideHint: boolean = false;
+  @Input() contentTypeHint: boolean = false;
 
   constructor(public validationMessages: ValidationMessages) {}
 }

@@ -1,6 +1,4 @@
-<edit-asset-form-label
-  label="Language"
-  [ctrl]="control"></edit-asset-form-label>
+<edit-asset-form-label [label]="label" [ctrl]="control"></edit-asset-form-label>
 <mat-form-field class="w-full mt-1" color="accent">
   <mat-select [formControl]="control" [compareWith]="'id' | compareByField">
     <mat-option [value]="null">-</mat-option>

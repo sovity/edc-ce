@@ -35,6 +35,7 @@ Bug fixes
 #### Patch
 
 - Added description for fields in asset creation mask
+- Added description for fields in Create Data Offer page
 - Added proper handling of custom JSON properties in edit asset process
 
 ## [v4.1.1] - 2024-08-09
