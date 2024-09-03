@@ -20,10 +20,18 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
-- Check contract limits before negotiating a new one.
-- Enhanced EDC UI terminologies for create data offer tab
-- Changed title of contract definitions to data offers
-- Date and time related fixes, unified date format.
+## [v4.1.3] - 2024-09-03
+
+### Overview
+
+Bug fixes
+
+#### Patch
+
+- Check the contract limits before negotiating a new one.
+- Changed the title of Contract Definitions to Data Offers.
+- Enhanced EDC UI terminologies for the Create Data Offer tab.
+- Date and time display fixes, unified date format.
 
 ## [v4.1.2] - 2024-08-20
 
