@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.extension.contacttermination.ContractTerminationEvent;
 import de.sovity.edc.extension.contacttermination.ContractTerminationObserver;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.val;
 import org.eclipse.edc.spi.event.EventEnvelope;
 import org.eclipse.edc.spi.event.EventRouter;
@@ -57,13 +56,14 @@ public class MdsContractTerminationObserver implements ContractTerminationObserv
         }
     }
 
-    private @NotNull MdsContractTerminationEvent buildLogEvent(String contractAgreementId, LogEntry logEntry) throws JsonProcessingException {
-            val message = objectMapper.writeValueAsString(logEntry);
-            return new MdsContractTerminationEvent(
-                UuidGenerator.INSTANCE.generate().toString(),
-                contractAgreementId,
-                message
-            );
+    private @NotNull MdsContractTerminationEvent buildLogEvent(String contractAgreementId, LogEntry logEntry)
+        throws JsonProcessingException {
+        val message = objectMapper.writeValueAsString(logEntry);
+        return new MdsContractTerminationEvent(
+            UuidGenerator.INSTANCE.generate().toString(),
+            contractAgreementId,
+            message
+        );
     }
 
     private void publishEvent(MdsContractTerminationEvent event) {
