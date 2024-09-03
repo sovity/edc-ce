@@ -19,11 +19,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.extension.contacttermination.ContractTerminationEvent;
 import de.sovity.edc.extension.contacttermination.ContractTerminationObserver;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.val;
 import org.eclipse.edc.spi.event.EventEnvelope;
 import org.eclipse.edc.spi.event.EventRouter;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.uuid.UuidGenerator;
+import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
 public class MdsContractTerminationObserver implements ContractTerminationObserver {
@@ -46,28 +48,33 @@ public class MdsContractTerminationObserver implements ContractTerminationObserv
 
     private void sendMessage(String logEvent, ContractTerminationEvent contractTerminationEvent) {
         val logEntry = LogEntry.from(logEvent, contractTerminationEvent);
-
         try {
-            val message = objectMapper.writeValueAsString(logEntry);
-            val event = new MdsContractTerminationEvent(
-                UuidGenerator.INSTANCE.generate().toString(),
-                contractTerminationEvent.contractAgreementId(),
-                message
-            );
-
-            @SuppressWarnings("unchecked")
-            EventEnvelope.Builder<MdsContractTerminationEvent> builder = EventEnvelope.Builder.newInstance();
-
-            val eventEnvelope = builder
-                .at(System.currentTimeMillis())
-                .payload(event)
-                .build();
-
-            eventRouter.publish(eventEnvelope);
-
+            val event = buildLogEvent(contractTerminationEvent.contractAgreementId(), logEntry);
+            publishEvent(event);
             monitor.debug("Published event for " + logEntry);
         } catch (JsonProcessingException e) {
             monitor.warning("Failed to serialize the event for the logging house " + logEntry);
         }
+    }
+
+    private @NotNull MdsContractTerminationEvent buildLogEvent(String contractAgreementId, LogEntry logEntry) throws JsonProcessingException {
+            val message = objectMapper.writeValueAsString(logEntry);
+            return new MdsContractTerminationEvent(
+                UuidGenerator.INSTANCE.generate().toString(),
+                contractAgreementId,
+                message
+            );
+    }
+
+    private void publishEvent(MdsContractTerminationEvent event) {
+        @SuppressWarnings("unchecked")
+        EventEnvelope.Builder<MdsContractTerminationEvent> builder = EventEnvelope.Builder.newInstance();
+
+        val eventEnvelope = builder
+            .at(System.currentTimeMillis())
+            .payload(event)
+            .build();
+
+        eventRouter.publish(eventEnvelope);
     }
 }
