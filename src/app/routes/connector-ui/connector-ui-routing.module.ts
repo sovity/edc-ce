@@ -64,9 +64,9 @@ export const routes: Routes = [
     data: {title: 'Create Policy'},
   },
   {
-    path: 'contract-definitions',
+    path: 'data-offers',
     component: ContractDefinitionPageComponent,
-    data: {title: 'Contract Definitions'},
+    data: {title: 'Data Offers'},
   },
   {
     path: 'logout',

@@ -9,7 +9,7 @@ import {AssetProperty} from '../../../models/asset-properties';
 
 let contractDefinitions: ContractDefinitionEntry[] = [
   {
-    contractDefinitionId: 'test-contract-definition-1',
+    contractDefinitionId: 'test-data-offer-1',
     contractPolicyId: 'test-policy-definition-1',
     accessPolicyId: 'test-policy-definition-1',
     assetSelector: [

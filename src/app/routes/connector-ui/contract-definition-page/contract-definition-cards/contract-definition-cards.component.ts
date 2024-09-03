@@ -69,25 +69,22 @@ export class ContractDefinitionCardsComponent implements OnDestroy {
     let dialogRef: MatDialogRef<any>;
     const data: JsonDialogData = {
       title: card.id,
-      subtitle: 'Contract Definition',
+      subtitle: 'Data Offer',
       icon: 'policy',
       objectForJson: card.detailJsonObj,
       toolbarButton: {
         text: 'Delete',
         icon: 'delete',
-        confirmation: ConfirmDialogModel.forDelete(
-          'contract definition',
-          card.id,
-        ),
+        confirmation: ConfirmDialogModel.forDelete('data offer', card.id),
         action: () =>
           this.edcApiService.deleteContractDefinition(card.id).pipe(
             tap(() => {
-              this.notificationService.showInfo('Contract Definition deleted!');
+              this.notificationService.showInfo('Data Offer deleted!');
               this.deleteDone.emit();
               dialogRef?.close();
             }),
             catchError((err) => {
-              const msg = `Failed deleting contract definition with id ${card.id}`;
+              const msg = `Failed deleting data offer with id ${card.id}`;
               console.error(msg, err);
               this.notificationService.showError(msg);
               return EMPTY;

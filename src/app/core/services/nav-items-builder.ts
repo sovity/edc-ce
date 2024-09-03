@@ -21,9 +21,9 @@ export class NavItemsBuilder {
         {path: 'my-assets', icon: 'upload', title: 'Assets'},
         {path: 'policies', icon: 'policy', title: 'Policies'},
         {
-          path: 'contract-definitions',
+          path: 'data-offers',
           icon: 'rule',
-          title: 'Contract Definitions',
+          title: 'Data Offers',
         },
       ],
     },
