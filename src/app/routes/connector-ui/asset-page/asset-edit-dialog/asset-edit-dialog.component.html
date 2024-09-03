@@ -37,7 +37,7 @@
                 class="!scale-[0.9]"
                 mat-icon-button
                 matSuffix
-                matTooltip="The version of your asset">
+                matTooltip="The version of your asset. Especially useful if you have iterations of the same asset.">
                 <mat-icon>info_outline</mat-icon>
               </button>
             </mat-form-field>
@@ -168,10 +168,7 @@
               *ngIf="form.metadata.controls.standardLicense; let ctrl"
               class="grow">
               <mat-label>Standard License</mat-label>
-              <input
-                placeholder="https://creativecommons.org/licenses/by/4.0/deed.en"
-                matInput
-                [formControl]="ctrl" />
+              <input placeholder="https://" matInput [formControl]="ctrl" />
               <button
                 class="!scale-[0.9]"
                 mat-icon-button
@@ -222,7 +219,7 @@
               class="!scale-[0.9]"
               mat-icon-button
               matSuffix
-              matTooltip="Model for data exchange, e.g. DATEX II, TPEG for traffic and travel information">
+              matTooltip="Model for data exchange, e.g. DATEX II, TPEG for traffic and travel information, etc.">
               <mat-icon>info_outline</mat-icon>
             </button>
           </mat-form-field>
@@ -247,7 +244,7 @@
                 class="!scale-[0.9]"
                 mat-icon-button
                 matSuffix
-                matTooltip="The method used for representing of geographical data, e.g GeoJSON, OpenLR">
+                matTooltip="The method used for representing of geographical data, e.g GeoJSON, OpenLR, etc.">
                 <mat-icon>info_outline</mat-icon>
               </button>
             </mat-form-field>
@@ -297,7 +294,7 @@
                 class="!scale-[0.9]"
                 mat-icon-button
                 matSuffix
-                matTooltip="Simple description of the relevant geolocation, e.g. Hamburg and vicinity">
+                matTooltip="Simple description of the relevant geolocation, e.g. Hamburg and vicinity.">
                 <mat-icon>info_outline</mat-icon>
               </button>
             </mat-form-field>
