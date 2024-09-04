@@ -1,5 +1,5 @@
 ---
-icon: rectangle-vertical-history
+icon: arrow-right-from-bracket
 ---
 
 ## Frontend-Providing Section
