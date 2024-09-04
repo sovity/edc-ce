@@ -1,5 +1,5 @@
 ---
-icon: square-dashed-circle-plus
+icon: cube
 ---
 
 # Productive Deployment Guide
