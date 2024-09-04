@@ -129,7 +129,7 @@ subprojects {
     tasks.register("printClasspath") {
         group = libs.versions.edcGroup.get()
         description = "The EdcRuntimeExtension JUnit Extension requires the gradle task 'printClasspath'"
-        println(sourceSets.main.get().runtimeClasspath.asPath);
+        println(sourceSets.main.get().runtimeClasspath.asPath)
     }
 
     java {

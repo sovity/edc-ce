@@ -13,6 +13,10 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
+- Add Contract Termination Observer
+- MDS only
+  - Log contract termination events in the logging house
+
 #### Patch Changes
 
 ### Deployment Migration Notes
