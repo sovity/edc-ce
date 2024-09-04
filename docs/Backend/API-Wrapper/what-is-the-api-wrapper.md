@@ -1,5 +1,5 @@
 ---
-icon: keyboard
+icon: gear-complex-code
 ---
 
 ## What is the API-Wrapper?
