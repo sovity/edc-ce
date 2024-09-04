@@ -15,7 +15,7 @@
 package de.sovity.edc.extension.mdslogginhousebinder;
 
 public class LoggingHouseException extends RuntimeException {
-    public LoggingHouseException(String message) {
-        super(message);
+    public LoggingHouseException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
