@@ -1,5 +1,5 @@
 ---
-icon: rectangle-vertical-history
+icon: file-excel
 ---
 
 # Contract Termination
