@@ -52,7 +52,9 @@ public class MdsContractTerminationObserver implements ContractTerminationObserv
             publishEvent(event);
             monitor.debug("Published event for " + logEntry);
         } catch (JsonProcessingException e) {
-            monitor.warning("Failed to serialize the event for the logging house " + logEntry);
+            val message = "Failed to serialize the event for the LoggingHouse " + logEntry;
+            monitor.debug(message);
+            throw new LoggingHouseException(message);
         }
     }
 

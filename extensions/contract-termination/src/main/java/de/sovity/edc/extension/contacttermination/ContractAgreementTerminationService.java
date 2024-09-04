@@ -133,7 +133,7 @@ public class ContractAgreementTerminationService {
             try {
                 call.accept(listener);
             } catch (Exception e) {
-                monitor.warning("Failure when notifying the contract termination listener.");
+                monitor.warning("Failure when notifying the contract termination listener.", e);
             }
         }
     }
