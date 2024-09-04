@@ -13,10 +13,6 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
-- Add Contract Termination Observer
-- MDS only
-  - Log contract termination events in the logging house
-
 #### Patch Changes
 
 ### Deployment Migration Notes
@@ -30,6 +26,43 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
   - Dev Catalog Crawler: `ghcr.io/sovity/catalog-crawler-dev:{{ VERSION }}`
   - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:{{ VERSION }}`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI VERSION }}`
+
+
+## [10.3.0] - 2024-09-04
+
+### Overview
+
+Minor updates for contracts termination
+
+### Detailed Changes
+
+#### Minor Changes
+
+- MDS only
+  - Log contract termination events in the LoggingHouse
+
+#### Patch Changes
+
+- EDC CE
+  - API request examples updates
+
+- EDC UI
+  - Check the contract limits before negotiating a new one.
+  - Changed the title of Contract Definitions to Data Offers.
+  - Enhanced EDC UI terminologies for the Create Data Offer tab.
+  - Date and time display fixes, unified date format.
+
+### Deployment Migration Notes
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:10.3.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:10.3.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:10.3.0`
+  - Dev Catalog Crawler: `ghcr.io/sovity/catalog-crawler-dev:10.3.0`
+  - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.3.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.3`
 
 ## [10.2.0] - 2024-08-20
 
