@@ -1,5 +1,5 @@
 ---
-icon: square-dashed-circle-plus
+icon: tv
 ---
 
 Deployment Goal: Local Demo
