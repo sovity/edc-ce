@@ -1,5 +1,5 @@
 ---
-icon: rectangle-vertical-history
+icon: file-lines
 ---
 
 # Walkthrough Guide: From Dashboard to Consuming Data Offers
