@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3e0d6241-260c-42d3-81a1-3e3d4e9497e1",
+		"_postman_id": "213f5ff6-e5c6-41bb-9202-8e6cf60fec0c",
 		"name": "sovity EDC Community Edition Copy",
 		"description": "This is the official postman collection for the sovity EDC Community Edition.\n\nThe Management-API is based on core-edc v0.2.1.\n\nsovity EDC Community Edition: [https://github.com/sovity/edc-ce](https://github.com/sovity/edc-ce)\n\nLicense: [https://github.com/sovity/edc-ce/blob/main/LICENSE](https://github.com/sovity/edc-ce/blob/main/LICENSE)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -212,7 +212,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/asset-page/assets/{{ASSET_ID}}/metadata",
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/asset-page/assets/{{ASSET_ID}}",
 									"host": [
 										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
 									],
@@ -222,8 +222,7 @@
 										"pages",
 										"asset-page",
 										"assets",
-										"{{ASSET_ID}}",
-										"metadata"
+										"{{ASSET_ID}}"
 									],
 									"query": [
 										{
