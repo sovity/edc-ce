@@ -1,5 +1,5 @@
 ---
-icon: keyboard
+icon: rectangle-history
 ---
 
 # Basics: Setting Up Postman
