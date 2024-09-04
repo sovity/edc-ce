@@ -1,5 +1,5 @@
 ---
-icon: rectangle-vertical-history
+icon: arrow-left-to-bracket
 ---
 
 ## Frontend-Consuming Section
