@@ -1,5 +1,5 @@
 ---
-icon: rectangle-vertical-history
+icon: objects-column
 ---
 
 # Dashboard Overview
