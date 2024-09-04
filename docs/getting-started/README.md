@@ -1,5 +1,5 @@
 ---
-icon: square-dashed-circle-plus
+icon: grid
 ---
 
 Getting Started
