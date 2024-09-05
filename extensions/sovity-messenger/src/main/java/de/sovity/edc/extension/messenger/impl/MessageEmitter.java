@@ -19,8 +19,8 @@ import lombok.RequiredArgsConstructor;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import org.eclipse.edc.protocol.dsp.spi.dispatcher.DspHttpRequestFactory;
-import org.eclipse.edc.protocol.dsp.spi.serialization.JsonLdRemoteMessageSerializer;
+import org.eclipse.edc.protocol.dsp.http.spi.dispatcher.DspHttpRequestFactory;
+import org.eclipse.edc.protocol.dsp.http.spi.serialization.JsonLdRemoteMessageSerializer;
 
 @RequiredArgsConstructor
 public class MessageEmitter implements DspHttpRequestFactory<SovityMessageRequest> {

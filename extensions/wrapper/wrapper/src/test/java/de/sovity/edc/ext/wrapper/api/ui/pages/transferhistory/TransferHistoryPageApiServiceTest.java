@@ -17,10 +17,11 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractAgreementDirection;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
-import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
-import org.eclipse.edc.connector.spi.asset.AssetService;
-import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
+import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
+import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
+import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService;
+import org.eclipse.edc.connector.controlplane.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -29,7 +30,6 @@ import java.text.ParseException;
 
 import static de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessTestUtils.createConsumingTransferProcesses;
 import static de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessTestUtils.createProvidingTransferProcesses;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
@@ -39,11 +39,11 @@ class TransferHistoryPageApiServiceTest {
     private static EdcClient client;
 
     @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+    static RuntimePerClassWithDbExtension providerExtension = new RuntimePerClassWithDbExtension(
         ":launchers:connectors:sovity-dev",
         "provider",
         testDatabase -> {
-            config = forTestDatabase("my-edc-participant-id", testDatabase);
+            config = CeIntegrationTestUtils.defaultConfig("my-edc-participant-id", testDatabase);
             client = EdcClient.builder()
                 .managementApiUrl(config.getManagementApiUrl())
                 .managementApiKey(config.getManagementApiKey())

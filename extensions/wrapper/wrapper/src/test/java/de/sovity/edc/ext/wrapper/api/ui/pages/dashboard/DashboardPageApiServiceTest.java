@@ -15,26 +15,27 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
+import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
 import de.sovity.edc.utils.config.ConfigProps;
-import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
-import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
-import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
-import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
-import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
-import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
-import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
-import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
-import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
-import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
+import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
+import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex;
+import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.agreement.ContractAgreement;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.offer.ContractDefinition;
+import org.eclipse.edc.connector.controlplane.policy.spi.PolicyDefinition;
+import org.eclipse.edc.connector.controlplane.services.spi.contractdefinition.ContractDefinitionService;
+import org.eclipse.edc.connector.controlplane.services.spi.policydefinition.PolicyDefinitionService;
+import org.eclipse.edc.connector.controlplane.services.spi.transferprocess.TransferProcessService;
+import org.eclipse.edc.connector.controlplane.transfer.spi.types.DataRequest;
+import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess;
+import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcessStates;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.service.spi.result.ServiceResult;
-import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.query.QuerySpec;
-import org.eclipse.edc.spi.types.domain.asset.Asset;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -46,39 +47,24 @@ import java.util.Random;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation.Type.CONSUMER;
-import static org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation.Type.PROVIDER;
+import static org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation.Type.CONSUMER;
+import static org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation.Type.PROVIDER;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ApiTest
 class DashboardPageApiServiceTest {
-    private static ConnectorConfig config;
     private static EdcClient client;
 
     @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "provider",
-        testDatabase -> {
-            config = forTestDatabase("my-edc-participant-id", testDatabase);
-
-            config.setProperty(ConfigProps.EDC_OAUTH_TOKEN_URL, "https://token-url.daps");
-            config.setProperty(ConfigProps.EDC_OAUTH_PROVIDER_JWKS_URL, "https://jwks-url.daps");
-
-            config.setProperty("tx.ssi.oauth.token.url", "https://token.miw");
-            config.setProperty("tx.ssi.miw.url", "https://miw");
-            config.setProperty("tx.ssi.miw.authority.id", "my-authority-id");
-
-            client = EdcClient.builder()
-                .managementApiUrl(config.getManagementApiUrl())
-                .managementApiKey(config.getManagementApiKey())
-                .build();
-            return config.getProperties();
-        }
+    static RuntimePerClassWithDbExtension providerExtension = CeIntegrationTestUtils.defaultIntegrationTest(config -> config
+        .property(ConfigProps.EDC_OAUTH_TOKEN_URL, "https://token-url.daps")
+        .property(ConfigProps.EDC_OAUTH_PROVIDER_JWKS_URL, "https://jwks-url.daps")
+        .property("tx.ssi.oauth.token.url", "https://token.miw")
+        .property("tx.ssi.miw.url", "https://miw")
+        .property("tx.ssi.miw.authority.id", "my-authority-id")
     );
 
     AssetIndex assetIndex;
@@ -90,12 +76,8 @@ class DashboardPageApiServiceTest {
     private final Random random = new Random();
 
     @BeforeEach
-    void setUp(EdcExtension context) {
-
-        client = EdcClient.builder()
-            .managementApiUrl(config.getManagementApiUrl())
-            .managementApiKey(config.getManagementApiKey())
-            .build();
+    void setUp(EdcExtension context, Config config) {
+        client = CeIntegrationTestUtils.getEdcClient(config);
 
 
         assetIndex = mock();
@@ -118,24 +100,24 @@ class DashboardPageApiServiceTest {
     void testKpis() {
         // arrange
         mockAmounts(
-                repeat(7, Mockito::mock),
-                repeat(8, Mockito::mock),
-                repeat(9, Mockito::mock),
-                List.of(
-                        mockContractNegotiation(1, CONSUMER),
-                        mockContractNegotiation(2, PROVIDER),
-                        mockContractNegotiation(3, PROVIDER),
-                        mockContractNegotiationInProgress(CONSUMER),
-                        mockContractNegotiationInProgress(PROVIDER)
-                ),
-                flat(List.of(
-                        repeat(1, () -> mockTransferProcess(1, TransferProcessStates.REQUESTING.code())),
-                        repeat(2, () -> mockTransferProcess(1, TransferProcessStates.TERMINATED.code())),
-                        repeat(3, () -> mockTransferProcess(1, TransferProcessStates.COMPLETED.code())),
-                        repeat(4, () -> mockTransferProcess(2, TransferProcessStates.REQUESTING.code())),
-                        repeat(5, () -> mockTransferProcess(2, TransferProcessStates.TERMINATED.code())),
-                        repeat(6, () -> mockTransferProcess(2, TransferProcessStates.COMPLETED.code()))
-                ))
+            repeat(7, Mockito::mock),
+            repeat(8, Mockito::mock),
+            repeat(9, Mockito::mock),
+            List.of(
+                mockContractNegotiation(1, CONSUMER),
+                mockContractNegotiation(2, PROVIDER),
+                mockContractNegotiation(3, PROVIDER),
+                mockContractNegotiationInProgress(CONSUMER),
+                mockContractNegotiationInProgress(PROVIDER)
+            ),
+            flat(List.of(
+                repeat(1, () -> mockTransferProcess(1, TransferProcessStates.REQUESTING.code())),
+                repeat(2, () -> mockTransferProcess(1, TransferProcessStates.TERMINATED.code())),
+                repeat(3, () -> mockTransferProcess(1, TransferProcessStates.COMPLETED.code())),
+                repeat(4, () -> mockTransferProcess(2, TransferProcessStates.REQUESTING.code())),
+                repeat(5, () -> mockTransferProcess(2, TransferProcessStates.TERMINATED.code())),
+                repeat(6, () -> mockTransferProcess(2, TransferProcessStates.COMPLETED.code()))
+            ))
         );
 
         // act
@@ -225,21 +207,21 @@ class DashboardPageApiServiceTest {
     }
 
     private void mockAmounts(
-            List<Asset> assets,
-            List<PolicyDefinition> policyDefinitions,
-            List<ContractDefinition> contractDefinitions,
-            List<ContractNegotiation> contractNegotiations,
-            List<TransferProcess> transferProcesses
+        List<Asset> assets,
+        List<PolicyDefinition> policyDefinitions,
+        List<ContractDefinition> contractDefinitions,
+        List<ContractNegotiation> contractNegotiations,
+        List<TransferProcess> transferProcesses
     ) {
         when(assetIndex.queryAssets(eq(QuerySpec.max()))).thenAnswer(i -> assets.stream());
         when(transferProcessService.query(eq(QuerySpec.max())))
-                .thenAnswer(i -> ServiceResult.success(transferProcesses.stream()));
+            .thenAnswer(i -> ServiceResult.success(transferProcesses.stream()));
         when(policyDefinitionService.query(eq(QuerySpec.max())))
-                .thenAnswer(i -> ServiceResult.success(policyDefinitions.stream()));
+            .thenAnswer(i -> ServiceResult.success(policyDefinitions.stream()));
         when(contractNegotiationStore.queryNegotiations(eq(QuerySpec.max())))
-                .thenAnswer(i -> contractNegotiations.stream());
+            .thenAnswer(i -> contractNegotiations.stream());
         when(contractDefinitionService.query(eq(QuerySpec.max())))
-                .thenAnswer(i -> ServiceResult.success(contractDefinitions.stream()));
+            .thenAnswer(i -> ServiceResult.success(contractDefinitions.stream()));
     }
 
     private <T> List<T> repeat(int times, Supplier<T> supplier) {

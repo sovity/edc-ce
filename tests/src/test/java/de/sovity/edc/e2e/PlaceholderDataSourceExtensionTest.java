@@ -20,9 +20,9 @@ import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceOnRequest;
-import de.sovity.edc.extension.e2e.extension.E2eScenario;
-import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
-import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperConnectorRemote;
+import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import jakarta.ws.rs.HttpMethod;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -37,19 +37,18 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 
 class PlaceholderDataSourceExtensionTest {
 
     @RegisterExtension
-    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = new CeE2eTestExtension();
 
     @SneakyThrows
     @Test
     void shouldAccessDummyEndpoint(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         ClientAndServer clientAndServer,
         @Provider EdcClient providerClient
     ) {

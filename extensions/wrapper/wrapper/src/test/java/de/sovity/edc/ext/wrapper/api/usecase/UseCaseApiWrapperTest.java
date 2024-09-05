@@ -33,7 +33,8 @@ import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
+import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -42,7 +43,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.List;
 
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
@@ -52,11 +52,11 @@ class UseCaseApiWrapperTest {
     private static EdcClient client;
 
     @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+    static RuntimePerClassWithDbExtension providerExtension = new RuntimePerClassWithDbExtension(
         ":launchers:connectors:sovity-dev",
         "provider",
         testDatabase -> {
-            config = forTestDatabase("my-edc-participant-id", testDatabase);
+            config = CeIntegrationTestUtils.defaultConfig("my-edc-participant-id", testDatabase);
             client = EdcClient.builder()
                 .managementApiUrl(config.getManagementApiUrl())
                 .managementApiKey(config.getManagementApiKey())

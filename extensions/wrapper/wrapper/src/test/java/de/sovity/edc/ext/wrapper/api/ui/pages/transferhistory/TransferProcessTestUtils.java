@@ -15,18 +15,18 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;
 
 import de.sovity.edc.utils.jsonld.vocab.Prop;
-import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
-import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiationStates;
-import org.eclipse.edc.connector.spi.asset.AssetService;
-import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
-import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
-import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
+import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.agreement.ContractAgreement;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiationStates;
+import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService;
+import org.eclipse.edc.connector.controlplane.transfer.spi.store.TransferProcessStore;
+import org.eclipse.edc.connector.controlplane.transfer.spi.types.DataRequest;
+import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.policy.model.Policy;
-import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
+import org.eclipse.edc.protocol.dsp.http.spi.types.HttpMessageProtocol;
 import org.eclipse.edc.spi.types.domain.DataAddress;
-import org.eclipse.edc.spi.types.domain.asset.Asset;
+import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

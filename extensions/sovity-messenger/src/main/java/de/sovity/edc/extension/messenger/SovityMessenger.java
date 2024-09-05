@@ -51,6 +51,7 @@ public class SovityMessenger {
      *
      * @param resultType          The result's class.
      * @param counterPartyAddress The base DSP URL where to send the message. e.g. https://server:port/api/dsp
+     * @param counterPartyId      The Participant ID of the counter party EDC. e.g. MDSL1234XX.C1234XX
      * @param payload             The message to send.
      * @param <T>                 The outgoing message type.
      * @param <R>                 The incoming message type.
@@ -58,9 +59,9 @@ public class SovityMessenger {
      * @throws SovityMessengerException If a problem related to the message processing happened.
      */
     public <T extends SovityMessage, R extends SovityMessage> CompletableFuture<StatusResult<R>> send(
-        Class<R> resultType, String counterPartyAddress, T payload) {
+        Class<R> resultType, String counterPartyAddress, String counterPartyId, T payload) {
         try {
-            val message = buildMessage(counterPartyAddress, payload);
+            val message = buildMessage(counterPartyAddress, counterPartyId, payload);
             val future = registry.dispatch(SovityMessageRequest.class, message);
             return future.thenApply(processResponse(resultType, payload));
         } catch (URISyntaxException | MalformedURLException | JsonProcessingException e) {
@@ -78,8 +79,8 @@ public class SovityMessenger {
     /**
      * Fire-and-forget messaging where you don't care about the response.
      */
-    public <T extends SovityMessage> void send(String counterPartyAddress, T payload) {
-        send(Discarded.class, counterPartyAddress, payload);
+    public <T extends SovityMessage> void send(String counterPartyAddress, String counterPartyId, T payload) {
+        send(Discarded.class, counterPartyAddress, counterPartyId, payload);
     }
 
     @NotNull
@@ -108,7 +109,7 @@ public class SovityMessenger {
     }
 
     @NotNull
-    private <T extends SovityMessage> SovityMessageRequest buildMessage(String counterPartyAddress, T payload)
+    private <T extends SovityMessage> SovityMessageRequest buildMessage(String counterPartyAddress, String counterPartyId, T payload)
         throws MalformedURLException, URISyntaxException, JsonProcessingException {
         val url = new URI(counterPartyAddress).toURL();
         val header1 = Json.createObjectBuilder()
@@ -116,7 +117,7 @@ public class SovityMessenger {
             .build();
         val header = JsonUtils.toJson(header1);
         val serialized = serializer.writeValueAsString(payload);
-        return new SovityMessageRequest(url, header, serialized);
+        return new SovityMessageRequest(url, counterPartyId, header, serialized);
     }
 
 }

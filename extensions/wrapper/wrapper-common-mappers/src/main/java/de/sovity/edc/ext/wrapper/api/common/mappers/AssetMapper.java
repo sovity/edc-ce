@@ -26,8 +26,8 @@ import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
 import org.eclipse.edc.jsonld.spi.JsonLd;
-import org.eclipse.edc.spi.types.domain.asset.Asset;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
 import java.util.Optional;

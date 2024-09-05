@@ -39,7 +39,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ConnectorLimits'
+                $ref: "#/components/schemas/ConnectorLimits"
   /wrapper/ee/file-upload/blobs/{blobId}/asset:
     post:
       tags:
@@ -59,7 +59,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UiAssetCreateRequest'
+              $ref: "#/components/schemas/UiAssetCreateRequest"
         required: true
       responses:
         default:
@@ -91,14 +91,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UiAssetCreateRequest'
+              $ref: "#/components/schemas/UiAssetCreateRequest"
       responses:
         default:
           description: default response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: "#/components/schemas/IdResponseDto"
   /wrapper/ui/pages/contract-definition-page/contract-definitions:
     post:
       tags:
@@ -109,14 +109,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ContractDefinitionRequest'
+              $ref: "#/components/schemas/ContractDefinitionRequest"
       responses:
         default:
           description: default response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: "#/components/schemas/IdResponseDto"
   /wrapper/ui/pages/create-data-offer:
     post:
       tags:
@@ -129,14 +129,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DataOfferCreationRequest'
+              $ref: "#/components/schemas/DataOfferCreationRequest"
       responses:
         default:
           description: default response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: "#/components/schemas/IdResponseDto"
   /wrapper/ui/pages/policy-page/policy-definitions:
     post:
       tags:
@@ -148,14 +148,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PolicyDefinitionCreateRequest'
+              $ref: "#/components/schemas/PolicyDefinitionCreateRequest"
       responses:
         default:
           description: default response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: "#/components/schemas/IdResponseDto"
       deprecated: true
   /wrapper/ui/v2/pages/policy-page/policy-definitions:
     post:
@@ -167,14 +167,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PolicyDefinitionCreateDto'
+              $ref: "#/components/schemas/PolicyDefinitionCreateDto"
       responses:
         default:
           description: default response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: "#/components/schemas/IdResponseDto"
   /wrapper/ui/pages/asset-page/assets/{assetId}:
     put:
       tags:
@@ -191,14 +191,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UiAssetEditRequest'
+              $ref: "#/components/schemas/UiAssetEditRequest"
       responses:
         default:
           description: default response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: "#/components/schemas/IdResponseDto"
     delete:
       tags:
       - UI
@@ -216,7 +216,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: "#/components/schemas/IdResponseDto"
   /wrapper/ui/pages/contract-definition-page/contract-definitions/{contractDefinitionId}:
     delete:
       tags:
@@ -235,7 +235,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: "#/components/schemas/IdResponseDto"
   /wrapper/ui/pages/policy-page/policy-definitions/{policyId}:
     delete:
       tags:
@@ -254,7 +254,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: "#/components/schemas/IdResponseDto"
   /wrapper/ui/pages/asset-page:
     get:
       tags:
@@ -267,7 +267,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssetPage'
+                $ref: "#/components/schemas/AssetPage"
   /wrapper/ui/pages/catalog-page/data-offers:
     get:
       tags:
@@ -287,7 +287,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/UiDataOffer'
+                  $ref: "#/components/schemas/UiDataOffer"
   /wrapper/ui/pages/contract-agreement-page/{contractAgreementId}:
     get:
       tags:
@@ -306,7 +306,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ContractAgreementCard'
+                $ref: "#/components/schemas/ContractAgreementCard"
   /wrapper/ui/pages/contract-agreement-page:
     post:
       tags:
@@ -318,14 +318,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ContractAgreementPageQuery'
+              $ref: "#/components/schemas/ContractAgreementPageQuery"
       responses:
         default:
           description: default response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ContractAgreementPage'
+                $ref: "#/components/schemas/ContractAgreementPage"
   /wrapper/ui/pages/contract-definition-page:
     get:
       tags:
@@ -338,7 +338,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ContractDefinitionPage'
+                $ref: "#/components/schemas/ContractDefinitionPage"
   /wrapper/ui/pages/catalog-page/contract-negotiations/{contractNegotiationId}:
     get:
       tags:
@@ -357,7 +357,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UiContractNegotiation'
+                $ref: "#/components/schemas/UiContractNegotiation"
   /wrapper/ui/pages/dashboard-page:
     get:
       tags:
@@ -370,7 +370,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DashboardPage'
+                $ref: "#/components/schemas/DashboardPage"
   /wrapper/ui/pages/policy-page:
     get:
       tags:
@@ -383,7 +383,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PolicyDefinitionPage'
+                $ref: "#/components/schemas/PolicyDefinitionPage"
   /wrapper/ui/pages/transfer-history-page:
     get:
       tags:
@@ -396,7 +396,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TransferHistoryPage'
+                $ref: "#/components/schemas/TransferHistoryPage"
   /wrapper/ui/pages/transfer-history-page/transfer-processes/{transferProcessId}/asset:
     get:
       tags:
@@ -415,7 +415,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UiAsset'
+                $ref: "#/components/schemas/UiAsset"
   /wrapper/ui/pages/catalog-page/contract-negotiations:
     post:
       tags:
@@ -426,14 +426,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ContractNegotiationRequest'
+              $ref: "#/components/schemas/ContractNegotiationRequest"
       responses:
         default:
           description: default response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UiContractNegotiation'
+                $ref: "#/components/schemas/UiContractNegotiation"
   /wrapper/ui/pages/contract-agreement-page/transfers/custom:
     post:
       tags:
@@ -446,14 +446,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InitiateCustomTransferRequest'
+              $ref: "#/components/schemas/InitiateCustomTransferRequest"
       responses:
         default:
           description: default response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: "#/components/schemas/IdResponseDto"
   /wrapper/ui/pages/contract-agreement-page/transfers:
     post:
       tags:
@@ -464,14 +464,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InitiateTransferRequest'
+              $ref: "#/components/schemas/InitiateTransferRequest"
       responses:
         default:
           description: default response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: "#/components/schemas/IdResponseDto"
   /wrapper/ui/pages/data-offer-page/validate-asset-id/{assetId}:
     get:
       tags:
@@ -490,7 +490,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdAvailabilityResponse'
+                $ref: "#/components/schemas/IdAvailabilityResponse"
   /wrapper/ui/pages/data-offer-page/validate-contract-definition-id/{contractDefinitionId}:
     get:
       tags:
@@ -509,7 +509,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdAvailabilityResponse'
+                $ref: "#/components/schemas/IdAvailabilityResponse"
   /wrapper/ui/pages/data-offer-page/validate-policy-id/{policyId}:
     get:
       tags:
@@ -528,7 +528,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdAvailabilityResponse'
+                $ref: "#/components/schemas/IdAvailabilityResponse"
   /wrapper/ui/pages/content-agreement-page/{contractAgreementId}/terminate:
     post:
       tags:
@@ -546,14 +546,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ContractTerminationRequest'
+              $ref: "#/components/schemas/ContractTerminationRequest"
       responses:
         default:
           description: default response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponseDto'
+                $ref: "#/components/schemas/IdResponseDto"
   /wrapper/use-case-api/kpis:
     get:
       tags:
@@ -566,7 +566,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/KpiResult'
+                $ref: "#/components/schemas/KpiResult"
   /wrapper/use-case-api/supported-policy-functions:
     get:
       tags:
@@ -592,7 +592,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CatalogQuery'
+              $ref: "#/components/schemas/CatalogQuery"
         required: true
       responses:
         default:
@@ -602,7 +602,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/UiDataOffer'
+                  $ref: "#/components/schemas/UiDataOffer"
 components:
   schemas:
     ConnectorLimits:
@@ -649,7 +649,7 @@ components:
       type: object
       properties:
         dataSource:
-          $ref: '#/components/schemas/UiDataSource'
+          $ref: "#/components/schemas/UiDataSource"
         id:
           type: string
           description: Asset Id
@@ -768,11 +768,11 @@ components:
       type: object
       properties:
         type:
-          $ref: '#/components/schemas/DataSourceType'
+          $ref: "#/components/schemas/DataSourceType"
         httpData:
-          $ref: '#/components/schemas/UiDataSourceHttpData'
+          $ref: "#/components/schemas/UiDataSourceHttpData"
         onRequest:
-          $ref: '#/components/schemas/UiDataSourceOnRequest'
+          $ref: "#/components/schemas/UiDataSourceOnRequest"
         customProperties:
           type: object
           additionalProperties:
@@ -787,7 +787,7 @@ components:
       type: object
       properties:
         method:
-          $ref: '#/components/schemas/UiDataSourceHttpDataMethod'
+          $ref: "#/components/schemas/UiDataSourceHttpDataMethod"
         baseUrl:
           type: string
           description: "HTTP Request URL. If parameterized, additional pathParams\
@@ -803,7 +803,7 @@ components:
             EDC as its value can be read from a vault.
           example: Authorization
         authHeaderValue:
-          $ref: '#/components/schemas/SecretValue'
+          $ref: "#/components/schemas/SecretValue"
         headers:
           type: object
           additionalProperties:
@@ -893,7 +893,7 @@ components:
           type: array
           description: List of Criteria for the contract
           items:
-            $ref: '#/components/schemas/UiCriterion'
+            $ref: "#/components/schemas/UiCriterion"
       description: Data for creating a Contract Definition
     UiCriterion:
       required:
@@ -906,15 +906,15 @@ components:
           type: string
           description: Left Operand
         operator:
-          $ref: '#/components/schemas/UiCriterionOperator'
+          $ref: "#/components/schemas/UiCriterionOperator"
         operandRight:
-          $ref: '#/components/schemas/UiCriterionLiteral'
+          $ref: "#/components/schemas/UiCriterionLiteral"
       description: Contract Definition Criterion as supported by the UI
     UiCriterionLiteral:
       type: object
       properties:
         type:
-          $ref: '#/components/schemas/UiCriterionLiteralType'
+          $ref: "#/components/schemas/UiCriterionLiteralType"
         value:
           type: string
           description: Only for type VALUE. The single value representation.
@@ -945,7 +945,7 @@ components:
       type: object
       properties:
         uiAssetCreateRequest:
-          $ref: '#/components/schemas/UiAssetCreateRequest'
+          $ref: "#/components/schemas/UiAssetCreateRequest"
         policy:
           type: string
           description: Which policy to apply to this asset.
@@ -954,7 +954,7 @@ components:
           - PUBLISH_UNRESTRICTED
           - PUBLISH_RESTRICTED
         uiPolicyExpression:
-          $ref: '#/components/schemas/UiPolicyExpression'
+          $ref: "#/components/schemas/UiPolicyExpression"
       description: Request to create a data offer
     OperatorDto:
       type: string
@@ -984,9 +984,9 @@ components:
           type: string
           description: Left side of the expression.
         operator:
-          $ref: '#/components/schemas/OperatorDto'
+          $ref: "#/components/schemas/OperatorDto"
         right:
-          $ref: '#/components/schemas/UiPolicyLiteral'
+          $ref: "#/components/schemas/UiPolicyLiteral"
       description: "ODRL AtomicConstraint as supported by the sovity product landscape.\
         \ For example 'a EQ b', 'c IN [d, e, f]'"
     UiPolicyExpression:
@@ -995,15 +995,15 @@ components:
       type: object
       properties:
         type:
-          $ref: '#/components/schemas/UiPolicyExpressionType'
+          $ref: "#/components/schemas/UiPolicyExpressionType"
         expressions:
           type: array
           description: "Only for types AND, OR, XONE. List of sub-expressions to be\
             \ evaluated according to the expressionType."
           items:
-            $ref: '#/components/schemas/UiPolicyExpression'
+            $ref: "#/components/schemas/UiPolicyExpression"
         constraint:
-          $ref: '#/components/schemas/UiPolicyConstraint'
+          $ref: "#/components/schemas/UiPolicyConstraint"
       description: ODRL constraint as supported by the sovity product landscape
     UiPolicyExpressionType:
       type: string
@@ -1025,7 +1025,7 @@ components:
       type: object
       properties:
         type:
-          $ref: '#/components/schemas/UiPolicyLiteralType'
+          $ref: "#/components/schemas/UiPolicyLiteralType"
         value:
           type: string
           description: Only for types STRING and JSON
@@ -1053,7 +1053,7 @@ components:
           type: string
           description: Policy Definition ID
         policy:
-          $ref: '#/components/schemas/UiPolicyCreateRequest'
+          $ref: "#/components/schemas/UiPolicyCreateRequest"
       description: "[Deprecated] Create a Policy Definition. Use PolicyDefinitionCreateDto"
       deprecated: true
     UiPolicyCreateRequest:
@@ -1064,7 +1064,7 @@ components:
           description: Conjunction of required constraints
           deprecated: true
           items:
-            $ref: '#/components/schemas/UiPolicyConstraint'
+            $ref: "#/components/schemas/UiPolicyConstraint"
       description: "[Deprecated] Conjunction of constraints (simplified UiPolicyExpression)"
       deprecated: true
     PolicyDefinitionCreateDto:
@@ -1077,13 +1077,13 @@ components:
           type: string
           description: Policy Definition ID
         expression:
-          $ref: '#/components/schemas/UiPolicyExpression'
+          $ref: "#/components/schemas/UiPolicyExpression"
       description: Create a Policy Definition
     UiAssetEditRequest:
       type: object
       properties:
         dataSourceOverrideOrNull:
-          $ref: '#/components/schemas/UiDataSource'
+          $ref: "#/components/schemas/UiDataSource"
         title:
           type: string
           description: Asset Title
@@ -1202,7 +1202,7 @@ components:
           type: array
           description: Visible Assets
           items:
-            $ref: '#/components/schemas/UiAsset'
+            $ref: "#/components/schemas/UiAsset"
       description: All data for the Asset Page
     DataSourceAvailability:
       type: string
@@ -1224,7 +1224,7 @@ components:
       type: object
       properties:
         dataSourceAvailability:
-          $ref: '#/components/schemas/DataSourceAvailability'
+          $ref: "#/components/schemas/DataSourceAvailability"
         assetId:
           type: string
           description: Asset Id
@@ -1391,7 +1391,7 @@ components:
           type: string
           description: Contract Offer ID
         policy:
-          $ref: '#/components/schemas/UiPolicy'
+          $ref: "#/components/schemas/UiPolicy"
       description: Catalog Data Offer's Contract Offer as required by the UI
     UiDataOffer:
       required:
@@ -1408,12 +1408,12 @@ components:
           type: string
           description: Participant ID. Required for initiating transfers.
         asset:
-          $ref: '#/components/schemas/UiAsset'
+          $ref: "#/components/schemas/UiAsset"
         contractOffers:
           type: array
           description: Available Contract Offers
           items:
-            $ref: '#/components/schemas/UiContractOffer'
+            $ref: "#/components/schemas/UiContractOffer"
       description: Catalog Data Offer as required by the UI
     UiPolicy:
       required:
@@ -1426,7 +1426,7 @@ components:
           description: EDC Policy JSON-LD. This is required because the EDC requires
             the full policy when initiating contract negotiations.
         expression:
-          $ref: '#/components/schemas/UiPolicyExpression'
+          $ref: "#/components/schemas/UiPolicyExpression"
         errors:
           type: array
           description: "When trying to reduce the policy JSON-LD to our opinionated\
@@ -1462,7 +1462,7 @@ components:
           type: string
           description: Contract Negotiation ID
         direction:
-          $ref: '#/components/schemas/ContractAgreementDirection'
+          $ref: "#/components/schemas/ContractAgreementDirection"
         counterPartyAddress:
           type: string
           description: Other Connector's Endpoint
@@ -1474,18 +1474,18 @@ components:
           description: Contract Agreements Signing Date
           format: date-time
         asset:
-          $ref: '#/components/schemas/UiAsset'
+          $ref: "#/components/schemas/UiAsset"
         contractPolicy:
-          $ref: '#/components/schemas/UiPolicy'
+          $ref: "#/components/schemas/UiPolicy"
         transferProcesses:
           type: array
           description: Contract Agreement's Transfer Processes
           items:
-            $ref: '#/components/schemas/ContractAgreementTransferProcess'
+            $ref: "#/components/schemas/ContractAgreementTransferProcess"
         terminationStatus:
-          $ref: '#/components/schemas/ContractTerminationStatus'
+          $ref: "#/components/schemas/ContractTerminationStatus"
         terminationInformation:
-          $ref: '#/components/schemas/ContractAgreementTerminationInfo'
+          $ref: "#/components/schemas/ContractAgreementTerminationInfo"
       description: Contract Agreement for Contract Agreement Page
     ContractAgreementDirection:
       type: string
@@ -1514,7 +1514,7 @@ components:
           description: Detailed message from the terminating party about why the contract
             was terminated.
         terminatedBy:
-          $ref: '#/components/schemas/ContractTerminatedBy'
+          $ref: "#/components/schemas/ContractTerminatedBy"
       description: Contract's agreement metadata
     ContractAgreementTransferProcess:
       required:
@@ -1531,7 +1531,7 @@ components:
           description: Last Change Date
           format: date-time
         state:
-          $ref: '#/components/schemas/TransferProcessState'
+          $ref: "#/components/schemas/TransferProcessState"
         errorMessage:
           type: string
           description: Error Message
@@ -1572,7 +1572,7 @@ components:
           description: State code
           format: int32
         simplifiedState:
-          $ref: '#/components/schemas/TransferProcessSimplifiedState'
+          $ref: "#/components/schemas/TransferProcessSimplifiedState"
       description: Transfer Process State interpreted
     ContractAgreementPage:
       required:
@@ -1583,13 +1583,13 @@ components:
           type: array
           description: Contract Agreement Cards
           items:
-            $ref: '#/components/schemas/ContractAgreementCard'
+            $ref: "#/components/schemas/ContractAgreementCard"
       description: Data as required by the UI's Contract Agreement Page
     ContractAgreementPageQuery:
       type: object
       properties:
         terminationStatus:
-          $ref: '#/components/schemas/ContractTerminationStatus'
+          $ref: "#/components/schemas/ContractTerminationStatus"
       description: Filters for querying a Contract Contract Agreement Page
     ContractDefinitionEntry:
       required:
@@ -1612,7 +1612,7 @@ components:
           type: array
           description: Criteria for the contract
           items:
-            $ref: '#/components/schemas/UiCriterion'
+            $ref: "#/components/schemas/UiCriterion"
       description: Contract Definition List Entry for Contract Definition Page
     ContractDefinitionPage:
       required:
@@ -1623,7 +1623,7 @@ components:
           type: array
           description: Contract Definition Entries
           items:
-            $ref: '#/components/schemas/ContractDefinitionEntry'
+            $ref: "#/components/schemas/ContractDefinitionEntry"
     ContractNegotiationSimplifiedState:
       type: string
       description: Simplified Contract Negotiation State to be used in UI
@@ -1647,7 +1647,7 @@ components:
           description: State code
           format: int32
         simplifiedState:
-          $ref: '#/components/schemas/ContractNegotiationSimplifiedState'
+          $ref: "#/components/schemas/ContractNegotiationSimplifiedState"
       description: Contract Negotiation State interpreted
     UiContractNegotiation:
       required:
@@ -1667,7 +1667,7 @@ components:
           type: string
           description: Contract Agreement Id
         state:
-          $ref: '#/components/schemas/ContractNegotiationState'
+          $ref: "#/components/schemas/ContractNegotiationState"
       description: Contract Negotiation Information
     DashboardDapsConfig:
       required:
@@ -1739,9 +1739,9 @@ components:
           description: Number of providing Contract Agreements
           format: int64
         transferProcessesConsuming:
-          $ref: '#/components/schemas/DashboardTransferAmounts'
+          $ref: "#/components/schemas/DashboardTransferAmounts"
         transferProcessesProviding:
-          $ref: '#/components/schemas/DashboardTransferAmounts'
+          $ref: "#/components/schemas/DashboardTransferAmounts"
         connectorEndpoint:
           type: string
           description: Your Connector's Connector Endpoint
@@ -1767,9 +1767,9 @@ components:
           type: string
           description: Your Connector's Maintainer's Organization Name
         connectorDapsConfig:
-          $ref: '#/components/schemas/DashboardDapsConfig'
+          $ref: "#/components/schemas/DashboardDapsConfig"
         connectorMiwConfig:
-          $ref: '#/components/schemas/DashboardMiwConfig'
+          $ref: "#/components/schemas/DashboardMiwConfig"
       description: Data as required by the UI's Dashboard Page
     DashboardTransferAmounts:
       required:
@@ -1806,7 +1806,7 @@ components:
           type: string
           description: Policy Definition ID
         policy:
-          $ref: '#/components/schemas/UiPolicy'
+          $ref: "#/components/schemas/UiPolicy"
       description: Policy Definition as required for the Policy Definition Page
     PolicyDefinitionPage:
       required:
@@ -1817,7 +1817,7 @@ components:
           type: array
           description: Policy Definition Entries
           items:
-            $ref: '#/components/schemas/PolicyDefinitionDto'
+            $ref: "#/components/schemas/PolicyDefinitionDto"
       description: All data for the policy definition page as required by the UI
     TransferHistoryEntry:
       required:
@@ -1845,12 +1845,12 @@ components:
           description: Last Change Date
           format: date-time
         state:
-          $ref: '#/components/schemas/TransferProcessState'
+          $ref: "#/components/schemas/TransferProcessState"
         contractAgreementId:
           type: string
           description: Contract Agreement ID
         direction:
-          $ref: '#/components/schemas/ContractAgreementDirection'
+          $ref: "#/components/schemas/ContractAgreementDirection"
         counterPartyConnectorEndpoint:
           type: string
           description: Other Connector's Endpoint
@@ -1876,7 +1876,7 @@ components:
           type: array
           description: Transfer History Page Entries
           items:
-            $ref: '#/components/schemas/TransferHistoryEntry'
+            $ref: "#/components/schemas/TransferHistoryEntry"
       description: Data as required by the UI's Transfer History Page
     ContractNegotiationRequest:
       required:
@@ -2000,7 +2000,7 @@ components:
           description: Counts of contract agreements
           format: int32
         transferProcessDto:
-          $ref: '#/components/schemas/TransferProcessStatesDto'
+          $ref: "#/components/schemas/TransferProcessStatesDto"
       description: EDC-status-defining KPIs
     TransferProcessStatesDto:
       required:
@@ -2035,15 +2035,15 @@ components:
           description: Asset property name
           example: https://w3id.org/edc/v0.0.1/ns/assetId
         operator:
-          $ref: '#/components/schemas/CatalogFilterExpressionOperator'
+          $ref: "#/components/schemas/CatalogFilterExpressionOperator"
         operandRight:
-          $ref: '#/components/schemas/CatalogFilterExpressionLiteral'
+          $ref: "#/components/schemas/CatalogFilterExpressionLiteral"
       description: Generic expression for filtering the data offers in the catalog
     CatalogFilterExpressionLiteral:
       type: object
       properties:
         type:
-          $ref: '#/components/schemas/CatalogFilterExpressionLiteralType'
+          $ref: "#/components/schemas/CatalogFilterExpressionLiteralType"
         value:
           type: string
           description: Only for type VALUE. The single value representation.
@@ -2074,7 +2074,12 @@ components:
       properties:
         connectorEndpoint:
           type: string
-          description: Target EDC DSP endpoint URL
+          description: "Target EDC DSP endpoint URL. Can contain a queryParam 'participantId',\
+            \ which is provided by default in the Connector Endpoint in the EDC UI.."
+        participantId:
+          type: string
+          description: Target EDC Participant ID. Is required if the connector endpoint
+            does not contain the queryParam 'participantId'.
         limit:
           type: integer
           description: Limit the number of results
@@ -2087,5 +2092,5 @@ components:
           type: array
           description: Filter expressions for catalog filtering
           items:
-            $ref: '#/components/schemas/CatalogFilterExpression'
+            $ref: "#/components/schemas/CatalogFilterExpression"
       description: Catalog query parameters

@@ -14,7 +14,7 @@ commonsCompress = "1.26.1"
 commonsCollections = "4.4"
 commonsIo = "2.13.0"
 commonsLang = "3.13.0"
-edc = "0.2.1.4"
+edc = "0.7.2"
 findbugs = "3.0.2"
 flexmark = "0.64.8"
 flyway = "9.0.1"
@@ -78,9 +78,11 @@ awaitility-java = { module = "org.awaitility:awaitility", version.ref = "awaitil
 
 edc-apiCore = { module = "org.eclipse.edc:api-core", version.ref = "edc" }
 edc-apiObservability = { module = "org.eclipse.edc:api-observability", version.ref = "edc" }
+edc-assetSpi = { module = "org.eclipse.edc:asset-spi", version.ref = "edc" }
 edc-authSpi = { module = "org.eclipse.edc:auth-spi", version.ref = "edc" }
 edc-authTokenbased = { module = "org.eclipse.edc:auth-tokenbased", version.ref = "edc" }
 edc-boot = { module = "org.eclipse.edc:boot", version.ref = "edc" }
+edc-bootSpi = { module = "org.eclipse.edc:boot-spi", version.ref = "edc" }
 edc-configurationFilesystem = { module = "org.eclipse.edc:configuration-filesystem", version.ref = "edc" }
 edc-connectorCore = { module = "org.eclipse.edc:connector-core", version.ref = "edc" }
 edc-contractDefinitionApi = { module = "org.eclipse.edc:contract-definition-api", version.ref = "edc" }
@@ -92,13 +94,12 @@ edc-controlPlaneSpi = { module = "org.eclipse.edc:control-plane-spi", version.re
 edc-controlPlaneSql = { module = "org.eclipse.edc:control-plane-sql", version.ref = "edc" }
 edc-coreSpi = { module = "org.eclipse.edc:core-spi", version.ref = "edc" }
 edc-dataPlaneCore = { module = "org.eclipse.edc:data-plane-core", version.ref = "edc" }
-edc-dataPlaneFramework = { module = "org.eclipse.edc:data-plane-framework", version.ref = "edc" }
 edc-dataPlaneHttp = { module = "org.eclipse.edc:data-plane-http", version.ref = "edc" }
 edc-dataPlaneSelectorClient = { module = "org.eclipse.edc:data-plane-selector-client", version.ref = "edc" }
 edc-dataPlaneSelectorCore = { module = "org.eclipse.edc:data-plane-selector-core", version.ref = "edc" }
 edc-dataPlaneUtil = { module = "org.eclipse.edc:data-plane-util", version.ref = "edc" }
 edc-dsp = { module = "org.eclipse.edc:dsp", version.ref = "edc" }
-edc-dspApiConfiguration = { module = "org.eclipse.edc:dsp-api-configuration", version.ref = "edc" }
+edc-dspApiConfiguration = { module = "org.eclipse.edc:dsp-http-api-configuration", version.ref = "edc" }
 edc-dspNegotiationTransform = { module = "org.eclipse.edc:dsp-negotiation-transform", version.ref = "edc" }
 edc-dspHttpSpi = { module = "org.eclipse.edc:dsp-http-spi", version.ref = "edc" }
 edc-dspHttpCore = { module = "org.eclipse.edc:dsp-http-core", version.ref = "edc" }
@@ -106,6 +107,7 @@ edc-http = { module = "org.eclipse.edc:http", version.ref = "edc" }
 edc-httpSpi = { module = "org.eclipse.edc:http-spi", version.ref = "edc" }
 edc-iamMock = { module = "org.eclipse.edc:iam-mock", version.ref = "edc" }
 edc-jsonLd = { module = "org.eclipse.edc:json-ld", version.ref = "edc" }
+edc-jsonLdLib = { module = "org.eclipse.edc:json-ld-lib", version.ref = "edc" }
 edc-jsonLdSpi = { module = "org.eclipse.edc:json-ld-spi", version.ref = "edc" }
 edc-junit = { module = "org.eclipse.edc:junit", version.ref = "edc" }
 edc-managementApi = { module = "org.eclipse.edc:management-api", version.ref = "edc" }
@@ -123,9 +125,8 @@ edc-transferDataPlane = { module = "org.eclipse.edc:transfer-data-plane", versio
 edc-transferProcessApi = { module = "org.eclipse.edc:transfer-process-api", version.ref = "edc" }
 edc-transferProcessStoreSql = { module = "org.eclipse.edc:transfer-process-store-sql", version.ref = "edc" }
 edc-transferSpi = { module = "org.eclipse.edc:transfer-spi", version.ref = "edc" }
-edc-transformCore = { module = "org.eclipse.edc:transform-core", version.ref = "edc" }
 edc-transformSpi = { module = "org.eclipse.edc:transform-spi", version.ref = "edc" }
-edc-vaultFilesystem = { module = "org.eclipse.edc:vault-filesystem", version.ref = "edc" }
+edc-transformLib = { module = "org.eclipse.edc:transform-lib", version.ref = "edc" }
 
 findbugs-jsr305 = { module = "com.google.code.findbugs:jsr305", version.ref = "findbugs" }
 

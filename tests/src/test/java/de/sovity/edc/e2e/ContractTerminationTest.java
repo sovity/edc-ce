@@ -25,18 +25,18 @@ import de.sovity.edc.client.gen.model.TransferHistoryEntry;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
 import de.sovity.edc.extension.contacttermination.ContractTerminationEvent;
 import de.sovity.edc.extension.contacttermination.ContractTerminationObserver;
-import de.sovity.edc.extension.e2e.extension.Consumer;
-import de.sovity.edc.extension.e2e.extension.E2eScenario;
-import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
-import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperConnectorRemote;
+import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.ws.rs.HttpMethod;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.awaitility.Awaitility;
-import org.eclipse.edc.connector.contract.spi.ContractId;
-import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
+import org.eclipse.edc.connector.controlplane.contract.spi.ContractId;
+import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcessStates;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -58,7 +58,6 @@ import static de.sovity.edc.client.gen.model.ContractTerminatedBy.COUNTERPARTY;
 import static de.sovity.edc.client.gen.model.ContractTerminatedBy.SELF;
 import static de.sovity.edc.client.gen.model.ContractTerminationStatus.ONGOING;
 import static de.sovity.edc.client.gen.model.ContractTerminationStatus.TERMINATED;
-import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
 import static java.time.Duration.ofSeconds;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -71,12 +70,12 @@ import static org.mockito.Mockito.verify;
 public class ContractTerminationTest {
 
     @RegisterExtension
-    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = new CeE2eTestExtension();
 
     @Test
     @DisabledOnGithub
     void canGetAgreementPageForNonTerminatedContract(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
     ) {
@@ -124,7 +123,7 @@ public class ContractTerminationTest {
     @Test
     @SneakyThrows
     void canGetAgreementPageForTerminatedContract(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
     ) {
@@ -155,7 +154,7 @@ public class ContractTerminationTest {
     @Test
     @SneakyThrows
     void canTerminateFromConsumer(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
     ) {
@@ -185,7 +184,7 @@ public class ContractTerminationTest {
     @DisabledOnGithub
     @Test
     void limitTheReasonSizeAt100Chars(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
     ) {
@@ -226,7 +225,7 @@ public class ContractTerminationTest {
     @DisabledOnGithub
     @Test
     void limitTheDetailSizeAt1000Chars(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
     ) {
@@ -270,7 +269,7 @@ public class ContractTerminationTest {
     @DisabledOnGithub
     @TestFactory
     List<DynamicTest> theDetailsAreMandatory(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Consumer EdcClient consumerClient
     ) {
         val invalidDetails = List.of(
@@ -309,7 +308,7 @@ public class ContractTerminationTest {
     @Test
     @SneakyThrows
     void canTerminateFromProvider(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
     ) {
@@ -357,7 +356,7 @@ public class ContractTerminationTest {
     @Test
     @SneakyThrows
     void cantTransferDataAfterTerminated(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         ClientAndServer mockServer,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
@@ -423,7 +422,7 @@ public class ContractTerminationTest {
     @Test
     @DisabledOnGithub
     void canTerminateOnlyOnce(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
     ) {
@@ -451,7 +450,7 @@ public class ContractTerminationTest {
     @Test
     @DisabledOnGithub
     void canListenToTerminationEvents(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Consumer EdcClient consumerClient,
         @Consumer EdcExtension consumerExtension,
         @Provider EdcClient providerClient,
@@ -467,8 +466,8 @@ public class ContractTerminationTest {
         val contractTerminationRequest = ContractTerminationRequest.builder().detail(detail).reason(reason).build();
         val contractAgreementId = negotiation.getContractAgreementId();
 
-        val consumerService = consumerExtension.getContext().getService(ContractAgreementTerminationService.class);
-        val providerService = providerExtension.getContext().getService(ContractAgreementTerminationService.class);
+        val consumerService = consumerExtension.getService(ContractAgreementTerminationService.class);
+        val providerService = providerExtension.getService(ContractAgreementTerminationService.class);
 
         val consumerObserver = Mockito.spy(new ContractTerminationObserver() {
         });

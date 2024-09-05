@@ -35,12 +35,12 @@ import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.extension.Consumer;
-import de.sovity.edc.extension.e2e.extension.E2eScenario;
-import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
-import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperConnectorRemote;
+import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.JsonUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -50,7 +50,7 @@ import jakarta.ws.rs.core.HttpHeaders;
 import lombok.val;
 import okhttp3.HttpUrl;
 import org.awaitility.Awaitility;
-import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
+import org.eclipse.edc.protocol.dsp.http.spi.types.HttpMessageProtocol;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -76,15 +76,14 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.OK;
-import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
 import static java.time.Duration.ofSeconds;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
-import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.BODY;
-import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.MEDIA_TYPE;
-import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.METHOD;
-import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.PATH;
-import static org.eclipse.edc.connector.dataplane.spi.schema.DataFlowRequestSchema.QUERY_PARAMS;
+import static org.eclipse.edc.connector.controlplane.dataplane.spi.schema.DataFlowRequestSchema.BODY;
+import static org.eclipse.edc.connector.controlplane.dataplane.spi.schema.DataFlowRequestSchema.MEDIA_TYPE;
+import static org.eclipse.edc.connector.controlplane.dataplane.spi.schema.DataFlowRequestSchema.METHOD;
+import static org.eclipse.edc.connector.controlplane.dataplane.spi.schema.DataFlowRequestSchema.PATH;
+import static org.eclipse.edc.connector.controlplane.dataplane.spi.schema.DataFlowRequestSchema.QUERY_PARAMS;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
 import static org.mockserver.matchers.Times.once;
@@ -95,7 +94,7 @@ import static org.mockserver.stop.Stop.stopQuietly;
 class DataSourceParameterizationTest {
 
     @RegisterExtension
-    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = new CeE2eTestExtension();
 
     private final int port = getFreePort();
     private final String sourcePath = "/source/some/path/";
@@ -132,7 +131,7 @@ class DataSourceParameterizationTest {
     @Test
     @DisabledOnGithub
     void canUseTheWorkaroundInCustomTransferRequest(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Consumer EdcClient consumerClient,
         @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient
@@ -225,8 +224,8 @@ class DataSourceParameterizationTest {
 
     @Test
     void sendWithEdcManagementApi(
-        E2eScenario scenario,
-        @Consumer ConnectorRemote consumerConnector,
+        ApiWrapperConnectorRemote scenario,
+        @Consumer ManagementApiConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
         @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient
@@ -286,7 +285,7 @@ class DataSourceParameterizationTest {
     @DisabledOnGithub
     @Test
     void canTransferParameterizedAsset(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Consumer EdcClient consumerClient,
         @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient) {

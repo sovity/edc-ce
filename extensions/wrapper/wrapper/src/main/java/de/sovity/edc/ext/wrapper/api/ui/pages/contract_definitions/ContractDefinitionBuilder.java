@@ -17,7 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.offer.ContractDefinition;
 
 
 @RequiredArgsConstructor

@@ -18,12 +18,12 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.UiContractNegotiation;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
-import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.extension.Consumer;
-import de.sovity.edc.extension.e2e.extension.E2eScenario;
-import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
-import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperConnectorRemote;
+import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,21 +32,20 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.HashMap;
 
-import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
-import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
+import static de.sovity.edc.extension.e2e.connector.remotes.management_api.DataTransferTestUtil.validateDataTransferred;
 
 class DataSourceQueryParamsTest {
 
     @RegisterExtension
-    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = new CeE2eTestExtension();
 
-    private MockDataAddressRemote dataAddress;
+    private TestBackendRemote dataAddress;
     private final String encodedParam = "a=%25"; // Unencoded param "a=%"
 
     @BeforeEach
     void setup(@Provider ConnectorConfig providerConfig) {
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new MockDataAddressRemote(providerConfig.getDefaultApiUrl());
+        dataAddress = new TestBackendRemote(providerConfig.getDefaultApiUrl());
     }
 
     @Test
@@ -67,7 +66,7 @@ class DataSourceQueryParamsTest {
      */
     @DisabledOnGithub
     @Test
-    void testQueryParamsDoubleEncoded(E2eScenario scenario, @Consumer EdcClient consumerClient) {
+    void testQueryParamsDoubleEncoded(ApiWrapperConnectorRemote scenario, @Consumer EdcClient consumerClient) {
 
         // arrange
         val assetId = "asset-1";

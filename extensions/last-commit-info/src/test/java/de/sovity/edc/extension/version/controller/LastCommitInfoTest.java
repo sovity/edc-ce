@@ -15,12 +15,12 @@
 package de.sovity.edc.extension.version.controller;
 
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory;
 import de.sovity.edc.extension.e2e.db.JdbcCredentials;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
 import de.sovity.edc.utils.config.ConfigProps;
 import io.restassured.http.ContentType;
-import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
+import org.eclipse.edc.connector.controlplane.dataplane.selector.spi.store.DataPlaneInstanceStore;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -50,7 +50,7 @@ class LastCommitInfoTest {
         var testDatabase = mock(TestDatabase.class);
         when(testDatabase.getJdbcCredentials()).thenReturn(new JdbcCredentials("unused", "unused", "unused"));
 
-        config = ConnectorConfigFactory.forTestDatabase("provider", testDatabase);
+        config = CeIntegrationTestUtils.defaultConfig("provider", testDatabase);
         config.setProperty(ConfigProps.EDC_LAST_COMMIT_INFO, "test env commit message");
         config.setProperty(ConfigProps.EDC_BUILD_DATE, "2023-05-08T15:15:00Z");
 

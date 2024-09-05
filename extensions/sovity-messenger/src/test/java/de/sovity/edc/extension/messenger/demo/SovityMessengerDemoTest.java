@@ -15,7 +15,8 @@
 package de.sovity.edc.extension.messenger.demo;
 
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
+import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.extension.messenger.SovityMessengerException;
 import de.sovity.edc.extension.messenger.demo.message.Addition;
@@ -34,7 +35,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.concurrent.ExecutionException;
 
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 class SovityMessengerDemoTest {
@@ -52,16 +52,16 @@ class SovityMessengerDemoTest {
          *
          * This messenger is already configured to accept messages in de.sovity.edc.extension.messenger.demo.SovityMessengerDemo#initialize
          */
-        val messenger = emitterExtension.getEdcRuntimeExtension().getContext().getService(SovityMessenger.class);
+        val messenger = emitterExtension.getRuntimePerClassExtensionFixed().getService(SovityMessenger.class);
 
         System.out.println("START MARKER");
 
         // Send messages
-        val added = messenger.send(Answer.class, receiverAddress, new Addition(20, 30));
-        val rooted = messenger.send(Answer.class, receiverAddress, new Sqrt(9.0));
-        val withClaims = messenger.send(Answer.class, receiverAddress, new Counterparty());
-        val unregistered = messenger.send(Answer.class, receiverAddress, new UnregisteredMessage());
-        messenger.send(receiverAddress, new Signal());
+        val added = messenger.send(Answer.class, receiverAddress, receiverId, new Addition(20, 30));
+        val rooted = messenger.send(Answer.class, receiverAddress, receiverId, new Sqrt(9.0));
+        val withClaims = messenger.send(Answer.class, receiverAddress, receiverId, new Counterparty());
+        val unregistered = messenger.send(Answer.class, receiverAddress, receiverId, new UnregisteredMessage());
+        messenger.send(receiverAddress, receiverId, new Signal());
 
         try {
             // Wait for the answers
@@ -77,8 +77,8 @@ class SovityMessengerDemoTest {
         }
 
         try {
-            val failing1 = messenger.send(Answer.class, receiverAddress, new Failing("Some content 1"));
-            val failing2 = messenger.send(Answer.class, receiverAddress, new Failing("Some content 2"));
+            val failing1 = messenger.send(Answer.class, receiverAddress, receiverId, new Failing("Some content 1"));
+            val failing2 = messenger.send(Answer.class, receiverAddress, receiverId, new Failing("Some content 2"));
             failing1.get(2, SECONDS);
             failing2.get(2, SECONDS);
         } catch (ExecutionException e) {
@@ -95,24 +95,25 @@ class SovityMessengerDemoTest {
     }
 
     @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase emitterExtension = new EdcRuntimeExtensionWithTestDatabase(
+    static RuntimePerClassWithDbExtension emitterExtension = new RuntimePerClassWithDbExtension(
         ":launchers:connectors:sovity-dev",
         "emitter",
         testDatabase -> {
-            ConnectorConfig emitterConfig = forTestDatabase("emitter", testDatabase);
+            ConnectorConfig emitterConfig = CeIntegrationTestUtils.defaultConfig("emitter", testDatabase);
             return emitterConfig.getProperties();
         }
     );
 
+    private static String receiverId = "receiver";
 
     private static ConnectorConfig receiverConfig;
 
     @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase receiverExtension = new EdcRuntimeExtensionWithTestDatabase(
+    static RuntimePerClassWithDbExtension receiverExtension = new RuntimePerClassWithDbExtension(
         ":launchers:connectors:sovity-dev",
         "receiver",
         testDatabase -> {
-            receiverConfig = forTestDatabase("receiver", testDatabase);
+            receiverConfig = CeIntegrationTestUtils.defaultConfig(receiverId, testDatabase);
             return receiverConfig.getProperties();
         }
     );

@@ -19,27 +19,27 @@ import de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationDetails;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.extension.Consumer;
-import de.sovity.edc.extension.e2e.extension.E2eScenario;
-import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
-import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperConnectorRemote;
+import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation.Type.CONSUMER;
+import static org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation.Type.CONSUMER;
 
 class ContractAgreementTerminationDetailsQueryTest {
 
     @RegisterExtension
-    private static  E2eTestExtension e2eTestExtension = new E2eTestExtension(":launchers:connectors:sovity-dev");
+    private static CeE2eTestExtension e2eTestExtension = new CeE2eTestExtension();
 
     @DisabledOnGithub
     @Test
     void fetchAgreementDetailsOrThrow_whenAgreementIsPresent_shouldReturnTheAgreementDetails(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Consumer DslContextFactory dslContextFactory,
         @Provider ConnectorConfig providerConfig
     ) {
@@ -91,7 +91,7 @@ class ContractAgreementTerminationDetailsQueryTest {
 
     @Test
     void fetchAgreementDetailsOrThrow_whenTerminationAlreadyExists_shouldReturnOptionalWithTerminationData(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Consumer DslContextFactory dslContextFactory,
         @Provider ConnectorConfig providerConfig
     ) {

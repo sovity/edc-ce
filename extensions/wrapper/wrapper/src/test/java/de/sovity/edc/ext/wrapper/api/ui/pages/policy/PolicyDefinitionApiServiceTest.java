@@ -27,9 +27,10 @@ import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.ext.db.jooq.Tables;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
+import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
 import lombok.val;
-import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
+import org.eclipse.edc.connector.controlplane.services.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.spi.entity.Entity;
 import org.eclipse.edc.spi.query.QuerySpec;
@@ -39,7 +40,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.Map;
 
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
@@ -48,11 +48,11 @@ class PolicyDefinitionApiServiceTest {
     private static EdcClient client;
 
     @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
+    static RuntimePerClassWithDbExtension providerExtension = new RuntimePerClassWithDbExtension(
         ":launchers:connectors:sovity-dev",
         "provider",
         testDatabase -> {
-            config = forTestDatabase("my-edc-participant-id", testDatabase);
+            config = CeIntegrationTestUtils.defaultConfig("my-edc-participant-id", testDatabase);
             client = EdcClient.builder()
                 .managementApiUrl(config.getManagementApiUrl())
                 .managementApiKey(config.getManagementApiKey())

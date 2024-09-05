@@ -8,41 +8,33 @@ import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
-import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
-import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
+import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.offer.ContractDefinition;
+import org.eclipse.edc.connector.controlplane.services.spi.contractdefinition.ContractDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.spi.query.Criterion;
 import org.eclipse.edc.spi.query.QuerySpec;
+import org.eclipse.edc.spi.system.configuration.Config;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.List;
 
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 class ContractDefinitionPageApiServiceTest {
-
-    private static final String PARTICIPANT_ID = "my-edc-participant-id";
-
-    private static ConnectorConfig config;
     private static EdcClient client;
 
     @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "edc",
-        testDatabase -> {
-            config = forTestDatabase(PARTICIPANT_ID, testDatabase);
-            client = EdcClient.builder()
-                .managementApiUrl(config.getManagementApiUrl())
-                .managementApiKey(config.getManagementApiKey())
-                .build();
-            return config.getProperties();
-        }
-    );
+    static RuntimePerClassWithDbExtension providerExtension = CeIntegrationTestUtils.defaultIntegrationTest();
+
+    @BeforeEach
+    public void setup(Config config) {
+        client = CeIntegrationTestUtils.getEdcClient(config);
+    }
 
     @Test
     void contractDefinitionPage(ContractDefinitionService contractDefinitionService) {

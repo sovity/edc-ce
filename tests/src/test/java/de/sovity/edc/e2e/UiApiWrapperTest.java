@@ -48,13 +48,13 @@ import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.extension.Consumer;
-import de.sovity.edc.extension.e2e.extension.E2eScenario;
-import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
-import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperConnectorRemote;
+import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.policy.AlwaysTruePolicyConstants;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.JsonUtils;
@@ -63,7 +63,7 @@ import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import lombok.val;
 import org.awaitility.Awaitility;
-import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
+import org.eclipse.edc.protocol.dsp.http.spi.types.HttpMessageProtocol;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -78,8 +78,7 @@ import java.util.concurrent.TimeUnit;
 
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.CONSUMING;
 import static de.sovity.edc.client.gen.model.ContractAgreementDirection.PROVIDING;
-import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
-import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
+import static de.sovity.edc.extension.e2e.connector.remotes.management_api.DataTransferTestUtil.validateDataTransferred;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -92,21 +91,21 @@ class UiApiWrapperTest {
     private static final String CONSUMER_PARTICIPANT_ID = "consumer";
 
     @RegisterExtension
-    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = new CeE2eTestExtension();
 
-    private MockDataAddressRemote dataAddress;
+    private TestBackendRemote dataAddress;
 
     @BeforeEach
-    void setup(@Provider ConnectorRemote providerConnector) {
+    void setup(@Provider ManagementApiConnectorRemote providerConnector) {
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultApiUrl());
+        dataAddress = new TestBackendRemote(providerConnector.getConfig().getDefaultApiUrl());
     }
 
     @DisabledOnGithub
     @Test
     void provide_consume_assetMapping_policyMapping_agreements(
         @Consumer ConnectorConfig consumerConfig,
-        @Consumer ConnectorRemote consumerConnector,
+        @Consumer ManagementApiConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
         @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient) {
@@ -374,7 +373,7 @@ class UiApiWrapperTest {
     @DisabledOnGithub
     @Test
     void customTransferRequest(
-        @Consumer ConnectorRemote consumerConnector,
+        @Consumer ManagementApiConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
         @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient) {
@@ -442,7 +441,7 @@ class UiApiWrapperTest {
     @DisabledOnGithub
     @Test
     void editAssetOnLiveContract(
-        @Consumer ConnectorRemote consumerConnector,
+        @Consumer ManagementApiConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
         @Provider ConnectorConfig providerConfig,
         @Provider EdcClient providerClient) {
@@ -576,7 +575,7 @@ class UiApiWrapperTest {
 
     @Test
     @DisabledOnGithub
-    void checkIdAvailability(E2eScenario scenario, @Provider EdcClient providerClient) {
+    void checkIdAvailability(ApiWrapperConnectorRemote scenario, @Provider EdcClient providerClient) {
         // arrange
         var assetId = scenario.createAsset();
         var policyId = "policy-id";
@@ -606,7 +605,7 @@ class UiApiWrapperTest {
     @DisabledOnGithub
     @Test
     void retrieveSingleContractAgreement(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -648,7 +647,7 @@ class UiApiWrapperTest {
     @Test
     @DisabledOnGithub
     void canMakeAnOnDemandDataSourceAvailable(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -792,7 +791,7 @@ class UiApiWrapperTest {
 
     @Test
     void dontCreateAnythingIfTheAssetAlreadyExists(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -828,7 +827,7 @@ class UiApiWrapperTest {
 
     @Test
     void dontCreateAnythingIfThePolicyAlreadyExists(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -865,7 +864,7 @@ class UiApiWrapperTest {
 
     @Test
     void dontCreateAnythingIfTheContractDefinitionAlreadyExists(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -928,7 +927,7 @@ class UiApiWrapperTest {
 
     private UiContractNegotiation negotiate(
         EdcClient consumerClient,
-        ConnectorRemote consumerConnector,
+        ManagementApiConnectorRemote consumerConnector,
         UiDataOffer dataOffer,
         UiContractOffer contractOffer) {
 

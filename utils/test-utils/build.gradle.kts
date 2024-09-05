@@ -7,8 +7,10 @@ dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
 
-    api(libs.junit.api)
-    implementation(libs.apache.commonsLang)
+    api(libs.apache.commonsLang)
+    api(libs.edc.contractSpi)
+    api(libs.edc.jsonLdSpi)
+    api(libs.edc.jsonLdLib)
 
     api(libs.edc.junit)
     api(libs.awaitility.java)
@@ -16,6 +18,9 @@ dependencies {
     api(project(":config"))
     api(project(":extensions:wrapper:clients:java-client"))
     api(project(":utils:json-and-jsonld-utils"))
+
+
+    api(libs.junit.api)
 
     implementation(project(":utils:versions"))
     implementation(libs.edc.jsonLd)

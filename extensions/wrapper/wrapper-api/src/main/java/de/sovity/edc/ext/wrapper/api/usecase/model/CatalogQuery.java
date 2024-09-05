@@ -30,8 +30,13 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Catalog query parameters")
 public class CatalogQuery {
-    @Schema(description = "Target EDC DSP endpoint URL", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Target EDC DSP endpoint URL. Can contain a queryParam 'participantId', which is provided by default in the " +
+        "Connector Endpoint in the EDC UI..", requiredMode = Schema.RequiredMode.REQUIRED)
     private String connectorEndpoint;
+
+    @Schema(description = "Target EDC Participant ID. Is required if the connector endpoint does not contain the queryParam " +
+        "'participantId'.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private String participantId;
 
     @Schema(description = "Limit the number of results", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Integer limit;

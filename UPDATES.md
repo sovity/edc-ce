@@ -8,7 +8,7 @@ These are not easily testable and require a manual check.
 
 After each EDC version update
 
-- [ ]  Check if `org.eclipse.edc.spi.types.domain.asset.Asset.toBuilder` added a new
+- [ ]  Check if `org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset.toBuilder` added a new
   field and adjust the builder in `de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetBuilder.fromEditMetadataRequest` accordingly
 
 ## Context
@@ -28,5 +28,5 @@ will remove that hypothetical new field.
 
 #### Workaround
 
-On the EDC version update, check that `org.eclipse.edc.spi.types.domain.asset.Asset.toBuilder` doesn't set more
+On the EDC version update, check that `org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset.toBuilder` doesn't set more
 fields than what we set. If a new field was added, add it to this function too.

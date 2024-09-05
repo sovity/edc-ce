@@ -19,10 +19,10 @@ import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
-import de.sovity.edc.extension.e2e.extension.Consumer;
-import de.sovity.edc.extension.e2e.extension.E2eScenario;
-import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
-import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperConnectorRemote;
+import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.policy.AlwaysTruePolicyConstants;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.config.ConfigProps;
@@ -38,13 +38,13 @@ import org.mockserver.model.HttpResponse;
 
 import java.util.Map;
 
-import static de.sovity.edc.extension.e2e.extension.CeE2eTestExtensionConfigFactory.withModule;
+import static de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtensionConfigFactory.withModule;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AlwaysTrueMigrationTest {
 
     @RegisterExtension
-    private static final E2eTestExtension E2E_TEST_EXTENSION = new E2eTestExtension(
+    private static final CeE2eTestExtension E2E_TEST_EXTENSION = new CeE2eTestExtension(
         withModule(":launchers:connectors:sovity-dev").toBuilder()
             .consumerConfigCustomizer(config -> config.setProperty(
                 ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS, "classpath:db/additional-test-data/always-true-policy-legacy"
@@ -58,7 +58,7 @@ class AlwaysTrueMigrationTest {
     @Test
     @DisabledOnGithub
     void test_migrated_policy_working_test_legacy_policy_working(
-        E2eScenario scenario,
+        ApiWrapperConnectorRemote scenario,
         ClientAndServer mockServer,
         @Provider EdcClient providerClient,
         @Consumer EdcClient consumerClient
@@ -85,7 +85,7 @@ class AlwaysTrueMigrationTest {
         testTransfer(scenario, mockServer, consumerClient);
     }
 
-    public static void testTransfer(E2eScenario scenario, ClientAndServer mockServer, EdcClient consumerClient) {
+    public static void testTransfer(ApiWrapperConnectorRemote scenario, ClientAndServer mockServer, EdcClient consumerClient) {
         // arrange
         val destinationPath = "/destination/some/path/";
         val destinationUrl = "http://localhost:" + mockServer.getPort() + destinationPath;

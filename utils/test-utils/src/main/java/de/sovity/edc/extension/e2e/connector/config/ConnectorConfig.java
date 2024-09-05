@@ -14,69 +14,30 @@
 
 package de.sovity.edc.extension.e2e.connector.config;
 
-import de.sovity.edc.utils.config.ConfigProps;
-import de.sovity.edc.utils.config.ConfigUtils;
 import de.sovity.edc.utils.config.model.ConfigProp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-import org.apache.commons.lang3.tuple.Pair;
+import lombok.Singular;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 
-@Builder
+@Getter
+@Builder(toBuilder = true)
 @AllArgsConstructor
 public class ConnectorConfig {
-    /**
-     * Connector Properties after applying defaults from {@link ConfigProps}
-     */
-    @Getter
-    @Setter
-    private Map<String, String> properties;
+    @Singular("property")
+    private Map<ConfigProp, String> properties;
 
-    private Supplier<Pair<String, String>> managementApiAuthHeaderFactory;
+    @Singular("property")
+    private Map<String, String> additionalRawProperties;
 
-    public Supplier<Pair<String, String>> getManagementApiAuthHeaderFactory() {
-        if (managementApiAuthHeaderFactory == null) {
-            return () -> Pair.of("X-Api-Key", ConfigUtils.getManagementApiKey(properties));
-        }
-        return managementApiAuthHeaderFactory;
-    }
-
-    public ConnectorConfig setProperty(ConfigProp property, String value) {
-        properties.put(property.getProperty(), value);
-        return this;
-    }
-
-    public ConnectorConfig setProperty(String property, String value) {
-        properties.put(property, value);
-        return this;
-    }
-
-    public String getDefaultApiUrl() {
-        return ConfigUtils.getDefaultApiUrl(properties);
-    }
-
-    public String getManagementApiUrl() {
-        return ConfigUtils.getManagementApiUrl(properties);
-    }
-
-    public String getManagementApiKey() {
-        return ConfigUtils.getManagementApiKey(properties);
-    }
-
-    public String getProtocolApiUrl() {
-        return ConfigUtils.getProtocolApiUrl(properties);
-    }
-
-    public String getPublicApiUrl() {
-        return ConfigUtils.getPublicApiUrl(properties);
-    }
-
-    public String getParticipantId() {
-        return ConfigProps.EDC_PARTICIPANT_ID.getRaw(properties);
+    public Map<String, String> asMap() {
+        var merged = new HashMap<String, String>();
+        properties.forEach((prop, value) -> merged.put(prop.getProperty(), value));
+        merged.putAll(additionalRawProperties);
+        return merged;
     }
 }

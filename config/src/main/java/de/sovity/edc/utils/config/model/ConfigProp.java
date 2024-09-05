@@ -85,4 +85,13 @@ public class ConfigProp {
         // Default should already be handled by ConfigProp
         return config.getInteger(property);
     }
+
+    public Config getWildcardSubconfig(Config config) throws IllegalArgumentException {
+        if (!property.endsWith(".*")) {
+            throw new IllegalArgumentException("Property does not contain wildcard: %s".formatted(property));
+        }
+
+        var key = property.substring(0, property.length() - 2);
+        return config.getConfig(key);
+    }
 }

@@ -17,8 +17,8 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessSimplifiedState;
 import de.sovity.edc.ext.wrapper.api.ui.model.TransferProcessState;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
-import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
+import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess;
+import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcessStates;
 import org.jetbrains.annotations.NotNull;
 
 

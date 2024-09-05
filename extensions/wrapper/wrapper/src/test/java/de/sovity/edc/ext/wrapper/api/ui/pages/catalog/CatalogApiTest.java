@@ -27,39 +27,34 @@ import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
+import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
+import de.sovity.edc.utils.config.ConfigUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
 import org.eclipse.edc.junit.annotations.ApiTest;
+import org.eclipse.edc.spi.system.configuration.Config;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.List;
 
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 @ApiTest
 class CatalogApiTest {
-    private static ConnectorConfig config;
-    private static EdcClient client;
+    private EdcClient client;
 
     @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "provider",
-        testDatabase -> {
-            config = forTestDatabase("my-edc-participant-id", testDatabase);
-            client = EdcClient.builder()
-                .managementApiUrl(config.getManagementApiUrl())
-                .managementApiKey(config.getManagementApiKey())
-                .build();
-            return config.getProperties();
-        }
-    );
+    static RuntimePerClassWithDbExtension providerExtension = CeIntegrationTestUtils.defaultIntegrationTest();
+
+    @BeforeEach
+    void setUp(Config config) {
+        client = CeIntegrationTestUtils.getEdcClient(config);
+    }
 
     private final String dataOfferId = "my-data-offer-2023-11";
 
@@ -70,16 +65,18 @@ class CatalogApiTest {
     @DisabledOnGithub
     @Test
     @SneakyThrows
-    void testDistributionKey() {
+    void testDistributionKey(Config config) {
+        var protocolApiUrl = ConfigUtils.getProtocolApiUrl(config.getEntries());
+
         // arrange
         createAsset();
         createPolicy();
         createContractDefinition();
         // act
-        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers(config.getProtocolApiUrl());
+        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers(protocolApiUrl);
 
         // assert
-        assertThat(catalogPageDataOffers.size()).isEqualTo(1);
+        assertThat(catalogPageDataOffers).hasSize(1);
         assertThat(catalogPageDataOffers.get(0).getAsset().getTitle()).isEqualTo("My Data Offer");
         assertThat(catalogPageDataOffers.get(0).getAsset().getMediaType()).isEqualTo("Media Type");
     }

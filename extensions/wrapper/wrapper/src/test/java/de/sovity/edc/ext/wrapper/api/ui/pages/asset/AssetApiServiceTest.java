@@ -23,15 +23,16 @@ import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.FailedMappingException;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
+import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
-import lombok.val;
-import org.eclipse.edc.connector.spi.asset.AssetService;
+import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.spi.query.QuerySpec;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.spi.types.domain.DataAddress;
-import org.eclipse.edc.spi.types.domain.asset.Asset;
+import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -42,41 +43,27 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 public class AssetApiServiceTest {
 
-    private static EdcClient client;
+    public static final String DATA_SINK = "http://my-data-sink/api/stuff";
 
     @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "edc",
-        testDatabase -> {
-            val config = forTestDatabase("MyEDC", testDatabase);
-            client = EdcClient.builder()
-                .managementApiUrl(config.getManagementApiUrl())
-                .managementApiKey(config.getManagementApiKey())
-                .build();
-            return config.getProperties();
-        }
-    );
-
-    public static final String DATA_SINK = "http://my-data-sink/api/stuff";
+    static RuntimePerClassWithDbExtension providerExtension = CeIntegrationTestUtils.defaultIntegrationTest();
+    EdcClient client;
     EdcPropertyUtils edcPropertyUtils;
 
     @BeforeEach
-    void setup() {
+    void setup(Config config) {
+        client = CeIntegrationTestUtils.getEdcClient(config);
         edcPropertyUtils = new EdcPropertyUtils();
     }
 
     @Test
-    void assetPage() {
-        val assetService = providerExtension.getEdcRuntimeExtension().getContext().getService(AssetService.class);
-
+    void assetPage(AssetService assetService) {
         // arrange
         var properties = Map.of(
             Asset.PROPERTY_ID, "asset-11",
@@ -96,9 +83,7 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void assetPageSorting() {
-        val assetService = providerExtension.getEdcRuntimeExtension().getContext().getService(AssetService.class);
-
+    void assetPageSorting(AssetService assetService) {
         // arrange
         createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-21"));
         createAsset(assetService, "2023-06-03", Map.of(Asset.PROPERTY_ID, "asset-23"));
@@ -114,9 +99,7 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void testAssetCreation() {
-        val assetService = providerExtension.getEdcRuntimeExtension().getContext().getService(AssetService.class);
-
+    void testAssetCreation(AssetService assetService) {
         // arrange
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
@@ -245,9 +228,7 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void testeditAsset() {
-        val assetService = providerExtension.getEdcRuntimeExtension().getContext().getService(AssetService.class);
-
+    void testeditAsset(AssetService assetService) {
         // arrange
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
@@ -447,9 +428,7 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void testDeleteAsset() {
-        val assetService = providerExtension.getEdcRuntimeExtension().getContext().getService(AssetService.class);
-
+    void testDeleteAsset(AssetService assetService) {
         // arrange
         createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-71"));
         assertThat(assetService.query(QuerySpec.max()).getContent()).isNotEmpty();

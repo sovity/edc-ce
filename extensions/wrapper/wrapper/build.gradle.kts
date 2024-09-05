@@ -16,6 +16,7 @@ dependencies {
 
     api(libs.edc.contractDefinitionApi)
     api(libs.edc.controlPlaneSpi)
+    api(libs.edc.assetSpi)
     api(libs.edc.coreSpi)
     api(libs.edc.policyDefinitionApi)
     api(libs.edc.transferProcessApi)
