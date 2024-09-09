@@ -14,7 +14,7 @@ COPY ./ /app/
 RUN npm run ng build --no-progress --configuration=production
 
 # Stage 3: Serve app with nginx
-FROM docker.io/nginxinc/nginx-unprivileged:1.27-alpine3.19
+FROM docker.io/nginxinc/nginx-unprivileged:1.27-alpine3.20
 
 # Temporarily switch to root to install packages and create symlink in restricted location
 USER root
