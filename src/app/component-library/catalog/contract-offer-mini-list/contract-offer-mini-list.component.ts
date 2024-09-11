@@ -8,6 +8,7 @@ import {
 import {DataOffer} from 'src/app/core/services/models/data-offer';
 import {ContractNegotiationService} from '../../../core/services/contract-negotiation.service';
 import {ContractOffer} from '../../../core/services/models/contract-offer';
+import {PropertyGridField} from '../../property-grid/property-grid/property-grid-field';
 
 @Component({
   selector: 'contract-offer-mini-list',
@@ -25,4 +26,15 @@ export class ContractOfferMiniListComponent {
   negotiateClick = new EventEmitter<ContractOffer>();
 
   constructor(public contractNegotiationService: ContractNegotiationService) {}
+
+  contractOfferIdGroup(id: string): PropertyGridField[] {
+    return [
+      {
+        icon: 'category',
+        label: 'Contract Offer Id',
+        text: this.data.contractOffers.find((it) => it.contractOfferId == id)
+          ?.contractOfferId,
+      },
+    ];
+  }
 }
