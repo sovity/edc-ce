@@ -20,6 +20,7 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
+- Changed wording on the data offer creation page
 - Data Offer details now display the contract ID for each contract offer
 
 ## [v4.1.3] - 2024-09-03
