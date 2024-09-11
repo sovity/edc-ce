@@ -117,7 +117,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
-  /wrapper/ui/pages/create-asset:
+  /wrapper/ui/pages/create-data-offer:
     post:
       tags:
       - UI
