@@ -250,7 +250,11 @@ public class WrapperExtensionContextBuilder {
             miwConfigBuilder,
             selfDescriptionService
         );
-        var dataOfferPageApiService = new DataOfferPageApiService();
+        var dataOfferPageApiService = new DataOfferPageApiService(
+            assetApiService,
+            contractDefinitionApiService,
+            policyDefinitionApiService
+        );
         var uiResource = new UiResourceImpl(
             contractAgreementApiService,
             contractAgreementTransferApiService,

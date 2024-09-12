@@ -26,6 +26,7 @@ import de.sovity.edc.ext.wrapper.api.ui.model.ContractDefinitionRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractNegotiationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.ContractTerminationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardPage;
+import de.sovity.edc.ext.wrapper.api.ui.model.DataOfferCreationRequest;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdAvailabilityResponse;
 import de.sovity.edc.ext.wrapper.api.ui.model.IdResponseDto;
 import de.sovity.edc.ext.wrapper.api.ui.model.InitiateCustomTransferRequest;
@@ -133,6 +134,11 @@ public class UiResourceImpl implements UiResource {
     @Override
     public IdResponseDto deleteContractDefinition(String contractDefinitionId) {
         return contractDefinitionApiService.deleteContractDefinition(contractDefinitionId);
+    }
+
+    @Override
+    public IdResponseDto createDataOffer(DataOfferCreationRequest dataOfferCreationRequest) {
+        return dslContextFactory.transactionResult(trx -> dataOfferPageApiService.createDataOffer(trx, dataOfferCreationRequest));
     }
 
     @Override

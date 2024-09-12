@@ -117,6 +117,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IdResponseDto'
+  /wrapper/ui/pages/create-data-offer:
+    post:
+      tags:
+      - UI
+      description: "Create a new asset, contract definition and optional policies.\
+        \ Uses the same id for the asset, the contract policy, the access policy and\
+        \ the contract definition"
+      operationId: createDataOffer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataOfferCreationRequest'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponseDto'
   /wrapper/ui/pages/policy-page/policy-definitions:
     post:
       tags:
@@ -918,6 +938,24 @@ components:
       - EQ
       - IN
       - LIKE
+    DataOfferCreationRequest:
+      required:
+      - policy
+      - uiAssetCreateRequest
+      type: object
+      properties:
+        uiAssetCreateRequest:
+          $ref: '#/components/schemas/UiAssetCreateRequest'
+        policy:
+          type: string
+          description: Which policy to apply to this asset.
+          enum:
+          - DONT_PUBLISH
+          - PUBLISH_UNRESTRICTED
+          - PUBLISH_RESTRICTED
+        uiPolicyExpression:
+          $ref: '#/components/schemas/UiPolicyExpression'
+      description: Request to create a data offer
     OperatorDto:
       type: string
       description: Type-Safe ODRL Policy Operator as supported by the sovity product
@@ -935,19 +973,6 @@ components:
       - IS_ALL_OF
       - IS_ANY_OF
       - IS_NONE_OF
-    PolicyDefinitionCreateRequest:
-      required:
-      - policy
-      - policyDefinitionId
-      type: object
-      properties:
-        policyDefinitionId:
-          type: string
-          description: Policy Definition ID
-        policy:
-          $ref: '#/components/schemas/UiPolicyCreateRequest'
-      description: "[Deprecated] Create a Policy Definition. Use PolicyDefinitionCreateDto"
-      deprecated: true
     UiPolicyConstraint:
       required:
       - left
@@ -964,53 +989,6 @@ components:
           $ref: '#/components/schemas/UiPolicyLiteral'
       description: "ODRL AtomicConstraint as supported by the sovity product landscape.\
         \ For example 'a EQ b', 'c IN [d, e, f]'"
-    UiPolicyCreateRequest:
-      type: object
-      properties:
-        constraints:
-          type: array
-          description: Conjunction of required constraints
-          deprecated: true
-          items:
-            $ref: '#/components/schemas/UiPolicyConstraint'
-      description: "[Deprecated] Conjunction of constraints (simplified UiPolicyExpression)"
-      deprecated: true
-    UiPolicyLiteral:
-      required:
-      - type
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/UiPolicyLiteralType'
-        value:
-          type: string
-          description: Only for types STRING and JSON
-        valueList:
-          type: array
-          description: Only for type STRING_LIST
-          items:
-            type: string
-            description: Only for type STRING_LIST
-      description: "Sum type: A String, a list of Strings or a generic JSON value."
-    UiPolicyLiteralType:
-      type: string
-      description: Supported Types of values for the right hand side of an expression
-      enum:
-      - STRING
-      - STRING_LIST
-      - JSON
-    PolicyDefinitionCreateDto:
-      required:
-      - expression
-      - policyDefinitionId
-      type: object
-      properties:
-        policyDefinitionId:
-          type: string
-          description: Policy Definition ID
-        expression:
-          $ref: '#/components/schemas/UiPolicyExpression'
-      description: Create a Policy Definition
     UiPolicyExpression:
       required:
       - type
@@ -1041,6 +1019,66 @@ components:
       - AND
       - OR
       - XONE
+    UiPolicyLiteral:
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/UiPolicyLiteralType'
+        value:
+          type: string
+          description: Only for types STRING and JSON
+        valueList:
+          type: array
+          description: Only for type STRING_LIST
+          items:
+            type: string
+            description: Only for type STRING_LIST
+      description: "Sum type: A String, a list of Strings or a generic JSON value."
+    UiPolicyLiteralType:
+      type: string
+      description: Supported Types of values for the right hand side of an expression
+      enum:
+      - STRING
+      - STRING_LIST
+      - JSON
+    PolicyDefinitionCreateRequest:
+      required:
+      - policy
+      - policyDefinitionId
+      type: object
+      properties:
+        policyDefinitionId:
+          type: string
+          description: Policy Definition ID
+        policy:
+          $ref: '#/components/schemas/UiPolicyCreateRequest'
+      description: "[Deprecated] Create a Policy Definition. Use PolicyDefinitionCreateDto"
+      deprecated: true
+    UiPolicyCreateRequest:
+      type: object
+      properties:
+        constraints:
+          type: array
+          description: Conjunction of required constraints
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/UiPolicyConstraint'
+      description: "[Deprecated] Conjunction of constraints (simplified UiPolicyExpression)"
+      deprecated: true
+    PolicyDefinitionCreateDto:
+      required:
+      - expression
+      - policyDefinitionId
+      type: object
+      properties:
+        policyDefinitionId:
+          type: string
+          description: Policy Definition ID
+        expression:
+          $ref: '#/components/schemas/UiPolicyExpression'
+      description: Create a Policy Definition
     UiAssetEditRequest:
       type: object
       properties:
