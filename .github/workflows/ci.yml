@@ -174,7 +174,7 @@ jobs:
       - name: Print GH ref
         run: echo ${{ github.ref }}
       - name: "NPM: Publish (Main & Releases Only)"
-        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') || github.ref == ' refs/pull/1040/merge' }}
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/pull/1040/merge' }}
         working-directory: extensions/wrapper/clients/typescript-client
         run: |
           npm set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
