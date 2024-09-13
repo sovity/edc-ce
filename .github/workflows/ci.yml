@@ -172,7 +172,7 @@ jobs:
         working-directory: extensions/wrapper/clients/typescript-client
         run: npm ci && npm run build
       - name: "NPM: Publish (Main & Releases Only)"
-        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') }}
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/1373-gap-create-data-offer-endpoint-fix' }}
         working-directory: extensions/wrapper/clients/typescript-client
         run: |
           npm set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
