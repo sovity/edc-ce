@@ -138,7 +138,7 @@ interface UiResource {
     IdResponseDto deleteContractDefinition(@PathParam("contractDefinitionId") String contractDefinitionId);
 
     @POST
-    @Path("pages/create-data-offer/")
+    @Path("pages/create-data-offer")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Create a new asset, contract definition and optional policies. Uses the same id for the asset, the contract policy, the access policy and the contract definition")
