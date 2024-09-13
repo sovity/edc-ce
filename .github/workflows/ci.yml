@@ -163,7 +163,7 @@ jobs:
             VERSION="${GITHUB_REF#refs/tags/v}"
             DIST_TAG=latest
           else
-            VERSION="0.$(date '+%Y%m%d.%H%M%S')-main-$CI_SHA_SHORT"
+            VERSION="0.$(date '+%Y%m%d.%H%M%S')-branch-$CI_SHA_SHORT"
             DIST_TAG=main
           fi
           npm version $VERSION
@@ -171,6 +171,8 @@ jobs:
       - name: "NPM: Build"
         working-directory: extensions/wrapper/clients/typescript-client
         run: npm ci && npm run build
+      - name: Print GH ref
+        run: echo ${{ github.ref }}
       - name: "NPM: Publish (Main & Releases Only)"
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/1373-gap-create-data-offer-endpoint-fix' }}
         working-directory: extensions/wrapper/clients/typescript-client
