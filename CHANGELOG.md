@@ -22,6 +22,8 @@ the detailed section referring to by linking pull requests or issues.
 
 - Changed wording on the data offer creation page
 - Data Offer details now display the contract ID for each contract offer
+- Added validator for the Policy Id
+- Added validator for the Data Offer Id
 
 ## [v4.1.3] - 2024-09-03
 

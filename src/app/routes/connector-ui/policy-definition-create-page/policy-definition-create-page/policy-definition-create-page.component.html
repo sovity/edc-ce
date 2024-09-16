@@ -10,6 +10,9 @@
     <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">{{
       validationMessages.invalidWhitespacesOrColonsMessage
     }}</mat-error>
+    <mat-error *ngIf="ctrl.invalid && ctrl.errors?.idAlreadyExists">{{
+      validationMessages.idExistsErrorMessage
+    }}</mat-error>
   </mat-form-field>
 
   <div class="form-section-title">Policy Expression</div>

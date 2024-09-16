@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {DataOfferFormValidators} from 'src/app/core/validators/data-offer-form-validators';
 import {ExpressionFormControls} from '../../../../component-library/policy-editor/editor/expression-form-controls';
 import {noWhitespacesOrColonsValidator} from '../../../../core/validators/no-whitespaces-or-colons-validator';
 import {
@@ -24,11 +25,16 @@ export class PolicyDefinitionCreatePageForm {
   constructor(
     private formBuilder: FormBuilder,
     private expressionFormControls: ExpressionFormControls,
+    private validators: DataOfferFormValidators,
   ) {}
 
   buildFormGroup(): FormGroup<PolicyDefinitionCreatePageFormModel> {
     return this.formBuilder.nonNullable.group({
-      id: ['', [Validators.required, noWhitespacesOrColonsValidator]],
+      id: [
+        '',
+        [Validators.required, noWhitespacesOrColonsValidator],
+        [this.validators.policyIdExistsValidator],
+      ],
       treeControls: this.expressionFormControls.formGroup,
     });
   }
