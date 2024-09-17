@@ -17,6 +17,6 @@ export const buildTimespanRestriction = (
   return multi(
     'AND',
     evaluationTimeConstraint('GEQ', firstDay),
-    evaluationTimeConstraint('LT', addDays(lastDay, 1)),
+    evaluationTimeConstraint('LEQ', addDays(lastDay, 1)),
   );
 };

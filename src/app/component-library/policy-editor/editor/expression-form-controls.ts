@@ -50,7 +50,9 @@ export class ExpressionFormControls {
     const operatorControl = new UntypedFormControl(operatorConfig);
 
     const valueControl = expr.verb!.adapter.fromControlFactory();
-    valueControl.reset(expr.verb!.adapter.buildFormValueFn(value));
+    valueControl.reset(
+      expr.verb!.adapter.buildFormValueFn(value, operatorConfig),
+    );
 
     this.formGroup.addControl(`${nodeId}-value`, valueControl);
     this.formGroup.addControl(`${nodeId}-op`, operatorControl);

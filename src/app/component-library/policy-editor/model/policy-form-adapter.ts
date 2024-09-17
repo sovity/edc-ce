@@ -1,14 +1,24 @@
 import {UntypedFormControl, Validators} from '@angular/forms';
 import {UiPolicyConstraint, UiPolicyLiteral} from '@sovity.de/edc-client';
-import {format} from 'date-fns-tz';
 import {filterNonNull} from '../../../core/utils/array-utils';
+import {
+  localTzDayToIsoString,
+  truncateToLocalTzDay,
+  truncateToLocalTzDayRaw,
+} from '../../../core/utils/date-utils';
 import {jsonValidator} from '../../../core/validators/json-validator';
 import {PolicyOperatorConfig} from './policy-operators';
 
 export interface PolicyFormAdapter<T> {
-  displayText: (value: UiPolicyLiteral) => string | null;
+  displayText: (
+    value: UiPolicyLiteral,
+    operator: PolicyOperatorConfig,
+  ) => string | null;
   fromControlFactory: () => UntypedFormControl;
-  buildFormValueFn: (literal: UiPolicyLiteral) => T;
+  buildFormValueFn: (
+    literal: UiPolicyLiteral,
+    operator: PolicyOperatorConfig,
+  ) => T;
   buildValueFn: (
     formValue: T,
     operator: PolicyOperatorConfig,
@@ -49,49 +59,39 @@ const stringLiteral = (value: string | null | undefined): UiPolicyLiteral => ({
 });
 
 export const localDateAdapter: PolicyFormAdapter<Date | null> = {
-  displayText: (literal): string | null => {
-    const value = readSingleStringLiteral(literal);
-    try {
-      if (!value) {
-        return value;
-      }
-      return format(new Date(value), 'dd/MM/yyyy');
-    } catch (e) {
-      return '' + value;
-    }
+  displayText: (literal, operator): string | null => {
+    const stringOrNull = readSingleStringLiteral(literal);
+    return safeConversion(stringOrNull, (string) => {
+      const date = new Date(string);
+      const upperBound = isUpperBound(operator);
+
+      return truncateToLocalTzDay(date, upperBound);
+    });
   },
   fromControlFactory: () => new UntypedFormControl(null, Validators.required),
-  buildFormValueFn: (literal): Date | null => {
-    const value = readSingleStringLiteral(literal);
-    try {
-      if (!value) {
-        return null;
-      }
-      return new Date(value);
-    } catch (e) {
-      return null;
-    }
+  buildFormValueFn: (literal, operator): Date | null => {
+    const stringOrNull = readSingleStringLiteral(literal);
+    return safeConversion(stringOrNull, (string) => {
+      const date = new Date(string);
+      const upperBound = isUpperBound(operator);
+
+      // Editing datetimes from a different TZ as days has no good solution
+      return truncateToLocalTzDayRaw(date, upperBound);
+    });
   },
-  buildValueFn: (value) => stringLiteral(value?.toISOString()),
+  buildValueFn: (valueOrNull, operator) => {
+    return stringLiteral(
+      safeConversion(valueOrNull, (value) => {
+        const upperBound = isUpperBound(operator);
+
+        return localTzDayToIsoString(value, upperBound);
+      }),
+    );
+  },
   emptyConstraintValue: () => ({
     operator: 'LT',
     right: {
       type: 'STRING',
-    },
-  }),
-};
-
-export const stringAdapter: PolicyFormAdapter<string> = {
-  displayText: (literal): string | null =>
-    readSingleStringLiteral(literal) ?? '',
-  fromControlFactory: () => new UntypedFormControl('', Validators.required),
-  buildFormValueFn: (literal): string => readSingleStringLiteral(literal) ?? '',
-  buildValueFn: (value) => stringLiteral(value),
-  emptyConstraintValue: () => ({
-    operator: 'EQ',
-    right: {
-      type: 'STRING',
-      value: '',
     },
   }),
 };
@@ -145,4 +145,31 @@ export const jsonAdapter: PolicyFormAdapter<string> = {
       value: 'null',
     },
   }),
+};
+
+const isUpperBound = (operator: PolicyOperatorConfig) =>
+  operator.id === 'LT' || operator.id === 'LEQ';
+
+/**
+ * Helper function for reducing mental complexity of mapping code:
+ *  - Handles null input
+ *  - Handles undefined output
+ *  - Catches exceptions and returns null
+ *
+ * @param valueOrNull value
+ * @param mapper mapper
+ */
+const safeConversion = <T, R>(
+  valueOrNull: T | null | undefined,
+  mapper: (it: T) => R | null | undefined,
+): R | null => {
+  if (valueOrNull == null) {
+    return null;
+  }
+
+  try {
+    return mapper(valueOrNull) ?? null;
+  } catch (e) {
+    return null;
+  }
 };

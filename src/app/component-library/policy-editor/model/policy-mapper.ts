@@ -56,7 +56,7 @@ export class PolicyMapper {
       operator,
       valueRaw: value,
       valueJson: this.formatJson(value!),
-      displayValue: this.formatValue(value, verb) ?? 'null',
+      displayValue: this.formatValue(value, verb, operator) ?? 'null',
     };
   }
 
@@ -110,12 +110,13 @@ export class PolicyMapper {
   private formatValue(
     value: UiPolicyLiteral | undefined,
     verbConfig: PolicyVerbConfig,
+    operatorConfig: PolicyOperatorConfig,
   ) {
     if (value == null) {
       return '';
     }
 
-    return verbConfig.adapter.displayText(value);
+    return verbConfig.adapter.displayText(value, operatorConfig);
   }
 
   private formatJson(value: UiPolicyLiteral): string {

@@ -24,6 +24,8 @@ the detailed section referring to by linking pull requests or issues.
 - Data Offer details now display the contract ID for each contract offer
 - Added validator for the Policy Id
 - Added validator for the Data Offer Id
+- Fixed time restriction upper bound "local day to datetime" conversion issues
+  ([#815](https://github.com/sovity/edc-ui/issues/815))
 
 ## [v4.1.3] - 2024-09-03
 
