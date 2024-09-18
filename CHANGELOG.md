@@ -16,6 +16,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
+- Catalog Crawler: Synced Flyway migrations with the Authority Portal for its v4.2.0 release.
+
 ### Deployment Migration Notes
 
 _No special deployment migration steps required_
