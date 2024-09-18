@@ -3,6 +3,7 @@
 For documentation on how to update this changelog,
 please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
+
 ## [x.x.x] - UNRELEASED
 
 ### Overview
@@ -13,12 +14,11 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
-- Extend the Wrapper API
-  - Adds `createDataOffer` endpoint to create an asset, policies and a contract definition in a single call
-
 #### Patch Changes
 
 ### Deployment Migration Notes
+
+_No special deployment migration steps required_
 
 #### Compatible Versions
 
@@ -29,6 +29,46 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
   - Dev Catalog Crawler: `ghcr.io/sovity/catalog-crawler-dev:{{ VERSION }}`
   - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:{{ VERSION }}`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI VERSION }}`
+
+
+## [10.4.0] - 2024-09-18
+
+### Overview
+
+MDS Patch release
+
+### Detailed Changes
+
+UI and Wrapper API improvements.
+
+#### Minor Changes
+
+- Extend the Wrapper API ([PR 1035](https://github.com/sovity/edc-ce/pull/1035))
+  - Adds `createDataOffer` / `pages/create-data-offer` endpoint to create an asset, policies and a contract definition in a single call
+
+#### Patch Changes
+
+- Changed wording on the data offer creation page ([#817](https://github.com/sovity/edc-ui/issues/795))
+- Data Offer details now display the contract ID for each contract offer ([#795](https://github.com/sovity/edc-ui/issues/795))
+- Warn the user when using an invalid Policy Id ([#746](https://github.com/sovity/edc-ui/issues/746))
+- Warn the user when using an invalid Data Offer Id ([#745](https://github.com/sovity/edc-ui/issues/745))
+- Fixed time restriction upper bound "local day to datetime" conversion issues
+  ([#815](https://github.com/sovity/edc-ui/issues/815))
+
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:10.4.0`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:10.4.0`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:10.4.0`
+  - Dev Catalog Crawler: `ghcr.io/sovity/catalog-crawler-dev:10.4.0`
+  - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.4.0`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.4`
 
 
 ## [10.3.0] - 2024-09-04

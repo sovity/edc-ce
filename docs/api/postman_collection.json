@@ -876,7 +876,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/create-asset/",
+									"raw": "{{PROVIDER_EDC_MANAGEMENT_URL}}/wrapper/ui/pages/create-data-offer/",
 									"host": [
 										"{{PROVIDER_EDC_MANAGEMENT_URL}}"
 									],
@@ -884,7 +884,7 @@
 										"wrapper",
 										"ui",
 										"pages",
-										"create-asset",
+										"create-data-offer",
 										""
 									]
 								}
