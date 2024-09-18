@@ -31,7 +31,7 @@ _No special deployment migration steps required_
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI VERSION }}`
 
 
-## [10.4.0] - 2024-09-17
+## [10.4.0] - 2024-09-18
 
 ### Overview
 
@@ -43,7 +43,7 @@ UI and Wrapper API improvements.
 
 #### Minor Changes
 
-- Extend the Wrapper API ([#1373](https://github.com/sovity/PMO-Software/issues/1373))
+- Extend the Wrapper API ([PR 1035](https://github.com/sovity/edc-ce/pull/1035))
   - Adds `createDataOffer` / `pages/create-data-offer` endpoint to create an asset, policies and a contract definition in a single call
 
 #### Patch Changes
