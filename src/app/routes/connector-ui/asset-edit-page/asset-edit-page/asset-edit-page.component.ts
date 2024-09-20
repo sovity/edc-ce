@@ -1,24 +1,22 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {EMPTY, Observable, catchError, concat, finalize, tap} from 'rxjs';
+import {EMPTY, Observable, catchError, finalize, tap} from 'rxjs';
 import {
+  DataOfferCreationRequestPolicyEnum,
   IdResponseDto,
   UiAssetEditRequest,
-  UiCriterionLiteralType,
 } from '@sovity.de/edc-client';
 import {AssetAdvancedFormBuilder} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/asset-advanced-form-builder';
 import {AssetDatasourceFormBuilder} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/asset-datasource-form-builder';
 import {AssetGeneralFormBuilder} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/asset-general-form-builder';
 import {EditAssetForm} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/edit-asset-form';
 import {EditAssetFormInitializer} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/edit-asset-form-initializer';
-import {ALWAYS_TRUE_POLICY_ID} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/always-true-policy-id';
 import {EditAssetFormValue} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/edit-asset-form-model';
 import {ExpressionFormControls} from 'src/app/component-library/policy-editor/editor/expression-form-controls';
 import {ExpressionFormHandler} from 'src/app/component-library/policy-editor/editor/expression-form-handler';
 import {EdcApiService} from 'src/app/core/services/api/edc-api.service';
 import {AssetRequestBuilder} from 'src/app/core/services/asset-request-builder';
 import {AssetService} from 'src/app/core/services/asset.service';
-import {AssetProperty} from 'src/app/core/services/models/asset-properties';
 import {Fetched} from 'src/app/core/services/models/fetched';
 import {UiAssetMapped} from 'src/app/core/services/models/ui-asset-mapped';
 import {NotificationService} from 'src/app/core/services/notification.service';
@@ -130,21 +128,30 @@ export class AssetEditPageComponent implements OnInit {
         this.assetRequestBuilder.buildAssetCreateRequest(formValue);
 
       if (publishMode === 'PUBLISH_UNRESTRICTED') {
-        return concat(
-          this.edcApiService.createAsset(assetCreateRequest),
-          this.createContractDefinition(assetId, ALWAYS_TRUE_POLICY_ID),
-        );
+        return this.edcApiService.createDataOffer({
+          dataOfferCreationRequest: {
+            uiAssetCreateRequest: assetCreateRequest,
+            policy: DataOfferCreationRequestPolicyEnum.PublishUnrestricted,
+            uiPolicyExpression:
+              this.expressionFormHandler.toUiPolicyExpression(),
+          },
+        });
       } else if (publishMode === 'PUBLISH_RESTRICTED') {
-        return concat(
-          this.edcApiService.createAsset(assetCreateRequest),
-          this.edcApiService.createPolicyDefinitionV2({
-            policyDefinitionId: assetId,
-            expression: this.expressionFormHandler.toUiPolicyExpression(),
-          }),
-          this.createContractDefinition(assetId, assetId),
-        );
+        return this.edcApiService.createDataOffer({
+          dataOfferCreationRequest: {
+            uiAssetCreateRequest: assetCreateRequest,
+            policy: DataOfferCreationRequestPolicyEnum.PublishRestricted,
+            uiPolicyExpression:
+              this.expressionFormHandler.toUiPolicyExpression(),
+          },
+        });
       } else {
-        return this.edcApiService.createAsset(assetCreateRequest);
+        return this.edcApiService.createDataOffer({
+          dataOfferCreationRequest: {
+            uiAssetCreateRequest: assetCreateRequest,
+            policy: DataOfferCreationRequestPolicyEnum.DontPublish,
+          },
+        });
       }
     }
 
@@ -163,26 +170,5 @@ export class AssetEditPageComponent implements OnInit {
     }
 
     throw new Error(`Unsupported mode: ${mode}`);
-  }
-
-  private createContractDefinition(
-    assetId: string,
-    policyId: string,
-  ): Observable<IdResponseDto> {
-    return this.edcApiService.createContractDefinition({
-      accessPolicyId: policyId,
-      contractPolicyId: policyId,
-      contractDefinitionId: assetId,
-      assetSelector: [
-        {
-          operandLeft: AssetProperty.id,
-          operator: 'IN',
-          operandRight: {
-            type: UiCriterionLiteralType.ValueList,
-            valueList: [assetId],
-          },
-        },
-      ],
-    });
   }
 }

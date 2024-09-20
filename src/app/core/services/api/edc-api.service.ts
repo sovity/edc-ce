@@ -8,6 +8,7 @@ import {
   ContractDefinitionPage,
   ContractDefinitionRequest,
   ContractNegotiationRequest,
+  CreateDataOfferRequest,
   DashboardPage,
   EdcClient,
   GetContractAgreementPageRequest,
@@ -126,6 +127,14 @@ export class EdcApiService {
   ): Observable<IdResponseDto> {
     return toObservable(() =>
       this.edcClient.uiApi.deleteContractDefinition({contractDefinitionId}),
+    );
+  }
+
+  createDataOffer(
+    dataOfferCreationRequest: CreateDataOfferRequest,
+  ): Observable<IdResponseDto> {
+    return toObservable(() =>
+      this.edcClient.uiApi.createDataOffer(dataOfferCreationRequest),
     );
   }
 

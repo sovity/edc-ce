@@ -20,6 +20,10 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
+- Used createDataOffer endpoint to create an asset, policies and a contract
+  definition in a single call
+  ([#841](https://github.com/sovity/edc-ui/issues/841))
+
 ### Deployment Migration Notes
 
 _No special deployment migration steps required_
@@ -36,10 +40,14 @@ Various bugfixes.
 
 #### Patch
 
-- Changed wording on the data offer creation page ([#817](https://github.com/sovity/edc-ui/issues/795))
-- Data Offer details now display the contract ID for each contract offer ([#795](https://github.com/sovity/edc-ui/issues/795))
-- Warn the user when using an invalid Policy Id ([#746](https://github.com/sovity/edc-ui/issues/746))
-- Warn the user when using an invalid Data Offer Id ([#745](https://github.com/sovity/edc-ui/issues/745))
+- Changed wording on the data offer creation page
+  ([#817](https://github.com/sovity/edc-ui/issues/795))
+- Data Offer details now display the contract ID for each contract offer
+  ([#795](https://github.com/sovity/edc-ui/issues/795))
+- Warn the user when using an invalid Policy Id
+  ([#746](https://github.com/sovity/edc-ui/issues/746))
+- Warn the user when using an invalid Data Offer Id
+  ([#745](https://github.com/sovity/edc-ui/issues/745))
 - Fixed time restriction upper bound "local day to datetime" conversion issues
   ([#815](https://github.com/sovity/edc-ui/issues/815))
 

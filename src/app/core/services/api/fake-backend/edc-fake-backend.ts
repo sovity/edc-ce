@@ -8,6 +8,7 @@ import {
   ContractNegotiationRequestFromJSON,
   ContractTerminationRequestFromJSON,
   DashboardPageToJSON,
+  DataOfferCreationRequestFromJSON,
   FetchAPI,
   IdAvailabilityResponseToJSON,
   IdResponseDtoToJSON,
@@ -46,6 +47,7 @@ import {
 } from './connector-fake-impl/contract-negotiation-fake-service';
 import {initiateContractTermination} from './connector-fake-impl/contract-termination-fake-service';
 import {dashboardPage} from './connector-fake-impl/dashboard-fake-service';
+import {createDataOffer} from './connector-fake-impl/data-offer-fake-service';
 import {connectorLimits} from './connector-fake-impl/ee-fake-service';
 import {
   createPolicyDefinition,
@@ -194,8 +196,10 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
     .url('ui/pages/contract-agreement-page/*')
     .on('GET', (contractAgreementId: String) => {
       return ok(
-        contractAgreementPage().contractAgreements
-          .find( (contractAgreement) => contractAgreement.contractAgreementId === contractAgreementId)
+        contractAgreementPage().contractAgreements.find(
+          (contractAgreement) =>
+            contractAgreement.contractAgreementId === contractAgreementId,
+        ),
       );
     })
 
@@ -232,6 +236,12 @@ export const EDC_FAKE_BACKEND: FetchAPI = async (
     .on('GET', () => {
       const limits = connectorLimits();
       return ok(ConnectorLimitsToJSON(limits));
+    })
+
+    .url('ui/pages/create-data-offer')
+    .on('POST', () => {
+      const response = createDataOffer(DataOfferCreationRequestFromJSON(body));
+      return ok(IdResponseDtoToJSON(response));
     })
 
     .url('ui/pages/data-offer-page/validate-asset-id/*')
