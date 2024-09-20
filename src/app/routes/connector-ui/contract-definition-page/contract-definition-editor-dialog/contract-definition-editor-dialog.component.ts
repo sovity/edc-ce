@@ -63,23 +63,18 @@ export class ContractDefinitionEditorDialog implements OnInit, OnDestroy {
       )
       .subscribe({
         complete: () => {
-          this.notificationService.showInfo(
-            'Successfully created contract definition.',
-          );
+          this.notificationService.showInfo('Successfully created data offer.');
           this.close({refreshList: true});
         },
         error: (error) => {
           if (error.status == 409) {
-            this.notificationService.showError(
-              'Contract Definition ID already taken.',
-            );
+            this.notificationService.showError('Data offer ID already taken.');
           } else if (error.status >= 500) {
             this.notificationService.showError(
-              'Error creating contract definition: ' +
-                (error?.error?.message ?? '???'),
+              'Error creating data offer: ' + (error?.error?.message ?? '???'),
             );
           }
-          console.error('Error creating contract definition!', error);
+          console.error('Error creating data offer!', error);
         },
       });
   }
