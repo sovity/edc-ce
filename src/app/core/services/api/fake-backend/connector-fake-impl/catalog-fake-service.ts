@@ -10,12 +10,12 @@ let dataOffers: UiDataOffer[] = [
     contractOffers: [
       {
         contractOfferId:
-          'Zmlyc3QtY2Q=:Zmlyc3QtYXNzZXQtMS4w:MjgzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNi',
+          'dGVzdHRlc3R0ZXN0dGVzdHRlc3Q=:dGVzdHRlc3R0ZXN0dGVzdHRlc3Q=:MDE5MjA4ZWMtMjI0My03YmEyLWE5ZGYtYzRjZTZkZDEyYzAx',
         policy: TestPolicies.connectorRestricted,
       },
       {
         contractOfferId:
-          'Bmlyf3Qt62Q=:Zmlyc3QtYXNzZXQtMS4w:NigzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNj',
+          'Zmlyc3QtY2Q=:Zmlyc3QtYXNzZXQtMS4w:MjgzNTZkMTMtN2ZhYy00NTQwLTgwZjItMjI5NzJjOTc1ZWNi',
         policy: TestPolicies.warnings,
       },
     ],

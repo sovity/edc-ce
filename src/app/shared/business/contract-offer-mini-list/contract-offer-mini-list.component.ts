@@ -34,6 +34,7 @@ export class ContractOfferMiniListComponent {
         label: 'Contract Offer Id',
         text: this.data.contractOffers.find((it) => it.contractOfferId == id)
           ?.contractOfferId,
+        additionalClasses: 'min-h-fit h-fit break-all',
       },
     ];
   }
