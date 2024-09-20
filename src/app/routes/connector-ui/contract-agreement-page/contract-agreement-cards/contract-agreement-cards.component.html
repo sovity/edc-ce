@@ -37,7 +37,9 @@
       <div class="flex flex-row space-x-[10px] justify-between">
         <!-- Signed -->
         <div class="flex flex-col flex-grow">
-          <div class="text-slate text-sm uppercase tracking-wider">Signed</div>
+          <div class="text-slate text-sm uppercase tracking-wider">
+            {{ 'general.signed' | translate }}
+          </div>
           <div>
             <ago [date]="card.contractSigningDate"></ago>
           </div>
@@ -56,7 +58,9 @@
       <div class="flex flex-row space-x-[10px] justify-between">
         <!-- Counterparty Address -->
         <div class="flex flex-col">
-          <div class="text-slate text-sm uppercase">Other Connector</div>
+          <div class="text-slate text-sm uppercase">
+            {{ 'general.oth_connector' | translate }}
+          </div>
           <div>
             <a
               class="link break-all"

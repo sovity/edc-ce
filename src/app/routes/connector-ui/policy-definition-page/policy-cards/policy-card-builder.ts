@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {PolicyDefinitionDto, PolicyDefinitionPage} from '@sovity.de/edc-client';
-import {PolicyMapper} from '../../../../component-library/policy-editor/model/policy-mapper';
+import {PolicyMapper} from '../../../../shared/business/policy-editor/model/policy-mapper';
 import {PolicyCard} from './policy-card';
 
 @Injectable({providedIn: 'root'})

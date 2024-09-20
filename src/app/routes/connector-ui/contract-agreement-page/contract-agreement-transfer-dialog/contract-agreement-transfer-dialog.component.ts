@@ -7,15 +7,15 @@ import {
   InitiateCustomTransferRequest,
   InitiateTransferRequest,
 } from '@sovity.de/edc-client';
-import {
-  DATA_SINK_HTTP_METHODS,
-  DATA_SOURCE_HTTP_METHODS,
-} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/http-methods';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {DataAddressMapper} from '../../../../core/services/data-address-mapper';
 import {NotificationService} from '../../../../core/services/notification.service';
 import {TransferDataSinkMapper} from '../../../../core/services/transfer-data-sink-mapper';
 import {ValidationMessages} from '../../../../core/validators/validation-messages';
+import {
+  DATA_SINK_HTTP_METHODS,
+  DATA_SOURCE_HTTP_METHODS,
+} from '../../../../shared/business/edit-asset-form/form/http-methods';
 import {ContractAgreementTransferDialogData} from './contract-agreement-transfer-dialog-data';
 import {ContractAgreementTransferDialogForm} from './contract-agreement-transfer-dialog-form';
 import {ContractAgreementTransferDialogFormValue} from './contract-agreement-transfer-dialog-form-model';

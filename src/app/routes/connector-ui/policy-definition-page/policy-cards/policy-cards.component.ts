@@ -8,11 +8,12 @@ import {
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {EMPTY} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
-import {ConfirmDialogModel} from '../../../../component-library/confirmation-dialog/confirmation-dialog/confirmation-dialog.component';
-import {JsonDialogComponent} from '../../../../component-library/json-dialog/json-dialog/json-dialog.component';
-import {JsonDialogData} from '../../../../component-library/json-dialog/json-dialog/json-dialog.data';
+import {TranslateService} from '@ngx-translate/core';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {NotificationService} from '../../../../core/services/notification.service';
+import {ConfirmDialogModel} from '../../../../shared/common/confirmation-dialog/confirmation-dialog.component';
+import {JsonDialogComponent} from '../../../../shared/common/json-dialog/json-dialog.component';
+import {JsonDialogData} from '../../../../shared/common/json-dialog/json-dialog.data';
 import {PolicyCard} from './policy-card';
 
 @Component({
@@ -38,19 +39,24 @@ export class PolicyCardsComponent {
     private edcApiService: EdcApiService,
     private matDialog: MatDialog,
     private notificationService: NotificationService,
+    private translateService: TranslateService,
   ) {}
 
   onPolicyDetailClick(policyCard: PolicyCard) {
     let dialogRef: MatDialogRef<any>;
     const data: JsonDialogData = {
       title: policyCard.id,
-      subtitle: 'Policy',
+      subtitle: this.translateService.instant('general.policy'),
       icon: 'policy',
       objectForJson: policyCard.objectForJson,
       toolbarButton: {
-        text: 'Delete',
+        text: this.translateService.instant('general.delete'),
         icon: 'delete',
-        confirmation: ConfirmDialogModel.forDelete('policy', policyCard.id),
+        confirmation: ConfirmDialogModel.forDelete(
+          'general.policy',
+          policyCard.id,
+          this.translateService,
+        ),
         action: () =>
           this.edcApiService.deletePolicyDefinition(policyCard.id).pipe(
             tap(() => {

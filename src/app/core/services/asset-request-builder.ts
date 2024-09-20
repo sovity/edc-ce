@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {UiAssetCreateRequest, UiAssetEditRequest} from '@sovity.de/edc-client';
-import {EditAssetFormValue} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/edit-asset-form-model';
+import {EditAssetFormValue} from 'src/app/shared/business/edit-asset-form/form/model/edit-asset-form-model';
 import {toGmtZeroHourDate} from '../utils/date-utils';
 import {AssetDataSourceMapper} from './asset-data-source-mapper';
 import {AssetRequestCommonMetadata} from './asset-request-common-metadata';

@@ -16,6 +16,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Major
 
+- Internationalize the UI and add a German localization
+
 #### Minor
 
 #### Patch

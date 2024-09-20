@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {UiDataSource} from '@sovity.de/edc-client';
-import {AssetDatasourceFormValue} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/asset-datasource-form-model';
-import {HttpDatasourceHeaderFormValue} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/http-datasource-header-form-model';
+import {AssetDatasourceFormValue} from '../../shared/business/edit-asset-form/form/model/asset-datasource-form-model';
+import {HttpDatasourceHeaderFormValue} from '../../shared/business/edit-asset-form/form/model/http-datasource-header-form-model';
 import {getAuthFields} from '../utils/form-value-utils';
 import {QueryParamsMapper} from './query-params-mapper';
 

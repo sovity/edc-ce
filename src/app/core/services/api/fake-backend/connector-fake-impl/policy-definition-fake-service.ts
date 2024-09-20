@@ -7,7 +7,7 @@ import {
   PolicyDefinitionPage,
   UiPolicyExpression,
 } from '@sovity.de/edc-client';
-import {ALWAYS_TRUE_POLICY_ID} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/always-true-policy-id';
+import {ALWAYS_TRUE_POLICY_ID} from '../../../../../shared/business/edit-asset-form/form/model/always-true-policy-id';
 import {TestPolicies} from './data/test-policies';
 
 let policyDefinitions: PolicyDefinitionDto[] = [

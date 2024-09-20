@@ -24,7 +24,9 @@
         !transferProcessesList.data.transferProcesses.length
       "
       class="min-h-[35rem]"
-      [emptyMessage]="'No transfer history found.'"></empty-state>
+      [emptyMessage]="
+        'tranfer_history_page.no_trans' | translate
+      "></empty-state>
   </div>
   <div
     *ngIf="
@@ -37,7 +39,7 @@
       [dataSource]="transferProcessesList.data.transferProcesses">
       <ng-container matColumnDef="direction">
         <th *matHeaderCellDef class="w-[50px]" mat-header-cell scope="col">
-          Direction
+          {{ 'general.direction' | translate }}
         </th>
         <td *matCellDef="let item" class="w-[50px]" mat-cell>
           <mat-icon class="mat-icon-[28px]">
@@ -47,14 +49,16 @@
       </ng-container>
       <ng-container matColumnDef="lastUpdated">
         <th *matHeaderCellDef class="w-[150px]" mat-header-cell scope="col">
-          Last updated
+          {{ 'general.updated' | translate }}
         </th>
         <td *matCellDef="let item" class="w-[150px]" mat-cell>
           <ago [date]="item.lastUpdatedDate"></ago>
         </td>
       </ng-container>
       <ng-container matColumnDef="assetName">
-        <th *matHeaderCellDef mat-header-cell scope="col">Asset</th>
+        <th *matHeaderCellDef mat-header-cell scope="col">
+          {{ 'general.asset' | translate }}
+        </th>
         <td *matCellDef="let item" mat-cell>
           <div *ngIf="item.direction === 'PROVIDING'">
             <a
@@ -74,7 +78,7 @@
       </ng-container>
       <ng-container matColumnDef="state">
         <th *matHeaderCellDef class="w-[150px]" mat-header-cell scope="col">
-          State
+          {{ 'general.state' | translate }}
         </th>
         <td *matCellDef="let item" class="w-[150px]" mat-cell>
           <div class="flex flex-row items-center space-x-[5px]">
@@ -104,7 +108,7 @@
       </ng-container>
       <ng-container matColumnDef="counterPartyParticipantId">
         <th *matHeaderCellDef mat-header-cell scope="col">
-          Counterparty {{ participantIdLocalization.participantId }}
+          {{ 'transfer_history_page.counter_id' | translate }}
         </th>
         <td *matCellDef="let item" mat-cell>
           {{ item.counterPartyParticipantId }}
@@ -112,7 +116,7 @@
       </ng-container>
       <ng-container matColumnDef="counterPartyConnectorEndpoint">
         <th *matHeaderCellDef mat-header-cell scope="col">
-          Counterparty Connector Endpoint
+          {{ 'transfer_history_page.counter_endpoint' | translate }}
         </th>
         <td *matCellDef="let item" mat-cell>
           {{ item.counterPartyConnectorEndpoint }}
@@ -120,14 +124,14 @@
       </ng-container>
       <ng-container matColumnDef="details">
         <th *matHeaderCellDef class="w-[100px]" mat-header-cell scope="col">
-          Details
+          {{ 'general.details' | translate }}
         </th>
         <td *matCellDef="let item" class="w-[100px]" mat-cell>
           <a
             class="link"
             href="javascript:void(0)"
             (click)="onTransferHistoryDetailsClick(item)">
-            {{ 'Show Details' }}
+            {{ 'general.details' | translate }}
           </a>
         </td>
       </ng-container>

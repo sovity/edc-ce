@@ -1,0 +1,5 @@
+<span *ngIf="textBefore">{{ textBefore }}</span>
+<ng-container *ngIf="hasMiddle">
+  <ng-content></ng-content>
+</ng-container>
+<span *ngIf="textAfter">{{ textAfter }}</span>

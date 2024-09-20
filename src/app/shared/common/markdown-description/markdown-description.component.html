@@ -1,0 +1,46 @@
+<div
+  class="overflow-hidden relative"
+  [style.height.px]="isCollapsed ? collapsedDescriptionHeight : null">
+  <div
+    class="markdown-description"
+    #content
+    [innerHtml]="
+      htmlSanitizer.sanitize(markdownConverter.toHtml(description ?? ''))
+    "></div>
+
+  <i *ngIf="!description">{{
+    'component_library.no_description' | translate
+  }}</i>
+
+  <div
+    *ngIf="isCollapsed"
+    class="absolute inset-x-0 bottom-0 z-10 flex h-16 flex-col overflow-hidden"
+    style="
+      background: rgb(255, 255, 255);
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.85) 100%
+      );
+    "></div>
+</div>
+
+<button
+  *ngIf="isLargeDescription"
+  class="w-full"
+  mat-button
+  (click)="onToggleShowMore()">
+  <div class="flex items-center gap-1 justify-center">
+    <mat-icon *ngIf="isCollapsed" class="mat-icon-[17px] mt-[2px]"
+      >keyboard_double_arrow_down</mat-icon
+    >
+    <mat-icon *ngIf="!isCollapsed" class="mat-icon-[17px] mt-[2px]"
+      >keyboard_double_arrow_up</mat-icon
+    >
+    {{
+      isCollapsed
+        ? ('component_library.show_more' | translate)
+        : ('component_library.show_less' | translate)
+    }}
+  </div>
+</button>

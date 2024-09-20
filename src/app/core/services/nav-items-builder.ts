@@ -17,25 +17,41 @@ export class NavItemsBuilder {
     {
       title: 'Providing',
       items: [
-        {path: 'create-asset', icon: 'post_add', title: 'Create Data Offer'},
-        {path: 'my-assets', icon: 'upload', title: 'Assets'},
-        {path: 'policies', icon: 'policy', title: 'Policies'},
+        {
+          path: 'create-asset',
+          icon: 'post_add',
+          title: 'create_data_offer_page.title',
+        },
+        {path: 'my-assets', icon: 'upload', title: 'asset_list_page.title'},
+        {
+          path: 'policies',
+          icon: 'policy',
+          title: 'policy_definition_page.title',
+        },
         {
           path: 'data-offers',
           icon: 'rule',
-          title: 'Data Offers',
+          title: 'contract_definition_page.title',
         },
       ],
     },
     {
       title: 'Consuming',
       items: [
-        {path: 'catalog-browser', icon: 'sim_card', title: 'Catalog Browser'},
-        {path: 'contracts', icon: 'assignment_turned_in', title: 'Contracts'},
+        {
+          path: 'catalog-browser',
+          icon: 'sim_card',
+          title: 'catalog_browser_page.title',
+        },
+        {
+          path: 'contracts',
+          icon: 'assignment_turned_in',
+          title: 'contract_agreement_page.title',
+        },
         {
           path: 'transfer-history',
           icon: 'assignment',
-          title: 'Transfer History',
+          title: 'transfer_history_page.title',
         },
       ],
     },
@@ -44,7 +60,7 @@ export class NavItemsBuilder {
         {
           path: 'logout',
           icon: 'logout',
-          title: 'Logout',
+          title: 'logout_page.title',
           requiresFeature: 'logout-button',
         },
       ],

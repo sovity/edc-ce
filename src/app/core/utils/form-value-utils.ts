@@ -1,5 +1,5 @@
-import {AssetDatasourceFormValue} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/asset-datasource-form-model';
 import {ContractAgreementTransferDialogFormValue} from '../../routes/connector-ui/contract-agreement-page/contract-agreement-transfer-dialog/contract-agreement-transfer-dialog-form-model';
+import {AssetDatasourceFormValue} from '../../shared/business/edit-asset-form/form/model/asset-datasource-form-model';
 
 export function getAuthFields(
   formValue:

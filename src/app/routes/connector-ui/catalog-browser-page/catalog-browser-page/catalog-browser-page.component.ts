@@ -10,11 +10,12 @@ import {
   switchMap,
 } from 'rxjs';
 import {filter, map} from 'rxjs/operators';
-import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
-import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
+import {TranslateService} from '@ngx-translate/core';
 import {ConnectorLimitsService} from '../../../../core/services/connector-limits.service';
 import {DataOffer} from '../../../../core/services/models/data-offer';
 import {value$} from '../../../../core/utils/form-group-utils';
+import {AssetDetailDialogDataService} from '../../../../shared/business/asset-detail-dialog/asset-detail-dialog-data.service';
+import {AssetDetailDialogService} from '../../../../shared/business/asset-detail-dialog/asset-detail-dialog.service';
 import {CatalogBrowserFetchDetailDialogComponent} from '../catalog-browser-fetch-detail-dialog/catalog-browser-fetch-detail-dialog.component';
 import {CatalogBrowserFetchDetailDialogData} from '../catalog-browser-fetch-detail-dialog/catalog-browser-fetch-detail-dialog.data';
 import {CatalogApiUrlService} from './catalog-api-url.service';
@@ -41,6 +42,7 @@ export class CatalogBrowserPageComponent implements OnInit, OnDestroy {
     private catalogApiUrlService: CatalogApiUrlService,
     private matDialog: MatDialog,
     private connectorLimitsService: ConnectorLimitsService,
+    private translateService: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -87,12 +89,13 @@ export class CatalogBrowserPageComponent implements OnInit, OnDestroy {
 
   private buildPresetCatalogUrlsMessage(): string {
     const urls = this.catalogApiUrlService.getPresetProviders();
+    const usage = this.translateService.instant('catalog_browser_page.usage');
     if (!urls.length) {
       return '';
     }
-    return `Already using${
-      urls.length > 1 ? ` (${urls.length})` : ''
-    }: ${urls.join(', ')}`;
+    return `${usage} ${urls.length > 1 ? ` (${urls.length})` : ''}: ${urls.join(
+      ', ',
+    )}`;
   }
 
   private searchText$(): Observable<string> {

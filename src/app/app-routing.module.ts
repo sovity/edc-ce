@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {ROUTES, RouterModule, Routes} from '@angular/router';
-import {PageNotFoundComponent} from './component-library/error-404-component/page-not-found.component';
 import {APP_CONFIG, AppConfig} from './core/config/app-config';
+import {PageNotFoundPageComponent} from './routes/connector-ui/page-not-found-page/page-not-found-page.component';
 
 @NgModule({
   imports: [RouterModule.forRoot([], {paramsInheritanceStrategy: 'always'})],
@@ -27,7 +27,7 @@ import {APP_CONFIG, AppConfig} from './core/config/app-config';
           default:
             throw new Error(`Unhandled PageSet: ${config.routes}`);
         }
-        routes.push({path: '**', component: PageNotFoundComponent});
+        routes.push({path: '**', component: PageNotFoundPageComponent});
         return routes;
       },
     },

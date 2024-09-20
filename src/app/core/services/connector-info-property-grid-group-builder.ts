@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
+import {TranslateService} from '@ngx-translate/core';
 import {DashboardPage} from '@sovity.de/edc-client';
-import {JsonDialogComponent} from '../../component-library/json-dialog/json-dialog/json-dialog.component';
-import {JsonDialogData} from '../../component-library/json-dialog/json-dialog/json-dialog.data';
-import {PropertyGridGroup} from '../../component-library/property-grid/property-grid-group/property-grid-group';
-import {PropertyGridField} from '../../component-library/property-grid/property-grid/property-grid-field';
-import {PropertyGridFieldService} from '../../component-library/property-grid/property-grid/property-grid-field.service';
+import {JsonDialogComponent} from '../../shared/common/json-dialog/json-dialog.component';
+import {JsonDialogData} from '../../shared/common/json-dialog/json-dialog.data';
+import {PropertyGridGroup} from '../../shared/common/property-grid-group/property-grid-group';
+import {PropertyGridField} from '../../shared/common/property-grid/property-grid-field';
+import {PropertyGridFieldService} from '../../shared/common/property-grid/property-grid-field.service';
 import {LastCommitInfo} from './api/model/last-commit-info';
 import {Fetched} from './models/fetched';
 import {ParticipantIdLocalization} from './participant-id-localization';
@@ -16,12 +17,13 @@ export class ConnectorInfoPropertyGridGroupBuilder {
     private participantIdLocalization: ParticipantIdLocalization,
     private propertyGridUtils: PropertyGridFieldService,
     private matDialog: MatDialog,
+    private translateService: TranslateService,
   ) {}
 
   private onShowConnectorVersionClick(title: string, versionData: any) {
     const data: JsonDialogData = {
       title,
-      subtitle: 'Show Details',
+      subtitle: this.translateService.instant('general.details'),
       icon: 'link',
       objectForJson: versionData,
     };
@@ -86,13 +88,14 @@ export class ConnectorInfoPropertyGridGroupBuilder {
           label: 'UI Version',
           text: data.trim().toString()
             ? this.asDate(data.trim().toString())
-            : 'Show Details',
+            : this.translateService.instant('general.details'),
           onclick: () =>
             this.onShowConnectorVersionClick('Version Information', {
               'UI Last Commit Information': uiCommitDetails.match({
                 ifOk: (uiCommitdata) => uiCommitdata,
                 ifError: (error) => error.failureMessage,
-                ifLoading: () => 'Still Loading...',
+                ifLoading: () =>
+                  this.translateService.instant('general.still_loading'),
               }),
             }),
         },
@@ -101,7 +104,7 @@ export class ConnectorInfoPropertyGridGroupBuilder {
         {
           icon: 'link',
           label: 'UI Version',
-          text: 'Show Details',
+          text: this.translateService.instant('general.details'),
           onclick: () =>
             this.onShowConnectorVersionClick('Version Information', {
               'UI Commit Information': error.failureMessage,
@@ -112,7 +115,7 @@ export class ConnectorInfoPropertyGridGroupBuilder {
         {
           icon: 'link',
           label: 'UI Version',
-          text: 'Loading...',
+          text: this.translateService.instant('general.loading'),
         },
       ],
     });
@@ -125,12 +128,18 @@ export class ConnectorInfoPropertyGridGroupBuilder {
     const fields: PropertyGridField[] = dashboardData.match<
       PropertyGridField[]
     >({
-      ifLoading: () => [{icon: 'info', label: 'Loading', text: 'Loading...'}],
+      ifLoading: () => [
+        {
+          icon: 'info',
+          label: this.translateService.instant('general.loading1'),
+          text: this.translateService.instant('general.loading'),
+        },
+      ],
       ifError: () => [
         {
           icon: 'error',
-          label: 'Error',
-          text: 'Failed loading connector information',
+          label: this.translateService.instant('general.error'),
+          text: this.translateService.instant('services.failed_loading'),
         },
       ],
       ifOk: (data) => this.buildConnectorMetadata(data),
@@ -146,7 +155,7 @@ export class ConnectorInfoPropertyGridGroupBuilder {
     const fields = [
       {
         icon: 'link',
-        label: 'Connector Endpoint',
+        label: this.translateService.instant('general.endpoint'),
         ...this.propertyGridUtils.guessValue(data.connectorEndpoint),
       },
       {
@@ -156,32 +165,32 @@ export class ConnectorInfoPropertyGridGroupBuilder {
       },
       {
         icon: 'title',
-        label: 'Title',
+        label: this.translateService.instant('general.title'),
         ...this.propertyGridUtils.guessValue(data.connectorTitle),
       },
       {
         icon: 'apartment',
-        label: 'Curator Organization Name',
+        label: this.translateService.instant('services.curator_org'),
         ...this.propertyGridUtils.guessValue(data.connectorCuratorName),
       },
       {
         icon: 'apartment',
-        label: 'Curator URL',
+        label: this.translateService.instant('services.curator_url'),
         ...this.propertyGridUtils.guessValue(data.connectorCuratorUrl),
       },
       {
         icon: 'title',
-        label: 'Description',
+        label: this.translateService.instant('general.description'),
         ...this.propertyGridUtils.guessValue(data.connectorDescription),
       },
       {
         icon: 'contact_support',
-        label: 'Maintainer Organization Name',
+        label: this.translateService.instant('services.maintainer'),
         ...this.propertyGridUtils.guessValue(data.connectorMaintainerName),
       },
       {
         icon: 'contact_support',
-        label: 'Maintainer URL',
+        label: this.translateService.instant('services.main_url'),
         ...this.propertyGridUtils.guessValue(data.connectorMaintainerUrl),
       },
     ];

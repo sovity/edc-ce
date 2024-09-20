@@ -5,7 +5,9 @@
       class="search-form-field"
       appearance="outline"
       color="accent">
-      <mat-label>Search policies</mat-label>
+      <mat-label>{{
+        'policy_definition_page.search_pol' | translate
+      }}</mat-label>
       <input matInput [(ngModel)]="searchText" (input)="onSearch()" />
       <mat-icon matPrefix>search</mat-icon>
       <button
@@ -25,7 +27,7 @@
       style="margin-top: 8px; height: 44px"
       routerLink="/policies/create">
       <mat-icon>add_circle_outline</mat-icon>
-      Create policy
+      {{ 'policy_definition_page.create_policy' | translate }}
     </button>
 
     <!-- Spacer -->
@@ -55,7 +57,9 @@
           !policyList.data.policyCards.length)
       "
       class="min-h-[35rem]"
-      [emptyMessage]="'No policy found with given filter.'"></empty-state>
+      [emptyMessage]="
+        'policy_definition_page.no_pol' | translate
+      "></empty-state>
   </div>
   <policy-cards
     *ngIf="policyList.isReady && !!policyList.data.numTotalPolicies"

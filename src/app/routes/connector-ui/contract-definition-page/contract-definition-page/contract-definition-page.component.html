@@ -5,7 +5,9 @@
       class="search-form-field"
       appearance="outline"
       color="accent">
-      <mat-label>Search data offers</mat-label>
+      <mat-label>
+        {{ 'contract_agreement_page.search_def' | translate }}</mat-label
+      >
       <input matInput [formControl]="searchText" />
       <mat-icon matPrefix>search</mat-icon>
       <button
@@ -25,7 +27,7 @@
       style="margin-top: 8px; height: 44px"
       (click)="onCreate()">
       <mat-icon>add_circle_outline</mat-icon>
-      Publish Data Offer
+      {{ 'contract_agreement_page.create_def' | translate }}
     </button>
 
     <!-- Spacer -->
@@ -58,7 +60,7 @@
       "
       class="min-h-[35rem]"
       [emptyMessage]="
-        'No contract definition found with given filter.'
+        'contract_agreement_page.con_def' | translate
       "></empty-state>
   </div>
   <contract-definition-cards

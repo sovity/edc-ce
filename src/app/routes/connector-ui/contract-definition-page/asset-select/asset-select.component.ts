@@ -1,9 +1,9 @@
 import {Component, Input, OnDestroy} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {Subject} from 'rxjs';
-import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
-import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
 import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
+import {AssetDetailDialogDataService} from '../../../../shared/business/asset-detail-dialog/asset-detail-dialog-data.service';
+import {AssetDetailDialogService} from '../../../../shared/business/asset-detail-dialog/asset-detail-dialog.service';
 
 @Component({
   selector: 'asset-select',

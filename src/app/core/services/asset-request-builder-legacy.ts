@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {UiAssetCreateRequest, UiAssetEditRequest} from '@sovity.de/edc-client';
-import {AssetEditorDialogFormValue} from '../../routes/connector-ui/asset-page/asset-edit-dialog/form/model/asset-editor-dialog-form-model';
+import {UiAssetCreateRequest} from '@sovity.de/edc-client';
+import {AssetCreateDialogFormValue} from '../../routes/connector-ui/asset-list-page/asset-create-dialog/form/model/asset-create-dialog-form-model';
 import {toGmtZeroHourDate} from '../utils/date-utils';
 import {AssetDataSourceMapperLegacy} from './asset-data-source-mapper-legacy';
 import {AssetRequestCommonMetadata} from './asset-request-common-metadata';
@@ -10,7 +10,7 @@ export class AssetRequestBuilderLegacy {
   constructor(private assetDataSourceMapper: AssetDataSourceMapperLegacy) {}
 
   buildAssetCreateRequestLegacy(
-    formValue: AssetEditorDialogFormValue,
+    formValue: AssetCreateDialogFormValue,
   ): UiAssetCreateRequest {
     const id = formValue.metadata?.id!;
     const metadata = this.buildAssetRequestCommonMetadataLegacy(formValue);
@@ -24,22 +24,8 @@ export class AssetRequestBuilderLegacy {
     };
   }
 
-  buildAssetEditRequestLegacy(
-    formValue: AssetEditorDialogFormValue,
-  ): UiAssetEditRequest {
-    const metadata = this.buildAssetRequestCommonMetadataLegacy(formValue);
-    const dataSourceOrNull =
-      this.assetDataSourceMapper.buildDataSourceOrNullLegacy(
-        formValue.datasource!,
-      );
-    return {
-      ...metadata,
-      dataSourceOverrideOrNull: dataSourceOrNull ?? undefined,
-    };
-  }
-
   buildAssetRequestCommonMetadataLegacy(
-    formValue: AssetEditorDialogFormValue,
+    formValue: AssetCreateDialogFormValue,
   ): AssetRequestCommonMetadata {
     const title = formValue.metadata?.title!;
     const version = formValue.metadata?.version;

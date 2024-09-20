@@ -1,5 +1,7 @@
 <div class="p-10 flex flex-col">
-  <div class="form-section-title">Policy Metadata</div>
+  <div class="form-section-title">
+    {{ 'policy_definition_page.metadata' | translate }}
+  </div>
   <!--  ID -->
   <mat-form-field
     *ngIf="form.group.controls.id; let ctrl"
@@ -15,14 +17,16 @@
     }}</mat-error>
   </mat-form-field>
 
-  <div class="form-section-title">Policy Expression</div>
+  <div class="form-section-title">
+    {{ 'policy_definition_page.expression' | translate }}
+  </div>
 
   <policy-form-expression
     [treeNode]="expressionFormHandler.tree.root"></policy-form-expression>
 
   <div class="flex justify-end gap-4 my-4">
     <button mat-stroked-button routerLink="/policies" [disabled]="loading">
-      Cancel
+      {{ 'general.cancel' | translate }}
     </button>
 
     <button
@@ -30,7 +34,7 @@
       mat-raised-button
       [disabled]="loading || !form.group.valid"
       (click)="onSave()">
-      Create
+      {{ 'general.create' | translate }}
     </button>
   </div>
 </div>

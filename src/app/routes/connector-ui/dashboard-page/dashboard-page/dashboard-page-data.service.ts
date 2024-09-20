@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, combineLatest, merge, of, sampleTime, scan} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
 import {DashboardTransferAmounts, UiDataOffer} from '@sovity.de/edc-client';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {LastCommitInfoService} from '../../../../core/services/api/last-commit-info.service';
@@ -17,6 +18,7 @@ export class DashboardPageDataService {
     private catalogApiUrlService: CatalogApiUrlService,
     private lastCommitInfoService: LastCommitInfoService,
     private connectorInfoPropertyGridGroupBuilder: ConnectorInfoPropertyGridGroupBuilder,
+    private translateService: TranslateService,
   ) {}
 
   /**
@@ -43,7 +45,9 @@ export class DashboardPageDataService {
     return this.getAllDataOffers().pipe(
       map((dataOffers) => dataOffers.length),
       Fetched.wrap({
-        failureMessage: 'Failed fetching data offers.',
+        failureMessage: this.translateService.instant(
+          'dashboard_page.failed_offers',
+        ),
       }),
       map((numOffers) => ({numCatalogEntries: numOffers})),
     );
@@ -77,22 +81,37 @@ export class DashboardPageDataService {
     direction: 'CONSUMING' | 'PROVIDING',
   ): DonutChartData {
     const amounts: {label: string; amount: number; color: string}[] = [
-      {label: 'Completed', amount: transfers.numOk, color: '#b2e061'},
-      {label: 'In Progress', amount: transfers.numRunning, color: '#7eb0d5'},
-      {label: 'Error', amount: transfers.numError, color: '#fd7f6f'},
+      {
+        label: this.translateService.instant('dashboard_page.completed'),
+        amount: transfers.numOk,
+        color: '#b2e061',
+      },
+      {
+        label: this.translateService.instant('dashboard_page.progress'),
+        amount: transfers.numRunning,
+        color: '#7eb0d5',
+      },
+      {
+        label: this.translateService.instant('dashboard_page.error'),
+        amount: transfers.numError,
+        color: '#fd7f6f',
+      },
     ].filter((it) => it.amount);
 
     const total = transfers.numTotal;
-
+    const emptyMessage =
+      direction === 'CONSUMING'
+        ? this.translateService.instant('dashboard_page.no_transfer')
+        : this.translateService.instant('dashboard_page.no_transfer2');
     return {
-      totalLabel: 'Total',
+      totalLabel: this.translateService.instant('general.total'),
       totalValue: total,
       isEmpty: !total,
-      emptyMessage: `No ${direction} transfer processes.`,
+      emptyMessage,
       labels: amounts.map((it) => it.label),
       datasets: [
         {
-          label: 'Number of Transfer Processes',
+          label: this.translateService.instant('dashboard_page.num_transfer'),
           data: amounts.map((it) => it.amount),
           backgroundColor: amounts.map((it) => it.color),
         },
@@ -105,22 +124,30 @@ export class DashboardPageDataService {
     return combineLatest([
       this.lastCommitInfoService.getLastCommitInfoData().pipe(
         Fetched.wrap({
-          failureMessage: 'Failed fetching Env and Jar Last Commit Data',
+          failureMessage: this.translateService.instant(
+            'dashboard_page.failed_env',
+          ),
         }),
       ),
       this.lastCommitInfoService.getUiBuildDateDetails().pipe(
         Fetched.wrap({
-          failureMessage: 'Failed fetching UI Last Build Date Data',
+          failureMessage: this.translateService.instant(
+            'dashboard_page.failed_ui_build',
+          ),
         }),
       ),
       this.lastCommitInfoService.getUiCommitDetails().pipe(
         Fetched.wrap({
-          failureMessage: 'Failed fetching UI Last Commit Data',
+          failureMessage: this.translateService.instant(
+            'dashboard_page.failed_ui',
+          ),
         }),
       ),
       this.edcApiService.getDashboardPage().pipe(
         Fetched.wrap({
-          failureMessage: 'Failed fetching Dashboard Page Data',
+          failureMessage: this.translateService.instant(
+            'dashboard_page.failed_dashboard',
+          ),
         }),
       ),
     ]).pipe(

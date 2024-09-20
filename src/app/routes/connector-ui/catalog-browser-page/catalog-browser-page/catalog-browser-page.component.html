@@ -2,7 +2,7 @@
   <div class="flex flex-row">
     <!-- Search Bar -->
     <mat-form-field class="search-form-field" color="accent">
-      <mat-label>Search catalog</mat-label>
+      <mat-label>{{ 'catalog_browser_page.search' | translate }}</mat-label>
       <mat-icon matPrefix>search</mat-icon>
       <input matInput [formControl]="searchText" />
       <button
@@ -25,7 +25,9 @@
           ? data.requestTotals.numFailed
           : undefined
       ">
-      <mat-label>Connector Endpoints</mat-label>
+      <mat-label>{{
+        'catalog_browser_page.con_endpoints' | translate
+      }}</mat-label>
       <mat-icon matPrefix>link</mat-icon>
       <input
         matInput
@@ -41,7 +43,7 @@
         *ngIf="!data.requestTotals.isDone"
         matSuffix
         mat-icon-button
-        matTooltip="Click for details"
+        [matTooltip]="'tooltip.details' | translate"
         (click)="onShowFetchDetails()">
         <mat-progress-spinner
           matSuffix
@@ -56,7 +58,7 @@
         matSuffix
         color="warn"
         mat-icon-button
-        matTooltip="Click for failed catalog details"
+        [matTooltip]="'tooltip.failed_details' | translate"
         (click)="onShowFetchDetails()">
         <mat-icon>warning</mat-icon>
       </button>
@@ -65,7 +67,7 @@
         matSuffix
         color="primary"
         mat-icon-button
-        matTooltip="Click for details"
+        [matTooltip]="'tooltip.details' | translate"
         (click)="onShowFetchDetails()">
         <mat-icon>info</mat-icon>
       </button>
@@ -87,7 +89,9 @@
     <empty-state
       *ngIf="data.requestTotals.isNothingReady && !data.requests.length"
       class="min-h-[35rem]"
-      emptyMessage="Please enter other connector endpoints to fetch catalogs."></empty-state>
+      [emptyMessage]="
+        'catalog_browser_page.enter_endpoints' | translate
+      "></empty-state>
     <loading-state
       *ngIf="
         data.requestTotals.isNothingReady &&
@@ -102,7 +106,9 @@
     <empty-state
       *ngIf="data.requestTotals.isSomeReady && !data.filteredDataOffers.length"
       class="min-h-[35rem]"
-      emptyMessage="No contract offers found with this filter"></empty-state>
+      [emptyMessage]="
+        'catalog_browser_page.no_contract_offers' | translate
+      "></empty-state>
   </div>
   <div
     *ngIf="data.requestTotals.isSomeReady && !!data.numTotalContractOffers"

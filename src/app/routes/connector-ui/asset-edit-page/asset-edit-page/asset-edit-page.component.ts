@@ -1,40 +1,24 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {EMPTY, Observable, catchError, finalize, tap} from 'rxjs';
-import {
-  DataOfferCreationRequestPolicyEnum,
-  IdResponseDto,
-  UiAssetEditRequest,
-} from '@sovity.de/edc-client';
-import {AssetAdvancedFormBuilder} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/asset-advanced-form-builder';
-import {AssetDatasourceFormBuilder} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/asset-datasource-form-builder';
-import {AssetGeneralFormBuilder} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/asset-general-form-builder';
-import {EditAssetForm} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/edit-asset-form';
-import {EditAssetFormInitializer} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/edit-asset-form-initializer';
-import {EditAssetFormValue} from 'src/app/component-library/edit-asset-form/edit-asset-form/form/model/edit-asset-form-model';
-import {ExpressionFormControls} from 'src/app/component-library/policy-editor/editor/expression-form-controls';
-import {ExpressionFormHandler} from 'src/app/component-library/policy-editor/editor/expression-form-handler';
+import {IdResponseDto, UiAssetEditRequest} from '@sovity.de/edc-client';
 import {EdcApiService} from 'src/app/core/services/api/edc-api.service';
 import {AssetRequestBuilder} from 'src/app/core/services/asset-request-builder';
 import {AssetService} from 'src/app/core/services/asset.service';
 import {Fetched} from 'src/app/core/services/models/fetched';
 import {UiAssetMapped} from 'src/app/core/services/models/ui-asset-mapped';
 import {NotificationService} from 'src/app/core/services/notification.service';
-import {PolicyDefinitionCreatePageForm} from '../../policy-definition-create-page/policy-definition-create-page/policy-definition-create-page-form';
+import {editAssetFormRequiredViewProviders} from '../../../../shared/business/edit-asset-form/edit-asset-form-required-providers';
+import {EditAssetForm} from '../../../../shared/business/edit-asset-form/form/edit-asset-form';
+import {EditAssetFormInitializer} from '../../../../shared/business/edit-asset-form/form/edit-asset-form-initializer';
+import {EditAssetFormValue} from '../../../../shared/business/edit-asset-form/form/model/edit-asset-form-model';
+import {ExpressionFormHandler} from '../../../../shared/business/policy-editor/editor/expression-form-handler';
 
 @Component({
   selector: 'asset-edit-page',
   templateUrl: './asset-edit-page.component.html',
   providers: [EditAssetFormInitializer, AssetRequestBuilder],
-  viewProviders: [
-    EditAssetForm,
-    AssetGeneralFormBuilder,
-    AssetDatasourceFormBuilder,
-    AssetAdvancedFormBuilder,
-    ExpressionFormHandler,
-    ExpressionFormControls,
-    PolicyDefinitionCreatePageForm,
-  ],
+  viewProviders: editAssetFormRequiredViewProviders,
 })
 export class AssetEditPageComponent implements OnInit {
   asset: Fetched<UiAssetMapped | undefined> = new Fetched(

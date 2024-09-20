@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {AssetEditPageComponent} from './asset-edit-page/asset-edit-page/asset-edit-page.component';
-import {AssetPageComponent} from './asset-page/asset-page/asset-page.component';
+import {AssetListPageComponent} from './asset-list-page/asset-list-page/asset-list-page.component';
 import {CatalogBrowserPageComponent} from './catalog-browser-page/catalog-browser-page/catalog-browser-page.component';
 import {ConnectorUiComponent} from './connector-ui.component';
 import {ContractAgreementPageComponent} from './contract-agreement-page/contract-agreement-page/contract-agreement-page.component';
@@ -21,57 +21,57 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardPageComponent,
-    data: {title: 'Dashboard'},
+    data: {title: 'dashboard_page.title'},
   },
   {
     path: 'create-asset',
     component: AssetEditPageComponent,
-    data: {title: 'Create Data Offer'},
-  },
-  {
-    path: 'edit-asset/:id',
-    component: AssetEditPageComponent,
-    data: {title: 'Edit Asset'},
+    data: {title: 'create_data_offer_page.title'},
   },
   {
     path: 'catalog-browser',
     component: CatalogBrowserPageComponent,
-    data: {title: 'Catalog Browser'},
+    data: {title: 'catalog_browser_page.title'},
   },
   {
     path: 'contracts',
     component: ContractAgreementPageComponent,
-    data: {title: 'Contracts'},
+    data: {title: 'contract_agreement_page.title'},
   },
   {
     path: 'transfer-history',
     component: TransferHistoryPageComponent,
-    data: {title: 'Transfer History'},
+    data: {title: 'transfer_history_page.title'},
   },
   {
     path: 'my-assets', // must not be "assets" to prevent conflict with assets directory
-    component: AssetPageComponent,
-    data: {title: 'Assets'},
+    component: AssetListPageComponent,
+    data: {title: 'asset_list_page.title'},
+  },
+  {
+    path: 'my-assets/:id/edit',
+    component: AssetEditPageComponent,
+    data: {title: 'edit_asset_page.title'},
   },
   {
     path: 'policies',
     component: PolicyDefinitionPageComponent,
-    data: {title: 'Policies'},
+    data: {title: 'policy_definition_page.title'},
   },
   {
     path: 'policies/create',
     component: PolicyDefinitionCreatePageComponent,
-    data: {title: 'Create Policy'},
+    data: {title: 'create_policy_page.title'},
   },
   {
     path: 'data-offers',
     component: ContractDefinitionPageComponent,
-    data: {title: 'Data Offers'},
+    data: {title: 'contract_definition_page.title'},
   },
   {
     path: 'logout',
     component: LogoutPageComponent,
-    data: {title: 'Logout'},
+    data: {title: 'logout_page.title'},
   },
 ];
 

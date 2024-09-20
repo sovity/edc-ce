@@ -1,4 +1,4 @@
-import {PolicyExpressionMapped} from '../../../../component-library/policy-editor/model/policy-expression-mapped';
+import {PolicyExpressionMapped} from '../../../../shared/business/policy-editor/model/policy-expression-mapped';
 
 export interface PolicyCard {
   id: string;

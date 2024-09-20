@@ -1,13 +1,17 @@
-<h1 mat-dialog-title>Initiate Transfer</h1>
+<h1 mat-dialog-title>
+  {{ 'contract_agreement_page.ini_transfer' | translate }}
+</h1>
 <mat-dialog-content class="w-[800px]">
   <form [formGroup]="form.all">
     <div class="flex flex-col mt-[10px]">
-      <div class="form-section-title">Datasink</div>
+      <div class="form-section-title">
+        {{ 'contract_agreement_page.datasink' | translate }}
+      </div>
 
       <!-- Data Address Type -->
       <data-address-type-select
-        label="Type"
         mode="Datasink"
+        [label]="'general.type' | translate"
         [control]="
           form.all.controls.dataAddressType
         "></data-address-type-select>
@@ -20,7 +24,9 @@
           let ctrl
         "
         color="accent">
-        <mat-label>Custom Datasink Config (JSON)</mat-label>
+        <mat-label>{{
+          'contract_agreement_page.cus_datasink' | translate
+        }}</mat-label>
         <textarea
           matInput
           placeholder='{"https://w3id.org/edc/v0.0.1/ns/type": "HttpData", ...}'
@@ -38,14 +44,15 @@
           let ctrl
         "
         color="accent">
-        <mat-label>Custom Transfer Process Request (JSON)</mat-label>
+        <mat-label>{{
+          'contract_agreement_page.cus_tranfer' | translate
+        }}</mat-label>
         <textarea matInput [formControl]="ctrl" [placeholder]="'{}'"></textarea>
         <mat-error *ngIf="ctrl.invalid && ctrl.errors?.jsonInvalid">
           {{ validationMessages.invalidJsonMessage }}
         </mat-error>
         <mat-hint>
-          JSON-LD values for "edc:connectorId", "edc:contractId",
-          "edc:connectorId" and "edc:connectorAddress" will be overridden.
+          {{ 'contract_agreement_page.json_hint' | translate }}
         </mat-hint>
       </mat-form-field>
 
@@ -57,7 +64,7 @@
           <mat-form-field
             *ngIf="form.all.controls.httpMethod; let ctrl"
             class="w-1/3">
-            <mat-label>Method</mat-label>
+            <mat-label>{{ 'general.method' | translate }}</mat-label>
             <mat-select [formControl]="ctrl">
               <mat-option
                 *ngFor="let method of dataSinkMethods"
@@ -78,7 +85,7 @@
           </mat-form-field>
         </div>
 
-        <div class="form-section-title">Authentication</div>
+        <div class="form-section-title">{{ 'general.auth' | translate }}</div>
 
         <!-- Add Authentication Button -->
         <div
@@ -90,7 +97,7 @@
             (click)="
               form.all.controls.httpAuthHeaderType.setValue('Vault-Secret')
             ">
-            Add Authentication
+            {{ 'general.add_auth' | translate }}
           </button>
         </div>
 
@@ -101,9 +108,11 @@
           <mat-label>Type</mat-label>
           <mat-select [formControl]="form.all.controls.httpAuthHeaderType">
             <mat-option value="Vault-Secret">
-              Header with Vault Secret
+              {{ 'general.header_sec' | translate }}
             </mat-option>
-            <mat-option value="Value">Header with Value</mat-option>
+            <mat-option value="Value">{{
+              'general.header_val' | translate
+            }}</mat-option>
           </mat-select>
         </mat-form-field>
         <div
@@ -111,7 +120,7 @@
           class="flex flex-row space-x-[10px]">
           <!-- Auth Header Name -->
           <mat-form-field class="w-1/3">
-            <mat-label>Auth Header Name</mat-label>
+            <mat-label>{{ 'general.auth_header' | translate }}</mat-label>
             <input
               matInput
               placeholder="Authorization"
@@ -122,7 +131,7 @@
           <mat-form-field
             *ngIf="form.all.controls.httpAuthHeaderType.value === 'Value'"
             class="grow">
-            <mat-label>Auth Header Value</mat-label>
+            <mat-label>{{ 'general.auth_value' | translate }}</mat-label>
             <input
               matInput
               placeholder="Bearer ..."
@@ -135,7 +144,7 @@
               form.all.controls.httpAuthHeaderType.value === 'Vault-Secret'
             "
             class="grow">
-            <mat-label>Vault Secret Name</mat-label>
+            <mat-label>{{ 'general.vault_secret' | translate }}</mat-label>
             <input
               matInput
               placeholder="MySecret123"
@@ -151,11 +160,13 @@
             mat-button
             color="warn"
             (click)="form.all.controls.httpAuthHeaderType.setValue('None')">
-            Remove Authentication
+            {{ 'general.rem_auth' | translate }}
           </button>
         </div>
 
-        <div class="form-section-title">Additional Headers</div>
+        <div class="form-section-title">
+          {{ 'general.add_header' | translate }}
+        </div>
 
         <div
           *ngFor="
@@ -165,7 +176,7 @@
           class="flex flex-row space-x-[10px]">
           <!-- Header Name -->
           <mat-form-field class="w-1/3">
-            <mat-label>Header Name</mat-label>
+            <mat-label>{{ 'general.header_name' | translate }}</mat-label>
             <input
               matInput
               placeholder="Header"
@@ -174,7 +185,7 @@
 
           <!-- Header Value -->
           <mat-form-field class="grow">
-            <mat-label>Header Value</mat-label>
+            <mat-label>{{ 'general.header_value' | translate }}</mat-label>
             <input
               matInput
               placeholder="..."
@@ -187,7 +198,7 @@
             color="warn"
             style="height: 54px; margin-top: 4px; margin-left: 8px"
             (click)="form.onHttpHeadersRemoveClick(i)">
-            Remove
+            {{ 'general.remove' | translate }}
           </button>
         </div>
 
@@ -197,29 +208,25 @@
             mat-button
             color="accent"
             (click)="form.onHttpHeadersAddClick()">
-            Add Additional Header
+            {{ 'general.add_add_header' | translate }}
           </button>
         </div>
       </ng-container>
 
       <ng-container
         *ngIf="form.dataAddressType !== 'Custom-Transfer-Process-Request'">
-        <div class="form-section-title">HTTP Datasource Parameterization</div>
+        <div class="form-section-title">
+          {{ 'contract_agreement_page.http_para' | translate }}
+        </div>
 
         <div class="text-sm mb-[10px] px-[3px]">
-          When the data offer on the provider side is of the type
-          <b>HttpData</b> and certain data source fields are set, certain parts
-          of the request to the data source can be customized from the consumer
-          side and will be passed to the other connector when initiating the
-          transfer. This allows an asset to contain more than just one kind of
-          data, allowing additional filtering or even sharing of entire APIs
-          with multiple data sets via a single asset and a single contract.
+          {{ 'contract_agreement_page.http_message' | translate }}
         </div>
 
         <div
           *ngIf="proxyPath || proxyMethod"
           class="text-sm mb-[10px] px-[3px]">
-          The resulting URL will look like
+          {{ 'contract_agreement_page.res_url' | translate }}
           <i>{{
             '{baseUrl}{customSubPath}?{baseQueryParams}&{customQueryParams}'
           }}</i>
@@ -233,8 +240,14 @@
             <mat-form-field
               *ngIf="form.all.controls.httpProxiedMethod; let ctrl"
               [ngClass]="{'w-1/3': proxyPath}">
-              <mat-label>Custom Method</mat-label>
-              <mat-select placeholder="Custom Method" [formControl]="ctrl">
+              <mat-label>{{
+                'contract_agreement_page.cus_meth' | translate
+              }}</mat-label>
+              <mat-select
+                placeholder="{{
+                  'contract_agreement_page.cus_meth' | translate
+                }}"
+                [formControl]="ctrl">
                 <mat-option></mat-option>
                 <mat-option
                   *ngFor="let method of dataSourceMethods"
@@ -242,7 +255,11 @@
                   >{{ method }}</mat-option
                 >
               </mat-select>
-              <mat-hint> Requires "proxyMethod" to be "true". </mat-hint>
+              <mat-hint>
+                {{
+                  'contract_agreement_page.proxy_method' | translate
+                }}</mat-hint
+              >
             </mat-form-field>
           </ng-container>
 
@@ -251,12 +268,16 @@
             <mat-form-field
               *ngIf="form.all.controls.httpProxiedPath; let ctrl"
               class="grow">
-              <mat-label>Custom Subpath</mat-label>
+              <mat-label>{{
+                'contract_agreement_page.cus_sub' | translate
+              }}</mat-label>
               <input
                 matInput
                 [formControl]="ctrl"
                 [placeholder]="'sub-path/endpoint'" />
-              <mat-hint> Requires "proxyPath" to be "true". </mat-hint>
+              <mat-hint>{{
+                'contract_agreement_page.proxy_path' | translate
+              }}</mat-hint>
             </mat-form-field>
           </ng-container>
         </div>
@@ -270,19 +291,23 @@
             class="flex flex-row space-x-[10px]">
             <!-- Query Param Name -->
             <mat-form-field class="w-1/3">
-              <mat-label>Custom Query Param Name</mat-label>
+              <mat-label>{{
+                'contract_agreement_page.cus_query' | translate
+              }}</mat-label>
               <input
                 matInput
                 placeholder="key"
                 required
                 autocomplete="new-query-param-name"
                 [formControl]="header.controls.paramName" />
-              <mat-hint> Requires "proxyQueryParams" to be "true". </mat-hint>
+              <mat-hint>
+                {{ 'contract_agreement_page.proxy_query' | translate }}
+              </mat-hint>
             </mat-form-field>
 
             <!-- Query Param Value -->
             <mat-form-field class="grow">
-              <mat-label>Value</mat-label>
+              <mat-label>{{ 'general.value' | translate }}</mat-label>
               <input
                 matInput
                 placeholder="..."
@@ -296,7 +321,7 @@
               color="warn"
               style="height: 54px; margin-top: 4px; margin-left: 8px"
               (click)="form.onHttpQueryParamsRemoveClick(i)">
-              Remove
+              {{ 'general.remove' | translate }}
             </button>
           </div>
 
@@ -306,7 +331,7 @@
               mat-button
               color="accent"
               (click)="form.onHttpQueryParamsAddClick()">
-              Add Custom Query Param
+              {{ 'contract_agreement_page.add_cus_query' | translate }}
             </button>
           </div>
         </ng-container>
@@ -314,24 +339,32 @@
         <ng-container *ngIf="proxyBody">
           <!-- Request Body Content Type -->
           <mat-form-field class="grow">
-            <mat-label>Custom Request Body Content Type</mat-label>
+            <mat-label>{{
+              'contract_agreement_page.req_cont' | translate
+            }}</mat-label>
             <input
               matInput
               autocomplete="new-content-type"
               [formControl]="form.all.controls.httpProxiedBodyContentType"
               [placeholder]="'application/json'" />
-            <mat-hint> Requires "proxyBody" to be "true". </mat-hint>
+            <mat-hint>
+              {{ 'contract_agreement_page.proxy_body' | translate }}
+            </mat-hint>
           </mat-form-field>
 
           <!-- Request Body -->
           <mat-form-field *ngIf="form.all.controls.httpProxiedBody; let ctrl">
-            <mat-label>Custom Request Body</mat-label>
+            <mat-label>{{
+              'contract_agreement_page.req_body' | translate
+            }}</mat-label>
             <textarea
               matInput
               placeholder='{"some": "request-body"}'
               autocomplete="new-request-body"
               [formControl]="ctrl"></textarea>
-            <mat-hint> Requires "proxyBody" to be "true". </mat-hint>
+            <mat-hint>
+              {{ 'contract_agreement_page.proxy_body' | translate }}</mat-hint
+            >
           </mat-form-field>
         </ng-container>
 
@@ -347,8 +380,12 @@
             mat-button
             [color]="ctrl.value ? 'warn' : 'accent'"
             (click)="ctrl.setValue(!ctrl.value)">
-            {{ ctrl.value ? 'Hide' : 'Show' }} Http Datasource Parameterization
-            Fields
+            {{
+              ctrl.value
+                ? ('general.hide' | translate)
+                : ('general.show' | translate)
+            }}
+            {{ 'contract_agreement_page.http_fields' | translate }}
           </button>
         </div>
       </ng-container>
@@ -362,7 +399,7 @@
     color="default"
     [mat-dialog-close]="null"
     [disabled]="loading">
-    Cancel
+    {{ 'general.cancel' | translate }}
   </button>
 
   <button
@@ -370,6 +407,6 @@
     color="primary"
     [disabled]="!form.all.valid || loading"
     (click)="onSave()">
-    Initiate Transfer
+    {{ 'contract_agreement_page.ini_transfer' | translate }}
   </button>
 </mat-dialog-actions>

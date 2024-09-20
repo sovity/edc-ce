@@ -1,17 +1,9 @@
 import {CommonModule} from '@angular/common';
+import {HttpClient} from '@angular/common/http';
 import {NgModule} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import {MatNativeDateModule} from '@angular/material/core';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatIconModule} from '@angular/material/icon';
-import {MatListModule} from '@angular/material/list';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {PipesAndDirectivesModule} from '../../component-library/pipes-and-directives/pipes-and-directives.module';
-import {UiElementsModule} from '../../component-library/ui-elements/ui-elements.module';
+import {SharedModule} from '../../shared/shared.module';
 import {AssetEditPageModule} from './asset-edit-page/asset-edit-page.module';
-import {AssetPageModule} from './asset-page/asset-page.module';
+import {AssetListPageModule} from './asset-list-page/asset-list-page.module';
 import {CatalogBrowserPageModule} from './catalog-browser-page/catalog-browser-page.module';
 import {ConnectorUiRoutingModule} from './connector-ui-routing.module';
 import {ConnectorUiComponent} from './connector-ui.component';
@@ -21,6 +13,7 @@ import {DashboardPageModule} from './dashboard-page/dashboard-page.module';
 import {LocationHistoryUtils} from './logout-page/location-history-utils';
 import {LogoutPageModule} from './logout-page/logout-page.module';
 import {PreviousRouteListener} from './logout-page/previous-route-listener';
+import {PageNotFoundPageModule} from './page-not-found-page/page-not-found-page.module';
 import {PolicyDefinitionCreatePageModule} from './policy-definition-create-page/policy-definition-create-page.module';
 import {PolicyDefinitionPageModule} from './policy-definition-page/policy-definition-page.module';
 import {TransferHistoryPageModule} from './transfer-history-page/transfer-history-page.module';
@@ -30,22 +23,11 @@ import {TransferHistoryPageModule} from './transfer-history-page/transfer-histor
     // Angular
     CommonModule,
 
-    // Angular Material
-    MatButtonModule,
-    MatDatepickerModule,
-    MatIconModule,
-    MatListModule,
-    MatNativeDateModule,
-    MatSidenavModule,
-    MatSnackBarModule,
-    MatToolbarModule,
-
     // Features
-    PipesAndDirectivesModule,
-    UiElementsModule,
+    SharedModule,
 
     // Pages
-    AssetPageModule,
+    AssetListPageModule,
     AssetEditPageModule,
     CatalogBrowserPageModule,
     ContractAgreementPageModule,
@@ -55,12 +37,13 @@ import {TransferHistoryPageModule} from './transfer-history-page/transfer-histor
     PolicyDefinitionPageModule,
     PolicyDefinitionCreatePageModule,
     TransferHistoryPageModule,
+    PageNotFoundPageModule,
 
     // Routing
     ConnectorUiRoutingModule,
   ],
   declarations: [ConnectorUiComponent],
-  providers: [PreviousRouteListener, LocationHistoryUtils],
+  providers: [PreviousRouteListener, LocationHistoryUtils, HttpClient],
 })
 export class ConnectorUiModule {
   constructor(previousRouteListener: PreviousRouteListener) {

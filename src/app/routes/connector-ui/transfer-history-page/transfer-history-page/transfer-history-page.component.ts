@@ -9,20 +9,21 @@ import {
   switchMap,
 } from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
 import {
   TransferHistoryEntry,
   TransferHistoryPage,
   UiAsset,
 } from '@sovity.de/edc-client';
-import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
-import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
-import {JsonDialogService} from '../../../../component-library/json-dialog/json-dialog/json-dialog.service';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {AssetBuilder} from '../../../../core/services/asset-builder';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
 import {NotificationService} from '../../../../core/services/notification.service';
 import {ParticipantIdLocalization} from '../../../../core/services/participant-id-localization';
+import {AssetDetailDialogDataService} from '../../../../shared/business/asset-detail-dialog/asset-detail-dialog-data.service';
+import {AssetDetailDialogService} from '../../../../shared/business/asset-detail-dialog/asset-detail-dialog.service';
+import {JsonDialogService} from '../../../../shared/common/json-dialog/json-dialog.service';
 
 @Component({
   selector: 'transfer-history-page',
@@ -51,13 +52,16 @@ export class TransferHistoryPageComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private jsonDialogService: JsonDialogService,
     public participantIdLocalization: ParticipantIdLocalization,
+    private translateService: TranslateService,
   ) {}
 
   onTransferHistoryDetailsClick(item: TransferHistoryEntry) {
     this.jsonDialogService.showJsonDetailDialog(
       {
         title: item.assetName ?? item.assetId,
-        subtitle: 'Transfer History Details',
+        subtitle: this.translateService.instant(
+          'transfer_history_page.subtitle',
+        ),
         icon: 'assignment',
         objectForJson: item,
       },
@@ -79,8 +83,11 @@ export class TransferHistoryPageComponent implements OnInit, OnDestroy {
         this.assetDetailDialogService.open(data, this.ngOnDestroy$);
       },
       error: (error) => {
-        console.error('Failed to fetch asset details!', error);
-        this.notificationService.showError('Failed to fetch asset details!');
+        const message = this.translateService.instant(
+          'notification.failed_transfer_detail_fetch',
+        );
+        console.error(message, error);
+        this.notificationService.showError(message);
       },
     });
   }

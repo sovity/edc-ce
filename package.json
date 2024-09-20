@@ -27,6 +27,8 @@
     "@angular/platform-browser-dynamic": "^14.3.0",
     "@angular/router": "^14.3.0",
     "@ng-apimock/core": "^3.11.0",
+    "@ngx-translate/core": "^14.0.0",
+    "@ngx-translate/http-loader": "^7.0.0",
     "@ngxs/store": "^3.8.1",
     "@sovity.de/edc-client": "10.4.0",
     "clean-deep": "^3.4.0",

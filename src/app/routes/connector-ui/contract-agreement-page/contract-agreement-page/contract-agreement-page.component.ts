@@ -16,12 +16,12 @@ import {
 } from 'rxjs';
 import {catchError, filter, map, takeUntil} from 'rxjs/operators';
 import {ContractTerminationStatus} from '@sovity.de/edc-client';
-import {AssetDetailDialogDataService} from 'src/app/component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
-import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {Fetched} from '../../../../core/services/models/fetched';
 import {value$} from '../../../../core/utils/form-group-utils';
 import {filterNotNull} from '../../../../core/utils/rxjs-utils';
+import {AssetDetailDialogDataService} from '../../../../shared/business/asset-detail-dialog/asset-detail-dialog-data.service';
+import {AssetDetailDialogService} from '../../../../shared/business/asset-detail-dialog/asset-detail-dialog.service';
 import {ContractAgreementCardMapped} from '../contract-agreement-cards/contract-agreement-card-mapped';
 import {ContractAgreementCardMappedService} from '../contract-agreement-cards/contract-agreement-card-mapped.service';
 import {ContractAgreementPageData} from './contract-agreement-page.data';

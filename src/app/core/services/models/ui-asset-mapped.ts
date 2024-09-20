@@ -1,8 +1,8 @@
 import {UiAsset} from '@sovity.de/edc-client';
-import {DataCategorySelectItem} from 'src/app/component-library/edit-asset-form/data-category-select/data-category-select-item';
-import {DataSubcategorySelectItem} from 'src/app/component-library/edit-asset-form/data-subcategory-select/data-subcategory-select-item';
-import {LanguageSelectItem} from 'src/app/component-library/edit-asset-form/language-select/language-select-item';
-import {TransportModeSelectItem} from 'src/app/component-library/edit-asset-form/transport-mode-select/transport-mode-select-item';
+import {DataCategorySelectItem} from '../../../shared/form-elements/data-category-select/data-category-select-item';
+import {DataSubcategorySelectItem} from '../../../shared/form-elements/data-subcategory-select/data-subcategory-select-item';
+import {LanguageSelectItem} from '../../../shared/form-elements/language-select/language-select-item';
+import {TransportModeSelectItem} from '../../../shared/form-elements/transport-mode-select/transport-mode-select-item';
 
 /**
  * UiAsset with replaced fixed vocabulary items.

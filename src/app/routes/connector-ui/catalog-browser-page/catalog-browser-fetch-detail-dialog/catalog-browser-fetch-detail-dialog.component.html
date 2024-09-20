@@ -1,8 +1,12 @@
 <div class="mat-card-header" mat-dialog-title removeClass="mat-dialog-title">
-  <mat-icon class="mat-card-avatar-icon"> view_timeline </mat-icon>
+  <mat-icon class="mat-card-avatar-icon">view_timeline </mat-icon>
   <div class="mat-card-header-text">
-    <div class="mat-card-title">Fetch Status</div>
-    <div class="mat-card-subtitle">Other Connector Endpoint Catalogs</div>
+    <div class="mat-card-title">
+      {{ 'catalog_browser_page.fetch' | translate }}
+    </div>
+    <div class="mat-card-subtitle">
+      {{ 'catalog_browser_page.endpoint_catalogs' | translate }}
+    </div>
   </div>
 </div>
 
@@ -23,8 +27,10 @@
 </div>
 
 <div class="w-full flex flex-row justify-end" mat-dialog-actions>
-  <button mat-button color="default" [mat-dialog-close]="null">Cancel</button>
+  <button mat-button color="default" [mat-dialog-close]="null">
+    {{ 'general.cancel' | translate }}
+  </button>
   <button mat-flat-button color="primary" (click)="dialogData.refresh()">
-    Refresh
+    {{ 'general.refresh' | translate }}
   </button>
 </div>

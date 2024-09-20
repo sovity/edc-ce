@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DataOfferFormValidators} from 'src/app/core/validators/data-offer-form-validators';
-import {ExpressionFormControls} from '../../../../component-library/policy-editor/editor/expression-form-controls';
 import {noWhitespacesOrColonsValidator} from '../../../../core/validators/no-whitespaces-or-colons-validator';
+import {ExpressionFormControls} from '../../../../shared/business/policy-editor/editor/expression-form-controls';
 import {
   PolicyDefinitionCreatePageFormModel,
   PolicyDefinitionCreatePageFormValue,

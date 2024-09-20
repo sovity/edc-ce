@@ -1,5 +1,5 @@
-import {PropertyGridGroup} from '../../../../component-library/property-grid/property-grid-group/property-grid-group';
 import {Fetched} from '../../../../core/services/models/fetched';
+import {PropertyGridGroup} from '../../../../shared/common/property-grid-group/property-grid-group';
 import {DonutChartData} from '../dashboard-donut-chart/donut-chart-data';
 
 export interface DashboardPageData {

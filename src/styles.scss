@@ -82,8 +82,6 @@ body {
 .link {
   color: var(--link-color);
   text-decoration: none;
-  display: flex;
-  align-items: center;
 
   &:hover,
   &:focus {

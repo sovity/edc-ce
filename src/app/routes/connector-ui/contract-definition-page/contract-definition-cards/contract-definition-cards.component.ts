@@ -9,15 +9,16 @@ import {
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {EMPTY, Subject} from 'rxjs';
 import {catchError, filter, tap} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
 import {PolicyDefinitionDto} from '@sovity.de/edc-client';
-import {AssetDetailDialogDataService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog-data.service';
-import {AssetDetailDialogService} from '../../../../component-library/catalog/asset-detail-dialog/asset-detail-dialog.service';
-import {ConfirmDialogModel} from '../../../../component-library/confirmation-dialog/confirmation-dialog/confirmation-dialog.component';
-import {JsonDialogComponent} from '../../../../component-library/json-dialog/json-dialog/json-dialog.component';
-import {JsonDialogData} from '../../../../component-library/json-dialog/json-dialog/json-dialog.data';
 import {EdcApiService} from '../../../../core/services/api/edc-api.service';
 import {UiAssetMapped} from '../../../../core/services/models/ui-asset-mapped';
 import {NotificationService} from '../../../../core/services/notification.service';
+import {AssetDetailDialogDataService} from '../../../../shared/business/asset-detail-dialog/asset-detail-dialog-data.service';
+import {AssetDetailDialogService} from '../../../../shared/business/asset-detail-dialog/asset-detail-dialog.service';
+import {ConfirmDialogModel} from '../../../../shared/common/confirmation-dialog/confirmation-dialog.component';
+import {JsonDialogComponent} from '../../../../shared/common/json-dialog/json-dialog.component';
+import {JsonDialogData} from '../../../../shared/common/json-dialog/json-dialog.data';
 import {ContractDefinitionCard} from './contract-definition-card';
 
 @Component({
@@ -45,6 +46,7 @@ export class ContractDefinitionCardsComponent implements OnDestroy {
     private assetDetailDialogService: AssetDetailDialogService,
     private matDialog: MatDialog,
     private notificationService: NotificationService,
+    private translateService: TranslateService,
   ) {}
 
   onPolicyClick(policyDefinition: PolicyDefinitionDto) {
@@ -75,7 +77,11 @@ export class ContractDefinitionCardsComponent implements OnDestroy {
       toolbarButton: {
         text: 'Delete',
         icon: 'delete',
-        confirmation: ConfirmDialogModel.forDelete('data offer', card.id),
+        confirmation: ConfirmDialogModel.forDelete(
+          'general.con_def',
+          card.id,
+          this.translateService,
+        ),
         action: () =>
           this.edcApiService.deleteContractDefinition(card.id).pipe(
             tap(() => {

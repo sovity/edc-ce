@@ -1,0 +1,69 @@
+<ng-container *ngIf="!data.contractOffers.length">
+  <div class="flex flex-row flex-wrap property-grid-group-title">
+    Contract Offers
+  </div>
+  <i>No contract offers available.</i>
+</ng-container>
+
+<ng-container *ngFor="let contractOffer of data.contractOffers; let i = index">
+  <div
+    class="flex flex-row items-center space-x-[5px] property-grid-group-title">
+    <span>
+      <span>
+        {{ 'general.contract_offer' | translate }}
+        {{ data.contractOffers.length >= 2 ? i + 1 : '' }}
+      </span>
+    </span>
+
+    <mat-progress-spinner
+      *ngIf="contractNegotiationService.isBusy(contractOffer)"
+      class="mat-icon-[14px]"
+      diameter="14"
+      color="primary"
+      mode="indeterminate">
+    </mat-progress-spinner>
+  </div>
+
+  <property-grid
+    class="mb-3"
+    [columns]="1"
+    [props]="
+      contractOfferIdGroup(contractOffer.contractOfferId)
+    "></property-grid>
+
+  <property-grid
+    [columns]="3"
+    [props]="contractOffer.properties"></property-grid>
+
+  <div
+    *ngIf="data.contractOffers.length > 1"
+    class="flex flex-row justify-end mt-[15px]">
+    <button
+      *ngIf="!data.asset.isOwnConnector"
+      mat-raised-button
+      color="primary"
+      [disabled]="
+        this.contractNegotiationService.negotiationState(contractOffer) !=
+        'ready'
+      "
+      [ngSwitch]="contractNegotiationService.negotiationState(contractOffer)"
+      (click)="negotiateClick.emit(contractOffer)">
+      <ng-container *ngSwitchCase="'ready'">{{
+        'component_library.negotiate' | translate
+      }}</ng-container>
+      <ng-container *ngSwitchCase="'negotiating'">
+        {{ 'component_library.negotiating' | translate }}
+      </ng-container>
+      <ng-container *ngSwitchCase="'negotiated'">
+        {{ 'component_library.succ_negotiating' | translate }}
+      </ng-container>
+    </button>
+    <button
+      *ngIf="data.asset.isOwnConnector"
+      disabled
+      mat-raised-button
+      [matTooltip]="'tooltip.negotiate' | translate">
+      {{ 'component_library.negotiate' | translate }}
+    </button>
+  </div>
+</ng-container>

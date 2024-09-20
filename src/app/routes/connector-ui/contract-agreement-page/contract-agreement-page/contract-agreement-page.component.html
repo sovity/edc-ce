@@ -5,7 +5,9 @@
       class="search-form-field"
       appearance="outline"
       color="accent">
-      <mat-label>Search contract agreements...</mat-label>
+      <mat-label>{{
+        'contract_agreement_page.search_agree' | translate
+      }}</mat-label>
       <input matInput [formControl]="searchText" />
       <mat-icon matPrefix>search</mat-icon>
       <button
@@ -59,7 +61,9 @@
     <empty-state
       *ngIf="page.isReady && !page.data.numTotalContractAgreements"
       class="min-h-[35rem]"
-      [emptyMessage]="'No contract agreements yet.'"></empty-state>
+      [emptyMessage]="
+        'contract_agreement_page.no_agree' | translate
+      "></empty-state>
     <empty-state
       *ngIf="
         page.isReady &&
@@ -71,7 +75,7 @@
       "
       class="min-h-[35rem]"
       [emptyMessage]="
-        'No contract agreements found with given filter.'
+        'contract_agreement_page.no_agree_found' | translate
       "></empty-state>
   </div>
 
@@ -79,7 +83,8 @@
     *ngIf="page.isReady && !!page.data.contractAgreements.length"
     class="flex flex-col space-y-[20px]">
     <ng-container *ngIf="page.data.consumingContractAgreements.length">
-      <horizontal-section-divider text="Consuming Contract Agreements">
+      <horizontal-section-divider
+        [text]="'contract_agreement_page.con_agree' | translate">
       </horizontal-section-divider>
 
       <contract-agreement-cards
@@ -90,7 +95,8 @@
     </ng-container>
 
     <ng-container *ngIf="page.data.providingContractAgreements.length">
-      <horizontal-section-divider text="Providing Contract Agreements">
+      <horizontal-section-divider
+        [text]="'contract_agreement_page.prov_agree' | translate">
       </horizontal-section-divider>
 
       <contract-agreement-cards

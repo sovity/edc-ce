@@ -1,10 +1,10 @@
 import {UiPolicy, UiPolicyExpression} from '@sovity.de/edc-client';
-import {policyLeftExpressions} from '../../../../../../component-library/policy-editor/model/policy-left-expressions';
+import {policyLeftExpressions} from '../../../../../../shared/business/policy-editor/model/policy-left-expressions';
 import {
   constraint,
   constraintList,
   multi,
-} from '../../../../../../component-library/policy-editor/model/ui-policy-expression-utils';
+} from '../../../../../../shared/business/policy-editor/model/ui-policy-expression-utils';
 
 export namespace TestPolicies {
   const policy = (
