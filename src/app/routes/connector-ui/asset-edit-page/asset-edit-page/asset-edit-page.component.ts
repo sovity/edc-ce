@@ -1,7 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {EMPTY, Observable, catchError, finalize, tap} from 'rxjs';
-import {IdResponseDto, UiAssetEditRequest} from '@sovity.de/edc-client';
+import {
+  DataOfferCreationRequestPolicyEnum,
+  IdResponseDto,
+  UiAssetEditRequest,
+} from '@sovity.de/edc-client';
 import {EdcApiService} from 'src/app/core/services/api/edc-api.service';
 import {AssetRequestBuilder} from 'src/app/core/services/asset-request-builder';
 import {AssetService} from 'src/app/core/services/asset.service';
