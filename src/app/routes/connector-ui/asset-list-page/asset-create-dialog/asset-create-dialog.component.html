@@ -559,12 +559,6 @@
             <!-- Contact E-Mail -->
             <div class="form-section-title">Contact E-Mail</div>
 
-            <div class="mb-[10px] px-[3px] text-sm">
-              This email address will be offered to potential consumers for
-              contacting you. This is done in place of having an actual data
-              source connected.
-            </div>
-
             <mat-form-field
               *ngIf="form.datasource.controls.contactEmail; let ctrl"
               class="grow">
@@ -573,6 +567,15 @@
                 matInput
                 [formControl]="ctrl"
                 [placeholder]="'contact@my-org.com'" />
+              <button
+                class="!scale-[0.9]"
+                mat-icon-button
+                matSuffix
+                matTooltip="This email address will be offered to potential consumers for
+                contacting you. This is done in place of having an actual data
+                source connected.">
+                <mat-icon>info_outline</mat-icon>
+              </button>
               <mat-error *ngIf="ctrl.invalid && ctrl.errors?.email">
                 {{ validationMessages.invalidEmailMessage }}
               </mat-error>
@@ -580,11 +583,6 @@
 
             <!-- Contact E-Mail Preferred Subject -->
             <div class="form-section-title">Preferred E-Mail Subject</div>
-
-            <div class="mb-[10px] px-[3px] text-sm">
-              When potential customers reach out to you via email, you’ll
-              receive messages with this subject line.
-            </div>
 
             <mat-form-field
               *ngIf="
@@ -597,6 +595,14 @@
                 matInput
                 [formControl]="ctrl"
                 [placeholder]="'Data Offer \'xyz\''" />
+              <button
+                class="!scale-[0.9]"
+                mat-icon-button
+                matSuffix
+                matTooltip="When potential customers reach out to you via email, you’ll
+                receive messages with this subject line.">
+                <mat-icon>info_outline</mat-icon>
+              </button>
             </mat-form-field>
           </ng-container>
 

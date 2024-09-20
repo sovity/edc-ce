@@ -39,12 +39,11 @@
           placeholder="{{
             'create_data_offer.contact_email_placeholder' | translate
           }}"
+          tooltip="'contact_form.contact_email_tooltip' | translate"
           [label]="'create_data_offer.contact_email' | translate"
-          [ctrl]="form.datasource.controls.contactEmail"
-          >{{
-            'create_data_offer.contact_email_descr' | translate
-          }}</edit-asset-form-input
-        >
+          [ctrl]="
+            form.datasource.controls.contactEmail
+          "></edit-asset-form-input>
 
         <!-- Contact E-Mail Subject for On Request Assets -->
         <edit-asset-form-input
@@ -52,10 +51,9 @@
           fieldId="create-asset-form-contact-subject"
           label="Preferred E-Mail Subject"
           placeholder="Data Offer 'xyz'"
-          [ctrl]="form.datasource.controls.contactPreferredEmailSubject"
-          >When potential customers reach out to you via email, you’ll receive
-          messages with this subject line.</edit-asset-form-input
-        >
+          tooltip="'contact_form.contact_subject_tooltip' | translate"
+          [ctrl]="form.datasource.controls.contactPreferredEmailSubject">
+        </edit-asset-form-input>
       </ng-container>
 
       <ng-container
@@ -852,7 +850,7 @@
             </button>
           </mat-radio-button>
           <mat-radio-button value="DO_NOT_PUBLISH">
-            Create asset only (without data offer)
+            {{ 'general.pub_asset_only' | translate }}
             <button
               class="!scale-[0.9]"
               mat-icon-button
