@@ -47,9 +47,9 @@ if (!Object.keys(filteredProps).length) {
 }
 
 // Write app-config.json
-const output = './src/assets/config/app-config.json';
+const output = './src/assets/config/app-configuration.json';
 const json = JSON.stringify(filteredProps);
 writeFileSync(output, json);
 
 // It is ok to log this config as the data will be available in all client browsers
-console.log(`Writing app.config.json to ${output}: ${json}`);
+console.log(`Writing app.configuration.json to ${output}: ${json}`);
