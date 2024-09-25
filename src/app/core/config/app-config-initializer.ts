@@ -11,7 +11,7 @@ export async function loadAppConfig(): Promise<AppConfig> {
   const builder = new AppConfigBuilder();
   const fetcher = new AppConfigFetcher(merger);
   return fetcher
-    .fetchEffectiveConfig('/assets/config/app-config.json', null)
+    .fetchEffectiveConfig('/assets/config/app-configuration.json', null)
     .then((json) => builder.buildAppConfig(json))
     .then((config) => (appConfig = config));
 }

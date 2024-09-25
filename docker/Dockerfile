@@ -28,9 +28,9 @@ COPY docker/default.conf.template etc/nginx/templates/default.conf.template
 # so that the automatic envsubst templating is not disabled.
 COPY docker/99-generate-app-config.sh /docker-entrypoint.d/99-generate-app-config.sh
 
-RUN ln -sf /tmp/app-config.json /usr/share/nginx/html/assets/config/app-config.json \
+RUN ln -sf /tmp/app-config.json /usr/share/nginx/html/assets/config/app-configuration.json \
   # Nginx is configured to reject symlinks that point to a file owned by a different user, for security reasons
-  && chown --no-dereference nginx:root /usr/share/nginx/html/assets/config/app-config.json
+  && chown --no-dereference nginx:root /usr/share/nginx/html/assets/config/app-configuration.json
 
 # Switch back to unprivileged user for runtime
 USER nginx:nginx

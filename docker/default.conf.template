@@ -20,4 +20,9 @@ server {
         index index.html;
         try_files /index.html =404;
     }
+
+    location ~* ^/assets/config/app-configuration\.json$ {
+        add_header Cache-Control "no-store, no-cache, must-revalidate";
+        expires -1;
+    }
 }
