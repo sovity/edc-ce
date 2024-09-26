@@ -15,7 +15,6 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
 
 import de.sovity.edc.ext.db.jooq.Tables;
-import de.sovity.edc.ext.db.jooq.tables.EdcAsset;
 import de.sovity.edc.ext.wrapper.api.ServiceException;
 import de.sovity.edc.ext.wrapper.api.common.mappers.AssetMapper;
 import de.sovity.edc.ext.wrapper.api.common.model.UiAsset;

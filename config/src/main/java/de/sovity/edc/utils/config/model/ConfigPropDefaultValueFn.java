@@ -12,11 +12,16 @@
  *
  */
 
-package de.sovity.edc.extension.e2e.connector.config.api.auth;
+package de.sovity.edc.utils.config.model;
 
-public interface AuthProvider {
+import java.util.Map;
 
-    String getAuthorizationHeader();
 
-    String getAuthorizationHeaderValue();
+@FunctionalInterface
+public interface ConfigPropDefaultValueFn {
+    String apply(Map<String, String> props);
+
+    static ConfigPropDefaultValueFn constant(String value) {
+        return p -> value;
+    }
 }

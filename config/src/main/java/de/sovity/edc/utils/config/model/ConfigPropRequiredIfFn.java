@@ -12,16 +12,12 @@
  *
  */
 
-package de.sovity.edc.extension.e2e.connector.config.api.auth;
+package de.sovity.edc.utils.config.model;
 
-public class NoneAuthProvider implements AuthProvider {
-    @Override
-    public String getAuthorizationHeader() {
-        return "";
-    }
+import java.util.Map;
 
-    @Override
-    public String getAuthorizationHeaderValue() {
-        return "";
-    }
+
+@FunctionalInterface
+public interface ConfigPropRequiredIfFn {
+    boolean predicate(Map<String, String> props);
 }

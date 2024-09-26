@@ -60,7 +60,7 @@ class ContractAgreementTerminationDetailsQueryTest {
                 assertThat(details).isEqualTo(ContractAgreementTerminationDetails.builder()
                     .contractAgreementId(agreementId)
                     .counterpartyId("provider")
-                    .counterpartyAddress(providerConfig.getProtocolEndpoint().getUri().toString())
+                    .counterpartyAddress(providerConfig.getProtocolApiUrl())
                     .type(CONSUMER)
                     .providerAgentId("provider")
                     .consumerAgentId("consumer")
@@ -113,7 +113,7 @@ class ContractAgreementTerminationDetailsQueryTest {
                 // assert
                 assertThat(details.contractAgreementId()).isEqualTo(agreementId);
                 assertThat(details.counterpartyId()).isEqualTo("provider");
-                assertThat(details.counterpartyAddress()).isEqualTo(providerConfig.getProtocolEndpoint().getUri().toString());
+                assertThat(details.counterpartyAddress()).isEqualTo(providerConfig.getProtocolApiUrl());
                 assertThat(details.type()).isEqualTo(CONSUMER);
                 assertThat(details.providerAgentId()).isEqualTo("provider");
                 assertThat(details.consumerAgentId()).isEqualTo("consumer");

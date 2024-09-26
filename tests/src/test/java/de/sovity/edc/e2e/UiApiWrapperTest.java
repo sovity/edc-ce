@@ -99,7 +99,7 @@ class UiApiWrapperTest {
     @BeforeEach
     void setup(@Provider ConnectorRemote providerConnector) {
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
+        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultApiUrl());
     }
 
     @DisabledOnGithub
@@ -198,7 +198,7 @@ class UiApiWrapperTest {
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
 
-        var providerProtocolEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
+        var providerProtocolEndpoint = providerConfig.getProtocolApiUrl();
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint);
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
@@ -286,7 +286,7 @@ class UiApiWrapperTest {
         // Provider Contract Agreement
         assertThat(providerAgreement.getContractAgreementId()).isEqualTo(negotiation.getContractAgreementId());
         assertThat(providerAgreement.getDirection()).isEqualTo(PROVIDING);
-        assertThat(providerAgreement.getCounterPartyAddress()).isEqualTo(consumerConfig.getProtocolEndpoint().getUri().toString());
+        assertThat(providerAgreement.getCounterPartyAddress()).isEqualTo(consumerConfig.getProtocolApiUrl());
         assertThat(providerAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
 
         assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
@@ -409,7 +409,7 @@ class UiApiWrapperTest {
             .assetSelector(List.of())
             .build());
 
-        val providerProtocolEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
+        val providerProtocolEndpoint = providerConfig.getProtocolApiUrl();
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint);
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
@@ -501,7 +501,7 @@ class UiApiWrapperTest {
                 .build()))
             .build());
 
-        val providerProtocolEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
+        val providerProtocolEndpoint = providerConfig.getProtocolApiUrl();
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint);
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);

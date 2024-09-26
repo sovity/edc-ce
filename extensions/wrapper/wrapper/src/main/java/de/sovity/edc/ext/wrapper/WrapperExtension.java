@@ -36,7 +36,6 @@ import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.protocol.dsp.api.configuration.DspApiConfiguration;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
-import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.CoreConstants;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.system.ServiceExtension;
@@ -45,9 +44,6 @@ import org.eclipse.edc.spi.types.TypeManager;
 import org.eclipse.edc.web.spi.WebService;
 
 public class WrapperExtension implements ServiceExtension {
-
-    @Setting(value = "Base URL for the On Request asset datasource, as reachable by the data plane")
-    public static final String MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL = "my.edc.datasource.placeholder.baseurl";
 
     public static final String EXTENSION_NAME = "WrapperExtension";
 
@@ -126,8 +122,6 @@ public class WrapperExtension implements ServiceExtension {
             transferProcessStore,
             typeTransformerRegistry
         );
-
-        wrapperExtensionContext.selfDescriptionService().validateSelfDescriptionConfig();
 
         wrapperExtensionContext.managementApiResources().forEach(resource ->
             webService.registerResource(dataManagementApiConfiguration.getContextAlias(), resource));

@@ -15,15 +15,13 @@
 package de.sovity.edc.extension.postgresql.legacy.migration;
 
 import de.sovity.edc.extension.postgresql.legacy.connection.JdbcConnectionProperties;
-import org.eclipse.edc.runtime.metamodel.annotation.Setting;
+import de.sovity.edc.utils.config.ConfigProps;
 import org.eclipse.edc.spi.system.configuration.Config;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class DatabaseMigrationManager {
-    @Setting
-    public static final String EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS = "edc.flyway.additional.migration.locations";
     private static final String DEFAULT_DATASOURCE = "default";
 
     private final Config config;
@@ -62,7 +60,7 @@ public class DatabaseMigrationManager {
             return List.of();
         }
 
-        String commaJoined = config.getString(EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS, "");
+        String commaJoined = ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS.getStringOrEmpty(config);
         return Arrays.stream(commaJoined.split(","))
                 .map(String::trim)
                 .filter(it -> !it.isEmpty())

@@ -66,7 +66,7 @@ public class SovityMessengerExtensionE2eTest {
         receiverEdcContext.setConfiguration(consumerConfig.getProperties());
         receiverEdcContext.registerServiceMock(TokenDecorator.class, (td) -> td);
 
-        counterPartyAddress = consumerConfig.getProtocolEndpoint().getUri().toString();
+        counterPartyAddress = consumerConfig.getProtocolApiUrl();
     }
 
     @Test

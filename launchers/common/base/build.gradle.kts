@@ -3,6 +3,9 @@ plugins {
 }
 
 dependencies {
+    // For Custom Launcher Code
+    implementation(project(":config"))
+
     // Control-Plane
     api(libs.edc.controlPlaneCore)
     api(libs.edc.managementApi)

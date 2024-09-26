@@ -12,13 +12,13 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Major Changes
 
-- Moved Catalog Crawler to the Authority Portal
+- Removed Catalog Crawler as it will be added to the Authority Portal to prevent circular dependencies
 
 #### Minor Changes
 
 #### Patch Changes
 
-### Deployment Migration Notes
+- Refactoring: Config as Java Code### Deployment Migration Notes
 
 _No special deployment migration steps required_
 

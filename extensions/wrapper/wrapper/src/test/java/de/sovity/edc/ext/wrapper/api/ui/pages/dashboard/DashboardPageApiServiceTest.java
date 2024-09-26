@@ -17,6 +17,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard;
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
+import de.sovity.edc.utils.config.ConfigProps;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
 import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
@@ -65,16 +66,16 @@ class DashboardPageApiServiceTest {
         testDatabase -> {
             config = forTestDatabase("my-edc-participant-id", testDatabase);
 
-            config.setProperty("edc.oauth.token.url", "https://token-url.daps");
-            config.setProperty("edc.oauth.provider.jwks.url", "https://jwks-url.daps");
+            config.setProperty(ConfigProps.EDC_OAUTH_TOKEN_URL, "https://token-url.daps");
+            config.setProperty(ConfigProps.EDC_OAUTH_PROVIDER_JWKS_URL, "https://jwks-url.daps");
 
             config.setProperty("tx.ssi.oauth.token.url", "https://token.miw");
             config.setProperty("tx.ssi.miw.url", "https://miw");
             config.setProperty("tx.ssi.miw.authority.id", "my-authority-id");
 
             client = EdcClient.builder()
-                .managementApiUrl(config.getManagementEndpoint().getUri().toString())
-                .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+                .managementApiUrl(config.getManagementApiUrl())
+                .managementApiKey(config.getManagementApiKey())
                 .build();
             return config.getProperties();
         }
@@ -92,8 +93,8 @@ class DashboardPageApiServiceTest {
     void setUp(EdcExtension context) {
 
         client = EdcClient.builder()
-            .managementApiUrl(config.getManagementEndpoint().getUri().toString())
-            .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+            .managementApiUrl(config.getManagementApiUrl())
+            .managementApiKey(config.getManagementApiKey())
             .build();
 
 
@@ -167,7 +168,7 @@ class DashboardPageApiServiceTest {
         assertThat(dashboardPage.getConnectorDescription()).isEqualTo("Connector Description my-edc-participant-id");
         assertThat(dashboardPage.getConnectorTitle()).isEqualTo("Connector Title my-edc-participant-id");
 
-        assertThat(dashboardPage.getConnectorEndpoint()).isEqualTo(config.getProtocolEndpoint().getUri().toString());
+        assertThat(dashboardPage.getConnectorEndpoint()).isEqualTo(config.getProtocolApiUrl());
         assertThat(dashboardPage.getConnectorCuratorName()).isEqualTo("Curator Name my-edc-participant-id");
         assertThat(dashboardPage.getConnectorCuratorUrl()).isEqualTo("http://curator.my-edc-participant-id");
         assertThat(dashboardPage.getConnectorMaintainerName()).isEqualTo("Maintainer Name my-edc-participant-id");

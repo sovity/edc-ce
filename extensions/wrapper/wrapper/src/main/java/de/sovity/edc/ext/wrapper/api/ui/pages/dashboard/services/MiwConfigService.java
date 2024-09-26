@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.system.configuration.Config;
 
 import static com.apicatalog.jsonld.StringUtils.isBlank;
-import static de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.ConfigPropertyUtils.configKey;
 
 @RequiredArgsConstructor
 public class MiwConfigService {
@@ -41,5 +40,15 @@ public class MiwConfigService {
 
     String configValue(String configKey) {
         return config.getString(configKey, "");
+    }
+
+    /**
+     * Maps a {@literal CONFIG_KEY} to {@literal config.key}
+     *
+     * @param envVarKey {@literal CONFIG_KEY}
+     * @return {@literal config.key}
+     */
+    public static String configKey(String envVarKey) {
+        return String.join(".", envVarKey.split("_")).toLowerCase();
     }
 }

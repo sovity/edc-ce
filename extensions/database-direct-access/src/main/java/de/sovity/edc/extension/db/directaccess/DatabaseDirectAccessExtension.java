@@ -16,39 +16,15 @@ package de.sovity.edc.extension.db.directaccess;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import de.sovity.edc.utils.config.ConfigProps;
 import lombok.val;
 import org.eclipse.edc.runtime.metamodel.annotation.Provides;
-import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 
 @Provides(DslContextFactory.class)
 public class DatabaseDirectAccessExtension implements ServiceExtension {
     public static final String NAME = "DirectDatabaseAccess";
-
-    /**
-     * The JDBC URL.
-     */
-    @Setting(required = true)
-    public static final String EDC_DATASOURCE_DEFAULT_URL = "edc.datasource.default.url";
-
-    /**
-     * The JDBC user.
-     */
-    @Setting(required = true)
-    public static final String EDC_DATASOURCE_JDBC_USER = "edc.datasource.default.user";
-
-    /**
-     * The JDBC password.
-     */
-    @Setting(required = true)
-    public static final String EDC_DATASOURCE_JDBC_PASSWORD = "edc.datasource.default.password";
-
-    /**
-     * Sets the connection pool size to use during the flyway migration.
-     */
-    @Setting(defaultValue = "3")
-    public static final String EDC_SERVER_DB_CONNECTION_POOL_SIZE = "edc.server.db.connection.pool.size";
 
 
     @Override
@@ -65,11 +41,11 @@ public class DatabaseDirectAccessExtension implements ServiceExtension {
 
         val hikariConfig = new HikariConfig();
         val config = context.getConfig();
-        hikariConfig.setJdbcUrl(config.getString(EDC_DATASOURCE_DEFAULT_URL));
-        hikariConfig.setUsername(config.getString(EDC_DATASOURCE_JDBC_USER));
-        hikariConfig.setPassword(config.getString(EDC_DATASOURCE_JDBC_PASSWORD));
+        hikariConfig.setJdbcUrl(ConfigProps.EDC_DATASOURCE_DEFAULT_URL.getStringOrNull(config));
+        hikariConfig.setUsername(ConfigProps.EDC_DATASOURCE_DEFAULT_USER.getStringOrNull(config));
+        hikariConfig.setPassword(ConfigProps.EDC_DATASOURCE_DEFAULT_PASSWORD.getStringOrNull(config));
         hikariConfig.setMinimumIdle(1);
-        hikariConfig.setMaximumPoolSize(config.getInteger(EDC_SERVER_DB_CONNECTION_POOL_SIZE, 3));
+        hikariConfig.setMaximumPoolSize(config.getInteger(ConfigProps.EDC_SERVER_DB_CONNECTION_POOL_SIZE.getProperty(), 3));
         hikariConfig.setIdleTimeout(30000);
         hikariConfig.setPoolName("direct-database-access");
         hikariConfig.setMaxLifetime(50000);

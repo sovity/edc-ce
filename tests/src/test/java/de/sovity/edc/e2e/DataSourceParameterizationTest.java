@@ -61,7 +61,6 @@ import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.mockserver.model.HttpStatusCode;
 
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
@@ -154,7 +153,7 @@ class DataSourceParameterizationTest {
             createData(providerClient, testCase, context);
 
             // act
-            val providerEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
+            val providerEndpoint = providerConfig.getProtocolApiUrl();
             val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerEndpoint);
             val startNegotiation = initiateNegotiation(consumerClient, dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
             val negotiation = awaitNegotiationDone(consumerClient, startNegotiation.getContractNegotiationId());
@@ -248,7 +247,7 @@ class DataSourceParameterizationTest {
             createData(providerClient, testCase, context);
 
             // act
-            val providerEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
+            val providerEndpoint = providerConfig.getProtocolApiUrl();
             val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerEndpoint);
             val startNegotiation = initiateNegotiation(consumerClient, dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
             val negotiation = awaitNegotiationDone(consumerClient, startNegotiation.getContractNegotiationId());
@@ -258,7 +257,7 @@ class DataSourceParameterizationTest {
             val transferId = consumerConnector.initiateTransfer(
                 negotiation.getContractAgreementId(),
                 testCase.id,
-                URI.create(providerEndpoint),
+                providerEndpoint,
                 Json.createObjectBuilder(Map.of(
                     standardBase + "type", "HttpData",
                     standardBase + "baseUrl", context.destinationUrl,
@@ -300,7 +299,7 @@ class DataSourceParameterizationTest {
                 createData(providerClient, testCase, context);
 
                 // act
-                val connectorEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
+                val connectorEndpoint = providerConfig.getProtocolApiUrl();
                 val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(connectorEndpoint);
                 val dataOffer = dataOffers.stream().filter(it -> it.getAsset().getAssetId().equals(testCase.id)).findFirst().get();
                 val negotiationInit = initiateNegotiation(consumerClient, dataOffer, dataOffer.getContractOffers().get(0));

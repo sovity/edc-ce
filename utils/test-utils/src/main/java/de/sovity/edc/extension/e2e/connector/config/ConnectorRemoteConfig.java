@@ -14,16 +14,46 @@
 
 package de.sovity.edc.extension.e2e.connector.config;
 
-import de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroupConfig;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NonNull;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.function.Supplier;
 
 
 @Getter
-@RequiredArgsConstructor
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ConnectorRemoteConfig {
+    @NonNull
     private final String participantId;
-    private final EdcApiGroupConfig defaultEndpoint;
-    private final EdcApiGroupConfig managementEndpoint;
-    private final EdcApiGroupConfig protocolEndpoint;
+
+    @NonNull
+    private final String defaultApiUrl;
+
+    @NonNull
+    private final String managementApiUrl;
+
+    @NonNull
+    private final Supplier<Pair<String, String>> managementApiAuthHeader;
+
+    @NonNull
+    private final String protocolApiUrl;
+
+    @NonNull
+    private final String publicApiUrl;
+
+    public static ConnectorRemoteConfig fromConnectorConfig(ConnectorConfig connectorConfig) {
+        return builder()
+            .participantId(connectorConfig.getParticipantId())
+            .managementApiUrl(connectorConfig.getManagementApiUrl())
+            .managementApiAuthHeader(connectorConfig.getManagementApiAuthHeader())
+            .protocolApiUrl(connectorConfig.getProtocolApiUrl())
+            .publicApiUrl(connectorConfig.getPublicApiUrl())
+            .defaultApiUrl(connectorConfig.getDefaultApiUrl())
+            .build();
+    }
 }

@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
+    api(project(":config"))
     api(project(":launchers:common:base"))
     api(project(":launchers:common:auth-mock"))
 

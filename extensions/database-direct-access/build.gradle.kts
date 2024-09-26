@@ -8,6 +8,7 @@ dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
 
+    implementation(project(":config"))
     implementation(libs.edc.coreSpi)
 
     implementation(libs.jooq.jooq)

@@ -58,8 +58,8 @@ public class AssetApiServiceTest {
         testDatabase -> {
             val config = forTestDatabase("MyEDC", testDatabase);
             client = EdcClient.builder()
-                .managementApiUrl(config.getManagementEndpoint().getUri().toString())
-                .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+                .managementApiUrl(config.getManagementApiUrl())
+                .managementApiKey(config.getManagementApiKey())
                 .build();
             return config.getProperties();
         }

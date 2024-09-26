@@ -58,8 +58,8 @@ class UseCaseApiWrapperTest {
         testDatabase -> {
             config = forTestDatabase("my-edc-participant-id", testDatabase);
             client = EdcClient.builder()
-                .managementApiUrl(config.getManagementEndpoint().getUri().toString())
-                .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+                .managementApiUrl(config.getManagementApiUrl())
+                .managementApiKey(config.getManagementApiKey())
                 .build();
             return config.getProperties();
         }
@@ -128,7 +128,7 @@ class UseCaseApiWrapperTest {
 
     private CatalogQuery criterion(String leftOperand, CatalogFilterExpressionOperator operator, String rightOperand) {
         return CatalogQuery.builder()
-                .connectorEndpoint(config.getProtocolEndpoint().getUri().toString())
+                .connectorEndpoint(config.getProtocolApiUrl())
                 .filterExpressions(
                         List.of(
                             CatalogFilterExpression.builder()
@@ -143,7 +143,7 @@ class UseCaseApiWrapperTest {
 
     private CatalogQuery criterion(String leftOperand, CatalogFilterExpressionOperator operator, List<String> rightOperand) {
         return CatalogQuery.builder()
-                .connectorEndpoint(config.getProtocolEndpoint().getUri().toString())
+                .connectorEndpoint(config.getProtocolApiUrl())
                 .filterExpressions(
                         List.of(
                             CatalogFilterExpression.builder()
@@ -158,7 +158,7 @@ class UseCaseApiWrapperTest {
 
     private CatalogQuery criterion(Integer limit, Integer offset) {
         return CatalogQuery.builder()
-                .connectorEndpoint(config.getProtocolEndpoint().getUri().toString())
+                .connectorEndpoint(config.getProtocolApiUrl())
                 .limit(limit)
                 .offset(offset)
                 .build();
@@ -184,7 +184,7 @@ class UseCaseApiWrapperTest {
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
             .httpData(UiDataSourceHttpData.builder()
-                .baseUrl(config.getProtocolEndpoint().getUri().toString())
+                .baseUrl(config.getProtocolApiUrl())
                 .build())
             .build();
 
