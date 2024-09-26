@@ -8,7 +8,7 @@ the CI pipeline. With each version (respectively milestone), the core features
 are highlighted. Relevant changes to existing implementations can be found in
 the detailed section referring to by linking pull requests or issues.
 
-## Unreleased
+## [vx.x.x] - UNRELEASED
 
 ### Overview
 
@@ -20,21 +20,36 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
-- Fixed gaps in renaming to "Data Offer"
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+
+## [v4.1.5] - 2024-09-26
+
+### Overview
+
+MDS Patch release
+
+### Detailed Changes
+
+#### Patch
+
+- Fixed the gaps in renaming "Contract Definition" to "Data Offer"
   ([#831](https://github.com/sovity/edc-ui/issues/831))
 - Replaced hints with info boxes in On Request data source
   ([#820](https://github.com/sovity/edc-ui/issues/820))
 - Fixed cropping of Contract Offer Ids on catalog browser page
   ([#795](https://github.com/sovity/edc-ui/issues/795))
-- Used createDataOffer endpoint to create an asset, policies and a contract
-  definition in a single call
+- Used the `createDataOffer` endpoint to create an asset, policies and a contract definition in a single call
   ([#841](https://github.com/sovity/edc-ui/issues/841))
 - Fixed config not being applied properly after a version upgrade
-- Fixed Date to DateTime conversion issues when using operators `LT` and `GT`
+- Fixed Date to DateTime conversion issues when using operators less than `LT` and greater than `GT`
   ([#846](https://github.com/sovity/edc-ui/issues/846))
 - Added initial support for UI internationalization
   ([#680](https://github.com/sovity/edc-ui/issues/680))
 - Implemented Data Offer wizard wording change request by MDS
+- ([PR#850](https://github.com/sovity/edc-ui/pull/850))
 
 ### Deployment Migration Notes
 
