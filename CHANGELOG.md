@@ -31,6 +31,49 @@ _No special deployment migration steps required_
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI VERSION }}`
 
 
+## [10.4.1] - 2024-09-26
+
+### Overview
+
+MDS Patch release
+
+### Detailed Changes
+
+EDC UI patches only
+
+#### Patch Changes
+
+- Fixed the gaps in renaming "Contract Definition" to "Data Offer"
+  ([#831](https://github.com/sovity/edc-ui/issues/831))
+- Replaced hints with info boxes in On Request data source
+  ([#820](https://github.com/sovity/edc-ui/issues/820))
+- Fixed cropping of Contract Offer Ids on catalog browser page
+  ([#795](https://github.com/sovity/edc-ui/issues/795))
+- Used the `createDataOffer` endpoint to create an asset, policies and a contract definition in a single call
+  ([#841](https://github.com/sovity/edc-ui/issues/841))
+- Fixed config not being applied properly after a version upgrade
+- Fixed Date to DateTime conversion issues when using the operators less than `<=` and greater than `>`
+  ([#846](https://github.com/sovity/edc-ui/issues/846))
+- Added initial support for UI internationalization
+  ([#680](https://github.com/sovity/edc-ui/issues/680))
+- Implemented Data Offer wizard wording change request by MDS
+- ([PR#850](https://github.com/sovity/edc-ui/pull/850))
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:10.4.1`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:10.4.1`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:10.4.1`
+  - Dev Catalog Crawler: `ghcr.io/sovity/catalog-crawler-dev:10.4.1`
+  - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.4.1`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.5`
+
+
 ## [10.4.0] - 2024-09-18
 
 ### Overview
