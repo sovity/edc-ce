@@ -121,7 +121,7 @@ export const jsonAdapter: PolicyFormAdapter<string> = {
 };
 
 const isUpperBound = (operator: PolicyOperatorConfig) =>
-  operator.id === 'LT' || operator.id === 'LEQ';
+  operator.id === 'GT' || operator.id === 'LEQ';
 
 /**
  * Helper function for reducing mental complexity of mapping code:
