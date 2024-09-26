@@ -9,7 +9,7 @@ import {
   sampleTime,
   switchMap,
 } from 'rxjs';
-import {filter, map} from 'rxjs/operators';
+import {filter, map, takeUntil} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {ConnectorLimitsService} from '../../../../core/services/connector-limits.service';
 import {DataOffer} from '../../../../core/services/models/data-offer';
@@ -55,7 +55,7 @@ export class CatalogBrowserPageComponent implements OnInit, OnDestroy {
         this.data = data;
         this.data$.next(data);
       });
-    this.presetProvidersMessage = this.buildPresetCatalogUrlsMessage();
+    this.startBuildingPresetCatalogUrlsMessage();
   }
 
   onDataOfferClick(dataOffer: DataOffer) {
@@ -87,15 +87,19 @@ export class CatalogBrowserPageComponent implements OnInit, OnDestroy {
     this.fetch$.next(null);
   }
 
-  private buildPresetCatalogUrlsMessage(): string {
-    const urls = this.catalogApiUrlService.getPresetProviders();
-    const usage = this.translateService.instant('catalog_browser_page.usage');
-    if (!urls.length) {
-      return '';
-    }
-    return `${usage} ${urls.length > 1 ? ` (${urls.length})` : ''}: ${urls.join(
-      ', ',
-    )}`;
+  private startBuildingPresetCatalogUrlsMessage() {
+    this.translateService
+      .get(['catalog_browser_page.usage'])
+      .pipe(takeUntil(this.ngOnDestroy$))
+      .subscribe((strings) => {
+        const urls = this.catalogApiUrlService.getPresetProviders();
+        const usage = strings['catalog_browser_page.usage'];
+        this.presetProvidersMessage = !urls.length
+          ? ''
+          : `${usage} ${
+              urls.length > 1 ? ` (${urls.length})` : ''
+            }: ${urls.join(', ')}`;
+      });
   }
 
   private searchText$(): Observable<string> {

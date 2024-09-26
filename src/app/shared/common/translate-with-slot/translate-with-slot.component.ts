@@ -11,6 +11,10 @@ import {SimpleChangesTyped} from '../../../core/utils/angular-utils';
 export class TranslateWithSlotComponent implements OnChanges, OnDestroy {
   @Input()
   key!: string;
+
+  @Input()
+  html = false;
+
   key$ = new Subject();
 
   textBefore = '';

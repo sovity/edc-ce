@@ -96,7 +96,7 @@
         <button
           mat-icon-button
           matSuffix
-          [matTooltip]="'tooltip.clipboard' | translate"
+          [matTooltip]="'general.copy_to_clipboard_tooltip' | translate"
           [cdkCopyToClipboard]="data.connectorEndpoint">
           <mat-icon>content_copy</mat-icon>
         </button>
@@ -114,7 +114,7 @@
         <button
           mat-icon-button
           matSuffix
-          [matTooltip]="'tooltip.clipboard' | translate"
+          [matTooltip]="'general.copy_to_clipboard_tooltip' | translate"
           [cdkCopyToClipboard]="config.shownManagementApiUrl">
           <mat-icon>content_copy</mat-icon>
         </button>
@@ -127,7 +127,7 @@
       ">
       <mat-card-title
         ><span class="flex flex-row items-center"
-          >Provided by
+          >{{ 'dashboard_page.provided' | translate }}
           <img
             class="h-6 ml-2 mt-1"
             src="/assets/images/sovity_logo.svg"
@@ -167,9 +167,16 @@
       }}</mat-card-subtitle>
       <div>
         <p class="text-justify">
-          {{ 'dashboard_page.marketing_ce_intro' | translate }}
-          <a class="link" href="https://sovity.de" target="_blank">sovity</a>
-          {{ 'dashboard_page.marketing_ce_intro2' | translate }}
+          <translate-with-slot
+            key="dashboard_page.marketing_ce_intro"
+            [html]="true">
+            <a class="link" href="https://sovity.de" target="_blank">sovity</a>
+          </translate-with-slot>
+          <br />
+          <span
+            [innerHTML]="
+              'dashboard_page.marketing_ce_intro2' | translate
+            "></span>
         </p>
         <div class="flex flex-row !space-x-[10px]">
           <a

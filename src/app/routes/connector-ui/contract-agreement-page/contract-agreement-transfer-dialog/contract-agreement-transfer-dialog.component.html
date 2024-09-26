@@ -244,9 +244,7 @@
                 'contract_agreement_page.cus_meth' | translate
               }}</mat-label>
               <mat-select
-                placeholder="{{
-                  'contract_agreement_page.cus_meth' | translate
-                }}"
+                [placeholder]="'contract_agreement_page.cus_meth' | translate"
                 [formControl]="ctrl">
                 <mat-option></mat-option>
                 <mat-option

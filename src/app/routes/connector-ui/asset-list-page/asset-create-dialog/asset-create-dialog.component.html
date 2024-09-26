@@ -7,29 +7,36 @@
     <mat-step [stepControl]="form.metadata">
       <form [formGroup]="form.metadata">
         <ng-template matStepLabel>{{
-          'asset_list_page.information' | translate
+          'create_data_offer_page.general_information' | translate
         }}</ng-template>
         <div class="flex flex-col mt-[10px]">
           <div class="flex flex-row space-x-[10px]">
             <!-- Title -->
             <mat-form-field class="grow">
-              <mat-label>Title</mat-label>
+              <mat-label>{{ 'general.title' | translate }}</mat-label>
               <input
                 matInput
                 autocomplete="new-name"
+                [placeholder]="
+                  'create_data_offer_page.title_placeholder' | translate
+                "
                 [formControl]="form.metadata.controls.title" />
               <button
                 class="!scale-[0.9]"
                 mat-icon-button
                 matSuffix
-                matTooltip="The main title of your asset. It will also be the title of the data offering displayed in the catalog.">
+                [matTooltip]="
+                  'create_data_offer_page.title_tooltip' | translate
+                ">
                 <mat-icon>info_outline</mat-icon>
               </button>
             </mat-form-field>
 
             <!-- Version -->
             <mat-form-field class="grow">
-              <mat-label>{{ 'asset_list_page.version' | translate }}</mat-label>
+              <mat-label>{{
+                'create_data_offer_page.version' | translate
+              }}</mat-label>
               <input
                 matInput
                 autocomplete="new-id"
@@ -39,7 +46,9 @@
                 class="!scale-[0.9]"
                 mat-icon-button
                 matSuffix
-                matTooltip="The version of your asset. Especially useful if you have iterations of the same asset.">
+                [matTooltip]="
+                  'create_data_offer_page.version_tooltip' | translate
+                ">
                 <mat-icon>info_outline</mat-icon>
               </button>
             </mat-form-field>
@@ -49,7 +58,9 @@
           <mat-form-field
             *ngIf="form.metadata.controls.id; let ctrl"
             class="grow">
-            <mat-label>{{ 'asset_list_page.asset_id' | translate }}</mat-label>
+            <mat-label>{{
+              'create_data_offer_page.asset_id' | translate
+            }}</mat-label>
             <input
               placeholder="my-asset-1"
               matInput
@@ -59,7 +70,9 @@
               class="!scale-[0.9]"
               mat-icon-button
               matSuffix
-              matTooltip="Asset ID, used internally, is an auto-generated string in a URL-compatible format, combining the asset name and version with a urn:artifact: prefix. You can customize it if needed.">
+              [matTooltip]="
+                'create_data_offer_page.asset_id_tooltip' | translate
+              ">
               <mat-icon>info_outline</mat-icon>
             </button>
             <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
@@ -76,7 +89,9 @@
           <!-- Description -->
 
           <mat-form-field>
-            <mat-label>{{ 'asset_list_page.file_des' | translate }}</mat-label>
+            <mat-label>{{
+              'create_data_offer_page.description' | translate
+            }}</mat-label>
             <textarea
               class="h-36"
               matInput
@@ -85,7 +100,7 @@
                 '# My Asset\n\nAt vero eos et accusam et justo duo dolores et ea rebum.\n\n## Details\n\nAt vero eos et accusam et justo duo dolores et ea **rebum**.'
               "></textarea>
             <mat-hint class="flex flex-row items-center gap-1 mb-1">
-              {{ 'asset_list_page.descrip' | translate }}
+              {{ 'create_data_offer_page.description_supports' | translate }}
               <a
                 class="link"
                 externalLink
@@ -99,7 +114,7 @@
 
           <!-- Keywords -->
           <keyword-select
-            [label]="'asset_list_page.keywords' | translate"
+            [label]="'create_data_offer_page.keywords' | translate"
             [control]="form.metadata.controls.keywords"></keyword-select>
 
           <!-- Language -->
@@ -111,13 +126,15 @@
           <div class="flex flex-row space-x-[10px]">
             <!-- Content Type -->
             <mat-form-field class="grow mb-2">
-              <mat-label>{{ 'general.content_type' | translate }}</mat-label>
+              <mat-label>{{
+                'create_data_offer_page.content_type' | translate
+              }}</mat-label>
               <input
                 matInput
                 [formControl]="form.metadata.controls.contentType"
                 [placeholder]="'text/plain'" />
               <mat-hint class="flex flex-row items-center gap-1 mb-1">
-                Describes the content type of the data as a MIME type, see
+                {{ 'create_asset.content_type_hint' | translate }}
                 <a
                   class="link"
                   externalLink
@@ -132,13 +149,18 @@
           <mat-form-field
             *ngIf="form.metadata.controls.endpointDocumentation; let ctrl"
             class="grow">
-            <mat-label>{{ 'general.endpoint_doc' | translate }}</mat-label>
+            <mat-label>{{
+              'create_data_offer_page.endpoint_documentation' | translate
+            }}</mat-label>
             <input placeholder="https://" matInput [formControl]="ctrl" />
             <button
               class="!scale-[0.9]"
               mat-icon-button
               matSuffix
-              matTooltip="URL to the technical documentation about the data to be received.">
+              [matTooltip]="
+                'create_data_offer_page.endpoint_documentation_tooltip'
+                  | translate
+              ">
               <mat-icon>info_outline</mat-icon>
             </button>
             <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
@@ -151,13 +173,17 @@
             <mat-form-field
               *ngIf="form.metadata.controls.publisher; let ctrl"
               class="grow">
-              <mat-label>{{ 'general.publisher' | translate }}</mat-label>
+              <mat-label>{{
+                'create_data_offer_page.publisher' | translate
+              }}</mat-label>
               <input placeholder="https://" matInput [formControl]="ctrl" />
               <button
                 class="!scale-[0.9]"
                 mat-icon-button
                 matSuffix
-                matTooltip="URL of the original publisher of the data.">
+                [matTooltip]="
+                  'create_data_offer_page.publisher_tooltip' | translate
+                ">
                 <mat-icon>info_outline</mat-icon>
               </button>
               <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
@@ -170,14 +196,16 @@
               *ngIf="form.metadata.controls.standardLicense; let ctrl"
               class="grow">
               <mat-label>{{
-                'general.standard_license' | translate
+                'create_data_offer_page.standard_license_label' | translate
               }}</mat-label>
               <input placeholder="https://" matInput [formControl]="ctrl" />
               <button
                 class="!scale-[0.9]"
                 mat-icon-button
                 matSuffix
-                matTooltip="URL of the license under which the data is offered">
+                [matTooltip]="
+                  'create_data_offer_page.standard_license_tooltip' | translate
+                ">
                 <mat-icon>info_outline</mat-icon>
               </button>
               <mat-error *ngIf="ctrl.invalid && ctrl.errors?.pattern">
@@ -216,7 +244,9 @@
 
           <!-- Data Model -->
           <mat-form-field>
-            <mat-label>Data Model</mat-label>
+            <mat-label>{{
+              'create_data_offer_page.data_model' | translate
+            }}</mat-label>
             <input
               matInput
               placeholder="proprietary"
@@ -225,23 +255,27 @@
               class="!scale-[0.9]"
               mat-icon-button
               matSuffix
-              matTooltip="Model for data exchange, e.g. DATEX II, TPEG for traffic and travel information, etc.">
+              [matTooltip]="
+                'create_data_offer_page.data_model_tooltip' | translate
+              ">
               <mat-icon>info_outline</mat-icon>
             </button>
           </mat-form-field>
 
-          <div class="flex flex-row space-x-[10px]">
+          <div class="flex flex-row items-end space-x-[10px]">
             <!-- Transport Mode -->
             <transport-mode-select
               class="grow"
-              label="Transport Mode"
+              [label]="'create_data_offer_page.transport_mode' | translate"
               [control]="
                 form.advanced.controls.transportMode
               "></transport-mode-select>
 
             <!-- Geo reference method -->
-            <mat-form-field class="grow">
-              <mat-label>Geo reference method</mat-label>
+            <mat-form-field class="grow align-middle">
+              <mat-label>{{
+                'create_data_offer_page.geo_reference_method' | translate
+              }}</mat-label>
               <input
                 matInput
                 placeholder="Lat/Lon"
@@ -250,7 +284,9 @@
                 class="!scale-[0.9]"
                 mat-icon-button
                 matSuffix
-                matTooltip="The method used for representing of geographical data, e.g GeoJSON, OpenLR, etc.">
+                [matTooltip]="
+                  'create_data_offer_page.geo_reference_tooltip' | translate
+                ">
                 <mat-icon>info_outline</mat-icon>
               </button>
             </mat-form-field>
@@ -258,16 +294,22 @@
 
           <!-- Sovereign legal name -->
           <mat-form-field>
-            <mat-label>Sovereign</mat-label>
+            <mat-label>{{
+              'create_data_offer_page.sovereign_label' | translate
+            }}</mat-label>
             <input
               matInput
-              placeholder="Data Owning Company GMBH"
+              [placeholder]="
+                'create_data_offer_page.sovereign_placeholder' | translate
+              "
               [formControl]="form.advanced.controls.sovereignLegalName" />
             <button
               class="!scale-[0.9]"
               mat-icon-button
               matSuffix
-              matTooltip="Legal name of the data owner">
+              [matTooltip]="
+                'create_data_offer_page.sovereign_tooltip' | translate
+              ">
               <mat-icon>info_outline</mat-icon>
             </button>
           </mat-form-field>
@@ -275,23 +317,33 @@
           <!-- Data update frequency -->
           <div class="flex flex-row space-x-[10px]">
             <mat-form-field class="grow">
-              <mat-label>Data update frequency</mat-label>
+              <mat-label>{{
+                'create_data_offer_page.data_update_frequency_label' | translate
+              }}</mat-label>
               <input
                 matInput
-                placeholder="every month"
+                [placeholder]="
+                  'create_data_offer_page.data_update_frequency_placeholder'
+                    | translate
+                "
                 [formControl]="form.advanced.controls.dataUpdateFrequency" />
               <button
                 class="!scale-[0.9]"
                 mat-icon-button
                 matSuffix
-                matTooltip="How often is the dataset updated, e.g	'Every 5 min.'">
+                [matTooltip]="
+                  'create_data_offer_page.data_update_frequency_tooltip'
+                    | translate
+                ">
                 <mat-icon>info_outline</mat-icon>
               </button>
             </mat-form-field>
 
             <!-- Geo location -->
             <mat-form-field class="grow">
-              <mat-label>Geo location</mat-label>
+              <mat-label>{{
+                'create_data_offer_page.geo_location_label' | translate
+              }}</mat-label>
               <input
                 matInput
                 placeholder="40.741895,-73.989308"
@@ -300,7 +352,9 @@
                 class="!scale-[0.9]"
                 mat-icon-button
                 matSuffix
-                matTooltip="Simple description of the relevant geolocation, e.g. Hamburg and vicinity.">
+                [matTooltip]="
+                  'create_data_offer_page.geo_location_tooltip' | translate
+                ">
                 <mat-icon>info_outline</mat-icon>
               </button>
             </mat-form-field>
@@ -308,13 +362,17 @@
 
           <!-- NUTS locations -->
           <div class="flex flex-row justify-start items-center">
-            <div class="form-section-title">NUTS locations</div>
+            <div class="form-section-title">
+              {{ 'create_data_offer_page.nuts_locations_label' | translate }}
+            </div>
             <button
               class="!scale-[0.9]"
               mat-icon-button
               matSuffix
               matTooltipPosition="right"
-              matTooltip="NUTS codes are regional identifiers in Germany used for statistical and administrative purposes, covering states, districts, and municipalities. (e.g DE60)">
+              [matTooltip]="
+                'create_data_offer_page.nuts_locations_tooltip' | translate
+              ">
               <mat-icon>info_outline</mat-icon>
             </button>
           </div>
@@ -325,7 +383,9 @@
             "
             class="flex flex-row space-x-[10px]">
             <mat-form-field class="grow">
-              <mat-label>NUTS location</mat-label>
+              <mat-label>{{
+                'create_data_offer_page.nuts_location' | translate
+              }}</mat-label>
               <input matInput placeholder="DE929" [formControl]="location" />
             </mat-form-field>
 
@@ -334,7 +394,7 @@
               color="warn"
               style="height: 54px; margin-top: 4px; margin-left: 8px"
               (click)="form.onNutsLocationsRemoveClick(i)">
-              Remove
+              {{ 'general.remove' | translate }}
             </button>
           </div>
 
@@ -343,19 +403,23 @@
               mat-button
               color="accent"
               (click)="form.onNutsLocationsAddClick()">
-              Add location
+              {{ 'create_data_offer_page.add_location' | translate }}
             </button>
           </div>
 
           <!-- Data sample URLs -->
           <div class="flex flex-row justify-start items-center">
-            <div class="form-section-title">Data samples</div>
+            <div class="form-section-title">
+              {{ 'create_data_offer_page.data_samples' | translate }}
+            </div>
             <button
               class="!scale-[0.9]"
               mat-icon-button
               matSuffix
               matTooltipPosition="right"
-              matTooltip="URLs of Dataset samples if available">
+              [matTooltip]="
+                'create_data_offer_page.data_samples_tooltip' | translate
+              ">
               <mat-icon>info_outline</mat-icon>
             </button>
           </div>
@@ -378,7 +442,7 @@
               color="warn"
               style="height: 54px; margin-top: 4px; margin-left: 8px"
               (click)="form.onDataSampleUrlsRemoveClick(i)">
-              Remove
+              {{ 'general.remove' | translate }}
             </button>
           </div>
 
@@ -387,20 +451,24 @@
               mat-button
               color="accent"
               (click)="form.onDataSampleUrlsAddClick()">
-              Add data sample
+              {{ 'create_data_offer_page.add_data_sample' | translate }}
             </button>
           </div>
 
           <!-- Reference file URLs -->
           <div class="flex flex-row justify-start items-center">
-            <div class="form-section-title">Reference files</div>
+            <div class="form-section-title">
+              {{ 'create_data_offer_page.reference_files' | translate }}
+            </div>
 
             <button
               class="!scale-[0.9]"
               mat-icon-button
               matSuffix
               matTooltipPosition="right"
-              matTooltip="URLs of Dataset schemas or other references">
+              [matTooltip]="
+                'create_data_offer_page.reference_files_tooltip' | translate
+              ">
               <mat-icon>info_outline</mat-icon>
             </button>
           </div>
@@ -423,7 +491,7 @@
               color="warn"
               style="height: 54px; margin-top: 4px; margin-left: 8px"
               (click)="form.onReferenceFileUrlsRemoveClick(i)">
-              Remove
+              {{ 'general.remove' | translate }}
             </button>
           </div>
 
@@ -432,14 +500,17 @@
               mat-button
               color="accent"
               (click)="form.onReferenceFileUrlsAddClick()">
-              Add reference file
+              {{ 'create_data_offer_page.add_reference_file' | translate }}
             </button>
           </div>
 
           <!-- Reference files description -->
           <mat-form-field
             *ngIf="form.advanced.controls.referenceFileUrls.length > 0">
-            <mat-label>Reference files description</mat-label>
+            <mat-label>{{
+              'create_data_offer_page.reference_files_description_label'
+                | translate
+            }}</mat-label>
             <textarea
               class="h-28"
               matInput
@@ -448,16 +519,16 @@
                 form.advanced.controls.referenceFilesDescription
               "></textarea>
             <mat-hint
-              >Additional information regarding the reference files.
-              <span class="flex flex-row items-center gap-1"
-                >Supports
-                <a
-                  class="link"
-                  externalLink
-                  href="https://www.markdownguide.org/basic-syntax/"
-                  >Markdown syntax</a
-                >
-              </span>
+              >{{
+                'create_data_offer_page.reference_files_description' | translate
+              }}
+
+              <a
+                class="link"
+                externalLink
+                href="https://www.markdownguide.org/basic-syntax/"
+                >Markdown syntax</a
+              >
             </mat-hint>
           </mat-form-field>
 
@@ -466,20 +537,25 @@
             *ngIf="form.advanced.controls.temporalCoverage; let ctrl"
             class="mt-[20px]"
             color="accent">
-            <mat-label>Temporal coverage</mat-label>
+            <mat-label>{{
+              'create_data_offer_page.temporal_coverage' | translate
+            }}</mat-label>
             <mat-date-range-input [formGroup]="ctrl" [rangePicker]="picker">
               <input
                 matStartDate
                 formControlName="from"
-                placeholder="Start date" />
+                [placeholder]="
+                  'create_data_offer_page.start_date' | translate
+                " />
               <input
                 matEndDate
                 formControlName="toInclusive"
-                placeholder="End date (inclusive)" />
+                [placeholder]="
+                  'create_data_offer_page.end_date_inclusive' | translate
+                " />
             </mat-date-range-input>
             <mat-hint
-              >Start and/or end date when the dataset is available for
-              consumption. DD/MM/YYYY (optional) – DD/MM/YYYY (optional)
+              >{{ 'create_data_offer_page.temporal_coverage_hint' | translate }}
             </mat-hint>
             <mat-datepicker-toggle
               matSuffix
@@ -492,26 +568,30 @@
 
           <!-- Conditions for use -->
           <mat-form-field class="mt-[20px]">
-            <mat-label>Conditions for use</mat-label>
+            <mat-label>{{
+              'create_data_offer_page.conditions_for_use_label' | translate
+            }}</mat-label>
             <textarea
               class="h-28"
               matInput
-              placeholder="Please cite the dataset as..."
+              [placeholder]="
+                'create_data_offer_page.conditions_for_use_placeholder'
+                  | translate
+              "
               [formControl]="
                 form.advanced.controls.conditionsForUse
               "></textarea>
             <mat-hint
-              >Additional not legally relevant usage instructions (e.g. how to
-              cite the dataset). <br />
-              <span class="flex flex-row items-center gap-1"
-                >Supports
-                <a
-                  class="link"
-                  externalLink
-                  href="https://www.markdownguide.org/basic-syntax/"
-                  >Markdown syntax</a
-                >
-              </span>
+              >{{
+                'create_data_offer_page.conditions_for_use_description_hint'
+                  | translate
+              }}
+              <a
+                class="link"
+                externalLink
+                href="https://www.markdownguide.org/basic-syntax/"
+                >Markdown syntax</a
+              >
             </mat-hint>
           </mat-form-field>
         </div>
@@ -521,10 +601,10 @@
     <mat-step *ngIf="form.datasource" [stepControl]="form.datasource">
       <form [formGroup]="form.datasource">
         <ng-template matStepLabel>{{
-          'asset_list_page.datasource_info' | translate
+          'create_data_offer_page.datasource_information' | translate
         }}</ng-template>
         <div class="form-section-title">
-          {{ 'asset_list_page.datasource' | translate }}
+          {{ 'create_data_offer_page.datasource' | translate }}
         </div>
         <div class="flex flex-col mt-[10px]">
           <!-- Data Address Type -->
@@ -543,7 +623,8 @@
               let ctrl
             ">
             <mat-label>{{
-              'asset_list_page.datasource_config' | translate
+              'create_data_offer_page.custom_datasource_config_json_label'
+                | translate
             }}</mat-label>
             <textarea
               matInput
@@ -557,12 +638,16 @@
           <!-- Data Source Type ON_REQUEST -->
           <ng-container *ngIf="form.dataAddressType === 'On-Request'">
             <!-- Contact E-Mail -->
-            <div class="form-section-title">Contact E-Mail</div>
+            <div class="form-section-title">
+              {{ 'create_data_offer_page.contact_email' | translate }}
+            </div>
 
             <mat-form-field
               *ngIf="form.datasource.controls.contactEmail; let ctrl"
               class="grow">
-              <mat-label>Contact E-Mail</mat-label>
+              <mat-label>{{
+                'create_data_offer_page.contact_email' | translate
+              }}</mat-label>
               <input
                 matInput
                 [formControl]="ctrl"
@@ -571,9 +656,9 @@
                 class="!scale-[0.9]"
                 mat-icon-button
                 matSuffix
-                matTooltip="This email address will be offered to potential consumers for
-                contacting you. This is done in place of having an actual data
-                source connected.">
+                [matTooltip]="
+                  'create_data_offer_page.contact_email_tooltip' | translate
+                ">
                 <mat-icon>info_outline</mat-icon>
               </button>
               <mat-error *ngIf="ctrl.invalid && ctrl.errors?.email">
@@ -582,7 +667,9 @@
             </mat-form-field>
 
             <!-- Contact E-Mail Preferred Subject -->
-            <div class="form-section-title">Preferred E-Mail Subject</div>
+            <div class="form-section-title">
+              {{ 'create_data_offer_page.email_subject' | translate }}
+            </div>
 
             <mat-form-field
               *ngIf="
@@ -590,7 +677,9 @@
                 let ctrl
               "
               class="grow">
-              <mat-label>Preferred E-Mail Subject</mat-label>
+              <mat-label>{{
+                'create_data_offer_page.email_subject' | translate
+              }}</mat-label>
               <input
                 matInput
                 [formControl]="ctrl"
@@ -599,8 +688,9 @@
                 class="!scale-[0.9]"
                 mat-icon-button
                 matSuffix
-                matTooltip="When potential customers reach out to you via email, you’ll
-                receive messages with this subject line.">
+                [matTooltip]="
+                  'create_data_offer_page.email_subject_tooltip' | translate
+                ">
                 <mat-icon>info_outline</mat-icon>
               </button>
             </mat-form-field>
@@ -613,7 +703,7 @@
             </div>
 
             <div *ngIf="form.proxyMethod" class="mb-[10px] px-[3px] text-sm">
-              {{ 'asset_list_page.provide' | translate }}
+              {{ 'create_data_offer_page.custom_http_method_hint' | translate }}
             </div>
 
             <!-- Method (Rest-Api) -->
@@ -645,14 +735,18 @@
                     ? ('general.disable' | translate)
                     : ('general.enable' | translate)
                 }}
-                {{ 'asset_list_page.method_para' | translate }}
+                {{
+                  'create_data_offer_page.method_parameterization' | translate
+                }}
               </button>
             </div>
 
             <div class="form-section-title">URL</div>
 
             <div *ngIf="form.proxyPath" class="mb-[10px] px-[3px] text-sm">
-              {{ 'asset_list_page.http_subpath' | translate }}
+              {{
+                'create_data_offer_page.custom_http_subpath_hint' | translate
+              }}
             </div>
 
             <!-- Base Path (Rest-Api) -->
@@ -680,13 +774,13 @@
                     ? ('general.disable' | translate)
                     : ('general.enable' | translate)
                 }}
-                {{ 'asset_list_page.path_para' | translate }}
+                {{ 'create_data_offer_page.path_parameterization' | translate }}
               </button>
             </div>
 
             <div class="form-section-title">
               {{ form.proxyQueryParams ? 'Default' : '' }}
-              {{ 'asset_list_page.query_para' | translate }}
+              {{ 'create_data_offer_page.query_params' | translate }}
             </div>
 
             <div
@@ -698,7 +792,7 @@
               <!-- Query Param Name -->
               <mat-form-field class="w-1/3">
                 <mat-label>{{
-                  'asset_list_page.query_name' | translate
+                  'create_data_offer_page.query_param_name' | translate
                 }}</mat-label>
                 <input
                   matInput
@@ -757,7 +851,7 @@
                 (click)="form.onHttpQueryParamsAddClick()">
                 {{ 'general.add' | translate }}
                 {{ form.proxyQueryParams ? 'Default' : '' }}
-                {{ 'asset_list_page.query_para_single' | translate }}
+                {{ 'create_data_offer_page.query_param' | translate }}
               </button>
 
               <!-- Toggle Proxy Query Param Parameterization Button -->
@@ -771,17 +865,17 @@
                     ? ('general.disable' | translate)
                     : ('general.enable' | translate)
                 }}
-                {{ 'asset_list_page.query_para_single' | translate }}
-                Parameterization
+                {{ 'create_data_offer_page.query_param' | translate }}
+                {{ 'create_data_offer_page.parameterization' | translate }}
               </button>
             </div>
 
             <div class="form-section-title">
-              {{ 'asset_list_page.request_body' | translate }}
+              {{ 'create_data_offer_page.request_body' | translate }}
             </div>
 
             <div class="text-sm mb-[10px] px-[3px]">
-              {{ 'asset_list_page.info_body' | translate }}
+              {{ 'create_data_offer_page.request_body_hint' | translate }}
             </div>
 
             <!-- Toggle Proxy Body Button -->
@@ -797,7 +891,10 @@
                     ? ('general.disable' | translate)
                     : ('general.enable' | translate)
                 }}
-                {{ 'asset_list_page.request_para' | translate }}
+                {{
+                  'create_data_offer_page.request_body_parameterization'
+                    | translate
+                }}
               </button>
             </div>
 
@@ -829,14 +926,17 @@
                 form.datasource.controls.httpAuthHeaderType.value !== 'None'
               "
               class="grow">
-              <mat-label>Type</mat-label>
+              <mat-label>{{ 'general.type' | translate }}</mat-label>
               <mat-select
                 [formControl]="form.datasource.controls.httpAuthHeaderType">
                 <mat-option value="Vault-Secret">
-                  {{ 'general.header_sec' | translate }}
+                  {{
+                    'create_data_offer_page.header_with_vault_secret'
+                      | translate
+                  }}
                 </mat-option>
                 <mat-option value="Value">{{
-                  'general.header_val' | translate
+                  'create_data_offer_page.header_with_value' | translate
                 }}</mat-option>
               </mat-select>
             </mat-form-field>
@@ -847,11 +947,16 @@
               class="flex flex-row space-x-[10px]">
               <!-- Auth Header Name -->
               <mat-form-field class="w-1/3">
-                <mat-label>{{ 'general.auth_header' | translate }}</mat-label>
+                <mat-label>{{
+                  'create_data_offer_page.auth_header_name' | translate
+                }}</mat-label>
                 <input
                   matInput
-                  placeholder="Authorization"
                   autocomplete="new-auth-header-name"
+                  [placeholder]="
+                    'create_data_offer_page.authorization_header_placeholder'
+                      | translate
+                  "
                   [formControl]="form.datasource.controls.httpAuthHeaderName" />
               </mat-form-field>
 
@@ -864,7 +969,9 @@
                 <mat-label>{{ 'general.auth_value' | translate }}</mat-label>
                 <input
                   matInput
-                  placeholder="Bearer ..."
+                  [placeholder]="
+                    'create_data_offer_page.bearer_placeholder' | translate
+                  "
                   [formControl]="
                     form.datasource.controls.httpAuthHeaderValue
                   " />
@@ -877,7 +984,9 @@
                   'Vault-Secret'
                 "
                 class="grow">
-                <mat-label>{{ 'general.vault_secret' | translate }}</mat-label>
+                <mat-label>{{
+                  'create_data_offer_page.vault_secret_name' | translate
+                }}</mat-label>
                 <input
                   matInput
                   placeholder="MySecret123"
@@ -904,7 +1013,7 @@
             </div>
 
             <div class="form-section-title">
-              {{ 'general.add_header' | translate }}
+              {{ 'create_data_offer_page.additional_headers' | translate }}
             </div>
 
             <div
