@@ -131,39 +131,6 @@ Our sovity Community Edition EDC is built as several docker image variants in di
       </ul>
     </td>
   </tr>
-  <tr>
-    <td>
-      <a href="https://github.com/sovity/edc-ce/pkgs/container/catalog-crawler-dev">catalog-crawler-dev</a>
-    </td>
-    <td>Development</td>
-    <td>
-      <ul>
-        <li>Local Demo</li>
-        <li>E2E Testing</li>
-      </ul>
-    </td>
-    <td>
-      <ul>
-        <li>Catalog Crawler for one environment</li>
-        <li>Mock IAM</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td>catalog-crawler-ce</td>
-    <td>Community Edition</td>
-    <td>
-      <ul>
-        <li>Productive Deployment</li>
-      </ul>
-    </td>
-    <td>
-      <ul>
-        <li>Catalog Crawler for one environment</li>
-        <li>DAPS Authentication</li>
-      </ul>
-    </td>
-  </tr>
 </table>
 
 ## Image Tags

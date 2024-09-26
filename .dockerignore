@@ -39,7 +39,6 @@ build
 
 .env
 !launchers/.env.connector
-!launchers/.env.catalog-crawler
 
 # Log files
 *.log

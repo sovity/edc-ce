@@ -104,30 +104,6 @@ jobs:
           deployment-type: "connector"
           title: "Test Data Source / Data Sink"
           description: "Provides a minimal data source / data sink for E2E tests."
-      - name: "Docker Image: catalog-crawler-dev"
-        uses: ./.github/actions/build-connector-image
-        with:
-          registry-url: ${{ env.REGISTRY_URL }}
-          registry-user: ${{ env.REGISTRY_USER }}
-          registry-password: ${{ secrets.GITHUB_TOKEN }}
-          image-base-name: ${{ env.IMAGE_BASE_NAME }}
-          image-name: "catalog-crawler-dev"
-          connector-name: "catalog-crawler-dev"
-          deployment-type: "catalog-crawler"
-          title: "Catalog Crawler (Dev)"
-          description: "sovity CE Catalog crawler for the sovity CE Authority Portal. This dev version contains no auth and can be used to quickly start a locally running Catalog Crawler."
-      - name: "Docker Image: catalog-crawler-ce"
-        uses: ./.github/actions/build-connector-image
-        with:
-          registry-url: ${{ env.REGISTRY_URL }}
-          registry-user: ${{ env.REGISTRY_USER }}
-          registry-password: ${{ secrets.GITHUB_TOKEN }}
-          image-base-name: ${{ env.IMAGE_BASE_NAME }}
-          image-name: "catalog-crawler-ce"
-          connector-name: "catalog-crawler-ce"
-          deployment-type: "catalog-crawler"
-          title: "Catalog Crawler (Community Edition, DAPS)"
-          description: "sovity CE Catalog crawler for the sovity CE Authority Portal. Requires DAPS dataspace credentials to join an existing dataspace."
   ts-api-client-library:
     name: TS API Client Library
     runs-on: ubuntu-latest
