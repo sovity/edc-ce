@@ -40,6 +40,9 @@ public class ConfigProp {
     @NotNull
     private String description;
 
+    /**
+     * Turns off all required / defaulting logic, if false
+     */
     private ConfigPropRequiredIfFn relevantIf;
 
     private boolean required;

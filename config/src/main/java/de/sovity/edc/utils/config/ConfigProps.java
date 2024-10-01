@@ -476,7 +476,7 @@ public class ConfigProps {
         .property("edc.connector.name")
         .description("Connector Name")
         .warnIfOverridden(true)
-        .defaultValueFn(props -> coalesce(MY_EDC_PARTICIPANT_ID.getRaw(props), MY_EDC_NAME_KEBAB_CASE.getRaw(props)))
+        .defaultValueFn(props -> firstNonNull(MY_EDC_PARTICIPANT_ID.getRaw(props), MY_EDC_NAME_KEBAB_CASE.getRaw(props)))
         .build().also(ALL_CE_PROPS::add);
 
     public static final ConfigProp EDC_PARTICIPANT_ID = ConfigProp.builder()
@@ -484,7 +484,7 @@ public class ConfigProps {
         .property("edc.participant.id")
         .description("Participant ID / Connector ID")
         .warnIfOverridden(true)
-        .defaultValueFn(props -> coalesce(MY_EDC_PARTICIPANT_ID.getRaw(props), MY_EDC_NAME_KEBAB_CASE.getRaw(props)))
+        .defaultValueFn(props -> firstNonNull(MY_EDC_PARTICIPANT_ID.getRaw(props), MY_EDC_NAME_KEBAB_CASE.getRaw(props)))
         .build().also(ALL_CE_PROPS::add);
 
     public static final ConfigProp EDC_HOSTNAME = ConfigProp.builder()
@@ -576,7 +576,7 @@ public class ConfigProps {
         .relevantIf(NetworkType::isProduction)
         .build().also(ALL_CE_PROPS::add);
 
-    public String coalesce(String... values) {
+    public String firstNonNull(String... values) {
         for (String value : values) {
             if (value != null) {
                 return value;

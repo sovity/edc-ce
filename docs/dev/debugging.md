@@ -27,6 +27,7 @@ If you used the `dev` set of files:
 
 ```bash
 docker compose --env-file .env.dev --file docker-compose-dev.yaml down
+docker compose --env-file .env.dev --file docker-compose-dev.yaml pull
 docker compose --env-file .env.dev --file docker-compose-dev.yaml up
 ```
 

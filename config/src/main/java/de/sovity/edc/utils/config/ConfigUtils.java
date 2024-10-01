@@ -25,7 +25,6 @@ import java.util.Map;
 public class ConfigUtils {
 
     public static String getProtocolApiUrl(Map<String, String> props) {
-
         return UrlPathUtils.urlPathJoin(
             ConfigProps.MY_EDC_PROTOCOL.getRaw(props),
             getHost(props, ConfigProps.WEB_HTTP_PROTOCOL_PORT),
@@ -34,7 +33,6 @@ public class ConfigUtils {
     }
 
     public static String getManagementApiUrl(Map<String, String> props) {
-
         return UrlPathUtils.urlPathJoin(
             ConfigProps.MY_EDC_PROTOCOL.getRaw(props),
             getHost(props, ConfigProps.WEB_HTTP_MANAGEMENT_PORT),

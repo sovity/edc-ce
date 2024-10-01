@@ -26,7 +26,6 @@ import org.eclipse.edc.spi.system.ServiceExtensionContext;
 public class DatabaseDirectAccessExtension implements ServiceExtension {
     public static final String NAME = "DirectDatabaseAccess";
 
-
     @Override
     public String name() {
         return NAME;
@@ -45,14 +44,13 @@ public class DatabaseDirectAccessExtension implements ServiceExtension {
         hikariConfig.setUsername(ConfigProps.EDC_DATASOURCE_DEFAULT_USER.getStringOrThrow(config));
         hikariConfig.setPassword(ConfigProps.EDC_DATASOURCE_DEFAULT_PASSWORD.getStringOrThrow(config));
         hikariConfig.setMinimumIdle(1);
-        hikariConfig.setMaximumPoolSize(config.getInteger(ConfigProps.EDC_SERVER_DB_CONNECTION_POOL_SIZE.getProperty(), 3));
+        hikariConfig.setMaximumPoolSize(ConfigProps.EDC_SERVER_DB_CONNECTION_POOL_SIZE.getInt(config));
         hikariConfig.setIdleTimeout(30000);
         hikariConfig.setPoolName("direct-database-access");
         hikariConfig.setMaxLifetime(50000);
-        hikariConfig.setConnectionTimeout(1000);
+        hikariConfig.setConnectionTimeout(ConfigProps.EDC_SERVER_DB_CONNECTION_TIMEOUT_IN_MS.getInt(config));
 
-        val dda = new DslContextFactory(new HikariDataSource(hikariConfig));
-
-        context.registerService(DslContextFactory.class, dda);
+        val dslContextFactory = new DslContextFactory(new HikariDataSource(hikariConfig));
+        context.registerService(DslContextFactory.class, dslContextFactory);
     }
 }
