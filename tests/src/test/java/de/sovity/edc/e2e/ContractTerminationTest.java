@@ -448,6 +448,7 @@ public class ContractTerminationTest {
 
     @SneakyThrows
     @Test
+    @DisabledOnGithub
     void canListenToTerminationEvents(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,

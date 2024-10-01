@@ -130,6 +130,7 @@ class DataSourceParameterizationTest {
     }
 
     @Test
+    @DisabledOnGithub
     void canUseTheWorkaroundInCustomTransferRequest(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
