@@ -80,6 +80,8 @@ export class ContractAgreementTransferDialogForm {
         const httpAuthByValue = value.httpAuthHeaderType === 'Value';
         const httpAuthByVault = value.httpAuthHeaderType === 'Vault-Secret';
 
+        const httpProxiedMethod = !!value.showAllHttpParameterizationFields;
+
         return {
           dataAddressType: true,
 
@@ -101,7 +103,7 @@ export class ContractAgreementTransferDialogForm {
           showAllHttpParameterizationFields: !customTransferProcessRequest,
 
           httpProxiedPath: !customTransferProcessRequest,
-          httpProxiedMethod: !customTransferProcessRequest,
+          httpProxiedMethod: !customTransferProcessRequest && httpProxiedMethod,
           httpProxiedQueryParams: !customTransferProcessRequest,
           httpProxiedBody: !customTransferProcessRequest,
           httpProxiedBodyContentType: !customTransferProcessRequest,
