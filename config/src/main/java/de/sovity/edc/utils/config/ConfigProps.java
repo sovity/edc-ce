@@ -543,6 +543,39 @@ public class ConfigProps {
         .defaultValueFn(MY_EDC_JDBC_PASSWORD::getRaw)
         .build().also(ALL_CE_PROPS::add);
 
+    public static final ConfigProp EDC_DATASOURCE_LOGGINGHOUSE_URL = ConfigProp.builder()
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("edc.datasource.logginghouse.url")
+        .relevantIf(NetworkType::isProduction)
+        .description("MDS Prod Variants Only: Logging House URL")
+        .defaultValueFn(MY_EDC_JDBC_URL::getRaw)
+        .build().also(ALL_CE_PROPS::add);
+
+    public static final ConfigProp EDC_DATASOURCE_LOGGINGHOUSE_USER = ConfigProp.builder()
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("edc.datasource.logginghouse.user")
+        .relevantIf(NetworkType::isProduction)
+        .description("MDS Prod Variants Only: Logging House User")
+        .defaultValueFn(MY_EDC_JDBC_USER::getRaw)
+        .build().also(ALL_CE_PROPS::add);
+
+    public static final ConfigProp EDC_DATASOURCE_LOGGINGHOUSE_PASSWORD = ConfigProp.builder()
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("edc.datasource.logginghouse.password")
+        .relevantIf(NetworkType::isProduction)
+        .description("MDS Prod Variants Only: Logging House Password")
+        .defaultValueFn(MY_EDC_JDBC_PASSWORD::getRaw)
+        .build().also(ALL_CE_PROPS::add);
+
+    public static final ConfigProp EDC_VAULT = ConfigProp.builder()
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("edc.vault")
+        .description("This file could contain an entry replacing the EDC_KEYSTORE ENV var, " +
+            "but for some reason it is required, and EDC won't start up if it isn't configured." +
+            "It is created in the Dockerfile")
+        .relevantIf(NetworkType::isProduction)
+        .build().also(ALL_CE_PROPS::add);
+
     public String coalesce(String... values) {
         for (String value : values) {
             if (value != null) {

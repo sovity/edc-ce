@@ -20,12 +20,8 @@ WORKDIR /app
 COPY ./launchers/connectors/$CONNECTOR_NAME/build/libs/app.jar /app
 COPY ./launchers/logging.properties /app
 COPY ./launchers/logging.dev.properties /app
-COPY ./launchers/.env.$CONNECTOR_TYPE /app/.env
 
 RUN touch /app/empty-properties-file.properties
-
-# Replaces var statements so when they are sourced as bash they don't overwrite existing env vars
-RUN sed -ri 's/^\s*(\S+)=(.*)$/\1=${\1:-"\2"}/' .env
 
 ENV EDC_LAST_COMMIT_INFO=$EDC_LAST_COMMIT_INFO_ARG
 ENV EDC_BUILD_DATE=$EDC_BUILD_DATE_ARG
