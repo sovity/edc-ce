@@ -20,6 +20,9 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
+- Fixed wrong button label stating "Method Parameterization" instead of "Path Parameterization" ([#857]https://github.com/sovity/edc-ui/issues/857)
+
+
 ### Deployment Migration Notes
 
 _No special deployment migration steps required_
