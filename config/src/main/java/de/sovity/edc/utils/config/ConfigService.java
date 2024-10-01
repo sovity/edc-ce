@@ -35,6 +35,12 @@ public class ConfigService {
      */
     private final List<ConfigProp> configProps;
 
+    /**
+     * Validate config and apply defaults
+     *
+     * @param properties raw config
+     * @return config with defaults and validation
+     */
     public Map<String, String> applyDefaults(Map<String, String> properties) {
         var withDefaults = new HashMap<>(translateToDotCase(properties));
         configProps.forEach(prop -> applyDefault(withDefaults, prop));

@@ -37,12 +37,15 @@ public class ConnectorConfigFactory {
 
     public static ConnectorConfig forTestDatabase(String participantId, TestDatabase testDatabase) {
         val firstPort = getFreePortRange(5);
+
+        // The initialization of the Map is split into several statements
+        // due to the parameter limit of Map.of(...)
         var propertiesInput = new HashMap<>(Map.of(
+            ConfigProps.MY_EDC_NETWORK_TYPE, ConfigProps.NetworkType.UNIT_TEST,
             ConfigProps.MY_EDC_FIRST_PORT, String.valueOf(firstPort),
             ConfigProps.EDC_API_AUTH_KEY, "api-key-%s".formatted(UUID.randomUUID().toString()),
             ConfigProps.MY_EDC_C2C_IAM_TYPE, "mock-iam",
-            ConfigProps.MY_EDC_PARTICIPANT_ID, participantId,
-            ConfigProps.MY_EDC_NETWORK_TYPE, ConfigProps.NetworkType.UNIT_TEST
+            ConfigProps.MY_EDC_PARTICIPANT_ID, participantId
         ));
 
         propertiesInput.putAll(Map.of(

@@ -19,13 +19,15 @@ public class SovityEdcRuntime extends BaseRuntime {
      */
     private final List<ConfigProp> configProps;
 
-    public static void boot(List<ConfigProp> configProps) {
-        var runtime = new SovityEdcRuntime(configProps);
-        runtime.boot();
-    }
-
     @Override
     protected @NotNull ServiceExtensionContext createContext(Monitor monitor) {
         return new SovityServiceExtensionContext(monitor, configProps, this.loadConfigurationExtensions());
+    }
+
+    public static void boot(List<ConfigProp> configProps) {
+        var runtime = new SovityEdcRuntime(configProps);
+
+        // This method is protected, so we need to have the static method here
+        runtime.boot();
     }
 }

@@ -64,6 +64,10 @@ public class ConfigProp {
         return config.getString(property, null);
     }
 
+    public String getStringOrThrow(Config config) {
+        return config.getString(property);
+    }
+
     public String getStringOrEmpty(Config config) {
         // Default should already be handled by ConfigProp
         return config.getString(property, "");

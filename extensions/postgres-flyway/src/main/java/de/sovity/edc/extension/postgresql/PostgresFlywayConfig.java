@@ -31,9 +31,9 @@ public record PostgresFlywayConfig(
     public static PostgresFlywayConfig fromConfig(Config config) {
         return new PostgresFlywayConfig(
             new JdbcCredentials(
-                ConfigProps.EDC_DATASOURCE_DEFAULT_URL.getStringOrNull(config),
-                ConfigProps.EDC_DATASOURCE_DEFAULT_USER.getStringOrNull(config),
-                ConfigProps.EDC_DATASOURCE_DEFAULT_PASSWORD.getStringOrNull(config)
+                ConfigProps.EDC_DATASOURCE_DEFAULT_URL.getStringOrThrow(config),
+                ConfigProps.EDC_DATASOURCE_DEFAULT_USER.getStringOrThrow(config),
+                ConfigProps.EDC_DATASOURCE_DEFAULT_PASSWORD.getStringOrThrow(config)
             ),
             ConfigProps.EDC_FLYWAY_REPAIR.getBoolean(config),
             ConfigProps.EDC_FLYWAY_CLEAN_ENABLE.getBoolean(config),

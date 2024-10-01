@@ -41,9 +41,9 @@ public class DatabaseDirectAccessExtension implements ServiceExtension {
 
         val hikariConfig = new HikariConfig();
         val config = context.getConfig();
-        hikariConfig.setJdbcUrl(ConfigProps.EDC_DATASOURCE_DEFAULT_URL.getStringOrNull(config));
-        hikariConfig.setUsername(ConfigProps.EDC_DATASOURCE_DEFAULT_USER.getStringOrNull(config));
-        hikariConfig.setPassword(ConfigProps.EDC_DATASOURCE_DEFAULT_PASSWORD.getStringOrNull(config));
+        hikariConfig.setJdbcUrl(ConfigProps.EDC_DATASOURCE_DEFAULT_URL.getStringOrThrow(config));
+        hikariConfig.setUsername(ConfigProps.EDC_DATASOURCE_DEFAULT_USER.getStringOrThrow(config));
+        hikariConfig.setPassword(ConfigProps.EDC_DATASOURCE_DEFAULT_PASSWORD.getStringOrThrow(config));
         hikariConfig.setMinimumIdle(1);
         hikariConfig.setMaximumPoolSize(config.getInteger(ConfigProps.EDC_SERVER_DB_CONNECTION_POOL_SIZE.getProperty(), 3));
         hikariConfig.setIdleTimeout(30000);
