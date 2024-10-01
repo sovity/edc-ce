@@ -69,7 +69,5 @@ class EdcUiConfigTest {
 
         request.assertThat()
             .body("EDC_UI_SOME_EXAMPLE_PROP", equalTo(SOME_EXAMPLE_PROP));
-        ;
-
     }
 }
