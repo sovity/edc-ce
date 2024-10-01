@@ -20,7 +20,8 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
-- Fixed wrong button label stating "Method Parameterization" instead of "Path Parameterization" ([#857]https://github.com/sovity/edc-ui/issues/857)
+- Fixed wrong button label stating "Method Parameterization" instead of "Path Parameterization" ([#857](https://github.com/sovity/edc-ui/issues/857))
+- Made Custom Http Method mandatory if the corresponding option is chosen ([#739](https://github.com/sovity/edc-ui/issues/739))
 
 
 ### Deployment Migration Notes
