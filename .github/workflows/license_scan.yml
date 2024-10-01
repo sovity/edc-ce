@@ -20,6 +20,7 @@ jobs:
           scanners: "license"
           severity: "CRITICAL,HIGH"
           exit-code: 1
+          github-pat: ${{ secrets.GITHUB_TOKEN }}
   license_scan2:
     name: License scan (repo)
     runs-on: ubuntu-latest
@@ -39,3 +40,4 @@ jobs:
           scanners: "license"
           severity: "CRITICAL,HIGH"
           exit-code: 1
+          github-pat: ${{ secrets.GITHUB_TOKEN }}
