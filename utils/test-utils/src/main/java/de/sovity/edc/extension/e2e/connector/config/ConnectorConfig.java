@@ -19,26 +19,35 @@ import de.sovity.edc.utils.config.ConfigUtils;
 import de.sovity.edc.utils.config.model.ConfigProp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.http.Header;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.function.Supplier;
 
 
-@Data
 @Builder
 @AllArgsConstructor
 public class ConnectorConfig {
     /**
      * Connector Properties after applying defaults from {@link ConfigProps}
      */
+    @Getter
+    @Setter
     private Map<String, String> properties;
 
-    @Builder.Default
-    private Supplier<Pair<String, String>> managementApiAuthHeader = () -> Pair.of("X-Api-Key", getManagementApiKey());
+    private Supplier<Pair<String, String>> managementApiAuthHeader;
+
+    @Nullable
+    public Pair<String, String> getManagementApiAuthHeader() {
+        if (managementApiAuthHeader != null) {
+            return managementApiAuthHeader.get();
+        }
+
+        return Pair.of("X-Api-Key", ConfigUtils.getManagementApiKey(properties));
+    }
 
     public ConnectorConfig setProperty(ConfigProp property, String value) {
         properties.put(property.getProperty(), value);

@@ -14,6 +14,11 @@
 
 package de.sovity.edc.extension.version.controller;
 
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory;
+import de.sovity.edc.extension.e2e.db.JdbcCredentials;
+import de.sovity.edc.extension.e2e.db.TestDatabase;
+import io.restassured.http.ContentType;
 import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -23,33 +28,48 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.Map;
-
-import static de.sovity.edc.extension.version.controller.TestUtils.createConfiguration;
-import static de.sovity.edc.extension.version.controller.TestUtils.mockRequest;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
 class EdcUiConfigTest {
     private static final String SOME_EXAMPLE_PROP = "this should also be passed through";
 
+    private ConnectorConfig config;
+
     @BeforeEach
     void setUp(EdcExtension extension) {
         extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
         extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
-        extension.registerServiceMock(
-                DataPlaneInstanceStore.class,
-                mock(DataPlaneInstanceStore.class));
-        extension.setConfiguration(createConfiguration(Map.of(
-                "edc.ui.some.example.prop", SOME_EXAMPLE_PROP
-        )));
+        extension.registerServiceMock(DataPlaneInstanceStore.class, mock(DataPlaneInstanceStore.class));
+
+        var testDatabase = mock(TestDatabase.class);
+        when(testDatabase.getJdbcCredentials()).thenReturn(new JdbcCredentials("unused", "unused", "unused"));
+
+        config = ConnectorConfigFactory.forTestDatabase("provider", testDatabase);
+        config.setProperty("edc.ui.some.example.prop", SOME_EXAMPLE_PROP);
+
+        extension.setConfiguration(config.getProperties());
     }
 
     @Test
     void testEdcUiConfigWithEverythingSet() {
-        mockRequest().assertThat()
-                .body("EDC_UI_SOME_EXAMPLE_PROP", equalTo(SOME_EXAMPLE_PROP));
+        var request = given()
+            .baseUri(config.getManagementApiUrl())
+            .header("X-Api-Key", config.getManagementApiKey())
+            .when()
+            .contentType(ContentType.JSON)
+            .get("/edc-ui-config")
+            .then()
+            .statusCode(200)
+            .contentType(ContentType.JSON);
+
+        request.assertThat()
+            .body("EDC_UI_SOME_EXAMPLE_PROP", equalTo(SOME_EXAMPLE_PROP));
+        ;
+
     }
 }

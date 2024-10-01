@@ -20,8 +20,4 @@ import java.util.Map;
 @FunctionalInterface
 public interface ConfigPropDefaultValueFn {
     String apply(Map<String, String> props);
-
-    static ConfigPropDefaultValueFn constant(String value) {
-        return p -> value;
-    }
 }

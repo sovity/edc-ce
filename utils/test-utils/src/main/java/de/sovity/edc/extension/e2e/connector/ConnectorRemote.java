@@ -340,7 +340,7 @@ public class ConnectorRemote {
         var apiUrl = config.getManagementApiUrl();
         var request = given().baseUri(apiUrl);
 
-        var header = config.getManagementApiAuthHeader().get();
+        var header = config.getManagementApiAuthHeader();
         if (header != null) {
             request = request.header(new Header(header.getLeft(), header.getRight()));
         }

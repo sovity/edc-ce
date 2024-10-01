@@ -8,6 +8,8 @@ dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
 
+    implementation(project(":config"))
+
     api(libs.edc.coreSpi)
     api(libs.edc.controlPlaneSpi)
     implementation(libs.edc.apiCore)
@@ -19,6 +21,7 @@ dependencies {
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
 
+    testImplementation(project(":utils:test-utils"))
     testImplementation(libs.edc.controlPlaneCore)
     testImplementation(libs.edc.junit)
     testImplementation(libs.edc.http) {

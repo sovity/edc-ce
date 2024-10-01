@@ -14,6 +14,11 @@
 
 package de.sovity.edc.extension.version.controller;
 
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory;
+import de.sovity.edc.extension.e2e.db.JdbcCredentials;
+import de.sovity.edc.extension.e2e.db.TestDatabase;
+import de.sovity.edc.utils.config.ConfigProps;
 import io.restassured.http.ContentType;
 import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
 import org.eclipse.edc.jsonld.spi.JsonLd;
@@ -30,34 +35,36 @@ import static io.restassured.RestAssured.given;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ApiTest
 @ExtendWith(EdcExtension.class)
 class LastCommitInfoTest {
 
+    private ConnectorConfig config;
+
     @BeforeEach
     void setUp(EdcExtension extension) {
+
         extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
         extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
-        extension.registerServiceMock(
-                DataPlaneInstanceStore.class,
-                mock(DataPlaneInstanceStore.class));
-        extension.setConfiguration(Map.of(
-                "web.http.port", String.valueOf(getFreePort()),
-                "web.http.path", "/api",
-                "web.http.management.port", String.valueOf(TestUtils.DATA_PORT),
-                "web.http.management.path", "/api/v1/data",
-                "edc.api.auth.key", TestUtils.AUTH_KEY,
-                "edc.last.commit.info", "test env commit message",
-                "edc.build.date", "2023-05-08T15:30:00Z"));
+        extension.registerServiceMock(DataPlaneInstanceStore.class, mock(DataPlaneInstanceStore.class));
+
+        var testDatabase = mock(TestDatabase.class);
+        when(testDatabase.getJdbcCredentials()).thenReturn(new JdbcCredentials("unused", "unused", "unused"));
+
+        config = ConnectorConfigFactory.forTestDatabase("provider", testDatabase);
+        config.setProperty(ConfigProps.EDC_LAST_COMMIT_INFO, "test env commit message");
+        config.setProperty(ConfigProps.EDC_BUILD_DATE, "2023-05-08T15:15:00Z");
+
+        extension.setConfiguration(config.getProperties());
     }
 
     @Test
     void testEnvAndJar() {
         var request = given()
-                .baseUri("http://localhost:" + TestUtils.DATA_PORT)
-                .basePath("/api/v1/data")
-                .header("X-Api-Key", TestUtils.AUTH_KEY)
+                .baseUri(config.getManagementApiUrl())
+                .header("X-Api-Key", config.getManagementApiKey())
                 .when()
                 .contentType(ContentType.JSON)
                 .get("/last-commit-info")
@@ -66,7 +73,7 @@ class LastCommitInfoTest {
                 .contentType(ContentType.JSON);
 
         request.assertThat().body("envLastCommitInfo", equalTo("test env commit message"))
-                .body("envBuildDate", equalTo("2023-05-08T15:30:00Z"))
+                .body("envBuildDate", equalTo("2023-05-08T15:15:00Z"))
                 .body("jarLastCommitInfo", equalTo("test jar commit message"))
                 .body("jarBuildDate", equalTo("2023-05-09T15:30:00Z"));
 

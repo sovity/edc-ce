@@ -20,6 +20,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -37,8 +38,8 @@ public class ConnectorRemoteConfig {
     @NonNull
     private final String managementApiUrl;
 
-    @NonNull
-    private final Supplier<Pair<String, String>> managementApiAuthHeader;
+    @Nullable
+    private final Pair<String, String> managementApiAuthHeader;
 
     @NonNull
     private final String protocolApiUrl;

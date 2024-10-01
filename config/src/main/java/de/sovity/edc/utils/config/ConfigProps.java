@@ -331,11 +331,18 @@ public class ConfigProps {
         .defaultValue("*")
         .build().also(ALL_CE_PROPS::add);
 
-    private static final ConfigProp EDC_BUILD_DATE = ConfigProp.builder()
+    public static final ConfigProp EDC_BUILD_DATE = ConfigProp.builder()
         .category(Category.ADVANCED)
         .property("edc.build.date")
         .description("Build Date, usually set via CI into a build arg into the built image")
-        .defaultValue("Unknown version")
+        .defaultValue("Unknown Version")
+        .build().also(ALL_CE_PROPS::add);
+
+    public static final ConfigProp EDC_LAST_COMMIT_INFO = ConfigProp.builder()
+        .category(Category.ADVANCED)
+        .property("edc.build.date")
+        .description("Last Commit Info / Build Version, usually set via CI into a build arg into the built image")
+        .defaultValue("Unknown Version")
         .build().also(ALL_CE_PROPS::add);
 
     public static final ConfigProp MY_EDC_DOCKER_COMPOSE_SERVICE_NAME = ConfigProp.builder()
