@@ -60,19 +60,20 @@ class LastCommitInfoTest {
     @Test
     void testEnvAndJar() {
         var request = given()
-                .baseUri(config.getManagementApiUrl())
-                .header("X-Api-Key", config.getManagementApiKey())
-                .when()
-                .contentType(ContentType.JSON)
-                .get("/last-commit-info")
-                .then()
-                .statusCode(200)
-                .contentType(ContentType.JSON);
+            .baseUri(config.getManagementApiUrl())
+            .header("X-Api-Key", config.getManagementApiKey())
+            .when()
+            .contentType(ContentType.JSON)
+            .get("/last-commit-info")
+            .then()
+            .statusCode(200)
+            .contentType(ContentType.JSON);
 
-        request.assertThat().body("envLastCommitInfo", equalTo("test env commit message"))
-                .body("envBuildDate", equalTo("2023-05-08T15:15:00Z"))
-                .body("jarLastCommitInfo", equalTo("test jar commit message"))
-                .body("jarBuildDate", equalTo("2023-05-09T15:30:00Z"));
+        request.assertThat()
+            .body("envLastCommitInfo", equalTo("test env commit message"))
+            .body("jarLastCommitInfo", equalTo("test jar commit message"))
+            .body("envBuildDate", equalTo("2023-05-08T15:15:00Z"))
+            .body("jarBuildDate", equalTo("2023-05-09T15:30:00Z"));
 
     }
 }

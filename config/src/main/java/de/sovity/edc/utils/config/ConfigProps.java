@@ -340,7 +340,7 @@ public class ConfigProps {
 
     public static final ConfigProp EDC_LAST_COMMIT_INFO = ConfigProp.builder()
         .category(Category.ADVANCED)
-        .property("edc.build.date")
+        .property("edc.last.commit.info")
         .description("Last Commit Info / Build Version, usually set via CI into a build arg into the built image")
         .defaultValue("Unknown Version")
         .build().also(ALL_CE_PROPS::add);
