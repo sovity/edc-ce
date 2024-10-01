@@ -38,15 +38,13 @@ public class ConnectorConfig {
     @Setter
     private Map<String, String> properties;
 
-    private Supplier<Pair<String, String>> managementApiAuthHeader;
+    private Supplier<Pair<String, String>> managementApiAuthHeaderFactory;
 
-    @Nullable
-    public Pair<String, String> getManagementApiAuthHeader() {
-        if (managementApiAuthHeader != null) {
-            return managementApiAuthHeader.get();
+    public Supplier<Pair<String, String>> getManagementApiAuthHeaderFactory() {
+        if (managementApiAuthHeaderFactory == null) {
+            return () -> Pair.of("X-Api-Key", ConfigUtils.getManagementApiKey(properties));
         }
-
-        return Pair.of("X-Api-Key", ConfigUtils.getManagementApiKey(properties));
+        return managementApiAuthHeaderFactory;
     }
 
     public ConnectorConfig setProperty(ConfigProp property, String value) {

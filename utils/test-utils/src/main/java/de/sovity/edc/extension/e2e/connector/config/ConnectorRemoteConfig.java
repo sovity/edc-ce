@@ -39,7 +39,7 @@ public class ConnectorRemoteConfig {
     private final String managementApiUrl;
 
     @Nullable
-    private final Pair<String, String> managementApiAuthHeader;
+    private final Supplier<Pair<String, String>> managementApiAuthHeaderFactory;
 
     @NonNull
     private final String protocolApiUrl;
@@ -51,7 +51,7 @@ public class ConnectorRemoteConfig {
         return builder()
             .participantId(connectorConfig.getParticipantId())
             .managementApiUrl(connectorConfig.getManagementApiUrl())
-            .managementApiAuthHeader(connectorConfig.getManagementApiAuthHeader())
+            .managementApiAuthHeaderFactory(connectorConfig.getManagementApiAuthHeaderFactory())
             .protocolApiUrl(connectorConfig.getProtocolApiUrl())
             .publicApiUrl(connectorConfig.getPublicApiUrl())
             .defaultApiUrl(connectorConfig.getDefaultApiUrl())

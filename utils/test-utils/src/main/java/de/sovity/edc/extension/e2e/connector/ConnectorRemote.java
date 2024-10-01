@@ -31,7 +31,6 @@ import org.eclipse.edc.jsonld.util.JacksonJsonLd;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.monitor.ConsoleMonitor;
 import org.eclipse.edc.spi.result.Failure;
-import org.eclipse.edc.util.string.StringUtils;
 
 import java.time.Duration;
 import java.util.Map;
@@ -340,7 +339,7 @@ public class ConnectorRemote {
         var apiUrl = config.getManagementApiUrl();
         var request = given().baseUri(apiUrl);
 
-        var header = config.getManagementApiAuthHeader();
+        var header = config.getManagementApiAuthHeaderFactory().get();
         if (header != null) {
             request = request.header(new Header(header.getLeft(), header.getRight()));
         }
