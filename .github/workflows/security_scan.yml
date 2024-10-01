@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Run static analysis (rootfs)
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.24
         with:
           scan-type: "rootfs"
           scanners: "vuln,misconfig"
@@ -28,7 +28,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Run static analysis (repo)
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.24
         with:
           scan-type: "repo"
           scanners: "vuln,misconfig"

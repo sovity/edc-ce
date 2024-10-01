@@ -10,10 +10,10 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Run license scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.24
         with:
           scan-type: "rootfs"
           scan-ref: "."
@@ -27,13 +27,13 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: npm install (typescript-client)
         run: cd extensions/wrapper/clients/typescript-client && npm clean-install
       - name: npm install (typescript-client-example)
         run: cd extensions/wrapper/clients/typescript-client-example && npm clean-install
       - name: Run license scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.24
         with:
           scan-type: "repo"
           scan-ref: "."
