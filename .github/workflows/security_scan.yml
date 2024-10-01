@@ -13,6 +13,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Run static analysis (rootfs)
         uses: aquasecurity/trivy-action@0.24.0
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
         with:
           scan-type: "rootfs"
           scanners: "vuln,misconfig"
@@ -29,6 +31,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Run static analysis (repo)
         uses: aquasecurity/trivy-action@0.24.0
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
         with:
           scan-type: "repo"
           scanners: "vuln,misconfig"
