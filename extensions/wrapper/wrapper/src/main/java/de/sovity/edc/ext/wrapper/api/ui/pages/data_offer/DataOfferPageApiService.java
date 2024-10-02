@@ -78,28 +78,35 @@ public class DataOfferPageApiService {
     }
 
     private @NotNull IdResponseDto createAndPublishUnrestricted(DSLContext dsl, DataOfferCreationRequest dataOfferCreationRequest, String commonId) {
-        checkAssetIdAvailable(dsl, commonId);
-        checkContractDefinitionIdAvailable(dsl, commonId);
+        val assetId = commonId;
+        val contractDefinitionId = commonId;
         val policyId = AlwaysTruePolicyConstants.POLICY_DEFINITION_ID;
+
+        checkAssetIdAvailable(dsl, assetId);
+        checkContractDefinitionIdAvailable(dsl, contractDefinitionId);
 
         assetApiService.createAsset(dataOfferCreationRequest.getUiAssetCreateRequest());
 
-        return createContractDefinition(commonId, policyId, commonId);
+        return createContractDefinition(assetId, policyId, contractDefinitionId);
     }
 
     private @NotNull IdResponseDto createAndPublishRestricted(DSLContext dsl, DataOfferCreationRequest dataOfferCreationRequest, String commonId) {
-        checkAssetIdAvailable(dsl, commonId);
-        checkPolicyIdAvailable(dsl, commonId);
-        checkContractDefinitionIdAvailable(dsl, commonId);
+        val assetId = commonId;
+        val policyId = commonId;
+        val contractDefinitionId = commonId;
+
+        checkAssetIdAvailable(dsl, assetId);
+        checkPolicyIdAvailable(dsl, policyId);
+        checkContractDefinitionIdAvailable(dsl, contractDefinitionId);
 
         assetApiService.createAsset(dataOfferCreationRequest.getUiAssetCreateRequest());
 
         val maybeNewPolicy = Optional.ofNullable(dataOfferCreationRequest.getUiPolicyExpression());
 
         maybeNewPolicy.ifPresent(
-            policy -> policyDefinitionApiService.createPolicyDefinitionV2(new PolicyDefinitionCreateDto(commonId, policy)));
+            policy -> policyDefinitionApiService.createPolicyDefinitionV2(new PolicyDefinitionCreateDto(policyId, policy)));
 
-        createContractDefinition(commonId, commonId, commonId);
+        createContractDefinition(assetId, policyId, contractDefinitionId);
 
         return new IdResponseDto(commonId, OffsetDateTime.now());
     }

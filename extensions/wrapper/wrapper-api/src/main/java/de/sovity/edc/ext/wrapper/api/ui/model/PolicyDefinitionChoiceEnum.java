@@ -14,8 +14,15 @@
 
 package de.sovity.edc.ext.wrapper.api.ui.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
+
 public enum PolicyDefinitionChoiceEnum {
+    @Schema(description = "Only create the asset", requiredMode = REQUIRED)
     DONT_PUBLISH,
+    @Schema(description = "Create the asset and assigns the always-true policy in the contract definition", requiredMode = REQUIRED)
     PUBLISH_UNRESTRICTED,
+    @Schema(description = "Create the asset, a policy and a contract definition", requiredMode = REQUIRED)
     PUBLISH_RESTRICTED
 }

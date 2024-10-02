@@ -687,7 +687,7 @@ class UiApiWrapperTest {
     }
 
     @Test
-    void canCreateDataOfferWithoutAnyNewPolicy(
+    void canCreateDataOfferWithoutAnyNewPolicyNotContractDefinition(
         @Provider EdcClient providerClient
     ) {
         // arrange
