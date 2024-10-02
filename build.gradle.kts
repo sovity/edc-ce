@@ -25,12 +25,12 @@ val getJars by tasks.registering(Copy::class) {
     outputs.upToDateWhen { false } //always download
 
     from(downloadArtifact)
-            // strip away the version string
-            .rename { s ->
-                s.replace("-${identityHubVersion}", "")
-                        .replace("-${registrationServiceVersion}", "")
-                        .replace("-all", "")
-            }
+        // strip away the version string
+        .rename { s ->
+            s.replace("-${identityHubVersion}", "")
+                .replace("-${registrationServiceVersion}", "")
+                .replace("-all", "")
+        }
     into(layout.projectDirectory.dir("libs/cli-tools"))
 }
 
@@ -101,7 +101,8 @@ allprojects {
             }
         }
         maven {
-            url = uri("https://pkgs.dev.azure.com/sovity/41799556-91c8-4df6-8ddb-4471d6f15953/_packaging/core-edc/maven/v1")
+            url =
+                uri("https://pkgs.dev.azure.com/sovity/41799556-91c8-4df6-8ddb-4471d6f15953/_packaging/core-edc/maven/v1")
             name = "AzureRepo"
         }
     }
@@ -137,8 +138,20 @@ subprojects {
         withJavadocJar()
     }
 
-    tasks.withType<Javadoc> {
-        val fullOptions = options as StandardJavadocDocletOptions
-        fullOptions.addStringOption("Xdoclint:none", "-quiet")
+    tasks.withType<Javadoc>().configureEach {
+        options {
+            val fullOptions = options as StandardJavadocDocletOptions
+            fullOptions.addStringOption("Xdoclint:none", "-quiet")
+            // Include Lombok-generated methods in the documentation
+            fullOptions.addBooleanOption("-A", true)
+        }
+
+        // Ensure Lombok processor is available during JavaDoc generation
+        doFirst {
+            configurations.compileClasspath.get().forEach { file ->
+                val fullOptions = options as StandardJavadocDocletOptions
+                fullOptions.addStringOption("classpath", file.absolutePath)
+            }
+        }
     }
 }

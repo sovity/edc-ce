@@ -17,6 +17,7 @@ package de.sovity.edc.extension.e2e.connector.config;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.utils.config.ConfigProps;
 import de.sovity.edc.utils.config.ConfigService;
+import de.sovity.edc.utils.config.model.ConfigProp;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.val;
@@ -35,7 +36,18 @@ public class ConnectorConfigFactory {
 
     private static final Random RANDOM = new Random();
 
-    public static ConnectorConfig forTestDatabase(String participantId, TestDatabase testDatabase) {
+    public static ConnectorConfig forTestDatabase(
+        String participantId,
+        TestDatabase testDatabase
+    ) {
+        return forTestDatabase(participantId, testDatabase, Map.of());
+    }
+
+    public static ConnectorConfig forTestDatabase(
+        String participantId,
+        TestDatabase testDatabase,
+        Map<ConfigProp, String> overrides
+    ) {
         val firstPort = getFreePortRange(5);
 
         // The initialization of the Map is split into several statements
@@ -64,6 +76,8 @@ public class ConnectorConfigFactory {
             ConfigProps.MY_EDC_MAINTAINER_URL, "http://maintainer.%s".formatted(participantId),
             ConfigProps.MY_EDC_MAINTAINER_NAME, "Maintainer Name %s".formatted(participantId)
         ));
+
+        propertiesInput.putAll(overrides);
 
         var properties = ConfigService.applyDefaults(propertiesInput, ConfigProps.ALL_CE_PROPS);
 

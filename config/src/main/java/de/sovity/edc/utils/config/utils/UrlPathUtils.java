@@ -26,11 +26,6 @@ public class UrlPathUtils {
             .filter(Objects::nonNull)
             .filter(it -> !it.isEmpty())
             .reduce("", (cur, add) -> {
-                // Special Case: https://
-                if (add.contains("://")) {
-                    return add;
-                }
-
                 // Join with a single slash
                 if (cur.endsWith("/") && add.startsWith("/")) {
                     return cur + add.substring(1);

@@ -46,6 +46,13 @@ class UrlPathUtilsTest {
     }
 
     @Test
+    void urlPathJoin_immediate_protocol() {
+        assertThat(urlPathJoin("https://")).isEqualTo("https://");
+        assertThat(urlPathJoin("https://", "b")).isEqualTo("https://b");
+        assertThat(urlPathJoin("https://", "/b")).isEqualTo("https://b");
+    }
+
+    @Test
     void urlPathJoin_protocol() {
         assertThat(urlPathJoin("https://a")).isEqualTo("https://a");
         assertThat(urlPathJoin("https://a/")).isEqualTo("https://a/");
@@ -56,12 +63,12 @@ class UrlPathUtilsTest {
     }
 
     @Test
-    void urlPathJoin_protocol_overrules_previous_segment() {
-        assertThat(urlPathJoin("https://ignored", "https://a")).isEqualTo("https://a");
-        assertThat(urlPathJoin("https://ignored", "https://a/")).isEqualTo("https://a/");
-        assertThat(urlPathJoin("https://ignored", "https://a", "b")).isEqualTo("https://a/b");
-        assertThat(urlPathJoin("https://ignored", "https://a/", "b")).isEqualTo("https://a/b");
-        assertThat(urlPathJoin("https://ignored", "https://a", "/b")).isEqualTo("https://a/b");
-        assertThat(urlPathJoin("https://ignored", "https://a/", "/b")).isEqualTo("https://a/b");
+    void urlPathJoin_protocol_overruling_not_enabled() {
+        assertThat(urlPathJoin("https://ignored", "https://a")).isEqualTo("https://ignored/https://a");
+        assertThat(urlPathJoin("https://ignored", "https://a/")).isEqualTo("https://ignored/https://a/");
+        assertThat(urlPathJoin("https://ignored", "https://a", "b")).isEqualTo("https://ignored/https://a/b");
+        assertThat(urlPathJoin("https://ignored", "https://a/", "b")).isEqualTo("https://ignored/https://a/b");
+        assertThat(urlPathJoin("https://ignored", "https://a", "/b")).isEqualTo("https://ignored/https://a/b");
+        assertThat(urlPathJoin("https://ignored", "https://a/", "/b")).isEqualTo("https://ignored/https://a/b");
     }
 }

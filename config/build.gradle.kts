@@ -8,8 +8,7 @@ dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
 
-    api(libs.edc.bootSpi)
-
+    api(libs.edc.boot)
 
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
