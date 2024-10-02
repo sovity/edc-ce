@@ -56,7 +56,7 @@ public class LastCommitInfoService {
 
     @SneakyThrows
     private String readClasspathFile(String fileName) {
-        var is = getClass().getResourceAsStream(fileName);
+        var is = getClass().getClassLoader().getResourceAsStream(fileName);
         Objects.requireNonNull(is, "File not found: " + fileName);
         return IOUtils.toString(is, StandardCharsets.UTF_8);
     }
