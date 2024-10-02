@@ -135,23 +135,5 @@ subprojects {
 
     java {
         withSourcesJar()
-        withJavadocJar()
-    }
-
-    tasks.withType<Javadoc>().configureEach {
-        options {
-            val fullOptions = options as StandardJavadocDocletOptions
-            fullOptions.addStringOption("Xdoclint:none", "-quiet")
-            // Include Lombok-generated methods in the documentation
-            fullOptions.addBooleanOption("-A", true)
-        }
-
-        // Ensure Lombok processor is available during JavaDoc generation
-        doFirst {
-            configurations.compileClasspath.get().forEach { file ->
-                val fullOptions = options as StandardJavadocDocletOptions
-                fullOptions.addStringOption("classpath", file.absolutePath)
-            }
-        }
     }
 }
