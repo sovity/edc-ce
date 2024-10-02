@@ -8,6 +8,7 @@ dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
 
+    api(project(":extensions:policy-always-true"))
     api(project(":extensions:wrapper:wrapper-api"))
     api(project(":extensions:wrapper:wrapper-common-mappers"))
     api(project(":utils:catalog-parser"))

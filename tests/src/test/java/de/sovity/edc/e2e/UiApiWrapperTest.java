@@ -726,9 +726,7 @@ class UiApiWrapperTest {
         assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient)).hasSize(0);
 
         assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
-            .extracting(ContractDefinitionEntry::getContractDefinitionId)
-            .first()
-            .isEqualTo(assetId);
+            .hasSize(0);
     }
 
     @Test
@@ -753,7 +751,7 @@ class UiApiWrapperTest {
 
         val dataOfferCreateRequest = new DataOfferCreationRequest(
             asset,
-            DataOfferCreationRequest.PolicyEnum.DONT_PUBLISH,
+            DataOfferCreationRequest.PolicyEnum.PUBLISH_RESTRICTED,
             UiPolicyExpression.builder()
                 .constraint(UiPolicyConstraint.builder()
                     .left("foo")
@@ -917,6 +915,87 @@ class UiApiWrapperTest {
             .first()
             // the already existing one, before the data offer creation attempt
             .isEqualTo(assetId);
+    }
+
+    @Test
+    void reuseTheAlwaysTruePolicyWhenPublishingUnrestricted(
+        E2eScenario scenario,
+        @Provider EdcClient providerClient
+    ) {
+        // arrange
+        val assetId = "assetId";
+
+        // act
+        providerClient.uiApi()
+            .createDataOffer(DataOfferCreationRequest.builder()
+                .uiAssetCreateRequest(UiAssetCreateRequest.builder()
+                    .id(assetId)
+                    .dataSource(UiDataSource.builder()
+                        .type(DataSourceType.ON_REQUEST)
+                        .onRequest(UiDataSourceOnRequest.builder()
+                            .contactEmail("foo@example.com")
+                            .contactPreferredEmailSubject("Subject")
+                            .build())
+                        .build())
+                    .build())
+                .policy(DataOfferCreationRequest.PolicyEnum.PUBLISH_UNRESTRICTED)
+                .build());
+
+        // assert
+        assertThat(providerClient.uiApi().getAssetPage().getAssets())
+            // the asset used for the placeholder contract definition
+            .hasSize(1)
+            .extracting(UiAsset::getAssetId)
+            .first()
+            .isEqualTo(assetId);
+
+        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient)).hasSize(0);
+
+        assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
+            .hasSize(1)
+            .filteredOn(it -> it.getContractDefinitionId().equals(assetId))
+            .extracting(ContractDefinitionEntry::getContractDefinitionId)
+            .first()
+            // the already existing one, before the data offer creation attempt
+            .isEqualTo(assetId);
+    }
+
+    @Test
+    void onlyCreateTheAssetWhenDontPublish(
+        E2eScenario scenario,
+        @Provider EdcClient providerClient
+    ) {
+        // arrange
+        val assetId = "assetId";
+
+        // act
+        providerClient.uiApi()
+            .createDataOffer(DataOfferCreationRequest.builder()
+                .uiAssetCreateRequest(UiAssetCreateRequest.builder()
+                    .id(assetId)
+                    .dataSource(UiDataSource.builder()
+                        .type(DataSourceType.ON_REQUEST)
+                        .onRequest(UiDataSourceOnRequest.builder()
+                            .contactEmail("foo@example.com")
+                            .contactPreferredEmailSubject("Subject")
+                            .build())
+                        .build())
+                    .build())
+                .policy(DataOfferCreationRequest.PolicyEnum.DONT_PUBLISH)
+                .build());
+
+        // assert
+        assertThat(providerClient.uiApi().getAssetPage().getAssets())
+            // the asset used for the placeholder contract definition
+            .hasSize(1)
+            .extracting(UiAsset::getAssetId)
+            .first()
+            .isEqualTo(assetId);
+
+        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient)).hasSize(0);
+
+        assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
+            .hasSize(0);
     }
 
     private static @NotNull List<PolicyDefinitionDto> getAllPoliciesExceptTheAlwaysTruePolicy(EdcClient edcClient) {
