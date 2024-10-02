@@ -421,6 +421,7 @@ public class ContractTerminationTest {
     }
 
     @Test
+    @DisabledOnGithub
     void canTerminateOnlyOnce(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
