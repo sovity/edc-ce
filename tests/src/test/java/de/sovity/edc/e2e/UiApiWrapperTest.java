@@ -787,6 +787,55 @@ class UiApiWrapperTest {
     }
 
     @Test
+    void canCreateDataOfferWithNewEmptyPolicyAndRestrictedPublishing(
+        @Provider EdcClient providerClient
+    ) {
+        // arrange
+        val dataSource = UiDataSource.builder()
+            .httpData(UiDataSourceHttpData.builder()
+                .baseUrl("http://example.com")
+                .method(UiDataSourceHttpDataMethod.GET)
+                .build())
+            .type(DataSourceType.HTTP_DATA)
+            .build();
+
+        val assetId = "asset";
+        val asset = UiAssetCreateRequest.builder()
+            .dataSource(dataSource)
+            .id(assetId)
+            .title("My asset")
+            .build();
+
+        val dataOfferCreateRequest = new DataOfferCreationRequest(
+            asset,
+            DataOfferCreationRequest.PolicyEnum.PUBLISH_RESTRICTED,
+            UiPolicyExpression.builder().build()
+        );
+
+        // act
+        val returnedId = providerClient.uiApi().createDataOffer(dataOfferCreateRequest).getId();
+
+        // assert
+        assertThat(returnedId).isEqualTo(assetId);
+
+        assertThat(providerClient.uiApi().getAssetPage().getAssets())
+            .extracting(UiAsset::getAssetId)
+            .first()
+            .isEqualTo(assetId);
+
+        assertThat(getAllPoliciesExceptTheAlwaysTruePolicy(providerClient))
+            .hasSize(1)
+            .extracting(PolicyDefinitionDto::getPolicyDefinitionId)
+            .first()
+            .isEqualTo(assetId);
+
+        assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
+            .extracting(ContractDefinitionEntry::getContractDefinitionId)
+            .first()
+            .isEqualTo(assetId);
+    }
+
+    @Test
     void dontCreateAnythingIfTheAssetAlreadyExists(
         E2eScenario scenario,
         @Provider EdcClient providerClient
