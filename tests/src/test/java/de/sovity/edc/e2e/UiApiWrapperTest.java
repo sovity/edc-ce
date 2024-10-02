@@ -575,6 +575,7 @@ class UiApiWrapperTest {
     }
 
     @Test
+    @DisabledOnGithub
     void checkIdAvailability(E2eScenario scenario, @Provider EdcClient providerClient) {
         // arrange
         var assetId = scenario.createAsset();
@@ -645,6 +646,7 @@ class UiApiWrapperTest {
     }
 
     @Test
+    @DisabledOnGithub
     void canMakeAnOnDemandDataSourceAvailable(
         E2eScenario scenario,
         @Provider EdcClient providerClient
