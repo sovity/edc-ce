@@ -18,6 +18,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Patch Changes
 
+- Fix issues with the Create Data Offer Endpoint ([PR#1055](https://github.com/sovity/edc-ce/pull/1055))
+
 ### Deployment Migration Notes
 
 _No special deployment migration steps required_
