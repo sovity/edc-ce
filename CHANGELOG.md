@@ -11,13 +11,13 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Major Changes
 
-- Removed Catalog Crawler as it will be added to the Authority Portal to prevent circular dependencies ([#1052](https://github.com/sovity/edc-ui/issues/1052))
+- Removed Catalog Crawler as it will be added to the Authority Portal to prevent circular dependencies ([#1052](https://github.com/sovity/edc-ce/pull/1052))
 
 #### Minor Changes
 
 #### Patch Changes
 
-- Refactoring: Config as Java Code ([#1051](https://github.com/sovity/edc-ui/issues/1051))
+- Refactoring: Config as Java Code ([#1051](https://github.com/sovity/edc-ce/pull/1051))
 
 ### Deployment Migration Notes
 
