@@ -14,6 +14,7 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
 import de.sovity.edc.extension.policy.AlwaysTruePolicyConstants;
+import de.sovity.edc.extension.policy.services.AlwaysTruePolicyDefinitionService;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
@@ -33,6 +34,7 @@ public class DataOfferPageApiService {
     private final AssetApiService assetApiService;
     private final ContractDefinitionApiService contractDefinitionApiService;
     private final PolicyDefinitionApiService policyDefinitionApiService;
+    private final AlwaysTruePolicyDefinitionService alwaysTruePolicyDefinitionService;
 
     @NotNull
     public IdAvailabilityResponse checkIfPolicyIdAvailable(DSLContext dsl, String id) {
@@ -77,7 +79,11 @@ public class DataOfferPageApiService {
         };
     }
 
-    private @NotNull IdResponseDto createAndPublishUnrestricted(DSLContext dsl, DataOfferCreationRequest dataOfferCreationRequest, String commonId) {
+    private @NotNull IdResponseDto createAndPublishUnrestricted(
+        DSLContext dsl,
+        DataOfferCreationRequest dataOfferCreationRequest,
+        String commonId
+    ) {
         val assetId = commonId;
         val contractDefinitionId = commonId;
         val policyId = AlwaysTruePolicyConstants.POLICY_DEFINITION_ID;
@@ -85,12 +91,21 @@ public class DataOfferPageApiService {
         checkAssetIdAvailable(dsl, assetId);
         checkContractDefinitionIdAvailable(dsl, contractDefinitionId);
 
+        if (!alwaysTruePolicyDefinitionService.exists()) {
+            // the default always-true policy has been deleted, recreate it.
+            alwaysTruePolicyDefinitionService.create();
+        }
+
         assetApiService.createAsset(dataOfferCreationRequest.getUiAssetCreateRequest());
 
         return createContractDefinition(assetId, policyId, contractDefinitionId);
     }
 
-    private @NotNull IdResponseDto createAndPublishRestricted(DSLContext dsl, DataOfferCreationRequest dataOfferCreationRequest, String commonId) {
+    private @NotNull IdResponseDto createAndPublishRestricted(
+        DSLContext dsl,
+        DataOfferCreationRequest dataOfferCreationRequest,
+        String commonId
+    ) {
         val assetId = commonId;
         val policyId = commonId;
         val contractDefinitionId = commonId;
@@ -101,17 +116,20 @@ public class DataOfferPageApiService {
 
         assetApiService.createAsset(dataOfferCreationRequest.getUiAssetCreateRequest());
 
-        val maybeNewPolicy = Optional.ofNullable(dataOfferCreationRequest.getUiPolicyExpression());
-
-        maybeNewPolicy.ifPresent(
-            policy -> policyDefinitionApiService.createPolicyDefinitionV2(new PolicyDefinitionCreateDto(policyId, policy)));
+        val policyExpression = Optional.ofNullable(dataOfferCreationRequest.getUiPolicyExpression())
+            .orElseThrow(() -> new InvalidRequestException("Missing policy expression"));
+        policyDefinitionApiService.createPolicyDefinitionV2(new PolicyDefinitionCreateDto(policyId, policyExpression));
 
         createContractDefinition(assetId, policyId, contractDefinitionId);
 
         return new IdResponseDto(commonId, OffsetDateTime.now());
     }
 
-    private @NotNull IdResponseDto createButDontPublish(DSLContext dsl, DataOfferCreationRequest dataOfferCreationRequest, String commonId) {
+    private @NotNull IdResponseDto createButDontPublish(
+        DSLContext dsl,
+        DataOfferCreationRequest dataOfferCreationRequest,
+        String commonId
+    ) {
         checkAssetIdAvailable(dsl, commonId);
         return assetApiService.createAsset(dataOfferCreationRequest.getUiAssetCreateRequest());
     }

@@ -583,8 +583,6 @@ class UiApiWrapperTest {
         scenario.createPolicy(policyId, OffsetDateTime.MIN, OffsetDateTime.MAX);
         var contractDefinitionId = scenario.createContractDefinition(policyId, assetId);
 
-        val asset = providerClient.uiApi().getAssetPage();
-
         // act
         val negAssetResponse = providerClient.uiApi().isAssetIdAvailable(assetId);
         val negPolicyResponse = providerClient.uiApi().isPolicyIdAvailable(policyId);
@@ -921,7 +919,6 @@ class UiApiWrapperTest {
 
     @Test
     void reuseTheAlwaysTruePolicyWhenPublishingUnrestricted(
-        E2eScenario scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -964,7 +961,6 @@ class UiApiWrapperTest {
 
     @Test
     void onlyCreateTheAssetWhenDontPublish(
-        E2eScenario scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -998,6 +994,61 @@ class UiApiWrapperTest {
 
         assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
             .hasSize(0);
+    }
+
+    @Test
+    void recreateTheAlwaysTruePolicyIfDeleted(
+        @Provider EdcClient providerClient
+    ) {
+        // arrange
+        val assetId = "assetId";
+        providerClient.uiApi().deletePolicyDefinition(AlwaysTruePolicyConstants.POLICY_DEFINITION_ID);
+
+        List<PolicyDefinitionDto> withoutDefaultAlwaysTrue =
+            providerClient.uiApi()
+                .getPolicyDefinitionPage()
+                .getPolicies()
+                .stream()
+                .filter(it -> !it.getPolicyDefinitionId().equals(AlwaysTruePolicyConstants.POLICY_DEFINITION_ID))
+                .toList();
+
+        assertThat(withoutDefaultAlwaysTrue).hasSize(0);
+
+        // act
+        providerClient.uiApi()
+            .createDataOffer(DataOfferCreationRequest.builder()
+                .uiAssetCreateRequest(UiAssetCreateRequest.builder()
+                    .id(assetId)
+                    .dataSource(UiDataSource.builder()
+                        .type(DataSourceType.ON_REQUEST)
+                        .onRequest(UiDataSourceOnRequest.builder()
+                            .contactEmail("foo@example.com")
+                            .contactPreferredEmailSubject("Subject")
+                            .build())
+                        .build())
+                    .build())
+                .policy(DataOfferCreationRequest.PolicyEnum.PUBLISH_UNRESTRICTED)
+                .build());
+
+        // assert
+        assertThat(providerClient.uiApi().getAssetPage().getAssets())
+            // the asset used for the placeholder contract definition
+            .hasSize(1)
+            .extracting(UiAsset::getAssetId)
+            .first()
+            .isEqualTo(assetId);
+
+        List<PolicyDefinitionDto> policies =
+            providerClient.uiApi()
+                .getPolicyDefinitionPage()
+                .getPolicies()
+                .stream()
+                .toList();
+
+        assertThat(policies).hasSize(1);
+
+        assertThat(providerClient.uiApi().getContractDefinitionPage().getContractDefinitions())
+            .hasSize(1);
     }
 
     private static @NotNull List<PolicyDefinitionDto> getAllPoliciesExceptTheAlwaysTruePolicy(EdcClient edcClient) {
