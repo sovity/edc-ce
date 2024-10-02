@@ -66,7 +66,7 @@ class UseCaseApiWrapperTest {
     @BeforeEach
     void setup(@Provider ConnectorRemote providerConnector) {
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
+        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultApiUrl());
     }
 
     @DisabledOnGithub
@@ -194,6 +194,6 @@ class UseCaseApiWrapperTest {
     }
 
     private String getProtocolEndpoint(ConnectorRemote connector) {
-        return connector.getConfig().getProtocolEndpoint().getUri().toString();
+        return connector.getConfig().getProtocolApiUrl();
     }
 }

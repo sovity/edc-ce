@@ -81,6 +81,7 @@ import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationSe
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
+import de.sovity.edc.utils.config.ConfigProps;
 import lombok.NoArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -145,10 +146,10 @@ public class WrapperExtensionContextBuilder {
         var criterionLiteralMapper = new CriterionLiteralMapper();
         var criterionMapper = new CriterionMapper(criterionOperatorMapper, criterionLiteralMapper);
         var edcPropertyUtils = new EdcPropertyUtils();
-        var selfDescriptionService = new SelfDescriptionService(config, monitor);
+        var selfDescriptionService = new SelfDescriptionService(config);
         var ownConnectorEndpointService = new OwnConnectorEndpointServiceImpl(selfDescriptionService);
         var placeholderEndpointService = new PlaceholderEndpointService(
-            config.getString(WrapperExtension.MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL, "http://0.0.0.0")
+            ConfigProps.MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL.getStringOrThrow(config)
         );
         var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd, ownConnectorEndpointService, placeholderEndpointService);
         var policyMapper = newPolicyMapper(objectMapper, typeTransformerRegistry, operatorMapper);

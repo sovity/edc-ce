@@ -54,7 +54,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
@@ -71,8 +71,8 @@ class ContractAgreementPageTest {
         testDatabase -> {
             config = forTestDatabase("provider", testDatabase);
             client = EdcClient.builder()
-                .managementApiUrl(config.getManagementEndpoint().getUri().toString())
-                .managementApiKey(config.getProperties().get("edc.api.auth.key"))
+                .managementApiUrl(config.getManagementApiUrl())
+                .managementApiKey(config.getManagementApiKey())
                 .build();
             connector = new ConnectorRemote(fromConnectorConfig(config));
             return config.getProperties();

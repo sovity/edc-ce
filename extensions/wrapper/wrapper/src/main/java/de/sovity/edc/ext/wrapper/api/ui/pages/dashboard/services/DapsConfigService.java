@@ -15,28 +15,20 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services;
 
 import de.sovity.edc.ext.wrapper.api.ui.model.DashboardDapsConfig;
+import de.sovity.edc.utils.config.ConfigProps;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.system.configuration.Config;
 
 import static com.apicatalog.jsonld.StringUtils.isBlank;
-import static de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.ConfigPropertyUtils.configKey;
 
 @RequiredArgsConstructor
 public class DapsConfigService {
     private final Config config;
 
-    private static final String DAPS_TOKEN_URL = configKey("EDC_OAUTH_TOKEN_URL");
-
-    private static final String DAPS_JWKS_URL = configKey("EDC_OAUTH_PROVIDER_JWKS_URL");
-
     public DashboardDapsConfig buildDapsConfigOrNull() {
         var dapsConfig = new DashboardDapsConfig();
-        dapsConfig.setTokenUrl(configValue(DAPS_TOKEN_URL));
-        dapsConfig.setJwksUrl(configValue(DAPS_JWKS_URL));
+        dapsConfig.setTokenUrl(ConfigProps.EDC_OAUTH_TOKEN_URL.getStringOrNull(config));
+        dapsConfig.setJwksUrl(ConfigProps.EDC_OAUTH_PROVIDER_JWKS_URL.getStringOrNull(config));
         return isBlank(dapsConfig.getTokenUrl()) ? null : dapsConfig;
-    }
-
-    String configValue(String configKey) {
-        return config.getString(configKey, "");
     }
 }

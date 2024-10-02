@@ -76,7 +76,7 @@ class TerminateContractQueryTest {
                 assertThat(detailsAfterTermination.contractAgreementId()).isEqualTo(agreementId);
                 assertThat(detailsAfterTermination.counterpartyId()).isEqualTo("provider");
                 assertThat(detailsAfterTermination.counterpartyAddress())
-                    .isEqualTo(providerConfig.getProtocolEndpoint().getUri().toString());
+                    .isEqualTo(providerConfig.getProtocolApiUrl());
                 assertThat(detailsAfterTermination.type()).isEqualTo(ContractNegotiation.Type.CONSUMER);
                 assertThat(detailsAfterTermination.providerAgentId()).isEqualTo("provider");
                 assertThat(detailsAfterTermination.consumerAgentId()).isEqualTo("consumer");

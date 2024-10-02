@@ -15,6 +15,9 @@
 package de.sovity.edc.extension.e2e.connector.config;
 
 import de.sovity.edc.extension.e2e.db.TestDatabase;
+import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.ConfigService;
+import de.sovity.edc.utils.config.model.ConfigProp;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.val;
@@ -22,11 +25,10 @@ import lombok.val;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
-import static de.sovity.edc.extension.e2e.connector.config.DatasourceConfigUtils.configureDatasources;
-import static de.sovity.edc.extension.e2e.connector.config.api.EdcApiConfigFactory.configureApi;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.MAX_TCP_PORT;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -34,11 +36,54 @@ public class ConnectorConfigFactory {
 
     private static final Random RANDOM = new Random();
 
-    public static ConnectorConfig forTestDatabase(String participantId, TestDatabase testDatabase) {
+    public static ConnectorConfig forTestDatabase(
+        String participantId,
+        TestDatabase testDatabase
+    ) {
+        return forTestDatabase(participantId, testDatabase, Map.of());
+    }
+
+    public static ConnectorConfig forTestDatabase(
+        String participantId,
+        TestDatabase testDatabase,
+        Map<ConfigProp, String> overrides
+    ) {
         val firstPort = getFreePortRange(5);
-        var config = basicEdcConfig(participantId, firstPort);
-        config.setProperties(configureDatasources(testDatabase.getJdbcCredentials()));
-        return config;
+
+        // The initialization of the Map is split into several statements
+        // due to the parameter limit of Map.of(...)
+        var propertiesInput = new HashMap<>(Map.of(
+            ConfigProps.MY_EDC_NETWORK_TYPE, ConfigProps.NetworkType.UNIT_TEST,
+            ConfigProps.MY_EDC_FIRST_PORT, String.valueOf(firstPort),
+            ConfigProps.EDC_API_AUTH_KEY, "api-key-%s".formatted(UUID.randomUUID().toString()),
+            ConfigProps.MY_EDC_C2C_IAM_TYPE, "mock-iam",
+            ConfigProps.MY_EDC_PARTICIPANT_ID, participantId
+        ));
+
+        propertiesInput.putAll(Map.of(
+            ConfigProps.MY_EDC_JDBC_URL, testDatabase.getJdbcCredentials().jdbcUrl(),
+            ConfigProps.MY_EDC_JDBC_USER, testDatabase.getJdbcCredentials().jdbcUser(),
+            ConfigProps.MY_EDC_JDBC_PASSWORD, testDatabase.getJdbcCredentials().jdbcPassword(),
+            ConfigProps.EDC_FLYWAY_CLEAN_ENABLE, "true",
+            ConfigProps.EDC_FLYWAY_CLEAN, "true"
+        ));
+
+        propertiesInput.putAll(Map.of(
+            ConfigProps.MY_EDC_TITLE, "Connector Title %s".formatted(participantId),
+            ConfigProps.MY_EDC_DESCRIPTION, "Connector Description %s".formatted(participantId),
+            ConfigProps.MY_EDC_CURATOR_URL, "http://curator.%s".formatted(participantId),
+            ConfigProps.MY_EDC_CURATOR_NAME, "Curator Name %s".formatted(participantId),
+            ConfigProps.MY_EDC_MAINTAINER_URL, "http://maintainer.%s".formatted(participantId),
+            ConfigProps.MY_EDC_MAINTAINER_NAME, "Maintainer Name %s".formatted(participantId)
+        ));
+
+        propertiesInput.putAll(overrides);
+
+        var properties = ConfigService.applyDefaults(propertiesInput, ConfigProps.ALL_CE_PROPS);
+
+        return ConnectorConfig.builder()
+            .properties(properties)
+            .build();
     }
 
     public static synchronized int getFreePortRange(int size) {
@@ -69,47 +114,5 @@ public class ConnectorConfigFactory {
         } catch (IOException e) {
             return false;
         }
-    }
-
-    public static ConnectorConfig basicEdcConfig(String participantId, int firstPort) {
-        var apiKey = UUID.randomUUID().toString();
-        var apiConfig = configureApi(firstPort, apiKey);
-
-        var properties = new HashMap<String, String>();
-        properties.put("edc.participant.id", participantId);
-        properties.put("edc.api.auth.key", apiKey);
-        properties.put("edc.dsp.callback.address", apiConfig.getProtocolApiGroup().getUri().toString());
-        properties.putAll(apiConfig.getProperties());
-
-        properties.put("edc.jsonld.https.enabled", "true");
-        properties.put("edc.last.commit.info", "test env commit message");
-        properties.put("edc.build.date", "2023-05-08T15:30:00Z");
-
-        properties.put("my.edc.participant.id", participantId);
-        properties.put("my.edc.title", "Connector Title %s".formatted(participantId));
-        properties.put("my.edc.description", "Connector Description %s".formatted(participantId));
-        properties.put("my.edc.curator.url", "http://curator.%s".formatted(participantId));
-        properties.put("my.edc.curator.name", "Curator Name %s".formatted(participantId));
-        properties.put("my.edc.maintainer.url", "http://maintainer.%s".formatted(participantId));
-        properties.put("my.edc.maintainer.name", "Maintainer Name %s".formatted(participantId));
-
-        properties.put("my.edc.datasource.placeholder.baseurl", apiConfig.getProtocolApiGroup().getUri().toString());
-
-        properties.put("web.http.port", String.valueOf(apiConfig.getDefaultApiGroup().port()));
-        properties.put("web.http.path", String.valueOf(apiConfig.getDefaultApiGroup().path()));
-        properties.put("web.http.protocol.port", String.valueOf(apiConfig.getProtocolApiGroup().port()));
-        properties.put("web.http.protocol.path", String.valueOf(apiConfig.getProtocolApiGroup().path()));
-        properties.put("web.http.management.port", String.valueOf(apiConfig.getManagementApiGroup().port()));
-        properties.put("web.http.management.path", String.valueOf(apiConfig.getManagementApiGroup().path()));
-        properties.put("web.http.control.port", String.valueOf(apiConfig.getControlApiGroup().port()));
-        properties.put("web.http.control.path", String.valueOf(apiConfig.getControlApiGroup().path()));
-
-        return new ConnectorConfig(
-            participantId,
-            apiConfig.getDefaultApiGroup(),
-            apiConfig.getManagementApiGroup(),
-            apiConfig.getProtocolApiGroup(),
-            properties
-        );
     }
 }

@@ -33,14 +33,14 @@ public class E2eTestExtensionConfig {
     private String providerParticipantId = "provider";
 
     @Builder.Default
-    private Consumer<ConnectorConfig> configCustomizer = (it) -> {
+    private Consumer<ConnectorConfig> configCustomizer = it -> {
     };
 
     @Builder.Default
-    private Consumer<ConnectorConfig> consumerConfigCustomizer = (it) -> {
+    private Consumer<ConnectorConfig> consumerConfigCustomizer = it -> {
     };
 
     @Builder.Default
-    private Consumer<ConnectorConfig> providerConfigCustomizer = (it) -> {
+    private Consumer<ConnectorConfig> providerConfigCustomizer = it -> {
     };
 }

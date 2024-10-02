@@ -16,7 +16,6 @@ package de.sovity.edc.extension.e2e.connector;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig;
-import de.sovity.edc.extension.e2e.connector.config.api.auth.NoneAuthProvider;
 import io.restassured.http.Header;
 import io.restassured.specification.RequestSpecification;
 import jakarta.json.Json;
@@ -33,7 +32,6 @@ import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.monitor.ConsoleMonitor;
 import org.eclipse.edc.spi.result.Failure;
 
-import java.net.URI;
 import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
@@ -132,12 +130,12 @@ public class ConnectorRemote {
                 .contentType(JSON);
     }
 
-    public JsonArray getCatalogDatasets(URI providerProtocolEndpoint) {
+    public JsonArray getCatalogDatasets(String providerProtocolApiUrl) {
         var datasetReference = new AtomicReference<JsonArray>();
         var requestBody = createObjectBuilder()
                 .add(CONTEXT, createObjectBuilder().add(EDC_PREFIX, EDC_NAMESPACE))
                 .add(TYPE, EDC_NAMESPACE + "CatalogRequest")
-                .add(EDC_NAMESPACE + "counterPartyAddress", providerProtocolEndpoint.toString())
+                .add(EDC_NAMESPACE + "counterPartyAddress", providerProtocolApiUrl)
                 .add(EDC_NAMESPACE + "protocol", "dataspace-protocol-http")
                 .build();
 
@@ -164,8 +162,8 @@ public class ConnectorRemote {
         return datasetReference.get();
     }
 
-    public JsonObject getDatasetForAsset(String assetId, URI providerProtocolEndpoint) {
-        var datasets = getCatalogDatasets(providerProtocolEndpoint);
+    public JsonObject getDatasetForAsset(String assetId, String providerProtocolApiUrl) {
+        var datasets = getCatalogDatasets(providerProtocolApiUrl);
         return datasets.stream()
                 .map(JsonValue::asJsonObject)
                 .filter(it -> assetId.equals(getDatasetContractId(it).assetIdPart()))
@@ -175,7 +173,7 @@ public class ConnectorRemote {
 
     public String negotiateContract(
             String providerParticipantId,
-            URI providerProtocolEndpoint,
+            String providerProtocolApiUrl,
             String offerId,
             String assetId,
             JsonObject policy) {
@@ -184,7 +182,7 @@ public class ConnectorRemote {
                 .add(TYPE, EDC_NAMESPACE + "ContractRequest")
                 .add(EDC_NAMESPACE + "consumerId", config.getParticipantId())
                 .add(EDC_NAMESPACE + "providerId", providerParticipantId)
-                .add(EDC_NAMESPACE + "connectorAddress", providerProtocolEndpoint.toString())
+                .add(EDC_NAMESPACE + "connectorAddress", providerProtocolApiUrl)
                 .add(EDC_NAMESPACE + "protocol", "dataspace-protocol-http")
                 .add(EDC_NAMESPACE + "offer", createObjectBuilder()
                         .add(EDC_NAMESPACE + "offerId", offerId)
@@ -253,12 +251,12 @@ public class ConnectorRemote {
     public String initiateTransfer(
             String contractAgreementId,
             String assetId,
-            URI providerProtocolApi,
+            String providerProtocolApiUrl,
             JsonObject destination) {
         var requestBody = createObjectBuilder()
                 .add(TYPE, EDC_NAMESPACE + "TransferRequest")
                 .add(EDC_NAMESPACE + "protocol", "dataspace-protocol-http")
-                .add(EDC_NAMESPACE + "connectorAddress", providerProtocolApi.toString())
+                .add(EDC_NAMESPACE + "connectorAddress", providerProtocolApiUrl)
                 .add(EDC_NAMESPACE + "connectorId", config.getParticipantId())
                 .add(EDC_NAMESPACE + "assetId", assetId)
                 .add(EDC_NAMESPACE + "dataDestination", destination)
@@ -279,16 +277,16 @@ public class ConnectorRemote {
 
     public String consumeOffer(
             String providerId,
-            URI providerProtocolApi,
+            String providerProtocolApiUrl,
             String assetId,
             JsonObject destination) {
-        var dataset = getDatasetForAsset(assetId, providerProtocolApi);
+        var dataset = getDatasetForAsset(assetId, providerProtocolApiUrl);
         var contractId = getDatasetContractId(dataset);
         var policy = dataset.getJsonArray(ODRL_POLICY_ATTRIBUTE).get(0).asJsonObject();
 
         var contractAgreementId = negotiateContract(
                 providerId,
-                providerProtocolApi,
+            providerProtocolApiUrl,
                 contractId.toString(),
                 contractId.assetIdPart(),
                 policy);
@@ -296,7 +294,7 @@ public class ConnectorRemote {
         var transferProcessId = initiateTransfer(
                 contractAgreementId,
                 assetId,
-                providerProtocolApi,
+            providerProtocolApiUrl,
                 destination);
 
         assertThat(transferProcessId).isNotNull();
@@ -338,24 +336,15 @@ public class ConnectorRemote {
     }
 
     public RequestSpecification prepareManagementApiCall() {
-        var managementConfig = config.getManagementEndpoint();
-        var managementBaseUri = managementConfig.getUri().toString();
-        if (managementConfig.authProvider() instanceof NoneAuthProvider) {
-            return given().baseUri(managementBaseUri);
-        }
-        return given()
-                .baseUri(managementBaseUri)
-                .header(getAuthHeader());
-    }
+        var apiUrl = config.getManagementApiUrl();
+        var request = given().baseUri(apiUrl);
 
-    private Header getAuthHeader() {
-        var authProvider = config.getManagementEndpoint().authProvider();
-        if ("".equals(authProvider.getAuthorizationHeader())) {
-            return null;
+        var header = config.getManagementApiAuthHeaderFactory().get();
+        if (header != null) {
+            request = request.header(new Header(header.getLeft(), header.getRight()));
         }
-        return new Header(
-                authProvider.getAuthorizationHeader(),
-                authProvider.getAuthorizationHeaderValue());
+
+        return request;
     }
 
 

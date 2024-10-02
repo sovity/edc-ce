@@ -54,7 +54,7 @@ import java.util.List;
 
 import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfigFactory.fromConnectorConfig;
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ApiWrapperDemoTest {
@@ -90,8 +90,8 @@ class ApiWrapperDemoTest {
         providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
 
         providerClient = EdcClient.builder()
-            .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-            .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
+            .managementApiUrl(providerConfig.getManagementApiUrl())
+            .managementApiKey(providerConfig.getManagementApiKey())
             .build();
 
         // set up consumer EDC + Client
@@ -100,12 +100,12 @@ class ApiWrapperDemoTest {
         consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
 
         consumerClient = EdcClient.builder()
-            .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-            .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
+            .managementApiUrl(consumerConfig.getManagementApiUrl())
+            .managementApiKey(consumerConfig.getManagementApiKey())
             .build();
 
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
+        dataAddress = new MockDataAddressRemote(providerConfig.getDefaultApiUrl());
     }
 
     @Test
@@ -236,6 +236,6 @@ class ApiWrapperDemoTest {
     }
 
     private String getProtocolEndpoint(ConnectorRemote connector) {
-        return connector.getConfig().getProtocolEndpoint().getUri().toString();
+        return connector.getConfig().getProtocolApiUrl();
     }
 }

@@ -45,8 +45,7 @@ Additional Migration Scripts can be added by specifiying the configuration prope
 script locations](https://flywaydb.org/documentation/configuration/parameters/locations). These migration scripts need
 to be compatible to the migrations in `resources/migration/default`.
 
-For further configuration options, please refer to the configuration of our sovity Community Edition EDC and its .env
-file.
+For further configuration options, please refer to the configuration of our sovity Community Edition EDC Config.
 
 ## Why does this extension exist?
 

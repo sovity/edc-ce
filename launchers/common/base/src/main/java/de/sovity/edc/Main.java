@@ -12,16 +12,13 @@
  *
  */
 
-package de.sovity.edc.extension.e2e.connector.config.api.auth;
+package de.sovity.edc;
 
-public class NoneAuthProvider implements AuthProvider {
-    @Override
-    public String getAuthorizationHeader() {
-        return "";
-    }
+import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.SovityEdcRuntime;
 
-    @Override
-    public String getAuthorizationHeaderValue() {
-        return "";
+public class Main {
+    public static void main(String[] args) {
+        SovityEdcRuntime.boot(ConfigProps.ALL_CE_PROPS);
     }
 }

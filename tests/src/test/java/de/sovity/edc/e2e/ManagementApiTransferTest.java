@@ -39,7 +39,7 @@ class ManagementApiTransferTest {
     @BeforeEach
     void setup(@Provider ConnectorRemote providerConnector) {
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultEndpoint());
+        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultApiUrl());
     }
 
     @Test
@@ -51,7 +51,7 @@ class ManagementApiTransferTest {
         // act
         consumerConnector.consumeOffer(
             providerConnector.getParticipantId(),
-            providerConnector.getConfig().getProtocolEndpoint().getUri(),
+            providerConnector.getConfig().getProtocolApiUrl(),
             assetId,
             dataAddress.getDataSinkJsonLd());
 
