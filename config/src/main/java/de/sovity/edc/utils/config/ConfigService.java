@@ -101,7 +101,7 @@ public class ConfigService {
         properties.forEach((key, value) -> {
             String newKey = toDotCase(key);
             if (result.containsKey(newKey)) {
-                monitor.severe("Duplicate Config Property: %s: %s -> %s".formatted(key, result.get(newKey), value));
+                monitor.warning("Duplicate Config Property: %s: %s -> %s".formatted(key, result.get(newKey), value));
             }
             result.put(newKey, value);
         });

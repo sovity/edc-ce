@@ -15,6 +15,7 @@ dependencies {
     implementation(libs.edc.apiCore)
     implementation(libs.edc.managementApiConfiguration)
 
+    implementation(libs.apache.commonsIo)
     implementation(libs.jakarta.rsApi)
     implementation(libs.jakarta.validationApi)
 

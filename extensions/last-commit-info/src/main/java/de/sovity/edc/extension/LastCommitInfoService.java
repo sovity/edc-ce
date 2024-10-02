@@ -16,11 +16,12 @@ package de.sovity.edc.extension;
 
 import de.sovity.edc.utils.config.ConfigProps;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.edc.spi.system.configuration.Config;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.Scanner;
 
 @RequiredArgsConstructor
 public class LastCommitInfoService {
@@ -38,7 +39,7 @@ public class LastCommitInfoService {
     }
 
     private String getJarLastCommitInfo() {
-        return this.readFileInCurrentClassClasspath("jar-last-commit-info.txt").trim();
+        return this.readClasspathFile("jar-last-commit-info.txt").trim();
     }
 
     private String getEnvLastCommitInfo() {
@@ -46,18 +47,18 @@ public class LastCommitInfoService {
     }
 
     private String getJarBuildDate() {
-        return readFileInCurrentClassClasspath("jar-build-date.txt").trim();
+        return readClasspathFile("jar-build-date.txt").trim();
     }
 
     private String getEnvBuildDate() {
         return ConfigProps.EDC_BUILD_DATE.getStringOrThrow(config);
     }
 
-    private String readFileInCurrentClassClasspath(String path) {
-        var classLoader = LastCommitInfoService.class.getClassLoader();
-        var is = classLoader.getResourceAsStream(path);
-        var scanner = new Scanner(Objects.requireNonNull(is), StandardCharsets.UTF_8).useDelimiter("\\A");
-        return scanner.hasNext() ? scanner.next() : "";
+    @SneakyThrows
+    private String readClasspathFile(String fileName) {
+        var is = getClass().getResourceAsStream(fileName);
+        Objects.requireNonNull(is, "File not found: " + fileName);
+        return IOUtils.toString(is, StandardCharsets.UTF_8);
     }
 }
 
