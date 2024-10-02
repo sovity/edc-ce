@@ -8,6 +8,7 @@ dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
 
+    implementation(project(":config"))
     implementation(project(":utils:jooq-database-access"))
     implementation(project(":extensions:database-direct-access"))
     implementation(project(":extensions:sovity-messenger"))

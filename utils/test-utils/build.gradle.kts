@@ -13,6 +13,7 @@ dependencies {
     api(libs.edc.junit)
     api(libs.awaitility.java)
     api(libs.postgres)
+    api(project(":config"))
     api(project(":extensions:wrapper:clients:java-client"))
     api(project(":utils:json-and-jsonld-utils"))
 

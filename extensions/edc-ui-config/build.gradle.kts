@@ -13,6 +13,7 @@ dependencies {
     implementation(libs.jakarta.rsApi)
     implementation(libs.jakarta.validationApi)
 
+    testImplementation(project(":utils:test-utils"))
     testImplementation(libs.edc.controlPlaneCore)
     testImplementation(libs.edc.junit)
     testImplementation(libs.edc.http) {

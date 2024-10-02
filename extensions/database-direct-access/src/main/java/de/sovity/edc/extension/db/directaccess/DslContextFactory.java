@@ -35,7 +35,7 @@ public class DslContextFactory {
     }
 
     public void transaction(Consumer<DSLContext> consumer) {
-        newDslContext().transaction((trx) -> consumer.accept(trx.dsl()));
+        newDslContext().transaction(trx -> consumer.accept(trx.dsl()));
     }
 
     /**
@@ -53,6 +53,6 @@ public class DslContextFactory {
     }
 
     public <T> T transactionResult(Function<DSLContext, T> f) {
-        return newDslContext().transactionResult((trx) -> f.apply(trx.dsl()));
+        return newDslContext().transactionResult(trx -> f.apply(trx.dsl()));
     }
 }

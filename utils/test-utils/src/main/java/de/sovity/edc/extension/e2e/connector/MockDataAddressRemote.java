@@ -14,7 +14,6 @@
 
 package de.sovity.edc.extension.e2e.connector;
 
-import de.sovity.edc.extension.e2e.connector.config.api.EdcApiGroupConfig;
 import jakarta.json.JsonObject;
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +24,7 @@ import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.buildDa
 
 @RequiredArgsConstructor
 public class MockDataAddressRemote {
-    private final EdcApiGroupConfig defaultEndpoint;
+    private final String defaultApiUrl;
 
     public String getDataSinkUrl() {
         return getMockBackendUrl("data-sink");
@@ -44,7 +43,7 @@ public class MockDataAddressRemote {
     }
 
     public String getMockBackendUrl(String path) {
-        return "%s/test-backend/%s".formatted(defaultEndpoint.getUri().toString(), path);
+        return "%s/test-backend/%s".formatted(defaultApiUrl, path);
     }
 
     public JsonObject getDataSinkJsonLd() {

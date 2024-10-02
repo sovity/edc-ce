@@ -36,7 +36,7 @@ public class LastCommitInfoExtension implements ServiceExtension {
 
     @Override
     public void initialize(ServiceExtensionContext context) {
-        var lastCommitInfoService = new LastCommitInfoService(context);
+        var lastCommitInfoService = new LastCommitInfoService(context.getConfig());
         var controller = new LastCommitInfoController(lastCommitInfoService);
         webService.registerResource(config.getContextAlias(), controller);
     }

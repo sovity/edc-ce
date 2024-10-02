@@ -20,13 +20,12 @@ import de.sovity.edc.extension.contacttermination.query.TerminateContractQuery;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.extension.messenger.SovityMessengerRegistry;
+import de.sovity.edc.utils.config.ConfigProps;
 import lombok.val;
 import org.eclipse.edc.connector.transfer.spi.observe.TransferProcessObservable;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Provides;
-import org.eclipse.edc.runtime.metamodel.annotation.Setting;
 import org.eclipse.edc.spi.agent.ParticipantAgentService;
-import org.eclipse.edc.spi.iam.IdentityService;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
@@ -35,14 +34,8 @@ import org.eclipse.edc.spi.system.ServiceExtensionContext;
 @Provides(ContractAgreementTerminationService.class)
 public class ContractTerminationExtension implements ServiceExtension {
 
-    @Setting(required = true)
-    private static final String EDC_PARTICIPANT_ID = "edc.participant.id";
-
     @Inject
     private DslContextFactory dslContextFactory;
-
-    @Inject
-    private IdentityService identityService;
 
     @Inject
     private Monitor monitor;
@@ -78,7 +71,7 @@ public class ContractTerminationExtension implements ServiceExtension {
             contractAgreementTerminationDetailsQuery,
             terminateContractQuery,
             monitor,
-            config.getString(EDC_PARTICIPANT_ID)
+            ConfigProps.EDC_PARTICIPANT_ID.getStringOrEmpty(config)
         );
 
         context.registerService(ContractAgreementTerminationService.class, terminationService);

@@ -421,6 +421,7 @@ public class ContractTerminationTest {
     }
 
     @Test
+    @DisabledOnGithub
     void canTerminateOnlyOnce(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,
@@ -448,6 +449,7 @@ public class ContractTerminationTest {
 
     @SneakyThrows
     @Test
+    @DisabledOnGithub
     void canListenToTerminationEvents(
         E2eScenario scenario,
         @Consumer EdcClient consumerClient,

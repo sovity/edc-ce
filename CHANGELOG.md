@@ -3,7 +3,6 @@
 For documentation on how to update this changelog,
 please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
-
 ## [x.x.x] - UNRELEASED
 
 ### Overview
@@ -12,11 +11,13 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Major Changes
 
-- Moved Catalog Crawler to the Authority Portal
+- Removed Catalog Crawler as it will be added to the Authority Portal to prevent circular dependencies ([#1052](https://github.com/sovity/edc-ce/pull/1052))
 
 #### Minor Changes
 
 #### Patch Changes
+
+- Refactoring: Config as Java Code ([#1051](https://github.com/sovity/edc-ce/pull/1051))
 
 ### Deployment Migration Notes
 
@@ -29,7 +30,6 @@ _No special deployment migration steps required_
   - sovity EDC CE: `ghcr.io/sovity/edc-ce:{{ VERSION }}`
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:{{ VERSION }}`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI VERSION }}`
-
 
 ## [10.4.1] - 2024-09-26
 
@@ -73,7 +73,6 @@ _No special deployment migration steps required_
   - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.4.1`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.5`
 
-
 ## [10.4.0] - 2024-09-18
 
 ### Overview
@@ -98,7 +97,6 @@ UI and Wrapper API improvements.
 - Fixed time restriction upper bound "local day to datetime" conversion issues
   ([#815](https://github.com/sovity/edc-ui/issues/815))
 
-
 ### Deployment Migration Notes
 
 _No special deployment migration steps required_
@@ -112,7 +110,6 @@ _No special deployment migration steps required_
   - Dev Catalog Crawler: `ghcr.io/sovity/catalog-crawler-dev:10.4.0`
   - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.4.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.4`
-
 
 ## [10.3.0] - 2024-09-04
 
@@ -191,6 +188,7 @@ This is a replacement for redacted release `10.1.0` with a few additional bug fi
 ##### logging-house-client extension
 
 If the extension is to be switched off, the following must now be set, as the extension is now activated by default when integrated:
+
 - `EDC_LOGGINGHOUSE_EXTENSION_ENABLED: 'false'`
 
 #### Compatible Versions
@@ -226,7 +224,7 @@ MDS 2.2 release
 #### Major Changes
 
 - Complex policies using AND, OR and XONE:
-  - Complex policy support in the Connector UI. 
+  - Complex policy support in the Connector UI.
   - The `UiPolicy` model has been adjusted to support complex expressions including `AND`, `OR` and `XONE`.
   - The `createPolicyDefinition` has been marked as deprecated in favor of the new `createPolicyDefinitionV2` endpoint that supports complex policies.
   - Removed the recently rushed `createPolicyDefinitionUseCase` endpoint in favor of the new `createPolicyDefinitionV2` endpoint.

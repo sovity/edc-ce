@@ -73,13 +73,13 @@ public class E2eScenario {
         this.mockServer = mockServer;
 
         consumerClient = EdcClient.builder()
-            .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-            .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
+            .managementApiUrl(consumerConfig.getManagementApiUrl())
+            .managementApiKey(consumerConfig.getManagementApiKey())
             .build();
 
         providerClient = EdcClient.builder()
-            .managementApiUrl(providerConfig.getManagementEndpoint().getUri().toString())
-            .managementApiKey(providerConfig.getProperties().get("edc.api.auth.key"))
+            .managementApiUrl(providerConfig.getManagementApiUrl())
+            .managementApiKey(providerConfig.getManagementApiKey())
             .build();
     }
 
@@ -171,7 +171,7 @@ public class E2eScenario {
     }
 
     public UiContractNegotiation negotiateAssetAndAwait(String assetId) {
-        val connectorEndpoint = providerConfig.getProtocolEndpoint().getUri().toString();
+        val connectorEndpoint = providerConfig.getProtocolApiUrl();
         val offers = consumerClient.uiApi().getCatalogPageDataOffers(connectorEndpoint);
 
         val offersContainingContract = offers.stream()

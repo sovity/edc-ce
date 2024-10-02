@@ -17,11 +17,9 @@ package de.sovity.edc.extension.e2e.extension;
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig;
 import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
 import de.sovity.edc.extension.utils.Lazy;
 import lombok.val;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -36,6 +34,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
+import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig.fromConnectorConfig;
 import static org.eclipse.edc.junit.testfixtures.TestUtils.getFreePort;
 import static org.mockserver.stop.Stop.stopQuietly;
 
@@ -162,7 +161,7 @@ public class E2eTestExtension
             } else if (ConnectorConfig.class.equals(type)) {
                 return consumerConfig;
             } else if (ConnectorRemote.class.equals(type)) {
-                return newConnectorRemote(config.getConsumerParticipantId(), consumerConfig);
+                return new ConnectorRemote(fromConnectorConfig(consumerConfig));
             } else {
                 return consumerExtension.resolveParameter(parameterContext, extensionContext);
             }
@@ -174,7 +173,7 @@ public class E2eTestExtension
             } else if (ConnectorConfig.class.equals(type)) {
                 return providerConfig;
             } else if (ConnectorRemote.class.equals(type)) {
-                return newConnectorRemote(config.getProviderParticipantId(), providerConfig);
+                return new ConnectorRemote(fromConnectorConfig(providerConfig));
             } else {
                 return providerExtension.resolveParameter(parameterContext, extensionContext);
             }
@@ -190,15 +189,6 @@ public class E2eTestExtension
             "The parameters must be annotated by the EDC side: @Provider or @Consumer or be one of the supported classes.");
     }
 
-    private @NotNull ConnectorRemote newConnectorRemote(String participantId, ConnectorConfig config) {
-        return new ConnectorRemote(
-            new ConnectorRemoteConfig(
-                participantId,
-                config.getDefaultEndpoint(),
-                config.getManagementEndpoint(),
-                config.getProtocolEndpoint()));
-    }
-
     private static boolean isProvider(ParameterContext parameterContext) {
         return parameterContext.getParameter().getDeclaredAnnotation(Provider.class) != null;
     }
@@ -209,8 +199,8 @@ public class E2eTestExtension
 
     private EdcClient newEdcClient(ConnectorConfig consumerConfig) {
         return EdcClient.builder()
-            .managementApiUrl(consumerConfig.getManagementEndpoint().getUri().toString())
-            .managementApiKey(consumerConfig.getProperties().get("edc.api.auth.key"))
+            .managementApiUrl(consumerConfig.getManagementApiUrl())
+            .managementApiKey(consumerConfig.getManagementApiKey())
             .build();
     }
 }

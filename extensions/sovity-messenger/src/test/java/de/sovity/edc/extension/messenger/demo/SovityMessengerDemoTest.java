@@ -121,6 +121,6 @@ class SovityMessengerDemoTest {
 
     @BeforeEach
     void setup() {
-        receiverAddress = receiverConfig.getProtocolEndpoint().getUri().toString();
+        receiverAddress = receiverConfig.getProtocolApiUrl();
     }
 }

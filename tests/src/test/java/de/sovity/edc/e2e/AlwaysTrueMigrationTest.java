@@ -25,6 +25,7 @@ import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
 import de.sovity.edc.extension.e2e.extension.Provider;
 import de.sovity.edc.extension.policy.AlwaysTruePolicyConstants;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
+import de.sovity.edc.utils.config.ConfigProps;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.ws.rs.HttpMethod;
 import lombok.val;
@@ -45,10 +46,12 @@ class AlwaysTrueMigrationTest {
     @RegisterExtension
     private static final E2eTestExtension E2E_TEST_EXTENSION = new E2eTestExtension(
         withModule(":launchers:connectors:sovity-dev").toBuilder()
-            .consumerConfigCustomizer(config -> config.getProperties()
-                .put("edc.flyway.additional.migration.locations", "classpath:db/additional-test-data/always-true-policy-migrated"))
-            .providerConfigCustomizer(config -> config.getProperties()
-                .put("edc.flyway.additional.migration.locations", "classpath:db/additional-test-data/always-true-policy-legacy"))
+            .consumerConfigCustomizer(config -> config.setProperty(
+                ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS, "classpath:db/additional-test-data/always-true-policy-legacy"
+            ))
+            .providerConfigCustomizer(config -> config.setProperty(
+                ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS, "classpath:db/additional-test-data/always-true-policy-migrated"
+            ))
             .build()
     );
 
