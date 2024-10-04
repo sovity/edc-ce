@@ -13,6 +13,8 @@ import de.sovity.edc.ext.wrapper.api.ui.model.UiCriterionOperator;
 import de.sovity.edc.ext.wrapper.api.ui.pages.asset.AssetApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionApiService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.policy.PolicyDefinitionApiService;
+import de.sovity.edc.extension.policy.AlwaysTruePolicyConstants;
+import de.sovity.edc.extension.policy.services.AlwaysTruePolicyDefinitionService;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.eclipse.edc.spi.types.domain.asset.Asset;
@@ -32,6 +34,7 @@ public class DataOfferPageApiService {
     private final AssetApiService assetApiService;
     private final ContractDefinitionApiService contractDefinitionApiService;
     private final PolicyDefinitionApiService policyDefinitionApiService;
+    private final AlwaysTruePolicyDefinitionService alwaysTruePolicyDefinitionService;
 
     @NotNull
     public IdAvailabilityResponse checkIfPolicyIdAvailable(DSLContext dsl, String id) {
@@ -66,45 +69,106 @@ public class DataOfferPageApiService {
     }
 
     public IdResponseDto createDataOffer(DSLContext dsl, DataOfferCreationRequest dataOfferCreationRequest) {
+
         val commonId = dataOfferCreationRequest.getUiAssetCreateRequest().getId();
 
-        val assetIdExists = checkIfAssetIdAvailable(dsl, commonId).isAvailable();
-        if (!assetIdExists) {
-            throw new InvalidRequestException("Asset with id %s already exists".formatted(commonId));
-        }
+        return switch (dataOfferCreationRequest.getPolicy()) {
+            case DONT_PUBLISH -> createButDontPublish(dsl, dataOfferCreationRequest, commonId);
+            case PUBLISH_UNRESTRICTED -> createAndPublishUnrestricted(dsl, dataOfferCreationRequest, commonId);
+            case PUBLISH_RESTRICTED -> createAndPublishRestricted(dsl, dataOfferCreationRequest, commonId);
+        };
+    }
 
-        val policyIdExists = checkIfPolicyIdAvailable(dsl, commonId).isAvailable();
-        if (!policyIdExists) {
-            throw new InvalidRequestException("Policy with id %s already exists".formatted(commonId));
-        }
+    private @NotNull IdResponseDto createAndPublishUnrestricted(
+        DSLContext dsl,
+        DataOfferCreationRequest dataOfferCreationRequest,
+        String commonId
+    ) {
+        val assetId = commonId;
+        val contractDefinitionId = commonId;
+        val policyId = AlwaysTruePolicyConstants.POLICY_DEFINITION_ID;
 
-        val contractDefinitionIdExists = checkIfContractDefinitionIdAvailable(dsl, commonId).isAvailable();
-        if (!contractDefinitionIdExists) {
-            throw new InvalidRequestException("Contract definition with id %s already exists".formatted(commonId));
+        checkAssetIdAvailable(dsl, assetId);
+        checkContractDefinitionIdAvailable(dsl, contractDefinitionId);
+
+        if (!alwaysTruePolicyDefinitionService.exists()) {
+            // the default always-true policy has been deleted, recreate it.
+            alwaysTruePolicyDefinitionService.create();
         }
 
         assetApiService.createAsset(dataOfferCreationRequest.getUiAssetCreateRequest());
 
-        val maybeNewPolicy = Optional.ofNullable(dataOfferCreationRequest.getUiPolicyExpression());
+        return createContractDefinition(assetId, policyId, contractDefinitionId);
+    }
 
-        maybeNewPolicy.ifPresent(
-            policy -> policyDefinitionApiService.createPolicyDefinitionV2(new PolicyDefinitionCreateDto(commonId, policy)));
+    private @NotNull IdResponseDto createAndPublishRestricted(
+        DSLContext dsl,
+        DataOfferCreationRequest dataOfferCreationRequest,
+        String commonId
+    ) {
+        val assetId = commonId;
+        val policyId = commonId;
+        val contractDefinitionId = commonId;
 
+        checkAssetIdAvailable(dsl, assetId);
+        checkPolicyIdAvailable(dsl, policyId);
+        checkContractDefinitionIdAvailable(dsl, contractDefinitionId);
+
+        assetApiService.createAsset(dataOfferCreationRequest.getUiAssetCreateRequest());
+
+        val policyExpression = Optional.ofNullable(dataOfferCreationRequest.getUiPolicyExpression())
+            .orElseThrow(() -> new InvalidRequestException("Missing policy expression"));
+        policyDefinitionApiService.createPolicyDefinitionV2(new PolicyDefinitionCreateDto(policyId, policyExpression));
+
+        createContractDefinition(assetId, policyId, contractDefinitionId);
+
+        return new IdResponseDto(commonId, OffsetDateTime.now());
+    }
+
+    private @NotNull IdResponseDto createButDontPublish(
+        DSLContext dsl,
+        DataOfferCreationRequest dataOfferCreationRequest,
+        String commonId
+    ) {
+        checkAssetIdAvailable(dsl, commonId);
+        return assetApiService.createAsset(dataOfferCreationRequest.getUiAssetCreateRequest());
+    }
+
+    private void checkContractDefinitionIdAvailable(DSLContext dsl, String commonId) {
+        val contractDefinitionIdExists = checkIfContractDefinitionIdAvailable(dsl, commonId).isAvailable();
+        if (!contractDefinitionIdExists) {
+            throw new InvalidRequestException("Contract definition with id %s already exists".formatted(commonId));
+        }
+    }
+
+    private void checkPolicyIdAvailable(DSLContext dsl, String commonId) {
+        val policyIdExists = checkIfPolicyIdAvailable(dsl, commonId).isAvailable();
+        if (!policyIdExists) {
+            throw new InvalidRequestException("Policy with id %s already exists".formatted(commonId));
+        }
+    }
+
+    private void checkAssetIdAvailable(DSLContext dsl, String commonId) {
+        val assetIdExists = checkIfAssetIdAvailable(dsl, commonId).isAvailable();
+        if (!assetIdExists) {
+            throw new InvalidRequestException("Asset with id %s already exists".formatted(commonId));
+        }
+    }
+
+    private @NotNull IdResponseDto createContractDefinition(String assetId, String policyId, String contractDefinitionId) {
         val cd = new ContractDefinitionRequest();
         cd.setAssetSelector(List.of(UiCriterion.builder()
             .operandLeft(Asset.PROPERTY_ID)
             .operator(UiCriterionOperator.EQ)
             .operandRight(UiCriterionLiteral.builder()
                 .type(UiCriterionLiteralType.VALUE)
-                .value(commonId)
+                .value(assetId)
                 .build())
             .build()));
-        cd.setAccessPolicyId(commonId);
-        cd.setContractPolicyId(commonId);
-        cd.setContractDefinitionId(commonId);
+        cd.setAccessPolicyId(policyId);
+        cd.setContractPolicyId(policyId);
+        cd.setContractDefinitionId(contractDefinitionId);
 
-        contractDefinitionApiService.createContractDefinition(cd);
-
-        return new IdResponseDto(commonId, OffsetDateTime.now());
+        return contractDefinitionApiService.createContractDefinition(cd);
     }
 }
