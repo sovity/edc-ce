@@ -35,7 +35,7 @@ public class DataOfferCreationRequest {
     @Schema(description = "The asset to create", requiredMode = REQUIRED)
     private UiAssetCreateRequest uiAssetCreateRequest;
 
-    @Schema(description = "Which policy to apply to this asset.", requiredMode = REQUIRED)
+    @Schema(description = "Which policy to apply to this asset creation.", requiredMode = REQUIRED)
     private PolicyDefinitionChoiceEnum policy;
 
     @Schema(description = "Policy Expression.", requiredMode = NOT_REQUIRED)

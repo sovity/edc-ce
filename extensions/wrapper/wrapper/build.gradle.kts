@@ -8,7 +8,9 @@ dependencies {
     annotationProcessor(libs.lombok)
     compileOnly(libs.lombok)
 
+
     implementation(project(":config"))
+
     api(project(":extensions:wrapper:wrapper-api"))
     api(project(":extensions:wrapper:wrapper-common-mappers"))
     api(project(":utils:catalog-parser"))
@@ -22,6 +24,7 @@ dependencies {
 
     implementation(project(":extensions:contract-termination"))
     implementation(project(":extensions:database-direct-access"))
+    implementation(project(":extensions:policy-always-true"))
     implementation(project(":extensions:sovity-messenger"))
     implementation(project(":utils:jooq-database-access"))
 
