@@ -22,9 +22,13 @@ export class TranslateWithSlotComponent implements OnChanges, OnDestroy {
   textAfter = '';
 
   constructor(private translationService: TranslateService) {
+    this.splitText();
+  }
+
+  splitText() {
     this.key$
       .pipe(
-        switchMap(() => this.translationService.get(this.key)),
+        switchMap(() => this.translationService.stream(this.key)),
         takeUntil(this.ngOnDestroy$),
       )
       .subscribe((text) => {

@@ -1,28 +1,24 @@
 import {Component, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
+import {
+  AvailableLanguage,
+  isLanguageSupported,
+  supportedLanguages,
+} from 'src/app/core/utils/i18n-utils';
 import {LocalStoredValue} from '../../../core/utils/local-stored-value';
-
-interface AvailableLanguage {
-  code: string;
-  name: string;
-}
 
 @Component({
   selector: 'app-language-selector',
   templateUrl: './language-selector.component.html',
 })
 export class LanguageSelectorComponent implements OnInit {
-  supportedLanguages: AvailableLanguage[] = [
-    {code: 'en', name: 'English'},
-    {code: 'de', name: 'Deutsch'},
-  ];
-
   selectedLanguage = new LocalStoredValue<string>(
     'en',
     'selectedLanguage',
-    (value): value is string =>
-      this.supportedLanguages.map((it) => it.code).includes(value as string),
+    isLanguageSupported,
   );
+
+  supportedLanguages = supportedLanguages;
 
   constructor(private translateService: TranslateService) {}
 

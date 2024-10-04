@@ -6,6 +6,8 @@ import {map, shareReplay} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {NavItemGroup} from 'src/app/core/services/models/nav-item-group';
 import {NavItemsBuilder} from 'src/app/core/services/nav-items-builder';
+import {isLanguageSupported} from 'src/app/core/utils/i18n-utils';
+import {LocalStoredValue} from 'src/app/core/utils/local-stored-value';
 import {APP_CONFIG, AppConfig} from '../../core/config/app-config';
 import {LoginPollingService} from '../../core/services/login-polling.service';
 
@@ -24,6 +26,12 @@ export class ConnectorUiComponent implements OnInit {
 
   navItemGroups: NavItemGroup[] = [];
 
+  selectedLanguage = new LocalStoredValue<string>(
+    'en',
+    'selectedLanguage',
+    isLanguageSupported,
+  );
+
   constructor(
     @Inject(APP_CONFIG) public config: AppConfig,
     public titleService: Title,
@@ -34,7 +42,7 @@ export class ConnectorUiComponent implements OnInit {
   ) {
     this.navItemGroups = this.navItemsBuilder.buildNavItemGroups();
     this.translateService.setDefaultLang('en');
-    this.translateService.use(localStorage.getItem('selectedLanguage') || 'en');
+    this.translateService.use(this.selectedLanguage.value);
   }
 
   ngOnInit() {
