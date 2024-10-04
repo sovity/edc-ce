@@ -8,7 +8,6 @@ import {Observable, combineLatest, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {IdAvailabilityResponse} from '@sovity.de/edc-client';
 import {EdcApiService} from 'src/app/core/services/api/edc-api.service';
-import {ALWAYS_TRUE_POLICY_ID} from './model/always-true-policy-id';
 import {EditAssetFormValue} from './model/edit-asset-form-model';
 
 /**
@@ -29,20 +28,7 @@ export class EditAssetFormValidators {
       }
 
       const assetId = control.value! as string;
-      if (value.publishMode === 'PUBLISH_UNRESTRICTED') {
-        return combineLatest([
-          this.assetIdExistsErrorMessage(assetId),
-          this.contractDefinitionIdErrorMessage(assetId),
-          this.policyIdExistsErrorMessage(ALWAYS_TRUE_POLICY_ID).pipe(
-            map((errorMessage) =>
-              // We want to throw an error if always-true was not found
-              errorMessage ? null : 'Always True Policy does not exist.',
-            ),
-          ),
-        ]).pipe(
-          map((errorMessages) => this.buildValidationErrors(errorMessages)),
-        );
-      } else if (value.publishMode === 'PUBLISH_RESTRICTED') {
+      if (value.publishMode !== 'DO_NOT_PUBLISH') {
         return combineLatest([
           this.assetIdExistsErrorMessage(assetId),
           this.contractDefinitionIdErrorMessage(assetId),
@@ -55,7 +41,6 @@ export class EditAssetFormValidators {
           map((result) => this.buildValidationErrors([result])),
         );
       }
-
       return of(null);
     };
   }

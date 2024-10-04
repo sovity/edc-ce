@@ -25,6 +25,17 @@ const checkIdAvailability = (id: string): void => {
   }
 };
 
+const checkIfNoAlwaysTruePolicyExists = (): void => {
+  if (policyDefinitionIdAvailable(ALWAYS_TRUE_POLICY_ID).available) {
+    createPolicyDefinitionV2({
+      policyDefinitionId: ALWAYS_TRUE_POLICY_ID,
+      expression: {
+        type: 'EMPTY',
+      },
+    });
+  }
+};
+
 export const createDataOffer = (
   request: DataOfferCreationRequest,
 ): IdResponseDto => {
@@ -32,6 +43,7 @@ export const createDataOffer = (
   let accessPolicyId = null;
   let contractPolicyId = null;
 
+  checkIfNoAlwaysTruePolicyExists();
   checkIdAvailability(commonId);
   createAsset(request.uiAssetCreateRequest);
 
