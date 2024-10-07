@@ -6,7 +6,7 @@ on:
   release:
     types: [ published ]
   pull_request:
-    branches: [ main, hotfix/* ]
+    branches: [ main, hotfix/picked-for-release ]
 
 env:
   REGISTRY_URL: ghcr.io
