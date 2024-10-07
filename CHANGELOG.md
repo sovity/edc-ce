@@ -3,7 +3,6 @@
 For documentation on how to update this changelog,
 please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
-
 ## [x.x.x] - UNRELEASED
 
 ### Overview
@@ -30,6 +29,35 @@ _No special deployment migration steps required_
   - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:{{ VERSION }}`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI VERSION }}`
 
+## [10.4.2] - 2024-10-07
+
+### Overview
+
+MDS patch update
+
+### Detailed Changes
+
+#### Patch Changes
+
+- Fix issues regarding contracts and policies creation on the Create Data Offer page ([PR#1055](https://github.com/sovity/edc-ce/pull/1055))
+- Fixed a button label stating "Method Parameterization" instead of "Path
+  Parameterization" ([#857](https://github.com/sovity/edc-ui/issues/857))
+- Made the Custom Http Method mandatory if the corresponding option is chosen
+  ([#739](https://github.com/sovity/edc-ui/issues/739))
+- Fixed inconsistent renaming of "Contract Definition" to "Data Offer" after
+  i18n ([#831](https://github.com/sovity/edc-ui/issues/831))
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:10.4.2`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:10.4.2`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:10.4.2`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.6`
 
 ## [10.4.1] - 2024-09-26
 
@@ -73,7 +101,6 @@ _No special deployment migration steps required_
   - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.4.1`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.5`
 
-
 ## [10.4.0] - 2024-09-18
 
 ### Overview
@@ -98,7 +125,6 @@ UI and Wrapper API improvements.
 - Fixed time restriction upper bound "local day to datetime" conversion issues
   ([#815](https://github.com/sovity/edc-ui/issues/815))
 
-
 ### Deployment Migration Notes
 
 _No special deployment migration steps required_
@@ -112,7 +138,6 @@ _No special deployment migration steps required_
   - Dev Catalog Crawler: `ghcr.io/sovity/catalog-crawler-dev:10.4.0`
   - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.4.0`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.4`
-
 
 ## [10.3.0] - 2024-09-04
 
@@ -191,6 +216,7 @@ This is a replacement for redacted release `10.1.0` with a few additional bug fi
 ##### logging-house-client extension
 
 If the extension is to be switched off, the following must now be set, as the extension is now activated by default when integrated:
+
 - `EDC_LOGGINGHOUSE_EXTENSION_ENABLED: 'false'`
 
 #### Compatible Versions
