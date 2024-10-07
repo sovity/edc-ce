@@ -59,3 +59,9 @@ useful for the customer and people deploying the application, containing both pr
 deployment migration notes.
 
 More on that can be found in the [Release Issue Template](../../.github/ISSUE_TEMPLATE/release.md).
+
+## Linking
+
+The entries in the changelog should be linked to their corresponding issue.
+
+If for some reason the issue is not accessible for the public, link to the pull request instead.

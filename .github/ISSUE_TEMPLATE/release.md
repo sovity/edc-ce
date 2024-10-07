@@ -36,6 +36,7 @@ Feel free to edit this release checklist in-progress depending on what tasks nee
     - [ ] Add all deployment migration notes from the newer EDC UI release(s), merge and reword them.
     - [ ] Check the commit history for commits that might be product-relevant and thus should be added to the
           changelog. Maybe they were forgotten.
+    - [ ] Check that all the log entries have a link to their corresponding issue or a pull request.
     - [ ] Write or review the `Deployment Migration Notes` section, check the commit history for changed / added
           configuration properties.
     - [ ] Reorder, reword or combine changelog entries from a product perspective for consistency.
