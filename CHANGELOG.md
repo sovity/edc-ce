@@ -39,7 +39,7 @@ MDS patch update
 
 #### Patch Changes
 
-- Fix issues regarding contracts and policies creation on the Create Data Offer page ([PR#1055](https://github.com/sovity/edc-ce/pull/1055))
+- Fixed issues regarding contracts and policies creation on the Create Data Offer page ([PR#1055](https://github.com/sovity/edc-ce/pull/1055))
 - Fixed a button label stating "Method Parameterization" instead of "Path
   Parameterization" ([#857](https://github.com/sovity/edc-ui/issues/857))
 - Made the Custom Http Method mandatory if the corresponding option is chosen
