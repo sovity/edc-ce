@@ -20,9 +20,23 @@ the detailed section referring to by linking pull requests or issues.
 
 #### Patch
 
-- Fixed wrong button label stating "Method Parameterization" instead of "Path
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+## [v4.1.6] - 2024-10-07
+
+### Overview
+
+MDS Patch release
+
+### Detailed Changes
+
+#### Patch
+
+- Fixed a button label stating "Method Parameterization" instead of "Path
   Parameterization" ([#857](https://github.com/sovity/edc-ui/issues/857))
-- Made Custom Http Method mandatory if the corresponding option is chosen
+- Made the Custom Http Method mandatory if the corresponding option is chosen
   ([#739](https://github.com/sovity/edc-ui/issues/739))
 - Fixed inconsistent renaming of "Contract Definition" to "Data Offer" after
   i18n ([#831](https://github.com/sovity/edc-ui/issues/831))
