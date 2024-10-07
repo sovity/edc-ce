@@ -21,6 +21,7 @@ dependencies {
 
     implementation(project(":extensions:contract-termination"))
     implementation(project(":extensions:database-direct-access"))
+    implementation(project(":extensions:policy-always-true"))
     implementation(project(":extensions:sovity-messenger"))
     implementation(project(":utils:jooq-database-access"))
 

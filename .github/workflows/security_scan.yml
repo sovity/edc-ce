@@ -12,7 +12,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Run static analysis (rootfs)
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.24.0
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
         with:
           scan-type: "rootfs"
           scanners: "vuln,misconfig"
@@ -20,6 +22,7 @@ jobs:
           format: "sarif"
           output: "trivy-results-rootfs.sarif"
           severity: "CRITICAL,HIGH"
+          github-pat: ${{ secrets.GITHUB_TOKEN }}
   security_scan_repo:
     name: security_scan_repo
     runs-on: ubuntu-latest
@@ -27,7 +30,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Run static analysis (repo)
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.24.0
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
         with:
           scan-type: "repo"
           scanners: "vuln,misconfig"
@@ -35,6 +40,7 @@ jobs:
           format: "sarif"
           output: "trivy-results-repo.sarif"
           severity: "CRITICAL,HIGH"
+          github-pat: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Trivy scan results to GitHub Security tab (repo)
         uses: github/codeql-action/upload-sarif@v2
         continue-on-error: true

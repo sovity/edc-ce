@@ -79,6 +79,7 @@ import de.sovity.edc.ext.wrapper.api.usecase.services.SupportedPolicyApiService;
 import de.sovity.edc.ext.wrapper.controller.PlaceholderEndpointController;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
+import de.sovity.edc.extension.policy.services.AlwaysTruePolicyDefinitionService;
 import de.sovity.edc.utils.catalog.DspCatalogService;
 import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import lombok.NoArgsConstructor;
@@ -96,6 +97,7 @@ import org.eclipse.edc.connector.spi.transferprocess.TransferProcessService;
 import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
+import org.eclipse.edc.policy.engine.spi.RuleBindingRegistry;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.spi.asset.AssetIndex;
 import org.eclipse.edc.spi.monitor.Monitor;
@@ -135,6 +137,7 @@ public class WrapperExtensionContextBuilder {
         PolicyDefinitionService policyDefinitionService,
         PolicyDefinitionStore policyDefinitionStore,
         PolicyEngine policyEngine,
+        RuleBindingRegistry ruleBindingRegistry,
         TransferProcessService transferProcessService,
         TransferProcessStore transferProcessStore,
         TypeTransformerRegistry typeTransformerRegistry
@@ -250,10 +253,14 @@ public class WrapperExtensionContextBuilder {
             miwConfigBuilder,
             selfDescriptionService
         );
+        var alwaysTruePolicyService = new AlwaysTruePolicyDefinitionService(
+            policyDefinitionService
+        );
         var dataOfferPageApiService = new DataOfferPageApiService(
             assetApiService,
             contractDefinitionApiService,
-            policyDefinitionApiService
+            policyDefinitionApiService,
+            alwaysTruePolicyService
         );
         var uiResource = new UiResourceImpl(
             contractAgreementApiService,

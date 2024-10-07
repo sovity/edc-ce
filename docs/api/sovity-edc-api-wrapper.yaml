@@ -948,7 +948,7 @@ components:
           $ref: '#/components/schemas/UiAssetCreateRequest'
         policy:
           type: string
-          description: Which policy to apply to this asset.
+          description: Which policy to apply to this asset creation.
           enum:
           - DONT_PUBLISH
           - PUBLISH_UNRESTRICTED
