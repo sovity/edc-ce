@@ -3,6 +3,7 @@
 For documentation on how to update this changelog,
 please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
+
 ## [x.x.x] - UNRELEASED
 
 ### Overview
@@ -31,6 +32,38 @@ _No special deployment migration steps required_
   - sovity EDC CE: `ghcr.io/sovity/edc-ce:{{ VERSION }}`
   - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:{{ VERSION }}`
 - Connector UI Docker Image: `ghcr.io/sovity/edc-ui:{{ UI VERSION }}`
+
+## [10.4.2] - 2024-10-07
+
+### Overview
+
+MDS patch update
+
+### Detailed Changes
+
+#### Patch Changes
+
+- Fixed issues regarding contracts and policies creation on the Create Data Offer page ([PR#1055](https://github.com/sovity/edc-ce/pull/1055))
+- Fixed a button label stating "Method Parameterization" instead of "Path
+  Parameterization" ([#857](https://github.com/sovity/edc-ui/issues/857))
+- Made the Custom Http Method mandatory if the corresponding option is chosen
+  ([#739](https://github.com/sovity/edc-ui/issues/739))
+- Fixed inconsistent renaming of "Contract Definition" to "Data Offer" after
+  i18n ([#831](https://github.com/sovity/edc-ui/issues/831))
+
+### Deployment Migration Notes
+
+_No special deployment migration steps required_
+
+#### Compatible Versions
+
+- Connector Backend Docker Images:
+  - Dev EDC: `ghcr.io/sovity/edc-dev:10.4.2`
+  - sovity EDC CE: `ghcr.io/sovity/edc-ce:10.4.2`
+  - MDS EDC CE: `ghcr.io/sovity/edc-ce-mds:10.4.2`
+  - Dev Catalog Crawler: `ghcr.io/sovity/catalog-crawler-dev:10.4.2`
+  - Catalog Crawler CE: `ghcr.io/sovity/catalog-crawler-ce:10.4.2`
+- Connector UI Docker Image: `ghcr.io/sovity/edc-ui:4.1.6`
 
 ## [10.4.1] - 2024-09-26
 
