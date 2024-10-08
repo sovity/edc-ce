@@ -16,6 +16,12 @@
 
 ---------------------------------------
 
+{% swagger src="https://raw.githubusercontent.com/sovity/edc-ce/main/docs/api/sovity-edc-api-wrapper.yaml" path="/wrapper/ui/pages/asset-page/assets" method="post" %}
+[https://raw.githubusercontent.com/sovity/edc-ce/main/docs/api/sovity-edc-api-wrapper.yaml](https://raw.githubusercontent.com/sovity/edc-ce/main/docs/api/sovity-edc-api-wrapper.yaml)
+{% endswagger %}
+
+---------------------------------------
+
 {% swagger src="https://raw.githubusercontent.com/sovity/edc-ce/main/docs/api/sovity-edc-api-wrapper.yaml" path="/wrapper/ui/pages/asset-page/assets/{assetId}" method="delete" %}
 [https://raw.githubusercontent.com/sovity/edc-ce/main/docs/api/sovity-edc-api-wrapper.yaml](https://raw.githubusercontent.com/sovity/edc-ce/main/docs/api/sovity-edc-api-wrapper.yaml)
 {% endswagger %}
