@@ -74,3 +74,11 @@ Within the Management-API, there is an API that can abort and terminate ongoing 
 ### Why am I getting a 500 error when accessing the /public endpoint of the Data-Plane?
 
 This issue can be caused by the connected customer-backend. The core-edc may convert error codes, leading to this issue. For example, a customer-backend returning a 400 code could be translated to a 500 by the core-edc.
+
+### Do productive Connectors need to be public reachable?
+
+Yes, Connectors need to have public-facing endpoints when deployed for productive usage in a dataspace, specifically the Dataspace Protocol (DSP) endpoint, to enable communication between Connectors. This is necessary because during processes such as contract negotiation, the Connectors must be able to exchange DSP-messages to perform the negotiations. Having a public DSP-endpoint allows these interactions to occur in a productive deployment environment. Contract negotiations and other communications happen between the connectors in a peer-to-peer manner.
+
+### Do data sinks need to be public reachable in productive environments?
+
+Yes, the architecture relys on the data provider directly connecting to the data sink of the consumer, which is designed for scaling and technical efficiency. This setup reduces the need for data to pass through the consuming EDC, optimizing bandwidth, reducing latency and avoiding technical bottlenecks, this is thus a technical design decision. To secure the data sink, measures such as IP-whitelisting of data-providers or API-keys for the data sink should be used to ensure that only authorized parties can access and write to the data sink.
