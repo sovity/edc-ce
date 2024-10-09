@@ -14,8 +14,9 @@ jobs:
       - name: Run static analysis (rootfs)
         uses: aquasecurity/trivy-action@0.26.0
         env:
-          TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db #try default GitHub db, if failing, use aws mirror instead (https://github.com/aquasecurity/trivy-action/issues/389)
-          TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db #try default GitHub db, if failing, use aws mirror instead (https://github.com/aquasecurity/trivy-action/issues/389)
+          #try default GitHub DBs, if failing, use AWS mirror instead (https://github.com/aquasecurity/trivy-action/issues/389)
+          TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
+          TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
         with:
           scan-type: "rootfs"
           scanners: "vuln,misconfig"
@@ -33,8 +34,9 @@ jobs:
       - name: Run static analysis (repo)
         uses: aquasecurity/trivy-action@0.26.0
         env:
-          TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db #try default GitHub db, if failing, use aws mirror instead (https://github.com/aquasecurity/trivy-action/issues/389)
-          TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db #try default GitHub db, if failing, use aws mirror instead (https://github.com/aquasecurity/trivy-action/issues/389)
+          #try default GitHub DBs, if failing, use AWS mirror instead (https://github.com/aquasecurity/trivy-action/issues/389)
+          TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db,public.ecr.aws/aquasecurity/trivy-db
+          TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db
         with:
           scan-type: "repo"
           scanners: "vuln,misconfig"
