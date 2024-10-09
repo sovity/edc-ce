@@ -13,9 +13,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run license scanner
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@0.26.0
         env:
-          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db #mirror because of https://github.com/aquasecurity/trivy-action/issues/389
         with:
           scan-type: "rootfs"
           scan-ref: "."
@@ -35,9 +35,9 @@ jobs:
       - name: npm install (typescript-client-example)
         run: cd extensions/wrapper/clients/typescript-client-example && npm clean-install
       - name: Run license scanner
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@0.26.0
         env:
-          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db #mirror because of https://github.com/aquasecurity/trivy-action/issues/389
         with:
           scan-type: "repo"
           scan-ref: "."
