@@ -16,12 +16,15 @@ package de.sovity.edc.extension.version.controller;
 
 import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
+import de.sovity.edc.extension.e2e.junit.edc.RuntimeExtensionFixed;
+import de.sovity.edc.utils.config.ConfigUtils;
 import io.restassured.http.ContentType;
 import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.protocol.ProtocolWebhook;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -34,25 +37,24 @@ import static org.mockito.Mockito.mock;
 class EdcUiConfigTest {
     private static final String SOME_EXAMPLE_PROP = "this should also be passed through";
 
-    private ConnectorBootConfig config;
-
     @RegisterExtension
     static CeIntegrationTestExtension extension = CeIntegrationTestExtension.builder()
         .configOverrides(config -> config.property("edc.ui.some.example.prop", SOME_EXAMPLE_PROP))
+        .skipDb(true)
         .build();
 
     @BeforeEach
-    void setUp(EdcExtension extension) {
+    void setUp(RuntimeExtensionFixed extension) {
         extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
         extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
         extension.registerServiceMock(DataPlaneInstanceStore.class, mock(DataPlaneInstanceStore.class));
     }
 
     @Test
-    void testEdcUiConfigWithEverythingSet() {
+    void testEdcUiConfigWithEverythingSet(Config config) {
         var request = given()
-            .baseUri(config.getManagementApiUrl())
-            .header("X-Api-Key", config.getManagementApiKey())
+            .baseUri(ConfigUtils.getManagementApiUrl(config))
+            .header("X-Api-Key", ConfigUtils.getManagementApiKey(config))
             .when()
             .contentType(ContentType.JSON)
             .get("/edc-ui-config")
