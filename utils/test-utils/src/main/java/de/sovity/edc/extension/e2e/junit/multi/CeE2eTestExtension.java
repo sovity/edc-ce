@@ -15,14 +15,14 @@
 package de.sovity.edc.extension.e2e.junit.multi;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig.ConnectorBootConfigBuilder;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenarioConfig;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
-import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
-import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
+import lombok.Builder;
+import lombok.Singular;
 import lombok.val;
+import org.eclipse.edc.junit.extensions.RuntimePerClassExtension;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
@@ -35,63 +35,60 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.mockserver.integration.ClientAndServer;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
 
 import static org.eclipse.edc.util.io.Ports.getFreePort;
 import static org.mockserver.stop.Stop.stopQuietly;
 
+@Builder
 public class CeE2eTestExtension
     implements BeforeAllCallback, AfterAllCallback, BeforeTestExecutionCallback, AfterTestExecutionCallback, ParameterResolver {
 
-    private final InstancesForEachConnector<Side> connectorInstances = new InstancesForEachConnector<>(Arrays.asList(Side.values()));
+    @Singular("additionalModule")
+    private List<String> additionalModules;
+
+    @Builder.Default
+    private boolean skipDb = false;
+
+    @Builder.Default
+    private Consumer<ConnectorBootConfigBuilder> configCustomizer = it -> {
+    };
+
+    @Builder.Default
+    private Consumer<ConnectorBootConfigBuilder> consumerConfigCustomizer = it -> {
+    };
+
+    @Builder.Default
+    private Consumer<ConnectorBootConfigBuilder> providerConfigCustomizer = it -> {
+    };
+
+    private final InstancesForEachConnector<CeE2eTestSide> connectorInstances =
+        new InstancesForEachConnector<>(Arrays.asList(CeE2eTestSide.values()));
     private final InstancesForJunitTest globalInstances = new InstancesForJunitTest();
-
-    public CeE2eTestExtension() {
-        this(CeE2eTestConfig.builder().build());
-    }
-
-    public CeE2eTestExtension(String moduleName) {
-        this(CeE2eTestConfig.builder().moduleName(moduleName).build());
-    }
-
-    public CeE2eTestExtension(CeE2eTestConfig e2eConfig) {
-        // Register E2eTestExtensionConfig
-        globalInstances.put(e2eConfig);
-
-        for (Side side : Side.values()) {
-            var participantId = side.getParticipantId();
-
-            var dbRuntimePerClassExtension = RuntimePerClassWithDbExtension.builder()
-                .allConfigProps(ConfigProps.ALL_CE_PROPS)
-                .configFactory(testDatabase -> {
-                    // Register ConnectorConfig
-                    var connectorConfig = buildConnectorConfig(e2eConfig, side, testDatabase, participantId);
-                    connectorInstances.put(side, connectorConfig);
-                    return connectorConfig;
-                })
-                .additionalModule(e2eConfig.getModuleName())
-                .build();
-
-            // Register DbRuntimePerClassExtension
-            connectorInstances.put(side, dbRuntimePerClassExtension);
-        }
-    }
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
-        // Start EDCs
-        // for loop explicitly used because of checked exceptions
-        for (var extension : connectorInstances.all(RuntimePerClassWithDbExtension.class)) {
+        for (CeE2eTestSide side : CeE2eTestSide.values()) {
+            var extension = CeIntegrationTestExtension.builder()
+                .participantId(side.getParticipantId())
+                .additionalModules(additionalModules)
+                .configOverrides(config -> {
+                    configCustomizer.accept(config);
+                    if (side == CeE2eTestSide.CONSUMER) {
+                        consumerConfigCustomizer.accept(config);
+                    } else {
+                        providerConfigCustomizer.accept(config);
+                    }
+                })
+                .skipDb(skipDb)
+                .build();
+
+            // Register DbRuntimePerClassExtension
+            connectorInstances.put(side, extension);
+
+            // Start EDC
             extension.beforeAll(context);
-        }
-
-        for (var side : Side.values()) {
-            var config = getConfig(side);
-
-            // Register EdcClient
-            connectorInstances.put(side, CeIntegrationTestUtils.getEdcClient(config));
-
-            // Register ManagementApiConnectorRemote
-            connectorInstances.put(side, CeIntegrationTestUtils.getManagementApiConnectorRemote(config));
         }
     }
 
@@ -104,16 +101,7 @@ public class CeE2eTestExtension
         );
 
         // Register ConnectorRemoteClient
-        globalInstances.putLazy(
-            E2eTestScenario.class,
-            () -> E2eTestScenario
-                .builder()
-                .consumerClient(connectorInstances.get(Side.CONSUMER, EdcClient.class))
-                .providerClient(connectorInstances.get(Side.PROVIDER, EdcClient.class))
-                .mockServer(globalInstances.get(ClientAndServer.class))
-                .config(E2eTestScenarioConfig.forProviderConfig(getConfig(Side.PROVIDER)))
-                .build()
-        );
+        globalInstances.putLazy(E2eTestScenario.class, this::buildE2eTestScenario);
     }
 
     @Override
@@ -126,7 +114,7 @@ public class CeE2eTestExtension
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
         // for loop explicitly used because of checked exceptions
-        for (var extension : connectorInstances.all(RuntimePerClassWithDbExtension.class)) {
+        for (var extension : connectorInstances.all(RuntimePerClassExtension.class)) {
             extension.afterAll(context);
         }
     }
@@ -134,7 +122,7 @@ public class CeE2eTestExtension
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
         throws ParameterResolutionException {
-        val sideOrNull = Side.fromParameterContextOrNull(parameterContext);
+        val sideOrNull = CeE2eTestSide.fromParameterContextOrNull(parameterContext);
         val clazz = parameterContext.getParameter().getType();
 
         if (sideOrNull != null) {
@@ -142,7 +130,7 @@ public class CeE2eTestExtension
                 return connectorInstances.has(sideOrNull, clazz);
             }
 
-            return connectorInstances.get(sideOrNull, RuntimePerClassWithDbExtension.class)
+            return connectorInstances.get(sideOrNull, RuntimePerClassExtension.class)
                 .supportsParameter(parameterContext, extensionContext);
         }
 
@@ -152,7 +140,7 @@ public class CeE2eTestExtension
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
         throws ParameterResolutionException {
-        val sideOrNull = Side.fromParameterContextOrNull(parameterContext);
+        val sideOrNull = CeE2eTestSide.fromParameterContextOrNull(parameterContext);
         val clazz = parameterContext.getParameter().getType();
 
         if (sideOrNull != null) {
@@ -160,7 +148,7 @@ public class CeE2eTestExtension
                 return connectorInstances.get(sideOrNull, clazz);
             }
 
-            return connectorInstances.get(sideOrNull, RuntimePerClassWithDbExtension.class)
+            return connectorInstances.get(sideOrNull, RuntimePerClassExtension.class)
                 .resolveParameter(parameterContext, extensionContext);
         }
 
@@ -173,28 +161,13 @@ public class CeE2eTestExtension
         );
     }
 
-    private Config getConfig(Side side) {
-        var extension = connectorInstances.get(side, RuntimePerClassWithDbExtension.class);
-        return extension.getRuntimePerClassExtensionFixed().getService(Config.class);
-    }
-
-    private ConnectorBootConfig buildConnectorConfig(
-        CeE2eTestConfig config,
-        Side side,
-        TestDatabase testDatabase,
-        String participantId
-    ) {
-        return CeIntegrationTestUtils.defaultConfig(
-            participantId,
-            testDatabase,
-            builder -> {
-                config.getConfigCustomizer().accept(builder);
-                if (side == Side.CONSUMER) {
-                    config.getConsumerConfigCustomizer().accept(builder);
-                } else {
-                    config.getProviderConfigCustomizer().accept(builder);
-                }
-            }
-        );
+    private E2eTestScenario buildE2eTestScenario() {
+        return E2eTestScenario.builder()
+            .consumerClient(connectorInstances.get(CeE2eTestSide.CONSUMER, EdcClient.class))
+            .providerClient(connectorInstances.get(CeE2eTestSide.PROVIDER, EdcClient.class))
+            .mockServer(globalInstances.get(ClientAndServer.class))
+            .config(E2eTestScenarioConfig.forProviderConfig(
+                connectorInstances.get(CeE2eTestSide.PROVIDER, RuntimePerClassExtension.class).getService(Config.class)))
+            .build();
     }
 }

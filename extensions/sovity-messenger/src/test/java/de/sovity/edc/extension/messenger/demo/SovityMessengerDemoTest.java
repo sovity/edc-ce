@@ -15,8 +15,8 @@
 package de.sovity.edc.extension.messenger.demo;
 
 import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
-import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.extension.messenger.SovityMessengerException;
 import de.sovity.edc.extension.messenger.demo.message.Addition;
@@ -41,22 +41,18 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 class SovityMessengerDemoTest {
 
+    @RegisterExtension
+    static CeIntegrationTestExtension emitterExtension = CeIntegrationTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
+
     @DisabledOnGithub
     @Test
     @SneakyThrows
-    void demo() {
-        /*
-         * Get a reference to the SovityMessenger. This is equivalent to
-         *
-         * @Inject SovityMessenger messenger;
-         *
-         * in an extension.
-         *
-         * This messenger is already configured to accept messages in de.sovity.edc.extension.messenger.demo.SovityMessengerDemo#initialize
-         */
-        val messenger = emitterExtension.getRuntimePerClassExtensionFixed().getService(SovityMessenger.class);
-
+    void demo(SovityMessenger messenger, Config config) {
         System.out.println("START MARKER");
+        var receiverId = ConfigUtils.getParticipantId(config);
+        var receiverAddress = ConfigUtils.getProtocolApiUrl(config);
 
         // Send messages
         val added = messenger.send(Answer.class, receiverAddress, receiverId, new Addition(20, 30));
@@ -94,36 +90,5 @@ class SovityMessengerDemoTest {
         }
 
         System.out.println("END MARKER");
-    }
-
-    @RegisterExtension
-    static RuntimePerClassWithDbExtension emitterExtension = new RuntimePerClassWithDbExtension(
-        ":launchers:connectors:sovity-dev",
-        "emitter",
-        testDatabase -> {
-            ConnectorBootConfig emitterConfig = CeIntegrationTestUtils.defaultConfig("emitter", testDatabase);
-            return emitterConfig.getProperties();
-        }
-    );
-
-    private static String receiverId = "receiver";
-
-    private static ConnectorBootConfig receiverConfig;
-
-    @RegisterExtension
-    static RuntimePerClassWithDbExtension receiverExtension = new RuntimePerClassWithDbExtension(
-        ":launchers:connectors:sovity-dev",
-        "receiver",
-        testDatabase -> {
-            receiverConfig = CeIntegrationTestUtils.defaultConfig(receiverId, testDatabase);
-            return receiverConfig.getProperties();
-        }
-    );
-
-    private String receiverAddress;
-
-    @BeforeEach
-    void setup(Config config) {
-        receiverAddress = ConfigUtils.getProtocolApiUrl(config.getEntries());
     }
 }

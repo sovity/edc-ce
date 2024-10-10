@@ -15,14 +15,20 @@
 package de.sovity.edc.extension.e2e.junit;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig.ConnectorConfigBuilder;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig.ConnectorBootConfigBuilder;
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
+import de.sovity.edc.extension.e2e.db.JdbcCredentials;
+import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.junit.multi.InstancesForJunitTest;
+import de.sovity.edc.utils.config.ConfigProps;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Singular;
 import lombok.val;
+import org.eclipse.edc.junit.extensions.RuntimePerClassExtension;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -40,32 +46,59 @@ import java.util.function.Consumer;
  */
 @Builder
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public final class CeIntegrationTestExtension
+public class CeIntegrationTestExtension
     implements BeforeAllCallback, AfterAllCallback, ParameterResolver {
+
+    @Getter
+    @Builder.Default
+    private final String participantId = "connector";
 
     @Singular("additionalModule")
     private final List<String> additionalModules;
 
+    @Builder.Default
+    private final boolean skipDb = false;
+
     @Nullable
-    private final Consumer<ConnectorConfigBuilder> configOverrides;
+    private final Consumer<ConnectorBootConfigBuilder> configOverrides;
 
     private final InstancesForJunitTest instances = new InstancesForJunitTest();
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
-        var extension = CeIntegrationTestUtils.defaultRuntimeWithCeConfig(additionalModules, configOverrides);
+        // Start DB
+        if (!skipDb) {
+            var testDatabaseExtension = TestDatabaseExtension.builder().build();
+            testDatabaseExtension.beforeAll(extensionContext);
+            instances.put(testDatabaseExtension);
+        }
+
+        // Start Connector
+        var bootConfig = CeIntegrationTestUtils.defaultConfig(participantId, getTestDatabaseOrMock(), configOverrides);
+        var extension = new RuntimePerClassExtensionFixed(new EmbeddedRuntimeFixed(
+            participantId,
+            bootConfig,
+            ConfigProps.ALL_CE_PROPS,
+            additionalModules.toArray(String[]::new)
+        ));
         instances.put(extension);
         extension.beforeAll(extensionContext);
 
-        var config = extension.getRuntimePerClassExtensionFixed().getService(Config.class);
-
+        // Configure Clients and Utilities
+        var config = extension.getService(Config.class);
         instances.putLazy(EdcClient.class, () -> CeIntegrationTestUtils.getEdcClient(config));
         instances.putLazy(ManagementApiConnectorRemote.class, () -> CeIntegrationTestUtils.getManagementApiConnectorRemote(config));
     }
 
     @Override
     public void afterAll(ExtensionContext extensionContext) throws Exception {
-        instances.get(RuntimePerClassWithDbExtension.class).afterAll(extensionContext);
+        try {
+            instances.get(RuntimePerClassExtension.class).afterAll(extensionContext);
+        } finally {
+            if (instances.has(TestDatabaseExtension.class)) {
+                instances.get(TestDatabaseExtension.class).afterAll(extensionContext);
+            }
+        }
     }
 
     @Override
@@ -75,11 +108,10 @@ public final class CeIntegrationTestExtension
     ) throws ParameterResolutionException {
         val clazz = parameterContext.getParameter().getType();
 
-        if (instances.has(clazz)) {
-            return true;
-        }
-
-        return instances.get(RuntimePerClassWithDbExtension.class).supportsParameter(parameterContext, extensionContext);
+        return instances.has(clazz) ||
+            (instances.has(TestDatabaseExtension.class) &&
+                instances.get(TestDatabaseExtension.class).supportsParameter(parameterContext, extensionContext)) ||
+            instances.get(RuntimePerClassExtension.class).supportsParameter(parameterContext, extensionContext);
     }
 
     @Override
@@ -93,7 +125,19 @@ public final class CeIntegrationTestExtension
             return instances.get(clazz);
         }
 
-        return instances.get(RuntimePerClassWithDbExtension.class).resolveParameter(parameterContext, extensionContext);
+        if (instances.has(TestDatabaseExtension.class) &&
+            instances.get(TestDatabaseExtension.class).supportsParameter(parameterContext, extensionContext)) {
+            return instances.get(TestDatabaseExtension.class).resolveParameter(parameterContext, extensionContext);
+        }
+
+        return instances.get(RuntimePerClassExtension.class).resolveParameter(parameterContext, extensionContext);
     }
 
+
+    private TestDatabase getTestDatabaseOrMock() {
+        if (skipDb) {
+            return () -> new JdbcCredentials("no-test-db", "no-test-db", "no-test-db");
+        }
+        return instances.get(TestDatabaseExtension.class).getTestDatabase();
+    }
 }

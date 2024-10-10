@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 
-public enum Side {
+public enum CeE2eTestSide {
     CONSUMER,
     PROVIDER;
 
@@ -31,7 +31,7 @@ public enum Side {
 
 
     @Nullable
-    public static Side fromParameterContextOrNull(ParameterContext parameterContext) {
+    public static CeE2eTestSide fromParameterContextOrNull(ParameterContext parameterContext) {
         val isProvider = parameterContext.getParameter().getDeclaredAnnotation(Provider.class) != null;
         val isConsumer = parameterContext.getParameter().getDeclaredAnnotation(Consumer.class) != null;
 
@@ -39,10 +39,10 @@ public enum Side {
             throw new ParameterResolutionException("Either @Provider or @Consumer may be used.");
         }
         if (isConsumer) {
-            return Side.CONSUMER;
+            return CeE2eTestSide.CONSUMER;
         }
         if (isProvider) {
-            return Side.PROVIDER;
+            return CeE2eTestSide.PROVIDER;
         }
         return null;
     }

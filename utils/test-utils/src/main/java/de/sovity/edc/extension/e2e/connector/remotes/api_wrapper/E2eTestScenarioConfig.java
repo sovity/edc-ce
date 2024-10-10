@@ -41,10 +41,9 @@ public class E2eTestScenarioConfig {
     private final Duration timeout = ofSeconds(10);
 
     public static E2eTestScenarioConfig forProviderConfig(Config providerConfig) {
-        var providerConfigEntries = providerConfig.getEntries();
         return builder()
-            .providerParticipantId(ConfigUtils.getParticipantId(providerConfigEntries))
-            .providerProtocolApiUrl(ConfigUtils.getManagementApiUrl(providerConfigEntries))
+            .providerParticipantId(ConfigUtils.getParticipantId(providerConfig))
+            .providerProtocolApiUrl(ConfigUtils.getManagementApiUrl(providerConfig))
             .build();
     }
 }

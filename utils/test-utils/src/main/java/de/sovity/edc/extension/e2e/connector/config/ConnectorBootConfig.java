@@ -26,7 +26,7 @@ import java.util.Map;
 
 /**
  * Config before EDC has been started.
- *
+ * <p>
  * This does not include all config properties, as the EDC will do defaulting on startup.
  */
 @Getter

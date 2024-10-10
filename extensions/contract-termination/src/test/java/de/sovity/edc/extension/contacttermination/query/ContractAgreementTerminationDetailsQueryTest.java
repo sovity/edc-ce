@@ -36,7 +36,9 @@ import static org.eclipse.edc.connector.controlplane.contract.spi.types.negotiat
 class ContractAgreementTerminationDetailsQueryTest {
 
     @RegisterExtension
-    private static CeE2eTestExtension e2eTestExtension = new CeE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
     @DisabledOnGithub
     @Test
@@ -62,7 +64,7 @@ class ContractAgreementTerminationDetailsQueryTest {
                 assertThat(details).isEqualTo(ContractAgreementTerminationDetails.builder()
                     .contractAgreementId(agreementId)
                     .counterpartyId("provider")
-                    .counterpartyAddress(ConfigUtils.getProtocolApiUrl(providerConfig.getEntries()))
+                    .counterpartyAddress(ConfigUtils.getProtocolApiUrl(providerConfig))
                     .type(CONSUMER)
                     .providerAgentId("provider")
                     .consumerAgentId("consumer")
@@ -95,7 +97,7 @@ class ContractAgreementTerminationDetailsQueryTest {
     void fetchAgreementDetailsOrThrow_whenTerminationAlreadyExists_shouldReturnOptionalWithTerminationData(
         E2eTestScenario scenario,
         @Consumer DslContextFactory dslContextFactory,
-        @Provider ConnectorBootConfig providerConfig
+        @Provider Config providerConfig
     ) {
         // arrange
 
@@ -115,7 +117,7 @@ class ContractAgreementTerminationDetailsQueryTest {
                 // assert
                 assertThat(details.contractAgreementId()).isEqualTo(agreementId);
                 assertThat(details.counterpartyId()).isEqualTo("provider");
-                assertThat(details.counterpartyAddress()).isEqualTo(providerConfig.getProtocolApiUrl());
+                assertThat(details.counterpartyAddress()).isEqualTo(ConfigUtils.getProtocolApiUrl(providerConfig));
                 assertThat(details.type()).isEqualTo(CONSUMER);
                 assertThat(details.providerAgentId()).isEqualTo("provider");
                 assertThat(details.consumerAgentId()).isEqualTo("consumer");

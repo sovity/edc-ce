@@ -17,13 +17,15 @@ package de.sovity.edc.extension.contacttermination.query;
 import de.sovity.edc.extension.contacttermination.ContractTerminationParam;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
-import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
+import de.sovity.edc.utils.config.ConfigUtils;
 import lombok.val;
 import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -37,14 +39,16 @@ import static org.assertj.core.api.Assertions.within;
 class TerminateContractQueryTest {
 
     @RegisterExtension
-    private static CeE2eTestExtension e2eTestExtension = new CeE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
     @DisabledOnGithub
     @Test
     void terminateConsumerAgreementOrThrow_shouldInsertRowInTerminationTable(
         E2eTestScenario scenario,
         @Consumer DslContextFactory dslContextFactory,
-        @Provider ConnectorBootConfig providerConfig
+        @Provider Config providerConfig
     ) {
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);
@@ -75,7 +79,7 @@ class TerminateContractQueryTest {
                 assertThat(detailsAfterTermination.contractAgreementId()).isEqualTo(agreementId);
                 assertThat(detailsAfterTermination.counterpartyId()).isEqualTo("provider");
                 assertThat(detailsAfterTermination.counterpartyAddress())
-                    .isEqualTo(providerConfig.getProtocolApiUrl());
+                    .isEqualTo(ConfigUtils.getProtocolApiUrl(providerConfig));
                 assertThat(detailsAfterTermination.type()).isEqualTo(ContractNegotiation.Type.CONSUMER);
                 assertThat(detailsAfterTermination.providerAgentId()).isEqualTo("provider");
                 assertThat(detailsAfterTermination.consumerAgentId()).isEqualTo("consumer");

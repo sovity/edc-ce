@@ -25,7 +25,9 @@ import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
+import de.sovity.edc.utils.config.ConfigUtils;
 import lombok.val;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -37,15 +39,17 @@ import static de.sovity.edc.extension.e2e.connector.remotes.management_api.DataT
 class DataSourceQueryParamsTest {
 
     @RegisterExtension
-    private static CeE2eTestExtension e2eTestExtension = new CeE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
     private TestBackendRemote dataAddress;
     private final String encodedParam = "a=%25"; // Unencoded param "a=%"
 
     @BeforeEach
-    void setup(@Provider ConnectorBootConfig providerConfig) {
+    void setup(@Provider Config providerConfig) {
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new TestBackendRemote(providerConfig.getDefaultApiUrl());
+        dataAddress = new TestBackendRemote(ConfigUtils.getDefaultApiUrl(providerConfig));
     }
 
     @Test

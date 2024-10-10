@@ -15,9 +15,9 @@
 package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.config.ConfigProps;
@@ -26,21 +26,21 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockserver.integration.ClientAndServer;
 
 import static de.sovity.edc.e2e.AlwaysTrueMigrationTest.testTransfer;
-import static de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtensionConfigFactory.defaultBuilder;
 
 class AlwaysTrueMigrationReversedTest {
 
     @RegisterExtension
-    private static final CeE2eTestExtension E2E_TEST_EXTENSION = new CeE2eTestExtension(
-        defaultBuilder().toBuilder()
-            .consumerConfigCustomizer(config -> config.setProperty(
-                ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS, "classpath:db/additional-test-data/always-true-policy-legacy"
-            ))
-            .providerConfigCustomizer(config -> config.setProperty(
-                ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS, "classpath:db/additional-test-data/always-true-policy-migrated"
-            ))
-            .build()
-    );
+    private static final CeE2eTestExtension E2E_TEST_EXTENSION = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .consumerConfigCustomizer(config -> config.property(
+            ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS,
+            "classpath:db/additional-test-data/always-true-policy-legacy"
+        ))
+        .providerConfigCustomizer(config -> config.property(
+            ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS,
+            "classpath:db/additional-test-data/always-true-policy-migrated"
+        ))
+        .build();
 
     @Test
     @DisabledOnGithub

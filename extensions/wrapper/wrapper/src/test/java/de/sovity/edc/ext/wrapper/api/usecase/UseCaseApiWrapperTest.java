@@ -57,7 +57,7 @@ class UseCaseApiWrapperTest {
 
     @BeforeEach
     public void setup(Config config) {
-        protocolApiUrl = ConfigUtils.getProtocolApiUrl(config.getEntries());
+        protocolApiUrl = ConfigUtils.getProtocolApiUrl(config);
     }
 
     private static String assetId1 = "test-asset-1";

@@ -47,6 +47,7 @@ public class Prop {
         public final String DATA_ADDRESS_TYPE_HTTP_DATA = "HttpData";
         public final String DATA_ADDRESS_TYPE_HTTP_PROXY = "HttpProxy";
         public final String BASE_URL = CTX + "baseUrl";
+        public final String BODY = CTX + "body";
         public final String METHOD = CTX + "method";
         public final String CONTENT_TYPE = CTX + "contentType";
         public final String QUERY_PARAMS = CTX + "queryParams";
@@ -66,6 +67,8 @@ public class Prop {
         public final String ASSET_ID = CTX + "assetId";
         public final String DATA_DESTINATION = CTX + "dataDestination";
         public final String RECEIVER_HTTP_ENDPOINT = CTX + "receiverHttpEndpoint";
+        public final String MEDIA_TYPE = CTX + "mediaType";
+        public final String PATH = CTX + "path";
     }
 
     /**

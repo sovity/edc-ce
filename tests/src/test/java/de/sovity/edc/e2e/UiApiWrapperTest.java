@@ -48,22 +48,24 @@ import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
-import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
-import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestSide;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.policy.AlwaysTruePolicyConstants;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.JsonUtils;
+import de.sovity.edc.utils.config.ConfigUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import lombok.val;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.protocol.dsp.http.spi.types.HttpMessageProtocol;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -87,11 +89,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UiApiWrapperTest {
 
-    private static final String PROVIDER_PARTICIPANT_ID = "provider";
-    private static final String CONSUMER_PARTICIPANT_ID = "consumer";
+    private static final String PROVIDER_PARTICIPANT_ID = CeE2eTestSide.PROVIDER.getParticipantId();
+    private static final String CONSUMER_PARTICIPANT_ID = CeE2eTestSide.CONSUMER.getParticipantId();
 
     @RegisterExtension
-    private static CeE2eTestExtension e2eTestExtension = new CeE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
     private TestBackendRemote dataAddress;
 
@@ -104,10 +108,10 @@ class UiApiWrapperTest {
     @DisabledOnGithub
     @Test
     void provide_consume_assetMapping_policyMapping_agreements(
-        @Consumer ConnectorBootConfig consumerConfig,
+        @Consumer Config consumerConfig,
         @Consumer ManagementApiConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
-        @Provider ConnectorBootConfig providerConfig,
+        @Provider Config providerConfig,
         @Provider EdcClient providerClient) {
 
         // arrange
@@ -197,7 +201,7 @@ class UiApiWrapperTest {
         assertThat(assets).hasSize(1);
         var asset = assets.get(0);
 
-        var providerProtocolEndpoint = providerConfig.getProtocolApiUrl();
+        var providerProtocolEndpoint = ConfigUtils.getProtocolApiUrl(providerConfig);
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint);
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
@@ -216,7 +220,7 @@ class UiApiWrapperTest {
         assertThat(dataOffer.getAsset().getAssetId()).isEqualTo(assetId);
         assertThat(dataOffer.getAsset().getTitle()).isEqualTo("AssetName");
         assertThat(dataOffer.getAsset().getConnectorEndpoint()).isEqualTo(providerProtocolEndpoint);
-        assertThat(dataOffer.getAsset().getParticipantId()).isEqualTo(providerConfig.getProperties().get("edc.participant.id"));
+        assertThat(dataOffer.getAsset().getParticipantId()).isEqualTo(ConfigUtils.getParticipantId(providerConfig));
         assertThat(dataOffer.getAsset().getKeywords()).isEqualTo(List.of("keyword1", "keyword2"));
         assertThat(dataOffer.getAsset().getDescription()).isEqualTo("AssetDescription");
         assertThat(dataOffer.getAsset().getVersion()).isEqualTo("1.0.0");
@@ -258,7 +262,7 @@ class UiApiWrapperTest {
         assertThat(asset.getAssetId()).isEqualTo(assetId);
         assertThat(asset.getTitle()).isEqualTo("AssetName");
         assertThat(asset.getConnectorEndpoint()).isEqualTo(providerProtocolEndpoint);
-        assertThat(asset.getParticipantId()).isEqualTo(providerConfig.getProperties().get("edc.participant.id"));
+        assertThat(asset.getParticipantId()).isEqualTo(ConfigUtils.getParticipantId(providerConfig));
 
         assertThatJson(asset.getCustomJsonAsString()).isEqualTo("""
             { "test": "value" }
@@ -285,7 +289,7 @@ class UiApiWrapperTest {
         // Provider Contract Agreement
         assertThat(providerAgreement.getContractAgreementId()).isEqualTo(negotiation.getContractAgreementId());
         assertThat(providerAgreement.getDirection()).isEqualTo(PROVIDING);
-        assertThat(providerAgreement.getCounterPartyAddress()).isEqualTo(consumerConfig.getProtocolApiUrl());
+        assertThat(providerAgreement.getCounterPartyAddress()).isEqualTo(ConfigUtils.getProtocolApiUrl(consumerConfig));
         assertThat(providerAgreement.getCounterPartyId()).isEqualTo(CONSUMER_PARTICIPANT_ID);
 
         assertThat(providerAgreement.getAsset().getAssetId()).isEqualTo(assetId);
@@ -375,8 +379,9 @@ class UiApiWrapperTest {
     void customTransferRequest(
         @Consumer ManagementApiConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
-        @Provider ConnectorBootConfig providerConfig,
-        @Provider EdcClient providerClient) {
+        @Provider Config providerConfig,
+        @Provider EdcClient providerClient
+    ) {
 
         // arrange
         var data = "expected data 123";
@@ -408,7 +413,7 @@ class UiApiWrapperTest {
             .assetSelector(List.of())
             .build());
 
-        val providerProtocolEndpoint = providerConfig.getProtocolApiUrl();
+        val providerProtocolEndpoint = ConfigUtils.getProtocolApiUrl(providerConfig);
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint);
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
@@ -443,7 +448,7 @@ class UiApiWrapperTest {
     void editAssetOnLiveContract(
         @Consumer ManagementApiConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
-        @Provider ConnectorBootConfig providerConfig,
+        @Provider Config providerConfig,
         @Provider EdcClient providerClient) {
 
         // arrange
@@ -500,7 +505,7 @@ class UiApiWrapperTest {
                 .build()))
             .build());
 
-        val providerProtocolEndpoint = providerConfig.getProtocolApiUrl();
+        val providerProtocolEndpoint = ConfigUtils.getProtocolApiUrl(providerConfig);
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint);
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);

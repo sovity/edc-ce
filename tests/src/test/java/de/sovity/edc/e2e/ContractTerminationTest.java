@@ -25,9 +25,9 @@ import de.sovity.edc.client.gen.model.TransferHistoryEntry;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
 import de.sovity.edc.extension.contacttermination.ContractTerminationEvent;
 import de.sovity.edc.extension.contacttermination.ContractTerminationObserver;
-import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -35,7 +35,7 @@ import jakarta.ws.rs.HttpMethod;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.awaitility.Awaitility;
-import org.eclipse.edc.connector.controlplane.contract.spi.ContractId;
+import org.eclipse.edc.connector.controlplane.contract.spi.ContractOfferId;
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcessStates;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.DynamicTest;
@@ -67,10 +67,12 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
-public class ContractTerminationTest {
+class ContractTerminationTest {
 
     @RegisterExtension
-    private static CeE2eTestExtension e2eTestExtension = new CeE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
     @Test
     @DisabledOnGithub
@@ -348,7 +350,7 @@ public class ContractTerminationTest {
         assertThrows(
             ApiException.class,
             () -> consumerClient.uiApi().terminateContractAgreement(
-                ContractId.create("definition-1", "asset-1").toString(),
+                ContractOfferId.create("definition-1", "asset-1").toString(),
                 ContractTerminationRequest.builder().detail("Some detail").reason("Some reason").build()));
     }
 

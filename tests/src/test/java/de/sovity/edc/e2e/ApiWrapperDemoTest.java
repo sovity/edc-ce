@@ -39,13 +39,14 @@ import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
-import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
+import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
+import de.sovity.edc.utils.config.ConfigUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.awaitility.Awaitility;
-import org.eclipse.edc.junit.extensions.EdcExtension;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -54,58 +55,36 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import static de.sovity.edc.extension.e2e.connector.remotes.management_api.DataTransferTestUtil.validateDataTransferred;
-import static de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemoteConfig.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ApiWrapperDemoTest {
 
-    private static final String PROVIDER_PARTICIPANT_ID = "provider";
-    private static final String CONSUMER_PARTICIPANT_ID = "consumer";
-
     @RegisterExtension
-    static EdcExtension providerEdcContext = new EdcExtension();
-    @RegisterExtension
-    static EdcExtension consumerEdcContext = new EdcExtension();
-
-    @RegisterExtension
-    static final TestDatabase PROVIDER_DATABASE = new TestDatabaseViaTestcontainers();
-    @RegisterExtension
-    static final TestDatabase CONSUMER_DATABASE = new TestDatabaseViaTestcontainers();
-
-    private ManagementApiConnectorRemote providerConnector;
-    private ManagementApiConnectorRemote consumerConnector;
-
-    private EdcClient providerClient;
-    private EdcClient consumerClient;
-    private TestBackendRemote dataAddress;
+    private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
     private final String dataOfferData = "expected data 123";
-
     private final String dataOfferId = "my-data-offer-2023-11";
 
+    TestBackendRemote dataAddress;
+    EdcClient consumerClient;
+    EdcClient providerClient;
+    Config consumerConfig;
+    Config providerConfig;
+
     @BeforeEach
-    void setup() {
-        // set up provider EDC + Client
-        var providerConfig = CeIntegrationTestUtils.defaultConfig(PROVIDER_PARTICIPANT_ID, PROVIDER_DATABASE);
-        providerEdcContext.setConfiguration(providerConfig.getProperties());
-        providerConnector = new ManagementApiConnectorRemote(fromConnectorConfig(providerConfig));
-
-        providerClient = EdcClient.builder()
-            .managementApiUrl(providerConfig.getManagementApiUrl())
-            .managementApiKey(providerConfig.getManagementApiKey())
-            .build();
-
-        // set up consumer EDC + Client
-        var consumerConfig = CeIntegrationTestUtils.defaultConfig(CONSUMER_PARTICIPANT_ID, CONSUMER_DATABASE);
-        consumerEdcContext.setConfiguration(consumerConfig.getProperties());
-        consumerConnector = new ManagementApiConnectorRemote(fromConnectorConfig(consumerConfig));
-
-        consumerClient = EdcClient.builder()
-            .managementApiUrl(consumerConfig.getManagementApiUrl())
-            .managementApiKey(consumerConfig.getManagementApiKey())
-            .build();
-
-        // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new TestBackendRemote(providerConfig.getDefaultApiUrl());
+    void setup(
+        TestBackendRemote dataAddress,
+        @Consumer EdcClient consumerClient,
+        @Consumer Config consumerConfig,
+        @Provider EdcClient providerClient,
+        @Provider Config providerConfig
+    ) {
+        this.dataAddress = dataAddress;
+        this.consumerClient = consumerClient;
+        this.consumerConfig = consumerConfig;
+        this.providerClient = providerClient;
+        this.providerConfig = providerConfig;
     }
 
     @Test
@@ -117,7 +96,7 @@ class ApiWrapperDemoTest {
         createContractDefinition();
 
         // consumer: negotiate contract and transfer data
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(getProtocolEndpoint(providerConnector));
+        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(ConfigUtils.getProtocolApiUrl(providerConfig));
         var negotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
         negotiation = awaitNegotiationDone(negotiation.getContractNegotiationId());
         initiateTransfer(negotiation);
@@ -217,7 +196,7 @@ class ApiWrapperDemoTest {
     }
 
     private UiContractNegotiation awaitNegotiationDone(String negotiationId) {
-        var negotiation = Awaitility.await().atMost(consumerConnector.timeout).until(
+        var negotiation = Awaitility.await().atMost(e2eTestExtension.getTimeout()).until(
             () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
             it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
         );

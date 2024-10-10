@@ -30,7 +30,9 @@ import static de.sovity.edc.extension.e2e.connector.remotes.management_api.DataT
 class ManagementApiTransferTest {
 
     @RegisterExtension
-    private static CeE2eTestExtension e2eTestExtension = new CeE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
     private TestBackendRemote dataAddress;
     private static final String TEST_BACKEND_TEST_DATA = UUID.randomUUID().toString();
@@ -42,7 +44,10 @@ class ManagementApiTransferTest {
     }
 
     @Test
-    void testDataTransfer(@Consumer ManagementApiConnectorRemote consumerConnector, @Provider ManagementApiConnectorRemote providerConnector) {
+    void testDataTransfer(
+        @Consumer ManagementApiConnectorRemote consumerConnector,
+        @Provider ManagementApiConnectorRemote providerConnector
+    ) {
         // arrange
         var assetId = UUID.randomUUID().toString();
         providerConnector.createDataOffer(assetId, dataAddress.getDataSourceUrl(TEST_BACKEND_TEST_DATA));

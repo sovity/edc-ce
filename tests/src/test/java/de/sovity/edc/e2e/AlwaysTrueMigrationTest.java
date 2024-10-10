@@ -19,9 +19,9 @@ import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
-import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.policy.AlwaysTruePolicyConstants;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
@@ -38,21 +38,22 @@ import org.mockserver.model.HttpResponse;
 
 import java.util.Map;
 
-import static de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtensionConfigFactory.withModule;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AlwaysTrueMigrationTest {
 
     @RegisterExtension
-    private static final CeE2eTestExtension E2E_TEST_EXTENSION = new CeE2eTestExtension(
-        withModule(":launchers:connectors:sovity-dev").toBuilder()
-            .consumerConfigCustomizer(config -> config.setProperty(
-                ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS, "classpath:db/additional-test-data/always-true-policy-legacy"
-            ))
-            .providerConfigCustomizer(config -> config.setProperty(
-                ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS, "classpath:db/additional-test-data/always-true-policy-migrated"
-            ))
-            .build()
+    private static final CeE2eTestExtension E2E_TEST_EXTENSION = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .consumerConfigCustomizer(config -> config.property(
+            ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS,
+            "classpath:db/additional-test-data/always-true-policy-legacy"
+        ))
+        .providerConfigCustomizer(config -> config.property(
+            ConfigProps.EDC_FLYWAY_ADDITIONAL_MIGRATION_LOCATIONS,
+            "classpath:db/additional-test-data/always-true-policy-migrated"
+        ))
+        .build();
     );
 
     @Test

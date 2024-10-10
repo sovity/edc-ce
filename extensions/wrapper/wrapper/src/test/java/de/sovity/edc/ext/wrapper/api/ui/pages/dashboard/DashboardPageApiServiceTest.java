@@ -151,7 +151,7 @@ class DashboardPageApiServiceTest {
         assertThat(dashboardPage.getConnectorDescription()).isEqualTo("Connector Description my-edc-participant-id");
         assertThat(dashboardPage.getConnectorTitle()).isEqualTo("Connector Title my-edc-participant-id");
 
-        assertThat(dashboardPage.getConnectorEndpoint()).isEqualTo(ConfigUtils.getProtocolApiUrl(config.getEntries()));
+        assertThat(dashboardPage.getConnectorEndpoint()).isEqualTo(ConfigUtils.getProtocolApiUrl(config));
         assertThat(dashboardPage.getConnectorCuratorName()).isEqualTo("Curator Name my-edc-participant-id");
         assertThat(dashboardPage.getConnectorCuratorUrl()).isEqualTo("http://curator.my-edc-participant-id");
         assertThat(dashboardPage.getConnectorMaintainerName()).isEqualTo("Maintainer Name my-edc-participant-id");

@@ -16,11 +16,7 @@ package de.sovity.edc.ext.wrapper.api.usecase;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
-import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
-import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
 import org.eclipse.edc.junit.annotations.ApiTest;
-import org.eclipse.edc.spi.system.configuration.Config;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
