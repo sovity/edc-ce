@@ -52,10 +52,10 @@ public class TransferRequestBuilder {
         return TransferRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString())
                 .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
-                .connectorAddress(negotiation.getCounterPartyAddress())
-                .connectorId(negotiation.getCounterPartyId())
+                .counterPartyAddress(negotiation.getCounterPartyAddress())
                 .contractId(contractId)
-                .assetId(agreement.getAssetId())
+                // TODO is this just not needed anymore? Related tests just got deleted in 818d64f15de877d0334fa8c5437d48ae551def61
+                // .assetId(agreement.getAssetId())
                 .dataDestination(address)
                 .privateProperties(edcPropertyUtils.toMapOfObject(request.getTransferProcessProperties()))
                 .callbackAddresses(List.of())
