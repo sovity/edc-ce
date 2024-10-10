@@ -14,17 +14,16 @@
 
 package de.sovity.edc.extension.messenger;
 
-import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
-import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
+import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.utils.Consumer;
+import de.sovity.edc.extension.e2e.junit.utils.Provider;
 import de.sovity.edc.extension.messenger.dto.Addition;
 import de.sovity.edc.extension.messenger.dto.Answer;
 import de.sovity.edc.extension.messenger.dto.Multiplication;
 import de.sovity.edc.extension.messenger.dto.UnsupportedMessage;
+import de.sovity.edc.utils.config.ConfigUtils;
 import lombok.val;
-import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.eclipse.edc.token.spi.TokenDecorator;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -37,49 +36,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
- class SovityMessengerExtensionE2eTest {
-    private static final String EMITTER_PARTICIPANT_ID = "emitter";
-    private static final String RECEIVER_PARTICIPANT_ID = "receiver";
-
+class SovityMessengerExtensionE2eTest {
     @RegisterExtension
-    static EdcExtension emitterEdcContext = new EdcExtension();
-    @RegisterExtension
-    static EdcExtension receiverEdcContext = new EdcExtension();
-
-    @RegisterExtension
-    static final TestDatabase EMITTER_DATABASE = new TestDatabaseViaTestcontainers();
-    @RegisterExtension
-    static final TestDatabase RECEIVER_DATABASE = new TestDatabaseViaTestcontainers();
-
-    private ConnectorBootConfig providerConfig;
-    private ConnectorBootConfig consumerConfig;
-
+    static CeE2eTestExtension extension = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:utils:edc-integration-test")
+        .skipDb(true)
+        .build();
     private String counterPartyAddress;
     private String counterPartyId;
 
     @BeforeEach
-    void setup() {
-        providerConfig = CeIntegrationTestUtils.defaultConfig(EMITTER_PARTICIPANT_ID, EMITTER_DATABASE);
-        emitterEdcContext.setConfiguration(providerConfig.getProperties());
-        emitterEdcContext.registerServiceMock(TokenDecorator.class, (td) -> td);
-
-        consumerConfig = CeIntegrationTestUtils.defaultConfig(RECEIVER_PARTICIPANT_ID, RECEIVER_DATABASE);
-        receiverEdcContext.setConfiguration(consumerConfig.getProperties());
-        receiverEdcContext.registerServiceMock(TokenDecorator.class, (td) -> td);
-
-        counterPartyAddress = consumerConfig.getProtocolApiUrl();
-        counterPartyId = consumerConfig.getParticipantId();
+    void setup(@Consumer Config consumerConfig) {
+        counterPartyAddress = ConfigUtils.getProtocolApiUrl(consumerConfig);
+        counterPartyId = ConfigUtils.getParticipantId(consumerConfig);
     }
 
     @Test
-    void e2eTest() throws ExecutionException, InterruptedException, TimeoutException {
-        val sovityMessenger = emitterEdcContext.getService(SovityMessenger.class);
-        val handlers = receiverEdcContext.getService(SovityMessengerRegistry.class);
-        handlers.register(Addition.class, in -> new Answer(in.getOp1() + in.getOp2()));
-        handlers.register(Multiplication.class, in -> new Answer(in.getOp1() * in.getOp2()));
+    void e2eTest(
+        @Provider SovityMessenger providerMessenger,
+        @Consumer SovityMessengerRegistry consumerHandlers
+    ) throws ExecutionException, InterruptedException, TimeoutException {
+        consumerHandlers.register(Addition.class, in -> new Answer(in.getOp1() + in.getOp2()));
+        consumerHandlers.register(Multiplication.class, in -> new Answer(in.getOp1() * in.getOp2()));
 
-        val added = sovityMessenger.send(Answer.class, counterPartyAddress, counterPartyId, new Addition(20, 30));
-        val multiplied = sovityMessenger.send(Answer.class, counterPartyAddress, counterPartyId, new Multiplication(20, 30));
+        val added = providerMessenger.send(Answer.class, counterPartyAddress, counterPartyId, new Addition(20, 30));
+        val multiplied = providerMessenger.send(Answer.class, counterPartyAddress, counterPartyId, new Multiplication(20, 30));
 
         // assert
         added.get(30, SECONDS)
@@ -98,9 +79,9 @@ import static org.junit.jupiter.api.Assertions.fail;
     }
 
     @Test
-    void e2eNoHandlerTest() {
-        val sovityMessenger = emitterEdcContext.getService(SovityMessenger.class);
-
+    void e2eNoHandlerTest(
+        @Provider SovityMessenger sovityMessenger
+    ) {
         val added = sovityMessenger.send(Answer.class, counterPartyAddress, counterPartyId, new UnsupportedMessage());
 
         // assert

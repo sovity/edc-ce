@@ -14,54 +14,46 @@
 
 package de.sovity.edc.extension.version.controller;
 
-import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
-import de.sovity.edc.extension.e2e.db.JdbcCredentials;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
-import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.ConfigUtils;
 import io.restassured.http.ContentType;
-import org.eclipse.edc.connector.controlplane.dataplane.selector.spi.store.DataPlaneInstanceStore;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.protocol.ProtocolWebhook;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ApiTest
-@ExtendWith(EdcExtension.class)
 class LastCommitInfoTest {
 
-    private ConnectorBootConfig config;
+    @RegisterExtension
+    static CeIntegrationTestExtension extension = CeIntegrationTestExtension.builder()
+        .skipDb(true)
+        .configOverrides(config -> config
+            .property(ConfigProps.EDC_LAST_COMMIT_INFO, "test env commit message")
+            .property(ConfigProps.EDC_BUILD_DATE, "2023-05-08T15:15:00Z")
+        )
+        .build();
 
     @BeforeEach
     void setUp(EdcExtension extension) {
-
         extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
         extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
-        extension.registerServiceMock(DataPlaneInstanceStore.class, mock(DataPlaneInstanceStore.class));
-
-        var testDatabase = mock(TestDatabase.class);
-        when(testDatabase.getJdbcCredentials()).thenReturn(new JdbcCredentials("unused", "unused", "unused"));
-
-        config = CeIntegrationTestUtils.defaultConfig("provider", testDatabase);
-        config.setProperty(ConfigProps.EDC_LAST_COMMIT_INFO, "test env commit message");
-        config.setProperty(ConfigProps.EDC_BUILD_DATE, "2023-05-08T15:15:00Z");
-
-        extension.setConfiguration(config.getProperties());
     }
 
     @Test
-    void testEnvAndJar() {
+    void testEnvAndJar(Config config) {
         var request = given()
-            .baseUri(config.getManagementApiUrl())
-            .header("X-Api-Key", config.getManagementApiKey())
+            .baseUri(ConfigUtils.getManagementApiUrl(config))
+            .header("X-Api-Key", ConfigUtils.getManagementApiKey(config))
             .when()
             .contentType(ContentType.JSON)
             .get("/last-commit-info")
