@@ -164,7 +164,7 @@ public class E2eTestScenario {
     public UiContractNegotiation negotiateAssetAndAwait(String assetId) {
         val connectorEndpoint = config.getProviderProtocolApiUrl();
         val participantId = config.getProviderParticipantId();
-        val offers = consumerClient.uiApi().getCatalogPageDataOffers(connectorEndpoint);
+        val offers = consumerClient.uiApi().getCatalogPageDataOffers(participantId, connectorEndpoint);
 
         val offersContainingContract = offers.stream()
             .filter(offer -> offer.getAsset().getAssetId().equals(assetId))

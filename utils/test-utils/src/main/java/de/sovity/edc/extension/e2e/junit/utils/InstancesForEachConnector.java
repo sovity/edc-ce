@@ -14,7 +14,6 @@
 
 package de.sovity.edc.extension.e2e.junit.utils;
 
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -27,13 +26,18 @@ import java.util.function.BiFunction;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
-@RequiredArgsConstructor
+
 public class InstancesForEachConnector<S> implements ParameterResolver {
     private final List<S> sides;
     private final BiFunction<ParameterContext, ExtensionContext, S> getSideOrNull;
-    private final Map<S, InstancesForJunitTest> instances = sides.stream()
-        .collect(toMap(identity(), unused -> new InstancesForJunitTest()));
+    private final Map<S, InstancesForJunitTest> instances;
 
+    public InstancesForEachConnector(List<S> sides, BiFunction<ParameterContext, ExtensionContext, S> getSideOrNull) {
+        this.sides = sides;
+        this.getSideOrNull = getSideOrNull;
+        instances = sides.stream()
+            .collect(toMap(identity(), unused -> new InstancesForJunitTest()));
+    }
 
     public <T> List<T> all(Class<T> clazz) {
         return sides.stream().flatMap(side -> forSide(side).all(clazz).stream()).toList();
