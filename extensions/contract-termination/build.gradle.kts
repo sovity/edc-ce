@@ -22,7 +22,8 @@ dependencies {
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
 
-    testImplementation(project(":launchers:utils:edc-integration-test"))
+    testImplementation(project(":launchers:utils:vanilla-control-plane"))
+    testImplementation(project(":launchers:utils:vanilla-control-plane"))
 }
 
 group = libs.versions.sovityEdcExtensionGroup.get()

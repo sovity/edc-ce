@@ -37,7 +37,6 @@ import lombok.val;
 import org.awaitility.Awaitility;
 import org.eclipse.edc.connector.controlplane.contract.spi.ContractOfferId;
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcessStates;
-import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
@@ -454,9 +453,9 @@ class ContractTerminationTest {
     void canListenToTerminationEvents(
         E2eTestScenario scenario,
         @Consumer EdcClient consumerClient,
-        @Consumer EdcExtension consumerExtension,
+        @Consumer ContractAgreementTerminationService consumerService,
         @Provider EdcClient providerClient,
-        @Provider EdcExtension providerExtension
+        @Provider ContractAgreementTerminationService providerService
     ) {
         // arrange
         val assetId = scenario.createAsset();
@@ -467,9 +466,6 @@ class ContractTerminationTest {
         val reason = "Some reason";
         val contractTerminationRequest = ContractTerminationRequest.builder().detail(detail).reason(reason).build();
         val contractAgreementId = negotiation.getContractAgreementId();
-
-        val consumerService = consumerExtension.getService(ContractAgreementTerminationService.class);
-        val providerService = providerExtension.getService(ContractAgreementTerminationService.class);
 
         val consumerObserver = Mockito.spy(new ContractTerminationObserver() {
         });

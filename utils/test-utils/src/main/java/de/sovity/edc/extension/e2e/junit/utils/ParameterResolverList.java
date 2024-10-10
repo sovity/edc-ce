@@ -14,7 +14,6 @@
 
 package de.sovity.edc.extension.e2e.junit.utils;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-@AllArgsConstructor
 public class ParameterResolverList implements ParameterResolver {
     private final List<ParameterResolver> resolvers = new ArrayList<>();
 

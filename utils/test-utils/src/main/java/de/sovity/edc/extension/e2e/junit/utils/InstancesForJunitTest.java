@@ -16,6 +16,7 @@ package de.sovity.edc.extension.e2e.junit.utils;
 
 import de.sovity.edc.extension.utils.Lazy;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -24,6 +25,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class InstancesForJunitTest implements ParameterResolver {
@@ -40,14 +42,14 @@ public class InstancesForJunitTest implements ParameterResolver {
     public boolean has(Class<?> clazz) {
         return instances.entrySet()
             .stream()
-            .anyMatch(clazz::isInstance);
+            .anyMatch(isSubclassOfEntry(clazz));
     }
 
     @SuppressWarnings("unchecked")
     public <T> T get(Class<T> clazz) {
         return instances.entrySet()
             .stream()
-            .filter(clazz::isInstance)
+            .filter(isSubclassOfEntry(clazz))
             .findFirst()
             .map(entry -> (T) entry.getValue().get())
             .orElseThrow(() -> new IllegalArgumentException("No object of type %s".formatted(clazz)));
@@ -57,7 +59,7 @@ public class InstancesForJunitTest implements ParameterResolver {
     public <T> List<T> all(Class<T> clazz) {
         return instances.entrySet()
             .stream()
-            .filter(clazz::isInstance)
+            .filter(isSubclassOfEntry(clazz))
             .map(entry -> (T) entry.getValue().get())
             .toList();
     }
@@ -65,7 +67,7 @@ public class InstancesForJunitTest implements ParameterResolver {
     public boolean isLazyInitialized(Class<?> clazz) {
         var lazy = instances.entrySet()
             .stream()
-            .filter(clazz::isInstance)
+            .filter(isSubclassOfEntry(clazz))
             .findFirst()
             .map(Map.Entry::getValue)
             .filter(it -> it.lazy() != null)
@@ -93,6 +95,11 @@ public class InstancesForJunitTest implements ParameterResolver {
             throw new IllegalArgumentException("No object of type %s".formatted(clazz));
         }
         return get(clazz);
+    }
+
+    @NotNull
+    private Predicate<Map.Entry<Class<?>, LazyOrValue>> isSubclassOfEntry(Class<?> clazz) {
+        return it -> clazz.isAssignableFrom(it.getKey());
     }
 
 

@@ -10,7 +10,6 @@ import de.sovity.edc.client.gen.model.UiCriterionOperator;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import org.eclipse.edc.connector.controlplane.contract.spi.types.offer.ContractDefinition;
 import org.eclipse.edc.connector.controlplane.services.spi.contractdefinition.ContractDefinitionService;
-import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.spi.query.Criterion;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ApiTest
 class ContractDefinitionPageApiServiceTest {
 
     @RegisterExtension

@@ -17,6 +17,7 @@ package de.sovity.edc.extension.e2e.junit.edc;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.utils.config.SovityEdcRuntime;
 import de.sovity.edc.utils.config.model.ConfigProp;
+import org.apache.commons.lang3.Validate;
 import org.eclipse.edc.junit.extensions.EmbeddedRuntime;
 import org.eclipse.edc.junit.extensions.TestServiceExtensionContext;
 import org.eclipse.edc.junit.testfixtures.TestUtils;
@@ -100,6 +101,10 @@ public class EmbeddedRuntimeFixed extends SovityEdcRuntime {
     @Override
     public void boot(boolean addShutdownHook) {
         try {
+            /* Begin of Modified Code: Handle empty additionalModules */
+            Validate.notEmpty(additionalModules, "additionalModules must not be empty, as the current classpath is excluded");
+            /* End of Modified Code: Handle empty additionalModules */
+
             // Find the project root directory, moving up the directory tree
             var root = TestUtils.findBuildRoot();
 
@@ -169,6 +174,45 @@ public class EmbeddedRuntimeFixed extends SovityEdcRuntime {
             throw new EdcException(e);
         }
 
+    }
+
+    @NotNull
+    private List<URL> getAdditionalClassPathEntries() throws IOException, InterruptedException {
+        /* Begin of Modified Code: Handle empty additionalModules */
+        if (additionalModules.length == 0) {
+            return List.of();
+        }
+        /* End of Modified Code: Handle empty additionalModules */
+
+        // Find the project root directory, moving up the directory tree
+        var root = TestUtils.findBuildRoot();
+
+        // Run a Gradle custom task to determine the runtime classpath of the module to run
+        var printClasspath = Arrays.stream(additionalModules).map(it -> it + ":printClasspath");
+        var commandStream = Stream.of(new File(root, TestUtils.GRADLE_WRAPPER).getCanonicalPath(), "-q");
+        var command = Stream.concat(commandStream, printClasspath).toArray(String[]::new);
+
+        var exec = Runtime.getRuntime().exec(command);
+        var classpathString = new String(exec.getInputStream().readAllBytes());
+        var errorOutput = new String(exec.getErrorStream().readAllBytes());
+        if (exec.waitFor() != 0) {
+            throw new EdcException(format("Failed to run gradle command: [%s]. Output: %s %s",
+                String.join(" ", command), classpathString, errorOutput));
+        }
+
+        /* Begin of modified code: Fix issue under Windows */
+        var splitRegex = ":|\\s";
+        if (System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("windows")) {
+            splitRegex = ";|\\s";
+        }
+
+        // Replace subproject JAR entries with subproject build directories in classpath.
+        // This ensures modified classes are picked up without needing to rebuild dependent JARs.
+        return Arrays.stream(classpathString.split(splitRegex))
+            .filter(s -> !s.isBlank())
+            .flatMap(p -> resolveClassPathEntry(root, p))
+            .toList();
+        /* End of modified code: Fix issue under Windows */
     }
 
     @Override

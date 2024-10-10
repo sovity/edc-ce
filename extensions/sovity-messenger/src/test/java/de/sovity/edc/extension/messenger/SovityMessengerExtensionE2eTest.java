@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class SovityMessengerExtensionE2eTest {
     @RegisterExtension
     static CeE2eTestExtension extension = CeE2eTestExtension.builder()
-        .additionalModule(":launchers:utils:edc-integration-test")
+        .additionalModule(":launchers:utils:vanilla-control-plane")
         .skipDb(true)
         .build();
     private String counterPartyAddress;

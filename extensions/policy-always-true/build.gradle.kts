@@ -10,11 +10,8 @@ dependencies {
     api(libs.edc.controlPlaneSpi)
     implementation(libs.edc.apiCore)
 
-    testImplementation(libs.edc.controlPlaneCore)
-    testImplementation(libs.edc.junit)
-    testImplementation(libs.edc.dataPlaneSelectorCore)
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.junit.api)
+    testImplementation(project(":launchers:utils:vanilla-control-plane"))
+    testImplementation(project(":utils:test-utils"))
     testRuntimeOnly(libs.junit.engine)
 }
 

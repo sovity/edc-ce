@@ -14,15 +14,12 @@
 
 package de.sovity.edc.extension.version.controller;
 
-import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
-import de.sovity.edc.extension.e2e.junit.edc.RuntimeExtensionFixed;
+import de.sovity.edc.extension.e2e.junit.edc.EmbeddedRuntimeFixed;
 import de.sovity.edc.utils.config.ConfigUtils;
 import io.restassured.http.ContentType;
 import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
 import org.eclipse.edc.jsonld.spi.JsonLd;
-import org.eclipse.edc.junit.annotations.ApiTest;
-import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +30,6 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
 
-@ApiTest
 class EdcUiConfigTest {
     private static final String SOME_EXAMPLE_PROP = "this should also be passed through";
 
@@ -44,10 +40,10 @@ class EdcUiConfigTest {
         .build();
 
     @BeforeEach
-    void setUp(RuntimeExtensionFixed extension) {
-        extension.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
-        extension.registerServiceMock(JsonLd.class, mock(JsonLd.class));
-        extension.registerServiceMock(DataPlaneInstanceStore.class, mock(DataPlaneInstanceStore.class));
+    void setUp(EmbeddedRuntimeFixed runtime) {
+        runtime.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
+        runtime.registerServiceMock(JsonLd.class, mock(JsonLd.class));
+        runtime.registerServiceMock(DataPlaneInstanceStore.class, mock(DataPlaneInstanceStore.class));
     }
 
     @Test

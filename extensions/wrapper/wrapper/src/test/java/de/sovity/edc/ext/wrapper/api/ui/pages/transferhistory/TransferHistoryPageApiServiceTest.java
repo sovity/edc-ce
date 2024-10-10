@@ -20,7 +20,6 @@ import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService;
 import org.eclipse.edc.connector.controlplane.transfer.spi.store.TransferProcessStore;
-import org.eclipse.edc.junit.annotations.ApiTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -30,7 +29,6 @@ import static de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferPro
 import static de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessTestUtils.createProvidingTransferProcesses;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ApiTest
 class TransferHistoryPageApiServiceTest {
 
     @RegisterExtension

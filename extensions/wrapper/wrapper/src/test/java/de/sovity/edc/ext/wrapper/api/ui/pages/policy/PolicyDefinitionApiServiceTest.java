@@ -29,7 +29,6 @@ import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import lombok.val;
 import org.eclipse.edc.connector.controlplane.services.spi.policydefinition.PolicyDefinitionService;
-import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.spi.entity.Entity;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.jooq.DSLContext;
@@ -40,7 +39,6 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ApiTest
 class PolicyDefinitionApiServiceTest {
 
     @RegisterExtension

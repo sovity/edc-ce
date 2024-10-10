@@ -15,20 +15,20 @@ public class ReflectionUtils {
 
     @SuppressWarnings("unchecked")
     @SneakyThrows
-    public static <T> T getFieldValue(Object obj, String fieldName) {
-        var field = getField(obj.getClass(), fieldName);
-        return (T) field.get(obj);
+    public static <T, R> R getFieldValue(Class<T> clazz, T obj, String fieldName) {
+        var field = getField(clazz, fieldName);
+        return (R) field.get(obj);
     }
 
     @SneakyThrows
-    public static void setFieldValue(Object obj, String fieldName, Object value) {
-        Field field = getField(obj.getClass(), fieldName);
+    public static <T> void setFieldValue(Class<T> clazz, T obj, String fieldName, Object value) {
+        var field = getField(clazz, fieldName);
         field.set(obj, value);
     }
 
     @SneakyThrows
     private static Field getField(Class<?> clazz, String fieldName) {
-        Field field = clazz.getDeclaredField(fieldName);
+        var field = clazz.getDeclaredField(fieldName);
         field.setAccessible(true);
         return field;
     }

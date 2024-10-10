@@ -20,6 +20,7 @@ import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementAp
 import de.sovity.edc.extension.e2e.db.JdbcCredentials;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.junit.edc.EmbeddedRuntimeFixed;
+import de.sovity.edc.extension.e2e.junit.edc.RuntimeExtensionFixed;
 import de.sovity.edc.extension.e2e.junit.edc.RuntimePerClassExtensionFixed;
 import de.sovity.edc.extension.e2e.junit.utils.InstancesForJunitTest;
 import de.sovity.edc.extension.e2e.junit.utils.ParameterResolverList;
@@ -58,6 +59,9 @@ public class CeIntegrationTestExtension
     @Builder.Default
     private final boolean skipDb = false;
 
+    @Builder.Default
+    private final Consumer<RuntimeExtensionFixed> beforeEdcStartup = runtime -> {};
+
     @Nullable
     private final Consumer<ConnectorBootConfigBuilder> configOverrides;
 
@@ -80,18 +84,21 @@ public class CeIntegrationTestExtension
 
         // Start Connector
         var bootConfig = CeIntegrationTestUtils.defaultConfig(participantId, getTestDatabaseOrMock(), configOverrides);
-        var connectorExtension = new RuntimePerClassExtensionFixed(new EmbeddedRuntimeFixed(
+        var runtime = new EmbeddedRuntimeFixed(
             participantId,
             bootConfig,
             ConfigProps.ALL_CE_PROPS,
             additionalModules.toArray(String[]::new)
-        ));
+        );
+        var connectorExtension = new RuntimePerClassExtensionFixed(runtime);
         instances.put(connectorExtension);
         parameterResolverList.add(connectorExtension);
+        beforeEdcStartup.accept(connectorExtension);
         connectorExtension.beforeAll(extensionContext);
 
         // Configure Clients and Utilities
-        var config = connectorExtension.getService(Config.class);
+        var config = runtime.getContext().getConfig();
+        instances.put(config);
         instances.putLazy(EdcClient.class, () -> CeIntegrationTestUtils.getEdcClient(config));
         instances.putLazy(ManagementApiConnectorRemote.class, () -> CeIntegrationTestUtils.getManagementApiConnectorRemote(config));
     }
@@ -101,16 +108,16 @@ public class CeIntegrationTestExtension
         try {
             instances.get(RuntimePerClassExtensionFixed.class).afterAll(extensionContext);
         } finally {
-            if (instances.has(TestDatabaseExtension.class)) {
+            if (!skipDb) {
                 instances.get(TestDatabaseExtension.class).afterAll(extensionContext);
             }
         }
     }
 
     private TestDatabase getTestDatabaseOrMock() {
-        if (skipDb) {
-            return () -> new JdbcCredentials("no-test-db", "no-test-db", "no-test-db");
+        if (!skipDb) {
+            return instances.get(TestDatabaseExtension.class).getTestDatabase();
         }
-        return instances.get(TestDatabaseExtension.class).getTestDatabase();
+        return () -> new JdbcCredentials("no-test-db", "no-test-db", "no-test-db");
     }
 }

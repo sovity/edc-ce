@@ -16,13 +16,11 @@ package de.sovity.edc.ext.wrapper.api.usecase;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
-import org.eclipse.edc.junit.annotations.ApiTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ApiTest
 class SupportedPolicyApiTest {
 
     @RegisterExtension
