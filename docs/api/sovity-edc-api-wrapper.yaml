@@ -275,6 +275,10 @@ paths:
       description: Fetch a connector's data offers
       operationId: getCatalogPageDataOffers
       parameters:
+      - name: participantId
+        in: query
+        schema:
+          type: string
       - name: connectorEndpoint
         in: query
         schema:

@@ -32,7 +32,10 @@ public class UseCaseCatalogApiService {
     public List<UiDataOffer> fetchDataOffers(CatalogQuery catalogQuery) {
         var querySpec = buildQuerySpec(catalogQuery);
 
-        var dspCatalog = dspCatalogService.fetchDataOffersWithFilters(catalogQuery.getConnectorEndpoint(), querySpec);
+        var dspCatalog = dspCatalogService.fetchDataOffersWithFilters(
+            catalogQuery.getParticipantId(),
+            catalogQuery.getConnectorEndpoint(),
+            querySpec);
         return uiDataOfferBuilder.buildUiDataOffers(dspCatalog);
     }
 
