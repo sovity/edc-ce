@@ -145,6 +145,7 @@ public class TransferProcessTestUtils {
             .type(type)
             .correlationId(UUID.randomUUID().toString())
             .contractId(contractId)
+            .assetId(assetId)
             // TODO: no connector address? .counterPartyAddress()
             .dataDestination(dataAddress)
             .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
