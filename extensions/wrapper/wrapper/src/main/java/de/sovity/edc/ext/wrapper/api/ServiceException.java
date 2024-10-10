@@ -15,16 +15,8 @@
 package de.sovity.edc.ext.wrapper.api;
 
 import jakarta.ws.rs.WebApplicationException;
-import org.eclipse.edc.service.spi.result.ServiceResult;
 import org.eclipse.edc.spi.result.Failure;
 
-import java.util.function.Function;
-
-/**
- * Exception for handling {@link ServiceResult} {@link Failure}s.
- *
- * @see ServiceResult#orElseThrow(Function)
- */
 public class ServiceException extends WebApplicationException {
     public ServiceException(Failure failure) {
         super(failure.getFailureDetail(), 500);

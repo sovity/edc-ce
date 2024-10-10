@@ -19,8 +19,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationService;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
-import org.eclipse.edc.connector.api.management.configuration.ManagementApiConfiguration;
-import org.eclipse.edc.connector.api.management.configuration.transform.ManagementApiTypeTransformerRegistry;
 import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.controlplane.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.controlplane.policy.spi.store.PolicyDefinitionStore;
@@ -34,14 +32,14 @@ import org.eclipse.edc.connector.controlplane.services.spi.transferprocess.Trans
 import org.eclipse.edc.connector.controlplane.transfer.spi.store.TransferProcessStore;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
-import org.eclipse.edc.protocol.dsp.api.configuration.DspApiConfiguration;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
-import org.eclipse.edc.spi.CoreConstants;
+import org.eclipse.edc.spi.constants.CoreConstants;
 import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.types.TypeManager;
 import org.eclipse.edc.web.spi.WebService;
+import org.eclipse.edc.web.spi.configuration.ApiContext;
 
 public class WrapperExtension implements ServiceExtension {
 
@@ -66,10 +64,6 @@ public class WrapperExtension implements ServiceExtension {
     @Inject
     private DslContextFactory dslContextFactory;
     @Inject
-    private DspApiConfiguration dspApiConfiguration;
-    @Inject
-    private ManagementApiConfiguration dataManagementApiConfiguration;
-    @Inject
     private PolicyDefinitionStore policyDefinitionStore;
     @Inject
     private PolicyEngine policyEngine;
@@ -79,8 +73,9 @@ public class WrapperExtension implements ServiceExtension {
     private TransferProcessStore transferProcessStore;
     @Inject
     private TypeManager typeManager;
-    @Inject
-    private ManagementApiTypeTransformerRegistry typeTransformerRegistry;
+    // TODO: was revomed, maybe replaced with ManagementApiTypeTransformerRegistryImpl between v0.5.1..v0.6.0
+//     @Inject
+//     private ManagementApiTypeTransformerRegistry typeTransformerRegistry;
     @Inject
     private WebService webService;
     @Inject
@@ -120,14 +115,15 @@ public class WrapperExtension implements ServiceExtension {
             policyEngine,
             transferProcessService,
             transferProcessStore,
-            typeTransformerRegistry
+            // TODO: what is the new value? is it necessary?
+            null
         );
 
         wrapperExtensionContext.managementApiResources().forEach(resource ->
-            webService.registerResource(dataManagementApiConfiguration.getContextAlias(), resource));
+            webService.registerResource(ApiContext.MANAGEMENT, resource));
 
         wrapperExtensionContext.dspApiResources().forEach(resource ->
-            webService.registerResource(dspApiConfiguration.getContextAlias(), resource));
+            webService.registerResource(ApiContext.PROTOCOL, resource));
     }
 
     private void fixObjectMapperDateSerialization(ObjectMapper objectMapper) {

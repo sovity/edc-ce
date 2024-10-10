@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-@AllArgsConstructor
 public class ParameterResolverList implements ParameterResolver {
     private final List<ParameterResolver> resolvers = new ArrayList<>();
 

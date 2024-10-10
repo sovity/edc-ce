@@ -22,7 +22,7 @@ import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.extension.messenger.SovityMessengerRegistry;
 import de.sovity.edc.utils.config.ConfigProps;
 import lombok.val;
-import org.eclipse.edc.connector.transfer.spi.observe.TransferProcessObservable;
+import org.eclipse.edc.connector.controlplane.transfer.spi.observe.TransferProcessObservable;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Provides;
 import org.eclipse.edc.spi.agent.ParticipantAgentService;
