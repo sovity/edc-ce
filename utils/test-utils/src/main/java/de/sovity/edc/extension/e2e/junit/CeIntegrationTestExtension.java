@@ -15,7 +15,6 @@
 package de.sovity.edc.extension.e2e.junit;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig.ConnectorBootConfigBuilder;
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
 import de.sovity.edc.extension.e2e.db.JdbcCredentials;

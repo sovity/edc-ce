@@ -16,7 +16,6 @@ package de.sovity.edc.extension.contacttermination.query;
 
 import de.sovity.edc.extension.contacttermination.ContractTerminationParam;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;

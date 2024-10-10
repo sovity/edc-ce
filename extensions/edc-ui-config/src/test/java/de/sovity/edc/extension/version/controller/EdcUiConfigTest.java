@@ -15,12 +15,8 @@
 package de.sovity.edc.extension.version.controller;
 
 import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
-import de.sovity.edc.extension.e2e.db.JdbcCredentials;
-import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
-import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
 import io.restassured.http.ContentType;
-import org.eclipse.edc.connector.controlplane.dataplane.selector.spi.store.DataPlaneInstanceStore;
 import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.junit.annotations.ApiTest;
@@ -28,13 +24,11 @@ import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.protocol.ProtocolWebhook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ApiTest
 class EdcUiConfigTest {

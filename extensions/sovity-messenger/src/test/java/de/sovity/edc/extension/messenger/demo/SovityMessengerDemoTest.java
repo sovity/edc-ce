@@ -14,9 +14,7 @@
 
 package de.sovity.edc.extension.messenger.demo;
 
-import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
-import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
 import de.sovity.edc.extension.messenger.SovityMessenger;
 import de.sovity.edc.extension.messenger.SovityMessengerException;
 import de.sovity.edc.extension.messenger.demo.message.Addition;
@@ -31,7 +29,6 @@ import de.sovity.edc.utils.config.ConfigUtils;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.eclipse.edc.spi.system.configuration.Config;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
