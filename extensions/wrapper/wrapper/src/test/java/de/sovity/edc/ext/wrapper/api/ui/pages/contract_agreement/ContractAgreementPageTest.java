@@ -122,22 +122,15 @@ class ContractAgreementPageTest {
     }
 
     private TransferProcess transferProcess(int contract, int transfer, int code) {
-        var dataRequest = TransferRequest.Builder.newInstance()
-            .contractId("my-contract-agreement-" + contract)
-            .assetId("my-asset-" + contract)
-            .processId("my-transfer-" + contract + "-" + transfer)
-            .id("my-data-request-" + contract + "-" + transfer)
-            .processId("my-transfer-" + contract + "-" + transfer)
-            .connectorAddress("http://other-connector")
-            .connectorId("urn:connector:other-connector")
-            .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
-            .dataDestination(DataAddress.Builder.newInstance().type("HttpData").build())
-            .build();
         return TransferProcess.Builder.newInstance()
             .id("my-transfer-" + contract + "-" + transfer)
             .state(code)
             .type(TransferProcess.Type.PROVIDER)
-            .dataRequest(dataRequest)
+            .contractId("my-contract-agreement-" + contract)
+            .assetId("my-asset-" + contract)
+            .counterPartyAddress("http://other-connector")
+            .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
+            .dataDestination(DataAddress.Builder.newInstance().type("HttpData").build())
             .contentDataAddress(DataAddress.Builder.newInstance().type("HttpData").build())
             .errorDetail("my-error-message-" + transfer)
             .build();

@@ -22,7 +22,6 @@ import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.Con
 import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiationStates;
 import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService;
 import org.eclipse.edc.connector.controlplane.transfer.spi.store.TransferProcessStore;
-import org.eclipse.edc.connector.controlplane.transfer.spi.types.DataRequest;
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.protocol.dsp.http.spi.types.HttpMessageProtocol;
@@ -141,21 +140,15 @@ public class TransferProcessTestUtils {
         String errorMessage,
         TransferProcessStore transferProcessStore
     ) throws ParseException {
-
-        var dataRequestForTransfer = DataRequest.Builder.newInstance()
-            .id(UUID.randomUUID().toString())
-            .assetId(assetId)
-            .contractId(contractId)
-            .dataDestination(dataAddress)
-            .connectorAddress(COUNTER_PARTY_ADDRESS)
-            .connectorId(COUNTER_PARTY_ID)
-            .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
-            .build();
-
         var transferProcess = TransferProcess.Builder.newInstance()
             .id(transferProcessId)
             .type(type)
-            .dataRequest(dataRequestForTransfer)
+            .correlationId(UUID.randomUUID().toString())
+            .contractId(contractId)
+            .assetId(assetId)
+            // TODO: no connector address? .counterPartyAddress()
+            .dataDestination(dataAddress)
+            .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
             .createdAt(dateFormatterToLong("2023-07-08"))
             .updatedAt(dateFormatterToLong(lastUpdateDateForTransferProcess))
             .state(800)
