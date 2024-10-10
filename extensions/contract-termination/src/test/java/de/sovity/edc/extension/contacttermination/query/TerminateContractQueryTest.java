@@ -16,7 +16,7 @@ package de.sovity.edc.extension.contacttermination.query;
 
 import de.sovity.edc.extension.contacttermination.ContractTerminationParam;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
@@ -44,7 +44,7 @@ class TerminateContractQueryTest {
     void terminateConsumerAgreementOrThrow_shouldInsertRowInTerminationTable(
         E2eTestScenario scenario,
         @Consumer DslContextFactory dslContextFactory,
-        @Provider ConnectorConfig providerConfig
+        @Provider ConnectorBootConfig providerConfig
     ) {
         val assetId = scenario.createAsset();
         scenario.createContractDefinition(assetId);

@@ -14,7 +14,7 @@
 
 package de.sovity.edc.extension.messenger.demo;
 
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
 import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
 import de.sovity.edc.extension.messenger.SovityMessenger;
@@ -27,8 +27,10 @@ import de.sovity.edc.extension.messenger.demo.message.Signal;
 import de.sovity.edc.extension.messenger.demo.message.Sqrt;
 import de.sovity.edc.extension.messenger.demo.message.UnregisteredMessage;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
+import de.sovity.edc.utils.config.ConfigUtils;
 import lombok.SneakyThrows;
 import lombok.val;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -99,14 +101,14 @@ class SovityMessengerDemoTest {
         ":launchers:connectors:sovity-dev",
         "emitter",
         testDatabase -> {
-            ConnectorConfig emitterConfig = CeIntegrationTestUtils.defaultConfig("emitter", testDatabase);
+            ConnectorBootConfig emitterConfig = CeIntegrationTestUtils.defaultConfig("emitter", testDatabase);
             return emitterConfig.getProperties();
         }
     );
 
     private static String receiverId = "receiver";
 
-    private static ConnectorConfig receiverConfig;
+    private static ConnectorBootConfig receiverConfig;
 
     @RegisterExtension
     static RuntimePerClassWithDbExtension receiverExtension = new RuntimePerClassWithDbExtension(
@@ -121,7 +123,7 @@ class SovityMessengerDemoTest {
     private String receiverAddress;
 
     @BeforeEach
-    void setup() {
-        receiverAddress = receiverConfig.getProtocolApiUrl();
+    void setup(Config config) {
+        receiverAddress = ConfigUtils.getProtocolApiUrl(config.getEntries());
     }
 }

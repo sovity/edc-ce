@@ -15,7 +15,7 @@
 package de.sovity.edc.extension.e2e.junit.multi;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenarioConfig;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
@@ -178,7 +178,7 @@ public class CeE2eTestExtension
         return extension.getRuntimePerClassExtensionFixed().getService(Config.class);
     }
 
-    private ConnectorConfig buildConnectorConfig(
+    private ConnectorBootConfig buildConnectorConfig(
         CeE2eTestConfig config,
         Side side,
         TestDatabase testDatabase,

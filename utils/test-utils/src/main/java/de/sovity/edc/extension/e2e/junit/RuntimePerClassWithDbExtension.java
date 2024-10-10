@@ -14,7 +14,7 @@
 
 package de.sovity.edc.extension.e2e.junit;
 
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import de.sovity.edc.extension.e2e.junit.multi.InstancesForJunitTest;
@@ -50,7 +50,7 @@ public final class RuntimePerClassWithDbExtension
     private final String runtimeName = "runtime";
 
     @Builder.Default
-    private final Function<TestDatabase, ConnectorConfig> configFactory = db -> ConnectorConfig.builder().build();
+    private final Function<TestDatabase, ConnectorBootConfig> configFactory = db -> ConnectorBootConfig.builder().build();
 
     @Builder.Default
     private final List<ConfigProp> allConfigProps = emptyList();

@@ -18,13 +18,15 @@ import de.sovity.edc.client.gen.model.ContractTerminationRequest;
 import de.sovity.edc.ext.db.jooq.enums.ContractTerminatedBy;
 import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationDetails;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
+import de.sovity.edc.utils.config.ConfigUtils;
 import lombok.val;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -41,7 +43,7 @@ class ContractAgreementTerminationDetailsQueryTest {
     void fetchAgreementDetailsOrThrow_whenAgreementIsPresent_shouldReturnTheAgreementDetails(
         E2eTestScenario scenario,
         @Consumer DslContextFactory dslContextFactory,
-        @Provider ConnectorConfig providerConfig
+        @Provider Config providerConfig
     ) {
         // arrange
 
@@ -60,7 +62,7 @@ class ContractAgreementTerminationDetailsQueryTest {
                 assertThat(details).isEqualTo(ContractAgreementTerminationDetails.builder()
                     .contractAgreementId(agreementId)
                     .counterpartyId("provider")
-                    .counterpartyAddress(providerConfig.getProtocolApiUrl())
+                    .counterpartyAddress(ConfigUtils.getProtocolApiUrl(providerConfig.getEntries()))
                     .type(CONSUMER)
                     .providerAgentId("provider")
                     .consumerAgentId("consumer")
@@ -93,7 +95,7 @@ class ContractAgreementTerminationDetailsQueryTest {
     void fetchAgreementDetailsOrThrow_whenTerminationAlreadyExists_shouldReturnOptionalWithTerminationData(
         E2eTestScenario scenario,
         @Consumer DslContextFactory dslContextFactory,
-        @Provider ConnectorConfig providerConfig
+        @Provider ConnectorBootConfig providerConfig
     ) {
         // arrange
 

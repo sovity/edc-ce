@@ -35,8 +35,8 @@ import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
@@ -133,7 +133,7 @@ class DataSourceParameterizationTest {
     void canUseTheWorkaroundInCustomTransferRequest(
         E2eTestScenario scenario,
         @Consumer EdcClient consumerClient,
-        @Provider ConnectorConfig providerConfig,
+        @Provider ConnectorBootConfig providerConfig,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -227,7 +227,7 @@ class DataSourceParameterizationTest {
         E2eTestScenario scenario,
         @Consumer ManagementApiConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
-        @Provider ConnectorConfig providerConfig,
+        @Provider ConnectorBootConfig providerConfig,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -287,7 +287,7 @@ class DataSourceParameterizationTest {
     void canTransferParameterizedAsset(
         E2eTestScenario scenario,
         @Consumer EdcClient consumerClient,
-        @Provider ConnectorConfig providerConfig,
+        @Provider ConnectorBootConfig providerConfig,
         @Provider EdcClient providerClient) {
 
         source().parallel().forEach(testCase -> {

@@ -24,10 +24,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * Config before EDC has been started.
+ *
+ * This does not include all config properties, as the EDC will do defaulting on startup.
+ */
 @Getter
 @Builder(toBuilder = true)
 @AllArgsConstructor
-public class ConnectorConfig {
+public class ConnectorBootConfig {
     @Singular("property")
     private Map<ConfigProp, String> properties;
 

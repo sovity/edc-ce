@@ -14,7 +14,7 @@
 
 package de.sovity.edc.extension.version.controller;
 
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.db.JdbcCredentials;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 class EdcUiConfigTest {
     private static final String SOME_EXAMPLE_PROP = "this should also be passed through";
 
-    private ConnectorConfig config;
+    private ConnectorBootConfig config;
 
     @BeforeEach
     void setUp(EdcExtension extension) {

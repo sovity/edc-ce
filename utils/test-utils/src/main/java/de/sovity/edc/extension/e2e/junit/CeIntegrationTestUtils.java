@@ -15,8 +15,8 @@
 package de.sovity.edc.extension.e2e.junit;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig.ConnectorConfigBuilder;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig.ConnectorConfigBuilder;
 import de.sovity.edc.extension.e2e.connector.config.PortUtils;
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemoteConfig;
@@ -36,7 +36,7 @@ import java.util.function.Consumer;
 @UtilityClass
 public final class CeIntegrationTestUtils {
 
-    public static ConnectorConfig defaultConfig(
+    public static ConnectorBootConfig defaultConfig(
         String participantId,
         TestDatabase testDatabase,
         @Nullable
@@ -45,7 +45,7 @@ public final class CeIntegrationTestUtils {
         val firstPort = PortUtils.getFreePortRange(5);
         val apiKey = "api-key-%s".formatted(UUID.randomUUID().toString());
 
-        val configBuilder = ConnectorConfig.builder()
+        val configBuilder = ConnectorBootConfig.builder()
             // Network
             .property(ConfigProps.MY_EDC_NETWORK_TYPE, ConfigProps.NetworkType.UNIT_TEST)
             .property(ConfigProps.MY_EDC_FIRST_PORT, String.valueOf(firstPort))

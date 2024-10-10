@@ -14,7 +14,7 @@
 
 package de.sovity.edc.extension.version.controller;
 
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.db.JdbcCredentials;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(EdcExtension.class)
 class LastCommitInfoTest {
 
-    private ConnectorConfig config;
+    private ConnectorBootConfig config;
 
     @BeforeEach
     void setUp(EdcExtension extension) {

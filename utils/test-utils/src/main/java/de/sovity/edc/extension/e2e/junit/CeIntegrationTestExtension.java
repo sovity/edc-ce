@@ -15,7 +15,7 @@
 package de.sovity.edc.extension.e2e.junit;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig.ConnectorConfigBuilder;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig.ConnectorConfigBuilder;
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
 import de.sovity.edc.extension.e2e.junit.multi.InstancesForJunitTest;
 import lombok.AccessLevel;
@@ -69,8 +69,10 @@ public final class CeIntegrationTestExtension
     }
 
     @Override
-    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-        throws ParameterResolutionException {
+    public boolean supportsParameter(
+        ParameterContext parameterContext,
+        ExtensionContext extensionContext
+    ) throws ParameterResolutionException {
         val clazz = parameterContext.getParameter().getType();
 
         if (instances.has(clazz)) {
@@ -81,8 +83,10 @@ public final class CeIntegrationTestExtension
     }
 
     @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-        throws ParameterResolutionException {
+    public Object resolveParameter(
+        ParameterContext parameterContext,
+        ExtensionContext extensionContext
+    ) throws ParameterResolutionException {
         val clazz = parameterContext.getParameter().getType();
 
         if (instances.has(clazz)) {

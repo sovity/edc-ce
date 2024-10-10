@@ -14,7 +14,7 @@
 
 package de.sovity.edc.extension.e2e.junit;
 
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.utils.config.SovityEdcRuntime;
 import de.sovity.edc.utils.config.model.ConfigProp;
 import org.eclipse.edc.junit.extensions.EmbeddedRuntime;
@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -69,14 +68,14 @@ public class EmbeddedRuntimeFixed extends SovityEdcRuntime {
 
     public EmbeddedRuntimeFixed(
         String name,
-        ConnectorConfig connectorConfig,
+        ConnectorBootConfig connectorBootConfig,
         List<ConfigProp> allConfigProps,
         String... additionalModules
     ) {
         this(
             new MultiSourceServiceLocator(),
             name,
-            connectorConfig,
+            connectorBootConfig,
             allConfigProps,
             additionalModules
         );
@@ -85,7 +84,7 @@ public class EmbeddedRuntimeFixed extends SovityEdcRuntime {
     private EmbeddedRuntimeFixed(
         MultiSourceServiceLocator serviceLocator,
         String name,
-        ConnectorConfig connectorConfig,
+        ConnectorBootConfig connectorBootConfig,
         List<ConfigProp> allConfigProps,
         String... additionalModules
     ) {
@@ -93,7 +92,7 @@ public class EmbeddedRuntimeFixed extends SovityEdcRuntime {
         this.serviceLocator = serviceLocator;
         this.name = name;
         this.additionalModules = additionalModules;
-        this.properties = connectorConfig.asMap();
+        this.properties = connectorBootConfig.asMap();
     }
 
     /* End of modified code: Custom Constructors */

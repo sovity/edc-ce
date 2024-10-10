@@ -48,9 +48,9 @@ import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
@@ -104,10 +104,10 @@ class UiApiWrapperTest {
     @DisabledOnGithub
     @Test
     void provide_consume_assetMapping_policyMapping_agreements(
-        @Consumer ConnectorConfig consumerConfig,
+        @Consumer ConnectorBootConfig consumerConfig,
         @Consumer ManagementApiConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
-        @Provider ConnectorConfig providerConfig,
+        @Provider ConnectorBootConfig providerConfig,
         @Provider EdcClient providerClient) {
 
         // arrange
@@ -375,7 +375,7 @@ class UiApiWrapperTest {
     void customTransferRequest(
         @Consumer ManagementApiConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
-        @Provider ConnectorConfig providerConfig,
+        @Provider ConnectorBootConfig providerConfig,
         @Provider EdcClient providerClient) {
 
         // arrange
@@ -443,7 +443,7 @@ class UiApiWrapperTest {
     void editAssetOnLiveContract(
         @Consumer ManagementApiConnectorRemote consumerConnector,
         @Consumer EdcClient consumerClient,
-        @Provider ConnectorConfig providerConfig,
+        @Provider ConnectorBootConfig providerConfig,
         @Provider EdcClient providerClient) {
 
         // arrange

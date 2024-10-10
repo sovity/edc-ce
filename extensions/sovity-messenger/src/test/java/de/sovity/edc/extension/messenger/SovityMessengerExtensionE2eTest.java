@@ -14,7 +14,7 @@
 
 package de.sovity.edc.extension.messenger;
 
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
@@ -51,8 +51,8 @@ import static org.junit.jupiter.api.Assertions.fail;
     @RegisterExtension
     static final TestDatabase RECEIVER_DATABASE = new TestDatabaseViaTestcontainers();
 
-    private ConnectorConfig providerConfig;
-    private ConnectorConfig consumerConfig;
+    private ConnectorBootConfig providerConfig;
+    private ConnectorBootConfig consumerConfig;
 
     private String counterPartyAddress;
     private String counterPartyId;

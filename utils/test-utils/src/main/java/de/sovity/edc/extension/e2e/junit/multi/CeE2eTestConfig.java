@@ -14,7 +14,7 @@
 
 package de.sovity.edc.extension.e2e.junit.multi;
 
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig.ConnectorConfigBuilder;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig.ConnectorConfigBuilder;
 import lombok.Builder;
 import lombok.Getter;
 
