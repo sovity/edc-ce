@@ -12,9 +12,9 @@
  *
  */
 
-package de.sovity.edc.extension.e2e.junit.multi.annotations;
+package de.sovity.edc.extension.e2e.junit.utils;
 
-import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

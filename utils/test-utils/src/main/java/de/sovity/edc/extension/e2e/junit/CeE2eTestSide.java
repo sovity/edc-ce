@@ -12,10 +12,10 @@
  *
  */
 
-package de.sovity.edc.extension.e2e.junit.multi;
+package de.sovity.edc.extension.e2e.junit;
 
-import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
-import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
+import de.sovity.edc.extension.e2e.junit.utils.Consumer;
+import de.sovity.edc.extension.e2e.junit.utils.Provider;
 import lombok.val;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.extension.ParameterContext;

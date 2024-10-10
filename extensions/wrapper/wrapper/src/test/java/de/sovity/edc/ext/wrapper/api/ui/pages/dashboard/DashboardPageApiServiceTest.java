@@ -16,7 +16,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
-import de.sovity.edc.extension.e2e.junit.EmbeddedRuntimeFixed;
+import de.sovity.edc.extension.e2e.junit.edc.EmbeddedRuntimeFixed;
 import de.sovity.edc.utils.config.ConfigProps;
 import de.sovity.edc.utils.config.ConfigUtils;
 import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;

@@ -16,9 +16,9 @@ package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
-import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
-import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
-import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
+import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.utils.Consumer;
+import de.sovity.edc.extension.e2e.junit.utils.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.config.ConfigProps;
 import org.junit.jupiter.api.Test;

@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.extension.e2e.junit;
+package de.sovity.edc.extension.e2e.junit.edc;
 
 import org.eclipse.edc.boot.system.ServiceLocator;
 import org.eclipse.edc.boot.system.ServiceLocatorImpl;

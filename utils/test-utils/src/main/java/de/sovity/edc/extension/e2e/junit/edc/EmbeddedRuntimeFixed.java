@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.extension.e2e.junit;
+package de.sovity.edc.extension.e2e.junit.edc;
 
 import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.utils.config.SovityEdcRuntime;

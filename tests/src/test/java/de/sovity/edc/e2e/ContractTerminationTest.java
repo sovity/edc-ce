@@ -26,9 +26,9 @@ import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationSe
 import de.sovity.edc.extension.contacttermination.ContractTerminationEvent;
 import de.sovity.edc.extension.contacttermination.ContractTerminationObserver;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
-import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
-import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
-import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
+import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.utils.Consumer;
+import de.sovity.edc.extension.e2e.junit.utils.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.ws.rs.HttpMethod;

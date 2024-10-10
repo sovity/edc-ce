@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.extension.e2e.junit;
+package de.sovity.edc.extension.e2e.junit.edc;
 
 import org.eclipse.edc.spi.system.ConfigurationExtension;
 import org.eclipse.edc.spi.system.SystemExtension;

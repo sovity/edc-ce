@@ -12,25 +12,25 @@
  *
  */
 
-package de.sovity.edc.extension.e2e.junit.multi;
+package de.sovity.edc.extension.e2e.junit;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig.ConnectorBootConfigBuilder;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenarioConfig;
-import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
+import de.sovity.edc.extension.e2e.junit.utils.InstancesForEachConnector;
+import de.sovity.edc.extension.e2e.junit.utils.InstancesForJunitTest;
+import de.sovity.edc.extension.e2e.junit.utils.ParameterResolverList;
 import lombok.Builder;
 import lombok.Singular;
-import lombok.val;
-import org.eclipse.edc.junit.extensions.RuntimePerClassExtension;
+import lombok.experimental.Delegate;
+import org.eclipse.edc.junit.extensions.RuntimeExtension;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.mockserver.integration.ClientAndServer;
 
@@ -63,12 +63,20 @@ public class CeE2eTestExtension
     private Consumer<ConnectorBootConfigBuilder> providerConfigCustomizer = it -> {
     };
 
-    private final InstancesForEachConnector<CeE2eTestSide> connectorInstances =
-        new InstancesForEachConnector<>(Arrays.asList(CeE2eTestSide.values()));
+    private final InstancesForEachConnector<CeE2eTestSide> connectorInstances = new InstancesForEachConnector<>(
+        Arrays.asList(CeE2eTestSide.values()),
+        (parameterContext, extensionContext) -> CeE2eTestSide.fromParameterContextOrNull(parameterContext)
+    );
     private final InstancesForJunitTest globalInstances = new InstancesForJunitTest();
+
+    @Delegate(types = ParameterResolver.class)
+    private final ParameterResolverList parameterResolverList = new ParameterResolverList();
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
+        parameterResolverList.add(globalInstances);
+        parameterResolverList.add(connectorInstances);
+
         for (CeE2eTestSide side : CeE2eTestSide.values()) {
             var extension = CeIntegrationTestExtension.builder()
                 .participantId(side.getParticipantId())
@@ -85,7 +93,7 @@ public class CeE2eTestExtension
                 .build();
 
             // Register DbRuntimePerClassExtension
-            connectorInstances.put(side, extension);
+            connectorInstances.forSide(side).put(extension);
 
             // Start EDC
             extension.beforeAll(context);
@@ -114,60 +122,19 @@ public class CeE2eTestExtension
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
         // for loop explicitly used because of checked exceptions
-        for (var extension : connectorInstances.all(RuntimePerClassExtension.class)) {
+        for (var extension : connectorInstances.all(CeIntegrationTestExtension.class)) {
             extension.afterAll(context);
         }
     }
 
-    @Override
-    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-        throws ParameterResolutionException {
-        val sideOrNull = CeE2eTestSide.fromParameterContextOrNull(parameterContext);
-        val clazz = parameterContext.getParameter().getType();
-
-        if (sideOrNull != null) {
-            if (connectorInstances.has(sideOrNull, clazz)) {
-                return connectorInstances.has(sideOrNull, clazz);
-            }
-
-            return connectorInstances.get(sideOrNull, RuntimePerClassExtension.class)
-                .supportsParameter(parameterContext, extensionContext);
-        }
-
-        return globalInstances.has(clazz);
-    }
-
-    @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-        throws ParameterResolutionException {
-        val sideOrNull = CeE2eTestSide.fromParameterContextOrNull(parameterContext);
-        val clazz = parameterContext.getParameter().getType();
-
-        if (sideOrNull != null) {
-            if (connectorInstances.has(sideOrNull, clazz)) {
-                return connectorInstances.get(sideOrNull, clazz);
-            }
-
-            return connectorInstances.get(sideOrNull, RuntimePerClassExtension.class)
-                .resolveParameter(parameterContext, extensionContext);
-        }
-
-        if (globalInstances.has(clazz)) {
-            return globalInstances.get(clazz);
-        }
-
-        throw new IllegalArgumentException(
-            "The parameters must be annotated by the EDC side: @Provider or @Consumer or be one of the supported classes."
-        );
-    }
-
     private E2eTestScenario buildE2eTestScenario() {
         return E2eTestScenario.builder()
-            .consumerClient(connectorInstances.get(CeE2eTestSide.CONSUMER, EdcClient.class))
-            .providerClient(connectorInstances.get(CeE2eTestSide.PROVIDER, EdcClient.class))
+            .consumerClient(connectorInstances.forSide(CeE2eTestSide.CONSUMER).get(EdcClient.class))
+            .providerClient(connectorInstances.forSide(CeE2eTestSide.PROVIDER).get(EdcClient.class))
             .mockServer(globalInstances.get(ClientAndServer.class))
             .config(E2eTestScenarioConfig.forProviderConfig(
-                connectorInstances.get(CeE2eTestSide.PROVIDER, RuntimePerClassExtension.class).getService(Config.class)))
+                connectorInstances.forSide(CeE2eTestSide.PROVIDER).get(RuntimeExtension.class).getService(Config.class)
+            ))
             .build();
     }
 }

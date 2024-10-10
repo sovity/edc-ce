@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.extension.e2e.junit;
+package de.sovity.edc.extension.e2e.junit.edc;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;

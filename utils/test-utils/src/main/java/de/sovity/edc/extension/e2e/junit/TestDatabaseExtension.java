@@ -16,7 +16,7 @@ package de.sovity.edc.extension.e2e.junit;
 
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
-import de.sovity.edc.extension.e2e.junit.multi.InstancesForJunitTest;
+import de.sovity.edc.extension.e2e.junit.utils.InstancesForJunitTest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

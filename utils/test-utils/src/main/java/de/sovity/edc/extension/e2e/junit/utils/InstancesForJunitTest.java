@@ -12,15 +12,21 @@
  *
  */
 
-package de.sovity.edc.extension.e2e.junit.multi;
+package de.sovity.edc.extension.e2e.junit.utils;
 
 import de.sovity.edc.extension.utils.Lazy;
+import lombok.val;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class InstancesForJunitTest {
+public class InstancesForJunitTest implements ParameterResolver {
     private final Map<Class<?>, LazyOrValue> instances = new HashMap<>();
 
     public void put(Object object) {
@@ -47,6 +53,15 @@ public class InstancesForJunitTest {
             .orElseThrow(() -> new IllegalArgumentException("No object of type %s".formatted(clazz)));
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> List<T> all(Class<T> clazz) {
+        return instances.entrySet()
+            .stream()
+            .filter(clazz::isInstance)
+            .map(entry -> (T) entry.getValue().get())
+            .toList();
+    }
+
     public boolean isLazyInitialized(Class<?> clazz) {
         var lazy = instances.entrySet()
             .stream()
@@ -57,6 +72,27 @@ public class InstancesForJunitTest {
             .map(LazyOrValue::lazy)
             .orElseThrow(() -> new IllegalArgumentException("No lazy object of type %s".formatted(clazz)));
         return lazy.isInitialized();
+    }
+
+    @Override
+    public boolean supportsParameter(
+        ParameterContext parameterContext,
+        ExtensionContext extensionContext
+    ) throws ParameterResolutionException {
+        val clazz = parameterContext.getParameter().getType();
+        return has(clazz);
+    }
+
+    @Override
+    public Object resolveParameter(
+        ParameterContext parameterContext,
+        ExtensionContext extensionContext
+    ) throws ParameterResolutionException {
+        val clazz = parameterContext.getParameter().getType();
+        if (!has(clazz)) {
+            throw new IllegalArgumentException("No object of type %s".formatted(clazz));
+        }
+        return get(clazz);
     }
 
 
