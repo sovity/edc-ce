@@ -15,11 +15,11 @@
 package de.sovity.edc.extension.messenger.impl;
 
 import lombok.val;
-import org.eclipse.edc.core.transform.TypeTransformerRegistryImpl;
 import org.eclipse.edc.jsonld.TitaniumJsonLd;
-import org.eclipse.edc.protocol.dsp.serialization.JsonLdRemoteMessageSerializerImpl;
-import org.eclipse.edc.protocol.dsp.spi.serialization.JsonLdRemoteMessageSerializer;
+import org.eclipse.edc.protocol.dsp.http.serialization.JsonLdRemoteMessageSerializerImpl;
+import org.eclipse.edc.protocol.dsp.http.spi.serialization.JsonLdRemoteMessageSerializer;
 import org.eclipse.edc.spi.monitor.Monitor;
+import org.eclipse.edc.transform.TypeTransformerRegistryImpl;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.junit.jupiter.api.Test;
 
@@ -41,13 +41,15 @@ class MessageEmitterTest {
         JsonLdRemoteMessageSerializer serializer = new JsonLdRemoteMessageSerializerImpl(
             registry,
             mapperFactory.createObjectMapper(),
-            new TitaniumJsonLd(mock(Monitor.class))
+            new TitaniumJsonLd(mock(Monitor.class)),
+            "scope"
         );
         val emitter = new MessageEmitter(serializer);
 
         // act
         val request = emitter.createRequest(new SovityMessageRequest(
             new URL("https://example.com/api"),
+            "example",
             "header",
             "body"
         ));

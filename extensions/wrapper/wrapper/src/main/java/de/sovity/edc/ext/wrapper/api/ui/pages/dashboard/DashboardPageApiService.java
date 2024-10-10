@@ -22,9 +22,9 @@ import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.MiwConfigServic
 import de.sovity.edc.ext.wrapper.api.ui.pages.dashboard.services.SelfDescriptionService;
 import de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessStateService;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
-import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.agreement.ContractAgreement;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -93,21 +93,21 @@ public class DashboardPageApiService {
             Set<String> agreements
     ) {
         var numTotal = transferProcesses.stream()
-                .filter(transferProcess -> agreements.contains(transferProcess.getDataRequest().getContractId()))
+                .filter(transferProcess -> agreements.contains(transferProcess.getContractId()))
                 .count();
 
         var numOk = transferProcesses.stream()
-                .filter(transferProcess -> agreements.contains(transferProcess.getDataRequest().getContractId()))
+                .filter(transferProcess -> agreements.contains(transferProcess.getContractId()))
                 .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(OK))
                 .count();
 
         var numRunning = transferProcesses.stream()
-                .filter(transferProcess -> agreements.contains(transferProcess.getDataRequest().getContractId()))
+                .filter(transferProcess -> agreements.contains(transferProcess.getContractId()))
                 .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(RUNNING))
                 .count();
 
         var numError = transferProcesses.stream()
-                .filter(transferProcess -> agreements.contains(transferProcess.getDataRequest().getContractId()))
+                .filter(transferProcess -> agreements.contains(transferProcess.getContractId()))
                 .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(ERROR))
                 .count();
 

@@ -7,45 +7,33 @@ import de.sovity.edc.client.gen.model.UiCriterion;
 import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
-import org.eclipse.edc.connector.contract.spi.types.offer.ContractDefinition;
-import org.eclipse.edc.connector.spi.contractdefinition.ContractDefinitionService;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
+import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.offer.ContractDefinition;
+import org.eclipse.edc.connector.controlplane.services.spi.contractdefinition.ContractDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.spi.query.Criterion;
 import org.eclipse.edc.spi.query.QuerySpec;
+import org.eclipse.edc.spi.system.configuration.Config;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.List;
 
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 class ContractDefinitionPageApiServiceTest {
 
-    private static final String PARTICIPANT_ID = "my-edc-participant-id";
-
-    private static ConnectorConfig config;
-    private static EdcClient client;
-
     @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "edc",
-        testDatabase -> {
-            config = forTestDatabase(PARTICIPANT_ID, testDatabase);
-            client = EdcClient.builder()
-                .managementApiUrl(config.getManagementApiUrl())
-                .managementApiKey(config.getManagementApiKey())
-                .build();
-            return config.getProperties();
-        }
-    );
+    static CeIntegrationTestExtension providerExtension = CeIntegrationTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
     @Test
-    void contractDefinitionPage(ContractDefinitionService contractDefinitionService) {
+    void contractDefinitionPage(EdcClient client, ContractDefinitionService contractDefinitionService) {
         // arrange
 
         var criterion = new Criterion("exampleLeft1", "=", "abc");
@@ -71,7 +59,7 @@ class ContractDefinitionPageApiServiceTest {
     }
 
     @Test
-    void contractDefinitionPageSorting(ContractDefinitionService contractDefinitionService) {
+    void contractDefinitionPageSorting(EdcClient client, ContractDefinitionService contractDefinitionService) {
         // arrange
 
         createContractDefinition(
@@ -107,7 +95,7 @@ class ContractDefinitionPageApiServiceTest {
     }
 
     @Test
-    void testContractDefinitionCreation(ContractDefinitionService contractDefinitionService) {
+    void testContractDefinitionCreation(EdcClient client, ContractDefinitionService contractDefinitionService) {
         // arrange
 
         var criterion = new UiCriterion(
@@ -142,7 +130,7 @@ class ContractDefinitionPageApiServiceTest {
     }
 
     @Test
-    void testDeleteContractDefinition(ContractDefinitionService contractDefinitionService) {
+    void testDeleteContractDefinition(EdcClient client, ContractDefinitionService contractDefinitionService) {
         // arrange
 
         var criterion = new Criterion("exampleLeft1", "=", "exampleRight1");

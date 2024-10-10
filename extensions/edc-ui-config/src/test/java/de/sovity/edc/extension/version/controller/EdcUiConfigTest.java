@@ -14,12 +14,12 @@
 
 package de.sovity.edc.extension.version.controller;
 
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
 import de.sovity.edc.extension.e2e.db.JdbcCredentials;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
 import io.restassured.http.ContentType;
-import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
+import org.eclipse.edc.connector.controlplane.dataplane.selector.spi.store.DataPlaneInstanceStore;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 class EdcUiConfigTest {
     private static final String SOME_EXAMPLE_PROP = "this should also be passed through";
 
-    private ConnectorConfig config;
+    private ConnectorBootConfig config;
 
     @BeforeEach
     void setUp(EdcExtension extension) {
@@ -49,7 +49,7 @@ class EdcUiConfigTest {
         var testDatabase = mock(TestDatabase.class);
         when(testDatabase.getJdbcCredentials()).thenReturn(new JdbcCredentials("unused", "unused", "unused"));
 
-        config = ConnectorConfigFactory.forTestDatabase("provider", testDatabase);
+        config = CeIntegrationTestUtils.defaultConfig("provider", testDatabase);
         config.setProperty("edc.ui.some.example.prop", SOME_EXAMPLE_PROP);
 
         extension.setConfiguration(config.getProperties());

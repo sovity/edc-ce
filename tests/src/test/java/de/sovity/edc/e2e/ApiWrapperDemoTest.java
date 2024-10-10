@@ -37,10 +37,11 @@ import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.awaitility.Awaitility;
@@ -52,9 +53,8 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig.fromConnectorConfig;
+import static de.sovity.edc.extension.e2e.connector.remotes.management_api.DataTransferTestUtil.validateDataTransferred;
+import static de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemoteConfig.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ApiWrapperDemoTest {
@@ -72,12 +72,12 @@ class ApiWrapperDemoTest {
     @RegisterExtension
     static final TestDatabase CONSUMER_DATABASE = new TestDatabaseViaTestcontainers();
 
-    private ConnectorRemote providerConnector;
-    private ConnectorRemote consumerConnector;
+    private ManagementApiConnectorRemote providerConnector;
+    private ManagementApiConnectorRemote consumerConnector;
 
     private EdcClient providerClient;
     private EdcClient consumerClient;
-    private MockDataAddressRemote dataAddress;
+    private TestBackendRemote dataAddress;
     private final String dataOfferData = "expected data 123";
 
     private final String dataOfferId = "my-data-offer-2023-11";
@@ -85,9 +85,9 @@ class ApiWrapperDemoTest {
     @BeforeEach
     void setup() {
         // set up provider EDC + Client
-        var providerConfig = forTestDatabase(PROVIDER_PARTICIPANT_ID, PROVIDER_DATABASE);
+        var providerConfig = CeIntegrationTestUtils.defaultConfig(PROVIDER_PARTICIPANT_ID, PROVIDER_DATABASE);
         providerEdcContext.setConfiguration(providerConfig.getProperties());
-        providerConnector = new ConnectorRemote(fromConnectorConfig(providerConfig));
+        providerConnector = new ManagementApiConnectorRemote(fromConnectorConfig(providerConfig));
 
         providerClient = EdcClient.builder()
             .managementApiUrl(providerConfig.getManagementApiUrl())
@@ -95,9 +95,9 @@ class ApiWrapperDemoTest {
             .build();
 
         // set up consumer EDC + Client
-        var consumerConfig = forTestDatabase(CONSUMER_PARTICIPANT_ID, CONSUMER_DATABASE);
+        var consumerConfig = CeIntegrationTestUtils.defaultConfig(CONSUMER_PARTICIPANT_ID, CONSUMER_DATABASE);
         consumerEdcContext.setConfiguration(consumerConfig.getProperties());
-        consumerConnector = new ConnectorRemote(fromConnectorConfig(consumerConfig));
+        consumerConnector = new ManagementApiConnectorRemote(fromConnectorConfig(consumerConfig));
 
         consumerClient = EdcClient.builder()
             .managementApiUrl(consumerConfig.getManagementApiUrl())
@@ -105,7 +105,7 @@ class ApiWrapperDemoTest {
             .build();
 
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new MockDataAddressRemote(providerConfig.getDefaultApiUrl());
+        dataAddress = new TestBackendRemote(providerConfig.getDefaultApiUrl());
     }
 
     @Test
@@ -235,7 +235,7 @@ class ApiWrapperDemoTest {
         consumerClient.uiApi().initiateTransfer(transferRequest);
     }
 
-    private String getProtocolEndpoint(ConnectorRemote connector) {
+    private String getProtocolEndpoint(ManagementApiConnectorRemote connector) {
         return connector.getConfig().getProtocolApiUrl();
     }
 }

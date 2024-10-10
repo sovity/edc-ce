@@ -14,10 +14,10 @@
 
 package de.sovity.edc.extension.policy;
 
-import org.eclipse.edc.connector.contract.spi.offer.ContractDefinitionResolver;
-import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
-import org.eclipse.edc.connector.policy.spi.PolicyDefinition;
-import org.eclipse.edc.connector.spi.policydefinition.PolicyDefinitionService;
+import org.eclipse.edc.connector.controlplane.contract.spi.offer.ContractDefinitionResolver;
+import org.eclipse.edc.connector.controlplane.dataplane.selector.spi.store.DataPlaneInstanceStore;
+import org.eclipse.edc.connector.controlplane.policy.spi.PolicyDefinition;
+import org.eclipse.edc.connector.controlplane.services.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.policy.engine.spi.PolicyContext;

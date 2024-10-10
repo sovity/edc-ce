@@ -24,9 +24,9 @@ import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
-import org.eclipse.edc.connector.transfer.spi.types.TransferRequest;
-import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferRequest;
+import org.eclipse.edc.protocol.dsp.http.spi.types.HttpMessageProtocol;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 
 import java.util.List;
@@ -52,10 +52,8 @@ public class TransferRequestBuilder {
         return TransferRequest.Builder.newInstance()
                 .id(UUID.randomUUID().toString())
                 .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
-                .connectorAddress(negotiation.getCounterPartyAddress())
-                .connectorId(negotiation.getCounterPartyId())
+                .counterPartyAddress(negotiation.getCounterPartyAddress())
                 .contractId(contractId)
-                .assetId(agreement.getAssetId())
                 .dataDestination(address)
                 .privateProperties(edcPropertyUtils.toMapOfObject(request.getTransferProcessProperties()))
                 .callbackAddresses(List.of())

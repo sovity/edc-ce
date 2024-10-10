@@ -34,9 +34,8 @@ public class DriverManagerConnectionFactory implements ConnectionFactory {
     }
 
     @Override
-    public Connection create() {
+    public Connection create(String string, Properties properties) {
         try {
-            var properties = new Properties();
             properties.setProperty(CONNECTION_PROPERTY_USER, jdbcProperties.getUser());
             properties.setProperty(CONNECTION_PROPERTY_PASSWORD, jdbcProperties.getPassword());
             return DriverManager.getConnection(jdbcProperties.getJdbcUrl(), properties);

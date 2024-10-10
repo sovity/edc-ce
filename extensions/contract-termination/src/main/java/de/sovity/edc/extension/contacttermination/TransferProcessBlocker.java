@@ -18,8 +18,8 @@ import de.sovity.edc.extension.contacttermination.query.ContractAgreementIsTermi
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.eclipse.edc.connector.transfer.spi.observe.TransferProcessListener;
-import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
+import org.eclipse.edc.connector.controlplane.transfer.spi.observe.TransferProcessListener;
+import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess;
 
 @RequiredArgsConstructor
 public class TransferProcessBlocker implements TransferProcessListener {

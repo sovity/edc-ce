@@ -14,36 +14,35 @@
 
 package de.sovity.edc.e2e;
 
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.MockDataAddressRemote;
-import de.sovity.edc.extension.e2e.extension.Consumer;
-import de.sovity.edc.extension.e2e.extension.E2eTestExtension;
-import de.sovity.edc.extension.e2e.extension.Provider;
+import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
+import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.UUID;
 
-import static de.sovity.edc.extension.e2e.connector.DataTransferTestUtil.validateDataTransferred;
-import static de.sovity.edc.extension.e2e.extension.Helpers.defaultE2eTestExtension;
+import static de.sovity.edc.extension.e2e.connector.remotes.management_api.DataTransferTestUtil.validateDataTransferred;
 
 class ManagementApiTransferTest {
 
     @RegisterExtension
-    private static E2eTestExtension e2eTestExtension = defaultE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = new CeE2eTestExtension();
 
-    private MockDataAddressRemote dataAddress;
+    private TestBackendRemote dataAddress;
     private static final String TEST_BACKEND_TEST_DATA = UUID.randomUUID().toString();
 
     @BeforeEach
-    void setup(@Provider ConnectorRemote providerConnector) {
+    void setup(@Provider ManagementApiConnectorRemote providerConnector) {
         // We use the provider EDC as data sink / data source (it has the test-backend-controller extension)
-        dataAddress = new MockDataAddressRemote(providerConnector.getConfig().getDefaultApiUrl());
+        dataAddress = new TestBackendRemote(providerConnector.getConfig().getDefaultApiUrl());
     }
 
     @Test
-    void testDataTransfer(@Consumer ConnectorRemote consumerConnector, @Provider ConnectorRemote providerConnector) {
+    void testDataTransfer(@Consumer ManagementApiConnectorRemote consumerConnector, @Provider ManagementApiConnectorRemote providerConnector) {
         // arrange
         var assetId = UUID.randomUUID().toString();
         providerConnector.createDataOffer(assetId, dataAddress.getDataSourceUrl(TEST_BACKEND_TEST_DATA));

@@ -23,6 +23,9 @@ import java.util.Map;
 
 @UtilityClass
 public class ConfigUtils {
+    public static String getParticipantId(Map<String, String> props) {
+        return ConfigProps.EDC_PARTICIPANT_ID.getRaw(props);
+    }
 
     public static String getProtocolApiUrl(Map<String, String> props) {
         return UrlPathUtils.urlPathJoin(

@@ -22,7 +22,6 @@ dependencies {
     // sovity Extensions Package
     api(project(":extensions:sovity-edc-extensions-package"))
     api(project(":extensions:postgres-flyway"))
-    api(project(":extensions:transfer-process-status-checker"))
 
     // Control-plane to Data-plane
     api(libs.edc.transferDataPlane)
@@ -31,7 +30,6 @@ dependencies {
 
     // Data-plane
     api(libs.edc.dataPlaneHttp)
-    api(libs.edc.dataPlaneFramework)
     api(libs.edc.dataPlaneCore)
     api(libs.edc.dataPlaneUtil)
 }

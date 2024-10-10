@@ -20,13 +20,13 @@ import de.sovity.edc.extension.messenger.controller.SovityMessageController;
 import de.sovity.edc.extension.messenger.impl.JsonObjectFromSovityMessageRequest;
 import de.sovity.edc.extension.messenger.impl.JsonObjectFromSovityMessageResponse;
 import de.sovity.edc.extension.messenger.impl.MessageEmitter;
-import de.sovity.edc.extension.messenger.impl.MessageReceiver;
 import de.sovity.edc.extension.messenger.impl.ObjectMapperFactory;
 import de.sovity.edc.extension.messenger.impl.SovityMessageRequest;
+import de.sovity.edc.extension.messenger.impl.SovityMessageRequestBodyExtractor;
+import de.sovity.edc.utils.config.ConfigProps;
 import lombok.val;
-import org.eclipse.edc.protocol.dsp.api.configuration.DspApiConfiguration;
-import org.eclipse.edc.protocol.dsp.spi.dispatcher.DspHttpRemoteMessageDispatcher;
-import org.eclipse.edc.protocol.dsp.spi.serialization.JsonLdRemoteMessageSerializer;
+import org.eclipse.edc.protocol.dsp.http.spi.dispatcher.DspHttpRemoteMessageDispatcher;
+import org.eclipse.edc.protocol.dsp.http.spi.serialization.JsonLdRemoteMessageSerializer;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
 import org.eclipse.edc.runtime.metamodel.annotation.Provides;
 import org.eclipse.edc.spi.agent.ParticipantAgentService;
@@ -35,9 +35,11 @@ import org.eclipse.edc.spi.message.RemoteMessageDispatcherRegistry;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.spi.types.TypeManager;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.WebService;
+import org.eclipse.edc.web.spi.configuration.ApiContext;
 
 @Provides({SovityMessenger.class, SovityMessengerRegistry.class})
 public class SovityMessengerExtension implements ServiceExtension {
@@ -45,7 +47,7 @@ public class SovityMessengerExtension implements ServiceExtension {
     public static final String NAME = "SovityMessenger";
 
     @Inject
-    private DspApiConfiguration dspApiConfiguration;
+    private Config config;
 
     @Inject
     private DspHttpRemoteMessageDispatcher dspHttpRemoteMessageDispatcher;
@@ -90,9 +92,8 @@ public class SovityMessengerExtension implements ServiceExtension {
 
     private void setupSovityMessengerEmitter(ServiceExtensionContext context, ObjectMapper objectMapper) {
         val factory = new MessageEmitter(jsonLdRemoteMessageSerializer);
-        val delegate = new MessageReceiver(objectMapper);
-
-        dspHttpRemoteMessageDispatcher.registerMessage(SovityMessageRequest.class, factory, delegate);
+        val bodyExtractor = new SovityMessageRequestBodyExtractor(objectMapper);
+        dspHttpRemoteMessageDispatcher.registerMessage(SovityMessageRequest.class, factory, bodyExtractor);
 
         typeTransformerRegistry.register(new JsonObjectFromSovityMessageRequest());
 
@@ -100,20 +101,29 @@ public class SovityMessengerExtension implements ServiceExtension {
         context.registerService(SovityMessenger.class, sovityMessenger);
     }
 
-    private void setupSovityMessengerReceiver(ServiceExtensionContext context, ObjectMapper objectMapper, SovityMessengerRegistry handlers) {
+    private void setupSovityMessengerReceiver(
+        ServiceExtensionContext context,
+        ObjectMapper objectMapper,
+        SovityMessengerRegistry handlers
+    ) {
         val receiver = new SovityMessageController(
             identityService,
-            dspApiConfiguration.getDspCallbackAddress(),
+            getDspCallbackAddress(),
             typeTransformerRegistry,
             monitor,
             objectMapper,
             participantAgentService,
-            handlers);
+            handlers
+        );
 
-        webService.registerResource(dspApiConfiguration.getContextAlias(), receiver);
+        webService.registerResource(ApiContext.PROTOCOL, receiver);
 
         context.registerService(SovityMessengerRegistry.class, handlers);
 
         typeTransformerRegistry.register(new JsonObjectFromSovityMessageResponse());
+    }
+
+    private String getDspCallbackAddress() {
+        return ConfigProps.EDC_DSP_CALLBACK_ADDRESS.getStringOrThrow(config);
     }
 }

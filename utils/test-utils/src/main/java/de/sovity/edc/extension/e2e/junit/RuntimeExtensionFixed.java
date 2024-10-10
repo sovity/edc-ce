@@ -1,0 +1,97 @@
+/*
+ *  Copyright (c) 2024 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
+ *
+ *  This program and the accompanying materials are made available under the
+ *  terms of the Apache License, Version 2.0 which is available at
+ *  https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
+ *  Contributors:
+ *       Bayerische Motoren Werke Aktiengesellschaft (BMW AG) - initial API and implementation
+ *
+ */
+
+package de.sovity.edc.extension.e2e.junit;
+
+import org.eclipse.edc.spi.system.ConfigurationExtension;
+import org.eclipse.edc.spi.system.SystemExtension;
+import org.eclipse.edc.spi.system.configuration.ConfigFactory;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
+
+import java.util.Map;
+
+import static org.eclipse.edc.util.types.Cast.cast;
+
+/**
+ * Starts one EDC
+ * <p>
+ * Modified {@link org.eclipse.edc.junit.extensions.RuntimeExtension}
+ * that uses {@link EmbeddedRuntimeFixed} instead of {@link org.eclipse.edc.junit.extensions.EmbeddedRuntime}.
+ */
+public abstract class RuntimeExtensionFixed implements ParameterResolver {
+    protected final EmbeddedRuntimeFixed runtime;
+
+    protected RuntimeExtensionFixed(EmbeddedRuntimeFixed runtime) {
+        this.runtime = runtime;
+    }
+
+    @Override
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+        throws ParameterResolutionException {
+        var type = parameterContext.getParameter().getParameterizedType();
+        if (type.equals(RuntimeExtensionFixed.class)) {
+            return true;
+        } else if (type.equals(EmbeddedRuntimeFixed.class)) {
+            return true;
+        } else if (type instanceof Class) {
+            return runtime.getContext().hasService(cast(type));
+        }
+        return false;
+    }
+
+    @Override
+    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+        throws ParameterResolutionException {
+        var type = parameterContext.getParameter().getParameterizedType();
+        if (type.equals(RuntimeExtensionFixed.class)) {
+            return this;
+        } else if (type.equals(EmbeddedRuntimeFixed.class)) {
+            return runtime;
+        } else if (type instanceof Class) {
+            return runtime.getContext().getService(cast(type));
+        }
+        return null;
+    }
+
+    /**
+     * Registers a mock service with the runtime. Note that the mock will overwrite any service already registered with the context.
+     * This is intentional. A warning will be logged to STDOUT if the mock actually replaces an existing service.
+     *
+     * @param mock the service mock
+     */
+    public <T> RuntimeExtensionFixed registerServiceMock(Class<T> type, T mock) {
+        runtime.registerServiceMock(type, mock);
+        return this;
+    }
+
+    /**
+     * Registers a service extension with the runtime.
+     */
+    public <T extends SystemExtension> RuntimeExtensionFixed registerSystemExtension(Class<T> type, SystemExtension extension) {
+        runtime.registerSystemExtension(type, extension);
+        return this;
+    }
+
+    public RuntimeExtensionFixed setConfiguration(Map<String, String> configuration) {
+        registerSystemExtension(ConfigurationExtension.class, (ConfigurationExtension) () -> ConfigFactory.fromMap(configuration));
+        return this;
+    }
+
+    public <T> T getService(Class<T> clazz) {
+        return runtime.getService(clazz);
+    }
+}

@@ -80,14 +80,6 @@ public class PolicyValidator {
             errors.add("Permission has duties, which is currently unsupported.");
         }
 
-        if (isNotBlank(permission.getAssigner())) {
-            errors.add("Permission has an assigner, which is currently unsupported.");
-        }
-
-        if (isNotBlank(permission.getAssignee())) {
-            errors.add("Permission has an assignee, which is currently unsupported.");
-        }
-
         validateAction(permission.getAction(), errors.forChildObject("action"));
     }
 

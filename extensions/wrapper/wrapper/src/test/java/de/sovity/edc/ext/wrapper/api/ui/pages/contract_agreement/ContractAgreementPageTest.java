@@ -19,18 +19,20 @@ import de.sovity.edc.client.gen.model.ContractAgreementDirection;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
-import de.sovity.edc.extension.e2e.connector.ConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.db.EdcRuntimeExtensionWithTestDatabase;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
+import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
-import org.eclipse.edc.connector.contract.spi.negotiation.store.ContractNegotiationStore;
-import org.eclipse.edc.connector.contract.spi.types.agreement.ContractAgreement;
-import org.eclipse.edc.connector.contract.spi.types.negotiation.ContractNegotiation;
-import org.eclipse.edc.connector.contract.spi.types.offer.ContractOffer;
-import org.eclipse.edc.connector.transfer.spi.store.TransferProcessStore;
-import org.eclipse.edc.connector.transfer.spi.types.DataRequest;
-import org.eclipse.edc.connector.transfer.spi.types.TransferProcess;
-import org.eclipse.edc.connector.transfer.spi.types.TransferProcessStates;
+import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
+import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex;
+import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.agreement.ContractAgreement;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.negotiation.ContractNegotiation;
+import org.eclipse.edc.connector.controlplane.contract.spi.types.offer.ContractOffer;
+import org.eclipse.edc.connector.controlplane.transfer.spi.store.TransferProcessStore;
+import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess;
+import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcessStates;
+import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferRequest;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.policy.model.Action;
 import org.eclipse.edc.policy.model.AtomicConstraint;
@@ -38,10 +40,10 @@ import org.eclipse.edc.policy.model.LiteralExpression;
 import org.eclipse.edc.policy.model.Operator;
 import org.eclipse.edc.policy.model.Permission;
 import org.eclipse.edc.policy.model.Policy;
-import org.eclipse.edc.protocol.dsp.spi.types.HttpMessageProtocol;
-import org.eclipse.edc.spi.asset.AssetIndex;
+import org.eclipse.edc.protocol.dsp.http.spi.types.HttpMessageProtocol;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.spi.types.domain.DataAddress;
-import org.eclipse.edc.spi.types.domain.asset.Asset;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -53,32 +55,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorConfigFactory.forTestDatabase;
-import static de.sovity.edc.extension.e2e.connector.config.ConnectorRemoteConfig.fromConnectorConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 class ContractAgreementPageTest {
-
-    private static ConnectorConfig config;
-    private static ConnectorRemote connector;
-    private static EdcClient client;
-
-    @RegisterExtension
-    static EdcRuntimeExtensionWithTestDatabase providerExtension = new EdcRuntimeExtensionWithTestDatabase(
-        ":launchers:connectors:sovity-dev",
-        "provider",
-        testDatabase -> {
-            config = forTestDatabase("provider", testDatabase);
-            client = EdcClient.builder()
-                .managementApiUrl(config.getManagementApiUrl())
-                .managementApiKey(config.getManagementApiKey())
-                .build();
-            connector = new ConnectorRemote(fromConnectorConfig(config));
-            return config.getProperties();
-        }
-    );
-
     private static final int CONTRACT_DEFINITION_ID = 1;
     private static final String ASSET_ID = UUID.randomUUID().toString();
 
@@ -87,11 +67,18 @@ class ContractAgreementPageTest {
     long todayEpochMillis = todayAsZonedDateTime.toInstant().toEpochMilli();
     long todayEpochSeconds = todayAsZonedDateTime.toInstant().getEpochSecond();
 
+    @RegisterExtension
+    static CeIntegrationTestExtension providerExtension = CeIntegrationTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
+
     @Test
     void testContractAgreementPage(
+        EdcClient client,
         ContractNegotiationStore contractNegotiationStore,
         TransferProcessStore transferProcessStore,
-        AssetIndex assetIndex) {
+        AssetIndex assetIndex
+    ) {
 
         // arrange
         assetIndex.create(asset(ASSET_ID)).orElseThrow(storeFailure -> new RuntimeException("Failed to create asset"));
@@ -139,22 +126,15 @@ class ContractAgreementPageTest {
     }
 
     private TransferProcess transferProcess(int contract, int transfer, int code) {
-        var dataRequest = DataRequest.Builder.newInstance()
-            .contractId("my-contract-agreement-" + contract)
-            .assetId("my-asset-" + contract)
-            .processId("my-transfer-" + contract + "-" + transfer)
-            .id("my-data-request-" + contract + "-" + transfer)
-            .processId("my-transfer-" + contract + "-" + transfer)
-            .connectorAddress("http://other-connector")
-            .connectorId("urn:connector:other-connector")
-            .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
-            .dataDestination(DataAddress.Builder.newInstance().type("HttpData").build())
-            .build();
         return TransferProcess.Builder.newInstance()
             .id("my-transfer-" + contract + "-" + transfer)
             .state(code)
             .type(TransferProcess.Type.PROVIDER)
-            .dataRequest(dataRequest)
+            .contractId("my-contract-agreement-" + contract)
+            .assetId("my-asset-" + contract)
+            .counterPartyAddress("http://other-connector")
+            .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
+            .dataDestination(DataAddress.Builder.newInstance().type("HttpData").build())
             .contentDataAddress(DataAddress.Builder.newInstance().type("HttpData").build())
             .errorDetail("my-error-message-" + transfer)
             .build();
