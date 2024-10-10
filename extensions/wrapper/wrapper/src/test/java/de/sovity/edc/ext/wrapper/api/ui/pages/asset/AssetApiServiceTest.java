@@ -229,7 +229,7 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void testeditAsset(AssetService assetService) {
+    void testeditAsset(EdcClient client, AssetService assetService) {
         // arrange
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
@@ -373,7 +373,7 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void testAssetCreation_noProxying() {
+    void testAssetCreation_noProxying(EdcClient client) {
         // arrange
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
@@ -401,7 +401,7 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void testAssetCreation_differentDataAddressType() {
+    void testAssetCreation_differentDataAddressType(EdcClient client) {
         // arrange
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.CUSTOM)
@@ -429,7 +429,7 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void testDeleteAsset(AssetService assetService) {
+    void testDeleteAsset(EdcClient client, AssetService assetService) {
         // arrange
         createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-71"));
         assertThat(assetService.query(QuerySpec.max()).getContent()).isNotEmpty();
