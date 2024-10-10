@@ -17,7 +17,7 @@ package de.sovity.edc.extension.e2e.junit;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.db.TestDatabaseViaTestcontainers;
-import de.sovity.edc.extension.e2e.junit.multi.InstancesForE2eTest;
+import de.sovity.edc.extension.e2e.junit.multi.InstancesForJunitTest;
 import de.sovity.edc.utils.config.model.ConfigProp;
 import lombok.Builder;
 import lombok.Getter;
@@ -58,7 +58,7 @@ public final class RuntimePerClassWithDbExtension
     @Singular("additionalModule")
     private final List<String> additionalModules;
 
-    private final InstancesForE2eTest instances = new InstancesForE2eTest();
+    private final InstancesForJunitTest instances = new InstancesForJunitTest();
     private final TestDatabase testDatabase = new TestDatabaseViaTestcontainers();
 
     @Getter

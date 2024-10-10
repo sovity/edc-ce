@@ -21,7 +21,7 @@ import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
-import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
@@ -66,7 +66,7 @@ class DataSourceQueryParamsTest {
      */
     @DisabledOnGithub
     @Test
-    void testQueryParamsDoubleEncoded(ApiWrapperConnectorRemote scenario, @Consumer EdcClient consumerClient) {
+    void testQueryParamsDoubleEncoded(E2eTestScenario scenario, @Consumer EdcClient consumerClient) {
 
         // arrange
         val assetId = "asset-1";

@@ -20,7 +20,7 @@ import de.sovity.edc.client.gen.model.InitiateTransferRequest;
 import de.sovity.edc.client.gen.model.UiAssetCreateRequest;
 import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceOnRequest;
-import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import jakarta.ws.rs.HttpMethod;
@@ -48,7 +48,7 @@ class PlaceholderDataSourceExtensionTest {
     @SneakyThrows
     @Test
     void shouldAccessDummyEndpoint(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         ClientAndServer clientAndServer,
         @Provider EdcClient providerClient
     ) {

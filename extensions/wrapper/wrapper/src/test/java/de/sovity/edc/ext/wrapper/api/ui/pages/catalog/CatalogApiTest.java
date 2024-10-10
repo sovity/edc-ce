@@ -27,6 +27,7 @@ import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
 import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
@@ -46,15 +47,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 class CatalogApiTest {
-    private EdcClient client;
-
     @RegisterExtension
-    static RuntimePerClassWithDbExtension providerExtension = CeIntegrationTestUtils.defaultIntegrationTest();
-
-    @BeforeEach
-    void setUp(Config config) {
-        client = CeIntegrationTestUtils.getEdcClient(config);
-    }
+    static CeIntegrationTestExtension providerExtension = CeIntegrationTestExtension.builder()
+            .additionalModule(":launchers:connectors:sovity-dev")
+            .build();
 
     private final String dataOfferId = "my-data-offer-2023-11";
 
@@ -65,13 +61,13 @@ class CatalogApiTest {
     @DisabledOnGithub
     @Test
     @SneakyThrows
-    void testDistributionKey(Config config) {
+    void testDistributionKey(EdcClient client, Config config) {
         var protocolApiUrl = ConfigUtils.getProtocolApiUrl(config.getEntries());
 
         // arrange
-        createAsset();
-        createPolicy();
-        createContractDefinition();
+        createAsset(client);
+        createPolicy(client);
+        createContractDefinition(client);
         // act
         var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers(protocolApiUrl);
 
@@ -81,7 +77,7 @@ class CatalogApiTest {
         assertThat(catalogPageDataOffers.get(0).getAsset().getMediaType()).isEqualTo("Media Type");
     }
 
-    private void createAsset() {
+    private void createAsset(EdcClient client) {
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)
             .httpData(UiDataSourceHttpData.builder()
@@ -104,7 +100,7 @@ class CatalogApiTest {
         client.uiApi().createAsset(asset);
     }
 
-    private void createPolicy() {
+    private void createPolicy(EdcClient client) {
         var policyDefinition = PolicyDefinitionCreateDto.builder()
                 .policyDefinitionId(dataOfferId)
                 .expression(UiPolicyExpression.builder().type(UiPolicyExpressionType.EMPTY).build())
@@ -113,7 +109,7 @@ class CatalogApiTest {
         client.uiApi().createPolicyDefinitionV2(policyDefinition);
     }
 
-    private void createContractDefinition() {
+    private void createContractDefinition(EdcClient client) {
         var contractDefinition = ContractDefinitionRequest.builder()
                 .contractDefinitionId(dataOfferId)
                 .accessPolicyId(dataOfferId)

@@ -23,6 +23,7 @@ import de.sovity.edc.client.gen.model.UiDataSource;
 import de.sovity.edc.client.gen.model.UiDataSourceHttpData;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.EdcPropertyUtils;
 import de.sovity.edc.ext.wrapper.api.common.mappers.asset.utils.FailedMappingException;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
 import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -52,18 +53,18 @@ public class AssetApiServiceTest {
     public static final String DATA_SINK = "http://my-data-sink/api/stuff";
 
     @RegisterExtension
-    static RuntimePerClassWithDbExtension providerExtension = CeIntegrationTestUtils.defaultIntegrationTest();
-    EdcClient client;
+    static CeIntegrationTestExtension providerExtension = CeIntegrationTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
     EdcPropertyUtils edcPropertyUtils;
 
     @BeforeEach
     void setup(Config config) {
-        client = CeIntegrationTestUtils.getEdcClient(config);
         edcPropertyUtils = new EdcPropertyUtils();
     }
 
     @Test
-    void assetPage(AssetService assetService) {
+    void assetPage(EdcClient client, AssetService assetService) {
         // arrange
         var properties = Map.of(
             Asset.PROPERTY_ID, "asset-11",
@@ -83,7 +84,7 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void assetPageSorting(AssetService assetService) {
+    void assetPageSorting(EdcClient client, AssetService assetService) {
         // arrange
         createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-21"));
         createAsset(assetService, "2023-06-03", Map.of(Asset.PROPERTY_ID, "asset-23"));
@@ -99,7 +100,7 @@ public class AssetApiServiceTest {
     }
 
     @Test
-    void testAssetCreation(AssetService assetService) {
+    void testAssetCreation(EdcClient client, AssetService assetService) {
         // arrange
         var dataSource = UiDataSource.builder()
             .type(DataSourceType.HTTP_DATA)

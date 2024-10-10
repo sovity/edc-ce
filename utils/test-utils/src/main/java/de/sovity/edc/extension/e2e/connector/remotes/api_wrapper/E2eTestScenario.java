@@ -51,21 +51,19 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 
-import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static de.sovity.edc.client.gen.model.TransferProcessSimplifiedState.RUNNING;
-import static java.time.Duration.ofSeconds;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ApiWrapperConnectorRemote {
+public class E2eTestScenario {
     @NonNull
-    private final ApiWrapperRemoteConfig config;
+    private final E2eTestScenarioConfig config;
 
     @NonNull
     private final EdcClient consumerClient;
@@ -75,9 +73,6 @@ public class ApiWrapperConnectorRemote {
 
     @NonNull
     private final ClientAndServer mockServer;
-
-    @Builder.Default
-    private final Duration timeout = ofSeconds(10);
 
     private final AtomicInteger assetCounter = new AtomicInteger(0);
 
@@ -189,7 +184,7 @@ public class ApiWrapperConnectorRemote {
 
         val negotiation = consumerClient.uiApi().initiateContractNegotiation(negotiationRequest);
 
-        val neg = Awaitility.await().atMost(timeout).until(
+        val neg = Awaitility.await().atMost(config.getTimeout()).until(
             () -> consumerClient.uiApi().getContractNegotiation(negotiation.getContractNegotiationId()),
             it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
         );
@@ -249,7 +244,7 @@ public class ApiWrapperConnectorRemote {
     }
 
     public void awaitTransferCompletion(String transferId) {
-        Awaitility.await().atMost(timeout).until(
+        Awaitility.await().atMost(config.getTimeout()).until(
             () -> consumerClient.uiApi()
                 .getTransferHistoryPage()
                 .getTransferEntries()
@@ -262,7 +257,7 @@ public class ApiWrapperConnectorRemote {
     }
 
     public IdResponseDto terminateContractAgreementAndAwait(
-        ContractNegotiation.Type  party,
+        ContractNegotiation.Type party,
         String contractAgreementId,
         ContractTerminationRequest terminationRequest
     ) {

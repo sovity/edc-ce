@@ -52,7 +52,7 @@ import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementAp
 import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
-import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.policy.AlwaysTruePolicyConstants;
@@ -575,7 +575,7 @@ class UiApiWrapperTest {
 
     @Test
     @DisabledOnGithub
-    void checkIdAvailability(ApiWrapperConnectorRemote scenario, @Provider EdcClient providerClient) {
+    void checkIdAvailability(E2eTestScenario scenario, @Provider EdcClient providerClient) {
         // arrange
         var assetId = scenario.createAsset();
         var policyId = "policy-id";
@@ -605,7 +605,7 @@ class UiApiWrapperTest {
     @DisabledOnGithub
     @Test
     void retrieveSingleContractAgreement(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -647,7 +647,7 @@ class UiApiWrapperTest {
     @Test
     @DisabledOnGithub
     void canMakeAnOnDemandDataSourceAvailable(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -791,7 +791,7 @@ class UiApiWrapperTest {
 
     @Test
     void dontCreateAnythingIfTheAssetAlreadyExists(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -827,7 +827,7 @@ class UiApiWrapperTest {
 
     @Test
     void dontCreateAnythingIfThePolicyAlreadyExists(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange
@@ -864,7 +864,7 @@ class UiApiWrapperTest {
 
     @Test
     void dontCreateAnythingIfTheContractDefinitionAlreadyExists(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Provider EdcClient providerClient
     ) {
         // arrange

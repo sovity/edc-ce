@@ -22,18 +22,25 @@ import lombok.Getter;
 import lombok.NonNull;
 import org.eclipse.edc.spi.system.configuration.Config;
 
+import java.time.Duration;
+
+import static java.time.Duration.ofSeconds;
+
 
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ApiWrapperRemoteConfig {
+public class E2eTestScenarioConfig {
     @NonNull
     private final String providerParticipantId;
 
     @NonNull
     private final String providerProtocolApiUrl;
 
-    public static ApiWrapperRemoteConfig forProviderConfig(Config providerConfig) {
+    @Builder.Default
+    private final Duration timeout = ofSeconds(10);
+
+    public static E2eTestScenarioConfig forProviderConfig(Config providerConfig) {
         var providerConfigEntries = providerConfig.getEntries();
         return builder()
             .providerParticipantId(ConfigUtils.getParticipantId(providerConfigEntries))

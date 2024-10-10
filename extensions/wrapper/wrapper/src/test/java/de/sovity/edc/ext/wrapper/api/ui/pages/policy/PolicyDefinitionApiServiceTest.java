@@ -27,7 +27,7 @@ import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
 import de.sovity.edc.ext.db.jooq.Tables;
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
 import lombok.val;
 import org.eclipse.edc.connector.controlplane.services.spi.policydefinition.PolicyDefinitionService;
@@ -44,22 +44,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 class PolicyDefinitionApiServiceTest {
-    private static ConnectorConfig config;
-    private static EdcClient client;
 
     @RegisterExtension
-    static RuntimePerClassWithDbExtension providerExtension = new RuntimePerClassWithDbExtension(
-        ":launchers:connectors:sovity-dev",
-        "provider",
-        testDatabase -> {
-            config = CeIntegrationTestUtils.defaultConfig("my-edc-participant-id", testDatabase);
-            client = EdcClient.builder()
-                .managementApiUrl(config.getManagementApiUrl())
-                .managementApiKey(config.getManagementApiKey())
-                .build();
-            return config.getProperties();
-        }
-    );
+    static CeIntegrationTestExtension providerExtension = CeIntegrationTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
     UiPolicyExpression expression = UiPolicyExpression.builder()
         .type(UiPolicyExpressionType.CONSTRAINT)
@@ -74,7 +63,7 @@ class PolicyDefinitionApiServiceTest {
         .build();
 
     @Test
-    void getPolicyList() {
+    void getPolicyList(EdcClient client) {
         // arrange
         createPolicyDefinition("my-policy-def-1");
 
@@ -92,7 +81,7 @@ class PolicyDefinitionApiServiceTest {
     }
 
     @Test
-    void sortPoliciesFromNewestToOldest(DslContextFactory dslContextFactory) {
+    void sortPoliciesFromNewestToOldest(EdcClient client, DslContextFactory dslContextFactory) {
         // arrange
         createPolicyDefinition("my-policy-def-0");
         createPolicyDefinition("my-policy-def-1");
@@ -127,7 +116,7 @@ class PolicyDefinitionApiServiceTest {
     }
 
     @Test
-    void test_delete(PolicyDefinitionService policyDefinitionService) {
+    void test_delete(EdcClient client, PolicyDefinitionService policyDefinitionService) {
         // arrange
         createPolicyDefinition("my-policy-def-1");
         assertThat(policyDefinitionService.query(QuerySpec.max()).getContent().toList())

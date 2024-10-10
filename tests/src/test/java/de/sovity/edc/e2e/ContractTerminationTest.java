@@ -26,7 +26,7 @@ import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationSe
 import de.sovity.edc.extension.contacttermination.ContractTerminationEvent;
 import de.sovity.edc.extension.contacttermination.ContractTerminationObserver;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
-import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
@@ -75,7 +75,7 @@ public class ContractTerminationTest {
     @Test
     @DisabledOnGithub
     void canGetAgreementPageForNonTerminatedContract(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
     ) {
@@ -123,7 +123,7 @@ public class ContractTerminationTest {
     @Test
     @SneakyThrows
     void canGetAgreementPageForTerminatedContract(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
     ) {
@@ -154,7 +154,7 @@ public class ContractTerminationTest {
     @Test
     @SneakyThrows
     void canTerminateFromConsumer(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
     ) {
@@ -184,7 +184,7 @@ public class ContractTerminationTest {
     @DisabledOnGithub
     @Test
     void limitTheReasonSizeAt100Chars(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
     ) {
@@ -225,7 +225,7 @@ public class ContractTerminationTest {
     @DisabledOnGithub
     @Test
     void limitTheDetailSizeAt1000Chars(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
     ) {
@@ -269,7 +269,7 @@ public class ContractTerminationTest {
     @DisabledOnGithub
     @TestFactory
     List<DynamicTest> theDetailsAreMandatory(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Consumer EdcClient consumerClient
     ) {
         val invalidDetails = List.of(
@@ -308,7 +308,7 @@ public class ContractTerminationTest {
     @Test
     @SneakyThrows
     void canTerminateFromProvider(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
     ) {
@@ -356,7 +356,7 @@ public class ContractTerminationTest {
     @Test
     @SneakyThrows
     void cantTransferDataAfterTerminated(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         ClientAndServer mockServer,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
@@ -422,7 +422,7 @@ public class ContractTerminationTest {
     @Test
     @DisabledOnGithub
     void canTerminateOnlyOnce(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Consumer EdcClient consumerClient,
         @Provider EdcClient providerClient
     ) {
@@ -450,7 +450,7 @@ public class ContractTerminationTest {
     @Test
     @DisabledOnGithub
     void canListenToTerminationEvents(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Consumer EdcClient consumerClient,
         @Consumer EdcExtension consumerExtension,
         @Provider EdcClient providerClient,

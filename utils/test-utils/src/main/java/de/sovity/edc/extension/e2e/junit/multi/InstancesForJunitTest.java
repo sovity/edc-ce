@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class InstancesForE2eTest {
+public class InstancesForJunitTest {
     private final Map<Class<?>, LazyOrValue> instances = new HashMap<>();
 
     public void put(Object object) {

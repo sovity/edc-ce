@@ -16,8 +16,8 @@ package de.sovity.edc.extension.e2e.junit.multi;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperConnectorRemote;
-import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperRemoteConfig;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenarioConfig;
 import de.sovity.edc.extension.e2e.db.TestDatabase;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
 import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
@@ -43,7 +43,7 @@ public class CeE2eTestExtension
     implements BeforeAllCallback, AfterAllCallback, BeforeTestExecutionCallback, AfterTestExecutionCallback, ParameterResolver {
 
     private final InstancesForEachConnector<Side> connectorInstances = new InstancesForEachConnector<>(Arrays.asList(Side.values()));
-    private final InstancesForE2eTest globalInstances = new InstancesForE2eTest();
+    private final InstancesForJunitTest globalInstances = new InstancesForJunitTest();
 
     public CeE2eTestExtension() {
         this(CeE2eTestConfig.builder().build());
@@ -105,13 +105,13 @@ public class CeE2eTestExtension
 
         // Register ConnectorRemoteClient
         globalInstances.putLazy(
-            ApiWrapperConnectorRemote.class,
-            () -> ApiWrapperConnectorRemote
+            E2eTestScenario.class,
+            () -> E2eTestScenario
                 .builder()
                 .consumerClient(connectorInstances.get(Side.CONSUMER, EdcClient.class))
                 .providerClient(connectorInstances.get(Side.PROVIDER, EdcClient.class))
                 .mockServer(globalInstances.get(ClientAndServer.class))
-                .config(ApiWrapperRemoteConfig.forProviderConfig(getConfig(Side.PROVIDER)))
+                .config(E2eTestScenarioConfig.forProviderConfig(getConfig(Side.PROVIDER)))
                 .build()
         );
     }

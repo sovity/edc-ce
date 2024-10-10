@@ -16,7 +16,7 @@ package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
-import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
@@ -45,7 +45,7 @@ class AlwaysTrueMigrationReversedTest {
     @Test
     @DisabledOnGithub
     void test_migrated_policy_working_test_legacy_policy_working(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         ClientAndServer mockServer,
         @Provider EdcClient providerClient,
         @Consumer EdcClient consumerClient

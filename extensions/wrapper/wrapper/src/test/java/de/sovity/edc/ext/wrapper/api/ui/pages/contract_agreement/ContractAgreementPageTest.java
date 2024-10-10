@@ -19,6 +19,7 @@ import de.sovity.edc.client.gen.model.ContractAgreementDirection;
 import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
 import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
@@ -58,7 +59,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 class ContractAgreementPageTest {
-    private static EdcClient client;
     private static final int CONTRACT_DEFINITION_ID = 1;
     private static final String ASSET_ID = UUID.randomUUID().toString();
 
@@ -68,18 +68,17 @@ class ContractAgreementPageTest {
     long todayEpochSeconds = todayAsZonedDateTime.toInstant().getEpochSecond();
 
     @RegisterExtension
-    static RuntimePerClassWithDbExtension providerExtension = CeIntegrationTestUtils.defaultIntegrationTest();
-
-    @BeforeEach
-    public void setup(Config config) {
-        client = CeIntegrationTestUtils.getEdcClient(config);
-    }
+    static CeIntegrationTestExtension providerExtension = CeIntegrationTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
     @Test
     void testContractAgreementPage(
+        EdcClient client,
         ContractNegotiationStore contractNegotiationStore,
         TransferProcessStore transferProcessStore,
-        AssetIndex assetIndex) {
+        AssetIndex assetIndex
+    ) {
 
         // arrange
         assetIndex.create(asset(ASSET_ID)).orElseThrow(storeFailure -> new RuntimeException("Failed to create asset"));

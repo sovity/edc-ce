@@ -15,9 +15,12 @@
 package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard;
 
 import de.sovity.edc.client.EdcClient;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
-import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
+import de.sovity.edc.extension.e2e.junit.EmbeddedRuntimeFixed;
 import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.ConfigUtils;
+import de.sovity.edc.utils.config.SovityEdcRuntime;
 import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
 import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex;
 import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -33,8 +36,8 @@ import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcessStates;
 import org.eclipse.edc.junit.annotations.ApiTest;
 import org.eclipse.edc.junit.extensions.EdcExtension;
-import org.eclipse.edc.service.spi.result.ServiceResult;
 import org.eclipse.edc.spi.query.QuerySpec;
+import org.eclipse.edc.spi.result.ServiceResult;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,16 +59,17 @@ import static org.mockito.Mockito.when;
 
 @ApiTest
 class DashboardPageApiServiceTest {
-    private static EdcClient client;
 
     @RegisterExtension
-    static RuntimePerClassWithDbExtension providerExtension = CeIntegrationTestUtils.defaultIntegrationTest(config -> config
-        .property(ConfigProps.EDC_OAUTH_TOKEN_URL, "https://token-url.daps")
-        .property(ConfigProps.EDC_OAUTH_PROVIDER_JWKS_URL, "https://jwks-url.daps")
-        .property("tx.ssi.oauth.token.url", "https://token.miw")
-        .property("tx.ssi.miw.url", "https://miw")
-        .property("tx.ssi.miw.authority.id", "my-authority-id")
-    );
+    static CeIntegrationTestExtension providerExtension = CeIntegrationTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .configOverrides(config -> config
+            .property(ConfigProps.EDC_OAUTH_TOKEN_URL, "https://token-url.daps")
+            .property(ConfigProps.EDC_OAUTH_PROVIDER_JWKS_URL, "https://jwks-url.daps")
+            .property("tx.ssi.oauth.token.url", "https://token.miw")
+            .property("tx.ssi.miw.url", "https://miw")
+            .property("tx.ssi.miw.authority.id", "my-authority-id"))
+        .build();
 
     AssetIndex assetIndex;
     PolicyDefinitionService policyDefinitionService;
@@ -76,10 +80,7 @@ class DashboardPageApiServiceTest {
     private final Random random = new Random();
 
     @BeforeEach
-    void setUp(EdcExtension context, Config config) {
-        client = CeIntegrationTestUtils.getEdcClient(config);
-
-
+    void setUp(EmbeddedRuntimeFixed context) {
         assetIndex = mock();
         context.registerServiceMock(AssetIndex.class, assetIndex);
 
@@ -97,7 +98,7 @@ class DashboardPageApiServiceTest {
     }
 
     @Test
-    void testKpis() {
+    void testKpis(EdcClient client) {
         // arrange
         mockAmounts(
             repeat(7, Mockito::mock),
@@ -138,7 +139,7 @@ class DashboardPageApiServiceTest {
     }
 
     @Test
-    void testConnectorMetadata() {
+    void testConnectorMetadata(EdcClient client, Config config) {
         // arrange
         mockAmounts(List.of(), List.of(), List.of(), List.of(), List.of());
 
@@ -150,7 +151,7 @@ class DashboardPageApiServiceTest {
         assertThat(dashboardPage.getConnectorDescription()).isEqualTo("Connector Description my-edc-participant-id");
         assertThat(dashboardPage.getConnectorTitle()).isEqualTo("Connector Title my-edc-participant-id");
 
-        assertThat(dashboardPage.getConnectorEndpoint()).isEqualTo(config.getProtocolApiUrl());
+        assertThat(dashboardPage.getConnectorEndpoint()).isEqualTo(ConfigUtils.getProtocolApiUrl(config.getEntries()));
         assertThat(dashboardPage.getConnectorCuratorName()).isEqualTo("Curator Name my-edc-participant-id");
         assertThat(dashboardPage.getConnectorCuratorUrl()).isEqualTo("http://curator.my-edc-participant-id");
         assertThat(dashboardPage.getConnectorMaintainerName()).isEqualTo("Maintainer Name my-edc-participant-id");

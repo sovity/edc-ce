@@ -20,7 +20,7 @@ import de.sovity.edc.client.gen.model.OperatorDto;
 import de.sovity.edc.client.gen.model.TransferProcessSimplifiedState;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
-import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.policy.AlwaysTruePolicyConstants;
@@ -58,7 +58,7 @@ class AlwaysTrueMigrationTest {
     @Test
     @DisabledOnGithub
     void test_migrated_policy_working_test_legacy_policy_working(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         ClientAndServer mockServer,
         @Provider EdcClient providerClient,
         @Consumer EdcClient consumerClient
@@ -85,7 +85,7 @@ class AlwaysTrueMigrationTest {
         testTransfer(scenario, mockServer, consumerClient);
     }
 
-    public static void testTransfer(ApiWrapperConnectorRemote scenario, ClientAndServer mockServer, EdcClient consumerClient) {
+    public static void testTransfer(E2eTestScenario scenario, ClientAndServer mockServer, EdcClient consumerClient) {
         // arrange
         val destinationPath = "/destination/some/path/";
         val destinationUrl = "http://localhost:" + mockServer.getPort() + destinationPath;

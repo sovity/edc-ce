@@ -7,7 +7,7 @@ import de.sovity.edc.client.gen.model.UiCriterion;
 import de.sovity.edc.client.gen.model.UiCriterionLiteral;
 import de.sovity.edc.client.gen.model.UiCriterionLiteralType;
 import de.sovity.edc.client.gen.model.UiCriterionOperator;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
 import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
 import org.eclipse.edc.connector.controlplane.contract.spi.types.offer.ContractDefinition;
@@ -26,18 +26,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ApiTest
 class ContractDefinitionPageApiServiceTest {
-    private static EdcClient client;
 
     @RegisterExtension
-    static RuntimePerClassWithDbExtension providerExtension = CeIntegrationTestUtils.defaultIntegrationTest();
-
-    @BeforeEach
-    public void setup(Config config) {
-        client = CeIntegrationTestUtils.getEdcClient(config);
-    }
+    static CeIntegrationTestExtension providerExtension = CeIntegrationTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
     @Test
-    void contractDefinitionPage(ContractDefinitionService contractDefinitionService) {
+    void contractDefinitionPage(EdcClient client, ContractDefinitionService contractDefinitionService) {
         // arrange
 
         var criterion = new Criterion("exampleLeft1", "=", "abc");
@@ -63,7 +59,7 @@ class ContractDefinitionPageApiServiceTest {
     }
 
     @Test
-    void contractDefinitionPageSorting(ContractDefinitionService contractDefinitionService) {
+    void contractDefinitionPageSorting(EdcClient client, ContractDefinitionService contractDefinitionService) {
         // arrange
 
         createContractDefinition(
@@ -99,7 +95,7 @@ class ContractDefinitionPageApiServiceTest {
     }
 
     @Test
-    void testContractDefinitionCreation(ContractDefinitionService contractDefinitionService) {
+    void testContractDefinitionCreation(EdcClient client, ContractDefinitionService contractDefinitionService) {
         // arrange
 
         var criterion = new UiCriterion(
@@ -134,7 +130,7 @@ class ContractDefinitionPageApiServiceTest {
     }
 
     @Test
-    void testDeleteContractDefinition(ContractDefinitionService contractDefinitionService) {
+    void testDeleteContractDefinition(EdcClient client, ContractDefinitionService contractDefinitionService) {
         // arrange
 
         var criterion = new Criterion("exampleLeft1", "=", "exampleRight1");

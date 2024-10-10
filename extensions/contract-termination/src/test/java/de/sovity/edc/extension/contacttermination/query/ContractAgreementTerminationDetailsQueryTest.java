@@ -20,7 +20,7 @@ import de.sovity.edc.extension.contacttermination.ContractAgreementTerminationDe
 import de.sovity.edc.extension.db.directaccess.DslContextFactory;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
-import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.ApiWrapperConnectorRemote;
+import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
@@ -39,7 +39,7 @@ class ContractAgreementTerminationDetailsQueryTest {
     @DisabledOnGithub
     @Test
     void fetchAgreementDetailsOrThrow_whenAgreementIsPresent_shouldReturnTheAgreementDetails(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Consumer DslContextFactory dslContextFactory,
         @Provider ConnectorConfig providerConfig
     ) {
@@ -91,7 +91,7 @@ class ContractAgreementTerminationDetailsQueryTest {
 
     @Test
     void fetchAgreementDetailsOrThrow_whenTerminationAlreadyExists_shouldReturnOptionalWithTerminationData(
-        ApiWrapperConnectorRemote scenario,
+        E2eTestScenario scenario,
         @Consumer DslContextFactory dslContextFactory,
         @Provider ConnectorConfig providerConfig
     ) {

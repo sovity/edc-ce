@@ -29,27 +29,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
 @UtilityClass
 public final class CeIntegrationTestUtils {
-    public static RuntimePerClassWithDbExtension defaultIntegrationTest() {
-        return defaultIntegrationTest(null);
-    }
-
-    public static RuntimePerClassWithDbExtension defaultIntegrationTest(
-        @Nullable
-        Consumer<ConnectorConfigBuilder> overrides
-    ) {
-        var participantId = "connector";
-        return RuntimePerClassWithDbExtension.builder()
-            .runtimeName(participantId)
-            .additionalModule(":launchers:connectors:sovity-dev")
-            .allConfigProps(ConfigProps.ALL_CE_PROPS)
-            .configFactory(db -> defaultConfig(participantId, db, overrides))
-            .build();
-    }
 
     public static ConnectorConfig defaultConfig(
         String participantId,
@@ -90,6 +75,19 @@ public final class CeIntegrationTestUtils {
             overrides.accept(configBuilder);
         }
         return configBuilder.build();
+    }
+
+    public static RuntimePerClassWithDbExtension defaultRuntimeWithCeConfig(
+        List<String> modules,
+        @Nullable
+        Consumer<ConnectorConfigBuilder> overrides
+    ) {
+        return RuntimePerClassWithDbExtension.builder()
+            .runtimeName("connector")
+            .additionalModules(modules)
+            .allConfigProps(ConfigProps.ALL_CE_PROPS)
+            .configFactory(db -> defaultConfig("connector", db, overrides))
+            .build();
     }
 
     public static EdcClient getEdcClient(Config config) {

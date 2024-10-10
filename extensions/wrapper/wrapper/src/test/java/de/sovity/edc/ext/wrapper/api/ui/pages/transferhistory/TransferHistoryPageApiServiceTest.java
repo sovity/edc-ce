@@ -16,9 +16,7 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractAgreementDirection;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorConfig;
-import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
-import de.sovity.edc.extension.e2e.junit.RuntimePerClassWithDbExtension;
+import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService;
 import org.eclipse.edc.connector.controlplane.transfer.spi.store.TransferProcessStore;
@@ -35,28 +33,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ApiTest
 class TransferHistoryPageApiServiceTest {
 
-    private static ConnectorConfig config;
-    private static EdcClient client;
-
     @RegisterExtension
-    static RuntimePerClassWithDbExtension providerExtension = new RuntimePerClassWithDbExtension(
-        ":launchers:connectors:sovity-dev",
-        "provider",
-        testDatabase -> {
-            config = CeIntegrationTestUtils.defaultConfig("my-edc-participant-id", testDatabase);
-            client = EdcClient.builder()
-                .managementApiUrl(config.getManagementApiUrl())
-                .managementApiKey(config.getManagementApiKey())
-                .build();
-            return config.getProperties();
-        }
-    );
+    static CeIntegrationTestExtension providerExtension = CeIntegrationTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
     @Test
     void transferHistoryTest(
-            ContractNegotiationStore negotiationStore,
-            TransferProcessStore transferProcessStore,
-            AssetService assetStore
+        EdcClient client,
+        ContractNegotiationStore negotiationStore,
+        TransferProcessStore transferProcessStore,
+        AssetService assetStore
     ) throws ParseException {
         // arrange
         createProvidingTransferProcesses(negotiationStore, transferProcessStore, assetStore);
@@ -92,9 +79,10 @@ class TransferHistoryPageApiServiceTest {
 
     @Test
     void transferProcessAssetTest_providing(
-            ContractNegotiationStore negotiationStore,
-            TransferProcessStore transferProcessStore,
-            AssetService assetStore
+        EdcClient client,
+        ContractNegotiationStore negotiationStore,
+        TransferProcessStore transferProcessStore,
+        AssetService assetStore
     ) throws ParseException {
         // arrange
         createProvidingTransferProcesses(negotiationStore, transferProcessStore, assetStore);
@@ -109,8 +97,9 @@ class TransferHistoryPageApiServiceTest {
 
     @Test
     void transferProcessAssetTest_consuming(
-            ContractNegotiationStore negotiationStore,
-            TransferProcessStore transferProcessStore
+        EdcClient client,
+        ContractNegotiationStore negotiationStore,
+        TransferProcessStore transferProcessStore
     ) throws ParseException {
         // arrange
         createConsumingTransferProcesses(negotiationStore, transferProcessStore);
