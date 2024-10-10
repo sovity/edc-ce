@@ -63,7 +63,7 @@ class PolicyDefinitionApiServiceTest {
     @Test
     void getPolicyList(EdcClient client) {
         // arrange
-        createPolicyDefinition("my-policy-def-1");
+        createPolicyDefinition(client, "my-policy-def-1");
 
         // act
         var response = client.uiApi().getPolicyDefinitionPage();
@@ -81,9 +81,9 @@ class PolicyDefinitionApiServiceTest {
     @Test
     void sortPoliciesFromNewestToOldest(EdcClient client, DslContextFactory dslContextFactory) {
         // arrange
-        createPolicyDefinition("my-policy-def-0");
-        createPolicyDefinition("my-policy-def-1");
-        createPolicyDefinition("my-policy-def-2");
+        createPolicyDefinition(client, "my-policy-def-0");
+        createPolicyDefinition(client, "my-policy-def-1");
+        createPolicyDefinition(client, "my-policy-def-2");
 
         dslContextFactory.transaction(dsl ->
             Map.of(
@@ -116,7 +116,7 @@ class PolicyDefinitionApiServiceTest {
     @Test
     void test_delete(EdcClient client, PolicyDefinitionService policyDefinitionService) {
         // arrange
-        createPolicyDefinition("my-policy-def-1");
+        createPolicyDefinition(client, "my-policy-def-1");
         assertThat(policyDefinitionService.query(QuerySpec.max()).getContent().toList())
             .extracting(Entity::getId).contains("always-true", "my-policy-def-1");
 
@@ -129,7 +129,7 @@ class PolicyDefinitionApiServiceTest {
             .extracting(Entity::getId).containsExactly("always-true");
     }
 
-    private void createPolicyDefinition(String policyDefinitionId) {
+    private void createPolicyDefinition(EdcClient client, String policyDefinitionId) {
         var policyDefinition = new PolicyDefinitionCreateDto(policyDefinitionId, expression);
         client.uiApi().createPolicyDefinitionV2(policyDefinition);
     }

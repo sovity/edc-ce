@@ -113,8 +113,8 @@ class UseCaseApiWrapperTest {
     ) {
         // arrange
         setupAssets(client);
-        buildContractDefinition(policyId, assetId1, "cd-1");
-        buildContractDefinition(policyId, assetId2, "cd-2");
+        buildContractDefinition(client, policyId, assetId1, "cd-1");
+        buildContractDefinition(client, policyId, assetId2, "cd-2");
 
         // act
         var catalogQueryParamsEq = criterion(1, 0);
