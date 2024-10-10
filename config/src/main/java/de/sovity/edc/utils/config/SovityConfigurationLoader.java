@@ -18,17 +18,13 @@ import de.sovity.edc.utils.config.model.ConfigProp;
 import org.eclipse.edc.boot.config.ConfigurationLoader;
 import org.eclipse.edc.boot.config.EnvironmentVariables;
 import org.eclipse.edc.boot.config.SystemProperties;
-import org.eclipse.edc.boot.system.DefaultServiceExtensionContext;
 import org.eclipse.edc.boot.system.ServiceLocator;
 import org.eclipse.edc.spi.monitor.Monitor;
-import org.eclipse.edc.spi.system.ConfigurationExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.spi.system.configuration.ConfigFactory;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Custom {@link ServiceExtensionContext} for applying config defaults on EDC startup

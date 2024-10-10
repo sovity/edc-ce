@@ -16,8 +16,8 @@ package de.sovity.edc.e2e;
 
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
-import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
 import de.sovity.edc.extension.e2e.junit.multi.CeE2eTestExtension;
+import de.sovity.edc.extension.e2e.junit.multi.annotations.Consumer;
 import de.sovity.edc.extension.e2e.junit.multi.annotations.Provider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
