@@ -54,7 +54,6 @@ class AlwaysTrueMigrationTest {
             "classpath:db/additional-test-data/always-true-policy-migrated"
         ))
         .build();
-    );
 
     @Test
     @DisabledOnGithub

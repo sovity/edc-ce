@@ -51,6 +51,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -196,7 +197,7 @@ class ApiWrapperDemoTest {
     }
 
     private UiContractNegotiation awaitNegotiationDone(String negotiationId) {
-        var negotiation = Awaitility.await().atMost(e2eTestExtension.getTimeout()).until(
+        var negotiation = Awaitility.await().atMost(Duration.ofSeconds(15)).until(
             () -> consumerClient.uiApi().getContractNegotiation(negotiationId),
             it -> it.getState().getSimplifiedState() != ContractNegotiationSimplifiedState.IN_PROGRESS
         );

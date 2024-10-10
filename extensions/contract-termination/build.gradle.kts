@@ -23,7 +23,6 @@ dependencies {
     testCompileOnly(libs.lombok)
 
     testImplementation(project(":launchers:utils:edc-integration-test"))
-    // testRuntimeOnly(libs.junit.engine)
 }
 
 group = libs.versions.sovityEdcExtensionGroup.get()

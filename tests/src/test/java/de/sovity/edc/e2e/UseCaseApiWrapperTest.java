@@ -55,7 +55,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UseCaseApiWrapperTest {
 
     @RegisterExtension
-    private static CeE2eTestExtension e2eTestExtension = new CeE2eTestExtension();
+    private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
+        .additionalModule(":launchers:connectors:sovity-dev")
+        .build();
 
     private TestBackendRemote dataAddress;
     private final String dataOfferData = "expected data 123";
@@ -73,7 +75,8 @@ class UseCaseApiWrapperTest {
     void catalog_filtering_by_like(
         @Consumer EdcClient consumerClient,
         @Provider ManagementApiConnectorRemote providerConnector,
-        @Provider EdcClient providerClient) {
+        @Provider EdcClient providerClient
+    ) {
 
         // arrange
         createPolicy(providerClient);
@@ -96,7 +99,8 @@ class UseCaseApiWrapperTest {
         ManagementApiConnectorRemote providerConnector,
         String leftOperand,
         CatalogFilterExpressionOperator operator,
-        String rightOperand) {
+        String rightOperand
+    ) {
 
         return CatalogQuery.builder()
             .connectorEndpoint(getProtocolEndpoint(providerConnector))
