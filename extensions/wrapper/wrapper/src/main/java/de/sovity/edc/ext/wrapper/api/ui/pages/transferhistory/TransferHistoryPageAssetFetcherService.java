@@ -55,8 +55,8 @@ public class TransferHistoryPageAssetFetcherService {
     }
 
     private Asset getTransferProcessAsset(TransferProcess process) {
-        var assetId = process.getDataRequest().getAssetId();
-        var asset = assetService.findById(process.getDataRequest().getAssetId());
+        var assetId = process.getAssetId();
+        var asset = assetService.findById(process.getAssetId());
         if (asset == null) {
             asset = Asset.Builder.newInstance().id(assetId).build();
         }

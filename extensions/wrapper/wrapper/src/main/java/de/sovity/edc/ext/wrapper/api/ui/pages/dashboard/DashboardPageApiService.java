@@ -93,21 +93,21 @@ public class DashboardPageApiService {
             Set<String> agreements
     ) {
         var numTotal = transferProcesses.stream()
-                .filter(transferProcess -> agreements.contains(transferProcess.getDataRequest().getContractId()))
+                .filter(transferProcess -> agreements.contains(transferProcess.getContractId()))
                 .count();
 
         var numOk = transferProcesses.stream()
-                .filter(transferProcess -> agreements.contains(transferProcess.getDataRequest().getContractId()))
+                .filter(transferProcess -> agreements.contains(transferProcess.getContractId()))
                 .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(OK))
                 .count();
 
         var numRunning = transferProcesses.stream()
-                .filter(transferProcess -> agreements.contains(transferProcess.getDataRequest().getContractId()))
+                .filter(transferProcess -> agreements.contains(transferProcess.getContractId()))
                 .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(RUNNING))
                 .count();
 
         var numError = transferProcesses.stream()
-                .filter(transferProcess -> agreements.contains(transferProcess.getDataRequest().getContractId()))
+                .filter(transferProcess -> agreements.contains(transferProcess.getContractId()))
                 .filter(transferProcess -> transferProcessStateService.getSimplifiedState(transferProcess.getState()).equals(ERROR))
                 .count();
 

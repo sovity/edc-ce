@@ -79,10 +79,9 @@ class ContractAgreementTransferApiServiceTest {
             "privateProperty", "privateValue"
         ));
 
-        var dataRequest = transferProcess.getDataRequest();
-        assertThat(dataRequest.getContractId()).isEqualTo(contractId);
-        assertThat(dataRequest.getConnectorAddress()).isEqualTo(COUNTER_PARTY_ADDRESS);
-        assertThat(dataRequest.getDataDestination().getProperties()).containsAllEntriesOf(Map.of(
+        assertThat(transferProcess.getContractId()).isEqualTo(contractId);
+        assertThat(transferProcess.getCounterPartyAddress()).isEqualTo(COUNTER_PARTY_ADDRESS);
+        assertThat(transferProcess.getDataDestination().getProperties()).containsAllEntriesOf(Map.of(
             "https://w3id.org/edc/v0.0.1/ns/type", "HttpData",
             "baseUrl", DATA_SINK
         ));
@@ -124,10 +123,9 @@ class ContractAgreementTransferApiServiceTest {
             "http://unknown/custom-prop", "value"
         ));
 
-        var dataRequest = transferProcess.getDataRequest();
-        assertThat(dataRequest.getContractId()).isEqualTo(contractId);
-        assertThat(dataRequest.getConnectorAddress()).isEqualTo(COUNTER_PARTY_ADDRESS);
-        assertThat(dataRequest.getDataDestination().getProperties()).containsAllEntriesOf(Map.of(
+        assertThat(transferProcess.getContractId()).isEqualTo(contractId);
+        assertThat(transferProcess.getCounterPartyAddress()).isEqualTo(COUNTER_PARTY_ADDRESS);
+        assertThat(transferProcess.getDataDestination().getProperties()).containsAllEntriesOf(Map.of(
             Prop.Edc.TYPE, "HttpData",
             Prop.Edc.BASE_URL, DATA_SINK
         ));

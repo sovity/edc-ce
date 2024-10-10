@@ -62,7 +62,7 @@ public class ContractAgreementDataFetcher {
             .collect(groupingBy(it -> it.getContractAgreement().getId()));
 
         var transfers = getAllTransferProcesses().stream()
-            .collect(groupingBy(it -> it.getDataRequest().getContractId()));
+            .collect(groupingBy(TransferProcess::getContractId));
 
         var agreementIds = agreements.stream().map(ContractAgreement::getId).toList();
 
@@ -91,7 +91,7 @@ public class ContractAgreementDataFetcher {
             .orElseThrow(
                 () -> new IllegalStateException("Can't find any negotiation for contract agreement id %s".formatted(contractAgreementId)));
 
-        val transfers = getAllTransferProcesses().stream().collect(groupingBy(it -> it.getDataRequest().getContractId()));
+        val transfers = getAllTransferProcesses().stream().collect(groupingBy(TransferProcess::getContractId));
 
         val terminations = fetchTerminations(dsl, agreement.getId());
 

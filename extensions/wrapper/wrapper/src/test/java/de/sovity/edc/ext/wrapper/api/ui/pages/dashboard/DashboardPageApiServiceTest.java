@@ -16,11 +16,9 @@ package de.sovity.edc.ext.wrapper.api.ui.pages.dashboard;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
-import de.sovity.edc.extension.e2e.junit.CeIntegrationTestUtils;
 import de.sovity.edc.extension.e2e.junit.EmbeddedRuntimeFixed;
 import de.sovity.edc.utils.config.ConfigProps;
 import de.sovity.edc.utils.config.ConfigUtils;
-import de.sovity.edc.utils.config.SovityEdcRuntime;
 import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
 import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex;
 import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
@@ -31,11 +29,9 @@ import org.eclipse.edc.connector.controlplane.policy.spi.PolicyDefinition;
 import org.eclipse.edc.connector.controlplane.services.spi.contractdefinition.ContractDefinitionService;
 import org.eclipse.edc.connector.controlplane.services.spi.policydefinition.PolicyDefinitionService;
 import org.eclipse.edc.connector.controlplane.services.spi.transferprocess.TransferProcessService;
-import org.eclipse.edc.connector.controlplane.transfer.spi.types.DataRequest;
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcess;
 import org.eclipse.edc.connector.controlplane.transfer.spi.types.TransferProcessStates;
 import org.eclipse.edc.junit.annotations.ApiTest;
-import org.eclipse.edc.junit.extensions.EdcExtension;
 import org.eclipse.edc.spi.query.QuerySpec;
 import org.eclipse.edc.spi.result.ServiceResult;
 import org.eclipse.edc.spi.system.configuration.Config;
@@ -197,12 +193,9 @@ class DashboardPageApiServiceTest {
     }
 
     private TransferProcess mockTransferProcess(int contractId, int state) {
-        DataRequest dataRequest = mock();
-        when(dataRequest.getContractId()).thenReturn("ca-" + contractId);
-
         TransferProcess transferProcess = mock();
         when(transferProcess.getId()).thenReturn(String.valueOf(random.nextInt()));
-        when(transferProcess.getDataRequest()).thenReturn(dataRequest);
+        when(transferProcess.getContractId()).thenReturn("ca-" + contractId);
         when(transferProcess.getState()).thenReturn(state);
         return transferProcess;
     }

@@ -15,7 +15,8 @@
 package de.sovity.edc.extension.e2e.junit;
 
 import de.sovity.edc.client.EdcClient;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig.ConnectorConfigBuilder;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig.ConnectorBootConfigBuilder;
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
 import de.sovity.edc.extension.e2e.junit.multi.InstancesForJunitTest;
 import lombok.AccessLevel;
@@ -47,7 +48,7 @@ public final class CeIntegrationTestExtension
     private final List<String> additionalModules;
 
     @Nullable
-    private final Consumer<ConnectorConfigBuilder> configOverrides;
+    private final Consumer<ConnectorBootConfigBuilder> configOverrides;
 
     private final InstancesForJunitTest instances = new InstancesForJunitTest();
 

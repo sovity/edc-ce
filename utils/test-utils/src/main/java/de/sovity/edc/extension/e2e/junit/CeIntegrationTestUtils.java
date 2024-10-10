@@ -16,7 +16,7 @@ package de.sovity.edc.extension.e2e.junit;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig;
-import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig.ConnectorConfigBuilder;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig.ConnectorBootConfigBuilder;
 import de.sovity.edc.extension.e2e.connector.config.PortUtils;
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemoteConfig;
@@ -40,7 +40,7 @@ public final class CeIntegrationTestUtils {
         String participantId,
         TestDatabase testDatabase,
         @Nullable
-        Consumer<ConnectorConfigBuilder> overrides
+        Consumer<ConnectorBootConfigBuilder> overrides
     ) {
         val firstPort = PortUtils.getFreePortRange(5);
         val apiKey = "api-key-%s".formatted(UUID.randomUUID().toString());
@@ -80,7 +80,7 @@ public final class CeIntegrationTestUtils {
     public static RuntimePerClassWithDbExtension defaultRuntimeWithCeConfig(
         List<String> modules,
         @Nullable
-        Consumer<ConnectorConfigBuilder> overrides
+        Consumer<ConnectorBootConfigBuilder> overrides
     ) {
         return RuntimePerClassWithDbExtension.builder()
             .runtimeName("connector")

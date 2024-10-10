@@ -79,8 +79,8 @@ public class TransferHistoryPageApiService {
         var transferProcesses = getAllTransferProcesses();
 
         return transferProcesses.stream().map(process -> {
-            var agreement = Optional.ofNullable(agreementsById.get(process.getDataRequest().getContractId()));
-            var negotiation = Optional.ofNullable(negotiationsById.get(process.getDataRequest().getContractId()));
+            var agreement = Optional.ofNullable(agreementsById.get(process.getContractId()));
+            var negotiation = Optional.ofNullable(negotiationsById.get(process.getContractId()));
             var asset = assetLookup(assetsById, process);
             var direction = negotiation.map(ContractNegotiation::getType).map(ContractAgreementDirection::fromType);
             var transferHistoryEntry = new TransferHistoryEntry();
@@ -115,7 +115,7 @@ public class TransferHistoryPageApiService {
     }
 
     private Asset assetLookup(Map<String, Asset> assetsById, TransferProcess process) {
-        var assetId = process.getDataRequest().getAssetId();
+        var assetId = process.getAssetId();
         var asset = assetsById.get(assetId);
         if (asset == null) {
             return Asset.Builder.newInstance().id(assetId).build();

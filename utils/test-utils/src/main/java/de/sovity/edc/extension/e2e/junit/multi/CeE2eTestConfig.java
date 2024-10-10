@@ -14,7 +14,7 @@
 
 package de.sovity.edc.extension.e2e.junit.multi;
 
-import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig.ConnectorConfigBuilder;
+import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig.ConnectorBootConfigBuilder;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -28,14 +28,14 @@ public class CeE2eTestConfig {
     private String moduleName = ":launchers:connectors:sovity-dev";
 
     @Builder.Default
-    private Consumer<ConnectorConfigBuilder> configCustomizer = it -> {
+    private Consumer<ConnectorBootConfigBuilder> configCustomizer = it -> {
     };
 
     @Builder.Default
-    private Consumer<ConnectorConfigBuilder> consumerConfigCustomizer = it -> {
+    private Consumer<ConnectorBootConfigBuilder> consumerConfigCustomizer = it -> {
     };
 
     @Builder.Default
-    private Consumer<ConnectorConfigBuilder> providerConfigCustomizer = it -> {
+    private Consumer<ConnectorBootConfigBuilder> providerConfigCustomizer = it -> {
     };
 }
