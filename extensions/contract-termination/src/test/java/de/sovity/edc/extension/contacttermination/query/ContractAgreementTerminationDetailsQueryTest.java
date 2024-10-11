@@ -36,7 +36,7 @@ class ContractAgreementTerminationDetailsQueryTest {
 
     @RegisterExtension
     private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
-        .additionalModule(":launchers:connectors:sovity-dev")
+        .additionalModule(":launchers:utils:vanilla-control-plane")
         .build();
 
     @DisabledOnGithub
