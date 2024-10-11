@@ -85,11 +85,9 @@ class SovityMessageControllerTest {
 
         val controller = new SovityMessageController(
             identityService,
-            "http://example.com/callback",
             transformers,
             monitor,
             objectMapper,
-            participantAgentService,
             handlers
         );
 
@@ -122,11 +120,9 @@ class SovityMessageControllerTest {
 
         val controller = new SovityMessageController(
             identityService,
-            "http://example.com/callback",
             transformers,
             monitor,
             objectMapper,
-            participantAgentService,
             handlers);
 
         val message = new SovityMessageRequest(
@@ -155,11 +151,9 @@ class SovityMessageControllerTest {
 
         val controller = new SovityMessageController(
             identityService,
-            "http://example.com/callback",
             transformers,
             monitor,
             objectMapper,
-            participantAgentService,
             handlers
         );
 

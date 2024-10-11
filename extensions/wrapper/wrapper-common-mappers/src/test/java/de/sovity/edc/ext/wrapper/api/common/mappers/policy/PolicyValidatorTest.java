@@ -163,9 +163,6 @@ class PolicyValidatorTest {
                 .build();
         var permission = Permission.Builder.newInstance()
                 .duty(mock(Duty.class))
-                .assigner("assigner")
-                .assignee("assignee")
-                .target("target")
                 .action(action)
                 .build();
 
