@@ -23,13 +23,13 @@ import de.sovity.edc.extension.messenger.impl.ObjectMapperFactory;
 import de.sovity.edc.extension.messenger.impl.SovityMessageRequest;
 import jakarta.ws.rs.core.Response;
 import lombok.val;
-import org.eclipse.edc.core.transform.TypeTransformerRegistryImpl;
 import org.eclipse.edc.spi.agent.ParticipantAgent;
 import org.eclipse.edc.spi.agent.ParticipantAgentService;
 import org.eclipse.edc.spi.iam.ClaimToken;
 import org.eclipse.edc.spi.iam.IdentityService;
 import org.eclipse.edc.spi.monitor.ConsoleMonitor;
 import org.eclipse.edc.spi.result.Result;
+import org.eclipse.edc.transform.TypeTransformerRegistryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -98,6 +98,8 @@ class SovityMessageControllerTest {
 
         val message = new SovityMessageRequest(
             new URL("https://example.com/api"),
+            // TODO: added for compilation. Needs fixing.
+            "someCounterpartyId",
             """
                 { "type" : "foo" }
                 """,
@@ -129,6 +131,8 @@ class SovityMessageControllerTest {
 
         val message = new SovityMessageRequest(
             new URL("https://example.com/api"),
+            // TODO: added for compilation. Needs fixing.
+            "someCounterpartyId",
             """
                 { "type" : "foo" }
                 """,
@@ -164,6 +168,8 @@ class SovityMessageControllerTest {
 
         val message = new SovityMessageRequest(
             new URL("https://example.com/api"),
+            // TODO: added for compilation. Needs fixing.
+            "someCounterpartyId",
             """
                 { "type" : "foo" }
                 """,
@@ -175,6 +181,5 @@ class SovityMessageControllerTest {
             // assert
             assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
         }
-
     }
 }

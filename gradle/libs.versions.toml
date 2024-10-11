@@ -162,8 +162,6 @@ jetty-webapp = { module = "org.eclipse.jetty:jetty-webapp", version.ref = "jetty
 
 jooq-jooq = { module = "org.jooq:jooq", version.ref = "jooq" }
 
-jsonAssert = { module = "org.skyscreamer:jsonassert", version.ref = "jsonAssert" }
-
 jsonUnit-assertj = { module = "net.javacrumbs.json-unit:json-unit-assertj", version.ref = "jsonUnit" }
 
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
