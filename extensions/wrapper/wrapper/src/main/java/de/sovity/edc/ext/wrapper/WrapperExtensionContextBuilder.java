@@ -84,6 +84,7 @@ import de.sovity.edc.utils.catalog.mapper.DspDataOfferBuilder;
 import de.sovity.edc.utils.config.ConfigProps;
 import lombok.NoArgsConstructor;
 import lombok.val;
+import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex;
 import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.controlplane.contract.spi.offer.store.ContractDefinitionStore;
 import org.eclipse.edc.connector.controlplane.policy.spi.store.PolicyDefinitionStore;
@@ -98,7 +99,6 @@ import org.eclipse.edc.connector.controlplane.transfer.spi.store.TransferProcess
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
 import org.eclipse.edc.runtime.metamodel.annotation.Inject;
-import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex;
 import org.eclipse.edc.spi.monitor.Monitor;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
@@ -138,7 +138,7 @@ public class WrapperExtensionContextBuilder {
         PolicyEngine policyEngine,
         TransferProcessService transferProcessService,
         TransferProcessStore transferProcessStore,
-        TypeTransformerRegistry typeTransformerRegistry
+        TypeTransformerRegistry rootTypeTransformerRegistry
     ) {
         // UI API
         var operatorMapper = new OperatorMapper();
@@ -151,8 +151,18 @@ public class WrapperExtensionContextBuilder {
         var placeholderEndpointService = new PlaceholderEndpointService(
             ConfigProps.MY_EDC_DATASOURCE_PLACEHOLDER_BASEURL.getStringOrThrow(config)
         );
-        var assetMapper = newAssetMapper(typeTransformerRegistry, jsonLd, ownConnectorEndpointService, placeholderEndpointService);
-        var policyMapper = newPolicyMapper(objectMapper, typeTransformerRegistry, operatorMapper);
+        var managementApiTypeTransformerRegistry = rootTypeTransformerRegistry.forContext("management-api");
+        var assetMapper = newAssetMapper(
+            managementApiTypeTransformerRegistry,
+            jsonLd,
+            ownConnectorEndpointService,
+            placeholderEndpointService
+        );
+        var policyMapper = newPolicyMapper(
+            objectMapper,
+            managementApiTypeTransformerRegistry,
+            operatorMapper
+        );
         var transferProcessStateService = new TransferProcessStateService();
         var contractNegotiationUtils = new ContractNegotiationUtils(
             contractNegotiationService,
@@ -206,7 +216,7 @@ public class WrapperExtensionContextBuilder {
             contractAgreementUtils,
             contractNegotiationUtils,
             edcPropertyUtils,
-            typeTransformerRegistry,
+            managementApiTypeTransformerRegistry,
             parameterizationCompatibilityUtils
         );
         var contractAgreementTransferApiService = new ContractAgreementTransferApiService(

@@ -36,7 +36,7 @@ class MessageEmitterTest {
     @Test
     void emitValidMessage_whenEmpty_shouldSucceed() throws IOException {
         // arrange
-        TypeTransformerRegistry registry = new TypeTransformerRegistryImpl();
+        var registry = new TypeTransformerRegistryImpl();
         registry.register(new JsonObjectFromSovityMessageRequest());
         JsonLdRemoteMessageSerializer serializer = new JsonLdRemoteMessageSerializerImpl(
             registry,

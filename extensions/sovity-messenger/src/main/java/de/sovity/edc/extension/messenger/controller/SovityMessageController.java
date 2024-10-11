@@ -60,11 +60,9 @@ public class SovityMessageController {
     public static final String PATH = "/sovity/message/generic";
 
     private final IdentityService identityService;
-    private final String callbackAddress;
     private final TypeTransformerRegistry typeTransformerRegistry;
     private final Monitor monitor;
     private final ObjectMapper mapper;
-    private final ParticipantAgentService participant;
 
     @Getter
     private final SovityMessengerRegistry handlers;
@@ -72,7 +70,8 @@ public class SovityMessageController {
     @POST
     public Response post(
         @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-        SovityMessageRequest request) {
+        SovityMessageRequest request
+    ) {
 
         val validation = validateToken(authorization);
         if (validation.failed()) {

@@ -8,13 +8,16 @@ sovityEdcGroup = "de.sovity.edc"
 postgresDbImage = "postgres:15-alpine"
 
 # versions
+edc = "0.7.2"
+edcForOtherRepos = "0.7.2"
+tractus = "0.7.6"
+
 assertj = "3.23.1"
 awaitility = "4.2.0"
 commonsCompress = "1.26.1"
 commonsCollections = "4.4"
 commonsIo = "2.13.0"
 commonsLang = "3.13.0"
-edc = "0.7.2"
 findbugs = "3.0.2"
 flexmark = "0.64.8"
 flyway = "9.0.1"
@@ -60,8 +63,6 @@ swagger = "1.6.12"
 swaggerCore = "2.2.18"
 testcontainers = "1.19.1"
 titaniumLd = "1.3.2"
-tractus = "0.5.3"
-
 
 [libraries]
 
@@ -206,8 +207,6 @@ t9tJooq-jooqPostgresqlJson = { module = "com.github.t9t.jooq:jooq-postgresql-jso
 testcontainers-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 testcontainers-junitJupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
-
-tractus-sqlPool = { module = "org.eclipse.tractusx.edc:sql-pool", version.ref = "tractus" }
 
 [bundles]
 jetty-cve2023 = [

@@ -360,6 +360,38 @@ public class ConfigProps {
 
     /* Defaults of EDC Configuration */
 
+    public static final ConfigProp EDC_DATASOURCE_DEFAULT_NAME = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("edc.datasource.default.name")
+        .description("Ensures the EDC initializes the DataSource 'default' because it initializes all edc.datasource.* data sources.")
+        .warnIfOverridden(true)
+        .defaultValue("default")
+    );
+
+    public static final ConfigProp MY_EDC_VAULT_INIT_ENTRY_DEFAULT_DATASOURCE_JDBC_URL = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("my.edc.vault.init.entries.edc.datasource.default.url")
+        .description("Initializes Vault Value: edc.datasource.default.url")
+        .warnIfOverridden(true)
+        .defaultValueFn(MY_EDC_JDBC_URL::getRaw)
+    );
+
+    public static final ConfigProp MY_EDC_VAULT_INIT_ENTRY_DEFAULT_DATASOURCE_JDBC_USER = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("my.edc.vault.init.entries.edc.datasource.default.user")
+        .description("Initializes Vault Value: edc.datasource.default.user")
+        .warnIfOverridden(true)
+        .defaultValueFn(MY_EDC_JDBC_URL::getRaw)
+    );
+
+    public static final ConfigProp MY_EDC_VAULT_INIT_ENTRY_DEFAULT_DATASOURCE_JDBC_PASSWORD = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("my.edc.vault.init.entries.edc.datasource.default.password")
+        .description("Initializes Vault Value: edc.datasource.default.password")
+        .warnIfOverridden(true)
+        .defaultValueFn(MY_EDC_JDBC_URL::getRaw)
+    );
+
     public static final ConfigProp MY_EDC_PROTOCOL = addCeProp(builder -> builder
         .category(Category.RAW_EDC_CONFIG_DEFAULTS)
         .property("my.edc.protocol")

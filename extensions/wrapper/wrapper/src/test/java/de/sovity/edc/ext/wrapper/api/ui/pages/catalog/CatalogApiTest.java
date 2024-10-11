@@ -57,13 +57,14 @@ class CatalogApiTest {
     @SneakyThrows
     void testDistributionKey(EdcClient client, Config config) {
         var protocolApiUrl = ConfigUtils.getProtocolApiUrl(config);
+        var participantId = ConfigUtils.getParticipantId(config);
 
         // arrange
         createAsset(client);
         createPolicy(client);
         createContractDefinition(client);
         // act
-        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers(protocolApiUrl);
+        var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers(participantId, protocolApiUrl);
 
         // assert
         assertThat(catalogPageDataOffers).hasSize(1);
