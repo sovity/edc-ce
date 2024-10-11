@@ -79,7 +79,7 @@ public class Prop {
         /**
          * Context as specified in https://www.w3.org/TR/vocab-dcat-3/#normative-namespaces
          */
-        public final String CTX = "http://www.w3.org/ns/dcat#";
+        public final String CTX = "https://www.w3.org/ns/dcat#";
 
         public final String DATASET = CTX + "dataset";
 
