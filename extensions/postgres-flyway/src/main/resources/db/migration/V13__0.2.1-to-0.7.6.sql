@@ -49,19 +49,15 @@ drop table edc_asset_dataaddress;
 
 --- table: edc_asset_property
 
-with agg as (
-    select
-        asset_id_fk,
-        json_agg(json_build_object(property_name, property_value))
-        filter (where property_is_private = false or property_is_private is null) as public_properties,
-        json_agg(json_build_object(property_name, property_value))
-        filter (where property_is_private = true) as private_properties
-    from edc_asset_property
-    group by asset_id_fk
-)
+with agg as (select asset_id_fk,
+                    json_agg(json_build_object(property_name, property_value))
+                    filter (where property_is_private = false or property_is_private is null) as public_properties,
+                    json_agg(json_build_object(property_name, property_value))
+                    filter (where property_is_private = true)                                 as private_properties
+             from edc_asset_property
+             group by asset_id_fk)
 update edc_asset
-set
-    properties = coalesce(agg.public_properties, '{}'::json),
+set properties         = coalesce(agg.public_properties, '{}'::json),
     private_properties = coalesce(agg.private_properties, '{}'::json)
 from agg
 where edc_asset.asset_id = agg.asset_id_fk;
@@ -124,15 +120,15 @@ alter table edc_transfer_process
 
 -- TODO
 update edc_transfer_process
-set transfer_type = 'TODO',
-    protocol_messages = '"TODO"'::json,
-    data_plane_id = 'TODO',
-    correlation_id = 'TODO, might be sourced from ContractNegotiation',
+set transfer_type         = 'TODO',
+    protocol_messages     = '"TODO"'::json,
+    data_plane_id         = 'TODO',
+    correlation_id        = 'TODO, might be sourced from ContractNegotiation',
     counter_party_address = dr.connector_address,
-    protocol = dr.protocol,
-    asset_id = dr.asset_id,
-    contract_id = dr.contract_id,
-    data_destination = dr.data_destination
+    protocol              = dr.protocol,
+    asset_id              = dr.asset_id,
+    contract_id           = dr.contract_id,
+    data_destination      = dr.data_destination
 from edc_data_request dr
 where edc_transfer_process.transferprocess_id = dr.transfer_process_id;
 
@@ -154,9 +150,9 @@ alter table edc_data_plane_instance
 
 create table edc_accesstokendata
 (
-    id           varchar not null primary key,
-    claim_token  json    not null,
-    data_address json    not null,
+    id                    varchar not null primary key,
+    claim_token           json    not null,
+    data_address          json    not null,
     additional_properties json default '{}'
 );
 
@@ -166,6 +162,16 @@ comment on column edc_accesstokendata.additional_properties is 'Optional Additio
 
 
 -- table: edc_data_plane
+create table edc_data_plane_instance
+(
+    id       varchar not null primary key,
+    data     json,
+    lease_id varchar
+        constraint data_plane_instance_lease_id_fk
+            references edc_lease
+            on delete set null
+);
+
 -- TODO: Do we truly not need this?
 --
 -- alter table edc_data_plane
@@ -185,7 +191,7 @@ comment on column edc_accesstokendata.additional_properties is 'Optional Additio
 --     add column callback_address varchar;
 --
 -- alter table edc_data_plane
---     add column lease_id varchar
+--     add column lease_id varchardc_
 --         constraint data_plane_lease_lease_id_fk
 --             references edc_lease
 --             on delete set null;
@@ -212,20 +218,20 @@ comment on column edc_accesstokendata.additional_properties is 'Optional Additio
 
 create table edc_policy_monitor
 (
-    entry_id             varchar not null primary key,
-    state                integer not null,
-    created_at           bigint  not null,
-    updated_at           bigint  not null,
-    state_count          integer default 0 not null,
-    state_time_stamp     bigint,
-    trace_context        json,
-    error_detail         varchar,
-    lease_id             varchar
+    entry_id         varchar           not null primary key,
+    state            integer           not null,
+    created_at       bigint            not null,
+    updated_at       bigint            not null,
+    state_count      integer default 0 not null,
+    state_time_stamp bigint,
+    trace_context    json,
+    error_detail     varchar,
+    lease_id         varchar
         constraint policy_monitor_lease_lease_id_fk
-                    references edc_lease
-                    on delete set null,
-    properties           json,
-    contract_id          varchar
+            references edc_lease
+            on delete set null,
+    properties       json,
+    contract_id      varchar
 );
 
 -- This will help to identify states that need to be transitioned without a table scan when the entries grow
