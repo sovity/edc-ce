@@ -24,15 +24,12 @@ import de.sovity.edc.extension.e2e.junit.edc.RuntimeExtensionFixed;
 import de.sovity.edc.extension.e2e.junit.edc.RuntimePerClassExtensionFixed;
 import de.sovity.edc.extension.e2e.junit.utils.InstancesForJunitTest;
 import de.sovity.edc.utils.config.ConfigProps;
-import de.sovity.edc.utils.config.utils.ReflectionUtils;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Singular;
 import lombok.experimental.Delegate;
-import org.eclipse.edc.spi.monitor.ConsoleMonitor;
-import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -75,7 +72,8 @@ public class CeIntegrationTestExtension
         // Start DB
         if (!skipDb) {
             var dbExtension = TestDatabaseExtension.builder().build();
-            instances.putAll(dbExtension);
+            instances.put(dbExtension);
+            instances.addParameterResolver(dbExtension);
             dbExtension.beforeAll(extensionContext);
         }
 
@@ -93,7 +91,8 @@ public class CeIntegrationTestExtension
         beforeEdcStartup.accept(connectorExtension);
         connectorExtension.beforeAll(extensionContext);
 
-        instances.putAll(connectorExtension);
+        instances.put(connectorExtension);
+        instances.addParameterResolver(connectorExtension);
 
         // Configure Clients and Utilities
         var config = runtime.getContext().getConfig();

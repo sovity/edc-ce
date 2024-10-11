@@ -73,7 +73,8 @@ public class CeE2eTestExtension
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
-        instances.putAll(instancesForEachConnector);
+        instances.put(instancesForEachConnector);
+        instances.addParameterResolver(instancesForEachConnector);
 
         for (CeE2eTestSide side : CeE2eTestSide.values()) {
             var extension = CeIntegrationTestExtension.builder()
@@ -91,7 +92,8 @@ public class CeE2eTestExtension
                 .build();
 
             // Register DbRuntimePerClassExtension
-            instancesForEachConnector.forSide(side).putAll(extension);
+            instancesForEachConnector.forSide(side).put(extension);
+            instancesForEachConnector.forSide(side).addParameterResolver(extension);
 
             // Start EDC
             extension.beforeAll(context);

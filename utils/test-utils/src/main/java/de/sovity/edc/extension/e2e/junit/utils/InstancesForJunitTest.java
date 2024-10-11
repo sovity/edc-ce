@@ -37,8 +37,7 @@ public class InstancesForJunitTest implements ParameterResolver {
     private final Map<Class<?>, LazyOrValue> instances = new HashMap<>();
     private final List<ParameterResolver> childResolvers = new ArrayList<>();
 
-    public void putAll(ParameterResolver resolver) {
-        put(resolver);
+    public void addParameterResolver(ParameterResolver resolver) {
         childResolvers.add(resolver);
     }
 
