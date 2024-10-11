@@ -38,6 +38,7 @@ import org.eclipse.edc.connector.controlplane.asset.spi.index.AssetIndex;
 import org.eclipse.edc.spi.system.ServiceExtension;
 import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.eclipse.edc.spi.types.TypeManager;
+import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.eclipse.edc.web.spi.WebService;
 import org.eclipse.edc.web.spi.configuration.ApiContext;
 
@@ -73,9 +74,8 @@ public class WrapperExtension implements ServiceExtension {
     private TransferProcessStore transferProcessStore;
     @Inject
     private TypeManager typeManager;
-    // TODO: was revomed, maybe replaced with ManagementApiTypeTransformerRegistryImpl between v0.5.1..v0.6.0
-//     @Inject
-//     private ManagementApiTypeTransformerRegistry typeTransformerRegistry;
+    @Inject
+    private TypeTransformerRegistry typeTransformerRegistry;
     @Inject
     private WebService webService;
     @Inject
@@ -115,8 +115,7 @@ public class WrapperExtension implements ServiceExtension {
             policyEngine,
             transferProcessService,
             transferProcessStore,
-            // TODO: what is the new value? is it necessary?
-            null
+            typeTransformerRegistry.forContext("management-api")
         );
 
         wrapperExtensionContext.managementApiResources().forEach(resource ->
