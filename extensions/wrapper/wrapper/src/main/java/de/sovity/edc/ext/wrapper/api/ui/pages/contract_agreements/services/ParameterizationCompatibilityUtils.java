@@ -21,7 +21,7 @@ import org.eclipse.edc.spi.types.domain.DataAddress;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.eclipse.edc.spi.CoreConstants.EDC_NAMESPACE;
+import static org.eclipse.edc.spi.constants.CoreConstants.EDC_NAMESPACE;
 
 public class ParameterizationCompatibilityUtils {
     private static final String WORKAROUND = "https://sovity.de/workaround/proxy/param/";

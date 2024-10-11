@@ -38,13 +38,20 @@ import static org.mockito.Mockito.when;
 
 class DspCatalogServiceTest {
     String endpoint = "http://localhost:11003/api/v1/dsp";
+    String participantId = "someParticipantId";
 
     private DspCatalogService newDspCatalogService(String resultJsonFilename) {
         var catalogJson = readFile(resultJsonFilename);
         var catalogService = mock(CatalogService.class);
 
         var result = CompletableFuture.completedFuture(StatusResult.success(catalogJson.getBytes(StandardCharsets.UTF_8)));
-        when(catalogService.requestCatalog(eq(endpoint), eq("dataspace-protocol-http"), eq(QuerySpec.max()))).thenReturn(result);
+        when(catalogService.requestCatalog(
+            eq(participantId),
+            eq(endpoint),
+            eq("dataspace-protocol-http"),
+            eq(QuerySpec.max()))
+        ).thenReturn(result);
+
         var monitor = mock(Monitor.class);
         var dataOfferBuilder = new DspDataOfferBuilder(new TitaniumJsonLd(monitor));
 
@@ -57,7 +64,7 @@ class DspCatalogServiceTest {
         var dspCatalogService = newDspCatalogService("catalogResponse.json");
 
         // act
-        var actual = dspCatalogService.fetchDataOffers(endpoint);
+        var actual = dspCatalogService.fetchDataOffers(participantId, endpoint);
 
         // assert
         var offers = actual.getDataOffers();
@@ -66,7 +73,7 @@ class DspCatalogServiceTest {
         assertThat(actual.getEndpoint()).isEqualTo(endpoint);
         assertThat(actual.getParticipantId()).isEqualTo("provider");
         assertThat(JsonLdUtils.id(offer.getAssetPropertiesJsonLd()))
-                .isEqualTo("test-1.0");
+            .isEqualTo("test-1.0");
         assertThat(offer.getAssetPropertiesJsonLd().get(Prop.TYPE)).isNull();
         assertThat(JsonLdUtils.string(offer.getAssetPropertiesJsonLd(), Prop.Dcat.VERSION)).isEqualTo("1.0");
 

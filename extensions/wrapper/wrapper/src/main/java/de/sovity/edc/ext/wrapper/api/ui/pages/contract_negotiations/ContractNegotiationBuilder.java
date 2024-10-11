@@ -31,7 +31,9 @@ public class ContractNegotiationBuilder {
 
         return ContractRequest.Builder.newInstance()
                 .counterPartyAddress(counterPartyAddress)
-                .providerId(request.getCounterPartyParticipantId())
+                // TODO: deprecated and moved into the contractOffer.policy.assigner, set by `.contractOffer()` below
+                //  git diff v0.5.1..v0.6.0 -- spi/control-plane/contract-spi/src/main/java/org/eclipse/edc/connector/contract/spi/types/negotiation/ContractRequest.java
+//                 .providerId(request.getCounterPartyParticipantId())
                 .protocol(HttpMessageProtocol.DATASPACE_PROTOCOL_HTTP)
                 .contractOffer(contractOfferMapper.buildContractOffer(request))
                 .build();
