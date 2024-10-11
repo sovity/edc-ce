@@ -11,6 +11,8 @@ dependencies {
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
 
+    testImplementation(libs.edc.dspHttpSpi)
+
     testImplementation(project(":extensions:test-backend-controller"))
     testImplementation(project(":extensions:wrapper:clients:java-client"))
     testImplementation(project(":utils:test-utils"))
