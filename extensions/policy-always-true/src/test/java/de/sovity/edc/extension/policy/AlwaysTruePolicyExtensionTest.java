@@ -19,6 +19,7 @@ import de.sovity.edc.extension.e2e.junit.edc.EmbeddedRuntimeFixed;
 import org.eclipse.edc.connector.controlplane.contract.spi.offer.ContractDefinitionResolver;
 import org.eclipse.edc.connector.controlplane.policy.spi.PolicyDefinition;
 import org.eclipse.edc.connector.controlplane.services.spi.policydefinition.PolicyDefinitionService;
+import org.eclipse.edc.connector.dataplane.selector.spi.client.DataPlaneClientFactory;
 import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
 import org.eclipse.edc.policy.engine.spi.PolicyContext;
 import org.eclipse.edc.policy.engine.spi.PolicyEngine;
@@ -37,15 +38,16 @@ class AlwaysTruePolicyExtensionTest {
 
     @RegisterExtension
     static CeIntegrationTestExtension extension = CeIntegrationTestExtension.builder()
+        .additionalModule(":extensions:edc-ui-config")
+        .additionalModule(":launchers:utils:vanilla-control-plane")
         .skipDb(true)
+        .beforeEdcStartup(runtime -> runtime.registerServiceMock(DataPlaneClientFactory.class, mock()))
         .build();
 
     @BeforeEach
     void setUp(EmbeddedRuntimeFixed runtime) {
-        runtime.registerServiceMock(ProtocolWebhook.class, mock(ProtocolWebhook.class));
-        runtime.registerServiceMock(
-            DataPlaneInstanceStore.class,
-            mock(DataPlaneInstanceStore.class));
+        runtime.registerServiceMock(ProtocolWebhook.class, mock());
+        runtime.registerServiceMock(DataPlaneInstanceStore.class, mock());
     }
 
     @Test

@@ -89,6 +89,7 @@ edc-contractDefinitionApi = { module = "org.eclipse.edc:contract-definition-api"
 edc-contractNegotiationStoreSql = { module = "org.eclipse.edc:contract-negotiation-store-sql", version.ref = "edc" }
 edc-contractSpi = { module = "org.eclipse.edc:contract-spi", version.ref = "edc" }
 edc-controlPlaneAggregateServices = { module = "org.eclipse.edc:control-plane-aggregate-services", version.ref = "edc" }
+edc-controlPlaneApiClientSpi = { module = "org.eclipse.edc:control-plane-api-client-spi", version.ref = "edc" }
 edc-controlPlaneCore = { module = "org.eclipse.edc:control-plane-core", version.ref = "edc" }
 edc-controlPlaneSpi = { module = "org.eclipse.edc:control-plane-spi", version.ref = "edc" }
 edc-controlPlaneSql = { module = "org.eclipse.edc:control-plane-sql", version.ref = "edc" }
