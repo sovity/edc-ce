@@ -172,8 +172,6 @@ class PolicyValidatorTest {
         // assert
         assertThat(errors.getErrors()).containsExactlyInAnyOrder(
                 "$: Permission has duties, which is currently unsupported.",
-                "$: Permission has an assigner, which is currently unsupported.",
-                "$: Permission has an assignee, which is currently unsupported.",
                 "$.action: Action has a type that is not 'USE', but 'idk'.",
                 "$.action: Action has a value for includedIn, which is currently unsupported.",
                 "$.action: Action has a constraint, which is currently unsupported."
