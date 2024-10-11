@@ -23,14 +23,16 @@ import de.sovity.edc.extension.e2e.junit.edc.EmbeddedRuntimeFixed;
 import de.sovity.edc.extension.e2e.junit.edc.RuntimeExtensionFixed;
 import de.sovity.edc.extension.e2e.junit.edc.RuntimePerClassExtensionFixed;
 import de.sovity.edc.extension.e2e.junit.utils.InstancesForJunitTest;
-import de.sovity.edc.extension.e2e.junit.utils.ParameterResolverList;
 import de.sovity.edc.utils.config.ConfigProps;
+import de.sovity.edc.utils.config.utils.ReflectionUtils;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Singular;
 import lombok.experimental.Delegate;
+import org.eclipse.edc.spi.monitor.ConsoleMonitor;
+import org.eclipse.edc.spi.system.ServiceExtensionContext;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -59,25 +61,21 @@ public class CeIntegrationTestExtension
     private final boolean skipDb = false;
 
     @Builder.Default
-    private final Consumer<RuntimeExtensionFixed> beforeEdcStartup = runtime -> {};
+    private final Consumer<RuntimeExtensionFixed> beforeEdcStartup = runtime -> {
+    };
 
     @Nullable
     private final Consumer<ConnectorBootConfigBuilder> configOverrides;
 
-    private final InstancesForJunitTest instances = new InstancesForJunitTest();
-
     @Delegate(types = ParameterResolver.class)
-    private final ParameterResolverList parameterResolverList = new ParameterResolverList();
+    private final InstancesForJunitTest instances = new InstancesForJunitTest();
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
-        parameterResolverList.add(instances);
-
         // Start DB
         if (!skipDb) {
             var dbExtension = TestDatabaseExtension.builder().build();
-            instances.put(dbExtension);
-            parameterResolverList.add(dbExtension);
+            instances.putAll(dbExtension);
             dbExtension.beforeAll(extensionContext);
         }
 
@@ -89,11 +87,13 @@ public class CeIntegrationTestExtension
             ConfigProps.ALL_CE_PROPS,
             additionalModules.toArray(String[]::new)
         );
+        instances.put(runtime);
+
         var connectorExtension = new RuntimePerClassExtensionFixed(runtime);
-        instances.put(connectorExtension);
-        parameterResolverList.add(connectorExtension);
         beforeEdcStartup.accept(connectorExtension);
         connectorExtension.beforeAll(extensionContext);
+
+        instances.putAll(connectorExtension);
 
         // Configure Clients and Utilities
         var config = runtime.getContext().getConfig();

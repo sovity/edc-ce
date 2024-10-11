@@ -14,6 +14,7 @@
 
 package de.sovity.edc.extension.postgresql.legacy.connection;
 
+import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.spi.persistence.EdcPersistenceException;
 import org.eclipse.edc.sql.ConnectionFactory;
 
@@ -22,16 +23,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+@RequiredArgsConstructor
 public class DriverManagerConnectionFactory implements ConnectionFactory {
 
     private static final String CONNECTION_PROPERTY_USER = "user";
     private static final String CONNECTION_PROPERTY_PASSWORD = "password";
 
     private final JdbcConnectionProperties jdbcProperties;
-
-    public DriverManagerConnectionFactory(JdbcConnectionProperties jdbcProperties) {
-        this.jdbcProperties = jdbcProperties;
-    }
 
     @Override
     public Connection create(String string, Properties properties) {

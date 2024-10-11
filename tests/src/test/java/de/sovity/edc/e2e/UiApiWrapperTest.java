@@ -202,7 +202,8 @@ class UiApiWrapperTest {
         var asset = assets.get(0);
 
         var providerProtocolEndpoint = ConfigUtils.getProtocolApiUrl(providerConfig);
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint);
+        var providerParticipantId = ConfigUtils.getParticipantId(providerConfig);
+        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerParticipantId, providerProtocolEndpoint);
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
         assertThat(dataOffer.getContractOffers()).hasSize(1);
@@ -414,7 +415,8 @@ class UiApiWrapperTest {
             .build());
 
         val providerProtocolEndpoint = ConfigUtils.getProtocolApiUrl(providerConfig);
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint);
+        val providerParticipantId = ConfigUtils.getParticipantId(providerConfig);
+        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerParticipantId, providerProtocolEndpoint);
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
         assertThat(dataOffer.getContractOffers()).hasSize(1);
@@ -506,7 +508,8 @@ class UiApiWrapperTest {
             .build());
 
         val providerProtocolEndpoint = ConfigUtils.getProtocolApiUrl(providerConfig);
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint);
+        val providerParticipantId = ConfigUtils.getParticipantId(providerConfig);
+        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerParticipantId, providerProtocolEndpoint);
         assertThat(dataOffers).hasSize(1);
         var dataOffer = dataOffers.get(0);
         assertThat(dataOffer.getContractOffers()).hasSize(1);
@@ -546,7 +549,7 @@ class UiApiWrapperTest {
         initiateTransfer(consumerClient, negotiation);
 
         // assert
-        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(providerProtocolEndpoint).get(0).getAsset().getTitle())
+        assertThat(consumerClient.uiApi().getCatalogPageDataOffers(providerParticipantId, providerProtocolEndpoint).get(0).getAsset().getTitle())
             .isEqualTo("Good Asset Title");
         val firstAsset = providerClient.uiApi().getContractAgreementPage(null).getContractAgreements().get(0).getAsset();
         assertThat(firstAsset.getTitle()).isEqualTo("Good Asset Title");

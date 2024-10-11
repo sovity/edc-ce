@@ -31,9 +31,10 @@ public record PostgresFlywayConfig(
     public static PostgresFlywayConfig fromConfig(Config config) {
         return new PostgresFlywayConfig(
             new JdbcCredentials(
-                ConfigProps.EDC_DATASOURCE_DEFAULT_URL.getStringOrThrow(config),
-                ConfigProps.EDC_DATASOURCE_DEFAULT_USER.getStringOrThrow(config),
-                ConfigProps.EDC_DATASOURCE_DEFAULT_PASSWORD.getStringOrThrow(config)
+				// TODO: Switch to Vault for EE
+                ConfigProps.MY_EDC_JDBC_URL.getStringOrThrow(config),
+                ConfigProps.MY_EDC_JDBC_USER.getStringOrThrow(config),
+                ConfigProps.MY_EDC_JDBC_PASSWORD.getStringOrThrow(config)
             ),
             ConfigProps.EDC_FLYWAY_REPAIR.getBoolean(config),
             ConfigProps.EDC_FLYWAY_CLEAN_ENABLE.getBoolean(config),

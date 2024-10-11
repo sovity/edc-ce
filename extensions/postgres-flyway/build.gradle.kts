@@ -14,6 +14,7 @@ dependencies {
 
     // implementation(libs.edc.coreSpi)
     implementation(libs.edc.sqlCore)
+    implementation(libs.edc.httpSpi)
 
     // Adds Database-Related EDC-Extensions (EDC-SQL-Stores, JDBC-Driver, Pool and Transactions)
     implementation(libs.edc.controlPlaneSql)

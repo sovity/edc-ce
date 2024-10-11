@@ -18,13 +18,13 @@ import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.extension.e2e.connector.config.ConnectorBootConfig.ConnectorBootConfigBuilder;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenario;
 import de.sovity.edc.extension.e2e.connector.remotes.api_wrapper.E2eTestScenarioConfig;
+import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
 import de.sovity.edc.extension.e2e.junit.utils.InstancesForEachConnector;
 import de.sovity.edc.extension.e2e.junit.utils.InstancesForJunitTest;
-import de.sovity.edc.extension.e2e.junit.utils.ParameterResolverList;
+import de.sovity.edc.utils.config.ConfigUtils;
 import lombok.Builder;
 import lombok.Singular;
 import lombok.experimental.Delegate;
-import org.eclipse.edc.junit.extensions.RuntimeExtension;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
@@ -63,19 +63,17 @@ public class CeE2eTestExtension
     private Consumer<ConnectorBootConfigBuilder> providerConfigCustomizer = it -> {
     };
 
-    private final InstancesForEachConnector<CeE2eTestSide> connectorInstances = new InstancesForEachConnector<>(
+    private final InstancesForEachConnector<CeE2eTestSide> instancesForEachConnector = new InstancesForEachConnector<>(
         Arrays.asList(CeE2eTestSide.values()),
         (parameterContext, extensionContext) -> CeE2eTestSide.fromParameterContextOrNull(parameterContext)
     );
-    private final InstancesForJunitTest globalInstances = new InstancesForJunitTest();
 
     @Delegate(types = ParameterResolver.class)
-    private final ParameterResolverList parameterResolverList = new ParameterResolverList();
+    private final InstancesForJunitTest instances = new InstancesForJunitTest();
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
-        parameterResolverList.add(globalInstances);
-        parameterResolverList.add(connectorInstances);
+        instances.putAll(instancesForEachConnector);
 
         for (CeE2eTestSide side : CeE2eTestSide.values()) {
             var extension = CeIntegrationTestExtension.builder()
@@ -93,48 +91,58 @@ public class CeE2eTestExtension
                 .build();
 
             // Register DbRuntimePerClassExtension
-            connectorInstances.forSide(side).put(extension);
+            instancesForEachConnector.forSide(side).putAll(extension);
 
             // Start EDC
             extension.beforeAll(context);
         }
+
+        // Register TestBackendRemote
+        instances.putLazy(TestBackendRemote.class, this::buildTestBackendRemote);
     }
 
     @Override
     public void beforeTestExecution(ExtensionContext context) throws Exception {
         // Register ClientAndServer
-        globalInstances.putLazy(
+        instances.putLazy(
             ClientAndServer.class,
             () -> ClientAndServer.startClientAndServer(getFreePort())
         );
 
         // Register ConnectorRemoteClient
-        globalInstances.putLazy(E2eTestScenario.class, this::buildE2eTestScenario);
+        instances.putLazy(E2eTestScenario.class, this::buildE2eTestScenario);
     }
 
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
-        if (globalInstances.isLazyInitialized(ClientAndServer.class)) {
-            stopQuietly(globalInstances.get(ClientAndServer.class));
+        if (instances.isLazyInitialized(ClientAndServer.class)) {
+            stopQuietly(instances.get(ClientAndServer.class));
         }
     }
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
         // for loop explicitly used because of checked exceptions
-        for (var extension : connectorInstances.all(CeIntegrationTestExtension.class)) {
+        for (var extension : instancesForEachConnector.all(CeIntegrationTestExtension.class)) {
             extension.afterAll(context);
         }
     }
 
     private E2eTestScenario buildE2eTestScenario() {
         return E2eTestScenario.builder()
-            .consumerClient(connectorInstances.forSide(CeE2eTestSide.CONSUMER).get(EdcClient.class))
-            .providerClient(connectorInstances.forSide(CeE2eTestSide.PROVIDER).get(EdcClient.class))
-            .mockServer(globalInstances.get(ClientAndServer.class))
-            .config(E2eTestScenarioConfig.forProviderConfig(
-                connectorInstances.forSide(CeE2eTestSide.PROVIDER).get(RuntimeExtension.class).getService(Config.class)
-            ))
+            .consumerClient(instancesForEachConnector.forSide(CeE2eTestSide.CONSUMER).get(EdcClient.class))
+            .providerClient(instancesForEachConnector.forSide(CeE2eTestSide.PROVIDER).get(EdcClient.class))
+            .mockServer(instances.get(ClientAndServer.class))
+            .config(E2eTestScenarioConfig.forProviderConfig(getConfig(CeE2eTestSide.PROVIDER)))
             .build();
+    }
+
+    private TestBackendRemote buildTestBackendRemote() {
+        var defaultApiUrl = ConfigUtils.getDefaultApiUrl(getConfig(CeE2eTestSide.PROVIDER));
+        return new TestBackendRemote(defaultApiUrl);
+    }
+
+    private Config getConfig(CeE2eTestSide ceE2eTestSide) {
+        return instancesForEachConnector.forSide(ceE2eTestSide).get(Config.class);
     }
 }

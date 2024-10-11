@@ -26,6 +26,11 @@ import java.util.function.BiFunction;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
+/**
+ * A fancy {@link Map} of {@code S} and {@link InstancesForJunitTest}.
+ *
+ * @param <S> Connector Side enum, rather than just a  string
+ */
 public class InstancesForEachConnector<S> implements ParameterResolver {
     private final List<S> sides;
     private final BiFunction<ParameterContext, ExtensionContext, S> getSideOrNull;
@@ -45,7 +50,7 @@ public class InstancesForEachConnector<S> implements ParameterResolver {
 
 
     public <T> List<T> all(Class<T> clazz) {
-        return sides.stream().flatMap(side -> forSide(side).all(clazz).stream()).toList();
+        return sides.stream().map(side -> forSide(side).get(clazz)).toList();
     }
 
     public InstancesForJunitTest forSide(S side) {

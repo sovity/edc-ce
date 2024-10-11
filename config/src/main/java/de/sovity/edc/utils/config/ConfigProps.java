@@ -381,7 +381,7 @@ public class ConfigProps {
         .property("my.edc.vault.init.entries.edc.datasource.default.user")
         .description("Initializes Vault Value: edc.datasource.default.user")
         .warnIfOverridden(true)
-        .defaultValueFn(MY_EDC_JDBC_URL::getRaw)
+        .defaultValueFn(MY_EDC_JDBC_USER::getRaw)
     );
 
     public static final ConfigProp MY_EDC_VAULT_INIT_ENTRY_DEFAULT_DATASOURCE_JDBC_PASSWORD = addCeProp(builder -> builder
@@ -389,7 +389,7 @@ public class ConfigProps {
         .property("my.edc.vault.init.entries.edc.datasource.default.password")
         .description("Initializes Vault Value: edc.datasource.default.password")
         .warnIfOverridden(true)
-        .defaultValueFn(MY_EDC_JDBC_URL::getRaw)
+        .defaultValueFn(MY_EDC_JDBC_PASSWORD::getRaw)
     );
 
     public static final ConfigProp MY_EDC_PROTOCOL = addCeProp(builder -> builder
@@ -554,30 +554,6 @@ public class ConfigProps {
         .description("Base URL for the On Request asset datasource, as reachable by the data plane")
         .warnIfOverridden(true)
         .defaultValueFn(EDC_DSP_CALLBACK_ADDRESS::getRaw)
-    );
-
-    public static final ConfigProp EDC_DATASOURCE_DEFAULT_URL = addCeProp(builder -> builder
-        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
-        .property("edc.datasource.default.url")
-        .description("Default Datasource: JDBC URL. Prefer setting %s".formatted(MY_EDC_JDBC_URL.getProperty()))
-        .warnIfOverridden(true)
-        .defaultValueFn(MY_EDC_JDBC_URL::getRaw)
-    );
-
-    public static final ConfigProp EDC_DATASOURCE_DEFAULT_USER = addCeProp(builder -> builder
-        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
-        .property("edc.datasource.default.user")
-        .description("Default Datasource: Username. Prefer setting %s".formatted(MY_EDC_JDBC_USER.getProperty()))
-        .warnIfOverridden(true)
-        .defaultValueFn(MY_EDC_JDBC_USER::getRaw)
-    );
-
-    public static final ConfigProp EDC_DATASOURCE_DEFAULT_PASSWORD = addCeProp(builder -> builder
-        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
-        .property("edc.datasource.default.password")
-        .description("Default Datasource: Password. Prefer setting %s".formatted(MY_EDC_JDBC_PASSWORD.getProperty()))
-        .warnIfOverridden(true)
-        .defaultValueFn(MY_EDC_JDBC_PASSWORD::getRaw)
     );
 
     public static final ConfigProp EDC_DATASOURCE_LOGGINGHOUSE_URL = addCeProp(builder -> builder

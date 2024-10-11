@@ -20,14 +20,13 @@ import de.sovity.edc.extension.e2e.junit.utils.InstancesForJunitTest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Delegate;
 import lombok.val;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
 /**
@@ -37,6 +36,8 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 @RequiredArgsConstructor
 public final class TestDatabaseExtension
     implements BeforeAllCallback, AfterAllCallback, ParameterResolver {
+
+    @Delegate(types = ParameterResolver.class)
     private final InstancesForJunitTest instances = new InstancesForJunitTest();
 
     @Getter
@@ -44,7 +45,9 @@ public final class TestDatabaseExtension
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
+        System.out.println("Starting Test DB");
         testDatabase.beforeAll(extensionContext);
+        System.out.printf("Test DB Started with %s%n", testDatabase.getJdbcCredentials());
         instances.put(testDatabase);
         instances.putLazy(DSLContext.class, () -> {
             val credentials = testDatabase.getJdbcCredentials();
@@ -54,31 +57,8 @@ public final class TestDatabaseExtension
 
     @Override
     public void afterAll(ExtensionContext extensionContext) throws Exception {
+        System.out.println("Shutting down Test DB");
         testDatabase.afterAll(extensionContext);
+        System.out.println("Test DB shut down");
     }
-
-    @Override
-    public boolean supportsParameter(
-        ParameterContext parameterContext,
-        ExtensionContext extensionContext
-    ) throws ParameterResolutionException {
-        val clazz = parameterContext.getParameter().getType();
-
-        return instances.has(clazz);
-    }
-
-    @Override
-    public Object resolveParameter(
-        ParameterContext parameterContext,
-        ExtensionContext extensionContext
-    ) throws ParameterResolutionException {
-        val clazz = parameterContext.getParameter().getType();
-
-        if (instances.has(clazz)) {
-            return instances.get(clazz);
-        }
-
-        throw new ParameterResolutionException("No instance of " + clazz);
-    }
-
 }

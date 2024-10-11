@@ -40,7 +40,7 @@ public class VaultInitializerService {
     }
 
     private void initializeVaultValue(String key, String value) {
-        if (StringUtils.isBlank(key) || StringUtils.isBlank(value)) {
+        if (StringUtils.isBlank(key) || StringUtils.isBlank(value) || key.equals("*")) {
             return;
         }
 

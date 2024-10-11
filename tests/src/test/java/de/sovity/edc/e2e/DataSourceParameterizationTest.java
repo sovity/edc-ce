@@ -151,7 +151,8 @@ class DataSourceParameterizationTest {
 
             // act
             val providerEndpoint = ConfigUtils.getProtocolApiUrl(providerConfig);
-            val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerEndpoint);
+            var participantId = ConfigUtils.getParticipantId(providerConfig);
+            val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(participantId, providerEndpoint);
             val startNegotiation = initiateNegotiation(consumerClient, dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
             val negotiation = awaitNegotiationDone(consumerClient, startNegotiation.getContractNegotiationId());
 
@@ -245,7 +246,8 @@ class DataSourceParameterizationTest {
 
             // act
             val providerEndpoint = ConfigUtils.getProtocolApiUrl(providerConfig);
-            val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerEndpoint);
+            val providerParticipantId = ConfigUtils.getParticipantId(providerConfig);
+            val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(providerParticipantId, providerEndpoint);
             val startNegotiation = initiateNegotiation(consumerClient, dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
             val negotiation = awaitNegotiationDone(consumerClient, startNegotiation.getContractNegotiationId());
 
@@ -297,7 +299,8 @@ class DataSourceParameterizationTest {
 
                 // act
                 val connectorEndpoint = ConfigUtils.getProtocolApiUrl(providerConfig);
-                val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(connectorEndpoint);
+                val participantId = ConfigUtils.getParticipantId(providerConfig);
+                val dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(participantId, connectorEndpoint);
                 val dataOffer = dataOffers.stream().filter(it -> it.getAsset().getAssetId().equals(testCase.id)).findFirst().get();
                 val negotiationInit = initiateNegotiation(consumerClient, dataOffer, dataOffer.getContractOffers().get(0));
                 val negotiation = awaitNegotiationDone(consumerClient, negotiationInit.getContractNegotiationId());

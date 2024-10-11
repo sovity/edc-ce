@@ -25,6 +25,7 @@ dependencies {
     implementation(project(":utils:versions"))
     implementation(libs.edc.jsonLd)
     implementation(libs.assertj.core)
+    implementation(libs.mockito.core)
     implementation(libs.jooq.jooq)
     implementation(libs.mockserver.netty)
     implementation(libs.testcontainers.testcontainers)

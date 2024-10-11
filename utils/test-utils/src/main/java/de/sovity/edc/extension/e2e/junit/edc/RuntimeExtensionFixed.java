@@ -14,6 +14,7 @@
 
 package de.sovity.edc.extension.e2e.junit.edc;
 
+import lombok.Getter;
 import org.eclipse.edc.spi.system.ConfigurationExtension;
 import org.eclipse.edc.spi.system.SystemExtension;
 import org.eclipse.edc.spi.system.configuration.ConfigFactory;
@@ -33,6 +34,7 @@ import static org.eclipse.edc.util.types.Cast.cast;
  * that uses {@link EmbeddedRuntimeFixed} instead of {@link org.eclipse.edc.junit.extensions.EmbeddedRuntime}.
  */
 public abstract class RuntimeExtensionFixed implements ParameterResolver {
+    @Getter
     protected final EmbeddedRuntimeFixed runtime;
 
     protected RuntimeExtensionFixed(EmbeddedRuntimeFixed runtime) {

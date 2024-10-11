@@ -22,14 +22,25 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class InstancesForJunitTest implements ParameterResolver {
     private final Map<Class<?>, LazyOrValue> instances = new HashMap<>();
+    private final List<ParameterResolver> childResolvers = new ArrayList<>();
+
+    public void putAll(ParameterResolver resolver) {
+        put(resolver);
+        childResolvers.add(resolver);
+    }
 
     public void put(Object object) {
         instances.put(object.getClass(), LazyOrValue.ofValue(object));
@@ -40,28 +51,12 @@ public class InstancesForJunitTest implements ParameterResolver {
     }
 
     public boolean has(Class<?> clazz) {
-        return instances.entrySet()
-            .stream()
-            .anyMatch(isSubclassOfEntry(clazz));
+        return supportsParameter(dummyParameterContext(clazz), null);
     }
 
     @SuppressWarnings("unchecked")
     public <T> T get(Class<T> clazz) {
-        return instances.entrySet()
-            .stream()
-            .filter(isSubclassOfEntry(clazz))
-            .findFirst()
-            .map(entry -> (T) entry.getValue().get())
-            .orElseThrow(() -> new IllegalArgumentException("No object of type %s".formatted(clazz)));
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> List<T> all(Class<T> clazz) {
-        return instances.entrySet()
-            .stream()
-            .filter(isSubclassOfEntry(clazz))
-            .map(entry -> (T) entry.getValue().get())
-            .toList();
+        return (T) resolveParameter(dummyParameterContext(clazz), null);
     }
 
     public boolean isLazyInitialized(Class<?> clazz) {
@@ -82,7 +77,9 @@ public class InstancesForJunitTest implements ParameterResolver {
         ExtensionContext extensionContext
     ) throws ParameterResolutionException {
         val clazz = parameterContext.getParameter().getType();
-        return has(clazz);
+
+        return instances.entrySet().stream().anyMatch(isSubclassOfEntry(clazz)) ||
+            childResolvers.stream().anyMatch(r -> r.supportsParameter(parameterContext, extensionContext));
     }
 
     @Override
@@ -91,10 +88,18 @@ public class InstancesForJunitTest implements ParameterResolver {
         ExtensionContext extensionContext
     ) throws ParameterResolutionException {
         val clazz = parameterContext.getParameter().getType();
-        if (!has(clazz)) {
-            throw new IllegalArgumentException("No object of type %s".formatted(clazz));
-        }
-        return get(clazz);
+        return instances.entrySet()
+            .stream()
+            .filter(isSubclassOfEntry(clazz))
+            .findFirst()
+            .map(entry -> entry.getValue().get())
+            .orElseGet(() -> childResolvers.stream()
+                .filter(r -> r.supportsParameter(parameterContext, extensionContext))
+                .findFirst()
+                .orElseThrow(() -> new ParameterResolutionException(
+                    "No resolver found for type %s in list of resolvers and instances".formatted(clazz))
+                )
+                .resolveParameter(parameterContext, extensionContext));
     }
 
     @NotNull
@@ -118,5 +123,19 @@ public class InstancesForJunitTest implements ParameterResolver {
             }
             return lazy.get();
         }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private ParameterContext dummyParameterContext(Class<?> type) {
+        // While the ParameterContext API supports resolving all kinds of
+        // templated Array types etc, we only care about supporting resolving
+        // classes by java.lang.class
+        var parameter = mock(Parameter.class);
+        when(parameter.getType()).thenReturn((Class) type);
+        when(parameter.getParameterizedType()).thenReturn(type);
+
+        var parameterContext = mock(ParameterContext.class);
+        when(parameterContext.getParameter()).thenReturn(parameter);
+        return parameterContext;
     }
 }
