@@ -162,14 +162,25 @@ comment on column edc_accesstokendata.additional_properties is 'Optional Additio
 
 
 -- table: edc_data_plane
-create table edc_data_plane_instance
+create table if not exists edc_data_plane
 (
-    id       varchar not null primary key,
-    data     json,
-    lease_id varchar
-        constraint data_plane_instance_lease_id_fk
+    process_id       varchar           not null primary key,
+    state            integer           not null,
+    created_at       bigint            not null,
+    updated_at       bigint            not null,
+    state_count      integer default 0 not null,
+    state_time_stamp bigint,
+    trace_context    json,
+    error_detail     varchar,
+    callback_address varchar,
+    lease_id         varchar
+        constraint data_plane_lease_lease_id_fk
             references edc_lease
-            on delete set null
+            on delete set null,
+    source           json,
+    destination      json,
+    properties       json,
+    flow_type        varchar
 );
 
 -- TODO: Do we truly not need this?
@@ -191,7 +202,7 @@ create table edc_data_plane_instance
 --     add column callback_address varchar;
 --
 -- alter table edc_data_plane
---     add column lease_id varchardc_
+--     add column lease_id varchar
 --         constraint data_plane_lease_lease_id_fk
 --             references edc_lease
 --             on delete set null;
