@@ -35,6 +35,7 @@ import jakarta.ws.rs.core.Response;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.protocol.dsp.http.spi.error.DspErrorResponse;
 import org.eclipse.edc.spi.EdcException;
 import org.eclipse.edc.spi.agent.ParticipantAgentService;
@@ -145,7 +146,9 @@ public class SovityMessageController {
 
     private Result<ClaimToken> validateToken(String authorization) {
         val token = TokenRepresentation.Builder.newInstance().token(authorization).build();
-        val verificationContext = VerificationContext.Builder.newInstance().build();
+        val verificationContext = VerificationContext.Builder.newInstance()
+            .policy(Policy.Builder.newInstance().build())
+            .build();
         return identityService.verifyJwtToken(token, verificationContext);
     }
 

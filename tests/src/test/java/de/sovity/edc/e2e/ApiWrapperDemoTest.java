@@ -43,6 +43,7 @@ import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.utils.Consumer;
 import de.sovity.edc.extension.e2e.junit.utils.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
+import de.sovity.edc.utils.config.ConfigProps;
 import de.sovity.edc.utils.config.ConfigUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.awaitility.Awaitility;
@@ -97,7 +98,8 @@ class ApiWrapperDemoTest {
         createContractDefinition();
 
         // consumer: negotiate contract and transfer data
-        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(ConfigUtils.getProtocolApiUrl(providerConfig));
+        var participantId = ConfigProps.EDC_PARTICIPANT_ID.getStringOrThrow(providerConfig);
+        var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(participantId, ConfigUtils.getProtocolApiUrl(providerConfig));
         var negotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
         negotiation = awaitNegotiationDone(negotiation.getContractNegotiationId());
         initiateTransfer(negotiation);

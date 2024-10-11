@@ -18,6 +18,7 @@ import de.sovity.edc.extension.e2e.junit.CeIntegrationTestExtension;
 import de.sovity.edc.extension.e2e.junit.edc.EmbeddedRuntimeFixed;
 import de.sovity.edc.utils.config.ConfigUtils;
 import io.restassured.http.ContentType;
+import org.eclipse.edc.connector.dataplane.selector.spi.client.DataPlaneClientFactory;
 import org.eclipse.edc.connector.dataplane.selector.spi.store.DataPlaneInstanceStore;
 import org.eclipse.edc.jsonld.spi.JsonLd;
 import org.eclipse.edc.spi.protocol.ProtocolWebhook;
@@ -35,8 +36,12 @@ class EdcUiConfigTest {
 
     @RegisterExtension
     static CeIntegrationTestExtension extension = CeIntegrationTestExtension.builder()
+        .additionalModule(":launchers:utils:vanilla-control-plane")
         .configOverrides(config -> config.property("edc.ui.some.example.prop", SOME_EXAMPLE_PROP))
         .skipDb(true)
+        .beforeEdcStartup(runtime -> {
+            runtime.registerServiceMock(DataPlaneClientFactory.class, mock(DataPlaneClientFactory.class));
+        })
         .build();
 
     @BeforeEach

@@ -44,7 +44,6 @@ public class TransferRequestBuilder {
             InitiateTransferRequest request
     ) {
         var contractId = request.getContractAgreementId();
-        var agreement = contractAgreementUtils.findByIdOrThrow(contractId);
         var negotiation = contractNegotiationUtils.findByContractAgreementIdOrThrow(contractId);
         var address = parameterizationCompatibilityUtils.enrich(edcPropertyUtils.buildDataAddress(request.getDataSinkProperties()), request.getTransferProcessProperties());
         assertIsConsuming(negotiation);
