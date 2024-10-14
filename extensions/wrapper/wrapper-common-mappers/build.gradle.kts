@@ -18,6 +18,7 @@ dependencies {
 
     api(project(":extensions:wrapper:wrapper-common-api"))
     api(project(":utils:json-and-jsonld-utils"))
+    implementation(project(":config"))
 
     implementation(libs.apache.commonsLang)
     implementation(libs.apache.commonsCollections)

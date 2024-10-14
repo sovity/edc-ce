@@ -941,7 +941,6 @@ class UiApiWrapperTest {
 
         var negotiationRequest = ContractNegotiationRequest.builder()
             .counterPartyAddress(dataOffer.getEndpoint())
-            .counterPartyParticipantId(dataOffer.getParticipantId())
             .assetId(dataOffer.getAsset().getAssetId())
             .contractOfferId(contractOffer.getContractOfferId())
             .policyJsonLd(contractOffer.getPolicy().getPolicyJsonLd())

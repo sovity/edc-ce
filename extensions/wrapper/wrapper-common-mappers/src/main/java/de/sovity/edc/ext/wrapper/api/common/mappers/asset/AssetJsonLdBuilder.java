@@ -65,7 +65,6 @@ public class AssetJsonLdBuilder {
 
 
     @SneakyThrows
-    @Nullable
     public JsonObject editAssetJsonLd(
         JsonObject assetJsonLd,
         UiAssetEditRequest editRequest

@@ -33,9 +33,6 @@ public class ContractNegotiationRequest {
     @Schema(description = "Counter Party Address", requiredMode = Schema.RequiredMode.REQUIRED)
     private String counterPartyAddress;
 
-    @Schema(description = "Counter Party Participant ID", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String counterPartyParticipantId;
-
     @Schema(description = "Contract Offer Dto ", requiredMode = Schema.RequiredMode.REQUIRED)
     private String contractOfferId;
 

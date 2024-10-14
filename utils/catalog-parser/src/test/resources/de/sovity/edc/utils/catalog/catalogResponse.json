@@ -27,7 +27,7 @@
       "odrl:target": "test-1.0"
     },
     "dcat:distribution": [{"@id": "dummy-distribution"}],
-    "https://www.w3.org/ns/dcat#version": "1.0",
+    "http://www.w3.org/ns/dcat#version": "1.0",
     "http://purl.org/dc/terms/title": "test"
   },
   "dcat:service": {
@@ -40,7 +40,7 @@
   "@context": {
     "dct": "https://purl.org/dc/terms/",
     "edc": "https://w3id.org/edc/v0.0.1/ns/",
-    "dcat": "https://www.w3.org/ns/dcat#",
+    "dcat": "http://www.w3.org/ns/dcat/",
     "odrl": "http://www.w3.org/ns/odrl/2/",
     "dspace": "https://w3id.org/dspace/v0.8/"
   }
