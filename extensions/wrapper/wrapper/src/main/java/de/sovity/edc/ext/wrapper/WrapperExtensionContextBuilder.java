@@ -160,8 +160,9 @@ public class WrapperExtensionContextBuilder {
         );
         var policyMapper = newPolicyMapper(
             objectMapper,
+            jsonLd,
             managementApiTypeTransformerRegistry,
-            operatorMapper
+            operatorMapper, config
         );
         var transferProcessStateService = new TransferProcessStateService();
         var contractNegotiationUtils = new ContractNegotiationUtils(
@@ -357,8 +358,10 @@ public class WrapperExtensionContextBuilder {
     @NotNull
     private static PolicyMapper newPolicyMapper(
         ObjectMapper objectMapper,
+        JsonLd jsonLd,
         TypeTransformerRegistry typeTransformerRegistry,
-        OperatorMapper operatorMapper
+        OperatorMapper operatorMapper,
+        Config config
     ) {
         var literalMapper = new LiteralMapper(objectMapper);
         var atomicConstraintMapper = new AtomicConstraintMapper(literalMapper, operatorMapper);
@@ -368,7 +371,9 @@ public class WrapperExtensionContextBuilder {
         return new PolicyMapper(
             constraintExtractor,
             expressionMapper,
-            typeTransformerRegistry
+            typeTransformerRegistry,
+            jsonLd,
+            config
         );
     }
 }

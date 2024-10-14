@@ -24,6 +24,7 @@ import de.sovity.edc.utils.jsonld.JsonLdUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
@@ -92,6 +93,7 @@ public class AssetMapper {
     ) {
         var expanded = jsonLd.expand(assetJsonLd)
             .orElseThrow(FailedMappingException::ofFailure);
+
         return typeTransformerRegistry.transform(expanded, Asset.class)
             .orElseThrow(FailedMappingException::ofFailure);
     }

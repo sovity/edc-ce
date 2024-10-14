@@ -88,6 +88,25 @@ public class ConfigUtils {
         return getPublicApiUrl(config.getEntries());
     }
 
+    public static String getControlApiUrl(Map<String, String> props) {
+        return UrlPathUtils.urlPathJoin(
+            ConfigProps.MY_EDC_PROTOCOL.getRaw(props),
+            getHost(props, ConfigProps.WEB_HTTP_CONTROL_PORT),
+            ConfigProps.WEB_HTTP_CONTROL_PATH.getRaw(props)
+        );
+    }
+
+    public static String getControlApiUrl(Config config) {
+        return getControlApiUrl(config.getEntries());
+    }
+
+    public static String getIntegratedDataPlaneUrl(Config config) {
+        return UrlPathUtils.urlPathJoin(
+            getControlApiUrl(config),
+            "v1/dataflows"
+        );
+    }
+
     @Nullable
     public static String getHost(Map<String, String> props, ConfigProp portIfNoReverseProxy) {
         var hasReverseProxy = ConfigProps.NetworkType.isProduction(props);

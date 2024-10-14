@@ -176,7 +176,6 @@ public class E2eTestScenario {
         val dataOffer = offersContainingContract.get(0);
         var negotiationRequest = ContractNegotiationRequest.builder()
             .counterPartyAddress(dataOffer.getEndpoint())
-            .counterPartyParticipantId(dataOffer.getParticipantId())
             .assetId(dataOffer.getAsset().getAssetId())
             .contractOfferId(firstContractOffer.getContractOfferId())
             .policyJsonLd(firstContractOffer.getPolicy().getPolicyJsonLd())

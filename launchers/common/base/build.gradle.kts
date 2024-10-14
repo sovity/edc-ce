@@ -92,6 +92,8 @@ dependencies {
     implementation("${edcGroup}:data-plane-public-api-v2:${edcVersion}")
     implementation("${edcGroup}:control-plane-api-client:${edcVersion}")
 
+    implementation(project(":extensions:integrated-data-plane-initializer"))
+
     // transfer-types
     implementation("${edcGroup}:data-plane-http:${edcVersion}")
     implementation("${edcGroup}:data-plane-http-oauth2:${edcVersion}")

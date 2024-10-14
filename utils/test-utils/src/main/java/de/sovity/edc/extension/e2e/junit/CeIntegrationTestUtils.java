@@ -81,6 +81,11 @@ public final class CeIntegrationTestUtils {
         return EdcClient.builder()
             .managementApiUrl(ConfigUtils.getManagementApiUrl(config.getEntries()))
             .managementApiKey(ConfigUtils.getManagementApiKey(config.getEntries()))
+            .customConfigurer(it -> it
+                .setConnectTimeout(0)
+                .setReadTimeout(0)
+                .setWriteTimeout(0)
+            )
             .build();
     }
 

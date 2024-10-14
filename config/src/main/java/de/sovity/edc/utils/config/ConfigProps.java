@@ -358,6 +358,49 @@ public class ConfigProps {
         .defaultValue("Unknown Version")
     );
 
+    public static final ConfigProp EDC_TRANSFER_SEND_RETRY_LIMIT = addCeProp(builder -> builder
+        .category(Category.ADVANCED)
+        .property("edc.transfer.send.retry.limit")
+        .description("Transfer Process Retry Limit")
+        .defaultValue("1")
+    );
+
+    public static final ConfigProp EDC_TRANSFER_SEND_RETRY_BASE_DELAY_MS = addCeProp(builder -> builder
+        .category(Category.ADVANCED)
+        .property("edc.transfer.send.retry.base-delay.ms")
+        .description("Transfer Process Retry Base Delay in Milliseconds")
+        .defaultValue("100")
+    );
+
+    public static final ConfigProp EDC_NEGOTIATION_CONSUMER_SEND_RETRY_LIMIT = addCeProp(builder -> builder
+        .category(Category.ADVANCED)
+        .property("edc.negotiation.consumer.send.retry.limit")
+        .description("Contract Negotiation Retry Limit (Consuming Side)")
+        .defaultValue("1")
+    );
+
+    public static final ConfigProp EDC_NEGOTIATION_PROVIDER_SEND_RETRY_LIMIT = addCeProp(builder -> builder
+        .category(Category.ADVANCED)
+        .property("edc.negotiation.provider.send.retry.limit")
+        .description("Contract Negotiation Retry Limit (Providing Side)")
+        .defaultValue("1")
+    );
+
+    public static final ConfigProp EDC_NEGOTIATION_CONSUMER_SEND_RETRY_BASE_DELAY_MS = addCeProp(builder -> builder
+        .category(Category.ADVANCED)
+        .property("edc.negotiation.consumer.send.retry.base-delay.ms")
+        .description("Contract Negotiation Retry Base Delay in Milliseconds (Consuming Side)")
+        .defaultValue("100")
+    );
+
+    public static final ConfigProp EDC_NEGOTIATION_PROVIDER_SEND_RETRY_BASE_DELAY_MS = addCeProp(builder -> builder
+        .category(Category.ADVANCED)
+        .property("edc.negotiation.provider.send.retry.base-delay.ms")
+        .description("Contract Negotiation Retry Base Delay in Milliseconds (Providing Side)")
+        .defaultValue("100")
+    );
+
+
     /* Defaults of EDC Configuration */
 
     public static final ConfigProp EDC_DATASOURCE_DEFAULT_NAME = addCeProp(builder -> builder
@@ -556,6 +599,18 @@ public class ConfigProps {
         .defaultValueFn(EDC_DSP_CALLBACK_ADDRESS::getRaw)
     );
 
+    public static final ConfigProp EDC_DATAPLANE_API_PUBLIC_BASEURL = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("edc.dataplane.api.public.baseurl")
+        .description("Base URL for the public data plane API")
+        .warnIfOverridden(true)
+        .defaultValueFn(props -> UrlPathUtils.urlPathJoin(
+            ConfigUtils.getPublicApiUrl(props),
+            // See org.eclipse.edc.test.e2e.TransferEndToEndParticipant#dataPlaneConfiguration
+            "/v2"
+        ))
+    );
+
     public static final ConfigProp EDC_DATASOURCE_LOGGINGHOUSE_URL = addCeProp(builder -> builder
         .category(Category.RAW_EDC_CONFIG_DEFAULTS)
         .property("edc.datasource.logginghouse.url")
@@ -587,6 +642,39 @@ public class ConfigProps {
             "but for some reason it is required, and EDC won't start up if it isn't configured." +
             "It is created in the Dockerfile")
         .relevantIf(NetworkType::isProduction)
+    );
+
+    public static final ConfigProp EDC_DATAPLANE_TRANSFERTYPES = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("edc.dataplane.transfertypes")
+        .description("Data Plane Transfer Types, not to be confused with the Data Plane Source and Dest Types")
+        .warnIfOverridden(true)
+        .defaultValue("HttpData-PUSH,HttpData-PULL,AmazonS3-PUSH")
+    );
+
+    // MY_EDC_TRANSFER_TYPES=HttpData,HttpProxy,HttpPush,AzureStorage,AmazonS3
+    public static final ConfigProp MY_EDC_TRANSFER_TYPES = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("my.edc.transfer.types")
+        .description("Data Plane Source and Dest Types")
+        .warnIfOverridden(true)
+        .defaultValue("HttpData,HttpProxy,HttpPush")
+    );
+
+    public static final ConfigProp EDC_DATAPLANE_DESTTYPES = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("edc.dataplane.desttypes")
+        .description("Data Plane Destination Types")
+        .warnIfOverridden(true)
+        .defaultValueFn(MY_EDC_TRANSFER_TYPES::getRaw)
+    );
+
+    public static final ConfigProp EDC_DATAPLANE_SOURCETYPES = addCeProp(builder -> builder
+        .category(Category.RAW_EDC_CONFIG_DEFAULTS)
+        .property("edc.dataplane.sourcetypes")
+        .description("Data Plane Source Types")
+        .warnIfOverridden(true)
+        .defaultValueFn(MY_EDC_TRANSFER_TYPES::getRaw)
     );
 
     private static ConfigProp addCeProp(Consumer<ConfigProp.ConfigPropBuilder> builderFn) {

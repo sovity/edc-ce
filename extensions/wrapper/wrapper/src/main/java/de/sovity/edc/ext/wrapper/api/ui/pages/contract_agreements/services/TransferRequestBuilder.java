@@ -56,6 +56,8 @@ public class TransferRequestBuilder {
                 .dataDestination(address)
                 .privateProperties(edcPropertyUtils.toMapOfObject(request.getTransferProcessProperties()))
                 .callbackAddresses(List.of())
+                // TODO: Move into API
+                .transferType("HttpData-PUSH")
                 .build();
     }
 

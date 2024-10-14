@@ -79,14 +79,11 @@ public class Prop {
         /**
          * Context as specified in https://www.w3.org/TR/vocab-dcat-3/#normative-namespaces
          */
-        public final String CTX = "https://www.w3.org/ns/dcat#";
+        public final String CTX = "http://www.w3.org/ns/dcat#";
 
         public final String DATASET = CTX + "dataset";
-
-        // TODO If there's issues with this field, it's because in 0.2.1 there was /dcat/ used by the EDC instead of /dcat#,
-        // TODO which allowed us to sneak by using that key for the EDC.
-        // TODO Now they might block this field to put in info fromm the Data Plane
         public final String DISTRIBUTION = CTX + "distribution";
+        public final String DISTRIBUTION_AS_USED_BY_CORE_EDC = CTX + "distribution";
         public final String VERSION = CTX + "version";
         public final String KEYWORDS = CTX + "keyword";
         public final String LANDING_PAGE = CTX + "landingPage";
