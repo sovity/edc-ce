@@ -19,6 +19,7 @@ dependencies {
     api("${edcGroup}:control-plane-api:${edcVersion}")
     api("${edcGroup}:http:${edcVersion}")
     api("${edcGroup}:dsp:${edcVersion}")
+    api(libs.edc.dataPlaneClient)
     api(libs.edc.iamMock)
 
     // data-plane-selector

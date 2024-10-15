@@ -55,7 +55,7 @@ public class AssetApiServiceTest {
     EdcPropertyUtils edcPropertyUtils;
 
     @BeforeEach
-    void setup(Config config) {
+    void setup() {
         edcPropertyUtils = new EdcPropertyUtils();
     }
 

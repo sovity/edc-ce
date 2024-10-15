@@ -18,12 +18,14 @@ import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionExtractor;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.ExpressionMapper;
 import de.sovity.edc.ext.wrapper.api.common.mappers.policy.MappingErrors;
 import de.sovity.edc.ext.wrapper.api.common.model.UiPolicyExpression;
+import de.sovity.edc.utils.config.ConfigProps;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import org.eclipse.edc.policy.model.Constraint;
 import org.eclipse.edc.policy.model.Policy;
 import org.eclipse.edc.policy.model.PolicyType;
 import org.eclipse.edc.spi.result.Result;
+import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.transform.spi.TypeTransformerRegistry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,8 +33,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Map;
 import java.util.Optional;
 
+import static de.sovity.edc.utils.config.ConfigProps.EDC_PARTICIPANT_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -42,13 +46,15 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PolicyMapperTest {
     @InjectMocks
-    PolicyMapper policyMapper;
+    private PolicyMapper policyMapper;
     @Mock
-    ExpressionExtractor expressionExtractor;
+    private ExpressionExtractor expressionExtractor;
     @Mock
-    ExpressionMapper expressionMapper;
+    private ExpressionMapper expressionMapper;
     @Mock
-    TypeTransformerRegistry typeTransformerRegistry;
+    private TypeTransformerRegistry typeTransformerRegistry;
+    @Mock
+    private Config config;
 
     @Test
     void buildUiPolicy() {
@@ -96,6 +102,10 @@ class PolicyMapperTest {
     @Test
     void buildPolicy_noConstraint() {
         // arrange
+        when(config.getEntries()).thenReturn(
+            Map.of(ConfigProps.EDC_PARTICIPANT_ID.getProperty(), "foo")
+        );
+
         var uiExpression = mock(UiPolicyExpression.class);
         when(expressionMapper.buildConstraint(uiExpression))
             .thenReturn(Optional.empty());
