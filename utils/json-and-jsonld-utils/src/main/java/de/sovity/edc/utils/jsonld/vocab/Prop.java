@@ -79,6 +79,7 @@ public class Prop {
         /**
          * Context as specified in https://www.w3.org/TR/vocab-dcat-3/#normative-namespaces
          */
+        // TODO: get a sample from the catalog in v0.7 and validate that this is the correct URI and update `catalogResponse.json`
         public final String CTX = "http://www.w3.org/ns/dcat#";
 
         public final String DATASET = CTX + "dataset";
