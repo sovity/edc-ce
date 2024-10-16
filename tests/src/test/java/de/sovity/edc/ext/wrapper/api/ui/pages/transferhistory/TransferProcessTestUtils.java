@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 sovity GmbH
+ * Copyright (c) 2024 sovity GmbH
  *
  *  This program and the accompanying materials are made available under the
  *  terms of the Apache License, Version 2.0 which is available at
@@ -8,13 +8,14 @@
  *  SPDX-License-Identifier: Apache-2.0
  *
  *  Contributors:
- *       sovity GmbH - init
+ *       sovity GmbH - initial API and implementation
  *
  */
 
 package de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory;
 
 import de.sovity.edc.utils.jsonld.vocab.Prop;
+import lombok.val;
 import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
 import org.eclipse.edc.connector.controlplane.contract.spi.negotiation.store.ContractNegotiationStore;
 import org.eclipse.edc.connector.controlplane.contract.spi.types.agreement.ContractAgreement;
@@ -43,8 +44,11 @@ public class TransferProcessTestUtils {
     public static final String PROVIDING_TRANSFER_PROCESS_ID = "81cdf4cf-8427-480f-9662-8a29d66ddd3b";
     public static final String CONSUMING_TRANSFER_PROCESS_ID = "be0cac12-bb43-420e-aa29-d66bb3d0e0ac";
 
-    public static void createProvidingTransferProcesses(ContractNegotiationStore store, TransferProcessStore transferProcessStore,
-                                                        AssetService assetStore) throws ParseException {
+    public static void createProvidingTransferProcesses(
+        ContractNegotiationStore store,
+        TransferProcessStore transferProcessStore,
+        AssetService assetStore
+    ) throws ParseException {
         DataAddress dataAddress = getDataAddress();
         createAsset(assetStore, dataAddress, PROVIDING_ASSET_ID, PROVIDING_ASSET_NAME);
 
@@ -81,7 +85,7 @@ public class TransferProcessTestUtils {
     private static DataAddress getDataAddress() {
         return DataAddress.Builder.newInstance()
             .type("HttpData")
-            .property("baseUrl", DATA_SINK)
+            .property(Prop.Edc.BASE_URL, DATA_SINK)
             .build();
     }
 
@@ -94,7 +98,10 @@ public class TransferProcessTestUtils {
             .createdAt(dateFormatterToLong("2023-06-01"))
             .build();
 
-        assetStore.create(asset);
+        val result = assetStore.create(asset);
+        if(result.failed()) {
+            throw new IllegalStateException(result.reason().toString());
+        }
     }
 
     private static ContractAgreement createContractAgreement(

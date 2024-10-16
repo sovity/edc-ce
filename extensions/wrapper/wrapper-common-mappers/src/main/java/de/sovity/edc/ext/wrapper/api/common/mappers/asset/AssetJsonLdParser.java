@@ -47,7 +47,7 @@ public class AssetJsonLdParser {
         var id = assetJsonLdUtils.getId(assetJsonLd);
         var title = assetJsonLdUtils.getTitle(assetJsonLd);
 
-        var distribution = JsonLdUtils.object(properties, Prop.Dcat.DISTRIBUTION);
+        var distribution = JsonLdUtils.object(properties, Prop.SovityDcatExt.DISTRIBUTION);
         uiAsset.setMediaType(JsonLdUtils.string(distribution, Prop.Dcat.MEDIATYPE));
         uiAsset.setDataSampleUrls(JsonLdUtils.stringList(distribution, Prop.Adms.SAMPLE));
         var rights = JsonLdUtils.object(distribution, Prop.Dcterms.RIGHTS);
@@ -129,7 +129,7 @@ public class AssetJsonLdParser {
             Prop.Dcterms.IDENTIFIER,
 
             // Explicitly handled
-            Prop.Dcat.DISTRIBUTION,
+            Prop.Dcat.DISTRIBUTION_WILL_BE_OVERWRITTEN_BY_CATALOG,
             Prop.Dcat.KEYWORDS,
             Prop.Dcat.LANDING_PAGE,
             Prop.Dcat.VERSION,
@@ -155,7 +155,8 @@ public class AssetJsonLdParser {
             Prop.SovityDcatExt.CUSTOM_JSON,
             Prop.SovityDcatExt.DATA_SOURCE_AVAILABILITY,
             Prop.SovityDcatExt.CONTACT_EMAIL,
-            Prop.SovityDcatExt.CONTACT_PREFERRED_EMAIL_SUBJECT
+            Prop.SovityDcatExt.CONTACT_PREFERRED_EMAIL_SUBJECT,
+            Prop.SovityDcatExt.DISTRIBUTION
         ));
 
         // custom properties

@@ -37,13 +37,11 @@ import de.sovity.edc.client.gen.model.UiPolicyExpression;
 import de.sovity.edc.client.gen.model.UiPolicyExpressionType;
 import de.sovity.edc.client.gen.model.UiPolicyLiteral;
 import de.sovity.edc.client.gen.model.UiPolicyLiteralType;
-import de.sovity.edc.extension.e2e.connector.remotes.management_api.ManagementApiConnectorRemote;
 import de.sovity.edc.extension.e2e.connector.remotes.test_backend_controller.TestBackendRemote;
 import de.sovity.edc.extension.e2e.junit.CeE2eTestExtension;
 import de.sovity.edc.extension.e2e.junit.utils.Consumer;
 import de.sovity.edc.extension.e2e.junit.utils.Provider;
 import de.sovity.edc.extension.utils.junit.DisabledOnGithub;
-import de.sovity.edc.utils.config.ConfigProps;
 import de.sovity.edc.utils.config.ConfigUtils;
 import de.sovity.edc.utils.jsonld.vocab.Prop;
 import org.awaitility.Awaitility;
@@ -188,6 +186,7 @@ class ApiWrapperDemoTest {
 
     private UiContractNegotiation initiateNegotiation(UiDataOffer dataOffer, UiContractOffer contractOffer) {
         var negotiationRequest = ContractNegotiationRequest.builder()
+            .counterPartyId(dataOffer.getParticipantId())
             .counterPartyAddress(dataOffer.getEndpoint())
             .assetId(dataOffer.getAsset().getAssetId())
             .contractOfferId(contractOffer.getContractOfferId())
@@ -215,9 +214,5 @@ class ApiWrapperDemoTest {
             .dataSinkProperties(dataAddress.getDataSinkProperties())
             .build();
         consumerClient.uiApi().initiateTransfer(transferRequest);
-    }
-
-    private String getProtocolEndpoint(ManagementApiConnectorRemote connector) {
-        return connector.getConfig().getProtocolApiUrl();
     }
 }

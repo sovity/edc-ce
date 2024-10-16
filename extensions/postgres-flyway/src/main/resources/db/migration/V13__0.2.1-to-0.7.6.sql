@@ -247,3 +247,14 @@ create table edc_policy_monitor
 
 -- This will help to identify states that need to be transitioned without a table scan when the entries grow
 create index if not exists policy_monitor_state on edc_policy_monitor (state, state_time_stamp);
+
+-- This will mark the existing contracts as terminated and pending termination
+-- The goal is to not use the old contracts anymore and inform the counterparty that it's been cancelled
+
+alter table edc_contract_agreement
+    add column sovity_marked_for_termination boolean default false;
+
+-- Mark all the existing contracts to be terminated
+update edc_contract_agreement set sovity_marked_for_termination = true;
+
+

@@ -114,6 +114,8 @@ public class AssetMapper {
         var assetId = Optional.ofNullable(JsonLdUtils.string(json, Prop.Edc.ID))
             .orElseGet(() -> JsonLdUtils.string(json, Prop.ID));
 
+        // TODO: write doc about this change
+
         return Json.createObjectBuilder()
             .add(Prop.ID, assetId)
             .add(Prop.Edc.PROPERTIES, json)

@@ -30,6 +30,9 @@ import lombok.RequiredArgsConstructor;
 @Schema(description = "Data for initiating a Contract Negotiation")
 public class ContractNegotiationRequest {
 
+    @Schema(description = "Counter Party Id", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String counterPartyId;
+
     @Schema(description = "Counter Party Address", requiredMode = Schema.RequiredMode.REQUIRED)
     private String counterPartyAddress;
 

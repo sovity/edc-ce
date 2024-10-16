@@ -104,7 +104,7 @@ public class CeE2eTestExtension
     }
 
     @Override
-    public void beforeTestExecution(ExtensionContext context) throws Exception {
+    public void beforeTestExecution(ExtensionContext context) {
         // Register ClientAndServer
         instances.putLazy(
             ClientAndServer.class,
@@ -116,7 +116,7 @@ public class CeE2eTestExtension
     }
 
     @Override
-    public void afterTestExecution(ExtensionContext context) throws Exception {
+    public void afterTestExecution(ExtensionContext context) {
         if (instances.isLazyInitialized(ClientAndServer.class)) {
             stopQuietly(instances.get(ClientAndServer.class));
         }

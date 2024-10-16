@@ -49,8 +49,8 @@ public class DspCatalogService {
     @SneakyThrows
     private byte[] fetchDcatRaw(String participantId, String connectorEndpoint, QuerySpec querySpec) {
         return catalogService
-                .requestCatalog(participantId, connectorEndpoint, "dataspace-protocol-http", querySpec)
-                .get()
-                .orElseThrow(DspCatalogServiceException::ofFailure);
+            .requestCatalog(participantId, connectorEndpoint, "dataspace-protocol-http", querySpec)
+            .get()
+            .orElseThrow(DspCatalogServiceException::ofFailure);
     }
 }

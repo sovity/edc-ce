@@ -50,14 +50,13 @@ public class DspDataOfferBuilder {
                 .map(this::buildContractOffer)
                 .toList();
 
-        var distributions = JsonLdUtils.listOfObjects(dataset, Prop.Dcat.DISTRIBUTION_AS_USED_BY_CORE_EDC);
+        var distributions = JsonLdUtils.listOfObjects(dataset, Prop.Dcat.DISTRIBUTION_WILL_BE_OVERWRITTEN_BY_CATALOG);
 
         var assetProperties = Json.createObjectBuilder(dataset)
                 .remove(Prop.TYPE)
                 .remove(Prop.Odrl.HAS_POLICY)
-                .remove(Prop.Dcat.DISTRIBUTION_AS_USED_BY_CORE_EDC)
+                .remove(Prop.Dcat.DISTRIBUTION_WILL_BE_OVERWRITTEN_BY_CATALOG)
                 .build();
-
 
         return new DspDataOffer(
                 assetProperties,

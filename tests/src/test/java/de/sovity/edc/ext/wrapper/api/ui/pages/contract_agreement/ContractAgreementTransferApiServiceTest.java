@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2023 sovity GmbH
+ * Copyright (c) 2024 sovity GmbH
  *
  *  This program and the accompanying materials are made available under the
  *  terms of the Apache License, Version 2.0 which is available at
@@ -62,8 +62,8 @@ class ContractAgreementTransferApiServiceTest {
             .contractAgreementId(contractId)
             .transferType("HttpData-PUSH")
             .dataSinkProperties(Map.of(
-                "type", "HttpData",
-                "baseUrl", DATA_SINK
+                Prop.Edc.TYPE, "HttpData",
+                Prop.Edc.BASE_URL, DATA_SINK
             ))
             .transferProcessProperties(Map.of("privateProperty", "privateValue"))
             .build();
@@ -81,8 +81,8 @@ class ContractAgreementTransferApiServiceTest {
         assertThat(transferProcess.getContractId()).isEqualTo(contractId);
         assertThat(transferProcess.getCounterPartyAddress()).isEqualTo(COUNTER_PARTY_ADDRESS);
         assertThat(transferProcess.getDataDestination().getProperties()).containsAllEntriesOf(Map.of(
-            "https://w3id.org/edc/v0.0.1/ns/type", "HttpData",
-            "baseUrl", DATA_SINK
+            Prop.Edc.TYPE, "HttpData",
+            Prop.Edc.BASE_URL, DATA_SINK
         ));
     }
 

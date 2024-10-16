@@ -11,7 +11,7 @@
  *       sovity GmbH - initial API and implementation
  *
  */
-package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
+package de.sovity.edc.e2e;
 
 
 import de.sovity.edc.client.EdcClient;
@@ -28,8 +28,8 @@ import de.sovity.edc.utils.jsonld.vocab.Prop;
 import lombok.SneakyThrows;
 import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
 import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService;
+import org.eclipse.edc.spi.query.Criterion;
 import org.eclipse.edc.spi.query.QuerySpec;
-import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,6 +51,7 @@ public class AssetApiServiceTest {
     @RegisterExtension
     static CeIntegrationTestExtension providerExtension = CeIntegrationTestExtension.builder()
         .additionalModule(":launchers:connectors:sovity-dev")
+        .participantId("MyEDC")
         .build();
     EdcPropertyUtils edcPropertyUtils;
 
@@ -77,6 +78,8 @@ public class AssetApiServiceTest {
         var asset = assets.get(0);
         assertThat(asset.getAssetId()).isEqualTo(properties.get(Asset.PROPERTY_ID));
         assertThat(asset.getLandingPageUrl()).isEqualTo(properties.get(Prop.Dcat.LANDING_PAGE));
+
+        client.uiApi().deleteAsset("asset-11");
     }
 
     @Test
@@ -93,6 +96,8 @@ public class AssetApiServiceTest {
         assertThat(result.getAssets())
             .extracting(UiAsset::getAssetId)
             .containsExactly("asset-23", "asset-22", "asset-21");
+
+        List.of("asset-21","asset-22","asset-23").forEach(id -> client.uiApi().deleteAsset(id));
     }
 
     @Test
@@ -222,6 +227,8 @@ public class AssetApiServiceTest {
 
         var assetWithDataAddress = assetService.query(QuerySpec.max()).orElseThrow(FailedMappingException::ofFailure).toList().get(0);
         assertThat(assetWithDataAddress.getDataAddress().getProperties()).containsEntry("oauth2:tokenUrl", "https://token-url");
+
+        client.uiApi().deleteAsset("asset-31");
     }
 
     @Test
@@ -366,6 +373,9 @@ public class AssetApiServiceTest {
             .getDataAddress()
             .getProperties();
         assertThat(dataAddressAfterEdit).isEqualTo(dataAddressBeforeEdit);
+
+
+        client.uiApi().deleteAsset("asset-41");
     }
 
     @Test
@@ -394,6 +404,8 @@ public class AssetApiServiceTest {
         assertThat(asset.getHttpDatasourceHintsProxyPath()).isFalse();
         assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isFalse();
         assertThat(asset.getHttpDatasourceHintsProxyBody()).isFalse();
+
+        client.uiApi().deleteAsset("asset-51");
     }
 
     @Test
@@ -422,20 +434,25 @@ public class AssetApiServiceTest {
         assertThat(asset.getHttpDatasourceHintsProxyPath()).isNull();
         assertThat(asset.getHttpDatasourceHintsProxyQueryParams()).isNull();
         assertThat(asset.getHttpDatasourceHintsProxyBody()).isNull();
+
+        client.uiApi().deleteAsset("asset-61");
     }
 
     @Test
     void testDeleteAsset(EdcClient client, AssetService assetService) {
         // arrange
         createAsset(assetService, "2023-06-01", Map.of(Asset.PROPERTY_ID, "asset-71"));
-        assertThat(assetService.query(QuerySpec.max()).getContent()).isNotEmpty();
+        QuerySpec query71 = QuerySpec.Builder.newInstance()
+            .filter(Criterion.criterion("id", "=", "asset-71"))
+            .build();
+        assertThat(assetService.query(query71).getContent()).isNotEmpty();
 
         // act
         var response = client.uiApi().deleteAsset("asset-71");
 
         // assert
         assertThat(response.getId()).isEqualTo("asset-71");
-        assertThat(assetService.query(QuerySpec.max()).getContent()).isEmpty();
+        assertThat(assetService.query(query71).getContent()).hasSize(0);
     }
 
     private void createAsset(
