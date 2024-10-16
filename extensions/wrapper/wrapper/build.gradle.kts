@@ -47,17 +47,7 @@ dependencies {
     testImplementation(libs.edc.dsp)
     testImplementation(libs.edc.iamMock)
     testImplementation(libs.edc.junit)
-    testImplementation(libs.edc.http) {
-        exclude(group = "org.eclipse.jetty", module = "jetty-client")
-        exclude(group = "org.eclipse.jetty", module = "jetty-http")
-        exclude(group = "org.eclipse.jetty", module = "jetty-io")
-        exclude(group = "org.eclipse.jetty", module = "jetty-server")
-        exclude(group = "org.eclipse.jetty", module = "jetty-util")
-        exclude(group = "org.eclipse.jetty", module = "jetty-webapp")
-    }
-
-    // Updated jetty versions for e.g. CVE-2023-26048
-    testImplementation(libs.bundles.jetty.cve2023)
+    testImplementation(libs.edc.http)
 
     testImplementation(libs.edc.controlPlaneSql)
     testImplementation(libs.edc.contractNegotiationStoreSql)

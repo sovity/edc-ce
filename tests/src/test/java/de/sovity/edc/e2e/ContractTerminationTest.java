@@ -375,6 +375,7 @@ class ContractTerminationTest {
 
         val transferRequest = InitiateTransferRequest.builder()
             .contractAgreementId(negotiation.getContractAgreementId())
+            .transferType("HttpData-PUSH")
             .dataSinkProperties(
                 Map.of(
                     Prop.Edc.BASE_URL, destinationUrl,

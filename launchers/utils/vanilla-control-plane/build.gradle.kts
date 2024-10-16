@@ -3,28 +3,26 @@ plugins {
     `java-library`
     `maven-publish`
 }
-val edcVersion = libs.versions.edc.get()
-val edcGroup = libs.versions.edcGroup.get()
 
 dependencies {
     // EDC Base
-    api("${edcGroup}:json-ld:${edcVersion}")
-    api("${edcGroup}:connector-core:${edcVersion}")
-    api("${edcGroup}:policy-monitor-core:${edcVersion}")
+    api(libs.edc.jsonLd)
+    api(libs.edc.connectorCore)
+    api(libs.edc.policyMonitorCore)
 
     // EDC CP
-    api("${edcGroup}:control-plane-core:${edcVersion}")
-    api("${edcGroup}:management-api:${edcVersion}")
-    api("${edcGroup}:control-api-configuration:${edcVersion}")
-    api("${edcGroup}:control-plane-api:${edcVersion}")
-    api("${edcGroup}:http:${edcVersion}")
-    api("${edcGroup}:dsp:${edcVersion}")
+    api(libs.edc.controlPlaneCore)
+    api(libs.edc.managementApi)
+    api(libs.edc.controlApiConfiguration)
+    api(libs.edc.controlPlaneApi)
+    api(libs.edc.http)
+    api(libs.edc.dsp)
     api(libs.edc.dataPlaneClient)
     api(libs.edc.iamMock)
 
     // data-plane-selector
-    api("${edcGroup}:data-plane-selector-core:${edcVersion}")
-    api("${edcGroup}:data-plane-selector-api:${edcVersion}")
+    api(libs.edc.dataPlaneSelectorCore)
+    api(libs.edc.dataPlaneSelectorApi)
 
     // Test Dependencies
     api(libs.edc.junit)

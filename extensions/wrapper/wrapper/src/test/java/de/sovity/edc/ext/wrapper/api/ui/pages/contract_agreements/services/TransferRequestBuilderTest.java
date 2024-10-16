@@ -36,20 +36,21 @@ class TransferRequestBuilderTest {
     @Test
     void ensureThatThePreviousCustomPropertiesAreCopiedOverToTheDataSource() {
         // arrange
-        var request = new InitiateTransferRequest(
-                "contract-id",
-                Map.of(
-                        "type", "HttpData",
-                        "baseUrl", "http://example.com/segment0"
-                ),
-                Map.of(
-                        EDC_NAMESPACE + "pathSegments", "my-endpoint",
-                        EDC_NAMESPACE + "method", "METHOD",
-                        EDC_NAMESPACE + "queryParams", "queryParams",
-                        EDC_NAMESPACE + "contentType", "mimetype",
-                        EDC_NAMESPACE + "body", "[]"
-                )
-        );
+        var request = InitiateTransferRequest.builder()
+            .contractAgreementId("contract-id")
+            .transferType("HttpData-PUSH")
+            .dataSinkProperties(Map.of(
+                "type", "HttpData",
+                "baseUrl", "http://example.com/segment0"
+            ))
+            .transferProcessProperties(Map.of(
+                EDC_NAMESPACE + "pathSegments", "my-endpoint",
+                EDC_NAMESPACE + "method", "METHOD",
+                EDC_NAMESPACE + "queryParams", "queryParams",
+                EDC_NAMESPACE + "contentType", "mimetype",
+                EDC_NAMESPACE + "body", "[]"
+            ))
+            .build();
 
         final var transformer = createTransferRequestBuilder();
 

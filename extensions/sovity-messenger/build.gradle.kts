@@ -25,10 +25,6 @@ dependencies {
     testImplementation(libs.edc.jsonLdLib)
 }
 
-tasks.getByName<Test>("test") {
-    useJUnitPlatform()
-}
-
 publishing {
     publications {
         create<MavenPublication>(project.name) {

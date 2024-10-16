@@ -1,17 +1,23 @@
 [versions]
-# groups
-edcGroup = "org.eclipse.edc"
+# Publishing
 sovityEdcExtensionGroup = "de.sovity.edc.ext"
 sovityEdcGroup = "de.sovity.edc"
+sovityCeVersion = "0.0.1-SNAPSHOT"
 
-# images
-postgresDbImage = "postgres:15-alpine"
-
-# versions
+# Eclipse EDC Version
 edc = "0.7.2"
-edcForOtherRepos = "0.7.2"
+
+# Eclipse EDC Version for Modules not contained in our fork
+edcUniverse = "0.7.2"
+
+# Tractus-X Version
+# Used for using bugfixes of the Tractus-X EDC
 tractus = "0.7.6"
 
+# Testcontainers, JooQ Codegen
+postgresDbImage = "postgres:15-alpine"
+
+# Other Libraries
 assertj = "3.23.1"
 awaitility = "4.2.0"
 commonsCompress = "1.26.1"
@@ -24,7 +30,6 @@ flyway = "9.0.1"
 flywayPlugin = "9.21.1"
 gson = "2.10.1"
 gsonFire = "1.8.5"
-guava = "33.1.0-jre"
 hibernateValidator = "8.0.1.Final"
 hidetakeSwagger = "2.19.2"
 hikari = "5.0.1"
@@ -34,15 +39,12 @@ jakartaJson = "2.0.1"
 jakartaRs = "3.1.0"
 jakartaServletApi = "5.0.0"
 jakartaValidation = "3.0.2"
-java = "17"
 javapoet = "1.13.0"
 jersey = "3.1.3"
 jetty = "11.0.15"
 jooq = "3.18.7"
 jooqPostgresqlJson = "4.0.0"
 jooqPlugin = "7.1.1"
-json = "20220924"
-jsonAssert = "1.5.1"
 jsonUnit = "3.2.7"
 junit = "5.10.0"
 loggingHouse = "v1.2.0-alpha.1"
@@ -57,7 +59,7 @@ openapiJackson = "0.2.6"
 postgres = "42.4.5"
 quarkus = "2.16.6.Final"
 quartz = "2.3.2"
-restAssured = "5.4.0"
+restAssured = "5.5.0"
 shadow = "7.1.2"
 swagger = "1.6.12"
 swaggerCore = "2.2.18"
@@ -66,17 +68,9 @@ titaniumLd = "1.3.2"
 
 [libraries]
 
-apache-commonsCollections = { module = "org.apache.commons:commons-collections4", version.ref = "commonsCollections" }
-apache-commonsCompress = { module = "org.apache.commons:commons-compress", version.ref = "commonsCompress" }
-apache-commonsIo = { module = "commons-io:commons-io", version.ref = "commonsIo" }
-apache-commonsLang = { module = "org.apache.commons:commons-lang3", version.ref = "commonsLang" }
+# Core EDC Libraries
 
-apicatalog-titaniumJsonLd = { module = "com.apicatalog:titanium-json-ld", version.ref = "titaniumLd" }
-
-assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
-
-awaitility-java = { module = "org.awaitility:awaitility", version.ref = "awaitility" }
-
+edc-accesstokendataStoreSql = { module = "org.eclipse.edc:accesstokendata-store-sql", version.ref = "edc" }
 edc-apiCore = { module = "org.eclipse.edc:api-core", version.ref = "edc" }
 edc-apiObservability = { module = "org.eclipse.edc:api-observability", version.ref = "edc" }
 edc-assetSpi = { module = "org.eclipse.edc:asset-spi", version.ref = "edc" }
@@ -84,31 +78,47 @@ edc-authSpi = { module = "org.eclipse.edc:auth-spi", version.ref = "edc" }
 edc-authTokenbased = { module = "org.eclipse.edc:auth-tokenbased", version.ref = "edc" }
 edc-boot = { module = "org.eclipse.edc:boot", version.ref = "edc" }
 edc-bootSpi = { module = "org.eclipse.edc:boot-spi", version.ref = "edc" }
+edc-callbackEventDispatcher = { module = "org.eclipse.edc:callback-event-dispatcher", version.ref = "edc" }
+edc-callbackHttpDispatcher = { module = "org.eclipse.edc:callback-http-dispatcher", version.ref = "edc" }
+edc-callbackStaticEndpoint = { module = "org.eclipse.edc:callback-static-endpoint", version.ref = "edc" }
 edc-configurationFilesystem = { module = "org.eclipse.edc:configuration-filesystem", version.ref = "edc" }
 edc-connectorCore = { module = "org.eclipse.edc:connector-core", version.ref = "edc" }
 edc-contractDefinitionApi = { module = "org.eclipse.edc:contract-definition-api", version.ref = "edc" }
 edc-contractNegotiationStoreSql = { module = "org.eclipse.edc:contract-negotiation-store-sql", version.ref = "edc" }
 edc-contractSpi = { module = "org.eclipse.edc:contract-spi", version.ref = "edc" }
+edc-controlApiConfiguration = { module = "org.eclipse.edc:control-api-configuration", version.ref = "edc" }
 edc-controlPlaneAggregateServices = { module = "org.eclipse.edc:control-plane-aggregate-services", version.ref = "edc" }
+edc-controlPlaneApi = { module = "org.eclipse.edc:control-plane-api", version.ref = "edc" }
+edc-controlPlaneApiClient = { module = "org.eclipse.edc:control-plane-api-client", version.ref = "edc" }
 edc-controlPlaneApiClientSpi = { module = "org.eclipse.edc:control-plane-api-client-spi", version.ref = "edc" }
 edc-controlPlaneCore = { module = "org.eclipse.edc:control-plane-core", version.ref = "edc" }
 edc-controlPlaneSpi = { module = "org.eclipse.edc:control-plane-spi", version.ref = "edc" }
 edc-controlPlaneSql = { module = "org.eclipse.edc:control-plane-sql", version.ref = "edc" }
 edc-coreSpi = { module = "org.eclipse.edc:core-spi", version.ref = "edc" }
+edc-dataPlaneClient = { module = "org.eclipse.edc:data-plane-client", version.ref = "edc" }
+edc-dataPlaneControlApi = { module = "org.eclipse.edc:data-plane-control-api", version.ref = "edc" }
 edc-dataPlaneCore = { module = "org.eclipse.edc:data-plane-core", version.ref = "edc" }
 edc-dataPlaneHttp = { module = "org.eclipse.edc:data-plane-http", version.ref = "edc" }
+edc-dataPlaneHttpOauth2 = { module = "org.eclipse.edc:data-plane-http-oauth2", version.ref = "edc" }
+edc-dataPlaneInstanceStoreSql = { module = "org.eclipse.edc:data-plane-instance-store-sql", version.ref = "edc" }
+edc-dataPlanePublicApiV2 = { module = "org.eclipse.edc:data-plane-public-api-v2", version.ref = "edc" }
+edc-dataPlaneSelectorApi = { module = "org.eclipse.edc:data-plane-selector-api", version.ref = "edc" }
 edc-dataPlaneSelectorClient = { module = "org.eclipse.edc:data-plane-selector-client", version.ref = "edc" }
 edc-dataPlaneSelectorCore = { module = "org.eclipse.edc:data-plane-selector-core", version.ref = "edc" }
+edc-dataPlaneSignalingApi = { module = "org.eclipse.edc:data-plane-signaling-api", version.ref = "edc" }
+edc-dataPlaneStoreSql = { module = "org.eclipse.edc:data-plane-store-sql", version.ref = "edc" }
 edc-dataPlaneUtil = { module = "org.eclipse.edc:data-plane-util", version.ref = "edc" }
 edc-dsp = { module = "org.eclipse.edc:dsp", version.ref = "edc" }
 edc-dspApiConfiguration = { module = "org.eclipse.edc:dsp-http-api-configuration", version.ref = "edc" }
-edc-dspNegotiationTransform = { module = "org.eclipse.edc:dsp-negotiation-transform", version.ref = "edc" }
-edc-dspHttpSpi = { module = "org.eclipse.edc:dsp-http-spi", version.ref = "edc" }
 edc-dspHttpCore = { module = "org.eclipse.edc:dsp-http-core", version.ref = "edc" }
+edc-dspHttpSpi = { module = "org.eclipse.edc:dsp-http-spi", version.ref = "edc" }
+edc-dspNegotiationTransform = { module = "org.eclipse.edc:dsp-negotiation-transform", version.ref = "edc" }
+edc-edrIndexSql = { module = "org.eclipse.edc:edr-index-sql", version.ref = "edc" }
+edc-edrStoreCore = { module = "org.eclipse.edc:edr-store-core", version.ref = "edc" }
+edc-edrStoreReceiver = { module = "org.eclipse.edc:edr-store-receiver", version.ref = "edc" }
 edc-http = { module = "org.eclipse.edc:http", version.ref = "edc" }
 edc-httpSpi = { module = "org.eclipse.edc:http-spi", version.ref = "edc" }
 edc-iamMock = { module = "org.eclipse.edc:iam-mock", version.ref = "edc" }
-edc-dataPlaneClient = { module = "org.eclipse.edc:data-plane-client", version.ref = "edc" }
 edc-jsonLd = { module = "org.eclipse.edc:json-ld", version.ref = "edc" }
 edc-jsonLdLib = { module = "org.eclipse.edc:json-ld-lib", version.ref = "edc" }
 edc-jsonLdSpi = { module = "org.eclipse.edc:json-ld-spi", version.ref = "edc" }
@@ -120,103 +130,95 @@ edc-oauth2Core = { module = "org.eclipse.edc:oauth2-core", version.ref = "edc" }
 edc-policyDefinitionApi = { module = "org.eclipse.edc:policy-definition-api", version.ref = "edc" }
 edc-policyEngineSpi = { module = "org.eclipse.edc:policy-engine-spi", version.ref = "edc" }
 edc-policyModel = { module = "org.eclipse.edc:policy-model", version.ref = "edc" }
+edc-policyMonitorCore = { module = "org.eclipse.edc:policy-monitor-core", version.ref = "edc" }
+edc-policyMonitorStoreSql = { module = "org.eclipse.edc:policy-monitor-store-sql", version.ref = "edc" }
 edc-policySpi = { module = "org.eclipse.edc:policy-spi", version.ref = "edc" }
 edc-runtimeMetamodel = { module = "org.eclipse.edc:runtime-metamodel", version = "0.2.1" }
+edc-secretsApi = { module = "org.eclipse.edc:secrets-api", version.ref = "edc" }
 edc-sqlCore = { module = "org.eclipse.edc:sql-core", version.ref = "edc" }
+edc-sqlPoolApacheCommons = { module = "org.eclipse.edc:sql-pool-apache-commons", version.ref = "edc" }
 edc-transactionLocal = { module = "org.eclipse.edc:transaction-local", version.ref = "edc" }
 edc-transferDataPlane = { module = "org.eclipse.edc:transfer-data-plane", version.ref = "edc" }
 edc-transferProcessApi = { module = "org.eclipse.edc:transfer-process-api", version.ref = "edc" }
 edc-transferProcessStoreSql = { module = "org.eclipse.edc:transfer-process-store-sql", version.ref = "edc" }
+edc-transferPullHttpDynamicReceiver = { module = "org.eclipse.edc:transfer-pull-http-dynamic-receiver", version.ref = "edc" }
 edc-transferSpi = { module = "org.eclipse.edc:transfer-spi", version.ref = "edc" }
-edc-transformSpi = { module = "org.eclipse.edc:transform-spi", version.ref = "edc" }
 edc-transformLib = { module = "org.eclipse.edc:transform-lib", version.ref = "edc" }
+edc-transformSpi = { module = "org.eclipse.edc:transform-spi", version.ref = "edc" }
+edc-validatorDataAddressHttpData = { module = "org.eclipse.edc:validator-data-address-http-data", version.ref = "edc" }
+edc-webSpi = { module = "org.eclipse.edc:web-spi", version.ref = "edc" }
 
+# EDC Extended Universe Libraries
+
+edc-aws-dataPlaneAwsS3 = { module = "org.eclipse.edc.aws:data-plane-aws-s3", version.ref = "edcUniverse" }
+edc-azure-dataPlaneAzureStorage = { module = "org.eclipse.edc.azure:data-plane-azure-storage", version.ref = "edcUniverse" }
+
+# Catena Libraries
+
+tractus-azblobProvisioner = { module = "org.eclipse.tractusx.edc:azblob-provisioner", version.ref = "tractus" }
+tractus-datasetBugfix = { module = "org.eclipse.tractusx.edc:dataset-bugfix", version.ref = "tractus" }
+tractus-pipelineService = { module = "org.eclipse.tractusx.edc:pipeline-service", version.ref = "tractus" }
+tractus-transferDataplaneSignaling = { module = "org.eclipse.tractusx.edc:transfer-dataplane-signaling", version.ref = "tractus" }
+
+# Other Libraries
+
+apache-commonsCollections = { module = "org.apache.commons:commons-collections4", version.ref = "commonsCollections" }
+apache-commonsCompress = { module = "org.apache.commons:commons-compress", version.ref = "commonsCompress" }
+apache-commonsIo = { module = "commons-io:commons-io", version.ref = "commonsIo" }
+apache-commonsLang = { module = "org.apache.commons:commons-lang3", version.ref = "commonsLang" }
+apicatalog-titaniumJsonLd = { module = "com.apicatalog:titanium-json-ld", version.ref = "titaniumLd" }
 findbugs-jsr305 = { module = "com.google.code.findbugs:jsr305", version.ref = "findbugs" }
-
 flexmark-all = { module = "com.vladsch.flexmark:flexmark-all", version.ref = "flexmark" }
-
 flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
-
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-
 gsonFire = { module = "io.gsonfire:gson-fire", version.ref = "gsonFire" }
-
-guava = { module = "com.google.guava:guava", version.ref = "guava" }
-
 hibernate-validation = { module = "org.hibernate.validator:hibernate-validator", version.ref = "hibernateValidator" }
-
 hikari = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
-
 jakarta-annotationApi = { module = "jakarta.annotation:jakarta.annotation-api", version.ref = "jakartaAnnotation" }
 jakarta-el = { module = "org.glassfish:jakarta.el", version.ref = "jakartaEl" }
 jakarta-json = { module = "org.glassfish:jakarta.json", version.ref = "jakartaJson" }
 jakarta-rsApi = { module = "jakarta.ws.rs:jakarta.ws.rs-api", version.ref = "jakartaRs" }
 jakarta-servletApi = { module = "jakarta.servlet:jakarta.servlet-api", version.ref = "jakartaServletApi" }
 jakarta-validationApi = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakartaValidation" }
-
 jersey-mediaMultipart = { module = "org.glassfish.jersey.media:jersey-media-multipart", version.ref = "jersey" }
-
 jetty-client = { module = "org.eclipse.jetty:jetty-client", version.ref = "jetty" }
 jetty-http = { module = "org.eclipse.jetty:jetty-http", version.ref = "jetty" }
 jetty-io = { module = "org.eclipse.jetty:jetty-io", version.ref = "jetty" }
 jetty-server = { module = "org.eclipse.jetty:jetty-server", version.ref = "jetty" }
 jetty-util = { module = "org.eclipse.jetty:jetty-util", version.ref = "jetty" }
 jetty-webapp = { module = "org.eclipse.jetty:jetty-webapp", version.ref = "jetty" }
-
 jooq-jooq = { module = "org.jooq:jooq", version.ref = "jooq" }
-
-jsonUnit-assertj = { module = "net.javacrumbs.json-unit:json-unit-assertj", version.ref = "jsonUnit" }
-
-junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
-junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
-junit-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
-
 loggingHouse-client = { module = "logging-house:logging-house-client", version.ref = "loggingHouse" }
-
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
-
-mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
-mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
-mockito-junitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
-
-mockserver-netty = { module = "org.mock-server:mockserver-netty", version.ref = "mockserver" }
-
-okhttp-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttp-loggingInterceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
-
+okhttp-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okio-jvm = { module = "com.squareup.okio:okio-jvm", version.ref = "okio" }
-
 openapi-jacksonDatabindNullable = { module = "org.openapitools:jackson-databind-nullable", version.ref = "openapiJackson" }
-
 postgres = { module = "org.postgresql:postgresql", version.ref = "postgres" }
-
 quarkus-bom = { module = "io.quarkus.platform:quarkus-bom", version.ref = "quarkus" }
-
 quartz-quartz = { module = "org.quartz-scheduler:quartz", version.ref = "quartz" }
-
-restAssured-restAssured = { module = "io.rest-assured:rest-assured", version.ref = "restAssured" }
-
 squareup-javapoet = { module = "com.squareup:javapoet", version.ref = "javapoet" }
-
 swagger-annotations = { module = "io.swagger:swagger-annotations", version.ref = "swagger" }
 swagger-annotationsJakarta = { module = "io.swagger.core.v3:swagger-annotations-jakarta", version.ref = "swaggerCore" }
 swagger-jaxrs2Jakarta = { module = "io.swagger.core.v3:swagger-jaxrs2-jakarta", version.ref = "swaggerCore" }
-
 t9tJooq-jooqPostgresqlJson = { module = "com.github.t9t.jooq:jooq-postgresql-json", version.ref = "jooqPostgresqlJson" }
-
-testcontainers-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 testcontainers-junitJupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
 testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
+testcontainers-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 
-[bundles]
-jetty-cve2023 = [
-    "jetty-client",
-    "jetty-http",
-    "jetty-io",
-    "jetty-server",
-    "jetty-util",
-    "jetty-webapp",
-]
+# Test Utils
+
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+awaitility-java = { module = "org.awaitility:awaitility", version.ref = "awaitility" }
+junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+junit-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
+jsonUnit-assertj = { module = "net.javacrumbs.json-unit:json-unit-assertj", version.ref = "jsonUnit" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
+mockito-junitJupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
+mockserver-netty = { module = "org.mock-server:mockserver-netty", version.ref = "mockserver" }
+restAssured-restAssured = { module = "io.rest-assured:rest-assured", version.ref = "restAssured" }
 
 [plugins]
 hidetake-swaggerGenerator = { id = "org.hidetake.swagger.generator", version.ref = "hidetakeSwagger" }
