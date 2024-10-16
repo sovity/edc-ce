@@ -11,7 +11,7 @@
  *       sovity GmbH - initial API and implementation
  *
  */
-package de.sovity.edc.ext.wrapper.api.ui.pages.asset;
+package de.sovity.edc.e2e;
 
 
 import de.sovity.edc.client.EdcClient;
@@ -29,7 +29,6 @@ import lombok.SneakyThrows;
 import org.eclipse.edc.connector.controlplane.asset.spi.domain.Asset;
 import org.eclipse.edc.connector.controlplane.services.spi.asset.AssetService;
 import org.eclipse.edc.spi.query.QuerySpec;
-import org.eclipse.edc.spi.system.configuration.Config;
 import org.eclipse.edc.spi.types.domain.DataAddress;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

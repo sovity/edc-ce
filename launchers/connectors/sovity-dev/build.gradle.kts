@@ -8,6 +8,7 @@ dependencies {
     api(project(":launchers:common:base"))
     api(project(":launchers:common:auth-mock"))
     api(project(":launchers:common:observability"))
+    api(libs.edc.controlPlaneContract)
 }
 
 application {
