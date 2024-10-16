@@ -78,7 +78,11 @@ public class CeIntegrationTestExtension
         }
 
         // Start Connector
-        var bootConfig = CeIntegrationTestUtils.defaultConfig(participantId, getTestDatabaseOrMock(), configOverrides);
+        var bootConfig = CeIntegrationTestUtils.defaultConfig(
+            participantId,
+            getTestDatabaseOrMock(),
+            configOverrides
+        );
         var runtime = new EmbeddedRuntimeFixed(
             participantId,
             bootConfig,

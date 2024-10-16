@@ -58,14 +58,15 @@ class ContractAgreementTransferApiServiceTest {
         var contractId = UUID.randomUUID().toString();
         createContractNegotiation(store, COUNTER_PARTY_ADDRESS, contractId);
 
-        var request = new InitiateTransferRequest(
-            contractId,
-            Map.of(
+        var request = InitiateTransferRequest.builder()
+            .contractAgreementId(contractId)
+            .transferType("HttpData-PUSH")
+            .dataSinkProperties(Map.of(
                 "type", "HttpData",
                 "baseUrl", DATA_SINK
-            ),
-            Map.of("privateProperty", "privateValue")
-        );
+            ))
+            .transferProcessProperties(Map.of("privateProperty", "privateValue"))
+            .build();
 
         // act
         var result = client.uiApi().initiateTransfer(request);

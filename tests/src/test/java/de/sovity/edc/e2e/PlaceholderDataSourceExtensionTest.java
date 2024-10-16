@@ -41,7 +41,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.eclipse.edc.spi.constants.CoreConstants.EDC_NAMESPACE;
 
 class PlaceholderDataSourceExtensionTest {
-
     @RegisterExtension
     private static CeE2eTestExtension e2eTestExtension = CeE2eTestExtension.builder()
         .additionalModule(":launchers:connectors:sovity-dev")
@@ -87,6 +86,7 @@ class PlaceholderDataSourceExtensionTest {
 
         scenario.transferAndAwait(InitiateTransferRequest.builder()
             .contractAgreementId(negotiation.getContractAgreementId())
+            .transferType("HttpData-PUSH")
             .dataSinkProperties(Map.of(
                 EDC_NAMESPACE + "baseUrl", destinationUrl,
                 EDC_NAMESPACE + "method", HttpMethod.POST,

@@ -548,6 +548,7 @@ class DataSourceParameterizationTest {
         var transferRequest = InitiateTransferRequest.builder()
             .contractAgreementId(contractAgreementId)
             .dataSinkProperties(dataSinkProperties)
+            .transferType("HttpData-PUSH")
             .transferProcessProperties(transferProcessProperties)
             .build();
         return consumerClient.uiApi().initiateTransfer(transferRequest).getId();

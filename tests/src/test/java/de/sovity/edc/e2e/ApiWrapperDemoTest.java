@@ -211,6 +211,7 @@ class ApiWrapperDemoTest {
         var contractAgreementId = negotiation.getContractAgreementId();
         var transferRequest = InitiateTransferRequest.builder()
             .contractAgreementId(contractAgreementId)
+            .transferType("HttpData-PUSH")
             .dataSinkProperties(dataAddress.getDataSinkProperties())
             .build();
         consumerClient.uiApi().initiateTransfer(transferRequest);

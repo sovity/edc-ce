@@ -23,7 +23,6 @@ import de.sovity.edc.extension.messenger.dto.Multiplication;
 import de.sovity.edc.extension.messenger.dto.UnsupportedMessage;
 import de.sovity.edc.utils.config.ConfigUtils;
 import lombok.val;
-import org.eclipse.edc.connector.dataplane.selector.spi.client.DataPlaneClientFactory;
 import org.eclipse.edc.spi.system.configuration.Config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,17 +35,12 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
 
 class SovityMessengerExtensionE2eTest {
     @RegisterExtension
     static CeE2eTestExtension extension = CeE2eTestExtension.builder()
         .additionalModule(":launchers:utils:vanilla-control-plane")
         .skipDb(true)
-        // TODO: should this be added via a mock or does it need the real impl??
-//         .beforeEdcStartup(runtime -> {
-//             runtime.registerServiceMock(DataPlaneClientFactory.class, mock(DataPlaneClientFactory.class));
-//         })
         .build();
     private String counterPartyAddress;
     private String counterPartyId;
