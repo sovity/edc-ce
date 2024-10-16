@@ -25,13 +25,11 @@ dependencies {
     implementation(libs.postgres)
     implementation(libs.hikari)
 
-    implementation("org.eclipse.edc:sql-pool-apache-commons:${edcVersion}")
-
-    implementation("org.eclipse.edc:data-plane-instance-store-sql:${edcVersion}")
-    implementation("org.eclipse.edc:edr-index-sql:${edcVersion}")
-    implementation("org.eclipse.edc:policy-monitor-store-sql:${edcVersion}")
-
-    testImplementation(libs.edc.junit)
+    // TODO check which ones are required in the EDC CE
+    implementation(libs.edc.sqlPoolApacheCommons)
+    implementation(libs.edc.dataPlaneInstanceStoreSql)
+    implementation(libs.edc.edrIndexSql)
+    implementation(libs.edc.policyMonitorStoreSql)
 }
 
 group = libs.versions.sovityEdcExtensionGroup.get()

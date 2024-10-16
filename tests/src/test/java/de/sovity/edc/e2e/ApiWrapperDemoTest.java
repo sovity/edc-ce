@@ -98,7 +98,7 @@ class ApiWrapperDemoTest {
         createContractDefinition();
 
         // consumer: negotiate contract and transfer data
-        var participantId = ConfigProps.EDC_PARTICIPANT_ID.getStringOrThrow(providerConfig);
+        var participantId = ConfigUtils.getParticipantId(providerConfig);
         var dataOffers = consumerClient.uiApi().getCatalogPageDataOffers(participantId, ConfigUtils.getProtocolApiUrl(providerConfig));
         var negotiation = initiateNegotiation(dataOffers.get(0), dataOffers.get(0).getContractOffers().get(0));
         negotiation = awaitNegotiationDone(negotiation.getContractNegotiationId());
