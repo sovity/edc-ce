@@ -16,6 +16,8 @@ please see [changelog_updates.md](docs/dev/changelog_updates.md).
 
 #### Minor Changes
 
+- Only return `Datasets` with valid `Offers` ([#1065](https://github.com/sovity/edc-ce/issues/1065))
+
 #### Patch Changes
 
 - Refactoring: Config as Java Code ([#1051](https://github.com/sovity/edc-ce/pull/1051))
