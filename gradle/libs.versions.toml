@@ -127,6 +127,7 @@ edc-transferSpi = { module = "org.eclipse.edc:transfer-spi", version.ref = "edc"
 edc-transformCore = { module = "org.eclipse.edc:transform-core", version.ref = "edc" }
 edc-transformSpi = { module = "org.eclipse.edc:transform-spi", version.ref = "edc" }
 edc-vaultFilesystem = { module = "org.eclipse.edc:vault-filesystem", version.ref = "edc" }
+edc-webSpi = { module = "org.eclipse.edc:web-spi", version.ref = "edc" }
 
 findbugs-jsr305 = { module = "com.google.code.findbugs:jsr305", version.ref = "findbugs" }
 
