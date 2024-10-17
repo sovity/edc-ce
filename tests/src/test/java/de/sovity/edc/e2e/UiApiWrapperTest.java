@@ -619,10 +619,7 @@ class UiApiWrapperTest {
         // arrange
         val assetId = scenario.createAsset();
 
-        val assetPage = providerClient.uiApi().getAssetPage();
-
         scenario.createContractDefinition(assetId);
-        // TODO: why does it want an x-api-key and not a token?
         val negotiation = scenario.negotiateAssetAndAwait(assetId);
 
         // act
