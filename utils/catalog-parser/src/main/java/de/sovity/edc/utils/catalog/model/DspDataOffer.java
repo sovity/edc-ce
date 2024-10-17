@@ -23,5 +23,4 @@ import java.util.List;
 public class DspDataOffer {
     private final JsonObject assetPropertiesJsonLd;
     private final List<DspContractOffer> contractOffers;
-    private final List<JsonObject> distributions;
 }

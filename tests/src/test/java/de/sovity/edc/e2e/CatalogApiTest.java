@@ -12,7 +12,7 @@
  *
  */
 
-package de.sovity.edc.ext.wrapper.api.ui.pages.catalog;
+package de.sovity.edc.e2e;
 
 import de.sovity.edc.client.EdcClient;
 import de.sovity.edc.client.gen.model.ContractDefinitionRequest;
@@ -48,10 +48,6 @@ class CatalogApiTest {
 
     private final String dataOfferId = "my-data-offer-2023-11";
 
-    /**
-     * There used to be issues with the Prop.DISTRIBUTION field being occupied by core EDC.
-     * This test verifies that the field can be used by us.
-     */
     @DisabledOnGithub
     @Test
     @SneakyThrows
@@ -63,6 +59,7 @@ class CatalogApiTest {
         createAsset(client);
         createPolicy(client);
         createContractDefinition(client);
+
         // act
         var catalogPageDataOffers = client.uiApi().getCatalogPageDataOffers(participantId, protocolApiUrl);
 
