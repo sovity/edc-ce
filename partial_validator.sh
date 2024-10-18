@@ -11,9 +11,10 @@ gradle \
     :utils:catalog-parser:test \
     :tests:test \
     --tests 'de.sovity.edc.e2e.ApiWrapperDemoTest' \
-    --tests 'de.sovity.edc.e2e.ContractAgreementPageTest' \
     --tests 'de.sovity.edc.e2e.ContractAgreementTerminationDetailsQueryTest' \
-    --tests 'de.sovity.edc.e2e.ContractAgreementTransferApiServiceTest' \
-    --tests 'de.sovity.edc.e2e.TransferRequestBuilderTest' \
-    --tests 'de.sovity.edc.e2e.UseCaseApiWrapperTest' \
     --tests 'de.sovity.edc.e2e.UiApiWrapperTest.retrieveSingleContractAgreement' \
+    --tests 'de.sovity.edc.e2e.UseCaseApiWrapperTest' \
+    --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreement.ContractAgreementPageTest' \
+    --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreement.ContractAgreementTransferApiServiceTest' \
+    --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.contract_agreements.services.TransferRequestBuilderTest' \
+    --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.contract_definitions.ContractDefinitionPageApiServiceTest' \
