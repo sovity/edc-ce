@@ -85,7 +85,7 @@ public class TransferRequestBuilder {
                 .add(Prop.Edc.ASSET_ID, agreement.getAssetId())
                 .add(Prop.Edc.CONTRACT_ID, agreement.getId())
                 .add(Prop.Edc.CONNECTOR_ID, negotiation.getCounterPartyId())
-                .add(Prop.Edc.CONNECTOR_ADDRESS, negotiation.getCounterPartyAddress())
+                .add(Prop.Edc.COUNTER_PARTY_ADDRESS, negotiation.getCounterPartyAddress())
                 .build();
 
         return typeTransformerRegistry.transform(requestJsonLd, TransferRequest.class)

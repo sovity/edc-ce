@@ -58,6 +58,7 @@ public class Prop {
         public final String PROXY_PATH = CTX + "proxyPath";
         public final String PROXY_QUERY_PARAMS = CTX + "proxyQueryParams";
         public final String PROXY_BODY = CTX + "proxyBody";
+        public final String COUNTER_PARTY_ADDRESS = CTX + "counterPartyAddress";
 
         // Transfer Request Related
         public static String TYPE_TRANSFER_REQUEST = CTX + "TransferRequest";
