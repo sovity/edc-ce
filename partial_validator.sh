@@ -23,3 +23,4 @@ gradle \
     --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferHistoryPageApiServiceTest' \
     --tests 'de.sovity.edc.ext.wrapper.api.ui.pages.transferhistory.TransferProcessAssetApiServiceTest' \
     --tests 'de.sovity.edc.ext.wrapper.api.usecase.KpiApiTest' \
+    --tests 'de.sovity.edc.ext.wrapper.api.usecase.SupportedPolicyApiTest' \
