@@ -5,6 +5,7 @@ gradle \
     :utils:catalog-parser:test \
     :tests:test \
     --tests 'de.sovity.edc.e2e.ApiWrapperDemoTest' \
+    --tests 'de.sovity.edc.e2e.AssetApiServiceTest' \
     --tests 'de.sovity.edc.e2e.ContractAgreementTerminationDetailsQueryTest' \
     --tests 'de.sovity.edc.e2e.PolicyDefinitionApiServiceTest' \
     --tests 'de.sovity.edc.e2e.UiApiWrapperTest.retrieveSingleContractAgreement' \
